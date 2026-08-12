@@ -1,18 +1,59 @@
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/App";
 
-describe("application shell", () => {
-  it("renders the curriculum identity", () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>,
-    );
+function renderApp(path = "/lesson/read-the-evidence") {
+  return render(
+    <MemoryRouter initialEntries={[path]}>
+      <App />
+    </MemoryRouter>,
+  );
+}
 
+describe("application shell", () => {
+  beforeEach(() => window.localStorage.clear());
+
+  it("renders the tutorial app as its first screen", () => {
+    renderApp();
     expect(
-      screen.getByRole("heading", { name: "Kernel field guide" }),
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Read the evidence before the code",
+      }),
     ).toBeInTheDocument();
+    expect(screen.getByLabelText("Curriculum")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Kernel" })).toBeInTheDocument();
+  });
+
+  it("persists completed lesson progress", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await user.click(screen.getByRole("button", { name: "Mark complete" }));
+    expect(screen.getByRole("button", { name: "Completed" })).toBeInTheDocument();
+    expect(window.localStorage.getItem("fe2o3-kernels-progress-v1")).toContain(
+      "read-the-evidence",
+    );
+  });
+
+  it("searches lessons and navigates to the result", async () => {
+    const user = userEvent.setup();
+    renderApp();
+    await user.click(screen.getByRole("button", { name: /Search/ }));
+    const input = screen.getByRole("textbox", {
+      name: "Search lessons and glossary",
+    });
+    await user.type(input, "flash attention");
+    await user.click(
+      screen.getByRole("option", { name: /Flash attention: online invariant/ }),
+    );
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Flash attention: online invariant",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Design only").length).toBeGreaterThan(0);
   });
 });
