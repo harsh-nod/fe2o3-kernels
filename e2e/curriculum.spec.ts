@@ -107,6 +107,14 @@ test("every internal curriculum route resolves without page overflow", async ({
       name: "Evidence pipeline and authority boundaries",
     }),
   ).toBeVisible();
+  await page.goto("./#/status");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Kernel delivery and verification progress",
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole("table", { name: "Kernel implementation status" })).toBeVisible();
   await page.goto("./#/glossary");
   await expect(
     page.getByRole("heading", { level: 1, name: "Glossary and API index" }),

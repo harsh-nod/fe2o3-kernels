@@ -28,6 +28,11 @@ runners, compiler tests, direct-link tooling, and the signed evidence model.
 Commands shown in lessons that exercise fe2o3 are run from a checkout of that
 exact commit, not from this documentation repository.
 
+The deployed workbench also has an **Implementation status** reference page.
+It reports the newer public `fe2o3` main revision, private acceptance candidates,
+known blockers, and separate run/verify/evidence gates for every kernel in the
+curriculum. That progress view does not silently repin or upgrade lesson claims.
+
 ## Maturity labels
 
 Every technical claim uses one of five labels. A non-design claim is invalid

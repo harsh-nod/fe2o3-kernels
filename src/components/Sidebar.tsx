@@ -1,4 +1,4 @@
-import { BookOpen, Check, GitBranch, Network, X } from "lucide-react";
+import { Activity, BookOpen, Check, GitBranch, Network, X } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { curriculum, lessons } from "../content/curriculum";
 
@@ -75,6 +75,9 @@ export function Sidebar({
       </nav>
 
       <nav className="reference-nav" aria-label="Reference">
+        <NavLink onClick={onNavigate} to="/status">
+          <Activity size={16} /> Implementation status
+        </NavLink>
         <NavLink onClick={onNavigate} to="/architecture">
           <Network size={16} /> Architecture
         </NavLink>

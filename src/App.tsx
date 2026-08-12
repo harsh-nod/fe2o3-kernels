@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { ArchitecturePage } from "./components/ArchitecturePage";
 import { GlossaryPage } from "./components/GlossaryPage";
 import { LessonPage } from "./components/LessonPage";
+import { ProgressPage } from "./components/ProgressPage";
 import { SearchDialog } from "./components/SearchDialog";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
@@ -59,6 +60,7 @@ export function App() {
             }
           />
           <Route path="/architecture" element={<ArchitecturePage />} />
+          <Route path="/status" element={<ProgressPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

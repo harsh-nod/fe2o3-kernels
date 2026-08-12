@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
+import {
+  developmentCheckpoints,
+  kernelProgress,
+  progressSnapshot,
+  validateProgress,
+} from "../src/content/progress";
 import { validateCurriculum } from "../src/content/validate";
 
 describe("curriculum integrity", () => {
@@ -58,5 +64,31 @@ describe("curriculum integrity", () => {
         true,
       );
     }
+  });
+});
+
+describe("implementation progress integrity", () => {
+  it("pins public and candidate states without changing lesson authority", () => {
+    expect(validateProgress()).toEqual([]);
+    expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
+    expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
+    expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
+  });
+
+  it("tracks every tutorial kernel through three independent gates", () => {
+    expect(kernelProgress.map((kernel) => kernel.id)).toEqual([
+      "fill",
+      "vecadd",
+      "scalar-map",
+      "wave-collectives",
+      "workgroup-reduction",
+      "scalar-gemm",
+      "tiled-gemm",
+      "softmax",
+      "flash-attention",
+      "moe-routing",
+      "moe-experts",
+    ]);
+    expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
   });
 });

@@ -15,6 +15,7 @@
   --accent-soft: #dff2ed;
   --blue: #245d9f;
   --blue-soft: #e6effa;
+  --green: #167052;
   --amber: #925600;
   --amber-soft: #fff0cf;
   --red: #a53642;
@@ -50,6 +51,7 @@
   --accent-soft: #173832;
   --blue: #8bb8ef;
   --blue-soft: #1c3048;
+  --green: #76d6af;
   --amber: #f1bd63;
   --amber-soft: #422f15;
   --red: #f29aa3;
@@ -1811,6 +1813,184 @@ tr:last-child td {
   font-size: 0.68rem;
 }
 
+.status-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 18px 0;
+  overflow: hidden;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+}
+
+.status-summary > div {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding: 12px;
+  background: var(--surface);
+}
+
+.status-summary span,
+.checkpoint-state {
+  color: var(--muted);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+}
+
+.status-summary code,
+.checkpoint-list code {
+  overflow-wrap: anywhere;
+  color: var(--text-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+}
+
+.status-boundary {
+  max-width: 820px;
+  padding: 12px 14px;
+  color: var(--amber) !important;
+  background: var(--amber-soft);
+  border-left: 3px solid var(--amber);
+}
+
+.checkpoint-list {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.checkpoint-list article {
+  display: grid;
+  grid-template-columns: 190px minmax(210px, 0.8fr) minmax(260px, 1.2fr);
+  gap: 18px;
+  align-items: start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.checkpoint-list h3,
+.kernel-status-name h3 {
+  margin: 5px 0 0;
+  color: var(--text-strong);
+  font-size: 0.82rem;
+}
+
+.checkpoint-list p,
+.kernel-status-name p,
+.kernel-status-next {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.checkpoint-state-public {
+  color: var(--green);
+}
+
+.checkpoint-state-acceptance,
+.checkpoint-state-queued {
+  color: var(--amber);
+}
+
+.checkpoint-state-repair {
+  color: var(--red);
+}
+
+.kernel-status-table {
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.kernel-status-head,
+.kernel-status-table > article {
+  display: grid;
+  grid-template-columns: minmax(250px, 1fr) 118px 118px 118px;
+  gap: 12px;
+  align-items: center;
+}
+
+.kernel-status-head {
+  min-height: 38px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.66rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.kernel-status-head > span:first-child {
+  padding-left: 12px;
+}
+
+.kernel-status-table > article {
+  padding: 15px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.kernel-status-name p {
+  margin-top: 5px;
+}
+
+.kernel-status-next {
+  grid-column: 1 / -1;
+  padding-top: 10px;
+  border-top: 1px dotted var(--border);
+}
+
+.kernel-status-next strong {
+  color: var(--text-strong);
+}
+
+.delivery-gate {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 25px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.delivery-gate-complete {
+  color: var(--green);
+}
+
+.delivery-gate-partial {
+  color: var(--accent-strong);
+}
+
+.delivery-gate-blocked {
+  color: var(--red);
+}
+
+.delivery-gate-planned {
+  color: var(--amber);
+}
+
+.progress-repositories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.progress-repositories a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.progress-repositories a:hover {
+  text-decoration: underline;
+}
+
 .source-button {
   display: inline-flex;
   align-items: center;
@@ -2119,8 +2299,28 @@ tr:last-child td {
   }
 
   .pin-details,
+  .status-summary,
   .glossary-list {
     grid-template-columns: 1fr;
+  }
+
+  .checkpoint-list article {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .kernel-status-head {
+    display: none;
+  }
+
+  .kernel-status-table > article {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .kernel-status-name,
+  .kernel-status-next {
+    grid-column: 1 / -1;
   }
 
   .glossary-list article,

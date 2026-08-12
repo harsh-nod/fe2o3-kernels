@@ -56,4 +56,16 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("Design only").length).toBeGreaterThan(0);
   });
+
+  it("shows public and candidate kernel delivery states separately", () => {
+    renderApp("/status");
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Kernel delivery and verification progress",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
+    expect(screen.getByText("Formal evidence isolation v8")).toBeInTheDocument();
+  });
 });
