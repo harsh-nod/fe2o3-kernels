@@ -96,25 +96,27 @@ function IndexingMap() {
 function MemoryOwnership() {
   return (
     <figure className="diagram diagram-memory" aria-label="Read and write region ownership">
-      <div className="memory-row">
-        <div className="memory-label"><MemoryStick size={17} /> input A</div>
-        <div className="memory-cells read-cells">
-          {Array.from({ length: 8 }, (_, index) => <span key={index}>r{index}</span>)}
+      <div className="diagram-memory-inner">
+        <div className="memory-row">
+          <div className="memory-label"><MemoryStick size={17} /> input A</div>
+          <div className="memory-cells read-cells">
+            {Array.from({ length: 8 }, (_, index) => <span key={index}>r{index}</span>)}
+          </div>
         </div>
-      </div>
-      <div className="memory-row">
-        <div className="memory-label"><MemoryStick size={17} /> input B</div>
-        <div className="memory-cells read-cells">
-          {Array.from({ length: 8 }, (_, index) => <span key={index}>r{index}</span>)}
+        <div className="memory-row">
+          <div className="memory-label"><MemoryStick size={17} /> input B</div>
+          <div className="memory-cells read-cells">
+            {Array.from({ length: 8 }, (_, index) => <span key={index}>r{index}</span>)}
+          </div>
         </div>
-      </div>
-      <div className="mapping-lines" aria-hidden="true">
-        {Array.from({ length: 8 }, (_, index) => <i key={index} />)}
-      </div>
-      <div className="memory-row">
-        <div className="memory-label"><Fingerprint size={17} /> output C</div>
-        <div className="memory-cells write-cells">
-          {Array.from({ length: 8 }, (_, index) => <span key={index}>t{index}</span>)}
+        <div className="mapping-lines" aria-hidden="true">
+          {Array.from({ length: 8 }, (_, index) => <i key={index} />)}
+        </div>
+        <div className="memory-row">
+          <div className="memory-label"><Fingerprint size={17} /> output C</div>
+          <div className="memory-cells write-cells">
+            {Array.from({ length: 8 }, (_, index) => <span key={index}>t{index}</span>)}
+          </div>
         </div>
       </div>
       <figcaption>
@@ -151,34 +153,36 @@ function ReductionTree() {
 function GemmTiles() {
   return (
     <figure className="diagram diagram-gemm" aria-label="Tiled GEMM memory movement">
-      <div className="matrix-unit">
-        <span className="matrix-name">A</span>
-        <div className="matrix-grid matrix-a">
-          {Array.from({ length: 24 }, (_, index) => <i key={index} />)}
+      <div className="gemm-flow">
+        <div className="matrix-unit">
+          <span className="matrix-name">A</span>
+          <div className="matrix-grid matrix-a">
+            {Array.from({ length: 24 }, (_, index) => <i key={index} />)}
+          </div>
+          <span>M × K</span>
         </div>
-        <span>M × K</span>
-      </div>
-      <div className="math-symbol">×</div>
-      <div className="matrix-unit">
-        <span className="matrix-name">B</span>
-        <div className="matrix-grid matrix-b">
-          {Array.from({ length: 24 }, (_, index) => <i key={index} />)}
+        <div className="math-symbol">×</div>
+        <div className="matrix-unit">
+          <span className="matrix-name">B</span>
+          <div className="matrix-grid matrix-b">
+            {Array.from({ length: 24 }, (_, index) => <i key={index} />)}
+          </div>
+          <span>K × N</span>
         </div>
-        <span>K × N</span>
-      </div>
-      <ArrowRight size={24} aria-hidden="true" />
-      <div className="lds-stage">
-        <Boxes size={22} />
-        <strong>LDS phase p</strong>
-        <span>load · barrier · MFMA · barrier</span>
-      </div>
-      <ArrowRight size={24} aria-hidden="true" />
-      <div className="matrix-unit">
-        <span className="matrix-name">C</span>
-        <div className="matrix-grid matrix-c">
-          {Array.from({ length: 16 }, (_, index) => <i key={index} />)}
+        <ArrowRight size={24} aria-hidden="true" />
+        <div className="lds-stage">
+          <Boxes size={22} />
+          <strong>LDS phase p</strong>
+          <span>load · barrier · MFMA · barrier</span>
         </div>
-        <span>M × N</span>
+        <ArrowRight size={24} aria-hidden="true" />
+        <div className="matrix-unit">
+          <span className="matrix-name">C</span>
+          <div className="matrix-grid matrix-c">
+            {Array.from({ length: 16 }, (_, index) => <i key={index} />)}
+          </div>
+          <span>M × N</span>
+        </div>
       </div>
       <figcaption>
         The phase invariant covers K tiles already accumulated into one owned C tile.
@@ -191,26 +195,28 @@ function AttentionFlow() {
   const keys = ["K₀ / V₀", "K₁ / V₁", "K₂ / V₂", "K₃ / V₃"];
   return (
     <figure className="diagram diagram-attention" aria-label="Flash attention online tile flow">
-      <div className="query-block">
-        <span>Q tile</span>
-        <strong>query rows</strong>
-      </div>
-      <div className="attention-stream">
-        {keys.map((key, index) => (
-          <div className="attention-step" key={key}>
-            <div className="kv-block">{key}</div>
-            <ArrowDown size={15} aria-hidden="true" />
-            <div className="state-block">
-              <span>state {index + 1}</span>
-              <strong>m · l · o</strong>
+      <div className="attention-flow-diagram">
+        <div className="query-block">
+          <span>Q tile</span>
+          <strong>query rows</strong>
+        </div>
+        <div className="attention-stream">
+          {keys.map((key, index) => (
+            <div className="attention-step" key={key}>
+              <div className="kv-block">{key}</div>
+              <ArrowDown size={15} aria-hidden="true" />
+              <div className="state-block">
+                <span>state {index + 1}</span>
+                <strong>m · l · o</strong>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <div className="attention-output">
-        <GitCompareArrows size={20} />
-        <span>normalize once</span>
-        <strong>O = o / l</strong>
+          ))}
+        </div>
+        <div className="attention-output">
+          <GitCompareArrows size={20} />
+          <span>normalize once</span>
+          <strong>O = o / l</strong>
+        </div>
       </div>
       <figcaption>
         Each key/value tile updates maximum, normalization sum, and output numerator in one frame.
@@ -229,29 +235,31 @@ function MoeRouting() {
   ];
   return (
     <figure className="diagram diagram-moe" aria-label="Mixture of experts stable routing">
-      <div className="moe-column tokens">
-        <strong>Tokens</strong>
-        {routes.map(([token]) => <span key={token}>{token}</span>)}
-      </div>
-      <div className="moe-router">
-        <Route size={23} />
-        <strong>stable top-k</strong>
-        <span>count + scan</span>
-      </div>
-      <div className="moe-experts">
-        {[0, 1, 2].map((expert) => (
-          <div className="expert-lane" key={expert}>
-            <strong>E{expert}</strong>
-            {routes
-              .filter(([, id]) => id === `E${expert}`)
-              .map(([token, , slot]) => <span key={token}>{slot} · {token}</span>)}
-          </div>
-        ))}
-      </div>
-      <div className="moe-combine">
-        <Network size={21} />
-        <strong>expert GEMM</strong>
-        <span>inverse + combine</span>
+      <div className="moe-flow-diagram">
+        <div className="moe-column tokens">
+          <strong>Tokens</strong>
+          {routes.map(([token]) => <span key={token}>{token}</span>)}
+        </div>
+        <div className="moe-router">
+          <Route size={23} />
+          <strong>stable top-k</strong>
+          <span>count + scan</span>
+        </div>
+        <div className="moe-experts">
+          {[0, 1, 2].map((expert) => (
+            <div className="expert-lane" key={expert}>
+              <strong>E{expert}</strong>
+              {routes
+                .filter(([, id]) => id === `E${expert}`)
+                .map(([token, , slot]) => <span key={token}>{slot} · {token}</span>)}
+            </div>
+          ))}
+        </div>
+        <div className="moe-combine">
+          <Network size={21} />
+          <strong>expert GEMM</strong>
+          <span>inverse + combine</span>
+        </div>
       </div>
       <figcaption>
         Stable ranks make compact expert slots deterministic and injective.

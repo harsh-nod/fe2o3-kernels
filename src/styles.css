@@ -727,7 +727,7 @@ p {
   border-color: var(--red);
 }
 
-.diagram-memory {
+.diagram-memory-inner {
   min-width: 680px;
 }
 
@@ -839,6 +839,10 @@ p {
 }
 
 .diagram-gemm {
+  display: block;
+}
+
+.gemm-flow {
   display: flex;
   align-items: center;
   gap: 16px;
@@ -922,13 +926,7 @@ p {
   font-size: 0.62rem;
 }
 
-.diagram-gemm figcaption {
-  min-width: 150px;
-  margin: 0;
-  text-align: left;
-}
-
-.diagram-attention {
+.attention-flow-diagram {
   display: grid;
   grid-template-columns: 120px 1fr 145px;
   align-items: center;
@@ -1000,12 +998,7 @@ p {
   font-size: 0.58rem;
 }
 
-.diagram-attention figcaption,
-.diagram-moe figcaption {
-  grid-column: 1 / -1;
-}
-
-.diagram-moe {
+.moe-flow-diagram {
   display: grid;
   grid-template-columns: 100px 120px 1fr 145px;
   align-items: center;
@@ -1943,6 +1936,7 @@ tr:last-child td {
   .drawer-backdrop {
     z-index: 90;
     display: block;
+    place-items: initial;
     padding: 0;
   }
 
