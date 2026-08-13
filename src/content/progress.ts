@@ -55,9 +55,9 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "Protected evidence publisher",
     commit: "1c55fd8af805850c46c8183f57178713432af024",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "The accepted 46-commit stack is replayed on the Cargo candidate without stale-tree regressions. Full workspace, debug/release, secret-memory, adversarial client, Clippy, formatting, and synchronized stress gates pass on mi300x; independent rereview remains.",
+      "Hostile rereview rejected committed-frame corruption recovery and pre-handler slow-header admission. V10 is adding authenticated frame boundaries, connection-level deadlines and limits, and clean conformance execution.",
   },
   {
     name: "gfx942 scalar control flow",
