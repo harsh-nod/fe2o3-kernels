@@ -43,28 +43,28 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "69c543279c294cd6d1035f076060768349a5f6b5",
     state: "acceptance",
     detail:
-      "A clean generic campaign rejected the prior candidate on one unexplained worker-test error. The exact assertion now reports the full error; a fresh campaign is running from zero.",
+      "The fresh generic and focused campaigns pass, including the prior worker-test failure. Invalid contention harness attempts were discarded; one clean corrected contention run and the remaining acceptance matrix are in progress.",
   },
   {
     name: "Formal evidence isolation v8",
-    commit: "884427b19a47c137a9ad43a4789fc93cc0106381",
+    commit: "f7cb3132fb687cfc10809d58271dcb09505e1be9",
     state: "repair",
     detail:
-      "Hostile rereview rejected mutable same-inode log content and unrelated inherited descriptors. Anonymous bounded result capture and a closed child descriptor inventory are in progress.",
+      "The clean repair uses anonymous bounded result capture, closes ambient proof descriptors, and passes focused hostile and reproducibility checks. Independent rereview and protected root-installed execution remain required.",
   },
   {
     name: "Protected evidence publisher",
-    commit: "8d865bf64e1dac00ad43eae54062ed4bb5132f61",
-    state: "queued",
+    commit: "1c55fd8af805850c46c8183f57178713432af024",
+    state: "acceptance",
     detail:
-      "Accepted on its original base; it must be replayed and re-audited after the Cargo checkpoint is public.",
+      "The accepted 46-commit stack is replayed on the Cargo candidate without stale-tree regressions. Debug and release suites, secret-memory and adversarial client probes, Clippy, formatting, and a synchronized 100-run enrollment stress test pass on mi300x; independent rereview remains.",
   },
   {
     name: "gfx942 scalar control flow",
     commit: "d63bc81d190f4a33a5e22b9b22da6df24c86b3a3",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "A private compiler-only candidate lowers bounded reducible executable MIR through mem2reg, Scalar V2, verified Kernel IR, and direct gfx942 LLVM. Independent source review is running.",
+      "Hostile review rejected implicit export authority, truncated identity collisions, incomplete xnack target binding, and late resource charging. A private repair is adding authenticated roles, canonical identities, exact target binding, and preflight bounds.",
   },
 ];
 
