@@ -20,10 +20,10 @@ export interface DevelopmentCheckpoint {
 }
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-12",
+  reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "4bd1be0d6325d3946075904d653222aa9c81eebd",
-  publicTree: "c813c06a8897599bd5144c82d2dc93d72394ec53",
+  publicCommit: "b745b55dd59036aee7014f4814f4420c13e721cd",
+  publicTree: "118b206beec4d3e7badf53f6561d1b37b86fc491",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -57,28 +57,28 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "e03bf45b6a828847ac74ea91e546aae743f4b9e6",
     state: "acceptance",
     detail:
-      "V11 uses three independently checksummed checkpoints to bind the committed prefix and allows recovery only beyond it. Exact-bundle mutation, stress, conformance, clean generic, and bytecode-free gates pass; hostile rereview and replay onto public Cargo V6 remain.",
+      "V11 uses three independently checksummed checkpoints to bind the committed prefix and allows recovery only beyond it. Independent hostile rereview accepted the exact bundle after extended mutation, truncation, resource, stress, conformance, secret-memory, and clean generic gates; replay onto current public main remains.",
   },
   {
     name: "gfx942 scalar control flow",
-    commit: "5434e778f8676684c97ec9c280d15587f3e47523",
-    state: "repair",
+    commit: "54ae9ff671b041205434aec80ab2b9a5979d0fa7",
+    state: "acceptance",
     detail:
-      "Hostile rereview accepted the MIR and artifact binding but rejected backend provenance and build isolation: arbitrary sealed bytes were trusted, exec reset nondumpability, source stayed replaceable, and receive could block forever. Integrated V4 is repairing this on public Cargo V6.",
+      "Integrated V4 is based on public Cargo V6 and independently pins source, toolchain, backend digest and ELF identity, helper credentials/state, pidfd lifecycle, and an absolute deadline. Exact-head and hostile gates pass; independent rereview remains.",
   },
   {
     name: "Collected Rust scalar admission",
-    commit: "5434e778f8676684c97ec9c280d15587f3e47523",
-    state: "repair",
+    commit: "54ae9ff671b041205434aec80ab2b9a5979d0fa7",
+    state: "acceptance",
     detail:
-      "V3 binds root and helper MIR plus compiler semantics, but its sealed backend transport lacks independent provenance and bounded lifecycle authority. V4 must close that protocol before direct COV6/LLD and hardware execution can be connected.",
+      "V4 authenticates the collected MIR/compiler boundary and its host-specific backend build transport, then still fails closed before executable authority or artifacts. Direct COV6/LLD, HSACO, hardware execution, and compiler refinement remain.",
   },
   {
     name: "gfx942 wave64 and LDS reduction",
-    commit: "421805b1f531a6fd2ed86bbf09331dee5689179f",
-    state: "acceptance",
+    commit: "b745b55dd59036aee7014f4814f4420c13e721cd",
+    state: "public",
     detail:
-      "V2 binds the complete canonical gfx942:xnack- profile through Kernel IR and Worker V2 checks; eleven unauthorized target forms reject. The 6/26 Verus and 256-lane MI300X evidence remains partial pending hostile rereview and source finalization.",
+      "V2 is identical on both public mains with green hosted policy and generic workflows. It binds canonical gfx942:xnack- through Kernel IR and Worker V2, rejects eleven unauthorized target forms, and passes 6/26 Verus plus 256-lane MI300X evidence; source finalization and compiler refinement remain partial.",
   },
 ];
 
