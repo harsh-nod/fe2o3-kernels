@@ -59,6 +59,13 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     detail:
       "Accepted on its original base; it must be replayed and re-audited after the Cargo checkpoint is public.",
   },
+  {
+    name: "gfx942 scalar control flow",
+    commit: "d63bc81d190f4a33a5e22b9b22da6df24c86b3a3",
+    state: "acceptance",
+    detail:
+      "A private compiler-only candidate lowers bounded reducible executable MIR through mem2reg, Scalar V2, verified Kernel IR, and direct gfx942 LLVM. Independent source review is running.",
+  },
 ];
 
 export const kernelProgress: KernelProgress[] = [
@@ -87,7 +94,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["source-derived control flow"],
-    next: "Land the structured-control-flow vertical and typed widening arithmetic profiles.",
+    next: "Accept and integrate the helper control-flow candidate, connect collected kernel entries, and add typed widening arithmetic profiles.",
   },
   {
     id: "wave-collectives",
