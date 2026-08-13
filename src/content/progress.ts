@@ -43,7 +43,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "69c543279c294cd6d1035f076060768349a5f6b5",
     state: "acceptance",
     detail:
-      "The fresh generic and focused campaigns pass, including the prior worker-test failure. Invalid contention harness attempts were discarded; one clean corrected contention run and the remaining acceptance matrix are in progress.",
+      "Fresh generic, focused, and corrected contention campaigns pass, including the prior worker-test failure. Invalid harness attempts are classified separately; serial vertical repetitions and the remaining acceptance matrix are in progress.",
   },
   {
     name: "Formal evidence isolation v8",
@@ -57,7 +57,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "1c55fd8af805850c46c8183f57178713432af024",
     state: "acceptance",
     detail:
-      "The accepted 46-commit stack is replayed on the Cargo candidate without stale-tree regressions. Debug and release suites, secret-memory and adversarial client probes, Clippy, formatting, and a synchronized 100-run enrollment stress test pass on mi300x; independent rereview remains.",
+      "The accepted 46-commit stack is replayed on the Cargo candidate without stale-tree regressions. Full workspace, debug/release, secret-memory, adversarial client, Clippy, formatting, and synchronized stress gates pass on mi300x; independent rereview remains.",
   },
   {
     name: "gfx942 scalar control flow",
