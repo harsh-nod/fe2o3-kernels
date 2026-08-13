@@ -61,17 +61,17 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "gfx942 scalar control flow",
-    commit: "d63bc81d190f4a33a5e22b9b22da6df24c86b3a3",
-    state: "repair",
+    commit: "48ff155038a2aa90696258a494878ef2da7f40cf",
+    state: "acceptance",
     detail:
-      "Hostile review rejected implicit export authority, truncated identity collisions, incomplete xnack target binding, and late resource charging. A private repair is adding authenticated roles, canonical identities, exact target binding, and preflight bounds.",
+      "The private repair carries authenticated export and helper roles, collision-resistant canonical identities, exact gfx942:xnack- LLVM binding, and preflight resource bounds. Touched-crate and LLVM checks pass; independent hostile rereview is running.",
   },
   {
     name: "Collected Rust scalar admission",
-    commit: "03941089a4c5d4aff32e88cc34a05bf0f6a111ad",
-    state: "queued",
+    commit: "48ff155038a2aa90696258a494878ef2da7f40cf",
+    state: "acceptance",
     detail:
-      "A tested fail-closed slice authenticates the collected kernel/helper closure, exact roles, MIR instances, ABI, and gfx942:xnack- target, but emits no code until repaired V1 exposes an authenticated helper composition contract.",
+      "The tested slice authenticates the collected kernel/helper closure and composes sealed root export with internal helper authority. Authenticated helper MIR import, kernel-root body composition, direct COV6/LLD, and hardware execution remain.",
   },
 ];
 
