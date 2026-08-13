@@ -40,17 +40,17 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Cargo acknowledgement repair",
-    commit: "4c4570a510ec1d2a08137b206d010365a6d6ed43",
+    commit: "69c543279c294cd6d1035f076060768349a5f6b5",
     state: "acceptance",
     detail:
-      "Source review and focused contention tests passed; full clean acceptance remains the promotion gate.",
+      "A clean generic campaign rejected the prior candidate on one unexplained worker-test error. The exact assertion now reports the full error; a fresh campaign is running from zero.",
   },
   {
     name: "Formal evidence isolation v8",
-    commit: "2f68c6c62ffdcea217ccc9e492cd94436943a781",
-    state: "repair",
+    commit: "884427b19a47c137a9ad43a4789fc93cc0106381",
+    state: "acceptance",
     detail:
-      "Rejected privately for verifier-log pathname substitution and a false-passing x32 escape probe. A replacement candidate is in progress.",
+      "The retained-log and x32 fail-open defects are repaired with focused regressions. Independent hostile review and the full proof campaign remain pending.",
   },
   {
     name: "Protected evidence publisher",
