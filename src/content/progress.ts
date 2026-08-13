@@ -43,7 +43,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "69c543279c294cd6d1035f076060768349a5f6b5",
     state: "acceptance",
     detail:
-      "Fresh generic, focused, and corrected contention campaigns pass, including the prior worker-test failure. Invalid harness attempts are classified separately; serial vertical repetitions and the remaining acceptance matrix are in progress.",
+      "Fresh generic, focused, and corrected contention campaigns pass, including the prior worker-test failure, and the full worker vertical passes 10/10 serial repetitions. The remaining target, release, and hardware acceptance matrix is in progress.",
   },
   {
     name: "Formal evidence isolation v8",
