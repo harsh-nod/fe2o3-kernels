@@ -50,7 +50,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "f7cb3132fb687cfc10809d58271dcb09505e1be9",
     state: "repair",
     detail:
-      "The clean repair uses anonymous bounded result capture, closes ambient proof descriptors, and passes focused hostile and reproducibility checks. Independent rereview and protected root-installed execution remain required.",
+      "Hostile rereview rejected descendant containment, verifier-to-Z3 descriptor closure, duplicate object authorities, and unbounded drain work. V9 containment repair is in progress; protected root execution remains external.",
   },
   {
     name: "Protected evidence publisher",
@@ -65,6 +65,13 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     state: "repair",
     detail:
       "Hostile review rejected implicit export authority, truncated identity collisions, incomplete xnack target binding, and late resource charging. A private repair is adding authenticated roles, canonical identities, exact target binding, and preflight bounds.",
+  },
+  {
+    name: "Collected Rust scalar admission",
+    commit: "03941089a4c5d4aff32e88cc34a05bf0f6a111ad",
+    state: "queued",
+    detail:
+      "A tested fail-closed slice authenticates the collected kernel/helper closure, exact roles, MIR instances, ABI, and gfx942:xnack- target, but emits no code until repaired V1 exposes an authenticated helper composition contract.",
   },
 ];
 
