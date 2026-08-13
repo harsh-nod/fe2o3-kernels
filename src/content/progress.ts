@@ -80,6 +80,13 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     detail:
       "V2 is identical on both public mains with green hosted policy and generic workflows. It binds canonical gfx942:xnack- through Kernel IR and Worker V2, rejects eleven unauthorized target forms, and passes 6/26 Verus plus 256-lane MI300X evidence; source finalization and compiler refinement remain partial.",
   },
+  {
+    name: "Scalar GEMM V1 vertical slice",
+    commit: "4b1bdb92e1373bd4b446dccb7502f5e2f737bc4a",
+    state: "queued",
+    detail:
+      "Three isolated implementation lanes are active from this common base: authentic rustc source and ABI admission, cyclic Kernel IR plus exact gfx942 LLVM lowering, and Verus specifications plus host admission and CPU-oracle tests. The fixed profile is row-major f32 C=A*B with runtime m/n/k, one output per invocation, sequential non-contracted accumulation, checked extents, and direct upstream LLVM/LLD finalization. No run, verification, or evidence gate is upgraded yet.",
+  },
 ];
 
 export const kernelProgress: KernelProgress[] = [
@@ -135,7 +142,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "planned",
     evidence: "planned",
     dependsOn: ["nested loops", "multidimensional indexing", "layout admission"],
-    next: "Complete executable loops, helpers, edge predicates, and checked matrix indexing.",
+    next: "Integrate and independently review the active frontend, Kernel IR/lowering, and Verus/runtime lanes, then produce direct-LLVM/LLD HSACO and guarded MI300X evidence.",
   },
   {
     id: "tiled-gemm",

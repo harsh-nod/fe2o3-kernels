@@ -91,4 +91,17 @@ describe("implementation progress integrity", () => {
     ]);
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
   });
+
+  it("does not promote scalar GEMM while its implementation swarm is active", () => {
+    expect(
+      developmentCheckpoints.find(
+        (checkpoint) => checkpoint.name === "Scalar GEMM V1 vertical slice",
+      ),
+    ).toMatchObject({ state: "queued" });
+    expect(kernelProgress.find((kernel) => kernel.id === "scalar-gemm")).toMatchObject({
+      run: "blocked",
+      verify: "planned",
+      evidence: "planned",
+    });
+  });
 });
