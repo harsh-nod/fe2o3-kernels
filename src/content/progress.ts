@@ -48,9 +48,9 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "Formal evidence isolation V11",
     commit: "29ab16ec25bb604f57fb4568b9488c892113feb1",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "V11 binds initial user, PID, and mount namespace authority plus installation and reservation objects through supervisor-retained descriptors. The exact V10 exploit and expanded namespace tests reject; independent hostile review and protected root execution remain.",
+      "Hostile rereview forged a self-consistent supervisor record and live descriptor graph inside mapped-root namespaces; the exact validator accepted it, including a forged launcher digest. V12 needs an external, pre-provisioned root of trust that attacker-created namespaces cannot mint.",
   },
   {
     name: "Protected evidence publisher",
