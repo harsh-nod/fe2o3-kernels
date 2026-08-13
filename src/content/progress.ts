@@ -48,9 +48,9 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "Formal evidence isolation V10",
     commit: "81ade3914cfca7ea4e5e9473bf6d9600a3837457",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "V10 adds atomic verifier identity reservation, post-exec containment, transition- and object-bound Z3 admission, pidfd cleanup, and former-TID reconciliation. Focused verification and hostile regressions pass; independent rereview and protected execution remain.",
+      "Hostile rereview rejected namespace-relative root authority: an unprivileged user namespace could enter protected mode with a private root and lock. V11 is anchoring execution, installation objects, namespace identities, and reservation authority in an initial-namespace supervisor.",
   },
   {
     name: "Protected evidence publisher",
