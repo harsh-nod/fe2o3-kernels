@@ -54,10 +54,10 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Protected evidence publisher",
-    commit: "795c317bfcb8369f9a1e02c00ad3aaaee7414029",
-    state: "repair",
+    commit: "e03bf45b6a828847ac74ea91e546aae743f4b9e6",
+    state: "acceptance",
     detail:
-      "Hostile rereview rejected a forward-length plus commit-magic corruption that still truncates a fully committed final record. V11 is making commit recognition independently durable under multi-field corruption and removing canonical generic-gate bytecode pollution.",
+      "V11 uses three independently checksummed checkpoints to bind the committed prefix and allows recovery only beyond it. Exact-bundle mutation, stress, conformance, clean generic, and bytecode-free gates pass; hostile rereview and replay onto public Cargo V6 remain.",
   },
   {
     name: "gfx942 scalar control flow",
