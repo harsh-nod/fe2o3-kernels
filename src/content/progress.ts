@@ -48,9 +48,9 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "Formal evidence isolation v8",
     commit: "884427b19a47c137a9ad43a4789fc93cc0106381",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "The retained-log and x32 fail-open defects are repaired with focused regressions. Independent hostile review and the full proof campaign remain pending.",
+      "Hostile rereview rejected mutable same-inode log content and unrelated inherited descriptors. Anonymous bounded result capture and a closed child descriptor inventory are in progress.",
   },
   {
     name: "Protected evidence publisher",
