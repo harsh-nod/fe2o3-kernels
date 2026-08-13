@@ -55,9 +55,9 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "Protected evidence publisher",
     commit: "795c317bfcb8369f9a1e02c00ad3aaaee7414029",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "V10 adds authenticated commit trailers, fail-closed corruption recovery, pre-parser connection admission, absolute deadlines, and header limits. Focused mutation, Slowloris, debug/release, and conformance gates pass; hostile rereview, full generic completion, and replay onto public Cargo V6 remain.",
+      "Hostile rereview rejected a forward-length plus commit-magic corruption that still truncates a fully committed final record. V11 is making commit recognition independently durable under multi-field corruption and removing canonical generic-gate bytecode pollution.",
   },
   {
     name: "gfx942 scalar control flow",
