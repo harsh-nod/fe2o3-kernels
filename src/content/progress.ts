@@ -76,9 +76,9 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "gfx942 wave64 and LDS reduction",
     commit: "a2375e8d2cd34dc9197f7c541c83e062fc8baf69",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "The partial candidate lowers typed wave64 and static LDS reductions, passes 6 positive and 26 negative Verus cases, and matches all 256 lanes on MI300X through direct LLVM/LLD. Independent hostile review and the authenticated Rust-source-to-HSACO join remain.",
+      "Hostile rereview rejected processor-only target admission: omitted XNACK and xnack+ reached verified Kernel IR despite an exact gfx942:xnack- claim. V2 is binding the complete target profile; the 6/26 Verus and 256-lane MI300X evidence remains partial.",
   },
 ];
 
