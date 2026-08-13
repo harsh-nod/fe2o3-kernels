@@ -48,9 +48,9 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "Formal evidence isolation V9",
     commit: "beca261b76aadf0f8c05c5fa3481f2d9b072b397",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "Formal V9 denies process-group escape, traces and reaps descendants, isolates Z3 to stdio, rejects duplicate object authorities, and bounds drain work. Focused 60/37 verification and hostile probes pass; independent rereview and protected execution remain.",
+      "Hostile rereview rejected post-exec nondumpability, descriptor-number-only Z3 admission, and stale task accounting after non-leader exec. V10 is binding process transitions and descriptor authorities while making verifier identity allocation atomic.",
   },
   {
     name: "Protected evidence publisher",
@@ -62,16 +62,16 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "gfx942 scalar control flow",
     commit: "48ff155038a2aa90696258a494878ef2da7f40cf",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "The private repair carries authenticated export and helper roles, collision-resistant canonical identities, exact gfx942:xnack- LLVM binding, and preflight resource bounds. Touched-crate and LLVM checks pass; independent hostile rereview is running.",
+      "Hostile rereview rejected identity-only body authority, mutable composed artifacts, incomplete compiler-semantics binding, and a replaceable test backend path. V3 is binding exact executable MIR and generated artifacts while hardening backend loading.",
   },
   {
     name: "Collected Rust scalar admission",
     commit: "48ff155038a2aa90696258a494878ef2da7f40cf",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "The tested slice authenticates the collected kernel/helper closure and composes sealed root export with internal helper authority. Authenticated helper MIR import, kernel-root body composition, direct COV6/LLD, and hardware execution remain.",
+      "The collected path rejects root-body mutation through its portable digest, but its lower-level authority and composition APIs are not yet body-bound and immutable. V3 must close those gaps before direct COV6/LLD and hardware execution.",
   },
 ];
 
