@@ -20,7 +20,7 @@ export interface DevelopmentCheckpoint {
 }
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-11",
+  reviewedOn: "2026-08-12",
   auditedCommit: FE2O3_PIN.commit,
   publicCommit: "efc28dffea77d4f3fdf9a715b5a834d90176d4fa",
   publicTree: "4ccfb539f61ad1ae747a42516898124ef337df03",
