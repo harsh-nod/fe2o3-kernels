@@ -46,11 +46,11 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
       "Acceptance rejected an unexpected candidate-worker timeout in the required finalizer all-target/all-feature gate after generic, 100/100 contention pairs, and 10/10 vertical suites passed. V6 is isolating the lifecycle and scheduling cause.",
   },
   {
-    name: "Formal evidence isolation v8",
-    commit: "f7cb3132fb687cfc10809d58271dcb09505e1be9",
-    state: "repair",
+    name: "Formal evidence isolation V9",
+    commit: "beca261b76aadf0f8c05c5fa3481f2d9b072b397",
+    state: "acceptance",
     detail:
-      "Hostile rereview rejected descendant containment, verifier-to-Z3 descriptor closure, duplicate object authorities, and unbounded drain work. V9 containment repair is in progress; protected root execution remains external.",
+      "Formal V9 denies process-group escape, traces and reaps descendants, isolates Z3 to stdio, rejects duplicate object authorities, and bounds drain work. Focused 60/37 verification and hostile probes pass; independent rereview and protected execution remain.",
   },
   {
     name: "Protected evidence publisher",
