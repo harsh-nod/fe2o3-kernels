@@ -46,11 +46,11 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
       "V6 passed 100/100 contention, 10/10 finalizer, 280/280 vertical, release, focused, and fresh mi300x generic gates without changing production timeouts. Both public mains are exact, and both hosted policy and generic workflows are green.",
   },
   {
-    name: "Formal evidence isolation V10",
-    commit: "81ade3914cfca7ea4e5e9473bf6d9600a3837457",
-    state: "repair",
+    name: "Formal evidence isolation V11",
+    commit: "29ab16ec25bb604f57fb4568b9488c892113feb1",
+    state: "acceptance",
     detail:
-      "Hostile rereview rejected namespace-relative root authority: an unprivileged user namespace could enter protected mode with a private root and lock. V11 is anchoring execution, installation objects, namespace identities, and reservation authority in an initial-namespace supervisor.",
+      "V11 binds initial user, PID, and mount namespace authority plus installation and reservation objects through supervisor-retained descriptors. The exact V10 exploit and expanded namespace tests reject; independent hostile review and protected root execution remain.",
   },
   {
     name: "Protected evidence publisher",
@@ -75,10 +75,10 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "gfx942 wave64 and LDS reduction",
-    commit: "a2375e8d2cd34dc9197f7c541c83e062fc8baf69",
-    state: "repair",
+    commit: "421805b1f531a6fd2ed86bbf09331dee5689179f",
+    state: "acceptance",
     detail:
-      "Hostile rereview rejected processor-only target admission: omitted XNACK and xnack+ reached verified Kernel IR despite an exact gfx942:xnack- claim. V2 is binding the complete target profile; the 6/26 Verus and 256-lane MI300X evidence remains partial.",
+      "V2 binds the complete canonical gfx942:xnack- profile through Kernel IR and Worker V2 checks; eleven unauthorized target forms reject. The 6/26 Verus and 256-lane MI300X evidence remains partial pending hostile rereview and source finalization.",
   },
 ];
 
