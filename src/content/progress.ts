@@ -73,6 +73,13 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     detail:
       "V3 binds root and helper MIR plus compiler semantics, but its sealed backend transport lacks independent provenance and bounded lifecycle authority. V4 must close that protocol before direct COV6/LLD and hardware execution can be connected.",
   },
+  {
+    name: "gfx942 wave64 and LDS reduction",
+    commit: "a2375e8d2cd34dc9197f7c541c83e062fc8baf69",
+    state: "acceptance",
+    detail:
+      "The partial candidate lowers typed wave64 and static LDS reductions, passes 6 positive and 26 negative Verus cases, and matches all 256 lanes on MI300X through direct LLVM/LLD. Independent hostile review and the authenticated Rust-source-to-HSACO join remain.",
+  },
 ];
 
 export const kernelProgress: KernelProgress[] = [
@@ -108,18 +115,18 @@ export const kernelProgress: KernelProgress[] = [
     kernel: "Wave64 reduction and scan",
     run: "partial",
     verify: "partial",
-    evidence: "planned",
+    evidence: "partial",
     dependsOn: ["source-derived control flow", "wave intrinsics"],
-    next: "Integrate shuffle/ballot lowering with inactive-lane semantics and hardware oracles.",
+    next: "Accept the wave64 sum slice, connect its verified Kernel IR to Worker V2 finalization, then extend the same contract to scan.",
   },
   {
     id: "workgroup-reduction",
     kernel: "Workgroup LDS reduction",
     run: "partial",
     verify: "partial",
-    evidence: "planned",
+    evidence: "partial",
     dependsOn: ["wave reduction", "LDS ownership epochs", "uniform barriers"],
-    next: "Connect existing LDS, barrier, and atomic contracts to one source-derived kernel.",
+    next: "Accept the 256-thread reduction slice and bind its direct-LLD hardware evidence to the authenticated source artifact.",
   },
   {
     id: "scalar-gemm",
