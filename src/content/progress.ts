@@ -54,10 +54,10 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Protected evidence publisher",
-    commit: "1c55fd8af805850c46c8183f57178713432af024",
-    state: "repair",
+    commit: "795c317bfcb8369f9a1e02c00ad3aaaee7414029",
+    state: "acceptance",
     detail:
-      "Hostile rereview rejected committed-frame corruption recovery and pre-handler slow-header admission. V10 is adding authenticated frame boundaries, connection-level deadlines and limits, and clean conformance execution.",
+      "V10 adds authenticated commit trailers, fail-closed corruption recovery, pre-parser connection admission, absolute deadlines, and header limits. Focused mutation, Slowloris, debug/release, and conformance gates pass; hostile rereview, full generic completion, and replay onto public Cargo V6 remain.",
   },
   {
     name: "gfx942 scalar control flow",
