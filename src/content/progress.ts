@@ -62,16 +62,16 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
     name: "gfx942 scalar control flow",
     commit: "5434e778f8676684c97ec9c280d15587f3e47523",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "V3 binds authority to exact executable MIR, seals committed Kernel IR and LLVM artifacts, commits compiler semantics, and loads the backend through a sealed descriptor. Exact-head compiler and LLVM gates pass; independent hostile rereview remains.",
+      "Hostile rereview accepted the MIR and artifact binding but rejected backend provenance and build isolation: arbitrary sealed bytes were trusted, exec reset nondumpability, source stayed replaceable, and receive could block forever. Integrated V4 is repairing this on public Cargo V6.",
   },
   {
     name: "Collected Rust scalar admission",
     commit: "5434e778f8676684c97ec9c280d15587f3e47523",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "The collected path now binds root and helper MIR plus compiler semantics and fails closed after authenticated admission. It still creates no executable authority, Kernel IR, LLVM, HSACO, or fallback; direct COV6/LLD and hardware execution remain.",
+      "V3 binds root and helper MIR plus compiler semantics, but its sealed backend transport lacks independent provenance and bounded lifecycle authority. V4 must close that protocol before direct COV6/LLD and hardware execution can be connected.",
   },
 ];
 
