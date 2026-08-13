@@ -61,17 +61,17 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "gfx942 scalar control flow",
-    commit: "48ff155038a2aa90696258a494878ef2da7f40cf",
-    state: "repair",
+    commit: "5434e778f8676684c97ec9c280d15587f3e47523",
+    state: "acceptance",
     detail:
-      "Hostile rereview rejected identity-only body authority, mutable composed artifacts, incomplete compiler-semantics binding, and a replaceable test backend path. V3 is binding exact executable MIR and generated artifacts while hardening backend loading.",
+      "V3 binds authority to exact executable MIR, seals committed Kernel IR and LLVM artifacts, commits compiler semantics, and loads the backend through a sealed descriptor. Exact-head compiler and LLVM gates pass; independent hostile rereview remains.",
   },
   {
     name: "Collected Rust scalar admission",
-    commit: "48ff155038a2aa90696258a494878ef2da7f40cf",
-    state: "repair",
+    commit: "5434e778f8676684c97ec9c280d15587f3e47523",
+    state: "acceptance",
     detail:
-      "The collected path rejects root-body mutation through its portable digest, but its lower-level authority and composition APIs are not yet body-bound and immutable. V3 must close those gaps before direct COV6/LLD and hardware execution.",
+      "The collected path now binds root and helper MIR plus compiler semantics and fails closed after authenticated admission. It still creates no executable authority, Kernel IR, LLVM, HSACO, or fallback; direct COV6/LLD and hardware execution remain.",
   },
 ];
 
