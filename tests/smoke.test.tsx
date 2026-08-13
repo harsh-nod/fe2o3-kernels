@@ -66,6 +66,6 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
-    expect(screen.getByText("Formal evidence isolation V9")).toBeInTheDocument();
+    expect(screen.getByText("Formal evidence isolation V10")).toBeInTheDocument();
   });
 });

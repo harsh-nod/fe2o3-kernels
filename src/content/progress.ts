@@ -46,11 +46,11 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
       "Acceptance rejected an unexpected candidate-worker timeout in the required finalizer all-target/all-feature gate after generic, 100/100 contention pairs, and 10/10 vertical suites passed. V6 is isolating the lifecycle and scheduling cause.",
   },
   {
-    name: "Formal evidence isolation V9",
-    commit: "beca261b76aadf0f8c05c5fa3481f2d9b072b397",
-    state: "repair",
+    name: "Formal evidence isolation V10",
+    commit: "81ade3914cfca7ea4e5e9473bf6d9600a3837457",
+    state: "acceptance",
     detail:
-      "Hostile rereview rejected post-exec nondumpability, descriptor-number-only Z3 admission, and stale task accounting after non-leader exec. V10 is binding process transitions and descriptor authorities while making verifier identity allocation atomic.",
+      "V10 adds atomic verifier identity reservation, post-exec containment, transition- and object-bound Z3 admission, pidfd cleanup, and former-TID reconciliation. Focused verification and hostile regressions pass; independent rereview and protected execution remain.",
   },
   {
     name: "Protected evidence publisher",
