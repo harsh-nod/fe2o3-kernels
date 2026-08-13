@@ -43,7 +43,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "4bd1be0d6325d3946075904d653222aa9c81eebd",
     state: "public",
     detail:
-      "V6 passed 100/100 contention, 10/10 finalizer, 280/280 vertical, release, focused, and fresh mi300x generic gates without changing production timeouts. Both public mains are exact; their hosted generic validation is running.",
+      "V6 passed 100/100 contention, 10/10 finalizer, 280/280 vertical, release, focused, and fresh mi300x generic gates without changing production timeouts. Both public mains are exact, and both hosted policy and generic workflows are green.",
   },
   {
     name: "Formal evidence isolation V10",
