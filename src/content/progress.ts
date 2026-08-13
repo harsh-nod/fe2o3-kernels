@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-12",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "efc28dffea77d4f3fdf9a715b5a834d90176d4fa",
-  publicTree: "4ccfb539f61ad1ae747a42516898124ef337df03",
+  publicCommit: "4bd1be0d6325d3946075904d653222aa9c81eebd",
+  publicTree: "c813c06a8897599bd5144c82d2dc93d72394ec53",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -40,10 +40,10 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Cargo acknowledgement repair",
-    commit: "69c543279c294cd6d1035f076060768349a5f6b5",
-    state: "repair",
+    commit: "4bd1be0d6325d3946075904d653222aa9c81eebd",
+    state: "public",
     detail:
-      "Acceptance rejected an unexpected candidate-worker timeout in the required finalizer all-target/all-feature gate after generic, 100/100 contention pairs, and 10/10 vertical suites passed. V6 is isolating the lifecycle and scheduling cause.",
+      "V6 passed 100/100 contention, 10/10 finalizer, 280/280 vertical, release, focused, and fresh mi300x generic gates without changing production timeouts. Both public mains are exact; their hosted generic validation is running.",
   },
   {
     name: "Formal evidence isolation V10",
