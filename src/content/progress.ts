@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "b745b55dd59036aee7014f4814f4420c13e721cd",
-  publicTree: "118b206beec4d3e7badf53f6561d1b37b86fc491",
+  publicCommit: "85a38372d74873cb84e2d6d55eed66fd98e5904b",
+  publicTree: "df9ac26cde159ed4194346044bc53a4d9318a3f6",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -47,31 +47,31 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Formal evidence isolation V11",
-    commit: "29ab16ec25bb604f57fb4568b9488c892113feb1",
+    commit: "1265afc07aed232a24dd055b56dda8d35446f577",
     state: "repair",
     detail:
-      "Hostile rereview forged a self-consistent supervisor record and live descriptor graph inside mapped-root namespaces; the exact validator accepted it, including a forged launcher digest. V12 needs an external, pre-provisioned root of trust that attacker-created namespaces cannot mint.",
+      "V12 prototypes an Ed25519-signed external authority handoff, but protected evidence remains rejected. Independent policy anchors, separately sealed statement transport, hostile substitution and replay probes, and the full regression and reproducibility matrix are still required.",
   },
   {
     name: "Protected evidence publisher",
-    commit: "e03bf45b6a828847ac74ea91e546aae743f4b9e6",
-    state: "acceptance",
+    commit: "85a38372d74873cb84e2d6d55eed66fd98e5904b",
+    state: "public",
     detail:
-      "V11 uses three independently checksummed checkpoints to bind the committed prefix and allows recovery only beyond it. Independent hostile rereview accepted the exact bundle after extended mutation, truncation, resource, stress, conformance, secret-memory, and clean generic gates; replay onto current public main remains.",
+      "V11 uses three independently checksummed checkpoints to bind the committed prefix and allows recovery only beyond it. Independent hostile rereview and the replayed full mi300x generic suite passed; both public main branches now contain the accepted merge.",
   },
   {
     name: "gfx942 scalar control flow",
     commit: "54ae9ff671b041205434aec80ab2b9a5979d0fa7",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "Integrated V4 is based on public Cargo V6 and independently pins source, toolchain, backend digest and ELF identity, helper credentials/state, pidfd lifecycle, and an absolute deadline. Exact-head and hostile gates pass; independent rereview remains.",
+      "Independent hostile review rejected V4: preload constructors run before authority, clone can create namespaces, preload nondumpability is bypassable, fake rustc stderr can satisfy admission, and the authenticated build closure is incomplete. V5 must close all five attacks.",
   },
   {
     name: "Collected Rust scalar admission",
     commit: "54ae9ff671b041205434aec80ab2b9a5979d0fa7",
-    state: "acceptance",
+    state: "repair",
     detail:
-      "V4 authenticates the collected MIR/compiler boundary and its host-specific backend build transport, then still fails closed before executable authority or artifacts. Direct COV6/LLD, HSACO, hardware execution, and compiler refinement remain.",
+      "V4 preserves admission-only and no-HSACO scope, but its compiler and process authority can be forged or escaped. V5 is adding pinned positive backend identity, complete closure authentication, and adversarial process-boundary tests before any executable claim.",
   },
   {
     name: "gfx942 wave64 and LDS reduction",
