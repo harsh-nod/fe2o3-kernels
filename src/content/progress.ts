@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "a51c78322e264c06abdb6dc21817aced09653830",
-  publicTree: "106d3429b076d681d860b8781000e3d6b4d45f62",
+  publicCommit: "9beaf72c1d0dd59ab18801dc0a82ebc646f3551d",
+  publicTree: "456ddcd2f9563a0a216137831c4e72d2e0637713",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -37,6 +37,13 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     state: "public",
     detail:
       "Identical on harsh-nod/fe2o3 and powderluv/fe2o3. This is newer than the lesson evidence pin.",
+  },
+  {
+    name: "Production S09 rustc invocation capture",
+    commit: progressSnapshot.publicCommit,
+    state: "public",
+    detail:
+      "The production path canonically captures RustcInvocationDescriptorV2 and admits exactly /proc/./self/fd/198 as its backend capability. It rejects procfs/devfd aliases, other descriptor numbers, every preexisting joined or split codegen-backend selector spelling, and an option terminator before the sole final managed -Zcodegen-backend=<path> selector. A real cargo-fe2o3 integration test traverses pinned Cargo, the S09 broker, closed-environment materialization, pinned rustc spawn, Worker V2, and durable publication of a COV6 gfx942:xnack- HSACO containing exactly alpha. It decodes the canonical publication envelope and nested record, then binds the finalized-output identity and content-addressed artifact name to the exact inspected HSACO bytes. A retained mi300x observation records 1 passed in 132.45 seconds and HSACO SHA-256 5902632c5c249be05855ae5cef62bb9096a1f9277cfb0c58b4384594d6ee61de. This is non-authoritative: it proves no compiler origin and grants no loading, execution, or verification authority. Canonical cwd pathname capture is not a pathname-to-object identity join, and the scalar profile still establishes no general source or output-object association.",
   },
   {
     name: "Cargo acknowledgement repair",
@@ -106,7 +113,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: progressSnapshot.publicCommit,
     state: "public",
     detail:
-      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Current head a51c78322e264c06abdb6dc21817aced09653830 only adds the Rust 1.97.1 installation required by that hosted Verus workflow; it changes no proof or kernel semantics. There is no public frontend/compiler binding yet, compiler refinement, MFMA numerical equivalence, HSACO or hardware execution, machine memory safety, race freedom, or protected authority.",
+      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain required by that hosted Verus job; it changes no proof or kernel semantics. There is no public frontend/compiler binding yet, compiler refinement, MFMA numerical equivalence, HSACO or hardware execution, machine memory safety, race freedom, or protected authority.",
   },
 ];
 

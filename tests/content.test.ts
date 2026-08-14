@@ -73,8 +73,8 @@ describe("implementation progress integrity", () => {
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-13",
-      publicCommit: "a51c78322e264c06abdb6dc21817aced09653830",
-      publicTree: "106d3429b076d681d860b8781000e3d6b4d45f62",
+      publicCommit: "9beaf72c1d0dd59ab18801dc0a82ebc646f3551d",
+      publicTree: "456ddcd2f9563a0a216137831c4e72d2e0637713",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
@@ -149,6 +149,39 @@ describe("implementation progress integrity", () => {
     );
   });
 
+  it("tracks production S09 capture without granting compiler or execution authority", () => {
+    const s09Checkpoint = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.name === "Production S09 rustc invocation capture",
+    );
+    expect(s09Checkpoint).toMatchObject({
+      commit: progressSnapshot.publicCommit,
+      state: "public",
+    });
+    expect(s09Checkpoint?.detail).toContain("RustcInvocationDescriptorV2");
+    expect(s09Checkpoint?.detail).toContain("exactly /proc/./self/fd/198");
+    expect(s09Checkpoint?.detail).toContain(
+      "sole final managed -Zcodegen-backend=<path> selector",
+    );
+    expect(s09Checkpoint?.detail).toContain("COV6 gfx942:xnack-");
+    expect(s09Checkpoint?.detail).toContain("containing exactly alpha");
+    expect(s09Checkpoint?.detail).toContain(
+      "canonical publication envelope and nested record",
+    );
+    expect(s09Checkpoint?.detail).toContain(
+      "5902632c5c249be05855ae5cef62bb9096a1f9277cfb0c58b4384594d6ee61de",
+    );
+    expect(s09Checkpoint?.detail).toContain("proves no compiler origin");
+    expect(s09Checkpoint?.detail).toContain(
+      "no loading, execution, or verification authority",
+    );
+    expect(s09Checkpoint?.detail).toContain(
+      "not a pathname-to-object identity join",
+    );
+    expect(s09Checkpoint?.detail).toContain(
+      "no general source or output-object association",
+    );
+  });
+
   it("tracks the tiled GEMM layout proof without claiming compiler or GPU closure", () => {
     const tiledCheckpoint = developmentCheckpoints.find(
       (checkpoint) => checkpoint.name === "Tiled GEMM V1 host and layout proof",
@@ -180,7 +213,7 @@ describe("implementation progress integrity", () => {
     expect(tiledCheckpoint?.detail).toContain("race freedom");
     expect(tiledCheckpoint?.detail).toContain("protected authority");
     expect(tiledCheckpoint?.detail).toContain(
-      "Current head a51c78322e264c06abdb6dc21817aced09653830 only adds the Rust 1.97.1 installation",
+      "Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain",
     );
     expect(kernelProgress.find((kernel) => kernel.id === "tiled-gemm")).toMatchObject({
       run: "partial",

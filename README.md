@@ -34,19 +34,31 @@ known blockers, and separate run/verify/evidence gates for every kernel in the
 curriculum. That progress view does not silently repin or upgrade lesson claims.
 
 The current public progress head is fe2o3 commit
-`a51c78322e264c06abdb6dc21817aced09653830`, tree
-`106d3429b076d681d860b8781000e3d6b4d45f62`. Its parent
-`027ab901bef7007d0e8da3370470556ed28baad1` adds exact official gfx942 A/B/C/D
-register maps pinned to AMD Matrix Instruction Calculator commit
+`9beaf72c1d0dd59ab18801dc0a82ebc646f3551d`, tree
+`456ddcd2f9563a0a216137831c4e72d2e0637713`. It canonically captures the
+production rustc invocation descriptor, admits exactly
+`/proc/./self/fd/198` as the backend capability, and enforces one final managed
+codegen-backend selector. A real `cargo-fe2o3`/Worker test published a COV6
+`gfx942:xnack-` HSACO containing exactly `alpha`, decoded and bound its durable
+publication record to the inspected bytes, and retained a reproducible mi300x
+observation. These are inert observations: they prove no compiler origin and
+grant no loading, execution, or verification authority. Canonical cwd pathname
+capture does not bind that pathname to the separately pinned cwd object, and
+the scalar profile establishes no general source or output-object association.
+
+Earlier commit `027ab901bef7007d0e8da3370470556ed28baad1` remains the source
+of the exact official gfx942 A/B/C/D register maps pinned to AMD Matrix
+Instruction Calculator commit
 `2ef91896bcdc4d26624f952e5c905c787cd9bc9e`, executable XOR4 A and
 transposed-B staging, exhaustive 64-lane x 4-component goldens, exact
 source-level Rust-Verus correspondence, pinned Verus executable bytes, 23
 public proof functions covering 73 obligations, and five rejected formula
-mutations. The head itself only installs Rust 1.97.1 for the hosted Verus job;
-it changes no proof or kernel semantics. This is source-level layout evidence
-only: there is no public frontend/compiler binding yet, compiler refinement,
-MFMA numerical equivalence, HSACO or hardware execution, machine memory safety,
-race freedom, or protected authority.
+mutations. Workflow-only descendant
+`a51c78322e264c06abdb6dc21817aced09653830` installs Rust 1.97.1 for the
+hosted Verus job and changes no proof or kernel semantics. This remains
+source-level layout evidence only: there is no public frontend/compiler binding
+yet, compiler refinement, MFMA numerical equivalence, HSACO or hardware
+execution, machine memory safety, race freedom, or protected authority.
 
 ## Maturity labels
 
