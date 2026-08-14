@@ -316,10 +316,14 @@ const gemmMapping: Lesson = {
           text: "Public descendants f8a66d3babf764a6f064189e4634da9ee0cb046a and abe9fdca21579017a1d346fcfa66552bc81308f4 distinguish block counts [N/16,M/16,1] from the [64,1,1] workgroup and derived AQL work-item dimensions, then add a sealed target-neutral one-wave 16x16x16 Kernel IR graph. The graph has 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, exact 256-element profiles, and exhaustive lane/output ownership tests. It deliberately contains no LDS operations yet.",
         },
         {
+          type: "paragraph",
+          text: "Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5, retained by the current public head, adds separate build-scoped in-process Rust frontend/provider/ABI evidence. Same-name external providers and copied markers are rejected. Observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the projected kernel ABI carries 8 BF16 plus 4 F32 values in 32 explicit bytes followed by 256 implicit bytes, 288 total. The checkpoint binds gfx942:xnack-, wave64, and strict FP, and genuine LLVM contains the MFMA before final probe compilation. An opt-in ROCm 7.2.4 MI300X test passed and validates final HSACO metadata only.",
+        },
+        {
           type: "callout",
           tone: "boundary",
-          title: "Layout proof and target-neutral IR only",
-          text: "The public graph has no frontend/compiler binding or dedicated tiled AMDGCN lowering target yet. It does not prove compiler refinement, MFMA numerical equivalence, final HSACO or hardware execution, machine memory safety, race freedom, or protected authority. The lesson dependency pin remains at the older audited baseline.",
+          title: "Build-scoped frontend evidence is not execution",
+          text: "Frontend provenance is intentionally build-scoped, and hostile layout and FnAbi fixtures currently reject earlier at source-root binding. Structured matrix evidence lacks an actual matrix Kernel IR wire payload, so this checkpoint does not establish that the frontend emits the canonical graph. There is no dedicated canonical tiled AMDGCN lowering, functional final HSACO with audited retained MFMA and stores, hardware numerical execution, LDS composition, machine memory safety, race freedom, or protected authority. The lesson dependency pin remains at the older audited baseline.",
         },
       ],
     },
@@ -412,7 +416,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "The newer public checkpoint closes a bounded source-level register/LDS layout proof and adds a sealed direct-global one-tile Kernel IR graph, but frontend binding, dedicated lowering, final HSACO, hardware execution, LDS composition, and functional/numerical proof remain future gates; none is represented as current parity or production authority.",
+        "The newer public checkpoint closes a bounded source-level register/LDS layout proof, adds a sealed direct-global one-tile Kernel IR graph, and separately records build-scoped frontend/provider/ABI evidence plus a final-HSACO metadata probe. It does not show that the frontend emits the canonical graph. Dedicated lowering, audited retained MFMA and stores, numerical hardware execution, LDS composition, memory and race proofs, and protected authority remain future gates; none is represented as current parity or production authority.",
     },
   ],
   sections: [
@@ -452,7 +456,7 @@ const gemmProof: Lesson = {
           type: "callout",
           tone: "proof",
           title: "One ledger row is now concrete",
-          text: "At public commit 027ab901bef7007d0e8da3370470556ed28baad1, the official gfx942 A/B/C/D maps, XOR4 A and transposed-B staging, exhaustive 64x4 goldens, exact Rust-Verus source correspondence, 73 proof obligations, and five expected-negative mutations form a reviewed source-level layout packet. The compiler, numerical, machine-code, hardware, and authority rows remain open.",
+          text: "At public commit 027ab901bef7007d0e8da3370470556ed28baad1, the official gfx942 A/B/C/D maps, XOR4 A and transposed-B staging, exhaustive 64x4 goldens, exact Rust-Verus source correspondence, 73 proof obligations, and five expected-negative mutations form a reviewed source-level layout packet. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds build-scoped frontend/provider/ABI and final-HSACO metadata evidence, but canonical graph emission, numerical, functional machine-code, hardware-execution, memory/race, and authority rows remain open.",
         },
       ],
     },

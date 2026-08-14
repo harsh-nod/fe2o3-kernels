@@ -72,9 +72,9 @@ describe("implementation progress integrity", () => {
     expect(validateProgress()).toEqual([]);
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-13",
-      publicCommit: "abe9fdca21579017a1d346fcfa66552bc81308f4",
-      publicTree: "380572dbe2bad528aa95a2e648ac4fdfda5800a7",
+      reviewedOn: "2026-08-14",
+      publicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
+      publicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
@@ -182,10 +182,62 @@ describe("implementation progress integrity", () => {
     );
   });
 
-  it("tracks tiled GEMM layout and canonical IR without claiming compiler or GPU closure", () => {
+  it("tracks authenticated Verus V2 without overstating its authority", () => {
+    const checkpoint = developmentCheckpoints.find(
+      (entry) => entry.name === "Authenticated Verus execution V2",
+    );
+    expect(checkpoint).toMatchObject({
+      commit: progressSnapshot.publicCommit,
+      state: "public",
+    });
+    expect(checkpoint?.detail).toContain("Linux x86_64");
+    expect(checkpoint?.detail).toContain(
+      "pinned local runtime and tool snapshots",
+    );
+    expect(checkpoint?.detail).toContain(
+      "clone3 pidfds and ptrace-unresumable checkpoints",
+    );
+    expect(checkpoint?.detail).toContain("seccomp process-creation denial");
+    expect(checkpoint?.detail).toContain(
+      "exact live executable/backing comparison",
+    );
+    expect(checkpoint?.detail).toContain(
+      "runtime closure and baseline pinning",
+    );
+    expect(checkpoint?.detail).toContain("vDSO pinning");
+    expect(checkpoint?.detail).toContain("immutable sealed results");
+    expect(checkpoint?.detail).toContain(
+      "compressed and alternate debug-section families",
+    );
+    expect(checkpoint?.detail).toContain(
+      "Package-scoped debug stripping",
+    );
+    expect(checkpoint?.detail).toContain(
+      "bounded two-root gate compares SHA-256, size, and Build ID",
+    );
+    expect(checkpoint?.detail).toContain("debug V2 integration passed 14/14");
+    expect(checkpoint?.detail).toContain("release passed 13/13");
+    expect(checkpoint?.detail).toContain(
+      "full verifier debug and release suites and 22 doctests passed",
+    );
+    expect(checkpoint?.detail).toContain(
+      "mi300x correctly failed closed on its different vDSO and runtime baseline",
+    );
+    expect(checkpoint?.detail).toContain(
+      "does not integrate stock Verus or Z3",
+    );
+    expect(checkpoint?.detail).toContain("semantic proof validity");
+    expect(checkpoint?.detail).toContain(
+      "exclusive measured-image execution between checkpoints",
+    );
+    expect(checkpoint?.detail).toContain("compiler refinement");
+    expect(checkpoint?.detail).toContain("GPU authority");
+  });
+
+  it("tracks tiled GEMM IR and build-scoped frontend evidence without claiming GPU closure", () => {
     const tiledCheckpoint = developmentCheckpoints.find(
       (checkpoint) =>
-        checkpoint.name === "Tiled GEMM V1 host, layout proof, and canonical IR",
+        checkpoint.name === "Tiled GEMM V1 host, layout, IR, and frontend ABI",
     );
     expect(tiledCheckpoint).toMatchObject({
       commit: progressSnapshot.publicCommit,
@@ -216,12 +268,50 @@ describe("implementation progress integrity", () => {
       "four observable F32 stores",
     );
     expect(tiledCheckpoint?.detail).toContain(
-      "no public frontend/compiler binding yet",
+      "build-scoped in-process Rust frontend/provider/ABI evidence",
     );
-    expect(tiledCheckpoint?.detail).toContain("MFMA numerical equivalence");
-    expect(tiledCheckpoint?.detail).toContain("dedicated tiled lowering target");
-    expect(tiledCheckpoint?.detail).toContain("machine memory safety");
-    expect(tiledCheckpoint?.detail).toContain("race freedom");
+    expect(tiledCheckpoint?.detail).toContain(
+      "same-name external providers and copied markers are rejected",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "8 BF16 plus 4 F32 values, 32 explicit bytes plus 256 implicit bytes, 288 total",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "gfx942:xnack-, wave64, and strict FP are bound",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "Genuine LLVM contains the MFMA before final probe compilation",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "opt-in ROCm 7.2.4 MI300X test passed",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "validates final HSACO metadata, not retained MFMA execution or numerical behavior",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "Provenance is intentionally build-scoped",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "hostile layout and FnAbi fixtures currently reject earlier at source-root binding",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "structured matrix evidence lacks an actual matrix Kernel IR wire payload",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "does not establish that the frontend emits the canonical graph",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "dedicated canonical tiled lowering",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "functional final HSACO with audited retained MFMA and stores",
+    );
+    expect(tiledCheckpoint?.detail).toContain("hardware numerical execution");
+    expect(tiledCheckpoint?.detail).toContain("LDS composition");
+    expect(tiledCheckpoint?.detail).toContain("memory or race proof");
     expect(tiledCheckpoint?.detail).toContain("protected authority");
     expect(tiledCheckpoint?.detail).toContain(
       "Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain",

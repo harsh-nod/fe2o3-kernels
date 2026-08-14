@@ -34,8 +34,8 @@ known blockers, and separate run/verify/evidence gates for every kernel in the
 curriculum. That progress view does not silently repin or upgrade lesson claims.
 
 The current public progress head is fe2o3 commit
-`abe9fdca21579017a1d346fcfa66552bc81308f4`, tree
-`380572dbe2bad528aa95a2e648ac4fdfda5800a7`. It retains the production S09
+`96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
+`f911f0c693238830ad6070b2674fb863857bfec1`. It retains the production S09
 checkpoint that canonically captures the
 production rustc invocation descriptor, admits exactly
 `/proc/./self/fd/198` as the backend capability, and enforces one final managed
@@ -47,13 +47,43 @@ grant no loading, execution, or verification authority. Canonical cwd pathname
 capture does not bind that pathname to the separately pinned cwd object, and
 the scalar profile establishes no general source or output-object association.
 
-The new tiled-GEMM descendants separate block counts, wave64 workgroup
+The tiled-GEMM descendants separate block counts, wave64 workgroup
 dimensions, and derived AQL work-item dimensions in the checked host contract.
 They also add a sealed, target-neutral one-wave `16x16x16` Kernel IR graph with
 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, and
-exhaustive 64-lane ownership tests. This is not a runnable GPU increment: the
-graph is not yet bound to a public Rust frontend admission, a dedicated tiled
-AMDGCN lowering target, a final HSACO, or hardware execution.
+exhaustive 64-lane ownership tests. The new public frontend checkpoint adds
+build-scoped, in-process Rust provider and ABI evidence. It rejects same-name
+external providers and copied markers; canonicalizes and digests observed
+layouts, `FnAbi`, and provider facts through Kernel IR; projects 8 BF16 plus 4
+F32 values into 32 explicit bytes plus a 256-byte implicit suffix (288 bytes
+total); and binds `gfx942:xnack-`, wave64, and strict floating-point behavior.
+Genuine LLVM contains the MFMA before final probe compilation. An opt-in ROCm
+7.2.4 test passed on MI300X and validates final HSACO metadata only, not retained
+MFMA execution or numerical behavior.
+
+This frontend provenance is intentionally build-scoped. Hostile layout and
+`FnAbi` fixtures currently reject earlier at source-root binding, and the
+structured matrix evidence has no actual matrix Kernel IR wire payload. The
+checkpoint therefore does not establish that this frontend emits the canonical
+graph. There is still no dedicated canonical tiled lowering, functional final
+HSACO with audited retained MFMA and stores, hardware numerical execution, LDS
+composition, memory or race proof, or protected authority.
+
+The latest head also adds authenticated Verus execution V2 for Linux x86_64
+against pinned local runtime and tool snapshots. It uses `clone3` pidfds and
+ptrace-unresumable checkpoints, denies process creation with seccomp, compares
+the live executable to its backing, pins the runtime closure, baseline, and
+vDSO, and returns immutable sealed results. Its artifact policy rejects
+compressed and alternate debug sections. Package-scoped debug stripping makes
+the debug artifact reproducible, with a bounded two-root SHA-256, size, and
+Build-ID gate. On the pinned local host, debug V2 integration passed 14/14,
+release passed 13/13, and the full verifier debug/release suites plus 22 doctests
+passed. The same run on MI300X correctly failed closed against a different vDSO
+and runtime baseline.
+
+Authenticated V2 does not integrate stock Verus or Z3, establish semantic proof
+validity, guarantee exclusive measured-image execution between checkpoints,
+prove compiler refinement, or grant GPU authority.
 
 Earlier commit `027ab901bef7007d0e8da3370470556ed28baad1` remains the source
 of the exact official gfx942 A/B/C/D register maps pinned to AMD Matrix
@@ -64,10 +94,11 @@ source-level Rust-Verus correspondence, pinned Verus executable bytes, 23
 public proof functions covering 73 obligations, and five rejected formula
 mutations. Workflow-only descendant
 `a51c78322e264c06abdb6dc21817aced09653830` installs Rust 1.97.1 for the
-hosted Verus job and changes no proof or kernel semantics. This remains
-source-level layout evidence only: there is no public frontend/compiler binding
-yet, compiler refinement, MFMA numerical equivalence, HSACO or hardware
-execution, machine memory safety, race freedom, or protected authority.
+hosted Verus job and changes no proof or kernel semantics. The layout packet
+remains source-level evidence; the newer build-scoped frontend checkpoint does
+not establish compiler refinement, MFMA numerical equivalence, functional
+HSACO or hardware execution, machine memory safety, race freedom, or protected
+authority.
 
 ## Maturity labels
 
@@ -101,9 +132,10 @@ At the audited pin:
   narrow MFMA tile profile exist in APIs, models, Kernel IR, or lowering tests.
   The site labels those focused mechanics separately from runnable kernels.
 - The public tiled-GEMM checkpoint now has unambiguous block/workgroup/AQL
-  geometry and a canonical direct-global one-tile Kernel IR graph. Dedicated
-  tiled lowering, result-retaining HSACO, LDS composition, and GPU execution are
-  still open.
+  geometry, a canonical direct-global one-tile Kernel IR graph, and separate
+  build-scoped Rust frontend/provider/ABI evidence. Dedicated canonical tiled
+  lowering, result-retaining functional HSACO, LDS composition, numerical GPU
+  execution, memory and race proofs, and protected authority are still open.
 - Tiled GEMM, softmax, flash attention, and mixture-of-experts are design-only
   curricula. Their snippets decompose the implementation and proof work; they
   are not fe2o3 programs users should expect to compile today.

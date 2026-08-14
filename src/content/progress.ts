@@ -20,10 +20,10 @@ export interface DevelopmentCheckpoint {
 }
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-13",
+  reviewedOn: "2026-08-14",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "abe9fdca21579017a1d346fcfa66552bc81308f4",
-  publicTree: "380572dbe2bad528aa95a2e648ac4fdfda5800a7",
+  publicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
+  publicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -44,6 +44,13 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     state: "public",
     detail:
       "The production path canonically captures RustcInvocationDescriptorV2 and admits exactly /proc/./self/fd/198 as its backend capability. It rejects procfs/devfd aliases, other descriptor numbers, every preexisting joined or split codegen-backend selector spelling, and an option terminator before the sole final managed -Zcodegen-backend=<path> selector. A real cargo-fe2o3 integration test traverses pinned Cargo, the S09 broker, closed-environment materialization, pinned rustc spawn, Worker V2, and durable publication of a COV6 gfx942:xnack- HSACO containing exactly alpha. It decodes the canonical publication envelope and nested record, then binds the finalized-output identity and content-addressed artifact name to the exact inspected HSACO bytes. A retained mi300x observation records 1 passed in 132.45 seconds and HSACO SHA-256 5902632c5c249be05855ae5cef62bb9096a1f9277cfb0c58b4384594d6ee61de. This is non-authoritative: it proves no compiler origin and grants no loading, execution, or verification authority. Canonical cwd pathname capture is not a pathname-to-object identity join, and the scalar profile still establishes no general source or output-object association.",
+  },
+  {
+    name: "Authenticated Verus execution V2",
+    commit: progressSnapshot.publicCommit,
+    state: "public",
+    detail:
+      "Linux x86_64 authenticated execution is bound to pinned local runtime and tool snapshots. V2 uses clone3 pidfds and ptrace-unresumable checkpoints, seccomp process-creation denial, exact live executable/backing comparison, runtime closure and baseline pinning, vDSO pinning, and immutable sealed results. It rejects compressed and alternate debug-section families. Package-scoped debug stripping makes the debug fixture reproducible, and a bounded two-root gate compares SHA-256, size, and Build ID. On the pinned local host, debug V2 integration passed 14/14 and release passed 13/13; the full verifier debug and release suites and 22 doctests passed. A run on mi300x correctly failed closed on its different vDSO and runtime baseline. This does not integrate stock Verus or Z3, establish semantic proof validity, guarantee exclusive measured-image execution between checkpoints, prove compiler refinement, or grant GPU authority.",
   },
   {
     name: "Cargo acknowledgement repair",
@@ -109,11 +116,11 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
       "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
   },
   {
-    name: "Tiled GEMM V1 host, layout proof, and canonical IR",
+    name: "Tiled GEMM V1 host, layout, IR, and frontend ABI",
     commit: progressSnapshot.publicCommit,
     state: "public",
     detail:
-      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain required by that hosted Verus job; it changes no proof or kernel semantics. Commit f8a66d3babf764a6f064189e4634da9ee0cb046a separates block counts [N/16,M/16,1], workgroup dimensions [64,1,1], and derived AQL work items [64*(N/16),M/16,1]. Public head abe9fdca21579017a1d346fcfa66552bc81308f4 adds the sealed target-neutral one-wave 16x16x16 graph with 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, exact 256-element profiles, and exhaustive lane/output ownership tests. There is no public frontend/compiler binding yet, dedicated tiled lowering target, compiler refinement, MFMA numerical equivalence, final HSACO or hardware execution, machine memory safety, race freedom, or protected authority.",
+      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain required by that hosted Verus job; it changes no proof or kernel semantics. Commit f8a66d3babf764a6f064189e4634da9ee0cb046a separates block counts [N/16,M/16,1], workgroup dimensions [64,1,1], and derived AQL work items [64*(N/16),M/16,1]. Commit abe9fdca21579017a1d346fcfa66552bc81308f4 adds the sealed target-neutral one-wave 16x16x16 graph with 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, exact 256-element profiles, and exhaustive lane/output ownership tests. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds separate build-scoped in-process Rust frontend/provider/ABI evidence: same-name external providers and copied markers are rejected; observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the projected ABI is 8 BF16 plus 4 F32 values, 32 explicit bytes plus 256 implicit bytes, 288 total; and gfx942:xnack-, wave64, and strict FP are bound. Genuine LLVM contains the MFMA before final probe compilation. An opt-in ROCm 7.2.4 MI300X test passed and validates final HSACO metadata, not retained MFMA execution or numerical behavior. Provenance is intentionally build-scoped; hostile layout and FnAbi fixtures currently reject earlier at source-root binding; and structured matrix evidence lacks an actual matrix Kernel IR wire payload. This does not establish that the frontend emits the canonical graph. There is still no dedicated canonical tiled lowering, functional final HSACO with audited retained MFMA and stores, hardware numerical execution, LDS composition, memory or race proof, or protected authority.",
   },
 ];
 
@@ -184,7 +191,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["scalar GEMM", "workgroup reduction", "MFMA integration"],
-    next: "Bind the observed gfx942:xnack- Rust provider and ABI to the canonical graph, add the dedicated tiled lowering target so MFMA and four stores survive final HSACO, run the guarded one-tile hardware slice, then compose XOR4 LDS movement and tiled loops.",
+    next: "Add the dedicated canonical tiled lowering so MFMA and four stores survive audited final HSACO, run the guarded one-tile numerical hardware slice, add a real matrix Kernel IR wire payload, then compose XOR4 LDS movement and tiled loops while closing memory, race, and authority proofs.",
   },
   {
     id: "softmax",
