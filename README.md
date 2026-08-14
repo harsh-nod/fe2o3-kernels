@@ -35,8 +35,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The implementation-status snapshot has an eventual public target at fe2o3 commit
-`e2e9725f0708faaad355ec792d21ad8b57633538`, tree
-`09752086eac323ea47091f563e242932707a029f`. This is explicitly a staged
+`d43f11c86196e4f01c9ee305ea8d19f6d8c17672`, tree
+`1396be8ff4947a16ddc6aabae7390cc376992c61`. This is explicitly a staged
 target, not an observation of current remote state. **Do not publish this site
 revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
@@ -68,7 +68,13 @@ The tiled-GEMM work now has three additional, deliberately separate stages:
    represents the BF16 carriers with i16 loads. This
    source-to-canonical lowering is reviewed correspondence, **not a compiler
    refinement proof**, and its Worker V2 handoff remains inert.
-2. Commit `c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c` adds an ignored, opt-in
+   Follow-up commit `b904f5b648c7eb249d32d73db427abe72970315a`
+   normalizes only Cargo-generated metadata in the semantic commitment while
+   the full observed argv and metadata remain receipt-bound. Commit
+   `51bd129c31b08b636545f12229f34aaa431321f2` normalizes only the
+   Cargo-generated root shape while the full observed root remains
+   receipt-bound.
+2. Commit `b825661ac3f7e332d2cc9723ed1efbb54869fa33` adds an ignored, opt-in
    one-tile gfx942:xnack- hardware harness for externally supplied
    digest-pinned bytes and an observed digest-pinned LLVM 22 objdump. It
    enforces the COV6/WG64/320-byte metadata and entry range, one retained BF16
@@ -79,7 +85,7 @@ The tiled-GEMM work now has three additional, deliberately separate stages:
    non-authoritative. The harness bypasses production prerequisite
    authentication and grants no compiler, publication, load, or launch
    authority.
-3. Commit `e2e9725f0708faaad355ec792d21ad8b57633538` adds sealed structural
+3. Commit `d43f11c86196e4f01c9ee305ea8d19f6d8c17672` adds sealed structural
    descriptor admission and canonical finalization for the exact 320-byte
    four-slice ABI, COV6, `gfx942:xnack-`, WG64, wave64, and zero LDS. It rejects
    the separate WG64/288-byte fragment probe, independent WG256 and 384-byte

@@ -24,11 +24,11 @@ export const progressSnapshot = {
   auditedCommit: FE2O3_PIN.commit,
   lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
   lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-  eventualPublicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
-  eventualPublicTree: "09752086eac323ea47091f563e242932707a029f",
+  eventualPublicCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
+  eventualPublicTree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
   publicationGate: {
     state: "blocked-until-public-refs-match",
-    requiredCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+    requiredCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
     requiredRefs: [
       "harsh-nod/fe2o3@refs/heads/main",
       "powderluv/fe2o3@refs/heads/main",
@@ -44,8 +44,8 @@ export const progressSnapshot = {
 
 export const tiledGemmV1Commits = {
   sourceBridge: "fb75e19a73ec0a9acebb203bd9821190b0592c82",
-  hardwareEvidence: "c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c",
-  structuralAdmission: "e2e9725f0708faaad355ec792d21ad8b57633538",
+  hardwareEvidence: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
+  structuralAdmission: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
 } as const;
 
 export const developmentCheckpoints: DevelopmentCheckpoint[] = [
@@ -54,7 +54,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: progressSnapshot.eventualPublicCommit,
     state: "queued",
     detail:
-      "This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to e2e9725f0708faaad355ec792d21ad8b57633538.",
+      "This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to d43f11c86196e4f01c9ee305ea8d19f6d8c17672.",
   },
   {
     name: "Last audited public baseline",
@@ -152,21 +152,21 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: tiledGemmV1Commits.sourceBridge,
     state: "acceptance",
     detail:
-      "Commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected Rust root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds the reviewed layouts, rustc FnAbi, portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS, and the 64-byte explicit plus 256-byte implicit four-slice ABI. A private single-use receipt selects the canonical direct-global Kernel IR module with eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores; AMDGCN lowering represents the BF16 carriers with i16 loads. The older WG64 32-byte explicit/288-byte fragment probe remains separate. This source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof. The Worker V2 handoff remains inert and grants no final-HSACO, publication, loading, or launch authority.",
+      "Commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected Rust root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds the reviewed layouts, rustc FnAbi, portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS, and the 64-byte explicit plus 256-byte implicit four-slice ABI. A private single-use receipt selects the canonical direct-global Kernel IR module with eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores; AMDGCN lowering represents the BF16 carriers with i16 loads. Follow-up b904f5b648c7eb249d32d73db427abe72970315a normalizes only Cargo-generated metadata in the semantic commitment while full observed argv and metadata remain receipt-bound. Follow-up 51bd129c31b08b636545f12229f34aaa431321f2 normalizes only the Cargo-generated root shape while the full observed root remains receipt-bound. The older WG64 32-byte explicit/288-byte fragment probe remains separate. This source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof. The Worker V2 handoff remains inert and grants no final-HSACO, publication, loading, or launch authority.",
   },
   {
     name: "Tiled GEMM V1 guarded gfx942 hardware harness",
     commit: tiledGemmV1Commits.hardwareEvidence,
     state: "acceptance",
     detail:
-      "Commit c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c adds an ignored, opt-in one-tile gfx942:xnack- harness for externally supplied digest-pinned bytes and a digest-pinned observed LLVM 22 objdump. Before dispatch it enforces COV6/WG64/320-byte metadata, one bound entry, exact disassembly coverage, one retained v_mfma_f32_16x16x16_bf16, a global store, and rejection of forbidden control and memory forms. If run, it checks a bitwise dyadic 16x16 oracle, that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous completion, exact executable identity, and terminal unload. The commit contains no committed run receipt, so exact hardware execution remains uncommitted and non-authoritative. The harness deliberately bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, loading, launch, or verification authority.",
+      "Commit b825661ac3f7e332d2cc9723ed1efbb54869fa33 adds an ignored, opt-in one-tile gfx942:xnack- harness for externally supplied digest-pinned bytes and a digest-pinned observed LLVM 22 objdump. Before dispatch it enforces COV6/WG64/320-byte metadata, one bound entry, exact disassembly coverage, one retained v_mfma_f32_16x16x16_bf16, a global store, and rejection of forbidden control and memory forms. If run, it checks a bitwise dyadic 16x16 oracle, that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous completion, exact executable identity, and terminal unload. The commit contains no committed run receipt, so exact hardware execution remains uncommitted and non-authoritative. The harness deliberately bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, loading, launch, or verification authority.",
   },
   {
     name: "Tiled GEMM V1 structural artifact admission",
     commit: tiledGemmV1Commits.structuralAdmission,
     state: "queued",
     detail:
-      "Commit e2e9725f0708faaad355ec792d21ad8b57633538 adds sealed Worker V2 structural inspection and canonical finalization for exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor: four slices in 64 explicit bytes, a 256-byte implicit suffix, WG64, wave64, and zero LDS. It separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte structural mutations, along with descriptor, target, capability, and finalization drift. Structural admission deliberately accepts arbitrary .text in adversarial tests, so it does not inspect machine-body semantics, authenticate compiler origin, prove BF16 or MFMA semantics, or prove Verus results. It grants no publication, loading, or launch authority. The capability schema remains V1 and unknown tag 12 is rejected; no COMGR path is added.",
+      "Commit d43f11c86196e4f01c9ee305ea8d19f6d8c17672 adds sealed Worker V2 structural inspection and canonical finalization for exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor: four slices in 64 explicit bytes, a 256-byte implicit suffix, WG64, wave64, and zero LDS. It separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte structural mutations, along with descriptor, target, capability, and finalization drift. Structural admission deliberately accepts arbitrary .text in adversarial tests, so it does not inspect machine-body semantics, authenticate compiler origin, prove BF16 or MFMA semantics, or prove Verus results. It grants no publication, loading, or launch authority. The capability schema remains V1 and unknown tag 12 is rejected; no COMGR path is added.",
   },
 ];
 

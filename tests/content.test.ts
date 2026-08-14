@@ -76,11 +76,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
-      eventualPublicTree: "09752086eac323ea47091f563e242932707a029f",
+      eventualPublicCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
+      eventualPublicTree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+        requiredCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -316,6 +316,18 @@ describe("implementation progress integrity", () => {
       "AMDGCN lowering represents the BF16 carriers with i16 loads",
     );
     expect(sourceBridge?.detail).toContain("private single-use receipt");
+    expect(sourceBridge?.detail).toContain(
+      "b904f5b648c7eb249d32d73db427abe72970315a normalizes only Cargo-generated metadata in the semantic commitment",
+    );
+    expect(sourceBridge?.detail).toContain(
+      "full observed argv and metadata remain receipt-bound",
+    );
+    expect(sourceBridge?.detail).toContain(
+      "51bd129c31b08b636545f12229f34aaa431321f2 normalizes only the Cargo-generated root shape",
+    );
+    expect(sourceBridge?.detail).toContain(
+      "full observed root remains receipt-bound",
+    );
     expect(sourceBridge?.detail).toContain("Worker V2 handoff remains inert");
     expect(sourceBridge?.detail).toContain(
       "not a compiler refinement proof",

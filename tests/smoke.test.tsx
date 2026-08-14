@@ -68,7 +68,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Audited public")).toBeInTheDocument();
     expect(screen.getByText("Eventual public target")).toBeInTheDocument();
-    expect(screen.getByText("e2e9725f0708")).toBeInTheDocument();
+    expect(screen.getByText("d43f11c86196")).toBeInTheDocument();
     expect(
       screen.getByText(/The eventual target is not current remote state/),
     ).toHaveTextContent(

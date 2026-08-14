@@ -113,7 +113,7 @@ const orientation: Lesson = {
           type: "callout",
           tone: "boundary",
           title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks e2e9725f0708faaad355ec792d21ad8b57633538 only as an eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The staged target retains the S09 and authenticated-Verus checkpoints and adds the three tiled GEMM stages below. Those stages close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
+          text: "The progress dashboard tracks d43f11c86196e4f01c9ee305ea8d19f6d8c17672 only as an eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The staged target retains the S09 and authenticated-Verus checkpoints and adds the three tiled GEMM stages below. Those stages close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
         },
         {
           type: "table",
@@ -121,16 +121,16 @@ const orientation: Lesson = {
           rows: [
             [
               "fb75e19a source bridge",
-              "An exact collected Rust/MIR/FnAbi profile selects the canonical direct-global WG64/320-byte Kernel IR module through a private single-use receipt.",
+              "An exact collected Rust/MIR/FnAbi profile selects the canonical direct-global WG64/320-byte Kernel IR module through a private single-use receipt. Follow-ups b904f5b6 and 51bd129c normalize only Cargo-generated metadata and root shape in semantic commitments; full observations remain receipt-bound.",
               "Source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof; the Worker V2 handoff is inert.",
             ],
             [
-              "c9c738d1 guarded gfx942 harness",
+              "b825661a guarded gfx942 harness",
               "An opt-in harness requires digest-pinned bytes and objdump, checks exact metadata and ISA shape, and, if run, checks a bitwise 16x16 oracle, inputs remained bitwise unchanged, canaries, and unload.",
               "The commit has no run receipt. Exact hardware execution remains uncommitted and non-authoritative, and the harness bypasses production prerequisites.",
             ],
             [
-              "e2e9725f structural admission",
+              "d43f11c8 structural admission",
               "Worker V2 inspection and finalization enforce gfx942:xnack-, COV6, WG64, wave64, zero LDS, and the four-slice 320-byte ABI.",
               "The gate separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte mutations, but accepts arbitrary .text, does not inspect machine-body semantics, and grants no launch authority.",
             ],
