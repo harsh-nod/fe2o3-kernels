@@ -206,8 +206,8 @@ describe("curriculum integrity", () => {
         label: "Observed direct-global tiled GEMM tile",
         kind: "gpu-observed",
         evidenceId: "tiled-hardware-harness-v1",
-        commit: "83fd4e4114a31da16ea3208c7b910269cd943bc8",
-        tree: "4d5c2b4fd645b7183e6f85d0768687bc3b621d31",
+        commit: "233b88f9722a0072d9a5fe3b9ccdc3dbaefdc1dd",
+        tree: "03129e8e3badf707007a128a3d3a98e218b0df36",
         authority: "harness-only",
       },
       {
@@ -894,7 +894,8 @@ describe("implementation progress integrity", () => {
     expect(hardwareDetail).toContain(
       "SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66",
     );
-    expect(hardwareDetail).toContain("passed 1/1 in 40.69 seconds");
+    expect(hardwareDetail).toContain("passed 1/1 in 40.92 seconds");
+    expect(hardwareDetail).toContain("compact console receipt is committed");
     expect(hardwareDetail).toContain("zero LDS and is not source-derived");
     expect(hardwareDetail).toContain("non-authoritative observation");
     expect(hardwareDetail).toContain("no compiler, publication, protected loading");
@@ -958,7 +959,7 @@ describe("implementation progress integrity", () => {
       "must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main",
     );
     expect(orientation).toContain("not a compiler refinement proof");
-    expect(orientation).toContain("passed 1/1 in 40.69 seconds");
+    expect(orientation).toContain("passed 1/1 in 40.92 seconds");
     expect(orientation).toContain("does not inspect machine-body semantics");
 
     for (const commit of Object.values(tiledGemmV1Commits)) {

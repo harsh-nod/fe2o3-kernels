@@ -127,16 +127,17 @@ const stagedEvidenceRecords = deepFreeze({
   },
   "tiled-hardware-harness-v1": {
     id: "tiled-hardware-harness-v1",
-    stageLabel: "83fd4e41 MI300X tile observation",
+    stageLabel: "233b88f9 MI300X tile observation",
     claimLabel: "Observed direct-global tiled GEMM tile",
     claim: "gpu-observed",
     authority: "harness-only",
-    commit: "83fd4e4114a31da16ea3208c7b910269cd943bc8",
-    tree: "4d5c2b4fd645b7183e6f85d0768687bc3b621d31",
+    commit: "233b88f9722a0072d9a5fe3b9ccdc3dbaefdc1dd",
+    tree: "03129e8e3badf707007a128a3d3a98e218b0df36",
     commands: [TILED_GEMM_V1_HARDWARE_COMMAND],
     sourcePaths: [
       "crates/fe2o3-hsa-runtime/tests/tiled_gemm_v1_hardware.rs",
       "docs/tiled-gemm-v1-mi300x-observation.md",
+      "docs/receipts/tiled-gemm-v1-mi300x-2026-08-14.txt",
     ],
     target: "gfx942:xnack-",
     assertions: [
@@ -150,7 +151,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "observed-run",
-        text: "At repository commit 9a5d65d5929b9cabcf73d423957b06f5070f5137 on 2026-08-14, MI300X executed the externally supplied 6,672-byte HSACO with SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66; the exact test passed 1/1 in 40.69 seconds.",
+        text: "At repository commit 6d35aea57b13ac24cdb05147da3b34bc410b16f4 on 2026-08-14, MI300X executed the externally supplied 6,672-byte HSACO with SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66 under the tightened ISA admission policy; the exact test passed 1/1 in 40.92 seconds and its compact console receipt is committed.",
       },
       {
         id: "harness-runtime-checks",
@@ -158,7 +159,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "harness-authority-boundary",
-        text: "Commit 83fd4e4114a31da16ea3208c7b910269cd943bc8 records this non-authoritative observation. The supplied artifact has zero LDS and is not source-derived by the recorded run; the harness bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, protected loading, protected launch, verification, or parity authority.",
+        text: "Commit 233b88f9722a0072d9a5fe3b9ccdc3dbaefdc1dd records this non-authoritative observation. The supplied artifact has zero LDS and is not source-derived by the recorded run; the harness bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, protected loading, protected launch, verification, or parity authority.",
       },
     ],
   },
