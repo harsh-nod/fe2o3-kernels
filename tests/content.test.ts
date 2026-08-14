@@ -583,11 +583,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
-      eventualPublicTree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
+      eventualPublicCommit: "233b88f9722a0072d9a5fe3b9ccdc3dbaefdc1dd",
+      eventualPublicTree: "03129e8e3badf707007a128a3d3a98e218b0df36",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
+        requiredCommit: "233b88f9722a0072d9a5fe3b9ccdc3dbaefdc1dd",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
