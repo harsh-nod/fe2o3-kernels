@@ -71,6 +71,11 @@ describe("implementation progress integrity", () => {
   it("pins public and candidate states without changing lesson authority", () => {
     expect(validateProgress()).toEqual([]);
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
+    expect(progressSnapshot).toMatchObject({
+      reviewedOn: "2026-08-13",
+      publicCommit: "858252e735e706dd8aaa30eacdadeca8741ccaad",
+      publicTree: "40e25e9038db8893030db1d4d62e8231cbb50817",
+    });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
   });
@@ -93,15 +98,28 @@ describe("implementation progress integrity", () => {
   });
 
   it("keeps scalar GEMM hardware-blocked while tracking reviewed partial gates", () => {
-    expect(
+    const scalarCheckpoint =
       developmentCheckpoints.find(
         (checkpoint) => checkpoint.name === "Scalar GEMM V1 vertical slice",
-      ),
-    ).toMatchObject({ state: "acceptance" });
+      );
+    expect(scalarCheckpoint).toMatchObject({
+      commit: progressSnapshot.publicCommit,
+      state: "acceptance",
+    });
+    expect(scalarCheckpoint?.detail).toContain(
+      "ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9",
+    );
+    expect(scalarCheckpoint?.detail).toContain(
+      "Hardware dispatch and production protected evidence have not run",
+    );
     expect(kernelProgress.find((kernel) => kernel.id === "scalar-gemm")).toMatchObject({
       run: "blocked",
       verify: "partial",
       evidence: "partial",
+      dependsOn: [
+        "production protected transaction authenticator",
+        "MI300X dispatch and protected evidence",
+      ],
     });
   });
 });

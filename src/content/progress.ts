@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "a78f3ef3538cbe1ce6187defc1bb7e48c7f6d484",
-  publicTree: "53a3fc642d2c3d69ca850575ff60d538b34fedfb",
+  publicCommit: "858252e735e706dd8aaa30eacdadeca8741ccaad",
+  publicTree: "40e25e9038db8893030db1d4d62e8231cbb50817",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -82,10 +82,10 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Scalar GEMM V1 vertical slice",
-    commit: "a78f3ef3538cbe1ce6187defc1bb7e48c7f6d484",
+    commit: "858252e735e706dd8aaa30eacdadeca8741ccaad",
     state: "acceptance",
     detail:
-      "Both public mains now contain the canonical Rust source, 15-proof Verus model, exact portable-MIR receipt, generated host adapter, canonical Kernel IR/lowering, Worker V2 validation, and fail-closed typed HSA harness. On mi300x, two upstream LLVM and in-process LLD runs produced identical 8,600-byte gfx942:xnack- COV6 HSACO (SHA-256 86a22b8cd3045a01445b30b12c00e11f6be466f989135402b871174109f2b1f5) with the exact two symbols, 64/320-byte kernarg spans, WG256, and wave64. Hardware dispatch and protected evidence remain open.",
+      "Both public mains contain the source-authenticated frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, and two deterministic raw runs. Canonical finalization produced a 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) with .fe2o3.kd.v1 and .fe2o3.scalar-auth.v1 sections, the exact six-argument scalar ABI with 64/320-byte kernarg spans, WG256 and wave64, and a nonzero descriptor digest. Adjacent canaries, the scalar load envelope, the recovered retained-currentness path, and canonical finalization are implemented. Hardware dispatch and production protected evidence have not run; the production protected transaction authenticator and MI300X dispatch/evidence remain open.",
   },
 ];
 
@@ -142,11 +142,10 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "authenticated HSA publication and launch",
-      "source-to-machine refinement",
-      "adjacent output canary views",
+      "production protected transaction authenticator",
+      "MI300X dispatch and protected evidence",
     ],
-    next: "Carry the inspected Worker V2 artifact capability into the typed HSA harness, run the boundary matrix on MI300X, and publish protected source-to-artifact-to-launch evidence.",
+    next: "Implement the production protected transaction authenticator, then dispatch the finalized artifact on MI300X and publish protected source-to-artifact-to-launch evidence.",
   },
   {
     id: "tiled-gemm",
