@@ -1,6 +1,13 @@
 import publicationGate from "../../config/publication-gate.json";
 import { FE2O3_PIN, type StagedEvidenceId } from "./model";
 import {
+  resolveProgressNarrative,
+  SAFE_PROGRESS_DETAIL,
+  validateProgressNarrativeRegistry,
+} from "./progress-narrative-registry";
+import type { ProgressNarrativeId } from "./progress-narrative-policy";
+import { deepFreeze, hasOwn } from "./registry";
+import {
   isStagedEvidenceId,
   stagedEvidenceDetail,
   stagedEvidenceRecord,
@@ -19,7 +26,7 @@ export interface KernelProgress {
   next: string;
 }
 
-export const developmentCheckpointIds = [
+export const developmentCheckpointIds = deepFreeze([
   "eventual-public-main",
   "last-audited-public-baseline",
   "production-s09-rustc-invocation",
@@ -37,7 +44,7 @@ export const developmentCheckpointIds = [
   "tiled-gemm-source-bridge",
   "tiled-gemm-hardware-harness",
   "tiled-gemm-structural-admission",
-] as const;
+] as const);
 
 export type DevelopmentCheckpointId =
   (typeof developmentCheckpointIds)[number];
@@ -52,7 +59,8 @@ interface DevelopmentCheckpointBase {
 export interface NarrativeDevelopmentCheckpoint
   extends DevelopmentCheckpointBase {
   kind: "narrative";
-  detail: string;
+  narrativeId: ProgressNarrativeId;
+  detail?: never;
   stagedEvidenceIds?: never;
 }
 
@@ -105,31 +113,71 @@ export const tiledGemmV1Commits = {
 } as const;
 
 type DevelopmentCheckpointSpec =
-  | { kind: "narrative" | "publication-gate" }
+  | { kind: "narrative"; narrativeId: ProgressNarrativeId }
+  | { kind: "publication-gate"; commit: string }
   | {
       kind: "staged-evidence";
       commit: string;
       evidenceIds: readonly StagedEvidenceId[];
     };
 
-const developmentCheckpointSpecs: Record<
-  DevelopmentCheckpointId,
-  DevelopmentCheckpointSpec
-> = {
-  "eventual-public-main": { kind: "publication-gate" },
-  "last-audited-public-baseline": { kind: "narrative" },
-  "production-s09-rustc-invocation": { kind: "narrative" },
-  "authenticated-verus-v2": { kind: "narrative" },
-  "cargo-acknowledgement-repair": { kind: "narrative" },
-  "formal-evidence-isolation-v11": { kind: "narrative" },
-  "protected-evidence-publisher": { kind: "narrative" },
-  "gfx942-scalar-control-flow": { kind: "narrative" },
-  "collected-rust-scalar-admission": { kind: "narrative" },
-  "gfx942-wave64-lds-reduction": { kind: "narrative" },
-  "scalar-gemm-v1": { kind: "narrative" },
-  "scalar-gemm-proof-profile": { kind: "narrative" },
-  "scalar-gemm-physical-effects": { kind: "narrative" },
-  "tiled-gemm-layout-frontend": { kind: "narrative" },
+const developmentCheckpointSpecs = deepFreeze({
+  "eventual-public-main": {
+    kind: "publication-gate",
+    commit: progressSnapshot.eventualPublicCommit,
+  },
+  "last-audited-public-baseline": {
+    kind: "narrative",
+    narrativeId: "progress/last-audited-public-baseline",
+  },
+  "production-s09-rustc-invocation": {
+    kind: "narrative",
+    narrativeId: "progress/production-s09-rustc-invocation",
+  },
+  "authenticated-verus-v2": {
+    kind: "narrative",
+    narrativeId: "progress/authenticated-verus-v2",
+  },
+  "cargo-acknowledgement-repair": {
+    kind: "narrative",
+    narrativeId: "progress/cargo-acknowledgement-repair",
+  },
+  "formal-evidence-isolation-v11": {
+    kind: "narrative",
+    narrativeId: "progress/formal-evidence-isolation-v11",
+  },
+  "protected-evidence-publisher": {
+    kind: "narrative",
+    narrativeId: "progress/protected-evidence-publisher",
+  },
+  "gfx942-scalar-control-flow": {
+    kind: "narrative",
+    narrativeId: "progress/gfx942-scalar-control-flow",
+  },
+  "collected-rust-scalar-admission": {
+    kind: "narrative",
+    narrativeId: "progress/collected-rust-scalar-admission",
+  },
+  "gfx942-wave64-lds-reduction": {
+    kind: "narrative",
+    narrativeId: "progress/gfx942-wave64-lds-reduction",
+  },
+  "scalar-gemm-v1": {
+    kind: "narrative",
+    narrativeId: "progress/scalar-gemm-v1",
+  },
+  "scalar-gemm-proof-profile": {
+    kind: "narrative",
+    narrativeId: "progress/scalar-gemm-proof-profile",
+  },
+  "scalar-gemm-physical-effects": {
+    kind: "narrative",
+    narrativeId: "progress/scalar-gemm-physical-effects",
+  },
+  "tiled-gemm-layout-frontend": {
+    kind: "narrative",
+    narrativeId: "progress/tiled-gemm-layout-frontend",
+  },
   "tiled-gemm-source-bridge": {
     kind: "staged-evidence",
     commit: tiledGemmV1Commits.sourceBridge,
@@ -149,9 +197,9 @@ const developmentCheckpointSpecs: Record<
     commit: tiledGemmV1Commits.structuralAdmission,
     evidenceIds: ["tiled-structural-admission-v1"],
   },
-};
+} satisfies Record<DevelopmentCheckpointId, DevelopmentCheckpointSpec>);
 
-export const developmentCheckpoints: DevelopmentCheckpoint[] = [
+export const developmentCheckpoints = deepFreeze([
   {
     id: "eventual-public-main",
     kind: "publication-gate",
@@ -165,8 +213,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Last audited public baseline",
     commit: progressSnapshot.lastAuditedPublicCommit,
     state: "public",
-    detail:
-      "This historical public baseline is newer than the lesson evidence pin. It is not presented as the current tip of either remote.",
+    narrativeId: "progress/last-audited-public-baseline",
   },
   {
     id: "production-s09-rustc-invocation",
@@ -174,8 +221,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Production S09 rustc invocation capture",
     commit: progressSnapshot.lastAuditedPublicCommit,
     state: "public",
-    detail:
-      "The production path canonically captures RustcInvocationDescriptorV2 and admits exactly /proc/./self/fd/198 as its backend capability. It rejects procfs/devfd aliases, other descriptor numbers, every preexisting joined or split codegen-backend selector spelling, and an option terminator before the sole final managed -Zcodegen-backend=<path> selector. A real cargo-fe2o3 integration test traverses pinned Cargo, the S09 broker, closed-environment materialization, pinned rustc spawn, Worker V2, and durable publication of a COV6 gfx942:xnack- HSACO containing exactly alpha. It decodes the canonical publication envelope and nested record, then binds the finalized-output identity and content-addressed artifact name to the exact inspected HSACO bytes. A retained mi300x observation records 1 passed in 132.45 seconds and HSACO SHA-256 5902632c5c249be05855ae5cef62bb9096a1f9277cfb0c58b4384594d6ee61de. This is non-authoritative: it proves no compiler origin and grants no loading, execution, or verification authority. Canonical cwd pathname capture is not a pathname-to-object identity join, and the scalar profile still establishes no general source or output-object association.",
+    narrativeId: "progress/production-s09-rustc-invocation",
   },
   {
     id: "authenticated-verus-v2",
@@ -183,8 +229,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Authenticated Verus execution V2",
     commit: "b704651757a3d46801144277e025f68153cb1ba9",
     state: "public",
-    detail:
-      "Linux x86_64 authenticated execution is bound to pinned local runtime and tool snapshots. V2 uses clone3 pidfds and ptrace-unresumable checkpoints, seccomp process-creation denial, exact live executable/backing comparison, runtime closure and baseline pinning, vDSO pinning, and immutable sealed results. It rejects compressed and alternate debug-section families. Package-scoped debug stripping makes the debug fixture reproducible, and a bounded two-root gate compares SHA-256, size, and Build ID. On the pinned local host, debug V2 integration passed 14/14 and release passed 13/13; the full verifier debug and release suites and 22 doctests passed. A run on mi300x correctly failed closed on its different vDSO and runtime baseline. This does not integrate stock Verus or Z3, establish semantic proof validity, guarantee exclusive measured-image execution between checkpoints, prove compiler refinement, or grant GPU authority.",
+    narrativeId: "progress/authenticated-verus-v2",
   },
   {
     id: "cargo-acknowledgement-repair",
@@ -192,8 +237,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Cargo acknowledgement repair",
     commit: "4bd1be0d6325d3946075904d653222aa9c81eebd",
     state: "public",
-    detail:
-      "V6 passed 100/100 contention, 10/10 finalizer, 280/280 vertical, release, focused, and fresh mi300x generic gates without changing production timeouts. Both public mains are exact, and both hosted policy and generic workflows are green.",
+    narrativeId: "progress/cargo-acknowledgement-repair",
   },
   {
     id: "formal-evidence-isolation-v11",
@@ -201,8 +245,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Formal evidence isolation V11",
     commit: "1265afc07aed232a24dd055b56dda8d35446f577",
     state: "repair",
-    detail:
-      "V12 prototypes an Ed25519-signed external authority handoff, but protected evidence remains rejected. Independent policy anchors, separately sealed statement transport, hostile substitution and replay probes, and the full regression and reproducibility matrix are still required.",
+    narrativeId: "progress/formal-evidence-isolation-v11",
   },
   {
     id: "protected-evidence-publisher",
@@ -210,8 +253,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Protected evidence publisher",
     commit: "85a38372d74873cb84e2d6d55eed66fd98e5904b",
     state: "public",
-    detail:
-      "V11 uses three independently checksummed checkpoints to bind the committed prefix and allows recovery only beyond it. Independent hostile rereview and the replayed full mi300x generic suite passed; both public main branches now contain the accepted merge.",
+    narrativeId: "progress/protected-evidence-publisher",
   },
   {
     id: "gfx942-scalar-control-flow",
@@ -219,8 +261,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "gfx942 scalar control flow",
     commit: "54ae9ff671b041205434aec80ab2b9a5979d0fa7",
     state: "repair",
-    detail:
-      "Independent hostile review rejected V4: preload constructors run before authority, clone can create namespaces, preload nondumpability is bypassable, fake rustc stderr can satisfy admission, and the authenticated build closure is incomplete. V5 must close all five attacks.",
+    narrativeId: "progress/gfx942-scalar-control-flow",
   },
   {
     id: "collected-rust-scalar-admission",
@@ -228,8 +269,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Collected Rust scalar admission",
     commit: "54ae9ff671b041205434aec80ab2b9a5979d0fa7",
     state: "repair",
-    detail:
-      "V4 preserves admission-only and no-HSACO scope, but its compiler and process authority can be forged or escaped. V5 is adding pinned positive backend identity, complete closure authentication, and adversarial process-boundary tests before any executable claim.",
+    narrativeId: "progress/collected-rust-scalar-admission",
   },
   {
     id: "gfx942-wave64-lds-reduction",
@@ -237,8 +277,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "gfx942 wave64 and LDS reduction",
     commit: "b745b55dd59036aee7014f4814f4420c13e721cd",
     state: "public",
-    detail:
-      "V2 is identical on both public mains with green hosted policy and generic workflows. It binds canonical gfx942:xnack- through Kernel IR and Worker V2, rejects eleven unauthorized target forms, and passes 6/26 Verus plus 256-lane MI300X evidence; source finalization and compiler refinement remain partial.",
+    narrativeId: "progress/gfx942-wave64-lds-reduction",
   },
   {
     id: "scalar-gemm-v1",
@@ -246,8 +285,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Scalar GEMM V1 vertical slice",
     commit: progressSnapshot.lastAuditedPublicCommit,
     state: "acceptance",
-    detail:
-      "Both public mains contain the source-bound frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, deterministic canonical finalization, retained-currentness load handoff, proof and physical-effect profiles, and a raw MI300X smoke test. The frontend commitment records lineage; it does not yet authenticate source-to-module causality. The 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) passed every HARDWARE_CASES case in 1.41 seconds, including zero-output no-dispatch, k=0 +0, bitwise CPU-oracle, immutable-input, adjacent-canary, and unload checks. The raw smoke deliberately bypasses production prerequisite authentication. The upstream LLVM 22 MC analyzer now accepts those exact artifact bytes without COMGR: 4/4 native tests passed on mi300x for the exact 60-opcode scalar profile, one function, zero calls, two constrained backward loops, and 19 ordered physical effect sites. Both the analyzer result and raw smoke remain static or observational evidence and grant no protected authority. Authenticated Verus execution, analyzer-identity binding, compiler and address refinement, memory, bounds and race proofs, and production protected launch evidence remain open.",
+    narrativeId: "progress/scalar-gemm-v1",
   },
   {
     id: "scalar-gemm-proof-profile",
@@ -255,8 +293,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Scalar GEMM proof profile",
     commit: "c223325ed437eebd9d382d0342cb35a01a17605e",
     state: "acceptance",
-    detail:
-      "Nine focused tests pin the exact 6,879-byte proof source (SHA-256 98803a62488e1af2fbc886b1da5ddc680b16d35a8a8a5c22d4959128dd2da5fe) and bind its target, ABI, effects, launch contract, seven required properties, tool identities, transcript, caller-supplied freshness, and finalized artifact digest. Replay is explicitly permitted after the process-local ledger is recreated. This is inert review evidence only: it does not execute Verus and creates no load, launch, or protected-evidence authority.",
+    narrativeId: "progress/scalar-gemm-proof-profile",
   },
   {
     id: "scalar-gemm-physical-effects",
@@ -264,8 +301,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Scalar GEMM physical-effect profile",
     commit: progressSnapshot.lastAuditedPublicCommit,
     state: "acceptance",
-    detail:
-      "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
+    narrativeId: "progress/scalar-gemm-physical-effects",
   },
   {
     id: "tiled-gemm-layout-frontend",
@@ -273,8 +309,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Tiled GEMM V1 layout and frontend foundations",
     commit: "286331aab8639dd3707e55cdf51a83f8854d26a5",
     state: "public",
-    detail:
-      "The standalone gfx942:xnack- BF16/F32 host scaffold and source-level layout proof begin at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, with XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four tables; 23 public Verus proof functions discharge 73 obligations; and five formula mutations are rejected. Descendants separate block counts, WG64 dimensions, and AQL work items, then add a sealed direct-global one-wave 16x16x16 Kernel IR graph with 12 reads, one BF16/BF16/F32 MFMA, and four F32 stores. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 separately records a build-scoped WG64/288-byte fragment probe. It is neither the later four-slice production profile nor the independent WG256/384-byte mutation, and it does not establish source-to-canonical Kernel IR correspondence.",
+    narrativeId: "progress/tiled-gemm-layout-frontend",
   },
   {
     id: "tiled-gemm-source-bridge",
@@ -304,18 +339,103 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     state: "queued",
     stagedEvidenceIds: ["tiled-structural-admission-v1"],
   },
-];
+] satisfies DevelopmentCheckpoint[]);
+
+const checkpointKeysByKind = {
+  narrative: ["commit", "id", "kind", "name", "narrativeId", "state"],
+  "publication-gate": ["commit", "id", "kind", "name", "state"],
+  "staged-evidence": [
+    "commit",
+    "id",
+    "kind",
+    "name",
+    "stagedEvidenceIds",
+    "state",
+  ],
+} as const;
+
+function checkpointPolicyIssues(checkpoint: unknown): string[] {
+  if (!checkpoint || typeof checkpoint !== "object") {
+    return ["checkpoint is not a policy object"];
+  }
+  const raw = checkpoint as Record<string, unknown>;
+  const rawId = raw.id;
+  if (
+    typeof rawId !== "string" ||
+    !hasOwn(developmentCheckpointSpecs, rawId)
+  ) {
+    return [`unknown development checkpoint id ${String(rawId)}`];
+  }
+  const id = rawId as DevelopmentCheckpointId;
+  const expected = developmentCheckpointSpecs[id];
+  const issues: string[] = [];
+  if (raw.kind !== expected.kind) {
+    issues.push(`${id} must retain canonical kind ${expected.kind}`);
+  }
+  if (
+    JSON.stringify(Object.keys(raw).sort()) !==
+    JSON.stringify(checkpointKeysByKind[expected.kind])
+  ) {
+    issues.push(`${id} fields do not match its canonical kind`);
+  }
+  if (typeof raw.commit !== "string" || !/^[0-9a-f]{40}$/u.test(raw.commit)) {
+    issues.push(`${id} is not pinned to an exact commit`);
+  }
+
+  if (expected.kind === "narrative") {
+    if (raw.narrativeId !== expected.narrativeId) {
+      issues.push(`${id} does not bind its canonical progress narrative ID`);
+    }
+    if (!resolveProgressNarrative(raw.narrativeId)) {
+      issues.push(`${id} has no valid frozen progress narrative`);
+    }
+  } else if (expected.kind === "publication-gate") {
+    if (raw.commit !== expected.commit) {
+      issues.push(`${id} does not bind its canonical publication commit`);
+    }
+  } else {
+    const evidenceIds = Array.isArray(raw.stagedEvidenceIds)
+      ? raw.stagedEvidenceIds
+      : [];
+    for (const evidenceId of evidenceIds) {
+      if (!isStagedEvidenceId(evidenceId)) {
+        issues.push(`${id} has unknown staged evidence id ${String(evidenceId)}`);
+      }
+    }
+    if (raw.commit !== expected.commit) {
+      issues.push(`${id} does not bind its canonical staged commit`);
+    }
+    if (
+      evidenceIds.length !== expected.evidenceIds.length ||
+      evidenceIds.some(
+        (evidenceId, index) => evidenceId !== expected.evidenceIds[index],
+      )
+    ) {
+      issues.push(`${id} must contain its complete canonical staged evidence IDs`);
+    }
+  }
+  return issues;
+}
 
 export function developmentCheckpointDetail(
-  checkpoint: DevelopmentCheckpoint,
+  checkpoint: unknown,
 ): string {
-  if (checkpoint.kind === "staged-evidence") {
-    return stagedEvidenceDetail(checkpoint.stagedEvidenceIds);
+  if (checkpointPolicyIssues(checkpoint).length > 0) {
+    return SAFE_PROGRESS_DETAIL;
   }
-  if (checkpoint.kind === "publication-gate") {
-    return `This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to ${publicationGate.requiredCommit}.`;
+  const id = (checkpoint as { id: DevelopmentCheckpointId }).id;
+  const expected = developmentCheckpointSpecs[id];
+  if (expected.kind === "narrative") {
+    return resolveProgressNarrative(expected.narrativeId) ?? SAFE_PROGRESS_DETAIL;
   }
-  return checkpoint.detail;
+  if (expected.kind === "staged-evidence") {
+    try {
+      return stagedEvidenceDetail(expected.evidenceIds);
+    } catch {
+      return SAFE_PROGRESS_DETAIL;
+    }
+  }
+  return `This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to ${publicationGate.requiredCommit}.`;
 }
 
 export const kernelProgress: KernelProgress[] = [
@@ -453,11 +573,16 @@ export const gateLabels: Record<
 };
 
 export function validateProgress(
-  checkpoints: DevelopmentCheckpoint[] = developmentCheckpoints,
+  checkpoints: readonly unknown[] = developmentCheckpoints,
 ): string[] {
-  const issues: string[] = validateStagedEvidenceCatalog().map(
-    (issue) => `staged evidence: ${issue}`,
-  );
+  const issues: string[] = [
+    ...validateStagedEvidenceCatalog().map(
+      (issue) => `staged evidence: ${issue}`,
+    ),
+    ...validateProgressNarrativeRegistry().map(
+      (issue) => `progress narrative: ${issue}`,
+    ),
+  ];
   const ids = new Set<string>();
   const exactCommit = /^[0-9a-f]{40}$/;
 
@@ -483,7 +608,7 @@ export function validateProgress(
     issues.push("publication gate does not require both public refs");
   }
   const actualCheckpointIds = checkpoints.map(
-    (checkpoint) => (checkpoint as unknown as Record<string, unknown>).id,
+    (checkpoint) => (checkpoint as Record<string, unknown>).id,
   );
   if (
     actualCheckpointIds.length !== developmentCheckpointIds.length ||
@@ -494,70 +619,7 @@ export function validateProgress(
     issues.push("development checkpoints do not contain the exact canonical ID order");
   }
   for (const checkpoint of checkpoints) {
-    if (!exactCommit.test(checkpoint.commit)) {
-      issues.push(`${checkpoint.name} is not pinned to an exact commit`);
-    }
-    const rawCheckpoint = checkpoint as unknown as Record<string, unknown>;
-    const rawId = rawCheckpoint.id;
-    if (
-      typeof rawId !== "string" ||
-      !Object.prototype.hasOwnProperty.call(developmentCheckpointSpecs, rawId)
-    ) {
-      issues.push(`unknown development checkpoint id ${String(rawId)}`);
-      continue;
-    }
-    const checkpointId = rawId as DevelopmentCheckpointId;
-    const expected = developmentCheckpointSpecs[checkpointId];
-    if (checkpoint.kind !== expected.kind) {
-      issues.push(
-        `${checkpointId} must retain canonical kind ${expected.kind}`,
-      );
-    }
-    const allowedKeysByKind = {
-      narrative: ["commit", "detail", "id", "kind", "name", "state"],
-      "publication-gate": ["commit", "id", "kind", "name", "state"],
-      "staged-evidence": [
-        "commit",
-        "id",
-        "kind",
-        "name",
-        "stagedEvidenceIds",
-        "state",
-      ],
-    } as const;
-    const allowedKeys = allowedKeysByKind[expected.kind];
-    if (
-      JSON.stringify(Object.keys(rawCheckpoint).sort()) !==
-      JSON.stringify(allowedKeys)
-    ) {
-      issues.push(`${checkpointId} fields do not match its canonical kind`);
-    }
-    if (expected.kind === "staged-evidence") {
-      const evidenceIds = Array.isArray(rawCheckpoint.stagedEvidenceIds)
-        ? rawCheckpoint.stagedEvidenceIds
-        : [];
-      for (const evidenceId of evidenceIds) {
-        if (!isStagedEvidenceId(evidenceId)) {
-          issues.push(
-            `${checkpointId} has unknown staged evidence id ${String(evidenceId)}`,
-          );
-        }
-      }
-      if (checkpoint.commit !== expected.commit) {
-        issues.push(`${checkpointId} does not bind its canonical staged commit`);
-      }
-      const expectedEvidenceIds = expected.evidenceIds;
-      if (
-        evidenceIds.length !== expectedEvidenceIds.length ||
-        evidenceIds.some(
-          (evidenceId, index) => evidenceId !== expectedEvidenceIds[index],
-        )
-      ) {
-        issues.push(
-          `${checkpointId} must contain its complete canonical staged evidence IDs`,
-        );
-      }
-    }
+    issues.push(...checkpointPolicyIssues(checkpoint));
   }
   for (const kernel of kernelProgress) {
     if (ids.has(kernel.id)) issues.push(`duplicate kernel id: ${kernel.id}`);

@@ -78,7 +78,7 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
 
       {lesson.diagram && <LessonDiagram kind={lesson.diagram} />}
       <ClaimList claims={lesson.claims} />
-      <LessonSections sections={lesson.sections} />
+      <LessonSections lessonId={lesson.id} sections={lesson.sections} />
 
       <section className="code-section">
         <p className="section-kicker">Workbench</p>

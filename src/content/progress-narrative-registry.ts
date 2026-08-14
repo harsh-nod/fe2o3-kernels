@@ -1,0 +1,59 @@
+import { narrativeFingerprint } from "./narrative-fingerprint";
+import { progressNarrativeFingerprints, progressNarrativeIds, type ProgressNarrativeId } from "./progress-narrative-policy";
+import { deepFreeze, hasOwn } from "./registry";
+
+const progressNarrativeRegistry = deepFreeze({
+  "progress/last-audited-public-baseline": "This historical public baseline is newer than the lesson evidence pin. It is not presented as the current tip of either remote.",
+  "progress/production-s09-rustc-invocation": "The production path canonically captures RustcInvocationDescriptorV2 and admits exactly /proc/./self/fd/198 as its backend capability. It rejects procfs/devfd aliases, other descriptor numbers, every preexisting joined or split codegen-backend selector spelling, and an option terminator before the sole final managed -Zcodegen-backend=<path> selector. A real cargo-fe2o3 integration test traverses pinned Cargo, the S09 broker, closed-environment materialization, pinned rustc spawn, Worker V2, and durable publication of a COV6 gfx942:xnack- HSACO containing exactly alpha. It decodes the canonical publication envelope and nested record, then binds the finalized-output identity and content-addressed artifact name to the exact inspected HSACO bytes. A retained mi300x observation records 1 passed in 132.45 seconds and HSACO SHA-256 5902632c5c249be05855ae5cef62bb9096a1f9277cfb0c58b4384594d6ee61de. This is non-authoritative: it proves no compiler origin and grants no loading, execution, or verification authority. Canonical cwd pathname capture is not a pathname-to-object identity join, and the scalar profile still establishes no general source or output-object association.",
+  "progress/authenticated-verus-v2": "Linux x86_64 authenticated execution is bound to pinned local runtime and tool snapshots. V2 uses clone3 pidfds and ptrace-unresumable checkpoints, seccomp process-creation denial, exact live executable/backing comparison, runtime closure and baseline pinning, vDSO pinning, and immutable sealed results. It rejects compressed and alternate debug-section families. Package-scoped debug stripping makes the debug fixture reproducible, and a bounded two-root gate compares SHA-256, size, and Build ID. On the pinned local host, debug V2 integration passed 14/14 and release passed 13/13; the full verifier debug and release suites and 22 doctests passed. A run on mi300x correctly failed closed on its different vDSO and runtime baseline. This does not integrate stock Verus or Z3, establish semantic proof validity, guarantee exclusive measured-image execution between checkpoints, prove compiler refinement, or grant GPU authority.",
+  "progress/cargo-acknowledgement-repair": "V6 passed 100/100 contention, 10/10 finalizer, 280/280 vertical, release, focused, and fresh mi300x generic gates without changing production timeouts. Both public mains are exact, and both hosted policy and generic workflows are green.",
+  "progress/formal-evidence-isolation-v11": "V12 prototypes an Ed25519-signed external authority handoff, but protected evidence remains rejected. Independent policy anchors, separately sealed statement transport, hostile substitution and replay probes, and the full regression and reproducibility matrix are still required.",
+  "progress/protected-evidence-publisher": "V11 uses three independently checksummed checkpoints to bind the committed prefix and allows recovery only beyond it. Independent hostile rereview and the replayed full mi300x generic suite passed; both public main branches now contain the accepted merge.",
+  "progress/gfx942-scalar-control-flow": "Independent hostile review rejected V4: preload constructors run before authority, clone can create namespaces, preload nondumpability is bypassable, fake rustc stderr can satisfy admission, and the authenticated build closure is incomplete. V5 must close all five attacks.",
+  "progress/collected-rust-scalar-admission": "V4 preserves admission-only and no-HSACO scope, but its compiler and process authority can be forged or escaped. V5 is adding pinned positive backend identity, complete closure authentication, and adversarial process-boundary tests before any executable claim.",
+  "progress/gfx942-wave64-lds-reduction": "V2 is identical on both public mains with green hosted policy and generic workflows. It binds canonical gfx942:xnack- through Kernel IR and Worker V2, rejects eleven unauthorized target forms, and passes 6/26 Verus plus 256-lane MI300X evidence; source finalization and compiler refinement remain partial.",
+  "progress/scalar-gemm-v1": "Both public mains contain the source-bound frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, deterministic canonical finalization, retained-currentness load handoff, proof and physical-effect profiles, and a raw MI300X smoke test. The frontend commitment records lineage; it does not yet authenticate source-to-module causality. The 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) passed every HARDWARE_CASES case in 1.41 seconds, including zero-output no-dispatch, k=0 +0, bitwise CPU-oracle, immutable-input, adjacent-canary, and unload checks. The raw smoke deliberately bypasses production prerequisite authentication. The upstream LLVM 22 MC analyzer now accepts those exact artifact bytes without COMGR: 4/4 native tests passed on mi300x for the exact 60-opcode scalar profile, one function, zero calls, two constrained backward loops, and 19 ordered physical effect sites. Both the analyzer result and raw smoke remain static or observational evidence and grant no protected authority. Authenticated Verus execution, analyzer-identity binding, compiler and address refinement, memory, bounds and race proofs, and production protected launch evidence remain open.",
+  "progress/scalar-gemm-proof-profile": "Nine focused tests pin the exact 6,879-byte proof source (SHA-256 98803a62488e1af2fbc886b1da5ddc680b16d35a8a8a5c22d4959128dd2da5fe) and bind its target, ABI, effects, launch contract, seven required properties, tool identities, transcript, caller-supplied freshness, and finalized artifact digest. Replay is explicitly permitted after the process-local ledger is recreated. This is inert review evidence only: it does not execute Verus and creates no load, launch, or protected-evidence authority.",
+  "progress/scalar-gemm-physical-effects": "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
+  "progress/tiled-gemm-layout-frontend": "The standalone gfx942:xnack- BF16/F32 host scaffold and source-level layout proof begin at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, with XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four tables; 23 public Verus proof functions discharge 73 obligations; and five formula mutations are rejected. Descendants separate block counts, WG64 dimensions, and AQL work items, then add a sealed direct-global one-wave 16x16x16 Kernel IR graph with 12 reads, one BF16/BF16/F32 MFMA, and four F32 stores. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 separately records a build-scoped WG64/288-byte fragment probe. It is neither the later four-slice production profile nor the independent WG256/384-byte mutation, and it does not establish source-to-canonical Kernel IR correspondence."
+} satisfies Record<ProgressNarrativeId, string>);
+
+export const SAFE_PROGRESS_DETAIL = "Checkpoint detail unavailable because its policy binding is invalid.";
+
+export function isProgressNarrativeId(value: unknown): value is ProgressNarrativeId {
+  return typeof value === "string" && hasOwn(progressNarrativeRegistry, value);
+}
+
+export function resolveProgressNarrative(value: unknown): string | undefined {
+  if (!isProgressNarrativeId(value)) return undefined;
+  const detail = progressNarrativeRegistry[value];
+  return narrativeFingerprint(detail) === progressNarrativeFingerprints[value]
+    ? detail
+    : undefined;
+}
+
+export function validateProgressNarrativeRegistry(
+  candidate: Record<string, unknown> = progressNarrativeRegistry,
+): string[] {
+  const issues: string[] = [];
+  const actualIds = Object.keys(candidate);
+  if (actualIds.length !== progressNarrativeIds.length || actualIds.some((id, index) => id !== progressNarrativeIds[index])) {
+    issues.push("registry does not contain the exact progress narrative ID order");
+  }
+  for (const id of progressNarrativeIds) {
+    if (!hasOwn(candidate, id)) {
+      issues.push(`${id}: missing canonical progress narrative`);
+      continue;
+    }
+    if (narrativeFingerprint(candidate[id]) !== progressNarrativeFingerprints[id]) {
+      issues.push(`${id}: canonical progress narrative text drift`);
+    }
+  }
+  return issues;
+}
+
+export function progressNarrativeRegistrySnapshot(): Record<string, string> {
+  return structuredClone(progressNarrativeRegistry) as Record<string, string>;
+}
+
+export { progressNarrativeIds };

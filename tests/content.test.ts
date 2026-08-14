@@ -14,16 +14,20 @@ import {
 import {
   narrativeEntry,
   narrativeIds,
-  narrativeRegistry,
+  narrativeRegistrySnapshot,
   validateNarrativeRegistry,
-  type NarrativeRegistryEntry,
 } from "../src/content/narrative-registry";
+import {
+  progressNarrativeRegistrySnapshot,
+  SAFE_PROGRESS_DETAIL,
+  validateProgressNarrativeRegistry,
+} from "../src/content/progress-narrative-registry";
 import {
   expectedCargoTestSourcePath,
   parseExactCargoTestCommand,
   stagedEvidenceDetail,
   stagedEvidenceOrder,
-  stagedEvidenceRecords,
+  stagedEvidenceRecord,
   validateStagedEvidenceCatalog,
 } from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
@@ -38,6 +42,12 @@ function serializedLessonContent(lessonId: string): string {
         : [],
     ),
   });
+}
+
+function checkpointDetail(
+  checkpoint: unknown,
+): string {
+  return checkpoint ? developmentCheckpointDetail(checkpoint) : "";
 }
 
 describe("curriculum integrity", () => {
@@ -217,14 +227,14 @@ describe("curriculum integrity", () => {
   it("requires whole Cargo test suites and referenced integration targets", () => {
     expect(validateStagedEvidenceCatalog()).toEqual([]);
     expect(
-      stagedEvidenceRecords["tiled-structural-admission-v1"].commands,
+      stagedEvidenceRecord("tiled-structural-admission-v1").commands,
     ).toEqual([
       "cargo test -p fe2o3-kernel-descriptor --test tiled_gemm_v1",
       "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_admission",
       "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_finalization",
     ]);
     for (const id of stagedEvidenceOrder) {
-      const record = stagedEvidenceRecords[id];
+      const record = stagedEvidenceRecord(id);
       for (const command of record.commands) {
         const parsed = parseExactCargoTestCommand(command);
         expect(parsed).toBeDefined();
@@ -305,6 +315,31 @@ describe("curriculum integrity", () => {
     expect(validateProgress(changed)).toContain(
       "tiled-gemm-source-bridge must contain its complete canonical staged evidence IDs",
     );
+    const rendered = developmentCheckpointDetail(checkpoint);
+    expect(rendered).toBe(SAFE_PROGRESS_DETAIL);
+    expect(rendered).not.toContain(unsupportedAuthority);
+  });
+
+  it("rejects progress authority prose stored on a checkpoint", () => {
+    const unsupportedAuthority =
+      "This checkpoint proves machine-code authority without further evidence.";
+    const changed = structuredClone(developmentCheckpoints);
+    const checkpoint = changed.find(
+      (candidate) => candidate.id === "scalar-gemm-v1",
+    );
+    const mutable = checkpoint as unknown as Record<string, unknown>;
+    mutable.detail = unsupportedAuthority;
+    delete mutable.narrativeId;
+
+    expect(validateProgress(changed)).toContain(
+      "scalar-gemm-v1 fields do not match its canonical kind",
+    );
+    expect(validateProgress(changed)).toContain(
+      "scalar-gemm-v1 does not bind its canonical progress narrative ID",
+    );
+    const rendered = developmentCheckpointDetail(checkpoint);
+    expect(rendered).toBe(SAFE_PROGRESS_DETAIL);
+    expect(rendered).not.toContain(unsupportedAuthority);
   });
 
   it("rejects renamed stable checkpoint IDs independently of display labels", () => {
@@ -345,10 +380,7 @@ describe("curriculum integrity", () => {
     const unsupportedAuthority =
       "The hardware result has unconditional execution authority.";
     expect(unsupportedAuthority).not.toMatch(/[0-9a-f]{40}/u);
-    const changed = structuredClone(narrativeRegistry) as Record<
-      string,
-      NarrativeRegistryEntry
-    >;
+    const changed = narrativeRegistrySnapshot();
     changed["gemm-tiling/public-layout-proof"].blocks[0] = {
       type: "paragraph",
       text: unsupportedAuthority,
@@ -363,6 +395,66 @@ describe("curriculum integrity", () => {
     };
     expect(validateNarrativeRegistry(changed)).toContain(
       "registry does not contain the exact canonical narrative ID order",
+    );
+  });
+
+  it("keeps frozen registries authoritative after detached mutations", () => {
+    const unsupportedAuthority =
+      "Mutated registry text grants unconditional machine authority.";
+    expect(validateNarrativeRegistry()).toEqual([]);
+    expect(validateProgressNarrativeRegistry()).toEqual([]);
+    expect(validateStagedEvidenceCatalog()).toEqual([]);
+
+    const narrative = narrativeEntry("first-fill/kernel-shape");
+    const originalNarrativeText =
+      narrative.blocks[0].type === "paragraph"
+        ? narrative.blocks[0].text
+        : "";
+    expect(Object.isFrozen(narrative.blocks[0])).toBe(true);
+    expect(
+      Reflect.set(
+        narrative.blocks[0] as object,
+        "text",
+        unsupportedAuthority,
+      ),
+    ).toBe(false);
+
+    const narrativeSnapshot = narrativeRegistrySnapshot();
+    const snapshotBlock =
+      narrativeSnapshot["first-fill/kernel-shape"].blocks[0];
+    if (snapshotBlock.type === "paragraph") {
+      snapshotBlock.text = unsupportedAuthority;
+    }
+    expect(validateNarrativeRegistry(narrativeSnapshot)).toContain(
+      "first-fill/kernel-shape: canonical narrative text drift",
+    );
+    expect(narrativeEntry("first-fill/kernel-shape").blocks[0]).toMatchObject({
+      text: originalNarrativeText,
+    });
+
+    const progressSnapshotCandidate = progressNarrativeRegistrySnapshot();
+    progressSnapshotCandidate["progress/scalar-gemm-v1"] = unsupportedAuthority;
+    expect(validateProgressNarrativeRegistry(progressSnapshotCandidate)).toContain(
+      "progress/scalar-gemm-v1: canonical progress narrative text drift",
+    );
+    const scalarCheckpoint = developmentCheckpoints.find(
+      (candidate) => candidate.id === "scalar-gemm-v1",
+    );
+    expect(developmentCheckpointDetail(scalarCheckpoint)).not.toContain(
+      unsupportedAuthority,
+    );
+
+    const staged = stagedEvidenceRecord("tiled-source-bridge-v1");
+    expect(Object.isFrozen(staged.assertions[0])).toBe(true);
+    expect(
+      Reflect.set(
+        staged.assertions[0] as object,
+        "text",
+        unsupportedAuthority,
+      ),
+    ).toBe(false);
+    expect(stagedEvidenceDetail(["tiled-source-bridge-v1"])).not.toContain(
+      unsupportedAuthority,
     );
   });
 
@@ -522,10 +614,11 @@ describe("implementation progress integrity", () => {
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "acceptance",
     });
-    expect(scalarCheckpoint?.detail).toContain(
+    const scalarDetail = checkpointDetail(scalarCheckpoint);
+    expect(scalarDetail).toContain(
       "ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9",
     );
-    expect(scalarCheckpoint?.detail).toContain(
+    expect(scalarDetail).toContain(
       "raw smoke deliberately bypasses production prerequisite authentication",
     );
     expect(kernelProgress.find((kernel) => kernel.id === "scalar-gemm")).toMatchObject({
@@ -539,11 +632,11 @@ describe("implementation progress integrity", () => {
         "protected MI300X launch evidence",
       ],
     });
-    expect(
+    expect(checkpointDetail(
       developmentCheckpoints.find(
         (checkpoint) => checkpoint.name === "Scalar GEMM proof profile",
-      )?.detail,
-    ).toContain("does not execute Verus");
+      ),
+    )).toContain("does not execute Verus");
     const physicalEffectCheckpoint = developmentCheckpoints.find(
       (checkpoint) => checkpoint.name === "Scalar GEMM physical-effect profile",
     );
@@ -551,16 +644,17 @@ describe("implementation progress integrity", () => {
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "acceptance",
     });
-    expect(physicalEffectCheckpoint?.detail).toContain("upstream LLVM 22");
-    expect(physicalEffectCheckpoint?.detail).toContain("exact 60-opcode scalar profile");
-    expect(physicalEffectCheckpoint?.detail).toContain(
+    const physicalEffectDetail = checkpointDetail(physicalEffectCheckpoint);
+    expect(physicalEffectDetail).toContain("upstream LLVM 22");
+    expect(physicalEffectDetail).toContain("exact 60-opcode scalar profile");
+    expect(physicalEffectDetail).toContain(
       "9 address / 8 read / 1 write / 1 return / 0 calls",
     );
-    expect(physicalEffectCheckpoint?.detail).toContain("without COMGR");
-    expect(physicalEffectCheckpoint?.detail).toContain(
+    expect(physicalEffectDetail).toContain("without COMGR");
+    expect(physicalEffectDetail).toContain(
       "static, inert evidence only",
     );
-    expect(physicalEffectCheckpoint?.detail).toContain(
+    expect(physicalEffectDetail).toContain(
       "downstream authenticated evidence must bind the new identity",
     );
   });
@@ -573,27 +667,28 @@ describe("implementation progress integrity", () => {
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "public",
     });
-    expect(s09Checkpoint?.detail).toContain("RustcInvocationDescriptorV2");
-    expect(s09Checkpoint?.detail).toContain("exactly /proc/./self/fd/198");
-    expect(s09Checkpoint?.detail).toContain(
+    const s09Detail = checkpointDetail(s09Checkpoint);
+    expect(s09Detail).toContain("RustcInvocationDescriptorV2");
+    expect(s09Detail).toContain("exactly /proc/./self/fd/198");
+    expect(s09Detail).toContain(
       "sole final managed -Zcodegen-backend=<path> selector",
     );
-    expect(s09Checkpoint?.detail).toContain("COV6 gfx942:xnack-");
-    expect(s09Checkpoint?.detail).toContain("containing exactly alpha");
-    expect(s09Checkpoint?.detail).toContain(
+    expect(s09Detail).toContain("COV6 gfx942:xnack-");
+    expect(s09Detail).toContain("containing exactly alpha");
+    expect(s09Detail).toContain(
       "canonical publication envelope and nested record",
     );
-    expect(s09Checkpoint?.detail).toContain(
+    expect(s09Detail).toContain(
       "5902632c5c249be05855ae5cef62bb9096a1f9277cfb0c58b4384594d6ee61de",
     );
-    expect(s09Checkpoint?.detail).toContain("proves no compiler origin");
-    expect(s09Checkpoint?.detail).toContain(
+    expect(s09Detail).toContain("proves no compiler origin");
+    expect(s09Detail).toContain(
       "no loading, execution, or verification authority",
     );
-    expect(s09Checkpoint?.detail).toContain(
+    expect(s09Detail).toContain(
       "not a pathname-to-object identity join",
     );
-    expect(s09Checkpoint?.detail).toContain(
+    expect(s09Detail).toContain(
       "no general source or output-object association",
     );
   });
@@ -606,48 +701,49 @@ describe("implementation progress integrity", () => {
       commit: "b704651757a3d46801144277e025f68153cb1ba9",
       state: "public",
     });
-    expect(checkpoint?.detail).toContain("Linux x86_64");
-    expect(checkpoint?.detail).toContain(
+    const detail = checkpointDetail(checkpoint);
+    expect(detail).toContain("Linux x86_64");
+    expect(detail).toContain(
       "pinned local runtime and tool snapshots",
     );
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain(
       "clone3 pidfds and ptrace-unresumable checkpoints",
     );
-    expect(checkpoint?.detail).toContain("seccomp process-creation denial");
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain("seccomp process-creation denial");
+    expect(detail).toContain(
       "exact live executable/backing comparison",
     );
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain(
       "runtime closure and baseline pinning",
     );
-    expect(checkpoint?.detail).toContain("vDSO pinning");
-    expect(checkpoint?.detail).toContain("immutable sealed results");
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain("vDSO pinning");
+    expect(detail).toContain("immutable sealed results");
+    expect(detail).toContain(
       "compressed and alternate debug-section families",
     );
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain(
       "Package-scoped debug stripping",
     );
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain(
       "bounded two-root gate compares SHA-256, size, and Build ID",
     );
-    expect(checkpoint?.detail).toContain("debug V2 integration passed 14/14");
-    expect(checkpoint?.detail).toContain("release passed 13/13");
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain("debug V2 integration passed 14/14");
+    expect(detail).toContain("release passed 13/13");
+    expect(detail).toContain(
       "full verifier debug and release suites and 22 doctests passed",
     );
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain(
       "mi300x correctly failed closed on its different vDSO and runtime baseline",
     );
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain(
       "does not integrate stock Verus or Z3",
     );
-    expect(checkpoint?.detail).toContain("semantic proof validity");
-    expect(checkpoint?.detail).toContain(
+    expect(detail).toContain("semantic proof validity");
+    expect(detail).toContain(
       "exclusive measured-image execution between checkpoints",
     );
-    expect(checkpoint?.detail).toContain("compiler refinement");
-    expect(checkpoint?.detail).toContain("GPU authority");
+    expect(detail).toContain("compiler refinement");
+    expect(detail).toContain("GPU authority");
   });
 
   it("keeps the tiled GEMM fragment probe separate from the four-slice profile", () => {
@@ -659,25 +755,26 @@ describe("implementation progress integrity", () => {
       commit: "286331aab8639dd3707e55cdf51a83f8854d26a5",
       state: "public",
     });
-    expect(foundation?.detail).toContain(
+    const detail = checkpointDetail(foundation);
+    expect(detail).toContain(
       "2ef91896bcdc4d26624f952e5c905c787cd9bc9e",
     );
-    expect(foundation?.detail).toContain(
+    expect(detail).toContain(
       "commit 027ab901bef7007d0e8da3370470556ed28baad1",
     );
-    expect(foundation?.detail).toContain(
+    expect(detail).toContain(
       "Exhaustive 64-lane x 4-component goldens",
     );
-    expect(foundation?.detail).toContain(
+    expect(detail).toContain(
       "23 public Verus proof functions discharge 73 obligations",
     );
-    expect(foundation?.detail).toContain(
+    expect(detail).toContain(
       "five formula mutations are rejected",
     );
-    expect(foundation?.detail).toContain(
+    expect(detail).toContain(
       "build-scoped WG64/288-byte fragment probe",
     );
-    expect(foundation?.detail).toContain(
+    expect(detail).toContain(
       "neither the later four-slice production profile nor the independent WG256/384-byte mutation",
     );
   });

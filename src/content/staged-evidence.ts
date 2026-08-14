@@ -6,6 +6,7 @@ import {
   type StagedEvidenceId,
   type StagedEvidenceReference,
 } from "./model";
+import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
 
 export interface StagedEvidenceAssertion {
   id: string;
@@ -26,18 +27,15 @@ export interface StagedEvidenceRecord {
   assertions: readonly StagedEvidenceAssertion[];
 }
 
-export const stagedEvidenceOrder: readonly StagedEvidenceId[] = [
+export const stagedEvidenceOrder = deepFreeze([
   "tiled-source-bridge-v1",
   "tiled-cargo-metadata-v1",
   "tiled-cargo-root-v1",
   "tiled-hardware-harness-v1",
   "tiled-structural-admission-v1",
-];
+] satisfies StagedEvidenceId[]);
 
-export const stagedEvidenceRecords: Record<
-  StagedEvidenceId,
-  StagedEvidenceRecord
-> = {
+const stagedEvidenceRecords = deepFreeze({
   "tiled-source-bridge-v1": {
     id: "tiled-source-bridge-v1",
     stageLabel: "fb75e19a source bridge",
@@ -198,19 +196,27 @@ export const stagedEvidenceRecords: Record<
       },
     ],
   },
-};
+} satisfies Record<StagedEvidenceId, StagedEvidenceRecord>);
 
 export function isStagedEvidenceId(value: unknown): value is StagedEvidenceId {
   return (
     typeof value === "string" &&
-    Object.prototype.hasOwnProperty.call(stagedEvidenceRecords, value)
+    hasOwn(stagedEvidenceRecords, value)
   );
+}
+
+export function resolveStagedEvidenceRecord(
+  value: unknown,
+): DeepReadonly<StagedEvidenceRecord> | undefined {
+  return isStagedEvidenceId(value) ? stagedEvidenceRecords[value] : undefined;
 }
 
 export function stagedEvidenceRecord(
   id: StagedEvidenceId,
-): StagedEvidenceRecord {
-  return stagedEvidenceRecords[id];
+): DeepReadonly<StagedEvidenceRecord> {
+  const record = resolveStagedEvidenceRecord(id);
+  if (!record) throw new Error("Canonical staged evidence registry failure");
+  return record;
 }
 
 export function stagedEvidenceDetail(

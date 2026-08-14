@@ -5,15 +5,15 @@ import {
 } from "./model";
 import {
   isNarrativeId,
-  narrativeOrderByLesson,
-  narrativeRegistry,
+  resolveNarrativeOrder,
+  stagedEvidenceLessonIds,
   validateNarrativeRegistry,
 } from "./narrative-registry";
 import {
   isStagedEvidenceId,
   stagedEvidenceDetail,
   stagedEvidenceOrder,
-  stagedEvidenceRecords,
+  stagedEvidenceRecord,
   stagedEvidenceReference,
   validateStagedEvidenceCatalog,
 } from "./staged-evidence";
@@ -26,11 +26,6 @@ const stagedAuthorities = new Set([
 ]);
 const narrativeSectionKeys = ["kind", "narrativeId"];
 const stagedSectionKeys = ["evidenceIds", "kind"];
-const lessonsRequiringStagedEvidence = new Set([
-  "read-the-evidence",
-  "gemm-tiling",
-]);
-
 function hasExactSequence(left: readonly unknown[], right: readonly string[]) {
   return (
     left.length === right.length &&
@@ -45,7 +40,7 @@ export interface ValidationIssue {
 
 export function validateCurriculum(
   modules: CurriculumModule[],
-  narratives: Record<string, unknown> = narrativeRegistry,
+  narratives?: Record<string, unknown>,
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [
     ...validateStagedEvidenceCatalog().map((message) => ({
@@ -111,7 +106,7 @@ function validateLesson(
   const narrativeSections = lesson.sections.filter(
     (section) => section.kind === "narrative",
   );
-  const expectedNarratives = narrativeOrderByLesson[lesson.id];
+  const expectedNarratives = resolveNarrativeOrder(lesson.id);
   const actualNarratives = narrativeSections.map(
     (section) => section.narrativeId,
   );
@@ -128,7 +123,8 @@ function validateLesson(
     (claim) => claim.reference?.scope === "staged-progress",
   );
   if (
-    (lessonsRequiringStagedEvidence.has(lesson.id) || hasStagedClaims) &&
+    (stagedEvidenceLessonIds.some((id) => id === lesson.id) ||
+      hasStagedClaims) &&
     stagedSections.length !== 1
   ) {
     issues.push({
@@ -229,7 +225,7 @@ function validateLesson(
           message: "staged reference has no recognized evidence id",
         });
       } else {
-        const record = stagedEvidenceRecords[reference.evidenceId];
+        const record = stagedEvidenceRecord(reference.evidenceId);
         const expectedReference = stagedEvidenceReference(record.id);
         if (
           claim.label !== record.claimLabel ||

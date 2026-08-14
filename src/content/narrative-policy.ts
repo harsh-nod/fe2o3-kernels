@@ -1,5 +1,7 @@
+import { deepFreeze } from "./registry";
+
 // Registry additions require an explicit ID, lesson-order entry, and reviewed SHA-256.
-export const narrativeIds = [
+export const narrativeIds = deepFreeze([
   "read-the-evidence/labels",
   "read-the-evidence/differentiator",
   "read-the-evidence/scalar-gemm-checkpoint",
@@ -39,11 +41,11 @@ export const narrativeIds = [
   "exercise-ladder/advanced",
   "contributing-kernel/checklist",
   "contributing-kernel/review"
-] as const;
+] as const);
 
 export type NarrativeId = (typeof narrativeIds)[number];
 
-export const narrativeOrderByLesson: Record<string, readonly NarrativeId[]> = {
+export const narrativeOrderByLesson = deepFreeze({
   "read-the-evidence": [
     "read-the-evidence/labels",
     "read-the-evidence/differentiator",
@@ -119,9 +121,14 @@ export const narrativeOrderByLesson: Record<string, readonly NarrativeId[]> = {
     "contributing-kernel/checklist",
     "contributing-kernel/review"
   ]
-};
+} satisfies Record<string, readonly NarrativeId[]>);
 
-export const narrativeFingerprints: Record<NarrativeId, string> = {
+export const stagedEvidenceLessonIds = deepFreeze([
+  "read-the-evidence",
+  "gemm-tiling",
+] as const);
+
+export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
   "read-the-evidence/differentiator": "2aae8c08ffc154d2feca3e53e9f5997d9965b7df3673cbf6e431f619b53f5951",
   "read-the-evidence/scalar-gemm-checkpoint": "3a89c3c6618b84f7c991b19317818624549b1ac51ba76f5c727fd58c6a692922",
@@ -161,4 +168,4 @@ export const narrativeFingerprints: Record<NarrativeId, string> = {
   "exercise-ladder/advanced": "9ab054160ebcd2cc8b3a744686102c9e0d62da2bcebad1fb3155639e16ffd16a",
   "contributing-kernel/checklist": "3655a026b9d3851266779266faf0ab4d405fc00172e4e6cdeb3424381ed08b02",
   "contributing-kernel/review": "9b62429c8ac23851756fdbe8c218b7e32a2e86cceaf21380cdd53182b467a856"
-};
+} satisfies Record<NarrativeId, string>);

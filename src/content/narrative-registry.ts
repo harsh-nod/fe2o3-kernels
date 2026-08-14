@@ -4,8 +4,10 @@ import {
   narrativeFingerprints,
   narrativeIds,
   narrativeOrderByLesson,
+  stagedEvidenceLessonIds,
   type NarrativeId,
 } from "./narrative-policy";
+import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
 
 export interface NarrativeRegistryEntry {
   sectionId: string;
@@ -13,7 +15,7 @@ export interface NarrativeRegistryEntry {
   blocks: LessonBlock[];
 }
 
-export const narrativeRegistry = {
+const narrativeRegistry = deepFreeze({
   "read-the-evidence/labels": {
     "sectionId": "labels",
     "title": "One kernel, several independent questions",
@@ -956,7 +958,7 @@ export const narrativeRegistry = {
       }
     ]
   }
-} satisfies Record<NarrativeId, NarrativeRegistryEntry>;
+} satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
 export function narrativeSection(narrativeId: NarrativeId): NarrativeLessonSection {
   return { kind: "narrative", narrativeId };
@@ -965,12 +967,46 @@ export function narrativeSection(narrativeId: NarrativeId): NarrativeLessonSecti
 export function isNarrativeId(value: unknown): value is NarrativeId {
   return (
     typeof value === "string" &&
-    Object.prototype.hasOwnProperty.call(narrativeRegistry, value)
+    hasOwn(narrativeRegistry, value)
   );
 }
 
-export function narrativeEntry(id: NarrativeId): NarrativeRegistryEntry {
-  return narrativeRegistry[id];
+export function resolveNarrativeEntry(
+  value: unknown,
+): DeepReadonly<NarrativeRegistryEntry> | undefined {
+  if (!isNarrativeId(value)) return undefined;
+  const entry = narrativeRegistry[value];
+  return narrativeFingerprint(entry) === narrativeFingerprints[value]
+    ? entry
+    : undefined;
+}
+
+export function narrativeEntry(
+  id: NarrativeId,
+): DeepReadonly<NarrativeRegistryEntry> {
+  const entry = resolveNarrativeEntry(id);
+  if (!entry) throw new Error("Canonical narrative registry failure");
+  return entry;
+}
+
+export function narrativeRegistrySnapshot(): Record<
+  string,
+  NarrativeRegistryEntry
+> {
+  return structuredClone(narrativeRegistry) as unknown as Record<
+    string,
+    NarrativeRegistryEntry
+  >;
+}
+
+export function resolveNarrativeOrder(
+  lessonId: string,
+): readonly NarrativeId[] | undefined {
+  return hasOwn(narrativeOrderByLesson, lessonId)
+    ? narrativeOrderByLesson[
+        lessonId as keyof typeof narrativeOrderByLesson
+      ]
+    : undefined;
 }
 
 export function validateNarrativeRegistry(
@@ -986,7 +1022,7 @@ export function validateNarrativeRegistry(
   }
 
   for (const id of narrativeIds) {
-    if (!Object.prototype.hasOwnProperty.call(candidate, id)) {
+    if (!hasOwn(candidate, id)) {
       issues.push(`${id}: missing canonical narrative entry`);
       continue;
     }
@@ -997,4 +1033,4 @@ export function validateNarrativeRegistry(
   return issues;
 }
 
-export { narrativeIds, narrativeOrderByLesson };
+export { narrativeIds, narrativeOrderByLesson, stagedEvidenceLessonIds };
