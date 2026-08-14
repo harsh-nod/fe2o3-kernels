@@ -73,8 +73,8 @@ describe("implementation progress integrity", () => {
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-13",
-      publicCommit: "9beaf72c1d0dd59ab18801dc0a82ebc646f3551d",
-      publicTree: "456ddcd2f9563a0a216137831c4e72d2e0637713",
+      publicCommit: "abe9fdca21579017a1d346fcfa66552bc81308f4",
+      publicTree: "380572dbe2bad528aa95a2e648ac4fdfda5800a7",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
@@ -182,9 +182,10 @@ describe("implementation progress integrity", () => {
     );
   });
 
-  it("tracks the tiled GEMM layout proof without claiming compiler or GPU closure", () => {
+  it("tracks tiled GEMM layout and canonical IR without claiming compiler or GPU closure", () => {
     const tiledCheckpoint = developmentCheckpoints.find(
-      (checkpoint) => checkpoint.name === "Tiled GEMM V1 host and layout proof",
+      (checkpoint) =>
+        checkpoint.name === "Tiled GEMM V1 host, layout proof, and canonical IR",
     );
     expect(tiledCheckpoint).toMatchObject({
       commit: progressSnapshot.publicCommit,
@@ -206,9 +207,19 @@ describe("implementation progress integrity", () => {
       "five formula mutations are rejected",
     );
     expect(tiledCheckpoint?.detail).toContain(
+      "f8a66d3babf764a6f064189e4634da9ee0cb046a separates block counts",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "12 direct global reads",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "four observable F32 stores",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
       "no public frontend/compiler binding yet",
     );
     expect(tiledCheckpoint?.detail).toContain("MFMA numerical equivalence");
+    expect(tiledCheckpoint?.detail).toContain("dedicated tiled lowering target");
     expect(tiledCheckpoint?.detail).toContain("machine memory safety");
     expect(tiledCheckpoint?.detail).toContain("race freedom");
     expect(tiledCheckpoint?.detail).toContain("protected authority");

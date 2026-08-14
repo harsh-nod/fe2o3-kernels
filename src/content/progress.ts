@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "9beaf72c1d0dd59ab18801dc0a82ebc646f3551d",
-  publicTree: "456ddcd2f9563a0a216137831c4e72d2e0637713",
+  publicCommit: "abe9fdca21579017a1d346fcfa66552bc81308f4",
+  publicTree: "380572dbe2bad528aa95a2e648ac4fdfda5800a7",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -109,11 +109,11 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
       "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
   },
   {
-    name: "Tiled GEMM V1 host and layout proof",
+    name: "Tiled GEMM V1 host, layout proof, and canonical IR",
     commit: progressSnapshot.publicCommit,
     state: "public",
     detail:
-      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain required by that hosted Verus job; it changes no proof or kernel semantics. There is no public frontend/compiler binding yet, compiler refinement, MFMA numerical equivalence, HSACO or hardware execution, machine memory safety, race freedom, or protected authority.",
+      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain required by that hosted Verus job; it changes no proof or kernel semantics. Commit f8a66d3babf764a6f064189e4634da9ee0cb046a separates block counts [N/16,M/16,1], workgroup dimensions [64,1,1], and derived AQL work items [64*(N/16),M/16,1]. Public head abe9fdca21579017a1d346fcfa66552bc81308f4 adds the sealed target-neutral one-wave 16x16x16 graph with 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, exact 256-element profiles, and exhaustive lane/output ownership tests. There is no public frontend/compiler binding yet, dedicated tiled lowering target, compiler refinement, MFMA numerical equivalence, final HSACO or hardware execution, machine memory safety, race freedom, or protected authority.",
   },
 ];
 
@@ -184,7 +184,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["scalar GEMM", "workgroup reduction", "MFMA integration"],
-    next: "Bind the public register and LDS maps to exact gfx942:xnack- rustc fragment ABI and MFMA lowering, then compose full LDS movement, tiled loops, stores, HSACO inspection, and hardware evidence.",
+    next: "Bind the observed gfx942:xnack- Rust provider and ABI to the canonical graph, add the dedicated tiled lowering target so MFMA and four stores survive final HSACO, run the guarded one-tile hardware slice, then compose XOR4 LDS movement and tiled loops.",
   },
   {
     id: "softmax",

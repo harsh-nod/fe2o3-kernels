@@ -34,8 +34,9 @@ known blockers, and separate run/verify/evidence gates for every kernel in the
 curriculum. That progress view does not silently repin or upgrade lesson claims.
 
 The current public progress head is fe2o3 commit
-`9beaf72c1d0dd59ab18801dc0a82ebc646f3551d`, tree
-`456ddcd2f9563a0a216137831c4e72d2e0637713`. It canonically captures the
+`abe9fdca21579017a1d346fcfa66552bc81308f4`, tree
+`380572dbe2bad528aa95a2e648ac4fdfda5800a7`. It retains the production S09
+checkpoint that canonically captures the
 production rustc invocation descriptor, admits exactly
 `/proc/./self/fd/198` as the backend capability, and enforces one final managed
 codegen-backend selector. A real `cargo-fe2o3`/Worker test published a COV6
@@ -45,6 +46,14 @@ observation. These are inert observations: they prove no compiler origin and
 grant no loading, execution, or verification authority. Canonical cwd pathname
 capture does not bind that pathname to the separately pinned cwd object, and
 the scalar profile establishes no general source or output-object association.
+
+The new tiled-GEMM descendants separate block counts, wave64 workgroup
+dimensions, and derived AQL work-item dimensions in the checked host contract.
+They also add a sealed, target-neutral one-wave `16x16x16` Kernel IR graph with
+12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, and
+exhaustive 64-lane ownership tests. This is not a runnable GPU increment: the
+graph is not yet bound to a public Rust frontend admission, a dedicated tiled
+AMDGCN lowering target, a final HSACO, or hardware execution.
 
 Earlier commit `027ab901bef7007d0e8da3370470556ed28baad1` remains the source
 of the exact official gfx942 A/B/C/D register maps pinned to AMD Matrix
@@ -91,6 +100,10 @@ At the audited pin:
 - Bounded wave64 collectives, LDS/barrier/atomic contracts, target gates, and a
   narrow MFMA tile profile exist in APIs, models, Kernel IR, or lowering tests.
   The site labels those focused mechanics separately from runnable kernels.
+- The public tiled-GEMM checkpoint now has unambiguous block/workgroup/AQL
+  geometry and a canonical direct-global one-tile Kernel IR graph. Dedicated
+  tiled lowering, result-retaining HSACO, LDS composition, and GPU execution are
+  still open.
 - Tiled GEMM, softmax, flash attention, and mixture-of-experts are design-only
   curricula. Their snippets decompose the implementation and proof work; they
   are not fe2o3 programs users should expect to compile today.

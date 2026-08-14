@@ -312,10 +312,14 @@ const gemmMapping: Lesson = {
           text: "The separate executable XOR4 LDS map stages A as (row, depth) and B in transposed logical order as (column, depth). An ordinary Rust test parses the exact Verus A/B/C and nested XOR formula bodies and exhaustively compares both staging compositions. The runner pins the Verus executable bytes; 23 public proof functions discharge 73 obligations, and five mutations of A, B, C, row-major XOR4, and the inner two-bit permutation are rejected at their intended correspondence theorems.",
         },
         {
+          type: "paragraph",
+          text: "Public descendants f8a66d3babf764a6f064189e4634da9ee0cb046a and abe9fdca21579017a1d346fcfa66552bc81308f4 distinguish block counts [N/16,M/16,1] from the [64,1,1] workgroup and derived AQL work-item dimensions, then add a sealed target-neutral one-wave 16x16x16 Kernel IR graph. The graph has 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, exact 256-element profiles, and exhaustive lane/output ownership tests. It deliberately contains no LDS operations yet.",
+        },
+        {
           type: "callout",
           tone: "boundary",
-          title: "Source-level layout evidence only",
-          text: "This public increment has no frontend/compiler binding yet. It does not prove compiler refinement, MFMA numerical equivalence, HSACO or hardware execution, machine memory safety, race freedom, or protected authority. The lesson dependency pin remains at the older audited baseline.",
+          title: "Layout proof and target-neutral IR only",
+          text: "The public graph has no frontend/compiler binding or dedicated tiled AMDGCN lowering target yet. It does not prove compiler refinement, MFMA numerical equivalence, final HSACO or hardware execution, machine memory safety, race freedom, or protected authority. The lesson dependency pin remains at the older audited baseline.",
         },
       ],
     },
@@ -408,7 +412,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "The newer public checkpoint closes a bounded source-level register and LDS layout proof, but the remaining gates are still a future GEMM vertical slice; none is represented as current parity or production authority.",
+        "The newer public checkpoint closes a bounded source-level register/LDS layout proof and adds a sealed direct-global one-tile Kernel IR graph, but frontend binding, dedicated lowering, final HSACO, hardware execution, LDS composition, and functional/numerical proof remain future gates; none is represented as current parity or production authority.",
     },
   ],
   sections: [
