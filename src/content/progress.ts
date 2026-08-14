@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "85a38372d74873cb84e2d6d55eed66fd98e5904b",
-  publicTree: "df9ac26cde159ed4194346044bc53a4d9318a3f6",
+  publicCommit: "a78f3ef3538cbe1ce6187defc1bb7e48c7f6d484",
+  publicTree: "53a3fc642d2c3d69ca850575ff60d538b34fedfb",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -82,10 +82,10 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Scalar GEMM V1 vertical slice",
-    commit: "4b1bdb92e1373bd4b446dccb7502f5e2f737bc4a",
-    state: "queued",
+    commit: "a78f3ef3538cbe1ce6187defc1bb7e48c7f6d484",
+    state: "acceptance",
     detail:
-      "Three isolated implementation lanes are active from this common base: authentic rustc source and ABI admission, cyclic Kernel IR plus exact gfx942 LLVM lowering, and Verus specifications plus host admission and CPU-oracle tests. The fixed profile is row-major f32 C=A*B with runtime m/n/k, one output per invocation, sequential non-contracted accumulation, checked extents, and direct upstream LLVM/LLD finalization. No run, verification, or evidence gate is upgraded yet.",
+      "Both public mains now contain the canonical Rust source, 15-proof Verus model, exact portable-MIR receipt, generated host adapter, canonical Kernel IR/lowering, Worker V2 validation, and fail-closed typed HSA harness. On mi300x, two upstream LLVM and in-process LLD runs produced identical 8,600-byte gfx942:xnack- COV6 HSACO (SHA-256 86a22b8cd3045a01445b30b12c00e11f6be466f989135402b871174109f2b1f5) with the exact two symbols, 64/320-byte kernarg spans, WG256, and wave64. Hardware dispatch and protected evidence remain open.",
   },
 ];
 
@@ -139,10 +139,14 @@ export const kernelProgress: KernelProgress[] = [
     id: "scalar-gemm",
     kernel: "Scalar reference GEMM",
     run: "blocked",
-    verify: "planned",
-    evidence: "planned",
-    dependsOn: ["nested loops", "multidimensional indexing", "layout admission"],
-    next: "Integrate and independently review the active frontend, Kernel IR/lowering, and Verus/runtime lanes, then produce direct-LLVM/LLD HSACO and guarded MI300X evidence.",
+    verify: "partial",
+    evidence: "partial",
+    dependsOn: [
+      "authenticated HSA publication and launch",
+      "source-to-machine refinement",
+      "adjacent output canary views",
+    ],
+    next: "Carry the inspected Worker V2 artifact capability into the typed HSA harness, run the boundary matrix on MI300X, and publish protected source-to-artifact-to-launch evidence.",
   },
   {
     id: "tiled-gemm",

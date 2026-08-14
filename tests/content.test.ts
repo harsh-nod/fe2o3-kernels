@@ -92,16 +92,16 @@ describe("implementation progress integrity", () => {
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
   });
 
-  it("does not promote scalar GEMM while its implementation swarm is active", () => {
+  it("keeps scalar GEMM hardware-blocked while tracking reviewed partial gates", () => {
     expect(
       developmentCheckpoints.find(
         (checkpoint) => checkpoint.name === "Scalar GEMM V1 vertical slice",
       ),
-    ).toMatchObject({ state: "queued" });
+    ).toMatchObject({ state: "acceptance" });
     expect(kernelProgress.find((kernel) => kernel.id === "scalar-gemm")).toMatchObject({
       run: "blocked",
-      verify: "planned",
-      evidence: "planned",
+      verify: "partial",
+      evidence: "partial",
     });
   });
 });
