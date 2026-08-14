@@ -58,43 +58,11 @@ grant no loading, execution, or verification authority. Canonical cwd pathname
 capture does not bind that pathname to the separately pinned cwd object, and
 the scalar profile establishes no general source or output-object association.
 
-The tiled-GEMM work now has three additional, deliberately separate stages:
-
-1. Commit `fb75e19a73ec0a9acebb203bd9821190b0592c82` authenticates one exact
-   collected Rust root with the four-slice signature `A:&[u16]`, `B:&[u16]`,
-   `C:&[f32]`, and `D:DisjointSlice<f32>`. It binds the exact layouts, rustc
-   `FnAbi`, portable-MIR identity, compiler profile, `gfx942:xnack-`, COV6,
-   WG64, zero LDS, and a 64-byte explicit plus 256-byte implicit ABI. A private
-   single-use receipt selects canonical direct-global Kernel IR with eight BF16
-   loads, four f32 loads, one BF16 MFMA, and four f32 stores. AMDGCN lowering
-   represents the BF16 carriers with i16 loads. This
-   source-to-canonical lowering is reviewed correspondence, **not a compiler
-   refinement proof**, and its Worker V2 handoff remains inert.
-   Follow-up commit `b904f5b648c7eb249d32d73db427abe72970315a`
-   normalizes only Cargo-generated metadata in the semantic commitment while
-   the full observed argv and metadata remain receipt-bound. Commit
-   `51bd129c31b08b636545f12229f34aaa431321f2` normalizes only the
-   Cargo-generated root shape while the full observed root remains
-   receipt-bound.
-2. Commit `b825661ac3f7e332d2cc9723ed1efbb54869fa33` adds an ignored, opt-in
-   one-tile gfx942:xnack- hardware harness for externally supplied
-   digest-pinned bytes and an observed digest-pinned LLVM 22 objdump. It
-   enforces the COV6/WG64/320-byte metadata and entry range, one retained BF16
-   MFMA, a global store, forbidden instruction checks, a bitwise 16x16 oracle,
-   that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous
-   completion, exact executable identity, and unload. The commit carries **no
-   committed run receipt**, so exact hardware execution remains uncommitted and
-   non-authoritative. The harness bypasses production prerequisite
-   authentication and grants no compiler, publication, load, or launch
-   authority.
-3. Commit `d43f11c86196e4f01c9ee305ea8d19f6d8c17672` adds sealed structural
-   descriptor admission and canonical finalization for the exact 320-byte
-   four-slice ABI, COV6, `gfx942:xnack-`, WG64, wave64, and zero LDS. It rejects
-   the separate WG64/288-byte fragment probe, independent WG256 and 384-byte
-   mutations, and other structural drift. Adversarial tests intentionally show
-   that arbitrary `.text` can pass this gate, so structural admission **does
-   not inspect machine-body semantics** or prove BF16/MFMA behavior. It adds no
-   COMGR path and grants no publication, load, or launch authority.
+The staged tiled-GEMM facts are defined once as atomic, typed evidence records
+in [`src/content/staged-evidence.ts`](src/content/staged-evidence.ts). Claims,
+lesson tables, progress checkpoints, exact commands, source paths, and limited
+authority labels are rendered from those records and rejected if they drift.
+The hardware entry is a harness record, not a hardware-run result.
 
 The previous WG64/288-byte build-scoped fragment probe remains separate from
 both the 320-byte four-slice profile and the independent WG256/384-byte
@@ -132,13 +100,9 @@ public proof functions covering 73 obligations, and five rejected formula
 mutations. Workflow-only descendant
 `a51c78322e264c06abdb6dc21817aced09653830` installs Rust 1.97.1 for the
 hosted Verus job and changes no proof or kernel semantics. The layout packet
-remains source-level evidence. The later source-authenticated bridge selects
-the canonical direct-global module, but that correspondence is not compiler
-refinement. The hardware harness carries no committed run receipt and is
-non-authoritative, and the structural artifact gate does not inspect the
-machine body. None of these stages
-establishes production LDS composition, memory safety, race freedom, or
-protected launch authority.
+remains source-level evidence. Later tiled checkpoints and their authority
+limits are intentionally not restated here; the typed staged-evidence records
+are the canonical source rendered by the site.
 
 ## Maturity labels
 

@@ -5,11 +5,14 @@ import vecaddKernel from "../../examples/vecadd_kernel.rs?raw";
 import {
   FE2O3_PIN,
   pinnedReference,
-  stagedReference,
   type CurriculumModule,
   type Lesson,
 } from "./model";
 import { completeTabs, noKernel, noProof, resultText } from "./shared";
+import {
+  stagedEvidenceClaim,
+  stagedEvidenceOrder,
+} from "./staged-evidence";
 
 const genericCommand = "scripts/ci-local.sh generic";
 const rocmCompileCommand =
@@ -46,106 +49,7 @@ const orientation: Lesson = {
         ["README.md", "docs/testing.md", "docs/verification-model.md"],
       ),
     },
-    {
-      kind: "compiler-hsaco-observed",
-      label: "Staged tiled source bridge",
-      detail:
-        "The staged source bridge authenticates one exact collected Rust/MIR/FnAbi profile into canonical direct-global tiled GEMM Kernel IR through a private single-use receipt. This is reviewed correspondence, not compiler refinement, and grants no final-HSACO or runtime authority.",
-      reference: stagedReference({
-        claim: "compiler-hsaco-observed",
-        authority: "source-admission-only",
-        commit: "fb75e19a73ec0a9acebb203bd9821190b0592c82",
-        tree: "0a57b2b6d14121da92dbbb2d7c4f9d8b4df4ce63",
-        commands: [
-          "cargo test -p rustc-codegen-fe2o3 --lib collected_tiled_gemm_v1",
-        ],
-        sourcePaths: [
-          "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_v1.rs",
-          "crates/rustc-codegen-fe2o3/src/kernel_ir_lowering.rs",
-          "crates/rustc-codegen-fe2o3/tests/fixtures/collected-tiled-gemm-v1/src/lib.rs",
-        ],
-        target: "gfx942:xnack-",
-      }),
-    },
-    {
-      kind: "compiler-hsaco-observed",
-      label: "Staged Cargo metadata normalization",
-      detail:
-        "The staged repair normalizes only Cargo-generated metadata in the semantic commitment. Full observed argv and metadata remain bound to the private receipt.",
-      reference: stagedReference({
-        claim: "compiler-hsaco-observed",
-        authority: "source-admission-only",
-        commit: "b904f5b648c7eb249d32d73db427abe72970315a",
-        tree: "a5b07af23c9fcf5f04ddcad1c18a6318469e6e06",
-        commands: [
-          "cargo test -p rustc-codegen-fe2o3 --lib cargo_build_metadata_is_shape_checked_but_not_a_semantic_identity",
-        ],
-        sourcePaths: [
-          "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_v1.rs",
-        ],
-        target: "gfx942:xnack-",
-      }),
-    },
-    {
-      kind: "compiler-hsaco-observed",
-      label: "Staged Cargo root normalization",
-      detail:
-        "The staged repair normalizes only the Cargo-generated root shape in the semantic commitment. The full observed root remains bound to the private receipt.",
-      reference: stagedReference({
-        claim: "compiler-hsaco-observed",
-        authority: "source-admission-only",
-        commit: "51bd129c31b08b636545f12229f34aaa431321f2",
-        tree: "8be992dee9f145c73f61bb05f0066656298a7c75",
-        commands: [
-          "cargo test -p rustc-codegen-fe2o3 --lib kernel_root_build_identity_is_shape_checked_and_receipt_bound",
-        ],
-        sourcePaths: [
-          "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_v1.rs",
-        ],
-        target: "gfx942:xnack-",
-      }),
-    },
-    {
-      kind: "compiler-hsaco-observed",
-      label: "Staged tiled hardware harness",
-      detail:
-        "The staged commit adds an ignored, opt-in harness for externally supplied digest-pinned bytes and objdump output. It commits no hardware run receipt, authenticates no producer, and grants no load, launch, or GPU-observation authority.",
-      reference: stagedReference({
-        claim: "compiler-hsaco-observed",
-        authority: "harness-only",
-        commit: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
-        tree: "ea96ff13212e02390c881b74e2ea47aaf3018f1b",
-        commands: [
-          "cargo test -p fe2o3-hsa-runtime --test tiled_gemm_v1_hardware",
-        ],
-        sourcePaths: [
-          "crates/fe2o3-hsa-runtime/tests/tiled_gemm_v1_hardware.rs",
-        ],
-        target: "gfx942:xnack-",
-      }),
-    },
-    {
-      kind: "compiler-hsaco-observed",
-      label: "Staged tiled structural admission",
-      detail:
-        "The staged structural gate admits and canonically finalizes the exact tiled descriptor profile. It intentionally does not inspect machine-body semantics and grants no publication, loading, or launch authority.",
-      reference: stagedReference({
-        claim: "compiler-hsaco-observed",
-        authority: "structural-admission-only",
-        commit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
-        tree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
-        commands: [
-          "cargo test -p fe2o3-kernel-descriptor tiled_gemm_v1",
-          "cargo test -p fe2o3-hsaco-finalize worker_v2_hsaco",
-        ],
-        sourcePaths: [
-          "crates/fe2o3-kernel-descriptor/src/tiled_gemm_v1.rs",
-          "crates/fe2o3-hsaco-finalize/src/tiled_gemm_v1_artifact.rs",
-          "crates/fe2o3-hsaco-finalize/tests/worker_v2_hsaco_admission.rs",
-        ],
-        target: "gfx942:xnack-",
-      }),
-    },
+    ...stagedEvidenceOrder.map(stagedEvidenceClaim),
   ],
   sections: [
     {
@@ -214,29 +118,9 @@ const orientation: Lesson = {
           type: "callout",
           tone: "boundary",
           title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks d43f11c86196e4f01c9ee305ea8d19f6d8c17672 only as an eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The staged target retains the S09 and authenticated-Verus checkpoints and adds the three tiled GEMM stages below. Those stages close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
+          text: "The progress dashboard tracks a separately gated eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The typed staged records below close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
         },
-        {
-          type: "table",
-          headers: ["Tiled GEMM stage", "What changed", "Authority boundary"],
-          rows: [
-            [
-              "fb75e19a source bridge",
-              "An exact collected Rust/MIR/FnAbi profile selects the canonical direct-global WG64/320-byte Kernel IR module through a private single-use receipt. Follow-ups b904f5b6 and 51bd129c normalize only Cargo-generated metadata and root shape in semantic commitments; full observations remain receipt-bound.",
-              "Source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof; the Worker V2 handoff is inert.",
-            ],
-            [
-              "b825661a guarded gfx942 harness",
-              "An opt-in harness requires digest-pinned bytes and objdump, checks exact metadata and ISA shape, and, if run, checks a bitwise 16x16 oracle, inputs remained bitwise unchanged, canaries, and unload.",
-              "The commit has no run receipt. Exact hardware execution remains uncommitted and non-authoritative, and the harness bypasses production prerequisites.",
-            ],
-            [
-              "d43f11c8 structural admission",
-              "Worker V2 inspection and finalization enforce gfx942:xnack-, COV6, WG64, wave64, zero LDS, and the four-slice 320-byte ABI.",
-              "The gate separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte mutations, but accepts arbitrary .text, does not inspect machine-body semantics, and grants no launch authority.",
-            ],
-          ],
-        },
+        { type: "staged-evidence", evidenceIds: [...stagedEvidenceOrder] },
       ],
     },
   ],

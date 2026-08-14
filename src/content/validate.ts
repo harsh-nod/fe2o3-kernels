@@ -1,4 +1,16 @@
-import { FE2O3_PIN, type CurriculumModule, type Lesson } from "./model";
+import {
+  FE2O3_PIN,
+  type CurriculumModule,
+  type Lesson,
+  type LessonBlock,
+} from "./model";
+import {
+  stagedEvidenceDetail,
+  stagedEvidenceOrder,
+  stagedEvidenceRecords,
+  stagedEvidenceReference,
+  validateStagedEvidenceCatalog,
+} from "./staged-evidence";
 
 const exactObjectName = /^[0-9a-f]{40}$/;
 const stagedAuthorities = new Set([
@@ -6,6 +18,19 @@ const stagedAuthorities = new Set([
   "harness-only",
   "structural-admission-only",
 ]);
+const stagedEvidenceMarkers = stagedEvidenceOrder.flatMap((id) => {
+  const commit = stagedEvidenceRecords[id].commit;
+  return [commit, commit.slice(0, 8)];
+});
+
+function unboundBlockText(block: LessonBlock): string[] {
+  if (block.type === "staged-evidence") return [];
+  if (block.type === "paragraph" || block.type === "callout") {
+    return [block.text];
+  }
+  if (block.type === "bullets" || block.type === "steps") return block.items;
+  return [block.headers, ...block.rows].flat();
+}
 
 export interface ValidationIssue {
   path: string;
@@ -15,7 +40,9 @@ export interface ValidationIssue {
 export function validateCurriculum(
   modules: CurriculumModule[],
 ): ValidationIssue[] {
-  const issues: ValidationIssue[] = [];
+  const issues: ValidationIssue[] = validateStagedEvidenceCatalog().map(
+    (message) => ({ path: "stagedEvidence", message }),
+  );
   const lessonIds = new Set<string>();
   const moduleNumbers = new Set<number>();
 
@@ -64,6 +91,40 @@ function validateLesson(
     }
   }
 
+  for (const [sectionIndex, section] of lesson.sections.entries()) {
+    for (const [blockIndex, block] of section.blocks.entries()) {
+      if (block.type !== "staged-evidence") continue;
+      const blockPath = `${path}.sections[${sectionIndex}].blocks[${blockIndex}]`;
+      if (block.evidenceIds.length === 0) {
+        issues.push({ path: blockPath, message: "empty staged evidence block" });
+      }
+      for (const evidenceId of block.evidenceIds) {
+        if (!stagedEvidenceRecords[evidenceId]) {
+          issues.push({
+            path: blockPath,
+            message: `unknown staged evidence id ${evidenceId}`,
+          });
+        }
+      }
+    }
+  }
+
+  const unboundStagedMarker = [
+    ...lesson.claims
+      .filter((claim) => claim.reference?.scope !== "staged-progress")
+      .flatMap((claim) => [claim.label, claim.detail]),
+    ...lesson.sections.flatMap((section) =>
+      section.blocks.flatMap(unboundBlockText),
+    ),
+    ...lesson.tabs.map((tab) => tab.code),
+  ].find((text) => stagedEvidenceMarkers.some((marker) => text.includes(marker)));
+  if (unboundStagedMarker) {
+    issues.push({
+      path,
+      message: "detailed staged prose must be rendered from an evidence record",
+    });
+  }
+
   for (const [index, claim] of lesson.claims.entries()) {
     const claimPath = `${path}.claims[${index}]`;
     if (claim.kind === "design-only") {
@@ -98,6 +159,25 @@ function validateLesson(
         });
       }
     } else {
+      const record = stagedEvidenceRecords[reference.evidenceId];
+      if (!record) {
+        issues.push({
+          path: claimPath,
+          message: "staged reference has no recognized evidence id",
+        });
+      } else {
+        const expectedReference = stagedEvidenceReference(record.id);
+        if (
+          claim.label !== record.claimLabel ||
+          claim.detail !== stagedEvidenceDetail([record.id]) ||
+          JSON.stringify(reference) !== JSON.stringify(expectedReference)
+        ) {
+          issues.push({
+            path: claimPath,
+            message: "staged claim is not derived from its atomic evidence record",
+          });
+        }
+      }
       if (reference.claim !== claim.kind) {
         issues.push({
           path: claimPath,

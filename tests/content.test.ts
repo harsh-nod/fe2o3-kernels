@@ -8,6 +8,14 @@ import {
   tiledGemmV1Commits,
   validateProgress,
 } from "../src/content/progress";
+import {
+  expectedCargoTestSourcePath,
+  parseExactCargoTestCommand,
+  stagedEvidenceDetail,
+  stagedEvidenceOrder,
+  stagedEvidenceRecords,
+  validateStagedEvidenceCatalog,
+} from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
 
 describe("curriculum integrity", () => {
@@ -73,6 +81,11 @@ describe("curriculum integrity", () => {
       { field: "commands", value: [], message: "claim has no exact command" },
       { field: "sourcePaths", value: [], message: "claim has no source path" },
       {
+        field: "evidenceId",
+        value: "unknown-staged-record",
+        message: "staged reference has no recognized evidence id",
+      },
+      {
         field: "claim",
         value: "gpu-observed",
         message: "staged reference claim label does not match its claim",
@@ -114,6 +127,10 @@ describe("curriculum integrity", () => {
       staged?.map((claim) => ({
         label: claim.label,
         kind: claim.kind,
+        evidenceId:
+          claim.reference?.scope === "staged-progress"
+            ? claim.reference.evidenceId
+            : undefined,
         commit: claim.reference?.commit,
         tree: claim.reference?.tree,
         authority:
@@ -125,6 +142,7 @@ describe("curriculum integrity", () => {
       {
         label: "Staged tiled source bridge",
         kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-source-bridge-v1",
         commit: "fb75e19a73ec0a9acebb203bd9821190b0592c82",
         tree: "0a57b2b6d14121da92dbbb2d7c4f9d8b4df4ce63",
         authority: "source-admission-only",
@@ -132,6 +150,7 @@ describe("curriculum integrity", () => {
       {
         label: "Staged Cargo metadata normalization",
         kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-cargo-metadata-v1",
         commit: "b904f5b648c7eb249d32d73db427abe72970315a",
         tree: "a5b07af23c9fcf5f04ddcad1c18a6318469e6e06",
         authority: "source-admission-only",
@@ -139,6 +158,7 @@ describe("curriculum integrity", () => {
       {
         label: "Staged Cargo root normalization",
         kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-cargo-root-v1",
         commit: "51bd129c31b08b636545f12229f34aaa431321f2",
         tree: "8be992dee9f145c73f61bb05f0066656298a7c75",
         authority: "source-admission-only",
@@ -146,6 +166,7 @@ describe("curriculum integrity", () => {
       {
         label: "Staged tiled hardware harness",
         kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-hardware-harness-v1",
         commit: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
         tree: "ea96ff13212e02390c881b74e2ea47aaf3018f1b",
         authority: "harness-only",
@@ -153,6 +174,7 @@ describe("curriculum integrity", () => {
       {
         label: "Staged tiled structural admission",
         kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-structural-admission-v1",
         commit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
         tree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
         authority: "structural-admission-only",
@@ -161,6 +183,86 @@ describe("curriculum integrity", () => {
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
     expect(staged?.some((claim) => claim.kind === "gpu-observed")).toBe(false);
+  });
+
+  it("requires whole Cargo test suites and referenced integration targets", () => {
+    expect(validateStagedEvidenceCatalog()).toEqual([]);
+    expect(
+      stagedEvidenceRecords["tiled-structural-admission-v1"].commands,
+    ).toEqual([
+      "cargo test -p fe2o3-kernel-descriptor --test tiled_gemm_v1",
+      "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_admission",
+      "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_finalization",
+    ]);
+    for (const id of stagedEvidenceOrder) {
+      const record = stagedEvidenceRecords[id];
+      for (const command of record.commands) {
+        const parsed = parseExactCargoTestCommand(command);
+        expect(parsed).toBeDefined();
+        const targetPath = parsed
+          ? expectedCargoTestSourcePath(parsed)
+          : undefined;
+        if (targetPath) expect(record.sourcePaths).toContain(targetPath);
+      }
+    }
+
+    expect(
+      parseExactCargoTestCommand(
+        "cargo test -p fe2o3-kernel-descriptor tiled_gemm_v1",
+      ),
+    ).toBeUndefined();
+    expect(
+      parseExactCargoTestCommand(
+        "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_admission tiled",
+      ),
+    ).toBeUndefined();
+    expect(
+      parseExactCargoTestCommand(
+        "cargo test -p rustc-codegen-fe2o3 --lib collected_tiled_gemm_v1",
+      ),
+    ).toBeUndefined();
+  });
+
+  it("rejects detailed staged prose that drifts from atomic records", () => {
+    const changedClaims = structuredClone(curriculum);
+    const claim = changedClaims
+      .flatMap((module) => module.lessons)
+      .find((lesson) => lesson.id === "read-the-evidence")
+      ?.claims.find(
+        (candidate) =>
+          candidate.reference?.scope === "staged-progress" &&
+          candidate.reference.evidenceId === "tiled-source-bridge-v1",
+      );
+    if (claim) claim.detail += " Unsupported extra staged assertion.";
+    expect(validateCurriculum(changedClaims)).toContainEqual(
+      expect.objectContaining({
+        message: "staged claim is not derived from its atomic evidence record",
+      }),
+    );
+
+    const changedBlocks = structuredClone(curriculum);
+    const section = changedBlocks
+      .flatMap((module) => module.lessons)
+      .find((lesson) => lesson.id === "gemm-tiling")
+      ?.sections.find((candidate) => candidate.id === "public-layout-proof");
+    section?.blocks.push({
+      type: "paragraph",
+      text: `${stagedEvidenceRecords["tiled-source-bridge-v1"].commit} unsupported duplicate detail`,
+    });
+    expect(validateCurriculum(changedBlocks)).toContainEqual(
+      expect.objectContaining({
+        message: "detailed staged prose must be rendered from an evidence record",
+      }),
+    );
+
+    const changedProgress = structuredClone(developmentCheckpoints);
+    const checkpoint = changedProgress.find(
+      (candidate) => candidate.stagedEvidenceIds?.length,
+    );
+    if (checkpoint) checkpoint.detail += " Unsupported extra staged assertion.";
+    expect(validateProgress(changedProgress)).toContain(
+      `${checkpoint?.name} detail is not derived from staged evidence`,
+    );
   });
 
   it("scopes the acb3 pin to lesson evidence, not staged progress", () => {
@@ -437,6 +539,13 @@ describe("implementation progress integrity", () => {
       commit: tiledGemmV1Commits.sourceBridge,
       state: "acceptance",
     });
+    expect(sourceBridge?.detail).toBe(
+      stagedEvidenceDetail([
+        "tiled-source-bridge-v1",
+        "tiled-cargo-metadata-v1",
+        "tiled-cargo-root-v1",
+      ]),
+    );
     expect(sourceBridge?.detail).toContain(
       "A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>",
     );
@@ -454,16 +563,22 @@ describe("implementation progress integrity", () => {
     );
     expect(sourceBridge?.detail).toContain("private single-use receipt");
     expect(sourceBridge?.detail).toContain(
-      "b904f5b648c7eb249d32d73db427abe72970315a normalizes only Cargo-generated metadata in the semantic commitment",
+      "b904f5b648c7eb249d32d73db427abe72970315a makes the compiler semantic commitment and private receipt contain normalized Cargo-generated metadata",
     );
     expect(sourceBridge?.detail).toContain(
+      "managed cargo-fe2o3 wrapper separately binds the full ordered rustc argv and exact metadata observations",
+    );
+    expect(sourceBridge?.detail).toContain(
+      "raw argv and exact metadata are not claimed as fields of the private receipt",
+    );
+    expect(sourceBridge?.detail).not.toContain(
       "full observed argv and metadata remain receipt-bound",
     );
     expect(sourceBridge?.detail).toContain(
-      "51bd129c31b08b636545f12229f34aaa431321f2 normalizes only the Cargo-generated root shape",
+      "51bd129c31b08b636545f12229f34aaa431321f2 normalizes only the Cargo-generated root shape in the compiler semantic commitment",
     );
     expect(sourceBridge?.detail).toContain(
-      "full observed root remains receipt-bound",
+      "full observed root is stored in the private receipt and length-framed into its authority commitment",
     );
     expect(sourceBridge?.detail).toContain("Worker V2 handoff remains inert");
     expect(sourceBridge?.detail).toContain(
@@ -491,7 +606,7 @@ describe("implementation progress integrity", () => {
     );
     expect(hardware?.detail).not.toMatch(/immutable\s+inputs/);
     expect(hardware?.detail).toContain(
-      "contains no committed run receipt",
+      "contains no hardware run receipt",
     );
     expect(hardware?.detail).toContain(
       "exact hardware execution remains uncommitted and non-authoritative",
@@ -520,7 +635,7 @@ describe("implementation progress integrity", () => {
     expect(structural?.detail).toContain(
       "independent WG256 and 384-byte structural mutations",
     );
-    expect(structural?.detail).toContain("accepts arbitrary .text");
+    expect(structural?.detail).toContain("admit arbitrary .text");
     expect(structural?.detail).toContain(
       "does not inspect machine-body semantics",
     );
@@ -556,6 +671,7 @@ describe("implementation progress integrity", () => {
     const proofPlan = JSON.stringify(
       lessons.find((lesson) => lesson.id === "gemm-proof-plan"),
     );
+    const renderedStaged = stagedEvidenceDetail(stagedEvidenceOrder);
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
     expect(orientation).toContain(
@@ -563,33 +679,30 @@ describe("implementation progress integrity", () => {
     );
     expect(orientation).toContain("not a compiler refinement proof");
     expect(orientation).toContain(
-      "Exact hardware execution remains uncommitted and non-authoritative",
+      "exact hardware execution remains uncommitted and non-authoritative",
     );
     expect(orientation).toContain("does not inspect machine-body semantics");
 
     for (const commit of Object.values(tiledGemmV1Commits)) {
-      expect(mapping).toContain(commit);
+      expect(renderedStaged).toContain(commit);
     }
-    expect(mapping).toContain("Worker V2 handoff is inert");
-    expect(mapping).toContain(
+    expect(renderedStaged).toContain("Worker V2 handoff remains inert");
+    expect(renderedStaged).toContain(
       "eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores",
     );
-    expect(mapping).toContain(
-      "WG64/288-byte fragment probe and independent WG256 and 384-byte mutations",
+    expect(renderedStaged).toContain(
+      "WG64/288-byte fragment probe",
     );
-    expect(mapping).toContain("inputs remained bitwise unchanged");
-    expect(mapping).not.toMatch(/immutable\s+inputs/);
+    expect(renderedStaged).toContain(
+      "independent WG256 and 384-byte structural mutations",
+    );
+    expect(renderedStaged).toContain("inputs remained bitwise unchanged");
+    expect(renderedStaged).not.toMatch(/immutable\s+inputs/);
     expect(mapping).toContain("source-derived, authority-bearing final HSACO");
     expect(mapping).toContain("race freedom remain open");
 
-    expect(proofPlan).toContain(
-      "Source-to-canonical lowering is not compiler refinement",
-    );
-    expect(proofPlan).toContain(
-      "exact hardware execution remains uncommitted and non-authoritative",
-    );
-    expect(proofPlan).toContain(
-      "structural admission does not inspect machine-body semantics",
-    );
+    expect(proofPlan).toContain("Source-derived final HSACO");
+    expect(proofPlan).toContain("typed staged records remain separate");
+    expect(proofPlan).not.toContain(tiledGemmV1Commits.sourceBridge);
   });
 });

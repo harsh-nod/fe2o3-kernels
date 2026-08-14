@@ -32,8 +32,16 @@ export type StagedEvidenceAuthority =
   | "harness-only"
   | "structural-admission-only";
 
+export type StagedEvidenceId =
+  | "tiled-source-bridge-v1"
+  | "tiled-cargo-metadata-v1"
+  | "tiled-cargo-root-v1"
+  | "tiled-hardware-harness-v1"
+  | "tiled-structural-admission-v1";
+
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";
+  evidenceId: StagedEvidenceId;
   claim: EvidenceKind;
   authority: StagedEvidenceAuthority;
 }
@@ -56,6 +64,7 @@ export type LessonBlock =
   | { type: "bullets"; items: string[] }
   | { type: "steps"; items: string[] }
   | { type: "callout"; tone: CalloutTone; title: string; text: string }
+  | { type: "staged-evidence"; evidenceIds: StagedEvidenceId[] }
   | {
       type: "table";
       headers: string[];

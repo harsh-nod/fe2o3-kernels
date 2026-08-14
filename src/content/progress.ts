@@ -1,5 +1,10 @@
 import publicationGate from "../../config/publication-gate.json";
-import { FE2O3_PIN } from "./model";
+import { FE2O3_PIN, type StagedEvidenceId } from "./model";
+import {
+  stagedEvidenceDetail,
+  stagedEvidenceRecord,
+  validateStagedEvidenceCatalog,
+} from "./staged-evidence";
 
 export type DeliveryGate = "complete" | "partial" | "blocked" | "planned";
 
@@ -18,6 +23,7 @@ export interface DevelopmentCheckpoint {
   commit: string;
   state: "public" | "acceptance" | "repair" | "queued";
   detail: string;
+  stagedEvidenceIds?: StagedEvidenceId[];
 }
 
 export const progressSnapshot = {
@@ -42,9 +48,11 @@ export const progressSnapshot = {
 } as const;
 
 export const tiledGemmV1Commits = {
-  sourceBridge: "fb75e19a73ec0a9acebb203bd9821190b0592c82",
-  hardwareEvidence: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
-  structuralAdmission: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
+  sourceBridge: stagedEvidenceRecord("tiled-source-bridge-v1").commit,
+  hardwareEvidence: stagedEvidenceRecord("tiled-hardware-harness-v1").commit,
+  structuralAdmission: stagedEvidenceRecord(
+    "tiled-structural-admission-v1",
+  ).commit,
 } as const;
 
 export const developmentCheckpoints: DevelopmentCheckpoint[] = [
@@ -150,22 +158,30 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     name: "Tiled GEMM V1 source-authenticated compiler bridge",
     commit: tiledGemmV1Commits.sourceBridge,
     state: "acceptance",
-    detail:
-      "Commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected Rust root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds the reviewed layouts, rustc FnAbi, portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS, and the 64-byte explicit plus 256-byte implicit four-slice ABI. A private single-use receipt selects the canonical direct-global Kernel IR module with eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores; AMDGCN lowering represents the BF16 carriers with i16 loads. Follow-up b904f5b648c7eb249d32d73db427abe72970315a normalizes only Cargo-generated metadata in the semantic commitment while full observed argv and metadata remain receipt-bound. Follow-up 51bd129c31b08b636545f12229f34aaa431321f2 normalizes only the Cargo-generated root shape while the full observed root remains receipt-bound. The older WG64 32-byte explicit/288-byte fragment probe remains separate. This source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof. The Worker V2 handoff remains inert and grants no final-HSACO, publication, loading, or launch authority.",
+    stagedEvidenceIds: [
+      "tiled-source-bridge-v1",
+      "tiled-cargo-metadata-v1",
+      "tiled-cargo-root-v1",
+    ],
+    detail: stagedEvidenceDetail([
+      "tiled-source-bridge-v1",
+      "tiled-cargo-metadata-v1",
+      "tiled-cargo-root-v1",
+    ]),
   },
   {
     name: "Tiled GEMM V1 guarded gfx942 hardware harness",
     commit: tiledGemmV1Commits.hardwareEvidence,
     state: "acceptance",
-    detail:
-      "Commit b825661ac3f7e332d2cc9723ed1efbb54869fa33 adds an ignored, opt-in one-tile gfx942:xnack- harness for externally supplied digest-pinned bytes and a digest-pinned observed LLVM 22 objdump. Before dispatch it enforces COV6/WG64/320-byte metadata, one bound entry, exact disassembly coverage, one retained v_mfma_f32_16x16x16_bf16, a global store, and rejection of forbidden control and memory forms. If run, it checks a bitwise dyadic 16x16 oracle, that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous completion, exact executable identity, and terminal unload. The commit contains no committed run receipt, so exact hardware execution remains uncommitted and non-authoritative. The harness deliberately bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, loading, launch, or verification authority.",
+    stagedEvidenceIds: ["tiled-hardware-harness-v1"],
+    detail: stagedEvidenceDetail(["tiled-hardware-harness-v1"]),
   },
   {
     name: "Tiled GEMM V1 structural artifact admission",
     commit: tiledGemmV1Commits.structuralAdmission,
     state: "queued",
-    detail:
-      "Commit d43f11c86196e4f01c9ee305ea8d19f6d8c17672 adds sealed Worker V2 structural inspection and canonical finalization for exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor: four slices in 64 explicit bytes, a 256-byte implicit suffix, WG64, wave64, and zero LDS. It separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte structural mutations, along with descriptor, target, capability, and finalization drift. Structural admission deliberately accepts arbitrary .text in adversarial tests, so it does not inspect machine-body semantics, authenticate compiler origin, prove BF16 or MFMA semantics, or prove Verus results. It grants no publication, loading, or launch authority. The capability schema remains V1 and unknown tag 12 is rejected; no COMGR path is added.",
+    stagedEvidenceIds: ["tiled-structural-admission-v1"],
+    detail: stagedEvidenceDetail(["tiled-structural-admission-v1"]),
   },
 ];
 
@@ -303,8 +319,12 @@ export const gateLabels: Record<
   },
 };
 
-export function validateProgress(): string[] {
-  const issues: string[] = [];
+export function validateProgress(
+  checkpoints: DevelopmentCheckpoint[] = developmentCheckpoints,
+): string[] {
+  const issues: string[] = validateStagedEvidenceCatalog().map(
+    (issue) => `staged evidence: ${issue}`,
+  );
   const ids = new Set<string>();
   const exactCommit = /^[0-9a-f]{40}$/;
 
@@ -329,9 +349,15 @@ export function validateProgress(): string[] {
   if (progressSnapshot.publicationGate.requiredRefs.length !== 2) {
     issues.push("publication gate does not require both public refs");
   }
-  for (const checkpoint of developmentCheckpoints) {
+  for (const checkpoint of checkpoints) {
     if (!exactCommit.test(checkpoint.commit)) {
       issues.push(`${checkpoint.name} is not pinned to an exact commit`);
+    }
+    if (
+      checkpoint.stagedEvidenceIds &&
+      checkpoint.detail !== stagedEvidenceDetail(checkpoint.stagedEvidenceIds)
+    ) {
+      issues.push(`${checkpoint.name} detail is not derived from staged evidence`);
     }
   }
   for (const kernel of kernelProgress) {

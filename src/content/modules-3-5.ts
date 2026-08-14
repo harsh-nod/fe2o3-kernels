@@ -7,6 +7,7 @@ import {
   type Lesson,
 } from "./model";
 import { completeTabs, noHost, noProof, resultText } from "./shared";
+import { stagedEvidenceOrder } from "./staged-evidence";
 
 const verusCommand =
   "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
@@ -319,18 +320,7 @@ const gemmMapping: Lesson = {
           type: "paragraph",
           text: "Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds separate build-scoped in-process Rust frontend/provider/ABI evidence. Same-name external providers and copied markers are rejected. Observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the WG64 fragment probe carries 8 BF16 plus 4 F32 values in 32 explicit bytes followed by 256 implicit bytes, 288 total. This remains a distinct fragment-level evidence profile, not the later four-slice kernel ABI or the independent WG256/384-byte mutation.",
         },
-        {
-          type: "paragraph",
-          text: "Source-bridge commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds exact layouts, rustc FnAbi, portable-MIR identity, compiler settings, gfx942:xnack-, COV6, WG64, zero LDS, and 64 explicit plus 256 implicit kernarg bytes. Consuming a private single-use receipt selects the canonical direct-global module: eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores. AMDGCN lowering represents the BF16 carriers with i16 loads. Commit b904f5b648c7eb249d32d73db427abe72970315a normalizes only Cargo-generated metadata in the semantic commitment while full observed argv and metadata remain receipt-bound. Commit 51bd129c31b08b636545f12229f34aaa431321f2 normalizes only the Cargo-generated root shape while the full observed root remains receipt-bound. This is source-to-canonical lowering under a reviewed correspondence contract, not a compiler refinement proof. Its Worker V2 handoff is inert and grants no final-HSACO, publication, load, or launch authority.",
-        },
-        {
-          type: "paragraph",
-          text: "Guarded-hardware commit b825661ac3f7e332d2cc9723ed1efbb54869fa33 adds an ignored one-tile gfx942:xnack- harness for exact externally supplied digest-pinned bytes and a digest-pinned observed LLVM 22 objdump. It enforces the 320-byte metadata and entry range, one retained BF16 MFMA, a global store, and forbidden instruction checks. If run, it checks a bitwise dyadic 16x16 oracle, that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous completion, executable identity, and unload. The commit contains no run receipt, so exact hardware execution remains uncommitted and non-authoritative. The harness bypasses production prerequisites and does not authenticate the producer.",
-        },
-        {
-          type: "paragraph",
-          text: "Structural-admission commit d43f11c86196e4f01c9ee305ea8d19f6d8c17672 inspects and canonically finalizes exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor with four slices, 64 explicit plus 256 implicit bytes, WG64, wave64, and zero LDS. It separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte mutations, plus other structural drift. Adversarial tests intentionally admit arbitrary .text, making the limit concrete: this gate checks metadata and descriptors, not machine-body semantics, BF16/MFMA behavior, compiler origin, or Verus results. It adds no COMGR path and grants no publication, load, or launch authority.",
-        },
+        { type: "staged-evidence", evidenceIds: [...stagedEvidenceOrder] },
         {
           type: "callout",
           tone: "boundary",
@@ -394,7 +384,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "A guarded one-tile gfx942 harness exists, but no exact hardware run receipt is committed. No source-derived, authority-bearing final HSACO or production LDS-tiled GEMM is claimed.",
+        "This remains a design lesson. Consult the typed staged-evidence table for implemented boundaries; no source-derived, authority-bearing final HSACO or production LDS-tiled GEMM is claimed here.",
       ),
     },
   ),
@@ -428,7 +418,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "The staged checkpoint authenticates an exact Rust root into canonical direct-global Kernel IR, defines a guarded gfx942 harness for separately supplied bytes, and structurally admits the exact four-slice Worker V2 artifact profile. Source-to-canonical lowering is not compiler refinement, exact hardware execution remains uncommitted and non-authoritative, and structural admission does not inspect machine-body semantics. Source-derived final HSACO/load/launch authority, production LDS tiling, and memory and race proofs remain future gates.",
+        "Source-derived final HSACO, protected load and launch authority, production LDS tiling, and memory, race, and numerical proofs remain required before this design can be promoted.",
     },
   ],
   sections: [
@@ -468,7 +458,7 @@ const gemmProof: Lesson = {
           type: "callout",
           tone: "proof",
           title: "Three ledger rows are concrete but unjoined",
-          text: "Commit fb75e19a authenticates the exact source profile and selects canonical Kernel IR; b825661a defines a guarded one-tile gfx942 harness but commits no execution receipt; d43f11c8 admits and canonically finalizes the exact structural artifact profile. None proves that the Worker V2 machine body was derived from that source, and none grants protected publication, loading, or launch authority. The remaining proof ledger must also cover bounds, initialization, barriers, LDS ownership, race freedom, and numerical refinement.",
+          text: "The typed staged records remain separate evidence boundaries, not one authority chain. The remaining proof ledger must cover source-to-machine derivation, protected publication and launch, bounds, initialization, barriers, LDS ownership, race freedom, and numerical refinement.",
         },
       ],
     },
@@ -481,7 +471,7 @@ const gemmProof: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "Source selection, structural artifact checks, and a hardware harness now exist as separate stages. The harness carries no committed run receipt. Completion still requires one identity-bound source/proof/compiler/machine/runtime authority chain.",
+        "Completion requires one identity-bound source, proof, compiler, machine, runtime, and review authority chain.",
       ),
     },
   ),

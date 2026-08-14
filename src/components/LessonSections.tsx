@@ -1,5 +1,6 @@
 import { AlertTriangle, CircleHelp, Info, ShieldCheck } from "lucide-react";
 import type { CalloutTone, LessonSection } from "../content/model";
+import { stagedEvidenceRows } from "../content/staged-evidence";
 
 const calloutIcons = {
   info: Info,
@@ -45,6 +46,28 @@ export function LessonSections({ sections }: { sections: LessonSection[] }) {
                       {block.rows.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                           {row.map((cell, cellIndex) => <td key={cellIndex}>{cell}</td>)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              );
+            }
+            if (block.type === "staged-evidence") {
+              return (
+                <div className="table-scroll" key={index}>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Staged evidence</th>
+                        <th>Atomic assertions</th>
+                        <th>Authority</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {stagedEvidenceRows(block.evidenceIds).map((row) => (
+                        <tr key={row[0]}>
+                          {row.map((cell) => <td key={cell}>{cell}</td>)}
                         </tr>
                       ))}
                     </tbody>
