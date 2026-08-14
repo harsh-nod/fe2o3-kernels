@@ -73,8 +73,8 @@ describe("implementation progress integrity", () => {
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-13",
-      publicCommit: "2e99f6eb53e0c739182a72c70005f9d9de17b77c",
-      publicTree: "09db0bcb2f948367ac492b52de60eb82a1a023b6",
+      publicCommit: "9a0b0b2855f9568ec113820b5b53e9fde1c133f2",
+      publicTree: "794c6d4224491321e0d7d19056a8ace3a58b9b9e",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
@@ -118,7 +118,7 @@ describe("implementation progress integrity", () => {
       evidence: "partial",
       dependsOn: [
         "production protected transaction authenticator",
-        "native real-HSACO physical-effect acceptance",
+        "authenticated analyzer-identity binding",
         "compiler and address refinement",
         "protected MI300X launch evidence",
       ],
@@ -128,10 +128,24 @@ describe("implementation progress integrity", () => {
         (checkpoint) => checkpoint.name === "Scalar GEMM proof profile",
       )?.detail,
     ).toContain("does not execute Verus");
-    expect(
-      developmentCheckpoints.find(
-        (checkpoint) => checkpoint.name === "Scalar GEMM physical-effect profile",
-      )?.detail,
-    ).toContain("race freedom");
+    const physicalEffectCheckpoint = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.name === "Scalar GEMM physical-effect profile",
+    );
+    expect(physicalEffectCheckpoint).toMatchObject({
+      commit: progressSnapshot.publicCommit,
+      state: "acceptance",
+    });
+    expect(physicalEffectCheckpoint?.detail).toContain("upstream LLVM 22");
+    expect(physicalEffectCheckpoint?.detail).toContain("exact 60-opcode scalar profile");
+    expect(physicalEffectCheckpoint?.detail).toContain(
+      "9 address / 8 read / 1 write / 1 return / 0 calls",
+    );
+    expect(physicalEffectCheckpoint?.detail).toContain("without COMGR");
+    expect(physicalEffectCheckpoint?.detail).toContain(
+      "static, inert evidence only",
+    );
+    expect(physicalEffectCheckpoint?.detail).toContain(
+      "downstream authenticated evidence must bind the new identity",
+    );
   });
 });
