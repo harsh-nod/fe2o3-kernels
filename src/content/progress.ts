@@ -326,9 +326,9 @@ export const developmentCheckpoints = deepFreeze([
   {
     id: "tiled-gemm-hardware-harness",
     kind: "staged-evidence",
-    name: "Tiled GEMM V1 guarded gfx942 hardware harness",
+    name: "Tiled GEMM V1 guarded gfx942 hardware observation",
     commit: tiledGemmV1Commits.hardwareEvidence,
-    state: "acceptance",
+    state: "public",
     stagedEvidenceIds: ["tiled-hardware-harness-v1"],
   },
   {

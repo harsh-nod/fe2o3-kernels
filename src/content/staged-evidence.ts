@@ -124,35 +124,40 @@ const stagedEvidenceRecords = deepFreeze({
   },
   "tiled-hardware-harness-v1": {
     id: "tiled-hardware-harness-v1",
-    stageLabel: "b825661a gfx942 hardware harness",
-    claimLabel: "Staged tiled hardware harness",
-    claim: "compiler-hsaco-observed",
+    stageLabel: "83fd4e41 MI300X tile observation",
+    claimLabel: "Observed direct-global tiled GEMM tile",
+    claim: "gpu-observed",
     authority: "harness-only",
-    commit: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
-    tree: "ea96ff13212e02390c881b74e2ea47aaf3018f1b",
+    commit: "83fd4e4114a31da16ea3208c7b910269cd943bc8",
+    tree: "4d5c2b4fd645b7183e6f85d0768687bc3b621d31",
     commands: [
-      "cargo test -p fe2o3-hsa-runtime --test tiled_gemm_v1_hardware",
+      "cargo test -p fe2o3-hsa-runtime --features hardware-test-hooks --test tiled_gemm_v1_hardware gfx942_tiled_gemm_v1_one_tile_raw_hardware_evidence -- --ignored --exact --nocapture",
     ],
     sourcePaths: [
       "crates/fe2o3-hsa-runtime/tests/tiled_gemm_v1_hardware.rs",
+      "docs/tiled-gemm-v1-mi300x-observation.md",
     ],
     target: "gfx942:xnack-",
     assertions: [
       {
         id: "harness-inputs",
-        text: "Commit b825661ac3f7e332d2cc9723ed1efbb54869fa33 adds an ignored, opt-in one-tile gfx942:xnack- harness for externally supplied digest-pinned bytes and a digest-pinned observed LLVM 22 objdump.",
+        text: "The ignored, opt-in one-tile gfx942:xnack- harness consumes externally supplied digest-pinned bytes and a digest-pinned observed LLVM 22 objdump.",
       },
       {
         id: "harness-static-gates",
         text: "Before dispatch it enforces COV6/WG64/320-byte metadata, one bound entry, exact disassembly coverage, one retained v_mfma_f32_16x16x16_bf16, a global store, and rejection of forbidden control and memory forms.",
       },
       {
+        id: "observed-run",
+        text: "At repository commit 9a5d65d5929b9cabcf73d423957b06f5070f5137 on 2026-08-14, MI300X executed the externally supplied 6,672-byte HSACO with SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66; the exact test passed 1/1 in 40.69 seconds.",
+      },
+      {
         id: "harness-runtime-checks",
-        text: "If explicitly run, it checks a bitwise dyadic 16x16 oracle, that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous completion, exact executable identity, and terminal unload.",
+        text: "The run passed a bitwise dyadic 16x16 oracle, confirmed that A/B/C inputs remained bitwise unchanged, preserved adjacent canaries, completed synchronously, retained exact executable identity, and performed terminal unload.",
       },
       {
         id: "harness-authority-boundary",
-        text: "The commit contains no hardware run receipt, so exact hardware execution remains uncommitted and non-authoritative; the harness bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, loading, launch, verification, or GPU-observation authority.",
+        text: "Commit 83fd4e4114a31da16ea3208c7b910269cd943bc8 records this non-authoritative observation. The supplied artifact has zero LDS and is not source-derived by the recorded run; the harness bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, protected loading, protected launch, verification, or parity authority.",
       },
     ],
   },
@@ -265,7 +270,13 @@ export function stagedEvidenceClaim(id: StagedEvidenceId): Claim {
 
 export type ParsedCargoTestCommand =
   | { packageName: string; mode: "lib" }
-  | { packageName: string; mode: "test"; targetName: string };
+  | {
+      packageName: string;
+      mode: "test";
+      targetName: string;
+      testName?: string;
+      features?: string;
+    };
 
 export function parseExactCargoTestCommand(
   command: string,
@@ -291,6 +302,26 @@ export function parseExactCargoTestCommand(
       packageName: tokens[3],
       mode: "test",
       targetName: tokens[5],
+    };
+  }
+  if (
+    tokens.length === 13 &&
+    tokens[4] === "--features" &&
+    /^[a-z0-9][a-z0-9-]*$/u.test(tokens[5] ?? "") &&
+    tokens[6] === "--test" &&
+    /^[A-Za-z0-9_]+$/u.test(tokens[7] ?? "") &&
+    /^[A-Za-z0-9_]+$/u.test(tokens[8] ?? "") &&
+    tokens[9] === "--" &&
+    tokens[10] === "--ignored" &&
+    tokens[11] === "--exact" &&
+    tokens[12] === "--nocapture"
+  ) {
+    return {
+      packageName: tokens[3],
+      mode: "test",
+      targetName: tokens[7],
+      testName: tokens[8],
+      features: tokens[5],
     };
   }
   return undefined;

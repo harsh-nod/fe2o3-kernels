@@ -203,11 +203,11 @@ describe("curriculum integrity", () => {
         authority: "source-admission-only",
       },
       {
-        label: "Staged tiled hardware harness",
-        kind: "compiler-hsaco-observed",
+        label: "Observed direct-global tiled GEMM tile",
+        kind: "gpu-observed",
         evidenceId: "tiled-hardware-harness-v1",
-        commit: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
-        tree: "ea96ff13212e02390c881b74e2ea47aaf3018f1b",
+        commit: "83fd4e4114a31da16ea3208c7b910269cd943bc8",
+        tree: "4d5c2b4fd645b7183e6f85d0768687bc3b621d31",
         authority: "harness-only",
       },
       {
@@ -221,7 +221,7 @@ describe("curriculum integrity", () => {
     ]);
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
-    expect(staged?.some((claim) => claim.kind === "gpu-observed")).toBe(false);
+    expect(staged?.filter((claim) => claim.kind === "gpu-observed")).toHaveLength(1);
   });
 
   it("requires whole Cargo test suites and referenced integration targets", () => {
@@ -849,14 +849,14 @@ describe("implementation progress integrity", () => {
     );
   });
 
-  it("tracks the guarded tiled hardware harness without inventing a run receipt", () => {
+  it("tracks the guarded tiled hardware observation without upgrading authority", () => {
     const hardware = developmentCheckpoints.find(
       (checkpoint) =>
-        checkpoint.name === "Tiled GEMM V1 guarded gfx942 hardware harness",
+        checkpoint.name === "Tiled GEMM V1 guarded gfx942 hardware observation",
     );
     expect(hardware).toMatchObject({
       commit: tiledGemmV1Commits.hardwareEvidence,
-      state: "acceptance",
+      state: "public",
     });
     const hardwareDetail = hardware ? developmentCheckpointDetail(hardware) : "";
     expect(hardwareDetail).toContain("externally supplied digest-pinned bytes");
@@ -866,16 +866,14 @@ describe("implementation progress integrity", () => {
       "A/B/C inputs remained bitwise unchanged",
     );
     expect(hardwareDetail).not.toMatch(/immutable\s+inputs/);
+    expect(hardwareDetail).toContain("6,672-byte HSACO");
     expect(hardwareDetail).toContain(
-      "contains no hardware run receipt",
+      "SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66",
     );
-    expect(hardwareDetail).toContain(
-      "exact hardware execution remains uncommitted and non-authoritative",
-    );
-    expect(hardwareDetail).not.toMatch(/[\d,]+-byte (?:COV6 )?HSACO/);
-    expect(hardwareDetail).not.toMatch(/SHA-256 [0-9a-f]{64}/);
-    expect(hardwareDetail).not.toMatch(/passed \d+\/\d+ in/);
-    expect(hardwareDetail).not.toContain("ROCm");
+    expect(hardwareDetail).toContain("passed 1/1 in 40.69 seconds");
+    expect(hardwareDetail).toContain("zero LDS and is not source-derived");
+    expect(hardwareDetail).toContain("non-authoritative observation");
+    expect(hardwareDetail).toContain("no compiler, publication, protected loading");
   });
 
   it("tracks structural artifact admission without claiming body semantics", () => {
@@ -936,9 +934,7 @@ describe("implementation progress integrity", () => {
       "must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main",
     );
     expect(orientation).toContain("not a compiler refinement proof");
-    expect(orientation).toContain(
-      "exact hardware execution remains uncommitted and non-authoritative",
-    );
+    expect(orientation).toContain("passed 1/1 in 40.69 seconds");
     expect(orientation).toContain("does not inspect machine-body semantics");
 
     for (const commit of Object.values(tiledGemmV1Commits)) {
