@@ -73,8 +73,8 @@ describe("implementation progress integrity", () => {
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-13",
-      publicCommit: "e87ac7b16a52562d8b7eacc9995880e1aa5d65c6",
-      publicTree: "c0e9ceea773baa12505a1db33385748decec54f5",
+      publicCommit: "a51c78322e264c06abdb6dc21817aced09653830",
+      publicTree: "106d3429b076d681d860b8781000e3d6b4d45f62",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
@@ -147,5 +147,45 @@ describe("implementation progress integrity", () => {
     expect(physicalEffectCheckpoint?.detail).toContain(
       "downstream authenticated evidence must bind the new identity",
     );
+  });
+
+  it("tracks the tiled GEMM layout proof without claiming compiler or GPU closure", () => {
+    const tiledCheckpoint = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.name === "Tiled GEMM V1 host and layout proof",
+    );
+    expect(tiledCheckpoint).toMatchObject({
+      commit: progressSnapshot.publicCommit,
+      state: "public",
+    });
+    expect(tiledCheckpoint?.detail).toContain(
+      "2ef91896bcdc4d26624f952e5c905c787cd9bc9e",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "Exhaustive 64-lane x 4-component goldens",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "23 public proof functions discharge 73 obligations",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "five formula mutations are rejected",
+    );
+    expect(tiledCheckpoint?.detail).toContain(
+      "no public frontend/compiler binding yet",
+    );
+    expect(tiledCheckpoint?.detail).toContain("MFMA numerical equivalence");
+    expect(tiledCheckpoint?.detail).toContain("machine memory safety");
+    expect(tiledCheckpoint?.detail).toContain("race freedom");
+    expect(tiledCheckpoint?.detail).toContain("protected authority");
+    expect(tiledCheckpoint?.detail).toContain(
+      "Current head a51c78322e264c06abdb6dc21817aced09653830 only adds the Rust 1.97.1 installation",
+    );
+    expect(kernelProgress.find((kernel) => kernel.id === "tiled-gemm")).toMatchObject({
+      run: "partial",
+      verify: "partial",
+      evidence: "partial",
+    });
   });
 });

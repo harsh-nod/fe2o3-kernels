@@ -290,6 +290,36 @@ const gemmMapping: Lesson = {
   ],
   sections: [
     {
+      id: "public-layout-proof",
+      title: "Read the public layout proof narrowly",
+      blocks: [
+        {
+          type: "paragraph",
+          text: "Public fe2o3 commit 027ab901bef7007d0e8da3370470556ed28baad1 pins the executable Rust register maps below to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e for gfx942 V_MFMA_F32_16X16X16_BF16. Golden tests exhaust all 64 lanes and four components for each official A/B/C/D table.",
+        },
+        {
+          type: "table",
+          headers: ["Fragment", "Logical coordinate for lane l, component c"],
+          rows: [
+            ["A / Src0", "row = l % 16, depth = 4 * (l / 16) + c"],
+            ["B / Src1", "depth = 4 * (l / 16) + c, column = l % 16"],
+            ["C / Src2", "row = 4 * (l / 16) + c, column = l % 16"],
+            ["D / Vdst", "row = 4 * (l / 16) + c, column = l % 16"],
+          ],
+        },
+        {
+          type: "paragraph",
+          text: "The separate executable XOR4 LDS map stages A as (row, depth) and B in transposed logical order as (column, depth). An ordinary Rust test parses the exact Verus A/B/C and nested XOR formula bodies and exhaustively compares both staging compositions. The runner pins the Verus executable bytes; 23 public proof functions discharge 73 obligations, and five mutations of A, B, C, row-major XOR4, and the inner two-bit permutation are rejected at their intended correspondence theorems.",
+        },
+        {
+          type: "callout",
+          tone: "boundary",
+          title: "Source-level layout evidence only",
+          text: "This public increment has no frontend/compiler binding yet. It does not prove compiler refinement, MFMA numerical equivalence, HSACO or hardware execution, machine memory safety, race freedom, or protected authority. The lesson dependency pin remains at the older audited baseline.",
+        },
+      ],
+    },
+    {
       id: "mapping",
       title: "Freeze the coordinate map",
       blocks: [
@@ -378,7 +408,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "These are proposed gates for a future GEMM vertical slice; none is represented as current parity or production authority.",
+        "The newer public checkpoint closes a bounded source-level register and LDS layout proof, but the remaining gates are still a future GEMM vertical slice; none is represented as current parity or production authority.",
     },
   ],
   sections: [
@@ -414,6 +444,12 @@ const gemmProof: Lesson = {
             "Sign the result set and obtain independent review before any Complete promotion.",
           ],
         },
+        {
+          type: "callout",
+          tone: "proof",
+          title: "One ledger row is now concrete",
+          text: "At public commit 027ab901bef7007d0e8da3370470556ed28baad1, the official gfx942 A/B/C/D maps, XOR4 A and transposed-B staging, exhaustive 64x4 goldens, exact Rust-Verus source correspondence, 73 proof obligations, and five expected-negative mutations form a reviewed source-level layout packet. The compiler, numerical, machine-code, hardware, and authority rows remain open.",
+        },
       ],
     },
   ],
@@ -425,7 +461,7 @@ const gemmProof: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "Completion requires one identity-bound source/proof/compiler/artifact/runtime evidence set; isolated green tests are insufficient.",
+        "The public layout proof is a real source-level increment. Completion still requires one identity-bound source/proof/compiler/artifact/runtime evidence set; isolated green tests are insufficient.",
       ),
     },
   ),

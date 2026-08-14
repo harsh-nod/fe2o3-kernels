@@ -113,7 +113,7 @@ const orientation: Lesson = {
           type: "callout",
           tone: "boundary",
           title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks public fe2o3 commit e87ac7b16a52562d8b7eacc9995880e1aa5d65c6. Lesson evidence remains pinned to the older audited FE2O3_PIN until those lesson claims are reviewed as a separate change.",
+          text: "The progress dashboard tracks public fe2o3 head a51c78322e264c06abdb6dc21817aced09653830. Its parent 027ab901bef7007d0e8da3370470556ed28baad1 adds exact official gfx942 A/B/C/D register maps, executable XOR4 A and transposed-B staging, exhaustive goldens, and a pinned 73-obligation Verus source proof with five rejected mutations. The head changes only the hosted workflow by installing Verus-required Rust 1.97.1. The proof content does not publicly bind those maps to the frontend or compiler and proves no compiler refinement, MFMA numerics, emitted HSACO, hardware behavior, machine memory safety, race freedom, or protected authority. Lesson evidence remains pinned to the older audited FE2O3_PIN until a separate baseline audit.",
         },
       ],
     },

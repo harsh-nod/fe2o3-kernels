@@ -33,6 +33,21 @@ It reports the newer public `fe2o3` main revision, private acceptance candidates
 known blockers, and separate run/verify/evidence gates for every kernel in the
 curriculum. That progress view does not silently repin or upgrade lesson claims.
 
+The current public progress head is fe2o3 commit
+`a51c78322e264c06abdb6dc21817aced09653830`, tree
+`106d3429b076d681d860b8781000e3d6b4d45f62`. Its parent
+`027ab901bef7007d0e8da3370470556ed28baad1` adds exact official gfx942 A/B/C/D
+register maps pinned to AMD Matrix Instruction Calculator commit
+`2ef91896bcdc4d26624f952e5c905c787cd9bc9e`, executable XOR4 A and
+transposed-B staging, exhaustive 64-lane x 4-component goldens, exact
+source-level Rust-Verus correspondence, pinned Verus executable bytes, 23
+public proof functions covering 73 obligations, and five rejected formula
+mutations. The head itself only installs Rust 1.97.1 for the hosted Verus job;
+it changes no proof or kernel semantics. This is source-level layout evidence
+only: there is no public frontend/compiler binding yet, compiler refinement,
+MFMA numerical equivalence, HSACO or hardware execution, machine memory safety,
+race freedom, or protected authority.
+
 ## Maturity labels
 
 Every technical claim uses one of five labels. A non-design claim is invalid

@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "e87ac7b16a52562d8b7eacc9995880e1aa5d65c6",
-  publicTree: "c0e9ceea773baa12505a1db33385748decec54f5",
+  publicCommit: "a51c78322e264c06abdb6dc21817aced09653830",
+  publicTree: "106d3429b076d681d860b8781000e3d6b4d45f62",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -102,11 +102,11 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
       "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
   },
   {
-    name: "Tiled GEMM V1 host scaffold",
+    name: "Tiled GEMM V1 host and layout proof",
     commit: progressSnapshot.publicCommit,
     state: "public",
     detail:
-      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold. Private checked witnesses bind shape, extents, launch geometry, and the exact parsed target declaration. Bitwise host evidence admits only a pinned 16-value BF16 alphabet through an unforgeable validated-input token; exhaustive tests reject every other BF16 encoding. Debug and release each pass 29 integration tests and seven compile-fail doctests, with strict Clippy, formatting, and dedicated hosted CI. This is host evidence only: exact target and rustc physical-ABI-bound matrix lowering, LDS movement, full GEMM loops, HSACO, hardware execution, and proofs remain pending.",
+      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Current head a51c78322e264c06abdb6dc21817aced09653830 only adds the Rust 1.97.1 installation required by that hosted Verus workflow; it changes no proof or kernel semantics. There is no public frontend/compiler binding yet, compiler refinement, MFMA numerical equivalence, HSACO or hardware execution, machine memory safety, race freedom, or protected authority.",
   },
 ];
 
@@ -175,9 +175,9 @@ export const kernelProgress: KernelProgress[] = [
     kernel: "gfx942 BF16/F32 tiled GEMM",
     run: "partial",
     verify: "partial",
-    evidence: "planned",
+    evidence: "partial",
     dependsOn: ["scalar GEMM", "workgroup reduction", "MFMA integration"],
-    next: "Bind exact gfx942:xnack- identity and rustc fragment ABI through MFMA lowering, then compose LDS movement, tiled loops, and accumulator-layout proofs.",
+    next: "Bind the public register and LDS maps to exact gfx942:xnack- rustc fragment ABI and MFMA lowering, then compose full LDS movement, tiled loops, stores, HSACO inspection, and hardware evidence.",
   },
   {
     id: "softmax",
