@@ -73,8 +73,8 @@ describe("implementation progress integrity", () => {
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-13",
-      publicCommit: "858252e735e706dd8aaa30eacdadeca8741ccaad",
-      publicTree: "40e25e9038db8893030db1d4d62e8231cbb50817",
+      publicCommit: "2e99f6eb53e0c739182a72c70005f9d9de17b77c",
+      publicTree: "09db0bcb2f948367ac492b52de60eb82a1a023b6",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
@@ -97,7 +97,7 @@ describe("implementation progress integrity", () => {
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
   });
 
-  it("keeps scalar GEMM hardware-blocked while tracking reviewed partial gates", () => {
+  it("tracks scalar GEMM hardware observation without upgrading authority", () => {
     const scalarCheckpoint =
       developmentCheckpoints.find(
         (checkpoint) => checkpoint.name === "Scalar GEMM V1 vertical slice",
@@ -110,16 +110,28 @@ describe("implementation progress integrity", () => {
       "ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9",
     );
     expect(scalarCheckpoint?.detail).toContain(
-      "Hardware dispatch and production protected evidence have not run",
+      "raw smoke deliberately bypasses production prerequisite authentication",
     );
     expect(kernelProgress.find((kernel) => kernel.id === "scalar-gemm")).toMatchObject({
-      run: "blocked",
+      run: "partial",
       verify: "partial",
       evidence: "partial",
       dependsOn: [
         "production protected transaction authenticator",
-        "MI300X dispatch and protected evidence",
+        "native real-HSACO physical-effect acceptance",
+        "compiler and address refinement",
+        "protected MI300X launch evidence",
       ],
     });
+    expect(
+      developmentCheckpoints.find(
+        (checkpoint) => checkpoint.name === "Scalar GEMM proof profile",
+      )?.detail,
+    ).toContain("does not execute Verus");
+    expect(
+      developmentCheckpoints.find(
+        (checkpoint) => checkpoint.name === "Scalar GEMM physical-effect profile",
+      )?.detail,
+    ).toContain("race freedom");
   });
 });

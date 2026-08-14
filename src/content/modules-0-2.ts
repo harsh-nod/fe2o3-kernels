@@ -84,6 +84,39 @@ const orientation: Lesson = {
         },
       ],
     },
+    {
+      id: "scalar-gemm-checkpoint",
+      title: "Read the scalar GEMM checkpoint by layer",
+      blocks: [
+        {
+          type: "table",
+          headers: ["Layer", "Observed at the public checkpoint", "Open boundary"],
+          rows: [
+            [
+              "Proof profile",
+              "Eight focused tests bind the expected proof inputs, properties, tools, transcript, freshness, and artifact digest.",
+              "The profile is inert review evidence. It does not execute Verus or grant authority.",
+            ],
+            [
+              "Physical-effect profile",
+              "The exact finalized payload and descriptor are bound to provisional expected instruction and effect sites.",
+              "The native analyzer does not yet accept the real HSACO; address refinement, memory safety, and race freedom are unproved.",
+            ],
+            [
+              "MI300X observation",
+              "All HARDWARE_CASES cases passed in 1.41 seconds for the 10,128-byte gfx942:xnack- artifact, including zero-output no-dispatch, k=0 +0, bitwise oracle, immutable inputs, canaries, and unload.",
+              "The raw HSA smoke bypasses production prerequisite authentication and grants no protected evidence.",
+            ],
+          ],
+        },
+        {
+          type: "callout",
+          tone: "boundary",
+          title: "Newer progress, unchanged lesson pin",
+          text: "The progress dashboard tracks public fe2o3 commit 2e99f6eb53e0c739182a72c70005f9d9de17b77c. Lesson evidence remains pinned to the older audited FE2O3_PIN until those lesson claims are reviewed as a separate change.",
+        },
+      ],
+    },
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },

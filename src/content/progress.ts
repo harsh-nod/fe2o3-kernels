@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "858252e735e706dd8aaa30eacdadeca8741ccaad",
-  publicTree: "40e25e9038db8893030db1d4d62e8231cbb50817",
+  publicCommit: "2e99f6eb53e0c739182a72c70005f9d9de17b77c",
+  publicTree: "09db0bcb2f948367ac492b52de60eb82a1a023b6",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -82,10 +82,24 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Scalar GEMM V1 vertical slice",
-    commit: "858252e735e706dd8aaa30eacdadeca8741ccaad",
+    commit: "2e99f6eb53e0c739182a72c70005f9d9de17b77c",
     state: "acceptance",
     detail:
-      "Both public mains contain the source-authenticated frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, and two deterministic raw runs. Canonical finalization produced a 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) with .fe2o3.kd.v1 and .fe2o3.scalar-auth.v1 sections, the exact six-argument scalar ABI with 64/320-byte kernarg spans, WG256 and wave64, and a nonzero descriptor digest. Adjacent canaries, the scalar load envelope, the recovered retained-currentness path, and canonical finalization are implemented. Hardware dispatch and production protected evidence have not run; the production protected transaction authenticator and MI300X dispatch/evidence remain open.",
+      "Both public mains contain the source-authenticated frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, deterministic canonical finalization, retained-currentness load handoff, proof and physical-effect profiles, and a raw MI300X smoke test. The 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) passed every HARDWARE_CASES case in 1.41 seconds, including zero-output no-dispatch, k=0 +0, bitwise CPU-oracle, immutable-input, adjacent-canary, and unload checks. That raw smoke deliberately bypasses production prerequisite authentication and grants no protected evidence. Authenticated Verus execution, native-analyzer real-HSACO acceptance, compiler and address refinement, memory-safety and race-freedom proofs, and production protected launch evidence remain open.",
+  },
+  {
+    name: "Scalar GEMM proof profile",
+    commit: "9acc3a9a7045c53b398d5a5015b6aab4c7bbe3b0",
+    state: "acceptance",
+    detail:
+      "Eight focused tests bind the measured proof source, target, ABI, effects, launch contract, seven required properties, tool identities, transcript, freshness, and finalized artifact digest. This is inert review evidence only: it does not execute Verus and creates no load, launch, or protected-evidence authority.",
+  },
+  {
+    name: "Scalar GEMM physical-effect profile",
+    commit: "67251ac26f72b8f3ca49d468a9c530da59b83c94",
+    state: "acceptance",
+    detail:
+      "The profile binds the exact finalized payload and scalar descriptor to provisional expected instruction and effect sites. Native-analyzer acceptance of the real HSACO remains pending, and the profile proves no compiler or address refinement, memory safety, out-of-bounds absence, or race freedom.",
   },
 ];
 
@@ -138,14 +152,16 @@ export const kernelProgress: KernelProgress[] = [
   {
     id: "scalar-gemm",
     kernel: "Scalar reference GEMM",
-    run: "blocked",
+    run: "partial",
     verify: "partial",
     evidence: "partial",
     dependsOn: [
       "production protected transaction authenticator",
-      "MI300X dispatch and protected evidence",
+      "native real-HSACO physical-effect acceptance",
+      "compiler and address refinement",
+      "protected MI300X launch evidence",
     ],
-    next: "Implement the production protected transaction authenticator, then dispatch the finalized artifact on MI300X and publish protected source-to-artifact-to-launch evidence.",
+    next: "Authenticate the Verus and native-analyzer executions, close compiler and address refinement, then admit the same bytes through the protected MI300X launch path.",
   },
   {
     id: "tiled-gemm",
