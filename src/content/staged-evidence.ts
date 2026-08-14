@@ -35,6 +35,9 @@ export const stagedEvidenceOrder = deepFreeze([
   "tiled-structural-admission-v1",
 ] satisfies StagedEvidenceId[]);
 
+const TILED_GEMM_V1_HARDWARE_COMMAND =
+  "env FE2O3_RUN_GFX942_TILED_GEMM_V1_HARDWARE=1 FE2O3_GFX942_TILED_GEMM_V1_HSACO=/home/harsh/fe2o3-tiled-gemm-f494.hsaco FE2O3_GFX942_TILED_GEMM_V1_SHA256=681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66 FE2O3_GFX942_TILED_GEMM_V1_KERNEL_SYMBOL=tiled_gemm_v1 FE2O3_LLVM_OBJDUMP=/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump FE2O3_LLVM_OBJDUMP_SHA256=e5bf27bb6ba178b4de94ac0d5da760b628672cd00d2ffeb40a4372fa6ad25140 cargo test --locked -p fe2o3-hsa-runtime --features hardware-test-hooks --test tiled_gemm_v1_hardware gfx942_tiled_gemm_v1_one_tile_raw_hardware_evidence -- --ignored --exact --nocapture";
+
 const stagedEvidenceRecords = deepFreeze({
   "tiled-source-bridge-v1": {
     id: "tiled-source-bridge-v1",
@@ -130,9 +133,7 @@ const stagedEvidenceRecords = deepFreeze({
     authority: "harness-only",
     commit: "83fd4e4114a31da16ea3208c7b910269cd943bc8",
     tree: "4d5c2b4fd645b7183e6f85d0768687bc3b621d31",
-    commands: [
-      "cargo test -p fe2o3-hsa-runtime --features hardware-test-hooks --test tiled_gemm_v1_hardware gfx942_tiled_gemm_v1_one_tile_raw_hardware_evidence -- --ignored --exact --nocapture",
-    ],
+    commands: [TILED_GEMM_V1_HARDWARE_COMMAND],
     sourcePaths: [
       "crates/fe2o3-hsa-runtime/tests/tiled_gemm_v1_hardware.rs",
       "docs/tiled-gemm-v1-mi300x-observation.md",
@@ -269,8 +270,15 @@ export function stagedEvidenceClaim(id: StagedEvidenceId): Claim {
 }
 
 export type ParsedCargoTestCommand =
-  | { packageName: string; mode: "lib" }
   | {
+      environment: Readonly<Record<string, string>>;
+      locked: boolean;
+      packageName: string;
+      mode: "lib";
+    }
+  | {
+      environment: Readonly<Record<string, string>>;
+      locked: boolean;
       packageName: string;
       mode: "test";
       targetName: string;
@@ -282,46 +290,81 @@ export function parseExactCargoTestCommand(
   command: string,
 ): ParsedCargoTestCommand | undefined {
   const tokens = command.trim().split(/\s+/u);
+  const environment: Record<string, string> = {};
+  let cursor = 0;
+  if (tokens[cursor] === "env") {
+    cursor += 1;
+    while (/^[A-Z][A-Z0-9_]*=\S+$/u.test(tokens[cursor] ?? "")) {
+      const assignment = tokens[cursor];
+      const separator = assignment.indexOf("=");
+      const name = assignment.slice(0, separator);
+      if (hasOwn(environment, name)) return undefined;
+      environment[name] = assignment.slice(separator + 1);
+      cursor += 1;
+    }
+    if (Object.keys(environment).length === 0) return undefined;
+  }
   if (
-    tokens[0] !== "cargo" ||
-    tokens[1] !== "test" ||
-    tokens[2] !== "-p" ||
-    !/^[a-z0-9][a-z0-9-]*$/u.test(tokens[3] ?? "")
+    tokens[cursor] !== "cargo" ||
+    tokens[cursor + 1] !== "test"
   ) {
     return undefined;
   }
-  if (tokens.length === 5 && tokens[4] === "--lib") {
-    return { packageName: tokens[3], mode: "lib" };
-  }
+  cursor += 2;
+  const locked = tokens[cursor] === "--locked";
+  if (locked) cursor += 1;
   if (
-    tokens.length === 6 &&
-    tokens[4] === "--test" &&
-    /^[A-Za-z0-9_]+$/u.test(tokens[5] ?? "")
+    tokens[cursor] !== "-p" ||
+    !/^[a-z0-9][a-z0-9-]*$/u.test(tokens[cursor + 1] ?? "")
+  ) {
+    return undefined;
+  }
+  const packageName = tokens[cursor + 1];
+  const argumentsAfterPackage = tokens.slice(cursor + 2);
+  if (
+    argumentsAfterPackage.length === 1 &&
+    argumentsAfterPackage[0] === "--lib"
   ) {
     return {
-      packageName: tokens[3],
-      mode: "test",
-      targetName: tokens[5],
+      environment,
+      locked,
+      packageName,
+      mode: "lib",
     };
   }
   if (
-    tokens.length === 13 &&
-    tokens[4] === "--features" &&
-    /^[a-z0-9][a-z0-9-]*$/u.test(tokens[5] ?? "") &&
-    tokens[6] === "--test" &&
-    /^[A-Za-z0-9_]+$/u.test(tokens[7] ?? "") &&
-    /^[A-Za-z0-9_]+$/u.test(tokens[8] ?? "") &&
-    tokens[9] === "--" &&
-    tokens[10] === "--ignored" &&
-    tokens[11] === "--exact" &&
-    tokens[12] === "--nocapture"
+    argumentsAfterPackage.length === 2 &&
+    argumentsAfterPackage[0] === "--test" &&
+    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[1] ?? "")
   ) {
     return {
-      packageName: tokens[3],
+      environment,
+      locked,
+      packageName,
       mode: "test",
-      targetName: tokens[7],
-      testName: tokens[8],
-      features: tokens[5],
+      targetName: argumentsAfterPackage[1],
+    };
+  }
+  if (
+    argumentsAfterPackage.length === 9 &&
+    argumentsAfterPackage[0] === "--features" &&
+    /^[a-z0-9][a-z0-9-]*$/u.test(argumentsAfterPackage[1] ?? "") &&
+    argumentsAfterPackage[2] === "--test" &&
+    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[3] ?? "") &&
+    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[4] ?? "") &&
+    argumentsAfterPackage[5] === "--" &&
+    argumentsAfterPackage[6] === "--ignored" &&
+    argumentsAfterPackage[7] === "--exact" &&
+    argumentsAfterPackage[8] === "--nocapture"
+  ) {
+    return {
+      environment,
+      locked,
+      packageName,
+      mode: "test",
+      targetName: argumentsAfterPackage[3],
+      testName: argumentsAfterPackage[4],
+      features: argumentsAfterPackage[1],
     };
   }
   return undefined;
@@ -340,6 +383,13 @@ export function validateStagedEvidenceCatalog(): string[] {
   for (const id of stagedEvidenceOrder) {
     const record = stagedEvidenceRecord(id);
     if (record.id !== id) issues.push(`${id}: record id mismatch`);
+    if (
+      id === "tiled-hardware-harness-v1" &&
+      (record.commands.length !== 1 ||
+        record.commands[0] !== TILED_GEMM_V1_HARDWARE_COMMAND)
+    ) {
+      issues.push(`${id}: hardware replay command differs from the observed command`);
+    }
     for (const command of record.commands) {
       const parsed = parseExactCargoTestCommand(command);
       if (!parsed) {

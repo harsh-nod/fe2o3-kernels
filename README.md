@@ -31,22 +31,21 @@ Commands shown in lessons that exercise fe2o3 are run from a checkout of that
 exact commit, not from this documentation repository.
 
 The deployed workbench also has an **Implementation status** reference page.
-It reports a last-audited public baseline, staged acceptance candidates, an
-eventual public target, known blockers, and separate run/verify/evidence gates
+It reports a last-audited public baseline, implementation checkpoints, a
+publication-gated snapshot, known blockers, and separate run/verify/evidence gates
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The implementation-status snapshot has an eventual public target at fe2o3 commit
+The implementation-status snapshot is pinned to fe2o3 commit
 `d43f11c86196e4f01c9ee305ea8d19f6d8c17672`, tree
-`1396be8ff4947a16ddc6aabae7390cc376992c61`. This is explicitly a staged
-target, not an observation of current remote state. **Do not publish this site
-revision until both `harsh-nod/fe2o3@refs/heads/main` and
+`1396be8ff4947a16ddc6aabae7390cc376992c61`. **The publication workflow must
+not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
 audited public baseline remains
 `96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
 `f911f0c693238830ad6070b2674fb863857bfec1`.
 
-The eventual target retains the production S09
+The pinned snapshot retains the production S09
 checkpoint that canonically captures the
 production rustc invocation descriptor, admits exactly
 `/proc/./self/fd/198` as the backend capability, and enforces one final managed
@@ -62,7 +61,8 @@ The staged tiled-GEMM facts are defined once as atomic, typed evidence records
 in [`src/content/staged-evidence.ts`](src/content/staged-evidence.ts). Claims,
 lesson tables, progress checkpoints, exact commands, source paths, and limited
 authority labels are rendered from those records and rejected if they drift.
-The hardware entry is a harness record, not a hardware-run result.
+The hardware entry records one bounded hardware observation through that harness;
+it is not protected execution evidence or a source-to-HSACO result.
 
 The previous WG64/288-byte build-scoped fragment probe remains separate from
 both the 320-byte four-slice profile and the independent WG256/384-byte

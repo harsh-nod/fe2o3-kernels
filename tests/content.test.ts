@@ -233,6 +233,30 @@ describe("curriculum integrity", () => {
       "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_admission",
       "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_finalization",
     ]);
+    const hardwareCommand = stagedEvidenceRecord(
+      "tiled-hardware-harness-v1",
+    ).commands[0];
+    const parsedHardwareCommand = parseExactCargoTestCommand(hardwareCommand);
+    expect(hardwareCommand).toContain("cargo test --locked");
+    expect(parsedHardwareCommand).toMatchObject({
+      locked: true,
+      packageName: "fe2o3-hsa-runtime",
+      mode: "test",
+      targetName: "tiled_gemm_v1_hardware",
+      testName: "gfx942_tiled_gemm_v1_one_tile_raw_hardware_evidence",
+      features: "hardware-test-hooks",
+      environment: {
+        FE2O3_RUN_GFX942_TILED_GEMM_V1_HARDWARE: "1",
+        FE2O3_GFX942_TILED_GEMM_V1_HSACO:
+          "/home/harsh/fe2o3-tiled-gemm-f494.hsaco",
+        FE2O3_GFX942_TILED_GEMM_V1_SHA256:
+          "681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66",
+        FE2O3_GFX942_TILED_GEMM_V1_KERNEL_SYMBOL: "tiled_gemm_v1",
+        FE2O3_LLVM_OBJDUMP: "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
+        FE2O3_LLVM_OBJDUMP_SHA256:
+          "e5bf27bb6ba178b4de94ac0d5da760b628672cd00d2ffeb40a4372fa6ad25140",
+      },
+    });
     for (const id of stagedEvidenceOrder) {
       const record = stagedEvidenceRecord(id);
       for (const command of record.commands) {
@@ -574,12 +598,12 @@ describe("implementation progress integrity", () => {
       "Do not publish this site revision until both required public refs",
     );
     expect(developmentCheckpoints[0]).toMatchObject({
-      name: "Eventual public main (publication gated)",
+      name: "Published implementation snapshot (publication gated)",
       commit: progressSnapshot.eventualPublicCommit,
-      state: "queued",
+      state: "public",
     });
     expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
-      "not an observation of current remote state",
+      "implementation snapshot is publication-gated",
     );
     expect(developmentCheckpoints[1]).toMatchObject({
       name: "Last audited public baseline",
@@ -612,7 +636,7 @@ describe("implementation progress integrity", () => {
       );
     expect(scalarCheckpoint).toMatchObject({
       commit: progressSnapshot.lastAuditedPublicCommit,
-      state: "acceptance",
+      state: "public",
     });
     const scalarDetail = checkpointDetail(scalarCheckpoint);
     expect(scalarDetail).toContain(
@@ -883,7 +907,7 @@ describe("implementation progress integrity", () => {
     );
     expect(structural).toMatchObject({
       commit: tiledGemmV1Commits.structuralAdmission,
-      state: "queued",
+      state: "public",
     });
     const structuralDetail = structural
       ? developmentCheckpointDetail(structural)

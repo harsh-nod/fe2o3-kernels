@@ -203,9 +203,9 @@ export const developmentCheckpoints = deepFreeze([
   {
     id: "eventual-public-main",
     kind: "publication-gate",
-    name: "Eventual public main (publication gated)",
+    name: "Published implementation snapshot (publication gated)",
     commit: progressSnapshot.eventualPublicCommit,
-    state: "queued",
+    state: "public",
   },
   {
     id: "last-audited-public-baseline",
@@ -284,7 +284,7 @@ export const developmentCheckpoints = deepFreeze([
     kind: "narrative",
     name: "Scalar GEMM V1 vertical slice",
     commit: progressSnapshot.lastAuditedPublicCommit,
-    state: "acceptance",
+    state: "public",
     narrativeId: "progress/scalar-gemm-v1",
   },
   {
@@ -336,7 +336,7 @@ export const developmentCheckpoints = deepFreeze([
     kind: "staged-evidence",
     name: "Tiled GEMM V1 structural artifact admission",
     commit: tiledGemmV1Commits.structuralAdmission,
-    state: "queued",
+    state: "public",
     stagedEvidenceIds: ["tiled-structural-admission-v1"],
   },
 ] satisfies DevelopmentCheckpoint[]);
@@ -435,7 +435,7 @@ export function developmentCheckpointDetail(
       return SAFE_PROGRESS_DETAIL;
     }
   }
-  return `This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to ${publicationGate.requiredCommit}.`;
+  return `This implementation snapshot is publication-gated. Its deployment workflow requires harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main to both resolve exactly to ${publicationGate.requiredCommit}.`;
 }
 
 export const kernelProgress: KernelProgress[] = [

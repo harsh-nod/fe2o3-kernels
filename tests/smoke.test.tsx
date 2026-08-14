@@ -67,15 +67,15 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Audited public")).toBeInTheDocument();
-    expect(screen.getByText("Eventual public target")).toBeInTheDocument();
+    expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
     expect(screen.getByText("d43f11c86196")).toBeInTheDocument();
     expect(
-      screen.getByText(/The eventual target is not current remote state/),
+      screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
-      "must not be published until both harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main resolve exactly",
+      "publication workflow verifies that harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main both resolve exactly",
     );
     expect(
-      screen.getByText("Eventual public main (publication gated)"),
+      screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
     expect(screen.getByText("Formal evidence isolation V11")).toBeInTheDocument();
   });
