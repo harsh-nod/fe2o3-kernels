@@ -70,7 +70,7 @@ export function ProgressPage() {
         </p>
         <div className="checkpoint-list">
           {developmentCheckpoints.map((checkpoint) => (
-            <article key={checkpoint.name}>
+            <article key={checkpoint.id}>
               <div>
                 <span className={`checkpoint-state checkpoint-state-${checkpoint.state}`}>
                   {checkpoint.state}

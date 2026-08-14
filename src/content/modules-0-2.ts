@@ -1,3 +1,4 @@
+import { narrativeSection } from "./narrative-registry";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import vecaddHost from "../../examples/vecadd_host.rs?raw";
@@ -52,79 +53,10 @@ const orientation: Lesson = {
     ...stagedEvidenceOrder.map(stagedEvidenceClaim),
   ],
   sections: [
+    narrativeSection("read-the-evidence/labels"),
+    narrativeSection("read-the-evidence/differentiator"),
+    narrativeSection("read-the-evidence/scalar-gemm-checkpoint"),
     {
-      id: "labels",
-      title: "One kernel, several independent questions",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "A kernel can have a checked Rust shape, a successful Verus model, valid AMDGPU LLVM, an inspected HSACO, and a passing GPU run while still lacking a production authority chain that binds all five facts together. This guide reports those facts independently.",
-        },
-        {
-          type: "table",
-          headers: ["Label", "What it establishes", "What it does not"],
-          rows: [
-            ["Runnable now", "A current fe2o3 command executes", "Formal correctness"],
-            ["Verus model", "Named properties hold in a versioned model", "LLVM or GPU refinement"],
-            ["HSACO mechanics", "Compiler or code-object checks pass", "Runtime semantics"],
-            ["GPU observed", "A pinned hardware campaign passed", "Universal correctness"],
-            ["Design only", "A concrete algorithm and proof plan", "A compilable fe2o3 kernel"],
-          ],
-        },
-      ],
-    },
-    {
-      id: "differentiator",
-      title: "The verification claim, stated precisely",
-      blocks: [
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "No exclusivity claim",
-          text: "CUDA and HIP kernels can be analyzed by external verifiers, model checkers, sanitizers, and proof systems. fe2o3's intended differentiator is one Rust kernel body plus explicit, versioned proof and evidence binding across compiler and runtime boundaries.",
-        },
-        {
-          type: "paragraph",
-          text: "Verus proves Rust-level specifications. Kernel IR checks modeled effects. Artifact inspection checks code-object facts. Runtime admission checks dynamic allocations and launch geometry. No single layer is allowed to mint a safe launch on its own.",
-        },
-      ],
-    },
-    {
-      id: "scalar-gemm-checkpoint",
-      title: "Read the scalar GEMM checkpoint by layer",
-      blocks: [
-        {
-          type: "table",
-          headers: ["Layer", "Observed at the public checkpoint", "Open boundary"],
-          rows: [
-            [
-              "Proof profile",
-              "Nine focused tests pin the exact proof source and bind its target, properties, tools, transcript, caller-supplied freshness, and artifact digest.",
-              "The profile is inert review evidence. It does not execute Verus or grant authority.",
-            ],
-            [
-              "Physical-effect profile",
-              "Four upstream LLVM 22 MC analyzer tests passed on mi300x for the exact artifact: 60 opcodes, one function, zero calls, two constrained backward loops, and 19 ordered physical effect sites matching the Rust profile. No COMGR is used.",
-              "This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness; downstream authenticated evidence must bind the changed analyzer identity.",
-            ],
-            [
-              "MI300X observation",
-              "All HARDWARE_CASES cases passed in 1.41 seconds for the 10,128-byte gfx942:xnack- artifact, including zero-output no-dispatch, k=0 +0, bitwise oracle, input buffers remained bitwise unchanged, canaries, and unload.",
-              "The raw HSA smoke bypasses production prerequisite authentication and grants no protected evidence.",
-            ],
-          ],
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks a separately gated eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The typed staged records below close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
-        },
-      ],
-    },
-    {
-      id: "staged-tiled-evidence",
-      title: "Staged tiled GEMM evidence",
       kind: "staged-evidence",
       evidenceIds: [...stagedEvidenceOrder],
     },
@@ -194,42 +126,8 @@ const setup: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "toolchain",
-      title: "Pinned inputs",
-      blocks: [
-        {
-          type: "bullets",
-          items: [
-            `Rust channel: ${FE2O3_PIN.rustToolchain}.`,
-            `Tutorial lesson evidence baseline: ${FE2O3_PIN.commit}.`,
-            "Primary target: gfx942:xnack-; do not infer feature state from the processor name alone.",
-            "ROCm tools must be discoverable by cargo-fe2o3 doctor.",
-          ],
-        },
-        {
-          type: "callout",
-          tone: "warning",
-          title: "Target text is not attestation",
-          text: "Parsing gfx942:xnack- does not prove that the selected device or code object has that identity. The runtime and artifact layers must observe and bind those facts separately.",
-        },
-      ],
-    },
-    {
-      id: "sequence",
-      title: "Run narrow gates first",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Run generic validation without ROCm to check the repository and evidence policy.",
-            "Run cargo-fe2o3 doctor and the ROCm compile lane with an explicit target.",
-            "Inspect the generated HSACO before dispatch.",
-            "Opt into hardware smoke only on the intended device host.",
-          ],
-        },
-      ],
-    },
+    narrativeSection("gfx942-setup/toolchain"),
+    narrativeSection("gfx942-setup/sequence"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -292,40 +190,8 @@ const fill: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "kernel-shape",
-      title: "The guarded write is the algorithm",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "thread::index_1d returns the current logical index witness. DisjointSlice::get_mut consumes the matching index-space witness and returns None for rounded-up launch lanes outside the output extent. Keeping the write inside this guard makes the bounds argument visible to both compiler analysis and the Verus model.",
-        },
-        {
-          type: "bullets",
-          items: [
-            "Index identity, not an arbitrary usize, drives safe mutable access.",
-            "Distinct active identities select distinct output elements.",
-            "Rounded tail threads perform no write.",
-          ],
-        },
-      ],
-    },
-    {
-      id: "trust",
-      title: "What remains trusted",
-      blocks: [
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Model-to-machine gap",
-          text: "The fill model has an external hardware_thread_id boundary. The theorem is conditional on that contract and does not prove that the AMDGPU intrinsic or loaded HSACO refines it.",
-        },
-        {
-          type: "paragraph",
-          text: "The current fill example also loads a path-selected HSACO and packs its argument through an unsafe launch macro. It is runnable evidence, not a safe generated launch authority.",
-        },
-      ],
-    },
+    narrativeSection("first-fill/kernel-shape"),
+    narrativeSection("first-fill/trust"),
   ],
   tabs: completeTabs(
     {
@@ -414,38 +280,8 @@ const vecadd: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "same-body",
-      title: "Share control and memory shape",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "The shared macro contains thread identity, guard, reads, addition call site, and write exactly once. Production Rust supplies the device intrinsic and f32 addition; Verus supplies modeled adapters. The adapters are explicit boundaries, not hidden claims of equivalence.",
-        },
-        {
-          type: "callout",
-          tone: "proof",
-          title: "Proved here",
-          text: "For an in-range identity, both input reads and the output write are in bounds; distinct identities own distinct outputs; the guarded update preserves every other element.",
-        },
-      ],
-    },
-    {
-      id: "typed-host",
-      title: "Generated host ownership",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Kernel::load binds the embedded artifact profile. prepare checks equal nonempty f32 buffers, context, geometry, and aliases while retaining borrows. Prepared::launch keeps resources alive through synchronous dispatch. This profile is exact and narrow; arbitrary signatures do not receive this authority.",
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Arithmetic remains abstract",
-          text: "The real-body Verus proof deliberately does not claim IEEE-754 f32 addition, NaN behavior, signed zero, contraction, or operation ordering. GPU and CPU result checks are valuable empirical evidence, not a universal numerical theorem.",
-        },
-      ],
-    },
+    narrativeSection("typed-vecadd/same-body"),
+    narrativeSection("typed-vecadd/typed-host"),
   ],
   tabs: completeTabs(
     {
@@ -509,40 +345,8 @@ const verusBasics: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "contract-shape",
-      title: "State assumptions where they enter",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "A bounds theorem should require the allocation extent, element width, and active index. A race-freedom theorem should require distinct invocation identities and prove distinct regions. Initialization should be a named capability or premise, not inferred from the existence of a Rust reference.",
-        },
-        {
-          type: "bullets",
-          items: [
-            "Use nat or int for mathematical arithmetic, then prove machine representability.",
-            "Expose hardware identity and allocation provenance as refinement obligations.",
-            "Keep functional arithmetic separate from memory-safety arithmetic.",
-          ],
-        },
-      ],
-    },
-    {
-      id: "negative",
-      title: "Mutation tests guard the theorem",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "A positive proof can become vacuous after a mistaken premise or abstraction change. The fe2o3 runner pairs each important theorem with a mutation and requires Verus to fail at the expected function and proof obligation. Parse errors and unrelated failures do not count.",
-        },
-        {
-          type: "callout",
-          tone: "warning",
-          title: "Verification is scoped",
-          text: "A theorem proves exactly its specification in its model. It does not automatically validate source sharing, compiler translation, artifact identity, or runtime arguments.",
-        },
-      ],
-    },
+    narrativeSection("verus-contracts/contract-shape"),
+    narrativeSection("verus-contracts/negative"),
   ],
   tabs: completeTabs(
     { language: "rust", code: fillKernel, explanatory: false },
@@ -604,42 +408,8 @@ const memoryProofs: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "regions",
-      title: "Prove byte regions, not pointer stories",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Model an access as allocation identity plus byte offset and length. Bounds prove the entire half-open region lies in the allocation and address space. Provenance distinguishes equal numeric addresses from the same authorized allocation. Alignment is a separate layout fact.",
-        },
-        {
-          type: "table",
-          headers: ["Property", "Typical premise", "Result"],
-          rows: [
-            ["Bounds", "i < len; len * width representable", "end <= allocation end"],
-            ["Initialization", "shared-read capability is initialized", "read is defined in model"],
-            ["Race freedom", "different IDs map injectively", "write regions do not overlap"],
-            ["Frame", "one owned output region", "all other elements unchanged"],
-          ],
-        },
-      ],
-    },
-    {
-      id: "dynamic-join",
-      title: "Static proof meets dynamic launch",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "The runtime must still authenticate the actual allocation IDs, extents, aliases, context, launch geometry, and artifact identity. Ghost facts supplied by a proof harness cannot be treated as observations of those values.",
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Current boundary",
-          text: "At the pinned commit, these proof records are evidence but do not by themselves create Verified launch authority. The production prerequisite authenticator for the general typed path remains absent.",
-        },
-      ],
-    },
+    narrativeSection("memory-race-proof/regions"),
+    narrativeSection("memory-race-proof/dynamic-join"),
   ],
   tabs: completeTabs(
     { language: "rust", code: vecaddKernel },

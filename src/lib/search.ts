@@ -1,4 +1,5 @@
 import type { GlossaryEntry, Lesson } from "../content/model";
+import { narrativeEntry } from "../content/narrative-registry";
 
 export interface SearchResult {
   id: string;
@@ -36,7 +37,11 @@ export function searchCatalog(
       lesson.summary,
       ...lesson.objectives,
       ...lesson.glossary,
-      ...lesson.sections.map((section) => section.title),
+      ...lesson.sections.map((section) =>
+        section.kind === "narrative"
+          ? narrativeEntry(section.narrativeId).title
+          : "Staged tiled GEMM evidence",
+      ),
     ]
       .join(" ")
       .toLocaleLowerCase();

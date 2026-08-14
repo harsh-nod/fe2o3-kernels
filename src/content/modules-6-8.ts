@@ -1,3 +1,4 @@
+import { narrativeSection } from "./narrative-registry";
 import moeDesign from "../../examples/moe_design.rs?raw";
 import {
   FE2O3_PIN,
@@ -30,47 +31,8 @@ const moeRouting: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "assumptions",
-      title: "Make router policy total",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Define how NaNs compare, how equal logits break ties, whether duplicate expert IDs are possible, and whether top-k order matters. A stable policy should produce the same ordered expert choices for the same input bits and model version.",
-        },
-        {
-          type: "bullets",
-          items: [
-            "0 < K <= expert_count.",
-            "Every selected expert ID is in range and unique for one token.",
-            "Capacity and token_count * K arithmetic are checked before allocation.",
-            "Overflow policy is explicit: drop, reroute, or spill.",
-          ],
-        },
-      ],
-    },
-    {
-      id: "permutation",
-      title: "Counts, scans, and stable rank",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Count accepted routes per expert under the capacity policy.",
-            "Exclusive-scan counts to obtain disjoint expert output ranges.",
-            "Give each token/expert pair a stable rank among earlier accepted routes.",
-            "Prove base[expert] + rank is in that expert's range and globally unique.",
-            "Write the inverse map needed to combine expert outputs back into token order.",
-          ],
-        },
-        {
-          type: "callout",
-          tone: "proof",
-          title: "Race-freedom hinge",
-          text: "The permutation write is race-free only if stable_rank is injective among accepted routes for one expert and the exclusive-scan ranges for different experts are disjoint.",
-        },
-      ],
-    },
+    narrativeSection("moe-routing/assumptions"),
+    narrativeSection("moe-routing/permutation"),
   ],
   tabs: completeTabs(
     { language: "rust", code: moeDesign, explanatory: true },
@@ -122,42 +84,8 @@ const expertCompute: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "composition",
-      title: "Range proofs become GEMM dimensions",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "For expert e, the scan establishes a compact range [base_e, base_e + count_e). Use count_e as M for that expert's token-by-weight GEMM. The weight tensor supplies K and N. The GEMM admission proof must bind these dimensions, layouts, and exact expert weight identity.",
-        },
-        {
-          type: "callout",
-          tone: "warning",
-          title: "Dynamic scheduling changes the proof surface",
-          text: "A persistent kernel or device work queue introduces atomics, liveness, and fairness assumptions. Begin with a deterministic host-scheduled expert order before adding that separate profile.",
-        },
-      ],
-    },
-    {
-      id: "combine",
-      title: "Return to token order",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "The inverse map ties every expert output row back to one original token and route rank. The combine writes one final token vector from its K routed results. Avoid cross-token races by assigning one owner to each final token; define route-weight normalization and accumulation order for numerical reproducibility.",
-        },
-        {
-          type: "table",
-          headers: ["Stage", "Identity carried", "Primary obligation"],
-          rows: [
-            ["Route", "token, expert, rank", "unique bounded slot"],
-            ["Expert GEMM", "expert, compact row", "dimension/layout binding"],
-            ["Inverse", "slot to token/rank", "bijection on accepted routes"],
-            ["Combine", "token and ordered routes", "one writer; stated reduction order"],
-          ],
-        },
-      ],
-    },
+    narrativeSection("moe-expert-compute/composition"),
+    narrativeSection("moe-expert-compute/combine"),
   ],
   tabs: completeTabs(
     {
@@ -235,40 +163,8 @@ const pipeline: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "chain",
-      title: "No layer self-certifies",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "rustc collects the exact monomorphized kernel and emits canonical semantic records.",
-            "Kernel IR records types, control flow, regions, effects, barriers, atomics, and target capabilities.",
-            "Verus checks versioned source-model properties and emits identity-bound evidence inputs.",
-            "A measured worker links canonical LLVM modules with direct LLVM/LLD APIs and emits HSACO.",
-            "Independent inspection binds ELF target, symbols, descriptors, kernarg ABI, resources, and machine effects.",
-            "Runtime admission joins the loaded artifact with actual context, allocations, aliases, geometry, and lifetimes.",
-            "Protected policy verifies signed result sets and independent review before promotion.",
-          ],
-        },
-      ],
-    },
-    {
-      id: "why-direct",
-      title: "Why direct LLVM/LLD linking",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Direct APIs expose the exact module, target-machine, linker, diagnostics, and output bytes that fe2o3 needs to measure and bind. It avoids granting a second opaque linking authority through COMGR. The worker is still a trusted native component whose executable, LLVM build, inputs, limits, and output must be measured.",
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Inspection is not execution proof",
-          text: "Seeing an MFMA, barrier, or kernarg record in HSACO establishes a machine-code fact. It does not prove source refinement, functional correctness, race freedom, or that a later runtime loaded those exact bytes.",
-        },
-      ],
-    },
+    narrativeSection("evidence-pipeline/chain"),
+    narrativeSection("evidence-pipeline/why-direct"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -327,39 +223,8 @@ const assurance: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "proved",
-      title: "A theorem has a model and premises",
-      blocks: [
-        {
-          type: "table",
-          headers: ["Question", "Primary mechanism"],
-          rows: [
-            ["Are modeled accesses in bounds?", "Verus and Kernel IR obligations"],
-            ["Do compiled effects match the model?", "translation validation and machine inspection"],
-            ["Are actual buffers disjoint and alive?", "runtime admission and Rust lifetimes"],
-            ["Does f32 match the abstract operation?", "versioned numerical refinement"],
-            ["Did this GPU execute these bytes correctly?", "pinned hardware evidence and oracle"],
-          ],
-        },
-      ],
-    },
-    {
-      id: "ecosystem",
-      title: "The differentiator is composition",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "CUDA and HIP can be checked by sanitizers, static analyzers, symbolic executors, model checkers, and external proof developments. fe2o3's design goal is a Rust-native single-source path where proof properties and artifact/runtime evidence carry explicit identities and fail closed when a join is missing.",
-        },
-        {
-          type: "callout",
-          tone: "warning",
-          title: "No proof by branding",
-          text: "A Rust type, compiler attribute, manifest, signature, test, sanitizer result, or proof record is evidence at one boundary. None alone establishes the complete kernel claim.",
-        },
-      ],
-    },
+    narrativeSection("what-verus-proves/proved"),
+    narrativeSection("what-verus-proves/ecosystem"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -407,38 +272,8 @@ const exercises: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "beginner",
-      title: "Beginner to intermediate",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Add a typed scalar-map profile with guarded writes and a CPU oracle.",
-            "Prove a widening integer affine map with no-overflow arithmetic.",
-            "Add a paired mutation that moves an input read above the output guard.",
-            "Implement one bounded wave reduction profile with inactive-lane semantics.",
-            "Compose a workgroup reduction using owned LDS slots and two explicit epochs.",
-          ],
-        },
-      ],
-    },
-    {
-      id: "advanced",
-      title: "Advanced vertical slices",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Land a scalar reference GEMM before introducing LDS or MFMA.",
-            "Add one fixed gfx942 BF16 tile profile with a phase invariant and canaries.",
-            "Build row softmax with an explicit all-masked and numerical-error policy.",
-            "Add one fixed-shape forward attention profile and bind machine effects.",
-            "Implement deterministic top-2 routing, then compose one fixed expert GEMM profile.",
-          ],
-        },
-      ],
-    },
+    narrativeSection("exercise-ladder/beginner"),
+    narrativeSection("exercise-ladder/advanced"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -496,40 +331,8 @@ const contributing: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "checklist",
-      title: "Kernel contribution checklist",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Add one shared executable body and a CPU oracle with edge dimensions.",
-            "Declare target, ABI, layout, launch, effect, synchronization, and numerical contracts.",
-            "Add positive Verus properties and one targeted expected-negative fixture per property.",
-            "Reject unsupported source shapes and remove stale outputs transactionally.",
-            "Inspect LLVM/HSACO target, symbols, descriptors, kernarg layout, resources, and relevant instructions.",
-            "Run gfx942 with independent expected results, boundary sizes, aliases, and canary memory.",
-            "Record exact commit, tree, tools, command, target, artifact digests, logs, and limitations.",
-          ],
-        },
-      ],
-    },
-    {
-      id: "review",
-      title: "Promotion requires independent review",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "A green candidate-owned test suite is not promotion authority. fe2o3's signed-evidence design takes verifier, row policy, trust policy, and keys from a protected base and requires a separate reviewer signature over an exact evidence set for Complete.",
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Zero Missing is not parity",
-          text: "At this tutorial baseline the dashboard has no Complete rows. A Partial row may contain substantial implementation and tests while still lacking one acceptance class or authenticated join.",
-        },
-      ],
-    },
+    narrativeSection("contributing-kernel/checklist"),
+    narrativeSection("contributing-kernel/review"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },

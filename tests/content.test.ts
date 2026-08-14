@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
+import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import {
+  developmentCheckpointIds,
   developmentCheckpoints,
   developmentCheckpointDetail,
   kernelProgress,
@@ -9,6 +11,13 @@ import {
   tiledGemmV1Commits,
   validateProgress,
 } from "../src/content/progress";
+import {
+  narrativeEntry,
+  narrativeIds,
+  narrativeRegistry,
+  validateNarrativeRegistry,
+  type NarrativeRegistryEntry,
+} from "../src/content/narrative-registry";
 import {
   expectedCargoTestSourcePath,
   parseExactCargoTestCommand,
@@ -19,6 +28,18 @@ import {
 } from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
 
+function serializedLessonContent(lessonId: string): string {
+  const lesson = lessons.find((candidate) => candidate.id === lessonId);
+  return JSON.stringify({
+    lesson,
+    narratives: lesson?.sections.flatMap((section) =>
+      section.kind === "narrative"
+        ? [narrativeEntry(section.narrativeId)]
+        : [],
+    ),
+  });
+}
+
 describe("curriculum integrity", () => {
   it("covers modules zero through eight in order", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
@@ -26,6 +47,13 @@ describe("curriculum integrity", () => {
     ]);
     expect(lessons).toHaveLength(18);
     expect(validateCurriculum(curriculum)).toEqual([]);
+    expect(
+      lessons.flatMap((lesson) =>
+        lesson.sections.flatMap((section) =>
+          section.kind === "narrative" ? [section.narrativeId] : [],
+        ),
+      ),
+    ).toEqual(narrativeIds);
   });
 
   it("uses every evidence label", () => {
@@ -224,16 +252,19 @@ describe("curriculum integrity", () => {
     ).toBeUndefined();
   });
 
-  it("rejects unsupported no-hash GPU observations in staged lesson sections", () => {
+  it("rejects no-hash hardware authority moved into lesson narrative", () => {
     const unsupportedObservation =
-      "A GPU observation establishes machine execution authority.";
+      "The hardware run establishes protected GPU execution authority.";
     expect(unsupportedObservation).not.toMatch(/[0-9a-f]{40}/u);
     const changed = structuredClone(curriculum);
     const section = changed
       .flatMap((module) => module.lessons)
       .find((lesson) => lesson.id === "gemm-tiling")
-      ?.sections.find((candidate) => candidate.id === "staged-tiled-evidence");
+      ?.sections.find((candidate) => candidate.kind === "staged-evidence");
     const mutable = section as unknown as Record<string, unknown>;
+    mutable.kind = "narrative";
+    delete mutable.evidenceIds;
+    mutable.narrativeId = "gemm-tiling/public-layout-proof";
     mutable.blocks = [
       {
         type: "paragraph",
@@ -242,29 +273,96 @@ describe("curriculum integrity", () => {
     ];
     expect(validateCurriculum(changed)).toContainEqual(
       expect.objectContaining({
-        message: "staged evidence section accepts only canonical evidence IDs",
+        message: "narrative section accepts only one canonical narrative ID",
+      }),
+    );
+    expect(validateCurriculum(changed)).toContainEqual(
+      expect.objectContaining({
+        message: "lesson must contain exactly one canonical staged evidence section",
       }),
     );
   });
 
-  it("rejects progress authority prose after staged evidence IDs are removed", () => {
+  it("rejects renamed and retyped staged checkpoints without evidence IDs", () => {
     const unsupportedAuthority =
       "The emitted machine code carries execution authority on the accelerator.";
     expect(unsupportedAuthority).not.toMatch(/[0-9a-f]{40}/u);
     const changed = structuredClone(developmentCheckpoints);
     const checkpoint = changed.find(
-      (candidate) =>
-        candidate.name ===
-        "Tiled GEMM V1 source-authenticated compiler bridge",
+      (candidate) => candidate.id === "tiled-gemm-source-bridge",
     );
     const mutable = checkpoint as unknown as Record<string, unknown>;
+    mutable.name = "Ordinary implementation note";
+    mutable.kind = "narrative";
     delete mutable.stagedEvidenceIds;
     mutable.detail = unsupportedAuthority;
     expect(validateProgress(changed)).toContain(
-      "Tiled GEMM V1 source-authenticated compiler bridge contains free-form staged fields",
+      "tiled-gemm-source-bridge must retain canonical kind staged-evidence",
     );
     expect(validateProgress(changed)).toContain(
-      "Tiled GEMM V1 source-authenticated compiler bridge must contain its complete canonical staged evidence IDs",
+      "tiled-gemm-source-bridge fields do not match its canonical kind",
+    );
+    expect(validateProgress(changed)).toContain(
+      "tiled-gemm-source-bridge must contain its complete canonical staged evidence IDs",
+    );
+  });
+
+  it("rejects renamed stable checkpoint IDs independently of display labels", () => {
+    const changed = structuredClone(developmentCheckpoints);
+    const checkpoint = changed.find(
+      (candidate) => candidate.id === "tiled-gemm-source-bridge",
+    );
+    const mutable = checkpoint as unknown as Record<string, unknown>;
+    mutable.id = "renamed-source-bridge";
+    mutable.name = "Ordinary implementation note";
+    expect(validateProgress(changed)).toContain(
+      "development checkpoints do not contain the exact canonical ID order",
+    );
+    expect(validateProgress(changed)).toContain(
+      "unknown development checkpoint id renamed-source-bridge",
+    );
+  });
+
+  it("rejects unknown and prototype narrative IDs", () => {
+    for (const invalidId of ["unknown-narrative", "__proto__"]) {
+      const changed = structuredClone(curriculum);
+      const section = changed[0].lessons[0].sections.find(
+        (candidate) => candidate.kind === "narrative",
+      );
+      const mutable = section as unknown as Record<string, unknown>;
+      mutable.narrativeId = invalidId;
+      expect(validateCurriculum(changed)).toContainEqual(
+        expect.objectContaining({ message: `unknown narrative id ${invalidId}` }),
+      );
+    }
+  });
+
+  it("rejects canonical narrative registry drift and unreviewed additions", () => {
+    expect(validateNarrativeRegistry()).toEqual([]);
+    expect(narrativeFingerprint("abc")).toBe(
+      "6cc43f858fbb763301637b5af970e2a46b46f461f27e5a0f41e009c59b827b25",
+    );
+    const unsupportedAuthority =
+      "The hardware result has unconditional execution authority.";
+    expect(unsupportedAuthority).not.toMatch(/[0-9a-f]{40}/u);
+    const changed = structuredClone(narrativeRegistry) as Record<
+      string,
+      NarrativeRegistryEntry
+    >;
+    changed["gemm-tiling/public-layout-proof"].blocks[0] = {
+      type: "paragraph",
+      text: unsupportedAuthority,
+    };
+    expect(validateNarrativeRegistry(changed)).toContain(
+      "gemm-tiling/public-layout-proof: canonical narrative text drift",
+    );
+    changed["unreviewed/new-claim"] = {
+      sectionId: "new-claim",
+      title: "Unreviewed claim",
+      blocks: [],
+    };
+    expect(validateNarrativeRegistry(changed)).toContain(
+      "registry does not contain the exact canonical narrative ID order",
     );
   });
 
@@ -273,7 +371,7 @@ describe("curriculum integrity", () => {
     const section = changed
       .flatMap((module) => module.lessons)
       .find((lesson) => lesson.id === "gemm-tiling")
-      ?.sections.find((candidate) => candidate.id === "staged-tiled-evidence");
+      ?.sections.find((candidate) => candidate.kind === "staged-evidence");
     const mutable = section as unknown as Record<string, unknown>;
     mutable.evidenceIds = ["unknown-staged-record"];
     expect(validateCurriculum(changed)).toContainEqual(
@@ -284,19 +382,17 @@ describe("curriculum integrity", () => {
 
     const changedProgress = structuredClone(developmentCheckpoints);
     const checkpoint = changedProgress.find(
-      (candidate) =>
-        candidate.name ===
-        "Tiled GEMM V1 source-authenticated compiler bridge",
+      (candidate) => candidate.id === "tiled-gemm-source-bridge",
     );
     const mutableCheckpoint = checkpoint as unknown as Record<string, unknown>;
     mutableCheckpoint.stagedEvidenceIds = ["unknown-staged-record"];
     expect(validateProgress(changedProgress)).toContain(
-      "Tiled GEMM V1 source-authenticated compiler bridge has unknown staged evidence id unknown-staged-record",
+      "tiled-gemm-source-bridge has unknown staged evidence id unknown-staged-record",
     );
 
     mutableCheckpoint.stagedEvidenceIds = ["__proto__"];
     expect(validateProgress(changedProgress)).toContain(
-      "Tiled GEMM V1 source-authenticated compiler bridge has unknown staged evidence id __proto__",
+      "tiled-gemm-source-bridge has unknown staged evidence id __proto__",
     );
   });
 
@@ -363,6 +459,9 @@ describe("curriculum integrity", () => {
 describe("implementation progress integrity", () => {
   it("gates the eventual public target on both public main refs", () => {
     expect(validateProgress()).toEqual([]);
+    expect(developmentCheckpoints.map((checkpoint) => checkpoint.id)).toEqual(
+      developmentCheckpointIds,
+    );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-14",
@@ -730,15 +829,9 @@ describe("implementation progress integrity", () => {
   });
 
   it("teaches the staged tiled evidence boundaries without repinning claims", () => {
-    const orientation = JSON.stringify(
-      lessons.find((lesson) => lesson.id === "read-the-evidence"),
-    );
-    const mapping = JSON.stringify(
-      lessons.find((lesson) => lesson.id === "gemm-tiling"),
-    );
-    const proofPlan = JSON.stringify(
-      lessons.find((lesson) => lesson.id === "gemm-proof-plan"),
-    );
+    const orientation = serializedLessonContent("read-the-evidence");
+    const mapping = serializedLessonContent("gemm-tiling");
+    const proofPlan = serializedLessonContent("gemm-proof-plan");
     const renderedStaged = stagedEvidenceDetail(stagedEvidenceOrder);
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);

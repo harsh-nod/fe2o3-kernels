@@ -1,3 +1,4 @@
+import { narrativeSection } from "./narrative-registry";
 import flashDesign from "../../examples/flash_attention_design.rs?raw";
 import gemmDesign from "../../examples/gemm_design.rs?raw";
 import {
@@ -61,41 +62,8 @@ const collectives: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "scope",
-      title: "Scope is part of the operation",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "A wave reduction communicates only among participating lanes in one wave. A workgroup reduction composes wave results through LDS and at least one workgroup barrier. Treating the two as interchangeable loses both the participation set and the memory-ordering proof.",
-        },
-        {
-          type: "table",
-          headers: ["Layer", "State", "Proof focus"],
-          rows: [
-            ["Wave", "registers and active mask", "inactive lanes do not contribute"],
-            ["Cross-wave", "one partial per wave in LDS", "one writer per slot"],
-            ["Workgroup", "final partials", "barrier order and initialized reads"],
-          ],
-        },
-      ],
-    },
-    {
-      id: "scan",
-      title: "A scan exposes more ownership",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "An inclusive scan returns one prefix per active lane. Besides proving the algebraic prefix result, prove that every lane receives one output slot and that inactive lanes cannot affect active prefixes. For a workgroup scan, carry the per-wave offset and epoch explicitly.",
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Current maturity",
-          text: "The APIs, model, IR operations, and lowering slices are real. This lesson does not present a generally runnable Rust reduction kernel because the production source-to-IR path does not yet cover that surface end to end.",
-        },
-      ],
-    },
+    narrativeSection("reductions-scans/scope"),
+    narrativeSection("reductions-scans/scan"),
   ],
   tabs: completeTabs(
     {
@@ -177,45 +145,8 @@ const synchronization: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "epochs",
-      title: "Initialization crosses a scoped epoch",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Assign disjoint LDS write regions to participating lanes.",
-            "Prove every later-read region is initialized by the write phase.",
-            "Require every workgroup participant to reach the same barrier instance in the same order.",
-            "Transfer only the memory and participant scope covered by that barrier.",
-          ],
-        },
-        {
-          type: "callout",
-          tone: "warning",
-          title: "Convergent is not a proof",
-          text: "An LLVM convergent attribute preserves a convergence fact established earlier. It cannot prove that a source-level branch sends every required participant through the same barrier.",
-        },
-      ],
-    },
-    {
-      id: "atomics",
-      title: "Atomics need a complete tuple",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Atomic validity is a tuple of operation, scalar type, success/failure ordering, synchronization scope, address space, and allocation coherence. A target capability says a tuple can be legalized; it does not establish that a particular runtime allocation is eligible for system scope.",
-        },
-        {
-          type: "bullets",
-          items: [
-            "Use workgroup scope only for workgroup communication.",
-            "Require coherent allocation evidence for device/system interactions.",
-            "Reject mixed atomic and non-atomic overlap unless the model orders it explicitly.",
-          ],
-        },
-      ],
-    },
+    narrativeSection("lds-barriers-atomics/epochs"),
+    narrativeSection("lds-barriers-atomics/atomics"),
   ],
   tabs: completeTabs(
     {
@@ -290,92 +221,13 @@ const gemmMapping: Lesson = {
     },
   ],
   sections: [
+    narrativeSection("gemm-tiling/public-layout-proof"),
     {
-      id: "public-layout-proof",
-      title: "Read the public layout proof narrowly",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Public fe2o3 commit 027ab901bef7007d0e8da3370470556ed28baad1 pins the executable Rust register maps below to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e for gfx942 V_MFMA_F32_16X16X16_BF16. Golden tests exhaust all 64 lanes and four components for each official A/B/C/D table.",
-        },
-        {
-          type: "table",
-          headers: ["Fragment", "Logical coordinate for lane l, component c"],
-          rows: [
-            ["A / Src0", "row = l % 16, depth = 4 * (l / 16) + c"],
-            ["B / Src1", "depth = 4 * (l / 16) + c, column = l % 16"],
-            ["C / Src2", "row = 4 * (l / 16) + c, column = l % 16"],
-            ["D / Vdst", "row = 4 * (l / 16) + c, column = l % 16"],
-          ],
-        },
-        {
-          type: "paragraph",
-          text: "The separate executable XOR4 LDS map stages A as (row, depth) and B in transposed logical order as (column, depth). An ordinary Rust test parses the exact Verus A/B/C and nested XOR formula bodies and exhaustively compares both staging compositions. The runner pins the Verus executable bytes; 23 public proof functions discharge 73 obligations, and five mutations of A, B, C, row-major XOR4, and the inner two-bit permutation are rejected at their intended correspondence theorems.",
-        },
-        {
-          type: "paragraph",
-          text: "Public descendants f8a66d3babf764a6f064189e4634da9ee0cb046a and abe9fdca21579017a1d346fcfa66552bc81308f4 distinguish block counts [N/16,M/16,1] from the [64,1,1] workgroup and derived AQL work-item dimensions, then add a sealed target-neutral one-wave 16x16x16 Kernel IR graph. The graph has 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, exact 256-element profiles, and exhaustive lane/output ownership tests. It deliberately contains no LDS operations yet.",
-        },
-        {
-          type: "paragraph",
-          text: "Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds separate build-scoped in-process Rust frontend/provider/ABI evidence. Same-name external providers and copied markers are rejected. Observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the WG64 fragment probe carries 8 BF16 plus 4 F32 values in 32 explicit bytes followed by 256 implicit bytes, 288 total. This remains a distinct fragment-level evidence profile, not the later four-slice kernel ABI or the independent WG256/384-byte mutation.",
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Three green stages are not one authority chain",
-          text: "Worker V2 still does not produce an authority-bearing final HSACO from the source-authenticated canonical module, nor carry that exact identity through protected publication, loading, and launch. Machine-body semantic admission, compiler and Verus-to-machine refinement, production XOR4 LDS tiling, bounds and initialization proofs, and race freedom remain open. The lesson dependency pin remains at the older audited baseline.",
-        },
-      ],
-    },
-    {
-      id: "staged-tiled-evidence",
-      title: "Staged tiled GEMM evidence",
       kind: "staged-evidence",
       evidenceIds: [...stagedEvidenceOrder],
     },
-    {
-      id: "mapping",
-      title: "Freeze the coordinate map",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "Choose BLOCK_M, BLOCK_N, BLOCK_K, workgroup dimensions, and the lane-to-fragment map as contract parameters. For each active output coordinate (m,n), prove m < M and n < N before writing C. For A and B edge loads, either prove the coordinate in range or write a defined zero into the owned LDS slot.",
-        },
-        {
-          type: "table",
-          headers: ["Object", "Owner", "Invariant"],
-          rows: [
-            ["C tile", "one workgroup", "different groups write disjoint global tiles"],
-            ["A LDS tile", "cooperative lanes", "one writer per slot per phase"],
-            ["B LDS tile", "cooperative lanes", "edge slots initialized to value or zero"],
-            ["Accumulator", "lane fragment", "sum covers exactly completed K phases"],
-          ],
-        },
-      ],
-    },
-    {
-      id: "loop-proof",
-      title: "Decompose the K loop",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Prove phase * BLOCK_K does not overflow and identifies the next K interval.",
-            "Prove cooperative loads initialize all tile elements before the first barrier.",
-            "Prove MFMA consumes only initialized fragments and extends the accumulator invariant.",
-            "Prove the second barrier prevents overwrite while peers still read the phase.",
-            "After all phases, prove guarded stores are injective and in bounds.",
-          ],
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Numerical contract required",
-          text: "A real BF16/F32 GEMM theorem must state input conversion, accumulation order, rounding, exceptional values, and an error bound or exact reference relation. Integer algebra over an abstract multiply-add is not that theorem.",
-        },
-      ],
-    },
+    narrativeSection("gemm-tiling/mapping"),
+    narrativeSection("gemm-tiling/loop-proof"),
   ],
   tabs: completeTabs(
     { language: "rust", code: gemmDesign, explanatory: true },
@@ -427,46 +279,8 @@ const gemmProof: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "proof-ledger",
-      title: "Property ledger",
-      blocks: [
-        {
-          type: "table",
-          headers: ["Property", "Positive proof", "Mutation"],
-          rows: [
-            ["Bounds", "all global/LDS regions bounded", "drop edge predicate"],
-            ["Initialization", "phase writes dominate reads", "read before barrier"],
-            ["Race freedom", "global and LDS writes injective", "duplicate lane owner"],
-            ["Convergence", "all participants reach two barriers", "varying early return"],
-            ["Function", "phase invariant reaches A x B", "skip final K phase"],
-            ["Numerics", "error within stated bound", "change accumulation order/model"],
-          ],
-        },
-      ],
-    },
-    {
-      id: "evidence",
-      title: "Artifact-level closure",
-      blocks: [
-        {
-          type: "steps",
-          items: [
-            "Compile the exact shared Rust body through rustc and canonical Kernel IR.",
-            "Bind the Verus model and theorem identities to source and semantic contract hashes.",
-            "Link with measured LLVM/LLD inputs and inspect target, kernarg ABI, LDS, barriers, MFMA, and exports.",
-            "Run edge dimensions and adversarial aliases on gfx942 against an independent high-precision oracle.",
-            "Sign the result set and obtain independent review before any Complete promotion.",
-          ],
-        },
-        {
-          type: "callout",
-          tone: "proof",
-          title: "Three ledger rows are concrete but unjoined",
-          text: "The typed staged records remain separate evidence boundaries, not one authority chain. The remaining proof ledger must cover source-to-machine derivation, protected publication and launch, bounds, initialization, barriers, LDS ownership, race freedom, and numerical refinement.",
-        },
-      ],
-    },
+    narrativeSection("gemm-proof-plan/proof-ledger"),
+    narrativeSection("gemm-proof-plan/evidence"),
   ],
   tabs: completeTabs(
     { language: "rust", code: gemmDesign, explanatory: true },
@@ -514,46 +328,8 @@ const softmax: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "spec",
-      title: "Define the row contract",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "For each unmasked score x_i, define p_i = exp(x_i - m) / sum_j exp(x_j - m), where m is the maximum unmasked score. Require p_i >= 0, masked outputs equal the chosen sentinel behavior, and the unmasked sum approximates one under a stated error model.",
-        },
-        {
-          type: "bullets",
-          items: [
-            "Specify NaN and infinity policy rather than inheriting an accidental backend choice.",
-            "Give all-masked rows an explicit output and denominator contract.",
-            "Bind the exp approximation and reduction order into numerical evidence.",
-          ],
-        },
-      ],
-    },
-    {
-      id: "proof",
-      title: "Proof layers",
-      blocks: [
-        {
-          type: "table",
-          headers: ["Layer", "Claim"],
-          rows: [
-            ["Real model", "max subtraction preserves exact softmax"],
-            ["Finite arithmetic", "running max/sum stay representable under premises"],
-            ["Approximation", "exp and reduction error remain within epsilon"],
-            ["Memory", "row loads and output writes are bounded and race-free"],
-          ],
-        },
-        {
-          type: "callout",
-          tone: "boundary",
-          title: "Device math is a separate dependency",
-          text: "A device-library exp call needs a linked symbol, target implementation, and numerical contract. The current narrow OCML linking slice does not turn an arbitrary softmax into a verified kernel.",
-        },
-      ],
-    },
+    narrativeSection("softmax-invariant/spec"),
+    narrativeSection("softmax-invariant/proof"),
   ],
   tabs: completeTabs(
     {
@@ -609,58 +385,9 @@ const flash: Lesson = {
     },
   ],
   sections: [
-    {
-      id: "online",
-      title: "Carry a normalized row state",
-      blocks: [
-        {
-          type: "paragraph",
-          text: "After processing key tiles 0..t, keep running_max m_t, running_sum l_t measured in the m_t frame, and output numerator o_t in the same frame. When a new tile raises the maximum, multiply both old l and old o by exp(m_old - m_new) before adding the new tile contributions.",
-        },
-        {
-          type: "callout",
-          tone: "proof",
-          title: "Central invariant",
-          text: "l_t equals the sum of exp(score - m_t) over exactly the processed, unmasked keys, and o_t equals the correspondingly weighted sum of V. Final output is o_t / l_t under the row-validity policy.",
-        },
-      ],
-    },
-    {
-      id: "effects",
-      title: "Machine effects are part of the proof",
-      blocks: [
-        {
-          type: "table",
-          headers: ["Phase", "Memory", "Required fact"],
-          rows: [
-            ["Q residency", "register/LDS", "row fragment initialized and stable"],
-            ["K/V load", "global to LDS", "edge and causal predicates dominate reads"],
-            ["Score tile", "MFMA accumulators", "layout matches lane fragments"],
-            ["Online update", "wave/workgroup reductions", "same active mask and order"],
-            ["Output", "global", "one owner per query/output element"],
-          ],
-        },
-        {
-          type: "paragraph",
-          text: "Causal masking, variable sequence lengths, head strides, grouped-query layouts, dropout, and backward propagation each change the specification. Introduce them as separate versioned profiles rather than optional booleans inside one unreviewed theorem.",
-        },
-      ],
-    },
-    {
-      id: "closure",
-      title: "What hardware evidence must inspect",
-      blocks: [
-        {
-          type: "bullets",
-          items: [
-            "Exact gfx942 target, wave64 contract, kernarg ABI, LDS bytes, barriers, and MFMA forms.",
-            "Boundary sequence lengths, causal corners, all-masked policy, and canary regions.",
-            "Numerical comparison against an independent high-precision implementation with a stated tolerance envelope.",
-            "Identity binding from source and proofs through direct LLVM/LLD output and the loaded code object.",
-          ],
-        },
-      ],
-    },
+    narrativeSection("flash-attention/online"),
+    narrativeSection("flash-attention/effects"),
+    narrativeSection("flash-attention/closure"),
   ],
   tabs: completeTabs(
     { language: "rust", code: flashDesign, explanatory: true },

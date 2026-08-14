@@ -1,3 +1,5 @@
+import type { NarrativeId } from "./narrative-policy";
+
 export const FE2O3_PIN = {
   commit: "acb3d2752e4e50e4f4a99ebfc4b180eb79160930",
   shortCommit: "acb3d275",
@@ -71,15 +73,11 @@ export type LessonBlock =
     };
 
 export interface NarrativeLessonSection {
-  id: string;
-  title: string;
-  blocks: LessonBlock[];
-  kind?: "narrative";
+  kind: "narrative";
+  narrativeId: NarrativeId;
 }
 
 export interface StagedEvidenceLessonSection {
-  id: string;
-  title: string;
   kind: "staged-evidence";
   evidenceIds: StagedEvidenceId[];
 }

@@ -4,6 +4,12 @@ import {
   type Lesson,
 } from "./model";
 import {
+  isNarrativeId,
+  narrativeOrderByLesson,
+  narrativeRegistry,
+  validateNarrativeRegistry,
+} from "./narrative-registry";
+import {
   isStagedEvidenceId,
   stagedEvidenceDetail,
   stagedEvidenceOrder,
@@ -18,7 +24,8 @@ const stagedAuthorities = new Set([
   "harness-only",
   "structural-admission-only",
 ]);
-const stagedSectionKeys = ["evidenceIds", "id", "kind", "title"];
+const narrativeSectionKeys = ["kind", "narrativeId"];
+const stagedSectionKeys = ["evidenceIds", "kind"];
 const lessonsRequiringStagedEvidence = new Set([
   "read-the-evidence",
   "gemm-tiling",
@@ -38,10 +45,18 @@ export interface ValidationIssue {
 
 export function validateCurriculum(
   modules: CurriculumModule[],
+  narratives: Record<string, unknown> = narrativeRegistry,
 ): ValidationIssue[] {
-  const issues: ValidationIssue[] = validateStagedEvidenceCatalog().map(
-    (message) => ({ path: "stagedEvidence", message }),
-  );
+  const issues: ValidationIssue[] = [
+    ...validateStagedEvidenceCatalog().map((message) => ({
+      path: "stagedEvidence",
+      message,
+    })),
+    ...validateNarrativeRegistry(narratives).map((message) => ({
+      path: "narrativeRegistry",
+      message,
+    })),
+  ];
   const lessonIds = new Set<string>();
   const moduleNumbers = new Set<number>();
 
@@ -93,6 +108,22 @@ function validateLesson(
   const stagedSections = lesson.sections.filter(
     (section) => section.kind === "staged-evidence",
   );
+  const narrativeSections = lesson.sections.filter(
+    (section) => section.kind === "narrative",
+  );
+  const expectedNarratives = narrativeOrderByLesson[lesson.id];
+  const actualNarratives = narrativeSections.map(
+    (section) => section.narrativeId,
+  );
+  if (
+    !expectedNarratives ||
+    !hasExactSequence(actualNarratives, expectedNarratives)
+  ) {
+    issues.push({
+      path,
+      message: "lesson does not contain its exact canonical narrative ID order",
+    });
+  }
   const hasStagedClaims = lesson.claims.some(
     (claim) => claim.reference?.scope === "staged-progress",
   );
@@ -106,13 +137,33 @@ function validateLesson(
     });
   }
   for (const [sectionIndex, section] of lesson.sections.entries()) {
-    if (section.kind !== "staged-evidence") continue;
     const sectionPath = `${path}.sections[${sectionIndex}]`;
+    if (section.kind === "narrative") {
+      if (
+        !hasExactSequence(Object.keys(section).sort(), narrativeSectionKeys)
+      ) {
+        issues.push({
+          path: sectionPath,
+          message: "narrative section accepts only one canonical narrative ID",
+        });
+      }
+      if (!isNarrativeId(section.narrativeId)) {
+        issues.push({
+          path: sectionPath,
+          message: `unknown narrative id ${String(section.narrativeId)}`,
+        });
+      }
+      continue;
+    }
+    if (section.kind !== "staged-evidence") {
+      issues.push({
+        path: sectionPath,
+        message: "lesson section has no recognized closed render kind",
+      });
+      continue;
+    }
     if (
-      !hasExactSequence(
-        Object.keys(section).sort(),
-        stagedSectionKeys,
-      )
+      !hasExactSequence(Object.keys(section).sort(), stagedSectionKeys)
     ) {
       issues.push({
         path: sectionPath,
