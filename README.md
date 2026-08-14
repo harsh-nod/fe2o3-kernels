@@ -141,9 +141,9 @@ At the audited pin:
   canonical direct-global one-tile Kernel IR, a guarded gfx942 hardware harness
   for separately supplied bytes, and structural Worker V2 artifact admission.
   One exact externally supplied 6,672-byte artifact has now passed the guarded
-  MI300X run, bitwise oracle, immutable-input comparison, adjacent canaries, and
-  unload checks. The observation is non-authoritative and does not join the
-  Rust source to those bytes. Source-derived final HSACO/load/launch authority,
+  MI300X run, bitwise oracle, A/B/C unchanged-value comparison, adjacent
+  canaries, and unload checks. The observation is non-authoritative and does not
+  join the Rust source to those bytes. Source-derived final HSACO/load/launch authority,
   machine-body semantic admission, production LDS composition, compiler
   refinement, and memory and race proofs are still open.
 - Tiled GEMM, softmax, flash attention, and mixture-of-experts are design-only
