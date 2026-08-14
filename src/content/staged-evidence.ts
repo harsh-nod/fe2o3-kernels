@@ -92,11 +92,11 @@ export const stagedEvidenceRecords: Record<
     assertions: [
       {
         id: "metadata-normalization",
-        text: "Commit b904f5b648c7eb249d32d73db427abe72970315a makes the compiler semantic commitment and private receipt contain normalized Cargo-generated metadata.",
+        text: "Commit b904f5b648c7eb249d32d73db427abe72970315a normalizes Cargo-generated metadata only inside the compiler-semantic commitment.",
       },
       {
         id: "wrapper-exact-observation",
-        text: "The managed cargo-fe2o3 wrapper separately binds the full ordered rustc argv and exact metadata observations; raw argv and exact metadata are not claimed as fields of the private receipt.",
+        text: "The private receipt carries that normalized compiler-semantic commitment; it does not carry normalized metadata as a separate receipt field. The managed cargo-fe2o3 wrapper separately binds the full ordered rustc argv and exact metadata observations.",
       },
     ],
   },
@@ -199,6 +199,13 @@ export const stagedEvidenceRecords: Record<
     ],
   },
 };
+
+export function isStagedEvidenceId(value: unknown): value is StagedEvidenceId {
+  return (
+    typeof value === "string" &&
+    Object.prototype.hasOwnProperty.call(stagedEvidenceRecords, value)
+  );
+}
 
 export function stagedEvidenceRecord(
   id: StagedEvidenceId,

@@ -64,18 +64,29 @@ export type LessonBlock =
   | { type: "bullets"; items: string[] }
   | { type: "steps"; items: string[] }
   | { type: "callout"; tone: CalloutTone; title: string; text: string }
-  | { type: "staged-evidence"; evidenceIds: StagedEvidenceId[] }
   | {
       type: "table";
       headers: string[];
       rows: string[][];
     };
 
-export interface LessonSection {
+export interface NarrativeLessonSection {
   id: string;
   title: string;
   blocks: LessonBlock[];
+  kind?: "narrative";
 }
+
+export interface StagedEvidenceLessonSection {
+  id: string;
+  title: string;
+  kind: "staged-evidence";
+  evidenceIds: StagedEvidenceId[];
+}
+
+export type LessonSection =
+  | NarrativeLessonSection
+  | StagedEvidenceLessonSection;
 
 export type CodeTabKind = "kernel" | "verus" | "host" | "result";
 

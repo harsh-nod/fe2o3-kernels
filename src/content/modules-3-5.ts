@@ -320,7 +320,6 @@ const gemmMapping: Lesson = {
           type: "paragraph",
           text: "Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds separate build-scoped in-process Rust frontend/provider/ABI evidence. Same-name external providers and copied markers are rejected. Observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the WG64 fragment probe carries 8 BF16 plus 4 F32 values in 32 explicit bytes followed by 256 implicit bytes, 288 total. This remains a distinct fragment-level evidence profile, not the later four-slice kernel ABI or the independent WG256/384-byte mutation.",
         },
-        { type: "staged-evidence", evidenceIds: [...stagedEvidenceOrder] },
         {
           type: "callout",
           tone: "boundary",
@@ -328,6 +327,12 @@ const gemmMapping: Lesson = {
           text: "Worker V2 still does not produce an authority-bearing final HSACO from the source-authenticated canonical module, nor carry that exact identity through protected publication, loading, and launch. Machine-body semantic admission, compiler and Verus-to-machine refinement, production XOR4 LDS tiling, bounds and initialization proofs, and race freedom remain open. The lesson dependency pin remains at the older audited baseline.",
         },
       ],
+    },
+    {
+      id: "staged-tiled-evidence",
+      title: "Staged tiled GEMM evidence",
+      kind: "staged-evidence",
+      evidenceIds: [...stagedEvidenceOrder],
     },
     {
       id: "mapping",

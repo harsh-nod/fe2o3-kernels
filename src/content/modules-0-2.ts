@@ -120,8 +120,13 @@ const orientation: Lesson = {
           title: "Newer progress, unchanged lesson pin",
           text: "The progress dashboard tracks a separately gated eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The typed staged records below close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
         },
-        { type: "staged-evidence", evidenceIds: [...stagedEvidenceOrder] },
       ],
+    },
+    {
+      id: "staged-tiled-evidence",
+      title: "Staged tiled GEMM evidence",
+      kind: "staged-evidence",
+      evidenceIds: [...stagedEvidenceOrder],
     },
   ],
   tabs: completeTabs(

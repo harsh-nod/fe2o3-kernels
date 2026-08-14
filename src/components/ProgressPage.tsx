@@ -1,6 +1,7 @@
 import { CheckCircle2, CircleDashed, Clock3, ExternalLink, ShieldAlert } from "lucide-react";
 import {
   developmentCheckpoints,
+  developmentCheckpointDetail,
   gateLabels,
   kernelProgress,
   progressSnapshot,
@@ -77,7 +78,7 @@ export function ProgressPage() {
                 <h3>{checkpoint.name}</h3>
               </div>
               <code>{checkpoint.commit}</code>
-              <p>{checkpoint.detail}</p>
+              <p>{developmentCheckpointDetail(checkpoint)}</p>
             </article>
           ))}
         </div>

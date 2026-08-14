@@ -3,6 +3,7 @@ import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import {
   developmentCheckpoints,
+  developmentCheckpointDetail,
   kernelProgress,
   progressSnapshot,
   tiledGemmV1Commits,
@@ -223,7 +224,83 @@ describe("curriculum integrity", () => {
     ).toBeUndefined();
   });
 
-  it("rejects detailed staged prose that drifts from atomic records", () => {
+  it("rejects unsupported no-hash GPU observations in staged lesson sections", () => {
+    const unsupportedObservation =
+      "A GPU observation establishes machine execution authority.";
+    expect(unsupportedObservation).not.toMatch(/[0-9a-f]{40}/u);
+    const changed = structuredClone(curriculum);
+    const section = changed
+      .flatMap((module) => module.lessons)
+      .find((lesson) => lesson.id === "gemm-tiling")
+      ?.sections.find((candidate) => candidate.id === "staged-tiled-evidence");
+    const mutable = section as unknown as Record<string, unknown>;
+    mutable.blocks = [
+      {
+        type: "paragraph",
+        text: unsupportedObservation,
+      },
+    ];
+    expect(validateCurriculum(changed)).toContainEqual(
+      expect.objectContaining({
+        message: "staged evidence section accepts only canonical evidence IDs",
+      }),
+    );
+  });
+
+  it("rejects progress authority prose after staged evidence IDs are removed", () => {
+    const unsupportedAuthority =
+      "The emitted machine code carries execution authority on the accelerator.";
+    expect(unsupportedAuthority).not.toMatch(/[0-9a-f]{40}/u);
+    const changed = structuredClone(developmentCheckpoints);
+    const checkpoint = changed.find(
+      (candidate) =>
+        candidate.name ===
+        "Tiled GEMM V1 source-authenticated compiler bridge",
+    );
+    const mutable = checkpoint as unknown as Record<string, unknown>;
+    delete mutable.stagedEvidenceIds;
+    mutable.detail = unsupportedAuthority;
+    expect(validateProgress(changed)).toContain(
+      "Tiled GEMM V1 source-authenticated compiler bridge contains free-form staged fields",
+    );
+    expect(validateProgress(changed)).toContain(
+      "Tiled GEMM V1 source-authenticated compiler bridge must contain its complete canonical staged evidence IDs",
+    );
+  });
+
+  it("rejects unknown staged evidence IDs", () => {
+    const changed = structuredClone(curriculum);
+    const section = changed
+      .flatMap((module) => module.lessons)
+      .find((lesson) => lesson.id === "gemm-tiling")
+      ?.sections.find((candidate) => candidate.id === "staged-tiled-evidence");
+    const mutable = section as unknown as Record<string, unknown>;
+    mutable.evidenceIds = ["unknown-staged-record"];
+    expect(validateCurriculum(changed)).toContainEqual(
+      expect.objectContaining({
+        message: "unknown staged evidence id unknown-staged-record",
+      }),
+    );
+
+    const changedProgress = structuredClone(developmentCheckpoints);
+    const checkpoint = changedProgress.find(
+      (candidate) =>
+        candidate.name ===
+        "Tiled GEMM V1 source-authenticated compiler bridge",
+    );
+    const mutableCheckpoint = checkpoint as unknown as Record<string, unknown>;
+    mutableCheckpoint.stagedEvidenceIds = ["unknown-staged-record"];
+    expect(validateProgress(changedProgress)).toContain(
+      "Tiled GEMM V1 source-authenticated compiler bridge has unknown staged evidence id unknown-staged-record",
+    );
+
+    mutableCheckpoint.stagedEvidenceIds = ["__proto__"];
+    expect(validateProgress(changedProgress)).toContain(
+      "Tiled GEMM V1 source-authenticated compiler bridge has unknown staged evidence id __proto__",
+    );
+  });
+
+  it("rejects staged prose that mismatches its evidence record", () => {
     const changedClaims = structuredClone(curriculum);
     const claim = changedClaims
       .flatMap((module) => module.lessons)
@@ -238,30 +315,6 @@ describe("curriculum integrity", () => {
       expect.objectContaining({
         message: "staged claim is not derived from its atomic evidence record",
       }),
-    );
-
-    const changedBlocks = structuredClone(curriculum);
-    const section = changedBlocks
-      .flatMap((module) => module.lessons)
-      .find((lesson) => lesson.id === "gemm-tiling")
-      ?.sections.find((candidate) => candidate.id === "public-layout-proof");
-    section?.blocks.push({
-      type: "paragraph",
-      text: `${stagedEvidenceRecords["tiled-source-bridge-v1"].commit} unsupported duplicate detail`,
-    });
-    expect(validateCurriculum(changedBlocks)).toContainEqual(
-      expect.objectContaining({
-        message: "detailed staged prose must be rendered from an evidence record",
-      }),
-    );
-
-    const changedProgress = structuredClone(developmentCheckpoints);
-    const checkpoint = changedProgress.find(
-      (candidate) => candidate.stagedEvidenceIds?.length,
-    );
-    if (checkpoint) checkpoint.detail += " Unsupported extra staged assertion.";
-    expect(validateProgress(changedProgress)).toContain(
-      `${checkpoint?.name} detail is not derived from staged evidence`,
     );
   });
 
@@ -334,7 +387,7 @@ describe("implementation progress integrity", () => {
       commit: progressSnapshot.eventualPublicCommit,
       state: "queued",
     });
-    expect(developmentCheckpoints[0].detail).toContain(
+    expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
       "not an observation of current remote state",
     );
     expect(developmentCheckpoints[1]).toMatchObject({
@@ -536,55 +589,66 @@ describe("implementation progress integrity", () => {
         checkpoint.name === "Tiled GEMM V1 source-authenticated compiler bridge",
     );
     expect(sourceBridge).toMatchObject({
+      kind: "staged-evidence",
       commit: tiledGemmV1Commits.sourceBridge,
       state: "acceptance",
     });
-    expect(sourceBridge?.detail).toBe(
+    expect(sourceBridge).not.toHaveProperty("detail");
+    const sourceBridgeDetail = sourceBridge
+      ? developmentCheckpointDetail(sourceBridge)
+      : "";
+    expect(sourceBridgeDetail).toBe(
       stagedEvidenceDetail([
         "tiled-source-bridge-v1",
         "tiled-cargo-metadata-v1",
         "tiled-cargo-root-v1",
       ]),
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "64-byte explicit plus 256-byte implicit four-slice ABI",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "AMDGCN lowering represents the BF16 carriers with i16 loads",
     );
-    expect(sourceBridge?.detail).toContain("private single-use receipt");
-    expect(sourceBridge?.detail).toContain(
-      "b904f5b648c7eb249d32d73db427abe72970315a makes the compiler semantic commitment and private receipt contain normalized Cargo-generated metadata",
+    expect(sourceBridgeDetail).toContain("private single-use receipt");
+    expect(sourceBridgeDetail).toContain(
+      "b904f5b648c7eb249d32d73db427abe72970315a normalizes Cargo-generated metadata only inside the compiler-semantic commitment",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
+      "private receipt carries that normalized compiler-semantic commitment",
+    );
+    expect(sourceBridgeDetail).toContain(
+      "does not carry normalized metadata as a separate receipt field",
+    );
+    expect(sourceBridgeDetail).toContain(
       "managed cargo-fe2o3 wrapper separately binds the full ordered rustc argv and exact metadata observations",
     );
-    expect(sourceBridge?.detail).toContain(
-      "raw argv and exact metadata are not claimed as fields of the private receipt",
+    expect(sourceBridgeDetail).not.toContain(
+      "private receipt contain normalized Cargo-generated metadata",
     );
-    expect(sourceBridge?.detail).not.toContain(
+    expect(sourceBridgeDetail).not.toContain(
       "full observed argv and metadata remain receipt-bound",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "51bd129c31b08b636545f12229f34aaa431321f2 normalizes only the Cargo-generated root shape in the compiler semantic commitment",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "full observed root is stored in the private receipt and length-framed into its authority commitment",
     );
-    expect(sourceBridge?.detail).toContain("Worker V2 handoff remains inert");
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain("Worker V2 handoff remains inert");
+    expect(sourceBridgeDetail).toContain(
       "not a compiler refinement proof",
     );
-    expect(sourceBridge?.detail).toContain(
+    expect(sourceBridgeDetail).toContain(
       "no final-HSACO, publication, loading, or launch authority",
     );
   });
@@ -598,23 +662,24 @@ describe("implementation progress integrity", () => {
       commit: tiledGemmV1Commits.hardwareEvidence,
       state: "acceptance",
     });
-    expect(hardware?.detail).toContain("externally supplied digest-pinned bytes");
-    expect(hardware?.detail).toContain("COV6/WG64/320-byte metadata");
-    expect(hardware?.detail).toContain("bitwise dyadic 16x16 oracle");
-    expect(hardware?.detail).toContain(
+    const hardwareDetail = hardware ? developmentCheckpointDetail(hardware) : "";
+    expect(hardwareDetail).toContain("externally supplied digest-pinned bytes");
+    expect(hardwareDetail).toContain("COV6/WG64/320-byte metadata");
+    expect(hardwareDetail).toContain("bitwise dyadic 16x16 oracle");
+    expect(hardwareDetail).toContain(
       "A/B/C inputs remained bitwise unchanged",
     );
-    expect(hardware?.detail).not.toMatch(/immutable\s+inputs/);
-    expect(hardware?.detail).toContain(
+    expect(hardwareDetail).not.toMatch(/immutable\s+inputs/);
+    expect(hardwareDetail).toContain(
       "contains no hardware run receipt",
     );
-    expect(hardware?.detail).toContain(
+    expect(hardwareDetail).toContain(
       "exact hardware execution remains uncommitted and non-authoritative",
     );
-    expect(hardware?.detail).not.toMatch(/[\d,]+-byte (?:COV6 )?HSACO/);
-    expect(hardware?.detail).not.toMatch(/SHA-256 [0-9a-f]{64}/);
-    expect(hardware?.detail).not.toMatch(/passed \d+\/\d+ in/);
-    expect(hardware?.detail).not.toContain("ROCm");
+    expect(hardwareDetail).not.toMatch(/[\d,]+-byte (?:COV6 )?HSACO/);
+    expect(hardwareDetail).not.toMatch(/SHA-256 [0-9a-f]{64}/);
+    expect(hardwareDetail).not.toMatch(/passed \d+\/\d+ in/);
+    expect(hardwareDetail).not.toContain("ROCm");
   });
 
   it("tracks structural artifact admission without claiming body semantics", () => {
@@ -626,23 +691,26 @@ describe("implementation progress integrity", () => {
       commit: tiledGemmV1Commits.structuralAdmission,
       state: "queued",
     });
-    expect(structural?.detail).toContain(
+    const structuralDetail = structural
+      ? developmentCheckpointDetail(structural)
+      : "";
+    expect(structuralDetail).toContain(
       "four slices in 64 explicit bytes, a 256-byte implicit suffix",
     );
-    expect(structural?.detail).toContain(
+    expect(structuralDetail).toContain(
       "separately rejects the WG64/288-byte fragment probe",
     );
-    expect(structural?.detail).toContain(
+    expect(structuralDetail).toContain(
       "independent WG256 and 384-byte structural mutations",
     );
-    expect(structural?.detail).toContain("admit arbitrary .text");
-    expect(structural?.detail).toContain(
+    expect(structuralDetail).toContain("admit arbitrary .text");
+    expect(structuralDetail).toContain(
       "does not inspect machine-body semantics",
     );
-    expect(structural?.detail).toContain(
+    expect(structuralDetail).toContain(
       "no publication, loading, or launch authority",
     );
-    expect(structural?.detail).toContain("no COMGR path is added");
+    expect(structuralDetail).toContain("no COMGR path is added");
   });
 
   it("keeps tiled GEMM partial until source, body, authority, and race closure", () => {
