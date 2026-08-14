@@ -481,7 +481,7 @@ const gemmProof: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "Source selection, structural artifact checks, and one guarded hardware result now exist as separate stages. Completion still requires one identity-bound source/proof/compiler/machine/runtime authority chain.",
+        "Source selection, structural artifact checks, and a hardware harness now exist as separate stages. The harness carries no committed run receipt. Completion still requires one identity-bound source/proof/compiler/machine/runtime authority chain.",
       ),
     },
   ),

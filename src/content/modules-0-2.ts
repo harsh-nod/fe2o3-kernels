@@ -5,6 +5,7 @@ import vecaddKernel from "../../examples/vecadd_kernel.rs?raw";
 import {
   FE2O3_PIN,
   pinnedReference,
+  stagedReference,
   type CurriculumModule,
   type Lesson,
 } from "./model";
@@ -37,13 +38,113 @@ const orientation: Lesson = {
   claims: [
     {
       kind: "compiler-hsaco-observed",
-      label: "Audited baseline",
+      label: "Audited lesson baseline",
       detail:
-        "Every concrete claim in this guide is pinned to the public fe2o3 tree shown below.",
+        "Lesson evidence claims are pinned to the public fe2o3 tree shown below. The separately gated implementation-progress snapshot uses its own exact staged references.",
       reference: pinnedReference(
         ["git show --stat acb3d2752e4e50e4f4a99ebfc4b180eb79160930"],
         ["README.md", "docs/testing.md", "docs/verification-model.md"],
       ),
+    },
+    {
+      kind: "compiler-hsaco-observed",
+      label: "Staged tiled source bridge",
+      detail:
+        "The staged source bridge authenticates one exact collected Rust/MIR/FnAbi profile into canonical direct-global tiled GEMM Kernel IR through a private single-use receipt. This is reviewed correspondence, not compiler refinement, and grants no final-HSACO or runtime authority.",
+      reference: stagedReference({
+        claim: "compiler-hsaco-observed",
+        authority: "source-admission-only",
+        commit: "fb75e19a73ec0a9acebb203bd9821190b0592c82",
+        tree: "0a57b2b6d14121da92dbbb2d7c4f9d8b4df4ce63",
+        commands: [
+          "cargo test -p rustc-codegen-fe2o3 --lib collected_tiled_gemm_v1",
+        ],
+        sourcePaths: [
+          "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/kernel_ir_lowering.rs",
+          "crates/rustc-codegen-fe2o3/tests/fixtures/collected-tiled-gemm-v1/src/lib.rs",
+        ],
+        target: "gfx942:xnack-",
+      }),
+    },
+    {
+      kind: "compiler-hsaco-observed",
+      label: "Staged Cargo metadata normalization",
+      detail:
+        "The staged repair normalizes only Cargo-generated metadata in the semantic commitment. Full observed argv and metadata remain bound to the private receipt.",
+      reference: stagedReference({
+        claim: "compiler-hsaco-observed",
+        authority: "source-admission-only",
+        commit: "b904f5b648c7eb249d32d73db427abe72970315a",
+        tree: "a5b07af23c9fcf5f04ddcad1c18a6318469e6e06",
+        commands: [
+          "cargo test -p rustc-codegen-fe2o3 --lib cargo_build_metadata_is_shape_checked_but_not_a_semantic_identity",
+        ],
+        sourcePaths: [
+          "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_v1.rs",
+        ],
+        target: "gfx942:xnack-",
+      }),
+    },
+    {
+      kind: "compiler-hsaco-observed",
+      label: "Staged Cargo root normalization",
+      detail:
+        "The staged repair normalizes only the Cargo-generated root shape in the semantic commitment. The full observed root remains bound to the private receipt.",
+      reference: stagedReference({
+        claim: "compiler-hsaco-observed",
+        authority: "source-admission-only",
+        commit: "51bd129c31b08b636545f12229f34aaa431321f2",
+        tree: "8be992dee9f145c73f61bb05f0066656298a7c75",
+        commands: [
+          "cargo test -p rustc-codegen-fe2o3 --lib kernel_root_build_identity_is_shape_checked_and_receipt_bound",
+        ],
+        sourcePaths: [
+          "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_v1.rs",
+        ],
+        target: "gfx942:xnack-",
+      }),
+    },
+    {
+      kind: "compiler-hsaco-observed",
+      label: "Staged tiled hardware harness",
+      detail:
+        "The staged commit adds an ignored, opt-in harness for externally supplied digest-pinned bytes and objdump output. It commits no hardware run receipt, authenticates no producer, and grants no load, launch, or GPU-observation authority.",
+      reference: stagedReference({
+        claim: "compiler-hsaco-observed",
+        authority: "harness-only",
+        commit: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
+        tree: "ea96ff13212e02390c881b74e2ea47aaf3018f1b",
+        commands: [
+          "cargo test -p fe2o3-hsa-runtime --test tiled_gemm_v1_hardware",
+        ],
+        sourcePaths: [
+          "crates/fe2o3-hsa-runtime/tests/tiled_gemm_v1_hardware.rs",
+        ],
+        target: "gfx942:xnack-",
+      }),
+    },
+    {
+      kind: "compiler-hsaco-observed",
+      label: "Staged tiled structural admission",
+      detail:
+        "The staged structural gate admits and canonically finalizes the exact tiled descriptor profile. It intentionally does not inspect machine-body semantics and grants no publication, loading, or launch authority.",
+      reference: stagedReference({
+        claim: "compiler-hsaco-observed",
+        authority: "structural-admission-only",
+        commit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
+        tree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
+        commands: [
+          "cargo test -p fe2o3-kernel-descriptor tiled_gemm_v1",
+          "cargo test -p fe2o3-hsaco-finalize worker_v2_hsaco",
+        ],
+        sourcePaths: [
+          "crates/fe2o3-kernel-descriptor/src/tiled_gemm_v1.rs",
+          "crates/fe2o3-hsaco-finalize/src/tiled_gemm_v1_artifact.rs",
+          "crates/fe2o3-hsaco-finalize/tests/worker_v2_hsaco_admission.rs",
+        ],
+        target: "gfx942:xnack-",
+      }),
     },
   ],
   sections: [
@@ -212,7 +313,7 @@ const setup: Lesson = {
           type: "bullets",
           items: [
             `Rust channel: ${FE2O3_PIN.rustToolchain}.`,
-            `Tutorial baseline: ${FE2O3_PIN.commit}.`,
+            `Tutorial lesson evidence baseline: ${FE2O3_PIN.commit}.`,
             "Primary target: gfx942:xnack-; do not infer feature state from the processor name alone.",
             "ROCm tools must be discoverable by cargo-fe2o3 doctor.",
           ],

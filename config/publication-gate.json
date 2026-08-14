@@ -1,0 +1,14 @@
+{
+  "requiredCommit": "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
+  "requiredTree": "1396be8ff4947a16ddc6aabae7390cc376992c61",
+  "requiredRefs": [
+    {
+      "repository": "harsh-nod/fe2o3",
+      "ref": "refs/heads/main"
+    },
+    {
+      "repository": "powderluv/fe2o3",
+      "ref": "refs/heads/main"
+    }
+  ]
+}

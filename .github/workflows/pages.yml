@@ -25,6 +25,11 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Enforce dual-repository publication gate
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/enforce-publication-gate.mjs
+
       - name: Install dependencies
         run: npm ci
 

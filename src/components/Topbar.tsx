@@ -31,7 +31,7 @@ export function Topbar({ theme, onMenu, onSearch, onTheme }: TopbarProps) {
       </div>
       <div className="pin-summary" title={`Tree ${FE2O3_PIN.tree}`}>
         <span className="pin-dot" aria-hidden="true" />
-        <span>fe2o3 {FE2O3_PIN.shortCommit}</span>
+        <span>lesson pin {FE2O3_PIN.shortCommit}</span>
         <span className="pin-target">gfx942</span>
       </div>
       <div className="topbar-actions">

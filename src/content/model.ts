@@ -14,13 +14,33 @@ export type EvidenceKind =
   | "gpu-observed"
   | "design-only";
 
-export interface EvidenceReference {
+interface EvidenceReferenceBase {
   commit: string;
+  tree: string;
   commands: string[];
   sourcePaths: string[];
   target?: string;
   note?: string;
 }
+
+export interface LessonEvidenceReference extends EvidenceReferenceBase {
+  scope: "lesson-evidence";
+}
+
+export type StagedEvidenceAuthority =
+  | "source-admission-only"
+  | "harness-only"
+  | "structural-admission-only";
+
+export interface StagedEvidenceReference extends EvidenceReferenceBase {
+  scope: "staged-progress";
+  claim: EvidenceKind;
+  authority: StagedEvidenceAuthority;
+}
+
+export type EvidenceReference =
+  | LessonEvidenceReference
+  | StagedEvidenceReference;
 
 export interface Claim {
   kind: EvidenceKind;
@@ -134,19 +154,30 @@ export const evidenceLabels: Record<
   },
 };
 
-export function sourceUrl(path: string): string {
-  return `${FE2O3_PIN.repository}/blob/${FE2O3_PIN.commit}/${path}`;
+export function sourceUrl(
+  path: string,
+  commit: string = FE2O3_PIN.commit,
+): string {
+  return `${FE2O3_PIN.repository}/blob/${commit}/${path}`;
 }
 
 export function pinnedReference(
   commands: string[],
   sourcePaths: string[],
-  options: Pick<EvidenceReference, "target" | "note"> = {},
-): EvidenceReference {
+  options: Pick<LessonEvidenceReference, "target" | "note"> = {},
+): LessonEvidenceReference {
   return {
+    scope: "lesson-evidence",
     commit: FE2O3_PIN.commit,
+    tree: FE2O3_PIN.tree,
     commands,
     sourcePaths,
     ...options,
   };
+}
+
+export function stagedReference(
+  reference: Omit<StagedEvidenceReference, "scope">,
+): StagedEvidenceReference {
+  return { scope: "staged-progress", ...reference };
 }

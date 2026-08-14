@@ -11,9 +11,11 @@ what it verifies, what it observes in compiler or hardware tests, and what is
 still a design. It does not present advanced tutorial pseudocode as a working
 kernel.
 
-## Audited baseline
+## Audited lesson baseline
 
-All implementation and proof claims are based on one immutable fe2o3 snapshot:
+Lesson evidence claims are based on one immutable fe2o3 snapshot. This pin does
+not cover the separately gated implementation-progress snapshot described
+below:
 
 | Field | Value |
 | --- | --- |
@@ -23,7 +25,7 @@ All implementation and proof claims are based on one immutable fe2o3 snapshot:
 | Rust toolchain | `nightly-2026-04-03` |
 | Primary target | `gfx942:xnack-` |
 
-The baseline was audited from source, documentation, test fixtures, Verus
+The lesson baseline was audited from source, documentation, test fixtures, Verus
 runners, compiler tests, direct-link tooling, and the signed evidence model.
 Commands shown in lessons that exercise fe2o3 are run from a checkout of that
 exact commit, not from this documentation repository.
@@ -132,16 +134,19 @@ mutations. Workflow-only descendant
 hosted Verus job and changes no proof or kernel semantics. The layout packet
 remains source-level evidence. The later source-authenticated bridge selects
 the canonical direct-global module, but that correspondence is not compiler
-refinement. The guarded hardware run is non-authoritative, and the structural
-artifact gate does not inspect the machine body. None of these stages
+refinement. The hardware harness carries no committed run receipt and is
+non-authoritative, and the structural artifact gate does not inspect the
+machine body. None of these stages
 establishes production LDS composition, memory safety, race freedom, or
 protected launch authority.
 
 ## Maturity labels
 
 Every technical claim uses one of five labels. A non-design claim is invalid
-unless it includes the exact fe2o3 commit, at least one command, and at least one
-source path. Runtime claims also require a target identity.
+unless it includes the exact fe2o3 commit and tree, at least one command, and at
+least one source path. Staged progress references additionally require explicit
+claim and limited-authority labels. Runtime claims also require a target
+identity.
 
 | Label | Meaning | Does not imply |
 | --- | --- | --- |
@@ -280,9 +285,10 @@ maturity label.
 
 ## Deployment
 
-GitHub Actions builds the static app and deploys `dist/` to GitHub Pages on each
-push to `main`. Workflow permissions are scoped per job, deployment is
-serialized, and third-party actions are pinned to immutable commit SHAs.
+On a push to `main`, GitHub Actions builds and deploys `dist/` only after
+authenticated Git resolution confirms that both required fe2o3 public refs
+equal the checked-in publication target. Workflow permissions are scoped per
+job, deployment is serialized, and actions are pinned to immutable commit SHAs.
 
 Pull requests and pushes also run lint, type checking, unit tests, the production
 build, and Chromium browser tests. A green site build is not evidence that a GPU
@@ -293,12 +299,12 @@ claim is true; the content evidence rules remain a separate gate.
 1. Never infer a stronger status from a weaker one. A passing Verus model is not
    a GPU run; an HSACO inspection is not a source proof.
 2. Never label an example runnable without an exact command, immutable fe2o3
-   commit, source paths, and target where execution is involved.
+   commit and tree, source paths, and target where execution is involved.
 3. Keep expected-negative verification tests next to positive proof claims.
 4. State assumptions, trusted components, and unproved obligations in the
    lesson itself.
 5. Downgrade stale claims when the pinned source or command can no longer be
-   reproduced. Do not silently move the baseline.
+   reproduced. Do not silently move the lesson evidence baseline.
 6. Treat design code as explanatory material until a real frontend path,
    compiler test, code-object check, and appropriate hardware test exist.
 

@@ -1,5 +1,12 @@
 import { FE2O3_PIN, type CurriculumModule, type Lesson } from "./model";
 
+const exactObjectName = /^[0-9a-f]{40}$/;
+const stagedAuthorities = new Set([
+  "source-admission-only",
+  "harness-only",
+  "structural-admission-only",
+]);
+
 export interface ValidationIssue {
   path: string;
   message: string;
@@ -74,13 +81,51 @@ function validateLesson(
       issues.push({ path: claimPath, message: "evidenced claim lacks reference" });
       continue;
     }
-    if (reference.commit !== FE2O3_PIN.commit) {
-      issues.push({ path: claimPath, message: "claim is not pinned to fe2o3" });
+    if (!exactObjectName.test(reference.commit)) {
+      issues.push({ path: claimPath, message: "claim has no exact commit" });
     }
-    if (reference.commands.length === 0) {
+    if (!exactObjectName.test(reference.tree)) {
+      issues.push({ path: claimPath, message: "claim has no exact tree" });
+    }
+    if (reference.scope === "lesson-evidence") {
+      if (
+        reference.commit !== FE2O3_PIN.commit ||
+        reference.tree !== FE2O3_PIN.tree
+      ) {
+        issues.push({
+          path: claimPath,
+          message: "lesson claim is not pinned to the lesson evidence tree",
+        });
+      }
+    } else {
+      if (reference.claim !== claim.kind) {
+        issues.push({
+          path: claimPath,
+          message: "staged reference claim label does not match its claim",
+        });
+      }
+      if (!stagedAuthorities.has(reference.authority)) {
+        issues.push({
+          path: claimPath,
+          message: "staged reference has no recognized authority label",
+        });
+      }
+    }
+    if (
+      reference.commands.length === 0 ||
+      reference.commands.some((command) => command.trim().length === 0)
+    ) {
       issues.push({ path: claimPath, message: "claim has no exact command" });
     }
-    if (reference.sourcePaths.length === 0) {
+    if (
+      reference.sourcePaths.length === 0 ||
+      reference.sourcePaths.some(
+        (sourcePath) =>
+          sourcePath.length === 0 ||
+          sourcePath.startsWith("/") ||
+          sourcePath.split("/").includes(".."),
+      )
+    ) {
       issues.push({ path: claimPath, message: "claim has no source path" });
     }
     if (

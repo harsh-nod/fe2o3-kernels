@@ -34,15 +34,152 @@ describe("curriculum integrity", () => {
           continue;
         }
 
-        expect(claim.reference?.commit).toBe(FE2O3_PIN.commit);
-        expect(claim.reference?.commands.length).toBeGreaterThan(0);
-        expect(claim.reference?.sourcePaths.length).toBeGreaterThan(0);
-        for (const path of claim.reference?.sourcePaths ?? []) {
+        const reference = claim.reference;
+        expect(reference?.commit).toMatch(/^[0-9a-f]{40}$/);
+        expect(reference?.tree).toMatch(/^[0-9a-f]{40}$/);
+        expect(reference?.commands.length).toBeGreaterThan(0);
+        expect(reference?.sourcePaths.length).toBeGreaterThan(0);
+        if (reference?.scope === "lesson-evidence") {
+          expect(reference.commit).toBe(FE2O3_PIN.commit);
+          expect(reference.tree).toBe(FE2O3_PIN.tree);
+        } else if (reference?.scope === "staged-progress") {
+          expect(reference.claim).toBe(claim.kind);
+          expect([
+            "source-admission-only",
+            "harness-only",
+            "structural-admission-only",
+          ]).toContain(reference.authority);
+        }
+        for (const path of reference?.sourcePaths ?? []) {
           expect(path).not.toMatch(/^\//);
           expect(path).not.toContain("..");
         }
       }
     }
+  });
+
+  it("requires complete staged evidence references mechanically", () => {
+    const mutations: Array<{
+      field: string;
+      value: unknown;
+      message: string;
+    }> = [
+      {
+        field: "commit",
+        value: undefined,
+        message: "claim has no exact commit",
+      },
+      { field: "tree", value: undefined, message: "claim has no exact tree" },
+      { field: "commands", value: [], message: "claim has no exact command" },
+      { field: "sourcePaths", value: [], message: "claim has no source path" },
+      {
+        field: "claim",
+        value: "gpu-observed",
+        message: "staged reference claim label does not match its claim",
+      },
+      {
+        field: "authority",
+        value: "",
+        message: "staged reference has no recognized authority label",
+      },
+    ];
+
+    for (const mutation of mutations) {
+      const changed = structuredClone(curriculum);
+      const lesson = changed
+        .flatMap((module) => module.lessons)
+        .find((entry) => entry.id === "read-the-evidence");
+      const reference = lesson?.claims.find(
+        (claim) => claim.label === "Staged tiled source bridge",
+      )?.reference;
+      expect(reference?.scope).toBe("staged-progress");
+      const mutable = reference as unknown as Record<string, unknown>;
+      if (mutation.value === undefined) {
+        delete mutable[mutation.field];
+      } else {
+        mutable[mutation.field] = mutation.value;
+      }
+      expect(validateCurriculum(changed)).toContainEqual(
+        expect.objectContaining({ message: mutation.message }),
+      );
+    }
+  });
+
+  it("records every staged tiled statement with exact limited authority", () => {
+    const lesson = lessons.find((entry) => entry.id === "read-the-evidence");
+    const staged = lesson?.claims.filter(
+      (claim) => claim.reference?.scope === "staged-progress",
+    );
+    expect(
+      staged?.map((claim) => ({
+        label: claim.label,
+        kind: claim.kind,
+        commit: claim.reference?.commit,
+        tree: claim.reference?.tree,
+        authority:
+          claim.reference?.scope === "staged-progress"
+            ? claim.reference.authority
+            : undefined,
+      })),
+    ).toEqual([
+      {
+        label: "Staged tiled source bridge",
+        kind: "compiler-hsaco-observed",
+        commit: "fb75e19a73ec0a9acebb203bd9821190b0592c82",
+        tree: "0a57b2b6d14121da92dbbb2d7c4f9d8b4df4ce63",
+        authority: "source-admission-only",
+      },
+      {
+        label: "Staged Cargo metadata normalization",
+        kind: "compiler-hsaco-observed",
+        commit: "b904f5b648c7eb249d32d73db427abe72970315a",
+        tree: "a5b07af23c9fcf5f04ddcad1c18a6318469e6e06",
+        authority: "source-admission-only",
+      },
+      {
+        label: "Staged Cargo root normalization",
+        kind: "compiler-hsaco-observed",
+        commit: "51bd129c31b08b636545f12229f34aaa431321f2",
+        tree: "8be992dee9f145c73f61bb05f0066656298a7c75",
+        authority: "source-admission-only",
+      },
+      {
+        label: "Staged tiled hardware harness",
+        kind: "compiler-hsaco-observed",
+        commit: "b825661ac3f7e332d2cc9723ed1efbb54869fa33",
+        tree: "ea96ff13212e02390c881b74e2ea47aaf3018f1b",
+        authority: "harness-only",
+      },
+      {
+        label: "Staged tiled structural admission",
+        kind: "compiler-hsaco-observed",
+        commit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
+        tree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
+        authority: "structural-admission-only",
+      },
+    ]);
+    expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
+    expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
+    expect(staged?.some((claim) => claim.kind === "gpu-observed")).toBe(false);
+  });
+
+  it("scopes the acb3 pin to lesson evidence, not staged progress", () => {
+    const lesson = lessons.find((entry) => entry.id === "read-the-evidence");
+    const baseline = lesson?.claims.find(
+      (claim) => claim.label === "Audited lesson baseline",
+    );
+    expect(baseline?.detail).toContain("Lesson evidence claims are pinned");
+    expect(baseline?.detail).toContain(
+      "separately gated implementation-progress snapshot",
+    );
+    expect(baseline?.reference).toMatchObject({
+      scope: "lesson-evidence",
+      commit: FE2O3_PIN.commit,
+      tree: FE2O3_PIN.tree,
+    });
+    expect(JSON.stringify(lessons)).not.toMatch(
+      /guarded hardware (?:run|result)/iu,
+    );
   });
 
   it("makes every glossary item searchable and navigable", () => {

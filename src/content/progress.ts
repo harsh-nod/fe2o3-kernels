@@ -1,3 +1,4 @@
+import publicationGate from "../../config/publication-gate.json";
 import { FE2O3_PIN } from "./model";
 
 export type DeliveryGate = "complete" | "partial" | "blocked" | "planned";
@@ -24,22 +25,20 @@ export const progressSnapshot = {
   auditedCommit: FE2O3_PIN.commit,
   lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
   lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-  eventualPublicCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
-  eventualPublicTree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
+  eventualPublicCommit: publicationGate.requiredCommit,
+  eventualPublicTree: publicationGate.requiredTree,
   publicationGate: {
     state: "blocked-until-public-refs-match",
-    requiredCommit: "d43f11c86196e4f01c9ee305ea8d19f6d8c17672",
-    requiredRefs: [
-      "harsh-nod/fe2o3@refs/heads/main",
-      "powderluv/fe2o3@refs/heads/main",
-    ],
+    requiredCommit: publicationGate.requiredCommit,
+    requiredRefs: publicationGate.requiredRefs.map(
+      ({ repository, ref }) => `${repository}@${ref}`,
+    ),
     requirement:
       "Do not publish this site revision until both required public refs resolve exactly to the required commit.",
   },
-  repositories: [
-    "https://github.com/harsh-nod/fe2o3",
-    "https://github.com/powderluv/fe2o3",
-  ],
+  repositories: publicationGate.requiredRefs.map(
+    ({ repository }) => `https://github.com/${repository}`,
+  ),
 } as const;
 
 export const tiledGemmV1Commits = {
@@ -54,7 +53,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: progressSnapshot.eventualPublicCommit,
     state: "queued",
     detail:
-      "This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to d43f11c86196e4f01c9ee305ea8d19f6d8c17672.",
+      `This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to ${publicationGate.requiredCommit}.`,
   },
   {
     name: "Last audited public baseline",
