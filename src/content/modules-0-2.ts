@@ -113,7 +113,7 @@ const orientation: Lesson = {
           type: "callout",
           tone: "boundary",
           title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks public fe2o3 commit 9ed2bd69fdfc16e04bb6d10c29315d58ded349d4. Lesson evidence remains pinned to the older audited FE2O3_PIN until those lesson claims are reviewed as a separate change.",
+          text: "The progress dashboard tracks public fe2o3 commit f59e6a8362d3cdae0babb727f3c4c4952a553b4d. Lesson evidence remains pinned to the older audited FE2O3_PIN until those lesson claims are reviewed as a separate change.",
         },
       ],
     },

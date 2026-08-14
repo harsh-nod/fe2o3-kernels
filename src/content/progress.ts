@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "9ed2bd69fdfc16e04bb6d10c29315d58ded349d4",
-  publicTree: "5bd7062bf799a4b03cb31ab7955cababeb195b60",
+  publicCommit: "f59e6a8362d3cdae0babb727f3c4c4952a553b4d",
+  publicTree: "b818bc62589285a9e43be24f21a89c8a29f8c1f6",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -101,6 +101,13 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     detail:
       "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
   },
+  {
+    name: "Tiled GEMM V1 host scaffold",
+    commit: progressSnapshot.publicCommit,
+    state: "public",
+    detail:
+      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold. Private checked witnesses bind shape, extents, launch geometry, and the exact parsed target declaration. Bitwise host evidence admits only a pinned 16-value BF16 alphabet through an unforgeable validated-input token; exhaustive tests reject every other BF16 encoding. Debug and release each pass 29 integration tests and seven compile-fail doctests, with strict Clippy, formatting, and dedicated hosted CI. This is host evidence only: exact target and rustc physical-ABI-bound matrix lowering, LDS movement, full GEMM loops, HSACO, hardware execution, and proofs remain pending.",
+  },
 ];
 
 export const kernelProgress: KernelProgress[] = [
@@ -170,7 +177,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "planned",
     dependsOn: ["scalar GEMM", "workgroup reduction", "MFMA integration"],
-    next: "Compose MFMA and LDS mechanics into a fixed tile with accumulator-layout proofs.",
+    next: "Bind exact gfx942:xnack- identity and rustc fragment ABI through MFMA lowering, then compose LDS movement, tiled loops, and accumulator-layout proofs.",
   },
   {
     id: "softmax",
