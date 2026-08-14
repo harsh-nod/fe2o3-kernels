@@ -69,16 +69,40 @@ describe("curriculum integrity", () => {
 });
 
 describe("implementation progress integrity", () => {
-  it("pins public and candidate states without changing lesson authority", () => {
+  it("gates the eventual public target on both public main refs", () => {
     expect(validateProgress()).toEqual([]);
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-14",
-      publicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
-      publicTree: "09752086eac323ea47091f563e242932707a029f",
+      lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
+      lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
+      eventualPublicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+      eventualPublicTree: "09752086eac323ea47091f563e242932707a029f",
+      publicationGate: {
+        state: "blocked-until-public-refs-match",
+        requiredCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+        requiredRefs: [
+          "harsh-nod/fe2o3@refs/heads/main",
+          "powderluv/fe2o3@refs/heads/main",
+        ],
+      },
     });
-    expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
-    expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
+    expect(progressSnapshot.publicationGate.requirement).toContain(
+      "Do not publish this site revision until both required public refs",
+    );
+    expect(developmentCheckpoints[0]).toMatchObject({
+      name: "Eventual public main (publication gated)",
+      commit: progressSnapshot.eventualPublicCommit,
+      state: "queued",
+    });
+    expect(developmentCheckpoints[0].detail).toContain(
+      "not an observation of current remote state",
+    );
+    expect(developmentCheckpoints[1]).toMatchObject({
+      name: "Last audited public baseline",
+      commit: progressSnapshot.lastAuditedPublicCommit,
+      state: "public",
+    });
   });
 
   it("tracks every tutorial kernel through three independent gates", () => {
@@ -104,7 +128,7 @@ describe("implementation progress integrity", () => {
         (checkpoint) => checkpoint.name === "Scalar GEMM V1 vertical slice",
       );
     expect(scalarCheckpoint).toMatchObject({
-      commit: progressSnapshot.publicCommit,
+      commit: progressSnapshot.lastAuditedPublicCommit,
       state: "acceptance",
     });
     expect(scalarCheckpoint?.detail).toContain(
@@ -133,7 +157,7 @@ describe("implementation progress integrity", () => {
       (checkpoint) => checkpoint.name === "Scalar GEMM physical-effect profile",
     );
     expect(physicalEffectCheckpoint).toMatchObject({
-      commit: progressSnapshot.publicCommit,
+      commit: progressSnapshot.lastAuditedPublicCommit,
       state: "acceptance",
     });
     expect(physicalEffectCheckpoint?.detail).toContain("upstream LLVM 22");
@@ -155,7 +179,7 @@ describe("implementation progress integrity", () => {
       (checkpoint) => checkpoint.name === "Production S09 rustc invocation capture",
     );
     expect(s09Checkpoint).toMatchObject({
-      commit: progressSnapshot.publicCommit,
+      commit: progressSnapshot.lastAuditedPublicCommit,
       state: "public",
     });
     expect(s09Checkpoint?.detail).toContain("RustcInvocationDescriptorV2");
@@ -188,7 +212,7 @@ describe("implementation progress integrity", () => {
       (entry) => entry.name === "Authenticated Verus execution V2",
     );
     expect(checkpoint).toMatchObject({
-      commit: progressSnapshot.publicCommit,
+      commit: "b704651757a3d46801144277e025f68153cb1ba9",
       state: "public",
     });
     expect(checkpoint?.detail).toContain("Linux x86_64");
@@ -260,10 +284,10 @@ describe("implementation progress integrity", () => {
       "five formula mutations are rejected",
     );
     expect(foundation?.detail).toContain(
-      "build-scoped 288-byte fragment probe",
+      "build-scoped WG64/288-byte fragment probe",
     );
     expect(foundation?.detail).toContain(
-      "not the later four-slice production profile",
+      "neither the later four-slice production profile nor the independent WG256/384-byte mutation",
     );
   });
 
@@ -274,7 +298,7 @@ describe("implementation progress integrity", () => {
     );
     expect(sourceBridge).toMatchObject({
       commit: tiledGemmV1Commits.sourceBridge,
-      state: "public",
+      state: "acceptance",
     });
     expect(sourceBridge?.detail).toContain(
       "A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>",
@@ -286,10 +310,13 @@ describe("implementation progress integrity", () => {
       "64-byte explicit plus 256-byte implicit four-slice ABI",
     );
     expect(sourceBridge?.detail).toContain(
-      "eight i16 loads, four f32 loads, one BF16 MFMA, and four f32 stores",
+      "eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores",
+    );
+    expect(sourceBridge?.detail).toContain(
+      "AMDGCN lowering represents the BF16 carriers with i16 loads",
     );
     expect(sourceBridge?.detail).toContain("private single-use receipt");
-    expect(sourceBridge?.detail).toContain("inert Worker V2 handoff");
+    expect(sourceBridge?.detail).toContain("Worker V2 handoff remains inert");
     expect(sourceBridge?.detail).toContain(
       "not a compiler refinement proof",
     );
@@ -298,28 +325,32 @@ describe("implementation progress integrity", () => {
     );
   });
 
-  it("tracks guarded tiled hardware evidence as non-authoritative", () => {
+  it("tracks the guarded tiled hardware harness without inventing a run receipt", () => {
     const hardware = developmentCheckpoints.find(
       (checkpoint) =>
-        checkpoint.name === "Tiled GEMM V1 guarded MI300X evidence",
+        checkpoint.name === "Tiled GEMM V1 guarded gfx942 hardware harness",
     );
     expect(hardware).toMatchObject({
       commit: tiledGemmV1Commits.hardwareEvidence,
       state: "acceptance",
     });
-    expect(hardware?.detail).toContain("6,672-byte HSACO");
-    expect(hardware?.detail).toContain(
-      "681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66",
-    );
-    expect(hardware?.detail).toContain("passed 1/1 in 40.41 seconds");
+    expect(hardware?.detail).toContain("externally supplied digest-pinned bytes");
+    expect(hardware?.detail).toContain("COV6/WG64/320-byte metadata");
     expect(hardware?.detail).toContain("bitwise dyadic 16x16 oracle");
-    expect(hardware?.detail).toContain("non-authoritative hardware evidence");
     expect(hardware?.detail).toContain(
-      "deliberately bypasses production prerequisite authentication",
+      "A/B/C inputs remained bitwise unchanged",
+    );
+    expect(hardware?.detail).not.toMatch(/immutable\s+inputs/);
+    expect(hardware?.detail).toContain(
+      "contains no committed run receipt",
     );
     expect(hardware?.detail).toContain(
-      "does not authenticate the artifact producer",
+      "exact hardware execution remains uncommitted and non-authoritative",
     );
+    expect(hardware?.detail).not.toMatch(/[\d,]+-byte (?:COV6 )?HSACO/);
+    expect(hardware?.detail).not.toMatch(/SHA-256 [0-9a-f]{64}/);
+    expect(hardware?.detail).not.toMatch(/passed \d+\/\d+ in/);
+    expect(hardware?.detail).not.toContain("ROCm");
   });
 
   it("tracks structural artifact admission without claiming body semantics", () => {
@@ -329,13 +360,16 @@ describe("implementation progress integrity", () => {
     );
     expect(structural).toMatchObject({
       commit: tiledGemmV1Commits.structuralAdmission,
-      state: "public",
+      state: "queued",
     });
     expect(structural?.detail).toContain(
       "four slices in 64 explicit bytes, a 256-byte implicit suffix",
     );
     expect(structural?.detail).toContain(
-      "rejects the separate WG256/288-byte fragment probe",
+      "separately rejects the WG64/288-byte fragment probe",
+    );
+    expect(structural?.detail).toContain(
+      "independent WG256 and 384-byte structural mutations",
     );
     expect(structural?.detail).toContain("accepts arbitrary .text");
     expect(structural?.detail).toContain(
@@ -375,21 +409,36 @@ describe("implementation progress integrity", () => {
     );
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
+    expect(orientation).toContain(
+      "must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main",
+    );
     expect(orientation).toContain("not a compiler refinement proof");
-    expect(orientation).toContain("non-authoritative hardware evidence");
+    expect(orientation).toContain(
+      "Exact hardware execution remains uncommitted and non-authoritative",
+    );
     expect(orientation).toContain("does not inspect machine-body semantics");
 
     for (const commit of Object.values(tiledGemmV1Commits)) {
       expect(mapping).toContain(commit);
     }
     expect(mapping).toContain("Worker V2 handoff is inert");
+    expect(mapping).toContain(
+      "eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores",
+    );
+    expect(mapping).toContain(
+      "WG64/288-byte fragment probe and independent WG256 and 384-byte mutations",
+    );
+    expect(mapping).toContain("inputs remained bitwise unchanged");
+    expect(mapping).not.toMatch(/immutable\s+inputs/);
     expect(mapping).toContain("source-derived, authority-bearing final HSACO");
     expect(mapping).toContain("race freedom remain open");
 
     expect(proofPlan).toContain(
       "Source-to-canonical lowering is not compiler refinement",
     );
-    expect(proofPlan).toContain("hardware evidence is non-authoritative");
+    expect(proofPlan).toContain(
+      "exact hardware execution remains uncommitted and non-authoritative",
+    );
     expect(proofPlan).toContain(
       "structural admission does not inspect machine-body semantics",
     );

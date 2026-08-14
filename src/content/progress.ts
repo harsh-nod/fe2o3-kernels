@@ -22,8 +22,20 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-14",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
-  publicTree: "09752086eac323ea47091f563e242932707a029f",
+  lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
+  lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
+  eventualPublicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+  eventualPublicTree: "09752086eac323ea47091f563e242932707a029f",
+  publicationGate: {
+    state: "blocked-until-public-refs-match",
+    requiredCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+    requiredRefs: [
+      "harsh-nod/fe2o3@refs/heads/main",
+      "powderluv/fe2o3@refs/heads/main",
+    ],
+    requirement:
+      "Do not publish this site revision until both required public refs resolve exactly to the required commit.",
+  },
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -38,22 +50,29 @@ export const tiledGemmV1Commits = {
 
 export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   {
-    name: "Public main",
-    commit: progressSnapshot.publicCommit,
+    name: "Eventual public main (publication gated)",
+    commit: progressSnapshot.eventualPublicCommit,
+    state: "queued",
+    detail:
+      "This is a staged target, not an observation of current remote state. Site publication is blocked until harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main both resolve exactly to e2e9725f0708faaad355ec792d21ad8b57633538.",
+  },
+  {
+    name: "Last audited public baseline",
+    commit: progressSnapshot.lastAuditedPublicCommit,
     state: "public",
     detail:
-      "Identical on harsh-nod/fe2o3 and powderluv/fe2o3. This is newer than the lesson evidence pin.",
+      "This historical public baseline is newer than the lesson evidence pin. It is not presented as the current tip of either remote.",
   },
   {
     name: "Production S09 rustc invocation capture",
-    commit: progressSnapshot.publicCommit,
+    commit: progressSnapshot.lastAuditedPublicCommit,
     state: "public",
     detail:
       "The production path canonically captures RustcInvocationDescriptorV2 and admits exactly /proc/./self/fd/198 as its backend capability. It rejects procfs/devfd aliases, other descriptor numbers, every preexisting joined or split codegen-backend selector spelling, and an option terminator before the sole final managed -Zcodegen-backend=<path> selector. A real cargo-fe2o3 integration test traverses pinned Cargo, the S09 broker, closed-environment materialization, pinned rustc spawn, Worker V2, and durable publication of a COV6 gfx942:xnack- HSACO containing exactly alpha. It decodes the canonical publication envelope and nested record, then binds the finalized-output identity and content-addressed artifact name to the exact inspected HSACO bytes. A retained mi300x observation records 1 passed in 132.45 seconds and HSACO SHA-256 5902632c5c249be05855ae5cef62bb9096a1f9277cfb0c58b4384594d6ee61de. This is non-authoritative: it proves no compiler origin and grants no loading, execution, or verification authority. Canonical cwd pathname capture is not a pathname-to-object identity join, and the scalar profile still establishes no general source or output-object association.",
   },
   {
     name: "Authenticated Verus execution V2",
-    commit: progressSnapshot.publicCommit,
+    commit: "b704651757a3d46801144277e025f68153cb1ba9",
     state: "public",
     detail:
       "Linux x86_64 authenticated execution is bound to pinned local runtime and tool snapshots. V2 uses clone3 pidfds and ptrace-unresumable checkpoints, seccomp process-creation denial, exact live executable/backing comparison, runtime closure and baseline pinning, vDSO pinning, and immutable sealed results. It rejects compressed and alternate debug-section families. Package-scoped debug stripping makes the debug fixture reproducible, and a bounded two-root gate compares SHA-256, size, and Build ID. On the pinned local host, debug V2 integration passed 14/14 and release passed 13/13; the full verifier debug and release suites and 22 doctests passed. A run on mi300x correctly failed closed on its different vDSO and runtime baseline. This does not integrate stock Verus or Z3, establish semantic proof validity, guarantee exclusive measured-image execution between checkpoints, prove compiler refinement, or grant GPU authority.",
@@ -102,7 +121,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Scalar GEMM V1 vertical slice",
-    commit: progressSnapshot.publicCommit,
+    commit: progressSnapshot.lastAuditedPublicCommit,
     state: "acceptance",
     detail:
       "Both public mains contain the source-bound frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, deterministic canonical finalization, retained-currentness load handoff, proof and physical-effect profiles, and a raw MI300X smoke test. The frontend commitment records lineage; it does not yet authenticate source-to-module causality. The 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) passed every HARDWARE_CASES case in 1.41 seconds, including zero-output no-dispatch, k=0 +0, bitwise CPU-oracle, immutable-input, adjacent-canary, and unload checks. The raw smoke deliberately bypasses production prerequisite authentication. The upstream LLVM 22 MC analyzer now accepts those exact artifact bytes without COMGR: 4/4 native tests passed on mi300x for the exact 60-opcode scalar profile, one function, zero calls, two constrained backward loops, and 19 ordered physical effect sites. Both the analyzer result and raw smoke remain static or observational evidence and grant no protected authority. Authenticated Verus execution, analyzer-identity binding, compiler and address refinement, memory, bounds and race proofs, and production protected launch evidence remain open.",
@@ -116,7 +135,7 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Scalar GEMM physical-effect profile",
-    commit: progressSnapshot.publicCommit,
+    commit: progressSnapshot.lastAuditedPublicCommit,
     state: "acceptance",
     detail:
       "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
@@ -126,28 +145,28 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
     commit: "286331aab8639dd3707e55cdf51a83f8854d26a5",
     state: "public",
     detail:
-      "The standalone gfx942:xnack- BF16/F32 host scaffold and source-level layout proof begin at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, with XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four tables; 23 public Verus proof functions discharge 73 obligations; and five formula mutations are rejected. Descendants separate block counts, WG64 dimensions, and AQL work items, then add a sealed direct-global one-wave 16x16x16 Kernel IR graph with 12 reads, one BF16/BF16/F32 MFMA, and four F32 stores. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 separately records a build-scoped 288-byte fragment probe. It is not the later four-slice production profile and does not establish source-to-canonical Kernel IR correspondence.",
+      "The standalone gfx942:xnack- BF16/F32 host scaffold and source-level layout proof begin at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, with XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four tables; 23 public Verus proof functions discharge 73 obligations; and five formula mutations are rejected. Descendants separate block counts, WG64 dimensions, and AQL work items, then add a sealed direct-global one-wave 16x16x16 Kernel IR graph with 12 reads, one BF16/BF16/F32 MFMA, and four F32 stores. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 separately records a build-scoped WG64/288-byte fragment probe. It is neither the later four-slice production profile nor the independent WG256/384-byte mutation, and it does not establish source-to-canonical Kernel IR correspondence.",
   },
   {
     name: "Tiled GEMM V1 source-authenticated compiler bridge",
     commit: tiledGemmV1Commits.sourceBridge,
-    state: "public",
+    state: "acceptance",
     detail:
-      "Commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected Rust root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds the reviewed layouts, rustc FnAbi, portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS, and the 64-byte explicit plus 256-byte implicit four-slice ABI. A private single-use receipt selects the canonical direct-global Kernel IR module with eight i16 loads, four f32 loads, one BF16 MFMA, and four f32 stores, then produces only an inert Worker V2 handoff. The older 32-byte explicit/288-byte fragment probe remains separate. This source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof, and grants no final-HSACO, publication, loading, or launch authority.",
+      "Commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected Rust root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds the reviewed layouts, rustc FnAbi, portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS, and the 64-byte explicit plus 256-byte implicit four-slice ABI. A private single-use receipt selects the canonical direct-global Kernel IR module with eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores; AMDGCN lowering represents the BF16 carriers with i16 loads. The older WG64 32-byte explicit/288-byte fragment probe remains separate. This source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof. The Worker V2 handoff remains inert and grants no final-HSACO, publication, loading, or launch authority.",
   },
   {
-    name: "Tiled GEMM V1 guarded MI300X evidence",
+    name: "Tiled GEMM V1 guarded gfx942 hardware harness",
     commit: tiledGemmV1Commits.hardwareEvidence,
     state: "acceptance",
     detail:
-      "Commit c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c adds an ignored, opt-in one-tile gfx942:xnack- harness for externally supplied exact bytes. It checks COV6/WG64/320-byte metadata, one bound entry, exact disassembly coverage, one retained v_mfma_f32_16x16x16_bf16, a global store, forbidden control and memory forms, a bitwise dyadic 16x16 oracle, immutable inputs, adjacent canaries, and terminal unload. On MI300X with ROCm 7.2.4, a 6,672-byte HSACO (SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66) and digest-pinned LLVM 22 objdump passed 1/1 in 40.41 seconds. This is non-authoritative hardware evidence: the harness deliberately bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, loading, launch, or verification authority.",
+      "Commit c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c adds an ignored, opt-in one-tile gfx942:xnack- harness for externally supplied digest-pinned bytes and a digest-pinned observed LLVM 22 objdump. Before dispatch it enforces COV6/WG64/320-byte metadata, one bound entry, exact disassembly coverage, one retained v_mfma_f32_16x16x16_bf16, a global store, and rejection of forbidden control and memory forms. If run, it checks a bitwise dyadic 16x16 oracle, that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous completion, exact executable identity, and terminal unload. The commit contains no committed run receipt, so exact hardware execution remains uncommitted and non-authoritative. The harness deliberately bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, loading, launch, or verification authority.",
   },
   {
     name: "Tiled GEMM V1 structural artifact admission",
     commit: tiledGemmV1Commits.structuralAdmission,
-    state: "public",
+    state: "queued",
     detail:
-      "Commit e2e9725f0708faaad355ec792d21ad8b57633538 adds sealed Worker V2 structural inspection and canonical finalization for exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor: four slices in 64 explicit bytes, a 256-byte implicit suffix, WG64, wave64, and zero LDS. It rejects the separate WG256/288-byte fragment probe and descriptor, ABI, target, capability, and finalization drift. Structural admission deliberately accepts arbitrary .text in adversarial tests, so it does not inspect machine-body semantics, authenticate compiler origin, prove BF16 or MFMA semantics, or prove Verus results. It grants no publication, loading, or launch authority. The capability schema remains V1 and unknown tag 12 is rejected; no COMGR path is added.",
+      "Commit e2e9725f0708faaad355ec792d21ad8b57633538 adds sealed Worker V2 structural inspection and canonical finalization for exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor: four slices in 64 explicit bytes, a 256-byte implicit suffix, WG64, wave64, and zero LDS. It separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte structural mutations, along with descriptor, target, capability, and finalization drift. Structural admission deliberately accepts arbitrary .text in adversarial tests, so it does not inspect machine-body semantics, authenticate compiler origin, prove BF16 or MFMA semantics, or prove Verus results. It grants no publication, loading, or launch authority. The capability schema remains V1 and unknown tag 12 is rejected; no COMGR path is added.",
   },
 ];
 
@@ -290,11 +309,26 @@ export function validateProgress(): string[] {
   const ids = new Set<string>();
   const exactCommit = /^[0-9a-f]{40}$/;
 
-  if (!exactCommit.test(progressSnapshot.publicCommit)) {
-    issues.push("public commit is not an exact Git object name");
+  if (!exactCommit.test(progressSnapshot.lastAuditedPublicCommit)) {
+    issues.push("last audited public commit is not an exact Git object name");
   }
-  if (!exactCommit.test(progressSnapshot.publicTree)) {
-    issues.push("public tree is not an exact Git object name");
+  if (!exactCommit.test(progressSnapshot.lastAuditedPublicTree)) {
+    issues.push("last audited public tree is not an exact Git object name");
+  }
+  if (!exactCommit.test(progressSnapshot.eventualPublicCommit)) {
+    issues.push("eventual public commit is not an exact Git object name");
+  }
+  if (!exactCommit.test(progressSnapshot.eventualPublicTree)) {
+    issues.push("eventual public tree is not an exact Git object name");
+  }
+  if (
+    progressSnapshot.publicationGate.requiredCommit !==
+    progressSnapshot.eventualPublicCommit
+  ) {
+    issues.push("publication gate does not bind the eventual public commit");
+  }
+  if (progressSnapshot.publicationGate.requiredRefs.length !== 2) {
+    issues.push("publication gate does not require both public refs");
   }
   for (const checkpoint of developmentCheckpoints) {
     if (!exactCommit.test(checkpoint.commit)) {

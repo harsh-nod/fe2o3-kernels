@@ -66,6 +66,17 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
+    expect(screen.getByText("Audited public")).toBeInTheDocument();
+    expect(screen.getByText("Eventual public target")).toBeInTheDocument();
+    expect(screen.getByText("e2e9725f0708")).toBeInTheDocument();
+    expect(
+      screen.getByText(/The eventual target is not current remote state/),
+    ).toHaveTextContent(
+      "must not be published until both harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main resolve exactly",
+    );
+    expect(
+      screen.getByText("Eventual public main (publication gated)"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Formal evidence isolation V11")).toBeInTheDocument();
   });
 });

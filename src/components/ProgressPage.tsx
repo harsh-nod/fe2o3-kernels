@@ -31,9 +31,10 @@ export function ProgressPage() {
         <p className="lesson-breadcrumb">Reference / implementation status</p>
         <h1>Kernel delivery and verification progress</h1>
         <p>
-          Public capability, private acceptance candidates, and tutorial evidence
-          are tracked separately. A runnable kernel is not called verified until
-          its proof, compiler, artifact, runtime, and review gates also close.
+          Audited public capability, staged acceptance candidates, an eventual
+          publication target, and tutorial evidence are tracked separately. A
+          runnable kernel is not called verified until its proof, compiler,
+          artifact, runtime, and review gates also close.
         </p>
       </header>
 
@@ -46,8 +47,12 @@ export function ProgressPage() {
             <code>{progressSnapshot.auditedCommit.slice(0, 12)}</code>
           </div>
           <div>
-            <span>Public main</span>
-            <code>{progressSnapshot.publicCommit.slice(0, 12)}</code>
+            <span>Audited public</span>
+            <code>{progressSnapshot.lastAuditedPublicCommit.slice(0, 12)}</code>
+          </div>
+          <div>
+            <span>Eventual public target</span>
+            <code>{progressSnapshot.eventualPublicCommit.slice(0, 12)}</code>
           </div>
           <div>
             <span>Reviewed</span>
@@ -55,9 +60,12 @@ export function ProgressPage() {
           </div>
         </div>
         <p className="status-boundary">
-          Lessons continue to cite the older audited commit. Newer public work is
-          reported here but does not strengthen a lesson claim until a repin
-          campaign reproduces that claim at one exact tree.
+          Site publication is blocked. The eventual target is not current remote
+          state and must not be published until both harsh-nod/fe2o3 and
+          powderluv/fe2o3 refs/heads/main resolve exactly to{" "}
+          {progressSnapshot.publicationGate.requiredCommit}. Lessons continue to
+          cite the older audited commit until a repin campaign reproduces each
+          claim at one exact tree.
         </p>
         <div className="checkpoint-list">
           {developmentCheckpoints.map((checkpoint) => (

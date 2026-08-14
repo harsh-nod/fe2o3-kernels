@@ -29,13 +29,22 @@ Commands shown in lessons that exercise fe2o3 are run from a checkout of that
 exact commit, not from this documentation repository.
 
 The deployed workbench also has an **Implementation status** reference page.
-It reports the newer public `fe2o3` main revision, private acceptance candidates,
-known blockers, and separate run/verify/evidence gates for every kernel in the
-curriculum. That progress view does not silently repin or upgrade lesson claims.
+It reports a last-audited public baseline, staged acceptance candidates, an
+eventual public target, known blockers, and separate run/verify/evidence gates
+for every kernel in the curriculum. That progress view does not silently repin
+or upgrade lesson claims.
 
-The implementation-status snapshot is pinned to fe2o3 commit
+The implementation-status snapshot has an eventual public target at fe2o3 commit
 `e2e9725f0708faaad355ec792d21ad8b57633538`, tree
-`09752086eac323ea47091f563e242932707a029f`. It retains the production S09
+`09752086eac323ea47091f563e242932707a029f`. This is explicitly a staged
+target, not an observation of current remote state. **Do not publish this site
+revision until both `harsh-nod/fe2o3@refs/heads/main` and
+`powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
+audited public baseline remains
+`96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
+`f911f0c693238830ad6070b2674fb863857bfec1`.
+
+The eventual target retains the production S09
 checkpoint that canonically captures the
 production rustc invocation descriptor, admits exactly
 `/proc/./self/fd/198` as the backend capability, and enforces one final managed
@@ -54,31 +63,34 @@ The tiled-GEMM work now has three additional, deliberately separate stages:
    `C:&[f32]`, and `D:DisjointSlice<f32>`. It binds the exact layouts, rustc
    `FnAbi`, portable-MIR identity, compiler profile, `gfx942:xnack-`, COV6,
    WG64, zero LDS, and a 64-byte explicit plus 256-byte implicit ABI. A private
-   single-use receipt selects canonical direct-global Kernel IR with eight i16
-   loads, four f32 loads, one BF16 MFMA, and four f32 stores. This
+   single-use receipt selects canonical direct-global Kernel IR with eight BF16
+   loads, four f32 loads, one BF16 MFMA, and four f32 stores. AMDGCN lowering
+   represents the BF16 carriers with i16 loads. This
    source-to-canonical lowering is reviewed correspondence, **not a compiler
    refinement proof**, and its Worker V2 handoff remains inert.
 2. Commit `c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c` adds an ignored, opt-in
-   one-tile hardware harness for externally supplied digest-pinned bytes. On an
-   MI300X/gfx942 system with ROCm 7.2.4, a 6,672-byte COV6 HSACO with SHA-256
-   `681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66`
-   passed the exact test in 40.41 seconds. The harness checks metadata,
-   disassembly shape, one retained BF16 MFMA, a global store, a bitwise 16x16
-   oracle, immutable inputs, canaries, and unload. This is **non-authoritative
-   hardware evidence**: it bypasses production prerequisite authentication and
-   does not authenticate the producer or grant compiler, load, or launch
+   one-tile gfx942:xnack- hardware harness for externally supplied
+   digest-pinned bytes and an observed digest-pinned LLVM 22 objdump. It
+   enforces the COV6/WG64/320-byte metadata and entry range, one retained BF16
+   MFMA, a global store, forbidden instruction checks, a bitwise 16x16 oracle,
+   that A/B/C inputs remained bitwise unchanged, adjacent canaries, synchronous
+   completion, exact executable identity, and unload. The commit carries **no
+   committed run receipt**, so exact hardware execution remains uncommitted and
+   non-authoritative. The harness bypasses production prerequisite
+   authentication and grants no compiler, publication, load, or launch
    authority.
 3. Commit `e2e9725f0708faaad355ec792d21ad8b57633538` adds sealed structural
    descriptor admission and canonical finalization for the exact 320-byte
    four-slice ABI, COV6, `gfx942:xnack-`, WG64, wave64, and zero LDS. It rejects
-   the separate 288-byte fragment probe and structural drift. Adversarial tests
-   intentionally show that arbitrary `.text` can pass this gate, so structural
-   admission **does not inspect machine-body semantics** or prove BF16/MFMA
-   behavior. It adds no COMGR path and grants no publication, load, or launch
-   authority.
+   the separate WG64/288-byte fragment probe, independent WG256 and 384-byte
+   mutations, and other structural drift. Adversarial tests intentionally show
+   that arbitrary `.text` can pass this gate, so structural admission **does
+   not inspect machine-body semantics** or prove BF16/MFMA behavior. It adds no
+   COMGR path and grants no publication, load, or launch authority.
 
-The previous 288-byte build-scoped fragment probe remains separate from the
-320-byte four-slice profile. The missing production chain is still material:
+The previous WG64/288-byte build-scoped fragment probe remains separate from
+both the 320-byte four-slice profile and the independent WG256/384-byte
+mutation. The missing production chain is still material:
 Worker V2 does not yet produce an authority-bearing final HSACO from the
 source-authenticated tiled module, and that same artifact is not carried
 through protected publication, loading, and launch. Machine-body semantic
@@ -151,11 +163,12 @@ At the audited pin:
   narrow MFMA tile profile exist in APIs, models, Kernel IR, or lowering tests.
   The site labels those focused mechanics separately from runnable kernels.
 - The tiled-GEMM checkpoint now has source-authenticated selection of the
-  canonical direct-global one-tile Kernel IR, exact guarded MI300X numerical
-  evidence for separately supplied bytes, and structural Worker V2 artifact
-  admission. These remain separate evidence layers. Source-derived final
-  HSACO/load/launch authority, machine-body semantic admission, production LDS
-  composition, compiler refinement, and memory and race proofs are still open.
+  canonical direct-global one-tile Kernel IR, a guarded gfx942 hardware harness
+  for separately supplied bytes, and structural Worker V2 artifact admission.
+  The harness has no committed run receipt, so exact hardware execution remains
+  uncommitted and non-authoritative. Source-derived final HSACO/load/launch
+  authority, machine-body semantic admission, production LDS composition,
+  compiler refinement, and memory and race proofs are still open.
 - Tiled GEMM, softmax, flash attention, and mixture-of-experts are design-only
   curricula. Their snippets decompose the implementation and proof work; they
   are not fe2o3 programs users should expect to compile today.

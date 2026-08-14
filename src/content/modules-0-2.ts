@@ -104,7 +104,7 @@ const orientation: Lesson = {
             ],
             [
               "MI300X observation",
-              "All HARDWARE_CASES cases passed in 1.41 seconds for the 10,128-byte gfx942:xnack- artifact, including zero-output no-dispatch, k=0 +0, bitwise oracle, immutable inputs, canaries, and unload.",
+              "All HARDWARE_CASES cases passed in 1.41 seconds for the 10,128-byte gfx942:xnack- artifact, including zero-output no-dispatch, k=0 +0, bitwise oracle, input buffers remained bitwise unchanged, canaries, and unload.",
               "The raw HSA smoke bypasses production prerequisite authentication and grants no protected evidence.",
             ],
           ],
@@ -113,7 +113,7 @@ const orientation: Lesson = {
           type: "callout",
           tone: "boundary",
           title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks staged fe2o3 head e2e9725f0708faaad355ec792d21ad8b57633538, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. The newer head retains the S09 and authenticated-Verus checkpoints and adds the three tiled GEMM stages below. Those stages close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
+          text: "The progress dashboard tracks e2e9725f0708faaad355ec792d21ad8b57633538 only as an eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The staged target retains the S09 and authenticated-Verus checkpoints and adds the three tiled GEMM stages below. Those stages close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
         },
         {
           type: "table",
@@ -125,14 +125,14 @@ const orientation: Lesson = {
               "Source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof; the Worker V2 handoff is inert.",
             ],
             [
-              "c9c738d1 guarded MI300X run",
-              "A digest-pinned 6,672-byte COV6 image passed one exact 16x16 numerical run with ISA checks, canaries, immutable inputs, and unload.",
-              "The artifact is supplied externally and the test bypasses production prerequisites, so this is non-authoritative hardware evidence.",
+              "c9c738d1 guarded gfx942 harness",
+              "An opt-in harness requires digest-pinned bytes and objdump, checks exact metadata and ISA shape, and, if run, checks a bitwise 16x16 oracle, inputs remained bitwise unchanged, canaries, and unload.",
+              "The commit has no run receipt. Exact hardware execution remains uncommitted and non-authoritative, and the harness bypasses production prerequisites.",
             ],
             [
               "e2e9725f structural admission",
               "Worker V2 inspection and finalization enforce gfx942:xnack-, COV6, WG64, wave64, zero LDS, and the four-slice 320-byte ABI.",
-              "The gate accepts arbitrary .text by design and therefore does not inspect machine-body semantics or grant publication, load, or launch authority.",
+              "The gate separately rejects the WG64/288-byte fragment probe and independent WG256 and 384-byte mutations, but accepts arbitrary .text, does not inspect machine-body semantics, and grants no launch authority.",
             ],
           ],
         },
