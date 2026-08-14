@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The implementation-status snapshot is pinned to fe2o3 commit
-`233b88f9722a0072d9a5fe3b9ccdc3dbaefdc1dd`, tree
-`03129e8e3badf707007a128a3d3a98e218b0df36`. **The publication workflow must
+`fd41ad690fd6342a8bcc296c4281b7cbdfa3df6b`, tree
+`8df59ad18c4f5d0b5bdc64c27607562adbdd4dfd`. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
 audited public baseline remains
