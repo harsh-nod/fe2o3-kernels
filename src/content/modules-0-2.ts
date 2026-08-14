@@ -94,12 +94,12 @@ const orientation: Lesson = {
           rows: [
             [
               "Proof profile",
-              "Eight focused tests bind the expected proof inputs, properties, tools, transcript, freshness, and artifact digest.",
+              "Nine focused tests pin the exact proof source and bind its target, properties, tools, transcript, caller-supplied freshness, and artifact digest.",
               "The profile is inert review evidence. It does not execute Verus or grant authority.",
             ],
             [
               "Physical-effect profile",
-              "Four upstream LLVM 22 MC analyzer tests passed on mi300x for the exact artifact: 60 opcodes, one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls matching the Rust profile. No COMGR is used.",
+              "Four upstream LLVM 22 MC analyzer tests passed on mi300x for the exact artifact: 60 opcodes, one function, zero calls, two constrained backward loops, and 19 ordered physical effect sites matching the Rust profile. No COMGR is used.",
               "This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness; downstream authenticated evidence must bind the changed analyzer identity.",
             ],
             [
@@ -113,7 +113,7 @@ const orientation: Lesson = {
           type: "callout",
           tone: "boundary",
           title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks public fe2o3 commit 9a0b0b2855f9568ec113820b5b53e9fde1c133f2. Lesson evidence remains pinned to the older audited FE2O3_PIN until those lesson claims are reviewed as a separate change.",
+          text: "The progress dashboard tracks public fe2o3 commit 9ed2bd69fdfc16e04bb6d10c29315d58ded349d4. Lesson evidence remains pinned to the older audited FE2O3_PIN until those lesson claims are reviewed as a separate change.",
         },
       ],
     },

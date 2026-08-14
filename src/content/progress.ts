@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "9a0b0b2855f9568ec113820b5b53e9fde1c133f2",
-  publicTree: "794c6d4224491321e0d7d19056a8ace3a58b9b9e",
+  publicCommit: "9ed2bd69fdfc16e04bb6d10c29315d58ded349d4",
+  publicTree: "5bd7062bf799a4b03cb31ab7955cababeb195b60",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
@@ -82,24 +82,24 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
   },
   {
     name: "Scalar GEMM V1 vertical slice",
-    commit: "9a0b0b2855f9568ec113820b5b53e9fde1c133f2",
+    commit: progressSnapshot.publicCommit,
     state: "acceptance",
     detail:
-      "Both public mains contain the source-bound frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, deterministic canonical finalization, retained-currentness load handoff, proof and physical-effect profiles, and a raw MI300X smoke test. The frontend commitment records lineage; it does not yet authenticate source-to-module causality. The 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) passed every HARDWARE_CASES case in 1.41 seconds, including zero-output no-dispatch, k=0 +0, bitwise CPU-oracle, immutable-input, adjacent-canary, and unload checks. The raw smoke deliberately bypasses production prerequisite authentication. The upstream LLVM 22 MC analyzer now accepts those exact artifact bytes without COMGR: 4/4 native tests passed on mi300x for the exact 60-opcode scalar profile, one function, zero calls, two constrained backward loops, and the Rust-profile effect counts. Both the analyzer result and raw smoke remain static or observational evidence and grant no protected authority. Authenticated Verus execution, analyzer-identity binding, compiler and address refinement, memory, bounds and race proofs, and production protected launch evidence remain open.",
+      "Both public mains contain the source-bound frontend handoff (SHA-256 2569dcdc19df8d64fb937e65bb64737c6c2a3c5e68ad6adc5dee86df373e6cb5), measured upstream LLVM/LLD Worker, deterministic canonical finalization, retained-currentness load handoff, proof and physical-effect profiles, and a raw MI300X smoke test. The frontend commitment records lineage; it does not yet authenticate source-to-module causality. The 10,128-byte gfx942:xnack- COV6 artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) passed every HARDWARE_CASES case in 1.41 seconds, including zero-output no-dispatch, k=0 +0, bitwise CPU-oracle, immutable-input, adjacent-canary, and unload checks. The raw smoke deliberately bypasses production prerequisite authentication. The upstream LLVM 22 MC analyzer now accepts those exact artifact bytes without COMGR: 4/4 native tests passed on mi300x for the exact 60-opcode scalar profile, one function, zero calls, two constrained backward loops, and 19 ordered physical effect sites. Both the analyzer result and raw smoke remain static or observational evidence and grant no protected authority. Authenticated Verus execution, analyzer-identity binding, compiler and address refinement, memory, bounds and race proofs, and production protected launch evidence remain open.",
   },
   {
     name: "Scalar GEMM proof profile",
-    commit: "9acc3a9a7045c53b398d5a5015b6aab4c7bbe3b0",
+    commit: "c223325ed437eebd9d382d0342cb35a01a17605e",
     state: "acceptance",
     detail:
-      "Eight focused tests bind the measured proof source, target, ABI, effects, launch contract, seven required properties, tool identities, transcript, freshness, and finalized artifact digest. This is inert review evidence only: it does not execute Verus and creates no load, launch, or protected-evidence authority.",
+      "Nine focused tests pin the exact 6,879-byte proof source (SHA-256 98803a62488e1af2fbc886b1da5ddc680b16d35a8a8a5c22d4959128dd2da5fe) and bind its target, ABI, effects, launch contract, seven required properties, tool identities, transcript, caller-supplied freshness, and finalized artifact digest. Replay is explicitly permitted after the process-local ledger is recreated. This is inert review evidence only: it does not execute Verus and creates no load, launch, or protected-evidence authority.",
   },
   {
     name: "Scalar GEMM physical-effect profile",
-    commit: "9a0b0b2855f9568ec113820b5b53e9fde1c133f2",
+    commit: progressSnapshot.publicCommit,
     state: "acceptance",
     detail:
-      "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls matching the Rust profile. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
+      "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
   },
 ];
 

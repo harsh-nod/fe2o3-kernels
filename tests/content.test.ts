@@ -73,8 +73,8 @@ describe("implementation progress integrity", () => {
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-13",
-      publicCommit: "9a0b0b2855f9568ec113820b5b53e9fde1c133f2",
-      publicTree: "794c6d4224491321e0d7d19056a8ace3a58b9b9e",
+      publicCommit: "9ed2bd69fdfc16e04bb6d10c29315d58ded349d4",
+      publicTree: "5bd7062bf799a4b03cb31ab7955cababeb195b60",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
