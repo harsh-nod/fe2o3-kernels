@@ -22,8 +22,8 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-13",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "f59e6a8362d3cdae0babb727f3c4c4952a553b4d",
-  publicTree: "b818bc62589285a9e43be24f21a89c8a29f8c1f6",
+  publicCommit: "e87ac7b16a52562d8b7eacc9995880e1aa5d65c6",
+  publicTree: "c0e9ceea773baa12505a1db33385748decec54f5",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
