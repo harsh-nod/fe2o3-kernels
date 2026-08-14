@@ -33,9 +33,9 @@ It reports the newer public `fe2o3` main revision, private acceptance candidates
 known blockers, and separate run/verify/evidence gates for every kernel in the
 curriculum. That progress view does not silently repin or upgrade lesson claims.
 
-The current public progress head is fe2o3 commit
-`96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
-`f911f0c693238830ad6070b2674fb863857bfec1`. It retains the production S09
+The implementation-status snapshot is pinned to fe2o3 commit
+`e2e9725f0708faaad355ec792d21ad8b57633538`, tree
+`09752086eac323ea47091f563e242932707a029f`. It retains the production S09
 checkpoint that canonically captures the
 production rustc invocation descriptor, admits exactly
 `/proc/./self/fd/198` as the backend capability, and enforces one final managed
@@ -47,27 +47,44 @@ grant no loading, execution, or verification authority. Canonical cwd pathname
 capture does not bind that pathname to the separately pinned cwd object, and
 the scalar profile establishes no general source or output-object association.
 
-The tiled-GEMM descendants separate block counts, wave64 workgroup
-dimensions, and derived AQL work-item dimensions in the checked host contract.
-They also add a sealed, target-neutral one-wave `16x16x16` Kernel IR graph with
-12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, and
-exhaustive 64-lane ownership tests. The new public frontend checkpoint adds
-build-scoped, in-process Rust provider and ABI evidence. It rejects same-name
-external providers and copied markers; canonicalizes and digests observed
-layouts, `FnAbi`, and provider facts through Kernel IR; projects 8 BF16 plus 4
-F32 values into 32 explicit bytes plus a 256-byte implicit suffix (288 bytes
-total); and binds `gfx942:xnack-`, wave64, and strict floating-point behavior.
-Genuine LLVM contains the MFMA before final probe compilation. An opt-in ROCm
-7.2.4 test passed on MI300X and validates final HSACO metadata only, not retained
-MFMA execution or numerical behavior.
+The tiled-GEMM work now has three additional, deliberately separate stages:
 
-This frontend provenance is intentionally build-scoped. Hostile layout and
-`FnAbi` fixtures currently reject earlier at source-root binding, and the
-structured matrix evidence has no actual matrix Kernel IR wire payload. The
-checkpoint therefore does not establish that this frontend emits the canonical
-graph. There is still no dedicated canonical tiled lowering, functional final
-HSACO with audited retained MFMA and stores, hardware numerical execution, LDS
-composition, memory or race proof, or protected authority.
+1. Commit `fb75e19a73ec0a9acebb203bd9821190b0592c82` authenticates one exact
+   collected Rust root with the four-slice signature `A:&[u16]`, `B:&[u16]`,
+   `C:&[f32]`, and `D:DisjointSlice<f32>`. It binds the exact layouts, rustc
+   `FnAbi`, portable-MIR identity, compiler profile, `gfx942:xnack-`, COV6,
+   WG64, zero LDS, and a 64-byte explicit plus 256-byte implicit ABI. A private
+   single-use receipt selects canonical direct-global Kernel IR with eight i16
+   loads, four f32 loads, one BF16 MFMA, and four f32 stores. This
+   source-to-canonical lowering is reviewed correspondence, **not a compiler
+   refinement proof**, and its Worker V2 handoff remains inert.
+2. Commit `c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c` adds an ignored, opt-in
+   one-tile hardware harness for externally supplied digest-pinned bytes. On an
+   MI300X/gfx942 system with ROCm 7.2.4, a 6,672-byte COV6 HSACO with SHA-256
+   `681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66`
+   passed the exact test in 40.41 seconds. The harness checks metadata,
+   disassembly shape, one retained BF16 MFMA, a global store, a bitwise 16x16
+   oracle, immutable inputs, canaries, and unload. This is **non-authoritative
+   hardware evidence**: it bypasses production prerequisite authentication and
+   does not authenticate the producer or grant compiler, load, or launch
+   authority.
+3. Commit `e2e9725f0708faaad355ec792d21ad8b57633538` adds sealed structural
+   descriptor admission and canonical finalization for the exact 320-byte
+   four-slice ABI, COV6, `gfx942:xnack-`, WG64, wave64, and zero LDS. It rejects
+   the separate 288-byte fragment probe and structural drift. Adversarial tests
+   intentionally show that arbitrary `.text` can pass this gate, so structural
+   admission **does not inspect machine-body semantics** or prove BF16/MFMA
+   behavior. It adds no COMGR path and grants no publication, load, or launch
+   authority.
+
+The previous 288-byte build-scoped fragment probe remains separate from the
+320-byte four-slice profile. The missing production chain is still material:
+Worker V2 does not yet produce an authority-bearing final HSACO from the
+source-authenticated tiled module, and that same artifact is not carried
+through protected publication, loading, and launch. Machine-body semantic
+admission, compiler refinement, Verus-to-machine refinement, production XOR4
+LDS tiling, bounds and initialization proofs, and a race-freedom proof also
+remain open.
 
 The latest head also adds authenticated Verus execution V2 for Linux x86_64
 against pinned local runtime and tool snapshots. It uses `clone3` pidfds and
@@ -95,10 +112,12 @@ public proof functions covering 73 obligations, and five rejected formula
 mutations. Workflow-only descendant
 `a51c78322e264c06abdb6dc21817aced09653830` installs Rust 1.97.1 for the
 hosted Verus job and changes no proof or kernel semantics. The layout packet
-remains source-level evidence; the newer build-scoped frontend checkpoint does
-not establish compiler refinement, MFMA numerical equivalence, functional
-HSACO or hardware execution, machine memory safety, race freedom, or protected
-authority.
+remains source-level evidence. The later source-authenticated bridge selects
+the canonical direct-global module, but that correspondence is not compiler
+refinement. The guarded hardware run is non-authoritative, and the structural
+artifact gate does not inspect the machine body. None of these stages
+establishes production LDS composition, memory safety, race freedom, or
+protected launch authority.
 
 ## Maturity labels
 
@@ -131,11 +150,12 @@ At the audited pin:
 - Bounded wave64 collectives, LDS/barrier/atomic contracts, target gates, and a
   narrow MFMA tile profile exist in APIs, models, Kernel IR, or lowering tests.
   The site labels those focused mechanics separately from runnable kernels.
-- The public tiled-GEMM checkpoint now has unambiguous block/workgroup/AQL
-  geometry, a canonical direct-global one-tile Kernel IR graph, and separate
-  build-scoped Rust frontend/provider/ABI evidence. Dedicated canonical tiled
-  lowering, result-retaining functional HSACO, LDS composition, numerical GPU
-  execution, memory and race proofs, and protected authority are still open.
+- The tiled-GEMM checkpoint now has source-authenticated selection of the
+  canonical direct-global one-tile Kernel IR, exact guarded MI300X numerical
+  evidence for separately supplied bytes, and structural Worker V2 artifact
+  admission. These remain separate evidence layers. Source-derived final
+  HSACO/load/launch authority, machine-body semantic admission, production LDS
+  composition, compiler refinement, and memory and race proofs are still open.
 - Tiled GEMM, softmax, flash attention, and mixture-of-experts are design-only
   curricula. Their snippets decompose the implementation and proof work; they
   are not fe2o3 programs users should expect to compile today.

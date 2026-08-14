@@ -5,6 +5,7 @@ import {
   developmentCheckpoints,
   kernelProgress,
   progressSnapshot,
+  tiledGemmV1Commits,
   validateProgress,
 } from "../src/content/progress";
 import { validateCurriculum } from "../src/content/validate";
@@ -73,8 +74,8 @@ describe("implementation progress integrity", () => {
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
       reviewedOn: "2026-08-14",
-      publicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
-      publicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
+      publicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+      publicTree: "09752086eac323ea47091f563e242932707a029f",
     });
     expect(progressSnapshot.publicCommit).not.toBe(FE2O3_PIN.commit);
     expect(developmentCheckpoints[0]).toMatchObject({ state: "public" });
@@ -234,92 +235,132 @@ describe("implementation progress integrity", () => {
     expect(checkpoint?.detail).toContain("GPU authority");
   });
 
-  it("tracks tiled GEMM IR and build-scoped frontend evidence without claiming GPU closure", () => {
-    const tiledCheckpoint = developmentCheckpoints.find(
+  it("keeps the tiled GEMM fragment probe separate from the four-slice profile", () => {
+    const foundation = developmentCheckpoints.find(
       (checkpoint) =>
-        checkpoint.name === "Tiled GEMM V1 host, layout, IR, and frontend ABI",
+        checkpoint.name === "Tiled GEMM V1 layout and frontend foundations",
     );
-    expect(tiledCheckpoint).toMatchObject({
-      commit: progressSnapshot.publicCommit,
+    expect(foundation).toMatchObject({
+      commit: "286331aab8639dd3707e55cdf51a83f8854d26a5",
       state: "public",
     });
-    expect(tiledCheckpoint?.detail).toContain(
+    expect(foundation?.detail).toContain(
       "2ef91896bcdc4d26624f952e5c905c787cd9bc9e",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1",
+    expect(foundation?.detail).toContain(
+      "commit 027ab901bef7007d0e8da3370470556ed28baad1",
     );
-    expect(tiledCheckpoint?.detail).toContain(
+    expect(foundation?.detail).toContain(
       "Exhaustive 64-lane x 4-component goldens",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "23 public proof functions discharge 73 obligations",
+    expect(foundation?.detail).toContain(
+      "23 public Verus proof functions discharge 73 obligations",
     );
-    expect(tiledCheckpoint?.detail).toContain(
+    expect(foundation?.detail).toContain(
       "five formula mutations are rejected",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "f8a66d3babf764a6f064189e4634da9ee0cb046a separates block counts",
+    expect(foundation?.detail).toContain(
+      "build-scoped 288-byte fragment probe",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "12 direct global reads",
+    expect(foundation?.detail).toContain(
+      "not the later four-slice production profile",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "four observable F32 stores",
+  });
+
+  it("tracks source-authenticated tiled lowering without claiming refinement", () => {
+    const sourceBridge = developmentCheckpoints.find(
+      (checkpoint) =>
+        checkpoint.name === "Tiled GEMM V1 source-authenticated compiler bridge",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "build-scoped in-process Rust frontend/provider/ABI evidence",
+    expect(sourceBridge).toMatchObject({
+      commit: tiledGemmV1Commits.sourceBridge,
+      state: "public",
+    });
+    expect(sourceBridge?.detail).toContain(
+      "A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "same-name external providers and copied markers are rejected",
+    expect(sourceBridge?.detail).toContain(
+      "portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR",
+    expect(sourceBridge?.detail).toContain(
+      "64-byte explicit plus 256-byte implicit four-slice ABI",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "8 BF16 plus 4 F32 values, 32 explicit bytes plus 256 implicit bytes, 288 total",
+    expect(sourceBridge?.detail).toContain(
+      "eight i16 loads, four f32 loads, one BF16 MFMA, and four f32 stores",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "gfx942:xnack-, wave64, and strict FP are bound",
+    expect(sourceBridge?.detail).toContain("private single-use receipt");
+    expect(sourceBridge?.detail).toContain("inert Worker V2 handoff");
+    expect(sourceBridge?.detail).toContain(
+      "not a compiler refinement proof",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "Genuine LLVM contains the MFMA before final probe compilation",
+    expect(sourceBridge?.detail).toContain(
+      "no final-HSACO, publication, loading, or launch authority",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "opt-in ROCm 7.2.4 MI300X test passed",
+  });
+
+  it("tracks guarded tiled hardware evidence as non-authoritative", () => {
+    const hardware = developmentCheckpoints.find(
+      (checkpoint) =>
+        checkpoint.name === "Tiled GEMM V1 guarded MI300X evidence",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "validates final HSACO metadata, not retained MFMA execution or numerical behavior",
+    expect(hardware).toMatchObject({
+      commit: tiledGemmV1Commits.hardwareEvidence,
+      state: "acceptance",
+    });
+    expect(hardware?.detail).toContain("6,672-byte HSACO");
+    expect(hardware?.detail).toContain(
+      "681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "Provenance is intentionally build-scoped",
+    expect(hardware?.detail).toContain("passed 1/1 in 40.41 seconds");
+    expect(hardware?.detail).toContain("bitwise dyadic 16x16 oracle");
+    expect(hardware?.detail).toContain("non-authoritative hardware evidence");
+    expect(hardware?.detail).toContain(
+      "deliberately bypasses production prerequisite authentication",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "hostile layout and FnAbi fixtures currently reject earlier at source-root binding",
+    expect(hardware?.detail).toContain(
+      "does not authenticate the artifact producer",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "structured matrix evidence lacks an actual matrix Kernel IR wire payload",
+  });
+
+  it("tracks structural artifact admission without claiming body semantics", () => {
+    const structural = developmentCheckpoints.find(
+      (checkpoint) =>
+        checkpoint.name === "Tiled GEMM V1 structural artifact admission",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "does not establish that the frontend emits the canonical graph",
+    expect(structural).toMatchObject({
+      commit: tiledGemmV1Commits.structuralAdmission,
+      state: "public",
+    });
+    expect(structural?.detail).toContain(
+      "four slices in 64 explicit bytes, a 256-byte implicit suffix",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "dedicated canonical tiled lowering",
+    expect(structural?.detail).toContain(
+      "rejects the separate WG256/288-byte fragment probe",
     );
-    expect(tiledCheckpoint?.detail).toContain(
-      "functional final HSACO with audited retained MFMA and stores",
+    expect(structural?.detail).toContain("accepts arbitrary .text");
+    expect(structural?.detail).toContain(
+      "does not inspect machine-body semantics",
     );
-    expect(tiledCheckpoint?.detail).toContain("hardware numerical execution");
-    expect(tiledCheckpoint?.detail).toContain("LDS composition");
-    expect(tiledCheckpoint?.detail).toContain("memory or race proof");
-    expect(tiledCheckpoint?.detail).toContain("protected authority");
-    expect(tiledCheckpoint?.detail).toContain(
-      "Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain",
+    expect(structural?.detail).toContain(
+      "no publication, loading, or launch authority",
     );
-    expect(kernelProgress.find((kernel) => kernel.id === "tiled-gemm")).toMatchObject({
+    expect(structural?.detail).toContain("no COMGR path is added");
+  });
+
+  it("keeps tiled GEMM partial until source, body, authority, and race closure", () => {
+    expect(
+      kernelProgress.find((kernel) => kernel.id === "tiled-gemm"),
+    ).toMatchObject({
       run: "partial",
       verify: "partial",
       evidence: "partial",
+      dependsOn: [
+        "source-derived Worker V2 final HSACO",
+        "machine-body semantic admission",
+        "protected publication, load, and launch authority",
+        "LDS ownership and race proof",
+      ],
     });
   });
+
 });

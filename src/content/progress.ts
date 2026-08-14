@@ -22,12 +22,18 @@ export interface DevelopmentCheckpoint {
 export const progressSnapshot = {
   reviewedOn: "2026-08-14",
   auditedCommit: FE2O3_PIN.commit,
-  publicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
-  publicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
+  publicCommit: "e2e9725f0708faaad355ec792d21ad8b57633538",
+  publicTree: "09752086eac323ea47091f563e242932707a029f",
   repositories: [
     "https://github.com/harsh-nod/fe2o3",
     "https://github.com/powderluv/fe2o3",
   ],
+} as const;
+
+export const tiledGemmV1Commits = {
+  sourceBridge: "fb75e19a73ec0a9acebb203bd9821190b0592c82",
+  hardwareEvidence: "c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c",
+  structuralAdmission: "e2e9725f0708faaad355ec792d21ad8b57633538",
 } as const;
 
 export const developmentCheckpoints: DevelopmentCheckpoint[] = [
@@ -116,11 +122,32 @@ export const developmentCheckpoints: DevelopmentCheckpoint[] = [
       "On mi300x, 4/4 upstream LLVM 22 MC analyzer tests accepted the exact finalized artifact (SHA-256 ac1da70c69a5038b887b459dece40802668c41bcf98f621d7d1273d2f61ba2c9) without COMGR. The exact 60-opcode scalar profile has one function, zero calls, two constrained backward loops, and effects of 9 address / 8 read / 1 write / 1 return / 0 calls. The Rust profile now also binds the exact entry range [0x1b00, 0x25d0) and all 19 ordered physical effect sites, including address/access pairing; focused mutation tests reject relocation, reordering, width, range, and pairing changes. This is static, inert evidence only. It provides no compiler or address refinement and no proof of memory safety, bounds safety, race freedom, or launch correctness. The analyzer identity changed and downstream authenticated evidence must bind the new identity.",
   },
   {
-    name: "Tiled GEMM V1 host, layout, IR, and frontend ABI",
-    commit: progressSnapshot.publicCommit,
+    name: "Tiled GEMM V1 layout and frontend foundations",
+    commit: "286331aab8639dd3707e55cdf51a83f8854d26a5",
     state: "public",
     detail:
-      "Both public mains contain the standalone gfx942:xnack- BF16/F32 host scaffold and the source-level layout proof introduced at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the exact official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, plus XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four official tables, and exact Rust-Verus source correspondence covers the register maps, parsed inner XOR permutation, outer XOR4 map, and both staging paths. A runner pins Verus version and executable bytes; 23 public proof functions discharge 73 obligations, while five formula mutations are rejected at their intended correspondence theorems. Workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs the Rust 1.97.1 toolchain required by that hosted Verus job; it changes no proof or kernel semantics. Commit f8a66d3babf764a6f064189e4634da9ee0cb046a separates block counts [N/16,M/16,1], workgroup dimensions [64,1,1], and derived AQL work items [64*(N/16),M/16,1]. Commit abe9fdca21579017a1d346fcfa66552bc81308f4 adds the sealed target-neutral one-wave 16x16x16 graph with 12 direct global reads, one BF16/BF16/F32 MFMA, four observable F32 stores, exact 256-element profiles, and exhaustive lane/output ownership tests. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds separate build-scoped in-process Rust frontend/provider/ABI evidence: same-name external providers and copied markers are rejected; observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the projected ABI is 8 BF16 plus 4 F32 values, 32 explicit bytes plus 256 implicit bytes, 288 total; and gfx942:xnack-, wave64, and strict FP are bound. Genuine LLVM contains the MFMA before final probe compilation. An opt-in ROCm 7.2.4 MI300X test passed and validates final HSACO metadata, not retained MFMA execution or numerical behavior. Provenance is intentionally build-scoped; hostile layout and FnAbi fixtures currently reject earlier at source-root binding; and structured matrix evidence lacks an actual matrix Kernel IR wire payload. This does not establish that the frontend emits the canonical graph. There is still no dedicated canonical tiled lowering, functional final HSACO with audited retained MFMA and stores, hardware numerical execution, LDS composition, memory or race proof, or protected authority.",
+      "The standalone gfx942:xnack- BF16/F32 host scaffold and source-level layout proof begin at commit 027ab901bef7007d0e8da3370470556ed28baad1. Executable Rust maps bind the official A/B/C/D register coordinates for gfx942 V_MFMA_F32_16X16X16_BF16 to AMD Matrix Instruction Calculator commit 2ef91896bcdc4d26624f952e5c905c787cd9bc9e, with XOR4 LDS staging for A and deliberately transposed B. Exhaustive 64-lane x 4-component goldens pin all four tables; 23 public Verus proof functions discharge 73 obligations; and five formula mutations are rejected. Descendants separate block counts, WG64 dimensions, and AQL work items, then add a sealed direct-global one-wave 16x16x16 Kernel IR graph with 12 reads, one BF16/BF16/F32 MFMA, and four F32 stores. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 separately records a build-scoped 288-byte fragment probe. It is not the later four-slice production profile and does not establish source-to-canonical Kernel IR correspondence.",
+  },
+  {
+    name: "Tiled GEMM V1 source-authenticated compiler bridge",
+    commit: tiledGemmV1Commits.sourceBridge,
+    state: "public",
+    detail:
+      "Commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected Rust root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds the reviewed layouts, rustc FnAbi, portable-MIR identity, compiler profile, gfx942:xnack-, COV6, WG64, zero LDS, and the 64-byte explicit plus 256-byte implicit four-slice ABI. A private single-use receipt selects the canonical direct-global Kernel IR module with eight i16 loads, four f32 loads, one BF16 MFMA, and four f32 stores, then produces only an inert Worker V2 handoff. The older 32-byte explicit/288-byte fragment probe remains separate. This source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof, and grants no final-HSACO, publication, loading, or launch authority.",
+  },
+  {
+    name: "Tiled GEMM V1 guarded MI300X evidence",
+    commit: tiledGemmV1Commits.hardwareEvidence,
+    state: "acceptance",
+    detail:
+      "Commit c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c adds an ignored, opt-in one-tile gfx942:xnack- harness for externally supplied exact bytes. It checks COV6/WG64/320-byte metadata, one bound entry, exact disassembly coverage, one retained v_mfma_f32_16x16x16_bf16, a global store, forbidden control and memory forms, a bitwise dyadic 16x16 oracle, immutable inputs, adjacent canaries, and terminal unload. On MI300X with ROCm 7.2.4, a 6,672-byte HSACO (SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66) and digest-pinned LLVM 22 objdump passed 1/1 in 40.41 seconds. This is non-authoritative hardware evidence: the harness deliberately bypasses production prerequisite authentication, does not authenticate the artifact producer or full objdump runtime, and grants no compiler, publication, loading, launch, or verification authority.",
+  },
+  {
+    name: "Tiled GEMM V1 structural artifact admission",
+    commit: tiledGemmV1Commits.structuralAdmission,
+    state: "public",
+    detail:
+      "Commit e2e9725f0708faaad355ec792d21ad8b57633538 adds sealed Worker V2 structural inspection and canonical finalization for exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor: four slices in 64 explicit bytes, a 256-byte implicit suffix, WG64, wave64, and zero LDS. It rejects the separate WG256/288-byte fragment probe and descriptor, ABI, target, capability, and finalization drift. Structural admission deliberately accepts arbitrary .text in adversarial tests, so it does not inspect machine-body semantics, authenticate compiler origin, prove BF16 or MFMA semantics, or prove Verus results. It grants no publication, loading, or launch authority. The capability schema remains V1 and unknown tag 12 is rejected; no COMGR path is added.",
   },
 ];
 
@@ -190,8 +217,13 @@ export const kernelProgress: KernelProgress[] = [
     run: "partial",
     verify: "partial",
     evidence: "partial",
-    dependsOn: ["scalar GEMM", "workgroup reduction", "MFMA integration"],
-    next: "Add the dedicated canonical tiled lowering so MFMA and four stores survive audited final HSACO, run the guarded one-tile numerical hardware slice, add a real matrix Kernel IR wire payload, then compose XOR4 LDS movement and tiled loops while closing memory, race, and authority proofs.",
+    dependsOn: [
+      "source-derived Worker V2 final HSACO",
+      "machine-body semantic admission",
+      "protected publication, load, and launch authority",
+      "LDS ownership and race proof",
+    ],
+    next: "Connect the source-authenticated canonical module to the measured upstream LLVM/LLD Worker V2 path, bind its final HSACO to structural and machine-body admission, and carry the same identity through protected publication, load, and launch. Then add production XOR4 LDS tiling with bounds, initialization, barrier, and race proofs.",
   },
   {
     id: "softmax",
