@@ -113,7 +113,28 @@ const orientation: Lesson = {
           type: "callout",
           tone: "boundary",
           title: "Newer progress, unchanged lesson pin",
-          text: "The progress dashboard tracks public fe2o3 head 96b9890c3ad33ad8c6b4239a9b567728a176d65f. It retains canonical production S09 rustc invocation capture and a real cargo-fe2o3/Worker publication observation, but neither proves compiler origin nor grants loading, execution, or verification authority. Earlier commit 027ab901bef7007d0e8da3370470556ed28baad1 remains the source of the exact gfx942 register/XOR4 layout proof; workflow-only descendant a51c78322e264c06abdb6dc21817aced09653830 installs its Verus-required Rust toolchain. Later descendants disambiguate block counts from AQL work-item dimensions and add a sealed target-neutral one-wave 16x16x16 direct-global Kernel IR graph with observable stores. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 separately adds build-scoped in-process Rust frontend/provider/ABI evidence, including canonical Kernel IR digests of observed layouts, FnAbi, and provider facts; a 32-byte explicit plus 256-byte implicit projected ABI; and gfx942:xnack-, wave64, and strict-FP bindings. Its opt-in ROCm 7.2.4 MI300X probe validates final HSACO metadata only. The latest head adds Linux x86_64 authenticated Verus execution V2 against pinned local runtime and tool snapshots, with clone3 pidfd and ptrace-unresumable checkpoints, seccomp process-creation denial, live executable/backing comparison, runtime closure, baseline, and vDSO pinning, immutable sealed results, strict debug-section rejection, and a bounded two-root reproducibility gate. The pinned local suites pass, while MI300X correctly fails closed on its different baseline. V2 does not integrate stock Verus or Z3, establish semantic proof validity, guarantee exclusive measured-image execution between checkpoints, prove compiler refinement, or grant GPU authority. The frontend evidence does not show that it emits the canonical graph, retain and execute the MFMA and stores, establish numerical behavior, compose LDS, or prove memory or race safety. Lesson evidence remains pinned to the older audited FE2O3_PIN until a separate baseline audit.",
+          text: "The progress dashboard tracks staged fe2o3 head e2e9725f0708faaad355ec792d21ad8b57633538, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. The newer head retains the S09 and authenticated-Verus checkpoints and adds the three tiled GEMM stages below. Those stages close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain.",
+        },
+        {
+          type: "table",
+          headers: ["Tiled GEMM stage", "What changed", "Authority boundary"],
+          rows: [
+            [
+              "fb75e19a source bridge",
+              "An exact collected Rust/MIR/FnAbi profile selects the canonical direct-global WG64/320-byte Kernel IR module through a private single-use receipt.",
+              "Source-to-canonical lowering is reviewed correspondence, not a compiler refinement proof; the Worker V2 handoff is inert.",
+            ],
+            [
+              "c9c738d1 guarded MI300X run",
+              "A digest-pinned 6,672-byte COV6 image passed one exact 16x16 numerical run with ISA checks, canaries, immutable inputs, and unload.",
+              "The artifact is supplied externally and the test bypasses production prerequisites, so this is non-authoritative hardware evidence.",
+            ],
+            [
+              "e2e9725f structural admission",
+              "Worker V2 inspection and finalization enforce gfx942:xnack-, COV6, WG64, wave64, zero LDS, and the four-slice 320-byte ABI.",
+              "The gate accepts arbitrary .text by design and therefore does not inspect machine-body semantics or grant publication, load, or launch authority.",
+            ],
+          ],
         },
       ],
     },

@@ -317,13 +317,25 @@ const gemmMapping: Lesson = {
         },
         {
           type: "paragraph",
-          text: "Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5, retained by the current public head, adds separate build-scoped in-process Rust frontend/provider/ABI evidence. Same-name external providers and copied markers are rejected. Observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the projected kernel ABI carries 8 BF16 plus 4 F32 values in 32 explicit bytes followed by 256 implicit bytes, 288 total. The checkpoint binds gfx942:xnack-, wave64, and strict FP, and genuine LLVM contains the MFMA before final probe compilation. An opt-in ROCm 7.2.4 MI300X test passed and validates final HSACO metadata only.",
+          text: "Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds separate build-scoped in-process Rust frontend/provider/ABI evidence. Same-name external providers and copied markers are rejected. Observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the fragment probe carries 8 BF16 plus 4 F32 values in 32 explicit bytes followed by 256 implicit bytes, 288 total. This remains a distinct fragment-level evidence profile, not the later four-slice kernel ABI.",
+        },
+        {
+          type: "paragraph",
+          text: "Source-bridge commit fb75e19a73ec0a9acebb203bd9821190b0592c82 admits one exact collected root with signature A:&[u16], B:&[u16], C:&[f32], D:DisjointSlice<f32>. It binds exact layouts, rustc FnAbi, portable-MIR identity, compiler settings, gfx942:xnack-, COV6, WG64, zero LDS, and 64 explicit plus 256 implicit kernarg bytes. Consuming a private single-use receipt selects the canonical direct-global module: eight i16 loads, four f32 loads, one BF16 MFMA, and four f32 stores. This is source-to-canonical lowering under a reviewed correspondence contract, not a compiler refinement proof. Its Worker V2 handoff is inert and grants no final-HSACO, publication, load, or launch authority.",
+        },
+        {
+          type: "paragraph",
+          text: "Guarded-hardware commit c9c738d1c5fb6d84d54cc04fcf166bc5fe56409c adds an ignored one-tile test for exact externally supplied bytes. On MI300X/gfx942 with ROCm 7.2.4, a 6,672-byte COV6 image with SHA-256 681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66 passed 1/1 in 40.41 seconds. The harness checks the exact 320-byte metadata and entry range, one retained BF16 MFMA, a global store, a bitwise dyadic 16x16 oracle, immutable inputs, adjacent canaries, and unload. Because it bypasses production prerequisites and does not authenticate the producer, this is non-authoritative hardware evidence.",
+        },
+        {
+          type: "paragraph",
+          text: "Structural-admission commit e2e9725f0708faaad355ec792d21ad8b57633538 inspects and canonically finalizes exactly one gfx942:xnack- COV6 tiled_gemm_v1 descriptor with four slices, 64 explicit plus 256 implicit bytes, WG64, wave64, and zero LDS. It rejects the separate WG256/288-byte fragment probe and structural drift. Adversarial tests intentionally admit arbitrary .text, making the limit concrete: this gate checks metadata and descriptors, not machine-body semantics, BF16/MFMA behavior, compiler origin, or Verus results. It adds no COMGR path and grants no publication, load, or launch authority.",
         },
         {
           type: "callout",
           tone: "boundary",
-          title: "Build-scoped frontend evidence is not execution",
-          text: "Frontend provenance is intentionally build-scoped, and hostile layout and FnAbi fixtures currently reject earlier at source-root binding. Structured matrix evidence lacks an actual matrix Kernel IR wire payload, so this checkpoint does not establish that the frontend emits the canonical graph. There is no dedicated canonical tiled AMDGCN lowering, functional final HSACO with audited retained MFMA and stores, hardware numerical execution, LDS composition, machine memory safety, race freedom, or protected authority. The lesson dependency pin remains at the older audited baseline.",
+          title: "Three green stages are not one authority chain",
+          text: "Worker V2 still does not produce an authority-bearing final HSACO from the source-authenticated canonical module, nor carry that exact identity through protected publication, loading, and launch. Machine-body semantic admission, compiler and Verus-to-machine refinement, production XOR4 LDS tiling, bounds and initialization proofs, and race freedom remain open. The lesson dependency pin remains at the older audited baseline.",
         },
       ],
     },
@@ -382,7 +394,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "No full GEMM binary or GPU result is claimed. Focused MFMA/LDS contract tests are reusable implementation evidence only.",
+        "One exact direct-global 16x16 artifact has non-authoritative MI300X evidence. No source-derived, authority-bearing final HSACO or production LDS-tiled GEMM is claimed.",
       ),
     },
   ),
@@ -416,7 +428,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "The newer public checkpoint closes a bounded source-level register/LDS layout proof, adds a sealed direct-global one-tile Kernel IR graph, and separately records build-scoped frontend/provider/ABI evidence plus a final-HSACO metadata probe. It does not show that the frontend emits the canonical graph. Dedicated lowering, audited retained MFMA and stores, numerical hardware execution, LDS composition, memory and race proofs, and protected authority remain future gates; none is represented as current parity or production authority.",
+        "The staged checkpoint authenticates an exact Rust root into canonical direct-global Kernel IR, records a guarded numerical MI300X observation for separately supplied bytes, and structurally admits the exact four-slice Worker V2 artifact profile. Source-to-canonical lowering is not compiler refinement, hardware evidence is non-authoritative, and structural admission does not inspect machine-body semantics. Source-derived final HSACO/load/launch authority, production LDS tiling, and memory and race proofs remain future gates.",
     },
   ],
   sections: [
@@ -455,8 +467,8 @@ const gemmProof: Lesson = {
         {
           type: "callout",
           tone: "proof",
-          title: "One ledger row is now concrete",
-          text: "At public commit 027ab901bef7007d0e8da3370470556ed28baad1, the official gfx942 A/B/C/D maps, XOR4 A and transposed-B staging, exhaustive 64x4 goldens, exact Rust-Verus source correspondence, 73 proof obligations, and five expected-negative mutations form a reviewed source-level layout packet. Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds build-scoped frontend/provider/ABI and final-HSACO metadata evidence, but canonical graph emission, numerical, functional machine-code, hardware-execution, memory/race, and authority rows remain open.",
+          title: "Three ledger rows are concrete but unjoined",
+          text: "Commit fb75e19a authenticates the exact source profile and selects canonical Kernel IR; c9c738d1 records exact one-tile gfx942 execution for separately supplied pinned bytes; e2e9725f admits and canonically finalizes the exact structural artifact profile. None proves that the Worker V2 machine body was derived from that source, and none grants protected publication, loading, or launch authority. The remaining proof ledger must also cover bounds, initialization, barriers, LDS ownership, race freedom, and numerical refinement.",
         },
       ],
     },
@@ -469,7 +481,7 @@ const gemmProof: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "The public layout proof is a real source-level increment. Completion still requires one identity-bound source/proof/compiler/artifact/runtime evidence set; isolated green tests are insufficient.",
+        "Source selection, structural artifact checks, and one guarded hardware result now exist as separate stages. Completion still requires one identity-bound source/proof/compiler/machine/runtime authority chain.",
       ),
     },
   ),

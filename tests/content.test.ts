@@ -363,4 +363,35 @@ describe("implementation progress integrity", () => {
     });
   });
 
+  it("teaches the staged tiled evidence boundaries without repinning claims", () => {
+    const orientation = JSON.stringify(
+      lessons.find((lesson) => lesson.id === "read-the-evidence"),
+    );
+    const mapping = JSON.stringify(
+      lessons.find((lesson) => lesson.id === "gemm-tiling"),
+    );
+    const proofPlan = JSON.stringify(
+      lessons.find((lesson) => lesson.id === "gemm-proof-plan"),
+    );
+
+    expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
+    expect(orientation).toContain("not a compiler refinement proof");
+    expect(orientation).toContain("non-authoritative hardware evidence");
+    expect(orientation).toContain("does not inspect machine-body semantics");
+
+    for (const commit of Object.values(tiledGemmV1Commits)) {
+      expect(mapping).toContain(commit);
+    }
+    expect(mapping).toContain("Worker V2 handoff is inert");
+    expect(mapping).toContain("source-derived, authority-bearing final HSACO");
+    expect(mapping).toContain("race freedom remain open");
+
+    expect(proofPlan).toContain(
+      "Source-to-canonical lowering is not compiler refinement",
+    );
+    expect(proofPlan).toContain("hardware evidence is non-authoritative");
+    expect(proofPlan).toContain(
+      "structural admission does not inspect machine-body semantics",
+    );
+  });
 });
