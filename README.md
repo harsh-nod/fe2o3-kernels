@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `51751e48812d6428627b8d403be72d24558175b5`, tree
-`e3c8d2d170837ae3b3389d30763ee225c5dcc1d0`. Both
+commit `4138e034b7ee9f457d9b63b4d54bdc623d0c8046`, tree
+`a5f8ac44fd69b7a69662c73fb8931399be0ab241`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -59,11 +59,14 @@ exist for its fixed WG64 LDS-reduction and system-scope relaxed-atomic forms.
 The exact fixed profiles now also have typed arguments, profile-bound host
 admission, private non-Clone `Joined -> Loaded -> Completed -> Unloaded`
 lifecycles, exact COV6 packing, dynamic-LDS AQL binding, and protected harness
-vectors. Combined debug and release host/runtime suites pass. The measured
-MI300X path still fails closed before HSA load because the upstream LLVM worker
-reports a module data-layout/target-machine mismatch, so no synchronization GPU
-execution or numerical result is claimed. These mechanics do not grant
-compiler-origin or source/compiler/machine refinement authority. The
+vectors. Combined debug and release host/runtime suites pass. A subsequent fix
+derives the canonical layout through upstream LLVM 22
+`TargetMachine::createDataLayout()`, binds its identity into both handoffs, and
+rejects stale, missing, reordered, and substituted layouts. The normal pinned
+MI300X lifecycle then passed both exact kernels in debug and release with
+canaries, unchanged inputs, exact oracles, bounded completion, and terminal
+unload. This is a bounded observation, not compiler-origin or
+source/compiler/machine refinement authority. The
 lesson snapshots for those source-only milestones remain byte-pinned to commit
 `d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8`, tree
 `cdec8448a300aa71d17565ca50fd4d893932f602`, rather than silently following the
@@ -412,10 +415,11 @@ At the audited pin:
   consumes an exact linear `DynamicLds` capability. Exact compiler profiles and
   opaque direct upstream LLVM/LLD finalization now cover the fixed LDS-reduction
   and scoped-atomic forms. Typed profile-bound host/runtime lifecycle mechanics,
-  exact dynamic-LDS dispatch binding, and fail-closed protected harness vectors
-  are public. Protected gfx942 execution is blocked by the measured upstream
-  LLVM module data-layout/target-machine mismatch; source/compiler/machine
-  refinement remains open for synchronization.
+  exact dynamic-LDS dispatch binding, and protected harness vectors are public.
+  Both exact kernels subsequently passed the normal pin-gated MI300X lifecycle
+  in debug and release after canonical target-machine layout binding replaced
+  the stale spelling. Source/compiler/machine refinement, generalized memory
+  safety, and generalized race freedom remain open for synchronization.
   Wave64 has subsequently
   reached an exact source-derived compiler profile, direct upstream LLVM/LLD
   finalizer, typed one-shot runtime lifecycle, and a four-mask protected gfx942

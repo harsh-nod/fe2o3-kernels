@@ -204,7 +204,10 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
     "opaque direct upstream LLVM/LLD finalizer receipts",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "protected gfx942 execution",
+    "bounded protected MI300X observation",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "exact-profile evidence only",
   );
 });
 

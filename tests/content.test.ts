@@ -285,9 +285,9 @@ describe("curriculum integrity", () => {
           ]
           : profile.lessonId === "lds-barriers-atomics"
           ? [
-              "upstream LLVM data-layout/target-machine mismatch",
-              "protected gfx942 execution",
               "source/compiler/machine refinement",
+              "generalized illegal-access safety",
+              "generalized race freedom",
             ]
           : profile.lessonId === "reductions-scans"
             ? ["Compiler and Verus-to-machine refinement"]
@@ -303,6 +303,9 @@ describe("curriculum integrity", () => {
       }
       if (profile.lessonId === "reductions-scans") {
         expect(result).toContain("protected four-mask gfx942 observation");
+      } else if (profile.lessonId === "lds-barriers-atomics") {
+        expect(result).toContain("bounded protected MI300X observation");
+        expect(result).toContain("exact-profile evidence only");
       } else {
         expect(result).toContain("No functional hardware result is claimed");
       }
@@ -1200,11 +1203,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "51751e48812d6428627b8d403be72d24558175b5",
-      eventualPublicTree: "e3c8d2d170837ae3b3389d30763ee225c5dcc1d0",
+      eventualPublicCommit: "4138e034b7ee9f457d9b63b4d54bdc623d0c8046",
+      eventualPublicTree: "a5f8ac44fd69b7a69662c73fb8931399be0ab241",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "51751e48812d6428627b8d403be72d24558175b5",
+        requiredCommit: "4138e034b7ee9f457d9b63b4d54bdc623d0c8046",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",

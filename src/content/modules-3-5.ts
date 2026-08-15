@@ -254,13 +254,13 @@ const synchronization: Lesson = {
       code: noHost,
       explanatory: true,
       notice:
-        "Typed compiler-profile-bound host/runtime mechanics are public for both exact synchronization kernels. The protected MI300X path currently fails closed on the upstream LLVM module data-layout/target-machine mismatch before HSA load.",
+        "Typed compiler-profile-bound host/runtime mechanics are public for both exact synchronization kernels. After canonical target-machine layout binding replaced the stale spelling, both passed the normal protected MI300X lifecycle in debug and release.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. The publication-gated descendant adds exact compiler profiles, opaque direct upstream LLVM/LLD finalizer receipts, typed argument admission, private one-shot host/runtime lifecycles, exact dynamic-LDS dispatch binding, and fail-closed protected vectors. Remaining gaps: fix the measured upstream LLVM data-layout/target-machine mismatch, protected gfx942 execution, and source/compiler/machine refinement. No functional hardware result is claimed.",
+        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. The publication-gated descendant adds exact compiler profiles, opaque direct upstream LLVM/LLD finalizer receipts, typed argument admission, private one-shot host/runtime lifecycles, exact dynamic-LDS dispatch binding, and one bounded protected MI300X observation for each profile in debug and release. Remaining gaps: source/compiler/machine refinement, generalized illegal-access safety, and generalized race freedom. The hardware result is exact-profile evidence only.",
       ),
       explanatory: true,
       notice:
