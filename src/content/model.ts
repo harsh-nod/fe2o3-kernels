@@ -38,7 +38,8 @@ export type StagedEvidenceAuthority =
   | "source-shape-only"
   | "machine-inspection-only"
   | "wire-format-only"
-  | "inert-worker-handoff-only";
+  | "inert-worker-handoff-only"
+  | "sealed-profile-registry-only";
 
 export type StagedEvidenceId =
   | "tiled-source-bridge-v1"
@@ -61,7 +62,8 @@ export type StagedEvidenceId =
   | "tiled-lds-edge-machine-inspection-v4"
   | "tiled-lds-source-model-correspondence-v1"
   | "tiled-lds-matrix-wire-v5"
-  | "tiled-lds-inert-worker-handoff-v1";
+  | "tiled-lds-inert-worker-handoff-v1"
+  | "tiled-lds-sealed-profile-registry-v1";
 
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";

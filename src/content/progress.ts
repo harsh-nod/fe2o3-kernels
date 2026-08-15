@@ -60,6 +60,7 @@ export const developmentCheckpointIds = deepFreeze([
   "tiled-gemm-lds-source-model-correspondence",
   "tiled-gemm-lds-matrix-wire-v5",
   "tiled-gemm-lds-inert-worker-handoff",
+  "tiled-gemm-lds-sealed-profile-registry",
 ] as const);
 
 export type DevelopmentCheckpointId =
@@ -165,6 +166,9 @@ export const tiledGemmV1Commits = {
   ldsMatrixWireV5: stagedEvidenceRecord("tiled-lds-matrix-wire-v5").commit,
   ldsInertWorkerHandoff: stagedEvidenceRecord(
     "tiled-lds-inert-worker-handoff-v1",
+  ).commit,
+  ldsSealedProfileRegistry: stagedEvidenceRecord(
+    "tiled-lds-sealed-profile-registry-v1",
   ).commit,
 } as const;
 
@@ -332,6 +336,11 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "staged-evidence",
     commit: tiledGemmV1Commits.ldsInertWorkerHandoff,
     evidenceIds: ["tiled-lds-inert-worker-handoff-v1"],
+  },
+  "tiled-gemm-lds-sealed-profile-registry": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsSealedProfileRegistry,
+    evidenceIds: ["tiled-lds-sealed-profile-registry-v1"],
   },
 } satisfies Record<DevelopmentCheckpointId, DevelopmentCheckpointSpec>);
 
@@ -602,6 +611,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: tiledGemmV1Commits.ldsInertWorkerHandoff,
     state: "public",
     stagedEvidenceIds: ["tiled-lds-inert-worker-handoff-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-sealed-profile-registry",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS sealed exact-profile registry",
+    commit: tiledGemmV1Commits.ldsSealedProfileRegistry,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-sealed-profile-registry-v1"],
   },
 ] satisfies DevelopmentCheckpoint[]);
 

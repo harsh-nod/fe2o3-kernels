@@ -49,6 +49,7 @@ export const stagedEvidenceOrder = deepFreeze([
   "tiled-lds-source-model-correspondence-v1",
   "tiled-lds-matrix-wire-v5",
   "tiled-lds-inert-worker-handoff-v1",
+  "tiled-lds-sealed-profile-registry-v1",
 ] satisfies StagedEvidenceId[]);
 
 const TILED_GEMM_V1_HARDWARE_COMMAND =
@@ -793,6 +794,44 @@ const stagedEvidenceRecords = deepFreeze({
       {
         id: "inert-handoff-boundary",
         text: "This is an inert compiler-module handoff. It authenticates no compiler origin and grants no worker, linker, final-HSACO, load, launch, hardware-execution, or production proof-certificate authority. The shared protected runtime substrate remains open in #94 and #96 through #100.",
+      },
+    ],
+  },
+  "tiled-lds-sealed-profile-registry-v1": {
+    id: "tiled-lds-sealed-profile-registry-v1",
+    stageLabel: "89ebe69b sealed Slice 1 profile registry",
+    claimLabel: "Sealed exact Slice 1 compiler import",
+    claim: "compiler-hsaco-observed",
+    authority: "sealed-profile-registry-only",
+    commit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
+    tree: "c2604487ec76f337d7ada2c0319fffd02b3ce8c9",
+    commands: [
+      "cargo test --locked -p fe2o3-hsaco-finalize --all-targets",
+      "cargo test --locked -p fe2o3-hsaco-finalize --test lds_gemm_profile_registry",
+      "cargo clippy --locked -p fe2o3-hsaco-finalize --all-targets --no-deps -- -D warnings",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-hsaco-finalize/src/lds_gemm_profile_registry.rs",
+      "crates/fe2o3-hsaco-finalize/src/lib.rs",
+      "crates/fe2o3-hsaco-finalize/tests/lds_gemm_profile_registry.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "closed-profile-slots",
+        text: "Commit 89ebe69bb3daf8262a485463c5fdf04cf095346f adds stable, disjoint Slice 1, K-phase, Grid, and Edges registry slots. Only the exact M16 N16 K16 Slice 1 manifest is enabled; the other three slots fail closed as reserved profiles.",
+      },
+      {
+        id: "exact-slice1-import",
+        text: "Slice 1 admission reconstructs canonical Kernel IR V5 and independently re-lowers it with upstream dialect-amdgcn, then requires byte-exact LLVM, compiler descriptor, source-authority, resource-transcript, target, COV6, ABI 48/304/8, grid 1, WG64, 1,024-byte LDS, and typed A/B/C effect and length bindings.",
+      },
+      {
+        id: "fail-closed-import-tests",
+        text: "Eight focused integration tests admit the deterministic canonical import and reject reserved profiles, regenerated hostile LLVM, descriptor-pin substitution, authority/resource substitution, duplicate or reordered sections, target/COV drift, and manifest drift. Clean mi300x validation passed 46 library tests with 4 configured ignores, all 8 focused tests, the full package suite, strict all-target Clippy, and the compile-fail doctest.",
+      },
+      {
+        id: "sealed-registry-boundary",
+        text: "The retained import is non-Clone and exposes no into_inner escape. It authenticates no compiler origin and grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority. Finalizer and host-adapter work in #97 and #99 can proceed in parallel; #100 remains downstream.",
       },
     ],
   },

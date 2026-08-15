@@ -1,7 +1,8 @@
-// REVIEWED SOURCE EXCERPT at fe2o3 7337a2b87dffa0845d092c13399b012f884de90b.
+// REVIEWED SOURCE EXCERPT at fe2o3 89ebe69bb3daf8262a485463c5fdf04cf095346f.
 // #[kernel] is the canonical user form. The authenticated compiler path reaches
 // canonical Kernel IR, an exact compiler-owned descriptor, and a single-use inert
-// Worker V2 handoff. Finalization, HSACO publication, loading, and launch remain open.
+// Worker V2 handoff plus a sealed authority-free Slice 1 import. Finalization,
+// HSACO publication, loading, and launch remain open.
 #[kernel(
     typed,
     namespace = "c09558e16157fec495e78bc32a23b082213fa4a6ddabe48445a54cb3de591295",

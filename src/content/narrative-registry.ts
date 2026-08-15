@@ -471,6 +471,10 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
+        "text": "Commit 89ebe69bb3daf8262a485463c5fdf04cf095346f closes #96 with stable, disjoint Slice 1, K-phase, Grid, and Edges registry slots. Only exact M16 N16 K16 Slice 1 is enabled; the other slots fail closed as reserved. Admission reconstructs canonical Kernel IR V5, independently re-lowers through upstream dialect-amdgcn, and requires exact LLVM, descriptor, source-authority, resource-transcript, target, COV6, ABI 48/304/8, grid 1, WG64, 1,024-byte LDS, typed effect, and role-separated length bindings. The retained import is non-Clone and grants no compiler-origin, finalizer, Worker V2, linker, publication, load, launch, hardware, numerical, or Verus proof authority."
+      },
+      {
+        "type": "paragraph",
         "text": "Slice 3 begins at 5bc57587b458da6a77a0f1063e4697f846cc0946 with a fixed-K16 grid/stride source model. Verus reports 101 verified and 0 errors for padded lda/ldb/ldc bounds, injective workgroup-to-tile mapping, bounded lane stores, and global C ownership. Commit f38fe82ca574eff0eb273d5a793f04b0df3e00e1 separately lowers the exact M=64, N=48, K=16, lda=33, ldb=79, ldc=96, 3x4-grid graph through upstream LLVM 22. Its mi300x final-object inspection observes gfx942:xnack- COV6, WG64, workgroup X/Y, 1,024-byte LDS, one barrier, one BF16 MFMA, and no spills, scratch, calls, atomics, or COMGR. This remains IR-derived machine-shape evidence, not protected execution, hardware numerics, or compiler refinement."
       },
       {
@@ -481,7 +485,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Bounded increments are not a functional kernel",
-        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), and the attributed Slice 1 source-to-exact-descriptor/inert-Worker-V2 boundary (#85) are complete. The shared finalizer, host adapter, and protected runtime substrate remain open in #94 and #96 through #100. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #1. The Slice 1 and Slice 4 machine records are still IR-derived and non-protected; canaries and machine inspection do not prove general illegal-access or race freedom. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed."
+        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/inert-Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Finalizer #97 and host-adapter #99 are independently claimable; protected runtime integration #100 remains downstream under #94. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. The Slice 1 and Slice 4 machine records are still IR-derived and non-protected; canaries and machine inspection do not prove general illegal-access or race freedom. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed."
       },
       {
         "type": "links",
@@ -496,7 +500,11 @@ const narrativeRegistry = deepFreeze({
           { "label": "#92 K-phase, grid, and edge proof certificates", "href": "https://github.com/harsh-nod/fe2o3/issues/92" },
           { "label": "#93 Canonical matrix Kernel IR V5 (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/93" },
           { "label": "#94 Shared protected execution substrate", "href": "https://github.com/harsh-nod/fe2o3/issues/94" },
-          { "label": "fe2o3-kernels #1 Evidence-site synchronization", "href": "https://github.com/harsh-nod/fe2o3-kernels/issues/1" }
+          { "label": "#96 Sealed exact-profile registry (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/96" },
+          { "label": "#97 LLVM finalizer", "href": "https://github.com/harsh-nod/fe2o3/issues/97" },
+          { "label": "#99 Host adapter", "href": "https://github.com/harsh-nod/fe2o3/issues/99" },
+          { "label": "#100 Protected runtime integration", "href": "https://github.com/harsh-nod/fe2o3/issues/100" },
+          { "label": "fe2o3-kernels #2 Sealed-registry synchronization", "href": "https://github.com/harsh-nod/fe2o3-kernels/issues/2" }
         ]
       }
     ]

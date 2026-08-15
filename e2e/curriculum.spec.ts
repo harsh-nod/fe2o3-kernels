@@ -93,7 +93,7 @@ test("tiled GEMM shows canonical attributed source without production promotion"
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/7337a2b87dffa0845d092c13399b012f884de90b/examples/tiled_gemm_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/89ebe69bb3daf8262a485463c5fdf04cf095346f/examples/tiled_gemm_v1/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -102,7 +102,7 @@ test("tiled GEMM shows canonical attributed source without production promotion"
   await expect(page.getByRole("tabpanel")).toContainText("#85");
   await expect(page.getByRole("tabpanel")).toContainText("#90");
   await expect(page.getByRole("tabpanel")).toContainText("#94");
-  for (const issue of [85, 86, 87, 88, 89, 90]) {
+  for (const issue of [85, 86, 87, 88, 89, 90, 96, 97, 99, 100]) {
     await expect(
       page.getByRole("link", { name: new RegExp(`#${String(issue)} `, "u") }),
     ).toHaveAttribute(
@@ -111,10 +111,10 @@ test("tiled GEMM shows canonical attributed source without production promotion"
     );
   }
   await expect(
-    page.getByRole("link", { name: /fe2o3-kernels #1/ }),
+    page.getByRole("link", { name: /fe2o3-kernels #2/ }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3-kernels/issues/1",
+    "https://github.com/harsh-nod/fe2o3-kernels/issues/2",
   );
 });
 

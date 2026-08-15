@@ -102,6 +102,7 @@ describe("curriculum integrity", () => {
             "machine-inspection-only",
             "wire-format-only",
             "inert-worker-handoff-only",
+            "sealed-profile-registry-only",
           ]).toContain(reference.authority);
         }
         for (const path of reference?.sourcePaths ?? []) {
@@ -117,7 +118,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-      sourceCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
+      sourceCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
       explanatory: true,
     });
     expect(kernel?.notice).toContain("exact compiler-owned descriptor");
@@ -379,6 +380,14 @@ describe("curriculum integrity", () => {
         tree: "6dd4d922e22cf488157cc0fece17edf64df98b7c",
         authority: "inert-worker-handoff-only",
       },
+      {
+        label: "Sealed exact Slice 1 compiler import",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-sealed-profile-registry-v1",
+        commit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
+        tree: "c2604487ec76f337d7ada2c0319fffd02b3ce8c9",
+        authority: "sealed-profile-registry-only",
+      },
     ]);
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
@@ -387,6 +396,20 @@ describe("curriculum integrity", () => {
 
   it("requires whole Cargo test suites and referenced integration targets", () => {
     expect(validateStagedEvidenceCatalog()).toEqual([]);
+    const sealedRegistry = stagedEvidenceRecord(
+      "tiled-lds-sealed-profile-registry-v1",
+    );
+    expect(sealedRegistry.commands).toEqual([
+      "cargo test --locked -p fe2o3-hsaco-finalize --all-targets",
+      "cargo test --locked -p fe2o3-hsaco-finalize --test lds_gemm_profile_registry",
+      "cargo clippy --locked -p fe2o3-hsaco-finalize --all-targets --no-deps -- -D warnings",
+    ]);
+    expect(stagedEvidenceDetail([sealedRegistry.id])).toContain(
+      "Only the exact M16 N16 K16 Slice 1 manifest is enabled",
+    );
+    expect(stagedEvidenceDetail([sealedRegistry.id])).toContain(
+      "grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority",
+    );
     expect(
       stagedEvidenceRecord("tiled-structural-admission-v1").commands,
     ).toEqual([
@@ -854,11 +877,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
-      eventualPublicTree: "6dd4d922e22cf488157cc0fece17edf64df98b7c",
+      eventualPublicCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
+      eventualPublicTree: "c2604487ec76f337d7ada2c0319fffd02b3ce8c9",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
+        requiredCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1257,6 +1280,10 @@ describe("implementation progress integrity", () => {
         "tiled-gemm-lds-inert-worker-handoff",
         tiledGemmV1Commits.ldsInertWorkerHandoff,
       ],
+      [
+        "tiled-gemm-lds-sealed-profile-registry",
+        tiledGemmV1Commits.ldsSealedProfileRegistry,
+      ],
     ];
     for (const [id, commit] of expected) {
       expect(
@@ -1458,7 +1485,7 @@ describe("implementation progress integrity", () => {
     expect(renderedStaged).toContain("inputs remained bitwise unchanged");
     expect(renderedStaged).not.toMatch(/immutable\s+inputs/);
     expect(mapping).toContain("#[kernel] is the canonical user form");
-    expect(mapping).toContain("sourceCommit\":\"7337a2b87dffa0845d092c13399b012f884de90b");
+    expect(mapping).toContain("sourceCommit\":\"89ebe69bb3daf8262a485463c5fdf04cf095346f");
     expect(mapping).toContain("not a functional kernel");
     expect(mapping).toContain("authenticates the exact attributed source");
     expect(mapping).toContain("stops before descriptor construction and Worker V2");
@@ -1487,22 +1514,26 @@ describe("implementation progress integrity", () => {
       "#92",
       "#93",
       "#94",
+      "#96",
+      "#97",
+      "#99",
+      "#100",
     ]) {
       expect(mapping).toContain(issue);
     }
-    expect(mapping).toContain("fe2o3-kernels #1");
-    expect(mapping).toContain("#85, #86, and #93 are complete");
+    expect(mapping).toContain("fe2o3-kernels #2");
+    expect(mapping).toContain("the sealed authority-free exact-profile registry (#96) are complete");
     expect(mapping).toContain("96 verified and 0 errors");
     expect(mapping).toContain("76 debug tests, 76 release tests");
     expect(mapping).toContain("Production certificate consumption is tracked in #91");
     expect(mapping).toContain("No production source execution is claimed");
-    for (const issue of [85, 86, 87, 88, 89, 90, 91, 92, 93, 94]) {
+    for (const issue of [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 96, 97, 99, 100]) {
       expect(mapping).toContain(
         `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,
       );
     }
     expect(mapping).toContain(
-      "https://github.com/harsh-nod/fe2o3-kernels/issues/1",
+      "https://github.com/harsh-nod/fe2o3-kernels/issues/2",
     );
     expect(mapping).not.toContain("#[kernel] WG64 contract integration remain open");
 

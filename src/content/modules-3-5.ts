@@ -200,7 +200,7 @@ const gemmMapping: Lesson = {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use inert Worker V2 handoff, proves a bounded identity-bound Slice 1 source/model relation, has independent Slice 2 proof and K32 backend records, and lowers and inspects exact Slice 3 and tail-safe Slice 4 graphs through upstream LLVM/COV6. Finalization, protected execution, compiler refinement, certificate consumption, and generalization remain open, so this is not a functional or production kernel.",
+        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use inert Worker V2 handoff, then admits that handoff into a sealed authority-free exact-profile registry. It proves a bounded identity-bound Slice 1 source/model relation, has independent Slice 2 proof and K32 backend records, and lowers and inspects exact Slice 3 and tail-safe Slice 4 graphs through upstream LLVM/COV6. Finalization, protected execution, compiler refinement, certificate consumption, and generalization remain open, so this is not a functional or production kernel.",
     },
     {
       kind: "compiler-hsaco-observed",
@@ -234,14 +234,14 @@ const gemmMapping: Lesson = {
       language: "rust",
       code: gemmDesign,
       sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-      sourceCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
+      sourceCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
       explanatory: true,
       notice:
-        "Reviewed attributed source excerpt. The exact fe2o3 source reaches canonical Kernel IR, an exact compiler-owned descriptor, and a single-use inert Worker V2 handoff. No final HSACO, protected load, launch, hardware execution, or production proof-certificate authority is claimed.",
+        "Reviewed attributed source excerpt. The exact fe2o3 source reaches canonical Kernel IR, an exact compiler-owned descriptor, a single-use inert Worker V2 handoff, and a sealed authority-free Slice 1 import. No final HSACO, protected load, launch, hardware execution, or production proof-certificate authority is claimed.",
     },
     {
       language: "text",
-      code: `Slice 1:\n  attributed #[kernel] source selects exact canonical V5 Kernel IR\n  exact compiler descriptor and single-use inert Worker V2 handoff\n  96 verified, 0 errors for bounded identity-bound source/model correspondence\n  no finalization, load, launch, hardware, or refinement authority\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n\nSlice 3, M=64, N=48, K=16, lda=33, ldb=79, ldc=96:\n  101 verified, 0 errors for the source model\n  exact IR lowers through upstream LLVM to inspected gfx942 COV6\n  protected execution remains open\n\nSlice 4, M=17, N=19, K=18, alpha=2, beta=-1:\n  tail-safe two-phase exact Kernel IR with predicated C access\n  exact IR lowers to inspected upstream LLVM/COV6\n  protected execution remains open`,
+      code: `Slice 1:\n  attributed #[kernel] source selects exact canonical V5 Kernel IR\n  exact compiler descriptor and single-use inert Worker V2 handoff\n  sealed authority-free import independently re-lowers and checks exact LLVM\n  96 verified, 0 errors for bounded identity-bound source/model correspondence\n  no finalization, load, launch, hardware, or refinement authority\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n  exact registry slot remains reserved\n\nSlice 3, M=64, N=48, K=16, lda=33, ldb=79, ldc=96:\n  101 verified, 0 errors for the source model\n  exact IR lowers through upstream LLVM to inspected gfx942 COV6\n  exact registry slot and protected execution remain open\n\nSlice 4, M=17, N=19, K=18, alpha=2, beta=-1:\n  tail-safe two-phase exact Kernel IR with predicated C access\n  exact IR lowers to inspected upstream LLVM/COV6\n  exact registry slot and protected execution remain open`,
       explanatory: true,
     },
     { language: "bash", code: noHost, explanatory: true },
@@ -249,7 +249,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "Slice 1 source-to-IR, canonical matrix wire V5, exact compiler descriptor, inert Worker V2 handoff, and bounded identity-bound source/model correspondence; Slice 2 proof and K32 backend evidence; and exact Slice 3 and Slice 4 LLVM/COV6 inspection exist as bounded increments. #85, #86, and #93 are complete. Shared protected execution (#94 and #96-#100), certificate consumption and proof extension (#91/#92), protected Slice 3/4 execution (#88/#89), and generalized GEMM (#90) remain open; site synchronization is tracked in fe2o3-kernels #1. No rustc/LLVM/machine refinement or production source execution is claimed.",
+        "Slice 1 source-to-IR, canonical matrix wire V5, exact compiler descriptor, inert Worker V2 handoff, sealed exact-profile import, and bounded identity-bound source/model correspondence; Slice 2 proof and K32 backend evidence; and exact Slice 3 and Slice 4 LLVM/COV6 inspection exist as bounded increments. #85, #86, #93, and #96 are complete. Under #94, finalization and host adaptation (#97/#99) are the parallel next steps before #100; certificate consumption and proof extension (#91/#92), protected Slice 3/4 execution (#88/#89), and generalized GEMM (#90) remain open. No rustc/LLVM/machine refinement or production source execution is claimed.",
       ),
     },
   ),

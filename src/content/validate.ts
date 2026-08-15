@@ -29,6 +29,7 @@ const stagedAuthorities = new Set([
   "machine-inspection-only",
   "wire-format-only",
   "inert-worker-handoff-only",
+  "sealed-profile-registry-only",
 ]);
 const narrativeSectionKeys = ["kind", "narrativeId"];
 const stagedSectionKeys = ["evidenceIds", "kind"];

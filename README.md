@@ -37,14 +37,15 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The publication-gated repository snapshot is pinned to fe2o3 commit
-`7337a2b87dffa0845d092c13399b012f884de90b`, tree
-`6dd4d922e22cf488157cc0fece17edf64df98b7c`. It includes exact Slice 1
+`89ebe69bb3daf8262a485463c5fdf04cf095346f`, tree
+`c2604487ec76f337d7ada2c0319fffd02b3ce8c9`. It includes exact Slice 1
 attributed source-to-IR correspondence, canonical matrix Kernel IR V5 bytes,
-an exact compiler-owned descriptor and single-use inert Worker V2 handoff,
-Slice 3 and Slice 4 upstream LLVM/COV6 inspection, and bounded identity-bound
-Slice 1 source/model correspondence. These records remain separate from final
-HSACO publication, protected loading, launch, hardware execution, and production
-proof-certificate authority. **The publication workflow must
+an exact compiler-owned descriptor and single-use inert Worker V2 handoff, an
+authority-free sealed exact-profile import, Slice 3 and Slice 4 upstream
+LLVM/COV6 inspection, and bounded identity-bound Slice 1 source/model
+correspondence. These records remain separate from final HSACO publication,
+protected loading, launch, hardware execution, and production proof-certificate
+authority. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
 audited public baseline remains
@@ -123,6 +124,16 @@ LLVM body, symbol manifest, target, COV6, and envelope. It authenticates no
 compiler origin and grants no worker, linker, final-HSACO, loading, launch,
 hardware-execution, or production proof-certificate authority.
 
+Commit `89ebe69bb` adds a stable closed registry with distinct Slice 1,
+K-phase, Grid, and Edges slots. Only exact M16 N16 K16 Slice 1 admission is
+enabled; the other three slots fail closed as reserved. Slice 1 reconstructs
+canonical Kernel IR V5, independently re-lowers it with upstream
+`dialect-amdgcn`, and requires exact LLVM, descriptor, source-authority,
+resource-transcript, target, COV6, ABI, grid, WG64, 1,024-byte LDS, typed effect,
+and role-separated length bindings. The retained compiler import is non-Clone
+and authority-free: it grants no compiler-origin, finalizer, Worker V2, linker,
+publication, load, launch, hardware, numerical, or Verus proof authority.
+
 Commit `5a45239ae` adds a bounded Verus relation for the exact Slice 1 source
 model. It reports 96 verified and 0 errors for exact lengths, same-epoch LDS
 initialization, publish-barrier ordering, unique C ownership, and correspondence
@@ -170,8 +181,12 @@ descriptor and Worker V2 boundary is complete in closed
 [`#85`](https://github.com/harsh-nod/fe2o3/issues/85), and canonical matrix wire
 V5 is complete in closed [`#93`](https://github.com/harsh-nod/fe2o3/issues/93).
 The shared finalizer, host adapter, and protected runtime substrate remain open
-in [`#94`](https://github.com/harsh-nod/fe2o3/issues/94) and its independently
-claimable [`#96`-`#100`](https://github.com/harsh-nod/fe2o3/issues/96) packages.
+in [`#94`](https://github.com/harsh-nod/fe2o3/issues/94). The sealed exact-profile
+registry in [`#96`](https://github.com/harsh-nod/fe2o3/issues/96) is complete;
+the finalizer in [`#97`](https://github.com/harsh-nod/fe2o3/issues/97) and host
+adapter in [`#99`](https://github.com/harsh-nod/fe2o3/issues/99) are now
+independently claimable, with protected runtime integration in
+[`#100`](https://github.com/harsh-nod/fe2o3/issues/100) downstream.
 Exact Slice 4 lowering is complete and
 [#86](https://github.com/harsh-nod/fe2o3/issues/86) is closed. Protected Slice
 3 and Slice 4 execution remain open in
@@ -185,7 +200,7 @@ K-phase, grid, and edge profiles in [#92](https://github.com/harsh-nod/fe2o3/iss
 and MIR-to-Kernel-IR semantic refinement in
 [#106](https://github.com/harsh-nod/fe2o3/issues/106). This synchronization pass
 is tracked in
-[`fe2o3-kernels#1`](https://github.com/harsh-nod/fe2o3-kernels/issues/1).
+[`fe2o3-kernels#2`](https://github.com/harsh-nod/fe2o3-kernels/issues/2).
 Compiler and Verus-to-machine refinement and an IEEE BF16/F32 numerical
 contract also remain open. No production LDS GEMM source execution is claimed.
 
