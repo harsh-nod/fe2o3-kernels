@@ -127,18 +127,20 @@ export const progressSnapshot = {
     hostAdapterCommit: completedIssue94IncrementRecord(
       "tiled-lds-host-adapter-v1",
     ).commit,
+    protectedLifecycleCommit: completedIssue94IncrementRecord(
+      "tiled-lds-protected-lifecycle-v1",
+    ).commit,
   },
   protectedLifecycle: {
     issue: 100,
-    state: "claimed-in-progress",
+    state: "implemented-fake-adapter-validated",
     stages: [
-      "load",
-      "resolve",
-      "resource",
-      "dispatch",
-      "completion",
-      "unload",
+      "Joined",
+      "Loaded",
+      "Completed",
+      "Unloaded",
     ],
+    realProtectedHardwareMeasurement: false,
   },
 } as const;
 
@@ -196,6 +198,9 @@ export const tiledGemmV1Commits = {
   ).commit,
   ldsHostAdapter: completedIssue94IncrementRecord(
     "tiled-lds-host-adapter-v1",
+  ).commit,
+  ldsProtectedLifecycle: completedIssue94IncrementRecord(
+    "tiled-lds-protected-lifecycle-v1",
   ).commit,
 } as const;
 
@@ -822,7 +827,7 @@ export const kernelProgress: KernelProgress[] = [
       "source and Verus-to-machine refinement",
       "IEEE BF16/F32 numerical contract (fe2o3 #109)",
     ],
-    next: "Complete #100 by joining the finalized Slice 1 receipt and borrowed host adapter through protected load, resolve, resource admission, dispatch, completion, and unload; then consume identity-bound proof certificates, carry Slice 3 and Slice 4 through protected MI300X execution, and generalize the exact profiles.",
+    next: "Measure the implemented Joined -> Loaded -> Completed -> Unloaded Slice 1 path on real protected MI300X hardware and bind its exact runtime observations without borrowing authority from the fake-adapter suite; then consume identity-bound proof certificates, carry Slice 3 and Slice 4 through protected execution, and generalize the exact profiles.",
   },
   {
     id: "softmax",

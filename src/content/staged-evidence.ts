@@ -29,12 +29,16 @@ export interface StagedEvidenceRecord {
 
 export type CompletedIssue94IncrementId =
   | "tiled-lds-direct-finalization-v1"
-  | "tiled-lds-host-adapter-v1";
+  | "tiled-lds-host-adapter-v1"
+  | "tiled-lds-protected-lifecycle-v1";
 
 export interface CompletedIssue94IncrementRecord {
   id: CompletedIssue94IncrementId;
   stageLabel: string;
-  authority: "finalization-mechanics-only" | "host-preparation-only";
+  authority:
+    | "finalization-mechanics-only"
+    | "host-preparation-only"
+    | "protected-lifecycle-mechanics-only";
   commit: string;
   tree: string;
   commands: readonly string[];
@@ -809,7 +813,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "inert-handoff-boundary",
-        text: "This is an inert compiler-module handoff. It authenticates no compiler origin and grants no worker, linker, final-HSACO, load, launch, hardware-execution, or production proof-certificate authority. The shared protected runtime substrate remains open in #94 and #96 through #100.",
+        text: "This is an inert compiler-module handoff. It authenticates no compiler origin and grants no worker, linker, final-HSACO, load, launch, hardware-execution, or production proof-certificate authority. At this checkpoint the shared protected runtime substrate remained open; later typed records separately complete #96 through #100 mechanics without strengthening this handoff record.",
       },
     ],
   },
@@ -847,7 +851,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "sealed-registry-boundary",
-        text: "The retained import is non-Clone and exposes no into_inner escape. It authenticates no compiler origin and grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority. The separately typed #97 and #99 increments below complete finalization mechanics and inert host preparation without retroactively strengthening this registry record; #100 protected lifecycle integration is claimed and in progress.",
+        text: "The retained import is non-Clone and exposes no into_inner escape. It authenticates no compiler origin and grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority. The separately typed #97, #99, and #100 increments below complete finalization, host-preparation, and one-shot lifecycle mechanics without retroactively strengthening this registry record.",
       },
     ],
   },
@@ -856,6 +860,7 @@ const stagedEvidenceRecords = deepFreeze({
 export const completedIssue94IncrementOrder = deepFreeze([
   "tiled-lds-direct-finalization-v1",
   "tiled-lds-host-adapter-v1",
+  "tiled-lds-protected-lifecycle-v1",
 ] satisfies CompletedIssue94IncrementId[]);
 
 const completedIssue94IncrementRecords = deepFreeze({
@@ -925,7 +930,51 @@ const completedIssue94IncrementRecords = deepFreeze({
       },
       {
         id: "host-authority-boundary",
-        text: "This is inert host preparation only. It exposes no raw kernarg, load, resolve, resource, dispatch, completion, unload, or launch operation and grants no compiler-origin, Verus, refinement, protected-execution, or source-to-HSACO authority. Those lifecycle joins remain in claimed, in-progress #100.",
+        text: "This is inert host preparation only. It exposes no raw kernarg, load, resolve, resource, dispatch, completion, unload, or launch operation and grants no compiler-origin, Verus, refinement, protected-execution, or source-to-HSACO authority. The later #100 record consumes this value into a fixed lifecycle without retroactively adding authority to the adapter itself.",
+      },
+    ],
+  },
+  "tiled-lds-protected-lifecycle-v1": {
+    id: "tiled-lds-protected-lifecycle-v1",
+    stageLabel: "66f62cac #100 one-shot protected lifecycle mechanics",
+    authority: "protected-lifecycle-mechanics-only",
+    commit: "66f62cac8e21b4e3b141beb7140f8753213fbc25",
+    tree: "724f72dd7f1212021d81f3c2ac692b672c00d886",
+    commands: [
+      "cargo test --locked -p fe2o3-host --test generated_lds_gemm_lifecycle",
+      "cargo test --locked -p fe2o3-hsa-runtime --lib",
+      "cargo clippy --locked -p fe2o3-host --all-targets --no-deps -- -D warnings",
+      "cargo clippy --locked -p fe2o3-hsa-runtime --all-targets --no-deps -- -D warnings",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-host/src/generated_lds_gemm_lifecycle.rs",
+      "crates/fe2o3-host/src/lib.rs",
+      "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
+      "crates/fe2o3-hsa-runtime/src/dispatch.rs",
+      "crates/fe2o3-hsa-runtime/src/lds_gemm_resource_observation.rs",
+      "crates/fe2o3-hsa-runtime/src/lib.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "linear-state-machine",
+        text: "Commits 7f4256a45e6c296f0fe593e9a5c416a8f30121d4, d8eef1333e6368436599e0e5e54feb19a0404477, and 66f62cac8e21b4e3b141beb7140f8753213fbc25 complete #100 resource observation, one-shot lifecycle, and production-adapter integration. The private non-Clone states consume ownership in the exact order Joined -> Loaded -> Completed -> Unloaded; no state exposes finalized bytes, native handles, or a generic/raw launch operation.",
+      },
+      {
+        id: "exact-join-and-runtime-gates",
+        text: "Joined reconciles the #97 finalizer and #99 host import, profile, contract, finalized-output, descriptor, buffer, and length identities before a runtime adapter is supplied. Loaded then requires the same retained context identity, gfx942:xnack- physical device and agent, HIP ordinal, runtime instance, exact executable and tiled_gemm_lds_v1 kernel identities, 1,024-byte static LDS, zero private and dynamic segments, grid 1, WG64/wave64, and the exact 48-byte explicit plus 256-byte implicit, 304-byte complete COV6 ABI with descriptor alignment 8 and HSA staging alignment 16.",
+      },
+      {
+        id: "completion-and-ownership",
+        text: "Loaded retains the finalized artifact, executable, selected kernel, and borrowed A/B/C views through exact hidden-kernarg initialization and one synchronous dispatch. Explicit bytes must remain unchanged. Only a validated completed observation releases the joined artifact and buffer leases into Completed, which retains only terminal executable-unload authority; Unloaded is an inert identity receipt.",
+      },
+      {
+        id: "terminal-policy",
+        text: "Every recoverable failure after successful load and before packet publication, plus failures after proven quiescence, performs one checked unload. Dropping Loaded or Completed also unloads once. Adapter unwind, unload error, or unload-observation ambiguity aborts; a post-submit queue error or completion deadline is process-terminal and retains submitted resources because GPU quiescence is unknown rather than returning or attempting an ordinary unload.",
+      },
+      {
+        id: "lifecycle-evidence-boundary",
+        text: "The focused #100 state-machine and substitution coverage uses a FakeAdapter. The production HSA adapter implements exact context and resource observation, but this record contains no real protected hardware measurement, numerical result, compiler-origin authentication, Verus proof consumption, compiler or machine refinement, or source-to-HSACO authority. The earlier observational MI300X run remains separate.",
       },
     ],
   },

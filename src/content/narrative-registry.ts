@@ -77,7 +77,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "#[kernel] is the canonical fe2o3 user form: a procedural attribute marks an ordinary Rust function for the kernel frontend and generated typed API. macro_rules! is optional declarative compile-time token expansion; vecadd uses it to share a small body with a Verus model, but it adds no runtime behavior and proves nothing by itself. Production kernel algorithms should remain readable in the attributed function and its reachable MIR. LDS Slice 1 follows that shape without a macro_rules! body; its exact source now reaches canonical V5 Kernel IR, an exact compiler descriptor, an inert final HSACO receipt through direct LLVM/LLD APIs, and exact generated host preparation, then stops before protected load, resolve, resource, dispatch, completion, unload, or launch authority."
+        "text": "#[kernel] is the canonical fe2o3 user form: a procedural attribute marks an ordinary Rust function for the kernel frontend and generated typed API. macro_rules! is optional declarative compile-time token expansion; vecadd uses it to share a small body with a Verus model, but it adds no runtime behavior and proves nothing by itself. Production kernel algorithms should remain readable in the attributed function and its reachable MIR. LDS Slice 1 follows that shape without a macro_rules! body; its exact source now reaches canonical V5 Kernel IR, an exact compiler descriptor, an inert final HSACO receipt through direct LLVM/LLD APIs, exact generated host preparation, and a private one-shot Joined -> Loaded -> Completed -> Unloaded implementation with exact context, resource, ABI, completion, and terminal-unload checks. Its focused integration tests use a fake adapter and record no real protected hardware measurement or protected-execution authority."
       }
     ]
   },
@@ -114,7 +114,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The progress dashboard tracks a separately gated eventual public target, while lesson claim badges remain pinned to the older audited FE2O3_PIN until a separate baseline audit. This site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that target. The typed staged records below close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, and protected execution into one authority chain."
+        "text": "The checked-in publication gate still names the older audited checkpoint, while lesson claim badges remain pinned to FE2O3_PIN until a separate baseline audit. The final fe2o3 publication SHA after #100 is pending, so this site revision must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to the final target after the gate is updated. The typed staged records below close useful interfaces, but they do not combine source proof, compiler refinement, final machine semantics, real protected hardware measurement, and protected-execution authority into one chain."
       }
     ]
   },
@@ -479,7 +479,15 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "Commit 278a41afb98684e1c1e60b4fb1d474c1fd5f44d8 completes #99 with the generated exact BF16/F32 Slice 1 host adapter. A and B are 256-element u16 BF16-bit shared read views, C is a 256-element f32 unique read/write view, A/B overlap is allowed, and C overlap is rejected. It prepares the exact 48-byte explicit and 304-byte complete COV6 ABI, copies the sealed import/profile/contract/descriptor/length identities, releases the compiler-import borrow for finalization consumption, and keeps all buffers borrowed. It exposes no raw launch. Both public fe2o3 main branches contain the #97 and #99 commits; protected load/resolve/resource/dispatch/completion/unload integration is claimed and in progress in #100, without a protected-execution or source-to-HSACO/Verus authority claim."
+        "text": "Commit 278a41afb98684e1c1e60b4fb1d474c1fd5f44d8 completes #99 with the generated exact BF16/F32 Slice 1 host adapter. A and B are 256-element u16 BF16-bit shared read views, C is a 256-element f32 unique read/write view, A/B overlap is allowed, and C overlap is rejected. It prepares the exact 48-byte explicit and 304-byte complete COV6 ABI, copies the sealed import/profile/contract/descriptor/length identities, releases the compiler-import borrow for finalization consumption, and keeps all buffers borrowed. It exposes no raw launch. Both public fe2o3 main branches contain the #97 and #99 commits; their heads may continue advancing while the final publication SHA is pending."
+      },
+      {
+        "type": "paragraph",
+        "text": "Commits 7f4256a45e6c296f0fe593e9a5c416a8f30121d4, d8eef1333e6368436599e0e5e54feb19a0404477, and 66f62cac8e21b4e3b141beb7140f8753213fbc25 complete #100 resource observation, one-shot lifecycle, and production-adapter integration. Private non-Clone states consume ownership as Joined -> Loaded -> Completed -> Unloaded. Join reconciles the exact #97 artifact and #99 import, profile, contract, descriptor, buffer, and length identities before supplying runtime authority. Load requires the same retained context, physical device and agent, HIP ordinal, runtime instance, gfx942:xnack- target, executable, tiled_gemm_lds_v1 symbol, 1,024-byte static LDS, zero private and dynamic segments, grid 1, WG64/wave64, and the 48-byte explicit plus 256-byte implicit, 304-byte complete COV6 ABI. The artifact and borrowed A/B/C views remain owned through synchronous dispatch and validated completion; Completed retains only one terminal unload and Unloaded is inert."
+      },
+      {
+        "type": "paragraph",
+        "text": "The #100 terminal policy checks one unload on recoverable post-load failures before packet publication, failures after proven quiescence, and Loaded or Completed drop. Adapter unwind, unload error, or ambiguous unload observation aborts. A post-submit queue error or completion deadline is process-terminal and retains submitted resources because GPU quiescence is unknown. Focused lifecycle and substitution tests use a FakeAdapter. The production HSA adapter implements exact context and resource observation, but this record contains no real protected hardware measurement, numerical result, protected-execution authority, compiler-origin authentication, Verus proof consumption, refinement, or production source-to-HSACO authority. The separate observational MI300X run remains non-protected."
       },
       {
         "type": "paragraph",
@@ -493,7 +501,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Bounded increments are not a functional kernel",
-        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Exact direct LLVM/LLD API finalization (#97) and exact generated host preparation (#99) are also complete. Protected load/resolve/resource/dispatch/completion/unload integration #100 is claimed and in progress under #94. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. The separate MI300X observation remains IR-derived and non-protected; finalization, host borrowing, canaries, and machine inspection do not prove protected execution, compiler origin, general illegal-access safety, or race freedom. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed. No production source-to-HSACO or Verus authority is claimed."
+        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Exact direct LLVM/LLD API finalization (#97), exact generated host preparation (#99), and the one-shot Joined -> Loaded -> Completed -> Unloaded implementation (#100) are also complete. The #100 focused integration evidence uses a fake adapter and does not record real protected hardware measurement. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. The separate MI300X observation remains IR-derived and non-protected; lifecycle mechanics, finalization, host borrowing, canaries, and machine inspection do not prove protected execution, compiler origin, general illegal-access safety, or race freedom. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed. No production source-to-HSACO or Verus authority is claimed."
       },
       {
         "type": "links",
@@ -511,7 +519,7 @@ const narrativeRegistry = deepFreeze({
           { "label": "#96 Sealed exact-profile registry (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/96" },
           { "label": "#97 Exact direct LLVM/LLD finalizer (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/97" },
           { "label": "#99 Exact generated host adapter (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/99" },
-          { "label": "#100 Protected lifecycle integration (in progress)", "href": "https://github.com/harsh-nod/fe2o3/issues/100" },
+          { "label": "#100 Protected lifecycle integration (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/100" },
           { "label": "fe2o3-kernels #2 Sealed-registry synchronization", "href": "https://github.com/harsh-nod/fe2o3-kernels/issues/2" }
         ]
       }
@@ -643,7 +651,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "The model ledger is stronger but still unjoined",
-        "text": "The bounded Slice 1 and Slice 2 models now cover bounds, current-epoch initialization, barrier participation, LDS ownership, disjoint stores, accumulator preservation, and exact-real products. Those results remain separate from the attributed source, inert final-HSACO, generated host-preparation, and runtime records. Completing #97 and #99 does not join those layers. Closure still requires multi-phase source-to-machine derivation, #100 protected lifecycle integration and execution, machine-level race evidence, and IEEE numerical refinement."
+        "text": "The bounded Slice 1 and Slice 2 models now cover bounds, current-epoch initialization, barrier participation, LDS ownership, disjoint stores, accumulator preservation, and exact-real products. Those results remain separate from the attributed source, inert final-HSACO, generated host-preparation, and runtime records. Completing #97, #99, and the fake-adapter-validated #100 lifecycle mechanics does not join those layers. Closure still requires multi-phase source-to-machine derivation, real protected MI300X lifecycle measurement, protected-execution authority, machine-level race evidence, and IEEE numerical refinement."
       }
     ]
   },
@@ -1032,11 +1040,13 @@ const narrativeRegistry = deepFreeze({
 const reviewedNarrativeFingerprints = deepFreeze({
   ...narrativeFingerprints,
   "read-the-evidence/differentiator":
-    "f549beec095f60b1edf430b721ddd4a12949f3165bd953e1e0f9195bd11b09c9",
+    "89d57f009f66df5933c46875b651ca23fdc1aec93a39a0925afd2146b5361a37",
+  "read-the-evidence/scalar-gemm-checkpoint":
+    "ccc40cddd505986e8db71af6a52bf41b1ce46eb2b9a0c40626e00af047dbdee5",
   "gemm-tiling/public-layout-proof":
-    "b441dd3851c8688bccd6ee2ca4a76914680c16f7b0a4adc5a6e3fef276ec90d4",
+    "767c1cc71f47fde1736bfce6bb8c44a4b84a0db473fbf285503a251ee12484bd",
   "gemm-proof-plan/evidence":
-    "a6715746af7eeeab905dc91e61f8117afe3d57084cee958bcc355f331d28a783",
+    "4f78c089c37260719be939333370e29dfd92c588970e5b29877ed18302b59d4b",
 } satisfies Record<NarrativeId, string>);
 
 export function narrativeSection(narrativeId: NarrativeId): NarrativeLessonSection {
