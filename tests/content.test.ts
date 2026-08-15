@@ -269,7 +269,14 @@ describe("curriculum integrity", () => {
         !["flash-attention", "moe-routing"].includes(profile.lessonId),
       );
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
-      const gaps = ["flash-attention", "moe-routing"].includes(profile.lessonId)
+      const gaps = profile.lessonId === "flash-attention"
+        ? [
+            "direct LLVM/LLD finalization",
+            "generated host/runtime",
+            "protected gfx942 execution",
+            "source/model-to-machine refinement",
+          ]
+        : profile.lessonId === "moe-routing"
         ? [
             "authenticated MIR-to-Kernel-IR correspondence",
             "finalization",
@@ -277,7 +284,15 @@ describe("curriculum integrity", () => {
             "protected gfx942 execution",
             "source-to-machine refinement",
           ]
-        : [
+        : profile.lessonId === "lds-barriers-atomics"
+          ? [
+              "typed host/runtime dispatch",
+              "protected gfx942 execution",
+              "source/compiler/machine refinement",
+            ]
+          : profile.lessonId === "reductions-scans"
+            ? ["Compiler and Verus-to-machine refinement"]
+          : [
             "compiler collector/lowering",
             "compiler profile and descriptor",
             "finalizer",
@@ -287,7 +302,11 @@ describe("curriculum integrity", () => {
       for (const gap of gaps) {
         expect(result).toContain(gap);
       }
-      expect(result).toContain("No functional hardware result is claimed");
+      if (profile.lessonId === "reductions-scans") {
+        expect(result).toContain("protected four-mask gfx942 observation");
+      } else {
+        expect(result).toContain("No functional hardware result is claimed");
+      }
     }
 
     const proofProfiles = [
@@ -1182,11 +1201,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
-      eventualPublicTree: "7706e67f005200c3988835e1bc86529dccad05ae",
+      eventualPublicCommit: "3d673ffb9a962d7c4b8ae7526bbe881260e19c72",
+      eventualPublicTree: "5e5137265f8fefe49111a2c03ebba6ab7bf43404",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
+        requiredCommit: "3d673ffb9a962d7c4b8ae7526bbe881260e19c72",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",

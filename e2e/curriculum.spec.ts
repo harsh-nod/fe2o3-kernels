@@ -160,7 +160,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   );
 });
 
-test("Wave 2 lessons expose exact source without hardware claims", async ({
+test("Wave 2 lessons expose exact source and bounded latest status", async ({
   page,
 }) => {
   await page.goto("./#/lesson/reductions-scans");
@@ -178,7 +178,10 @@ test("Wave 2 lessons expose exact source without hardware claims", async ({
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "No functional hardware result is claimed",
+    "protected four-mask gfx942 observation",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "historical source-model record itself grants no hardware authority",
   );
 
   await page.goto("./#/lesson/lds-barriers-atomics");
@@ -198,7 +201,7 @@ test("Wave 2 lessons expose exact source without hardware claims", async ({
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "compiler collector/lowering",
+    "opaque direct upstream LLVM/LLD finalizer receipts",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "protected gfx942 execution",

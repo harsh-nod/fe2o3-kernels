@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `5c25611adbd99e807957dfc9a0a6a63e83a9e099`, tree
-`7706e67f005200c3988835e1bc86529dccad05ae`. Both
+commit `3d673ffb9a962d7c4b8ae7526bbe881260e19c72`, tree
+`5e5137265f8fefe49111a2c03ebba6ab7bf43404`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -51,11 +51,14 @@ preparation, the one-shot protected lifecycle, and one bounded protected mi300x
 measurement. It also retains the separate Slice 3 and Slice 4 upstream
 LLVM/COV6 inspections and bounded Slice 1 source/model correspondence. The
 newer snapshot also adds source/oracle/formal Phase A packages for masked
-Wave64 collectives and workgroup synchronization. The latter now uses a typed
+Wave64 collectives and workgroup synchronization. The latter uses a typed
 `DeviceGlobalMutPtr` kernel argument, an exclusive generated `GlobalMut` host
-capability, and an exact linear `DynamicLds` capability. These source-level
-types do not grant compiler collector/lowering, profile/descriptor, finalizer,
-generated host/runtime launch, or protected gfx942 execution authority. The
+capability, and an exact linear `DynamicLds` capability. Exact compiler profiles
+and opaque upstream LLVM target-machine plus in-process LLD finalization now
+exist for its fixed WG64 LDS-reduction and system-scope relaxed-atomic forms.
+Those mechanics do not grant compiler-origin, source/compiler/machine
+refinement, generated host/runtime launch, or protected gfx942 execution
+authority. The
 lesson snapshots for those source-only milestones remain byte-pinned to commit
 `d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8`, tree
 `cdec8448a300aa71d17565ca50fd4d893932f602`, rather than silently following the
@@ -75,7 +78,12 @@ adapter and a private linear HSA load/dispatch/wait/unload lifecycle. Its
 protected hardware harness is compiled and fail-closed, but no new GPU run is
 claimed because the MI300X environment supplied 0 of the 25 exact
 compiler/worker/OCML pins required by that harness. The
-public snapshot also isolates the 64-connection broker-capacity test from the
+public snapshot also contains exact B=1, H=1, N=8, D=16 FlashAttention compiler
+admission. It binds ordinary attributed source, FnAbi, compiler configuration,
+complete reachable portable MIR, semantic Kernel IR, and V3 provider identity,
+with hostile substitution coverage. It does not yet grant artifact,
+finalization, runtime, GPU, numerical, performance, or source/model-to-machine
+authority. The public snapshot also isolates the 64-connection broker-capacity test from the
 separate concurrent executable-authentication and descriptor-transfer test, so
 hosted CI exercises each bounded property without coupling their deadlines. The
 publication workflow continues to require both public refs to resolve exactly
@@ -391,9 +399,11 @@ At the audited pin:
   Their CPU oracles, mutation suites, and Verus models are public. The atomic
   source carries global address-space identity through `DeviceGlobalMutPtr`,
   generated host admission uses an exclusive `GlobalMut`, and LDS scratch
-  consumes an exact linear `DynamicLds` capability. Compiler collector/lowering,
-  profile/descriptor construction, generated host/runtime launch, and protected
-  gfx942 execution remain open for synchronization. Wave64 has subsequently
+  consumes an exact linear `DynamicLds` capability. Exact compiler profiles and
+  opaque direct upstream LLVM/LLD finalization now cover the fixed LDS-reduction
+  and scoped-atomic forms. Typed host/runtime launch, protected gfx942 execution,
+  and source/compiler/machine refinement remain open for synchronization.
+  Wave64 has subsequently
   reached an exact source-derived compiler profile, direct upstream LLVM/LLD
   finalizer, typed one-shot runtime lifecycle, and a four-mask protected gfx942
   observation. It still lacks compiler and Verus-to-machine refinement joins.
@@ -450,9 +460,12 @@ At the audited pin:
   needed to authorize a run. FlashAttention Phase A now has exact ordinary
   attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
   oracle, executable proof-facing models, debug/release mutation suites, and a
-  pinned Verus proof of its exact rational online recurrence. That proof does
-  not establish exponential-law, IEEE FP32/OCML, Rust-source, compiler,
-  artifact, runtime, or hardware authority. MoE routing
+  pinned Verus proof of its exact rational online recurrence. The latest public
+  snapshot also authenticates its exact attributed source, FnAbi, complete
+  reachable portable MIR, semantic Kernel IR, compiler configuration, and V3
+  provider identity. That compiler admission and the separate Verus proof do
+  not establish exponential-law, IEEE FP32/OCML, artifact finalization, runtime,
+  hardware, or source/model-to-machine authority. MoE routing
   Phase A now has exact ordinary attributed T8/E4/K2/C4 source, an independent
   oracle, stable capacity/permutation/inverse contracts, a 6,561-case bounded
   corpus, debug/release mutation suites, and a pinned Verus proof of the exact

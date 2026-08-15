@@ -39,6 +39,8 @@ export const developmentCheckpointIds = deepFreeze([
   "gfx942-scalar-control-flow",
   "collected-rust-scalar-admission",
   "gfx942-wave64-lds-reduction",
+  "workgroup-sync-direct-finalization",
+  "flash-attention-compiler-admission",
   "scalar-gemm-v1",
   "scalar-gemm-proof-profile",
   "scalar-gemm-physical-effects",
@@ -260,6 +262,14 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "narrative",
     narrativeId: "progress/gfx942-wave64-lds-reduction",
   },
+  "workgroup-sync-direct-finalization": {
+    kind: "narrative",
+    narrativeId: "progress/workgroup-sync-direct-finalization",
+  },
+  "flash-attention-compiler-admission": {
+    kind: "narrative",
+    narrativeId: "progress/flash-attention-compiler-admission",
+  },
   "scalar-gemm-v1": {
     kind: "narrative",
     narrativeId: "progress/scalar-gemm-v1",
@@ -461,6 +471,22 @@ export const developmentCheckpoints = deepFreeze([
     commit: "b745b55dd59036aee7014f4814f4420c13e721cd",
     state: "public",
     narrativeId: "progress/gfx942-wave64-lds-reduction",
+  },
+  {
+    id: "workgroup-sync-direct-finalization",
+    kind: "narrative",
+    name: "Workgroup synchronization direct finalization",
+    commit: "3d673ffb9a962d7c4b8ae7526bbe881260e19c72",
+    state: "public",
+    narrativeId: "progress/workgroup-sync-direct-finalization",
+  },
+  {
+    id: "flash-attention-compiler-admission",
+    kind: "narrative",
+    name: "FlashAttention exact compiler admission",
+    commit: "bfc32b51314e75e4d619eda244e0d78573f1232c",
+    state: "public",
+    narrativeId: "progress/flash-attention-compiler-admission",
   },
   {
     id: "scalar-gemm-v1",
@@ -801,7 +827,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["wave reduction", "LDS ownership epochs", "uniform barriers"],
-    next: "Authenticate the exact linear DynamicLds reduction and typed DeviceGlobalMutPtr atomic sources through collector/lowering, profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution.",
+    next: "Join the exact compiler profiles and opaque direct LLVM/LLD finalizer receipts to typed one-shot host/runtime lifecycles, then run protected gfx942 dynamic-LDS and scoped-atomic vectors and close source/compiler/machine refinement.",
   },
   {
     id: "scalar-gemm",
@@ -851,7 +877,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["tiled GEMM", "online softmax", "masking"],
-    next: "Complete authenticated MIR-to-Kernel-IR admission for the exact B1/H1/N8/D16 causal source, then add direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, and source/model-to-machine refinement.",
+    next: "Carry the authenticated B1/H1/N8/D16 compiler profile through direct LLVM/LLD finalization, typed runtime launch, protected hardware and numerical vectors, and source/model-to-machine refinement.",
   },
   {
     id: "moe-routing",

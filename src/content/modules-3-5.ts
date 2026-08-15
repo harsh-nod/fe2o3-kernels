@@ -166,13 +166,13 @@ const collectives: Lesson = {
       code: noHost,
       explanatory: true,
       notice:
-        "Design boundary: no generated host/runtime path is bound to this exact source profile.",
+        "This historical source-model record does not bundle the later typed one-shot Wave64 host/runtime path; see Implementation status for its separately pinned protected gfx942 observation.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact source, CPU oracle, deterministic tests, and the bounded Verus model are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution. No functional hardware result is claimed.",
+        "This pinned source-model record remains independently reviewable. A later publication-gated descendant adds exact compiler admission, direct upstream LLVM/LLD finalization, a typed one-shot runtime, and one protected four-mask gfx942 observation. Compiler and Verus-to-machine refinement remain open; the historical source-model record itself grants no hardware authority.",
       ),
       explanatory: true,
       notice:
@@ -254,13 +254,13 @@ const synchronization: Lesson = {
       code: noHost,
       explanatory: true,
       notice:
-        "Design boundary: generated GlobalMut admission exists, but no compiler-profile-bound host/runtime launch exists for either exact kernel.",
+        "Generated GlobalMut admission and exact compiler/finalizer profiles exist, but no typed compiler-profile-bound runtime dispatch is public for either exact synchronization kernel.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution. No functional hardware result is claimed.",
+        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. The publication-gated descendant adds exact compiler profiles and opaque direct upstream LLVM/LLD finalizer receipts. Remaining gaps: typed host/runtime dispatch, protected gfx942 execution, and source/compiler/machine refinement. No functional hardware result is claimed.",
       ),
       explanatory: true,
       notice:
@@ -504,7 +504,7 @@ const flash: Lesson = {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent two-pass FP64 oracle, debug/release vectors, executable models, and a pinned Verus proof of the rational online recurrence are public. Remaining gaps: exponential and IEEE FP32/OCML refinement, authenticated MIR-to-Kernel-IR correspondence, finalization, generated host/runtime, protected gfx942 execution, and source-to-machine refinement. No functional hardware result is claimed.",
+        "Exact ordinary attributed source, an independent two-pass FP64 oracle, debug/release vectors, executable models, a pinned Verus proof of the rational online recurrence, and publication-gated exact compiler admission are public. Remaining gaps: exponential and IEEE FP32/OCML refinement, direct LLVM/LLD finalization, generated host/runtime, protected gfx942 execution, and source/model-to-machine refinement. No functional hardware result is claimed.",
       ),
       explanatory: true,
       notice:
