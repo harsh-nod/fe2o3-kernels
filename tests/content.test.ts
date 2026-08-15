@@ -254,10 +254,26 @@ describe("curriculum integrity", () => {
         tree: "4bc6c5a4f46a0c7cb86cbd5542ff20f170b3f940",
         authority: "machine-inspection-only",
       },
+      {
+        label: "Bounded Slice 2 K-phase model",
+        kind: "source-model-verified",
+        evidenceId: "tiled-lds-kphase-model-v2",
+        commit: "aba53376b4825c730ca9e9685e274e0c334e0e32",
+        tree: "e05bf2ac73f31f2fda39762520d855031ddf7419",
+        authority: "source-model-only",
+      },
+      {
+        label: "Observed LDS Slice 1 execution",
+        kind: "gpu-observed",
+        evidenceId: "tiled-lds-hardware-observation-v1",
+        commit: "79ad2298619baa4138b5edbf55e0d8044295bec2",
+        tree: "2b7766ec5f003b1316853376a802ada4a9999d9b",
+        authority: "harness-only",
+      },
     ]);
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
-    expect(staged?.filter((claim) => claim.kind === "gpu-observed")).toHaveLength(1);
+    expect(staged?.filter((claim) => claim.kind === "gpu-observed")).toHaveLength(2);
   });
 
   it("requires whole Cargo test suites and referenced integration targets", () => {
@@ -291,6 +307,29 @@ describe("curriculum integrity", () => {
         FE2O3_LLVM_OBJDUMP: "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
         FE2O3_LLVM_OBJDUMP_SHA256:
           "e5bf27bb6ba178b4de94ac0d5da760b628672cd00d2ffeb40a4372fa6ad25140",
+      },
+    });
+    const ldsHardwareCommand = stagedEvidenceRecord(
+      "tiled-lds-hardware-observation-v1",
+    ).commands[0];
+    expect(parseExactCargoTestCommand(ldsHardwareCommand)).toMatchObject({
+      locked: true,
+      packageName: "fe2o3-hsa-runtime",
+      mode: "test",
+      targetName: "tiled_gemm_lds_v1_hardware",
+      testName: "gfx942_tiled_gemm_lds_v1_observational_hardware_evidence",
+      features: "hardware-test-hooks",
+      environment: {
+        FE2O3_RUN_GFX942_TILED_GEMM_LDS_V1_HARDWARE: "1",
+        HSA_XNACK: "0",
+        HIP_VISIBLE_DEVICES: "0",
+        ROCR_VISIBLE_DEVICES: "0",
+        FE2O3_LLC: "/absolute/canonical/llc",
+        FE2O3_LLC_SHA256: "<sha256>",
+        FE2O3_LLD: "/absolute/canonical/ld.lld",
+        FE2O3_LLD_SHA256: "<sha256>",
+        FE2O3_LLVM_OBJDUMP: "/absolute/canonical/llvm-objdump",
+        FE2O3_LLVM_OBJDUMP_SHA256: "<sha256>",
       },
     });
     const parsedVerusCommand = parseExactCargoTestCommand(
@@ -649,11 +688,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2",
-      eventualPublicTree: "4bc6c5a4f46a0c7cb86cbd5542ff20f170b3f940",
+      eventualPublicCommit: "fe10eb4b4311cbd4c2475118f2728bc201d89fb6",
+      eventualPublicTree: "9b346982ec7dc77aed08313652fa922b7e286524",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2",
+        requiredCommit: "fe10eb4b4311cbd4c2475118f2728bc201d89fb6",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -998,7 +1037,7 @@ describe("implementation progress integrity", () => {
     expect(structuralDetail).toContain("no COMGR path is added");
   });
 
-  it("tracks all four LDS Slice 1 increments without claiming execution", () => {
+  it("tracks observational Slice 1 and proof-only Slice 2 without promotion", () => {
     const expected = [
       ["tiled-gemm-lds-kernel-ir", tiledGemmV1Commits.ldsKernelIr],
       ["tiled-gemm-lds-verus", tiledGemmV1Commits.ldsVerus],
@@ -1009,6 +1048,11 @@ describe("implementation progress integrity", () => {
       [
         "tiled-gemm-lds-machine-inspection",
         tiledGemmV1Commits.ldsMachineInspection,
+      ],
+      ["tiled-gemm-lds-kphase-model", tiledGemmV1Commits.ldsKphaseModel],
+      [
+        "tiled-gemm-lds-hardware-observation",
+        tiledGemmV1Commits.ldsHardwareObservation,
       ],
     ];
     for (const [id, commit] of expected) {
@@ -1032,7 +1076,23 @@ describe("implementation progress integrity", () => {
     ]);
     expect(machine).toContain("direct upstream llc and ld.lld");
     expect(machine).toContain("not collected from the attributed Rust source");
-    expect(machine).toContain("has not produced LDS functional hardware evidence");
+    expect(machine).toContain("later hardware observation remains a separate evidence record");
+    const kphase = stagedEvidenceDetail(["tiled-lds-kphase-model-v2"]);
+    expect(kphase).toContain("196 verified and 0 errors");
+    expect(kphase).toContain("1-, 2-, and 4-phase cases");
+    expect(kphase).toContain("proof/model evidence only");
+    expect(kphase).toContain("no attributed multi-phase GPU source");
+    expect(kphase).toContain("backend lowering, HSACO");
+    const hardware = stagedEvidenceDetail([
+      "tiled-lds-hardware-observation-v1",
+    ]);
+    expect(hardware).toContain("SHA-256-pinned upstream LLVM 22 llc, ld.lld, and llvm-objdump");
+    expect(hardware).toContain("COMGR is neither invoked nor admitted");
+    expect(hardware).toContain("all 1,536 outputs");
+    expect(hardware).toContain("passed 1/1 in 33.72 seconds");
+    expect(hardware).toContain("observational IR-derived hardware evidence only");
+    expect(hardware).toContain("no Worker V2, publisher, protected load, or protected launch authority");
+    expect(hardware).toContain("cannot establish general illegal-memory-access detection");
   });
 
   it("keeps tiled GEMM partial until source, body, authority, and race closure", () => {
@@ -1043,10 +1103,10 @@ describe("implementation progress integrity", () => {
       verify: "partial",
       evidence: "partial",
       dependsOn: [
-        "source-to-LDS-Kernel-IR collection",
+        "multi-phase attributed source and source-to-LDS-Kernel-IR collection",
         "#[kernel] WG64 contract integration",
         "protected publisher, load, and launch",
-        "LDS functional hardware evidence",
+        "source-bound protected LDS hardware evidence",
         "source and Verus-to-machine refinement",
         "IEEE BF16/F32 numerical contract",
       ],
@@ -1084,11 +1144,14 @@ describe("implementation progress integrity", () => {
     expect(renderedStaged).not.toMatch(/immutable\s+inputs/);
     expect(mapping).toContain("ordinary #[kernel(typed, ...)] Rust body");
     expect(mapping).toContain("not a functional kernel");
-    expect(mapping).toContain("Source-to-LDS-Kernel-IR collection");
-    expect(mapping).toContain("no LDS functional hardware result");
+    expect(mapping).toContain("source-to-LDS-Kernel-IR collection");
+    expect(mapping).toContain("six cases checked 1,536 outputs");
+    expect(mapping).toContain("not Rust-source correspondence");
+    expect(mapping).toContain("196 verified and 0 errors");
+    expect(mapping).toContain("not an attributed multi-phase GPU kernel");
 
-    expect(proofPlan).toContain("Source-to-LDS-Kernel-IR collection");
-    expect(proofPlan).toContain("typed staged records remain separate");
+    expect(proofPlan).toContain("multi-phase source-to-machine derivation");
+    expect(proofPlan).toContain("remain separate from the attributed source");
     expect(proofPlan).not.toContain(tiledGemmV1Commits.sourceBridge);
   });
 });

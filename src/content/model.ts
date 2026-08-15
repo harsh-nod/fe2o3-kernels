@@ -47,7 +47,9 @@ export type StagedEvidenceId =
   | "tiled-lds-kernel-ir-v1"
   | "tiled-lds-verus-v1"
   | "tiled-lds-attributed-source-v1"
-  | "tiled-lds-machine-inspection-v1";
+  | "tiled-lds-machine-inspection-v1"
+  | "tiled-lds-kphase-model-v2"
+  | "tiled-lds-hardware-observation-v1";
 
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";

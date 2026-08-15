@@ -200,13 +200,13 @@ const gemmMapping: Lesson = {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now contains a fixed attributed LDS Slice 1 source and separate bounded proof, Kernel IR, and machine-shape evidence. They are not joined into a functional or production kernel.",
+        "fe2o3 now contains a fixed attributed LDS Slice 1 source, separate Slice 1 proof, Kernel IR, and machine-shape evidence, and a bounded Slice 2 K-phase proof model. They are not joined into a functional or production kernel.",
     },
     {
       kind: "compiler-hsaco-observed",
       label: "Reusable MFMA/LDS mechanics",
       detail:
-        "A narrow gfx942 BF16 16x16x16 MFMA and XOR4 LDS profile now has separate Kernel IR, Verus, attributed-source, upstream LLVM/LLD, and final-HSACO inspection records.",
+        "A narrow gfx942 BF16 16x16x16 MFMA and XOR4 LDS tile/stream contract exists in the device, Kernel IR, target, and lowering layers.",
       reference: pinnedReference(
         [
           "cargo +nightly-2026-04-03 test --locked -p fe2o3-device -p fe2o3-kernel-ir -p dialect-amdgcn",
@@ -233,7 +233,7 @@ const gemmMapping: Lesson = {
     { language: "rust", code: gemmDesign, explanatory: true },
     {
       language: "text",
-      code: `Invariant after phase p:\n  acc[m,n] = sum(k=0..p*TILE_K) model_mul(A[m,k], B[k,n])\n\nPlus: every LDS read is initialized in the current epoch; output fragments are pairwise disjoint.`,
+      code: `Slice 1, one phase:\n  every LDS read is initialized in the current epoch\n  every output has one lane/component owner\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n\nObserved proof summary: 196 verified, 0 errors.\nThis exact-real model is not backend or hardware evidence.`,
       explanatory: true,
     },
     { language: "bash", code: noHost, explanatory: true },
@@ -241,7 +241,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "The source, proof, Kernel IR, and machine inspection exist as separate bounded increments. Source-to-IR collection, #[kernel] WG64 integration, protected publisher/load/launch, and LDS functional hardware evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
+        "The Slice 1 source, proof, Kernel IR, machine inspection, and observational MI300X run and the Slice 2 K-phase proof model exist as separate bounded increments. Multi-phase attributed source, source-to-IR collection, #[kernel] WG64 integration, and source-bound protected publisher/load/launch evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
       ),
     },
   ),
@@ -275,7 +275,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "Source-to-LDS-Kernel-IR collection, #[kernel] WG64 integration, protected publisher/load/launch, LDS functional hardware evidence, source-to-machine refinement, and an IEEE numerical contract remain required before promotion.",
+        "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, #[kernel] WG64 integration, source-bound protected publisher/load/launch evidence, source-to-machine refinement, and an IEEE numerical contract remain required before promotion.",
     },
   ],
   sections: [

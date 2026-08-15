@@ -447,13 +447,21 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "Four bounded public increments now define LDS Slice 1 without promoting it to functional status. Commit 4c79c58de1da19d9b7a22cba906f301e347c8f7c seals the fixed two-tile LDS Kernel IR. Commit 97373b781ac3643b1de61b4572894f7028b565b0 verifies the separate exact-real source model and targeted mutations. Commit ee76cedcdc4126c69bc486a5ac12900c1c5485b1 adds the ordinary #[kernel(typed, ...)] Rust body and deliberately traps at unsupported LDS acquisition. Commit 50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2 lowers the canonical IR through upstream LLVM/LLD and inspects the final HSACO machine shape. The typed evidence table states the exact authority boundary for each increment."
+        "text": "Four pre-execution public increments define LDS Slice 1 without promoting it to functional status. Commit 4c79c58de1da19d9b7a22cba906f301e347c8f7c seals the fixed two-tile LDS Kernel IR. Commit 97373b781ac3643b1de61b4572894f7028b565b0 verifies the separate exact-real source model and targeted mutations. Commit ee76cedcdc4126c69bc486a5ac12900c1c5485b1 adds the ordinary #[kernel(typed, ...)] Rust body and deliberately traps at unsupported LDS acquisition. Commit 50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2 lowers the canonical IR through upstream LLVM/LLD and inspects the final HSACO machine shape. The typed evidence table states the exact authority boundary for each increment."
+      },
+      {
+        "type": "paragraph",
+        "text": "Slice 2 adds proof/model depth without upgrading execution. Commit aba53376b4825c730ca9e9685e274e0c334e0e32 verifies one through four complete K phases with 196 verified and 0 errors, rejects missing-reuse and accumulator-reset mutations, and exhaustively runs integer event models for 1, 2, and 4 phases. This is not an attributed multi-phase GPU kernel, backend result, HSACO, or hardware observation."
+      },
+      {
+        "type": "paragraph",
+        "text": "A separate Slice 1 hardware increment at 79ad2298619baa4138b5edbf55e0d8044295bec2 generated HSACO from canonical Kernel IR with SHA-pinned upstream LLVM 22 llc, ld.lld, and llvm-objdump, without COMGR. On MI300X, six cases checked 1,536 outputs, unchanged A/B values, and allocation canaries; one ignored hardware test passed in 33.72 seconds. This is observational IR-derived evidence only, not Rust-source correspondence, Verus proof, Worker V2, publisher, or protected-launch authority."
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Four bounded increments are not a functional kernel",
-        "text": "Source-to-LDS-Kernel-IR collection and #[kernel] WG64 contract integration remain open. The inspected final HSACO begins from the separate canonical IR, is not carried through protected publisher, load, and launch authority, and has no LDS functional hardware result. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
+        "title": "Bounded increments are not a functional kernel",
+        "text": "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, and #[kernel] WG64 contract integration remain open. The observed Slice 1 final HSACO begins from the separate canonical IR and is not carried through protected publisher, load, and launch authority. Its canaries do not prove general illegal-access or race freedom. Slice 2 adds no backend or hardware claim. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
       }
     ]
   },
@@ -582,8 +590,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "proof",
-        "title": "Three ledger rows are concrete but unjoined",
-        "text": "The typed staged records remain separate evidence boundaries, not one authority chain. The remaining proof ledger must cover source-to-machine derivation, protected publication and launch, bounds, initialization, barriers, LDS ownership, race freedom, and numerical refinement."
+        "title": "The model ledger is stronger but still unjoined",
+        "text": "The bounded Slice 1 and Slice 2 models now cover bounds, current-epoch initialization, barrier participation, LDS ownership, disjoint stores, accumulator preservation, and exact-real products. Those results remain separate from the attributed source, compiler, artifact, and runtime records. Closure still requires multi-phase source-to-machine derivation, protected publication and launch, machine-level race evidence, and IEEE numerical refinement."
       }
     ]
   },

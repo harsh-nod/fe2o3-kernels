@@ -36,9 +36,11 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The implementation-status snapshot is pinned to fe2o3 commit
-`50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2`, tree
-`4bc6c5a4f46a0c7cb86cbd5542ff20f170b3f940`. **The publication workflow must
+The publication-gated repository snapshot is pinned to fe2o3 commit
+`fe10eb4b4311cbd4c2475118f2728bc201d89fb6`, tree
+`9b346982ec7dc77aed08313652fa922b7e286524`. The Slice 2 record remains
+proof/model evidence only; the separate Slice 1 MI300X record is observational
+IR-derived evidence, not source, proof, or publication authority. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
 audited public baseline remains
@@ -73,11 +75,27 @@ verified and 0 errors at
 `ee76cedcd`, and upstream LLVM/LLD plus final-HSACO machine inspection at
 `50902b6fc`. These are separate records, not a functional or production kernel.
 
-The missing production chain is still material. Source-to-LDS-Kernel-IR
-collection and `#[kernel]` WG64 contract integration remain open. The inspected
+Slice 2 at `aba53376b` verifies one through four complete K phases with 196
+verified and 0 errors, rejects missing-reuse and accumulator-reset mutations,
+and exhaustively runs integer event models for 1, 2, and 4 phases. This is
+proof/model evidence only. It establishes no attributed multi-phase GPU source,
+backend lowering, HSACO, protected runtime, or hardware result.
+
+Slice 1 hardware evidence at `79ad22986` is a separate observation. An ignored
+opt-in harness generated HSACO from the canonical Kernel IR using SHA-pinned
+upstream LLVM 22 `llc`, `ld.lld`, and `llvm-objdump`, without COMGR. On MI300X,
+six cases checked 1,536 outputs, unchanged A/B values, and prefix/suffix
+canaries around A, B, and C; one hardware test passed in 33.72 seconds. This
+does not bind the IR to attributed Rust source or Verus proofs, grant publisher
+or protected launch authority, or prove general memory safety or race freedom.
+
+The missing production chain is still material. An attributed multi-phase
+source, source-to-LDS-Kernel-IR collection, and `#[kernel]` WG64 contract
+integration remain open. The inspected
 HSACO begins from the separate canonical IR and is not carried through the
-protected publisher, load, and launch path. No LDS functional hardware result
-has been recorded. Compiler and Verus-to-machine refinement and an IEEE
+protected publisher, load, and launch path. The hardware observation therefore
+does not supply source-bound protected execution evidence. Compiler and
+Verus-to-machine refinement and an IEEE
 BF16/F32 numerical contract also remain open.
 
 The latest head also adds authenticated Verus execution V2 for Linux x86_64
@@ -152,16 +170,20 @@ At the audited pin:
   join the Rust source to those bytes.
 - LDS Slice 1 now has separate canonical Kernel IR, Verus source-model,
   attributed Rust source, LLVM lowering, and final-HSACO machine-shape evidence.
-  The Rust function is deliberately fail-closed before output mutation. It is
-  not source-collected into that LDS IR and has no protected or functional GPU
-  execution evidence.
+  An independent six-case MI300X run observed the IR-derived HSACO over 1,536
+  outputs with allocation canaries. The Rust function is deliberately
+  fail-closed before output mutation and is not source-collected into that LDS
+  IR, so the run is neither source-bound nor protected execution evidence.
+- LDS Slice 2 has a bounded exact-real K-phase Verus model and executable
+  integer event models for 1, 2, and 4 phases. It has no attributed multi-phase
+  GPU source, backend, HSACO, or hardware claim.
 - `macro_rules!` is declarative compile-time token expansion. Vecadd uses it to
   share a small body with Verus; it is not the GPU kernel marker. `#[kernel]` is
   the procedural attribute that marks an ordinary Rust function for fe2o3's
   frontend and generated typed API. Production kernel bodies should be ordinary
   attributed Rust and do not require `macro_rules!`.
-- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1
-  increments. Softmax, flash attention, and mixture-of-experts remain
+- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1 and
+  Slice 2 increments. Softmax, flash attention, and mixture-of-experts remain
   design-only. Their snippets are not programs users should expect to run today.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and

@@ -48,6 +48,8 @@ export const developmentCheckpointIds = deepFreeze([
   "tiled-gemm-lds-verus",
   "tiled-gemm-lds-attributed-source",
   "tiled-gemm-lds-machine-inspection",
+  "tiled-gemm-lds-kphase-model",
+  "tiled-gemm-lds-hardware-observation",
 ] as const);
 
 export type DevelopmentCheckpointId =
@@ -121,6 +123,10 @@ export const tiledGemmV1Commits = {
   ).commit,
   ldsMachineInspection: stagedEvidenceRecord(
     "tiled-lds-machine-inspection-v1",
+  ).commit,
+  ldsKphaseModel: stagedEvidenceRecord("tiled-lds-kphase-model-v2").commit,
+  ldsHardwareObservation: stagedEvidenceRecord(
+    "tiled-lds-hardware-observation-v1",
   ).commit,
 } as const;
 
@@ -228,6 +234,16 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "staged-evidence",
     commit: tiledGemmV1Commits.ldsMachineInspection,
     evidenceIds: ["tiled-lds-machine-inspection-v1"],
+  },
+  "tiled-gemm-lds-kphase-model": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsKphaseModel,
+    evidenceIds: ["tiled-lds-kphase-model-v2"],
+  },
+  "tiled-gemm-lds-hardware-observation": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsHardwareObservation,
+    evidenceIds: ["tiled-lds-hardware-observation-v1"],
   },
 } satisfies Record<DevelopmentCheckpointId, DevelopmentCheckpointSpec>);
 
@@ -403,6 +419,22 @@ export const developmentCheckpoints = deepFreeze([
     state: "public",
     stagedEvidenceIds: ["tiled-lds-machine-inspection-v1"],
   },
+  {
+    id: "tiled-gemm-lds-kphase-model",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 2 K-phase proof model",
+    commit: tiledGemmV1Commits.ldsKphaseModel,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-kphase-model-v2"],
+  },
+  {
+    id: "tiled-gemm-lds-hardware-observation",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 1 MI300X observation",
+    commit: tiledGemmV1Commits.ldsHardwareObservation,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-hardware-observation-v1"],
+  },
 ] satisfies DevelopmentCheckpoint[]);
 
 const checkpointKeysByKind = {
@@ -569,14 +601,14 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "source-to-LDS-Kernel-IR collection",
+      "multi-phase attributed source and source-to-LDS-Kernel-IR collection",
       "#[kernel] WG64 contract integration",
       "protected publisher, load, and launch",
-      "LDS functional hardware evidence",
+      "source-bound protected LDS hardware evidence",
       "source and Verus-to-machine refinement",
       "IEEE BF16/F32 numerical contract",
     ],
-    next: "Collect the ordinary attributed Rust body into the sealed LDS Kernel IR under the exact WG64 contract, then carry the same final bytes through protected publication, load, launch, and MI300X functional tests.",
+    next: "Implement the ordinary attributed multi-phase Rust body and collect it into the sealed LDS Kernel IR under the exact WG64 contract, then carry the same final bytes through protected publication, load, launch, and MI300X functional tests.",
   },
   {
     id: "softmax",

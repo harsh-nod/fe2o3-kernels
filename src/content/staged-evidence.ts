@@ -37,10 +37,15 @@ export const stagedEvidenceOrder = deepFreeze([
   "tiled-lds-verus-v1",
   "tiled-lds-attributed-source-v1",
   "tiled-lds-machine-inspection-v1",
+  "tiled-lds-kphase-model-v2",
+  "tiled-lds-hardware-observation-v1",
 ] satisfies StagedEvidenceId[]);
 
 const TILED_GEMM_V1_HARDWARE_COMMAND =
   "env FE2O3_RUN_GFX942_TILED_GEMM_V1_HARDWARE=1 FE2O3_GFX942_TILED_GEMM_V1_HSACO=/home/harsh/fe2o3-tiled-gemm-f494.hsaco FE2O3_GFX942_TILED_GEMM_V1_SHA256=681077be1108c57d9d887f94afdd0ec3700ed2c86d73e66d2b229d6b418d0c66 FE2O3_GFX942_TILED_GEMM_V1_KERNEL_SYMBOL=tiled_gemm_v1 FE2O3_LLVM_OBJDUMP=/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump FE2O3_LLVM_OBJDUMP_SHA256=e5bf27bb6ba178b4de94ac0d5da760b628672cd00d2ffeb40a4372fa6ad25140 cargo test --locked -p fe2o3-hsa-runtime --features hardware-test-hooks --test tiled_gemm_v1_hardware gfx942_tiled_gemm_v1_one_tile_raw_hardware_evidence -- --ignored --exact --nocapture";
+
+const TILED_GEMM_LDS_V1_HARDWARE_COMMAND =
+  "env FE2O3_RUN_GFX942_TILED_GEMM_LDS_V1_HARDWARE=1 HSA_XNACK=0 HIP_VISIBLE_DEVICES=0 ROCR_VISIBLE_DEVICES=0 FE2O3_LLC=/absolute/canonical/llc FE2O3_LLC_SHA256=<sha256> FE2O3_LLD=/absolute/canonical/ld.lld FE2O3_LLD_SHA256=<sha256> FE2O3_LLVM_OBJDUMP=/absolute/canonical/llvm-objdump FE2O3_LLVM_OBJDUMP_SHA256=<sha256> cargo test --locked -p fe2o3-hsa-runtime --features hardware-test-hooks --test tiled_gemm_lds_v1_hardware gfx942_tiled_gemm_lds_v1_observational_hardware_evidence -- --ignored --exact --nocapture";
 
 const stagedEvidenceRecords = deepFreeze({
   "tiled-source-bridge-v1": {
@@ -332,7 +337,77 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "machine-boundary",
-        text: "The inspected HSACO is derived from the canonical Kernel IR test path, not collected from the attributed Rust source. It has no protected publisher, load, or launch authority and has not produced LDS functional hardware evidence.",
+        text: "The inspected HSACO is derived from the canonical Kernel IR test path, not collected from the attributed Rust source. This inspection has no protected publisher, load, or launch authority; a later hardware observation remains a separate evidence record.",
+      },
+    ],
+  },
+  "tiled-lds-kphase-model-v2": {
+    id: "tiled-lds-kphase-model-v2",
+    stageLabel: "aba53376 bounded K-phase model",
+    claimLabel: "Bounded Slice 2 K-phase model",
+    claim: "source-model-verified",
+    authority: "source-model-only",
+    commit: "aba53376b4825c730ca9e9685e274e0c334e0e32",
+    tree: "e05bf2ac73f31f2fda39762520d855031ddf7419",
+    commands: [
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_kphase_model",
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_kphase_source",
+      "env VERUS=/absolute/path/to/pinned/verus cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_kphase_verus",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_v1/tests/lds_kphase_model.rs",
+      "examples/tiled_gemm_v1/tests/lds_kphase_source.rs",
+      "examples/tiled_gemm_v1/tests/lds_kphase_verus.rs",
+      "examples/tiled_gemm_v1/run-verus.sh",
+      "examples/tiled_gemm_v1/verus/lds_tiled_kphase.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_kphase_reuse_wrong.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_kphase_accumulator_reset_wrong.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "bounded-kphase-proof",
+        text: "Commit aba53376b4825c730ca9e9685e274e0c334e0e32 adds a Slice 2 Verus model for one through four complete 16-wide K phases and reports 196 verified and 0 errors. It covers global bounds and depth partitioning, current-epoch LDS initialization, publish and reuse barrier convergence, no overwrite before prior reads, accumulator preservation, disjoint final C stores, and bounded matrix-product correspondence.",
+      },
+      {
+        id: "models-and-mutations",
+        text: "Executable integer event models exhaust the admitted 1-, 2-, and 4-phase cases. Source tests prohibit admit, assume, and external-body shortcuts; a missing LDS reuse epoch and an accumulator reset are each rejected at their intended proof obligation.",
+      },
+      {
+        id: "kphase-boundary",
+        text: "Slice 2 is proof/model evidence only. Its arithmetic uses finite BF16 values after exact widening and excludes IEEE rounding and exceptional-value semantics. It grants no attributed multi-phase GPU source, source collection, backend lowering, HSACO, protected runtime, or hardware authority.",
+      },
+    ],
+  },
+  "tiled-lds-hardware-observation-v1": {
+    id: "tiled-lds-hardware-observation-v1",
+    stageLabel: "79ad2298 MI300X LDS observation",
+    claimLabel: "Observed LDS Slice 1 execution",
+    claim: "gpu-observed",
+    authority: "harness-only",
+    commit: "79ad2298619baa4138b5edbf55e0d8044295bec2",
+    tree: "2b7766ec5f003b1316853376a802ada4a9999d9b",
+    commands: [TILED_GEMM_LDS_V1_HARDWARE_COMMAND],
+    sourcePaths: [
+      "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_v1_hardware.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "direct-upstream-toolchain",
+        text: "Commit 79ad2298619baa4138b5edbf55e0d8044295bec2 adds an ignored opt-in harness that generates Slice 1 HSACO in-process from the canonical Kernel IR using separately SHA-256-pinned upstream LLVM 22 llc, ld.lld, and llvm-objdump tools. COMGR is neither invoked nor admitted.",
+      },
+      {
+        id: "observed-campaign",
+        text: "On MI300X gfx942:xnack-, zero, identity, dyadic, deterministic-random, signed-cancellation, and adversarial finite-BF16 cases checked all 1,536 outputs, unchanged A and B values, and prefix and suffix canaries around all three allocations. The exact ignored hardware test passed 1/1 in 33.72 seconds.",
+      },
+      {
+        id: "observational-boundary",
+        text: "This is observational IR-derived hardware evidence only. It does not bind the executed Kernel IR to attributed Rust source or Verus proofs and grants no Worker V2, publisher, protected load, or protected launch authority.",
+      },
+      {
+        id: "guard-boundary",
+        text: "The canaries and unchanged-value checks detect the mutations they observe; they cannot establish general illegal-memory-access detection, beyond-guard safety, value-preserving-write absence, or race freedom.",
       },
     ],
   },
@@ -548,6 +623,13 @@ export function validateStagedEvidenceCatalog(): string[] {
         record.commands[0] !== TILED_GEMM_V1_HARDWARE_COMMAND)
     ) {
       issues.push(`${id}: hardware replay command differs from the observed command`);
+    }
+    if (
+      id === "tiled-lds-hardware-observation-v1" &&
+      (record.commands.length !== 1 ||
+        record.commands[0] !== TILED_GEMM_LDS_V1_HARDWARE_COMMAND)
+    ) {
+      issues.push(`${id}: LDS hardware command differs from the documented command`);
     }
     for (const command of record.commands) {
       const parsed = parseExactCargoTestCommand(command);
