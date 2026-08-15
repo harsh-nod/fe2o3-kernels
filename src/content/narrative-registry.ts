@@ -508,7 +508,7 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Bounded increments are not a functional kernel",
+        "title": "Bounded execution is not production authority",
         "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Exact direct LLVM/LLD API finalization (#97), exact generated host preparation (#99), and the one-shot Joined -> Loaded -> Completed -> Unloaded implementation (#100) are also complete. #100 now has both fake-adapter adversarial coverage and one exact protected mi300x measurement. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. Neither the protected Slice 1 measurement nor the separate IR-derived observation proves compiler origin, general illegal-access safety, race freedom, or source-to-machine refinement. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed. No production source-to-HSACO or Verus authority is claimed."
       },
       {
@@ -523,7 +523,7 @@ const narrativeRegistry = deepFreeze({
           { "label": "#91 Production proof-certificate consumption", "href": "https://github.com/harsh-nod/fe2o3/issues/91" },
           { "label": "#92 K-phase, grid, and edge proof certificates", "href": "https://github.com/harsh-nod/fe2o3/issues/92" },
           { "label": "#93 Canonical matrix Kernel IR V5 (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/93" },
-          { "label": "#94 Shared protected execution substrate", "href": "https://github.com/harsh-nod/fe2o3/issues/94" },
+          { "label": "#94 Shared protected execution substrate (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/94" },
           { "label": "#96 Sealed exact-profile registry (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/96" },
           { "label": "#97 Exact direct LLVM/LLD finalizer (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/97" },
           { "label": "#99 Exact generated host adapter (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/99" },
@@ -1052,7 +1052,7 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/scalar-gemm-checkpoint":
     "493b73b6828f050bf608c2f5ab39797fc68c24913f571952eea6a9444ff80f35",
   "gemm-tiling/public-layout-proof":
-    "25eba26599f1afd31bbba4e41dbaba0fdd3056caad0465097ccb5654acc81d6a",
+    "cb55340b23fed8480e93460f7ef6160258ed1e709a9688f214b54c989d248d0e",
   "gemm-proof-plan/evidence":
     "961353dad93a62fb2d79e63b2f0d738b7e37814346ab4d5f9113656a9c9edbff",
 } satisfies Record<NarrativeId, string>);
