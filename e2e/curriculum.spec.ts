@@ -64,10 +64,23 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
       name: "Flash attention: online invariant",
     }),
   ).toBeVisible();
-  await expect(page.getByText("Design only", { exact: true }).first()).toBeVisible();
+  const lessonEvidence = page.getByLabel("Evidence for this lesson");
+  await expect(
+    lessonEvidence.getByText("Source tested", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    lessonEvidence.getByText("Verus model", { exact: true }),
+  ).toBeVisible();
 
   await page.getByRole("tab", { name: "Verus proof" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("Invariant(t)");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "exact_evidence_identity_is_admitted_v1",
+  );
+  await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/5c25611adbd99e807957dfc9a0a6a63e83a9e099/examples/flash_attention_v1/verus/flash_attention_v1.rs",
+  );
   await page.getByRole("button", { name: "Mark complete" }).click();
   await expect(page.getByRole("button", { name: "Completed" })).toBeVisible();
 
