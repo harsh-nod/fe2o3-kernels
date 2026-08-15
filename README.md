@@ -36,25 +36,22 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The checked-in publication gate remains pinned to fe2o3 commit
-`89ebe69bb3daf8262a485463c5fdf04cf095346f`, tree
-`c2604487ec76f337d7ada2c0319fffd02b3ce8c9`. That gate is intentionally
-separate from the advancing implementation head because the final publication
-SHA after completed protected-lifecycle integration is still pending. The gated
-commit includes exact Slice 1 attributed source-to-IR correspondence, canonical
-matrix Kernel IR V5 bytes, an exact compiler-owned descriptor and single-use
-inert Worker V2 handoff, an authority-free sealed exact-profile import, Slice 3
-and Slice 4 upstream LLVM/COV6 inspection, and bounded identity-bound Slice 1
-source/model correspondence. Later staged records below add completed exact
-finalization and host preparation plus the completed one-shot protected
-lifecycle mechanics.
-Those records contain no real protected hardware measurement and grant no
-protected-execution, source-to-HSACO, or production proof-certificate
-authority. **The publication workflow must not deploy this site revision until
-the gate is updated to the final reviewed fe2o3 SHA and both
+The checked-in publication gate is pinned to final public-main documentation
+commit `cfcb579e20e31fd5feaa21f262fadeb8e3d08676`, tree
+`8a59c29cff1366e1ba2bcfdfba034516877a801c`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
-exactly to that final gate.** The last
-audited public baseline remains
+to that commit. This docs-only descendant contains the exact protected Slice 1
+implementation and measured evidence pinned to commit
+`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`, tree
+`c65c6ab567409afaaef6ea39c8befcac21d47119`: attributed source-to-IR
+correspondence, canonical matrix Kernel IR V5 bytes, an exact compiler-owned
+descriptor and single-use inert Worker V2 handoff, an authority-free sealed
+exact-profile import, direct LLVM/LLD API finalization, generated borrowed host
+preparation, the one-shot protected lifecycle, and one bounded protected mi300x
+measurement. It also retains the separate Slice 3 and Slice 4 upstream
+LLVM/COV6 inspections and bounded Slice 1 source/model correspondence. The
+publication workflow continues to require both public refs to resolve exactly
+to the gated commit before deployment. The last audited public baseline remains
 `96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
 `f911f0c693238830ad6070b2674fb863857bfec1`.
 
@@ -74,8 +71,10 @@ The staged tiled-GEMM facts are defined once as atomic, typed evidence records
 in [`src/content/staged-evidence.ts`](src/content/staged-evidence.ts). Claims,
 lesson tables, progress checkpoints, exact commands, source paths, and limited
 authority labels are rendered from those records and rejected if they drift.
-The hardware entry records one bounded hardware observation through that harness;
-it is not protected execution evidence or a source-to-HSACO result.
+The earlier hardware entry records one bounded observation through a raw
+harness; it is not protected execution evidence or a source-to-HSACO result.
+The later #100 entry is a distinct bounded protected route measurement and does
+not retroactively strengthen that earlier record.
 
 The previous WG64/288-byte build-scoped fragment probe remains separate from
 both the 320-byte four-slice direct-global profile and the independent
@@ -159,18 +158,18 @@ overlap is rejected. Preparation constructs the exact 48-byte explicit and
 descriptor, and role-separated length identities. It then releases the compiler
 import borrow so finalization can consume that non-Clone import while all three
 device buffers remain borrowed by the adapter. The adapter exposes no raw
-kernarg or launch operation. Both public `fe2o3` main branches contain the #97
-and #99 commits; their heads may continue advancing while the final publication
-SHA is pending. Subsequent
-runtime feature-gating maintenance makes default and `hardware-test-hooks`
-strict all-target runtime Clippy pass and adds no functional claim.
+kernarg or launch operation. The final gated snapshot contains both the #97 and
+#99 increments. Subsequent runtime feature-gating maintenance makes default and
+`hardware-test-hooks` strict all-target runtime Clippy pass and adds no
+functional claim by itself.
 
-Commits `7f4256a45`, `d8eef1333`, and `66f62cac8` complete #100 by adding
-exact runtime-resource observation, the generated Slice 1 lifecycle, and its
-production HSA adapter integration. Private, non-Clone states consume ownership
-in the fixed `Joined -> Loaded -> Completed -> Unloaded` order. The join consumes
-the #97 finalized artifact and #99 borrowed adapter, and no state exposes
-finalized bytes, native handles, or a generic or raw launch operation.
+The protected implementation checkpoint at
+`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`
+completes #100 resource observation, production-adapter integration, metadata
+hardening, and protected hardware validation. Private, non-Clone states consume
+ownership in the fixed `Joined -> Loaded -> Completed -> Unloaded` order. The
+join consumes the #97 finalized artifact and #99 borrowed adapter, and no state
+exposes finalized bytes, native handles, or a generic or raw launch operation.
 
 Admission checks the exact retained context identity and the physical device,
 agent, HIP ordinal, runtime instance, `gfx942:xnack-` target, executable, and
@@ -182,16 +181,35 @@ A/B/C views remain owned through the single synchronous dispatch; only a
 validated completion releases those borrows, leaving `Completed` with terminal
 unload authority and `Unloaded` as an inert identity receipt.
 
-Recoverable failures after load and before packet publication, and failures
-after proven quiescence, perform one checked unload. Dropping `Loaded` or
-`Completed` also unloads once. Adapter unwind, unload failure, or ambiguous
-unload observation aborts. A post-submit queue error or completion deadline is
-process-terminal: submitted resources are retained because GPU quiescence is
-unknown, and the process aborts instead of returning or attempting an ordinary
-unload. The focused lifecycle integration suite uses a fake adapter. Production
-adapter support for exact context and resource observation is implemented, but
-no real protected hardware measurement or numerical result is recorded here.
-The existing observational MI300X tiled-GEMM run remains separate.
+On failure before packet publication, the production adapter cancels the
+prepared dispatch and releases its queue and kernarg before the selected kernel
+is released and the executable is unloaded. Failures after proven quiescence
+and dropping `Loaded` or `Completed` also perform one checked unload. Adapter
+unwind, unload failure, or ambiguous unload observation aborts. A post-submit
+queue error or
+completion deadline is process-terminal: submitted resources are retained
+because GPU quiescence is unknown, and the process aborts instead of returning
+or attempting an ordinary unload. Fake-adapter tests, now in
+`crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs`, continue to cover
+substitution, cleanup, and terminal paths.
+
+The actual public protected route passed 1/1 in 14.36 seconds on mi300x gfx942
+with `HSA_XNACK=0`. It used Worker ID
+`fe2o3-worker-v1-sha256-6c3dfd5f784b3babe140006aba57a214a897b171860928440184fa201b6f96db`
+and LLVM build
+`upstream-llvmorg-22.1.8-ca7933e47d3a3451d81e72ac174dcb5aa28b59d1`.
+The test compared all 256 output bit patterns with the CPU reference, required A
+and B to remain unchanged, and checked all A/B/C guard canaries. It emitted:
+
+```text
+FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b523164b679ff7af3b4e819ad041713c53c6841399ac7cea95090f09774 unload=df2f77ee798444a9e1fe5e27f219bdf720386eb8603a9a74fccc0df8efb3921c
+```
+
+This is one exact bounded Slice 1 protected hardware observation. It does not
+authenticate compiler origin, consume a Verus certificate, establish
+MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, generally prove
+illegal-access or race freedom, generalize GEMM, or cover protected Slice 3 or
+Slice 4. The earlier observational MI300X tiled-GEMM run remains separate.
 
 Commit `5a45239ae` adds a bounded Verus relation for the exact Slice 1 source
 model. It reports 96 verified and 0 errors for exact lengths, same-epoch LDS
@@ -246,9 +264,10 @@ host adapter in [`#99`](https://github.com/harsh-nod/fe2o3/issues/99) are
 complete. Under [`#94`](https://github.com/harsh-nod/fe2o3/issues/94), the exact
 one-shot `Joined -> Loaded -> Completed -> Unloaded` implementation in
 [`#100`](https://github.com/harsh-nod/fe2o3/issues/100) is also complete. Its
-focused integration evidence uses a fake adapter; real protected hardware
-measurement, protected-execution authority, and source-to-HSACO or Verus
-authority are not complete.
+fake-adapter suite is joined by one exact protected mi300x hardware measurement.
+That bounded result is not compiler-origin authentication, source-to-HSACO or
+Verus authority, general illegal-access or race-freedom proof, generalized
+GEMM, or protected Slice 3/4 execution.
 Exact Slice 4 lowering is complete and
 [#86](https://github.com/harsh-nod/fe2o3/issues/86) is closed. Protected Slice
 3 and Slice 4 execution remain open in
@@ -342,8 +361,9 @@ At the audited pin:
   a single-use Worker V2 handoff, exact direct LLVM/LLD API finalization, an
   inert generated host adapter, a one-shot `Joined -> Loaded -> Completed ->
   Unloaded` lifecycle implementation, LLVM lowering, and final-HSACO
-  machine-shape evidence. The lifecycle's focused integration tests use a fake
-  adapter and provide no real protected hardware measurement.
+  machine-shape evidence. The exact production route also has one bounded
+  protected mi300x run over 256 outputs with unchanged A/B values, A/B/C guard
+  canaries, bitwise CPU-reference agreement, and terminal unload identity.
   An independent six-case MI300X run observed the IR-derived HSACO over 1,536
   outputs with allocation canaries. That hardware run remains independent of the
   source-bound finalization and host-preparation records, so it is neither
@@ -366,8 +386,9 @@ At the audited pin:
   exact descriptor, a one-shot inert final HSACO receipt, and generated typed
   host preparation, then enters a fixed one-shot lifecycle with exact context,
   resource, ABI, completion, and terminal-unload checks. This implementation
-  exposes no generic or raw launch and has not produced a real protected
-  hardware measurement or protected-execution authority.
+  exposes no generic or raw launch. One exact bounded protected Slice 1 run has
+  passed; it does not authenticate compiler origin or establish source-to-HSACO,
+  Verus, compiler-refinement, generalized-safety, or generalized-GEMM authority.
 - `macro_rules!` is optional declarative compile-time token expansion. Vecadd
   uses it to share a small body with Verus; it is not the GPU kernel marker,
   creates no runtime mechanism, and proves nothing by itself. Production kernel

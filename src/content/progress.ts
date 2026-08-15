@@ -10,6 +10,7 @@ import { deepFreeze, hasOwn } from "./registry";
 import {
   completedIssue94IncrementRecord,
   isStagedEvidenceId,
+  protectedSlice1HardwareObservation,
   stagedEvidenceDetail,
   stagedEvidenceRecord,
   validateStagedEvidenceCatalog,
@@ -102,20 +103,20 @@ export type DevelopmentCheckpoint =
   | StagedEvidenceDevelopmentCheckpoint;
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-14",
+  reviewedOn: "2026-08-15",
   auditedCommit: FE2O3_PIN.commit,
   lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
   lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
   eventualPublicCommit: publicationGate.requiredCommit,
   eventualPublicTree: publicationGate.requiredTree,
   publicationGate: {
-    state: "blocked-until-public-refs-match",
+    state: "public-refs-match-required-target",
     requiredCommit: publicationGate.requiredCommit,
     requiredRefs: publicationGate.requiredRefs.map(
       ({ repository, ref }) => `${repository}@${ref}`,
     ),
     requirement:
-      "Do not publish this site revision until both required public refs resolve exactly to the required commit.",
+      "Both required public refs resolve exactly to the required commit; deployment continues to verify that exact match.",
   },
   repositories: publicationGate.requiredRefs.map(
     ({ repository }) => `https://github.com/${repository}`,
@@ -133,14 +134,19 @@ export const progressSnapshot = {
   },
   protectedLifecycle: {
     issue: 100,
-    state: "implemented-fake-adapter-validated",
+    state: "bounded-protected-hardware-observed",
     stages: [
       "Joined",
       "Loaded",
       "Completed",
       "Unloaded",
     ],
-    realProtectedHardwareMeasurement: false,
+    realProtectedHardwareMeasurement: true,
+    target: protectedSlice1HardwareObservation.target,
+    hsaXnack: protectedSlice1HardwareObservation.hsaXnack,
+    outputs: protectedSlice1HardwareObservation.outputs,
+    maxAbsError: protectedSlice1HardwareObservation.maxAbsError,
+    marker: protectedSlice1HardwareObservation.marker,
   },
 } as const;
 
@@ -748,7 +754,7 @@ export function developmentCheckpointDetail(
       return SAFE_PROGRESS_DETAIL;
     }
   }
-  return `This implementation snapshot is publication-gated. Its deployment workflow requires harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main to both resolve exactly to ${publicationGate.requiredCommit}.`;
+  return `This final public-main documentation snapshot is publication-gated. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to ${publicationGate.requiredCommit}, and the deployment workflow continues to require that exact match.`;
 }
 
 export const kernelProgress: KernelProgress[] = [
@@ -818,7 +824,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "shared protected finalizer, host, and Worker V2 runtime (fe2o3 #94)",
+      "compiler-origin-authenticated source-to-HSACO binding",
       "production proof-certificate consumption (fe2o3 #91)",
       "K-phase, grid, and edge proof extension (fe2o3 #92)",
       "MIR-to-IR and IR-to-machine safety correspondence (fe2o3 #106 and #107)",
@@ -827,7 +833,7 @@ export const kernelProgress: KernelProgress[] = [
       "source and Verus-to-machine refinement",
       "IEEE BF16/F32 numerical contract (fe2o3 #109)",
     ],
-    next: "Measure the implemented Joined -> Loaded -> Completed -> Unloaded Slice 1 path on real protected MI300X hardware and bind its exact runtime observations without borrowing authority from the fake-adapter suite; then consume identity-bound proof certificates, carry Slice 3 and Slice 4 through protected execution, and generalize the exact profiles.",
+    next: "Bind the measured exact Slice 1 route to authenticated compiler origin, identity-bound proof certificates, and MIR/Kernel-IR/LLVM/ISA refinement without generalizing from one hardware run; then carry Slice 3 and Slice 4 through protected execution and generalize the exact profiles.",
   },
   {
     id: "softmax",

@@ -38,7 +38,7 @@ export interface CompletedIssue94IncrementRecord {
   authority:
     | "finalization-mechanics-only"
     | "host-preparation-only"
-    | "protected-lifecycle-mechanics-only";
+    | "bounded-protected-hardware-observation-only";
   commit: string;
   tree: string;
   commands: readonly string[];
@@ -77,6 +77,27 @@ const TILED_GEMM_V1_HARDWARE_COMMAND =
 
 const TILED_GEMM_LDS_V1_HARDWARE_COMMAND =
   "env FE2O3_RUN_GFX942_TILED_GEMM_LDS_V1_HARDWARE=1 HSA_XNACK=0 HIP_VISIBLE_DEVICES=0 ROCR_VISIBLE_DEVICES=0 FE2O3_LLC=/absolute/canonical/llc FE2O3_LLC_SHA256=<sha256> FE2O3_LLD=/absolute/canonical/ld.lld FE2O3_LLD_SHA256=<sha256> FE2O3_LLVM_OBJDUMP=/absolute/canonical/llvm-objdump FE2O3_LLVM_OBJDUMP_SHA256=<sha256> cargo test --locked -p fe2o3-hsa-runtime --features hardware-test-hooks --test tiled_gemm_lds_v1_hardware gfx942_tiled_gemm_lds_v1_observational_hardware_evidence -- --ignored --exact --nocapture";
+
+export const protectedSlice1HardwareObservation = deepFreeze({
+  commit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+  tree: "c65c6ab567409afaaef6ea39c8befcac21d47119",
+  target: "gfx942:xnack-",
+  hsaXnack: 0,
+  workerId:
+    "fe2o3-worker-v1-sha256-6c3dfd5f784b3babe140006aba57a214a897b171860928440184fa201b6f96db",
+  llvmBuild:
+    "upstream-llvmorg-22.1.8-ca7933e47d3a3451d81e72ac174dcb5aa28b59d1",
+  marker:
+    "FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b523164b679ff7af3b4e819ad041713c53c6841399ac7cea95090f09774 unload=df2f77ee798444a9e1fe5e27f219bdf720386eb8603a9a74fccc0df8efb3921c",
+  outputs: 256,
+  maxAbsError: 0,
+  passed: 1,
+  total: 1,
+  durationSeconds: 14.36,
+});
+
+const PROTECTED_SLICE1_WORKER_V2_HARDWARE_COMMAND =
+  "env FE2O3_RUN_GFX942_TILED_GEMM_LDS_SLICE1_WORKER_V2_HARDWARE=1 HSA_XNACK=0 HIP_VISIBLE_DEVICES=0 ROCR_VISIBLE_DEVICES=0 FE2O3_LDS_GEMM_V1_WORKER=/absolute/measured/fe2o3-llvm-link-worker FE2O3_LDS_GEMM_V1_WORKER_BUILD_ID=fe2o3-worker-v1-sha256-6c3dfd5f784b3babe140006aba57a214a897b171860928440184fa201b6f96db FE2O3_LDS_GEMM_V1_LLVM_BUILD_ID=upstream-llvmorg-22.1.8-ca7933e47d3a3451d81e72ac174dcb5aa28b59d1 cargo test --locked -p fe2o3-hsa-runtime --features hardware-test-hooks --test tiled_gemm_lds_slice1_worker_v2_hardware gfx942_tiled_gemm_lds_slice1_worker_v2_protected_hardware -- --ignored --exact --nocapture";
 
 const stagedEvidenceRecords = deepFreeze({
   "tiled-source-bridge-v1": {
@@ -851,7 +872,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "sealed-registry-boundary",
-        text: "The retained import is non-Clone and exposes no into_inner escape. It authenticates no compiler origin and grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority. The separately typed #97, #99, and #100 increments below complete finalization, host-preparation, and one-shot lifecycle mechanics without retroactively strengthening this registry record.",
+        text: "The retained import is non-Clone and exposes no into_inner escape. It authenticates no compiler origin and grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority. The separately typed #97, #99, and #100 increments below complete finalization, host preparation, one-shot lifecycle mechanics, and one bounded protected hardware observation without retroactively strengthening this registry record.",
       },
     ],
   },
@@ -936,29 +957,33 @@ const completedIssue94IncrementRecords = deepFreeze({
   },
   "tiled-lds-protected-lifecycle-v1": {
     id: "tiled-lds-protected-lifecycle-v1",
-    stageLabel: "66f62cac #100 one-shot protected lifecycle mechanics",
-    authority: "protected-lifecycle-mechanics-only",
-    commit: "66f62cac8e21b4e3b141beb7140f8753213fbc25",
-    tree: "724f72dd7f1212021d81f3c2ac692b672c00d886",
+    stageLabel: "c4fcb4d9 exact protected Slice 1 lifecycle observation",
+    authority: "bounded-protected-hardware-observation-only",
+    commit: protectedSlice1HardwareObservation.commit,
+    tree: protectedSlice1HardwareObservation.tree,
     commands: [
-      "cargo test --locked -p fe2o3-host --test generated_lds_gemm_lifecycle",
+      "cargo test --locked -p fe2o3-host --lib",
       "cargo test --locked -p fe2o3-hsa-runtime --lib",
       "cargo clippy --locked -p fe2o3-host --all-targets --no-deps -- -D warnings",
       "cargo clippy --locked -p fe2o3-hsa-runtime --all-targets --no-deps -- -D warnings",
+      PROTECTED_SLICE1_WORKER_V2_HARDWARE_COMMAND,
     ],
     sourcePaths: [
       "crates/fe2o3-host/src/generated_lds_gemm_lifecycle.rs",
+      "crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs",
       "crates/fe2o3-host/src/lib.rs",
-      "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
       "crates/fe2o3-hsa-runtime/src/dispatch.rs",
       "crates/fe2o3-hsa-runtime/src/lds_gemm_resource_observation.rs",
       "crates/fe2o3-hsa-runtime/src/lib.rs",
+      "crates/fe2o3-hsa-runtime/src/lifecycle.rs",
+      "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
+      "crates/fe2o3-hsa-runtime/tests/support/tiled_gemm_lds_slice1_worker_v2_runner.rs",
     ],
-    target: "gfx942:xnack-",
+    target: protectedSlice1HardwareObservation.target,
     assertions: [
       {
         id: "linear-state-machine",
-        text: "Commits 7f4256a45e6c296f0fe593e9a5c416a8f30121d4, d8eef1333e6368436599e0e5e54feb19a0404477, and 66f62cac8e21b4e3b141beb7140f8753213fbc25 complete #100 resource observation, one-shot lifecycle, and production-adapter integration. The private non-Clone states consume ownership in the exact order Joined -> Loaded -> Completed -> Unloaded; no state exposes finalized bytes, native handles, or a generic/raw launch operation.",
+        text: "Commit c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119, is the completed exact protected Slice 1 checkpoint. The #100 private non-Clone states consume ownership in the exact order Joined -> Loaded -> Completed -> Unloaded; no state exposes finalized bytes, native handles, or a generic/raw launch operation.",
       },
       {
         id: "exact-join-and-runtime-gates",
@@ -970,11 +995,19 @@ const completedIssue94IncrementRecords = deepFreeze({
       },
       {
         id: "terminal-policy",
-        text: "Every recoverable failure after successful load and before packet publication, plus failures after proven quiescence, performs one checked unload. Dropping Loaded or Completed also unloads once. Adapter unwind, unload error, or unload-observation ambiguity aborts; a post-submit queue error or completion deadline is process-terminal and retains submitted resources because GPU quiescence is unknown rather than returning or attempting an ordinary unload.",
+        text: "On failure before packet publication, the production adapter cancels the prepared dispatch and releases its queue and kernarg before the selected kernel is dropped and the executable is terminally unloaded. Failures after proven quiescence and dropping Loaded or Completed also perform one checked unload. Adapter unwind, unload error, or unload-observation ambiguity aborts; a post-submit queue error or completion deadline is process-terminal and retains submitted resources because GPU quiescence is unknown rather than returning or attempting an ordinary unload.",
+      },
+      {
+        id: "protected-hardware-observation",
+        text: "The public protected route passed on mi300x gfx942 with HSA_XNACK=0 using Worker ID fe2o3-worker-v1-sha256-6c3dfd5f784b3babe140006aba57a214a897b171860928440184fa201b6f96db and LLVM build upstream-llvmorg-22.1.8-ca7933e47d3a3451d81e72ac174dcb5aa28b59d1. Its exact marker was FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b523164b679ff7af3b4e819ad041713c53c6841399ac7cea95090f09774 unload=df2f77ee798444a9e1fe5e27f219bdf720386eb8603a9a74fccc0df8efb3921c.",
+      },
+      {
+        id: "measured-result",
+        text: "The protected hardware test compared all 256 output bit patterns with the CPU reference, required A and B to remain unchanged, checked every A/B/C guard canary, and passed 1/1 in 14.36 seconds. FakeAdapter tests in crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs still cover identity and contract substitutions, cleanup, and process-terminal paths, but they are no longer the only #100 evidence.",
       },
       {
         id: "lifecycle-evidence-boundary",
-        text: "The focused #100 state-machine and substitution coverage uses a FakeAdapter. The production HSA adapter implements exact context and resource observation, but this record contains no real protected hardware measurement, numerical result, compiler-origin authentication, Verus proof consumption, compiler or machine refinement, or source-to-HSACO authority. The earlier observational MI300X run remains separate.",
+        text: "This is one exact bounded Slice 1 protected hardware observation. It does not authenticate compiler origin, consume a Verus certificate, establish MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, generally prove illegal-access or race freedom, generalize GEMM, or cover protected Slice 3 or Slice 4. The earlier observational IR-derived MI300X run remains a separate evidence layer.",
       },
     ],
   },

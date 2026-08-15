@@ -874,14 +874,14 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-14",
+      reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
-      eventualPublicTree: "c2604487ec76f337d7ada2c0319fffd02b3ce8c9",
+      eventualPublicCommit: "cfcb579e20e31fd5feaa21f262fadeb8e3d08676",
+      eventualPublicTree: "8a59c29cff1366e1ba2bcfdfba034516877a801c",
       publicationGate: {
-        state: "blocked-until-public-refs-match",
-        requiredCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
+        state: "public-refs-match-required-target",
+        requiredCommit: "cfcb579e20e31fd5feaa21f262fadeb8e3d08676",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -889,7 +889,7 @@ describe("implementation progress integrity", () => {
       },
     });
     expect(progressSnapshot.publicationGate.requirement).toContain(
-      "Do not publish this site revision until both required public refs",
+      "Both required public refs resolve exactly",
     );
     expect(developmentCheckpoints[0]).toMatchObject({
       name: "Published implementation snapshot (publication gated)",
@@ -897,7 +897,7 @@ describe("implementation progress integrity", () => {
       state: "public",
     });
     expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
-      "implementation snapshot is publication-gated",
+      "final public-main documentation snapshot is publication-gated",
     );
     expect(developmentCheckpoints[1]).toMatchObject({
       name: "Last audited public baseline",
@@ -1443,7 +1443,7 @@ describe("implementation progress integrity", () => {
       verify: "partial",
       evidence: "partial",
       dependsOn: [
-        "shared protected finalizer, host, and Worker V2 runtime (fe2o3 #94)",
+        "compiler-origin-authenticated source-to-HSACO binding",
         "production proof-certificate consumption (fe2o3 #91)",
         "K-phase, grid, and edge proof extension (fe2o3 #92)",
         "MIR-to-IR and IR-to-machine safety correspondence (fe2o3 #106 and #107)",
@@ -1463,7 +1463,7 @@ describe("implementation progress integrity", () => {
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
     expect(orientation).toContain(
-      "must not be published until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main",
+      "Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly",
     );
     expect(orientation).toContain("not a compiler refinement proof");
     expect(orientation).toContain("passed 1/1 in 40.92 seconds");
@@ -1484,9 +1484,24 @@ describe("implementation progress integrity", () => {
     );
     expect(renderedStaged).toContain("inputs remained bitwise unchanged");
     expect(renderedStaged).not.toMatch(/immutable\s+inputs/);
+    expect(renderedStaged).toContain(
+      "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+    );
+    expect(renderedStaged).toContain(
+      "FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0",
+    );
+    expect(renderedStaged).toContain(
+      "fe2o3-worker-v1-sha256-6c3dfd5f784b3babe140006aba57a214a897b171860928440184fa201b6f96db",
+    );
+    expect(renderedStaged).toContain(
+      "crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs",
+    );
+    expect(renderedStaged).not.toContain(
+      "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
+    );
     expect(mapping).toContain("#[kernel] is the canonical user form");
     expect(mapping).toContain("sourceCommit\":\"89ebe69bb3daf8262a485463c5fdf04cf095346f");
-    expect(mapping).toContain("not a functional kernel");
+    expect(mapping).toContain("not a generalized functional or production kernel");
     expect(mapping).toContain("authenticates the exact attributed source");
     expect(mapping).toContain("stops before descriptor construction and Worker V2");
     expect(mapping).toContain("six cases checked 1,536 outputs");
@@ -1500,6 +1515,8 @@ describe("implementation progress integrity", () => {
     expect(renderedStaged).toContain("12 expected negative rejections");
     expect(mapping).toContain("M=64, N=48, K=16");
     expect(mapping).toContain("gfx942:xnack- COV6");
+    expect(mapping).toContain("passed 1/1 in 14.36 seconds");
+    expect(mapping).toContain("one exact bounded Slice 1 protected hardware observation");
     expect(mapping).toContain("Slice 4 at f24063534");
     expect(mapping).toContain("Commit 35575cc32");
     expect(mapping).toContain("M=17, N=19, K=18");

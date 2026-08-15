@@ -88,8 +88,8 @@ test("tiled GEMM shows canonical attributed source without production promotion"
   await expect(page.getByRole("tabpanel")).toContainText(
     "#[kernel] is the canonical user form",
   );
-  await expect(page.getByText(/Reviewed attributed source excerpt\./)).toContainText(
-    "No final HSACO, protected load, launch, hardware execution, or production proof-certificate authority is claimed",
+  await expect(page.getByText(/Reviewed attributed source excerpt/)).toContainText(
+    "No final HSACO authority, compiler-origin authentication, source-to-HSACO authority, or production proof-certificate authority is granted by this source tab itself",
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
