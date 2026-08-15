@@ -7,7 +7,9 @@ import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
 
 export interface SourceMilestoneRecord {
   id: SourceMilestoneId;
-  lessonId: "reductions-scans" | "lds-barriers-atomics";
+  lessonId: "reductions-scans" | "lds-barriers-atomics" | "flash-attention";
+  claim: SourceMilestoneEvidenceReference["claim"];
+  authority: SourceMilestoneEvidenceReference["authority"];
   claimLabel: string;
   detail: string;
   commit: string;
@@ -22,12 +24,15 @@ export interface SourceMilestoneRecord {
 export const sourceMilestoneOrder = deepFreeze([
   "wave64-collectives-source-v1",
   "workgroup-sync-source-v1",
+  "flash-attention-source-v1",
 ] satisfies SourceMilestoneId[]);
 
 const sourceMilestoneRecords = deepFreeze({
   "wave64-collectives-source-v1": {
     id: "wave64-collectives-source-v1",
     lessonId: "reductions-scans",
+    claim: "source-model-verified",
+    authority: "source-model-only",
     claimLabel: "Exact masked Wave64 source and model",
     detail:
       "Public Phase A contains ordinary attributed Rust for one fixed masked Wave64 reduction plus inclusive and exclusive scans, a checked CPU oracle, deterministic mutation tests, and a pinned Verus model. It grants no compiler-profile, artifact, host-launch, runtime, or hardware authority.",
@@ -50,6 +55,8 @@ const sourceMilestoneRecords = deepFreeze({
   "workgroup-sync-source-v1": {
     id: "workgroup-sync-source-v1",
     lessonId: "lds-barriers-atomics",
+    claim: "source-model-verified",
+    authority: "source-model-only",
     claimLabel: "Exact typed LDS and scoped-atomic sources",
     detail:
       "Public Phase A contains separate ordinary attributed Rust files for one fixed LDS reduction and one scoped global atomic add, checked CPU oracles, deterministic mutation tests, and a pinned Verus model. DeviceGlobalMutPtr, exclusive GlobalMut host admission, and exact linear DynamicLds encode source-level capabilities without granting compiler-profile, artifact, host-launch, runtime, or hardware authority.",
@@ -67,6 +74,30 @@ const sourceMilestoneRecords = deepFreeze({
     primarySourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
     primarySourceSha256:
       "3e7ec081c7958288f9d997d40e6f41a7faabc56a3add734099cd1777443b2983",
+    target: "gfx942:xnack-",
+  },
+  "flash-attention-source-v1": {
+    id: "flash-attention-source-v1",
+    lessonId: "flash-attention",
+    claim: "source-tested",
+    authority: "source-tested-only",
+    claimLabel: "Exact causal FlashAttention Phase A source",
+    detail:
+      "Public Phase A contains ordinary attributed Rust for the exact B=1, H=1, N=8, D=16 FP32 causal fused online recurrence, an independent two-pass FP64 oracle, executable proof-facing models, and deterministic mutation tests. It grants no Verus, compiler-profile, artifact, host-launch, runtime, or hardware authority.",
+    commit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
+    tree: "9a7fcd78675c6fe793d8e8c1f697be052b962583",
+    commands: [
+      "cargo test --locked --manifest-path examples/flash_attention_v1/Cargo.toml",
+      "cargo test --locked --release --manifest-path examples/flash_attention_v1/Cargo.toml",
+    ],
+    sourcePaths: [
+      "examples/flash_attention_v1/src/kernel.rs",
+      "examples/flash_attention_v1/src/oracle.rs",
+      "examples/flash_attention_v1/src/proof_model.rs",
+    ],
+    primarySourcePath: "examples/flash_attention_v1/src/kernel.rs",
+    primarySourceSha256:
+      "2b00a64e43e69c416e70080e013edf90e861fef94ee66441da93d2c11b3e8f17",
     target: "gfx942:xnack-",
   },
 } satisfies Record<SourceMilestoneId, SourceMilestoneRecord>);
@@ -88,21 +119,21 @@ export function sourceMilestoneReference(
   return {
     scope: "source-milestone",
     evidenceId: record.id,
-    claim: "source-model-verified",
-    authority: "source-model-only",
+    claim: record.claim,
+    authority: record.authority,
     commit: record.commit,
     tree: record.tree,
     commands: [...record.commands],
     sourcePaths: [...record.sourcePaths],
     target: record.target,
-    note: "Exact public source/model milestone; no executable GPU authority.",
+    note: "Exact public source milestone; no executable GPU authority.",
   };
 }
 
 export function sourceMilestoneClaim(id: SourceMilestoneId): Claim {
   const record = sourceMilestoneRecord(id);
   return {
-    kind: "source-model-verified",
+    kind: record.claim,
     label: record.claimLabel,
     detail: record.detail,
     reference: sourceMilestoneReference(id),

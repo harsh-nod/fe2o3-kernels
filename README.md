@@ -36,11 +36,11 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The checked-in publication gate is pinned to final public-main documentation
-commit `38b0005765944de55bb32c559bc8431637317b2b`, tree
-`adf58f5a6c0d9b9a6d32a9d69ef54dbb48d9ec99`. Both
+The checked-in publication gate is pinned to public-main implementation
+commit `5d4313bcda3479e6c77ce93350ca3428729fdbc0`, tree
+`9a7fcd78675c6fe793d8e8c1f697be052b962583`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
-to that commit. This docs-only descendant contains the exact protected Slice 1
+to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
 `c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`, tree
 `c65c6ab567409afaaef6ea39c8befcac21d47119`: attributed source-to-IR
@@ -59,7 +59,11 @@ generated host/runtime launch, or protected gfx942 execution authority. The
 lesson snapshots for those source-only milestones remain byte-pinned to commit
 `d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8`, tree
 `cdec8448a300aa71d17565ca50fd4d893932f602`, rather than silently following the
-newer publication gate. The snapshot also carries the row-softmax V1 inert
+newer publication gate. A later exact Wave64 increment now reaches deterministic
+in-process upstream LLVM target emission and LLD library linking with exact
+post-link metadata, resource, relocation, dependency, and machine-call checks.
+It still has no generated runtime launch, protected hardware observation, or
+Verus-to-machine refinement. The snapshot also carries the row-softmax V1 inert
 verification certificate: 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
@@ -386,9 +390,10 @@ At the audited pin:
   source carries global address-space identity through `DeviceGlobalMutPtr`,
   generated host admission uses an exclusive `GlobalMut`, and LDS scratch
   consumes an exact linear `DynamicLds` capability. Compiler collector/lowering,
-  profile/descriptor construction, finalization, generated host/runtime launch,
-  and protected gfx942 execution remain open, so these are source/model
-  milestones rather than functional hardware kernels.
+  profile/descriptor construction, generated host/runtime launch, and protected
+  gfx942 execution remain open for synchronization. Wave64 has subsequently
+  reached an exact source-derived compiler profile and direct upstream LLVM/LLD
+  finalizer, but still lacks the runtime/hardware and refinement joins.
 - The tiled-GEMM checkpoint now has source-authenticated selection of the
   canonical direct-global one-tile Kernel IR, a guarded gfx942 hardware harness
   for separately supplied bytes, and structural Worker V2 artifact admission.
@@ -437,8 +442,13 @@ At the audited pin:
 - Tiled GEMM's exact fixed `16x16x16` Slice 1 Kernel, Host, and Result tabs are
   real and pinned. Its generalized dimensions, K phases, grids, tails,
   coefficients, and complete authority chain remain a design-level curriculum.
-  Softmax, flash attention, and mixture-of-experts remain design-only; their
-  snippets are not programs users should expect to run today.
+  Row softmax has an exact typed host adapter, private linear HSA lifecycle, and
+  fail-closed protected harness, but the exact machine has none of the 25 pins
+  needed to authorize a run. FlashAttention Phase A now has exact ordinary
+  attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
+  oracle, executable proof-facing models, and debug/release mutation suites; it
+  has no Verus, compiler, artifact, runtime, or hardware result. Mixture of
+  experts remains design-only until its exact routing source lands.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. The #97 path uses direct LLVM target-machine and LLD

@@ -54,7 +54,7 @@ describe("application shell", () => {
         name: "Flash attention: online invariant",
       }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Design only").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Source tested").length).toBeGreaterThan(0);
   });
 
   it("shows public and candidate kernel delivery states separately", () => {
@@ -68,7 +68,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Audited public")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("38b000576594")).toBeInTheDocument();
+    expect(screen.getByText("5d4313bcda34")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(

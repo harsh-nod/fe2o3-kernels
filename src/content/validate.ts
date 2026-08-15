@@ -368,10 +368,10 @@ function validateLesson(
           });
         }
       }
-      if (claim.kind !== "source-model-verified") {
+      if (claim.kind !== reference.claim) {
         issues.push({
           path: claimPath,
-          message: "source milestone may claim only source/model verification",
+          message: "source milestone claim does not match its evidence record",
         });
       }
     } else {

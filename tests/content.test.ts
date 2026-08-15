@@ -101,8 +101,8 @@ describe("curriculum integrity", () => {
           const record = sourceMilestoneRecord(reference.evidenceId);
           expect(reference.commit).toBe(record.commit);
           expect(reference.tree).toBe(record.tree);
-          expect(reference.claim).toBe("source-model-verified");
-          expect(reference.authority).toBe("source-model-only");
+          expect(reference.claim).toBe(record.claim);
+          expect(reference.authority).toBe(record.authority);
         } else if (reference?.scope === "staged-progress") {
           expect(reference.claim).toBe(claim.kind);
           expect([
@@ -192,10 +192,11 @@ describe("curriculum integrity", () => {
     );
   });
 
-  it("pins exact Wave 2 source-only kernel snapshots", () => {
+  it("pins exact source-only kernel snapshots", () => {
     expect(sourceMilestoneOrder).toEqual([
       "wave64-collectives-source-v1",
       "workgroup-sync-source-v1",
+      "flash-attention-source-v1",
     ]);
     expect(validateSourceMilestoneCatalog()).toEqual([]);
 
@@ -207,6 +208,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/wave64_collectives_v1/src/kernel.rs",
         sha256:
           "01ac1365b0fdfe91cdc8f7cf6a14ae5acbea41528103ec3de5fe6d895261625e",
+        sourceCommit: "d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8",
       },
       {
         lessonId: "lds-barriers-atomics",
@@ -215,6 +217,16 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/workgroup_sync_v1/src/kernel.rs",
         sha256:
           "3e7ec081c7958288f9d997d40e6f41a7faabc56a3add734099cd1777443b2983",
+        sourceCommit: "d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8",
+      },
+      {
+        lessonId: "flash-attention",
+        evidenceId: "flash-attention-source-v1",
+        sourcePath: "examples/flash_attention_v1/src/kernel.rs",
+        bundledPath: "examples/flash_attention_v1/src/kernel.rs",
+        sha256:
+          "2b00a64e43e69c416e70080e013edf90e861fef94ee66441da93d2c11b3e8f17",
+        sourceCommit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
       },
     ] as const;
 
@@ -223,7 +235,7 @@ describe("curriculum integrity", () => {
       const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
       expect(kernel).toMatchObject({
         sourcePath: profile.sourcePath,
-        sourceCommit: "d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8",
+        sourceCommit: profile.sourceCommit,
         sourceSha256: profile.sha256,
         evidenceId: profile.evidenceId,
         explanatory: false,
@@ -1081,14 +1093,18 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("promotes only the exact bounded GEMM source among advanced lessons", () => {
+  it("promotes only exact pinned sources among advanced lessons", () => {
     for (const lesson of lessons.filter((entry) => entry.module >= 4)) {
       const runnable = lesson.claims.some(
         (claim) => claim.kind === "runnable-now",
       );
       expect(runnable).toBe(false);
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
-        ["gemm-tiling", "gemm-proof-plan"].includes(lesson.id) ? false : true,
+        ["gemm-tiling", "gemm-proof-plan", "flash-attention"].includes(
+          lesson.id,
+        )
+          ? false
+          : true,
       );
     }
   });
@@ -1105,11 +1121,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "38b0005765944de55bb32c559bc8431637317b2b",
-      eventualPublicTree: "adf58f5a6c0d9b9a6d32a9d69ef54dbb48d9ec99",
+      eventualPublicCommit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
+      eventualPublicTree: "9a7fcd78675c6fe793d8e8c1f697be052b962583",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "38b0005765944de55bb32c559bc8431637317b2b",
+        requiredCommit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",

@@ -1,5 +1,5 @@
 import { narrativeSection } from "./narrative-registry";
-import flashDesign from "../../examples/flash_attention_design.rs?raw";
+import flashAttentionKernel from "../../examples/flash_attention_v1/src/kernel.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
@@ -34,6 +34,9 @@ const collectivesSource = sourceMilestoneRecord(
 );
 const synchronizationSource = sourceMilestoneRecord(
   "workgroup-sync-source-v1",
+);
+const flashAttentionSource = sourceMilestoneRecord(
+  "flash-attention-source-v1",
 );
 const gemmProtectedResult = resultText(
   "gpu-observed",
@@ -448,7 +451,7 @@ const flash: Lesson = {
   order: 1,
   title: "Flash attention: online invariant",
   summary:
-    "Fuse tiled QK, online softmax, and V accumulation around one row-state invariant without claiming a current executable kernel.",
+    "Inspect the exact fixed-shape causal Phase A kernel, then extend its online invariant toward compilation and GPU execution.",
   duration: "65 min",
   prerequisites: ["GEMM proof plan", "Softmax invariant"],
   objectives: [
@@ -456,33 +459,48 @@ const flash: Lesson = {
     "Track Q, K, V, score, and output tiles through distinct memory epochs.",
     "List masking, precision, and machine-effect evidence required for closure.",
   ],
-  claims: [
-    {
-      kind: "design-only",
-      label: "Flash attention roadmap",
-      detail:
-        "The algorithm, invariants, and evidence plan are educational design material. fe2o3 at this pin cannot compile or run this complete kernel.",
-    },
-  ],
+  claims: [sourceMilestoneClaim("flash-attention-source-v1")],
   sections: [
     narrativeSection("flash-attention/online"),
     narrativeSection("flash-attention/effects"),
     narrativeSection("flash-attention/closure"),
   ],
   tabs: completeTabs(
-    { language: "rust", code: flashDesign, explanatory: true },
+    {
+      language: "rust",
+      code: flashAttentionKernel,
+      sourcePath: flashAttentionSource.primarySourcePath,
+      sourceCommit: flashAttentionSource.commit,
+      sourceSha256: flashAttentionSource.primarySourceSha256,
+      evidenceId: flashAttentionSource.id,
+      explanatory: false,
+    },
     {
       language: "text",
-      code: `Invariant(t):\n  m = max(scores over processed unmasked keys)\n  l = sum(exp(score - m)) over the same keys\n  o = sum(exp(score - m) * V) over the same keys\n\nFinal: output = o / l`,
+      code: `Executable Phase A proof-facing model:\n  m = max(scores over processed causal keys)\n  l = sum(exp(score - m)) over the same keys\n  o = sum(exp(score - m) * V) over the same keys\n\nFinal: output = o / l\n\nNo Verus theorem is claimed yet.`,
+      sourcePath: "examples/flash_attention_v1/src/proof_model.rs",
+      sourceCommit: flashAttentionSource.commit,
+      evidenceId: flashAttentionSource.id,
       explanatory: true,
+      notice:
+        "The executable model and mutation tests check the recurrence structure. A pinned Verus proof and refinement to compiled effects remain open.",
     },
-    { language: "bash", code: noHost, explanatory: true },
+    {
+      language: "bash",
+      code: noHost,
+      explanatory: true,
+      notice:
+        "No generated host/runtime adapter exists for this exact FlashAttention profile.",
+    },
     {
       language: "text",
       code: resultText(
-        "design-only",
-        "No compile, HSACO, dispatch, or Verus result is claimed for the complete flash-attention pseudocode.",
+        "source-tested",
+        "Exact ordinary attributed source, an independent two-pass FP64 oracle, 24 debug vectors, 24 release vectors, executable proof-facing models, and mutation rejection tests are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution. No functional hardware result is claimed. No Verus theorem is claimed.",
       ),
+      explanatory: true,
+      notice:
+        "Evidence boundary: this is a fixed-shape source/oracle result, not a compiler, proof, or GPU result.",
     },
   ),
   diagram: "attention",

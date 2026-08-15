@@ -11,6 +11,7 @@ export const FE2O3_PIN = {
 
 export type EvidenceKind =
   | "runnable-now"
+  | "source-tested"
   | "source-model-verified"
   | "compiler-hsaco-observed"
   | "gpu-observed"
@@ -72,7 +73,8 @@ export type CompletedIssue94IncrementId =
 
 export type SourceMilestoneId =
   | "wave64-collectives-source-v1"
-  | "workgroup-sync-source-v1";
+  | "workgroup-sync-source-v1"
+  | "flash-attention-source-v1";
 
 export type CodeTabEvidenceId =
   | StagedEvidenceId
@@ -90,8 +92,8 @@ export interface SourceMilestoneEvidenceReference
   extends EvidenceReferenceBase {
   scope: "source-milestone";
   evidenceId: SourceMilestoneId;
-  claim: "source-model-verified";
-  authority: "source-model-only";
+  claim: "source-tested" | "source-model-verified";
+  authority: "source-tested-only" | "source-model-only";
 }
 
 export type EvidenceReference =
@@ -201,6 +203,11 @@ export const evidenceLabels: Record<
   "runnable-now": {
     short: "Runnable now",
     description: "An exact current fe2o3 path builds and executes this kernel.",
+  },
+  "source-tested": {
+    short: "Source tested",
+    description:
+      "Exact ordinary kernel source has checked host models or oracles; compiler and GPU execution are separate.",
   },
   "source-model-verified": {
     short: "Verus model",

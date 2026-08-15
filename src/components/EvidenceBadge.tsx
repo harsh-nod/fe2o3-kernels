@@ -1,6 +1,7 @@
 import {
   BookOpenCheck,
   CircuitBoard,
+  FileCode2,
   FlaskConical,
   Play,
   Route,
@@ -9,6 +10,7 @@ import { evidenceLabels, type EvidenceKind } from "../content/model";
 
 const icons = {
   "runnable-now": Play,
+  "source-tested": FileCode2,
   "source-model-verified": BookOpenCheck,
   "compiler-hsaco-observed": CircuitBoard,
   "gpu-observed": FlaskConical,

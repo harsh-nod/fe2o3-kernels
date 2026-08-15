@@ -563,6 +563,7 @@ p {
 }
 
 .evidence-runnable-now,
+.evidence-source-tested,
 .evidence-source-model-verified {
   color: var(--accent-strong);
   background: var(--accent-soft);
