@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to final public-main documentation
-commit `74c8da068703d5a310253546e15937351a43283a`, tree
-`12d9c482ea9439de53ec2e7120169fcd56afa5c2`. Both
+commit `fda1aa874dc51dfa7491cdb75f289c4277dce513`, tree
+`1c51ae0849216a58e4ba34064dab670ee545c14e`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This docs-only descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -64,6 +64,9 @@ verification certificate: 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
 certificate itself grants no compiler, artifact, launch, or hardware authority. The
+public snapshot also isolates the 64-connection broker-capacity test from the
+separate concurrent executable-authentication and descriptor-transfer test, so
+hosted CI exercises each bounded property without coupling their deadlines. The
 publication workflow continues to require both public refs to resolve exactly
 to the gated commit before deployment. The last audited public baseline remains
 `96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
