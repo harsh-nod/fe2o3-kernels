@@ -1,6 +1,7 @@
 import {
   stagedReference,
   type Claim,
+  type CompletedIssue94IncrementId,
   type EvidenceKind,
   type StagedEvidenceAuthority,
   type StagedEvidenceId,
@@ -26,11 +27,6 @@ export interface StagedEvidenceRecord {
   target: string;
   assertions: readonly StagedEvidenceAssertion[];
 }
-
-export type CompletedIssue94IncrementId =
-  | "tiled-lds-direct-finalization-v1"
-  | "tiled-lds-host-adapter-v1"
-  | "tiled-lds-protected-lifecycle-v1";
 
 export interface CompletedIssue94IncrementRecord {
   id: CompletedIssue94IncrementId;
@@ -969,6 +965,7 @@ const completedIssue94IncrementRecords = deepFreeze({
       PROTECTED_SLICE1_WORKER_V2_HARDWARE_COMMAND,
     ],
     sourcePaths: [
+      "examples/tiled_gemm_v1/src/kernel.rs",
       "crates/fe2o3-host/src/generated_lds_gemm_lifecycle.rs",
       "crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs",
       "crates/fe2o3-host/src/lib.rs",
@@ -1041,6 +1038,15 @@ export function completedIssue94IncrementRecord(
   id: CompletedIssue94IncrementId,
 ): DeepReadonly<CompletedIssue94IncrementRecord> {
   return completedIssue94IncrementRecords[id];
+}
+
+export function isCompletedIssue94IncrementId(
+  value: unknown,
+): value is CompletedIssue94IncrementId {
+  return (
+    typeof value === "string" &&
+    completedIssue94IncrementOrder.some((id) => id === value)
+  );
 }
 
 export function completedIssue94IncrementDetail(): string {

@@ -10,6 +10,8 @@ import {
   validateNarrativeRegistry,
 } from "./narrative-registry";
 import {
+  completedIssue94IncrementRecord,
+  isCompletedIssue94IncrementId,
   isStagedEvidenceId,
   stagedEvidenceDetail,
   stagedEvidenceOrder,
@@ -19,6 +21,10 @@ import {
 } from "./staged-evidence";
 
 const exactObjectName = /^[0-9a-f]{40}$/;
+const promotedAlgorithmLessonIds = new Set([
+  "gemm-tiling",
+  "gemm-proof-plan",
+]);
 const stagedAuthorities = new Set([
   "source-admission-only",
   "harness-only",
@@ -125,6 +131,51 @@ function validateLesson(
         path: tabPath,
         message: "code tab source is not pinned to an exact commit",
       });
+    }
+    if (tab.evidenceId) {
+      const evidence = isStagedEvidenceId(tab.evidenceId)
+        ? stagedEvidenceRecord(tab.evidenceId)
+        : isCompletedIssue94IncrementId(tab.evidenceId)
+          ? completedIssue94IncrementRecord(tab.evidenceId)
+          : undefined;
+      if (!evidence) {
+        issues.push({
+          path: tabPath,
+          message: "code tab has no recognized evidence linkage",
+        });
+      } else {
+        if (tab.sourceCommit !== evidence.commit) {
+          issues.push({
+            path: tabPath,
+            message: "code tab source commit does not match its evidence",
+          });
+        }
+        if (!tab.sourcePath || !evidence.sourcePaths.includes(tab.sourcePath)) {
+          issues.push({
+            path: tabPath,
+            message: "code tab source path is not covered by its evidence",
+          });
+        }
+      }
+    }
+  }
+
+  if (promotedAlgorithmLessonIds.has(lesson.id)) {
+    const kernel = lesson.tabs.find((tab) => tab.kind === "kernel");
+    if (kernel?.explanatory !== false) {
+      issues.push({
+        path,
+        message: "promoted algorithm kernel must be marked real",
+      });
+    }
+    for (const kind of ["kernel", "verus", "host"] as const) {
+      const tab = lesson.tabs.find((candidate) => candidate.kind === kind);
+      if (!tab?.sourcePath || !tab.sourceCommit || !tab.evidenceId) {
+        issues.push({
+          path,
+          message: `promoted algorithm ${kind} tab lacks exact source and evidence linkage`,
+        });
+      }
     }
   }
 

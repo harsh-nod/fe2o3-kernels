@@ -214,7 +214,9 @@ replay command. Their Host tabs link and show the protected Worker V2 hardware
 test command at `c4fcb4d9`; the Result tabs record the exact marker, worker and
 LLVM identities, 256 bitwise oracle matches, immutable A/B checks, all A/B/C
 guard canaries, and the 14.36-second result. This is a real fixed-shape source
-and measured route, not tutorial pseudocode.
+and measured route, not tutorial pseudocode. Each promoted Kernel, Verus, and
+Host tab also names the canonical evidence record that covers its exact source
+path and commit; curriculum validation rejects missing or mismatched links.
 
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish

@@ -121,6 +121,7 @@ describe("curriculum integrity", () => {
       expect(kernel).toMatchObject({
         sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
         sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+        evidenceId: "tiled-lds-protected-lifecycle-v1",
         explanatory: false,
       });
       expect(
@@ -134,6 +135,7 @@ describe("curriculum integrity", () => {
         sourcePath:
           "examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
         sourceCommit: "5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
+        evidenceId: "tiled-lds-source-model-correspondence-v1",
         explanatory: true,
       });
       expect(proof?.code).toContain("--test lds_source_refinement");
@@ -144,6 +146,7 @@ describe("curriculum integrity", () => {
         sourcePath:
           "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
         sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+        evidenceId: "tiled-lds-protected-lifecycle-v1",
         explanatory: false,
       });
       expect(host?.code).toContain(
@@ -171,6 +174,64 @@ describe("curriculum integrity", () => {
     expect(validateCurriculum(changed)).toContainEqual(
       expect.objectContaining({
         message: "code tab source is not pinned to an exact commit",
+      }),
+    );
+  });
+
+  it("rejects promoted GEMM tabs without exact evidence linkage", () => {
+    const mutateKernel = (mutate: (kernel: Record<string, unknown>) => void) => {
+      const changed = structuredClone(curriculum);
+      const kernel = changed
+        .flatMap((module) => module.lessons)
+        .find((entry) => entry.id === "gemm-tiling")
+        ?.tabs.find((tab) => tab.kind === "kernel");
+      expect(kernel).toBeDefined();
+      mutate(kernel as unknown as Record<string, unknown>);
+      return validateCurriculum(changed);
+    };
+
+    expect(
+      mutateKernel((kernel) => delete kernel.evidenceId),
+    ).toContainEqual(
+      expect.objectContaining({
+        message:
+          "promoted algorithm kernel tab lacks exact source and evidence linkage",
+      }),
+    );
+    expect(
+      mutateKernel((kernel) => {
+        kernel.sourceCommit = "5a45239aeeda3ca64cf16beb7fb1d3589e649bfe";
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        message: "code tab source commit does not match its evidence",
+      }),
+    );
+    expect(
+      mutateKernel((kernel) => {
+        kernel.sourcePath = "examples/tiled_gemm_v1/src/oracle.rs";
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        message: "code tab source path is not covered by its evidence",
+      }),
+    );
+    expect(
+      mutateKernel((kernel) => {
+        kernel.evidenceId = "unknown-evidence";
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        message: "code tab has no recognized evidence linkage",
+      }),
+    );
+    expect(
+      mutateKernel((kernel) => {
+        kernel.explanatory = true;
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        message: "promoted algorithm kernel must be marked real",
       }),
     );
   });

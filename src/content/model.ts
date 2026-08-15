@@ -65,6 +65,15 @@ export type StagedEvidenceId =
   | "tiled-lds-inert-worker-handoff-v1"
   | "tiled-lds-sealed-profile-registry-v1";
 
+export type CompletedIssue94IncrementId =
+  | "tiled-lds-direct-finalization-v1"
+  | "tiled-lds-host-adapter-v1"
+  | "tiled-lds-protected-lifecycle-v1";
+
+export type CodeTabEvidenceId =
+  | StagedEvidenceId
+  | CompletedIssue94IncrementId;
+
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";
   evidenceId: StagedEvidenceId;
@@ -120,6 +129,7 @@ export interface CodeTab {
   code: string;
   sourcePath?: string;
   sourceCommit?: string;
+  evidenceId?: CodeTabEvidenceId;
   explanatory?: boolean;
   notice?: string;
 }

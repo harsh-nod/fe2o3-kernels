@@ -52,6 +52,7 @@ function exactGemmKernelTab() {
     code: gemmSlice1Kernel,
     sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
     sourceCommit: protectedSlice1HardwareObservation.commit,
+    evidenceId: "tiled-lds-protected-lifecycle-v1" as const,
     explanatory: false,
   };
 }
@@ -63,6 +64,7 @@ function exactGemmProofTab() {
     sourcePath:
       "examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
     sourceCommit: gemmProofEvidence.commit,
+    evidenceId: "tiled-lds-source-model-correspondence-v1" as const,
     explanatory: true,
     notice:
       "Real pinned command and bounded Verus source/model. The tab shows the replay command rather than reproducing the proof file, so it remains explanatory; 96 obligations verify, but no production certificate is consumed.",
@@ -76,6 +78,7 @@ function exactGemmHostTab() {
     sourcePath:
       "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
     sourceCommit: protectedSlice1HardwareObservation.commit,
+    evidenceId: "tiled-lds-protected-lifecycle-v1" as const,
     explanatory: false,
   };
 }
