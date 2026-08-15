@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to final public-main documentation
-commit `fda1aa874dc51dfa7491cdb75f289c4277dce513`, tree
-`1c51ae0849216a58e4ba34064dab670ee545c14e`. Both
+commit `38b0005765944de55bb32c559bc8431637317b2b`, tree
+`adf58f5a6c0d9b9a6d32a9d69ef54dbb48d9ec99`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This docs-only descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -64,6 +64,11 @@ verification certificate: 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
 certificate itself grants no compiler, artifact, launch, or hardware authority. The
+same public snapshot now contains an exact typed 64-element row-softmax host
+adapter and a private linear HSA load/dispatch/wait/unload lifecycle. Its
+protected hardware harness is compiled and fail-closed, but no new GPU run is
+claimed because the MI300X environment supplied 0 of the 25 exact
+compiler/worker/OCML pins required by that harness. The
 public snapshot also isolates the 64-connection broker-capacity test from the
 separate concurrent executable-authentication and descriptor-transfer test, so
 hosted CI exercises each bounded property without coupling their deadlines. The
