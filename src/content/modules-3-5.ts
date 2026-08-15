@@ -200,7 +200,7 @@ const gemmMapping: Lesson = {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now contains a fixed attributed LDS Slice 1 source with a macro-owned WG64 contract, separate Slice 1 proof, Kernel IR, machine-shape and hardware observations, and independent Slice 2 proof and K32 backend records. They are not joined into a functional or production kernel.",
+        "fe2o3 now contains a fixed attributed LDS Slice 1 source with a macro-owned WG64 contract, separate Slice 1 proof, Kernel IR, machine-shape and hardware observations, independent Slice 2 proof and K32 backend records, and a bounded Slice 3 grid/stride source model. They are not joined into a functional or production kernel.",
     },
     {
       kind: "compiler-hsaco-observed",
@@ -233,7 +233,7 @@ const gemmMapping: Lesson = {
     { language: "rust", code: gemmDesign, explanatory: true },
     {
       language: "text",
-      code: `Slice 1, one phase:\n  every LDS read is initialized in the current epoch\n  every output has one lane/component owner\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n\nObserved proof summary: 196 verified, 0 errors.\nThis exact-real model is not backend or hardware evidence.`,
+      code: `Slice 1, one phase:\n  every LDS read is initialized in the current epoch\n  every output has one lane/component owner\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n\nSlice 3, fixed K=16 and positive tile-aligned M/N:\n  grid maps injectively to C tiles\n  padded lda/ldb/ldc accesses stay in bounds\n  four stores per lane are bounded and globally disjoint\n\nSlice 3 proof summary: 101 verified, 0 errors.\nThe runner checks 73/93/196/101 positives and 12 expected rejections.\nThis source model is not source, backend, hardware, numerical, or refinement evidence.`,
       explanatory: true,
     },
     { language: "bash", code: noHost, explanatory: true },
@@ -241,7 +241,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "Slice 1 source, proof, Kernel IR, machine inspection, and observational MI300X execution and Slice 2 proof and K32 backend evidence exist as separate bounded increments. Multi-phase attributed source, source-to-IR collection, compiler-issued LDS acquisition, and source-bound protected publisher/load/launch evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
+        "Slice 1 source, proof, Kernel IR, machine inspection, and observational MI300X execution, Slice 2 proof and K32 backend evidence, and the Slice 3 grid/stride source model exist as separate bounded increments. Multi-phase attributed source, source-to-IR collection, compiler-issued LDS acquisition, and source-bound protected publisher/load/launch evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
       ),
     },
   ),

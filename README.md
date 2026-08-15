@@ -37,10 +37,11 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The publication-gated repository snapshot is pinned to fe2o3 commit
-`280995762fce8a97f72fc2acb53c0d7effd2109f`, tree
-`782bcc60e1c5e12c32c0dabfd0975304a020d0bf`. Slice 2 proof and K32 backend
-records remain independent; the separate Slice 1 MI300X record is observational
-IR-derived evidence, not source, proof, or publication authority. **The publication workflow must
+`5bc57587b458da6a77a0f1063e4697f846cc0946`, tree
+`165566f92afaf03eed7cea8ae2b927aca53e618c`. Slice 2 proof and K32 backend
+records remain independent, as does the Slice 3 grid/stride model; the separate
+Slice 1 MI300X record is observational IR-derived evidence, not source, proof,
+or publication authority. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
 audited public baseline remains
@@ -103,6 +104,17 @@ Commit `280995762` moves the exact WG64 launch contract into the general typed
 fixed WG256 profiles reject WG64, and tiled Slice 1 no longer contains a
 handwritten frontend sidecar. Source-to-LDS Kernel IR collection and
 compiler-issued LDS acquisition remain open.
+
+Slice 3 at `5bc57587b` adds a fixed-K16 grid/stride source model for positive
+tile-aligned M and N. Verus reports 101 verified and 0 errors for padded
+lda/ldb/ldc bounds, exact and injective workgroup-to-tile mapping, four bounded
+stores per lane, and global disjointness of C ownership. The aggregate runner
+now checks positive summaries of 73, 93, 196, and 101 obligations and requires
+12 expected negative rejections. Ordinary models exhaust 1x1 through 3x3 grids
+with representative padding and a 64x48 case with lda=33, ldb=79, and ldc=96.
+This is source-model evidence only: it establishes no attributed kernel source,
+backend or HSACO result, hardware execution, numerical contract, refinement, or
+protected authority.
 
 The missing production chain is still material. An attributed multi-phase
 source, source-to-LDS-Kernel-IR collection, and compiler-issued LDS acquisition
@@ -193,6 +205,10 @@ At the audited pin:
   event models for 1, 2, and 4 phases, and an independent K32 backend/final
   machine-shape record. It has no attributed multi-phase GPU source, runtime
   hardware execution, protected authority, or LLVM refinement proof.
+- LDS Slice 3 has a bounded fixed-K16 Verus grid/stride model and executable
+  tests for tiled M/N dimensions and padded matrix strides. It proves the
+  modeled grid mapping, per-lane stores, and global C ownership, but has no
+  attributed source, backend, HSACO, hardware, numerical, or refinement result.
 - General typed `#[kernel]` now owns exact WG64 and WG256 launch contracts, and
   tiled Slice 1 no longer carries a handwritten frontend sidecar. The source
   still fails closed because LDS acquisition and source-to-LDS IR collection
@@ -202,9 +218,10 @@ At the audited pin:
   the procedural attribute that marks an ordinary Rust function for fe2o3's
   frontend and generated typed API. Production kernel bodies should be ordinary
   attributed Rust and do not require `macro_rules!`.
-- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1 and
-  Slice 2 increments. Softmax, flash attention, and mixture-of-experts remain
-  design-only. Their snippets are not programs users should expect to run today.
+- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1,
+  Slice 2, and Slice 3 increments. Softmax, flash attention, and
+  mixture-of-experts remain design-only. Their snippets are not programs users
+  should expect to run today.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. Linking is described through LLVM/LLD APIs, not COMGR.

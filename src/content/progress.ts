@@ -52,6 +52,7 @@ export const developmentCheckpointIds = deepFreeze([
   "tiled-gemm-lds-hardware-observation",
   "tiled-gemm-lds-k32-machine-inspection",
   "tiled-gemm-lds-wg64-contract",
+  "tiled-gemm-lds-grid-stride-model",
 ] as const);
 
 export type DevelopmentCheckpointId =
@@ -135,6 +136,9 @@ export const tiledGemmV1Commits = {
   ).commit,
   ldsWg64Contract: stagedEvidenceRecord(
     "tiled-lds-wg64-contract-v1",
+  ).commit,
+  ldsGridStrideModel: stagedEvidenceRecord(
+    "tiled-lds-grid-stride-model-v3",
   ).commit,
 } as const;
 
@@ -262,6 +266,11 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "staged-evidence",
     commit: tiledGemmV1Commits.ldsWg64Contract,
     evidenceIds: ["tiled-lds-wg64-contract-v1"],
+  },
+  "tiled-gemm-lds-grid-stride-model": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsGridStrideModel,
+    evidenceIds: ["tiled-lds-grid-stride-model-v3"],
   },
 } satisfies Record<DevelopmentCheckpointId, DevelopmentCheckpointSpec>);
 
@@ -468,6 +477,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: tiledGemmV1Commits.ldsWg64Contract,
     state: "public",
     stagedEvidenceIds: ["tiled-lds-wg64-contract-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-grid-stride-model",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 3 grid and stride model",
+    commit: tiledGemmV1Commits.ldsGridStrideModel,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-grid-stride-model-v3"],
   },
 ] satisfies DevelopmentCheckpoint[]);
 

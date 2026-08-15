@@ -287,6 +287,14 @@ describe("curriculum integrity", () => {
         tree: "782bcc60e1c5e12c32c0dabfd0975304a020d0bf",
         authority: "source-admission-only",
       },
+      {
+        label: "Bounded Slice 3 grid and stride model",
+        kind: "source-model-verified",
+        evidenceId: "tiled-lds-grid-stride-model-v3",
+        commit: "5bc57587b458da6a77a0f1063e4697f846cc0946",
+        tree: "165566f92afaf03eed7cea8ae2b927aca53e618c",
+        authority: "source-model-only",
+      },
     ]);
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
@@ -737,11 +745,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "280995762fce8a97f72fc2acb53c0d7effd2109f",
-      eventualPublicTree: "782bcc60e1c5e12c32c0dabfd0975304a020d0bf",
+      eventualPublicCommit: "5bc57587b458da6a77a0f1063e4697f846cc0946",
+      eventualPublicTree: "165566f92afaf03eed7cea8ae2b927aca53e618c",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "280995762fce8a97f72fc2acb53c0d7effd2109f",
+        requiredCommit: "5bc57587b458da6a77a0f1063e4697f846cc0946",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1108,6 +1116,10 @@ describe("implementation progress integrity", () => {
         tiledGemmV1Commits.ldsK32MachineInspection,
       ],
       ["tiled-gemm-lds-wg64-contract", tiledGemmV1Commits.ldsWg64Contract],
+      [
+        "tiled-gemm-lds-grid-stride-model",
+        tiledGemmV1Commits.ldsGridStrideModel,
+      ],
     ];
     for (const [id, commit] of expected) {
       expect(
@@ -1166,6 +1178,19 @@ describe("implementation progress integrity", () => {
     expect(wg64).toContain("fixed vecadd, alpha/zeta, and scalar-GEMM profiles");
     expect(wg64).toContain("Source-to-LDS Kernel IR collection");
     expect(wg64).toContain("compiler-issued LDS acquisition remain open");
+    const gridStride = stagedEvidenceDetail([
+      "tiled-lds-grid-stride-model-v3",
+    ]);
+    expect(gridStride).toContain("fixed-K16 Slice 3 Verus model");
+    expect(gridStride).toContain("101 verified and 0 errors");
+    expect(gridStride).toContain("73, 93, 196, and 101 verified obligations");
+    expect(gridStride).toContain("12 expected negative rejections");
+    expect(gridStride).toContain("1x1 through 3x3");
+    expect(gridStride).toContain("lda=33, ldb=79, and ldc=96");
+    expect(gridStride).toContain("no attributed kernel-source correspondence");
+    expect(gridStride).toContain("runtime hardware execution");
+    expect(gridStride).toContain("numerical-contract proof");
+    expect(gridStride).toContain("compiler or machine refinement");
   });
 
   it("keeps tiled GEMM partial until source, body, authority, and race closure", () => {
@@ -1225,6 +1250,10 @@ describe("implementation progress integrity", () => {
     expect(mapping).toContain("real two-trip SSA loop");
     expect(mapping).toContain("macro-owned for general typed #[kernel]");
     expect(mapping).toContain("compiler-issued LDS acquisition remain open");
+    expect(mapping).toContain("fixed-K16 grid/stride source model");
+    expect(mapping).toContain("101 verified and 0 errors");
+    expect(mapping).toContain("12 expected negative rejections");
+    expect(mapping).toContain("no attributed source, backend or HSACO result");
     expect(mapping).not.toContain("#[kernel] WG64 contract integration remain open");
 
     expect(proofPlan).toContain("multi-phase source-to-machine derivation");

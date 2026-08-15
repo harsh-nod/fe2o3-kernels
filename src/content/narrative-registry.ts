@@ -466,10 +466,14 @@ const narrativeRegistry = deepFreeze({
         "text": "Commit 280995762fce8a97f72fc2acb53c0d7effd2109f makes the exact WG64 launch contract macro-owned for general typed #[kernel] functions. Required-only WG64 and WG256 remain compatible, fixed WG256 profiles reject WG64, and tiled Slice 1 has no handwritten frontend sidecar. Source-to-LDS Kernel IR collection and compiler-issued LDS acquisition remain open."
       },
       {
+        "type": "paragraph",
+        "text": "Slice 3 at 5bc57587b458da6a77a0f1063e4697f846cc0946 adds a fixed-K16 grid/stride source model for positive tile-aligned M and N. Verus reports 101 verified and 0 errors for checked padded lda/ldb/ldc bounds, exact and injective workgroup-to-tile mapping, four bounded stores per lane, and global disjointness of C ownership. The aggregate runner checks 73, 93, 196, and 101 positive obligations and requires 12 expected negative rejections. Ordinary models exhaust 1x1 through 3x3 grids with representative padding and a 64x48 case with lda=33, ldb=79, and ldc=96. This is source-model evidence only, with no attributed source, backend or HSACO result, hardware execution, numerical contract, refinement, or protected authority."
+      },
+      {
         "type": "callout",
         "tone": "boundary",
         "title": "Bounded increments are not a functional kernel",
-        "text": "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, and compiler-issued LDS acquisition remain open. The observed Slice 1 final HSACO begins from separate canonical IR and is not carried through protected publisher, load, and launch authority; its canaries do not prove general illegal-access or race freedom. The K32 backend has no runtime hardware result or protected authority. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
+        "text": "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, and compiler-issued LDS acquisition remain open. The observed Slice 1 final HSACO begins from separate canonical IR and is not carried through protected publisher, load, and launch authority; its canaries do not prove general illegal-access or race freedom. The K32 backend has no runtime hardware result or protected authority. Slice 3 adds no source, backend, hardware, numerical, refinement, or protected-execution authority. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
       }
     ]
   },

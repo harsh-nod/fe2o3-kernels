@@ -41,6 +41,7 @@ export const stagedEvidenceOrder = deepFreeze([
   "tiled-lds-hardware-observation-v1",
   "tiled-lds-k32-machine-inspection-v2",
   "tiled-lds-wg64-contract-v1",
+  "tiled-lds-grid-stride-model-v3",
 ] satisfies StagedEvidenceId[]);
 
 const TILED_GEMM_V1_HARDWARE_COMMAND =
@@ -485,6 +486,49 @@ const stagedEvidenceRecords = deepFreeze({
       {
         id: "wg64-contract-boundary",
         text: "This closes the macro-owned #[kernel] WG64 launch-contract integration gap only. Source-to-LDS Kernel IR collection and compiler-issued LDS acquisition remain open, so the attributed source still fails closed and gains no backend, hardware-execution, or protected authority from this record.",
+      },
+    ],
+  },
+  "tiled-lds-grid-stride-model-v3": {
+    id: "tiled-lds-grid-stride-model-v3",
+    stageLabel: "5bc57587 Slice 3 grid/stride model",
+    claimLabel: "Bounded Slice 3 grid and stride model",
+    claim: "source-model-verified",
+    authority: "source-model-only",
+    commit: "5bc57587b458da6a77a0f1063e4697f846cc0946",
+    tree: "165566f92afaf03eed7cea8ae2b927aca53e618c",
+    commands: [
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_grid_model",
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_grid_source",
+      "env VERUS=/absolute/path/to/pinned/verus cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_grid_verus",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_v1/run-verus.sh",
+      "examples/tiled_gemm_v1/tests/lds_grid_model.rs",
+      "examples/tiled_gemm_v1/tests/lds_grid_source.rs",
+      "examples/tiled_gemm_v1/tests/lds_grid_verus.rs",
+      "examples/tiled_gemm_v1/verus/lds_tiled_grid_stride.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_grid_tile_mapping_wrong.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_grid_stride_wrong.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_grid_c_ownership_wrong.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "grid-stride-proof",
+        text: "Commit 5bc57587b458da6a77a0f1063e4697f846cc0946 adds a fixed-K16 Slice 3 Verus model for positive tile-aligned M and N. It reports 101 verified and 0 errors and proves checked padded lda/ldb/ldc bounds, exact and injective workgroup-to-tile mapping, four bounded stores per lane, and global disjointness of C ownership.",
+      },
+      {
+        id: "runner-and-mutations",
+        text: "The authenticated runner now checks positive summaries of 73, 93, 196, and 101 verified obligations and requires 12 expected negative rejections. Slice 3 rejects collapsed tile mapping, undersized lda, and dropped group-x C ownership at their named proof obligations.",
+      },
+      {
+        id: "executable-grid-model",
+        text: "Ordinary executable models exhaust tile grids from 1x1 through 3x3 with representative padding combinations and also exercise a 64x48 problem with padded lda=33, ldb=79, and ldc=96.",
+      },
+      {
+        id: "grid-stride-boundary",
+        text: "Slice 3 is source-model evidence only. It grants no attributed kernel-source correspondence, backend or HSACO result, runtime hardware execution, numerical-contract proof, compiler or machine refinement, or protected authority.",
       },
     ],
   },

@@ -146,7 +146,7 @@ export const narrativeFingerprints = deepFreeze({
   "reductions-scans/scan": "df55d3ca07a0baaeeabc318fd03122faf68c296fd94438781a95e2549af3d6e2",
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
   "lds-barriers-atomics/atomics": "5f9311c3a1e2b97d5be96f4fd5a3bd25535e27586bbb0949391e889e21324582",
-  "gemm-tiling/public-layout-proof": "c728a57d8bcf790ca3e4af1628fce391ba1025efbe69457d8c47ed9169fbb9dd",
+  "gemm-tiling/public-layout-proof": "a847bc3c0c381e5b667032abd8928f64e5c40f88f1019bbb2cee711f312b40e7",
   "gemm-tiling/mapping": "c2b015fa509dd2976748c2de7de3a0e5165ab33e3c83e3948700ce2f49654cf0",
   "gemm-tiling/loop-proof": "7c87b0639046276d51e796d2ea61e72401c97dbd89043505de446adb6a6d2d05",
   "gemm-proof-plan/proof-ledger": "635b84e78c427a7c59e189832896c38d0e3f50ba0249e203c3c1ab186daa77c2",
