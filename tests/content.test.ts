@@ -283,9 +283,9 @@ describe("curriculum integrity", () => {
             "protected gfx942 execution",
             "source/model-to-machine refinement",
           ]
-        : profile.lessonId === "lds-barriers-atomics"
+          : profile.lessonId === "lds-barriers-atomics"
           ? [
-              "typed host/runtime dispatch",
+              "upstream LLVM data-layout/target-machine mismatch",
               "protected gfx942 execution",
               "source/compiler/machine refinement",
             ]
@@ -1200,11 +1200,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "c1f6d8eeeeb88d7cd6592bf4874097e95f1d4a94",
-      eventualPublicTree: "405c48149f007e2822e10e3a570e01e1a43d86b3",
+      eventualPublicCommit: "51751e48812d6428627b8d403be72d24558175b5",
+      eventualPublicTree: "e3c8d2d170837ae3b3389d30763ee225c5dcc1d0",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "c1f6d8eeeeb88d7cd6592bf4874097e95f1d4a94",
+        requiredCommit: "51751e48812d6428627b8d403be72d24558175b5",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",

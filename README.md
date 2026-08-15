@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `c1f6d8eeeeb88d7cd6592bf4874097e95f1d4a94`, tree
-`405c48149f007e2822e10e3a570e01e1a43d86b3`. Both
+commit `51751e48812d6428627b8d403be72d24558175b5`, tree
+`e3c8d2d170837ae3b3389d30763ee225c5dcc1d0`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -56,9 +56,14 @@ Wave64 collectives and workgroup synchronization. The latter uses a typed
 capability, and an exact linear `DynamicLds` capability. Exact compiler profiles
 and opaque upstream LLVM target-machine plus in-process LLD finalization now
 exist for its fixed WG64 LDS-reduction and system-scope relaxed-atomic forms.
-Those mechanics do not grant compiler-origin, source/compiler/machine
-refinement, generated host/runtime launch, or protected gfx942 execution
-authority. The
+The exact fixed profiles now also have typed arguments, profile-bound host
+admission, private non-Clone `Joined -> Loaded -> Completed -> Unloaded`
+lifecycles, exact COV6 packing, dynamic-LDS AQL binding, and protected harness
+vectors. Combined debug and release host/runtime suites pass. The measured
+MI300X path still fails closed before HSA load because the upstream LLVM worker
+reports a module data-layout/target-machine mismatch, so no synchronization GPU
+execution or numerical result is claimed. These mechanics do not grant
+compiler-origin or source/compiler/machine refinement authority. The
 lesson snapshots for those source-only milestones remain byte-pinned to commit
 `d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8`, tree
 `cdec8448a300aa71d17565ca50fd4d893932f602`, rather than silently following the
@@ -406,8 +411,11 @@ At the audited pin:
   generated host admission uses an exclusive `GlobalMut`, and LDS scratch
   consumes an exact linear `DynamicLds` capability. Exact compiler profiles and
   opaque direct upstream LLVM/LLD finalization now cover the fixed LDS-reduction
-  and scoped-atomic forms. Typed host/runtime launch, protected gfx942 execution,
-  and source/compiler/machine refinement remain open for synchronization.
+  and scoped-atomic forms. Typed profile-bound host/runtime lifecycle mechanics,
+  exact dynamic-LDS dispatch binding, and fail-closed protected harness vectors
+  are public. Protected gfx942 execution is blocked by the measured upstream
+  LLVM module data-layout/target-machine mismatch; source/compiler/machine
+  refinement remains open for synchronization.
   Wave64 has subsequently
   reached an exact source-derived compiler profile, direct upstream LLVM/LLD
   finalizer, typed one-shot runtime lifecycle, and a four-mask protected gfx942

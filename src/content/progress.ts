@@ -40,6 +40,7 @@ export const developmentCheckpointIds = deepFreeze([
   "collected-rust-scalar-admission",
   "gfx942-wave64-lds-reduction",
   "workgroup-sync-direct-finalization",
+  "workgroup-sync-host-runtime",
   "flash-attention-compiler-admission",
   "moe-top2-compiler-admission",
   "scalar-gemm-v1",
@@ -267,6 +268,10 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "narrative",
     narrativeId: "progress/workgroup-sync-direct-finalization",
   },
+  "workgroup-sync-host-runtime": {
+    kind: "narrative",
+    narrativeId: "progress/workgroup-sync-host-runtime",
+  },
   "flash-attention-compiler-admission": {
     kind: "narrative",
     narrativeId: "progress/flash-attention-compiler-admission",
@@ -484,6 +489,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "3d673ffb9a962d7c4b8ae7526bbe881260e19c72",
     state: "public",
     narrativeId: "progress/workgroup-sync-direct-finalization",
+  },
+  {
+    id: "workgroup-sync-host-runtime",
+    kind: "narrative",
+    name: "Workgroup synchronization typed host/runtime",
+    commit: "51751e48812d6428627b8d403be72d24558175b5",
+    state: "public",
+    narrativeId: "progress/workgroup-sync-host-runtime",
   },
   {
     id: "flash-attention-compiler-admission",
@@ -840,7 +853,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["wave reduction", "LDS ownership epochs", "uniform barriers"],
-    next: "Join the exact compiler profiles and opaque direct LLVM/LLD finalizer receipts to typed one-shot host/runtime lifecycles, then run protected gfx942 dynamic-LDS and scoped-atomic vectors and close source/compiler/machine refinement.",
+    next: "Fix and pin the upstream LLVM module data-layout/target-machine join, run the existing protected gfx942 dynamic-LDS and scoped-atomic vectors through the typed one-shot lifecycle, then close source/compiler/machine refinement.",
   },
   {
     id: "scalar-gemm",
