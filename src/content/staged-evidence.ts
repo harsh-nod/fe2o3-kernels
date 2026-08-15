@@ -27,6 +27,22 @@ export interface StagedEvidenceRecord {
   assertions: readonly StagedEvidenceAssertion[];
 }
 
+export type CompletedIssue94IncrementId =
+  | "tiled-lds-direct-finalization-v1"
+  | "tiled-lds-host-adapter-v1";
+
+export interface CompletedIssue94IncrementRecord {
+  id: CompletedIssue94IncrementId;
+  stageLabel: string;
+  authority: "finalization-mechanics-only" | "host-preparation-only";
+  commit: string;
+  tree: string;
+  commands: readonly string[];
+  sourcePaths: readonly string[];
+  target: string;
+  assertions: readonly StagedEvidenceAssertion[];
+}
+
 export const stagedEvidenceOrder = deepFreeze([
   "tiled-source-bridge-v1",
   "tiled-cargo-metadata-v1",
@@ -831,11 +847,92 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "sealed-registry-boundary",
-        text: "The retained import is non-Clone and exposes no into_inner escape. It authenticates no compiler origin and grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority. Finalizer and host-adapter work in #97 and #99 can proceed in parallel; #100 remains downstream.",
+        text: "The retained import is non-Clone and exposes no into_inner escape. It authenticates no compiler origin and grants no finalizer, Worker V2, LLVM linker, publication, load, launch, hardware, numerical, or Verus proof authority. The separately typed #97 and #99 increments below complete finalization mechanics and inert host preparation without retroactively strengthening this registry record; #100 protected lifecycle integration is claimed and in progress.",
       },
     ],
   },
 } satisfies Record<StagedEvidenceId, StagedEvidenceRecord>);
+
+export const completedIssue94IncrementOrder = deepFreeze([
+  "tiled-lds-direct-finalization-v1",
+  "tiled-lds-host-adapter-v1",
+] satisfies CompletedIssue94IncrementId[]);
+
+const completedIssue94IncrementRecords = deepFreeze({
+  "tiled-lds-direct-finalization-v1": {
+    id: "tiled-lds-direct-finalization-v1",
+    stageLabel: "bfe9dfee #97 exact direct LLVM/LLD finalization",
+    authority: "finalization-mechanics-only",
+    commit: "bfe9dfeeff4b7efdc0aee3af8748e84eae5acb28",
+    tree: "9ae18d096c89b4fd6fdcc0649946a0796f6277d2",
+    commands: [
+      "cargo test --locked -p fe2o3-hsaco-finalize --test lds_gemm_finalizer",
+      "env FE2O3_LDS_GEMM_V1_WORKER=/absolute/measured/fe2o3-llvm-link-worker FE2O3_LDS_GEMM_V1_WORKER_BUILD_ID=<build-id> FE2O3_LDS_GEMM_V1_LLVM_BUILD_ID=<llvm-build-id> cargo test --locked -p fe2o3-hsaco-finalize --test lds_gemm_finalizer measured_worker_produces_a_deterministic_inert_slice1_cov6_receipt -- --ignored --exact --nocapture",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-hsaco-finalize/src/lds_gemm_finalizer.rs",
+      "crates/fe2o3-hsaco-finalize/src/lib.rs",
+      "crates/fe2o3-hsaco-finalize/tests/lds_gemm_finalizer.rs",
+      "tools/fe2o3-llvm-link-worker/src/WorkerPipeline.cpp",
+      "tools/fe2o3-llvm-link-worker/tests/PipelineTests.cpp",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "exact-direct-finalizer",
+        text: "Commits 6a3f7afe944dce87f355e11cba45dbb5f857dcf5, bb2c2100f7be30d7676eaf3b02952052db216404, and bfe9dfeeff4b7efdc0aee3af8748e84eae5acb28 implement, admit, and integrate the exact Slice 1 upstream LLVM target-machine plus LLD library API Worker V2 finalizer. Its public API has no COMGR, shell llc, or shell ld.lld escape hatch.",
+      },
+      {
+        id: "exact-final-artifact-closure",
+        text: "The one-shot path consumes the admitted compiler import and closes the exact gfx942:xnack- COV6 WG64 symbol, 48-byte explicit and 304-byte complete ABI, 1,024-byte LDS, zero-private-segment, and relocation-free artifact profile while retaining deterministic compiler-handoff, worker, LLVM, descriptor, and output lineage.",
+      },
+      {
+        id: "finalization-authority-boundary",
+        text: "This completes fe2o3 #97 finalization mechanics only. The inert finalized receipt authenticates no compiler origin, proves no Verus or compiler/LLVM/machine refinement result, and grants no publication, protected load, dispatch, or launch authority.",
+      },
+    ],
+  },
+  "tiled-lds-host-adapter-v1": {
+    id: "tiled-lds-host-adapter-v1",
+    stageLabel: "278a41af #99 exact generated host preparation",
+    authority: "host-preparation-only",
+    commit: "278a41afb98684e1c1e60b4fb1d474c1fd5f44d8",
+    tree: "c4afa6ad88e436ad896a746c324212ca2b6314f6",
+    commands: [
+      "cargo test --locked -p fe2o3-host --test generated_lds_gemm",
+      "cargo test --locked -p fe2o3-host --test generated_lds_gemm_ui",
+      "cargo clippy --locked -p fe2o3-host --all-targets --no-deps -- -D warnings",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-host/src/generated_lds_gemm.rs",
+      "crates/fe2o3-host/src/lib.rs",
+      "crates/fe2o3-host/tests/generated_lds_gemm.rs",
+      "crates/fe2o3-host/tests/generated_lds_gemm_ui.rs",
+      "crates/fe2o3-host/tests/ui/generated_lds_gemm/adapter_cannot_clone.rs",
+      "crates/fe2o3-host/tests/ui/generated_lds_gemm/input_buffers_remain_borrowed.rs",
+      "crates/fe2o3-host/tests/ui/generated_lds_gemm/output_remains_uniquely_borrowed.rs",
+      "crates/fe2o3-host/tests/ui/generated_lds_gemm/raw_kernarg_is_private.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "exact-generated-adapter",
+        text: "Commit 278a41afb98684e1c1e60b4fb1d474c1fd5f44d8 completes fe2o3 #99 with the generated exact BF16/F32 Slice 1 host adapter: A and B are 256-element u16 BF16-bit shared read views, C is a 256-element f32 unique read/write view, A/B overlap is allowed, and any C overlap is rejected.",
+      },
+      {
+        id: "host-abi-and-identities",
+        text: "Preparation constructs the exact 48-byte explicit and 304-byte complete COV6 ABI and copies the sealed import, profile, contract, descriptor, and role-separated length identities. The compiler import borrow is then released so the non-Clone import can be consumed by #97 finalization while the three device buffers remain borrowed by the adapter.",
+      },
+      {
+        id: "host-authority-boundary",
+        text: "This is inert host preparation only. It exposes no raw kernarg, load, resolve, resource, dispatch, completion, unload, or launch operation and grants no compiler-origin, Verus, refinement, protected-execution, or source-to-HSACO authority. Those lifecycle joins remain in claimed, in-progress #100.",
+      },
+    ],
+  },
+} satisfies Record<
+  CompletedIssue94IncrementId,
+  CompletedIssue94IncrementRecord
+>);
 
 export function isStagedEvidenceId(value: unknown): value is StagedEvidenceId {
   return (
@@ -858,7 +955,20 @@ export function stagedEvidenceRecord(
   return record;
 }
 
-export function stagedEvidenceDetail(
+export function completedIssue94IncrementRecord(
+  id: CompletedIssue94IncrementId,
+): DeepReadonly<CompletedIssue94IncrementRecord> {
+  return completedIssue94IncrementRecords[id];
+}
+
+export function completedIssue94IncrementDetail(): string {
+  return completedIssue94IncrementOrder
+    .flatMap((id) => completedIssue94IncrementRecord(id).assertions)
+    .map((assertion) => assertion.text)
+    .join(" ");
+}
+
+function stagedEvidenceRecordDetail(
   ids: readonly StagedEvidenceId[],
 ): string {
   return ids
@@ -867,13 +977,35 @@ export function stagedEvidenceDetail(
     .join(" ");
 }
 
+export function stagedEvidenceDetail(
+  ids: readonly StagedEvidenceId[],
+): string {
+  const detail = stagedEvidenceRecordDetail(ids);
+  return ids.includes("tiled-lds-sealed-profile-registry-v1")
+    ? `${detail} ${completedIssue94IncrementDetail()}`
+    : detail;
+}
+
 export function stagedEvidenceRows(
   ids: readonly StagedEvidenceId[],
 ): string[][] {
-  return ids.map((id) => {
+  const rows = ids.map((id) => {
     const record = stagedEvidenceRecord(id);
-    return [record.stageLabel, stagedEvidenceDetail([id]), record.authority];
+    return [record.stageLabel, stagedEvidenceRecordDetail([id]), record.authority];
   });
+  if (ids.includes("tiled-lds-sealed-profile-registry-v1")) {
+    rows.push(
+      ...completedIssue94IncrementOrder.map((id) => {
+        const record = completedIssue94IncrementRecord(id);
+        return [
+          record.stageLabel,
+          record.assertions.map((assertion) => assertion.text).join(" "),
+          record.authority,
+        ];
+      }),
+    );
+  }
+  return rows;
 }
 
 export function stagedEvidenceReference(
@@ -1109,6 +1241,38 @@ export function validateStagedEvidenceCatalog(): string[] {
         record.commands[0] !== TILED_GEMM_LDS_V1_HARDWARE_COMMAND)
     ) {
       issues.push(`${id}: LDS hardware command differs from the documented command`);
+    }
+    for (const command of record.commands) {
+      const parsed = parseExactCargoTestCommand(command);
+      if (!parsed && !isExactCargoClippyCommand(command)) {
+        issues.push(`${id}: command is not a supported exact Cargo evidence command: ${command}`);
+        continue;
+      }
+      if (!parsed) continue;
+      const expectedPath = expectedCargoTestSourcePath(parsed);
+      if (expectedPath && !record.sourcePaths.includes(expectedPath)) {
+        issues.push(`${id}: test target source is not referenced: ${expectedPath}`);
+      }
+    }
+    for (const assertion of record.assertions) {
+      const qualifiedId = `${id}/${assertion.id}`;
+      if (assertionIds.has(qualifiedId)) {
+        issues.push(`${id}: duplicate assertion id ${assertion.id}`);
+      }
+      assertionIds.add(qualifiedId);
+      if (assertion.text.trim().length === 0) {
+        issues.push(`${id}: empty assertion ${assertion.id}`);
+      }
+    }
+  }
+  for (const id of completedIssue94IncrementOrder) {
+    const record = completedIssue94IncrementRecord(id);
+    if (record.id !== id) issues.push(`${id}: record id mismatch`);
+    if (!/^[0-9a-f]{40}$/u.test(record.commit)) {
+      issues.push(`${id}: commit is not an exact Git object name`);
+    }
+    if (!/^[0-9a-f]{40}$/u.test(record.tree)) {
+      issues.push(`${id}: tree is not an exact Git object name`);
     }
     for (const command of record.commands) {
       const parsed = parseExactCargoTestCommand(command);

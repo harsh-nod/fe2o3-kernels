@@ -77,7 +77,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "#[kernel] is the canonical fe2o3 user form: a procedural attribute marks an ordinary Rust function for the kernel frontend and generated typed API. macro_rules! is optional declarative compile-time token expansion; vecadd uses it to share a small body with a Verus model, but it adds no runtime behavior and proves nothing by itself. Production kernel algorithms should remain readable in the attributed function and its reachable MIR. LDS Slice 1 follows that shape without a macro_rules! body; its exact source now reaches canonical V5 Kernel IR, an exact compiler descriptor, and a single-use inert Worker V2 handoff, then stops before finalization, protected loading, or launch."
+        "text": "#[kernel] is the canonical fe2o3 user form: a procedural attribute marks an ordinary Rust function for the kernel frontend and generated typed API. macro_rules! is optional declarative compile-time token expansion; vecadd uses it to share a small body with a Verus model, but it adds no runtime behavior and proves nothing by itself. Production kernel algorithms should remain readable in the attributed function and its reachable MIR. LDS Slice 1 follows that shape without a macro_rules! body; its exact source now reaches canonical V5 Kernel IR, an exact compiler descriptor, an inert final HSACO receipt through direct LLVM/LLD APIs, and exact generated host preparation, then stops before protected load, resolve, resource, dispatch, completion, unload, or launch authority."
       }
     ]
   },
@@ -475,6 +475,14 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
+        "text": "Commits 6a3f7afe944dce87f355e11cba45dbb5f857dcf5, bb2c2100f7be30d7676eaf3b02952052db216404, and bfe9dfeeff4b7efdc0aee3af8748e84eae5acb28 complete #97 by implementing, admitting, and integrating the exact Slice 1 upstream LLVM target-machine plus LLD library API Worker V2 finalizer. There is no COMGR, shell llc, or shell ld.lld escape hatch. The path closes exact gfx942:xnack- COV6 WG64 symbol, ABI, 1,024-byte LDS, zero-private-segment, and relocation requirements with deterministic lineage. Its inert finalized receipt authenticates no compiler origin, proves no Verus or compiler/LLVM/machine refinement, and grants no publication, protected-load, dispatch, or launch authority."
+      },
+      {
+        "type": "paragraph",
+        "text": "Commit 278a41afb98684e1c1e60b4fb1d474c1fd5f44d8 completes #99 with the generated exact BF16/F32 Slice 1 host adapter. A and B are 256-element u16 BF16-bit shared read views, C is a 256-element f32 unique read/write view, A/B overlap is allowed, and C overlap is rejected. It prepares the exact 48-byte explicit and 304-byte complete COV6 ABI, copies the sealed import/profile/contract/descriptor/length identities, releases the compiler-import borrow for finalization consumption, and keeps all buffers borrowed. It exposes no raw launch. Both public fe2o3 main branches contain the #97 and #99 commits; protected load/resolve/resource/dispatch/completion/unload integration is claimed and in progress in #100, without a protected-execution or source-to-HSACO/Verus authority claim."
+      },
+      {
+        "type": "paragraph",
         "text": "Slice 3 begins at 5bc57587b458da6a77a0f1063e4697f846cc0946 with a fixed-K16 grid/stride source model. Verus reports 101 verified and 0 errors for padded lda/ldb/ldc bounds, injective workgroup-to-tile mapping, bounded lane stores, and global C ownership. Commit f38fe82ca574eff0eb273d5a793f04b0df3e00e1 separately lowers the exact M=64, N=48, K=16, lda=33, ldb=79, ldc=96, 3x4-grid graph through upstream LLVM 22. Its mi300x final-object inspection observes gfx942:xnack- COV6, WG64, workgroup X/Y, 1,024-byte LDS, one barrier, one BF16 MFMA, and no spills, scratch, calls, atomics, or COMGR. This remains IR-derived machine-shape evidence, not protected execution, hardware numerics, or compiler refinement."
       },
       {
@@ -485,7 +493,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Bounded increments are not a functional kernel",
-        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/inert-Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Finalizer #97 and host-adapter #99 are independently claimable; protected runtime integration #100 remains downstream under #94. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. The Slice 1 and Slice 4 machine records are still IR-derived and non-protected; canaries and machine inspection do not prove general illegal-access or race freedom. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed."
+        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Exact direct LLVM/LLD API finalization (#97) and exact generated host preparation (#99) are also complete. Protected load/resolve/resource/dispatch/completion/unload integration #100 is claimed and in progress under #94. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. The separate MI300X observation remains IR-derived and non-protected; finalization, host borrowing, canaries, and machine inspection do not prove protected execution, compiler origin, general illegal-access safety, or race freedom. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed. No production source-to-HSACO or Verus authority is claimed."
       },
       {
         "type": "links",
@@ -501,9 +509,9 @@ const narrativeRegistry = deepFreeze({
           { "label": "#93 Canonical matrix Kernel IR V5 (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/93" },
           { "label": "#94 Shared protected execution substrate", "href": "https://github.com/harsh-nod/fe2o3/issues/94" },
           { "label": "#96 Sealed exact-profile registry (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/96" },
-          { "label": "#97 LLVM finalizer", "href": "https://github.com/harsh-nod/fe2o3/issues/97" },
-          { "label": "#99 Host adapter", "href": "https://github.com/harsh-nod/fe2o3/issues/99" },
-          { "label": "#100 Protected runtime integration", "href": "https://github.com/harsh-nod/fe2o3/issues/100" },
+          { "label": "#97 Exact direct LLVM/LLD finalizer (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/97" },
+          { "label": "#99 Exact generated host adapter (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/99" },
+          { "label": "#100 Protected lifecycle integration (in progress)", "href": "https://github.com/harsh-nod/fe2o3/issues/100" },
           { "label": "fe2o3-kernels #2 Sealed-registry synchronization", "href": "https://github.com/harsh-nod/fe2o3-kernels/issues/2" }
         ]
       }
@@ -635,7 +643,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "The model ledger is stronger but still unjoined",
-        "text": "The bounded Slice 1 and Slice 2 models now cover bounds, current-epoch initialization, barrier participation, LDS ownership, disjoint stores, accumulator preservation, and exact-real products. Those results remain separate from the attributed source, compiler, artifact, and runtime records. Closure still requires multi-phase source-to-machine derivation, protected publication and launch, machine-level race evidence, and IEEE numerical refinement."
+        "text": "The bounded Slice 1 and Slice 2 models now cover bounds, current-epoch initialization, barrier participation, LDS ownership, disjoint stores, accumulator preservation, and exact-real products. Those results remain separate from the attributed source, inert final-HSACO, generated host-preparation, and runtime records. Completing #97 and #99 does not join those layers. Closure still requires multi-phase source-to-machine derivation, #100 protected lifecycle integration and execution, machine-level race evidence, and IEEE numerical refinement."
       }
     ]
   },
@@ -1020,6 +1028,17 @@ const narrativeRegistry = deepFreeze({
   }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
+// Keep progress-only narrative review deltas explicit without repinning lessons.
+const reviewedNarrativeFingerprints = deepFreeze({
+  ...narrativeFingerprints,
+  "read-the-evidence/differentiator":
+    "f549beec095f60b1edf430b721ddd4a12949f3165bd953e1e0f9195bd11b09c9",
+  "gemm-tiling/public-layout-proof":
+    "b441dd3851c8688bccd6ee2ca4a76914680c16f7b0a4adc5a6e3fef276ec90d4",
+  "gemm-proof-plan/evidence":
+    "a6715746af7eeeab905dc91e61f8117afe3d57084cee958bcc355f331d28a783",
+} satisfies Record<NarrativeId, string>);
+
 export function narrativeSection(narrativeId: NarrativeId): NarrativeLessonSection {
   return { kind: "narrative", narrativeId };
 }
@@ -1036,7 +1055,7 @@ export function resolveNarrativeEntry(
 ): DeepReadonly<NarrativeRegistryEntry> | undefined {
   if (!isNarrativeId(value)) return undefined;
   const entry = narrativeRegistry[value];
-  return narrativeFingerprint(entry) === narrativeFingerprints[value]
+  return narrativeFingerprint(entry) === reviewedNarrativeFingerprints[value]
     ? entry
     : undefined;
 }
@@ -1086,7 +1105,9 @@ export function validateNarrativeRegistry(
       issues.push(`${id}: missing canonical narrative entry`);
       continue;
     }
-    if (narrativeFingerprint(candidate[id]) !== narrativeFingerprints[id]) {
+    if (
+      narrativeFingerprint(candidate[id]) !== reviewedNarrativeFingerprints[id]
+    ) {
       issues.push(`${id}: canonical narrative text drift`);
     }
   }

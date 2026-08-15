@@ -36,15 +36,18 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The publication-gated repository snapshot is pinned to fe2o3 commit
+The checked-in publication gate remains pinned to fe2o3 commit
 `89ebe69bb3daf8262a485463c5fdf04cf095346f`, tree
-`c2604487ec76f337d7ada2c0319fffd02b3ce8c9`. It includes exact Slice 1
+`c2604487ec76f337d7ada2c0319fffd02b3ce8c9`. That gate is intentionally
+separate from the advancing implementation head while protected lifecycle work
+continues. The gated commit includes exact Slice 1
 attributed source-to-IR correspondence, canonical matrix Kernel IR V5 bytes,
 an exact compiler-owned descriptor and single-use inert Worker V2 handoff, an
 authority-free sealed exact-profile import, Slice 3 and Slice 4 upstream
 LLVM/COV6 inspection, and bounded identity-bound Slice 1 source/model
-correspondence. These records remain separate from final HSACO publication,
-protected loading, launch, hardware execution, and production proof-certificate
+correspondence. Later staged records below add completed exact finalization and
+host preparation without granting protected loading, launch, hardware
+execution, source-to-HSACO authority, or production proof-certificate
 authority. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
@@ -134,6 +137,30 @@ and role-separated length bindings. The retained compiler import is non-Clone
 and authority-free: it grants no compiler-origin, finalizer, Worker V2, linker,
 publication, load, launch, hardware, numerical, or Verus proof authority.
 
+Commits `6a3f7afe9`, `bb2c2100f`, and `bfe9dfeef` complete #97 by
+implementing, admitting, and integrating the exact Slice 1 upstream LLVM
+target-machine plus LLD library API Worker V2 finalizer. The public API has no
+COMGR, shell `llc`, or shell `ld.lld` escape hatch. It closes the exact
+`gfx942:xnack-` COV6 WG64 symbol, 48-byte explicit and 304-byte complete ABI,
+1,024-byte LDS, zero-private-segment, and relocation-free artifact profile while
+retaining deterministic compiler-handoff, worker, LLVM, descriptor, and output
+lineage. The finalized receipt remains inert: it authenticates no compiler
+origin, proves no Verus or compiler/LLVM/machine refinement result, and grants no
+publication, protected load, dispatch, or launch authority.
+
+Commit `278a41afb` completes #99 with the generated exact BF16/F32 Slice 1
+host adapter. A and B are 256-element `u16` BF16-bit shared read views, C is a
+256-element `f32` unique read/write view, A/B overlap is allowed, and any C
+overlap is rejected. Preparation constructs the exact 48-byte explicit and
+304-byte complete COV6 ABI and copies the sealed import, profile, contract,
+descriptor, and role-separated length identities. It then releases the compiler
+import borrow so finalization can consume that non-Clone import while all three
+device buffers remain borrowed by the adapter. The adapter exposes no raw
+kernarg or launch operation. Both public `fe2o3` main branches contain the #97
+and #99 commits; their heads may continue advancing during #100. Subsequent
+runtime feature-gating maintenance makes default and `hardware-test-hooks`
+strict all-target runtime Clippy pass and adds no functional claim.
+
 Commit `5a45239ae` adds a bounded Verus relation for the exact Slice 1 source
 model. It reports 96 verified and 0 errors for exact lengths, same-epoch LDS
 initialization, publish-barrier ordering, unique C ownership, and correspondence
@@ -180,13 +207,15 @@ The missing production chain is still material. Source receipt to the inert
 descriptor and Worker V2 boundary is complete in closed
 [`#85`](https://github.com/harsh-nod/fe2o3/issues/85), and canonical matrix wire
 V5 is complete in closed [`#93`](https://github.com/harsh-nod/fe2o3/issues/93).
-The shared finalizer, host adapter, and protected runtime substrate remain open
-in [`#94`](https://github.com/harsh-nod/fe2o3/issues/94). The sealed exact-profile
-registry in [`#96`](https://github.com/harsh-nod/fe2o3/issues/96) is complete;
-the finalizer in [`#97`](https://github.com/harsh-nod/fe2o3/issues/97) and host
-adapter in [`#99`](https://github.com/harsh-nod/fe2o3/issues/99) are now
-independently claimable, with protected runtime integration in
-[`#100`](https://github.com/harsh-nod/fe2o3/issues/100) downstream.
+The sealed exact-profile registry in
+[`#96`](https://github.com/harsh-nod/fe2o3/issues/96), direct LLVM/LLD API
+finalizer in [`#97`](https://github.com/harsh-nod/fe2o3/issues/97), and generated
+host adapter in [`#99`](https://github.com/harsh-nod/fe2o3/issues/99) are
+complete. Under [`#94`](https://github.com/harsh-nod/fe2o3/issues/94), protected
+load, resolve, resource, dispatch, completion, and unload integration in
+[`#100`](https://github.com/harsh-nod/fe2o3/issues/100) is claimed and in
+progress. Protected execution and source-to-HSACO or Verus authority are not
+complete.
 Exact Slice 4 lowering is complete and
 [#86](https://github.com/harsh-nod/fe2o3/issues/86) is closed. Protected Slice
 3 and Slice 4 execution remain open in
@@ -277,12 +306,13 @@ At the audited pin:
 - LDS Slice 1 now has canonical Kernel IR and V5 matrix wire bytes, a separate
   Verus source model, authenticated attributed Rust source-to-IR correspondence,
   bounded identity-bound source/model proof, an exact compiler-owned descriptor,
-  a single-use inert Worker V2 handoff, LLVM lowering, and final-HSACO
-  machine-shape evidence.
+  a single-use Worker V2 handoff, exact direct LLVM/LLD API finalization, an
+  inert generated host adapter, LLVM lowering, and final-HSACO machine-shape
+  evidence.
   An independent six-case MI300X run observed the IR-derived HSACO over 1,536
   outputs with allocation canaries. That hardware run remains independent of the
-  source-bound inert handoff, so it is neither protected source execution nor a
-  source-to-hardware refinement result.
+  source-bound finalization and host-preparation records, so it is neither
+  protected source execution nor a source-to-hardware refinement result.
 - LDS Slice 2 has a bounded exact-real K-phase Verus model, executable integer
   event models for 1, 2, and 4 phases, and an independent K32 backend/final
   machine-shape record. It has no attributed multi-phase GPU source, runtime
@@ -298,8 +328,9 @@ At the audited pin:
 - `#[kernel]` is the canonical user form. The procedural attribute marks an
   ordinary Rust function for fe2o3's frontend and generated typed API, including
   exact WG64/WG256 launch contracts. Slice 1 now reaches canonical Kernel IR, an
-  exact descriptor, and an inert Worker V2 handoff, then fails closed before
-  finalization, protected loading, or launch.
+  exact descriptor, a one-shot inert final HSACO receipt, and generated typed
+  host preparation, then fails closed before protected load, resolve, resource,
+  dispatch, completion, unload, or launch authority.
 - `macro_rules!` is optional declarative compile-time token expansion. Vecadd
   uses it to share a small body with Verus; it is not the GPU kernel marker,
   creates no runtime mechanism, and proves nothing by itself. Production kernel
@@ -310,7 +341,8 @@ At the audited pin:
   should expect to run today.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
-  protected evidence. Linking is described through LLVM/LLD APIs, not COMGR.
+  protected evidence. The #97 path uses direct LLVM target-machine and LLD
+  library APIs, never COMGR linking.
 
 Verus proves the specifications encoded in its source models under their stated
 assumptions. It does not by itself prove LLVM lowering, linker behavior, the

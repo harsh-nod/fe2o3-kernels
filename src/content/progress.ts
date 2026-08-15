@@ -8,6 +8,7 @@ import {
 import type { ProgressNarrativeId } from "./progress-narrative-policy";
 import { deepFreeze, hasOwn } from "./registry";
 import {
+  completedIssue94IncrementRecord,
   isStagedEvidenceId,
   stagedEvidenceDetail,
   stagedEvidenceRecord,
@@ -119,6 +120,26 @@ export const progressSnapshot = {
   repositories: publicationGate.requiredRefs.map(
     ({ repository }) => `https://github.com/${repository}`,
   ),
+  completedIssue94Increments: {
+    finalizationCommit: completedIssue94IncrementRecord(
+      "tiled-lds-direct-finalization-v1",
+    ).commit,
+    hostAdapterCommit: completedIssue94IncrementRecord(
+      "tiled-lds-host-adapter-v1",
+    ).commit,
+  },
+  protectedLifecycle: {
+    issue: 100,
+    state: "claimed-in-progress",
+    stages: [
+      "load",
+      "resolve",
+      "resource",
+      "dispatch",
+      "completion",
+      "unload",
+    ],
+  },
 } as const;
 
 export const tiledGemmV1Commits = {
@@ -169,6 +190,12 @@ export const tiledGemmV1Commits = {
   ).commit,
   ldsSealedProfileRegistry: stagedEvidenceRecord(
     "tiled-lds-sealed-profile-registry-v1",
+  ).commit,
+  ldsDirectFinalization: completedIssue94IncrementRecord(
+    "tiled-lds-direct-finalization-v1",
+  ).commit,
+  ldsHostAdapter: completedIssue94IncrementRecord(
+    "tiled-lds-host-adapter-v1",
   ).commit,
 } as const;
 
@@ -795,7 +822,7 @@ export const kernelProgress: KernelProgress[] = [
       "source and Verus-to-machine refinement",
       "IEEE BF16/F32 numerical contract (fe2o3 #109)",
     ],
-    next: "Build the shared protected finalizer, host adapter, and Worker V2 runtime, consume identity-bound proof certificates, carry Slice 3 and Slice 4 through protected MI300X execution, then generalize the exact profiles.",
+    next: "Complete #100 by joining the finalized Slice 1 receipt and borrowed host adapter through protected load, resolve, resource admission, dispatch, completion, and unload; then consume identity-bound proof certificates, carry Slice 3 and Slice 4 through protected MI300X execution, and generalize the exact profiles.",
   },
   {
     id: "softmax",
