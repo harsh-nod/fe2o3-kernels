@@ -75,6 +75,49 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
+test("tiled GEMM shows canonical attributed source without production promotion", async ({
+  page,
+}) => {
+  await page.goto("./#/lesson/gemm-tiling");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Tiled GEMM: map ownership first",
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "#[kernel] is the canonical user form",
+  );
+  await expect(page.getByText(/Reviewed attributed source excerpt\./)).toContainText(
+    "No final HSACO, protected load, launch, hardware execution, or production proof-certificate authority is claimed",
+  );
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/7337a2b87dffa0845d092c13399b012f884de90b/examples/tiled_gemm_v1/src/kernel.rs",
+  );
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "No rustc/LLVM/machine refinement or production source execution is claimed",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText("#85");
+  await expect(page.getByRole("tabpanel")).toContainText("#90");
+  await expect(page.getByRole("tabpanel")).toContainText("#94");
+  for (const issue of [85, 86, 87, 88, 89, 90]) {
+    await expect(
+      page.getByRole("link", { name: new RegExp(`#${String(issue)} `, "u") }),
+    ).toHaveAttribute(
+      "href",
+      `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,
+    );
+  }
+  await expect(
+    page.getByRole("link", { name: /fe2o3-kernels #1/ }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3-kernels/issues/1",
+  );
+});
+
 test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {

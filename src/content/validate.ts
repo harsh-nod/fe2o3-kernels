@@ -27,6 +27,8 @@ const stagedAuthorities = new Set([
   "source-model-only",
   "source-shape-only",
   "machine-inspection-only",
+  "wire-format-only",
+  "inert-worker-handoff-only",
 ]);
 const narrativeSectionKeys = ["kind", "narrativeId"];
 const stagedSectionKeys = ["evidenceIds", "kind"];
@@ -101,6 +103,27 @@ function validateLesson(
   for (const kind of ["kernel", "verus", "host", "result"] as const) {
     if (!tabKinds.has(kind)) {
       issues.push({ path, message: `missing ${kind} tab` });
+    }
+  }
+  for (const [tabIndex, tab] of lesson.tabs.entries()) {
+    const tabPath = `${path}.tabs[${tabIndex}]`;
+    if (
+      tab.sourcePath &&
+      (tab.sourcePath.startsWith("/") || tab.sourcePath.split("/").includes(".."))
+    ) {
+      issues.push({ path: tabPath, message: "code tab has an invalid source path" });
+    }
+    if (tab.sourceCommit && !tab.sourcePath) {
+      issues.push({
+        path: tabPath,
+        message: "code tab source commit has no source path",
+      });
+    }
+    if (tab.sourceCommit && !exactObjectName.test(tab.sourceCommit)) {
+      issues.push({
+        path: tabPath,
+        message: "code tab source is not pinned to an exact commit",
+      });
     }
   }
 

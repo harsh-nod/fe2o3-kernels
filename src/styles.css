@@ -1236,6 +1236,26 @@ p {
   margin: 7px 0;
 }
 
+.lesson-sections .issue-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 6px 18px;
+  max-width: 840px;
+  padding-left: 21px;
+}
+
+.issue-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent-strong);
+  text-decoration: none;
+}
+
+.issue-links a:hover {
+  text-decoration: underline;
+}
+
 .lesson-steps {
   max-width: 840px;
   margin: 20px 0;

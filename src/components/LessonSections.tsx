@@ -1,4 +1,4 @@
-import { AlertTriangle, CircleHelp, Info, ShieldCheck } from "lucide-react";
+import { AlertTriangle, CircleHelp, ExternalLink, Info, ShieldCheck } from "lucide-react";
 import type { CalloutTone, LessonBlock, LessonSection } from "../content/model";
 import {
   resolveNarrativeEntry,
@@ -133,6 +133,19 @@ function NarrativeBlocks({
         <ol className="lesson-steps" key={index}>
           {block.items.map((item) => <li key={item}>{item}</li>)}
         </ol>
+      );
+    }
+    if (block.type === "links") {
+      return (
+        <ul className="issue-links" key={index}>
+          {block.items.map((item) => (
+            <li key={item.href}>
+              <a href={item.href} target="_blank" rel="noreferrer">
+                {item.label} <ExternalLink size={14} aria-hidden="true" />
+              </a>
+            </li>
+          ))}
+        </ul>
       );
     }
     if (block.type === "table") {

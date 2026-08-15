@@ -46,7 +46,7 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
         <div>
           {current.sourcePath && (
             <a
-              href={sourceUrl(current.sourcePath)}
+              href={sourceUrl(current.sourcePath, current.sourceCommit)}
               target="_blank"
               rel="noreferrer"
               title="Open pinned source"
@@ -68,7 +68,8 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
       {current.explanatory && (
         <div className="code-status">
           <Info size={14} aria-hidden="true" />
-          Explanatory source. It is not a runnable fe2o3 GPU kernel at the pinned commit.
+          {current.notice ??
+            "Explanatory source. It is not a runnable fe2o3 GPU kernel at the pinned commit."}
         </div>
       )}
       <pre

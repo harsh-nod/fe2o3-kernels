@@ -36,7 +36,9 @@ export type StagedEvidenceAuthority =
   | "kernel-ir-admission-only"
   | "source-model-only"
   | "source-shape-only"
-  | "machine-inspection-only";
+  | "machine-inspection-only"
+  | "wire-format-only"
+  | "inert-worker-handoff-only";
 
 export type StagedEvidenceId =
   | "tiled-source-bridge-v1"
@@ -52,7 +54,14 @@ export type StagedEvidenceId =
   | "tiled-lds-hardware-observation-v1"
   | "tiled-lds-k32-machine-inspection-v2"
   | "tiled-lds-wg64-contract-v1"
-  | "tiled-lds-grid-stride-model-v3";
+  | "tiled-lds-grid-stride-model-v3"
+  | "tiled-lds-source-ir-correspondence-v1"
+  | "tiled-lds-grid-machine-inspection-v3"
+  | "tiled-lds-edge-kernel-ir-v4"
+  | "tiled-lds-edge-machine-inspection-v4"
+  | "tiled-lds-source-model-correspondence-v1"
+  | "tiled-lds-matrix-wire-v5"
+  | "tiled-lds-inert-worker-handoff-v1";
 
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";
@@ -78,6 +87,7 @@ export type LessonBlock =
   | { type: "paragraph"; text: string }
   | { type: "bullets"; items: string[] }
   | { type: "steps"; items: string[] }
+  | { type: "links"; items: { label: string; href: string }[] }
   | { type: "callout"; tone: CalloutTone; title: string; text: string }
   | {
       type: "table";
@@ -107,7 +117,9 @@ export interface CodeTab {
   language: "rust" | "bash" | "text";
   code: string;
   sourcePath?: string;
+  sourceCommit?: string;
   explanatory?: boolean;
+  notice?: string;
 }
 
 export type DiagramKind =

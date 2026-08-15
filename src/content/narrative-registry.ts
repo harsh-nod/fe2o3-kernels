@@ -77,7 +77,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "macro_rules! and #[kernel] serve different purposes. macro_rules! is declarative compile-time token expansion; vecadd uses it to share a small body with a Verus model, but it neither marks a GPU kernel nor provides runtime behavior or proof. #[kernel] is a procedural attribute that marks an ordinary Rust function for fe2o3's kernel frontend and generated typed API. Production kernel bodies should be ordinary attributed Rust. The LDS Slice 1 source follows that shape and contains no macro_rules! body, although its unsupported frontend operations still fail closed."
+        "text": "#[kernel] is the canonical fe2o3 user form: a procedural attribute marks an ordinary Rust function for the kernel frontend and generated typed API. macro_rules! is optional declarative compile-time token expansion; vecadd uses it to share a small body with a Verus model, but it adds no runtime behavior and proves nothing by itself. Production kernel algorithms should remain readable in the attributed function and its reachable MIR. LDS Slice 1 follows that shape without a macro_rules! body; its exact source now reaches canonical V5 Kernel IR, an exact compiler descriptor, and a single-use inert Worker V2 handoff, then stops before finalization, protected loading, or launch."
       }
     ]
   },
@@ -447,7 +447,11 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "Four pre-execution public increments define LDS Slice 1 without promoting it to functional status. Commit 4c79c58de1da19d9b7a22cba906f301e347c8f7c seals the fixed two-tile LDS Kernel IR. Commit 97373b781ac3643b1de61b4572894f7028b565b0 verifies the separate exact-real source model and targeted mutations. Commit ee76cedcdc4126c69bc486a5ac12900c1c5485b1 adds the ordinary #[kernel(typed, ...)] Rust body and deliberately traps at unsupported LDS acquisition. Commit 50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2 lowers the canonical IR through upstream LLVM/LLD and inspects the final HSACO machine shape. The typed evidence table states the exact authority boundary for each increment."
+        "text": "LDS Slice 1 remains a bounded chain rather than a production kernel. Commit 4c79c58de1da19d9b7a22cba906f301e347c8f7c seals the fixed two-tile Kernel IR; 97373b781ac3643b1de61b4572894f7028b565b0 verifies its separate exact-real source model; ee76cedcdc4126c69bc486a5ac12900c1c5485b1 introduces the ordinary #[kernel(typed, ...)] source; and 50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2 inspects canonical-IR-derived upstream LLVM/LLD output. Commit dc31f23eb2decaa91eb2f9d72ae4c70e94766564 then authenticates the exact attributed source and reviewed reachable MIR to select only the verified canonical IR with two compiler-derived 512-byte LDS tiles. That receipt stops before descriptor construction and Worker V2 and is not compiler refinement or source-to-machine evidence."
+      },
+      {
+        "type": "paragraph",
+        "text": "Commit 5a45239aeeda3ca64cf16beb7fb1d3589e649bfe adds bounded identity-bound Slice 1 source/model correspondence. Verus reports 96 verified and 0 errors for exact source-profile lengths, same-epoch LDS initialization, converged publish ordering, unique C ownership, and correspondence identities; four targeted mutations are rejected. Clean mi300x validation passed 76 debug tests, 76 release tests, 7 doctests in each lane, strict Clippy, six positive proof groups, and 21 expected rejections. This does not establish rustc/LLVM/machine refinement, descriptor or Worker V2 integrity, certificate consumption, loading, or launch authority. Production certificate consumption is tracked in #91, K-phase/grid/edge proof extension in #92, and semantic MIR-to-Kernel-IR refinement in #106."
       },
       {
         "type": "paragraph",
@@ -463,17 +467,37 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "Commit 280995762fce8a97f72fc2acb53c0d7effd2109f makes the exact WG64 launch contract macro-owned for general typed #[kernel] functions. Required-only WG64 and WG256 remain compatible, fixed WG256 profiles reject WG64, and tiled Slice 1 has no handwritten frontend sidecar. Source-to-LDS Kernel IR collection and compiler-issued LDS acquisition remain open."
+        "text": "Commit 280995762fce8a97f72fc2acb53c0d7effd2109f makes the exact WG64 launch contract macro-owned for general typed #[kernel] functions. Required-only WG64 and WG256 remain compatible, fixed WG256 profiles reject WG64, and tiled Slice 1 has no handwritten frontend sidecar. Commit dc31f23eb2decaa91eb2f9d72ae4c70e94766564 authenticates the exact source to canonical Kernel IR and derives its LDS metadata. Commit 1429ed6ae70dcd218376b777e0fef7db4413efdb adds canonical matrix Kernel IR V5 bytes, and 7337a2b87dffa0845d092c13399b012f884de90b closes #85 by joining the source receipt to an exact compiler-owned descriptor and single-use inert Worker V2 handoff. The handoff grants no finalization, load, launch, hardware, or proof-certificate authority."
       },
       {
         "type": "paragraph",
-        "text": "Slice 3 at 5bc57587b458da6a77a0f1063e4697f846cc0946 adds a fixed-K16 grid/stride source model for positive tile-aligned M and N. Verus reports 101 verified and 0 errors for checked padded lda/ldb/ldc bounds, exact and injective workgroup-to-tile mapping, four bounded stores per lane, and global disjointness of C ownership. The aggregate runner checks 73, 93, 196, and 101 positive obligations and requires 12 expected negative rejections. Ordinary models exhaust 1x1 through 3x3 grids with representative padding and a 64x48 case with lda=33, ldb=79, and ldc=96. This is source-model evidence only, with no attributed source, backend or HSACO result, hardware execution, numerical contract, refinement, or protected authority."
+        "text": "Slice 3 begins at 5bc57587b458da6a77a0f1063e4697f846cc0946 with a fixed-K16 grid/stride source model. Verus reports 101 verified and 0 errors for padded lda/ldb/ldc bounds, injective workgroup-to-tile mapping, bounded lane stores, and global C ownership. Commit f38fe82ca574eff0eb273d5a793f04b0df3e00e1 separately lowers the exact M=64, N=48, K=16, lda=33, ldb=79, ldc=96, 3x4-grid graph through upstream LLVM 22. Its mi300x final-object inspection observes gfx942:xnack- COV6, WG64, workgroup X/Y, 1,024-byte LDS, one barrier, one BF16 MFMA, and no spills, scratch, calls, atomics, or COMGR. This remains IR-derived machine-shape evidence, not protected execution, hardware numerics, or compiler refinement."
+      },
+      {
+        "type": "paragraph",
+        "text": "Slice 4 at f24063534fd9c69d8c595608c75213db0570aa5e seals one exact tail-safe M=17, N=19, K=18 Kernel IR graph over a 2x2 WG64 grid. Two K16 phases zero-fill BF16 tails into reused XOR4 LDS, carry FP32 accumulators, use unconditional publish and reuse barriers, and predicate C reads and writes for alpha=2.0 and beta=-1.0. Commit 35575cc32cde9744078a3026b14c5e0e0066157f lowers only that graph through upstream LLVM 22. Clean mi300x inspection passed gfx942:xnack- COV6 with WG64, 1,024-byte LDS, zero private segment and spills, two static barriers, one static loop-body BF16 MFMA, and no scratch, calls, atomics, or COMGR. This is IR-derived machine shape, not attributed-source lowering, protected execution, hardware numerics, or compiler refinement."
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Bounded increments are not a functional kernel",
-        "text": "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, and compiler-issued LDS acquisition remain open. The observed Slice 1 final HSACO begins from separate canonical IR and is not carried through protected publisher, load, and launch authority; its canaries do not prove general illegal-access or race freedom. The K32 backend has no runtime hardware result or protected authority. Slice 3 adds no source, backend, hardware, numerical, refinement, or protected-execution authority. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
+        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), and the attributed Slice 1 source-to-exact-descriptor/inert-Worker-V2 boundary (#85) are complete. The shared finalizer, host adapter, and protected runtime substrate remain open in #94 and #96 through #100. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #1. The Slice 1 and Slice 4 machine records are still IR-derived and non-protected; canaries and machine inspection do not prove general illegal-access or race freedom. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed."
+      },
+      {
+        "type": "links",
+        "items": [
+          { "label": "#85 Source receipt to inert descriptor and Worker V2 (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/85" },
+          { "label": "#86 Exact Slice 4 lowering (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/86" },
+          { "label": "#87 Refinement and certificate consumption", "href": "https://github.com/harsh-nod/fe2o3/issues/87" },
+          { "label": "#88 Protected Slice 3 execution", "href": "https://github.com/harsh-nod/fe2o3/issues/88" },
+          { "label": "#89 Protected Slice 4 execution", "href": "https://github.com/harsh-nod/fe2o3/issues/89" },
+          { "label": "#90 Generalized GEMM", "href": "https://github.com/harsh-nod/fe2o3/issues/90" },
+          { "label": "#91 Production proof-certificate consumption", "href": "https://github.com/harsh-nod/fe2o3/issues/91" },
+          { "label": "#92 K-phase, grid, and edge proof certificates", "href": "https://github.com/harsh-nod/fe2o3/issues/92" },
+          { "label": "#93 Canonical matrix Kernel IR V5 (closed)", "href": "https://github.com/harsh-nod/fe2o3/issues/93" },
+          { "label": "#94 Shared protected execution substrate", "href": "https://github.com/harsh-nod/fe2o3/issues/94" },
+          { "label": "fe2o3-kernels #1 Evidence-site synchronization", "href": "https://github.com/harsh-nod/fe2o3-kernels/issues/1" }
+        ]
       }
     ]
   },

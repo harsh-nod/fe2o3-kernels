@@ -100,6 +100,8 @@ describe("curriculum integrity", () => {
             "source-model-only",
             "source-shape-only",
             "machine-inspection-only",
+            "wire-format-only",
+            "inert-worker-handoff-only",
           ]).toContain(reference.authority);
         }
         for (const path of reference?.sourcePaths ?? []) {
@@ -108,6 +110,32 @@ describe("curriculum integrity", () => {
         }
       }
     }
+  });
+
+  it("pins the current GEMM source link without moving the lesson baseline", () => {
+    const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
+    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
+    expect(kernel).toMatchObject({
+      sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
+      sourceCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
+      explanatory: true,
+    });
+    expect(kernel?.notice).toContain("exact compiler-owned descriptor");
+    expect(kernel?.notice).toContain("No final HSACO");
+    expect(kernel?.code).toContain("#[kernel(");
+    expect(kernel?.code).not.toContain("macro_rules!");
+
+    const changed = structuredClone(curriculum);
+    const changedKernel = changed
+      .flatMap((module) => module.lessons)
+      .find((entry) => entry.id === "gemm-tiling")
+      ?.tabs.find((tab) => tab.kind === "kernel");
+    if (changedKernel) changedKernel.sourceCommit = "main";
+    expect(validateCurriculum(changed)).toContainEqual(
+      expect.objectContaining({
+        message: "code tab source is not pinned to an exact commit",
+      }),
+    );
   });
 
   it("requires complete staged evidence references mechanically", () => {
@@ -295,6 +323,62 @@ describe("curriculum integrity", () => {
         tree: "165566f92afaf03eed7cea8ae2b927aca53e618c",
         authority: "source-model-only",
       },
+      {
+        label: "Authenticated attributed LDS source correspondence",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-source-ir-correspondence-v1",
+        commit: "dc31f23eb2decaa91eb2f9d72ae4c70e94766564",
+        tree: "092103d6daa2d8ebcd513627b7be9a3b182bfa60",
+        authority: "source-admission-only",
+      },
+      {
+        label: "Exact Slice 3 upstream LLVM/LLD machine shape",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-grid-machine-inspection-v3",
+        commit: "f38fe82ca574eff0eb273d5a793f04b0df3e00e1",
+        tree: "0375b991b20dcdb934797b039120f4ac279ee8cd",
+        authority: "machine-inspection-only",
+      },
+      {
+        label: "Exact tail-safe Slice 4 Kernel IR",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-edge-kernel-ir-v4",
+        commit: "f24063534fd9c69d8c595608c75213db0570aa5e",
+        tree: "8fd840624c50c25c74beb3371625a53a51956831",
+        authority: "kernel-ir-admission-only",
+      },
+      {
+        label: "Exact Slice 4 upstream LLVM/LLD machine shape",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-edge-machine-inspection-v4",
+        commit: "35575cc32cde9744078a3026b14c5e0e0066157f",
+        tree: "f7f43e9d92f98144daf5f003734fc2d9b77130d9",
+        authority: "machine-inspection-only",
+      },
+      {
+        label: "Identity-bound Slice 1 source/model correspondence",
+        kind: "source-model-verified",
+        evidenceId: "tiled-lds-source-model-correspondence-v1",
+        commit: "5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
+        tree: "1b8e2d3589082114a0bafe231d79262e6f8b22a1",
+        authority: "source-model-only",
+      },
+      {
+        label: "Canonical bounded matrix Kernel IR wire",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-matrix-wire-v5",
+        commit: "1429ed6ae70dcd218376b777e0fef7db4413efdb",
+        tree: "0a2b7965ef678253ed4c028e27f5de4394d22eb5",
+        authority: "wire-format-only",
+      },
+      {
+        label: "Source-bound compiler descriptor and inert handoff",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-inert-worker-handoff-v1",
+        commit: "7337a2b87dffa0845d092c13399b012f884de90b",
+        tree: "6dd4d922e22cf488157cc0fece17edf64df98b7c",
+        authority: "inert-worker-handoff-only",
+      },
     ]);
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
@@ -372,6 +456,31 @@ describe("curriculum integrity", () => {
         ? expectedCargoTestSourcePath(parsedVerusCommand)
         : undefined,
     ).toBe("examples/tiled_gemm_v1/tests/lds_proof_verus.rs");
+    const sourceModelCommands = stagedEvidenceRecord(
+      "tiled-lds-source-model-correspondence-v1",
+    ).commands;
+    expect(parseExactCargoTestCommand(sourceModelCommands[0])).toMatchObject({
+      locked: true,
+      manifestPath: "examples/tiled_gemm_v1/Cargo.toml",
+      mode: "test",
+      release: false,
+      targetName: "lds_source_refinement",
+    });
+    expect(parseExactCargoTestCommand(sourceModelCommands[1])).toMatchObject({
+      environment: { VERUS: "/home/harsh/tools/verus-0.2026.08.02/verus" },
+      locked: true,
+      manifestPath: "examples/tiled_gemm_v1/Cargo.toml",
+      mode: "package",
+      release: false,
+    });
+    expect(parseExactCargoTestCommand(sourceModelCommands[2])).toMatchObject({
+      environment: { VERUS: "/home/harsh/tools/verus-0.2026.08.02/verus" },
+      locked: true,
+      manifestPath: "examples/tiled_gemm_v1/Cargo.toml",
+      mode: "package",
+      release: true,
+    });
+    expect(isExactCargoClippyCommand(sourceModelCommands[3])).toBe(true);
     const machineCommand = stagedEvidenceRecord(
       "tiled-lds-machine-inspection-v1",
     ).commands[1];
@@ -745,11 +854,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "5bc57587b458da6a77a0f1063e4697f846cc0946",
-      eventualPublicTree: "165566f92afaf03eed7cea8ae2b927aca53e618c",
+      eventualPublicCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
+      eventualPublicTree: "6dd4d922e22cf488157cc0fece17edf64df98b7c",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "5bc57587b458da6a77a0f1063e4697f846cc0946",
+        requiredCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1120,6 +1229,34 @@ describe("implementation progress integrity", () => {
         "tiled-gemm-lds-grid-stride-model",
         tiledGemmV1Commits.ldsGridStrideModel,
       ],
+      [
+        "tiled-gemm-lds-source-ir-correspondence",
+        tiledGemmV1Commits.ldsSourceIrCorrespondence,
+      ],
+      [
+        "tiled-gemm-lds-grid-machine-inspection",
+        tiledGemmV1Commits.ldsGridMachineInspection,
+      ],
+      [
+        "tiled-gemm-lds-edge-kernel-ir",
+        tiledGemmV1Commits.ldsEdgeKernelIr,
+      ],
+      [
+        "tiled-gemm-lds-edge-machine-inspection",
+        tiledGemmV1Commits.ldsEdgeMachineInspection,
+      ],
+      [
+        "tiled-gemm-lds-source-model-correspondence",
+        tiledGemmV1Commits.ldsSourceModelCorrespondence,
+      ],
+      [
+        "tiled-gemm-lds-matrix-wire-v5",
+        tiledGemmV1Commits.ldsMatrixWireV5,
+      ],
+      [
+        "tiled-gemm-lds-inert-worker-handoff",
+        tiledGemmV1Commits.ldsInertWorkerHandoff,
+      ],
     ];
     for (const [id, commit] of expected) {
       expect(
@@ -1136,7 +1273,9 @@ describe("implementation progress integrity", () => {
     const source = stagedEvidenceDetail(["tiled-lds-attributed-source-v1"]);
     expect(source).toContain("ordinary Rust function carrying #[kernel(typed, ...)]");
     expect(source).toContain("without macro_rules!");
-    expect(source).toContain("deliberately non-executable");
+    expect(source).toContain("At commit ee76cedc");
+    expect(source).toContain("source is deliberately non-executable");
+    expect(source).toContain("Later records first add");
     const machine = stagedEvidenceDetail([
       "tiled-lds-machine-inspection-v1",
     ]);
@@ -1176,8 +1315,9 @@ describe("implementation progress integrity", () => {
     expect(wg64).toContain("no longer carries a handwritten frontend sidecar");
     expect(wg64).toContain("required-only exact WG64 and WG256 compatibility");
     expect(wg64).toContain("fixed vecadd, alpha/zeta, and scalar-GEMM profiles");
-    expect(wg64).toContain("Source-to-LDS Kernel IR collection");
-    expect(wg64).toContain("compiler-issued LDS acquisition remain open");
+    expect(wg64).toContain("source-to-LDS Kernel IR collection");
+    expect(wg64).toContain("compiler-issued LDS acquisition are still open");
+    expect(wg64).toContain("later dc31f23eb source-correspondence record");
     const gridStride = stagedEvidenceDetail([
       "tiled-lds-grid-stride-model-v3",
     ]);
@@ -1191,6 +1331,81 @@ describe("implementation progress integrity", () => {
     expect(gridStride).toContain("runtime hardware execution");
     expect(gridStride).toContain("numerical-contract proof");
     expect(gridStride).toContain("compiler or machine refinement");
+
+    const sourceIr = stagedEvidenceDetail([
+      "tiled-lds-source-ir-correspondence-v1",
+    ]);
+    expect(sourceIr).toContain("ordinary #[kernel(typed, ...)] Rust");
+    expect(sourceIr).toContain("contains no macro_rules! body");
+    expect(sourceIr).toContain("select only the verified canonical");
+    expect(sourceIr).toContain("Removed-barrier, A-index-drift");
+    expect(sourceIr).toContain("stops before descriptor construction and Worker V2");
+    expect(sourceIr).toContain("fe2o3 issue #85 was still open");
+    expect(sourceIr).toContain("not a source-to-machine or compiler-refinement proof");
+
+    const gridMachine = stagedEvidenceDetail([
+      "tiled-lds-grid-machine-inspection-v3",
+    ]);
+    expect(gridMachine).toContain("M=64, N=48, K=16");
+    expect(gridMachine).toContain("lda=33, ldb=79, ldc=96");
+    expect(gridMachine).toContain("gfx942:xnack- COV6");
+    expect(gridMachine).toContain("zero spills, scratch, calls, atomics, or COMGR");
+    expect(gridMachine).toContain("protected Slice 3 Worker V2 execution remains open");
+
+    const edgeIr = stagedEvidenceDetail(["tiled-lds-edge-kernel-ir-v4"]);
+    expect(edgeIr).toContain("M=17, N=19, K=18");
+    expect(edgeIr).toContain("BF16 zero-fill tails");
+    expect(edgeIr).toContain("alpha=2.0, beta=-1.0");
+    expect(edgeIr).toContain("unconditional publish and reuse barriers");
+    expect(edgeIr).toContain("At commit f2406353");
+    expect(edgeIr).toContain("later 35575cc32 machine-inspection record");
+    expect(edgeIr).toContain("protected execution remains open in #89");
+
+    const edgeMachine = stagedEvidenceDetail([
+      "tiled-lds-edge-machine-inspection-v4",
+    ]);
+    expect(edgeMachine).toContain("M=17, N=19, K=18");
+    expect(edgeMachine).toContain("alpha=2.0, beta=-1.0");
+    expect(edgeMachine).toContain("two predicated K16 phases");
+    expect(edgeMachine).toContain("exactly two static barriers");
+    expect(edgeMachine).toContain("one static loop-body BF16 MFMA");
+    expect(edgeMachine).toContain("5 active tests and 1 intentional LLVM-tool ignore");
+    expect(edgeMachine).toContain("129 active dialect tests with 23 intentional ignores");
+    expect(edgeMachine).toContain("362 active Kernel IR tests with 1 intentional ignore");
+    expect(edgeMachine).toContain("closes fe2o3 issue #86");
+    expect(edgeMachine).toContain("protected Slice 4 MI300X execution in #89");
+
+    const sourceModel = stagedEvidenceDetail([
+      "tiled-lds-source-model-correspondence-v1",
+    ]);
+    expect(sourceModel).toContain("96 verified and 0 errors");
+    expect(sourceModel).toContain("exact 256/256/256 lengths");
+    expect(sourceModel).toContain("Four new expected-negative fixtures");
+    expect(sourceModel).toContain("76 debug tests, 76 release tests");
+    expect(sourceModel).toContain("7 doctests in each lane");
+    expect(sourceModel).toContain("all six positive proof groups");
+    expect(sourceModel).toContain("all 21 expected-negative fixtures");
+    expect(sourceModel).toContain("identity-bound bounded source/model correspondence only");
+    expect(sourceModel).toContain("does not prove rustc MIR-to-IR semantics");
+    expect(sourceModel).toContain("descriptor or Worker V2 integrity");
+    expect(sourceModel).toContain("certificate consumption");
+    expect(sourceModel).toContain("fe2o3 #91");
+    expect(sourceModel).toContain("#92");
+    expect(sourceModel).toContain("#106");
+
+    const matrixWire = stagedEvidenceDetail(["tiled-lds-matrix-wire-v5"]);
+    expect(matrixWire).toContain("canonical Kernel IR V5 bytes");
+    expect(matrixWire).toContain("V1 through V4 remain frozen");
+    expect(matrixWire).toContain("wire identity only");
+
+    const inertHandoff = stagedEvidenceDetail([
+      "tiled-lds-inert-worker-handoff-v1",
+    ]);
+    expect(inertHandoff).toContain("exact compiler-owned descriptor");
+    expect(inertHandoff).toContain("single-use Worker V2 handoff");
+    expect(inertHandoff).toContain("original pre-section upstream-LLVM body");
+    expect(inertHandoff).toContain("380 library tests passed");
+    expect(inertHandoff).toContain("grants no worker, linker, final-HSACO");
   });
 
   it("keeps tiled GEMM partial until source, body, authority, and race closure", () => {
@@ -1201,12 +1416,14 @@ describe("implementation progress integrity", () => {
       verify: "partial",
       evidence: "partial",
       dependsOn: [
-        "multi-phase attributed source and source-to-LDS-Kernel-IR collection",
-        "compiler-issued LDS acquisition",
-        "protected publisher, load, and launch",
-        "source-bound protected LDS hardware evidence",
+        "shared protected finalizer, host, and Worker V2 runtime (fe2o3 #94)",
+        "production proof-certificate consumption (fe2o3 #91)",
+        "K-phase, grid, and edge proof extension (fe2o3 #92)",
+        "MIR-to-IR and IR-to-machine safety correspondence (fe2o3 #106 and #107)",
+        "protected Slice 3 and Slice 4 execution (fe2o3 #88 and #89)",
+        "general dimensions, strides, tails, and coefficients (fe2o3 #90)",
         "source and Verus-to-machine refinement",
-        "IEEE BF16/F32 numerical contract",
+        "IEEE BF16/F32 numerical contract (fe2o3 #109)",
       ],
     });
   });
@@ -1240,20 +1457,53 @@ describe("implementation progress integrity", () => {
     );
     expect(renderedStaged).toContain("inputs remained bitwise unchanged");
     expect(renderedStaged).not.toMatch(/immutable\s+inputs/);
-    expect(mapping).toContain("ordinary #[kernel(typed, ...)] Rust body");
+    expect(mapping).toContain("#[kernel] is the canonical user form");
+    expect(mapping).toContain("sourceCommit\":\"7337a2b87dffa0845d092c13399b012f884de90b");
     expect(mapping).toContain("not a functional kernel");
-    expect(mapping).toContain("source-to-LDS-Kernel-IR collection");
+    expect(mapping).toContain("authenticates the exact attributed source");
+    expect(mapping).toContain("stops before descriptor construction and Worker V2");
     expect(mapping).toContain("six cases checked 1,536 outputs");
     expect(mapping).toContain("not Rust-source correspondence");
     expect(mapping).toContain("196 verified and 0 errors");
     expect(mapping).toContain("not an attributed multi-phase GPU kernel");
     expect(mapping).toContain("real two-trip SSA loop");
     expect(mapping).toContain("macro-owned for general typed #[kernel]");
-    expect(mapping).toContain("compiler-issued LDS acquisition remain open");
     expect(mapping).toContain("fixed-K16 grid/stride source model");
     expect(mapping).toContain("101 verified and 0 errors");
-    expect(mapping).toContain("12 expected negative rejections");
-    expect(mapping).toContain("no attributed source, backend or HSACO result");
+    expect(renderedStaged).toContain("12 expected negative rejections");
+    expect(mapping).toContain("M=64, N=48, K=16");
+    expect(mapping).toContain("gfx942:xnack- COV6");
+    expect(mapping).toContain("Slice 4 at f24063534");
+    expect(mapping).toContain("Commit 35575cc32");
+    expect(mapping).toContain("M=17, N=19, K=18");
+    for (const issue of [
+      "#85",
+      "#86",
+      "#87",
+      "#88",
+      "#89",
+      "#90",
+      "#91",
+      "#92",
+      "#93",
+      "#94",
+    ]) {
+      expect(mapping).toContain(issue);
+    }
+    expect(mapping).toContain("fe2o3-kernels #1");
+    expect(mapping).toContain("#85, #86, and #93 are complete");
+    expect(mapping).toContain("96 verified and 0 errors");
+    expect(mapping).toContain("76 debug tests, 76 release tests");
+    expect(mapping).toContain("Production certificate consumption is tracked in #91");
+    expect(mapping).toContain("No production source execution is claimed");
+    for (const issue of [85, 86, 87, 88, 89, 90, 91, 92, 93, 94]) {
+      expect(mapping).toContain(
+        `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,
+      );
+    }
+    expect(mapping).toContain(
+      "https://github.com/harsh-nod/fe2o3-kernels/issues/1",
+    );
     expect(mapping).not.toContain("#[kernel] WG64 contract integration remain open");
 
     expect(proofPlan).toContain("multi-phase source-to-machine derivation");

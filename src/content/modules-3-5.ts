@@ -193,14 +193,14 @@ const gemmMapping: Lesson = {
   objectives: [
     "Map each workgroup to one C tile and each lane to disjoint output fragments.",
     "Prove cooperative A/B loads stay in bounds at edge tiles.",
-    "Separate the attributed Rust source from the still-open collection and execution path.",
+    "Separate the inert source-to-descriptor/Worker V2 handoff from the still-open finalization and execution path.",
   ],
   claims: [
     {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now contains a fixed attributed LDS Slice 1 source with a macro-owned WG64 contract, separate Slice 1 proof, Kernel IR, machine-shape and hardware observations, independent Slice 2 proof and K32 backend records, and a bounded Slice 3 grid/stride source model. They are not joined into a functional or production kernel.",
+        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use inert Worker V2 handoff, proves a bounded identity-bound Slice 1 source/model relation, has independent Slice 2 proof and K32 backend records, and lowers and inspects exact Slice 3 and tail-safe Slice 4 graphs through upstream LLVM/COV6. Finalization, protected execution, compiler refinement, certificate consumption, and generalization remain open, so this is not a functional or production kernel.",
     },
     {
       kind: "compiler-hsaco-observed",
@@ -230,10 +230,18 @@ const gemmMapping: Lesson = {
     narrativeSection("gemm-tiling/loop-proof"),
   ],
   tabs: completeTabs(
-    { language: "rust", code: gemmDesign, explanatory: true },
+    {
+      language: "rust",
+      code: gemmDesign,
+      sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
+      sourceCommit: "7337a2b87dffa0845d092c13399b012f884de90b",
+      explanatory: true,
+      notice:
+        "Reviewed attributed source excerpt. The exact fe2o3 source reaches canonical Kernel IR, an exact compiler-owned descriptor, and a single-use inert Worker V2 handoff. No final HSACO, protected load, launch, hardware execution, or production proof-certificate authority is claimed.",
+    },
     {
       language: "text",
-      code: `Slice 1, one phase:\n  every LDS read is initialized in the current epoch\n  every output has one lane/component owner\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n\nSlice 3, fixed K=16 and positive tile-aligned M/N:\n  grid maps injectively to C tiles\n  padded lda/ldb/ldc accesses stay in bounds\n  four stores per lane are bounded and globally disjoint\n\nSlice 3 proof summary: 101 verified, 0 errors.\nThe runner checks 73/93/196/101 positives and 12 expected rejections.\nThis source model is not source, backend, hardware, numerical, or refinement evidence.`,
+      code: `Slice 1:\n  attributed #[kernel] source selects exact canonical V5 Kernel IR\n  exact compiler descriptor and single-use inert Worker V2 handoff\n  96 verified, 0 errors for bounded identity-bound source/model correspondence\n  no finalization, load, launch, hardware, or refinement authority\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n\nSlice 3, M=64, N=48, K=16, lda=33, ldb=79, ldc=96:\n  101 verified, 0 errors for the source model\n  exact IR lowers through upstream LLVM to inspected gfx942 COV6\n  protected execution remains open\n\nSlice 4, M=17, N=19, K=18, alpha=2, beta=-1:\n  tail-safe two-phase exact Kernel IR with predicated C access\n  exact IR lowers to inspected upstream LLVM/COV6\n  protected execution remains open`,
       explanatory: true,
     },
     { language: "bash", code: noHost, explanatory: true },
@@ -241,7 +249,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "Slice 1 source, proof, Kernel IR, machine inspection, and observational MI300X execution, Slice 2 proof and K32 backend evidence, and the Slice 3 grid/stride source model exist as separate bounded increments. Multi-phase attributed source, source-to-IR collection, compiler-issued LDS acquisition, and source-bound protected publisher/load/launch evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
+        "Slice 1 source-to-IR, canonical matrix wire V5, exact compiler descriptor, inert Worker V2 handoff, and bounded identity-bound source/model correspondence; Slice 2 proof and K32 backend evidence; and exact Slice 3 and Slice 4 LLVM/COV6 inspection exist as bounded increments. #85, #86, and #93 are complete. Shared protected execution (#94 and #96-#100), certificate consumption and proof extension (#91/#92), protected Slice 3/4 execution (#88/#89), and generalized GEMM (#90) remain open; site synchronization is tracked in fe2o3-kernels #1. No rustc/LLVM/machine refinement or production source execution is claimed.",
       ),
     },
   ),
@@ -275,7 +283,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, compiler-issued LDS acquisition, source-bound protected publisher/load/launch evidence, source-to-machine refinement, and an IEEE numerical contract remain required before promotion.",
+        "The fixed Slice 1 attributed source reaches canonical V5 Kernel IR, an exact compiler descriptor, and an inert Worker V2 handoff; its bounded identity-bound source/model relation verifies, and exact Slice 3/4 graphs reach inspected machine shape. Finalization, proof-certificate consumption, Slice 2-4 proof extension, generalized attributed source, protected execution, compiler and machine refinement, and an IEEE numerical contract remain required before promotion.",
     },
   ],
   sections: [

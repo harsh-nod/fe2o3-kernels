@@ -37,11 +37,14 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The publication-gated repository snapshot is pinned to fe2o3 commit
-`5bc57587b458da6a77a0f1063e4697f846cc0946`, tree
-`165566f92afaf03eed7cea8ae2b927aca53e618c`. Slice 2 proof and K32 backend
-records remain independent, as does the Slice 3 grid/stride model; the separate
-Slice 1 MI300X record is observational IR-derived evidence, not source, proof,
-or publication authority. **The publication workflow must
+`7337a2b87dffa0845d092c13399b012f884de90b`, tree
+`6dd4d922e22cf488157cc0fece17edf64df98b7c`. It includes exact Slice 1
+attributed source-to-IR correspondence, canonical matrix Kernel IR V5 bytes,
+an exact compiler-owned descriptor and single-use inert Worker V2 handoff,
+Slice 3 and Slice 4 upstream LLVM/COV6 inspection, and bounded identity-bound
+Slice 1 source/model correspondence. These records remain separate from final
+HSACO publication, protected loading, launch, hardware execution, and production
+proof-certificate authority. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
 audited public baseline remains
@@ -102,8 +105,34 @@ LLVM refinement proof.
 Commit `280995762` moves the exact WG64 launch contract into the general typed
 `#[kernel]` macro path. Required-only WG64 and WG256 remain compatible while
 fixed WG256 profiles reject WG64, and tiled Slice 1 no longer contains a
-handwritten frontend sidecar. Source-to-LDS Kernel IR collection and
-compiler-issued LDS acquisition remain open.
+handwritten frontend sidecar. Commit `dc31f23eb` then authenticates the exact
+ordinary attributed source, reachable portable MIR, trusted device items,
+FnAbi, launch contract, target, and compiler-derived 1,024-byte LDS profile to
+select only the verified canonical Slice 1 Kernel IR. Removed-barrier,
+A-index-drift, and same-spelling-helper mutations fail before selection. At
+that commit this was reviewed source-to-IR correspondence, not compiler
+refinement, and the receipt deliberately stopped before descriptor construction
+and Worker V2.
+
+Commit `1429ed6ae` adds canonical Kernel IR V5 bytes for every current matrix
+operand and profile field while leaving V1 through V4 frozen. Commit
+`7337a2b87` then carries the original source-authenticated pre-section LLVM body
+through an exact compiler descriptor into one single-use inert Worker V2
+handoff. The handoff binds source authority, V5 Kernel IR, descriptor, resources,
+LLVM body, symbol manifest, target, COV6, and envelope. It authenticates no
+compiler origin and grants no worker, linker, final-HSACO, loading, launch,
+hardware-execution, or production proof-certificate authority.
+
+Commit `5a45239ae` adds a bounded Verus relation for the exact Slice 1 source
+model. It reports 96 verified and 0 errors for exact lengths, same-epoch LDS
+initialization, publish-barrier ordering, unique C ownership, and correspondence
+among the attributed profile, portable-MIR receipt, reviewed correspondence,
+and canonical module identities. Four targeted mutations are rejected. Clean
+MI300X validation passed 76 debug tests, 76 release tests, 7 doctests in each
+lane, strict Clippy, all six positive proof groups, and all 21 expected
+rejections. This is identity-bound source/model correspondence only. It does
+not prove rustc/MIR-to-IR semantics, LLVM, linking, emitted machine behavior,
+Worker V2 integrity, certificate consumption, loading, or launch authority.
 
 Slice 3 at `5bc57587b` adds a fixed-K16 grid/stride source model for positive
 tile-aligned M and N. Verus reports 101 verified and 0 errors for padded
@@ -112,18 +141,53 @@ stores per lane, and global disjointness of C ownership. The aggregate runner
 now checks positive summaries of 73, 93, 196, and 101 obligations and requires
 12 expected negative rejections. Ordinary models exhaust 1x1 through 3x3 grids
 with representative padding and a 64x48 case with lda=33, ldb=79, and ldc=96.
-This is source-model evidence only: it establishes no attributed kernel source,
-backend or HSACO result, hardware execution, numerical contract, refinement, or
-protected authority.
+Commit `f38fe82ca` separately lowers the exact M=64, N=48, K=16, lda=33,
+ldb=79, ldc=96, 3x4-grid graph through upstream LLVM 22. The final-object test
+observes gfx942:xnack- COV6, WG64, workgroup X/Y, 1,024-byte LDS, one barrier,
+one BF16 MFMA, and no spills, scratch, calls, atomics, or COMGR. This is exact
+IR-derived machine-shape evidence, not protected execution, hardware numerics,
+or compiler refinement.
 
-The missing production chain is still material. An attributed multi-phase
-source, source-to-LDS-Kernel-IR collection, and compiler-issued LDS acquisition
-remain open. The inspected
-HSACO begins from the separate canonical IR and is not carried through the
-protected publisher, load, and launch path. The hardware observation therefore
-does not supply source-bound protected execution evidence. Compiler and
-Verus-to-machine refinement and an IEEE
-BF16/F32 numerical contract also remain open.
+Slice 4 at `f24063534` seals an exact M=17, N=19, K=18 Kernel IR graph over a
+2x2 WG64 grid. It carries FP32 accumulators across two K16 phases, zero-fills
+BF16 tails into reusable XOR4 LDS, uses unconditional publish and reuse
+barriers, and predicates C reads and writes for alpha=2 and beta=-1. Nine tests
+exhaust the valid/tail coordinate and ownership domains and reject barrier,
+access, phase, accumulator, coefficient, target, resource, and layout drift.
+Commit `35575cc32` lowers only that exact graph through upstream LLVM 22 and
+passes final gfx942:xnack- COV6 machine inspection. The object has WG64/wave64,
+1,024-byte fixed LDS, zero private segment and spills, LDS traffic, two static
+barriers, one static loop-body BF16 MFMA, and no scratch, calls, atomics, or
+COMGR. Clean current-main validation passed 5 active focused tests with 1
+intentional ignore, the exact ignored machine test, 129 active dialect tests
+with 23 intentional ignores, strict Clippy, and 362 active Kernel IR tests with
+1 intentional ignore. This remains IR-derived machine-shape evidence, not
+attributed-source lowering, protected execution, hardware numerics, or compiler
+refinement.
+
+The missing production chain is still material. Source receipt to the inert
+descriptor and Worker V2 boundary is complete in closed
+[`#85`](https://github.com/harsh-nod/fe2o3/issues/85), and canonical matrix wire
+V5 is complete in closed [`#93`](https://github.com/harsh-nod/fe2o3/issues/93).
+The shared finalizer, host adapter, and protected runtime substrate remain open
+in [`#94`](https://github.com/harsh-nod/fe2o3/issues/94) and its independently
+claimable [`#96`-`#100`](https://github.com/harsh-nod/fe2o3/issues/96) packages.
+Exact Slice 4 lowering is complete and
+[#86](https://github.com/harsh-nod/fe2o3/issues/86) is closed. Protected Slice
+3 and Slice 4 execution remain open in
+[#88](https://github.com/harsh-nod/fe2o3/issues/88) and
+[#89](https://github.com/harsh-nod/fe2o3/issues/89), and generalized dimensions,
+strides, tails, and coefficients in
+[#90](https://github.com/harsh-nod/fe2o3/issues/90). Bounded #87 groundwork is
+integrated, but production certificate consumption remains open in
+[#91](https://github.com/harsh-nod/fe2o3/issues/91), relation extension through
+K-phase, grid, and edge profiles in [#92](https://github.com/harsh-nod/fe2o3/issues/92),
+and MIR-to-Kernel-IR semantic refinement in
+[#106](https://github.com/harsh-nod/fe2o3/issues/106). This synchronization pass
+is tracked in
+[`fe2o3-kernels#1`](https://github.com/harsh-nod/fe2o3-kernels/issues/1).
+Compiler and Verus-to-machine refinement and an IEEE BF16/F32 numerical
+contract also remain open. No production LDS GEMM source execution is claimed.
 
 The latest head also adds authenticated Verus execution V2 for Linux x86_64
 against pinned local runtime and tool snapshots. It uses `clone3` pidfds and
@@ -195,31 +259,38 @@ At the audited pin:
   MI300X run, bitwise oracle, A/B/C unchanged-value comparison, adjacent
   canaries, and unload checks. The observation is non-authoritative and does not
   join the Rust source to those bytes.
-- LDS Slice 1 now has separate canonical Kernel IR, Verus source-model,
-  attributed Rust source, LLVM lowering, and final-HSACO machine-shape evidence.
+- LDS Slice 1 now has canonical Kernel IR and V5 matrix wire bytes, a separate
+  Verus source model, authenticated attributed Rust source-to-IR correspondence,
+  bounded identity-bound source/model proof, an exact compiler-owned descriptor,
+  a single-use inert Worker V2 handoff, LLVM lowering, and final-HSACO
+  machine-shape evidence.
   An independent six-case MI300X run observed the IR-derived HSACO over 1,536
-  outputs with allocation canaries. The Rust function is deliberately
-  fail-closed before output mutation and is not source-collected into that LDS
-  IR, so the run is neither source-bound nor protected execution evidence.
+  outputs with allocation canaries. That hardware run remains independent of the
+  source-bound inert handoff, so it is neither protected source execution nor a
+  source-to-hardware refinement result.
 - LDS Slice 2 has a bounded exact-real K-phase Verus model, executable integer
   event models for 1, 2, and 4 phases, and an independent K32 backend/final
   machine-shape record. It has no attributed multi-phase GPU source, runtime
   hardware execution, protected authority, or LLVM refinement proof.
-- LDS Slice 3 has a bounded fixed-K16 Verus grid/stride model and executable
-  tests for tiled M/N dimensions and padded matrix strides. It proves the
-  modeled grid mapping, per-lane stores, and global C ownership, but has no
-  attributed source, backend, HSACO, hardware, numerical, or refinement result.
-- General typed `#[kernel]` now owns exact WG64 and WG256 launch contracts, and
-  tiled Slice 1 no longer carries a handwritten frontend sidecar. The source
-  still fails closed because LDS acquisition and source-to-LDS IR collection
-  remain unavailable.
-- `macro_rules!` is declarative compile-time token expansion. Vecadd uses it to
-  share a small body with Verus; it is not the GPU kernel marker. `#[kernel]` is
-  the procedural attribute that marks an ordinary Rust function for fe2o3's
-  frontend and generated typed API. Production kernel bodies should be ordinary
-  attributed Rust and do not require `macro_rules!`.
-- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1,
-  Slice 2, and Slice 3 increments. Softmax, flash attention, and
+- LDS Slice 3 has a bounded fixed-K16 Verus grid/stride model plus exact
+  upstream LLVM/LLD and COV6 machine-shape inspection for one padded 3x4 grid.
+  It has no attributed source, protected execution, hardware numerical, or
+  refinement result.
+- LDS Slice 4 has exact tail-safe two-phase Kernel IR and upstream LLVM/COV6
+  machine-shape inspection for one 17x19x18 profile, including alpha/beta and
+  predicated edge access. It has no attributed source, protected runtime or
+  hardware numerical execution, compiler refinement, or general profile.
+- `#[kernel]` is the canonical user form. The procedural attribute marks an
+  ordinary Rust function for fe2o3's frontend and generated typed API, including
+  exact WG64/WG256 launch contracts. Slice 1 now reaches canonical Kernel IR, an
+  exact descriptor, and an inert Worker V2 handoff, then fails closed before
+  finalization, protected loading, or launch.
+- `macro_rules!` is optional declarative compile-time token expansion. Vecadd
+  uses it to share a small body with Verus; it is not the GPU kernel marker,
+  creates no runtime mechanism, and proves nothing by itself. Production kernel
+  algorithms should remain ordinary attributed Rust and do not require it.
+- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1
+  through Slice 4 increments. Softmax, flash attention, and
   mixture-of-experts remain design-only. Their snippets are not programs users
   should expect to run today.
 - The production path described by the audited repository is Rust to Kernel IR

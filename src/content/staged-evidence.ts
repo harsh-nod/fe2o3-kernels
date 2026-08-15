@@ -42,6 +42,13 @@ export const stagedEvidenceOrder = deepFreeze([
   "tiled-lds-k32-machine-inspection-v2",
   "tiled-lds-wg64-contract-v1",
   "tiled-lds-grid-stride-model-v3",
+  "tiled-lds-source-ir-correspondence-v1",
+  "tiled-lds-grid-machine-inspection-v3",
+  "tiled-lds-edge-kernel-ir-v4",
+  "tiled-lds-edge-machine-inspection-v4",
+  "tiled-lds-source-model-correspondence-v1",
+  "tiled-lds-matrix-wire-v5",
+  "tiled-lds-inert-worker-handoff-v1",
 ] satisfies StagedEvidenceId[]);
 
 const TILED_GEMM_V1_HARDWARE_COMMAND =
@@ -307,7 +314,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "source-blockers",
-        text: "The source is deliberately non-executable: source-to-LDS-Kernel-IR collection, compiler-issued LDS allocation, authenticated wave-lane construction, and barrier lowering remain open. A later macro-owned record supplies the WG64 launch contract without changing these blockers.",
+        text: "At commit ee76cedcdc4126c69bc486a5ac12900c1c5485b1 the source is deliberately non-executable: source-to-LDS-Kernel-IR collection, compiler-issued LDS allocation, authenticated wave-lane construction, and barrier lowering are still open. Later records first add the macro-owned WG64 contract and then authenticate the exact source to canonical IR; this record grants neither result retroactively.",
       },
     ],
   },
@@ -485,7 +492,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "wg64-contract-boundary",
-        text: "This closes the macro-owned #[kernel] WG64 launch-contract integration gap only. Source-to-LDS Kernel IR collection and compiler-issued LDS acquisition remain open, so the attributed source still fails closed and gains no backend, hardware-execution, or protected authority from this record.",
+        text: "At commit 280995762fce8a97f72fc2acb53c0d7effd2109f this closes only the macro-owned #[kernel] WG64 launch-contract gap; source-to-LDS Kernel IR collection and compiler-issued LDS acquisition are still open. The later dc31f23eb source-correspondence record closes those bounded source/IR gaps without granting this record backend, hardware-execution, or protected authority.",
       },
     ],
   },
@@ -529,6 +536,263 @@ const stagedEvidenceRecords = deepFreeze({
       {
         id: "grid-stride-boundary",
         text: "Slice 3 is source-model evidence only. It grants no attributed kernel-source correspondence, backend or HSACO result, runtime hardware execution, numerical-contract proof, compiler or machine refinement, or protected authority.",
+      },
+    ],
+  },
+  "tiled-lds-source-ir-correspondence-v1": {
+    id: "tiled-lds-source-ir-correspondence-v1",
+    stageLabel: "dc31f23e attributed source to IR",
+    claimLabel: "Authenticated attributed LDS source correspondence",
+    claim: "compiler-hsaco-observed",
+    authority: "source-admission-only",
+    commit: "dc31f23eb2decaa91eb2f9d72ae4c70e94766564",
+    tree: "092103d6daa2d8ebcd513627b7be9a3b182bfa60",
+    commands: [
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test kernel_source",
+      "cargo test --locked -p rustc-codegen-fe2o3 --test collected_executable_scalar_control_flow_v2",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_v1/src/kernel.rs",
+      "examples/tiled_gemm_v1/tests/kernel_source.rs",
+      "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_lds_slice1_v1.rs",
+      "crates/rustc-codegen-fe2o3/tests/collected_executable_scalar_control_flow_v2.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "canonical-attributed-source",
+        text: "Commit dc31f23eb2decaa91eb2f9d72ae4c70e94766564 makes ordinary #[kernel(typed, ...)] Rust the canonical Slice 1 user form. The body contains checked global indexing, compiler-issued separate BF16 LDS tiles, cooperative XOR4 staging, a uniform barrier, LDS fragment reads, one BF16 MFMA, and four disjoint C writes; it contains no macro_rules! body, raw LDS pointer, inline assembly, or helper-function lookalike.",
+      },
+      {
+        id: "reviewed-source-ir-correspondence",
+        text: "The exact attributed root, reachable portable MIR, trusted device-item identities, FnAbi, gfx942:xnack- target, WG64 launch contract, and compiler-derived two-allocation 1,024-byte LDS profile select only the verified canonical fe2o3::tiled_gemm_lds_v1 Kernel IR. Removed-barrier, A-index-drift, and same-spelling helper mutations fail before canonical IR selection.",
+      },
+      {
+        id: "source-ir-boundary",
+        text: "This is bounded reviewed source-to-IR correspondence, not a source-to-machine or compiler-refinement proof. At this checkpoint the receipt deliberately stops before descriptor construction and Worker V2, and fe2o3 issue #85 was still open. This record grants no LLVM, final-HSACO, publication, loading, launch, hardware-execution, or production authority; the later 7337a2b87 handoff record advances only the inert compiler-module boundary.",
+      },
+    ],
+  },
+  "tiled-lds-grid-machine-inspection-v3": {
+    id: "tiled-lds-grid-machine-inspection-v3",
+    stageLabel: "f38fe82c Slice 3 LLVM/COV6 inspection",
+    claimLabel: "Exact Slice 3 upstream LLVM/LLD machine shape",
+    claim: "compiler-hsaco-observed",
+    authority: "machine-inspection-only",
+    commit: "f38fe82ca574eff0eb273d5a793f04b0df3e00e1",
+    tree: "0375b991b20dcdb934797b039120f4ac279ee8cd",
+    commands: [
+      "cargo test --locked -p dialect-amdgcn --test tiled_gemm_lds_grid_v1",
+      "cargo clippy --locked -p dialect-amdgcn --all-targets --all-features -- -D warnings",
+      "env FE2O3_OPT=/opt/rocm/llvm/bin/opt FE2O3_LLC=/opt/rocm/llvm/bin/llc FE2O3_LLD=/opt/rocm/llvm/bin/ld.lld FE2O3_LLVM_OBJDUMP=/opt/rocm/llvm/bin/llvm-objdump FE2O3_LLVM_READOBJ=/opt/rocm/llvm/bin/llvm-readobj cargo test --locked -p dialect-amdgcn --test tiled_gemm_lds_grid_v1 upstream_llvm_lld_final_artifact_has_the_exact_grid_machine_shape -- --ignored --exact --nocapture",
+    ],
+    sourcePaths: [
+      "crates/dialect-amdgcn/src/lowering.rs",
+      "crates/dialect-amdgcn/tests/tiled_gemm_lds_grid_v1.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "exact-grid-lowering",
+        text: "Commit f38fe82ca574eff0eb273d5a793f04b0df3e00e1 lowers only the exact Slice 3 M=64, N=48, K=16, lda=33, ldb=79, ldc=96, 3x4-grid, WG64/wave64, 1,024-byte-LDS graph. It derives workgroup X/Y from upstream LLVM intrinsics and rejects profile, group, stride, resource, layout, MFMA, store, barrier, extra-function, and generic-lowering drift.",
+      },
+      {
+        id: "grid-final-machine-shape",
+        text: "The ignored upstream LLVM 22 opt, llc, ld.lld, llvm-objdump, and llvm-readobj inspection passed on mi300x. The final object is gfx942:xnack- COV6 with WG64, workgroup X/Y use, 1,024 bytes of LDS, LDS traffic, one barrier, one BF16 MFMA, and zero spills, scratch, calls, atomics, or COMGR.",
+      },
+      {
+        id: "grid-machine-boundary",
+        text: "This is exact Kernel-IR-to-machine-shape inspection only. It is not the attributed Slice 1 source path, an LLVM refinement proof, protected publication or execution, or a hardware numerical result; protected Slice 3 Worker V2 execution remains open in fe2o3 issue #88.",
+      },
+    ],
+  },
+  "tiled-lds-edge-kernel-ir-v4": {
+    id: "tiled-lds-edge-kernel-ir-v4",
+    stageLabel: "f2406353 Slice 4 edge Kernel IR",
+    claimLabel: "Exact tail-safe Slice 4 Kernel IR",
+    claim: "compiler-hsaco-observed",
+    authority: "kernel-ir-admission-only",
+    commit: "f24063534fd9c69d8c595608c75213db0570aa5e",
+    tree: "8fd840624c50c25c74beb3371625a53a51956831",
+    commands: [
+      "cargo test --locked -p fe2o3-kernel-ir --test tiled_gemm_lds_edges_v1",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-kernel-ir/src/tiled_gemm_lds_edges_v1.rs",
+      "crates/fe2o3-kernel-ir/tests/tiled_gemm_lds_edges_v1.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "exact-edge-graph",
+        text: "Commit f24063534fd9c69d8c595608c75213db0570aa5e seals one exact Slice 4 M=17, N=19, K=18 graph: a 2x2 WG64/wave64 grid, two reusable aligned 512-byte XOR4 LDS tiles, two K16 phases with BF16 zero-fill tails, carried FP32 accumulators, alpha=2.0, beta=-1.0, predicated C reads and writes, and unconditional publish and reuse barriers.",
+      },
+      {
+        id: "edge-negative-space",
+        text: "Nine tests exhaustively classify valid and tail A/B/C coordinates, physical LDS ownership, and all-lane barrier participation. They reject conditional barrier bypass, removed barriers, unguarded tail or C access, phase, tail, accumulator, coefficient, ownership, target, resource, and layout drift.",
+      },
+      {
+        id: "edge-ir-boundary",
+        text: "At commit f24063534fd9c69d8c595608c75213db0570aa5e this is exact Kernel IR admission only and makes no attributed-source, lowering, final-HSACO, runtime, hardware, IEEE-754, numerical-refinement, or protected-authority claim. The later 35575cc32 machine-inspection record closes the bounded lowering gap independently; protected execution remains open in #89.",
+      },
+    ],
+  },
+  "tiled-lds-edge-machine-inspection-v4": {
+    id: "tiled-lds-edge-machine-inspection-v4",
+    stageLabel: "35575cc3 Slice 4 LLVM/COV6 inspection",
+    claimLabel: "Exact Slice 4 upstream LLVM/LLD machine shape",
+    claim: "compiler-hsaco-observed",
+    authority: "machine-inspection-only",
+    commit: "35575cc32cde9744078a3026b14c5e0e0066157f",
+    tree: "f7f43e9d92f98144daf5f003734fc2d9b77130d9",
+    commands: [
+      "cargo test --locked -p dialect-amdgcn --test tiled_gemm_lds_edges_v1",
+      "cargo test --locked -p dialect-amdgcn",
+      "cargo clippy --locked -p dialect-amdgcn --all-targets --all-features -- -D warnings",
+      "cargo test --locked -p fe2o3-kernel-ir",
+      "env FE2O3_OPT=/opt/rocm/llvm/bin/opt FE2O3_LLC=/opt/rocm/llvm/bin/llc FE2O3_LLD=/opt/rocm/llvm/bin/ld.lld FE2O3_LLVM_OBJDUMP=/opt/rocm/llvm/bin/llvm-objdump FE2O3_LLVM_READOBJ=/opt/rocm/llvm/bin/llvm-readobj cargo test --locked -p dialect-amdgcn --test tiled_gemm_lds_edges_v1 upstream_llvm_lld_final_artifact_has_the_exact_edge_machine_shape -- --ignored --exact --nocapture",
+    ],
+    sourcePaths: [
+      "crates/dialect-amdgcn/src/lowering.rs",
+      "crates/dialect-amdgcn/tests/tiled_gemm_lds_edges_v1.rs",
+      "crates/fe2o3-kernel-ir/src/tiled_gemm_lds_edges_v1.rs",
+      "crates/fe2o3-kernel-ir/tests/tiled_gemm_lds_edges_v1.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "exact-edge-lowering",
+        text: "Commit 35575cc32cde9744078a3026b14c5e0e0066157f lowers only the exact Slice 4 M=17, N=19, K=18, alpha=2.0, beta=-1.0, 2x2-grid, WG64/wave64 graph. The LLVM preserves two predicated K16 phases, BF16 zero-fill tails, carried FP32 accumulators, predicated C reads and writes, two reusable aligned 512-byte XOR4 LDS tiles, and unconditional publish/reuse barriers while rejecting profile, predicate, phase, epilogue, launch, resource, layout, MFMA, ownership, call, and generic-lowering drift.",
+      },
+      {
+        id: "edge-final-machine-shape",
+        text: "The exact ignored upstream LLVM 22 opt, llc, ld.lld, llvm-objdump, and llvm-readobj test passed on clean current-main mi300x. It observed gfx942:xnack- COV6, WG64/wave64, a 1,024-byte fixed LDS segment, zero private segment and spills, LDS traffic, exactly two static barriers, one static loop-body BF16 MFMA, and no scratch, calls, atomics, or COMGR.",
+      },
+      {
+        id: "edge-validation-campaign",
+        text: "Clean current-main validation passed the focused edge suite with 5 active tests and 1 intentional LLVM-tool ignore, the exact ignored COV6 machine test, all 129 active dialect tests with 23 intentional ignores, strict all-targets/all-features Clippy, and all 362 active Kernel IR tests with 1 intentional ignore.",
+      },
+      {
+        id: "edge-machine-boundary",
+        text: "This closes fe2o3 issue #86 for the exact IR-to-upstream-LLVM/COV6 machine-shape boundary only. It is not attributed-source lowering, compiler refinement, protected Worker V2 publication or execution, or a hardware numerical result. Source joining remains open in #85, refinement and GPU memory safety in #87, protected Slice 4 MI300X execution in #89, and generalization in #90.",
+      },
+    ],
+  },
+  "tiled-lds-source-model-correspondence-v1": {
+    id: "tiled-lds-source-model-correspondence-v1",
+    stageLabel: "5a45239a bounded source/model proof",
+    claimLabel: "Identity-bound Slice 1 source/model correspondence",
+    claim: "source-model-verified",
+    authority: "source-model-only",
+    commit: "5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
+    tree: "1b8e2d3589082114a0bafe231d79262e6f8b22a1",
+    commands: [
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_source_refinement",
+      "env VERUS=/home/harsh/tools/verus-0.2026.08.02/verus cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml",
+      "env VERUS=/home/harsh/tools/verus-0.2026.08.02/verus cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --release",
+      "cargo clippy --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --all-targets --all-features -- -D warnings",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_v1/run-verus.sh",
+      "examples/tiled_gemm_v1/tests/lds_proof_verus.rs",
+      "examples/tiled_gemm_v1/tests/lds_source_refinement.rs",
+      "examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_source_length_wrong.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_source_publish_barrier_wrong.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_source_output_owner_wrong.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_source_correspondence_identity_wrong.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "bounded-source-model-proof",
+        text: "Commit 5a45239aeeda3ca64cf16beb7fb1d3589e649bfe adds a bounded Slice 1 Verus source/model correspondence proof reporting 96 verified and 0 errors. It covers exact 256/256/256 lengths, initialized same-epoch LDS reads, converged publish-barrier ordering, unique C ownership, and exact correspondence among the attributed source profile, authenticated portable-MIR receipt, reviewed correspondence identity, and canonical module identity.",
+      },
+      {
+        id: "identity-and-negative-binding",
+        text: "An ordinary Rust test recomputes portable-MIR, reviewed-correspondence, and canonical-module SHA-256 identities from the real compiler and Kernel IR sources and checks source/IR operation order. Four new expected-negative fixtures reject short input, read-at-publish, output-owner collision, and one-bit portable-MIR identity drift at their named postconditions without admit, assume, or external-body shortcuts.",
+      },
+      {
+        id: "source-model-validation-campaign",
+        text: "Clean current-main mi300x validation passed 76 debug tests, 76 release tests, 7 doctests in each lane, and strict all-target/all-feature Clippy. The authenticated runner passed all six positive proof groups and rejected all 21 expected-negative fixtures.",
+      },
+      {
+        id: "source-model-boundary",
+        text: "This is identity-bound bounded source/model correspondence only. It does not prove rustc MIR-to-IR semantics, LLVM lowering, linking, emitted ISA or machine behavior, descriptor or Worker V2 integrity, certificate consumption, loading, or launch authority. Production certificate consumption is tracked in fe2o3 #91, extension through K-phase, grid, and edge profiles in #92, and semantic MIR-to-Kernel-IR refinement in #106.",
+      },
+    ],
+  },
+  "tiled-lds-matrix-wire-v5": {
+    id: "tiled-lds-matrix-wire-v5",
+    stageLabel: "1429ed6a canonical matrix wire V5",
+    claimLabel: "Canonical bounded matrix Kernel IR wire",
+    claim: "compiler-hsaco-observed",
+    authority: "wire-format-only",
+    commit: "1429ed6ae70dcd218376b777e0fef7db4413efdb",
+    tree: "0a2b7965ef678253ed4c028e27f5de4394d22eb5",
+    commands: [
+      "cargo test --locked -p fe2o3-kernel-ir --all-targets",
+      "cargo clippy --locked -p fe2o3-kernel-ir --all-targets --no-deps -- -D warnings",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-kernel-ir/WIRE_FORMAT.md",
+      "crates/fe2o3-kernel-ir/src/wire.rs",
+      "crates/fe2o3-kernel-ir/tests/wire_v5.rs",
+      "crates/fe2o3-kernel-ir/tests/fixtures/matrix_v5.hex",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "matrix-wire-fields",
+        text: "Commit 1429ed6ae70dcd218376b777e0fef7db4413efdb adds canonical Kernel IR V5 bytes for matrix active lanes, convergence, every MFMA operand and profile field, LDS base/value operands, element/layout tags, and wave width.",
+      },
+      {
+        id: "legacy-wire-closure",
+        text: "V1 through V4 remain frozen and reject matrix operations. V5 rejects an unrepresentable frontend binding instead of silently omitting it, and golden, round-trip, tag, truncation, and single-byte mutation tests remain bounded and panic-free.",
+      },
+      {
+        id: "matrix-wire-boundary",
+        text: "Canonical V5 bytes establish wire identity only. They do not establish semantic verification, source correspondence, compiler or LLVM refinement, artifact authority, loading, launch, or hardware execution.",
+      },
+    ],
+  },
+  "tiled-lds-inert-worker-handoff-v1": {
+    id: "tiled-lds-inert-worker-handoff-v1",
+    stageLabel: "7337a2b8 attributed inert Worker V2 handoff",
+    claimLabel: "Source-bound compiler descriptor and inert handoff",
+    claim: "compiler-hsaco-observed",
+    authority: "inert-worker-handoff-only",
+    commit: "7337a2b87dffa0845d092c13399b012f884de90b",
+    tree: "6dd4d922e22cf488157cc0fece17edf64df98b7c",
+    commands: [
+      "cargo test --locked -p rustc-codegen-fe2o3 --lib",
+      "cargo test --locked -p rustc-codegen-fe2o3 --test collected_executable_scalar_control_flow_v2 tiled_gemm_lds_slice1_attributed_source_publishes_only_the_bound_worker_v2_handoff -- --exact",
+      "cargo clippy --locked -p rustc-codegen-fe2o3 --all-targets --no-deps -- -D warnings",
+    ],
+    sourcePaths: [
+      "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_lds_slice1_v1.rs",
+      "crates/rustc-codegen-fe2o3/src/compiler_descriptor.rs",
+      "crates/rustc-codegen-fe2o3/src/kernel_ir_codegen.rs",
+      "crates/rustc-codegen-fe2o3/src/worker_v2_producer.rs",
+      "crates/rustc-codegen-fe2o3/tests/collected_executable_scalar_control_flow_v2.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "source-descriptor-join",
+        text: "Commit 7337a2b87dffa0845d092c13399b012f884de90b carries the authenticated attributed Slice 1 source into one exact compiler-owned descriptor for gfx942:xnack-, COV6, WG64, grid 1, two shared BF16 slices, one disjoint F32 slice, and 1,024 compiler-derived static LDS bytes.",
+      },
+      {
+        id: "complete-handoff-identity",
+        text: "The single-use Worker V2 handoff binds canonical V5 Kernel IR, source authority, descriptor bytes, resource transcript, the original pre-section upstream-LLVM body, symbol manifest, target, COV6, and compiler envelope. Descriptor, LLVM-instruction, symbol-manifest, target, resource, source, and replay mutations fail before publication.",
+      },
+      {
+        id: "handoff-validation",
+        text: "On mi300x, 380 library tests passed with 8 configured ignores; focused descriptor, receipt, publication, source-mutation, and integration tests passed; formatting and strict all-target Clippy passed.",
+      },
+      {
+        id: "inert-handoff-boundary",
+        text: "This is an inert compiler-module handoff. It authenticates no compiler origin and grants no worker, linker, final-HSACO, load, launch, hardware-execution, or production proof-certificate authority. The shared protected runtime substrate remains open in #94 and #96 through #100.",
       },
     ],
   },
@@ -606,6 +870,8 @@ export type ParsedCargoTestCommand =
       packageName?: string;
       manifestPath?: string;
       mode: "package";
+      release: boolean;
+      allTargets?: boolean;
     }
   | {
       environment: Readonly<Record<string, string>>;
@@ -613,6 +879,7 @@ export type ParsedCargoTestCommand =
       packageName?: string;
       manifestPath?: string;
       mode: "lib";
+      release: boolean;
     }
   | {
       environment: Readonly<Record<string, string>>;
@@ -620,6 +887,7 @@ export type ParsedCargoTestCommand =
       packageName?: string;
       manifestPath?: string;
       mode: "test";
+      release: boolean;
       targetName: string;
       testName?: string;
       features?: string;
@@ -667,7 +935,11 @@ export function parseExactCargoTestCommand(
   } else {
     return undefined;
   }
-  const argumentsAfterPackage = tokens.slice(cursor + 2);
+  let argumentsAfterPackage = tokens.slice(cursor + 2);
+  const release = argumentsAfterPackage[0] === "--release";
+  if (release) argumentsAfterPackage = argumentsAfterPackage.slice(1);
+  const allTargets = argumentsAfterPackage[0] === "--all-targets";
+  if (allTargets) argumentsAfterPackage = argumentsAfterPackage.slice(1);
   if (argumentsAfterPackage.length === 0) {
     return {
       environment,
@@ -675,6 +947,8 @@ export function parseExactCargoTestCommand(
       packageName,
       manifestPath,
       mode: "package",
+      release,
+      allTargets,
     };
   }
   if (
@@ -687,6 +961,7 @@ export function parseExactCargoTestCommand(
       packageName,
       manifestPath,
       mode: "lib",
+      release,
     };
   }
   if (
@@ -700,6 +975,7 @@ export function parseExactCargoTestCommand(
       packageName,
       manifestPath,
       mode: "test",
+      release,
       targetName: argumentsAfterPackage[1],
     };
   }
@@ -710,6 +986,26 @@ export function parseExactCargoTestCommand(
     if (!/^[a-z0-9][a-z0-9-]*$/u.test(value ?? "")) return undefined;
     features = value;
     argumentCursor += 2;
+  }
+  if (
+    argumentsAfterPackage[argumentCursor] === "--test" &&
+    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[argumentCursor + 1] ?? "") &&
+    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[argumentCursor + 2] ?? "") &&
+    argumentsAfterPackage[argumentCursor + 3] === "--" &&
+    argumentsAfterPackage[argumentCursor + 4] === "--exact" &&
+    argumentsAfterPackage.length === argumentCursor + 5
+  ) {
+    return {
+      environment,
+      locked,
+      packageName,
+      manifestPath,
+      mode: "test",
+      release,
+      targetName: argumentsAfterPackage[argumentCursor + 1],
+      testName: argumentsAfterPackage[argumentCursor + 2],
+      features,
+    };
   }
   if (
     argumentsAfterPackage[argumentCursor] === "--test" &&
@@ -727,6 +1023,7 @@ export function parseExactCargoTestCommand(
       packageName,
       manifestPath,
       mode: "test",
+      release,
       targetName: argumentsAfterPackage[argumentCursor + 1],
       testName: argumentsAfterPackage[argumentCursor + 2],
       features,
@@ -749,7 +1046,7 @@ export function expectedCargoTestSourcePath(
 }
 
 export function isExactCargoClippyCommand(command: string): boolean {
-  return /^cargo clippy --locked -p [a-z0-9][a-z0-9-]* --all-targets --all-features -- -D warnings$/u.test(
+  return /^cargo clippy --locked (?:-p [a-z0-9][a-z0-9-]*|--manifest-path [A-Za-z0-9_./-]+\/Cargo\.toml) --all-targets (?:--all-features|--no-deps) -- -D warnings$/u.test(
     command,
   );
 }

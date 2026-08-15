@@ -53,6 +53,13 @@ export const developmentCheckpointIds = deepFreeze([
   "tiled-gemm-lds-k32-machine-inspection",
   "tiled-gemm-lds-wg64-contract",
   "tiled-gemm-lds-grid-stride-model",
+  "tiled-gemm-lds-source-ir-correspondence",
+  "tiled-gemm-lds-grid-machine-inspection",
+  "tiled-gemm-lds-edge-kernel-ir",
+  "tiled-gemm-lds-edge-machine-inspection",
+  "tiled-gemm-lds-source-model-correspondence",
+  "tiled-gemm-lds-matrix-wire-v5",
+  "tiled-gemm-lds-inert-worker-handoff",
 ] as const);
 
 export type DevelopmentCheckpointId =
@@ -139,6 +146,25 @@ export const tiledGemmV1Commits = {
   ).commit,
   ldsGridStrideModel: stagedEvidenceRecord(
     "tiled-lds-grid-stride-model-v3",
+  ).commit,
+  ldsSourceIrCorrespondence: stagedEvidenceRecord(
+    "tiled-lds-source-ir-correspondence-v1",
+  ).commit,
+  ldsGridMachineInspection: stagedEvidenceRecord(
+    "tiled-lds-grid-machine-inspection-v3",
+  ).commit,
+  ldsEdgeKernelIr: stagedEvidenceRecord(
+    "tiled-lds-edge-kernel-ir-v4",
+  ).commit,
+  ldsEdgeMachineInspection: stagedEvidenceRecord(
+    "tiled-lds-edge-machine-inspection-v4",
+  ).commit,
+  ldsSourceModelCorrespondence: stagedEvidenceRecord(
+    "tiled-lds-source-model-correspondence-v1",
+  ).commit,
+  ldsMatrixWireV5: stagedEvidenceRecord("tiled-lds-matrix-wire-v5").commit,
+  ldsInertWorkerHandoff: stagedEvidenceRecord(
+    "tiled-lds-inert-worker-handoff-v1",
   ).commit,
 } as const;
 
@@ -271,6 +297,41 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "staged-evidence",
     commit: tiledGemmV1Commits.ldsGridStrideModel,
     evidenceIds: ["tiled-lds-grid-stride-model-v3"],
+  },
+  "tiled-gemm-lds-source-ir-correspondence": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsSourceIrCorrespondence,
+    evidenceIds: ["tiled-lds-source-ir-correspondence-v1"],
+  },
+  "tiled-gemm-lds-grid-machine-inspection": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsGridMachineInspection,
+    evidenceIds: ["tiled-lds-grid-machine-inspection-v3"],
+  },
+  "tiled-gemm-lds-edge-kernel-ir": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsEdgeKernelIr,
+    evidenceIds: ["tiled-lds-edge-kernel-ir-v4"],
+  },
+  "tiled-gemm-lds-edge-machine-inspection": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsEdgeMachineInspection,
+    evidenceIds: ["tiled-lds-edge-machine-inspection-v4"],
+  },
+  "tiled-gemm-lds-source-model-correspondence": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsSourceModelCorrespondence,
+    evidenceIds: ["tiled-lds-source-model-correspondence-v1"],
+  },
+  "tiled-gemm-lds-matrix-wire-v5": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsMatrixWireV5,
+    evidenceIds: ["tiled-lds-matrix-wire-v5"],
+  },
+  "tiled-gemm-lds-inert-worker-handoff": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsInertWorkerHandoff,
+    evidenceIds: ["tiled-lds-inert-worker-handoff-v1"],
   },
 } satisfies Record<DevelopmentCheckpointId, DevelopmentCheckpointSpec>);
 
@@ -486,6 +547,62 @@ export const developmentCheckpoints = deepFreeze([
     state: "public",
     stagedEvidenceIds: ["tiled-lds-grid-stride-model-v3"],
   },
+  {
+    id: "tiled-gemm-lds-source-ir-correspondence",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS attributed source-to-IR correspondence",
+    commit: tiledGemmV1Commits.ldsSourceIrCorrespondence,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-source-ir-correspondence-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-grid-machine-inspection",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 3 LLVM/COV6 inspection",
+    commit: tiledGemmV1Commits.ldsGridMachineInspection,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-grid-machine-inspection-v3"],
+  },
+  {
+    id: "tiled-gemm-lds-edge-kernel-ir",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 4 edge Kernel IR",
+    commit: tiledGemmV1Commits.ldsEdgeKernelIr,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-edge-kernel-ir-v4"],
+  },
+  {
+    id: "tiled-gemm-lds-edge-machine-inspection",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 4 LLVM/COV6 inspection",
+    commit: tiledGemmV1Commits.ldsEdgeMachineInspection,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-edge-machine-inspection-v4"],
+  },
+  {
+    id: "tiled-gemm-lds-source-model-correspondence",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 1 bounded source/model correspondence",
+    commit: tiledGemmV1Commits.ldsSourceModelCorrespondence,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-source-model-correspondence-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-matrix-wire-v5",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS canonical matrix Kernel IR wire V5",
+    commit: tiledGemmV1Commits.ldsMatrixWireV5,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-matrix-wire-v5"],
+  },
+  {
+    id: "tiled-gemm-lds-inert-worker-handoff",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS attributed inert Worker V2 handoff",
+    commit: tiledGemmV1Commits.ldsInertWorkerHandoff,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-inert-worker-handoff-v1"],
+  },
 ] satisfies DevelopmentCheckpoint[]);
 
 const checkpointKeysByKind = {
@@ -652,14 +769,16 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "multi-phase attributed source and source-to-LDS-Kernel-IR collection",
-      "compiler-issued LDS acquisition",
-      "protected publisher, load, and launch",
-      "source-bound protected LDS hardware evidence",
+      "shared protected finalizer, host, and Worker V2 runtime (fe2o3 #94)",
+      "production proof-certificate consumption (fe2o3 #91)",
+      "K-phase, grid, and edge proof extension (fe2o3 #92)",
+      "MIR-to-IR and IR-to-machine safety correspondence (fe2o3 #106 and #107)",
+      "protected Slice 3 and Slice 4 execution (fe2o3 #88 and #89)",
+      "general dimensions, strides, tails, and coefficients (fe2o3 #90)",
       "source and Verus-to-machine refinement",
-      "IEEE BF16/F32 numerical contract",
+      "IEEE BF16/F32 numerical contract (fe2o3 #109)",
     ],
-    next: "Implement the ordinary attributed multi-phase Rust body, issue its LDS capabilities, and collect it into the sealed LDS Kernel IR, then carry the same final bytes through protected publication, load, launch, and MI300X functional tests.",
+    next: "Build the shared protected finalizer, host adapter, and Worker V2 runtime, consume identity-bound proof certificates, carry Slice 3 and Slice 4 through protected MI300X execution, then generalize the exact profiles.",
   },
   {
     id: "softmax",
