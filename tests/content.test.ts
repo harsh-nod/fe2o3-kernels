@@ -197,6 +197,7 @@ describe("curriculum integrity", () => {
       "wave64-collectives-source-v1",
       "workgroup-sync-source-v1",
       "flash-attention-source-v1",
+      "moe-top2-source-v1",
     ]);
     expect(validateSourceMilestoneCatalog()).toEqual([]);
 
@@ -227,6 +228,15 @@ describe("curriculum integrity", () => {
         sha256:
           "2b00a64e43e69c416e70080e013edf90e861fef94ee66441da93d2c11b3e8f17",
         sourceCommit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
+      },
+      {
+        lessonId: "moe-routing",
+        evidenceId: "moe-top2-source-v1",
+        sourcePath: "examples/moe_top2_v1/src/kernel.rs",
+        bundledPath: "examples/moe_top2_v1/src/kernel.rs",
+        sha256:
+          "b77016caa0c3708e420e583712e65e4e6428db7b4feafd8d0a1d4bdc475ef6ff",
+        sourceCommit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
       },
     ] as const;
 
@@ -1100,9 +1110,12 @@ describe("curriculum integrity", () => {
       );
       expect(runnable).toBe(false);
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
-        ["gemm-tiling", "gemm-proof-plan", "flash-attention"].includes(
-          lesson.id,
-        )
+        [
+          "gemm-tiling",
+          "gemm-proof-plan",
+          "flash-attention",
+          "moe-routing",
+        ].includes(lesson.id)
           ? false
           : true,
       );
@@ -1121,11 +1134,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
-      eventualPublicTree: "9a7fcd78675c6fe793d8e8c1f697be052b962583",
+      eventualPublicCommit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
+      eventualPublicTree: "b2c2f04a3c8b1f207b45b86af1a9108f86e251a3",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
+        requiredCommit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",

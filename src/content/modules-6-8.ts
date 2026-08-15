@@ -1,5 +1,5 @@
 import { narrativeSection } from "./narrative-registry";
-import moeDesign from "../../examples/moe_design.rs?raw";
+import moeTop2Kernel from "../../examples/moe_top2_v1/src/kernel.rs?raw";
 import {
   FE2O3_PIN,
   pinnedReference,
@@ -7,6 +7,12 @@ import {
   type Lesson,
 } from "./model";
 import { completeTabs, noHost, noKernel, noProof, resultText } from "./shared";
+import {
+  sourceMilestoneClaim,
+  sourceMilestoneRecord,
+} from "./source-milestones";
+
+const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 
 const moeRouting: Lesson = {
   id: "moe-routing",
@@ -22,32 +28,47 @@ const moeRouting: Lesson = {
     "Use counts and exclusive scans to assign expert ranges.",
     "Prove accepted token routes own unique bounded slots.",
   ],
-  claims: [
-    {
-      kind: "design-only",
-      label: "MoE routing roadmap",
-      detail:
-        "The routing code is proof-oriented pseudocode. No current fe2o3 top-k, permutation, or grouped expert dispatch is claimed.",
-    },
-  ],
+  claims: [sourceMilestoneClaim("moe-top2-source-v1")],
   sections: [
     narrativeSection("moe-routing/assumptions"),
     narrativeSection("moe-routing/permutation"),
   ],
   tabs: completeTabs(
-    { language: "rust", code: moeDesign, explanatory: true },
+    {
+      language: "rust",
+      code: moeTop2Kernel,
+      sourcePath: moeTop2Source.primarySourcePath,
+      sourceCommit: moeTop2Source.commit,
+      sourceSha256: moeTop2Source.primarySourceSha256,
+      evidenceId: moeTop2Source.id,
+      explanatory: false,
+    },
     {
       language: "text",
-      code: `requires selected experts are in range and unique\nrequires total accepted routes fit the output allocation\nensures accepted route -> exactly one expert slot\nensures distinct accepted routes -> distinct slots`,
+      code: `Executable Phase A proof-facing model:\n  selected experts are in range, distinct, and totally ordered\n  admitted[e] = min(requested[e], 4)\n  offsets are an exclusive scan bounded by 16\n  accepted routes own unique bounded slots\n  permutation and inverse round-trip\n\nNo Verus theorem is claimed yet.`,
+      sourcePath: "examples/moe_top2_v1/src/proof_model.rs",
+      sourceCommit: moeTop2Source.commit,
+      evidenceId: moeTop2Source.id,
       explanatory: true,
+      notice:
+        "The executable model and hostile mutations check the routing contracts. A pinned Verus proof and refinement to the exact f32 source remain open.",
     },
-    { language: "bash", code: noHost, explanatory: true },
+    {
+      language: "bash",
+      code: noHost,
+      explanatory: true,
+      notice:
+        "No generated host/runtime adapter exists for this exact routing profile.",
+    },
     {
       language: "text",
       code: resultText(
-        "design-only",
-        "The desired result is a deterministic permutation plus inverse map. No fe2o3 GPU result is claimed.",
+        "source-tested",
+        "Exact ordinary attributed source, an independent oracle, 24 debug tests, 24 release tests, a 6,561-case bounded corpus, executable proof-facing models, and hostile mutations are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, protected gfx942 execution, and Verus refinement. No functional hardware result is claimed.",
       ),
+      explanatory: true,
+      notice:
+        "Evidence boundary: this is a fixed-profile source/oracle result, not a compiler, proof, or GPU result.",
     },
   ),
   diagram: "moe",

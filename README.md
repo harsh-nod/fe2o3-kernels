@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `5d4313bcda3479e6c77ce93350ca3428729fdbc0`, tree
-`9a7fcd78675c6fe793d8e8c1f697be052b962583`. Both
+commit `ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc`, tree
+`b2c2f04a3c8b1f207b45b86af1a9108f86e251a3`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -447,8 +447,12 @@ At the audited pin:
   needed to authorize a run. FlashAttention Phase A now has exact ordinary
   attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
   oracle, executable proof-facing models, and debug/release mutation suites; it
-  has no Verus, compiler, artifact, runtime, or hardware result. Mixture of
-  experts remains design-only until its exact routing source lands.
+  has no Verus, compiler, artifact, runtime, or hardware result. MoE routing
+  Phase A now has exact ordinary attributed T8/E4/K2/C4 source, an independent
+  oracle, stable capacity/permutation/inverse contracts, a 6,561-case bounded
+  corpus, and debug/release mutation suites. It likewise has no Verus, compiler,
+  artifact, runtime, or hardware result; expert GEMM and combine remain design
+  work.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. The #97 path uses direct LLVM target-machine and LLD
@@ -478,10 +482,10 @@ The documentation app contains 18 lessons across nine modules:
 3. Bounded reduction/scan semantics, wave64, barriers, atomics, and LDS.
 4. Tiled GEMM invariants, phase ownership, numerical specifications, and proof
    decomposition.
-5. Softmax and flash-attention design with online invariants, masking, and
-   numerical contracts.
-6. MoE top-k assumptions, scans, permutation, capacity bounds, expert GEMM, and
-   deterministic dispatch.
+5. Row-softmax runtime contracts plus exact FlashAttention Phase A source,
+   online invariants, masking, and numerical contracts.
+6. Exact MoE top-2 Phase A source, scans, permutation and capacity bounds,
+   followed by expert GEMM and deterministic-dispatch design work.
 7. Rust-to-HSACO evidence, machine-effect checks, protected evidence, and the
    Verus trust boundary.
 8. Exercises and the contribution evidence packet for a new kernel.

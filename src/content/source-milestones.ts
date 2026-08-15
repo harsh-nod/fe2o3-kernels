@@ -7,7 +7,11 @@ import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
 
 export interface SourceMilestoneRecord {
   id: SourceMilestoneId;
-  lessonId: "reductions-scans" | "lds-barriers-atomics" | "flash-attention";
+  lessonId:
+    | "reductions-scans"
+    | "lds-barriers-atomics"
+    | "flash-attention"
+    | "moe-routing";
   claim: SourceMilestoneEvidenceReference["claim"];
   authority: SourceMilestoneEvidenceReference["authority"];
   claimLabel: string;
@@ -25,6 +29,7 @@ export const sourceMilestoneOrder = deepFreeze([
   "wave64-collectives-source-v1",
   "workgroup-sync-source-v1",
   "flash-attention-source-v1",
+  "moe-top2-source-v1",
 ] satisfies SourceMilestoneId[]);
 
 const sourceMilestoneRecords = deepFreeze({
@@ -98,6 +103,30 @@ const sourceMilestoneRecords = deepFreeze({
     primarySourcePath: "examples/flash_attention_v1/src/kernel.rs",
     primarySourceSha256:
       "2b00a64e43e69c416e70080e013edf90e861fef94ee66441da93d2c11b3e8f17",
+    target: "gfx942:xnack-",
+  },
+  "moe-top2-source-v1": {
+    id: "moe-top2-source-v1",
+    lessonId: "moe-routing",
+    claim: "source-tested",
+    authority: "source-tested-only",
+    claimLabel: "Exact deterministic MoE top-2 Phase A source",
+    detail:
+      "Public Phase A contains ordinary attributed Rust for exact T8/E4/K2/C4 finite-FP32 routing, lower-expert tie breaking, stable-prefix capacity dropping, exclusive offsets, permutation, inverse mapping, and sentinel tails. An independent oracle, 24 debug and 24 release tests, a 6,561-case bounded corpus, executable proof-facing models, and hostile mutations are public. It grants no Verus, compiler-profile, artifact, host-launch, runtime, or hardware authority.",
+    commit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
+    tree: "b2c2f04a3c8b1f207b45b86af1a9108f86e251a3",
+    commands: [
+      "cargo test --locked --manifest-path examples/moe_top2_v1/Cargo.toml",
+      "cargo test --locked --release --manifest-path examples/moe_top2_v1/Cargo.toml",
+    ],
+    sourcePaths: [
+      "examples/moe_top2_v1/src/kernel.rs",
+      "examples/moe_top2_v1/src/oracle.rs",
+      "examples/moe_top2_v1/src/proof_model.rs",
+    ],
+    primarySourcePath: "examples/moe_top2_v1/src/kernel.rs",
+    primarySourceSha256:
+      "b77016caa0c3708e420e583712e65e4e6428db7b4feafd8d0a1d4bdc475ef6ff",
     target: "gfx942:xnack-",
   },
 } satisfies Record<SourceMilestoneId, SourceMilestoneRecord>);

@@ -856,11 +856,11 @@ export const kernelProgress: KernelProgress[] = [
   {
     id: "moe-routing",
     kernel: "Deterministic top-2 MoE routing",
-    run: "blocked",
-    verify: "planned",
-    evidence: "planned",
+    run: "partial",
+    verify: "partial",
+    evidence: "partial",
     dependsOn: ["scan", "stable permutation", "capacity policy"],
-    next: "Implement deterministic top-k, counts, exclusive scan, permutation, and inverse mapping.",
+    next: "Bind the exact T8/E4/K2/C4 source to authenticated MIR and Kernel IR, then add direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, and Verus refinement.",
   },
   {
     id: "moe-experts",

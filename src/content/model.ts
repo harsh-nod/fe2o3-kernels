@@ -74,7 +74,8 @@ export type CompletedIssue94IncrementId =
 export type SourceMilestoneId =
   | "wave64-collectives-source-v1"
   | "workgroup-sync-source-v1"
-  | "flash-attention-source-v1";
+  | "flash-attention-source-v1"
+  | "moe-top2-source-v1";
 
 export type CodeTabEvidenceId =
   | StagedEvidenceId
