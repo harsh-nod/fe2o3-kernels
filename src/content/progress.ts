@@ -41,6 +41,7 @@ export const developmentCheckpointIds = deepFreeze([
   "gfx942-wave64-lds-reduction",
   "workgroup-sync-direct-finalization",
   "flash-attention-compiler-admission",
+  "moe-top2-compiler-admission",
   "scalar-gemm-v1",
   "scalar-gemm-proof-profile",
   "scalar-gemm-physical-effects",
@@ -270,6 +271,10 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "narrative",
     narrativeId: "progress/flash-attention-compiler-admission",
   },
+  "moe-top2-compiler-admission": {
+    kind: "narrative",
+    narrativeId: "progress/moe-top2-compiler-admission",
+  },
   "scalar-gemm-v1": {
     kind: "narrative",
     narrativeId: "progress/scalar-gemm-v1",
@@ -487,6 +492,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "bfc32b51314e75e4d619eda244e0d78573f1232c",
     state: "public",
     narrativeId: "progress/flash-attention-compiler-admission",
+  },
+  {
+    id: "moe-top2-compiler-admission",
+    kind: "narrative",
+    name: "MoE top-2 exact compiler admission",
+    commit: "40e04f8e8469f37d3e9c4fcfcb23bd5ab6d1536e",
+    state: "public",
+    narrativeId: "progress/moe-top2-compiler-admission",
   },
   {
     id: "scalar-gemm-v1",
@@ -886,7 +899,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["scan", "stable permutation", "capacity policy"],
-    next: "Bind the exact T8/E4/K2/C4 source to authenticated MIR and Kernel IR, then add direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, IEEE FP32/source refinement, and model-to-machine refinement.",
+    next: "Carry the authenticated T8/E4/K2/C4 compiler profile through direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, IEEE FP32/source refinement, and model-to-machine refinement.",
   },
   {
     id: "moe-experts",

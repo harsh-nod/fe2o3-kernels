@@ -278,11 +278,10 @@ describe("curriculum integrity", () => {
           ]
         : profile.lessonId === "moe-routing"
         ? [
-            "authenticated MIR-to-Kernel-IR correspondence",
-            "finalization",
+            "direct LLVM/LLD finalization",
             "generated host/runtime",
             "protected gfx942 execution",
-            "source-to-machine refinement",
+            "source/model-to-machine refinement",
           ]
         : profile.lessonId === "lds-barriers-atomics"
           ? [
@@ -1201,11 +1200,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "3d673ffb9a962d7c4b8ae7526bbe881260e19c72",
-      eventualPublicTree: "5e5137265f8fefe49111a2c03ebba6ab7bf43404",
+      eventualPublicCommit: "c1f6d8eeeeb88d7cd6592bf4874097e95f1d4a94",
+      eventualPublicTree: "405c48149f007e2822e10e3a570e01e1a43d86b3",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "3d673ffb9a962d7c4b8ae7526bbe881260e19c72",
+        requiredCommit: "c1f6d8eeeeb88d7cd6592bf4874097e95f1d4a94",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",

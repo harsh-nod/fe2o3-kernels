@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `3d673ffb9a962d7c4b8ae7526bbe881260e19c72`, tree
-`5e5137265f8fefe49111a2c03ebba6ab7bf43404`. Both
+commit `c1f6d8eeeeb88d7cd6592bf4874097e95f1d4a94`, tree
+`405c48149f007e2822e10e3a570e01e1a43d86b3`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -83,7 +83,12 @@ admission. It binds ordinary attributed source, FnAbi, compiler configuration,
 complete reachable portable MIR, semantic Kernel IR, and V3 provider identity,
 with hostile substitution coverage. It does not yet grant artifact,
 finalization, runtime, GPU, numerical, performance, or source/model-to-machine
-authority. The public snapshot also isolates the 64-connection broker-capacity test from the
+authority. Exact T=8, E=4, K=2, C=4 MoE routing compiler admission now
+similarly binds attributed source, FnAbi, complete reachable portable MIR,
+semantic Kernel IR, target/ABI/resources, and V3 provider identity. It grants no
+LLVM lowering, finalization, runtime, GPU, IEEE FP32, Verus-refinement,
+numerical, performance, or source/model-to-machine authority. The public
+snapshot also isolates the 64-connection broker-capacity test from the
 separate concurrent executable-authentication and descriptor-transfer test, so
 hosted CI exercises each bounded property without coupling their deadlines. The
 publication workflow continues to require both public refs to resolve exactly
@@ -468,10 +473,12 @@ At the audited pin:
   hardware, or source/model-to-machine authority. MoE routing
   Phase A now has exact ordinary attributed T8/E4/K2/C4 source, an independent
   oracle, stable capacity/permutation/inverse contracts, a 6,561-case bounded
-  corpus, debug/release mutation suites, and a pinned Verus proof of the exact
-  mathematical routing policy. IEEE FP32/source refinement, compiler, artifact,
-  runtime, and hardware authority remain open; expert GEMM and combine remain
-  design work.
+  corpus, debug/release mutation suites, a pinned Verus proof of the exact
+  mathematical routing policy, and separate exact compiler admission binding
+  source, FnAbi, complete reachable portable MIR, semantic Kernel IR, target,
+  ABI/resources, and V3 provider identity. LLVM finalization, IEEE FP32/source
+  refinement, runtime, hardware, and source/model-to-machine authority remain
+  open; expert GEMM and combine remain design work.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. The #97 path uses direct LLVM target-machine and LLD
