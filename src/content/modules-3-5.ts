@@ -1,5 +1,6 @@
 import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_v1/src/kernel.rs?raw";
+import flashAttentionProof from "../../examples/flash_attention_v1/verus/flash_attention_v1.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
@@ -37,6 +38,9 @@ const synchronizationSource = sourceMilestoneRecord(
 );
 const flashAttentionSource = sourceMilestoneRecord(
   "flash-attention-source-v1",
+);
+const flashAttentionVerus = sourceMilestoneRecord(
+  "flash-attention-verus-v1",
 );
 const gemmProtectedResult = resultText(
   "gpu-observed",
@@ -459,7 +463,10 @@ const flash: Lesson = {
     "Track Q, K, V, score, and output tiles through distinct memory epochs.",
     "List masking, precision, and machine-effect evidence required for closure.",
   ],
-  claims: [sourceMilestoneClaim("flash-attention-source-v1")],
+  claims: [
+    sourceMilestoneClaim("flash-attention-source-v1"),
+    sourceMilestoneClaim("flash-attention-verus-v1"),
+  ],
   sections: [
     narrativeSection("flash-attention/online"),
     narrativeSection("flash-attention/effects"),
@@ -476,14 +483,15 @@ const flash: Lesson = {
       explanatory: false,
     },
     {
-      language: "text",
-      code: `Executable Phase A proof-facing model:\n  m = max(scores over processed causal keys)\n  l = sum(exp(score - m)) over the same keys\n  o = sum(exp(score - m) * V) over the same keys\n\nFinal: output = o / l\n\nNo Verus theorem is claimed yet.`,
-      sourcePath: "examples/flash_attention_v1/src/proof_model.rs",
-      sourceCommit: flashAttentionSource.commit,
-      evidenceId: flashAttentionSource.id,
-      explanatory: true,
+      language: "rust",
+      code: flashAttentionProof,
+      sourcePath: flashAttentionVerus.primarySourcePath,
+      sourceCommit: flashAttentionVerus.commit,
+      sourceSha256: flashAttentionVerus.primarySourceSha256,
+      evidenceId: flashAttentionVerus.id,
+      explanatory: false,
       notice:
-        "The executable model and mutation tests check the recurrence structure. A pinned Verus proof and refinement to compiled effects remain open.",
+        "This pinned rational model proves the online recurrence and ownership obligations. Exponential-law, IEEE FP32/OCML, source refinement, compiled effects, and GPU execution remain open.",
     },
     {
       language: "bash",
@@ -495,12 +503,12 @@ const flash: Lesson = {
     {
       language: "text",
       code: resultText(
-        "source-tested",
-        "Exact ordinary attributed source, an independent two-pass FP64 oracle, 24 debug vectors, 24 release vectors, executable proof-facing models, and mutation rejection tests are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution. No functional hardware result is claimed. No Verus theorem is claimed.",
+        "source-model-verified",
+        "Exact ordinary attributed source, an independent two-pass FP64 oracle, debug/release vectors, executable models, and a pinned Verus proof of the rational online recurrence are public. Remaining gaps: exponential and IEEE FP32/OCML refinement, authenticated MIR-to-Kernel-IR correspondence, finalization, generated host/runtime, protected gfx942 execution, and source-to-machine refinement. No functional hardware result is claimed.",
       ),
       explanatory: true,
       notice:
-        "Evidence boundary: this is a fixed-shape source/oracle result, not a compiler, proof, or GPU result.",
+        "Evidence boundary: the proof covers the fixed rational model, not compiled Rust, machine semantics, race freedom, or GPU execution.",
     },
   ),
   diagram: "attention",

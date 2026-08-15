@@ -1,5 +1,6 @@
 import { narrativeSection } from "./narrative-registry";
 import moeTop2Kernel from "../../examples/moe_top2_v1/src/kernel.rs?raw";
+import moeTop2Proof from "../../examples/moe_top2_v1/verus/moe_top2_v1.rs?raw";
 import {
   FE2O3_PIN,
   pinnedReference,
@@ -13,6 +14,7 @@ import {
 } from "./source-milestones";
 
 const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
+const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
 
 const moeRouting: Lesson = {
   id: "moe-routing",
@@ -28,7 +30,10 @@ const moeRouting: Lesson = {
     "Use counts and exclusive scans to assign expert ranges.",
     "Prove accepted token routes own unique bounded slots.",
   ],
-  claims: [sourceMilestoneClaim("moe-top2-source-v1")],
+  claims: [
+    sourceMilestoneClaim("moe-top2-source-v1"),
+    sourceMilestoneClaim("moe-top2-verus-v1"),
+  ],
   sections: [
     narrativeSection("moe-routing/assumptions"),
     narrativeSection("moe-routing/permutation"),
@@ -44,14 +49,15 @@ const moeRouting: Lesson = {
       explanatory: false,
     },
     {
-      language: "text",
-      code: `Executable Phase A proof-facing model:\n  selected experts are in range, distinct, and totally ordered\n  admitted[e] = min(requested[e], 4)\n  offsets are an exclusive scan bounded by 16\n  accepted routes own unique bounded slots\n  permutation and inverse round-trip\n\nNo Verus theorem is claimed yet.`,
-      sourcePath: "examples/moe_top2_v1/src/proof_model.rs",
-      sourceCommit: moeTop2Source.commit,
-      evidenceId: moeTop2Source.id,
-      explanatory: true,
+      language: "rust",
+      code: moeTop2Proof,
+      sourcePath: moeTop2Verus.primarySourcePath,
+      sourceCommit: moeTop2Verus.commit,
+      sourceSha256: moeTop2Verus.primarySourceSha256,
+      evidenceId: moeTop2Verus.id,
+      explanatory: false,
       notice:
-        "The executable model and hostile mutations check the routing contracts. A pinned Verus proof and refinement to the exact f32 source remain open.",
+        "This pinned mathematical model proves routing, capacity, scan, slot, permutation, and sentinel obligations. IEEE FP32 and source-to-machine refinement remain open.",
     },
     {
       language: "bash",
@@ -63,12 +69,12 @@ const moeRouting: Lesson = {
     {
       language: "text",
       code: resultText(
-        "source-tested",
-        "Exact ordinary attributed source, an independent oracle, 24 debug tests, 24 release tests, a 6,561-case bounded corpus, executable proof-facing models, and hostile mutations are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, protected gfx942 execution, and Verus refinement. No functional hardware result is claimed.",
+        "source-model-verified",
+        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, and a pinned Verus proof of the mathematical routing policy are public. Remaining gaps: IEEE FP32/source refinement, authenticated MIR-to-Kernel-IR correspondence, finalization, generated host/runtime, protected gfx942 execution, and source-to-machine refinement. No functional hardware result is claimed.",
       ),
       explanatory: true,
       notice:
-        "Evidence boundary: this is a fixed-profile source/oracle result, not a compiler, proof, or GPU result.",
+        "Evidence boundary: the proof covers the fixed mathematical routing model, not compiled Rust, machine semantics, race freedom, or GPU execution.",
     },
   ),
   diagram: "moe",

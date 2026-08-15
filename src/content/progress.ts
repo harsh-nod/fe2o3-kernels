@@ -851,7 +851,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["tiled GEMM", "online softmax", "masking"],
-    next: "Lower the exact B1/H1/N8/D16 causal source through MIR and Kernel IR, then add direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, and Verus refinement.",
+    next: "Complete authenticated MIR-to-Kernel-IR admission for the exact B1/H1/N8/D16 causal source, then add direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, and source/model-to-machine refinement.",
   },
   {
     id: "moe-routing",
@@ -860,7 +860,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["scan", "stable permutation", "capacity policy"],
-    next: "Bind the exact T8/E4/K2/C4 source to authenticated MIR and Kernel IR, then add direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, and Verus refinement.",
+    next: "Bind the exact T8/E4/K2/C4 source to authenticated MIR and Kernel IR, then add direct LLVM/LLD finalization, typed runtime launch, protected hardware vectors, IEEE FP32/source refinement, and model-to-machine refinement.",
   },
   {
     id: "moe-experts",

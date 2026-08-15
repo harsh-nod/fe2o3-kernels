@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc`, tree
-`b2c2f04a3c8b1f207b45b86af1a9108f86e251a3`. Both
+commit `5c25611adbd99e807957dfc9a0a6a63e83a9e099`, tree
+`7706e67f005200c3988835e1bc86529dccad05ae`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -62,8 +62,10 @@ lesson snapshots for those source-only milestones remain byte-pinned to commit
 newer publication gate. A later exact Wave64 increment now reaches deterministic
 in-process upstream LLVM target emission and LLD library linking with exact
 post-link metadata, resource, relocation, dependency, and machine-call checks.
-It still has no generated runtime launch, protected hardware observation, or
-Verus-to-machine refinement. The snapshot also carries the row-softmax V1 inert
+Its typed one-shot HSA lifecycle also completed one protected gfx942 observation
+over four exact masks with canaries, unchanged inputs, exact-bit outputs, and
+terminal unload. That bounded observation is not a generalized compiler or
+Verus-to-machine refinement result. The snapshot also carries the row-softmax V1 inert
 verification certificate: 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
@@ -392,8 +394,9 @@ At the audited pin:
   consumes an exact linear `DynamicLds` capability. Compiler collector/lowering,
   profile/descriptor construction, generated host/runtime launch, and protected
   gfx942 execution remain open for synchronization. Wave64 has subsequently
-  reached an exact source-derived compiler profile and direct upstream LLVM/LLD
-  finalizer, but still lacks the runtime/hardware and refinement joins.
+  reached an exact source-derived compiler profile, direct upstream LLVM/LLD
+  finalizer, typed one-shot runtime lifecycle, and a four-mask protected gfx942
+  observation. It still lacks compiler and Verus-to-machine refinement joins.
 - The tiled-GEMM checkpoint now has source-authenticated selection of the
   canonical direct-global one-tile Kernel IR, a guarded gfx942 hardware harness
   for separately supplied bytes, and structural Worker V2 artifact admission.
@@ -446,13 +449,16 @@ At the audited pin:
   fail-closed protected harness, but the exact machine has none of the 25 pins
   needed to authorize a run. FlashAttention Phase A now has exact ordinary
   attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
-  oracle, executable proof-facing models, and debug/release mutation suites; it
-  has no Verus, compiler, artifact, runtime, or hardware result. MoE routing
+  oracle, executable proof-facing models, debug/release mutation suites, and a
+  pinned Verus proof of its exact rational online recurrence. That proof does
+  not establish exponential-law, IEEE FP32/OCML, Rust-source, compiler,
+  artifact, runtime, or hardware authority. MoE routing
   Phase A now has exact ordinary attributed T8/E4/K2/C4 source, an independent
   oracle, stable capacity/permutation/inverse contracts, a 6,561-case bounded
-  corpus, and debug/release mutation suites. It likewise has no Verus, compiler,
-  artifact, runtime, or hardware result; expert GEMM and combine remain design
-  work.
+  corpus, debug/release mutation suites, and a pinned Verus proof of the exact
+  mathematical routing policy. IEEE FP32/source refinement, compiler, artifact,
+  runtime, and hardware authority remain open; expert GEMM and combine remain
+  design work.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. The #97 path uses direct LLVM target-machine and LLD

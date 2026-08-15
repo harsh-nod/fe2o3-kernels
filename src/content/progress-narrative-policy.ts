@@ -28,7 +28,7 @@ export const progressNarrativeFingerprints = deepFreeze({
   "progress/protected-evidence-publisher": "6a8aada65d0cb79d4334f9630fadcf643680c747ca87a948a9b8c26e17e209ad",
   "progress/gfx942-scalar-control-flow": "d85cbbdf04a70d9a06228bbcfd2597ff2de18967bce006f02cc188d0cb4bd02d",
   "progress/collected-rust-scalar-admission": "b7aea4b2500b3e8950bcb3df00a4dfdc3ac89ce0733081c6829e7e0d07b6612d",
-  "progress/gfx942-wave64-lds-reduction": "0ff9e79e0d9273d4a114e18dceade5dedd0115ca8cc0f49473d3e32339687a6d",
+  "progress/gfx942-wave64-lds-reduction": "8fb5e889d5534ae4d58c9261c2e0c03b75c73c030ec87b3e358e59bf31a3c2d2",
   "progress/scalar-gemm-v1": "da83866695d23c3fc1c7a4f335153c3112e92d12f8f538f45735eca5240eeb60",
   "progress/scalar-gemm-proof-profile": "537ff56d6904ac5e65be9e9cd8b31bcce9a36d662eda48245a027afda51d279a",
   "progress/scalar-gemm-physical-effects": "e5f66a29804312a75b33a16d1db208cc56b313409afb76dda1b7c7635e1eb40b",

@@ -197,7 +197,9 @@ describe("curriculum integrity", () => {
       "wave64-collectives-source-v1",
       "workgroup-sync-source-v1",
       "flash-attention-source-v1",
+      "flash-attention-verus-v1",
       "moe-top2-source-v1",
+      "moe-top2-verus-v1",
     ]);
     expect(validateSourceMilestoneCatalog()).toEqual([]);
 
@@ -258,22 +260,68 @@ describe("curriculum integrity", () => {
       expect(kernel?.code).toContain("#[kernel(");
       expect(kernel?.code).not.toMatch(/macro_rules!\s+[A-Za-z_]/u);
 
-      for (const kind of ["verus", "host", "result"] as const) {
+      for (const kind of ["host", "result"] as const) {
         expect(
           lesson?.tabs.find((tab) => tab.kind === kind)?.explanatory,
         ).toBe(true);
       }
+      expect(lesson?.tabs.find((tab) => tab.kind === "verus")?.explanatory).toBe(
+        !["flash-attention", "moe-routing"].includes(profile.lessonId),
+      );
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
-      for (const gap of [
-        "compiler collector/lowering",
-        "compiler profile and descriptor",
-        "finalizer",
-        "generated host/runtime",
-        "protected gfx942 execution",
-      ]) {
+      const gaps = ["flash-attention", "moe-routing"].includes(profile.lessonId)
+        ? [
+            "authenticated MIR-to-Kernel-IR correspondence",
+            "finalization",
+            "generated host/runtime",
+            "protected gfx942 execution",
+            "source-to-machine refinement",
+          ]
+        : [
+            "compiler collector/lowering",
+            "compiler profile and descriptor",
+            "finalizer",
+            "generated host/runtime",
+            "protected gfx942 execution",
+          ];
+      for (const gap of gaps) {
         expect(result).toContain(gap);
       }
       expect(result).toContain("No functional hardware result is claimed");
+    }
+
+    const proofProfiles = [
+      {
+        lessonId: "flash-attention",
+        evidenceId: "flash-attention-verus-v1",
+        bundledPath: "examples/flash_attention_v1/verus/flash_attention_v1.rs",
+        sha256:
+          "e1f48bb3dc7bee0678898d13660bf4ce02d9d8e5706e3969f11b11c8b1d7a2da",
+      },
+      {
+        lessonId: "moe-routing",
+        evidenceId: "moe-top2-verus-v1",
+        bundledPath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
+        sha256:
+          "4c8db7b0d33c19d01677cf30ead3273844ffc480c70869181f6be0d9d3cc637f",
+      },
+    ] as const;
+    for (const profile of proofProfiles) {
+      const proof = lessons
+        .find((entry) => entry.id === profile.lessonId)
+        ?.tabs.find((tab) => tab.kind === "verus");
+      const bundled = readFileSync(profile.bundledPath, "utf8");
+      expect(proof).toMatchObject({
+        code: bundled,
+        sourcePath: profile.bundledPath,
+        sourceCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
+        sourceSha256: profile.sha256,
+        evidenceId: profile.evidenceId,
+        explanatory: false,
+      });
+      expect(createHash("sha256").update(bundled).digest("hex")).toBe(
+        profile.sha256,
+      );
     }
 
     const atomicPath = "examples/workgroup_sync_v1/src/scoped_atomic.rs";
@@ -1134,11 +1182,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
-      eventualPublicTree: "b2c2f04a3c8b1f207b45b86af1a9108f86e251a3",
+      eventualPublicCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
+      eventualPublicTree: "7706e67f005200c3988835e1bc86529dccad05ae",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
+        requiredCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
