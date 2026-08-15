@@ -114,7 +114,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate names public-main implementation commit 0eae3bb633864bfd75aaa8ed76b8ae0b4e1014e1, tree b09b345409bb337c85c733f29c4e9bfff957bbc5, while lesson claim badges remain pinned to FE2O3_PIN until a separate baseline audit. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that descendant, and deployment continues to require that exact match. The protected implementation and measured evidence remain pinned to c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119. The newer public snapshot also contains Worker V2 metadata hardening plus shared GEMM and row-softmax numerical contracts; those increments do not retroactively strengthen the bounded protected observation. The typed staged records do not combine authenticated compiler origin, proof-certificate consumption, compiler refinement, final machine semantics, and generalized safety into one authority chain."
+        "text": "The checked-in publication gate names public-main implementation commit 143e9539d3ab8f4d85500816f521e040a8a77192, tree 6b7ed5d9872c765000405ad83e698f79f8cee2f9, while lesson claim badges remain pinned to FE2O3_PIN until a separate baseline audit. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that descendant, and deployment continues to require that exact match. The protected implementation and measured evidence remain pinned to c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119. The newer public snapshot contains Worker V2 metadata hardening, shared GEMM and row-softmax numerical contracts, and source/oracle/formal Phase A packages for masked Wave64 collectives and workgroup synchronization. Those packages do not yet carry compiler-profile, protected artifact, generated host, or hardware authority, and none of the newer increments retroactively strengthens the bounded protected observation. The typed staged records do not combine authenticated compiler origin, proof-certificate consumption, compiler refinement, final machine semantics, and generalized safety into one authority chain."
       }
     ]
   },
@@ -1050,7 +1050,7 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "98c80d0615ff95b8843da30d5bed6cfef6fabb8e4fc02643037b1296a542cfaf",
+    "30949cc71102ee04776df4a33c3c46f7ea8ef2168ed23ac907cb6997a5749869",
   "gemm-tiling/public-layout-proof":
     "cb55340b23fed8480e93460f7ef6160258ed1e709a9688f214b54c989d248d0e",
   "gemm-proof-plan/evidence":

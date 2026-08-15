@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to final public-main documentation
-commit `0eae3bb633864bfd75aaa8ed76b8ae0b4e1014e1`, tree
-`b09b345409bb337c85c733f29c4e9bfff957bbc5`. Both
+commit `143e9539d3ab8f4d85500816f521e040a8a77192`, tree
+`6b7ed5d9872c765000405ad83e698f79f8cee2f9`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This docs-only descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -50,6 +50,9 @@ exact-profile import, direct LLVM/LLD API finalization, generated borrowed host
 preparation, the one-shot protected lifecycle, and one bounded protected mi300x
 measurement. It also retains the separate Slice 3 and Slice 4 upstream
 LLVM/COV6 inspections and bounded Slice 1 source/model correspondence. The
+newer snapshot also adds source/oracle/formal Phase A packages for masked
+Wave64 collectives and workgroup synchronization. Neither package yet carries
+compiler-profile, protected artifact, generated host, or hardware authority. The
 publication workflow continues to require both public refs to resolve exactly
 to the gated commit before deployment. The last audited public baseline remains
 `96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
