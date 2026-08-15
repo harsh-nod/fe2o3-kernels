@@ -114,7 +114,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate names public-main implementation commit dd841720591003f418d056b21a319088ce4559d6, tree 40d27ad9faabe88e3d469d03b8e097bd31f8aedd, while lesson claim badges remain pinned to FE2O3_PIN until a separate baseline audit. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that descendant, and deployment continues to require that exact match. The protected implementation and measured evidence remain pinned to c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119. The newer public snapshot contains Worker V2 metadata hardening, shared GEMM and row-softmax numerical contracts, source/oracle/formal Phase A packages for masked Wave64 collectives and workgroup synchronization, and the row-softmax V1 inert verification certificate with 18 verified obligations and seven named negative fixtures. The Phase A packages do not yet carry compiler-profile, protected artifact, generated host, or hardware authority. The certificate binds reviewed source, policy, proof, compiler-profile, Kernel IR, target, and tool identities but itself grants no compiler, artifact, launch, or hardware authority. None of the newer increments retroactively strengthens the bounded protected observation. The typed staged records do not combine authenticated compiler origin, proof-certificate consumption, compiler refinement, final machine semantics, and generalized safety into one authority chain."
+        "text": "The checked-in publication gate names public-main implementation commit 954ae6824ab4964a073654009c2b435809701f86, tree fb3228c461c5d9c6467d75bf3e62e93a1f97c9cc, while lesson claim badges remain pinned to FE2O3_PIN until a separate baseline audit. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to that descendant, and deployment continues to require that exact match. The protected implementation and measured evidence remain pinned to c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119. The exact Wave64 and synchronization source snapshots remain pinned separately to d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. The newer public snapshot contains Worker V2 metadata hardening, shared GEMM and row-softmax numerical contracts, source/oracle/formal Phase A packages for masked Wave64 collectives and workgroup synchronization, typed DeviceGlobalMutPtr plus exclusive generated GlobalMut host admission, an exact linear DynamicLds capability, the trust-pin repair, root status documentation, and the row-softmax V1 inert verification certificate with 18 verified obligations and seven named negative fixtures. The Phase A source-level capabilities do not yet carry compiler collector/lowering, profile/descriptor, finalizer, generated host/runtime launch, protected artifact, or hardware authority. The certificate binds reviewed source, policy, proof, compiler-profile, Kernel IR, target, and tool identities but itself grants no compiler, artifact, launch, or hardware authority. None of the newer increments retroactively strengthens the bounded protected observation. The typed staged records do not combine authenticated compiler origin, proof-certificate consumption, compiler refinement, final machine semantics, and generalized safety into one authority chain."
       }
     ]
   },
@@ -357,7 +357,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current maturity",
-        "text": "The APIs, model, IR operations, and lowering slices are real. This lesson does not present a generally runnable Rust reduction kernel because the production source-to-IR path does not yet cover that surface end to end."
+        "text": "Public commit d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8 contains the exact ordinary attributed source shown in the Kernel tab plus its CPU oracle, mutation tests, and bounded Verus model. Compiler collector/lowering, profile/descriptor construction, finalization, generated host/runtime launch, and protected gfx942 execution remain open, so this source-only milestone is not a functional hardware claim."
       }
     ]
   },
@@ -388,7 +388,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "Atomic validity is a tuple of operation, scalar type, success/failure ordering, synchronization scope, address space, and allocation coherence. A target capability says a tuple can be legalized; it does not establish that a particular runtime allocation is eligible for system scope."
+        "text": "Atomic validity is a tuple of operation, scalar type, success/failure ordering, synchronization scope, address space, and allocation coherence. The separate exact scoped_atomic.rs source uses DeviceGlobalMutPtr to state global address-space identity, while generated host admission requires one exclusively borrowed GlobalMut region. Those types do not establish that a runtime allocation is eligible for system scope or that the source has entered compiler lowering."
       },
       {
         "type": "bullets",
@@ -396,6 +396,15 @@ const narrativeRegistry = deepFreeze({
           "Use workgroup scope only for workgroup communication.",
           "Require coherent allocation evidence for device/system interactions.",
           "Reject mixed atomic and non-atomic overlap unless the model orders it explicitly."
+        ]
+      },
+      {
+        "type": "links",
+        "items": [
+          {
+            "label": "Exact separate scoped_atomic.rs source",
+            "href": "https://github.com/harsh-nod/fe2o3/blob/d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8/examples/workgroup_sync_v1/src/scoped_atomic.rs"
+          }
         ]
       }
     ]
@@ -1050,7 +1059,11 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "63fe0cedeed9a9ce14b059a04e124ea8746ff9ef0ec08d5ba561abc70b43b26b",
+    "7bc846e4c91bd1c5a5777965396092bf60c41cb3cb3ee06445508d8785de3bd7",
+  "reductions-scans/scan":
+    "dab200f8280efee5db8af14b89533457ca7fb2bddc77f0e3f69a0f3fdc59843a",
+  "lds-barriers-atomics/atomics":
+    "3d19c81e59e9d80814ce7a5792ae8bd281a6360d8bfbb28e07948e13106eca03",
   "gemm-tiling/public-layout-proof":
     "cb55340b23fed8480e93460f7ef6160258ed1e709a9688f214b54c989d248d0e",
   "gemm-proof-plan/evidence":

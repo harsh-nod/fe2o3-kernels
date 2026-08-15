@@ -1,6 +1,8 @@
 import { narrativeSection } from "./narrative-registry";
 import flashDesign from "../../examples/flash_attention_design.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
+import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
+import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
 import {
   FE2O3_PIN,
   pinnedReference,
@@ -9,14 +11,15 @@ import {
 } from "./model";
 import { completeTabs, noHost, resultText } from "./shared";
 import {
+  sourceMilestoneClaim,
+  sourceMilestoneRecord,
+} from "./source-milestones";
+import {
   completedIssue94IncrementRecord,
   protectedSlice1HardwareObservation,
   stagedEvidenceOrder,
   stagedEvidenceRecord,
 } from "./staged-evidence";
-
-const verusCommand =
-  "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
 
 const gemmProofEvidence = stagedEvidenceRecord(
   "tiled-lds-source-model-correspondence-v1",
@@ -26,6 +29,12 @@ const gemmProtectedEvidence = completedIssue94IncrementRecord(
 );
 const gemmProofCommand = gemmProofEvidence.commands[0]!;
 const gemmProtectedCommand = gemmProtectedEvidence.commands.at(-1)!;
+const collectivesSource = sourceMilestoneRecord(
+  "wave64-collectives-source-v1",
+);
+const synchronizationSource = sourceMilestoneRecord(
+  "workgroup-sync-source-v1",
+);
 const gemmProtectedResult = resultText(
   "gpu-observed",
   `Exact bounded Slice 1 protected result
@@ -52,6 +61,8 @@ function exactGemmKernelTab() {
     code: gemmSlice1Kernel,
     sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
     sourceCommit: protectedSlice1HardwareObservation.commit,
+    sourceSha256:
+      "695e3449daa327944b0a9b0ecc081b0f1bd59eb60009cbe79ed6924942e86334",
     evidenceId: "tiled-lds-protected-lifecycle-v1" as const,
     explanatory: false,
   };
@@ -98,20 +109,7 @@ const collectives: Lesson = {
     "Separate bounded API/lowering profiles from general source integration.",
   ],
   claims: [
-    {
-      kind: "source-model-verified",
-      label: "Wave and LDS model",
-      detail:
-        "The Verus suite checks active-value reduction determinism, disjoint scan outputs, bounded LDS writes, and paired inactive-lane and LDS mutations.",
-      reference: pinnedReference(
-        [verusCommand],
-        [
-          "examples/verus_vecadd/verus/wave_lds.rs",
-          "examples/verus_vecadd/verus/negative/wave_inactive_lane_contributes.rs",
-          "examples/verus_vecadd/verus/negative/lds_duplicate_writer.rs",
-        ],
-      ),
-    },
+    sourceMilestoneClaim("wave64-collectives-source-v1"),
     {
       kind: "compiler-hsaco-observed",
       label: "Bounded collective foundations",
@@ -138,21 +136,40 @@ const collectives: Lesson = {
   tabs: completeTabs(
     {
       language: "rust",
-      code: `// BOUNDED API SHAPE; not a general runnable source path.\nlet lane = WaveLane::<Wave64>::current();\nlet partial = wave.reduce_sum(active_group, value);\nlet prefix = wave.inclusive_scan(active_group, value);`,
-      explanatory: true,
+      code: wave64CollectivesKernel,
+      sourcePath: collectivesSource.primarySourcePath,
+      sourceCommit: collectivesSource.commit,
+      sourceSha256: collectivesSource.primarySourceSha256,
+      evidenceId: collectivesSource.id,
+      explanatory: false,
     },
     {
-      language: "text",
-      code: `active_values_determine_reduction\ndistinct_active_lanes_have_disjoint_scan_outputs\nmutated_inactive_lane_contributes  // expected rejection`,
-      sourcePath: "examples/verus_vecadd/verus/wave_lds.rs",
+      language: "bash",
+      code: collectivesSource.commands[1]!,
+      sourcePath:
+        "examples/wave64_collectives_v1/verus/wave64_collectives_v1.rs",
+      sourceCommit: collectivesSource.commit,
+      evidenceId: collectivesSource.id,
+      explanatory: true,
+      notice:
+        "Real pinned Phase A proof command and source link. It proves the bounded mathematical model, not compiler lowering or GPU execution.",
     },
-    { language: "bash", code: verusCommand },
+    {
+      language: "bash",
+      code: noHost,
+      explanatory: true,
+      notice:
+        "Design boundary: no generated host/runtime path is bound to this exact source profile.",
+    },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Proof/model and lowering foundations pass independently. No general reduction HSACO dispatch is claimed.",
+        "Exact source, CPU oracle, deterministic tests, and the bounded Verus model are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution. No functional hardware result is claimed.",
       ),
+      explanatory: true,
+      notice:
+        "Evidence boundary: this is a source/model result, not a GPU result.",
     },
   ),
   diagram: "reduction",
@@ -181,6 +198,7 @@ const synchronization: Lesson = {
     "Match atomic ordering, scope, address space, and allocation eligibility.",
   ],
   claims: [
+    sourceMilestoneClaim("workgroup-sync-source-v1"),
     {
       kind: "compiler-hsaco-observed",
       label: "Target-gated lowering",
@@ -199,20 +217,6 @@ const synchronization: Lesson = {
         { target: FE2O3_PIN.target },
       ),
     },
-    {
-      kind: "source-model-verified",
-      label: "Barrier and LDS model",
-      detail:
-        "The Verus fixture suite rejects duplicate LDS writers, reads before the barrier, and out-of-bounds LDS reads.",
-      reference: pinnedReference(
-        [verusCommand],
-        [
-          "examples/verus_vecadd/verus/wave_lds.rs",
-          "examples/verus_vecadd/verus/negative/lds_read_before_barrier.rs",
-          "examples/verus_vecadd/verus/negative/lds_out_of_bounds_read.rs",
-        ],
-      ),
-    },
   ],
   sections: [
     narrativeSection("lds-barriers-atomics/epochs"),
@@ -221,23 +225,39 @@ const synchronization: Lesson = {
   tabs: completeTabs(
     {
       language: "rust",
-      code: `// BOUNDED PROFILE, not a generally runnable kernel.\nlds.write_owned(lane, value)?;\nworkgroup.barrier(GroupMemorySpace::Lds)?;\nlet peer = lds.read_initialized(peer_lane)?;`,
-      explanatory: true,
-    },
-    {
-      language: "text",
-      code: `owned_lds_write_is_in_bounds_and_framed\nmutated_read_before_barrier_is_legal  // expected rejection\nmutated_duplicate_lds_writers_are_race_free  // expected rejection`,
+      code: workgroupSyncKernel,
+      sourcePath: synchronizationSource.primarySourcePath,
+      sourceCommit: synchronizationSource.commit,
+      sourceSha256: synchronizationSource.primarySourceSha256,
+      evidenceId: synchronizationSource.id,
+      explanatory: false,
     },
     {
       language: "bash",
-      code: "cargo +nightly-2026-04-03 test --locked -p fe2o3-kernel-ir -p dialect-amdgcn -p fe2o3-amd-target",
+      code: synchronizationSource.commands[1]!,
+      sourcePath: "examples/workgroup_sync_v1/verus/workgroup_sync_v1.rs",
+      sourceCommit: synchronizationSource.commit,
+      evidenceId: synchronizationSource.id,
+      explanatory: true,
+      notice:
+        "Real pinned Phase A proof command and source link. It proves the bounded synchronization model, not compiler lowering or GPU execution.",
+    },
+    {
+      language: "bash",
+      code: noHost,
+      explanatory: true,
+      notice:
+        "Design boundary: generated GlobalMut admission exists, but no compiler-profile-bound host/runtime launch exists for either exact kernel.",
     },
     {
       language: "text",
       code: resultText(
-        "compiler-hsaco-observed",
-        "Static model and lowering tests pass. Dynamic-LDS launch plumbing and broad source integration remain incomplete.",
+        "source-model-verified",
+        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. Remaining gaps: compiler collector/lowering, compiler profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution. No functional hardware result is claimed.",
       ),
+      explanatory: true,
+      notice:
+        "Evidence boundary: this is a source/model result, not a GPU result.",
     },
   ),
   diagram: "memory",

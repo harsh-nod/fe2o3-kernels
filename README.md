@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to final public-main documentation
-commit `dd841720591003f418d056b21a319088ce4559d6`, tree
-`40d27ad9faabe88e3d469d03b8e097bd31f8aedd`. Both
+commit `954ae6824ab4964a073654009c2b435809701f86`, tree
+`fb3228c461c5d9c6467d75bf3e62e93a1f97c9cc`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This docs-only descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -51,9 +51,16 @@ preparation, the one-shot protected lifecycle, and one bounded protected mi300x
 measurement. It also retains the separate Slice 3 and Slice 4 upstream
 LLVM/COV6 inspections and bounded Slice 1 source/model correspondence. The
 newer snapshot also adds source/oracle/formal Phase A packages for masked
-Wave64 collectives and workgroup synchronization. Neither package yet carries
-compiler-profile, protected artifact, generated host, or hardware authority. The
-snapshot also carries the row-softmax V1 inert verification certificate: 18
+Wave64 collectives and workgroup synchronization. The latter now uses a typed
+`DeviceGlobalMutPtr` kernel argument, an exclusive generated `GlobalMut` host
+capability, and an exact linear `DynamicLds` capability. These source-level
+types do not grant compiler collector/lowering, profile/descriptor, finalizer,
+generated host/runtime launch, or protected gfx942 execution authority. The
+lesson snapshots for those source-only milestones remain byte-pinned to commit
+`d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8`, tree
+`cdec8448a300aa71d17565ca50fd4d893932f602`, rather than silently following the
+newer publication gate. The snapshot also carries the row-softmax V1 inert
+verification certificate: 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
 certificate itself grants no compiler, artifact, launch, or hardware authority. The
@@ -365,9 +372,15 @@ At the audited pin:
 - Typed vector addition is the strongest current single-source runnable path.
 - The associated Verus models cover bounds, initialization, overflow
   obligations, and injective ownership arguments at the modeled source level.
-- Bounded wave64 collectives, LDS/barrier/atomic contracts, target gates, and a
-  narrow MFMA tile profile exist in APIs, models, Kernel IR, or lowering tests.
-  The site labels those focused mechanics separately from runnable kernels.
+- Exact ordinary attributed Rust sources now exist for one masked Wave64
+  reduction/scan profile, one LDS reduction, and a separate scoped atomic add.
+  Their CPU oracles, mutation suites, and Verus models are public. The atomic
+  source carries global address-space identity through `DeviceGlobalMutPtr`,
+  generated host admission uses an exclusive `GlobalMut`, and LDS scratch
+  consumes an exact linear `DynamicLds` capability. Compiler collector/lowering,
+  profile/descriptor construction, finalization, generated host/runtime launch,
+  and protected gfx942 execution remain open, so these are source/model
+  milestones rather than functional hardware kernels.
 - The tiled-GEMM checkpoint now has source-authenticated selection of the
   canonical direct-global one-tile Kernel IR, a guarded gfx942 hardware harness
   for separately supplied bytes, and structural Worker V2 artifact admission.

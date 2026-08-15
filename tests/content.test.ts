@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
@@ -32,6 +33,11 @@ import {
   stagedEvidenceRecord,
   validateStagedEvidenceCatalog,
 } from "../src/content/staged-evidence";
+import {
+  sourceMilestoneOrder,
+  sourceMilestoneRecord,
+  validateSourceMilestoneCatalog,
+} from "../src/content/source-milestones";
 import { validateCurriculum } from "../src/content/validate";
 
 function serializedLessonContent(lessonId: string): string {
@@ -91,6 +97,12 @@ describe("curriculum integrity", () => {
         if (reference?.scope === "lesson-evidence") {
           expect(reference.commit).toBe(FE2O3_PIN.commit);
           expect(reference.tree).toBe(FE2O3_PIN.tree);
+        } else if (reference?.scope === "source-milestone") {
+          const record = sourceMilestoneRecord(reference.evidenceId);
+          expect(reference.commit).toBe(record.commit);
+          expect(reference.tree).toBe(record.tree);
+          expect(reference.claim).toBe("source-model-verified");
+          expect(reference.authority).toBe("source-model-only");
         } else if (reference?.scope === "staged-progress") {
           expect(reference.claim).toBe(claim.kind);
           expect([
@@ -121,6 +133,8 @@ describe("curriculum integrity", () => {
       expect(kernel).toMatchObject({
         sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
         sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+        sourceSha256:
+          "695e3449daa327944b0a9b0ecc081b0f1bd59eb60009cbe79ed6924942e86334",
         evidenceId: "tiled-lds-protected-lifecycle-v1",
         explanatory: false,
       });
@@ -172,6 +186,123 @@ describe("curriculum integrity", () => {
       ?.tabs.find((tab) => tab.kind === "kernel");
     if (changedKernel) changedKernel.sourceCommit = "main";
     expect(validateCurriculum(changed)).toContainEqual(
+      expect.objectContaining({
+        message: "code tab source is not pinned to an exact commit",
+      }),
+    );
+  });
+
+  it("pins exact Wave 2 source-only kernel snapshots", () => {
+    expect(sourceMilestoneOrder).toEqual([
+      "wave64-collectives-source-v1",
+      "workgroup-sync-source-v1",
+    ]);
+    expect(validateSourceMilestoneCatalog()).toEqual([]);
+
+    const profiles = [
+      {
+        lessonId: "reductions-scans",
+        evidenceId: "wave64-collectives-source-v1",
+        sourcePath: "examples/wave64_collectives_v1/src/kernel.rs",
+        bundledPath: "examples/wave64_collectives_v1/src/kernel.rs",
+        sha256:
+          "01ac1365b0fdfe91cdc8f7cf6a14ae5acbea41528103ec3de5fe6d895261625e",
+      },
+      {
+        lessonId: "lds-barriers-atomics",
+        evidenceId: "workgroup-sync-source-v1",
+        sourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
+        bundledPath: "examples/workgroup_sync_v1/src/kernel.rs",
+        sha256:
+          "3e7ec081c7958288f9d997d40e6f41a7faabc56a3add734099cd1777443b2983",
+      },
+    ] as const;
+
+    for (const profile of profiles) {
+      const lesson = lessons.find((entry) => entry.id === profile.lessonId);
+      const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
+      expect(kernel).toMatchObject({
+        sourcePath: profile.sourcePath,
+        sourceCommit: "d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8",
+        sourceSha256: profile.sha256,
+        evidenceId: profile.evidenceId,
+        explanatory: false,
+      });
+      const bundled = readFileSync(profile.bundledPath, "utf8");
+      expect(kernel?.code).toBe(bundled);
+      expect(createHash("sha256").update(bundled).digest("hex")).toBe(
+        profile.sha256,
+      );
+      expect(kernel?.code).toContain("#[kernel(");
+      expect(kernel?.code).not.toMatch(/macro_rules!\s+[A-Za-z_]/u);
+
+      for (const kind of ["verus", "host", "result"] as const) {
+        expect(
+          lesson?.tabs.find((tab) => tab.kind === kind)?.explanatory,
+        ).toBe(true);
+      }
+      const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
+      for (const gap of [
+        "compiler collector/lowering",
+        "compiler profile and descriptor",
+        "finalizer",
+        "generated host/runtime",
+        "protected gfx942 execution",
+      ]) {
+        expect(result).toContain(gap);
+      }
+      expect(result).toContain("No functional hardware result is claimed");
+    }
+
+    const atomicPath = "examples/workgroup_sync_v1/src/scoped_atomic.rs";
+    const atomic = readFileSync(atomicPath, "utf8");
+    expect(createHash("sha256").update(atomic).digest("hex")).toBe(
+      "c0f00a14c5941f34741fc10ca7798ce9cf47288294b0bcc43cddb7d22bbfe97e",
+    );
+    const synchronizationClaim = lessons
+      .find((entry) => entry.id === "lds-barriers-atomics")
+      ?.claims.find(
+        (claim) => claim.reference?.scope === "source-milestone",
+      );
+    expect(synchronizationClaim?.reference?.sourcePaths).toContain(atomicPath);
+    expect(atomic).toContain("DeviceGlobalMutPtr<u32>");
+  });
+
+  it("rejects incomplete or substituted promoted source provenance", () => {
+    const mutateCollectivesKernel = (
+      mutate: (kernel: Record<string, unknown>) => void,
+    ) => {
+      const changed = structuredClone(curriculum);
+      const kernel = changed
+        .flatMap((module) => module.lessons)
+        .find((entry) => entry.id === "reductions-scans")
+        ?.tabs.find((tab) => tab.kind === "kernel");
+      expect(kernel).toBeDefined();
+      mutate(kernel as unknown as Record<string, unknown>);
+      return validateCurriculum(changed);
+    };
+
+    expect(
+      mutateCollectivesKernel((kernel) => delete kernel.sourceSha256),
+    ).toContainEqual(
+      expect.objectContaining({
+        message: "promoted algorithm kernel lacks exact source provenance",
+      }),
+    );
+    expect(
+      mutateCollectivesKernel((kernel) => {
+        kernel.sourceSha256 = "0".repeat(64);
+      }),
+    ).toContainEqual(
+      expect.objectContaining({
+        message: "real source tab does not match its exact source milestone",
+      }),
+    );
+    expect(
+      mutateCollectivesKernel((kernel) => {
+        kernel.sourceCommit = "main";
+      }),
+    ).toContainEqual(
       expect.objectContaining({
         message: "code tab source is not pinned to an exact commit",
       }),
@@ -974,11 +1105,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "dd841720591003f418d056b21a319088ce4559d6",
-      eventualPublicTree: "40d27ad9faabe88e3d469d03b8e097bd31f8aedd",
+      eventualPublicCommit: "954ae6824ab4964a073654009c2b435809701f86",
+      eventualPublicTree: "fb3228c461c5d9c6467d75bf3e62e93a1f97c9cc",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "dd841720591003f418d056b21a319088ce4559d6",
+        requiredCommit: "954ae6824ab4964a073654009c2b435809701f86",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",

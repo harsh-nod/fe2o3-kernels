@@ -147,6 +147,51 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   );
 });
 
+test("Wave 2 lessons expose exact source without hardware claims", async ({
+  page,
+}) => {
+  await page.goto("./#/lesson/reductions-scans");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn wave64_collectives_v1",
+  );
+  await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8/examples/wave64_collectives_v1/src/kernel.rs",
+  );
+  await page.getByRole("tab", { name: "Host" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "No host launch is available for this design lesson",
+  );
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "No functional hardware result is claimed",
+  );
+
+  await page.goto("./#/lesson/lds-barriers-atomics");
+  await page.getByRole("tab", { name: "Kernel" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn lds_publish_read_reduce_i32_v1",
+  );
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8/examples/workgroup_sync_v1/src/kernel.rs",
+  );
+  await expect(
+    page.getByRole("link", { name: "Exact separate scoped_atomic.rs source" }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8/examples/workgroup_sync_v1/src/scoped_atomic.rs",
+  );
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "compiler collector/lowering",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "protected gfx942 execution",
+  );
+});
+
 test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {

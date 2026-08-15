@@ -19,9 +19,22 @@ import {
   stagedEvidenceReference,
   validateStagedEvidenceCatalog,
 } from "./staged-evidence";
+import {
+  isSourceMilestoneId,
+  sourceMilestoneRecord,
+  sourceMilestoneReference,
+  validateSourceMilestoneCatalog,
+} from "./source-milestones";
 
 const exactObjectName = /^[0-9a-f]{40}$/;
+const exactSha256 = /^[0-9a-f]{64}$/;
 const promotedAlgorithmLessonIds = new Set([
+  "reductions-scans",
+  "lds-barriers-atomics",
+  "gemm-tiling",
+  "gemm-proof-plan",
+]);
+const functionalAlgorithmLessonIds = new Set([
   "gemm-tiling",
   "gemm-proof-plan",
 ]);
@@ -62,6 +75,10 @@ export function validateCurriculum(
     })),
     ...validateNarrativeRegistry(narratives).map((message) => ({
       path: "narrativeRegistry",
+      message,
+    })),
+    ...validateSourceMilestoneCatalog().map((message) => ({
+      path: "sourceMilestones",
       message,
     })),
   ];
@@ -132,11 +149,19 @@ function validateLesson(
         message: "code tab source is not pinned to an exact commit",
       });
     }
+    if (tab.sourceSha256 && !exactSha256.test(tab.sourceSha256)) {
+      issues.push({
+        path: tabPath,
+        message: "code tab source SHA-256 is not exact",
+      });
+    }
     if (tab.evidenceId) {
       const evidence = isStagedEvidenceId(tab.evidenceId)
         ? stagedEvidenceRecord(tab.evidenceId)
         : isCompletedIssue94IncrementId(tab.evidenceId)
           ? completedIssue94IncrementRecord(tab.evidenceId)
+          : isSourceMilestoneId(tab.evidenceId)
+            ? sourceMilestoneRecord(tab.evidenceId)
           : undefined;
       if (!evidence) {
         issues.push({
@@ -156,6 +181,18 @@ function validateLesson(
             message: "code tab source path is not covered by its evidence",
           });
         }
+        if (isSourceMilestoneId(tab.evidenceId) && tab.explanatory === false) {
+          const sourceMilestone = sourceMilestoneRecord(tab.evidenceId);
+          if (
+            tab.sourcePath !== sourceMilestone.primarySourcePath ||
+            tab.sourceSha256 !== sourceMilestone.primarySourceSha256
+          ) {
+            issues.push({
+              path: tabPath,
+              message: "real source tab does not match its exact source milestone",
+            });
+          }
+        }
       }
     }
   }
@@ -168,6 +205,20 @@ function validateLesson(
         message: "promoted algorithm kernel must be marked real",
       });
     }
+    if (
+      !kernel?.sourcePath ||
+      !kernel.sourceCommit ||
+      !kernel.sourceSha256 ||
+      !kernel.evidenceId
+    ) {
+      issues.push({
+        path,
+        message: "promoted algorithm kernel lacks exact source provenance",
+      });
+    }
+  }
+
+  if (functionalAlgorithmLessonIds.has(lesson.id)) {
     for (const kind of ["kernel", "verus", "host"] as const) {
       const tab = lesson.tabs.find((candidate) => candidate.kind === kind);
       if (!tab?.sourcePath || !tab.sourceCommit || !tab.evidenceId) {
@@ -295,6 +346,32 @@ function validateLesson(
         issues.push({
           path: claimPath,
           message: "lesson claim is not pinned to the lesson evidence tree",
+        });
+      }
+    } else if (reference.scope === "source-milestone") {
+      if (!isSourceMilestoneId(reference.evidenceId)) {
+        issues.push({
+          path: claimPath,
+          message: "source milestone has no recognized evidence id",
+        });
+      } else {
+        const record = sourceMilestoneRecord(reference.evidenceId);
+        const expectedReference = sourceMilestoneReference(record.id);
+        if (
+          claim.label !== record.claimLabel ||
+          claim.detail !== record.detail ||
+          JSON.stringify(reference) !== JSON.stringify(expectedReference)
+        ) {
+          issues.push({
+            path: claimPath,
+            message: "source milestone claim is not derived from its record",
+          });
+        }
+      }
+      if (claim.kind !== "source-model-verified") {
+        issues.push({
+          path: claimPath,
+          message: "source milestone may claim only source/model verification",
         });
       }
     } else {

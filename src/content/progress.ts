@@ -792,7 +792,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["source-derived control flow", "wave intrinsics"],
-    next: "Accept the wave64 sum slice, connect its verified Kernel IR to Worker V2 finalization, then extend the same contract to scan.",
+    next: "Authenticate the exact masked reduction/scan source in the compiler collector and lowering, then bind its profile, descriptor, finalizer, generated host/runtime, and protected gfx942 execution.",
   },
   {
     id: "workgroup-reduction",
@@ -801,7 +801,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["wave reduction", "LDS ownership epochs", "uniform barriers"],
-    next: "Accept the 256-thread reduction slice and bind its direct-LLD hardware evidence to the authenticated source artifact.",
+    next: "Authenticate the exact linear DynamicLds reduction and typed DeviceGlobalMutPtr atomic sources through collector/lowering, profile and descriptor, finalizer, generated host/runtime, and protected gfx942 execution.",
   },
   {
     id: "scalar-gemm",

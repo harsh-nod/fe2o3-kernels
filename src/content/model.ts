@@ -70,9 +70,14 @@ export type CompletedIssue94IncrementId =
   | "tiled-lds-host-adapter-v1"
   | "tiled-lds-protected-lifecycle-v1";
 
+export type SourceMilestoneId =
+  | "wave64-collectives-source-v1"
+  | "workgroup-sync-source-v1";
+
 export type CodeTabEvidenceId =
   | StagedEvidenceId
-  | CompletedIssue94IncrementId;
+  | CompletedIssue94IncrementId
+  | SourceMilestoneId;
 
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";
@@ -81,9 +86,18 @@ export interface StagedEvidenceReference extends EvidenceReferenceBase {
   authority: StagedEvidenceAuthority;
 }
 
+export interface SourceMilestoneEvidenceReference
+  extends EvidenceReferenceBase {
+  scope: "source-milestone";
+  evidenceId: SourceMilestoneId;
+  claim: "source-model-verified";
+  authority: "source-model-only";
+}
+
 export type EvidenceReference =
   | LessonEvidenceReference
-  | StagedEvidenceReference;
+  | StagedEvidenceReference
+  | SourceMilestoneEvidenceReference;
 
 export interface Claim {
   kind: EvidenceKind;
@@ -129,6 +143,7 @@ export interface CodeTab {
   code: string;
   sourcePath?: string;
   sourceCommit?: string;
+  sourceSha256?: string;
   evidenceId?: CodeTabEvidenceId;
   explanatory?: boolean;
   notice?: string;
