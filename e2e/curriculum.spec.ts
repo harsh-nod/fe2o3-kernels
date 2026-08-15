@@ -75,7 +75,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
-test("tiled GEMM shows canonical attributed source without production promotion", async ({
+test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   page,
 }) => {
   await page.goto("./#/lesson/gemm-tiling");
@@ -86,22 +86,51 @@ test("tiled GEMM shows canonical attributed source without production promotion"
     }),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "#[kernel] is the canonical user form",
+    "Ordinary Rust source for the fixed Slice 1 LDS tiled GEMM",
   );
-  await expect(page.getByText(/Reviewed attributed source excerpt/)).toContainText(
-    "No final HSACO authority, compiler-origin authentication, source-to-HSACO authority, or production proof-certificate authority is granted by this source tab itself",
+  await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/c4fcb4d980cf979c0527dfa135a7b9f4fe72a811/examples/tiled_gemm_v1/src/kernel.rs",
+  );
+
+  await page.getByRole("tab", { name: "Verus proof" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "--test lds_source_refinement",
+  );
+  await expect(page.getByText(/Real pinned command and bounded Verus source/)).toContainText(
+    "96 obligations verify",
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/89ebe69bb3daf8262a485463c5fdf04cf095346f/examples/tiled_gemm_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/5a45239aeeda3ca64cf16beb7fb1d3589e649bfe/examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
   );
+
+  await page.getByRole("tab", { name: "Host" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "FE2O3_RUN_GFX942_TILED_GEMM_LDS_SLICE1_WORKER_V2_HARDWARE=1",
+  );
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/c4fcb4d980cf979c0527dfa135a7b9f4fe72a811/crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
+  );
+
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "No rustc/LLVM/machine refinement or production source execution is claimed",
+    "FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0",
   );
-  await expect(page.getByRole("tabpanel")).toContainText("#85");
-  await expect(page.getByRole("tabpanel")).toContainText("#90");
-  await expect(page.getByRole("tabpanel")).toContainText("#94");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "all 256 output bit patterns",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "A and B remained bitwise unchanged",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "1/1 passed in 14.36 seconds",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "not generalized GEMM",
+  );
   for (const issue of [85, 86, 87, 88, 89, 90, 96, 97, 99, 100]) {
     await expect(
       page.getByRole("link", { name: new RegExp(`#${String(issue)} `, "u") }),

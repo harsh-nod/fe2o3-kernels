@@ -1,17 +1,84 @@
 import { narrativeSection } from "./narrative-registry";
 import flashDesign from "../../examples/flash_attention_design.rs?raw";
-import gemmDesign from "../../examples/gemm_design.rs?raw";
+import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import {
   FE2O3_PIN,
   pinnedReference,
   type CurriculumModule,
   type Lesson,
 } from "./model";
-import { completeTabs, noHost, noProof, resultText } from "./shared";
-import { stagedEvidenceOrder } from "./staged-evidence";
+import { completeTabs, noHost, resultText } from "./shared";
+import {
+  completedIssue94IncrementRecord,
+  protectedSlice1HardwareObservation,
+  stagedEvidenceOrder,
+  stagedEvidenceRecord,
+} from "./staged-evidence";
 
 const verusCommand =
   "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
+
+const gemmProofEvidence = stagedEvidenceRecord(
+  "tiled-lds-source-model-correspondence-v1",
+);
+const gemmProtectedEvidence = completedIssue94IncrementRecord(
+  "tiled-lds-protected-lifecycle-v1",
+);
+const gemmProofCommand = gemmProofEvidence.commands[0]!;
+const gemmProtectedCommand = gemmProtectedEvidence.commands.at(-1)!;
+const gemmProtectedResult = resultText(
+  "gpu-observed",
+  `Exact bounded Slice 1 protected result
+
+Commit: ${protectedSlice1HardwareObservation.commit}
+Tree: ${protectedSlice1HardwareObservation.tree}
+Target: ${protectedSlice1HardwareObservation.target} with HSA_XNACK=0
+Worker: ${protectedSlice1HardwareObservation.workerId}
+LLVM: ${protectedSlice1HardwareObservation.llvmBuild}
+
+${protectedSlice1HardwareObservation.marker}
+
+Validated all 256 output bit patterns against the CPU oracle.
+A and B remained bitwise unchanged.
+Every A/B/C prefix and suffix guard canary remained intact.
+Result: 1/1 passed in 14.36 seconds.
+
+Boundary: this is functional exact bounded Slice 1, not generalized GEMM, compiler-origin authentication, production certificate consumption, MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, a general illegal-access or race-freedom proof, or protected Slice 3/4 execution.`,
+);
+
+function exactGemmKernelTab() {
+  return {
+    language: "rust" as const,
+    code: gemmSlice1Kernel,
+    sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
+    sourceCommit: protectedSlice1HardwareObservation.commit,
+    explanatory: false,
+  };
+}
+
+function exactGemmProofTab() {
+  return {
+    language: "bash" as const,
+    code: gemmProofCommand,
+    sourcePath:
+      "examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
+    sourceCommit: gemmProofEvidence.commit,
+    explanatory: true,
+    notice:
+      "Real pinned command and bounded Verus source/model. The tab shows the replay command rather than reproducing the proof file, so it remains explanatory; 96 obligations verify, but no production certificate is consumed.",
+  };
+}
+
+function exactGemmHostTab() {
+  return {
+    language: "bash" as const,
+    code: gemmProtectedCommand,
+    sourcePath:
+      "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
+    sourceCommit: protectedSlice1HardwareObservation.commit,
+    explanatory: false,
+  };
+}
 
 const collectives: Lesson = {
   id: "reductions-scans",
@@ -200,7 +267,7 @@ const gemmMapping: Lesson = {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use Worker V2 handoff, admits that handoff into a sealed authority-free exact-profile registry, finalizes it through direct upstream LLVM target-machine and LLD library APIs, prepares exact borrowed A/B/C views with a generated inert host adapter, and consumes those values through a private one-shot Joined -> Loaded -> Completed -> Unloaded lifecycle with exact context, resource, ABI, completion, cancellation, and terminal-unload checks. One public protected route passed on mi300x gfx942 over all 256 output bits with unchanged A/B values and A/B/C guard canaries. It also has bounded Slice 1 and Slice 2 model results plus independent Slice 2 through Slice 4 machine-shape records. The measured run does not authenticate compiler origin, consume Verus certificates, prove compiler refinement or general illegal-access/race freedom, generalize GEMM, or cover protected Slice 3/4, so this is not a generalized functional or production kernel.",
+        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use Worker V2 handoff, admits that handoff into a sealed authority-free exact-profile registry, finalizes it through direct upstream LLVM target-machine and LLD library APIs, prepares exact borrowed A/B/C views with a generated inert host adapter, and consumes those values through a private one-shot Joined -> Loaded -> Completed -> Unloaded lifecycle with exact context, resource, ABI, completion, cancellation, and terminal-unload checks. One public protected route passed on mi300x gfx942 over all 256 output bits with unchanged A/B values and A/B/C guard canaries. The exact bounded Slice 1 source and run are functional. They do not authenticate compiler origin, consume Verus certificates, prove compiler refinement or general illegal-access/race freedom, generalize GEMM, or cover protected Slice 3/4, so they are not generalized GEMM or a complete production authority chain.",
     },
     {
       kind: "compiler-hsaco-observed",
@@ -230,27 +297,12 @@ const gemmMapping: Lesson = {
     narrativeSection("gemm-tiling/loop-proof"),
   ],
   tabs: completeTabs(
-    {
-      language: "rust",
-      code: gemmDesign,
-      sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-      sourceCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
-      explanatory: true,
-      notice:
-        "Reviewed attributed source excerpt pinned to the exact compiler-owned descriptor and sealed-import checkpoint. Later records complete direct LLVM/LLD API finalization, exact generated host preparation, one-shot protected lifecycle mechanics, and one bounded protected hardware run. No final HSACO authority, compiler-origin authentication, source-to-HSACO authority, or production proof-certificate authority is granted by this source tab itself.",
-    },
+    exactGemmKernelTab(),
+    exactGemmProofTab(),
+    exactGemmHostTab(),
     {
       language: "text",
-      code: `Slice 1:\n  attributed #[kernel] source selects exact canonical V5 Kernel IR\n  exact compiler descriptor and single-use Worker V2 handoff\n  sealed authority-free import independently re-lowers and checks exact LLVM\n  direct LLVM target-machine + LLD library APIs produce an inert exact HSACO receipt\n  generated host adapter keeps exact A/B/C views borrowed and exposes no raw launch\n  #100 consumes them through Joined -> Loaded -> Completed -> Unloaded\n  exact context/resource/ABI checks, prepublication cancellation, terminal unload\n  fake-adapter substitution/terminal coverage plus one protected mi300x run\n  256/256 output bits match; A/B unchanged; A/B/C guard canaries intact\n  FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0\n  96 verified, 0 errors for bounded identity-bound source/model correspondence\n  no compiler-origin, certificate-consumption, source-to-HSACO, or refinement authority\n\nSlice 2, 1 <= phase_count <= 4:\n  acc[p,m,n] = sum(k=0..p*16) model_mul(A[m,k], B[k,n])\n  reuse_barrier[p] precedes stage[p+1]\n  exact registry slot remains reserved\n\nSlice 3, M=64, N=48, K=16, lda=33, ldb=79, ldc=96:\n  101 verified, 0 errors for the source model\n  exact IR lowers through upstream LLVM to inspected gfx942 COV6\n  exact registry slot and protected execution remain open\n\nSlice 4, M=17, N=19, K=18, alpha=2, beta=-1:\n  tail-safe two-phase exact Kernel IR with predicated C access\n  exact IR lowers to inspected upstream LLVM/COV6\n  exact registry slot and protected execution remain open`,
-      explanatory: true,
-    },
-    { language: "bash", code: noHost, explanatory: true },
-    {
-      language: "text",
-      code: resultText(
-        "design-only",
-        "Slice 1 source-to-IR, canonical matrix wire V5, exact compiler descriptor, Worker V2 handoff, sealed exact-profile import, direct LLVM/LLD API finalization, exact generated host preparation, one-shot Joined -> Loaded -> Completed -> Unloaded mechanics, bounded identity-bound source/model correspondence, and one exact protected mi300x observation; Slice 2 proof and K32 backend evidence; and exact Slice 3 and Slice 4 LLVM/COV6 inspection exist as bounded increments. #85, #86, #93, #96, #97, and #99 are complete; under #94, #100 is complete. The #100 evidence combines fake-adapter substitution and terminal coverage with a 256-output protected run; certificate consumption and proof extension (#91/#92), protected Slice 3/4 execution (#88/#89), and generalized GEMM (#90) remain open. No rustc/LLVM/machine refinement or production source execution is claimed. There is also no compiler-origin authentication, general illegal-access/race-freedom proof, or production source-to-HSACO authority.",
-      ),
+      code: gemmProtectedResult,
     },
   ),
   diagram: "gemm",
@@ -291,15 +343,12 @@ const gemmProof: Lesson = {
     narrativeSection("gemm-proof-plan/evidence"),
   ],
   tabs: completeTabs(
-    { language: "rust", code: gemmDesign, explanatory: true },
-    { language: "rust", code: noProof, explanatory: true },
-    { language: "bash", code: noHost, explanatory: true },
+    exactGemmKernelTab(),
+    exactGemmProofTab(),
+    exactGemmHostTab(),
     {
       language: "text",
-      code: resultText(
-        "design-only",
-        "Completion requires one identity-bound source, proof, compiler, machine, runtime, and review authority chain.",
-      ),
+      code: gemmProtectedResult,
     },
   ),
   diagram: "evidence",

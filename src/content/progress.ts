@@ -819,7 +819,7 @@ export const kernelProgress: KernelProgress[] = [
   },
   {
     id: "tiled-gemm",
-    kernel: "gfx942 BF16/F32 tiled GEMM",
+    kernel: "gfx942 BF16/F32 tiled GEMM (exact Slice 1 functional)",
     run: "partial",
     verify: "partial",
     evidence: "partial",
@@ -833,7 +833,7 @@ export const kernelProgress: KernelProgress[] = [
       "source and Verus-to-machine refinement",
       "IEEE BF16/F32 numerical contract (fe2o3 #109)",
     ],
-    next: "Bind the measured exact Slice 1 route to authenticated compiler origin, identity-bound proof certificates, and MIR/Kernel-IR/LLVM/ISA refinement without generalizing from one hardware run; then carry Slice 3 and Slice 4 through protected execution and generalize the exact profiles.",
+    next: "Keep the promoted exact Slice 1 source, proof command, protected host command, and measured result pinned while binding that route to authenticated compiler origin, identity-bound proof certificates, and MIR/Kernel-IR/LLVM/ISA refinement; then carry Slice 3 and Slice 4 through protected execution and generalize the exact profiles.",
   },
   {
     id: "softmax",

@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
@@ -113,18 +114,53 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("pins the current GEMM source link without moving the lesson baseline", () => {
-    const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
-    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
-    expect(kernel).toMatchObject({
-      sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-      sourceCommit: "89ebe69bb3daf8262a485463c5fdf04cf095346f",
-      explanatory: true,
-    });
-    expect(kernel?.notice).toContain("exact compiler-owned descriptor");
-    expect(kernel?.notice).toContain("No final HSACO");
-    expect(kernel?.code).toContain("#[kernel(");
-    expect(kernel?.code).not.toContain("macro_rules!");
+  it("pins the exact bounded GEMM source, proof, host, and result tabs", () => {
+    for (const lessonId of ["gemm-tiling", "gemm-proof-plan"]) {
+      const lesson = lessons.find((entry) => entry.id === lessonId);
+      const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
+      expect(kernel).toMatchObject({
+        sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
+        sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+        explanatory: false,
+      });
+      expect(
+        createHash("sha256").update(kernel?.code ?? "").digest("hex"),
+      ).toBe("695e3449daa327944b0a9b0ecc081b0f1bd59eb60009cbe79ed6924942e86334");
+      expect(kernel?.code).toContain("#[kernel(");
+      expect(kernel?.code).not.toMatch(/macro_rules!\s+[A-Za-z_]/u);
+
+      const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
+      expect(proof).toMatchObject({
+        sourcePath:
+          "examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
+        sourceCommit: "5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
+        explanatory: true,
+      });
+      expect(proof?.code).toContain("--test lds_source_refinement");
+      expect(proof?.notice).toContain("96 obligations verify");
+
+      const host = lesson?.tabs.find((tab) => tab.kind === "host");
+      expect(host).toMatchObject({
+        sourcePath:
+          "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
+        sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+        explanatory: false,
+      });
+      expect(host?.code).toContain(
+        "FE2O3_RUN_GFX942_TILED_GEMM_LDS_SLICE1_WORKER_V2_HARDWARE=1",
+      );
+      expect(host?.code).toContain("--ignored --exact --nocapture");
+
+      const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+      expect(result).toContain(
+        "FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0",
+      );
+      expect(result).toContain("all 256 output bit patterns");
+      expect(result).toContain("A and B remained bitwise unchanged");
+      expect(result).toContain("A/B/C prefix and suffix guard canary");
+      expect(result).toContain("1/1 passed in 14.36 seconds");
+      expect(result).toContain("not generalized GEMM");
+    }
 
     const changed = structuredClone(curriculum);
     const changedKernel = changed
@@ -853,14 +889,14 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("labels advanced source snippets as explanatory", () => {
+  it("promotes only the exact bounded GEMM source among advanced lessons", () => {
     for (const lesson of lessons.filter((entry) => entry.module >= 4)) {
       const runnable = lesson.claims.some(
         (claim) => claim.kind === "runnable-now",
       );
       expect(runnable).toBe(false);
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
-        true,
+        ["gemm-tiling", "gemm-proof-plan"].includes(lesson.id) ? false : true,
       );
     }
   });
@@ -1499,9 +1535,9 @@ describe("implementation progress integrity", () => {
     expect(renderedStaged).not.toContain(
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
-    expect(mapping).toContain("#[kernel] is the canonical user form");
-    expect(mapping).toContain("sourceCommit\":\"89ebe69bb3daf8262a485463c5fdf04cf095346f");
-    expect(mapping).toContain("not a generalized functional or production kernel");
+    expect(mapping).toContain("Ordinary Rust source for the fixed Slice 1 LDS tiled GEMM");
+    expect(mapping).toContain("sourceCommit\":\"c4fcb4d980cf979c0527dfa135a7b9f4fe72a811");
+    expect(mapping).toContain("not generalized GEMM or a complete production authority chain");
     expect(mapping).toContain("authenticates the exact attributed source");
     expect(mapping).toContain("stops before descriptor construction and Worker V2");
     expect(mapping).toContain("six cases checked 1,536 outputs");

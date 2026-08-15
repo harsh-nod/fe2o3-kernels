@@ -205,6 +205,17 @@ and B to remain unchanged, and checked all A/B/C guard canaries. It emitted:
 FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b523164b679ff7af3b4e819ad041713c53c6841399ac7cea95090f09774 unload=df2f77ee798444a9e1fe5e27f219bdf720386eb8603a9a74fccc0df8efb3921c
 ```
 
+The `gemm-tiling` and `gemm-proof-plan` lessons now expose that bounded Slice 1
+increment directly. Their Kernel tabs reproduce the complete ordinary
+`#[kernel(typed, ...)]` file from `examples/tiled_gemm_v1/src/kernel.rs` at
+`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811` byte for byte. Their Verus tabs
+link the exact bounded source/model proof at `5a45239ae` and show its pinned
+replay command. Their Host tabs link and show the protected Worker V2 hardware
+test command at `c4fcb4d9`; the Result tabs record the exact marker, worker and
+LLVM identities, 256 bitwise oracle matches, immutable A/B checks, all A/B/C
+guard canaries, and the 14.36-second result. This is a real fixed-shape source
+and measured route, not tutorial pseudocode.
+
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish
 MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, generally prove
@@ -393,10 +404,11 @@ At the audited pin:
   uses it to share a small body with Verus; it is not the GPU kernel marker,
   creates no runtime mechanism, and proves nothing by itself. Production kernel
   algorithms should remain ordinary attributed Rust and do not require it.
-- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1
-  through Slice 4 increments. Softmax, flash attention, and
-  mixture-of-experts remain design-only. Their snippets are not programs users
-  should expect to run today.
+- Tiled GEMM's exact fixed `16x16x16` Slice 1 Kernel, Host, and Result tabs are
+  real and pinned. Its generalized dimensions, K phases, grids, tails,
+  coefficients, and complete authority chain remain a design-level curriculum.
+  Softmax, flash attention, and mixture-of-experts remain design-only; their
+  snippets are not programs users should expect to run today.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. The #97 path uses direct LLVM target-machine and LLD
