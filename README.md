@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to final public-main documentation
-commit `954ae6824ab4964a073654009c2b435809701f86`, tree
-`fb3228c461c5d9c6467d75bf3e62e93a1f97c9cc`. Both
+commit `385aab3c09b4343c3f6c0613f25e2da0625b79e2`, tree
+`d35cc85985ef02c2275b223ef3b8a374860a34b3`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This docs-only descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
