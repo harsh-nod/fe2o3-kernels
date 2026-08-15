@@ -44,6 +44,10 @@ export const developmentCheckpointIds = deepFreeze([
   "tiled-gemm-source-bridge",
   "tiled-gemm-hardware-harness",
   "tiled-gemm-structural-admission",
+  "tiled-gemm-lds-kernel-ir",
+  "tiled-gemm-lds-verus",
+  "tiled-gemm-lds-attributed-source",
+  "tiled-gemm-lds-machine-inspection",
 ] as const);
 
 export type DevelopmentCheckpointId =
@@ -109,6 +113,14 @@ export const tiledGemmV1Commits = {
   hardwareEvidence: stagedEvidenceRecord("tiled-hardware-harness-v1").commit,
   structuralAdmission: stagedEvidenceRecord(
     "tiled-structural-admission-v1",
+  ).commit,
+  ldsKernelIr: stagedEvidenceRecord("tiled-lds-kernel-ir-v1").commit,
+  ldsVerus: stagedEvidenceRecord("tiled-lds-verus-v1").commit,
+  ldsAttributedSource: stagedEvidenceRecord(
+    "tiled-lds-attributed-source-v1",
+  ).commit,
+  ldsMachineInspection: stagedEvidenceRecord(
+    "tiled-lds-machine-inspection-v1",
   ).commit,
 } as const;
 
@@ -196,6 +208,26 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "staged-evidence",
     commit: tiledGemmV1Commits.structuralAdmission,
     evidenceIds: ["tiled-structural-admission-v1"],
+  },
+  "tiled-gemm-lds-kernel-ir": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsKernelIr,
+    evidenceIds: ["tiled-lds-kernel-ir-v1"],
+  },
+  "tiled-gemm-lds-verus": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsVerus,
+    evidenceIds: ["tiled-lds-verus-v1"],
+  },
+  "tiled-gemm-lds-attributed-source": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsAttributedSource,
+    evidenceIds: ["tiled-lds-attributed-source-v1"],
+  },
+  "tiled-gemm-lds-machine-inspection": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsMachineInspection,
+    evidenceIds: ["tiled-lds-machine-inspection-v1"],
   },
 } satisfies Record<DevelopmentCheckpointId, DevelopmentCheckpointSpec>);
 
@@ -338,6 +370,38 @@ export const developmentCheckpoints = deepFreeze([
     commit: tiledGemmV1Commits.structuralAdmission,
     state: "public",
     stagedEvidenceIds: ["tiled-structural-admission-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-kernel-ir",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 1 Kernel IR",
+    commit: tiledGemmV1Commits.ldsKernelIr,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-kernel-ir-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-verus",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 1 Verus model",
+    commit: tiledGemmV1Commits.ldsVerus,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-verus-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-attributed-source",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 1 attributed source",
+    commit: tiledGemmV1Commits.ldsAttributedSource,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-attributed-source-v1"],
+  },
+  {
+    id: "tiled-gemm-lds-machine-inspection",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 1 machine inspection",
+    commit: tiledGemmV1Commits.ldsMachineInspection,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-machine-inspection-v1"],
   },
 ] satisfies DevelopmentCheckpoint[]);
 
@@ -505,12 +569,14 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "source-derived Worker V2 final HSACO",
-      "machine-body semantic admission",
-      "protected publication, load, and launch authority",
-      "LDS ownership and race proof",
+      "source-to-LDS-Kernel-IR collection",
+      "#[kernel] WG64 contract integration",
+      "protected publisher, load, and launch",
+      "LDS functional hardware evidence",
+      "source and Verus-to-machine refinement",
+      "IEEE BF16/F32 numerical contract",
     ],
-    next: "Connect the source-authenticated canonical module to the measured upstream LLVM/LLD Worker V2 path, bind its final HSACO to structural and machine-body admission, and carry the same identity through protected publication, load, and launch. Then add production XOR4 LDS tiling with bounds, initialization, barrier, and race proofs.",
+    next: "Collect the ordinary attributed Rust body into the sealed LDS Kernel IR under the exact WG64 contract, then carry the same final bytes through protected publication, load, launch, and MI300X functional tests.",
   },
   {
     id: "softmax",

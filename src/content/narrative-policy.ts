@@ -130,7 +130,7 @@ export const stagedEvidenceLessonIds = deepFreeze([
 
 export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
-  "read-the-evidence/differentiator": "2aae8c08ffc154d2feca3e53e9f5997d9965b7df3673cbf6e431f619b53f5951",
+  "read-the-evidence/differentiator": "264a5493dfa39dcb48ef3ab77e31a464d48d6c78d35a1d0682e384ac038df57a",
   "read-the-evidence/scalar-gemm-checkpoint": "3a89c3c6618b84f7c991b19317818624549b1ac51ba76f5c727fd58c6a692922",
   "gfx942-setup/toolchain": "bde4a23bc51376d828c8b910ab8048c988c7f838736f1d309bea0294fde84ef3",
   "gfx942-setup/sequence": "00a0689fb93a27622076f9bd21c5fb8c0b78c57d88d79dc8db0bfb86596315da",
@@ -146,7 +146,7 @@ export const narrativeFingerprints = deepFreeze({
   "reductions-scans/scan": "df55d3ca07a0baaeeabc318fd03122faf68c296fd94438781a95e2549af3d6e2",
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
   "lds-barriers-atomics/atomics": "5f9311c3a1e2b97d5be96f4fd5a3bd25535e27586bbb0949391e889e21324582",
-  "gemm-tiling/public-layout-proof": "c37a5c91de9fc62c768b1e959fe3e665d128d0d6bb736c4c011d74b3f77fc7d4",
+  "gemm-tiling/public-layout-proof": "462337cf322ba6d78fff190d5dcb84d80f99aae0e51e73babbff6c9eec853398",
   "gemm-tiling/mapping": "c2b015fa509dd2976748c2de7de3a0e5165ab33e3c83e3948700ce2f49654cf0",
   "gemm-tiling/loop-proof": "7c87b0639046276d51e796d2ea61e72401c97dbd89043505de446adb6a6d2d05",
   "gemm-proof-plan/proof-ledger": "635b84e78c427a7c59e189832896c38d0e3f50ba0249e203c3c1ab186daa77c2",

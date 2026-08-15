@@ -33,6 +33,10 @@ export const stagedEvidenceOrder = deepFreeze([
   "tiled-cargo-root-v1",
   "tiled-hardware-harness-v1",
   "tiled-structural-admission-v1",
+  "tiled-lds-kernel-ir-v1",
+  "tiled-lds-verus-v1",
+  "tiled-lds-attributed-source-v1",
+  "tiled-lds-machine-inspection-v1",
 ] satisfies StagedEvidenceId[]);
 
 const TILED_GEMM_V1_HARDWARE_COMMAND =
@@ -203,6 +207,135 @@ const stagedEvidenceRecords = deepFreeze({
       },
     ],
   },
+  "tiled-lds-kernel-ir-v1": {
+    id: "tiled-lds-kernel-ir-v1",
+    stageLabel: "4c79c58d LDS Kernel IR",
+    claimLabel: "Bounded LDS Kernel IR",
+    claim: "compiler-hsaco-observed",
+    authority: "kernel-ir-admission-only",
+    commit: "4c79c58de1da19d9b7a22cba906f301e347c8f7c",
+    tree: "164414ee43e9df53d02f3d3b53e63c7b7ff36a52",
+    commands: [
+      "cargo test --locked -p fe2o3-kernel-ir --test tiled_gemm_lds_v1",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-kernel-ir/src/tiled_gemm_lds_v1.rs",
+      "crates/fe2o3-kernel-ir/tests/tiled_gemm_lds_v1.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "canonical-lds-graph",
+        text: "Commit 4c79c58de1da19d9b7a22cba906f301e347c8f7c seals one fixed 16x16x16 BF16/BF16-to-F32 Kernel IR graph with two separate 256-element XOR4 LDS allocations, cooperative A and transposed-B staging, one acquire-release workgroup barrier, authenticated fragment reads, one zero-accumulator MFMA, and exhaustive ownership of all 256 F32 stores.",
+      },
+      {
+        id: "kernel-ir-negative-space",
+        text: "Twelve focused tests cover exact maps and reject profile, operation-order, SSA, LDS alias, extent, alignment, barrier, MFMA, output, identity, launch, and capability mutations while preserving the older zero-LDS profile as a distinct graph.",
+      },
+      {
+        id: "kernel-ir-boundary",
+        text: "This is Kernel IR admission only. It establishes neither collection from the attributed Rust source nor lowering correctness, final-artifact identity, protected runtime authority, or GPU execution.",
+      },
+    ],
+  },
+  "tiled-lds-verus-v1": {
+    id: "tiled-lds-verus-v1",
+    stageLabel: "97373b78 LDS Verus model",
+    claimLabel: "Fixed LDS source model",
+    claim: "source-model-verified",
+    authority: "source-model-only",
+    commit: "97373b781ac3643b1de61b4572894f7028b565b0",
+    tree: "f9b874cf641887a5295d58a2313ed9d7e5cb42cf",
+    commands: [
+      "env VERUS=/absolute/path/to/pinned/verus cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_proof_verus",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_v1/tests/lds_proof_verus.rs",
+      "examples/tiled_gemm_v1/run-verus.sh",
+      "examples/tiled_gemm_v1/verus/lds_tiled_slice1.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_epoch_wrong.rs",
+      "examples/tiled_gemm_v1/verus/negative/lds_product_wrong.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "verified-obligations",
+        text: "Commit 97373b781ac3643b1de61b4572894f7028b565b0 adds a pinned-runner Slice 1 model reporting 93 verified and 0 errors for global bounds, XOR4 bounds and injectivity, cooperative-write disjointness, same-epoch LDS initialization, all-lane barrier participation, disjoint C stores, and fixed-tile matrix-product correspondence.",
+      },
+      {
+        id: "expected-rejections",
+        text: "A wrong LDS epoch and a wrong product mutation are each rejected at exactly one intended proof obligation.",
+      },
+      {
+        id: "proof-boundary",
+        text: "The arithmetic theorem uses an exact-real BF16-to-F32 abstraction. It excludes IEEE rounding, NaNs, signed zero, overflow, compiler refinement, machine-code refinement, runtime behavior, and physical GPU behavior.",
+      },
+    ],
+  },
+  "tiled-lds-attributed-source-v1": {
+    id: "tiled-lds-attributed-source-v1",
+    stageLabel: "ee76cedc attributed Rust source",
+    claimLabel: "Fail-closed attributed LDS source",
+    claim: "compiler-hsaco-observed",
+    authority: "source-shape-only",
+    commit: "ee76cedcdc4126c69bc486a5ac12900c1c5485b1",
+    tree: "cd0cec133dd5689c71c5d2795e125ea43cff4db3",
+    commands: [
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test kernel_source",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_v1/src/kernel.rs",
+      "examples/tiled_gemm_v1/tests/kernel_source.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "ordinary-attributed-rust",
+        text: "Commit ee76cedcdc4126c69bc486a5ac12900c1c5485b1 expresses the fixed Slice 1 algorithm as an ordinary Rust function carrying #[kernel(typed, ...)]. Its body contains the cooperative loads, XOR4 staging, barrier, LDS fragment reads, MFMA, and four disjoint output writes without macro_rules!, raw LDS pointers, or inline assembly.",
+      },
+      {
+        id: "fail-closed-source",
+        text: "Six AST and host tests pin the exact WG64 sidecar and generated marker, prohibit a declarative macro body, and confirm that the first unsupported LDS allocation traps before output mutation.",
+      },
+      {
+        id: "source-blockers",
+        text: "The source is deliberately non-executable: source-to-LDS-Kernel-IR collection, compiler-issued LDS allocation, authenticated wave-lane construction, barrier lowering, and #[kernel] WG64 contract integration remain open.",
+      },
+    ],
+  },
+  "tiled-lds-machine-inspection-v1": {
+    id: "tiled-lds-machine-inspection-v1",
+    stageLabel: "50902b6f LLVM/LLD inspection",
+    claimLabel: "Upstream LLVM/LLD LDS machine shape",
+    claim: "compiler-hsaco-observed",
+    authority: "machine-inspection-only",
+    commit: "50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2",
+    tree: "4bc6c5a4f46a0c7cb86cbd5542ff20f170b3f940",
+    commands: [
+      "cargo test --locked -p dialect-amdgcn --test tiled_gemm_lds_v1",
+      "env FE2O3_LLC=/opt/rocm-7.2.4/lib/llvm/bin/llc FE2O3_LLD=/opt/rocm-7.2.4/lib/llvm/bin/ld.lld FE2O3_LLVM_OBJDUMP=/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump cargo test --locked -p fe2o3-hsaco-finalize --test tiled_gemm_lds_v1_machine upstream_llvm_lld_final_artifact_has_the_exact_slice_1_machine_shape -- --ignored --exact --nocapture",
+    ],
+    sourcePaths: [
+      "crates/dialect-amdgcn/src/lowering.rs",
+      "crates/dialect-amdgcn/tests/tiled_gemm_lds_v1.rs",
+      "crates/fe2o3-hsaco-finalize/tests/tiled_gemm_lds_v1_machine.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "llvm-shape",
+        text: "Commit 50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2 lowers only the sealed LDS graph to an exact gfx942:xnack- LLVM profile with two distinct aligned LDS globals, eight LDS writes, eight LDS reads, one physical s_barrier, and one BF16 MFMA.",
+      },
+      {
+        id: "final-hsaco-shape",
+        text: "A focused mi300x test passed direct upstream llc and ld.lld finalization and inspection: COV6, WG64, wave64, a 1024-byte fixed group segment, zero private segment and spills, expected LDS reads and writes, exactly one s_barrier and MFMA, and no COMGR, atomic, scratch, or machine-call forms.",
+      },
+      {
+        id: "machine-boundary",
+        text: "The inspected HSACO is derived from the canonical Kernel IR test path, not collected from the attributed Rust source. It has no protected publisher, load, or launch authority and has not produced LDS functional hardware evidence.",
+      },
+    ],
+  },
 } satisfies Record<StagedEvidenceId, StagedEvidenceRecord>);
 
 export function isStagedEvidenceId(value: unknown): value is StagedEvidenceId {
@@ -274,13 +407,15 @@ export type ParsedCargoTestCommand =
   | {
       environment: Readonly<Record<string, string>>;
       locked: boolean;
-      packageName: string;
+      packageName?: string;
+      manifestPath?: string;
       mode: "lib";
     }
   | {
       environment: Readonly<Record<string, string>>;
       locked: boolean;
-      packageName: string;
+      packageName?: string;
+      manifestPath?: string;
       mode: "test";
       targetName: string;
       testName?: string;
@@ -314,13 +449,21 @@ export function parseExactCargoTestCommand(
   cursor += 2;
   const locked = tokens[cursor] === "--locked";
   if (locked) cursor += 1;
-  if (
-    tokens[cursor] !== "-p" ||
-    !/^[a-z0-9][a-z0-9-]*$/u.test(tokens[cursor + 1] ?? "")
-  ) {
+  let packageName: string | undefined;
+  let manifestPath: string | undefined;
+  if (tokens[cursor] === "-p") {
+    if (!/^[a-z0-9][a-z0-9-]*$/u.test(tokens[cursor + 1] ?? "")) {
+      return undefined;
+    }
+    packageName = tokens[cursor + 1];
+  } else if (tokens[cursor] === "--manifest-path") {
+    if (!/^[A-Za-z0-9_./-]+\/Cargo\.toml$/u.test(tokens[cursor + 1] ?? "")) {
+      return undefined;
+    }
+    manifestPath = tokens[cursor + 1];
+  } else {
     return undefined;
   }
-  const packageName = tokens[cursor + 1];
   const argumentsAfterPackage = tokens.slice(cursor + 2);
   if (
     argumentsAfterPackage.length === 1 &&
@@ -330,6 +473,7 @@ export function parseExactCargoTestCommand(
       environment,
       locked,
       packageName,
+      manifestPath,
       mode: "lib",
     };
   }
@@ -342,30 +486,38 @@ export function parseExactCargoTestCommand(
       environment,
       locked,
       packageName,
+      manifestPath,
       mode: "test",
       targetName: argumentsAfterPackage[1],
     };
   }
+  let argumentCursor = 0;
+  let features: string | undefined;
+  if (argumentsAfterPackage[argumentCursor] === "--features") {
+    const value = argumentsAfterPackage[argumentCursor + 1];
+    if (!/^[a-z0-9][a-z0-9-]*$/u.test(value ?? "")) return undefined;
+    features = value;
+    argumentCursor += 2;
+  }
   if (
-    argumentsAfterPackage.length === 9 &&
-    argumentsAfterPackage[0] === "--features" &&
-    /^[a-z0-9][a-z0-9-]*$/u.test(argumentsAfterPackage[1] ?? "") &&
-    argumentsAfterPackage[2] === "--test" &&
-    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[3] ?? "") &&
-    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[4] ?? "") &&
-    argumentsAfterPackage[5] === "--" &&
-    argumentsAfterPackage[6] === "--ignored" &&
-    argumentsAfterPackage[7] === "--exact" &&
-    argumentsAfterPackage[8] === "--nocapture"
+    argumentsAfterPackage[argumentCursor] === "--test" &&
+    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[argumentCursor + 1] ?? "") &&
+    /^[A-Za-z0-9_]+$/u.test(argumentsAfterPackage[argumentCursor + 2] ?? "") &&
+    argumentsAfterPackage[argumentCursor + 3] === "--" &&
+    argumentsAfterPackage[argumentCursor + 4] === "--ignored" &&
+    argumentsAfterPackage[argumentCursor + 5] === "--exact" &&
+    argumentsAfterPackage[argumentCursor + 6] === "--nocapture" &&
+    argumentsAfterPackage.length === argumentCursor + 7
   ) {
     return {
       environment,
       locked,
       packageName,
+      manifestPath,
       mode: "test",
-      targetName: argumentsAfterPackage[3],
-      testName: argumentsAfterPackage[4],
-      features: argumentsAfterPackage[1],
+      targetName: argumentsAfterPackage[argumentCursor + 1],
+      testName: argumentsAfterPackage[argumentCursor + 2],
+      features,
     };
   }
   return undefined;
@@ -375,7 +527,13 @@ export function expectedCargoTestSourcePath(
   parsed: ParsedCargoTestCommand,
 ): string | undefined {
   if (parsed.mode === "lib") return undefined;
-  return `crates/${parsed.packageName}/tests/${parsed.targetName}.rs`;
+  if (parsed.manifestPath) {
+    const directory = parsed.manifestPath.slice(0, -"Cargo.toml".length);
+    return `${directory}tests/${parsed.targetName}.rs`;
+  }
+  return parsed.packageName
+    ? `crates/${parsed.packageName}/tests/${parsed.targetName}.rs`
+    : undefined;
 }
 
 export function validateStagedEvidenceCatalog(): string[] {

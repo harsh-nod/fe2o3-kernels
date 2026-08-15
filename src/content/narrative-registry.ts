@@ -74,6 +74,10 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "paragraph",
         "text": "Verus proves Rust-level specifications. Kernel IR checks modeled effects. Artifact inspection checks code-object facts. Runtime admission checks dynamic allocations and launch geometry. No single layer is allowed to mint a safe launch on its own."
+      },
+      {
+        "type": "paragraph",
+        "text": "macro_rules! and #[kernel] serve different purposes. macro_rules! is declarative compile-time token expansion; vecadd uses it to share a small body with a Verus model, but it neither marks a GPU kernel nor provides runtime behavior or proof. #[kernel] is a procedural attribute that marks an ordinary Rust function for fe2o3's kernel frontend and generated typed API. Production kernel bodies should be ordinary attributed Rust. The LDS Slice 1 source follows that shape and contains no macro_rules! body, although its unsupported frontend operations still fail closed."
       }
     ]
   },
@@ -442,10 +446,14 @@ const narrativeRegistry = deepFreeze({
         "text": "Frontend checkpoint 286331aab8639dd3707e55cdf51a83f8854d26a5 adds separate build-scoped in-process Rust frontend/provider/ABI evidence. Same-name external providers and copied markers are rejected. Observed layouts, FnAbi, and provider facts are canonicalized and digested through Kernel IR; the WG64 fragment probe carries 8 BF16 plus 4 F32 values in 32 explicit bytes followed by 256 implicit bytes, 288 total. This remains a distinct fragment-level evidence profile, not the later four-slice kernel ABI or the independent WG256/384-byte mutation."
       },
       {
+        "type": "paragraph",
+        "text": "Four bounded public increments now define LDS Slice 1 without promoting it to functional status. Commit 4c79c58de1da19d9b7a22cba906f301e347c8f7c seals the fixed two-tile LDS Kernel IR. Commit 97373b781ac3643b1de61b4572894f7028b565b0 verifies the separate exact-real source model and targeted mutations. Commit ee76cedcdc4126c69bc486a5ac12900c1c5485b1 adds the ordinary #[kernel(typed, ...)] Rust body and deliberately traps at unsupported LDS acquisition. Commit 50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2 lowers the canonical IR through upstream LLVM/LLD and inspects the final HSACO machine shape. The typed evidence table states the exact authority boundary for each increment."
+      },
+      {
         "type": "callout",
         "tone": "boundary",
-        "title": "Three green stages are not one authority chain",
-        "text": "Worker V2 still does not produce an authority-bearing final HSACO from the source-authenticated canonical module, nor carry that exact identity through protected publication, loading, and launch. Machine-body semantic admission, compiler and Verus-to-machine refinement, production XOR4 LDS tiling, bounds and initialization proofs, and race freedom remain open. The lesson dependency pin remains at the older audited baseline."
+        "title": "Four bounded increments are not a functional kernel",
+        "text": "Source-to-LDS-Kernel-IR collection and #[kernel] WG64 contract integration remain open. The inspected final HSACO begins from the separate canonical IR, is not carried through protected publisher, load, and launch authority, and has no LDS functional hardware result. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
       }
     ]
   },

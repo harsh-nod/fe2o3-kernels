@@ -95,6 +95,10 @@ describe("curriculum integrity", () => {
             "source-admission-only",
             "harness-only",
             "structural-admission-only",
+            "kernel-ir-admission-only",
+            "source-model-only",
+            "source-shape-only",
+            "machine-inspection-only",
           ]).toContain(reference.authority);
         }
         for (const path of reference?.sourcePaths ?? []) {
@@ -218,6 +222,38 @@ describe("curriculum integrity", () => {
         tree: "1396be8ff4947a16ddc6aabae7390cc376992c61",
         authority: "structural-admission-only",
       },
+      {
+        label: "Bounded LDS Kernel IR",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-kernel-ir-v1",
+        commit: "4c79c58de1da19d9b7a22cba906f301e347c8f7c",
+        tree: "164414ee43e9df53d02f3d3b53e63c7b7ff36a52",
+        authority: "kernel-ir-admission-only",
+      },
+      {
+        label: "Fixed LDS source model",
+        kind: "source-model-verified",
+        evidenceId: "tiled-lds-verus-v1",
+        commit: "97373b781ac3643b1de61b4572894f7028b565b0",
+        tree: "f9b874cf641887a5295d58a2313ed9d7e5cb42cf",
+        authority: "source-model-only",
+      },
+      {
+        label: "Fail-closed attributed LDS source",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-attributed-source-v1",
+        commit: "ee76cedcdc4126c69bc486a5ac12900c1c5485b1",
+        tree: "cd0cec133dd5689c71c5d2795e125ea43cff4db3",
+        authority: "source-shape-only",
+      },
+      {
+        label: "Upstream LLVM/LLD LDS machine shape",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-machine-inspection-v1",
+        commit: "50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2",
+        tree: "4bc6c5a4f46a0c7cb86cbd5542ff20f170b3f940",
+        authority: "machine-inspection-only",
+      },
     ]);
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
@@ -255,6 +291,36 @@ describe("curriculum integrity", () => {
         FE2O3_LLVM_OBJDUMP: "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
         FE2O3_LLVM_OBJDUMP_SHA256:
           "e5bf27bb6ba178b4de94ac0d5da760b628672cd00d2ffeb40a4372fa6ad25140",
+      },
+    });
+    const parsedVerusCommand = parseExactCargoTestCommand(
+      stagedEvidenceRecord("tiled-lds-verus-v1").commands[0],
+    );
+    expect(parsedVerusCommand).toMatchObject({
+      locked: true,
+      manifestPath: "examples/tiled_gemm_v1/Cargo.toml",
+      mode: "test",
+      targetName: "lds_proof_verus",
+      environment: { VERUS: "/absolute/path/to/pinned/verus" },
+    });
+    expect(
+      parsedVerusCommand
+        ? expectedCargoTestSourcePath(parsedVerusCommand)
+        : undefined,
+    ).toBe("examples/tiled_gemm_v1/tests/lds_proof_verus.rs");
+    const machineCommand = stagedEvidenceRecord(
+      "tiled-lds-machine-inspection-v1",
+    ).commands[1];
+    expect(parseExactCargoTestCommand(machineCommand)).toMatchObject({
+      locked: true,
+      packageName: "fe2o3-hsaco-finalize",
+      targetName: "tiled_gemm_lds_v1_machine",
+      testName:
+        "upstream_llvm_lld_final_artifact_has_the_exact_slice_1_machine_shape",
+      environment: {
+        FE2O3_LLC: "/opt/rocm-7.2.4/lib/llvm/bin/llc",
+        FE2O3_LLD: "/opt/rocm-7.2.4/lib/llvm/bin/ld.lld",
+        FE2O3_LLVM_OBJDUMP: "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
       },
     });
     for (const id of stagedEvidenceOrder) {
@@ -583,11 +649,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "fd41ad690fd6342a8bcc296c4281b7cbdfa3df6b",
-      eventualPublicTree: "8df59ad18c4f5d0b5bdc64c27607562adbdd4dfd",
+      eventualPublicCommit: "50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2",
+      eventualPublicTree: "4bc6c5a4f46a0c7cb86cbd5542ff20f170b3f940",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "fd41ad690fd6342a8bcc296c4281b7cbdfa3df6b",
+        requiredCommit: "50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -932,6 +998,43 @@ describe("implementation progress integrity", () => {
     expect(structuralDetail).toContain("no COMGR path is added");
   });
 
+  it("tracks all four LDS Slice 1 increments without claiming execution", () => {
+    const expected = [
+      ["tiled-gemm-lds-kernel-ir", tiledGemmV1Commits.ldsKernelIr],
+      ["tiled-gemm-lds-verus", tiledGemmV1Commits.ldsVerus],
+      [
+        "tiled-gemm-lds-attributed-source",
+        tiledGemmV1Commits.ldsAttributedSource,
+      ],
+      [
+        "tiled-gemm-lds-machine-inspection",
+        tiledGemmV1Commits.ldsMachineInspection,
+      ],
+    ];
+    for (const [id, commit] of expected) {
+      expect(
+        developmentCheckpoints.find((checkpoint) => checkpoint.id === id),
+      ).toMatchObject({ commit, state: "public" });
+    }
+
+    expect(stagedEvidenceDetail(["tiled-lds-kernel-ir-v1"])).toContain(
+      "neither collection from the attributed Rust source",
+    );
+    expect(stagedEvidenceDetail(["tiled-lds-verus-v1"])).toContain(
+      "excludes IEEE rounding",
+    );
+    const source = stagedEvidenceDetail(["tiled-lds-attributed-source-v1"]);
+    expect(source).toContain("ordinary Rust function carrying #[kernel(typed, ...)]");
+    expect(source).toContain("without macro_rules!");
+    expect(source).toContain("deliberately non-executable");
+    const machine = stagedEvidenceDetail([
+      "tiled-lds-machine-inspection-v1",
+    ]);
+    expect(machine).toContain("direct upstream llc and ld.lld");
+    expect(machine).toContain("not collected from the attributed Rust source");
+    expect(machine).toContain("has not produced LDS functional hardware evidence");
+  });
+
   it("keeps tiled GEMM partial until source, body, authority, and race closure", () => {
     expect(
       kernelProgress.find((kernel) => kernel.id === "tiled-gemm"),
@@ -940,10 +1043,12 @@ describe("implementation progress integrity", () => {
       verify: "partial",
       evidence: "partial",
       dependsOn: [
-        "source-derived Worker V2 final HSACO",
-        "machine-body semantic admission",
-        "protected publication, load, and launch authority",
-        "LDS ownership and race proof",
+        "source-to-LDS-Kernel-IR collection",
+        "#[kernel] WG64 contract integration",
+        "protected publisher, load, and launch",
+        "LDS functional hardware evidence",
+        "source and Verus-to-machine refinement",
+        "IEEE BF16/F32 numerical contract",
       ],
     });
   });
@@ -977,10 +1082,12 @@ describe("implementation progress integrity", () => {
     );
     expect(renderedStaged).toContain("inputs remained bitwise unchanged");
     expect(renderedStaged).not.toMatch(/immutable\s+inputs/);
-    expect(mapping).toContain("source-derived, authority-bearing final HSACO");
-    expect(mapping).toContain("race freedom remain open");
+    expect(mapping).toContain("ordinary #[kernel(typed, ...)] Rust body");
+    expect(mapping).toContain("not a functional kernel");
+    expect(mapping).toContain("Source-to-LDS-Kernel-IR collection");
+    expect(mapping).toContain("no LDS functional hardware result");
 
-    expect(proofPlan).toContain("Source-derived final HSACO");
+    expect(proofPlan).toContain("Source-to-LDS-Kernel-IR collection");
     expect(proofPlan).toContain("typed staged records remain separate");
     expect(proofPlan).not.toContain(tiledGemmV1Commits.sourceBridge);
   });

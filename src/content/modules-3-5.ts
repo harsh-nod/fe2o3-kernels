@@ -193,20 +193,20 @@ const gemmMapping: Lesson = {
   objectives: [
     "Map each workgroup to one C tile and each lane to disjoint output fragments.",
     "Prove cooperative A/B loads stay in bounds at edge tiles.",
-    "State a loop invariant over completed K phases.",
+    "Separate the attributed Rust source from the still-open collection and execution path.",
   ],
   claims: [
     {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 at this pin does not expose a generally runnable, source-verified GEMM kernel. The lesson is a concrete implementation and proof decomposition.",
+        "fe2o3 now contains a fixed attributed LDS Slice 1 source and separate bounded proof, Kernel IR, and machine-shape evidence. They are not joined into a functional or production kernel.",
     },
     {
       kind: "compiler-hsaco-observed",
       label: "Reusable MFMA/LDS mechanics",
       detail:
-        "A narrow gfx942 BF16 16x16x16 MFMA and XOR4 LDS tile/stream contract exists in the device, Kernel IR, target, and lowering layers.",
+        "A narrow gfx942 BF16 16x16x16 MFMA and XOR4 LDS profile now has separate Kernel IR, Verus, attributed-source, upstream LLVM/LLD, and final-HSACO inspection records.",
       reference: pinnedReference(
         [
           "cargo +nightly-2026-04-03 test --locked -p fe2o3-device -p fe2o3-kernel-ir -p dialect-amdgcn",
@@ -241,7 +241,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "This remains a design lesson. Consult the typed staged-evidence table for implemented boundaries; no source-derived, authority-bearing final HSACO or production LDS-tiled GEMM is claimed here.",
+        "The source, proof, Kernel IR, and machine inspection exist as separate bounded increments. Source-to-IR collection, #[kernel] WG64 integration, protected publisher/load/launch, and LDS functional hardware evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
       ),
     },
   ),
@@ -275,7 +275,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "Source-derived final HSACO, protected load and launch authority, production LDS tiling, and memory, race, and numerical proofs remain required before this design can be promoted.",
+        "Source-to-LDS-Kernel-IR collection, #[kernel] WG64 integration, protected publisher/load/launch, LDS functional hardware evidence, source-to-machine refinement, and an IEEE numerical contract remain required before promotion.",
     },
   ],
   sections: [

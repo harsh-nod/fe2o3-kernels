@@ -23,6 +23,10 @@ const stagedAuthorities = new Set([
   "source-admission-only",
   "harness-only",
   "structural-admission-only",
+  "kernel-ir-admission-only",
+  "source-model-only",
+  "source-shape-only",
+  "machine-inspection-only",
 ]);
 const narrativeSectionKeys = ["kind", "narrativeId"];
 const stagedSectionKeys = ["evidenceIds", "kind"];

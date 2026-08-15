@@ -32,14 +32,22 @@ export interface LessonEvidenceReference extends EvidenceReferenceBase {
 export type StagedEvidenceAuthority =
   | "source-admission-only"
   | "harness-only"
-  | "structural-admission-only";
+  | "structural-admission-only"
+  | "kernel-ir-admission-only"
+  | "source-model-only"
+  | "source-shape-only"
+  | "machine-inspection-only";
 
 export type StagedEvidenceId =
   | "tiled-source-bridge-v1"
   | "tiled-cargo-metadata-v1"
   | "tiled-cargo-root-v1"
   | "tiled-hardware-harness-v1"
-  | "tiled-structural-admission-v1";
+  | "tiled-structural-admission-v1"
+  | "tiled-lds-kernel-ir-v1"
+  | "tiled-lds-verus-v1"
+  | "tiled-lds-attributed-source-v1"
+  | "tiled-lds-machine-inspection-v1";
 
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";

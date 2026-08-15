@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The implementation-status snapshot is pinned to fe2o3 commit
-`fd41ad690fd6342a8bcc296c4281b7cbdfa3df6b`, tree
-`8df59ad18c4f5d0b5bdc64c27607562adbdd4dfd`. **The publication workflow must
+`50902b6fc4e861f4b93c40f13fb2e808b2bdc0c2`, tree
+`4bc6c5a4f46a0c7cb86cbd5542ff20f170b3f940`. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
 audited public baseline remains
@@ -65,14 +65,20 @@ The hardware entry records one bounded hardware observation through that harness
 it is not protected execution evidence or a source-to-HSACO result.
 
 The previous WG64/288-byte build-scoped fragment probe remains separate from
-both the 320-byte four-slice profile and the independent WG256/384-byte
-mutation. The missing production chain is still material:
-Worker V2 does not yet produce an authority-bearing final HSACO from the
-source-authenticated tiled module, and that same artifact is not carried
-through protected publication, loading, and launch. Machine-body semantic
-admission, compiler refinement, Verus-to-machine refinement, production XOR4
-LDS tiling, bounds and initialization proofs, and a race-freedom proof also
-remain open.
+both the 320-byte four-slice direct-global profile and the independent
+WG256/384-byte mutation. Four newer commits add bounded LDS Slice 1 evidence:
+canonical two-tile Kernel IR at `4c79c58de`, a Verus model reporting 93
+verified and 0 errors at
+`97373b781`, fail-closed ordinary `#[kernel(typed, ...)]` Rust source at
+`ee76cedcd`, and upstream LLVM/LLD plus final-HSACO machine inspection at
+`50902b6fc`. These are separate records, not a functional or production kernel.
+
+The missing production chain is still material. Source-to-LDS-Kernel-IR
+collection and `#[kernel]` WG64 contract integration remain open. The inspected
+HSACO begins from the separate canonical IR and is not carried through the
+protected publisher, load, and launch path. No LDS functional hardware result
+has been recorded. Compiler and Verus-to-machine refinement and an IEEE
+BF16/F32 numerical contract also remain open.
 
 The latest head also adds authenticated Verus execution V2 for Linux x86_64
 against pinned local runtime and tool snapshots. It uses `clone3` pidfds and
@@ -143,12 +149,20 @@ At the audited pin:
   One exact externally supplied 6,672-byte artifact has now passed the guarded
   MI300X run, bitwise oracle, A/B/C unchanged-value comparison, adjacent
   canaries, and unload checks. The observation is non-authoritative and does not
-  join the Rust source to those bytes. Source-derived final HSACO/load/launch authority,
-  machine-body semantic admission, production LDS composition, compiler
-  refinement, and memory and race proofs are still open.
-- Tiled GEMM, softmax, flash attention, and mixture-of-experts are design-only
-  curricula. Their snippets decompose the implementation and proof work; they
-  are not fe2o3 programs users should expect to compile today.
+  join the Rust source to those bytes.
+- LDS Slice 1 now has separate canonical Kernel IR, Verus source-model,
+  attributed Rust source, LLVM lowering, and final-HSACO machine-shape evidence.
+  The Rust function is deliberately fail-closed before output mutation. It is
+  not source-collected into that LDS IR and has no protected or functional GPU
+  execution evidence.
+- `macro_rules!` is declarative compile-time token expansion. Vecadd uses it to
+  share a small body with Verus; it is not the GPU kernel marker. `#[kernel]` is
+  the procedural attribute that marks an ordinary Rust function for fe2o3's
+  frontend and generated typed API. Production kernel bodies should be ordinary
+  attributed Rust and do not require `macro_rules!`.
+- Tiled GEMM remains a design-level curriculum despite its bounded Slice 1
+  increments. Softmax, flash attention, and mixture-of-experts remain
+  design-only. Their snippets are not programs users should expect to run today.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. Linking is described through LLVM/LLD APIs, not COMGR.
