@@ -50,6 +50,8 @@ export const developmentCheckpointIds = deepFreeze([
   "tiled-gemm-lds-machine-inspection",
   "tiled-gemm-lds-kphase-model",
   "tiled-gemm-lds-hardware-observation",
+  "tiled-gemm-lds-k32-machine-inspection",
+  "tiled-gemm-lds-wg64-contract",
 ] as const);
 
 export type DevelopmentCheckpointId =
@@ -127,6 +129,12 @@ export const tiledGemmV1Commits = {
   ldsKphaseModel: stagedEvidenceRecord("tiled-lds-kphase-model-v2").commit,
   ldsHardwareObservation: stagedEvidenceRecord(
     "tiled-lds-hardware-observation-v1",
+  ).commit,
+  ldsK32MachineInspection: stagedEvidenceRecord(
+    "tiled-lds-k32-machine-inspection-v2",
+  ).commit,
+  ldsWg64Contract: stagedEvidenceRecord(
+    "tiled-lds-wg64-contract-v1",
   ).commit,
 } as const;
 
@@ -244,6 +252,16 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "staged-evidence",
     commit: tiledGemmV1Commits.ldsHardwareObservation,
     evidenceIds: ["tiled-lds-hardware-observation-v1"],
+  },
+  "tiled-gemm-lds-k32-machine-inspection": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsK32MachineInspection,
+    evidenceIds: ["tiled-lds-k32-machine-inspection-v2"],
+  },
+  "tiled-gemm-lds-wg64-contract": {
+    kind: "staged-evidence",
+    commit: tiledGemmV1Commits.ldsWg64Contract,
+    evidenceIds: ["tiled-lds-wg64-contract-v1"],
   },
 } satisfies Record<DevelopmentCheckpointId, DevelopmentCheckpointSpec>);
 
@@ -435,6 +453,22 @@ export const developmentCheckpoints = deepFreeze([
     state: "public",
     stagedEvidenceIds: ["tiled-lds-hardware-observation-v1"],
   },
+  {
+    id: "tiled-gemm-lds-k32-machine-inspection",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS Slice 2 K32 machine inspection",
+    commit: tiledGemmV1Commits.ldsK32MachineInspection,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-k32-machine-inspection-v2"],
+  },
+  {
+    id: "tiled-gemm-lds-wg64-contract",
+    kind: "staged-evidence",
+    name: "Tiled GEMM LDS macro-owned WG64 contract",
+    commit: tiledGemmV1Commits.ldsWg64Contract,
+    state: "public",
+    stagedEvidenceIds: ["tiled-lds-wg64-contract-v1"],
+  },
 ] satisfies DevelopmentCheckpoint[]);
 
 const checkpointKeysByKind = {
@@ -602,13 +636,13 @@ export const kernelProgress: KernelProgress[] = [
     evidence: "partial",
     dependsOn: [
       "multi-phase attributed source and source-to-LDS-Kernel-IR collection",
-      "#[kernel] WG64 contract integration",
+      "compiler-issued LDS acquisition",
       "protected publisher, load, and launch",
       "source-bound protected LDS hardware evidence",
       "source and Verus-to-machine refinement",
       "IEEE BF16/F32 numerical contract",
     ],
-    next: "Implement the ordinary attributed multi-phase Rust body and collect it into the sealed LDS Kernel IR under the exact WG64 contract, then carry the same final bytes through protected publication, load, launch, and MI300X functional tests.",
+    next: "Implement the ordinary attributed multi-phase Rust body, issue its LDS capabilities, and collect it into the sealed LDS Kernel IR, then carry the same final bytes through protected publication, load, launch, and MI300X functional tests.",
   },
   {
     id: "softmax",

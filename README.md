@@ -37,9 +37,9 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The publication-gated repository snapshot is pinned to fe2o3 commit
-`fe10eb4b4311cbd4c2475118f2728bc201d89fb6`, tree
-`9b346982ec7dc77aed08313652fa922b7e286524`. The Slice 2 record remains
-proof/model evidence only; the separate Slice 1 MI300X record is observational
+`280995762fce8a97f72fc2acb53c0d7effd2109f`, tree
+`782bcc60e1c5e12c32c0dabfd0975304a020d0bf`. Slice 2 proof and K32 backend
+records remain independent; the separate Slice 1 MI300X record is observational
 IR-derived evidence, not source, proof, or publication authority. **The publication workflow must
 not deploy this site revision until both `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` resolve exactly to that commit.** The last
@@ -79,7 +79,8 @@ Slice 2 at `aba53376b` verifies one through four complete K phases with 196
 verified and 0 errors, rejects missing-reuse and accumulator-reset mutations,
 and exhaustively runs integer event models for 1, 2, and 4 phases. This is
 proof/model evidence only. It establishes no attributed multi-phase GPU source,
-backend lowering, HSACO, protected runtime, or hardware result.
+protected runtime, or hardware result, and grants no authority to the later
+backend artifact.
 
 Slice 1 hardware evidence at `79ad22986` is a separate observation. An ignored
 opt-in harness generated HSACO from the canonical Kernel IR using SHA-pinned
@@ -89,9 +90,23 @@ canaries around A, B, and C; one hardware test passed in 33.72 seconds. This
 does not bind the IR to attributed Rust source or Verus proofs, grant publisher
 or protected launch authority, or prove general memory safety or race freedom.
 
+K32 Slice 2 backend evidence at `b94bd7d78` lowers the canonical graph to a
+real two-trip SSA loop with carried FP32 accumulators, two barriers, reused
+1,024-byte LDS, and one static loop-body BF16 MFMA. Its upstream LLVM 22 final
+artifact machine test passed; the full dialect suite passed 120 tests and
+strict Clippy passed. This remains backend and machine-shape evidence only: it
+has no attributed multi-phase source, hardware run, protected authority, or
+LLVM refinement proof.
+
+Commit `280995762` moves the exact WG64 launch contract into the general typed
+`#[kernel]` macro path. Required-only WG64 and WG256 remain compatible while
+fixed WG256 profiles reject WG64, and tiled Slice 1 no longer contains a
+handwritten frontend sidecar. Source-to-LDS Kernel IR collection and
+compiler-issued LDS acquisition remain open.
+
 The missing production chain is still material. An attributed multi-phase
-source, source-to-LDS-Kernel-IR collection, and `#[kernel]` WG64 contract
-integration remain open. The inspected
+source, source-to-LDS-Kernel-IR collection, and compiler-issued LDS acquisition
+remain open. The inspected
 HSACO begins from the separate canonical IR and is not carried through the
 protected publisher, load, and launch path. The hardware observation therefore
 does not supply source-bound protected execution evidence. Compiler and
@@ -174,9 +189,14 @@ At the audited pin:
   outputs with allocation canaries. The Rust function is deliberately
   fail-closed before output mutation and is not source-collected into that LDS
   IR, so the run is neither source-bound nor protected execution evidence.
-- LDS Slice 2 has a bounded exact-real K-phase Verus model and executable
-  integer event models for 1, 2, and 4 phases. It has no attributed multi-phase
-  GPU source, backend, HSACO, or hardware claim.
+- LDS Slice 2 has a bounded exact-real K-phase Verus model, executable integer
+  event models for 1, 2, and 4 phases, and an independent K32 backend/final
+  machine-shape record. It has no attributed multi-phase GPU source, runtime
+  hardware execution, protected authority, or LLVM refinement proof.
+- General typed `#[kernel]` now owns exact WG64 and WG256 launch contracts, and
+  tiled Slice 1 no longer carries a handwritten frontend sidecar. The source
+  still fails closed because LDS acquisition and source-to-LDS IR collection
+  remain unavailable.
 - `macro_rules!` is declarative compile-time token expansion. Vecadd uses it to
   share a small body with Verus; it is not the GPU kernel marker. `#[kernel]` is
   the procedural attribute that marks an ordinary Rust function for fe2o3's

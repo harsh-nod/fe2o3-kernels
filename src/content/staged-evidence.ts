@@ -39,6 +39,8 @@ export const stagedEvidenceOrder = deepFreeze([
   "tiled-lds-machine-inspection-v1",
   "tiled-lds-kphase-model-v2",
   "tiled-lds-hardware-observation-v1",
+  "tiled-lds-k32-machine-inspection-v2",
+  "tiled-lds-wg64-contract-v1",
 ] satisfies StagedEvidenceId[]);
 
 const TILED_GEMM_V1_HARDWARE_COMMAND =
@@ -304,7 +306,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "source-blockers",
-        text: "The source is deliberately non-executable: source-to-LDS-Kernel-IR collection, compiler-issued LDS allocation, authenticated wave-lane construction, barrier lowering, and #[kernel] WG64 contract integration remain open.",
+        text: "The source is deliberately non-executable: source-to-LDS-Kernel-IR collection, compiler-issued LDS allocation, authenticated wave-lane construction, and barrier lowering remain open. A later macro-owned record supplies the WG64 launch contract without changing these blockers.",
       },
     ],
   },
@@ -375,7 +377,7 @@ const stagedEvidenceRecords = deepFreeze({
       },
       {
         id: "kphase-boundary",
-        text: "Slice 2 is proof/model evidence only. Its arithmetic uses finite BF16 values after exact widening and excludes IEEE rounding and exceptional-value semantics. It grants no attributed multi-phase GPU source, source collection, backend lowering, HSACO, protected runtime, or hardware authority.",
+        text: "This Slice 2 record is proof/model evidence only. Its arithmetic uses finite BF16 values after exact widening and excludes IEEE rounding and exceptional-value semantics. The record grants no attributed multi-phase GPU source, source collection, backend, HSACO, protected runtime, or hardware authority; later backend evidence remains independent.",
       },
     ],
   },
@@ -408,6 +410,81 @@ const stagedEvidenceRecords = deepFreeze({
       {
         id: "guard-boundary",
         text: "The canaries and unchanged-value checks detect the mutations they observe; they cannot establish general illegal-memory-access detection, beyond-guard safety, value-preserving-write absence, or race freedom.",
+      },
+    ],
+  },
+  "tiled-lds-k32-machine-inspection-v2": {
+    id: "tiled-lds-k32-machine-inspection-v2",
+    stageLabel: "b94bd7d7 K32 backend inspection",
+    claimLabel: "Upstream LLVM/LLD K32 machine shape",
+    claim: "compiler-hsaco-observed",
+    authority: "machine-inspection-only",
+    commit: "b94bd7d78604a6b7fe12f571f84cfc5f5b29eaba",
+    tree: "70867ea4d2b360773480ded0a41f68b74722b209",
+    commands: [
+      "cargo test --locked -p dialect-amdgcn",
+      "cargo clippy --locked -p dialect-amdgcn --all-targets --all-features -- -D warnings",
+      "env FE2O3_OPT=/opt/rocm-7.2.4/lib/llvm/bin/opt FE2O3_LLC=/opt/rocm-7.2.4/lib/llvm/bin/llc FE2O3_LLD=/opt/rocm-7.2.4/lib/llvm/bin/ld.lld FE2O3_LLVM_OBJDUMP=/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump FE2O3_LLVM_READOBJ=/opt/rocm-7.2.4/lib/llvm/bin/llvm-readobj cargo test --locked -p dialect-amdgcn --test tiled_gemm_lds_k32_v2 upstream_llvm_lld_final_artifact_has_the_exact_k32_machine_shape -- --ignored --exact --nocapture",
+    ],
+    sourcePaths: [
+      "crates/dialect-amdgcn/src/lowering.rs",
+      "crates/dialect-amdgcn/tests/tiled_gemm_lds_k32_v2.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "ssa-two-phase-lowering",
+        text: "Commit b94bd7d78604a6b7fe12f571f84cfc5f5b29eaba lowers only the canonical K32 Slice 2 graph to a real two-trip SSA loop. It carries FP32 accumulators across both K16 phases, reuses the same two LDS tiles, retains two physical workgroup barriers, and emits one static loop-body BF16 MFMA.",
+      },
+      {
+        id: "final-k32-machine-shape",
+        text: "The focused upstream LLVM 22 opt, llc, ld.lld, llvm-readobj, and llvm-objdump final-artifact test passed. It observed COV6 gfx942:xnack-, WG64/wave64, a reused 1024-byte fixed LDS segment, zero private segment and spills, LDS reads and writes, exactly two s_barrier instructions, exactly one BF16 MFMA, and no COMGR, scratch, atomic, or machine-call forms.",
+      },
+      {
+        id: "dialect-campaign",
+        text: "The full dialect-amdgcn test campaign passed 120 tests, and strict all-targets, all-features Clippy passed with warnings denied.",
+      },
+      {
+        id: "k32-machine-boundary",
+        text: "This is backend and machine-shape evidence only. It establishes no attributed multi-phase Rust source or source collection, runtime hardware execution, protected publisher/load/launch authority, or LLVM refinement proof.",
+      },
+    ],
+  },
+  "tiled-lds-wg64-contract-v1": {
+    id: "tiled-lds-wg64-contract-v1",
+    stageLabel: "28099576 macro-owned WG64 contract",
+    claimLabel: "Generated typed WG64 launch contract",
+    claim: "compiler-hsaco-observed",
+    authority: "source-admission-only",
+    commit: "280995762fce8a97f72fc2acb53c0d7effd2109f",
+    tree: "782bcc60e1c5e12c32c0dabfd0975304a020d0bf",
+    commands: [
+      "cargo test --locked -p fe2o3-macros",
+      "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test kernel_source",
+      "cargo test --locked -p rustc-codegen-fe2o3 --test collected_executable_scalar_control_flow_v2",
+    ],
+    sourcePaths: [
+      "crates/fe2o3-macros/src/lib.rs",
+      "crates/rustc-codegen-fe2o3/src/collector.rs",
+      "crates/rustc-codegen-fe2o3/src/collected_tiled_gemm_v1.rs",
+      "crates/rustc-codegen-fe2o3/tests/collected_executable_scalar_control_flow_v2.rs",
+      "crates/rustc-codegen-fe2o3/tests/fixtures/collected-tiled-gemm-v1/src/lib.rs",
+      "examples/tiled_gemm_v1/src/kernel.rs",
+      "examples/tiled_gemm_v1/tests/kernel_source.rs",
+    ],
+    target: "gfx942:xnack-",
+    assertions: [
+      {
+        id: "macro-owned-contract",
+        text: "Commit 280995762fce8a97f72fc2acb53c0d7effd2109f lets an ordinary general typed #[kernel] declare exact WG64 launch dimensions. The macro generates the frontend contract bytes and binds the generated host-contract identity and renamed body; tiled Slice 1 no longer carries a handwritten frontend sidecar.",
+      },
+      {
+        id: "compatibility-and-rejection",
+        text: "General typed kernels preserve required-only exact WG64 and WG256 compatibility. Existing fixed vecadd, alpha/zeta, and scalar-GEMM profiles remain WG256 and reject WG64 rather than falling back to the general profile.",
+      },
+      {
+        id: "wg64-contract-boundary",
+        text: "This closes the macro-owned #[kernel] WG64 launch-contract integration gap only. Source-to-LDS Kernel IR collection and compiler-issued LDS acquisition remain open, so the attributed source still fails closed and gains no backend, hardware-execution, or protected authority from this record.",
       },
     ],
   },
@@ -484,6 +561,13 @@ export type ParsedCargoTestCommand =
       locked: boolean;
       packageName?: string;
       manifestPath?: string;
+      mode: "package";
+    }
+  | {
+      environment: Readonly<Record<string, string>>;
+      locked: boolean;
+      packageName?: string;
+      manifestPath?: string;
       mode: "lib";
     }
   | {
@@ -540,6 +624,15 @@ export function parseExactCargoTestCommand(
     return undefined;
   }
   const argumentsAfterPackage = tokens.slice(cursor + 2);
+  if (argumentsAfterPackage.length === 0) {
+    return {
+      environment,
+      locked,
+      packageName,
+      manifestPath,
+      mode: "package",
+    };
+  }
   if (
     argumentsAfterPackage.length === 1 &&
     argumentsAfterPackage[0] === "--lib"
@@ -601,7 +694,7 @@ export function parseExactCargoTestCommand(
 export function expectedCargoTestSourcePath(
   parsed: ParsedCargoTestCommand,
 ): string | undefined {
-  if (parsed.mode === "lib") return undefined;
+  if (parsed.mode === "lib" || parsed.mode === "package") return undefined;
   if (parsed.manifestPath) {
     const directory = parsed.manifestPath.slice(0, -"Cargo.toml".length);
     return `${directory}tests/${parsed.targetName}.rs`;
@@ -609,6 +702,12 @@ export function expectedCargoTestSourcePath(
   return parsed.packageName
     ? `crates/${parsed.packageName}/tests/${parsed.targetName}.rs`
     : undefined;
+}
+
+export function isExactCargoClippyCommand(command: string): boolean {
+  return /^cargo clippy --locked -p [a-z0-9][a-z0-9-]* --all-targets --all-features -- -D warnings$/u.test(
+    command,
+  );
 }
 
 export function validateStagedEvidenceCatalog(): string[] {
@@ -633,10 +732,11 @@ export function validateStagedEvidenceCatalog(): string[] {
     }
     for (const command of record.commands) {
       const parsed = parseExactCargoTestCommand(command);
-      if (!parsed) {
-        issues.push(`${id}: command is not an exact Cargo test target: ${command}`);
+      if (!parsed && !isExactCargoClippyCommand(command)) {
+        issues.push(`${id}: command is not a supported exact Cargo evidence command: ${command}`);
         continue;
       }
+      if (!parsed) continue;
       const expectedPath = expectedCargoTestSourcePath(parsed);
       if (expectedPath && !record.sourcePaths.includes(expectedPath)) {
         issues.push(`${id}: test target source is not referenced: ${expectedPath}`);

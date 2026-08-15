@@ -200,7 +200,7 @@ const gemmMapping: Lesson = {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now contains a fixed attributed LDS Slice 1 source, separate Slice 1 proof, Kernel IR, and machine-shape evidence, and a bounded Slice 2 K-phase proof model. They are not joined into a functional or production kernel.",
+        "fe2o3 now contains a fixed attributed LDS Slice 1 source with a macro-owned WG64 contract, separate Slice 1 proof, Kernel IR, machine-shape and hardware observations, and independent Slice 2 proof and K32 backend records. They are not joined into a functional or production kernel.",
     },
     {
       kind: "compiler-hsaco-observed",
@@ -241,7 +241,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: resultText(
         "design-only",
-        "The Slice 1 source, proof, Kernel IR, machine inspection, and observational MI300X run and the Slice 2 K-phase proof model exist as separate bounded increments. Multi-phase attributed source, source-to-IR collection, #[kernel] WG64 integration, and source-bound protected publisher/load/launch evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
+        "Slice 1 source, proof, Kernel IR, machine inspection, and observational MI300X execution and Slice 2 proof and K32 backend evidence exist as separate bounded increments. Multi-phase attributed source, source-to-IR collection, compiler-issued LDS acquisition, and source-bound protected publisher/load/launch evidence remain open; no functional or production LDS-tiled GEMM is claimed.",
       ),
     },
   ),
@@ -275,7 +275,7 @@ const gemmProof: Lesson = {
       kind: "design-only",
       label: "Acceptance plan",
       detail:
-        "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, #[kernel] WG64 integration, source-bound protected publisher/load/launch evidence, source-to-machine refinement, and an IEEE numerical contract remain required before promotion.",
+        "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, compiler-issued LDS acquisition, source-bound protected publisher/load/launch evidence, source-to-machine refinement, and an IEEE numerical contract remain required before promotion.",
     },
   ],
   sections: [

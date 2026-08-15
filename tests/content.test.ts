@@ -24,6 +24,7 @@ import {
 } from "../src/content/progress-narrative-registry";
 import {
   expectedCargoTestSourcePath,
+  isExactCargoClippyCommand,
   parseExactCargoTestCommand,
   stagedEvidenceDetail,
   stagedEvidenceOrder,
@@ -270,6 +271,22 @@ describe("curriculum integrity", () => {
         tree: "2b7766ec5f003b1316853376a802ada4a9999d9b",
         authority: "harness-only",
       },
+      {
+        label: "Upstream LLVM/LLD K32 machine shape",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-k32-machine-inspection-v2",
+        commit: "b94bd7d78604a6b7fe12f571f84cfc5f5b29eaba",
+        tree: "70867ea4d2b360773480ded0a41f68b74722b209",
+        authority: "machine-inspection-only",
+      },
+      {
+        label: "Generated typed WG64 launch contract",
+        kind: "compiler-hsaco-observed",
+        evidenceId: "tiled-lds-wg64-contract-v1",
+        commit: "280995762fce8a97f72fc2acb53c0d7effd2109f",
+        tree: "782bcc60e1c5e12c32c0dabfd0975304a020d0bf",
+        authority: "source-admission-only",
+      },
     ]);
     expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
     expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
@@ -362,11 +379,38 @@ describe("curriculum integrity", () => {
         FE2O3_LLVM_OBJDUMP: "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
       },
     });
+    const k32Commands = stagedEvidenceRecord(
+      "tiled-lds-k32-machine-inspection-v2",
+    ).commands;
+    expect(parseExactCargoTestCommand(k32Commands[0])).toMatchObject({
+      locked: true,
+      packageName: "dialect-amdgcn",
+      mode: "package",
+    });
+    expect(isExactCargoClippyCommand(k32Commands[1])).toBe(true);
+    expect(parseExactCargoTestCommand(k32Commands[2])).toMatchObject({
+      locked: true,
+      packageName: "dialect-amdgcn",
+      mode: "test",
+      targetName: "tiled_gemm_lds_k32_v2",
+      testName:
+        "upstream_llvm_lld_final_artifact_has_the_exact_k32_machine_shape",
+      environment: {
+        FE2O3_OPT: "/opt/rocm-7.2.4/lib/llvm/bin/opt",
+        FE2O3_LLC: "/opt/rocm-7.2.4/lib/llvm/bin/llc",
+        FE2O3_LLD: "/opt/rocm-7.2.4/lib/llvm/bin/ld.lld",
+        FE2O3_LLVM_OBJDUMP:
+          "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
+        FE2O3_LLVM_READOBJ:
+          "/opt/rocm-7.2.4/lib/llvm/bin/llvm-readobj",
+      },
+    });
     for (const id of stagedEvidenceOrder) {
       const record = stagedEvidenceRecord(id);
       for (const command of record.commands) {
         const parsed = parseExactCargoTestCommand(command);
-        expect(parsed).toBeDefined();
+        expect(parsed ?? isExactCargoClippyCommand(command)).toBeTruthy();
+        if (!parsed) continue;
         const targetPath = parsed
           ? expectedCargoTestSourcePath(parsed)
           : undefined;
@@ -389,6 +433,11 @@ describe("curriculum integrity", () => {
         "cargo test -p rustc-codegen-fe2o3 --lib collected_tiled_gemm_v1",
       ),
     ).toBeUndefined();
+    expect(
+      isExactCargoClippyCommand(
+        "cargo clippy -p dialect-amdgcn --all-targets --all-features",
+      ),
+    ).toBe(false);
   });
 
   it("rejects no-hash hardware authority moved into lesson narrative", () => {
@@ -688,11 +737,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-14",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "fe10eb4b4311cbd4c2475118f2728bc201d89fb6",
-      eventualPublicTree: "9b346982ec7dc77aed08313652fa922b7e286524",
+      eventualPublicCommit: "280995762fce8a97f72fc2acb53c0d7effd2109f",
+      eventualPublicTree: "782bcc60e1c5e12c32c0dabfd0975304a020d0bf",
       publicationGate: {
         state: "blocked-until-public-refs-match",
-        requiredCommit: "fe10eb4b4311cbd4c2475118f2728bc201d89fb6",
+        requiredCommit: "280995762fce8a97f72fc2acb53c0d7effd2109f",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1054,6 +1103,11 @@ describe("implementation progress integrity", () => {
         "tiled-gemm-lds-hardware-observation",
         tiledGemmV1Commits.ldsHardwareObservation,
       ],
+      [
+        "tiled-gemm-lds-k32-machine-inspection",
+        tiledGemmV1Commits.ldsK32MachineInspection,
+      ],
+      ["tiled-gemm-lds-wg64-contract", tiledGemmV1Commits.ldsWg64Contract],
     ];
     for (const [id, commit] of expected) {
       expect(
@@ -1082,7 +1136,7 @@ describe("implementation progress integrity", () => {
     expect(kphase).toContain("1-, 2-, and 4-phase cases");
     expect(kphase).toContain("proof/model evidence only");
     expect(kphase).toContain("no attributed multi-phase GPU source");
-    expect(kphase).toContain("backend lowering, HSACO");
+    expect(kphase).toContain("later backend evidence remains independent");
     const hardware = stagedEvidenceDetail([
       "tiled-lds-hardware-observation-v1",
     ]);
@@ -1093,6 +1147,25 @@ describe("implementation progress integrity", () => {
     expect(hardware).toContain("observational IR-derived hardware evidence only");
     expect(hardware).toContain("no Worker V2, publisher, protected load, or protected launch authority");
     expect(hardware).toContain("cannot establish general illegal-memory-access detection");
+    const k32Machine = stagedEvidenceDetail([
+      "tiled-lds-k32-machine-inspection-v2",
+    ]);
+    expect(k32Machine).toContain("real two-trip SSA loop");
+    expect(k32Machine).toContain("reuses the same two LDS tiles");
+    expect(k32Machine).toContain("two physical workgroup barriers");
+    expect(k32Machine).toContain("one static loop-body BF16 MFMA");
+    expect(k32Machine).toContain("passed 120 tests");
+    expect(k32Machine).toContain("Clippy passed with warnings denied");
+    expect(k32Machine).toContain("no attributed multi-phase Rust source");
+    expect(k32Machine).toContain("runtime hardware execution");
+    expect(k32Machine).toContain("LLVM refinement proof");
+    const wg64 = stagedEvidenceDetail(["tiled-lds-wg64-contract-v1"]);
+    expect(wg64).toContain("macro generates the frontend contract bytes");
+    expect(wg64).toContain("no longer carries a handwritten frontend sidecar");
+    expect(wg64).toContain("required-only exact WG64 and WG256 compatibility");
+    expect(wg64).toContain("fixed vecadd, alpha/zeta, and scalar-GEMM profiles");
+    expect(wg64).toContain("Source-to-LDS Kernel IR collection");
+    expect(wg64).toContain("compiler-issued LDS acquisition remain open");
   });
 
   it("keeps tiled GEMM partial until source, body, authority, and race closure", () => {
@@ -1104,7 +1177,7 @@ describe("implementation progress integrity", () => {
       evidence: "partial",
       dependsOn: [
         "multi-phase attributed source and source-to-LDS-Kernel-IR collection",
-        "#[kernel] WG64 contract integration",
+        "compiler-issued LDS acquisition",
         "protected publisher, load, and launch",
         "source-bound protected LDS hardware evidence",
         "source and Verus-to-machine refinement",
@@ -1149,6 +1222,10 @@ describe("implementation progress integrity", () => {
     expect(mapping).toContain("not Rust-source correspondence");
     expect(mapping).toContain("196 verified and 0 errors");
     expect(mapping).toContain("not an attributed multi-phase GPU kernel");
+    expect(mapping).toContain("real two-trip SSA loop");
+    expect(mapping).toContain("macro-owned for general typed #[kernel]");
+    expect(mapping).toContain("compiler-issued LDS acquisition remain open");
+    expect(mapping).not.toContain("#[kernel] WG64 contract integration remain open");
 
     expect(proofPlan).toContain("multi-phase source-to-machine derivation");
     expect(proofPlan).toContain("remain separate from the attributed source");

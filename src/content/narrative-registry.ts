@@ -451,17 +451,25 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "Slice 2 adds proof/model depth without upgrading execution. Commit aba53376b4825c730ca9e9685e274e0c334e0e32 verifies one through four complete K phases with 196 verified and 0 errors, rejects missing-reuse and accumulator-reset mutations, and exhaustively runs integer event models for 1, 2, and 4 phases. This is not an attributed multi-phase GPU kernel, backend result, HSACO, or hardware observation."
+        "text": "Slice 2 adds proof/model depth without upgrading execution. Commit aba53376b4825c730ca9e9685e274e0c334e0e32 verifies one through four complete K phases with 196 verified and 0 errors, rejects missing-reuse and accumulator-reset mutations, and exhaustively runs integer event models for 1, 2, and 4 phases. That record is not an attributed multi-phase GPU kernel, backend result, HSACO, or hardware observation."
       },
       {
         "type": "paragraph",
         "text": "A separate Slice 1 hardware increment at 79ad2298619baa4138b5edbf55e0d8044295bec2 generated HSACO from canonical Kernel IR with SHA-pinned upstream LLVM 22 llc, ld.lld, and llvm-objdump, without COMGR. On MI300X, six cases checked 1,536 outputs, unchanged A/B values, and allocation canaries; one ignored hardware test passed in 33.72 seconds. This is observational IR-derived evidence only, not Rust-source correspondence, Verus proof, Worker V2, publisher, or protected-launch authority."
       },
       {
+        "type": "paragraph",
+        "text": "Commit b94bd7d78604a6b7fe12f571f84cfc5f5b29eaba adds independent K32 Slice 2 backend evidence: a real two-trip SSA loop with carried FP32 accumulators, two physical barriers, reused 1,024-byte LDS, and one static loop-body BF16 MFMA. The upstream LLVM 22 final-artifact machine test passed, the full dialect suite passed 120 tests, and strict Clippy passed. This is not attributed-source, hardware-execution, protected-authority, or LLVM-refinement evidence."
+      },
+      {
+        "type": "paragraph",
+        "text": "Commit 280995762fce8a97f72fc2acb53c0d7effd2109f makes the exact WG64 launch contract macro-owned for general typed #[kernel] functions. Required-only WG64 and WG256 remain compatible, fixed WG256 profiles reject WG64, and tiled Slice 1 has no handwritten frontend sidecar. Source-to-LDS Kernel IR collection and compiler-issued LDS acquisition remain open."
+      },
+      {
         "type": "callout",
         "tone": "boundary",
         "title": "Bounded increments are not a functional kernel",
-        "text": "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, and #[kernel] WG64 contract integration remain open. The observed Slice 1 final HSACO begins from the separate canonical IR and is not carried through protected publisher, load, and launch authority. Its canaries do not prove general illegal-access or race freedom. Slice 2 adds no backend or hardware claim. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
+        "text": "An attributed multi-phase source, source-to-LDS-Kernel-IR collection, and compiler-issued LDS acquisition remain open. The observed Slice 1 final HSACO begins from separate canonical IR and is not carried through protected publisher, load, and launch authority; its canaries do not prove general illegal-access or race freedom. The K32 backend has no runtime hardware result or protected authority. Compiler and Verus-to-machine refinement plus an IEEE BF16/F32 numerical contract also remain open. The lesson dependency pin remains at the older audited baseline."
       }
     ]
   },
