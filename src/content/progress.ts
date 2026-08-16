@@ -30,6 +30,8 @@ export interface KernelProgress {
 
 export const developmentCheckpointIds = deepFreeze([
   "eventual-public-main",
+  "w0-host-link-closure-v1",
+  "broker-v4-inert-foundation",
   "w0b-host-link-rejection",
   "last-audited-public-baseline",
   "production-s09-rustc-invocation",
@@ -240,6 +242,14 @@ const developmentCheckpointSpecs = deepFreeze({
   "eventual-public-main": {
     kind: "publication-gate",
     commit: progressSnapshot.eventualPublicCommit,
+  },
+  "w0-host-link-closure-v1": {
+    kind: "narrative",
+    narrativeId: "progress/w0-host-link-closure-v1",
+  },
+  "broker-v4-inert-foundation": {
+    kind: "narrative",
+    narrativeId: "progress/broker-v4-inert-foundation",
   },
   "w0b-host-link-rejection": {
     kind: "narrative",
@@ -470,6 +480,22 @@ export const developmentCheckpoints = deepFreeze([
     name: "Published implementation snapshot (publication gated)",
     commit: progressSnapshot.eventualPublicCommit,
     state: "public",
+  },
+  {
+    id: "w0-host-link-closure-v1",
+    kind: "narrative",
+    name: "Accepted W0/G1 static host-link boundary",
+    commit: "9f40bbff39156f8b5f05868377ee12a2c4f74207",
+    state: "public",
+    narrativeId: "progress/w0-host-link-closure-v1",
+  },
+  {
+    id: "broker-v4-inert-foundation",
+    kind: "narrative",
+    name: "Inert Broker V4 protocol foundation",
+    commit: progressSnapshot.eventualPublicCommit,
+    state: "public",
+    narrativeId: "progress/broker-v4-inert-foundation",
   },
   {
     id: "w0b-host-link-rejection",
@@ -1051,13 +1077,12 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "W0 authenticated HostLinkClosureV1",
-      "W1 broker cargo-fe2o3 executable identity",
+      "W1 broker-owned durable replay registry and session capability",
       "protected MI300X execution",
       "source, proof, and machine refinement",
       "numerical policy",
     ],
-    next: "Complete W0 with the dedicated genuinely static fe2o3-host-lld and descriptor-backed HostLinkClosureV1, complete W1 with authenticated broker cargo-fe2o3 executable identity, then consume the staged 25-pin receipt through the protected MI300X vector matrix and join source, proof, compiler, and machine refinement evidence.",
+    next: "Complete W1 with a broker-owned durable replay registry, an unforgeable move-only session capability, and exact terminal transcript consumption; then consume the staged 25-pin receipt through the protected MI300X vector matrix and join source, proof, compiler, and machine refinement evidence.",
   },
   {
     id: "flash-attention",
@@ -1066,13 +1091,12 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "W0 authenticated HostLinkClosureV1",
-      "W1 broker cargo-fe2o3 executable identity and protected receipt injection",
+      "W1 durable replay/session authority and protected receipt injection",
       "protected MI300X execution and numerical comparison",
       "authenticated Verus execution receipt and proof consumption",
       "compiler, OCML, and source/model-to-machine refinement",
     ],
-    next: "Complete W0 with the dedicated genuinely static fe2o3-host-lld and descriptor-backed HostLinkClosureV1, then complete W1 with authenticated broker cargo-fe2o3 executable identity. Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the exact B1/H1/N8/D16 linear artifact receipt, run the protected MI300X vectors through the typed lifecycle, compare GPU output with the independent oracle, and join compiler, OCML, logical-address, and source/model-to-machine refinement evidence.",
+    next: "Complete W1 with broker-owned durable replay exclusion, an unforgeable move-only session capability, exact transcript binding, and atomic terminal consumption. Then consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the exact B1/H1/N8/D16 linear artifact receipt, run the protected MI300X vectors through the typed lifecycle, compare GPU output with the independent oracle, and join compiler, OCML, logical-address, and source/model-to-machine refinement evidence.",
   },
   {
     id: "moe-routing",
@@ -1081,13 +1105,12 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "W0 authenticated HostLinkClosureV1",
-      "W1 broker cargo-fe2o3 executable identity and protected receipt injection",
+      "W1 durable replay/session authority and protected receipt injection",
       "protected MI300X routing vectors and GPU/oracle comparison",
       "authenticated Verus execution receipt and proof consumption",
       "IEEE FP32, compiler, and model-to-machine refinement",
     ],
-    next: "Complete W0 with the dedicated genuinely static fe2o3-host-lld and descriptor-backed HostLinkClosureV1, then complete W1 with authenticated broker cargo-fe2o3 executable identity. Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the opaque T8/E4/K2/C4 artifact receipt, run protected MI300X routing vectors through the typed lifecycle, compare all seven GPU outputs with the independent oracle, and join IEEE FP32, compiler, logical-address, and model-to-machine refinement evidence.",
+    next: "Complete W1 with broker-owned durable replay exclusion, an unforgeable move-only session capability, exact transcript binding, and atomic terminal consumption. Then consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the opaque T8/E4/K2/C4 artifact receipt, run protected MI300X routing vectors through the typed lifecycle, compare all seven GPU outputs with the independent oracle, and join IEEE FP32, compiler, logical-address, and model-to-machine refinement evidence.",
   },
   {
     id: "moe-experts",

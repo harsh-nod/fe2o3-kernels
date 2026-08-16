@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("2042382cb072")).toBeInTheDocument();
+    expect(screen.getByText("66393d3ca7a6")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,11 +113,27 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "e4a964c61dd43e1ac5e54adc2562f6e77f2e6654",
+      "f39f9c76d964bafe9e8a12a0b48099766490b366",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
+    const w0Heading = screen.getByText(
+      "Accepted W0/G1 static host-link boundary",
+    );
+    const w0Card = w0Heading.closest("article");
+    expect(w0Card).toHaveTextContent("85,597,472-byte tool");
+    expect(w0Card).toHaveTextContent("measured/no-authority");
+    expect(w0Card).toHaveTextContent(
+      "7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9",
+    );
+    const brokerHeading = screen.getByText(
+      "Inert Broker V4 protocol foundation",
+    );
+    const brokerCard = brokerHeading.closest("article");
+    expect(brokerCard).toHaveTextContent("AUTHORITY=none");
+    expect(brokerCard).toHaveTextContent("durable registry");
+    expect(brokerCard).toHaveTextContent("unforgeable move-only capability");
     const rejectedHeading = screen.getByText(
       "Rejected W0-B static host-link candidate",
     );

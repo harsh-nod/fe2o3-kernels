@@ -1313,12 +1313,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "2042382cb07283c4339c05c6372c6798bd5ceb7b",
-      eventualPublicTree: "e4a964c61dd43e1ac5e54adc2562f6e77f2e6654",
+      eventualPublicCommit: "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
+      eventualPublicTree: "f39f9c76d964bafe9e8a12a0b48099766490b366",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "2042382cb07283c4339c05c6372c6798bd5ceb7b",
-        requiredTree: "e4a964c61dd43e1ac5e54adc2562f6e77f2e6654",
+        requiredCommit: "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
+        requiredTree: "f39f9c76d964bafe9e8a12a0b48099766490b366",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1345,6 +1345,53 @@ describe("implementation progress integrity", () => {
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "public",
     });
+  });
+
+  it("records bounded W0 acceptance and inert Broker V4 separately", () => {
+    const w0 = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "w0-host-link-closure-v1",
+    );
+    expect(w0).toMatchObject({
+      name: "Accepted W0/G1 static host-link boundary",
+      commit: "9f40bbff39156f8b5f05868377ee12a2c4f74207",
+      state: "public",
+      narrativeId: "progress/w0-host-link-closure-v1",
+    });
+    const w0Detail = checkpointDetail(w0);
+    expect(w0Detail).toContain("tree fd05530d3728aa928090b8e7beb372eaaf22b477");
+    expect(w0Detail).toContain("85,597,472-byte tool");
+    expect(w0Detail).toContain(
+      "7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9",
+    );
+    expect(w0Detail).toContain("measured/no-authority");
+    expect(w0Detail).toContain("no protected publication");
+    expect(w0Detail).toContain("neither memory safety nor race freedom");
+    expect(w0Detail).toContain("no source-to-machine or Verus-to-machine refinement");
+
+    const broker = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "broker-v4-inert-foundation",
+    );
+    expect(broker).toMatchObject({
+      name: "Inert Broker V4 protocol foundation",
+      commit: "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
+      state: "public",
+      narrativeId: "progress/broker-v4-inert-foundation",
+    });
+    const brokerDetail = checkpointDetail(broker);
+    expect(brokerDetail).toContain("tree f39f9c76d964bafe9e8a12a0b48099766490b366");
+    expect(brokerDetail).toContain("AUTHORITY=none");
+    expect(brokerDetail).toContain("No registry implementation");
+    expect(brokerDetail).toContain("broker-owned durable registry");
+    expect(brokerDetail).toContain("unforgeable move-only capability");
+    expect(brokerDetail).toContain("persist replay exclusion across restart");
+
+    for (const id of ["softmax", "flash-attention", "moe-routing", "moe-experts"]) {
+      expect(kernelProgress.find((kernel) => kernel.id === id)).toMatchObject({
+        run: "partial",
+        verify: "partial",
+        evidence: "partial",
+      });
+    }
   });
 
   it("records W0-B as rejected and pins the selected host-link closure", () => {
@@ -1542,7 +1589,7 @@ describe("implementation progress integrity", () => {
     expect(memoryProofDetail).toContain("No AuthenticatedVerusExecutionReceiptV2 join");
     expect(
       kernelProgress.find((kernel) => kernel.id === "flash-attention")?.next,
-    ).toContain("W0 with the dedicated genuinely static fe2o3-host-lld");
+    ).toContain("W1 with broker-owned durable replay exclusion");
 
     const lesson = lessons.find((entry) => entry.id === "flash-attention");
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
@@ -1623,13 +1670,13 @@ describe("implementation progress integrity", () => {
       (checkpoint) => checkpoint.id === "moe-expert-bounded-evidence",
     );
     expect(expertEvidence).toMatchObject({
-      commit: "2042382cb07283c4339c05c6372c6798bd5ceb7b",
+      commit: "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
       state: "public",
       narrativeId: "progress/moe-expert-bounded-evidence",
     });
     const expertEvidenceDetail = checkpointDetail(expertEvidence);
     expect(expertEvidenceDetail).toContain(
-      "integrates bounded MoE V2 proof and host-bridge evidence",
+      "retains the bounded MoE V2 proof and host-bridge evidence",
     );
     expect(expertEvidenceDetail).toContain("19 verified obligations");
     expect(expertEvidenceDetail).toContain(
@@ -1653,7 +1700,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "2042382cb07283c4339c05c6372c6798bd5ceb7b",
+      "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
     );
 
     const lesson = curriculum
@@ -1671,7 +1718,7 @@ describe("implementation progress integrity", () => {
     expect(result?.code).toContain("No protected GPU dispatch occurred");
     expect(
       kernelProgress.find((kernel) => kernel.id === "moe-routing")?.next,
-    ).toContain("W0 with the dedicated genuinely static fe2o3-host-lld");
+    ).toContain("W1 with broker-owned durable replay exclusion");
 
     const expertLesson = lessons.find(
       (candidate) => candidate.id === "moe-expert-compute",

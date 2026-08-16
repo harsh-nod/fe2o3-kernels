@@ -3,6 +3,8 @@ import { deepFreeze } from "./registry";
 // Registry additions require an explicit ID, checkpoint binding, and reviewed SHA-256.
 export const progressNarrativeIds = deepFreeze([
   "progress/last-audited-public-baseline",
+  "progress/w0-host-link-closure-v1",
+  "progress/broker-v4-inert-foundation",
   "progress/w0b-host-link-rejection",
   "progress/production-s09-rustc-invocation",
   "progress/authenticated-verus-v2",
@@ -37,6 +39,8 @@ export type ProgressNarrativeId = (typeof progressNarrativeIds)[number];
 
 export const progressNarrativeFingerprints = deepFreeze({
   "progress/last-audited-public-baseline": "e1e6c3c7c92857aa439bdc6730b24b841c913ad80d7a961bcb5264145d93d89c",
+  "progress/w0-host-link-closure-v1": "d41817d578eb295f4730421f61540263d324d0190bf844abf7ef8ca17a36c3c1",
+  "progress/broker-v4-inert-foundation": "fa00c5923d3c1931d0d751ebe39159b1797ffb38d083b7514c6fb739dc2dceb9",
   "progress/w0b-host-link-rejection": "0d690d75378f042b05043a4f34ae884f571320f5766ac7bc9e2a0d549cd79a39",
   "progress/production-s09-rustc-invocation": "d7fa0990f834630741d0a069578cabc79fd95c7b758e33a8ef1ed08d29cea8fb",
   "progress/authenticated-verus-v2": "f4e644ff77c50f896b9f61851052e1e2235c13cd648fefa864be7f9efdda17f2",
@@ -60,7 +64,7 @@ export const progressNarrativeFingerprints = deepFreeze({
   "progress/moe-top2-direct-finalization": "000c42e5b7f5e2b506a6e243f27a689243687d6b211d37811ec28e83aa81cdcb",
   "progress/moe-top2-typed-runtime": "bd7d6a96858bd819534738dcb589ac378961abc1ca0f8212abe97a210a76088c",
   "progress/moe-top2-memory-proof": "84d983299657bbd212a872f6c7d3dae1e26652bacbdac2410043d8d04b896e9c",
-  "progress/moe-expert-bounded-evidence": "2587636c0f54550913799bf663ba51ffb2e0709c1bb5d85136d7c0bf26c16004",
+  "progress/moe-expert-bounded-evidence": "6988dfeff8f9bd77e425e6f21ead67bea341280f3f60df1f6fb807bb1895f9a1",
   "progress/scalar-gemm-v1": "da83866695d23c3fc1c7a4f335153c3112e92d12f8f538f45735eca5240eeb60",
   "progress/scalar-gemm-proof-profile": "537ff56d6904ac5e65be9e9cd8b31bcce9a36d662eda48245a027afda51d279a",
   "progress/scalar-gemm-physical-effects": "e5f66a29804312a75b33a16d1db208cc56b313409afb76dda1b7c7635e1eb40b",

@@ -1,6 +1,6 @@
 {
-  "requiredCommit": "2042382cb07283c4339c05c6372c6798bd5ceb7b",
-  "requiredTree": "e4a964c61dd43e1ac5e54adc2562f6e77f2e6654",
+  "requiredCommit": "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
+  "requiredTree": "f39f9c76d964bafe9e8a12a0b48099766490b366",
   "requiredRefs": [
     {
       "repository": "harsh-nod/fe2o3",

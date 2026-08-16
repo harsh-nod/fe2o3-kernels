@@ -36,12 +36,12 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The checked-in publication gate is pinned to the intended public-main implementation
-commit `2042382cb07283c4339c05c6372c6798bd5ceb7b`, tree
-`e4a964c61dd43e1ac5e54adc2562f6e77f2e6654`. Deployment requires
+The checked-in publication gate is pinned to public-main implementation commit
+`66393d3ca7a6805633ed94e12c707a6d22bdf1ad`, tree
+`f39f9c76d964bafe9e8a12a0b48099766490b366`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
-both refs move, the live publication gate fails closed. This descendant contains
+both refs match, the live publication gate fails closed. This descendant contains
 the exact protected Slice 1
 implementation and measured evidence pinned to commit
 `c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`, tree
@@ -105,10 +105,11 @@ They did not dispatch a GPU and establish only bounded
 compiler/code-object reproducibility and operator-selected reviewed integrity,
 not runtime or GPU results, authentication, generalized memory safety or race
 freedom, or source/model/Verus-to-machine refinement. The GPU code-object path
-remains pinned upstream LLVM target-machine APIs plus in-process LLD. Production
-remains blocked on W0 authenticated `HostLinkClosureV1`, followed by W1 broker
-`cargo-fe2o3` executable identity; no production row-softmax hardware run is
-claimed. The publication-gated snapshot also contains exact B=1, H=1, N=8,
+remains pinned upstream LLVM target-machine APIs plus in-process LLD. W0 is now
+accepted only as the bounded ancestor described below. Production remains
+blocked on W1 broker-owned durable replay/session authority; no production
+row-softmax hardware run is claimed. The publication-gated snapshot also
+contains exact B=1, H=1, N=8,
 D=16 FlashAttention compiler
 admission. It binds ordinary attributed source, FnAbi, compiler configuration,
 complete reachable portable MIR, semantic Kernel IR, and V3 provider identity,
@@ -130,10 +131,11 @@ Loaded -> Completed -> Unloaded` lifecycle that binds reviewed HSA executable,
 kernel, group-segment, and private-segment observations. Nine compile-fail
 cases enforce the ownership and typestate boundaries, and an independent
 strict-F32 CPU oracle covers nominal, equal-score, dominant-score, causal-mask,
-exceptional-input, unchanged-input, and canary cases. The protected MI300X test
-fails closed before HSA load pending W0 authenticated host-link closure, W1
-broker executable identity, and subsequent linear receipt injection;
-artifact-path and raw-byte fallbacks are refused. This is host/runtime mechanics,
+exceptional-input, unchanged-input, and canary cases. At that checkpoint the
+protected MI300X test failed closed before HSA load pending W0 and W1; the
+current tip closes only the bounded W0 prerequisite, while W1 durable
+replay/session authority and subsequent linear receipt injection remain open.
+Artifact-path and raw-byte fallbacks are refused. This is host/runtime mechanics,
 compile-fail, resource-observation,
 and CPU-oracle evidence only. It grants no protected GPU dispatch or numerical
 GPU result, compiler or OCML semantics, source/model/Verus-to-machine
@@ -177,7 +179,7 @@ baseline remains
 `96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
 `f911f0c693238830ad6070b2674fb863857bfec1`.
 
-The final docs-only descendant also records the rejected W0-B candidate
+The public history also records the rejected W0-B candidate
 `2e5ad53bcb20f2a46e91128a42e838d918d61581`, tree
 `892f014381cd3e34f81cb05df3b9bbda4a412478`. That candidate is not integrated,
 accepted, or public. On MI300X it crossed the static binding-wrapper, Cargo,
@@ -188,14 +190,31 @@ it opened no COMGR path. Review also found that its dynamically linked host
 `rust-lld` left the ELF loader and system DSOs, CRTs, archives and objects,
 search roots, and forwarded Cargo target artifacts outside the authenticated
 closure. `env_clear` reduces ambient configuration but is not dependency
-authentication. W0 is a dedicated, genuinely static
-`fe2o3-host-lld` built from pinned upstream LLVM/LLD archives plus a
-descriptor-backed `HostLinkClosureV1`, with pre-link and post-link closure
-revalidation. W1 broker `cargo-fe2o3` executable identity follows that closure.
-Retaining the dynamic `rust-lld` is rejected, while an in-process host LLD is
-deferred. Device code-object linking remains pinned upstream LLVM target-machine APIs plus
-in-process LLD, with no COMGR or shell GPU linker. This rejection and design
-decision promote no parity or evidence row.
+authentication. The accepted successor is rooted at ancestor commit
+`9f40bbff39156f8b5f05868377ee12a2c4f74207`, tree
+`fd05530d3728aa928090b8e7beb372eaaf22b477`. Its dedicated genuinely static
+`fe2o3-host-lld` is built from pinned upstream LLVM/LLD archives and consumed by
+descriptor-sealed `HostLinkClosureV1`. Two fresh guarded MI300X builds produced
+the same 85,597,472-byte tool with SHA-256
+`7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9`;
+the secure-protocol CTest and a separate real closure link slice passed. This is
+measured/no-authority evidence only. W0 grants no protected publication, broker
+or durable artifact handoff, runtime, load, launch, or GPU authority or evidence;
+it proves neither memory safety nor race freedom and establishes no
+source-to-machine or Verus-to-machine refinement.
+
+The publication-gated tip adds an inert Broker V4 protocol foundation at commit
+`66393d3ca7a6805633ed94e12c707a6d22bdf1ad`, tree
+`f39f9c76d964bafe9e8a12a0b48099766490b366`. Its canonical binding, frames,
+transcript validator, replay claim, and registry interface all carry
+`AUTHORITY=none`; there is no production registry implementation or session
+capability. W1 remains the next blocker: the broker must durably and atomically
+reserve a unique session before host linking, issue an unforgeable move-only
+capability, bind completion to the exact reservation and transcript, persist
+replay exclusion across restart, and consume that capability once at durable
+publication. Device code-object linking remains pinned upstream LLVM
+target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker.
+Neither W0 nor inert Broker V4 promotes a parity or tutorial evidence row.
 
 The pinned snapshot retains the production S09
 checkpoint that canonically captures the
@@ -571,9 +590,9 @@ At the audited pin:
   complete MI300X runs passed and independent review accepted the evidence
   package. Those runs dispatched no GPU and grant no runtime,
   authentication, refinement, generalized memory-safety, or race-freedom
-  authority. Production remains blocked on W0 authenticated host-link closure,
-  then W1 broker executable identity, so these mechanics grant no protected
-  hardware authority.
+  authority. W0's measured/no-authority host-link prerequisite is accepted;
+  production remains blocked on W1 durable replay/session authority, so these
+  mechanics grant no protected hardware authority.
   FlashAttention Phase A now has exact ordinary
   attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
   oracle, executable proof-facing models, debug/release mutation suites, and a
@@ -593,10 +612,10 @@ At the audited pin:
   oracle pass. A separate pinned Verus memory/effect source verifies 13 exact
   fixed-domain obligations and rejects eight mutations, while its public
   expected-evidence descriptor remains inert and creates no proof receipt. The
-  protected gate still fails closed before HSA load pending W0 authenticated
-  host-link closure, W1 broker executable identity, and subsequent linear
-  receipt injection. No protected GPU dispatch or numerical GPU output is
-  claimed, and
+  historical protected gate fails closed before HSA load. The current public
+  path has accepted bounded W0 but still lacks W1 durable replay/session
+  authority and subsequent linear receipt injection. No protected GPU dispatch
+  or numerical GPU output is claimed, and
   compiler/OCML semantics, authenticated proof consumption, source/model/Verus-
   to-machine refinement, machine memory safety, generalized race freedom, and
   GPU execution remain open. MoE routing
