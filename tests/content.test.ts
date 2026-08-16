@@ -1204,11 +1204,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
-      eventualPublicTree: "7c25b5807addeaaab26036a78fc414ea4803dc2c",
+      eventualPublicCommit: "182d5673327bdbf642e3328a50903a4607a1756c",
+      eventualPublicTree: "c45ae5ac9f085e29fd1a2356ca82a6c8ac0f4749",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
+        requiredCommit: "182d5673327bdbf642e3328a50903a4607a1756c",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1289,6 +1289,19 @@ describe("implementation progress integrity", () => {
     expect(runtimeDetail).toContain("independent strict-f32 CPU oracle");
     expect(runtimeDetail).toContain("fails closed before HSA load");
     expect(runtimeDetail).toContain("no protected GPU dispatch or numerical GPU result");
+    const memoryProof = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "flash-attention-memory-proof",
+    );
+    expect(memoryProof).toMatchObject({
+      commit: "182d5673327bdbf642e3328a50903a4607a1756c",
+      state: "public",
+    });
+    const memoryProofDetail = checkpointDetail(memoryProof);
+    expect(memoryProofDetail).toContain("13 verified obligations");
+    expect(memoryProofDetail).toContain("all eight pinned mutations");
+    expect(memoryProofDetail).toContain("explicitly inert");
+    expect(memoryProofDetail).toContain("has_identity_bound_verus_receipt false");
+    expect(memoryProofDetail).toContain("No AuthenticatedVerusExecutionReceiptV2 join");
     expect(
       kernelProgress.find((kernel) => kernel.id === "flash-attention")?.next,
     ).toContain("production static wrapper");

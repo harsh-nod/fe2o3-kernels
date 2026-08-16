@@ -46,6 +46,7 @@ export const developmentCheckpointIds = deepFreeze([
   "flash-attention-compiler-admission",
   "flash-attention-direct-finalization",
   "flash-attention-typed-runtime",
+  "flash-attention-memory-proof",
   "moe-top2-compiler-admission",
   "moe-top2-direct-finalization",
   "scalar-gemm-v1",
@@ -296,6 +297,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "flash-attention-typed-runtime": {
     kind: "narrative",
     narrativeId: "progress/flash-attention-typed-runtime",
+  },
+  "flash-attention-memory-proof": {
+    kind: "narrative",
+    narrativeId: "progress/flash-attention-memory-proof",
   },
   "moe-top2-compiler-admission": {
     kind: "narrative",
@@ -562,6 +567,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
     state: "public",
     narrativeId: "progress/flash-attention-typed-runtime",
+  },
+  {
+    id: "flash-attention-memory-proof",
+    kind: "narrative",
+    name: "FlashAttention exact bounded memory/effect proof",
+    commit: "182d5673327bdbf642e3328a50903a4607a1756c",
+    state: "public",
+    narrativeId: "progress/flash-attention-memory-proof",
   },
   {
     id: "moe-top2-compiler-admission",
@@ -975,9 +988,10 @@ export const kernelProgress: KernelProgress[] = [
     dependsOn: [
       "production static binding wrapper and protected receipt injection",
       "protected MI300X execution and numerical comparison",
+      "authenticated Verus execution receipt and proof consumption",
       "compiler, OCML, and source/model-to-machine refinement",
     ],
-    next: "Inject the exact B1/H1/N8/D16 linear receipt from the measured production static wrapper, run the protected MI300X vectors through the typed lifecycle, compare GPU output with the independent oracle, and join compiler, OCML, and source/model-to-machine refinement evidence.",
+    next: "Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the exact B1/H1/N8/D16 linear artifact receipt from the measured production static wrapper, run the protected MI300X vectors through the typed lifecycle, compare GPU output with the independent oracle, and join compiler, OCML, logical-address, and source/model-to-machine refinement evidence.",
   },
   {
     id: "moe-routing",
