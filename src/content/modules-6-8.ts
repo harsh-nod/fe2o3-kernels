@@ -61,20 +61,32 @@ const moeRouting: Lesson = {
     },
     {
       language: "bash",
-      code: noHost,
+      code: `cargo test -p fe2o3-hsa-runtime \\
+  --test moe_top2_v1_hardware \\
+  independent_moe_oracle_covers_ties_capacity_permutation_inverse_and_sentinels \\
+  -- --exact --nocapture
+
+# This protected gate must fail closed before HSA load until the production
+# static wrapper injects the opaque linear finalization receipt.
+cargo test -p fe2o3-hsa-runtime \\
+  --test moe_top2_v1_hardware \\
+  protected_gfx942_moe_top2_v1_hardware \\
+  -- --ignored --exact --nocapture`,
+      sourcePath: "crates/fe2o3-hsa-runtime/tests/moe_top2_v1_hardware.rs",
+      sourceCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
       explanatory: true,
       notice:
-        "No generated host/runtime adapter exists for this exact routing profile.",
+        "The exact eight-buffer adapter and linear lifecycle are source-tested. The independent CPU oracle passes; the protected gate refuses artifact-path or raw-byte fallback and fails before HSA load until production static-wrapper receipt injection exists.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, and an opaque deterministic upstream LLVM/LLD finalization receipt are public. The direct worker produced identical raw and finalized identities in measured debug and release runs. Remaining gaps: authenticated publication, IEEE FP32/source refinement, generated host/runtime, protected gfx942 execution, and source/model-to-machine refinement. No functional hardware result is claimed.",
+        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, opaque deterministic upstream LLVM/LLD finalization, and T8/E4/K2/C4 typed host/runtime mechanics are public. The eight-buffer binding retains logits shared read-only and seven unique read-write outputs, rejects every alias pair, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Five binder tests, five lifecycle tests, nine compile-fail boundaries, and the independent routing oracle pass on MI300X. The protected test fails closed before HSA load because production static-wrapper receipt injection is absent. Remaining gaps: protected GPU output and seven-buffer oracle comparison, bounded memory/effect proof and authenticated proof consumption, IEEE FP32/compiler/logical-address refinement, expert GEMM/combine, and source/model-to-machine refinement. No functional hardware result is claimed. No protected GPU dispatch occurred.",
       ),
       explanatory: true,
       notice:
-        "Evidence boundary: the proof covers the fixed mathematical routing model, not compiled Rust, machine semantics, race freedom, or GPU execution.",
+        "Evidence boundary: this combines fixed source/model proof, typed ownership/lifecycle, compile-fail, and CPU-oracle evidence. It does not establish authenticated proof consumption, compiled Rust or machine semantics, generalized memory safety or race freedom, protected GPU dispatch, expert computation, or a numerical GPU result.",
     },
   ),
   diagram: "moe",

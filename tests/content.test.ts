@@ -278,10 +278,10 @@ describe("curriculum integrity", () => {
           ]
         : profile.lessonId === "moe-routing"
         ? [
-            "authenticated publication",
-            "IEEE FP32/source refinement",
-            "generated host/runtime",
-            "protected gfx942 execution",
+            "production static-wrapper receipt injection",
+            "protected GPU output",
+            "bounded memory/effect proof",
+            "IEEE FP32/compiler/logical-address refinement",
             "source/model-to-machine refinement",
           ]
           : profile.lessonId === "lds-barriers-atomics"
@@ -1201,14 +1201,14 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-15",
+      reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "ab31f1acfd6424048869450f3090281aec15de2c",
-      eventualPublicTree: "a27e60b849f30e35b08a0790bad9942737550ef0",
+      eventualPublicCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
+      eventualPublicTree: "6de71f0b421607862f0c57a761d8f2018e6bc090",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "ab31f1acfd6424048869450f3090281aec15de2c",
+        requiredCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1320,7 +1320,7 @@ describe("implementation progress integrity", () => {
     expect(result?.code).toContain("No protected GPU dispatch");
   });
 
-  it("tracks G5 MoE finalization without granting downstream authority", () => {
+  it("tracks G5 MoE finalization and typed runtime without granting GPU authority", () => {
     const admission = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "moe-top2-compiler-admission",
     );
@@ -1345,9 +1345,37 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain(
       "no publication, load, launch, runtime, GPU numerical, performance, compiler-refinement, Verus-to-machine, general memory-safety, or race-freedom authority",
     );
+
+    const runtime = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "moe-top2-typed-runtime",
+    );
+    expect(runtime).toMatchObject({
+      commit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
+      state: "public",
+    });
+    const runtimeDetail = checkpointDetail(runtime);
+    expect(runtimeDetail).toContain("eight-buffer binding");
+    expect(runtimeDetail).toContain("Joined -> Loaded -> Completed -> Unloaded");
+    expect(runtimeDetail).toContain("nine compile-fail cases");
+    expect(runtimeDetail).toContain("independent CPU oracle");
+    expect(runtimeDetail).toContain("fails closed before HSA load");
+    expect(runtimeDetail).toContain("no protected GPU routing result");
+
+    const lesson = curriculum
+      .flatMap((module) => module.lessons)
+      .find((candidate) => candidate.id === "moe-routing");
+    const host = lesson?.tabs.find((tab) => tab.kind === "host");
+    const result = lesson?.tabs.find((tab) => tab.kind === "result");
+    expect(host).toMatchObject({
+      sourcePath: "crates/fe2o3-hsa-runtime/tests/moe_top2_v1_hardware.rs",
+      sourceCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
+      explanatory: true,
+    });
+    expect(host?.code).toContain("protected_gfx942_moe_top2_v1_hardware");
+    expect(result?.code).toContain("No protected GPU dispatch occurred");
     expect(
       kernelProgress.find((kernel) => kernel.id === "moe-routing")?.next,
-    ).toContain("authenticated publication");
+    ).toContain("production static wrapper");
   });
 
   it("tracks scalar GEMM hardware observation without upgrading authority", () => {

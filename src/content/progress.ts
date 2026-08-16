@@ -49,6 +49,7 @@ export const developmentCheckpointIds = deepFreeze([
   "flash-attention-memory-proof",
   "moe-top2-compiler-admission",
   "moe-top2-direct-finalization",
+  "moe-top2-typed-runtime",
   "scalar-gemm-v1",
   "scalar-gemm-proof-profile",
   "scalar-gemm-physical-effects",
@@ -113,7 +114,7 @@ export type DevelopmentCheckpoint =
   | StagedEvidenceDevelopmentCheckpoint;
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-15",
+  reviewedOn: "2026-08-16",
   auditedCommit: FE2O3_PIN.commit,
   lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
   lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
@@ -309,6 +310,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "moe-top2-direct-finalization": {
     kind: "narrative",
     narrativeId: "progress/moe-top2-direct-finalization",
+  },
+  "moe-top2-typed-runtime": {
+    kind: "narrative",
+    narrativeId: "progress/moe-top2-typed-runtime",
   },
   "scalar-gemm-v1": {
     kind: "narrative",
@@ -591,6 +596,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "8926b3f725a9cb6a15bc8f43f019af1afffc6c1c",
     state: "public",
     narrativeId: "progress/moe-top2-direct-finalization",
+  },
+  {
+    id: "moe-top2-typed-runtime",
+    kind: "narrative",
+    name: "MoE top-2 exact typed host/runtime mechanics",
+    commit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
+    state: "public",
+    narrativeId: "progress/moe-top2-typed-runtime",
   },
   {
     id: "scalar-gemm-v1",
@@ -999,8 +1012,13 @@ export const kernelProgress: KernelProgress[] = [
     run: "partial",
     verify: "partial",
     evidence: "partial",
-    dependsOn: ["scan", "stable permutation", "capacity policy"],
-    next: "Carry the opaque T8/E4/K2/C4 finalization receipt through authenticated publication, a generated typed host/runtime path, protected hardware vectors, IEEE FP32/source refinement, and model-to-machine refinement.",
+    dependsOn: [
+      "production static binding wrapper and protected receipt injection",
+      "protected MI300X routing vectors and GPU/oracle comparison",
+      "bounded memory/effect proof and authenticated proof consumption",
+      "IEEE FP32, compiler, and model-to-machine refinement",
+    ],
+    next: "Inject the opaque T8/E4/K2/C4 receipt from the measured production static wrapper, run protected MI300X routing vectors through the typed lifecycle, compare all seven GPU outputs with the independent oracle, add the bounded memory/effect proof, and join IEEE FP32, compiler, logical-address, and model-to-machine refinement evidence.",
   },
   {
     id: "moe-experts",
