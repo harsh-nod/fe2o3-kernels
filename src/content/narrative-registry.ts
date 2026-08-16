@@ -118,6 +118,41 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "read-the-evidence/moe-bounded-evidence": {
+    "sectionId": "moe-bounded-evidence",
+    "title": "Read bounded MoE evidence by layer",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "The bounded MoE expert work below is an acceptance-stage candidate beyond the currently publication-gated fe2o3 snapshot. Each row states only the layer that was exercised; none is a functional expert GPU result."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Evidence",
+          "What was checked",
+          "Open boundary"
+        ],
+        "rows": [
+          [
+            "Compact-plan model",
+            "For exactly E4/C4/routes16/width16/tile256, Verus discharged 19 obligations, seven expected-failure mutations were rejected, and the Rust checker exhaustively accepted all 625 count vectors.",
+            "This is fixed-profile Verus and CPU evidence. It provides no authenticated proof receipt, compiler/finalizer binding, artifact, dispatch, expert GPU result, or performance claim."
+          ],
+          [
+            "Host routing bridge",
+            "The bridge checks internal consistency of caller-supplied top2 experts, requested and admitted counts, offsets, route slots, permutation, and inverse. It uploads offsets and inverse together, retains both device regions, and passed gfx942 upload/readback.",
+            "It authenticates neither router execution nor readback provenance, top2 selection from logits, route weights, packed activations, compiler/finalizer output, dispatch, or expert execution. Rechecking caller-supplied input can reconstruct equivalent evidence, so it carries no freshness or replay authority."
+          ],
+          [
+            "Expert GPU result",
+            "No expert GEMM or combine kernel was dispatched by this evidence slice.",
+            "Functional GPU output, GPU/oracle comparison, numerical refinement, and performance remain open."
+          ]
+        ]
+      }
+    ]
+  },
   "gfx942-setup/toolchain": {
     "sectionId": "toolchain",
     "title": "Pinned inputs",
@@ -897,6 +932,22 @@ const narrativeRegistry = deepFreeze({
             "one writer; stated reduction order"
           ]
         ]
+      }
+    ]
+  },
+  "moe-expert-compute/bounded-evidence": {
+    "sectionId": "bounded-evidence",
+    "title": "The bounded compact-plan and host bridge",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "The exact E4/C4/routes16/width16/tile256 compact-plan model turns monotone expert offsets into bounded source and destination ranges, pairwise disjoint ordered destination ranges, an accepted-prefix union, and a defined zero tail. Verus reports 19 verified obligations, all seven expected-failure mutations are rejected, and a Rust checker exhaustively covers all 625 possible expert-count vectors."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "A consistent host snapshot is not router provenance",
+        "text": "The host bridge validates the internal relation among caller-supplied top2 experts, requested and admitted counts, offsets, route slots, permutation, and inverse. It synchronously uploads offsets and inverse together and retains both immutable device regions; a gfx942 fixture read both arrays back exactly. It does not authenticate router completion or device readback, prove top2 selection from logits, bind route weights or packed activations, or grant compiler, finalizer, artifact, copy, load, dispatch, or expert GPU authority. The caller-supplied candidate can be checked again, so the resulting evidence has no freshness or replay authority."
       }
     ]
   },

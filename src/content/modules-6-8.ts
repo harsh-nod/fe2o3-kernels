@@ -120,6 +120,7 @@ const expertCompute: Lesson = {
     "Treat each expert's compacted token range as a bounded GEMM batch.",
     "Carry route identity through expert output and inverse permutation.",
     "State determinism and numerical contracts for weighted combine.",
+    "Separate host-snapshot consistency from authenticated router provenance.",
   ],
   claims: [
     sourceMilestoneClaim("moe-expert-source-v1"),
@@ -128,6 +129,7 @@ const expertCompute: Lesson = {
   sections: [
     narrativeSection("moe-expert-compute/composition"),
     narrativeSection("moe-expert-compute/combine"),
+    narrativeSection("moe-expert-compute/bounded-evidence"),
   ],
   tabs: completeTabs(
     {
@@ -161,22 +163,37 @@ cargo test --locked --release \\
   --all-targets
 
 VERUS=/absolute/path/to/pinned/verus \\
-  examples/moe_expert_v1/run-verus.sh`,
+  examples/moe_expert_v1/run-verus.sh
+
+VERUS=/absolute/path/to/pinned/verus \\
+  scripts/test-moe-expert-compact-plan-verus.sh
+
+cargo test --locked -p fe2o3-host \\
+  moe_routing_expert_bridge_v1 -- --nocapture
+
+cargo test --locked -p fe2o3-host \\
+  --test generated_moe_expert_v1_ui
+
+# Requires gfx942:xnack- and performs copies plus readback only. No kernel runs.
+cargo test --locked -p fe2o3-host \\
+  --test moe_expert_v1_upload_hardware \\
+  gfx942_routing_bridge_upload_readback_and_denial_are_exact \\
+  -- --ignored --exact --nocapture`,
       sourcePath: "examples/moe_expert_v1/src/pipeline.rs",
       sourceCommit: moeExpertSource.commit,
       explanatory: true,
       notice:
-        "These commands execute the host schedule, independent direct oracle, source checks, canary tests, and pinned Verus proof. They do not dispatch a GPU kernel.",
+        "These commands cover the host schedule, independent direct oracle, source checks, canaries, both pinned Verus models, host routing-snapshot checks, compile-fail boundaries, and the gfx942 offsets-plus-inverse upload/readback fixture. The upload fixture dispatches no kernel and grants no execution authority.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Commit ff0c08a5bdca2568178f690c04c0b0c6bfa6febe publishes two ordinary attributed kernels for the exact T8/E4/K2/C4, I16/O16 host-scheduled expert pipeline: one 16x16x16 BF16/F32 expert GEMM and one deterministic top-2 weighted combine. The executable host schedule and independent direct oracle agree on active and padded expert rows, compact outputs, dropped routes, route-order weighting, every final token output, unchanged inputs, and guard canaries in debug and release. Verus verifies 15 logical memory/effect obligations, and all six pinned mutations fail. Remaining gaps: exact compiler admission and direct finalization for both kernels, a typed multi-dispatch runtime, protected gfx942 execution, GPU/oracle comparison, numerical refinement, source/model-to-machine refinement, authenticated proof consumption, machine memory safety, and generalized race freedom. Grouped or persistent expert scheduling is still separate future work. No functional hardware result is claimed. No GPU dispatch occurred.",
+        "Commit ff0c08a5bdca2568178f690c04c0b0c6bfa6febe publishes two ordinary attributed kernels for the exact T8/E4/K2/C4, I16/O16 host-scheduled expert pipeline: one 16x16x16 BF16/F32 expert GEMM and one deterministic top-2 weighted combine. The executable host schedule and independent direct oracle agree on active and padded expert rows, compact outputs, dropped routes, route-order weighting, every final token output, unchanged inputs, and guard canaries in debug and release. The original logical memory/effect model verifies 15 obligations and rejects six pinned mutations. A separate acceptance-stage E4/C4/routes16/width16/tile256 compact-plan model verifies 19 obligations, rejects seven expected-failure mutations, and exhaustively checks all 625 count vectors. The host bridge validates internal consistency of caller-supplied top2 experts, requested and admitted counts, offsets, route slots, permutation, and inverse; it uploads offsets and inverse together, retains both regions, and passed gfx942 upload/readback. It does not authenticate router execution or readback provenance, derive top2 choices from logits, bind route weights or packed activations, or provide freshness, replay, compiler, finalizer, artifact, dispatch, or expert-execution authority. Remaining gaps include those joins, exact compiler admission and direct finalization for both expert kernels, a typed multi-dispatch runtime, protected gfx942 execution of both expert kernels, GPU/oracle comparison, numerical refinement, source/model-to-machine refinement, authenticated proof consumption, machine memory safety, and generalized race freedom. Grouped or persistent expert scheduling is still separate future work. No functional hardware result is claimed. No functional expert GPU result or performance result is claimed. No expert kernel was dispatched.",
       ),
       explanatory: true,
       notice:
-        "Evidence boundary: real attributed source, host arithmetic, independent oracle, canaries, and a bounded logical Verus model are public. Compiler, artifact, runtime, machine, numerical, performance, and protected-execution authority remain absent.",
+        "Evidence boundary: real attributed source, host arithmetic, independent oracle, canaries, fixed-profile Verus models, exhaustive CPU checks, and a retained host-to-device upload/readback observation exist. The new compact-plan and routing-bridge work is acceptance-stage and is not yet covered by this site's publication gate. Compiler, finalizer, artifact, dispatch, expert GPU execution, numerical, performance, provenance, freshness, replay, and protected-execution authority remain absent.",
     },
   ),
   diagram: "moe",

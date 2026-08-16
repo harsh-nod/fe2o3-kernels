@@ -1456,6 +1456,44 @@ describe("implementation progress integrity", () => {
     expect(
       kernelProgress.find((kernel) => kernel.id === "moe-routing")?.next,
     ).toContain("production static wrapper");
+
+    const expertLesson = lessons.find(
+      (candidate) => candidate.id === "moe-expert-compute",
+    );
+    const expertHost = expertLesson?.tabs.find((tab) => tab.kind === "host");
+    const expertResult = expertLesson?.tabs.find((tab) => tab.kind === "result");
+    const expertContent = serializedLessonContent("moe-expert-compute");
+    expect(expertContent).toContain("E4/C4/routes16/width16/tile256");
+    expect(expertContent).toContain("19 verified obligations");
+    expect(expertContent).toContain("all seven expected-failure mutations");
+    expect(expertContent).toContain("all 625 possible expert-count vectors");
+    expect(expertContent).toContain(
+      "A consistent host snapshot is not router provenance",
+    );
+    expect(expertContent).toContain("no freshness or replay authority");
+    expect(expertHost?.code).toContain(
+      "scripts/test-moe-expert-compact-plan-verus.sh",
+    );
+    expect(expertHost?.code).toContain(
+      "gfx942_routing_bridge_upload_readback_and_denial_are_exact",
+    );
+    expect(expertHost?.notice).toContain("dispatches no kernel");
+    expect(expertResult?.code).toContain(
+      "internal consistency of caller-supplied top2 experts",
+    );
+    expect(expertResult?.code).toContain(
+      "No functional expert GPU result or performance result is claimed",
+    );
+    expect(expertResult?.code).toContain("No expert kernel was dispatched");
+
+    const orientation = serializedLessonContent("read-the-evidence");
+    expect(orientation).toContain("Read bounded MoE evidence by layer");
+    expect(orientation).toContain("all 625 count vectors");
+    expect(orientation).toContain("uploads offsets and inverse together");
+    expect(orientation).toContain("no freshness or replay authority");
+    expect(orientation).toContain(
+      "No expert GEMM or combine kernel was dispatched",
+    );
   });
 
   it("tracks scalar GEMM hardware observation without upgrading authority", () => {

@@ -5,6 +5,7 @@ export const narrativeIds = deepFreeze([
   "read-the-evidence/labels",
   "read-the-evidence/differentiator",
   "read-the-evidence/scalar-gemm-checkpoint",
+  "read-the-evidence/moe-bounded-evidence",
   "gfx942-setup/toolchain",
   "gfx942-setup/sequence",
   "first-fill/kernel-shape",
@@ -33,6 +34,7 @@ export const narrativeIds = deepFreeze([
   "moe-routing/permutation",
   "moe-expert-compute/composition",
   "moe-expert-compute/combine",
+  "moe-expert-compute/bounded-evidence",
   "evidence-pipeline/chain",
   "evidence-pipeline/why-direct",
   "what-verus-proves/proved",
@@ -49,7 +51,8 @@ export const narrativeOrderByLesson = deepFreeze({
   "read-the-evidence": [
     "read-the-evidence/labels",
     "read-the-evidence/differentiator",
-    "read-the-evidence/scalar-gemm-checkpoint"
+    "read-the-evidence/scalar-gemm-checkpoint",
+    "read-the-evidence/moe-bounded-evidence"
   ],
   "gfx942-setup": [
     "gfx942-setup/toolchain",
@@ -103,7 +106,8 @@ export const narrativeOrderByLesson = deepFreeze({
   ],
   "moe-expert-compute": [
     "moe-expert-compute/composition",
-    "moe-expert-compute/combine"
+    "moe-expert-compute/combine",
+    "moe-expert-compute/bounded-evidence"
   ],
   "evidence-pipeline": [
     "evidence-pipeline/chain",
@@ -132,6 +136,7 @@ export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
   "read-the-evidence/differentiator": "7d4f9897c50993ecbe6e8d9f94162e6cf649f669f1f555627f9d2df5cb0147d7",
   "read-the-evidence/scalar-gemm-checkpoint": "3a89c3c6618b84f7c991b19317818624549b1ac51ba76f5c727fd58c6a692922",
+  "read-the-evidence/moe-bounded-evidence": "cf380650c51aa44090adbf4ded61fdcddb19dd4f4570d81f68bc312ad706194b",
   "gfx942-setup/toolchain": "bde4a23bc51376d828c8b910ab8048c988c7f838736f1d309bea0294fde84ef3",
   "gfx942-setup/sequence": "00a0689fb93a27622076f9bd21c5fb8c0b78c57d88d79dc8db0bfb86596315da",
   "first-fill/kernel-shape": "ad9c0b9744f9494313d2fcc88dfb1aee778c732acc2f2414f7f2712ac27cea6f",
@@ -160,6 +165,7 @@ export const narrativeFingerprints = deepFreeze({
   "moe-routing/permutation": "59d0d30d3a7d631aa2722d78639c0c1d69fc8f619c0d7eb96bb3ea5a5e7dae56",
   "moe-expert-compute/composition": "9aab7c463171447c8f914db0df7e2444361a11942f1d47b817aeea0977575c32",
   "moe-expert-compute/combine": "697de91306b180d91e1eb672ff3bc28c9ce4f02c5542d4fa6f2a1ce7820e6ad6",
+  "moe-expert-compute/bounded-evidence": "2dc95c2f5f1d5be75efb5bd95b440f3fe487a9438c49f2ecaf6f7bab7f6900fb",
   "evidence-pipeline/chain": "621e2f455016f7893d96eeb3a77d61136532c2c6acca35fc701123831221b320",
   "evidence-pipeline/why-direct": "f18b5450d768ca8aa846f5d5a02a9b9a46eeba5ead79253b0c7aa682de66d947",
   "what-verus-proves/proved": "5d3d102e616652b33c16f41ee786a5806cb89f12b99db5483372c714023dc857",

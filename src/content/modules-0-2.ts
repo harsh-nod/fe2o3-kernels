@@ -56,6 +56,7 @@ const orientation: Lesson = {
     narrativeSection("read-the-evidence/labels"),
     narrativeSection("read-the-evidence/differentiator"),
     narrativeSection("read-the-evidence/scalar-gemm-checkpoint"),
+    narrativeSection("read-the-evidence/moe-bounded-evidence"),
     {
       kind: "staged-evidence",
       evidenceIds: [...stagedEvidenceOrder],

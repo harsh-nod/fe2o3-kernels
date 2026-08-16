@@ -49,6 +49,15 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
       name: "Read the evidence before the code",
     }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Read bounded MoE evidence by layer",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText(/19 obligations/u)).toBeVisible();
+  await expect(page.getByText(/all 625 count vectors/u)).toBeVisible();
+  await expect(page.getByText(/no freshness or replay authority/u)).toBeVisible();
   await page.keyboard.press("Control+K");
   const search = page.getByRole("textbox", {
     name: "Search lessons and glossary",
@@ -244,13 +253,25 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
   await expect(page.getByRole("tabpanel")).toContainText(
     "examples/moe_expert_v1/run-verus.sh",
   );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "scripts/test-moe-expert-compact-plan-verus.sh",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "gfx942_routing_bridge_upload_readback_and_denial_are_exact",
+  );
   await expect(
-    page.getByText(/They do not dispatch a GPU kernel\./u),
+    page.getByText(/The upload fixture dispatches no kernel/u),
   ).toBeVisible();
 
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "No functional hardware result is claimed",
+    "No functional expert GPU result or performance result is claimed",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "No expert kernel was dispatched",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "no freshness or replay authority",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "Grouped or persistent expert scheduling is still separate future work",
