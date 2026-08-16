@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `c1aecbb11017125e84209a333d978ec6d5bdddb1`, tree
-`25e9d46354bccb96550ee8dac4da4c6b2e7bd45f`. Both
+commit `d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b`, tree
+`08141f73c1ed8f7ca99ac852b23e49989089dd76`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -552,7 +552,12 @@ At the audited pin:
   The measured direct worker passed in debug and release with identical raw and
   finalized identities. Publication, load, launch, runtime, GPU numerical,
   performance, compiler-refinement, Verus-to-machine, general memory-safety,
-  and race-freedom authority remain open; expert GEMM and combine remain design
+  and race-freedom authority remain open. A separate exact bounded
+  memory/effect checkpoint verifies 16 Verus obligations over the eight-buffer
+  logical source model and rejects eight named mutations. Its expected-evidence
+  descriptor is copyable and inert: it cannot mint or join an authenticated
+  receipt and proves no compiler, logical-address, machine-memory, generalized
+  race-freedom, or GPU-execution join. Expert GEMM and combine remain design
   work. The implementation has no COMGR or shell-linker path, but this is not a
   measured no-COMGR claim.
 - The production path described by the audited repository is Rust to Kernel IR

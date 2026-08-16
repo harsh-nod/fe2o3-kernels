@@ -280,7 +280,7 @@ describe("curriculum integrity", () => {
         ? [
             "production static-wrapper receipt injection",
             "protected GPU output",
-            "bounded memory/effect proof",
+            "authenticated proof consumption",
             "IEEE FP32/compiler/logical-address refinement",
             "source/model-to-machine refinement",
           ]
@@ -1204,11 +1204,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "c1aecbb11017125e84209a333d978ec6d5bdddb1",
-      eventualPublicTree: "25e9d46354bccb96550ee8dac4da4c6b2e7bd45f",
+      eventualPublicCommit: "d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b",
+      eventualPublicTree: "08141f73c1ed8f7ca99ac852b23e49989089dd76",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "c1aecbb11017125e84209a333d978ec6d5bdddb1",
+        requiredCommit: "d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1385,6 +1385,20 @@ describe("implementation progress integrity", () => {
     expect(runtimeDetail).toContain("fails closed before HSA load");
     expect(runtimeDetail).toContain("no protected GPU routing result");
 
+    const memoryProof = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "moe-top2-memory-proof",
+    );
+    expect(memoryProof).toMatchObject({
+      commit: "d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b",
+      state: "public",
+    });
+    const memoryProofDetail = checkpointDetail(memoryProof);
+    expect(memoryProofDetail).toContain("16 verified obligations");
+    expect(memoryProofDetail).toContain("all eight pinned mutations");
+    expect(memoryProofDetail).toContain("explicitly inert");
+    expect(memoryProofDetail).toContain("cannot mint or join");
+    expect(memoryProofDetail).toContain("no source/compiler/KIR/LLVM/ISA");
+
     const lesson = curriculum
       .flatMap((module) => module.lessons)
       .find((candidate) => candidate.id === "moe-routing");
@@ -1395,6 +1409,7 @@ describe("implementation progress integrity", () => {
       sourceCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
       explanatory: true,
     });
+    expect(host?.code).toContain("examples/moe_top2_v1/run-memory-verus.sh");
     expect(host?.code).toContain("protected_gfx942_moe_top2_v1_hardware");
     expect(result?.code).toContain("No protected GPU dispatch occurred");
     expect(

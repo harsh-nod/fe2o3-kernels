@@ -51,6 +51,7 @@ export const developmentCheckpointIds = deepFreeze([
   "moe-top2-compiler-admission",
   "moe-top2-direct-finalization",
   "moe-top2-typed-runtime",
+  "moe-top2-memory-proof",
   "scalar-gemm-v1",
   "scalar-gemm-proof-profile",
   "scalar-gemm-physical-effects",
@@ -319,6 +320,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "moe-top2-typed-runtime": {
     kind: "narrative",
     narrativeId: "progress/moe-top2-typed-runtime",
+  },
+  "moe-top2-memory-proof": {
+    kind: "narrative",
+    narrativeId: "progress/moe-top2-memory-proof",
   },
   "scalar-gemm-v1": {
     kind: "narrative",
@@ -617,6 +622,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
     state: "public",
     narrativeId: "progress/moe-top2-typed-runtime",
+  },
+  {
+    id: "moe-top2-memory-proof",
+    kind: "narrative",
+    name: "MoE top-2 exact bounded memory/effect proof",
+    commit: "d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b",
+    state: "public",
+    narrativeId: "progress/moe-top2-memory-proof",
   },
   {
     id: "scalar-gemm-v1",
@@ -1028,10 +1041,10 @@ export const kernelProgress: KernelProgress[] = [
     dependsOn: [
       "production static binding wrapper and protected receipt injection",
       "protected MI300X routing vectors and GPU/oracle comparison",
-      "bounded memory/effect proof and authenticated proof consumption",
+      "authenticated Verus execution receipt and proof consumption",
       "IEEE FP32, compiler, and model-to-machine refinement",
     ],
-    next: "Inject the opaque T8/E4/K2/C4 receipt from the measured production static wrapper, run protected MI300X routing vectors through the typed lifecycle, compare all seven GPU outputs with the independent oracle, add the bounded memory/effect proof, and join IEEE FP32, compiler, logical-address, and model-to-machine refinement evidence.",
+    next: "Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the opaque T8/E4/K2/C4 artifact receipt from the measured production static wrapper, run protected MI300X routing vectors through the typed lifecycle, compare all seven GPU outputs with the independent oracle, and join IEEE FP32, compiler, logical-address, and model-to-machine refinement evidence.",
   },
   {
     id: "moe-experts",
