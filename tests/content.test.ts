@@ -1313,12 +1313,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
-      eventualPublicTree: "f39f9c76d964bafe9e8a12a0b48099766490b366",
+      eventualPublicCommit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
+      eventualPublicTree: "bfedcca0e8fb58acda182d780700e520d093fb0f",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
-        requiredTree: "f39f9c76d964bafe9e8a12a0b48099766490b366",
+        requiredCommit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
+        requiredTree: "bfedcca0e8fb58acda182d780700e520d093fb0f",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1392,6 +1392,32 @@ describe("implementation progress integrity", () => {
         evidence: "partial",
       });
     }
+  });
+
+  it("records bounded Wave64 source-model-to-KIR correspondence", () => {
+    const wave64 = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "gfx942-wave64-lds-reduction",
+    );
+    expect(wave64).toMatchObject({
+      name: "gfx942 Wave64 bounded source-model/KIR correspondence",
+      commit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
+      state: "public",
+      narrativeId: "progress/gfx942-wave64-lds-reduction",
+    });
+    const detail = checkpointDetail(wave64);
+    expect(detail).toContain("tree bfedcca0e8fb58acda182d780700e520d093fb0f");
+    expect(detail).toContain("4,359 deterministic mask observations");
+    expect(detail).toContain("38 tests with one existing hardware test ignored");
+    expect(detail).toContain("22 positive obligations");
+    expect(detail).toContain("all eight expected-negative fixtures");
+    expect(detail).toContain("does not hash the CPU oracle or refinement implementation");
+    expect(detail).toContain("KIR order is validated but not operationally executed");
+    expect(detail).toContain("does not compute SHA-256");
+    expect(detail).toContain("no source-to-model correspondence");
+    expect(detail).toContain("compiler causality");
+    expect(detail).toContain("LLVM/ISA refinement");
+    expect(detail).toContain("generalized memory safety or race freedom");
+    expect(detail).toContain("parity authority");
   });
 
   it("records W0-B as rejected and pins the selected host-link closure", () => {
@@ -1670,7 +1696,7 @@ describe("implementation progress integrity", () => {
       (checkpoint) => checkpoint.id === "moe-expert-bounded-evidence",
     );
     expect(expertEvidence).toMatchObject({
-      commit: "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
+      commit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
       state: "public",
       narrativeId: "progress/moe-expert-bounded-evidence",
     });
@@ -1700,7 +1726,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "66393d3ca7a6805633ed94e12c707a6d22bdf1ad",
+      "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
     );
 
     const lesson = curriculum

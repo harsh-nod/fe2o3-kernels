@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("66393d3ca7a6")).toBeInTheDocument();
+    expect(screen.getByText("43bd2a602b2c")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "f39f9c76d964bafe9e8a12a0b48099766490b366",
+      "bfedcca0e8fb58acda182d780700e520d093fb0f",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -134,6 +134,15 @@ describe("application shell", () => {
     expect(brokerCard).toHaveTextContent("AUTHORITY=none");
     expect(brokerCard).toHaveTextContent("durable registry");
     expect(brokerCard).toHaveTextContent("unforgeable move-only capability");
+    const wave64Heading = screen.getByText(
+      "gfx942 Wave64 bounded source-model/KIR correspondence",
+    );
+    const wave64Card = wave64Heading.closest("article");
+    expect(wave64Card).toHaveTextContent("4,359 deterministic mask observations");
+    expect(wave64Card).toHaveTextContent("38 tests with one existing hardware test ignored");
+    expect(wave64Card).toHaveTextContent("22 positive obligations");
+    expect(wave64Card).toHaveTextContent("no source-to-model correspondence");
+    expect(wave64Card).toHaveTextContent("parity authority");
     const rejectedHeading = screen.getByText(
       "Rejected W0-B static host-link candidate",
     );

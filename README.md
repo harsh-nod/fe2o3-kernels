@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`66393d3ca7a6805633ed94e12c707a6d22bdf1ad`, tree
-`f39f9c76d964bafe9e8a12a0b48099766490b366`. Deployment requires
+`43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4`, tree
+`bfedcca0e8fb58acda182d780700e520d093fb0f`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -78,7 +78,18 @@ post-link metadata, resource, relocation, dependency, and machine-call checks.
 Its typed one-shot HSA lifecycle also completed one protected gfx942 observation
 over four exact masks with canaries, unchanged inputs, exact-bit outputs, and
 terminal unload. That bounded observation is not a generalized compiler or
-Verus-to-machine refinement result. The snapshot also carries the row-softmax
+Verus-to-machine refinement result. The current public tip adds bounded
+source-model-to-canonical-Kernel-IR correspondence for that exact masked Wave64
+profile. The package passes 38 tests with one existing hardware test ignored,
+Verus discharges 22 positive obligations, all eight expected-negative fixtures
+are rejected, and the executable checker records 4,359 deterministic mask
+observations while symbolically checking contributor sets for every `u64` mask.
+The receipt does not hash the CPU oracle or refinement implementation, so the
+outer commit remains part of the evidence identity. KIR order is validated but
+not operationally executed, and Verus relates internal mathematical definitions
+without computing SHA-256. This result establishes no source-to-model,
+compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity
+authority. The snapshot also carries the row-softmax
 V1 inert verification certificate: 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
@@ -203,9 +214,10 @@ or durable artifact handoff, runtime, load, launch, or GPU authority or evidence
 it proves neither memory safety nor race freedom and establishes no
 source-to-machine or Verus-to-machine refinement.
 
-The publication-gated tip adds an inert Broker V4 protocol foundation at commit
+Ancestor commit
 `66393d3ca7a6805633ed94e12c707a6d22bdf1ad`, tree
-`f39f9c76d964bafe9e8a12a0b48099766490b366`. Its canonical binding, frames,
+`f39f9c76d964bafe9e8a12a0b48099766490b366`, adds an inert Broker V4 protocol
+foundation. Its canonical binding, frames,
 transcript validator, replay claim, and registry interface all carry
 `AUTHORITY=none`; there is no production registry implementation or session
 capability. W1 remains the next blocker: the broker must durably and atomically
@@ -215,6 +227,9 @@ replay exclusion across restart, and consume that capability once at durable
 publication. Device code-object linking remains pinned upstream LLVM
 target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker.
 Neither W0 nor inert Broker V4 promotes a parity or tutorial evidence row.
+The later Wave64 correspondence commit changes neither boundary. The parity
+matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
+explanatory-source labels and run/verify/evidence states are unchanged.
 
 The pinned snapshot retains the production S09
 checkpoint that canonically captures the
