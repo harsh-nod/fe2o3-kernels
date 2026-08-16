@@ -1204,11 +1204,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
-      eventualPublicTree: "6de71f0b421607862f0c57a761d8f2018e6bc090",
+      eventualPublicCommit: "c1aecbb11017125e84209a333d978ec6d5bdddb1",
+      eventualPublicTree: "25e9d46354bccb96550ee8dac4da4c6b2e7bd45f",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
+        requiredCommit: "c1aecbb11017125e84209a333d978ec6d5bdddb1",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1250,7 +1250,7 @@ describe("implementation progress integrity", () => {
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
   });
 
-  it("tracks G4 Flash finalization and typed runtime without GPU authority", () => {
+  it("tracks G4 Flash finalization, upstream reproduction, and typed runtime without GPU authority", () => {
     const admission = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "flash-attention-compiler-admission",
     );
@@ -1274,6 +1274,24 @@ describe("implementation progress integrity", () => {
       "no publication, load, launch, runtime, GPU, numerical, performance, compiler-refinement, OCML-semantics, general memory-safety, or race-freedom authority",
     );
     expect(detail).toContain("no measured proof of no-COMGR linkage");
+
+    const reproducibility = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "flash-attention-upstream-reproducibility",
+    );
+    expect(reproducibility).toMatchObject({
+      commit: "c1aecbb11017125e84209a333d978ec6d5bdddb1",
+      state: "public",
+    });
+    const reproducibilityDetail = checkpointDetail(reproducibility);
+    expect(reproducibilityDetail).toContain("sole exact FlashAttention V1 machine compiler identity");
+    expect(reproducibilityDetail).toContain("Two previously absent worker build directories");
+    expect(reproducibilityDetail).toContain(
+      "d2aa57c0f468f574f44a9fea06bbb8e98aa9b60bb2d9303cc4d8b6caf0cfca54",
+    );
+    expect(reproducibilityDetail).toContain("ROCm LLVM 7.2.4 is rejected");
+    expect(reproducibilityDetail).toContain("first measured toolchain divergence is linked bitcode");
+    expect(reproducibilityDetail).toContain("No COMGR or shell linker was introduced");
+    expect(reproducibilityDetail).toContain("no functional Flash semantics");
 
     const runtime = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "flash-attention-typed-runtime",
@@ -1317,6 +1335,12 @@ describe("implementation progress integrity", () => {
     });
     expect(host?.code).toContain("protected_gfx942_flash_attention_v1_hardware");
     expect(result?.explanatory).toBe(true);
+    expect(result?.code).toContain(
+      "d2aa57c0f468f574f44a9fea06bbb8e98aa9b60bb2d9303cc4d8b6caf0cfca54",
+    );
+    expect(result?.code).toContain(
+      "Reproducible machine bytes do not establish functional or numerical correctness",
+    );
     expect(result?.code).toContain("No protected GPU dispatch");
   });
 

@@ -45,6 +45,7 @@ export const developmentCheckpointIds = deepFreeze([
   "row-softmax-release-checkpoint",
   "flash-attention-compiler-admission",
   "flash-attention-direct-finalization",
+  "flash-attention-upstream-reproducibility",
   "flash-attention-typed-runtime",
   "flash-attention-memory-proof",
   "moe-top2-compiler-admission",
@@ -294,6 +295,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "flash-attention-direct-finalization": {
     kind: "narrative",
     narrativeId: "progress/flash-attention-direct-finalization",
+  },
+  "flash-attention-upstream-reproducibility": {
+    kind: "narrative",
+    narrativeId: "progress/flash-attention-upstream-reproducibility",
   },
   "flash-attention-typed-runtime": {
     kind: "narrative",
@@ -564,6 +569,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
     state: "public",
     narrativeId: "progress/flash-attention-direct-finalization",
+  },
+  {
+    id: "flash-attention-upstream-reproducibility",
+    kind: "narrative",
+    name: "FlashAttention exact upstream LLVM machine reproducibility",
+    commit: "c1aecbb11017125e84209a333d978ec6d5bdddb1",
+    state: "public",
+    narrativeId: "progress/flash-attention-upstream-reproducibility",
   },
   {
     id: "flash-attention-typed-runtime",
