@@ -1204,11 +1204,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "182d5673327bdbf642e3328a50903a4607a1756c",
-      eventualPublicTree: "c45ae5ac9f085e29fd1a2356ca82a6c8ac0f4749",
+      eventualPublicCommit: "ab31f1acfd6424048869450f3090281aec15de2c",
+      eventualPublicTree: "a27e60b849f30e35b08a0790bad9942737550ef0",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "182d5673327bdbf642e3328a50903a4607a1756c",
+        requiredCommit: "ab31f1acfd6424048869450f3090281aec15de2c",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
