@@ -77,7 +77,9 @@ export type SourceMilestoneId =
   | "flash-attention-source-v1"
   | "flash-attention-verus-v1"
   | "moe-top2-source-v1"
-  | "moe-top2-verus-v1";
+  | "moe-top2-verus-v1"
+  | "moe-expert-source-v1"
+  | "moe-expert-verus-v1";
 
 export type CodeTabEvidenceId =
   | StagedEvidenceId

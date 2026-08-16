@@ -1049,11 +1049,17 @@ export const kernelProgress: KernelProgress[] = [
   {
     id: "moe-experts",
     kernel: "MoE expert GEMM and combine",
-    run: "blocked",
-    verify: "planned",
-    evidence: "planned",
-    dependsOn: ["MoE routing", "tiled GEMM", "weighted combine"],
-    next: "Start with host-scheduled experts, then add grouped persistent scheduling separately.",
+    run: "partial",
+    verify: "partial",
+    evidence: "partial",
+    dependsOn: [
+      "exact compiler admission and upstream LLVM/LLD finalization",
+      "typed four-expert dispatch and combine runtime",
+      "protected gfx942 execution and GPU/oracle comparison",
+      "authenticated proof consumption and source/model-to-machine refinement",
+      "BF16/F32 numerical refinement",
+    ],
+    next: "Carry the exact host-scheduled expert GEMM and combine sources through compiler admission, direct upstream LLVM/LLD finalization, typed multi-dispatch runtime, protected MI300X execution, and GPU/oracle comparison; keep grouped or persistent scheduling as a separate profile.",
   },
 ];
 

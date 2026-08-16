@@ -1,6 +1,8 @@
 import { narrativeSection } from "./narrative-registry";
 import moeTop2Kernel from "../../examples/moe_top2_v1/src/kernel.rs?raw";
 import moeTop2Proof from "../../examples/moe_top2_v1/verus/moe_top2_v1.rs?raw";
+import moeExpertKernel from "../../examples/moe_expert_v1/src/kernel.rs?raw";
+import moeExpertProof from "../../examples/moe_expert_v1/verus/moe_expert_memory_v1.rs?raw";
 import {
   FE2O3_PIN,
   pinnedReference,
@@ -15,6 +17,8 @@ import {
 
 const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
+const moeExpertSource = sourceMilestoneRecord("moe-expert-source-v1");
+const moeExpertVerus = sourceMilestoneRecord("moe-expert-verus-v1");
 
 const moeRouting: Lesson = {
   id: "moe-routing",
@@ -85,7 +89,7 @@ cargo test -p fe2o3-hsa-runtime \\
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, opaque deterministic upstream LLVM/LLD finalization, and T8/E4/K2/C4 typed host/runtime mechanics are public. The eight-buffer binding retains logits shared read-only and seven unique read-write outputs, rejects every alias pair, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Five binder tests, five lifecycle tests, nine compile-fail boundaries, and the independent routing oracle pass on MI300X. Commit d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b adds a separate exact bounded logical memory/effect model: Verus verifies 16 obligations and all eight pinned mutations fail at their named postconditions. Its copyable expected-evidence descriptor remains inert and cannot mint or join an authenticated receipt. The protected test fails closed before HSA load because production static-wrapper receipt injection is absent. Remaining gaps: protected GPU output and seven-buffer oracle comparison, authenticated proof consumption, IEEE FP32/compiler/logical-address refinement, expert GEMM/combine, and source/model-to-machine refinement. The logical model does not establish generalized machine memory safety or race freedom. No functional hardware result is claimed. No protected GPU dispatch occurred.",
+        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, opaque deterministic upstream LLVM/LLD finalization, and T8/E4/K2/C4 typed host/runtime mechanics are public. The eight-buffer binding retains logits shared read-only and seven unique read-write outputs, rejects every alias pair, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Five binder tests, five lifecycle tests, nine compile-fail boundaries, and the independent routing oracle pass on MI300X. Commit d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b adds a separate exact bounded logical memory/effect model: Verus verifies 16 obligations and all eight pinned mutations fail at their named postconditions. Its copyable expected-evidence descriptor remains inert and cannot mint or join an authenticated receipt. The protected test fails closed before HSA load because production static-wrapper receipt injection is absent. Remaining gaps: protected GPU output and seven-buffer oracle comparison, authenticated proof consumption, IEEE FP32/compiler/logical-address refinement, exact expert compiler/finalizer/runtime/protected execution, and source/model-to-machine refinement. The logical model does not establish generalized machine memory safety or race freedom. No functional hardware result is claimed. No protected GPU dispatch occurred.",
       ),
       explanatory: true,
       notice:
@@ -118,12 +122,8 @@ const expertCompute: Lesson = {
     "State determinism and numerical contracts for weighted combine.",
   ],
   claims: [
-    {
-      kind: "design-only",
-      label: "Expert pipeline roadmap",
-      detail:
-        "Grouped expert GEMM, dynamic scheduling, and combine are not current runnable fe2o3 features.",
-    },
+    sourceMilestoneClaim("moe-expert-source-v1"),
+    sourceMilestoneClaim("moe-expert-verus-v1"),
   ],
   sections: [
     narrativeSection("moe-expert-compute/composition"),
@@ -132,21 +132,51 @@ const expertCompute: Lesson = {
   tabs: completeTabs(
     {
       language: "rust",
-      code: `// DESIGN ONLY\nfor expert in 0..expert_count {\n    let rows = routed.range_for(expert);\n    expert_gemm(expert_weights[expert], rows, expert_output[rows]);\n}\ncombine_in_token_order(expert_output, inverse_routes, route_weights);`,
-      explanatory: true,
+      code: moeExpertKernel,
+      sourcePath: moeExpertSource.primarySourcePath,
+      sourceCommit: moeExpertSource.commit,
+      sourceSha256: moeExpertSource.primarySourceSha256,
+      evidenceId: moeExpertSource.id,
+      explanatory: false,
     },
     {
-      language: "text",
-      code: `route identity is preserved through every stage\nexpert ranges are disjoint\ncombine owns one final token row\nweighted result follows one specified route order`,
-      explanatory: true,
+      language: "rust",
+      code: moeExpertProof,
+      sourcePath: moeExpertVerus.primarySourcePath,
+      sourceCommit: moeExpertVerus.commit,
+      sourceSha256: moeExpertVerus.primarySourceSha256,
+      evidenceId: moeExpertVerus.id,
+      explanatory: false,
+      notice:
+        "This fixed logical model proves index bounds, padding separation, disjoint write owners, inverse-slot admission, and host phase order. It does not prove numerical or machine semantics.",
     },
-    { language: "bash", code: noHost, explanatory: true },
+    {
+      language: "bash",
+      code: `cargo test --locked \\
+  --manifest-path examples/moe_expert_v1/Cargo.toml \\
+  --all-targets
+
+cargo test --locked --release \\
+  --manifest-path examples/moe_expert_v1/Cargo.toml \\
+  --all-targets
+
+VERUS=/absolute/path/to/pinned/verus \\
+  examples/moe_expert_v1/run-verus.sh`,
+      sourcePath: "examples/moe_expert_v1/src/pipeline.rs",
+      sourceCommit: moeExpertSource.commit,
+      explanatory: true,
+      notice:
+        "These commands execute the host schedule, independent direct oracle, source checks, canary tests, and pinned Verus proof. They do not dispatch a GPU kernel.",
+    },
     {
       language: "text",
       code: resultText(
-        "design-only",
-        "A future result must compare routing, each expert GEMM, and the final combine with independent CPU oracles and canaries.",
+        "source-model-verified",
+        "Commit ff0c08a5bdca2568178f690c04c0b0c6bfa6febe publishes two ordinary attributed kernels for the exact T8/E4/K2/C4, I16/O16 host-scheduled expert pipeline: one 16x16x16 BF16/F32 expert GEMM and one deterministic top-2 weighted combine. The executable host schedule and independent direct oracle agree on active and padded expert rows, compact outputs, dropped routes, route-order weighting, every final token output, unchanged inputs, and guard canaries in debug and release. Verus verifies 15 logical memory/effect obligations, and all six pinned mutations fail. Remaining gaps: exact compiler admission and direct finalization for both kernels, a typed multi-dispatch runtime, protected gfx942 execution, GPU/oracle comparison, numerical refinement, source/model-to-machine refinement, authenticated proof consumption, machine memory safety, and generalized race freedom. Grouped or persistent expert scheduling is still separate future work. No functional hardware result is claimed. No GPU dispatch occurred.",
       ),
+      explanatory: true,
+      notice:
+        "Evidence boundary: real attributed source, host arithmetic, independent oracle, canaries, and a bounded logical Verus model are public. Compiler, artifact, runtime, machine, numerical, performance, and protected-execution authority remain absent.",
     },
   ),
   diagram: "moe",

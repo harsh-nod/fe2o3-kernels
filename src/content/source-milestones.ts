@@ -11,7 +11,8 @@ export interface SourceMilestoneRecord {
     | "reductions-scans"
     | "lds-barriers-atomics"
     | "flash-attention"
-    | "moe-routing";
+    | "moe-routing"
+    | "moe-expert-compute";
   claim: SourceMilestoneEvidenceReference["claim"];
   authority: SourceMilestoneEvidenceReference["authority"];
   claimLabel: string;
@@ -32,6 +33,8 @@ export const sourceMilestoneOrder = deepFreeze([
   "flash-attention-verus-v1",
   "moe-top2-source-v1",
   "moe-top2-verus-v1",
+  "moe-expert-source-v1",
+  "moe-expert-verus-v1",
 ] satisfies SourceMilestoneId[]);
 
 const sourceMilestoneRecords = deepFreeze({
@@ -176,6 +179,54 @@ const sourceMilestoneRecords = deepFreeze({
     primarySourcePath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
     primarySourceSha256:
       "4c8db7b0d33c19d01677cf30ead3273844ffc480c70869181f6be0d9d3cc637f",
+    target: "gfx942:xnack-",
+  },
+  "moe-expert-source-v1": {
+    id: "moe-expert-source-v1",
+    lessonId: "moe-expert-compute",
+    claim: "source-tested",
+    authority: "source-tested-only",
+    claimLabel: "Exact host-scheduled MoE expert source",
+    detail:
+      "Public source contains ordinary attributed Rust for one exact 16x16x16 BF16/F32 expert GEMM and deterministic top-2 combine. A host model compacts accepted routes, schedules four expert tiles, inverse-packs outputs, and combines in route order; an independent direct oracle checks every active row, padding row, compact row, and token output. It grants no compiler-profile, finalizer, runtime, protected GPU, numerical-refinement, or performance authority.",
+    commit: "b35c7ceff5b99494fcef2f419a4351dd5fb591cc",
+    tree: "8391cb60247141b5d169888e20b8d6d5ae360d93",
+    commands: [
+      "cargo test --locked --manifest-path examples/moe_expert_v1/Cargo.toml --all-targets",
+      "cargo test --locked --release --manifest-path examples/moe_expert_v1/Cargo.toml --all-targets",
+    ],
+    sourcePaths: [
+      "examples/moe_expert_v1/src/kernel.rs",
+      "examples/moe_expert_v1/src/pipeline.rs",
+      "examples/moe_expert_v1/src/oracle.rs",
+    ],
+    primarySourcePath: "examples/moe_expert_v1/src/kernel.rs",
+    primarySourceSha256:
+      "aeb772a09c7a81e624b72e7e9a84f7b7cd8f63110d3ced5ed975c0104036f8ba",
+    target: "gfx942:xnack-",
+  },
+  "moe-expert-verus-v1": {
+    id: "moe-expert-verus-v1",
+    lessonId: "moe-expert-compute",
+    claim: "source-model-verified",
+    authority: "source-model-only",
+    claimLabel: "Exact MoE expert memory/effect model",
+    detail:
+      "Pinned Verus proves 15 fixed T8/E4/K2/C4 expert-pipeline obligations covering route, activation, weight, expert-tile, compact-output, and combined-output index bounds; padding separation; disjoint logical write owners; inverse-slot admission; and host phase order. Six named mutations fail. It proves no numerical correctness, Rust/compiler/LLVM/ISA refinement, machine memory safety, generalized race freedom, or GPU execution.",
+    commit: "ff0c08a5bdca2568178f690c04c0b0c6bfa6febe",
+    tree: "22616b1a5791f4e6064e401785ab24176051ee39",
+    commands: [
+      "VERUS=/absolute/path/to/pinned/verus examples/moe_expert_v1/run-verus.sh",
+    ],
+    sourcePaths: [
+      "examples/moe_expert_v1/src/kernel.rs",
+      "examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+      "examples/moe_expert_v1/run-verus.sh",
+    ],
+    primarySourcePath:
+      "examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+    primarySourceSha256:
+      "617e6741c5f1415a8e792e5e36e3526c04ba18903438e3af178bb107766383d1",
     target: "gfx942:xnack-",
   },
 } satisfies Record<SourceMilestoneId, SourceMilestoneRecord>);

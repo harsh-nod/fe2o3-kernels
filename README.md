@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b`, tree
-`08141f73c1ed8f7ca99ac852b23e49989089dd76`. Both
+commit `2cd0e8dd1c7d29bfd10ec73950f7678c3d75e2f0`, tree
+`bbe1cd5e8861a59e9f2360db80bb6c41c9617c45`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -557,9 +557,16 @@ At the audited pin:
   logical source model and rejects eight named mutations. Its expected-evidence
   descriptor is copyable and inert: it cannot mint or join an authenticated
   receipt and proves no compiler, logical-address, machine-memory, generalized
-  race-freedom, or GPU-execution join. Expert GEMM and combine remain design
-  work. The implementation has no COMGR or shell-linker path, but this is not a
-  measured no-COMGR claim.
+  race-freedom, or GPU-execution join. The exact host-scheduled expert slice
+  now has two ordinary attributed kernels, a four-expert
+  compaction/GEMM/inverse/combine host model, an independent direct oracle,
+  debug/release canary coverage, and a pinned Verus model with 15 verified
+  obligations and six rejected mutations. This is source, host-model, oracle,
+  and bounded logical-proof evidence only: compiler admission, finalization,
+  typed runtime, protected GPU execution, numerical refinement, and
+  source/model-to-machine joins remain open. Grouped or persistent expert
+  scheduling remains separate work. The implementation has no COMGR or
+  shell-linker path, but this is not a measured no-COMGR claim.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. The #97 path uses direct LLVM target-machine and LLD

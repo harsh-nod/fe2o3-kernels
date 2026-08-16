@@ -200,6 +200,8 @@ describe("curriculum integrity", () => {
       "flash-attention-verus-v1",
       "moe-top2-source-v1",
       "moe-top2-verus-v1",
+      "moe-expert-source-v1",
+      "moe-expert-verus-v1",
     ]);
     expect(validateSourceMilestoneCatalog()).toEqual([]);
 
@@ -240,6 +242,15 @@ describe("curriculum integrity", () => {
           "b77016caa0c3708e420e583712e65e4e6428db7b4feafd8d0a1d4bdc475ef6ff",
         sourceCommit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
       },
+      {
+        lessonId: "moe-expert-compute",
+        evidenceId: "moe-expert-source-v1",
+        sourcePath: "examples/moe_expert_v1/src/kernel.rs",
+        bundledPath: "examples/moe_expert_v1/src/kernel.rs",
+        sha256:
+          "aeb772a09c7a81e624b72e7e9a84f7b7cd8f63110d3ced5ed975c0104036f8ba",
+        sourceCommit: "b35c7ceff5b99494fcef2f419a4351dd5fb591cc",
+      },
     ] as const;
 
     for (const profile of profiles) {
@@ -266,7 +277,11 @@ describe("curriculum integrity", () => {
         ).toBe(true);
       }
       expect(lesson?.tabs.find((tab) => tab.kind === "verus")?.explanatory).toBe(
-        !["flash-attention", "moe-routing"].includes(profile.lessonId),
+        ![
+          "flash-attention",
+          "moe-routing",
+          "moe-expert-compute",
+        ].includes(profile.lessonId),
       );
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
       const gaps = profile.lessonId === "flash-attention"
@@ -282,6 +297,13 @@ describe("curriculum integrity", () => {
             "protected GPU output",
             "authenticated proof consumption",
             "IEEE FP32/compiler/logical-address refinement",
+            "source/model-to-machine refinement",
+          ]
+        : profile.lessonId === "moe-expert-compute"
+        ? [
+            "exact compiler admission",
+            "typed multi-dispatch runtime",
+            "protected gfx942 execution",
             "source/model-to-machine refinement",
           ]
           : profile.lessonId === "lds-barriers-atomics"
@@ -319,6 +341,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/flash_attention_v1/verus/flash_attention_v1.rs",
         sha256:
           "e1f48bb3dc7bee0678898d13660bf4ce02d9d8e5706e3969f11b11c8b1d7a2da",
+        sourceCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
       },
       {
         lessonId: "moe-routing",
@@ -326,6 +349,16 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
         sha256:
           "4c8db7b0d33c19d01677cf30ead3273844ffc480c70869181f6be0d9d3cc637f",
+        sourceCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
+      },
+      {
+        lessonId: "moe-expert-compute",
+        evidenceId: "moe-expert-verus-v1",
+        bundledPath:
+          "examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+        sha256:
+          "617e6741c5f1415a8e792e5e36e3526c04ba18903438e3af178bb107766383d1",
+        sourceCommit: "ff0c08a5bdca2568178f690c04c0b0c6bfa6febe",
       },
     ] as const;
     for (const profile of proofProfiles) {
@@ -336,7 +369,7 @@ describe("curriculum integrity", () => {
       expect(proof).toMatchObject({
         code: bundled,
         sourcePath: profile.bundledPath,
-        sourceCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
+        sourceCommit: profile.sourceCommit,
         sourceSha256: profile.sha256,
         evidenceId: profile.evidenceId,
         explanatory: false,
@@ -1185,6 +1218,7 @@ describe("curriculum integrity", () => {
           "gemm-proof-plan",
           "flash-attention",
           "moe-routing",
+          "moe-expert-compute",
         ].includes(lesson.id)
           ? false
           : true,
@@ -1204,11 +1238,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b",
-      eventualPublicTree: "08141f73c1ed8f7ca99ac852b23e49989089dd76",
+      eventualPublicCommit: "2cd0e8dd1c7d29bfd10ec73950f7678c3d75e2f0",
+      eventualPublicTree: "bbe1cd5e8861a59e9f2360db80bb6c41c9617c45",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b",
+        requiredCommit: "2cd0e8dd1c7d29bfd10ec73950f7678c3d75e2f0",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1248,6 +1282,13 @@ describe("implementation progress integrity", () => {
       "moe-experts",
     ]);
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
+    expect(
+      kernelProgress.find((kernel) => kernel.id === "moe-experts"),
+    ).toMatchObject({
+      run: "partial",
+      verify: "partial",
+      evidence: "partial",
+    });
   });
 
   it("tracks G4 Flash finalization, upstream reproduction, and typed runtime without GPU authority", () => {
