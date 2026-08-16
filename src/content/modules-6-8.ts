@@ -70,7 +70,7 @@ const moeRouting: Lesson = {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, and publication-gated exact compiler admission are public. Remaining gaps: IEEE FP32/source refinement, direct LLVM/LLD finalization, generated host/runtime, protected gfx942 execution, and source/model-to-machine refinement. No functional hardware result is claimed.",
+        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, and an opaque deterministic upstream LLVM/LLD finalization receipt are public. The direct worker produced identical raw and finalized identities in measured debug and release runs. Remaining gaps: authenticated publication, IEEE FP32/source refinement, generated host/runtime, protected gfx942 execution, and source/model-to-machine refinement. No functional hardware result is claimed.",
       ),
       explanatory: true,
       notice:

@@ -279,7 +279,8 @@ describe("curriculum integrity", () => {
           ]
         : profile.lessonId === "moe-routing"
         ? [
-            "direct LLVM/LLD finalization",
+            "authenticated publication",
+            "IEEE FP32/source refinement",
             "generated host/runtime",
             "protected gfx942 execution",
             "source/model-to-machine refinement",
@@ -1204,11 +1205,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
-      eventualPublicTree: "2799167a3fdc0a31666843bb6d8cbffde89bf38f",
+      eventualPublicCommit: "8926b3f725a9cb6a15bc8f43f019af1afffc6c1c",
+      eventualPublicTree: "edad7563491b8f892696014ae071ddc116a7d2d0",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
+        requiredCommit: "8926b3f725a9cb6a15bc8f43f019af1afffc6c1c",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1276,6 +1277,36 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("no measured proof of no-COMGR linkage");
     expect(
       kernelProgress.find((kernel) => kernel.id === "flash-attention")?.next,
+    ).toContain("authenticated publication");
+  });
+
+  it("tracks G5 MoE finalization without granting downstream authority", () => {
+    const admission = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "moe-top2-compiler-admission",
+    );
+    expect(admission).toMatchObject({
+      commit: "40e04f8e8469f37d3e9c4fcfcb23bd5ab6d1536e",
+      state: "public",
+    });
+
+    const finalization = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "moe-top2-direct-finalization",
+    );
+    expect(finalization).toMatchObject({
+      commit: "8926b3f725a9cb6a15bc8f43f019af1afffc6c1c",
+      state: "public",
+    });
+    const detail = checkpointDetail(finalization);
+    expect(detail).toContain("upstream LLVM target-machine APIs");
+    expect(detail).toContain("in-process LLD");
+    expect(detail).toContain("non-Clone receipt is opaque");
+    expect(detail).toContain("passed in debug and release");
+    expect(detail).toContain("not measured no-COMGR authority");
+    expect(detail).toContain(
+      "no publication, load, launch, runtime, GPU numerical, performance, compiler-refinement, Verus-to-machine, general memory-safety, or race-freedom authority",
+    );
+    expect(
+      kernelProgress.find((kernel) => kernel.id === "moe-routing")?.next,
     ).toContain("authenticated publication");
   });
 

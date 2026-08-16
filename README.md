@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `0b8ddf138d5420b90a61463ade8d612eb7101090`, tree
-`2799167a3fdc0a31666843bb6d8cbffde89bf38f`. Both
+commit `8926b3f725a9cb6a15bc8f43f019af1afffc6c1c`, tree
+`edad7563491b8f892696014ae071ddc116a7d2d0`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -103,9 +103,17 @@ authority. It also contains no measured proof of no-COMGR linkage; that would
 require a separately measured worker manifest. Exact T=8, E=4, K=2, C=4 MoE
 routing compiler admission now
 similarly binds attributed source, FnAbi, complete reachable portable MIR,
-semantic Kernel IR, target/ABI/resources, and V3 provider identity. It grants no
-LLVM lowering, finalization, runtime, GPU, IEEE FP32, Verus-refinement,
-numerical, performance, or source/model-to-machine authority. The public
+semantic Kernel IR, target/ABI/resources, and V3 provider identity. G5 carries
+that authenticated compiler handoff through a single-use Worker V2 exchange,
+upstream LLVM target-machine emission, in-process LLD, and exact structural
+ELF, machine, metadata, descriptor, and resource checks. The resulting
+non-Clone receipt is opaque, deterministic, and identity-only. The measured
+direct worker passed in debug and release with identical raw and finalized
+output identities. This grants no publication, load, launch, runtime, GPU
+numerical, performance, compiler-refinement, Verus-to-machine, general
+memory-safety, or race-freedom authority. The implementation exposes no COMGR
+or shell-linker path, but no measured worker manifest proves no-COMGR linkage.
+The public
 snapshot also isolates the 64-connection broker-capacity test from the
 separate concurrent executable-authentication and descriptor-transfer test, so
 hosted CI exercises each bounded property without coupling their deadlines. The
@@ -503,9 +511,15 @@ At the audited pin:
   corpus, debug/release mutation suites, a pinned Verus proof of the exact
   mathematical routing policy, and separate exact compiler admission binding
   source, FnAbi, complete reachable portable MIR, semantic Kernel IR, target,
-  ABI/resources, and V3 provider identity. LLVM finalization, IEEE FP32/source
-  refinement, runtime, hardware, and source/model-to-machine authority remain
-  open; expert GEMM and combine remain design work.
+  ABI/resources, and V3 provider identity. G5 carries that exact profile through
+  a single-use Worker V2 handoff, upstream LLVM target-machine APIs, in-process
+  LLD, exact structural checks, and an opaque deterministic non-Clone receipt.
+  The measured direct worker passed in debug and release with identical raw and
+  finalized identities. Publication, load, launch, runtime, GPU numerical,
+  performance, compiler-refinement, Verus-to-machine, general memory-safety,
+  and race-freedom authority remain open; expert GEMM and combine remain design
+  work. The implementation has no COMGR or shell-linker path, but this is not a
+  measured no-COMGR claim.
 - The production path described by the audited repository is Rust to Kernel IR
   to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
   protected evidence. The #97 path uses direct LLVM target-machine and LLD
