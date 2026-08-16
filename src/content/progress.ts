@@ -43,6 +43,7 @@ export const developmentCheckpointIds = deepFreeze([
   "workgroup-sync-host-runtime",
   "workgroup-sync-protected-hardware",
   "row-softmax-release-checkpoint",
+  "row-softmax-llvm-release",
   "flash-attention-compiler-admission",
   "flash-attention-direct-finalization",
   "flash-attention-upstream-reproducibility",
@@ -126,11 +127,12 @@ export const progressSnapshot = {
   publicationGate: {
     state: "public-refs-match-required-target",
     requiredCommit: publicationGate.requiredCommit,
+    requiredTree: publicationGate.requiredTree,
     requiredRefs: publicationGate.requiredRefs.map(
       ({ repository, ref }) => `${repository}@${ref}`,
     ),
     requirement:
-      "Both required public refs resolve exactly to the required commit; deployment continues to verify that exact match.",
+      "Both required public refs resolve exactly to the required commit and its required tree; deployment continues to verify both identities.",
   },
   repositories: publicationGate.requiredRefs.map(
     ({ repository }) => `https://github.com/${repository}`,
@@ -289,6 +291,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "row-softmax-release-checkpoint": {
     kind: "narrative",
     narrativeId: "progress/row-softmax-release-checkpoint",
+  },
+  "row-softmax-llvm-release": {
+    kind: "narrative",
+    narrativeId: "progress/row-softmax-llvm-release",
   },
   "flash-attention-compiler-admission": {
     kind: "narrative",
@@ -463,7 +469,7 @@ export const developmentCheckpoints = deepFreeze([
   {
     id: "last-audited-public-baseline",
     kind: "narrative",
-    name: "Last audited public baseline",
+    name: "Historical audited public baseline",
     commit: progressSnapshot.lastAuditedPublicCommit,
     state: "public",
     narrativeId: "progress/last-audited-public-baseline",
@@ -559,10 +565,18 @@ export const developmentCheckpoints = deepFreeze([
   {
     id: "row-softmax-release-checkpoint",
     kind: "narrative",
-    name: "Row-softmax exact release checkpoint",
+    name: "Row-softmax historical 25-pin release checkpoint",
     commit: "aca28306fe89c036dc0129349ef9ed685a43c7bb",
     state: "public",
     narrativeId: "progress/row-softmax-release-checkpoint",
+  },
+  {
+    id: "row-softmax-llvm-release",
+    kind: "narrative",
+    name: "Row-softmax LLVM release pair",
+    commit: "fd89390788adc5670c54ecc2517b9720f2f80113",
+    state: "public",
+    narrativeId: "progress/row-softmax-llvm-release",
   },
   {
     id: "flash-attention-compiler-admission",
@@ -639,9 +653,9 @@ export const developmentCheckpoints = deepFreeze([
   {
     id: "moe-expert-bounded-evidence",
     kind: "narrative",
-    name: "MoE expert compact-plan proof and host bridge candidate",
-    commit: "7fc38f51e70fe8ecafb4e14719c041159cf0f66e",
-    state: "acceptance",
+    name: "MoE expert bounded V2 integrated checkpoint",
+    commit: progressSnapshot.eventualPublicCommit,
+    state: "public",
     narrativeId: "progress/moe-expert-bounded-evidence",
   },
   {
@@ -936,7 +950,7 @@ export function developmentCheckpointDetail(
       return SAFE_PROGRESS_DETAIL;
     }
   }
-  return `This final public-main documentation snapshot is publication-gated. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly to ${publicationGate.requiredCommit}, and the deployment workflow continues to require that exact match.`;
+  return `This public-main documentation snapshot is publication-gated. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main must resolve exactly to commit ${publicationGate.requiredCommit} and tree ${publicationGate.requiredTree}; the deployment workflow verifies both identities.`;
 }
 
 export const kernelProgress: KernelProgress[] = [
@@ -1132,6 +1146,12 @@ export function validateProgress(
     progressSnapshot.eventualPublicCommit
   ) {
     issues.push("publication gate does not bind the eventual public commit");
+  }
+  if (
+    progressSnapshot.publicationGate.requiredTree !==
+    progressSnapshot.eventualPublicTree
+  ) {
+    issues.push("publication gate does not bind the eventual public tree");
   }
   if (progressSnapshot.publicationGate.requiredRefs.length !== 2) {
     issues.push("publication gate does not require both public refs");

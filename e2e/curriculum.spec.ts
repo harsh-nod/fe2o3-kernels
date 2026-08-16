@@ -204,7 +204,7 @@ test("row softmax separates real source from pending and GPU evidence", async ({
   ).toBeVisible();
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "pending operator-selected release manifest",
+    "two independent complete MI300X release gates",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "no protected dispatch and no numerical GPU result",
@@ -326,17 +326,17 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
   const checkpoint = page
     .getByRole("heading", {
       level: 3,
-      name: "MoE expert compact-plan proof and host bridge candidate",
+      name: "MoE expert bounded V2 integrated checkpoint",
     })
     .locator("../..");
-  await expect(checkpoint).toContainText("acceptance");
+  await expect(checkpoint).toContainText("public");
   await expect(checkpoint).toContainText("19 verified obligations");
   await expect(checkpoint).toContainText("all seven expected-failure mutations");
   await expect(checkpoint).toContainText("all 625 count vectors");
   await expect(checkpoint).toContainText(
     "does not authenticate router execution or device readback provenance",
   );
-  await expect(checkpoint).toContainText("without dispatching a kernel");
+  await expect(checkpoint).toContainText("upload/readback test is no kernel dispatch");
   const expertRow = page
     .getByRole("row")
     .filter({ hasText: "MoE expert GEMM and combine" });

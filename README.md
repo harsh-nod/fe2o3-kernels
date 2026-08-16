@@ -37,10 +37,10 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `fa57eea910280b42d6d852047c92a4c352583053`, tree
-`b4634b48db3c1ffbc18ab0d4c4a2d01f1fc1e318`. Both
+commit `d65449e2092929f73b9cdee91c039fae3b61ecff`, tree
+`867ea9422bb5f721166d3ea829190c3b3debcc91`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
-to that commit. This descendant contains the exact protected Slice 1
+to that exact commit and tree. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
 `c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`, tree
 `c65c6ab567409afaaef6ea39c8befcac21d47119`: attributed source-to-IR
@@ -76,8 +76,8 @@ post-link metadata, resource, relocation, dependency, and machine-call checks.
 Its typed one-shot HSA lifecycle also completed one protected gfx942 observation
 over four exact masks with canaries, unchanged inputs, exact-bit outputs, and
 terminal unload. That bounded observation is not a generalized compiler or
-Verus-to-machine refinement result. The snapshot also carries the row-softmax V1 inert
-verification certificate: 18
+Verus-to-machine refinement result. The snapshot also carries the row-softmax
+V1 inert verification certificate: 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
 certificate itself grants no compiler, artifact, launch, or hardware authority. The
@@ -85,8 +85,25 @@ same public snapshot now contains an exact typed 64-element row-softmax host
 adapter and a private linear HSA load/dispatch/wait/unload lifecycle. G3 binds
 the attributed source, compiler descriptor, Worker V2 handoff, OCML import
 closure, finalization, typed host mechanics, and a staged receipt for all 25
-release pins. The production route still fails closed before GPU launch at the
-static binding-wrapper boundary, so no production hardware run is claimed. The
+release pins at historical commit
+`aca28306fe89c036dc0129349ef9ed685a43c7bb`, tree
+`37f1a92e0be0a4b48c5cef1b1a48327e0ea4c828`. That checkpoint remains separate
+from the later LLVM release pair: implementation commit A
+`31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1`, tree
+`293c6d39e47d64f5949d450d6041dc598aafd0fe`, and manifest commit B
+`fd89390788adc5670c54ecc2517b9720f2f80113`, tree
+`af0156687517c0e71eb0d607917964b7c375af43`. B pins
+`tools/fe2o3-llvm-link-worker/row-softmax-v1-release-manifest.txt` at SHA-256
+`9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c`.
+Two independent complete MI300X release gates reproduced and accepted the
+retained compiler, closure, worker, probe, raw-HSACO, and finalized-HSACO
+identities. They did not dispatch a GPU and establish only bounded
+compiler/code-object reproducibility and operator-selected reviewed integrity,
+not runtime or GPU results, authentication, generalized memory safety or race
+freedom, or source/model/Verus-to-machine refinement. The GPU code-object path
+remains pinned upstream LLVM target-machine APIs plus in-process LLD. The
+production route still fails closed before GPU launch at the static
+binding-wrapper boundary, so no production hardware run is claimed. The
 public snapshot also contains exact B=1, H=1, N=8, D=16 FlashAttention compiler
 admission. It binds ordinary attributed source, FnAbi, compiler configuration,
 complete reachable portable MIR, semantic Kernel IR, and V3 provider identity,
@@ -135,12 +152,21 @@ output identities. This grants no publication, load, launch, runtime, GPU
 numerical, performance, compiler-refinement, Verus-to-machine, general
 memory-safety, or race-freedom authority. The implementation exposes no COMGR
 or shell-linker path, but no measured worker manifest proves no-COMGR linkage.
-The public
+Bounded MoE V2 is integrated at this publication-gated checkpoint. Its exact
+E4/C4/routes16/width16/tile256 compact-plan model reports 19 verified
+obligations, rejects seven expected-failure mutations, and exhaustively covers
+all 625 expert-count vectors. Its host bridge validates one caller-supplied
+routing snapshot and uploads and reads back offsets plus inverse mappings on
+gfx942. That upload/readback test is no kernel dispatch. It provides no router
+or expert GPU execution, generalized source-to-machine refinement, numerical
+or performance result, memory-safety authority, or race-freedom authority; the
+MoE rows remain Partial. The public
 snapshot also isolates the 64-connection broker-capacity test from the
 separate concurrent executable-authentication and descriptor-transfer test, so
 hosted CI exercises each bounded property without coupling their deadlines. The
 publication workflow continues to require both public refs to resolve exactly
-to the gated commit before deployment. The last audited public baseline remains
+to the gated commit and tree before deployment. The historical audited public
+baseline remains
 `96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
 `f911f0c693238830ad6070b2674fb863857bfec1`.
 
@@ -513,8 +539,11 @@ At the audited pin:
   real and pinned. Its generalized dimensions, K phases, grids, tails,
   coefficients, and complete authority chain remain a design-level curriculum.
   Row softmax has an exact typed host adapter, private linear HSA lifecycle,
-  exact source/compiler/Worker/finalizer handoffs, and a staged 25-pin release
-  receipt. Production remains blocked before GPU launch on the static binding
+  exact source/compiler/Worker/finalizer handoffs, a historical staged 25-pin
+  release receipt, and a separate A/B LLVM release pair accepted by two complete
+  MI300X release gates. Those gates dispatched no GPU and grant no runtime,
+  authentication, refinement, generalized memory-safety, or race-freedom
+  authority. Production remains blocked before GPU launch on the static binding
   wrapper, so these mechanics grant no protected hardware authority.
   FlashAttention Phase A now has exact ordinary
   attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
@@ -672,8 +701,9 @@ maturity label.
 
 On a push to `main`, GitHub Actions builds and deploys `dist/` only after
 authenticated Git resolution confirms that both required fe2o3 public refs
-equal the checked-in publication target. Workflow permissions are scoped per
-job, deployment is serialized, and actions are pinned to immutable commit SHAs.
+equal the checked-in publication commit and tree. Workflow permissions are
+scoped per job, deployment is serialized, and actions are pinned to immutable
+commit SHAs.
 
 Pull requests and pushes also run lint, type checking, unit tests, the production
 build, and Chromium browser tests. A green site build is not evidence that a GPU

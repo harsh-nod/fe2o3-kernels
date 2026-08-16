@@ -238,7 +238,7 @@ const rowSoftmaxResult = resultText(
 Source: the attributed ordinary Rust #[kernel] body fixes one unmasked 64-element row, WG64, and three bounded scalar loops executed by lane zero.
 CPU: independent host reference and numerical-oracle tests exist; they are not GPU observations.
 Verus: the mathematical and address-set models verify bounded indices, row extents, and conditional disjoint-address obligations. They do not model concrete memory events or prove source-to-machine race freedom.
-Compiler/code object: focused source admission, direct upstream LLVM/LLD finalization, and inspection mechanics exist. The pending operator-selected release manifest and two-fresh-run gate are not claimed as published evidence here.
+Compiler/code object: focused source admission, pinned upstream LLVM target-machine plus in-process LLD finalization, and inspection mechanics exist. Release A 31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1/tree 293c6d39e47d64f5949d450d6041dc598aafd0fe and manifest B fd89390788adc5670c54ecc2517b9720f2f80113/tree af0156687517c0e71eb0d607917964b7c375af43 were accepted by two independent complete MI300X release gates. Manifest SHA-256: 9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c. These non-GPU gates establish bounded compiler/code-object reproducibility and operator-selected reviewed integrity only, not authentication or refinement.
 Host: typed disjoint input/output binding and Joined -> Loaded -> Completed -> Unloaded source mechanics exist, but production static-wrapper authority is absent and the protected path fails closed before HSA load.
 GPU: no protected dispatch and no numerical GPU result are claimed.
 

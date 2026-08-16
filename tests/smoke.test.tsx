@@ -101,28 +101,31 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
-    expect(screen.getByText("Audited public")).toBeInTheDocument();
+    expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("fa57eea91028")).toBeInTheDocument();
+    expect(screen.getByText("d65449e20929")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
       "publication workflow verifies that harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main both resolve exactly",
+    );
+    expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
+      "Both the commit and tree are required",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
     expect(screen.getByText("Formal evidence isolation V11")).toBeInTheDocument();
     const candidateHeading = screen.getByText(
-      "MoE expert compact-plan proof and host bridge candidate",
+      "MoE expert bounded V2 integrated checkpoint",
     );
     const candidateCard = candidateHeading.closest("article");
     expect(candidateCard).toBeInTheDocument();
-    expect(candidateCard).toHaveTextContent("acceptance");
+    expect(candidateCard).toHaveTextContent("public");
     expect(candidateCard).toHaveTextContent("19 verified obligations");
     expect(candidateCard).toHaveTextContent("all 625 count vectors");
     expect(candidateCard).toHaveTextContent(
-      "passed without dispatching a kernel",
+      "upload/readback test is no kernel dispatch",
     );
   });
 });

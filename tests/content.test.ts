@@ -242,7 +242,12 @@ describe("curriculum integrity", () => {
     ]) {
       expect(result).toContain(layer);
     }
-    expect(result).toContain("pending operator-selected release manifest");
+    expect(result).toContain("Release A 31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1");
+    expect(result).toContain("manifest B fd89390788adc5670c54ecc2517b9720f2f80113");
+    expect(result).toContain(
+      "9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c",
+    );
+    expect(result).toContain("two independent complete MI300X release gates");
     expect(result).toContain("no protected dispatch");
     expect(result).toContain("does not justify a cuda-oxide parity promotion");
 
@@ -1302,11 +1307,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "fa57eea910280b42d6d852047c92a4c352583053",
-      eventualPublicTree: "b4634b48db3c1ffbc18ab0d4c4a2d01f1fc1e318",
+      eventualPublicCommit: "d65449e2092929f73b9cdee91c039fae3b61ecff",
+      eventualPublicTree: "867ea9422bb5f721166d3ea829190c3b3debcc91",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "fa57eea910280b42d6d852047c92a4c352583053",
+        requiredCommit: "d65449e2092929f73b9cdee91c039fae3b61ecff",
+        requiredTree: "867ea9422bb5f721166d3ea829190c3b3debcc91",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1314,7 +1320,7 @@ describe("implementation progress integrity", () => {
       },
     });
     expect(progressSnapshot.publicationGate.requirement).toContain(
-      "Both required public refs resolve exactly",
+      "required commit and its required tree",
     );
     expect(developmentCheckpoints[0]).toMatchObject({
       name: "Published implementation snapshot (publication gated)",
@@ -1322,13 +1328,51 @@ describe("implementation progress integrity", () => {
       state: "public",
     });
     expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
-      "final public-main documentation snapshot is publication-gated",
+      "public-main documentation snapshot is publication-gated",
     );
     expect(developmentCheckpoints[1]).toMatchObject({
-      name: "Last audited public baseline",
+      name: "Historical audited public baseline",
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "public",
     });
+  });
+
+  it("keeps the historical row pin separate from the LLVM release pair", () => {
+    const historical = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "row-softmax-release-checkpoint",
+    );
+    expect(historical).toMatchObject({
+      name: "Row-softmax historical 25-pin release checkpoint",
+      commit: "aca28306fe89c036dc0129349ef9ed685a43c7bb",
+      state: "public",
+    });
+    expect(checkpointDetail(historical)).toContain(
+      "tree 37f1a92e0be0a4b48c5cef1b1a48327e0ea4c828",
+    );
+    expect(checkpointDetail(historical)).toContain("all 25 release pins");
+
+    const llvmRelease = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "row-softmax-llvm-release",
+    );
+    expect(llvmRelease).toMatchObject({
+      name: "Row-softmax LLVM release pair",
+      commit: "fd89390788adc5670c54ecc2517b9720f2f80113",
+      state: "public",
+    });
+    const detail = checkpointDetail(llvmRelease);
+    expect(detail).toContain(
+      "A 31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1, tree 293c6d39e47d64f5949d450d6041dc598aafd0fe",
+    );
+    expect(detail).toContain(
+      "B fd89390788adc5670c54ecc2517b9720f2f80113, tree af0156687517c0e71eb0d607917964b7c375af43",
+    );
+    expect(detail).toContain(
+      "9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c",
+    );
+    expect(detail).toContain("Two independent complete MI300X release gates");
+    expect(detail).toContain("did not dispatch a GPU");
+    expect(detail).toContain("upstream LLVM target-machine APIs plus in-process LLD");
+    expect(detail).toContain("no runtime or GPU result, authentication");
   });
 
   it("tracks every tutorial kernel through three independent gates", () => {
@@ -1508,13 +1552,13 @@ describe("implementation progress integrity", () => {
       (checkpoint) => checkpoint.id === "moe-expert-bounded-evidence",
     );
     expect(expertEvidence).toMatchObject({
-      commit: "7fc38f51e70fe8ecafb4e14719c041159cf0f66e",
-      state: "acceptance",
+      commit: "d65449e2092929f73b9cdee91c039fae3b61ecff",
+      state: "public",
       narrativeId: "progress/moe-expert-bounded-evidence",
     });
     const expertEvidenceDetail = checkpointDetail(expertEvidence);
     expect(expertEvidenceDetail).toContain(
-      "beyond the currently publication-gated snapshot",
+      "integrates bounded MoE V2 proof and host-bridge evidence",
     );
     expect(expertEvidenceDetail).toContain("19 verified obligations");
     expect(expertEvidenceDetail).toContain(
@@ -1528,17 +1572,17 @@ describe("implementation progress integrity", () => {
       "uploads offsets and inverse together",
     );
     expect(expertEvidenceDetail).toContain(
-      "gfx942 upload/readback fixture passed without dispatching a kernel",
+      "gfx942 upload/readback test is no kernel dispatch",
     );
     expect(expertEvidenceDetail).toContain(
       "does not authenticate router execution or device readback provenance",
     );
     expect(expertEvidenceDetail).toContain("freshness, replay, compiler, finalizer");
     expect(expertEvidenceDetail).toContain(
-      "No functional expert GPU result or performance",
+      "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "fa57eea910280b42d6d852047c92a4c352583053",
+      "d65449e2092929f73b9cdee91c039fae3b61ecff",
     );
 
     const lesson = curriculum
@@ -2152,7 +2196,7 @@ describe("implementation progress integrity", () => {
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
     expect(orientation).toContain(
-      "Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve exactly",
+      "Deployment requires both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main to resolve to that exact commit and tree",
     );
     expect(orientation).toContain("not a compiler refinement proof");
     expect(orientation).toContain("passed 1/1 in 40.92 seconds");
