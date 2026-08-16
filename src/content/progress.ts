@@ -42,6 +42,7 @@ export const developmentCheckpointIds = deepFreeze([
   "workgroup-sync-direct-finalization",
   "workgroup-sync-host-runtime",
   "workgroup-sync-protected-hardware",
+  "row-softmax-release-checkpoint",
   "flash-attention-compiler-admission",
   "moe-top2-compiler-admission",
   "scalar-gemm-v1",
@@ -277,6 +278,10 @@ const developmentCheckpointSpecs = deepFreeze({
     kind: "narrative",
     narrativeId: "progress/workgroup-sync-protected-hardware",
   },
+  "row-softmax-release-checkpoint": {
+    kind: "narrative",
+    narrativeId: "progress/row-softmax-release-checkpoint",
+  },
   "flash-attention-compiler-admission": {
     kind: "narrative",
     narrativeId: "progress/flash-attention-compiler-admission",
@@ -510,6 +515,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "4138e034b7ee9f457d9b63b4d54bdc623d0c8046",
     state: "public",
     narrativeId: "progress/workgroup-sync-protected-hardware",
+  },
+  {
+    id: "row-softmax-release-checkpoint",
+    kind: "narrative",
+    name: "Row-softmax exact release checkpoint",
+    commit: "aca28306fe89c036dc0129349ef9ed685a43c7bb",
+    state: "public",
+    narrativeId: "progress/row-softmax-release-checkpoint",
   },
   {
     id: "flash-attention-compiler-admission",
@@ -906,8 +919,13 @@ export const kernelProgress: KernelProgress[] = [
     run: "partial",
     verify: "partial",
     evidence: "partial",
-    dependsOn: ["reductions", "direct OCML linking", "numerical policy"],
-    next: "Provision the 25 exact compiler, worker, and OCML pins, then run the fail-closed protected nominal, masked, equal, dominant, and exceptional vector matrix.",
+    dependsOn: [
+      "static production binding wrapper",
+      "protected MI300X execution",
+      "source, proof, and machine refinement",
+      "numerical policy",
+    ],
+    next: "Land the static production binding wrapper, consume the staged 25-pin receipt through the protected MI300X vector matrix, then join source, proof, compiler, and machine refinement evidence.",
   },
   {
     id: "flash-attention",

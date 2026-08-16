@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `4138e034b7ee9f457d9b63b4d54bdc623d0c8046`, tree
-`a5f8ac44fd69b7a69662c73fb8931399be0ab241`. Both
+commit `aca28306fe89c036dc0129349ef9ed685a43c7bb`, tree
+`37f1a92e0be0a4b48c5cef1b1a48327e0ea4c828`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -82,10 +82,11 @@ Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
 certificate itself grants no compiler, artifact, launch, or hardware authority. The
 same public snapshot now contains an exact typed 64-element row-softmax host
-adapter and a private linear HSA load/dispatch/wait/unload lifecycle. Its
-protected hardware harness is compiled and fail-closed, but no new GPU run is
-claimed because the MI300X environment supplied 0 of the 25 exact
-compiler/worker/OCML pins required by that harness. The
+adapter and a private linear HSA load/dispatch/wait/unload lifecycle. G3 binds
+the attributed source, compiler descriptor, Worker V2 handoff, OCML import
+closure, finalization, typed host mechanics, and a staged receipt for all 25
+release pins. The production route still fails closed before GPU launch at the
+static binding-wrapper boundary, so no production hardware run is claimed. The
 public snapshot also contains exact B=1, H=1, N=8, D=16 FlashAttention compiler
 admission. It binds ordinary attributed source, FnAbi, compiler configuration,
 complete reachable portable MIR, semantic Kernel IR, and V3 provider identity,
@@ -472,9 +473,11 @@ At the audited pin:
 - Tiled GEMM's exact fixed `16x16x16` Slice 1 Kernel, Host, and Result tabs are
   real and pinned. Its generalized dimensions, K phases, grids, tails,
   coefficients, and complete authority chain remain a design-level curriculum.
-  Row softmax has an exact typed host adapter, private linear HSA lifecycle, and
-  fail-closed protected harness, but the exact machine has none of the 25 pins
-  needed to authorize a run. FlashAttention Phase A now has exact ordinary
+  Row softmax has an exact typed host adapter, private linear HSA lifecycle,
+  exact source/compiler/Worker/finalizer handoffs, and a staged 25-pin release
+  receipt. Production remains blocked before GPU launch on the static binding
+  wrapper, so these mechanics grant no protected hardware authority.
+  FlashAttention Phase A now has exact ordinary
   attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
   oracle, executable proof-facing models, debug/release mutation suites, and a
   pinned Verus proof of its exact rational online recurrence. The latest public
