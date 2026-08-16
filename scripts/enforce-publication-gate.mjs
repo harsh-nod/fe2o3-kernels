@@ -76,6 +76,31 @@ export function requireMatch(repository, observed, required) {
   }
 }
 
+export function parseGitHubCommit(payload, repository, requiredCommit) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
+    fail(`malformed Git commit response for ${repository}`);
+  }
+  if (payload.sha !== requiredCommit) {
+    fail(
+      `${repository} Git commit response resolved to ${String(payload.sha)}, required ${requiredCommit}`,
+    );
+  }
+  const tree = payload.tree;
+  if (!tree || typeof tree !== "object" || Array.isArray(tree)) {
+    fail(`Git commit response for ${repository} has no tree`);
+  }
+  if (!EXACT_OBJECT_NAME.test(tree.sha ?? "")) {
+    fail(`Git commit response for ${repository} has a malformed tree`);
+  }
+  return tree.sha;
+}
+
+export function requireTreeMatch(repository, commit, observed, required) {
+  if (observed !== required) {
+    fail(`${repository}@${commit}^{tree} resolved to ${observed}, required ${required}`);
+  }
+}
+
 export function requireToken(token) {
   if (!token) {
     fail("GITHUB_TOKEN is required for authenticated ref resolution");
@@ -127,7 +152,36 @@ function resolveAuthenticated(repository, ref, token) {
   return parseGitResult(result, repository, ref);
 }
 
-function runGate() {
+async function resolveAuthenticatedTree(repository, commit, token) {
+  let response;
+  try {
+    response = await fetch(
+      `https://api.github.com/repos/${repository}/git/commits/${commit}`,
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+          Authorization: `Bearer ${token}`,
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+        signal: AbortSignal.timeout(60_000),
+      },
+    );
+  } catch (error) {
+    fail(`Git commit lookup failed for ${repository}: ${error.message}`);
+  }
+  if (!response.ok) {
+    fail(`Git commit lookup returned HTTP ${String(response.status)} for ${repository}`);
+  }
+  let payload;
+  try {
+    payload = await response.json();
+  } catch (error) {
+    fail(`cannot parse Git commit response for ${repository}: ${error.message}`);
+  }
+  return parseGitHubCommit(payload, repository, commit);
+}
+
+async function runGate() {
   const token = requireToken(process.env.GITHUB_TOKEN);
   const policy = loadPolicy();
   for (const required of policy.requiredRefs) {
@@ -137,8 +191,19 @@ function runGate() {
       token,
     );
     requireMatch(required.repository, observed, policy.requiredCommit);
+    const observedTree = await resolveAuthenticatedTree(
+      required.repository,
+      policy.requiredCommit,
+      token,
+    );
+    requireTreeMatch(
+      required.repository,
+      policy.requiredCommit,
+      observedTree,
+      policy.requiredTree,
+    );
     process.stdout.write(
-      `publication gate: ${required.repository}@${required.ref} = ${observed}\n`,
+      `publication gate: ${required.repository}@${required.ref} = ${observed}, tree = ${observedTree}\n`,
     );
   }
 }
@@ -168,6 +233,12 @@ function runSelfTest() {
     throw new Error("self-test failed to parse a valid ref");
   }
   requireMatch("harsh-nod/fe2o3", commit, commit);
+  const tree = parseGitHubCommit(
+    { sha: commit, tree: { sha: policy.requiredTree } },
+    "harsh-nod/fe2o3",
+    commit,
+  );
+  requireTreeMatch("harsh-nod/fe2o3", commit, tree, policy.requiredTree);
   expectFailure(() => validatePolicy({ ...policy, requiredRefs: [] }), "missing refs");
   expectFailure(
     () => validatePolicy({ ...policy, requiredCommit: "main" }),
@@ -213,6 +284,34 @@ function runSelfTest() {
     () => requireMatch("harsh-nod/fe2o3", commit, "c".repeat(40)),
     "commit mismatch",
   );
+  expectFailure(
+    () =>
+      parseGitHubCommit(
+        { sha: "c".repeat(40), tree: { sha: policy.requiredTree } },
+        "harsh-nod/fe2o3",
+        commit,
+      ),
+    "Git commit response mismatch",
+  );
+  expectFailure(
+    () =>
+      parseGitHubCommit(
+        { sha: commit, tree: { sha: "main" } },
+        "harsh-nod/fe2o3",
+        commit,
+      ),
+    "malformed Git tree",
+  );
+  expectFailure(
+    () =>
+      requireTreeMatch(
+        "harsh-nod/fe2o3",
+        commit,
+        "c".repeat(40),
+        policy.requiredTree,
+      ),
+    "tree mismatch",
+  );
   process.stdout.write("publication gate self-test: passed\n");
 }
 
@@ -221,7 +320,7 @@ if (fileURLToPath(import.meta.url) === process.argv[1]) {
     if (process.argv[2] === "--self-test" && process.argv.length === 3) {
       runSelfTest();
     } else if (process.argv.length === 2) {
-      runGate();
+      await runGate();
     } else {
       fail("usage: enforce-publication-gate.mjs [--self-test]");
     }

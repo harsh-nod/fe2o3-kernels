@@ -24,14 +24,19 @@ describe("Pages publication policy", () => {
     });
   });
 
-  it("fails closed on malformed policy and ref-resolution results", () => {
-    expect(() =>
-      execFileSync(
-        process.execPath,
-        ["scripts/enforce-publication-gate.mjs", "--self-test"],
-        { cwd: process.cwd(), stdio: "pipe" },
-      ),
-    ).not.toThrow();
+  it("fails closed on malformed refs, commits, and trees", () => {
+    const output = execFileSync(
+      process.execPath,
+      ["scripts/enforce-publication-gate.mjs", "--self-test"],
+      { cwd: process.cwd(), encoding: "utf8", stdio: "pipe" },
+    );
+    expect(output).toContain("publication gate self-test: passed");
+    const gateSource = readFileSync(
+      "scripts/enforce-publication-gate.mjs",
+      "utf8",
+    );
+    expect(gateSource).toContain('"tree mismatch"');
+    expect(gateSource).toContain('"malformed Git tree"');
   });
 
   it("runs the authenticated gate before every Pages build and deploy step", () => {
@@ -53,6 +58,9 @@ describe("Pages publication policy", () => {
     expect(pagesWorkflow).toContain("GITHUB_TOKEN: ${{ github.token }}");
     expect(pagesWorkflow).toContain(
       "run: node scripts/enforce-publication-gate.mjs",
+    );
+    expect(readFileSync("scripts/enforce-publication-gate.mjs", "utf8")).toContain(
+      "/git/commits/${commit}",
     );
   });
 
