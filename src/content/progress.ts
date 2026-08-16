@@ -52,6 +52,7 @@ export const developmentCheckpointIds = deepFreeze([
   "moe-top2-direct-finalization",
   "moe-top2-typed-runtime",
   "moe-top2-memory-proof",
+  "moe-expert-bounded-evidence",
   "scalar-gemm-v1",
   "scalar-gemm-proof-profile",
   "scalar-gemm-physical-effects",
@@ -324,6 +325,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "moe-top2-memory-proof": {
     kind: "narrative",
     narrativeId: "progress/moe-top2-memory-proof",
+  },
+  "moe-expert-bounded-evidence": {
+    kind: "narrative",
+    narrativeId: "progress/moe-expert-bounded-evidence",
   },
   "scalar-gemm-v1": {
     kind: "narrative",
@@ -630,6 +635,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b",
     state: "public",
     narrativeId: "progress/moe-top2-memory-proof",
+  },
+  {
+    id: "moe-expert-bounded-evidence",
+    kind: "narrative",
+    name: "MoE expert compact-plan proof and host bridge candidate",
+    commit: "7fc38f51e70fe8ecafb4e14719c041159cf0f66e",
+    state: "acceptance",
+    narrativeId: "progress/moe-expert-bounded-evidence",
   },
   {
     id: "scalar-gemm-v1",
@@ -1053,13 +1066,16 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
+      "authenticated router completion and device readback provenance",
+      "logits-to-top2, route-weight, and packed-activation joins",
+      "freshness and replay authority",
       "exact compiler admission and upstream LLVM/LLD finalization",
       "typed four-expert dispatch and combine runtime",
       "protected gfx942 execution and GPU/oracle comparison",
       "authenticated proof consumption and source/model-to-machine refinement",
       "BF16/F32 numerical refinement",
     ],
-    next: "Carry the exact host-scheduled expert GEMM and combine sources through compiler admission, direct upstream LLVM/LLD finalization, typed multi-dispatch runtime, protected MI300X execution, and GPU/oracle comparison; keep grouped or persistent scheduling as a separate profile.",
+    next: "Promote the exact compact-plan proof and host bridge only after binding authenticated router completion/readback, logits-to-top2 selection, route weights, packed activations, and freshness/replay. Then carry the expert GEMM and combine sources through compiler admission, direct upstream LLVM/LLD finalization, typed multi-dispatch runtime, protected MI300X execution, and GPU/oracle comparison; keep grouped or persistent scheduling as a separate profile.",
   },
 ];
 

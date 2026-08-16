@@ -78,5 +78,16 @@ describe("application shell", () => {
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
     expect(screen.getByText("Formal evidence isolation V11")).toBeInTheDocument();
+    const candidateHeading = screen.getByText(
+      "MoE expert compact-plan proof and host bridge candidate",
+    );
+    const candidateCard = candidateHeading.closest("article");
+    expect(candidateCard).toBeInTheDocument();
+    expect(candidateCard).toHaveTextContent("acceptance");
+    expect(candidateCard).toHaveTextContent("19 verified obligations");
+    expect(candidateCard).toHaveTextContent("all 625 count vectors");
+    expect(candidateCard).toHaveTextContent(
+      "passed without dispatching a kernel",
+    );
   });
 });

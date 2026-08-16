@@ -276,6 +276,30 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
   await expect(page.getByRole("tabpanel")).toContainText(
     "Grouped or persistent expert scheduling is still separate future work",
   );
+
+  await page.goto("./#/status");
+  const checkpoint = page
+    .getByRole("heading", {
+      level: 3,
+      name: "MoE expert compact-plan proof and host bridge candidate",
+    })
+    .locator("../..");
+  await expect(checkpoint).toContainText("acceptance");
+  await expect(checkpoint).toContainText("19 verified obligations");
+  await expect(checkpoint).toContainText("all seven expected-failure mutations");
+  await expect(checkpoint).toContainText("all 625 count vectors");
+  await expect(checkpoint).toContainText(
+    "does not authenticate router execution or device readback provenance",
+  );
+  await expect(checkpoint).toContainText("without dispatching a kernel");
+  const expertRow = page
+    .getByRole("row")
+    .filter({ hasText: "MoE expert GEMM and combine" });
+  await expect(expertRow).toContainText("Partial");
+  await expect(expertRow).toContainText(
+    "authenticated router completion and device readback provenance",
+  );
+  await expect(expertRow).toContainText("freshness and replay authority");
 });
 
 test("every internal curriculum route resolves without page overflow", async ({

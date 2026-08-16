@@ -1440,6 +1440,43 @@ describe("implementation progress integrity", () => {
     expect(memoryProofDetail).toContain("cannot mint or join");
     expect(memoryProofDetail).toContain("no source/compiler/KIR/LLVM/ISA");
 
+    const expertEvidence = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "moe-expert-bounded-evidence",
+    );
+    expect(expertEvidence).toMatchObject({
+      commit: "7fc38f51e70fe8ecafb4e14719c041159cf0f66e",
+      state: "acceptance",
+      narrativeId: "progress/moe-expert-bounded-evidence",
+    });
+    const expertEvidenceDetail = checkpointDetail(expertEvidence);
+    expect(expertEvidenceDetail).toContain(
+      "beyond the currently publication-gated snapshot",
+    );
+    expect(expertEvidenceDetail).toContain("19 verified obligations");
+    expect(expertEvidenceDetail).toContain(
+      "all seven expected-failure mutations",
+    );
+    expect(expertEvidenceDetail).toContain("all 625 count vectors");
+    expect(expertEvidenceDetail).toContain(
+      "caller-supplied top2 experts, requested and admitted counts, offsets, route slots, permutation, and inverse",
+    );
+    expect(expertEvidenceDetail).toContain(
+      "uploads offsets and inverse together",
+    );
+    expect(expertEvidenceDetail).toContain(
+      "gfx942 upload/readback fixture passed without dispatching a kernel",
+    );
+    expect(expertEvidenceDetail).toContain(
+      "does not authenticate router execution or device readback provenance",
+    );
+    expect(expertEvidenceDetail).toContain("freshness, replay, compiler, finalizer");
+    expect(expertEvidenceDetail).toContain(
+      "No functional expert GPU result or performance",
+    );
+    expect(progressSnapshot.eventualPublicCommit).toBe(
+      "fa57eea910280b42d6d852047c92a4c352583053",
+    );
+
     const lesson = curriculum
       .flatMap((module) => module.lessons)
       .find((candidate) => candidate.id === "moe-routing");
@@ -1494,6 +1531,21 @@ describe("implementation progress integrity", () => {
     expect(orientation).toContain(
       "No expert GEMM or combine kernel was dispatched",
     );
+    expect(
+      kernelProgress.find((kernel) => kernel.id === "moe-experts"),
+    ).toMatchObject({
+      run: "partial",
+      verify: "partial",
+      evidence: "partial",
+      dependsOn: expect.arrayContaining([
+        "authenticated router completion and device readback provenance",
+        "logits-to-top2, route-weight, and packed-activation joins",
+        "freshness and replay authority",
+      ]),
+    });
+    expect(
+      kernelProgress.find((kernel) => kernel.id === "moe-experts")?.next,
+    ).toContain("Promote the exact compact-plan proof and host bridge only after");
   });
 
   it("tracks scalar GEMM hardware observation without upgrading authority", () => {
