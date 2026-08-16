@@ -709,25 +709,25 @@ const narrativeRegistry = deepFreeze({
   },
   "softmax-invariant/spec": {
     "sectionId": "spec",
-    "title": "Define the row contract",
+    "title": "Start from the attributed fixed row",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "For each unmasked score x_i, define p_i = exp(x_i - m) / sum_j exp(x_j - m), where m is the maximum unmasked score. Require p_i >= 0, masked outputs equal the chosen sentinel behavior, and the unmasked sum approximates one under a stated error model."
+        "text": "The attributed V1 Rust kernel accepts one separate input and output, each exactly 64 f32 elements. Lane zero performs a 64-step maximum scan, a 64-step sum of DeviceMath::exp_f32(input[i] - maximum), and a 64-step normalization pass. V1 is unmasked and nonempty by construction; masking, batches, striding, and variable widths are different profiles, not implied features."
       },
       {
         "type": "bullets",
         "items": [
-          "Specify NaN and infinity policy rather than inheriting an accidental backend choice.",
-          "Give all-masked rows an explicit output and denominator contract.",
-          "Bind the exp approximation and reduction order into numerical evidence."
+          "Source evidence fixes the ordinary #[kernel] body, typed slices, WG64 launch, and three bounded loops.",
+          "CPU evidence checks an independent finite reference and comparison policy; it does not execute HSACO.",
+          "Numerical closure still requires explicit NaN, infinity, subnormal, OCML approximation, reduction-order, and error-bound semantics."
         ]
       }
     ]
   },
   "softmax-invariant/proof": {
     "sectionId": "proof",
-    "title": "Proof layers",
+    "title": "Keep the evidence layers separate",
     "blocks": [
       {
         "type": "table",
@@ -737,28 +737,28 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           [
-            "Real model",
-            "max subtraction preserves exact softmax"
+            "Verus",
+            "mathematical and address-set obligations under explicit premises; no concrete memory-event model"
           ],
           [
-            "Finite arithmetic",
-            "running max/sum stay representable under premises"
+            "Compiler/code object",
+            "focused source-admission, direct upstream LLVM/LLD, and inspection mechanics; the pending release manifest and two-run gate are not published here"
           ],
           [
-            "Approximation",
-            "exp and reduction error remain within epsilon"
+            "Typed host",
+            "disjoint input/output leases and a linear Joined -> Loaded -> Completed -> Unloaded API, with production authority still failing closed before HSA load"
           ],
           [
-            "Memory",
-            "row loads and output writes are bounded and race-free"
+            "GPU",
+            "no protected dispatch and no numerical GPU result"
           ]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Device math is a separate dependency",
-        "text": "A device-library exp call needs a linked symbol, target implementation, and numerical contract. The current narrow OCML linking slice does not turn an arbitrary softmax into a verified kernel."
+        "title": "Address separation is an obligation, not end-to-end race freedom",
+        "text": "The Verus model proves bounded indices, checked row extents, and conditional distinct addresses. It does not model the attributed source's concrete memory events, AMDGPU scheduling, visibility, or emitted machine accesses. DeviceMath::exp_f32 also remains a separate OCML and IEEE numerical obligation. These layers establish neither source-to-machine race freedom nor a cuda-oxide parity promotion."
       }
     ]
   },
