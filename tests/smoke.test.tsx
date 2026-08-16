@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("43bd2a602b2c")).toBeInTheDocument();
+    expect(screen.getByText("b8daeb2bc953")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "bfedcca0e8fb58acda182d780700e520d093fb0f",
+      "ee06e94d6c5b5f5f447127a6c497e5a3e84ba417",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -143,6 +143,16 @@ describe("application shell", () => {
     expect(wave64Card).toHaveTextContent("22 positive obligations");
     expect(wave64Card).toHaveTextContent("no source-to-model correspondence");
     expect(wave64Card).toHaveTextContent("parity authority");
+    const serviceHeading = screen.getByText(
+      "Inert protected-service descriptor admission",
+    );
+    const serviceCard = serviceHeading.closest("article");
+    expect(serviceCard).toHaveTextContent("AUTHORITY=none");
+    expect(serviceCard).toHaveTextContent("27 unit tests and two compile-fail doctests");
+    expect(serviceCard).toHaveTextContent("two privileged/root-only positive tests remain ignored");
+    expect(serviceCard).toHaveTextContent("no client liveness");
+    expect(serviceCard).toHaveTextContent("no storage or anti-rollback");
+    expect(serviceCard).toHaveTextContent("changes no parity status");
     const rejectedHeading = screen.getByText(
       "Rejected W0-B static host-link candidate",
     );

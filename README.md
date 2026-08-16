@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4`, tree
-`bfedcca0e8fb58acda182d780700e520d093fb0f`. Deployment requires
+`b8daeb2bc953924a424542820bed566e52d57290`, tree
+`ee06e94d6c5b5f5f447127a6c497e5a3e84ba417`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -78,7 +78,8 @@ post-link metadata, resource, relocation, dependency, and machine-call checks.
 Its typed one-shot HSA lifecycle also completed one protected gfx942 observation
 over four exact masks with canaries, unchanged inputs, exact-bit outputs, and
 terminal unload. That bounded observation is not a generalized compiler or
-Verus-to-machine refinement result. The current public tip adds bounded
+Verus-to-machine refinement result. Commit
+`43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4` adds bounded
 source-model-to-canonical-Kernel-IR correspondence for that exact masked Wave64
 profile. The package passes 38 tests with one existing hardware test ignored,
 Verus discharges 22 positive obligations, all eight expected-negative fixtures
@@ -227,8 +228,17 @@ replay exclusion across restart, and consume that capability once at durable
 publication. Device code-object linking remains pinned upstream LLVM
 target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker.
 Neither W0 nor inert Broker V4 promotes a parity or tutorial evidence row.
-The later Wave64 correspondence commit changes neither boundary. The parity
-matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
+
+The current public tip adds only an inert protected-service descriptor-admission
+foundation at commit `b8daeb2bc953924a424542820bed566e52d57290`, tree
+`ee06e94d6c5b5f5f447127a6c497e5a3e84ba417`. It reports `AUTHORITY=none`.
+Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only
+positive tests remain ignored and were not executed. The retained descriptor
+and connection-time credential checks establish no liveness, PID-reuse
+protection, endpoint exclusivity, or storage provenance, and grant no storage,
+replay, link, publication, load, or launch authority. The Wave64 correspondence
+and this descriptor-admission foundation change no parity or lesson evidence.
+The matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
 explanatory-source labels and run/verify/evidence states are unchanged.
 
 The pinned snapshot retains the production S09

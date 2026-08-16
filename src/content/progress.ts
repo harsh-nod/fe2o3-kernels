@@ -32,6 +32,7 @@ export const developmentCheckpointIds = deepFreeze([
   "eventual-public-main",
   "w0-host-link-closure-v1",
   "broker-v4-inert-foundation",
+  "protected-service-descriptor-admission",
   "w0b-host-link-rejection",
   "last-audited-public-baseline",
   "production-s09-rustc-invocation",
@@ -250,6 +251,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "broker-v4-inert-foundation": {
     kind: "narrative",
     narrativeId: "progress/broker-v4-inert-foundation",
+  },
+  "protected-service-descriptor-admission": {
+    kind: "narrative",
+    narrativeId: "progress/protected-service-descriptor-admission",
   },
   "w0b-host-link-rejection": {
     kind: "narrative",
@@ -498,6 +503,14 @@ export const developmentCheckpoints = deepFreeze([
     narrativeId: "progress/broker-v4-inert-foundation",
   },
   {
+    id: "protected-service-descriptor-admission",
+    kind: "narrative",
+    name: "Inert protected-service descriptor admission",
+    commit: "b8daeb2bc953924a424542820bed566e52d57290",
+    state: "public",
+    narrativeId: "progress/protected-service-descriptor-admission",
+  },
+  {
     id: "w0b-host-link-rejection",
     kind: "narrative",
     name: "Rejected W0-B static host-link candidate",
@@ -573,7 +586,7 @@ export const developmentCheckpoints = deepFreeze([
     id: "gfx942-wave64-lds-reduction",
     kind: "narrative",
     name: "gfx942 Wave64 bounded source-model/KIR correspondence",
-    commit: progressSnapshot.eventualPublicCommit,
+    commit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
     state: "public",
     narrativeId: "progress/gfx942-wave64-lds-reduction",
   },
@@ -693,7 +706,7 @@ export const developmentCheckpoints = deepFreeze([
     id: "moe-expert-bounded-evidence",
     kind: "narrative",
     name: "MoE expert bounded V2 integrated checkpoint",
-    commit: progressSnapshot.eventualPublicCommit,
+    commit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
     state: "public",
     narrativeId: "progress/moe-expert-bounded-evidence",
   },

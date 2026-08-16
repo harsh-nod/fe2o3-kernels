@@ -1313,12 +1313,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
-      eventualPublicTree: "bfedcca0e8fb58acda182d780700e520d093fb0f",
+      eventualPublicCommit: "b8daeb2bc953924a424542820bed566e52d57290",
+      eventualPublicTree: "ee06e94d6c5b5f5f447127a6c497e5a3e84ba417",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
-        requiredTree: "bfedcca0e8fb58acda182d780700e520d093fb0f",
+        requiredCommit: "b8daeb2bc953924a424542820bed566e52d57290",
+        requiredTree: "ee06e94d6c5b5f5f447127a6c497e5a3e84ba417",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1418,6 +1418,32 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("LLVM/ISA refinement");
     expect(detail).toContain("generalized memory safety or race freedom");
     expect(detail).toContain("parity authority");
+  });
+
+  it("records only inert protected-service descriptor admission", () => {
+    const admission = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "protected-service-descriptor-admission",
+    );
+    expect(admission).toMatchObject({
+      name: "Inert protected-service descriptor admission",
+      commit: "b8daeb2bc953924a424542820bed566e52d57290",
+      state: "public",
+      narrativeId: "progress/protected-service-descriptor-admission",
+    });
+    const detail = checkpointDetail(admission);
+    expect(detail).toContain("tree ee06e94d6c5b5f5f447127a6c497e5a3e84ba417");
+    expect(detail).toContain("AUTHORITY=none");
+    expect(detail).toContain("27 unit tests and two compile-fail doctests");
+    expect(detail).toContain("two privileged/root-only positive tests remain ignored");
+    expect(detail).toContain("client liveness");
+    expect(detail).toContain("PID-reuse protection");
+    expect(detail).toContain("exclusive endpoint ownership");
+    expect(detail).toContain("storage or anti-rollback");
+    expect(detail).toContain("replay, reservation, host-link, publication, load, launch");
+    expect(detail).toContain("changes no parity status");
+    expect(detail).toContain("run/verify/evidence gate");
+    expect(detail).toContain("lesson pin");
+    expect(detail).toContain("explanatory-source label");
   });
 
   it("records W0-B as rejected and pins the selected host-link closure", () => {
@@ -1726,7 +1752,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
+      "b8daeb2bc953924a424542820bed566e52d57290",
     );
 
     const lesson = curriculum
