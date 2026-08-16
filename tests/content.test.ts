@@ -271,10 +271,9 @@ describe("curriculum integrity", () => {
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
       const gaps = profile.lessonId === "flash-attention"
         ? [
-            "authenticated publication",
+            "production static-wrapper measurements",
             "exponential and IEEE FP32/OCML refinement",
-            "generated host/runtime",
-            "protected gfx942 execution",
+            "protected gfx942 output",
             "source/model-to-machine refinement",
           ]
         : profile.lessonId === "moe-routing"
@@ -1205,11 +1204,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "8926b3f725a9cb6a15bc8f43f019af1afffc6c1c",
-      eventualPublicTree: "edad7563491b8f892696014ae071ddc116a7d2d0",
+      eventualPublicCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
+      eventualPublicTree: "7c25b5807addeaaab26036a78fc414ea4803dc2c",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "8926b3f725a9cb6a15bc8f43f019af1afffc6c1c",
+        requiredCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1251,7 +1250,7 @@ describe("implementation progress integrity", () => {
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
   });
 
-  it("tracks G4 Flash finalization without granting downstream authority", () => {
+  it("tracks G4 Flash finalization and typed runtime without GPU authority", () => {
     const admission = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "flash-attention-compiler-admission",
     );
@@ -1275,9 +1274,37 @@ describe("implementation progress integrity", () => {
       "no publication, load, launch, runtime, GPU, numerical, performance, compiler-refinement, OCML-semantics, general memory-safety, or race-freedom authority",
     );
     expect(detail).toContain("no measured proof of no-COMGR linkage");
+
+    const runtime = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "flash-attention-typed-runtime",
+    );
+    expect(runtime).toMatchObject({
+      commit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
+      state: "public",
+    });
+    const runtimeDetail = checkpointDetail(runtime);
+    expect(runtimeDetail).toContain("typed four-buffer binding");
+    expect(runtimeDetail).toContain("Joined -> Loaded -> Completed -> Unloaded");
+    expect(runtimeDetail).toContain("Nine compile-fail cases");
+    expect(runtimeDetail).toContain("independent strict-f32 CPU oracle");
+    expect(runtimeDetail).toContain("fails closed before HSA load");
+    expect(runtimeDetail).toContain("no protected GPU dispatch or numerical GPU result");
     expect(
       kernelProgress.find((kernel) => kernel.id === "flash-attention")?.next,
-    ).toContain("authenticated publication");
+    ).toContain("production static wrapper");
+
+    const lesson = lessons.find((entry) => entry.id === "flash-attention");
+    const host = lesson?.tabs.find((tab) => tab.kind === "host");
+    const result = lesson?.tabs.find((tab) => tab.kind === "result");
+    expect(host).toMatchObject({
+      sourcePath:
+        "crates/fe2o3-hsa-runtime/tests/flash_attention_v1_hardware.rs",
+      sourceCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
+      explanatory: true,
+    });
+    expect(host?.code).toContain("protected_gfx942_flash_attention_v1_hardware");
+    expect(result?.explanatory).toBe(true);
+    expect(result?.code).toContain("No protected GPU dispatch");
   });
 
   it("tracks G5 MoE finalization without granting downstream authority", () => {

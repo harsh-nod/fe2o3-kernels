@@ -45,6 +45,7 @@ export const developmentCheckpointIds = deepFreeze([
   "row-softmax-release-checkpoint",
   "flash-attention-compiler-admission",
   "flash-attention-direct-finalization",
+  "flash-attention-typed-runtime",
   "moe-top2-compiler-admission",
   "moe-top2-direct-finalization",
   "scalar-gemm-v1",
@@ -291,6 +292,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "flash-attention-direct-finalization": {
     kind: "narrative",
     narrativeId: "progress/flash-attention-direct-finalization",
+  },
+  "flash-attention-typed-runtime": {
+    kind: "narrative",
+    narrativeId: "progress/flash-attention-typed-runtime",
   },
   "moe-top2-compiler-admission": {
     kind: "narrative",
@@ -549,6 +554,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
     state: "public",
     narrativeId: "progress/flash-attention-direct-finalization",
+  },
+  {
+    id: "flash-attention-typed-runtime",
+    kind: "narrative",
+    name: "FlashAttention exact typed host/runtime mechanics",
+    commit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
+    state: "public",
+    narrativeId: "progress/flash-attention-typed-runtime",
   },
   {
     id: "moe-top2-compiler-admission",
@@ -959,8 +972,12 @@ export const kernelProgress: KernelProgress[] = [
     run: "partial",
     verify: "partial",
     evidence: "partial",
-    dependsOn: ["tiled GEMM", "online softmax", "masking"],
-    next: "Carry the opaque B1/H1/N8/D16 finalization receipt through authenticated publication, typed runtime launch, protected hardware and numerical vectors, and source/model-to-machine refinement.",
+    dependsOn: [
+      "production static binding wrapper and protected receipt injection",
+      "protected MI300X execution and numerical comparison",
+      "compiler, OCML, and source/model-to-machine refinement",
+    ],
+    next: "Inject the exact B1/H1/N8/D16 linear receipt from the measured production static wrapper, run the protected MI300X vectors through the typed lifecycle, compare GPU output with the independent oracle, and join compiler, OCML, and source/model-to-machine refinement evidence.",
   },
   {
     id: "moe-routing",

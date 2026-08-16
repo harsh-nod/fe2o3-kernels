@@ -455,7 +455,7 @@ const flash: Lesson = {
   order: 1,
   title: "Flash attention: online invariant",
   summary:
-    "Inspect the exact fixed-shape causal Phase A kernel, then extend its online invariant toward compilation and GPU execution.",
+    "Inspect the exact fixed-shape causal Phase A kernel and its typed host/runtime mechanics, then close the protected execution and refinement gaps.",
   duration: "65 min",
   prerequisites: ["GEMM proof plan", "Softmax invariant"],
   objectives: [
@@ -495,20 +495,33 @@ const flash: Lesson = {
     },
     {
       language: "bash",
-      code: noHost,
+      code: `cargo test -p fe2o3-hsa-runtime \\
+  --test flash_attention_v1_hardware \\
+  independent_flash_oracle_covers_nominal_masked_equal_dominant_and_exceptional_cases \\
+  -- --exact --nocapture
+
+# This protected gate must fail closed before HSA load until the production
+# static wrapper supplies exact measurements and injects the linear receipt.
+cargo test -p fe2o3-hsa-runtime \\
+  --test flash_attention_v1_hardware \\
+  protected_gfx942_flash_attention_v1_hardware \\
+  -- --ignored --exact --nocapture`,
+      sourcePath:
+        "crates/fe2o3-hsa-runtime/tests/flash_attention_v1_hardware.rs",
+      sourceCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
       explanatory: true,
       notice:
-        "No generated host/runtime adapter exists for this exact FlashAttention profile.",
+        "The exact typed four-buffer adapter and linear lifecycle are source-tested. The independent CPU oracle passes, while the protected gate deliberately refuses raw bytes or an artifact path and fails before HSA load without production static-wrapper measurements and receipt injection.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent two-pass FP64 oracle, debug/release vectors, executable models, a pinned Verus proof of the rational online recurrence, exact compiler admission, and an opaque deterministic upstream LLVM/LLD finalization receipt are public. Remaining gaps: authenticated publication, exponential and IEEE FP32/OCML refinement, generated host/runtime, protected gfx942 execution, and source/model-to-machine refinement. No functional hardware result is claimed.",
+        "Exact ordinary attributed source, proof-facing models, a pinned Verus proof of the rational online recurrence, compiler admission, upstream LLVM/LLD finalization, and B1/H1/N8/D16 typed host/runtime mechanics are public. The four-buffer binding retains input leases and a unique output lease, rejects aliases, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Nine compile-fail boundaries and an independent strict-f32 CPU oracle pass. The protected test fails closed before HSA load because production static-wrapper measurements and linear receipt injection are absent. Remaining gaps: protected gfx942 output, GPU/oracle numerical comparison, exponential and IEEE FP32/OCML refinement, and source/model-to-machine refinement. No functional hardware result is claimed. No protected GPU dispatch occurred.",
       ),
       explanatory: true,
       notice:
-        "Evidence boundary: the proof covers the fixed rational model, not compiled Rust, machine semantics, race freedom, or GPU execution.",
+        "Evidence boundary: this is source/model, host/runtime mechanics, compile-fail, and CPU-oracle evidence. It does not establish compiler or OCML semantics, compiled refinement, general memory safety, race freedom, protected GPU dispatch, or a numerical GPU result.",
     },
   ),
   diagram: "attention",

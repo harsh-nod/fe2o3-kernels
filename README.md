@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `8926b3f725a9cb6a15bc8f43f019af1afffc6c1c`, tree
-`edad7563491b8f892696014ae071ddc116a7d2d0`. Both
+commit `26c80737e3380cd73df21d9a8abd1838cdfa76bc`, tree
+`7c25b5807addeaaab26036a78fc414ea4803dc2c`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -100,7 +100,21 @@ compiler-handoff and finalizer evidence only: it grants no publication, load,
 launch, runtime, GPU, numerical, performance, compiler-refinement,
 OCML-semantics, general memory-safety, race-freedom, or source/model-to-machine
 authority. It also contains no measured proof of no-COMGR linkage; that would
-require a separately measured worker manifest. Exact T=8, E=4, K=2, C=4 MoE
+require a separately measured worker manifest. A subsequent exact
+B=1, H=1, N=8, D=16 FlashAttention checkpoint adds a typed four-buffer host
+binding with shared query/key/value input leases, unique output ownership, and
+alias rejection. The opaque receipt enters a private non-Clone `Joined ->
+Loaded -> Completed -> Unloaded` lifecycle that binds reviewed HSA executable,
+kernel, group-segment, and private-segment observations. Nine compile-fail
+cases enforce the ownership and typestate boundaries, and an independent
+strict-F32 CPU oracle covers nominal, equal-score, dominant-score, causal-mask,
+exceptional-input, unchanged-input, and canary cases. The protected MI300X test
+fails closed before HSA load because the production static wrapper measurements
+and linear receipt injection are absent; artifact-path and raw-byte fallbacks
+are refused. This is host/runtime mechanics, compile-fail, resource-observation,
+and CPU-oracle evidence only. It grants no protected GPU dispatch or numerical
+GPU result, compiler or OCML semantics, source/model/Verus-to-machine
+refinement, general memory safety, or race freedom. Exact T=8, E=4, K=2, C=4 MoE
 routing compiler admission now
 similarly binds attributed source, FnAbi, complete reachable portable MIR,
 semantic Kernel IR, target/ABI/resources, and V3 provider identity. G5 carries
@@ -505,7 +519,16 @@ At the audited pin:
   checks, and an opaque deterministic finalization receipt. That receipt grants
   no publication, load, launch, runtime, GPU, numerical, performance,
   compiler-refinement, OCML-semantics, general memory-safety, or race-freedom
-  authority, and it contains no measured proof of no-COMGR linkage. MoE routing
+  authority, and it contains no measured proof of no-COMGR linkage. The exact
+  profile now also has a typed four-buffer adapter that retains three input
+  leases and unique output ownership, rejects aliases, and feeds a private
+  linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource
+  observation. Nine compile-fail boundaries and an independent strict-F32 CPU
+  oracle pass. The protected gate still fails closed before HSA load because
+  production static-wrapper measurements and linear receipt injection are
+  absent. No protected GPU dispatch or numerical GPU output is claimed, and
+  compiler/OCML semantics, source/model/Verus-to-machine refinement, general
+  memory safety, and race freedom remain open. MoE routing
   Phase A now has exact ordinary attributed T8/E4/K2/C4 source, an independent
   oracle, stable capacity/permutation/inverse contracts, a 6,561-case bounded
   corpus, debug/release mutation suites, a pinned Verus proof of the exact
