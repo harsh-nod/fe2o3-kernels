@@ -211,6 +211,52 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
 });
 
+test("MoE expert lesson exposes attributed kernels and bounded proof evidence", async ({
+  page,
+}) => {
+  await page.goto("./#/lesson/moe-expert-compute");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn moe_expert_gemm_bf16_m16_n16_k16_v1",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn moe_expert_combine_f32_t8_k2_o16_v1",
+  );
+  await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/b35c7ceff5b99494fcef2f419a4351dd5fb591cc/examples/moe_expert_v1/src/kernel.rs",
+  );
+
+  await page.getByRole("tab", { name: "Verus" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub proof fn host_schedule_phase_order_is_exact_v1",
+  );
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/ff0c08a5bdca2568178f690c04c0b0c6bfa6febe/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+  );
+
+  await page.getByRole("tab", { name: "Host" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "examples/moe_expert_v1/run-verus.sh",
+  );
+  await expect(
+    page.getByText(/They do not dispatch a GPU kernel\./u),
+  ).toBeVisible();
+
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "No functional hardware result is claimed",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Grouped or persistent expert scheduling is still separate future work",
+  );
+});
+
 test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {
