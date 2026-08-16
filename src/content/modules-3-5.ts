@@ -62,6 +62,189 @@ Result: 1/1 passed in 14.36 seconds.
 Boundary: this is functional exact bounded Slice 1, not generalized GEMM, compiler-origin authentication, production certificate consumption, MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, a general illegal-access or race-freedom proof, or protected Slice 3/4 execution.`,
 );
 
+const rowSoftmaxKernel = `#![allow(non_upper_case_globals)]
+
+use fe2o3_device::{DeviceMath, DisjointSlice, kernel, thread};
+
+const ROW_ELEMENTS: usize = 64;
+
+#[kernel(
+    typed,
+    namespace = "b9c43562d541f2f0489f311058c425d85a7ea6c328a3991bb6da17bdf85f766c",
+    launch(required = [64, 1, 1], max = [64, 1, 1]),
+    control_flow(loop_bounds(64, 64, 64))
+)]
+pub fn row_softmax_v1(input: &[f32], mut output: DisjointSlice<f32>) {
+    let lane = thread::index_1d().get();
+    if lane == 0 {
+        let mut maximum = f32::NEG_INFINITY;
+        let mut index = 0_usize;
+        while index < ROW_ELEMENTS {
+            let value = input[index];
+            if value > maximum {
+                maximum = value;
+            }
+            index += 1;
+        }
+
+        let math = unsafe { DeviceMath::from_compiler() };
+        let mut denominator = 0.0_f32;
+        index = 0;
+        while index < ROW_ELEMENTS {
+            denominator += math.exp_f32(input[index] - maximum);
+            index += 1;
+        }
+
+        index = 0;
+        while index < ROW_ELEMENTS {
+            let probability = math.exp_f32(input[index] - maximum) / denominator;
+            if let Some(slot) = unsafe { output.get_mut_at(index) } {
+                *slot = probability;
+            }
+            index += 1;
+        }
+    }
+}
+`;
+
+const rowSoftmaxAddressModel = `pub open spec fn lane_input_index_v1(lane: nat) -> nat { lane }
+pub open spec fn lane_scratch_index_v1(lane: nat) -> nat { lane }
+pub open spec fn lane_output_index_v1(lane: nat) -> nat { lane }
+
+pub open spec fn element_address_v1(base: int, index: nat) -> int {
+    base + element_bytes_v1() * index
+}
+
+pub open spec fn row_region_fits_u64_v1(base: int) -> bool {
+    0 <= base && base + row_bytes_v1() <= 0x1_0000_0000_0000_0000int
+}
+
+pub open spec fn separate_rows_v1(input_base: int, output_base: int) -> bool {
+    input_base + row_bytes_v1() <= output_base
+        || output_base + row_bytes_v1() <= input_base
+}
+
+pub proof fn active_lane_indices_are_in_bounds_v1(active: Seq<bool>, lane: nat)
+    requires
+        explicit_activity_mask_v1(active),
+        lane < row_elements_v1(),
+    ensures
+        active[lane as int],
+        lane_input_index_v1(lane) < row_elements_v1(),
+        lane_scratch_index_v1(lane) < row_elements_v1(),
+        lane_output_index_v1(lane) < row_elements_v1(),
+{
+}
+
+pub proof fn active_element_address_is_in_row_v1(base: int, lane: nat)
+    requires
+        row_region_fits_u64_v1(base),
+        lane < row_elements_v1(),
+    ensures
+        base <= element_address_v1(base, lane),
+        element_address_v1(base, lane) + element_bytes_v1() <= base + row_bytes_v1(),
+        element_address_v1(base, lane) + element_bytes_v1()
+            <= 0x1_0000_0000_0000_0000int,
+{
+}
+
+pub proof fn separate_input_and_output_accesses_do_not_alias_v1(
+    input_base: int,
+    output_base: int,
+    reader: nat,
+    writer: nat,
+)
+    requires
+        row_region_fits_u64_v1(input_base),
+        row_region_fits_u64_v1(output_base),
+        separate_rows_v1(input_base, output_base),
+        reader < row_elements_v1(),
+        writer < row_elements_v1(),
+    ensures
+        element_address_v1(input_base, reader)
+            != element_address_v1(output_base, writer),
+{
+    active_element_address_is_in_row_v1(input_base, reader);
+    active_element_address_is_in_row_v1(output_base, writer);
+}
+
+pub proof fn distinct_output_element_addresses_v1(base: int, left: nat, right: nat)
+    requires
+        row_region_fits_u64_v1(base),
+        left < row_elements_v1(),
+        right < row_elements_v1(),
+        left != right,
+    ensures
+        element_address_v1(base, lane_output_index_v1(left))
+            != element_address_v1(base, lane_output_index_v1(right)),
+{
+}
+`;
+
+const rowSoftmaxHost = `/// Inert exact token/buffer join before a runtime is observed.
+#[must_use = "the joined row-softmax request must enter its one-shot lifecycle"]
+pub struct JoinedProtectedRowSoftmaxV1<'input, 'output> {
+    token: ProtectedRowSoftmaxV1HostTokenV1,
+    host: GeneratedProtectedRowSoftmaxV1HostAdapterV1<'input, 'output>,
+}
+
+/// Consumes the sealed token and exact generated binding into one linear join.
+pub fn join_protected_row_softmax_v1<'input, 'output>(
+    token: ProtectedRowSoftmaxV1HostTokenV1,
+    host: GeneratedProtectedRowSoftmaxV1HostAdapterV1<'input, 'output>,
+) -> Result<JoinedProtectedRowSoftmaxV1<'input, 'output>, ProtectedRowSoftmaxV1JoinErrorV1> {
+    validate_join(&token, &host)?;
+    Ok(JoinedProtectedRowSoftmaxV1 { token, host })
+}
+
+impl<'input, 'output> JoinedProtectedRowSoftmaxV1<'input, 'output> {
+    pub const fn token_identity(&self) -> ProtectedRowSoftmaxV1HostTokenIdentityV1 {
+        self.token.identity()
+    }
+
+    pub const fn admission_identity(&self) -> ProtectedRowSoftmaxV1AdmissionIdentityV1 {
+        self.token.admission_identity()
+    }
+
+    pub const fn finalized_artifact_identity(&self) -> FinalizedWorkerV2HsacoIdentityV1 {
+        self.token.finalized_artifact_identity()
+    }
+
+    pub fn load<A: ReviewedProtectedRowSoftmaxV1RuntimeAdapterV1>(
+        self,
+        mut adapter: A,
+    ) -> Result<
+        LoadedProtectedRowSoftmaxV1<'input, 'output, A>,
+        ProtectedRowSoftmaxV1LoadErrorV1<A::Error>,
+    > {
+        let context_identity = reviewed_adapter_call(|| unsafe { adapter.context_identity_v1() });
+        if !self
+            .host
+            .observed_context_v1()
+            .matches_core_context_identity_v1(context_identity)
+        {
+            return Err(ProtectedRowSoftmaxV1LoadErrorV1::ContextIdentity);
+        }
+        let state = load_after_context_match(self, adapter)?;
+        Ok(LoadedProtectedRowSoftmaxV1 { state })
+    }
+}
+`;
+
+const rowSoftmaxResult = resultText(
+  "compiler-hsaco-observed",
+  `Fixed-width row-softmax V1 evidence boundary
+
+Source: the attributed ordinary Rust #[kernel] body fixes one unmasked 64-element row, WG64, and three bounded scalar loops executed by lane zero.
+CPU: independent host reference and numerical-oracle tests exist; they are not GPU observations.
+Verus: the mathematical and address-set models verify bounded indices, row extents, and conditional disjoint-address obligations. They do not model concrete memory events or prove source-to-machine race freedom.
+Compiler/code object: focused source admission, direct upstream LLVM/LLD finalization, and inspection mechanics exist. The pending operator-selected release manifest and two-fresh-run gate are not claimed as published evidence here.
+Host: typed disjoint input/output binding and Joined -> Loaded -> Completed -> Unloaded source mechanics exist, but production static-wrapper authority is absent and the protected path fails closed before HSA load.
+GPU: no protected dispatch and no numerical GPU result are claimed.
+
+This evidence does not justify a cuda-oxide parity promotion.`,
+);
+
 function exactGemmKernelTab() {
   return {
     language: "rust" as const,
@@ -396,22 +579,22 @@ const softmax: Lesson = {
   id: "softmax-invariant",
   module: 5,
   order: 0,
-  title: "Softmax: specify stability first",
+  title: "Softmax: one fixed row, six evidence layers",
   summary:
-    "Derive a numerically stable row softmax and make masking, empty rows, and approximation error explicit.",
+    "Read the real width-64 kernel, address-set model, and typed host lifecycle without combining their separate authority levels.",
   duration: "42 min",
   prerequisites: ["Reductions", "Floating-point error basics"],
   objectives: [
-    "State the max-subtracted softmax specification.",
-    "Handle all-masked rows without undefined division.",
-    "Separate real-number identities from target math-library behavior.",
+    "Trace the attributed max, exponential-sum, and normalization loops.",
+    "Distinguish address-set obligations from a source-to-machine race proof.",
+    "Separate CPU, Verus, compiler/code-object, host, and GPU evidence.",
   ],
   claims: [
     {
       kind: "design-only",
-      label: "Softmax roadmap",
+      label: "Production GPU boundary",
       detail:
-        "No current fe2o3 source-to-HSACO softmax kernel is claimed. The lesson prepares the contracts required by flash attention.",
+        "Real attributed source, CPU checks, a Verus/address-set model, and compiler/host mechanics exist. Production authority still fails closed before HSA load, so there is no protected GPU result and no parity promotion.",
     },
   ],
   sections: [
@@ -421,29 +604,41 @@ const softmax: Lesson = {
   tabs: completeTabs(
     {
       language: "rust",
-      code: `// DESIGN ONLY\nlet m = reduce_max(active_scores);\nlet weights = map(active_scores, |x| exp(x - m));\nlet z = reduce_sum(weights);\nwrite_row(map(weights, |w| w / z));`,
-      explanatory: true,
+      code: rowSoftmaxKernel,
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
+      sourceCommit: "07446dc820d457ab895a3b01bcf6290613b47e66",
+      sourceSha256:
+        "c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4",
+      explanatory: false,
+    },
+    {
+      language: "rust",
+      code: rowSoftmaxAddressModel,
+      sourcePath: "examples/row_softmax_v1/verus/row_softmax_v1.rs",
+      sourceCommit: "dd841720591003f418d056b21a319088ce4559d6",
+      explanatory: false,
+    },
+    {
+      language: "rust",
+      code: rowSoftmaxHost,
+      sourcePath:
+        "crates/fe2o3-host/src/protected_row_softmax_v1_lifecycle.rs",
+      sourceCommit: "38b0005765944de55bb32c559bc8431637317b2b",
+      explanatory: false,
     },
     {
       language: "text",
-      code: `ensures unmasked_sum(output) ~= 1\nensures masked(i) ==> output[i] == 0\nensures finite_inputs && nonempty_active ==> denominator > 0`,
+      code: rowSoftmaxResult,
       explanatory: true,
-    },
-    { language: "bash", code: noHost, explanatory: true },
-    {
-      language: "text",
-      code: resultText(
-        "design-only",
-        "The output contract and error budget are ready to instantiate once source lowering, device math, and reduction execution are connected.",
-      ),
     },
   ),
   diagram: "reduction",
   exercises: [
     {
-      prompt: "Define the all-masked row behavior for your application.",
-      hint: "Avoid a zero denominator and state whether the output is zero, NaN, or an error.",
-      acceptance: "One explicit behavior appears in both the functional spec and host admission policy.",
+      prompt: "Add masking without overstating the proof boundary.",
+      hint: "Change source, CPU policy, Verus premises, compiler profile, and typed host ABI independently.",
+      acceptance: "The proposal names one test or proof obligation for each of the six evidence layers.",
     },
   ],
   glossary: ["softmax", "max subtraction", "error budget", "masking"],

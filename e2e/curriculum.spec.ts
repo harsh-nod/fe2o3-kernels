@@ -169,6 +169,51 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   );
 });
 
+test("row softmax separates real source from pending and GPU evidence", async ({
+  page,
+}) => {
+  await page.goto("./#/lesson/softmax-invariant");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Softmax: one fixed row, six evidence layers",
+    }),
+  ).toBeVisible();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn row_softmax_v1",
+  );
+  await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/07446dc820d457ab895a3b01bcf6290613b47e66/crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
+  );
+
+  await page.getByRole("tab", { name: "Verus proof" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "separate_input_and_output_accesses_do_not_alias_v1",
+  );
+  await expect(
+    page.getByText("Address separation is an obligation, not end-to-end race freedom"),
+  ).toBeVisible();
+  await page.getByRole("tab", { name: "Host" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "JoinedProtectedRowSoftmaxV1",
+  );
+  await expect(
+    page.getByText(/production authority still failing closed before HSA load/u),
+  ).toBeVisible();
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pending operator-selected release manifest",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "no protected dispatch and no numerical GPU result",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "does not justify a cuda-oxide parity promotion",
+  );
+});
+
 test("Wave 2 lessons expose exact source and bounded latest status", async ({
   page,
 }) => {

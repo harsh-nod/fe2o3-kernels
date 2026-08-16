@@ -57,6 +57,41 @@ describe("application shell", () => {
     expect(screen.getAllByText("Source tested").length).toBeGreaterThan(0);
   });
 
+  it("renders real row-softmax source without upgrading its evidence", async () => {
+    const user = userEvent.setup();
+    renderApp("/lesson/softmax-invariant");
+    expect(
+      screen.getByRole("heading", {
+        level: 1,
+        name: "Softmax: one fixed row, six evidence layers",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "pub fn row_softmax_v1",
+    );
+    expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/07446dc820d457ab895a3b01bcf6290613b47e66/crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
+    );
+
+    await user.click(screen.getByRole("tab", { name: "Verus proof" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "separate_input_and_output_accesses_do_not_alias_v1",
+    );
+    await user.click(screen.getByRole("tab", { name: "Host" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "JoinedProtectedRowSoftmaxV1",
+    );
+    await user.click(screen.getByRole("tab", { name: "Expected result" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "no protected dispatch and no numerical GPU result",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "does not justify a cuda-oxide parity promotion",
+    );
+  });
+
   it("shows public and candidate kernel delivery states separately", () => {
     renderApp("/status");
     expect(

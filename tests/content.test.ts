@@ -192,6 +192,69 @@ describe("curriculum integrity", () => {
     );
   });
 
+  it("teaches row softmax from exact source while preserving evidence boundaries", () => {
+    const lesson = lessons.find((entry) => entry.id === "softmax-invariant");
+    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
+    expect(kernel).toMatchObject({
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
+      sourceCommit: "07446dc820d457ab895a3b01bcf6290613b47e66",
+      sourceSha256:
+        "c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4",
+      explanatory: false,
+    });
+    expect(createHash("sha256").update(kernel?.code ?? "").digest("hex")).toBe(
+      kernel?.sourceSha256,
+    );
+    expect(kernel?.code).toContain("#[kernel(");
+    expect(kernel?.code).toContain("control_flow(loop_bounds(64, 64, 64))");
+    expect(kernel?.code).toContain("DeviceMath::from_compiler()");
+
+    const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
+    expect(proof).toMatchObject({
+      sourcePath: "examples/row_softmax_v1/verus/row_softmax_v1.rs",
+      sourceCommit: "dd841720591003f418d056b21a319088ce4559d6",
+      explanatory: false,
+    });
+    expect(proof?.code).toContain("active_element_address_is_in_row_v1");
+    expect(proof?.code).toContain(
+      "separate_input_and_output_accesses_do_not_alias_v1",
+    );
+
+    const host = lesson?.tabs.find((tab) => tab.kind === "host");
+    expect(host).toMatchObject({
+      sourcePath:
+        "crates/fe2o3-host/src/protected_row_softmax_v1_lifecycle.rs",
+      sourceCommit: "38b0005765944de55bb32c559bc8431637317b2b",
+      explanatory: false,
+    });
+    expect(host?.code).toContain("JoinedProtectedRowSoftmaxV1");
+    expect(host?.code).toContain("load_after_context_match");
+
+    const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    for (const layer of [
+      "Source:",
+      "CPU:",
+      "Verus:",
+      "Compiler/code object:",
+      "Host:",
+      "GPU:",
+    ]) {
+      expect(result).toContain(layer);
+    }
+    expect(result).toContain("pending operator-selected release manifest");
+    expect(result).toContain("no protected dispatch");
+    expect(result).toContain("does not justify a cuda-oxide parity promotion");
+
+    const proofNarrative = narrativeEntry("softmax-invariant/proof");
+    expect(JSON.stringify(proofNarrative)).not.toContain(
+      "row loads and output writes are bounded and race-free",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "Address separation is an obligation, not end-to-end race freedom",
+    );
+  });
+
   it("pins exact source-only kernel snapshots", () => {
     expect(sourceMilestoneOrder).toEqual([
       "wave64-collectives-source-v1",
@@ -1216,6 +1279,7 @@ describe("curriculum integrity", () => {
         [
           "gemm-tiling",
           "gemm-proof-plan",
+          "softmax-invariant",
           "flash-attention",
           "moe-routing",
           "moe-expert-compute",
