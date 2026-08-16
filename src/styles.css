@@ -1915,7 +1915,8 @@ tr:last-child td {
   color: var(--amber);
 }
 
-.checkpoint-state-repair {
+.checkpoint-state-repair,
+.checkpoint-state-rejected {
   color: var(--red);
 }
 

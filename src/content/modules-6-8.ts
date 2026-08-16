@@ -73,8 +73,8 @@ cargo test -p fe2o3-hsa-runtime \\
   independent_moe_oracle_covers_ties_capacity_permutation_inverse_and_sentinels \\
   -- --exact --nocapture
 
-# This protected gate must fail closed before HSA load until the production
-# static wrapper injects the opaque linear finalization receipt.
+# This protected gate must fail closed before HSA load pending W0 authenticated
+# HostLinkClosureV1, W1 broker executable identity, and later receipt injection.
 cargo test -p fe2o3-hsa-runtime \\
   --test moe_top2_v1_hardware \\
   protected_gfx942_moe_top2_v1_hardware \\
@@ -83,13 +83,13 @@ cargo test -p fe2o3-hsa-runtime \\
       sourceCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
       explanatory: true,
       notice:
-        "The pinned logical memory/effect proof verifies 16 obligations and rejects eight mutations. The exact eight-buffer adapter and linear lifecycle are source-tested. The independent CPU oracle passes; the protected gate refuses artifact-path or raw-byte fallback and fails before HSA load until production static-wrapper receipt injection exists.",
+        "The pinned logical memory/effect proof verifies 16 obligations and rejects eight mutations. The exact eight-buffer adapter and linear lifecycle are source-tested. The independent CPU oracle passes; the protected gate refuses artifact-path or raw-byte fallback and fails before HSA load pending W0 authenticated HostLinkClosureV1, W1 broker cargo-fe2o3 executable identity, and subsequent receipt injection.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, opaque deterministic upstream LLVM/LLD finalization, and T8/E4/K2/C4 typed host/runtime mechanics are public. The eight-buffer binding retains logits shared read-only and seven unique read-write outputs, rejects every alias pair, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Five binder tests, five lifecycle tests, nine compile-fail boundaries, and the independent routing oracle pass on MI300X. Commit d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b adds a separate exact bounded logical memory/effect model: Verus verifies 16 obligations and all eight pinned mutations fail at their named postconditions. Its copyable expected-evidence descriptor remains inert and cannot mint or join an authenticated receipt. The protected test fails closed before HSA load because production static-wrapper receipt injection is absent. Remaining gaps: protected GPU output and seven-buffer oracle comparison, authenticated proof consumption, IEEE FP32/compiler/logical-address refinement, exact expert compiler/finalizer/runtime/protected execution, and source/model-to-machine refinement. The logical model does not establish generalized machine memory safety or race freedom. No functional hardware result is claimed. No protected GPU dispatch occurred.",
+        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, opaque deterministic upstream LLVM/LLD finalization, and T8/E4/K2/C4 typed host/runtime mechanics are public. The eight-buffer binding retains logits shared read-only and seven unique read-write outputs, rejects every alias pair, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Five binder tests, five lifecycle tests, nine compile-fail boundaries, and the independent routing oracle pass on MI300X. Commit d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b adds a separate exact bounded logical memory/effect model: Verus verifies 16 obligations and all eight pinned mutations fail at their named postconditions. Its copyable expected-evidence descriptor remains inert and cannot mint or join an authenticated receipt. The protected test fails closed before HSA load pending W0 authenticated HostLinkClosureV1, W1 broker cargo-fe2o3 executable identity, and subsequent receipt injection. Remaining gaps: protected GPU output and seven-buffer oracle comparison, authenticated proof consumption, IEEE FP32/compiler/logical-address refinement, exact expert compiler/finalizer/runtime/protected execution, and source/model-to-machine refinement. The logical model does not establish generalized machine memory safety or race freedom. No functional hardware result is claimed. No protected GPU dispatch occurred.",
       ),
       explanatory: true,
       notice:

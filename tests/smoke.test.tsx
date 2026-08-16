@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("d65449e20929")).toBeInTheDocument();
+    expect(screen.getByText("2042382cb072")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -112,9 +112,22 @@ describe("application shell", () => {
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
       "Both the commit and tree are required",
     );
+    expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
+      "e4a964c61dd43e1ac5e54adc2562f6e77f2e6654",
+    );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
+    const rejectedHeading = screen.getByText(
+      "Rejected W0-B static host-link candidate",
+    );
+    const rejectedCard = rejectedHeading.closest("article");
+    expect(rejectedCard).toBeInTheDocument();
+    expect(rejectedCard).toHaveTextContent("rejected");
+    expect(rejectedCard).toHaveTextContent("executed zero Workers");
+    expect(rejectedCard).toHaveTextContent("descriptor-backed HostLinkClosureV1");
+    expect(rejectedCard).toHaveTextContent("W1 is authenticated broker cargo-fe2o3 executable identity");
+    expect(rejectedCard).toHaveTextContent("in-process host LLD is deferred");
     expect(screen.getByText("Formal evidence isolation V11")).toBeInTheDocument();
     const candidateHeading = screen.getByText(
       "MoE expert bounded V2 integrated checkpoint",

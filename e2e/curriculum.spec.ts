@@ -204,7 +204,10 @@ test("row softmax separates real source from pending and GPU evidence", async ({
   ).toBeVisible();
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "two independent complete MI300X release gates",
+    "Two fresh complete MI300X runs passed",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "independent review accepted the evidence package",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "no protected dispatch and no numerical GPU result",

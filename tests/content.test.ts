@@ -247,7 +247,11 @@ describe("curriculum integrity", () => {
     expect(result).toContain(
       "9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c",
     );
-    expect(result).toContain("two independent complete MI300X release gates");
+    expect(result).toContain("Two fresh complete MI300X runs passed");
+    expect(result).toContain("independent review accepted the evidence package");
+    expect(result).toContain(
+      "0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93",
+    );
     expect(result).toContain("no protected dispatch");
     expect(result).toContain("does not justify a cuda-oxide parity promotion");
 
@@ -354,14 +358,16 @@ describe("curriculum integrity", () => {
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
       const gaps = profile.lessonId === "flash-attention"
         ? [
-            "production static-wrapper measurements",
+            "W0 authenticated HostLinkClosureV1",
+            "W1 broker cargo-fe2o3 executable identity",
             "exponential and IEEE FP32/OCML refinement",
             "protected gfx942 output",
             "source/model-to-machine refinement",
           ]
         : profile.lessonId === "moe-routing"
         ? [
-            "production static-wrapper receipt injection",
+            "W0 authenticated HostLinkClosureV1",
+            "W1 broker cargo-fe2o3 executable identity",
             "protected GPU output",
             "authenticated proof consumption",
             "IEEE FP32/compiler/logical-address refinement",
@@ -1307,12 +1313,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "d65449e2092929f73b9cdee91c039fae3b61ecff",
-      eventualPublicTree: "867ea9422bb5f721166d3ea829190c3b3debcc91",
+      eventualPublicCommit: "2042382cb07283c4339c05c6372c6798bd5ceb7b",
+      eventualPublicTree: "e4a964c61dd43e1ac5e54adc2562f6e77f2e6654",
       publicationGate: {
-        state: "public-refs-match-required-target",
-        requiredCommit: "d65449e2092929f73b9cdee91c039fae3b61ecff",
-        requiredTree: "867ea9422bb5f721166d3ea829190c3b3debcc91",
+        state: "deployment-gated-exact-target",
+        requiredCommit: "2042382cb07283c4339c05c6372c6798bd5ceb7b",
+        requiredTree: "e4a964c61dd43e1ac5e54adc2562f6e77f2e6654",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1320,7 +1326,7 @@ describe("implementation progress integrity", () => {
       },
     });
     expect(progressSnapshot.publicationGate.requirement).toContain(
-      "required commit and its required tree",
+      "required commit and required tree",
     );
     expect(developmentCheckpoints[0]).toMatchObject({
       name: "Published implementation snapshot (publication gated)",
@@ -1330,11 +1336,62 @@ describe("implementation progress integrity", () => {
     expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
       "public-main documentation snapshot is publication-gated",
     );
-    expect(developmentCheckpoints[1]).toMatchObject({
+    expect(
+      developmentCheckpoints.find(
+        (checkpoint) => checkpoint.id === "last-audited-public-baseline",
+      ),
+    ).toMatchObject({
       name: "Historical audited public baseline",
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "public",
     });
+  });
+
+  it("records W0-B as rejected and pins the selected host-link closure", () => {
+    const rejected = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "w0b-host-link-rejection",
+    );
+    expect(rejected).toMatchObject({
+      name: "Rejected W0-B static host-link candidate",
+      commit: "2e5ad53bcb20f2a46e91128a42e838d918d61581",
+      state: "rejected",
+      narrativeId: "progress/w0b-host-link-rejection",
+    });
+    const detail = checkpointDetail(rejected);
+    expect(detail).toContain("tree 892f014381cd3e34f81cb05df3b9bbda4a412478");
+    expect(detail).toContain("is rejected and is not integrated, accepted, or public");
+    expect(detail).toContain(
+      "crossed the static binding-wrapper, Cargo, rustc, backend, and kernel-collection boundaries",
+    );
+    expect(detail).toContain("broker lacked an authenticated cargo-fe2o3 executable identity");
+    expect(detail).toContain("executed zero Workers");
+    expect(detail).toContain("no artifact admission, load, dispatch, or GPU result");
+    expect(detail).toContain("opened no COMGR path");
+    expect(detail).toContain("ELF loader and system DSOs, CRTs, archives and objects, search roots");
+    expect(detail).toContain("forwarded Cargo target artifacts outside the authenticated closure");
+    expect(detail).toContain("env_clear reduces ambient configuration but does not authenticate");
+    expect(detail).toContain("dedicated, genuinely static fe2o3-host-lld");
+    expect(detail).toContain("pinned upstream LLVM/LLD archives");
+    expect(detail).toContain("descriptor-backed HostLinkClosureV1");
+    expect(detail).toContain("W0 is a dedicated");
+    expect(detail).toContain(
+      "W1 is authenticated broker cargo-fe2o3 executable identity and follows W0",
+    );
+    expect(detail).toContain("Retaining dynamic rust-lld is rejected");
+    expect(detail).toContain("in-process host LLD is deferred");
+    expect(detail).toContain(
+      "Device code-object linking remains pinned upstream LLVM target-machine APIs plus in-process LLD",
+    );
+    expect(detail).toContain("no COMGR or shell GPU linker");
+    expect(detail).toContain("promote no parity or evidence row");
+
+    for (const id of ["softmax", "flash-attention", "moe-routing", "moe-experts"]) {
+      expect(kernelProgress.find((kernel) => kernel.id === id)).toMatchObject({
+        run: "partial",
+        verify: "partial",
+        evidence: "partial",
+      });
+    }
   });
 
   it("keeps the historical row pin separate from the LLVM release pair", () => {
@@ -1369,7 +1426,11 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain(
       "9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c",
     );
-    expect(detail).toContain("Two independent complete MI300X release gates");
+    expect(detail).toContain("Two fresh complete MI300X runs passed");
+    expect(detail).toContain("independent review accepted the evidence package");
+    expect(detail).toContain(
+      "single retained HSACO identity 0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93",
+    );
     expect(detail).toContain("did not dispatch a GPU");
     expect(detail).toContain("upstream LLVM target-machine APIs plus in-process LLD");
     expect(detail).toContain("no runtime or GPU result, authentication");
@@ -1390,6 +1451,14 @@ describe("implementation progress integrity", () => {
       "moe-experts",
     ]);
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
+    expect(
+      kernelProgress.some(
+        (kernel) =>
+          kernel.run === "complete" &&
+          kernel.verify === "complete" &&
+          kernel.evidence === "complete",
+      ),
+    ).toBe(false);
     expect(
       kernelProgress.find((kernel) => kernel.id === "moe-experts"),
     ).toMatchObject({
@@ -1439,7 +1508,9 @@ describe("implementation progress integrity", () => {
     );
     expect(reproducibilityDetail).toContain("ROCm LLVM 7.2.4 is rejected");
     expect(reproducibilityDetail).toContain("first measured toolchain divergence is linked bitcode");
-    expect(reproducibilityDetail).toContain("No COMGR or shell linker was introduced");
+    expect(reproducibilityDetail).toContain(
+      "GPU device code-object path introduced no COMGR or shell GPU linker",
+    );
     expect(reproducibilityDetail).toContain("no functional Flash semantics");
 
     const runtime = developmentCheckpoints.find(
@@ -1471,7 +1542,7 @@ describe("implementation progress integrity", () => {
     expect(memoryProofDetail).toContain("No AuthenticatedVerusExecutionReceiptV2 join");
     expect(
       kernelProgress.find((kernel) => kernel.id === "flash-attention")?.next,
-    ).toContain("production static wrapper");
+    ).toContain("W0 with the dedicated genuinely static fe2o3-host-lld");
 
     const lesson = lessons.find((entry) => entry.id === "flash-attention");
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
@@ -1552,7 +1623,7 @@ describe("implementation progress integrity", () => {
       (checkpoint) => checkpoint.id === "moe-expert-bounded-evidence",
     );
     expect(expertEvidence).toMatchObject({
-      commit: "d65449e2092929f73b9cdee91c039fae3b61ecff",
+      commit: "2042382cb07283c4339c05c6372c6798bd5ceb7b",
       state: "public",
       narrativeId: "progress/moe-expert-bounded-evidence",
     });
@@ -1582,7 +1653,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "d65449e2092929f73b9cdee91c039fae3b61ecff",
+      "2042382cb07283c4339c05c6372c6798bd5ceb7b",
     );
 
     const lesson = curriculum
@@ -1600,7 +1671,7 @@ describe("implementation progress integrity", () => {
     expect(result?.code).toContain("No protected GPU dispatch occurred");
     expect(
       kernelProgress.find((kernel) => kernel.id === "moe-routing")?.next,
-    ).toContain("production static wrapper");
+    ).toContain("W0 with the dedicated genuinely static fe2o3-host-lld");
 
     const expertLesson = lessons.find(
       (candidate) => candidate.id === "moe-expert-compute",
@@ -2196,7 +2267,7 @@ describe("implementation progress integrity", () => {
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
     expect(orientation).toContain(
-      "Deployment requires both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main to resolve to that exact commit and tree",
+      "Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree",
     );
     expect(orientation).toContain("not a compiler refinement proof");
     expect(orientation).toContain("passed 1/1 in 40.92 seconds");

@@ -30,6 +30,7 @@ export interface KernelProgress {
 
 export const developmentCheckpointIds = deepFreeze([
   "eventual-public-main",
+  "w0b-host-link-rejection",
   "last-audited-public-baseline",
   "production-s09-rustc-invocation",
   "authenticated-verus-v2",
@@ -87,7 +88,7 @@ interface DevelopmentCheckpointBase {
   id: DevelopmentCheckpointId;
   name: string;
   commit: string;
-  state: "public" | "acceptance" | "repair" | "queued";
+  state: "public" | "acceptance" | "repair" | "queued" | "rejected";
 }
 
 export interface NarrativeDevelopmentCheckpoint
@@ -125,14 +126,14 @@ export const progressSnapshot = {
   eventualPublicCommit: publicationGate.requiredCommit,
   eventualPublicTree: publicationGate.requiredTree,
   publicationGate: {
-    state: "public-refs-match-required-target",
+    state: "deployment-gated-exact-target",
     requiredCommit: publicationGate.requiredCommit,
     requiredTree: publicationGate.requiredTree,
     requiredRefs: publicationGate.requiredRefs.map(
       ({ repository, ref }) => `${repository}@${ref}`,
     ),
     requirement:
-      "Both required public refs resolve exactly to the required commit and its required tree; deployment continues to verify both identities.",
+      "Deployment requires both public refs to resolve exactly to the required commit and required tree; the gate fails closed until both identities match.",
   },
   repositories: publicationGate.requiredRefs.map(
     ({ repository }) => `https://github.com/${repository}`,
@@ -239,6 +240,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "eventual-public-main": {
     kind: "publication-gate",
     commit: progressSnapshot.eventualPublicCommit,
+  },
+  "w0b-host-link-rejection": {
+    kind: "narrative",
+    narrativeId: "progress/w0b-host-link-rejection",
   },
   "last-audited-public-baseline": {
     kind: "narrative",
@@ -465,6 +470,14 @@ export const developmentCheckpoints = deepFreeze([
     name: "Published implementation snapshot (publication gated)",
     commit: progressSnapshot.eventualPublicCommit,
     state: "public",
+  },
+  {
+    id: "w0b-host-link-rejection",
+    kind: "narrative",
+    name: "Rejected W0-B static host-link candidate",
+    commit: "2e5ad53bcb20f2a46e91128a42e838d918d61581",
+    state: "rejected",
+    narrativeId: "progress/w0b-host-link-rejection",
   },
   {
     id: "last-audited-public-baseline",
@@ -1038,12 +1051,13 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "static production binding wrapper",
+      "W0 authenticated HostLinkClosureV1",
+      "W1 broker cargo-fe2o3 executable identity",
       "protected MI300X execution",
       "source, proof, and machine refinement",
       "numerical policy",
     ],
-    next: "Land the static production binding wrapper, consume the staged 25-pin receipt through the protected MI300X vector matrix, then join source, proof, compiler, and machine refinement evidence.",
+    next: "Complete W0 with the dedicated genuinely static fe2o3-host-lld and descriptor-backed HostLinkClosureV1, complete W1 with authenticated broker cargo-fe2o3 executable identity, then consume the staged 25-pin receipt through the protected MI300X vector matrix and join source, proof, compiler, and machine refinement evidence.",
   },
   {
     id: "flash-attention",
@@ -1052,12 +1066,13 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "production static binding wrapper and protected receipt injection",
+      "W0 authenticated HostLinkClosureV1",
+      "W1 broker cargo-fe2o3 executable identity and protected receipt injection",
       "protected MI300X execution and numerical comparison",
       "authenticated Verus execution receipt and proof consumption",
       "compiler, OCML, and source/model-to-machine refinement",
     ],
-    next: "Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the exact B1/H1/N8/D16 linear artifact receipt from the measured production static wrapper, run the protected MI300X vectors through the typed lifecycle, compare GPU output with the independent oracle, and join compiler, OCML, logical-address, and source/model-to-machine refinement evidence.",
+    next: "Complete W0 with the dedicated genuinely static fe2o3-host-lld and descriptor-backed HostLinkClosureV1, then complete W1 with authenticated broker cargo-fe2o3 executable identity. Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the exact B1/H1/N8/D16 linear artifact receipt, run the protected MI300X vectors through the typed lifecycle, compare GPU output with the independent oracle, and join compiler, OCML, logical-address, and source/model-to-machine refinement evidence.",
   },
   {
     id: "moe-routing",
@@ -1066,12 +1081,13 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "production static binding wrapper and protected receipt injection",
+      "W0 authenticated HostLinkClosureV1",
+      "W1 broker cargo-fe2o3 executable identity and protected receipt injection",
       "protected MI300X routing vectors and GPU/oracle comparison",
       "authenticated Verus execution receipt and proof consumption",
       "IEEE FP32, compiler, and model-to-machine refinement",
     ],
-    next: "Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the opaque T8/E4/K2/C4 artifact receipt from the measured production static wrapper, run protected MI300X routing vectors through the typed lifecycle, compare all seven GPU outputs with the independent oracle, and join IEEE FP32, compiler, logical-address, and model-to-machine refinement evidence.",
+    next: "Complete W0 with the dedicated genuinely static fe2o3-host-lld and descriptor-backed HostLinkClosureV1, then complete W1 with authenticated broker cargo-fe2o3 executable identity. Consume the bounded memory/effect proof through a non-forgeable authenticated Verus receipt, inject the opaque T8/E4/K2/C4 artifact receipt, run protected MI300X routing vectors through the typed lifecycle, compare all seven GPU outputs with the independent oracle, and join IEEE FP32, compiler, logical-address, and model-to-machine refinement evidence.",
   },
   {
     id: "moe-experts",
@@ -1178,6 +1194,15 @@ export function validateProgress(
     }
     if (kernel.run === "complete" && kernel.dependsOn.length > 0) {
       issues.push(`${kernel.id} is complete but still declares dependencies`);
+    }
+    if (
+      kernel.run === "complete" &&
+      kernel.verify === "complete" &&
+      kernel.evidence === "complete"
+    ) {
+      issues.push(
+        `${kernel.id} claims unsupported run, verify, and evidence completion`,
+      );
     }
   }
   return issues;
