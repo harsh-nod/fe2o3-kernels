@@ -504,7 +504,7 @@ const flash: Lesson = {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent two-pass FP64 oracle, debug/release vectors, executable models, a pinned Verus proof of the rational online recurrence, and publication-gated exact compiler admission are public. Remaining gaps: exponential and IEEE FP32/OCML refinement, direct LLVM/LLD finalization, generated host/runtime, protected gfx942 execution, and source/model-to-machine refinement. No functional hardware result is claimed.",
+        "Exact ordinary attributed source, an independent two-pass FP64 oracle, debug/release vectors, executable models, a pinned Verus proof of the rational online recurrence, exact compiler admission, and an opaque deterministic upstream LLVM/LLD finalization receipt are public. Remaining gaps: authenticated publication, exponential and IEEE FP32/OCML refinement, generated host/runtime, protected gfx942 execution, and source/model-to-machine refinement. No functional hardware result is claimed.",
       ),
       explanatory: true,
       notice:

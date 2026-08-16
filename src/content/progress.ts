@@ -44,6 +44,7 @@ export const developmentCheckpointIds = deepFreeze([
   "workgroup-sync-protected-hardware",
   "row-softmax-release-checkpoint",
   "flash-attention-compiler-admission",
+  "flash-attention-direct-finalization",
   "moe-top2-compiler-admission",
   "scalar-gemm-v1",
   "scalar-gemm-proof-profile",
@@ -285,6 +286,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "flash-attention-compiler-admission": {
     kind: "narrative",
     narrativeId: "progress/flash-attention-compiler-admission",
+  },
+  "flash-attention-direct-finalization": {
+    kind: "narrative",
+    narrativeId: "progress/flash-attention-direct-finalization",
   },
   "moe-top2-compiler-admission": {
     kind: "narrative",
@@ -531,6 +536,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "bfc32b51314e75e4d619eda244e0d78573f1232c",
     state: "public",
     narrativeId: "progress/flash-attention-compiler-admission",
+  },
+  {
+    id: "flash-attention-direct-finalization",
+    kind: "narrative",
+    name: "FlashAttention exact direct finalization",
+    commit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
+    state: "public",
+    narrativeId: "progress/flash-attention-direct-finalization",
   },
   {
     id: "moe-top2-compiler-admission",
@@ -934,7 +947,7 @@ export const kernelProgress: KernelProgress[] = [
     verify: "partial",
     evidence: "partial",
     dependsOn: ["tiled GEMM", "online softmax", "masking"],
-    next: "Carry the authenticated B1/H1/N8/D16 compiler profile through direct LLVM/LLD finalization, typed runtime launch, protected hardware and numerical vectors, and source/model-to-machine refinement.",
+    next: "Carry the opaque B1/H1/N8/D16 finalization receipt through authenticated publication, typed runtime launch, protected hardware and numerical vectors, and source/model-to-machine refinement.",
   },
   {
     id: "moe-routing",

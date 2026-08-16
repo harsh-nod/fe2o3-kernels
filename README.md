@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation
-commit `aca28306fe89c036dc0129349ef9ed685a43c7bb`, tree
-`37f1a92e0be0a4b48c5cef1b1a48327e0ea4c828`. Both
+commit `0b8ddf138d5420b90a61463ade8d612eb7101090`, tree
+`2799167a3fdc0a31666843bb6d8cbffde89bf38f`. Both
 `harsh-nod/fe2o3@refs/heads/main` and `powderluv/fe2o3@refs/heads/main` resolve
 to that commit. This descendant contains the exact protected Slice 1
 implementation and measured evidence pinned to commit
@@ -90,9 +90,18 @@ static binding-wrapper boundary, so no production hardware run is claimed. The
 public snapshot also contains exact B=1, H=1, N=8, D=16 FlashAttention compiler
 admission. It binds ordinary attributed source, FnAbi, compiler configuration,
 complete reachable portable MIR, semantic Kernel IR, and V3 provider identity,
-with hostile substitution coverage. It does not yet grant artifact,
-finalization, runtime, GPU, numerical, performance, or source/model-to-machine
-authority. Exact T=8, E=4, K=2, C=4 MoE routing compiler admission now
+with hostile substitution coverage. G4 now carries those authenticated compiler
+inputs through a single-use Worker V2 handoff and structural finalization using
+upstream LLVM target-machine APIs plus in-process LLD. It checks the pinned OCML
+provider closure and exact gfx942:xnack-/COV6 profile, and returns an opaque,
+non-Clone receipt with deterministic raw and finalized output identities. The
+receipt exposes no bytes, replay, publication, load, or launch path. This is
+compiler-handoff and finalizer evidence only: it grants no publication, load,
+launch, runtime, GPU, numerical, performance, compiler-refinement,
+OCML-semantics, general memory-safety, race-freedom, or source/model-to-machine
+authority. It also contains no measured proof of no-COMGR linkage; that would
+require a separately measured worker manifest. Exact T=8, E=4, K=2, C=4 MoE
+routing compiler admission now
 similarly binds attributed source, FnAbi, complete reachable portable MIR,
 semantic Kernel IR, target/ABI/resources, and V3 provider identity. It grants no
 LLVM lowering, finalization, runtime, GPU, IEEE FP32, Verus-refinement,
@@ -483,9 +492,12 @@ At the audited pin:
   pinned Verus proof of its exact rational online recurrence. The latest public
   snapshot also authenticates its exact attributed source, FnAbi, complete
   reachable portable MIR, semantic Kernel IR, compiler configuration, and V3
-  provider identity. That compiler admission and the separate Verus proof do
-  not establish exponential-law, IEEE FP32/OCML, artifact finalization, runtime,
-  hardware, or source/model-to-machine authority. MoE routing
+  provider identity. G4 carries that exact profile through a single-use Worker
+  V2 handoff, upstream LLVM target-machine APIs, in-process LLD, structural
+  checks, and an opaque deterministic finalization receipt. That receipt grants
+  no publication, load, launch, runtime, GPU, numerical, performance,
+  compiler-refinement, OCML-semantics, general memory-safety, or race-freedom
+  authority, and it contains no measured proof of no-COMGR linkage. MoE routing
   Phase A now has exact ordinary attributed T8/E4/K2/C4 source, an independent
   oracle, stable capacity/permutation/inverse contracts, a 6,561-case bounded
   corpus, debug/release mutation suites, a pinned Verus proof of the exact

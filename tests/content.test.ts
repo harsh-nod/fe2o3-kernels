@@ -271,7 +271,8 @@ describe("curriculum integrity", () => {
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
       const gaps = profile.lessonId === "flash-attention"
         ? [
-            "direct LLVM/LLD finalization",
+            "authenticated publication",
+            "exponential and IEEE FP32/OCML refinement",
             "generated host/runtime",
             "protected gfx942 execution",
             "source/model-to-machine refinement",
@@ -1203,11 +1204,11 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-15",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "aca28306fe89c036dc0129349ef9ed685a43c7bb",
-      eventualPublicTree: "37f1a92e0be0a4b48c5cef1b1a48327e0ea4c828",
+      eventualPublicCommit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
+      eventualPublicTree: "2799167a3fdc0a31666843bb6d8cbffde89bf38f",
       publicationGate: {
         state: "public-refs-match-required-target",
-        requiredCommit: "aca28306fe89c036dc0129349ef9ed685a43c7bb",
+        requiredCommit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1247,6 +1248,35 @@ describe("implementation progress integrity", () => {
       "moe-experts",
     ]);
     expect(kernelProgress.every((kernel) => kernel.next.length > 0)).toBe(true);
+  });
+
+  it("tracks G4 Flash finalization without granting downstream authority", () => {
+    const admission = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "flash-attention-compiler-admission",
+    );
+    expect(admission).toMatchObject({
+      commit: "bfc32b51314e75e4d619eda244e0d78573f1232c",
+      state: "public",
+    });
+
+    const finalization = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "flash-attention-direct-finalization",
+    );
+    expect(finalization).toMatchObject({
+      commit: "0b8ddf138d5420b90a61463ade8d612eb7101090",
+      state: "public",
+    });
+    const detail = checkpointDetail(finalization);
+    expect(detail).toContain("upstream LLVM target-machine APIs");
+    expect(detail).toContain("in-process LLD");
+    expect(detail).toContain("opaque deterministic-receipt evidence only");
+    expect(detail).toContain(
+      "no publication, load, launch, runtime, GPU, numerical, performance, compiler-refinement, OCML-semantics, general memory-safety, or race-freedom authority",
+    );
+    expect(detail).toContain("no measured proof of no-COMGR linkage");
+    expect(
+      kernelProgress.find((kernel) => kernel.id === "flash-attention")?.next,
+    ).toContain("authenticated publication");
   });
 
   it("tracks scalar GEMM hardware observation without upgrading authority", () => {
