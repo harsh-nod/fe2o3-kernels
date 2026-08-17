@@ -1313,12 +1313,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "96a79c166750e9ec96e7848109707fd755b8821e",
-      eventualPublicTree: "d154d37926c646b3b9bc161cb8d578124b52ebcc",
+      eventualPublicCommit: "4639ff36c8651a859495da86ea2c75e735377440",
+      eventualPublicTree: "f0d91caaf705a7542135226c20cdb794dbc4f542",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "96a79c166750e9ec96e7848109707fd755b8821e",
-        requiredTree: "d154d37926c646b3b9bc161cb8d578124b52ebcc",
+        requiredCommit: "4639ff36c8651a859495da86ea2c75e735377440",
+        requiredTree: "f0d91caaf705a7542135226c20cdb794dbc4f542",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1506,6 +1506,34 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("no supervisor authentication, broker session or replay");
     expect(detail).toContain("publication, link, load, launch, runtime, GPU, or parity authority");
     expect(detail).toContain("promotes no lesson or parity row");
+  });
+
+  it("records only the bounded external anti-rollback anchor protocol", () => {
+    const anchor = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "external-anchor-protocol-foundation",
+    );
+    expect(anchor).toMatchObject({
+      name: "Bounded external anti-rollback anchor protocol",
+      commit: "4639ff36c8651a859495da86ea2c75e735377440",
+      state: "public",
+      narrativeId: "progress/external-anchor-protocol-foundation",
+    });
+    const detail = checkpointDetail(anchor);
+    expect(detail).toContain("tree f0d91caaf705a7542135226c20cdb794dbc4f542");
+    expect(detail).toContain("AUTHORITY=none");
+    expect(detail).toContain("nonzero caller nonce");
+    expect(detail).toContain("Strict Ed25519 verification");
+    expect(detail).toContain("caller-supplied pinned public-key value");
+    expect(detail).toContain("constructible only after a valid signature");
+    expect(detail).toContain("unrelated or later positions fail closed");
+    expect(detail).toContain("Fifteen unit, adversarial, and property-style tests");
+    expect(detail).toContain("three compile-fail doctests");
+    expect(detail).toContain("every single-byte response mutation");
+    expect(detail).toContain("durable nonce freshness");
+    expect(detail).toContain("monotonic anchor implementation");
+    expect(detail).toContain("atomic anchoring or publication remain absent");
+    expect(detail).toContain("changes no parity status");
+    expect(detail).toContain("explanatory-source label");
   });
 
   it("records W0-B as rejected and pins the selected host-link closure", () => {
@@ -1814,7 +1842,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "96a79c166750e9ec96e7848109707fd755b8821e",
+      "4639ff36c8651a859495da86ea2c75e735377440",
     );
 
     const lesson = curriculum

@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`96a79c166750e9ec96e7848109707fd755b8821e`, tree
-`d154d37926c646b3b9bc161cb8d578124b52ebcc`. Deployment requires
+`4639ff36c8651a859495da86ea2c75e735377440`, tree
+`f0d91caaf705a7542135226c20cdb794dbc4f542`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -254,7 +254,8 @@ admission rather than derived from source semantics, and no operational Rust
 semantics is proved. It grants no compiler, GPU, generalized safety, or parity
 authority.
 
-The current public tip adds an accepted static pre-exec containment foundation
+Ancestor commit `4aed8d4d394783362e289a558b6d94cc28ecda36` adds an accepted
+static pre-exec containment foundation
 at commit `4aed8d4d394783362e289a558b6d94cc28ecda36`, tree
 `3996f269dad3e88748c50a24c98439c1422c1e3b`, with `AUTHORITY=none`. Its
 freestanding syscall-only `_start` revalidates exact descriptor objects and
@@ -271,8 +272,21 @@ provenance relies on trusted procfs mount state, and target exec resets
 dumpability. It grants no broker replay, publication, link, load, launch, GPU,
 or parity authority.
 
+The current public tip adds only the bounded external anti-rollback anchor
+protocol at commit `4639ff36c8651a859495da86ea2c75e735377440`, tree
+`f0d91caaf705a7542135226c20cdb794dbc4f542`, with `AUTHORITY=none`.
+Canonical fixed-width advance and recovery challenges bind an exact nonzero
+caller nonce, expected sequence, prior head, transaction, proposed head, and
+derived anchor-key identity. Strict Ed25519 verification against a
+caller-supplied pinned public-key value is required before the move-only state
+machine can produce a commit observation. Fifteen adversarial/property-style
+tests and three compile-fail doctests pass locally and on `mi300x`. Key
+provenance, durable nonce freshness, transport, persistence, a monotonic anchor
+implementation, protected-service integration, and atomic publication remain
+absent. This checkpoint changes no parity row or tutorial evidence claim.
+
 The Wave64 checkpoints, descriptor admission, and static pre-exec foundation
-change no parity or lesson evidence.
+and external-anchor protocol change no parity or lesson evidence.
 The matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
 explanatory-source labels and run/verify/evidence states are unchanged.
 

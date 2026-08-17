@@ -34,6 +34,7 @@ export const developmentCheckpointIds = deepFreeze([
   "broker-v4-inert-foundation",
   "protected-service-descriptor-admission",
   "static-preexec-containment-foundation",
+  "external-anchor-protocol-foundation",
   "w0b-host-link-rejection",
   "last-audited-public-baseline",
   "production-s09-rustc-invocation",
@@ -261,6 +262,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "static-preexec-containment-foundation": {
     kind: "narrative",
     narrativeId: "progress/static-preexec-containment-foundation",
+  },
+  "external-anchor-protocol-foundation": {
+    kind: "narrative",
+    narrativeId: "progress/external-anchor-protocol-foundation",
   },
   "w0b-host-link-rejection": {
     kind: "narrative",
@@ -527,6 +532,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "4aed8d4d394783362e289a558b6d94cc28ecda36",
     state: "public",
     narrativeId: "progress/static-preexec-containment-foundation",
+  },
+  {
+    id: "external-anchor-protocol-foundation",
+    kind: "narrative",
+    name: "Bounded external anti-rollback anchor protocol",
+    commit: "4639ff36c8651a859495da86ea2c75e735377440",
+    state: "public",
+    narrativeId: "progress/external-anchor-protocol-foundation",
   },
   {
     id: "w0b-host-link-rejection",
