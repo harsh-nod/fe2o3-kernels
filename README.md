@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`4639ff36c8651a859495da86ea2c75e735377440`, tree
-`f0d91caaf705a7542135226c20cdb794dbc4f542`. Deployment requires
+`bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
+`6636f342efa8d2caf40a9bed253330972090326f`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -272,8 +272,8 @@ provenance relies on trusted procfs mount state, and target exec resets
 dumpability. It grants no broker replay, publication, link, load, launch, GPU,
 or parity authority.
 
-The current public tip adds only the bounded external anti-rollback anchor
-protocol at commit `4639ff36c8651a859495da86ea2c75e735377440`, tree
+Commit `4639ff36c8651a859495da86ea2c75e735377440` adds the independently
+accepted bounded external anti-rollback anchor protocol, tree
 `f0d91caaf705a7542135226c20cdb794dbc4f542`, with `AUTHORITY=none`.
 Canonical fixed-width advance and recovery challenges bind an exact nonzero
 caller nonce, expected sequence, prior head, transaction, proposed head, and
@@ -285,8 +285,19 @@ provenance, durable nonce freshness, transport, persistence, a monotonic anchor
 implementation, protected-service integration, and atomic publication remain
 absent. This checkpoint changes no parity row or tutorial evidence claim.
 
-The Wave64 checkpoints, descriptor admission, and static pre-exec foundation
-and external-anchor protocol change no parity or lesson evidence.
+The public tip `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
+`6636f342efa8d2caf40a9bed253330972090326f`, adds an independently accepted
+point-in-time process-leader pidfd identity foundation with `AUTHORITY=none`.
+Forty-six unit tests and six compile-fail doctests pass; three privileged or
+helper fixtures remain ignored. Linux 6.12 thread-pidfd and Linux 6.13
+`PIDFD_GET_INFO` paths were not executed on the available Linux 6.6/6.8 hosts,
+and procfs fallback requires a compatible trusted procfs mount for the active
+PID namespace. This grants no endpoint exclusivity, replay, publication,
+linking, loading, launch, runtime, GPU, or parity authority.
+
+The Wave64 checkpoints, descriptor admission, static pre-exec foundation,
+external-anchor protocol, and pidfd identity foundation change no parity or
+lesson evidence.
 The matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
 explanatory-source labels and run/verify/evidence states are unchanged.
 
