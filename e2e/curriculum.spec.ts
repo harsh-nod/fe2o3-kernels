@@ -370,7 +370,9 @@ test("every internal curriculum route resolves without page overflow", async ({
       page.getByRole("heading", { level: 1, name: route.title }),
     ).toBeVisible();
     const overflows = await page.evaluate(
-      () => document.documentElement.scrollWidth > window.innerWidth,
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
     );
     expect(overflows, `page overflowed at ${route.href}`).toBe(false);
   }

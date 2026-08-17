@@ -67,17 +67,21 @@
 }
 
 html {
+  max-width: 100%;
   min-width: 320px;
   min-height: 100%;
+  overflow-x: clip;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--topbar-height) + 24px);
 }
 
 body,
 #root {
+  max-width: 100%;
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  overflow-x: clip;
 }
 
 body {
@@ -2179,7 +2183,7 @@ tr:last-child td {
   }
 
   .assurance-columns {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .assurance-columns > div,
