@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`e874da2083c2a1eb192048ea5f88a053c28d0ee2`, tree
-`0e504b3be16b4dfaf3c997eefac8a6d24313e1b8`. Deployment requires
+`4aed8d4d394783362e289a558b6d94cc28ecda36`, tree
+`3996f269dad3e88748c50a24c98439c1422c1e3b`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -239,10 +239,11 @@ and connection-time credential checks establish no liveness, PID-reuse
 protection, endpoint exclusivity, or storage provenance, and grant no storage,
 replay, link, publication, load, or launch authority.
 
-The current public tip adds an accepted reviewed attributed-source structural
-correspondence checkpoint for the exact Wave64 kernel at commit
+Commit
 `e874da2083c2a1eb192048ea5f88a053c28d0ee2`, tree
-`0e504b3be16b4dfaf3c997eefac8a6d24313e1b8`. An exact `syn` AST gate admits
+`0e504b3be16b4dfaf3c997eefac8a6d24313e1b8`, adds an accepted reviewed
+attributed-source structural correspondence checkpoint for the exact Wave64
+kernel. An exact `syn` AST gate admits
 the complete reviewed source shape before a fixed interpreter runs. The checker
 records 17,436 observations; Verus adds 13 positive obligations and six
 expected-negative fixtures. Both paths report
@@ -253,8 +254,25 @@ admission rather than derived from source semantics, and no operational Rust
 semantics is proved. It grants no compiler, GPU, generalized safety, or parity
 authority.
 
-The Wave64 checkpoints and descriptor-admission foundation change no parity or
-lesson evidence.
+The current public tip adds an accepted static pre-exec containment foundation
+at commit `4aed8d4d394783362e289a558b6d94cc28ecda36`, tree
+`3996f269dad3e88748c50a24c98439c1422c1e3b`, with `AUTHORITY=none`. Its
+freestanding syscall-only `_start` revalidates exact descriptor objects and
+process controls, installs exact descriptor closure, and executes a fixed
+one-element `argv` with an empty target environment. Post-exec parent-death
+coverage confirms inherited `PDEATHSIG(SIGKILL)`. Fourteen tests and the Cargo
+integration pass; three builds reproduced a 17,488-byte static executable with
+SHA-256
+`db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52`.
+The boundary still trusts the supervisor and inherited process state. A
+preattached ptrace tracer, `CAP_SYS_PTRACE`, or inherited seccomp user
+notification can invalidate checks; descriptor state is coarse, parent-start
+provenance relies on trusted procfs mount state, and target exec resets
+dumpability. It grants no broker replay, publication, link, load, launch, GPU,
+or parity authority.
+
+The Wave64 checkpoints, descriptor admission, and static pre-exec foundation
+change no parity or lesson evidence.
 The matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
 explanatory-source labels and run/verify/evidence states are unchanged.
 

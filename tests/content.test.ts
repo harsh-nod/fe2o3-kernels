@@ -1313,12 +1313,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
-      eventualPublicTree: "0e504b3be16b4dfaf3c997eefac8a6d24313e1b8",
+      eventualPublicCommit: "4aed8d4d394783362e289a558b6d94cc28ecda36",
+      eventualPublicTree: "3996f269dad3e88748c50a24c98439c1422c1e3b",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
-        requiredTree: "0e504b3be16b4dfaf3c997eefac8a6d24313e1b8",
+        requiredCommit: "4aed8d4d394783362e289a558b6d94cc28ecda36",
+        requiredTree: "3996f269dad3e88748c50a24c98439c1422c1e3b",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1473,6 +1473,39 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("run/verify/evidence gate");
     expect(detail).toContain("lesson pin");
     expect(detail).toContain("explanatory-source label");
+  });
+
+  it("records the accepted static pre-exec containment foundation", () => {
+    const preexec = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "static-preexec-containment-foundation",
+    );
+    expect(preexec).toMatchObject({
+      name: "Accepted static pre-exec containment foundation",
+      commit: "4aed8d4d394783362e289a558b6d94cc28ecda36",
+      state: "public",
+      narrativeId: "progress/static-preexec-containment-foundation",
+    });
+    const detail = checkpointDetail(preexec);
+    expect(detail).toContain("tree 3996f269dad3e88748c50a24c98439c1422c1e3b");
+    expect(detail).toContain("AUTHORITY=none");
+    expect(detail).toContain("freestanding Linux x86-64 syscall-only _start");
+    expect(detail).toContain("exact descriptor objects and process controls");
+    expect(detail).toContain("empty target environment and fixed one-element argv");
+    expect(detail).toContain("post-exec target inherits PDEATHSIG(SIGKILL)");
+    expect(detail).toContain("Fourteen CTests and the Cargo integration pass");
+    expect(detail).toContain("17,488-byte executable");
+    expect(detail).toContain(
+      "db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52",
+    );
+    expect(detail).toContain("trusts the supervisor and inherited process state");
+    expect(detail).toContain("preattached ptrace tracer");
+    expect(detail).toContain("inherited seccomp user notification");
+    expect(detail).toContain("coarse object state");
+    expect(detail).toContain("parent-start provenance relies on trusted procfs mount state");
+    expect(detail).toContain("ordinary target exec resets dumpability");
+    expect(detail).toContain("no supervisor authentication, broker session or replay");
+    expect(detail).toContain("publication, link, load, launch, runtime, GPU, or parity authority");
+    expect(detail).toContain("promotes no lesson or parity row");
   });
 
   it("records W0-B as rejected and pins the selected host-link closure", () => {
@@ -1781,7 +1814,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
+      "4aed8d4d394783362e289a558b6d94cc28ecda36",
     );
 
     const lesson = curriculum

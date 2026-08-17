@@ -33,6 +33,7 @@ export const developmentCheckpointIds = deepFreeze([
   "w0-host-link-closure-v1",
   "broker-v4-inert-foundation",
   "protected-service-descriptor-admission",
+  "static-preexec-containment-foundation",
   "w0b-host-link-rejection",
   "last-audited-public-baseline",
   "production-s09-rustc-invocation",
@@ -256,6 +257,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "protected-service-descriptor-admission": {
     kind: "narrative",
     narrativeId: "progress/protected-service-descriptor-admission",
+  },
+  "static-preexec-containment-foundation": {
+    kind: "narrative",
+    narrativeId: "progress/static-preexec-containment-foundation",
   },
   "w0b-host-link-rejection": {
     kind: "narrative",
@@ -514,6 +519,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "b8daeb2bc953924a424542820bed566e52d57290",
     state: "public",
     narrativeId: "progress/protected-service-descriptor-admission",
+  },
+  {
+    id: "static-preexec-containment-foundation",
+    kind: "narrative",
+    name: "Accepted static pre-exec containment foundation",
+    commit: "4aed8d4d394783362e289a558b6d94cc28ecda36",
+    state: "public",
+    narrativeId: "progress/static-preexec-containment-foundation",
   },
   {
     id: "w0b-host-link-rejection",

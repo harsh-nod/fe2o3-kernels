@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("e874da2083c2")).toBeInTheDocument();
+    expect(screen.getByText("4aed8d4d3947")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "0e504b3be16b4dfaf3c997eefac8a6d24313e1b8",
+      "3996f269dad3e88748c50a24c98439c1422c1e3b",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -165,6 +165,22 @@ describe("application shell", () => {
     expect(serviceCard).toHaveTextContent("no client liveness");
     expect(serviceCard).toHaveTextContent("no storage or anti-rollback");
     expect(serviceCard).toHaveTextContent("changes no parity status");
+    const preexecHeading = screen.getByText(
+      "Accepted static pre-exec containment foundation",
+    );
+    const preexecCard = preexecHeading.closest("article");
+    expect(preexecCard).toHaveTextContent("AUTHORITY=none");
+    expect(preexecCard).toHaveTextContent("syscall-only _start");
+    expect(preexecCard).toHaveTextContent("empty target environment");
+    expect(preexecCard).toHaveTextContent("PDEATHSIG(SIGKILL)");
+    expect(preexecCard).toHaveTextContent("17,488-byte executable");
+    expect(preexecCard).toHaveTextContent(
+      "db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52",
+    );
+    expect(preexecCard).toHaveTextContent("preattached ptrace tracer");
+    expect(preexecCard).toHaveTextContent("inherited seccomp user notification");
+    expect(preexecCard).toHaveTextContent("ordinary target exec resets dumpability");
+    expect(preexecCard).toHaveTextContent("parity authority");
     const rejectedHeading = screen.getByText(
       "Rejected W0-B static host-link candidate",
     );
