@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`091bf3c080a516396a24650f52c8e41fddf699f6`, tree
-`ae42880843e34564fbbe408ddb5f05eab029783c`. Deployment requires
+`d9ae1e95957d28a17afdcfa1a5173d40b89e65a6`, tree
+`a7a5fe7a94331a1354679eea1977b1fa3d0c1218`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -294,6 +294,17 @@ Callers still own that canonical transaction encoding. This remains
 `AUTHORITY=none` and supplies no key provenance, nonce freshness, persistence,
 transport, anchor implementation, atomic publication, service integration,
 GPU authority, or parity claim.
+
+Commit `d9ae1e95957d28a17afdcfa1a5173d40b89e65a6`, tree
+`a7a5fe7a94331a1354679eea1977b1fa3d0c1218`, adds an independently
+accepted typed/cooperative broker lifecycle with `AUTHORITY=none`. A move-only
+permit gates formation of a reservation-bound W0 request; the reservation,
+fresh request nonce, process PID plus start time, V4 transcript, admitted host
+output, anchor transaction, and publication plan are checked as one logical
+identity. This is an in-memory state-machine foundation only. It provides no
+persistence, durable uniqueness, real anti-rollback, atomic disk publication,
+hostile-process enforcement, continuous liveness, runtime, GPU, or parity
+authority, and it still requires a compatible trusted procfs mount.
 
 The public tip `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
 `6636f342efa8d2caf40a9bed253330972090326f`, adds an independently accepted

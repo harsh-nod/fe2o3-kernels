@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("091bf3c080a5")).toBeInTheDocument();
+    expect(screen.getByText("d9ae1e95957d")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "ae42880843e34564fbbe408ddb5f05eab029783c",
+      "a7a5fe7a94331a1354679eea1977b1fa3d0c1218",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
