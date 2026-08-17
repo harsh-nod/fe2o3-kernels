@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("b8daeb2bc953")).toBeInTheDocument();
+    expect(screen.getByText("e874da2083c2")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "ee06e94d6c5b5f5f447127a6c497e5a3e84ba417",
+      "0e504b3be16b4dfaf3c997eefac8a6d24313e1b8",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -143,6 +143,18 @@ describe("application shell", () => {
     expect(wave64Card).toHaveTextContent("22 positive obligations");
     expect(wave64Card).toHaveTextContent("no source-to-model correspondence");
     expect(wave64Card).toHaveTextContent("parity authority");
+    const sourceCorrespondenceHeading = screen.getByText(
+      "Wave64 reviewed attributed-source structural correspondence",
+    );
+    const sourceCorrespondenceCard = sourceCorrespondenceHeading.closest("article");
+    expect(sourceCorrespondenceCard).toHaveTextContent("exact syn AST gate");
+    expect(sourceCorrespondenceCard).toHaveTextContent("17,436 observations");
+    expect(sourceCorrespondenceCard).toHaveTextContent("13 positive obligations");
+    expect(sourceCorrespondenceCard).toHaveTextContent(
+      "proves_source_to_model_refinement=false",
+    );
+    expect(sourceCorrespondenceCard).toHaveTextContent("model-internal/definitional");
+    expect(sourceCorrespondenceCard).toHaveTextContent("parity authority");
     const serviceHeading = screen.getByText(
       "Inert protected-service descriptor admission",
     );

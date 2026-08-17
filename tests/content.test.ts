@@ -1313,12 +1313,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-16",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "b8daeb2bc953924a424542820bed566e52d57290",
-      eventualPublicTree: "ee06e94d6c5b5f5f447127a6c497e5a3e84ba417",
+      eventualPublicCommit: "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
+      eventualPublicTree: "0e504b3be16b4dfaf3c997eefac8a6d24313e1b8",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "b8daeb2bc953924a424542820bed566e52d57290",
-        requiredTree: "ee06e94d6c5b5f5f447127a6c497e5a3e84ba417",
+        requiredCommit: "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
+        requiredTree: "0e504b3be16b4dfaf3c997eefac8a6d24313e1b8",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1418,6 +1418,35 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("LLVM/ISA refinement");
     expect(detail).toContain("generalized memory safety or race freedom");
     expect(detail).toContain("parity authority");
+  });
+
+  it("records reviewed Wave64 attributed-source structural correspondence", () => {
+    const correspondence = developmentCheckpoints.find(
+      (checkpoint) =>
+        checkpoint.id === "wave64-reviewed-source-structural-correspondence",
+    );
+    expect(correspondence).toMatchObject({
+      name: "Wave64 reviewed attributed-source structural correspondence",
+      commit: "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
+      state: "public",
+      narrativeId: "progress/wave64-reviewed-source-structural-correspondence",
+    });
+    const detail = checkpointDetail(correspondence);
+    expect(detail).toContain("tree 0e504b3be16b4dfaf3c997eefac8a6d24313e1b8");
+    expect(detail).toContain("exact syn AST gate");
+    expect(detail).toContain("fixed reviewed interpreter");
+    expect(detail).toContain("17,436 observations");
+    expect(detail).toContain("13 positive obligations");
+    expect(detail).toContain("six expected-negative fixtures");
+    expect(detail).toContain("proves_source_to_model_refinement=false");
+    expect(detail).toContain("model-internal/definitional correspondence");
+    expect(detail).toContain("constants rather than a verified SHA computation");
+    expect(detail).toContain("interpreter is fixed after the AST gate");
+    expect(detail).toContain("no theorem gives the Rust syntax operational semantics");
+    expect(detail).toContain("no compiler, LLVM/ISA, artifact, GPU");
+    expect(detail).toContain("generalized memory-safety or race-freedom");
+    expect(detail).toContain("parity authority");
+    expect(detail).toContain("promotes no lesson or parity row");
   });
 
   it("records only inert protected-service descriptor admission", () => {
@@ -1752,7 +1781,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "b8daeb2bc953924a424542820bed566e52d57290",
+      "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
     );
 
     const lesson = curriculum

@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`b8daeb2bc953924a424542820bed566e52d57290`, tree
-`ee06e94d6c5b5f5f447127a6c497e5a3e84ba417`. Deployment requires
+`e874da2083c2a1eb192048ea5f88a053c28d0ee2`, tree
+`0e504b3be16b4dfaf3c997eefac8a6d24313e1b8`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -229,15 +229,32 @@ publication. Device code-object linking remains pinned upstream LLVM
 target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker.
 Neither W0 nor inert Broker V4 promotes a parity or tutorial evidence row.
 
-The current public tip adds only an inert protected-service descriptor-admission
-foundation at commit `b8daeb2bc953924a424542820bed566e52d57290`, tree
-`ee06e94d6c5b5f5f447127a6c497e5a3e84ba417`. It reports `AUTHORITY=none`.
-Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only
+Commit `b8daeb2bc953924a424542820bed566e52d57290`, tree
+`ee06e94d6c5b5f5f447127a6c497e5a3e84ba417`, adds only an inert
+protected-service descriptor-admission foundation. It reports
+`AUTHORITY=none`. Its 27
+unit tests and two compile-fail doctests pass; two privileged/root-only
 positive tests remain ignored and were not executed. The retained descriptor
 and connection-time credential checks establish no liveness, PID-reuse
 protection, endpoint exclusivity, or storage provenance, and grant no storage,
-replay, link, publication, load, or launch authority. The Wave64 correspondence
-and this descriptor-admission foundation change no parity or lesson evidence.
+replay, link, publication, load, or launch authority.
+
+The current public tip adds an accepted reviewed attributed-source structural
+correspondence checkpoint for the exact Wave64 kernel at commit
+`e874da2083c2a1eb192048ea5f88a053c28d0ee2`, tree
+`0e504b3be16b4dfaf3c997eefac8a6d24313e1b8`. An exact `syn` AST gate admits
+the complete reviewed source shape before a fixed interpreter runs. The checker
+records 17,436 observations; Verus adds 13 positive obligations and six
+expected-negative fixtures. Both paths report
+`proves_source_to_model_refinement=false`. Independent review limits the result
+to structural and model-internal/definitional correspondence: digest constants
+are not a verified SHA computation, the interpreter is fixed after AST
+admission rather than derived from source semantics, and no operational Rust
+semantics is proved. It grants no compiler, GPU, generalized safety, or parity
+authority.
+
+The Wave64 checkpoints and descriptor-admission foundation change no parity or
+lesson evidence.
 The matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
 explanatory-source labels and run/verify/evidence states are unchanged.
 

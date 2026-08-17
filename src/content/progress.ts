@@ -43,6 +43,7 @@ export const developmentCheckpointIds = deepFreeze([
   "gfx942-scalar-control-flow",
   "collected-rust-scalar-admission",
   "gfx942-wave64-lds-reduction",
+  "wave64-reviewed-source-structural-correspondence",
   "workgroup-sync-direct-finalization",
   "workgroup-sync-host-runtime",
   "workgroup-sync-protected-hardware",
@@ -295,6 +296,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "gfx942-wave64-lds-reduction": {
     kind: "narrative",
     narrativeId: "progress/gfx942-wave64-lds-reduction",
+  },
+  "wave64-reviewed-source-structural-correspondence": {
+    kind: "narrative",
+    narrativeId: "progress/wave64-reviewed-source-structural-correspondence",
   },
   "workgroup-sync-direct-finalization": {
     kind: "narrative",
@@ -589,6 +594,14 @@ export const developmentCheckpoints = deepFreeze([
     commit: "43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4",
     state: "public",
     narrativeId: "progress/gfx942-wave64-lds-reduction",
+  },
+  {
+    id: "wave64-reviewed-source-structural-correspondence",
+    kind: "narrative",
+    name: "Wave64 reviewed attributed-source structural correspondence",
+    commit: "e874da2083c2a1eb192048ea5f88a053c28d0ee2",
+    state: "public",
+    narrativeId: "progress/wave64-reviewed-source-structural-correspondence",
   },
   {
     id: "workgroup-sync-direct-finalization",
