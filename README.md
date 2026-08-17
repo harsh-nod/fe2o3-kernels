@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
-`6636f342efa8d2caf40a9bed253330972090326f`. Deployment requires
+`091bf3c080a516396a24650f52c8e41fddf699f6`, tree
+`ae42880843e34564fbbe408ddb5f05eab029783c`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -284,6 +284,16 @@ tests and three compile-fail doctests pass locally and on `mi300x`. Key
 provenance, durable nonce freshness, transport, persistence, a monotonic anchor
 implementation, protected-service integration, and atomic publication remain
 absent. This checkpoint changes no parity row or tutorial evidence claim.
+
+Commit `091bf3c080a516396a24650f52c8e41fddf699f6`, tree
+`ae42880843e34564fbbe408ddb5f05eab029783c`, freezes independently
+reconstructed cross-implementation vectors for both 184-byte challenges and
+all four 288-byte signed observations. It also adds a bounded,
+domain-separated transaction-digest derivation over caller-canonical bytes.
+Callers still own that canonical transaction encoding. This remains
+`AUTHORITY=none` and supplies no key provenance, nonce freshness, persistence,
+transport, anchor implementation, atomic publication, service integration,
+GPU authority, or parity claim.
 
 The public tip `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
 `6636f342efa8d2caf40a9bed253330972090326f`, adds an independently accepted
