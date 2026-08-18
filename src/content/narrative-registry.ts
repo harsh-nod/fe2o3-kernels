@@ -596,8 +596,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Roadmap contract, not a current compiler result",
-        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138 proposes the general kernel and proof-required diagnostics below. Its companion compiler branch now implements the property registry spellings shown here, but semantic source detection and Pliron GEMM lowering remain incomplete, and stable numeric diagnostic codes are still under review."
+        "title": "Current layers, no general execution",
+        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. For issue #138, the companion compiler branch now implements the stable property and report/inventory code registry shown here. The companion source branch adds a positive safe-Rust general kernel and sealed typestate device surface, but that increment is compile-tested source-only with SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false. Semantic MIR detection, actual negative-fixture enforcement, Pliron GEMM lowering, and general protected execution remain incomplete."
       },
       {
         "type": "paragraph",
@@ -644,27 +644,43 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Safe source, sealed implementation",
-        "text": "The #138 reference kernel must be writable in safe Rust at the user source boundary: lane and workgroup identities, global views, LDS allocation and access, barriers, MFMA fragments, and disjoint stores must not require user-written unsafe. Compiler and runtime internals may use narrowly scoped unsafe for address-space pointers, intrinsics, and HSA/KFD ABIs behind sealed capabilities. An expert raw pointer, unchecked access, inline assembly, or other unsafe escape creates the same named proof obligations; unsafe never discharges or bypasses them. This is a target contract, not a claim that the currently pinned Slice 1 source already exposes that complete safe surface."
+        "text": "The #138 reference kernel is now represented by compile-tested source that uses safe Rust at the user source boundary: sealed compiler-issued lane/workgroup identities, global views, typestate LDS epochs, barriers, MFMA fragments, and disjoint stores do not require user-written unsafe. Compiler and runtime internals may use narrowly scoped unsafe for address-space pointers, intrinsics, and HSA/KFD ABIs behind sealed capabilities. An expert raw pointer, unchecked access, inline assembly, or other unsafe escape creates the same named proof obligations; unsafe never discharges or bypasses them. This source-only increment does not supersede the currently pinned Slice 1 execution evidence and establishes no source-to-IR, lowering, artifact, or GPU result."
       },
       {
         "type": "table",
         "headers": [
           "Branch property spelling",
+          "Stable code",
           "What must be established independently"
         ],
         "rows": [
-          ["memory_safe", "Global and LDS accesses retain valid regions, provenance, alignment, lifetimes, and admitted alias relationships."],
-          ["bounds_safe", "Every executed A/B/C and LDS address is inside its recorded allocation or tile extent under its exact predicate."],
-          ["initialized", "Every global or LDS read observes a value initialized in the admitted phase and epoch."],
-          ["race_free", "Unordered conflicting accesses cannot overlap across workgroups, lanes, fragments, or LDS writers."],
-          ["barrier_convergent", "Every required workgroup participant reaches the same publish and reuse barrier instances."],
-          ["output_region_injective", "Each active C coordinate has exactly one workgroup/lane/component writer."],
-          ["lds_epoch_correct", "Publish orders current-phase reads and reuse orders next-phase overwrites; capabilities cannot outlive their epoch."],
-          ["accumulator_phase_refinement", "The accumulator covers exactly the completed K intervals and reaches the full mathematical product."],
-          ["tail_refinement", "M/N stores are predicated and invalid A/B/K loads become defined zero contributions."],
-          ["epilogue_refinement", "The active store implements the recorded alpha/beta equation, including zero K."],
-          ["numerical_contract", "BF16 conversion, FP32 MFMA accumulation order, rounding, exceptional values, and comparison policy are explicit."],
-          ["machine_refinement_boundary", "The final covered LLVM/ISA boundary preserves the exact proven effects; source proof alone cannot promote it."]
+          ["memory_safe", "0x46470101", "Global and LDS accesses retain valid regions, provenance, alignment, lifetimes, and admitted alias relationships."],
+          ["bounds_safe", "0x46470102", "Every executed A/B/C and LDS address is inside its recorded allocation or tile extent under its exact predicate."],
+          ["initialized", "0x46470103", "Every global or LDS read observes a value initialized in the admitted phase and epoch."],
+          ["race_free", "0x46470104", "Unordered conflicting accesses cannot overlap across workgroups, lanes, fragments, or LDS writers."],
+          ["barrier_convergent", "0x46470105", "Every required workgroup participant reaches the same publish and reuse barrier instances."],
+          ["output_region_injective", "0x46470106", "Each active C coordinate has exactly one workgroup/lane/component writer."],
+          ["lds_epoch_correct", "0x46470107", "Publish orders current-phase reads and reuse orders next-phase overwrites; capabilities cannot outlive their epoch."],
+          ["accumulator_phase_refinement", "0x46470108", "The accumulator covers exactly the completed K intervals and reaches the full mathematical product."],
+          ["tail_refinement", "0x46470109", "M/N stores are predicated and invalid A/B/K loads become defined zero contributions."],
+          ["epilogue_refinement", "0x4647010a", "The active store implements the recorded alpha/beta equation, including zero K."],
+          ["numerical_contract", "0x4647010b", "BF16 conversion, FP32 MFMA accumulation order, rounding, exceptional values, and comparison policy are explicit."],
+          ["machine_refinement_boundary", "0x4647010c", "The final covered LLVM/ISA boundary preserves the exact proven effects; source proof alone cannot promote it."]
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Report/inventory code",
+          "Implemented structural rejection"
+        ],
+        "rows": [
+          ["0x46470001", "The report names a different obligation-set commitment."],
+          ["0x46470002", "The report duplicates an aggregate or unsafe obligation."],
+          ["0x46470003", "An unsafe-source obligation remains unresolved."],
+          ["0x46470004", "Proof evaluation failed to return a complete bounded report."],
+          ["0x46470005", "Reported unsafe findings do not match the compiler-owned inventory."],
+          ["0x46470006", "Compiler-owned requirements do not bind the active request."]
         ]
       },
       {
@@ -688,38 +704,39 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "Each source fixture should be ordinary Rust that parses and type-checks far enough to reach fe2o3 analysis, then differs from the valid GEMM by one semantic mutation. A rustc syntax, borrow-check, or ordinary trait error does not demonstrate that fe2o3 found a GPU race, bounds failure, uninitialized read, epoch error, divergent barrier, or incorrect schedule. A generic portable-MIR identity mismatch also demonstrates only source drift, not the named semantic failure."
+        "text": "The branch now compile-tests one positive safe-Rust general source and the 15 ordinary safe-Rust mutation sources below, and freezes each mutation's expected property, stage, and stable code. This is source/schema evidence only: the negative sources are not yet passed through authenticated semantic MIR detection, so the compiler has not demonstrated these semantic rejections. A rustc syntax, borrow-check, ordinary trait error, or generic portable-MIR identity mismatch would still not demonstrate that fe2o3 found the named GPU failure."
       },
       {
         "type": "table",
         "headers": [
-          "Proposed fixture",
+          "Source fixture ID",
           "Required failed obligation",
+          "Stable code",
           "Mutation"
         ],
         "rows": [
-          ["unguarded-a-tail", "bounds_safe", "Load A for a partial M or K tile without the in-range predicate."],
-          ["unguarded-b-tail", "bounds_safe", "Load B for a partial K or N tile without the in-range predicate."],
-          ["unguarded-c-tail", "bounds_safe", "Store an inactive M/N edge output to C."],
-          ["duplicate-lane-c-owner", "race_free / output_region_injective", "Map two lane fragments to the same active C element."],
-          ["overlapping-workgroup-c-tile", "race_free / output_region_injective", "Map distinct workgroups to overlapping C tiles."],
-          ["duplicate-lds-writer", "race_free / lds_epoch_correct", "Give two lanes the same LDS destination slot in one phase."],
-          ["lds-read-before-init", "initialized", "Consume an LDS fragment before all owned slots have value-or-zero initialization."],
-          ["missing-publish-barrier", "initialized / lds_epoch_correct", "Read peer-staged LDS without the phase publish barrier."],
-          ["divergent-barrier", "barrier_convergent", "Place a barrier behind a lane-varying branch or early return."],
-          ["missing-reuse-barrier", "lds_epoch_correct", "Start overwriting the next K tile while peers may still read the current tile."],
-          ["expired-lds-epoch", "lds_epoch_correct", "Reuse an LDS view or fragment capability after its phase epoch ends."],
-          ["staged-read-before-wait", "initialized / lds_epoch_correct", "Read an asynchronous or staged transfer before its admitted completion event."],
-          ["accumulator-reset", "accumulator_phase_refinement", "Replace the carried accumulator with zero between K phases."],
-          ["incorrect-k-tail-zero-fill", "tail_refinement / accumulator_phase_refinement", "Retain stale LDS data or write a nonzero value for an inactive K element."],
-          ["incorrect-alpha-beta", "epilogue_refinement", "Swap, omit, or otherwise alter alpha*acc + beta*C."]
+          ["unguarded_a_tail_load", "bounds_safe", "0x46470102", "Load A for a partial M or K tile without the in-range predicate."],
+          ["unguarded_b_tail_load", "bounds_safe", "0x46470102", "Load B for a partial K or N tile without the in-range predicate."],
+          ["unguarded_c_tail_store", "bounds_safe", "0x46470102", "Store an inactive M/N edge output to C."],
+          ["duplicate_lane_c_write", "output_region_injective", "0x46470106", "Map two lane fragments to the same active C element."],
+          ["overlapping_workgroup_c_tile", "output_region_injective", "0x46470106", "Map distinct workgroups to overlapping C tiles."],
+          ["duplicate_lds_write", "race_free", "0x46470104", "Give two lanes the same LDS destination slot in one phase."],
+          ["lds_read_before_initialization", "initialized", "0x46470103", "Consume an LDS fragment before all owned slots have value-or-zero initialization."],
+          ["missing_publish_barrier", "initialized", "0x46470103", "Read peer-staged LDS without the phase publish barrier."],
+          ["divergent_barrier", "barrier_convergent", "0x46470105", "Place a barrier behind a lane-varying branch or early return."],
+          ["missing_reuse_barrier", "lds_epoch_correct", "0x46470107", "Start overwriting the next K tile while peers may still read the current tile."],
+          ["expired_lds_epoch", "lds_epoch_correct", "0x46470107", "Reuse an LDS view or fragment capability after its phase epoch ends."],
+          ["staged_read_before_wait", "initialized", "0x46470103", "Read an asynchronous or staged transfer before its admitted completion event."],
+          ["accumulator_reset", "accumulator_phase_refinement", "0x46470108", "Replace the carried accumulator with zero between K phases."],
+          ["incorrect_k_tail_zero_fill", "tail_refinement", "0x46470109", "Retain stale LDS data or write a nonzero value for an inactive K element."],
+          ["incorrect_alpha_beta_epilogue", "epilogue_refinement", "0x4647010a", "Swap, omit, or otherwise alter alpha*acc + beta*C."]
         ]
       },
       {
         "type": "callout",
         "tone": "warning",
         "title": "Proof-required means fail closed",
-        "text": "For the proposed production profile, a counterexample, unsupported analysis, missing proof, timeout, incomplete coverage, or unresolved unsafe obligation is a compile error. The diagnostic must name the property and stage, retain the kernel root and source span where available, distinguish a definite counterexample from unknown or unproved, remove preseeded stale outputs, and emit no descriptor, Worker handoff, object, HSACO, proof authority, or launch authority. The branch property spellings are recorded above, but numeric diagnostic codes are intentionally not invented here; semantic compile-fail behavior becomes current documentation only after the compiler branch implements and tests it."
+        "text": "For the proposed production profile, a counterexample, unsupported analysis, missing proof, timeout, incomplete coverage, or unresolved unsafe obligation must be a compile error. The stable property and report/inventory codes are implemented, but their existence is not semantic detection. Completion still requires authenticated MIR analysis to produce the expected failure, retain the kernel root and source span, distinguish a counterexample from unknown or unproved, remove preseeded stale outputs, and emit no descriptor, Worker handoff, object, HSACO, proof authority, or launch authority."
       },
       {
         "type": "paragraph",

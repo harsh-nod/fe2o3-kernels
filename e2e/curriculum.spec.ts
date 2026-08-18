@@ -160,12 +160,16 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("Roadmap contract, not a current compiler result"),
+    page.getByText("Current layers, no general execution"),
   ).toBeVisible();
   await expect(page.getByText("The semantic compile-fail corpus")).toBeVisible();
-  await expect(page.getByText("unguarded-a-tail", { exact: true })).toBeVisible();
-  await expect(page.getByText("divergent-barrier", { exact: true })).toBeVisible();
-  await expect(page.getByText("incorrect-alpha-beta", { exact: true })).toBeVisible();
+  await expect(page.getByText("0x46470101", { exact: true })).toBeVisible();
+  await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();
+  await expect(page.getByText("unguarded_a_tail_load", { exact: true })).toBeVisible();
+  await expect(page.getByText("divergent_barrier", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("incorrect_alpha_beta_epilogue", { exact: true }),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: /#138 General tiled GEMM/ }),
   ).toHaveAttribute(

@@ -201,7 +201,10 @@ describe("curriculum integrity", () => {
     const contract = JSON.stringify(
       narrativeEntry("gemm-tiling/general-contract"),
     );
-    expect(contract).toContain("Roadmap contract, not a current compiler result");
+    expect(contract).toContain("Current layers, no general execution");
+    expect(contract).toContain("SOURCE_TO_IR=false");
+    expect(contract).toContain("LOWERING=false");
+    expect(contract).toContain("PROTECTED_EXECUTION=false");
     expect(contract).toContain("one workgroup per 16x16 C tile");
     expect(contract).toContain("ceil_div(K,16)");
     expect(contract).toContain("defined BF16 +0");
@@ -209,50 +212,60 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("alpha*acc[m,n] + beta*C[m,n]");
     expect(contract).toContain("safe Rust at the user source boundary");
     expect(contract).toContain("unsafe never discharges or bypasses them");
-    for (const obligation of [
-      "memory_safe",
-      "bounds_safe",
-      "initialized",
-      "race_free",
-      "barrier_convergent",
-      "output_region_injective",
-      "lds_epoch_correct",
-      "accumulator_phase_refinement",
-      "tail_refinement",
-      "epilogue_refinement",
-      "numerical_contract",
-      "machine_refinement_boundary",
+    for (const [obligation, code] of [
+      ["memory_safe", "0x46470101"],
+      ["bounds_safe", "0x46470102"],
+      ["initialized", "0x46470103"],
+      ["race_free", "0x46470104"],
+      ["barrier_convergent", "0x46470105"],
+      ["output_region_injective", "0x46470106"],
+      ["lds_epoch_correct", "0x46470107"],
+      ["accumulator_phase_refinement", "0x46470108"],
+      ["tail_refinement", "0x46470109"],
+      ["epilogue_refinement", "0x4647010a"],
+      ["numerical_contract", "0x4647010b"],
+      ["machine_refinement_boundary", "0x4647010c"],
     ]) {
       expect(contract).toContain(obligation);
+      expect(contract).toContain(code);
+    }
+    for (const code of [
+      "0x46470001",
+      "0x46470002",
+      "0x46470003",
+      "0x46470004",
+      "0x46470005",
+      "0x46470006",
+    ]) {
+      expect(contract).toContain(code);
     }
 
     const failures = JSON.stringify(
       narrativeEntry("gemm-tiling/semantic-failures"),
     );
     for (const fixture of [
-      "unguarded-a-tail",
-      "unguarded-b-tail",
-      "unguarded-c-tail",
-      "duplicate-lane-c-owner",
-      "overlapping-workgroup-c-tile",
-      "duplicate-lds-writer",
-      "lds-read-before-init",
-      "missing-publish-barrier",
-      "divergent-barrier",
-      "missing-reuse-barrier",
-      "expired-lds-epoch",
-      "staged-read-before-wait",
-      "accumulator-reset",
-      "incorrect-k-tail-zero-fill",
-      "incorrect-alpha-beta",
+      "unguarded_a_tail_load",
+      "unguarded_b_tail_load",
+      "unguarded_c_tail_store",
+      "duplicate_lane_c_write",
+      "overlapping_workgroup_c_tile",
+      "duplicate_lds_write",
+      "lds_read_before_initialization",
+      "missing_publish_barrier",
+      "divergent_barrier",
+      "missing_reuse_barrier",
+      "expired_lds_epoch",
+      "staged_read_before_wait",
+      "accumulator_reset",
+      "incorrect_k_tail_zero_fill",
+      "incorrect_alpha_beta_epilogue",
     ]) {
       expect(failures).toContain(fixture);
     }
-    expect(failures).toContain("parses and type-checks far enough");
+    expect(failures).toContain("compile-tests one positive safe-Rust general source");
+    expect(failures).toContain("source/schema evidence only");
+    expect(failures).toContain("not yet passed through authenticated semantic MIR detection");
     expect(failures).toContain("no descriptor, Worker handoff, object, HSACO");
-    expect(failures).toContain(
-      "numeric diagnostic codes are intentionally not invented",
-    );
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {

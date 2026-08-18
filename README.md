@@ -573,9 +573,13 @@ epilogue. It catalogs 15 ordinary-Rust semantic mutations that must reach
 fe2o3 analysis and fail the relevant bounds, initialization, race, convergence,
 epoch, phase, tail, or epilogue obligation before artifact emission. These are
 roadmap requirements. The companion compiler branch defines their property
-registry spellings, but semantic source detection, Pliron GEMM lowering, and
-stable numeric diagnostic codes remain incomplete; the lesson does not present
-the compile-fail cases as implemented results.
+registry spellings and stable `0x46470101` through `0x4647010c` codes, plus six
+report/inventory errors at `0x46470001` through `0x46470006`. A companion source
+branch adds a compile-tested safe-Rust positive kernel and sealed typestate
+device surface, but records `SOURCE_TO_IR=false`, `LOWERING=false`, and
+`PROTECTED_EXECUTION=false`. Semantic MIR detection and actual compile-fail
+enforcement remain incomplete; the lesson does not present the negative cases
+as compiler results.
 
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish
