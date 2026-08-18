@@ -564,6 +564,19 @@ and measured route, not tutorial pseudocode. Each promoted Kernel, Verus, and
 Host tab also names the canonical evidence record that covers its exact source
 path and commit; curriculum validation rejects missing or mismatched links.
 
+The `gemm-tiling` lesson also records the proposed contract from
+[fe2o3 #138](https://github.com/harsh-nod/fe2o3/issues/138). The target is one
+safe-Rust user kernel for dynamic dimensions and strides, multiple 16-wide K
+phases, M/N/K tails with zero-filled LDS slots, unconditional publish/reuse
+barriers, disjoint lane and workgroup ownership, and the runtime `alpha/beta`
+epilogue. It catalogs 15 ordinary-Rust semantic mutations that must reach
+fe2o3 analysis and fail the relevant bounds, initialization, race, convergence,
+epoch, phase, tail, or epilogue obligation before artifact emission. These are
+roadmap requirements. The companion compiler branch defines their property
+registry spellings, but semantic source detection, Pliron GEMM lowering, and
+stable numeric diagnostic codes remain incomplete; the lesson does not present
+the compile-fail cases as implemented results.
+
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish
 MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, generally prove

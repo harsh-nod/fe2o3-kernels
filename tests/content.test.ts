@@ -192,6 +192,69 @@ describe("curriculum integrity", () => {
     );
   });
 
+  it("labels the general GEMM and semantic rejection corpus as roadmap", () => {
+    const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
+    expect(lesson?.objectives).toContain(
+      "Distinguish safe-Rust kernel source from sealed unsafe compiler and runtime implementation boundaries.",
+    );
+
+    const contract = JSON.stringify(
+      narrativeEntry("gemm-tiling/general-contract"),
+    );
+    expect(contract).toContain("Roadmap contract, not a current compiler result");
+    expect(contract).toContain("one workgroup per 16x16 C tile");
+    expect(contract).toContain("ceil_div(K,16)");
+    expect(contract).toContain("defined BF16 +0");
+    expect(contract).toContain("unconditional publish barrier");
+    expect(contract).toContain("alpha*acc[m,n] + beta*C[m,n]");
+    expect(contract).toContain("safe Rust at the user source boundary");
+    expect(contract).toContain("unsafe never discharges or bypasses them");
+    for (const obligation of [
+      "memory_safe",
+      "bounds_safe",
+      "initialized",
+      "race_free",
+      "barrier_convergent",
+      "output_region_injective",
+      "lds_epoch_correct",
+      "accumulator_phase_refinement",
+      "tail_refinement",
+      "epilogue_refinement",
+      "numerical_contract",
+      "machine_refinement_boundary",
+    ]) {
+      expect(contract).toContain(obligation);
+    }
+
+    const failures = JSON.stringify(
+      narrativeEntry("gemm-tiling/semantic-failures"),
+    );
+    for (const fixture of [
+      "unguarded-a-tail",
+      "unguarded-b-tail",
+      "unguarded-c-tail",
+      "duplicate-lane-c-owner",
+      "overlapping-workgroup-c-tile",
+      "duplicate-lds-writer",
+      "lds-read-before-init",
+      "missing-publish-barrier",
+      "divergent-barrier",
+      "missing-reuse-barrier",
+      "expired-lds-epoch",
+      "staged-read-before-wait",
+      "accumulator-reset",
+      "incorrect-k-tail-zero-fill",
+      "incorrect-alpha-beta",
+    ]) {
+      expect(failures).toContain(fixture);
+    }
+    expect(failures).toContain("parses and type-checks far enough");
+    expect(failures).toContain("no descriptor, Worker handoff, object, HSACO");
+    expect(failures).toContain(
+      "numeric diagnostic codes are intentionally not invented",
+    );
+  });
+
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {
     const lesson = lessons.find((entry) => entry.id === "softmax-invariant");
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");

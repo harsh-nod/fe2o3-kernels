@@ -589,6 +589,144 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "gemm-tiling/general-contract": {
+    "sectionId": "general-contract",
+    "title": "Issue #138: the general safe-Rust contract",
+    "blocks": [
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Roadmap contract, not a current compiler result",
+        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138 proposes the general kernel and proof-required diagnostics below. Its companion compiler branch now implements the property registry spellings shown here, but semantic source detection and Pliron GEMM lowering remain incomplete, and stable numeric diagnostic codes are still under review."
+      },
+      {
+        "type": "paragraph",
+        "text": "The target is one ordinary #[kernel] Rust body for row-major BF16 A and B, FP32 accumulation and C, dynamic M/N/K, checked lda/ldb/ldc, runtime alpha/beta, multiple output workgroups, multiple K phases, and M/N/K tails. The first schedule stays conservative: gfx942:xnack-, wave64, one workgroup per 16x16 C tile, one 16x16x16 BF16 MFMA per K phase, single-buffered XOR4 LDS, and no vectorized, prefetched, double-buffered, or autotuned path."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Contract part",
+          "Required rule"
+        ],
+        "rows": [
+          [
+            "Host preparation",
+            "Use checked arithmetic. For nonempty regions require (M-1)*lda+(K-1) < len(A), (K-1)*ldb+(N-1) < len(B), and (M-1)*ldc+(N-1) < len(C), with lda >= K, ldb >= N, ldc >= N, valid aliases, and launch limits. Invalid dynamic values fail prepare() before launch; they are not Rust compile errors."
+          ],
+          [
+            "Workgroup ownership",
+            "Workgroup (gx,gy) owns rows 16*gy through 16*gy+15 and columns 16*gx through 16*gx+15 of C. Edge coordinates are inactive, and no two admitted workgroups may own the same active C element."
+          ],
+          [
+            "Lane ownership",
+            "For lane l in 0..64 and component c in 0..4, the MFMA C/D coordinate is local row 4*(l/16)+c and local column l%16. Equality of active store coordinates must imply the same workgroup, lane, and component."
+          ],
+          [
+            "K phases",
+            "The checked phase count is ceil_div(K,16). In phase p, lane l and component c own A(global row=16*gy+l%16, depth=16*p+4*(l/16)+c) and B(depth=16*p+4*(l/16)+c, global column=16*gx+l%16) load slots. Accumulators carry across every phase and are never reset inside the loop."
+          ],
+          [
+            "Tails and initialization",
+            "Every lane writes each owned LDS slot in every phase. An in-range global coordinate contributes its BF16 value; an out-of-range M, N, or K coordinate contributes defined BF16 +0. This makes all MFMA fragment reads initialized without issuing an out-of-bounds global access."
+          ],
+          [
+            "Synchronization",
+            "All 64 lanes execute an unconditional publish barrier after staging and an unconditional reuse barrier after consuming the phase. No lane-varying branch, early return, or expired LDS epoch may bypass either dynamic barrier instance."
+          ],
+          [
+            "Epilogue",
+            "Each active owner writes C[m,n] = alpha*acc[m,n] + beta*C[m,n] using the declared BF16/F32 numerical policy. M=0 or N=0 performs no dispatch; K=0 has an empty product and applies the checked beta*C epilogue to active outputs."
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Safe source, sealed implementation",
+        "text": "The #138 reference kernel must be writable in safe Rust at the user source boundary: lane and workgroup identities, global views, LDS allocation and access, barriers, MFMA fragments, and disjoint stores must not require user-written unsafe. Compiler and runtime internals may use narrowly scoped unsafe for address-space pointers, intrinsics, and HSA/KFD ABIs behind sealed capabilities. An expert raw pointer, unchecked access, inline assembly, or other unsafe escape creates the same named proof obligations; unsafe never discharges or bypasses them. This is a target contract, not a claim that the currently pinned Slice 1 source already exposes that complete safe surface."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Branch property spelling",
+          "What must be established independently"
+        ],
+        "rows": [
+          ["memory_safe", "Global and LDS accesses retain valid regions, provenance, alignment, lifetimes, and admitted alias relationships."],
+          ["bounds_safe", "Every executed A/B/C and LDS address is inside its recorded allocation or tile extent under its exact predicate."],
+          ["initialized", "Every global or LDS read observes a value initialized in the admitted phase and epoch."],
+          ["race_free", "Unordered conflicting accesses cannot overlap across workgroups, lanes, fragments, or LDS writers."],
+          ["barrier_convergent", "Every required workgroup participant reaches the same publish and reuse barrier instances."],
+          ["output_region_injective", "Each active C coordinate has exactly one workgroup/lane/component writer."],
+          ["lds_epoch_correct", "Publish orders current-phase reads and reuse orders next-phase overwrites; capabilities cannot outlive their epoch."],
+          ["accumulator_phase_refinement", "The accumulator covers exactly the completed K intervals and reaches the full mathematical product."],
+          ["tail_refinement", "M/N stores are predicated and invalid A/B/K loads become defined zero contributions."],
+          ["epilogue_refinement", "The active store implements the recorded alpha/beta equation, including zero K."],
+          ["numerical_contract", "BF16 conversion, FP32 MFMA accumulation order, rounding, exceptional values, and comparison policy are explicit."],
+          ["machine_refinement_boundary", "The final covered LLVM/ISA boundary preserves the exact proven effects; source proof alone cannot promote it."]
+        ]
+      },
+      {
+        "type": "links",
+        "items": [
+          {
+            "label": "#138 General tiled GEMM and semantic compile-fail corpus",
+            "href": "https://github.com/harsh-nod/fe2o3/issues/138"
+          },
+          {
+            "label": "#134 Rust-first Pliron compiler and proof architecture",
+            "href": "https://github.com/harsh-nod/fe2o3/issues/134"
+          }
+        ]
+      }
+    ]
+  },
+  "gemm-tiling/semantic-failures": {
+    "sectionId": "semantic-failures",
+    "title": "The semantic compile-fail corpus",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "Each source fixture should be ordinary Rust that parses and type-checks far enough to reach fe2o3 analysis, then differs from the valid GEMM by one semantic mutation. A rustc syntax, borrow-check, or ordinary trait error does not demonstrate that fe2o3 found a GPU race, bounds failure, uninitialized read, epoch error, divergent barrier, or incorrect schedule. A generic portable-MIR identity mismatch also demonstrates only source drift, not the named semantic failure."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Proposed fixture",
+          "Required failed obligation",
+          "Mutation"
+        ],
+        "rows": [
+          ["unguarded-a-tail", "bounds_safe", "Load A for a partial M or K tile without the in-range predicate."],
+          ["unguarded-b-tail", "bounds_safe", "Load B for a partial K or N tile without the in-range predicate."],
+          ["unguarded-c-tail", "bounds_safe", "Store an inactive M/N edge output to C."],
+          ["duplicate-lane-c-owner", "race_free / output_region_injective", "Map two lane fragments to the same active C element."],
+          ["overlapping-workgroup-c-tile", "race_free / output_region_injective", "Map distinct workgroups to overlapping C tiles."],
+          ["duplicate-lds-writer", "race_free / lds_epoch_correct", "Give two lanes the same LDS destination slot in one phase."],
+          ["lds-read-before-init", "initialized", "Consume an LDS fragment before all owned slots have value-or-zero initialization."],
+          ["missing-publish-barrier", "initialized / lds_epoch_correct", "Read peer-staged LDS without the phase publish barrier."],
+          ["divergent-barrier", "barrier_convergent", "Place a barrier behind a lane-varying branch or early return."],
+          ["missing-reuse-barrier", "lds_epoch_correct", "Start overwriting the next K tile while peers may still read the current tile."],
+          ["expired-lds-epoch", "lds_epoch_correct", "Reuse an LDS view or fragment capability after its phase epoch ends."],
+          ["staged-read-before-wait", "initialized / lds_epoch_correct", "Read an asynchronous or staged transfer before its admitted completion event."],
+          ["accumulator-reset", "accumulator_phase_refinement", "Replace the carried accumulator with zero between K phases."],
+          ["incorrect-k-tail-zero-fill", "tail_refinement / accumulator_phase_refinement", "Retain stale LDS data or write a nonzero value for an inactive K element."],
+          ["incorrect-alpha-beta", "epilogue_refinement", "Swap, omit, or otherwise alter alpha*acc + beta*C."]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "warning",
+        "title": "Proof-required means fail closed",
+        "text": "For the proposed production profile, a counterexample, unsupported analysis, missing proof, timeout, incomplete coverage, or unresolved unsafe obligation is a compile error. The diagnostic must name the property and stage, retain the kernel root and source span where available, distinguish a definite counterexample from unknown or unproved, remove preseeded stale outputs, and emit no descriptor, Worker handoff, object, HSACO, proof authority, or launch authority. The branch property spellings are recorded above, but numeric diagnostic codes are intentionally not invented here; semantic compile-fail behavior becomes current documentation only after the compiler branch implements and tests it."
+      },
+      {
+        "type": "paragraph",
+        "text": "Lower-level hostile Pliron or pass fixtures remain necessary for verifier preservation, but they do not replace source fixtures. Conversely, invalid runtime dimensions, lengths, strides, aliases, or launch limits belong to checked host prepare() errors under the compiler-recorded preconditions, not to compile-time rejection of otherwise general source."
+      }
+    ]
+  },
   "gemm-tiling/mapping": {
     "sectionId": "mapping",
     "title": "Freeze the coordinate map",

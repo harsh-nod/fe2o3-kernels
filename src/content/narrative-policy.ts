@@ -21,6 +21,8 @@ export const narrativeIds = deepFreeze([
   "lds-barriers-atomics/epochs",
   "lds-barriers-atomics/atomics",
   "gemm-tiling/public-layout-proof",
+  "gemm-tiling/general-contract",
+  "gemm-tiling/semantic-failures",
   "gemm-tiling/mapping",
   "gemm-tiling/loop-proof",
   "gemm-proof-plan/proof-ledger",
@@ -84,6 +86,8 @@ export const narrativeOrderByLesson = deepFreeze({
   ],
   "gemm-tiling": [
     "gemm-tiling/public-layout-proof",
+    "gemm-tiling/general-contract",
+    "gemm-tiling/semantic-failures",
     "gemm-tiling/mapping",
     "gemm-tiling/loop-proof"
   ],
@@ -152,6 +156,8 @@ export const narrativeFingerprints = deepFreeze({
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
   "lds-barriers-atomics/atomics": "5f9311c3a1e2b97d5be96f4fd5a3bd25535e27586bbb0949391e889e21324582",
   "gemm-tiling/public-layout-proof": "1f78d8b76a7323822d77b025a919a44fb29e64dfcd1e19c5b0d1b0776cb8bc39",
+  "gemm-tiling/general-contract": "f037e8b869d710de7c139af4d0558795bda639dd6595d00013ed158fd4b220aa",
+  "gemm-tiling/semantic-failures": "9fd0ab26b79f4568cc0b57685d84451a1f925ad6b59307508195772242bc3481",
   "gemm-tiling/mapping": "c2b015fa509dd2976748c2de7de3a0e5165ab33e3c83e3948700ce2f49654cf0",
   "gemm-tiling/loop-proof": "7c87b0639046276d51e796d2ea61e72401c97dbd89043505de446adb6a6d2d05",
   "gemm-proof-plan/proof-ledger": "635b84e78c427a7c59e189832896c38d0e3f50ba0249e203c3c1ab186daa77c2",

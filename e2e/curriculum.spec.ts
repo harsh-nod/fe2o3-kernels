@@ -153,6 +153,25 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(page.getByRole("tabpanel")).toContainText(
     "not generalized GEMM",
   );
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Issue #138: the general safe-Rust contract",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Roadmap contract, not a current compiler result"),
+  ).toBeVisible();
+  await expect(page.getByText("The semantic compile-fail corpus")).toBeVisible();
+  await expect(page.getByText("unguarded-a-tail", { exact: true })).toBeVisible();
+  await expect(page.getByText("divergent-barrier", { exact: true })).toBeVisible();
+  await expect(page.getByText("incorrect-alpha-beta", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: /#138 General tiled GEMM/ }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/issues/138",
+  );
   for (const issue of [85, 86, 87, 88, 89, 90, 96, 97, 99, 100]) {
     await expect(
       page.getByRole("link", { name: new RegExp(`#${String(issue)} `, "u") }),
