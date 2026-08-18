@@ -30,6 +30,10 @@ export interface KernelProgress {
 
 export const developmentCheckpointIds = deepFreeze([
   "eventual-public-main",
+  "worker-v2-ack-harness-isolation",
+  "row-softmax-ordinary-source",
+  "broker-durable-prepared-session",
+  "generic-ci-sharding",
   "w0-host-link-closure-v1",
   "broker-v4-inert-foundation",
   "protected-service-descriptor-admission",
@@ -125,7 +129,7 @@ export type DevelopmentCheckpoint =
   | StagedEvidenceDevelopmentCheckpoint;
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-16",
+  reviewedOn: "2026-08-17",
   auditedCommit: FE2O3_PIN.commit,
   lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
   lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
@@ -246,6 +250,22 @@ const developmentCheckpointSpecs = deepFreeze({
   "eventual-public-main": {
     kind: "publication-gate",
     commit: progressSnapshot.eventualPublicCommit,
+  },
+  "worker-v2-ack-harness-isolation": {
+    kind: "narrative",
+    narrativeId: "progress/worker-v2-ack-harness-isolation",
+  },
+  "row-softmax-ordinary-source": {
+    kind: "narrative",
+    narrativeId: "progress/row-softmax-ordinary-source",
+  },
+  "broker-durable-prepared-session": {
+    kind: "narrative",
+    narrativeId: "progress/broker-durable-prepared-session",
+  },
+  "generic-ci-sharding": {
+    kind: "narrative",
+    narrativeId: "progress/generic-ci-sharding",
   },
   "w0-host-link-closure-v1": {
     kind: "narrative",
@@ -500,6 +520,38 @@ export const developmentCheckpoints = deepFreeze([
     name: "Published implementation snapshot (publication gated)",
     commit: progressSnapshot.eventualPublicCommit,
     state: "public",
+  },
+  {
+    id: "worker-v2-ack-harness-isolation",
+    kind: "narrative",
+    name: "Worker V2 ACK harness isolation",
+    commit: "c703eaa271040b7c297e0d3b9ea8cc9fa470f327",
+    state: "public",
+    narrativeId: "progress/worker-v2-ack-harness-isolation",
+  },
+  {
+    id: "row-softmax-ordinary-source",
+    kind: "narrative",
+    name: "Row-softmax ordinary attributed source",
+    commit: "f4dcafb8b95345a5203a7f2c9886f9600345405f",
+    state: "public",
+    narrativeId: "progress/row-softmax-ordinary-source",
+  },
+  {
+    id: "broker-durable-prepared-session",
+    kind: "narrative",
+    name: "Durable broker prepared-session foundation",
+    commit: "7139ccfd01e0ab8b0fc521613ac4356134d2e0c5",
+    state: "public",
+    narrativeId: "progress/broker-durable-prepared-session",
+  },
+  {
+    id: "generic-ci-sharding",
+    kind: "narrative",
+    name: "Deterministic generic CI sharding",
+    commit: "5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4",
+    state: "public",
+    narrativeId: "progress/generic-ci-sharding",
   },
   {
     id: "w0-host-link-closure-v1",

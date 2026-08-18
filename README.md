@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`d9ae1e95957d28a17afdcfa1a5173d40b89e65a6`, tree
-`a7a5fe7a94331a1354679eea1977b1fa3d0c1218`. Deployment requires
+`86c4ca67a673bfec966f79e6c701104db872d8ea`, tree
+`28f0ef6525290eb1be2ddcad72a785816502f547`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -90,8 +90,13 @@ outer commit remains part of the evidence identity. KIR order is validated but
 not operationally executed, and Verus relates internal mathematical definitions
 without computing SHA-256. This result establishes no source-to-model,
 compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity
-authority. The snapshot also carries the row-softmax
-V1 inert verification certificate: 18
+authority. The snapshot also carries the row-softmax V1 inert verification
+certificate and makes `examples/row_softmax_v1/src/kernel.rs` the sole ordinary
+example-owned attributed source. Complete `syn` AST structural admission runs
+before a fixed reviewed interpreter/model, while digests and the certificate
+bind the exact source, model, and authenticated 64-element memory preconditions.
+This is not Rust semantic refinement and does not establish compiler/GPU
+causality or runtime satisfaction of the preconditions. The certificate has 18
 Verus obligations and seven named negative fixtures bind exact reviewed source,
 policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
 certificate itself grants no compiler, artifact, launch, or hardware authority. The
@@ -118,9 +123,12 @@ compiler/code-object reproducibility and operator-selected reviewed integrity,
 not runtime or GPU results, authentication, generalized memory safety or race
 freedom, or source/model/Verus-to-machine refinement. The GPU code-object path
 remains pinned upstream LLVM target-machine APIs plus in-process LLD. W0 is now
-accepted only as the bounded ancestor described below. Production remains
-blocked on W1 broker-owned durable replay/session authority; no production
-row-softmax hardware run is claimed. The publication-gated snapshot also
+accepted only as the bounded ancestor described below. A durable broker
+prepared-session consume foundation now exists, but it remains
+`AUTHORITY=none`; anti-rollback, key provenance, hostile same-UID resistance,
+multiwriter coordination, cross-system atomicity, and publication/runtime/GPU
+authority remain open. No production row-softmax hardware run is claimed. The
+publication-gated snapshot also
 contains exact B=1, H=1, N=8,
 D=16 FlashAttention compiler
 admission. It binds ordinary attributed source, FnAbi, compiler configuration,
@@ -145,8 +153,10 @@ cases enforce the ownership and typestate boundaries, and an independent
 strict-F32 CPU oracle covers nominal, equal-score, dominant-score, causal-mask,
 exceptional-input, unchanged-input, and canary cases. At that checkpoint the
 protected MI300X test failed closed before HSA load pending W0 and W1; the
-current tip closes only the bounded W0 prerequisite, while W1 durable
-replay/session authority and subsequent linear receipt injection remain open.
+current tip closes the bounded W0 prerequisite and adds local durable
+prepared-session consume mechanics with `AUTHORITY=none`, while real
+anti-rollback, key provenance, multiwriter coordination, publication authority,
+and subsequent linear receipt injection remain open.
 Artifact-path and raw-byte fallbacks are refused. This is host/runtime mechanics,
 compile-fail, resource-observation,
 and CPU-oracle evidence only. It grants no protected GPU dispatch or numerical
@@ -306,7 +316,74 @@ persistence, durable uniqueness, real anti-rollback, atomic disk publication,
 hostile-process enforcement, continuous liveness, runtime, GPU, or parity
 authority, and it still requires a compatible trusted procfs mount.
 
-The public tip `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
+Commit `c703eaa271040b7c297e0d3b9ea8cc9fa470f327`, tree
+`c75b6cb9d70c6984bb375d09f095580eb2f7581a`, isolates production-deadline
+Worker V2 application-ACK fixtures behind one exclusive process lane. The
+default 28-test and all-features 35-test suites pass on MI300X. This changes test
+harness determinism only, not production authority or tutorial evidence.
+
+Commit `f4dcafb8b95345a5203a7f2c9886f9600345405f`, tree
+`9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df`, moves the exact 1,289-byte
+row-softmax source to `examples/row_softmax_v1/src/kernel.rs` and leaves the
+compiler fixture as a re-export facade. Its SHA-256 remains
+`c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4`.
+Complete AST admission, a fixed reviewed interpreter/model, and
+digest/certificate binding provide bounded structural evidence only. They prove
+neither Rust semantics, compiler/GPU causality, OCML/IEEE behavior, execution,
+general memory or race safety, protected dispatch, nor parity.
+
+Commit `7139ccfd01e0ab8b0fc521613ac4356134d2e0c5`, tree
+`aef7f32c4dc3fe0087006e880cb535d8c8adaf1a`, adds a descriptor-relative
+durable broker prepared-session consume and crash-recovery foundation. It stages
+exact W0 bytes, obtains a service-owned random nonce, commits Prepared before
+exposing the challenge, and re-establishes a retained-directory durability
+barrier during recovery. It remains strictly `AUTHORITY=none`: there is no
+anti-rollback, key provenance, hostile same-UID resistance, multiwriter
+coordination, cross-system atomicity, publication, runtime, GPU, or parity
+authority.
+
+Commit `5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4`, tree
+`37dc2765f30c50f99a3fb3f5b8e56d03a511c33e`, splits hosted generic CI into
+one core job, eight rustc-codegen shards covering all 19 current Cargo test
+targets exactly once, and a fail-closed aggregate. Locked Cargo metadata is the
+authoritative target inventory. All shards and policy checks passed in isolated
+MI300X worktrees. At the current public tip, the complete `powderluv/fe2o3`
+GitHub-hosted generic run, including all eight shards and the fail-closed
+aggregate, also passed. The complete serial generic gate remains intact.
+
+Current public commit `86c4ca67a673bfec966f79e6c701104db872d8ea`, tree
+`28f0ef6525290eb1be2ddcad72a785816502f547`, integrates 34 descendants of
+that sharding checkpoint. The bounded delta canonicalizes provider identities
+and paths, completes the Wave64 and workgroup MIR V3 inputs, repins the exact
+FlashAttention and MoE MIR closures, reconciles architecture and evidence
+boundaries, makes stale-artifact cleanup ownership-aware, and rebuilds each
+ROCm example before checking its generated artifacts. The hosted row-softmax
+lineage test now receives complete checkout history, and the
+authenticated-Verus fixture closure is repinned after the ordinary row-softmax
+source changed its owning verifier package. The final commits isolate temporary
+clean-CLI projects from a workflow-wide `CARGO_TARGET_DIR` while preserving the
+dedicated environment-target test, then give an already-killed orphan a bounded
+host-reaping interval before the timeout test requires `ESRCH`. A still-live
+descendant remains a hard failure. The exact clean generic-core gate passed on
+MI300X, as did all 18 runnable tests in the affected control-flow target and a
+100-run stress loop for the timeout case; the ancestor release candidate's
+gfx942 ROCm compile/artifact lanes also passed there. All 14 debug and 13 release
+reviewed-host tests passed serially with the new exact fixture, runtime-closure,
+and executable-page identities. These are compiler identity, documentation,
+test-determinism, and release-order changes only; they do not
+promote a parity row or grant source-to-machine, memory-safety, race-freedom,
+protected-runtime, or GPU authority.
+
+The same public tip starts issue #134 Wave 0 with a normative Rust-first Pliron
+architecture and proof-boundary decision, fixed-width Pliron-independent
+`KernelItemId` and `KernelInstId` V1 records, and frozen V1-V5 Kernel IR
+compatibility guards. The contracts suite passes 44 tests plus one doctest, and
+the new compatibility suite passes six focused tests alongside 67 existing
+wire tests. This is identity, compatibility, and architecture infrastructure;
+no Pliron dependency or production selector has landed, and no executable
+Pliron lowering or #135 persistent-service implementation is claimed.
+
+Ancestor commit `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
 `6636f342efa8d2caf40a9bed253330972090326f`, adds an independently accepted
 point-in-time process-leader pidfd identity foundation with `AUTHORITY=none`.
 Forty-six unit tests and six compile-fail doctests pass; three privileged or
@@ -317,10 +394,12 @@ PID namespace. This grants no endpoint exclusivity, replay, publication,
 linking, loading, launch, runtime, GPU, or parity authority.
 
 The Wave64 checkpoints, descriptor admission, static pre-exec foundation,
-external-anchor protocol, and pidfd identity foundation change no parity or
-lesson evidence.
-The matrix remains **0 Complete / 97 Partial / 0 Missing / 12 N/A**, and all
-explanatory-source labels and run/verify/evidence states are unchanged.
+external-anchor protocol, pidfd identity foundation, Worker V2 harness repair,
+ordinary row-softmax source, durable broker foundation, and CI sharding do not
+promote a parity row. The matrix remains **0 Complete / 97 Partial / 0 Missing /
+12 N/A**: normative **0/82/0/12** and supplemental **0/15/0**. All tutorial
+run/verify/evidence states and unrelated explanatory-source labels are
+unchanged.
 
 The pinned snapshot retains the production S09
 checkpoint that canonically captures the
@@ -690,15 +769,20 @@ At the audited pin:
 - Tiled GEMM's exact fixed `16x16x16` Slice 1 Kernel, Host, and Result tabs are
   real and pinned. Its generalized dimensions, K phases, grids, tails,
   coefficients, and complete authority chain remain a design-level curriculum.
-  Row softmax has an exact typed host adapter, private linear HSA lifecycle,
-  exact source/compiler/Worker/finalizer handoffs, a historical staged 25-pin
+  Row softmax now displays its exact ordinary example-owned attributed source,
+  with complete AST structural admission before a fixed reviewed
+  interpreter/model and digest/certificate binding. It also has an exact typed
+  host adapter, private linear HSA lifecycle, exact
+  source/compiler/Worker/finalizer handoffs, a historical staged 25-pin
   release receipt, and a separate A/B LLVM release pair for which two fresh
   complete MI300X runs passed and independent review accepted the evidence
   package. Those runs dispatched no GPU and grant no runtime,
   authentication, refinement, generalized memory-safety, or race-freedom
-  authority. W0's measured/no-authority host-link prerequisite is accepted;
-  production remains blocked on W1 durable replay/session authority, so these
-  mechanics grant no protected hardware authority.
+  authority. W0's measured/no-authority host-link prerequisite is accepted, and
+  a durable prepared-session consume foundation exists with `AUTHORITY=none`.
+  Anti-rollback, key provenance, hostile same-UID resistance, multiwriter and
+  cross-system coordination, publication/runtime/GPU authority, and protected
+  hardware evidence remain open.
   FlashAttention Phase A now has exact ordinary
   attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
   oracle, executable proof-facing models, debug/release mutation suites, and a

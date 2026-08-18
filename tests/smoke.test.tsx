@@ -72,7 +72,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/07446dc820d457ab895a3b01bcf6290613b47e66/crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/86c4ca67a673bfec966f79e6c701104db872d8ea/examples/row_softmax_v1/src/kernel.rs",
     );
 
     await user.click(screen.getByRole("tab", { name: "Verus proof" }));
@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("d9ae1e95957d")).toBeInTheDocument();
+    expect(screen.getByText("86c4ca67a673")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,11 +113,23 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "a7a5fe7a94331a1354679eea1977b1fa3d0c1218",
+      "28f0ef6525290eb1be2ddcad72a785816502f547",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
+    expect(screen.getByText("Worker V2 ACK harness isolation").closest("article")).toHaveTextContent(
+      "test-harness determinism repair only",
+    );
+    expect(screen.getByText("Row-softmax ordinary attributed source").closest("article")).toHaveTextContent(
+      "Complete syn AST structural admission",
+    );
+    expect(screen.getByText("Durable broker prepared-session foundation").closest("article")).toHaveTextContent(
+      "AUTHORITY=none",
+    );
+    expect(screen.getByText("Deterministic generic CI sharding").closest("article")).toHaveTextContent(
+      "the complete powderluv/fe2o3 GitHub-hosted generic run",
+    );
     const w0Heading = screen.getByText(
       "Accepted W0/G1 static host-link boundary",
     );

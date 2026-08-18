@@ -185,8 +185,9 @@ test("row softmax separates real source from pending and GPU evidence", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/07446dc820d457ab895a3b01bcf6290613b47e66/crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/86c4ca67a673bfec966f79e6c701104db872d8ea/examples/row_softmax_v1/src/kernel.rs",
   );
+  await expect(page.getByText(/complete syn AST structural admission/u)).toBeVisible();
 
   await page.getByRole("tab", { name: "Verus proof" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(

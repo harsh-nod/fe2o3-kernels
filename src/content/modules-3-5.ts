@@ -235,11 +235,11 @@ const rowSoftmaxResult = resultText(
   "compiler-hsaco-observed",
   `Fixed-width row-softmax V1 evidence boundary
 
-Source: the attributed ordinary Rust #[kernel] body fixes one unmasked 64-element row, WG64, and three bounded scalar loops executed by lane zero.
+Source: the ordinary example-owned attributed Rust #[kernel] body at examples/row_softmax_v1/src/kernel.rs fixes one unmasked 64-element row, WG64, and three bounded scalar loops executed by lane zero. Complete syn AST structural admission, a fixed reviewed interpreter/model, and digest/certificate binding cover this exact source under authenticated 64-element input/output preconditions. They do not establish Rust semantic refinement or observe runtime satisfaction of those preconditions.
 CPU: independent host reference and numerical-oracle tests exist; they are not GPU observations.
 Verus: the mathematical and address-set models verify bounded indices, row extents, and conditional disjoint-address obligations. They do not model concrete memory events or prove source-to-machine race freedom.
 Compiler/code object: focused source admission, pinned upstream LLVM target-machine plus in-process LLD finalization, and inspection mechanics exist. Release A 31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1/tree 293c6d39e47d64f5949d450d6041dc598aafd0fe and manifest B fd89390788adc5670c54ecc2517b9720f2f80113/tree af0156687517c0e71eb0d607917964b7c375af43 bind manifest SHA-256 9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c and one retained HSACO SHA-256 0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93. Two fresh complete MI300X runs passed; independent review accepted the evidence package. These non-GPU runs establish bounded compiler/code-object reproducibility and operator-selected reviewed integrity only, not authentication or refinement.
-Host: typed disjoint input/output binding and Joined -> Loaded -> Completed -> Unloaded source mechanics exist, but the protected path remains blocked on W0 authenticated HostLinkClosureV1, then W1 broker cargo-fe2o3 executable identity, before subsequent receipt injection and HSA load.
+Host: typed disjoint input/output binding and Joined -> Loaded -> Completed -> Unloaded source mechanics exist. The durable broker prepared-session consume foundation remains AUTHORITY=none and supplies no anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, or GPU authority; protected receipt injection and HSA load remain open.
 GPU: no protected dispatch and no numerical GPU result are claimed.
 
 This evidence does not justify a cuda-oxide parity promotion.`,
@@ -605,9 +605,8 @@ const softmax: Lesson = {
     {
       language: "rust",
       code: rowSoftmaxKernel,
-      sourcePath:
-        "crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
-      sourceCommit: "07446dc820d457ab895a3b01bcf6290613b47e66",
+      sourcePath: "examples/row_softmax_v1/src/kernel.rs",
+      sourceCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
       sourceSha256:
         "c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4",
       explanatory: false,

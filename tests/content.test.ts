@@ -196,9 +196,8 @@ describe("curriculum integrity", () => {
     const lesson = lessons.find((entry) => entry.id === "softmax-invariant");
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
-      sourcePath:
-        "crates/rustc-codegen-fe2o3/tests/fixtures/collected-row-softmax-v1/src/lib.rs",
-      sourceCommit: "07446dc820d457ab895a3b01bcf6290613b47e66",
+      sourcePath: "examples/row_softmax_v1/src/kernel.rs",
+      sourceCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
       sourceSha256:
         "c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4",
       explanatory: false,
@@ -252,6 +251,12 @@ describe("curriculum integrity", () => {
     expect(result).toContain(
       "0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93",
     );
+    expect(result).toContain("examples/row_softmax_v1/src/kernel.rs");
+    expect(result).toContain("Complete syn AST structural admission");
+    expect(result).toContain("fixed reviewed interpreter/model");
+    expect(result).toContain("digest/certificate binding");
+    expect(result).toContain("do not establish Rust semantic refinement");
+    expect(result).toContain("runtime satisfaction of those preconditions");
     expect(result).toContain("no protected dispatch");
     expect(result).toContain("does not justify a cuda-oxide parity promotion");
 
@@ -261,6 +266,21 @@ describe("curriculum integrity", () => {
     );
     expect(JSON.stringify(proofNarrative)).toContain(
       "Address separation is an obligation, not end-to-end race freedom",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "complete syn AST structural admission",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "fixed reviewed interpreter/model",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "no Rust semantic refinement",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "Compiler and GPU causality",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "generalized memory safety and race freedom",
     );
   });
 
@@ -1310,15 +1330,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-16",
+      reviewedOn: "2026-08-17",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "d9ae1e95957d28a17afdcfa1a5173d40b89e65a6",
-      eventualPublicTree: "a7a5fe7a94331a1354679eea1977b1fa3d0c1218",
+      eventualPublicCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
+      eventualPublicTree: "28f0ef6525290eb1be2ddcad72a785816502f547",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "d9ae1e95957d28a17afdcfa1a5173d40b89e65a6",
-        requiredTree: "a7a5fe7a94331a1354679eea1977b1fa3d0c1218",
+        requiredCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
+        requiredTree: "28f0ef6525290eb1be2ddcad72a785816502f547",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1336,6 +1356,14 @@ describe("implementation progress integrity", () => {
     expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
       "public-main documentation snapshot is publication-gated",
     );
+    const currentNarrative = JSON.stringify(
+      narrativeEntry("read-the-evidence/scalar-gemm-checkpoint"),
+    );
+    expect(currentNarrative).toContain("0 Complete / 97 Partial / 0 Missing / 12 N/A");
+    expect(currentNarrative).toContain("normative 0/82/0/12");
+    expect(currentNarrative).toContain("supplemental 0/15/0");
+    expect(currentNarrative).toContain("No tutorial run/verify/evidence status");
+    expect(currentNarrative).toContain("unrelated explanatory-source label");
     expect(
       developmentCheckpoints.find(
         (checkpoint) => checkpoint.id === "last-audited-public-baseline",
@@ -1345,6 +1373,65 @@ describe("implementation progress integrity", () => {
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "public",
     });
+  });
+
+  it("records the four accepted commits in the current publication checkpoint", () => {
+    const worker = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "worker-v2-ack-harness-isolation",
+    );
+    expect(worker).toMatchObject({
+      commit: "c703eaa271040b7c297e0d3b9ea8cc9fa470f327",
+      state: "public",
+    });
+    expect(checkpointDetail(worker)).toContain("tree c75b6cb9d70c6984bb375d09f095580eb2f7581a");
+    expect(checkpointDetail(worker)).toContain("test-harness determinism repair only");
+
+    const source = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "row-softmax-ordinary-source",
+    );
+    expect(source).toMatchObject({
+      commit: "f4dcafb8b95345a5203a7f2c9886f9600345405f",
+      state: "public",
+    });
+    expect(checkpointDetail(source)).toContain("Complete syn AST structural admission");
+    expect(checkpointDetail(source)).toContain("not Rust semantic refinement");
+    expect(checkpointDetail(source)).toContain("The row remains Partial");
+
+    const broker = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "broker-durable-prepared-session",
+    );
+    expect(broker).toMatchObject({
+      commit: "7139ccfd01e0ab8b0fc521613ac4356134d2e0c5",
+      state: "public",
+    });
+    const brokerDetail = checkpointDetail(broker);
+    expect(brokerDetail).toContain("AUTHORITY=none");
+    expect(brokerDetail).toContain("hostile same-UID resistance");
+    expect(brokerDetail).toContain("multiwriter coordination");
+    expect(brokerDetail).toContain("cross-system atomicity");
+    expect(brokerDetail).toContain("GPU authority");
+
+    const ci = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "generic-ci-sharding",
+    );
+    expect(ci).toMatchObject({
+      commit: "5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4",
+      state: "public",
+    });
+    expect(checkpointDetail(ci)).toContain("eight explicit rustc-codegen shards");
+    expect(checkpointDetail(ci)).toContain("19 current Cargo integration-test targets");
+    expect(checkpointDetail(ci)).toContain("Locked Cargo metadata is authoritative");
+    expect(checkpointDetail(ci)).toContain(
+      "the complete powderluv/fe2o3 GitHub-hosted generic run",
+    );
+
+    for (const id of ["softmax", "flash-attention", "moe-routing", "moe-experts"]) {
+      expect(kernelProgress.find((kernel) => kernel.id === id)).toMatchObject({
+        run: "partial",
+        verify: "partial",
+        evidence: "partial",
+      });
+    }
   });
 
   it("records bounded W0 acceptance and inert Broker V4 separately", () => {
@@ -1842,7 +1929,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "d9ae1e95957d28a17afdcfa1a5173d40b89e65a6",
+      "86c4ca67a673bfec966f79e6c701104db872d8ea",
     );
 
     const lesson = curriculum

@@ -3,6 +3,10 @@ import { deepFreeze } from "./registry";
 // Registry additions require an explicit ID, checkpoint binding, and reviewed SHA-256.
 export const progressNarrativeIds = deepFreeze([
   "progress/last-audited-public-baseline",
+  "progress/worker-v2-ack-harness-isolation",
+  "progress/row-softmax-ordinary-source",
+  "progress/broker-durable-prepared-session",
+  "progress/generic-ci-sharding",
   "progress/w0-host-link-closure-v1",
   "progress/broker-v4-inert-foundation",
   "progress/protected-service-descriptor-admission",
@@ -43,6 +47,10 @@ export type ProgressNarrativeId = (typeof progressNarrativeIds)[number];
 
 export const progressNarrativeFingerprints = deepFreeze({
   "progress/last-audited-public-baseline": "e1e6c3c7c92857aa439bdc6730b24b841c913ad80d7a961bcb5264145d93d89c",
+  "progress/worker-v2-ack-harness-isolation": "7ad80de98ea98c5a77250dca2c27f459578f1904a57cfffb3fb287017aa36800",
+  "progress/row-softmax-ordinary-source": "c41e5a6c7cdd3e72778078784296c3653a7d9f3d5e049fa6ce7d3404739867a4",
+  "progress/broker-durable-prepared-session": "645ae73c79a9a67c76acb71450bcb835900fee5a8215c3fe2066766bb60552d4",
+  "progress/generic-ci-sharding": "06ca2463ddae9856c0df40725f779c409461482c4068ab5e2eab5a6ea2699f0b",
   "progress/w0-host-link-closure-v1": "d41817d578eb295f4730421f61540263d324d0190bf844abf7ef8ca17a36c3c1",
   "progress/broker-v4-inert-foundation": "fa00c5923d3c1931d0d751ebe39159b1797ffb38d083b7514c6fb739dc2dceb9",
   "progress/protected-service-descriptor-admission": "31ccb2cd4025a829ce22fb8247061d88a0fa4883ba5bb414944da834f6313f2e",
