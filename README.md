@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`c84c272926c14496282cdd355b580f40c04de6a7`, tree
-`df9ecbf578938ee1f178e1270a9e1e66760d73bd`. Deployment requires
+`2f7c4fd1dfef7b9056caab0880700e3da7eeef03`, tree
+`96d4275e7efde8ef594ef34b1c28f95d3000c8dc`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -383,59 +383,43 @@ wire tests. This is identity, compatibility, and architecture infrastructure;
 no Pliron dependency or production selector has landed, and no executable
 Pliron lowering or #135 persistent-service implementation is claimed.
 
-Compiler-refactor sequence through
-`db7bfdc8e0f1ab559b21662262516d0e5498180e`, tree
-`70eeb4b9ac25f73017007e75dac9156176c07926`, adds bounded
-compiler architecture infrastructure on top of that starting point. Stable
-Pliron-independent MIR and AMDGCN models now sit below compatibility dialect
-facades, while bounded compiler, proof, service, and host contracts use
-fixed-width identities and explicit validation boundaries. The real Pliron D0
-context/pass shell is pinned to upstream Pliron v0.17.0 commit
-`2610651306ea3ba670f68d5d8b1e1159bcd521ed`; D0 has no `pliron-llvm`
-path. Target-neutral kernel, tile, schedule, autotune, dispatch, GPU, and proof
-dialect shells have explicit registration, and the real MIR Pliron shell is
-opt-in behind the `dialect-mir` `pliron` feature.
+Public checkpoint `2f7c4fd1dfef7b9056caab0880700e3da7eeef03`, tree
+`96d4275e7efde8ef594ef34b1c28f95d3000c8dc`, advances the issue #134/#135
+compiler architecture while making the Pliron ownership limit explicit. Stable
+Pliron-independent MIR and AMDGCN models remain below compatibility dialect
+facades. Upstream Pliron v0.17.0 commit
+`2610651306ea3ba670f68d5d8b1e1159bcd521ed` is integrated through a private
+process-local identity anchor that registers and verifies contexts. Its bounded
+`PassPlan` is deliberately non-executing: generic pass execution remains
+withheld until issue #140 provides owner-aware upstream handles. There is no
+`pliron-llvm` path.
 
-The new driver isolates `Legacy`, `PlironShadow`, and `PlironV1`: exactly one
-selected backend runs, errors never fall back to a different backend, and the
-inspect-only shadow path cannot return an executable candidate. This does not
-switch the production compiler selector. Authority-free host/service contracts
-and typestates describe structural, causal, generation, and borrow boundaries
-without compiling, authenticating, loading, dispatching, waiting, executing,
-attesting quiescence, or releasing runtime authority. Commit `9796afeb6` adds
-one bounded `kernel.algorithm_root` to target-neutral `gpu.*` lowering shell;
-it does not select AMDGCN or compile, link, publish, load, launch, tune, or
-grant proof/runtime authority.
+The exact-byte KIR V1-V5 bridge is now opaque and context-bound. It checks the
+originating context before any operation dereference and rejects same-slot
+foreign contexts, transplanted identity markers, substitution, stale handles,
+and erased state. MIR-to-kernel and kernel-to-GPU are detached context-bound
+services rather than Pliron `Pass` implementations. Their results retain
+context identity, unsupported input and exhausted bounds remain terminal typed
+errors, and failure cannot return a result or fall back to another backend.
 
-Commit `7d783fdec1bc9439d0eadf2afde26dc2ab4f39fc` adds an
-authority-neutral exact-byte envelope between canonical KIR V1-V5 and the
-Pliron kernel/GPU shells. Canonical KIR bytes remain the only durable record
-and are stored unchanged with redundant wire-version and module-identity
-metadata. The deterministic shell projection is an inert index, not a second
-KIR serialization or semantic lowering; recovery returns the original bytes
-only after decoding, revalidation, redundant-field checks, and exact projection
-matching. Commit `db7bfdc8e0f1ab559b21662262516d0e5498180e` then adds a
-deliberately narrow, bounded MIR-to-kernel shell. It accepts only a verified
-`mir.module` whose functions contain canonical blocks and returns, maps those
-functions to source-ordered `kernel.algorithm_root` operations, and treats
-unsupported operations, malformed structure, unsupported rank, and exhausted
-source or rewrite bounds as terminal typed errors. It has no fallback and
-never reports a result after failure.
+The same checkpoint extends the `fe2o3-drm-uapi`, `fe2o3-kfd-uapi`,
+`fe2o3-kfd`, and `fe2o3-runtime-model` pure-Rust foundations through KFD 1.18
+and reviewed DRM identity UAPI bindings, strict sysfs topology discovery,
+firmware and partition observations, and device-generation Verus models. On
+MI300X, the audit, 78 focused tests, strict Clippy, warning-free rustdoc, six
+Verus obligations, four rejected proof mutations, all-eight-device topology
+discovery, and one checked gfx942 identity admission passed. The concrete
+observation is not sealed runtime authority, does not detect a GPU reset, and
+does not provide production queues, persistent execution, or a replacement for
+HIP/HSA. The ancestor generic-core and gfx942 ROCm compile gates also passed;
+the full workspace strict-Clippy run still has pre-existing fixture and
+`kernel_ir_lowering.rs` lint debt.
 
-These are issue #134/#135 infrastructure increments, not completion of either
-issue. They change no kernel functionality, performance, evidence, tutorial
-run/verify/evidence gate, explanatory-source label, or cuda-oxide parity row.
-No previously explanatory kernel becomes functional. Device-code finalization
+Issues #134, #135, and #140 remain open. This checkpoint changes no kernel
+functionality, performance, evidence, tutorial run/verify/evidence gate,
+explanatory-source label, or cuda-oxide parity row. Device-code finalization
 remains pinned upstream LLVM target-machine APIs plus in-process LLD, with no
 COMGR path.
-
-The checked-in publication target is descendant
-`c84c272926c14496282cdd355b580f40c04de6a7`, tree
-`df9ecbf578938ee1f178e1270a9e1e66760d73bd`, records the extended bridge and
-lowering boundaries in the implementation documentation. The compiler-refactor
-summary here remains bounded through `db7bfdc8e`; the later documentation pin
-does not change the kernel, performance, evidence, or authority limitations
-stated here.
 
 Ancestor commit `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
 `6636f342efa8d2caf40a9bed253330972090326f`, adds an independently accepted

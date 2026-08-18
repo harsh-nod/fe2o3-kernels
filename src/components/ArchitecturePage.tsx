@@ -38,23 +38,23 @@ export function ArchitecturePage() {
       </section>
       <section>
         <p className="section-kicker">Current implementation</p>
-        <h2>Bounded compiler refactor through db7bfdc8e</h2>
+        <h2>Pliron ownership and device identity at 2f7c4fd1d</h2>
         <div className="pin-details">
           <div><span>Publication</span><code>{progressSnapshot.eventualPublicCommit}</code></div>
-          <div><span>Refactor through</span><code>db7bfdc8e0f1ab559b21662262516d0e5498180e</code></div>
+          <div><span>Tree</span><code>{progressSnapshot.eventualPublicTree}</code></div>
           <div><span>Pliron</span><code>2610651306ea3ba670f68d5d8b1e1159bcd521ed</code></div>
-          <div><span>Issues</span><code>#134 / #135 open</code></div>
+          <div><span>Issues</span><code>#134 / #135 / #140 open</code></div>
         </div>
         <div className="architecture-rows">
           {[
             ["Canonical contracts", "Pliron-independent MIR and AMDGCN models plus bounded compiler, proof, service, and host contracts retain stable identities and validation boundaries."],
-            ["Pliron D0", "A real context and pass shell is pinned to upstream Pliron v0.17.0; D0 has no pliron-llvm or production-selection authority."],
+            ["Pliron ownership", "A private process-local identity anchor registers and verifies contexts. PassPlan is bounded and non-executing; generic pass execution remains withheld until issue #140 provides owner-aware upstream handles."],
             ["Neutral dialects", "Kernel, tile, schedule, autotune, dispatch, GPU, and proof shells register explicitly; the real MIR shell remains feature-gated."],
-            ["Exact-byte KIR envelope", "Commit 7d783fdec preserves canonical KIR V1-V5 bytes unchanged and checks redundant wire, identity, and shell-projection metadata before returning the original bytes."],
-            ["MIR to kernel", "Commit db7bfdc8e maps only a narrow verified MIR module to source-ordered kernel roots; unsupported shapes and exhausted bounds are terminal typed errors with no fallback or result after failure."],
+            ["Context-bound KIR", "The opaque exact-byte KIR V1-V5 envelope verifies its originating context before any dereference and rejects foreign-context substitution, transplanted markers, and stale handles."],
+            ["Detached lowerers", "MIR-to-kernel and kernel-to-GPU are context-bound services, not Pliron Pass implementations. Results retain context identity and stale or erased source handles produce typed terminal errors."],
             ["Selector isolation", "Legacy, PlironShadow, and PlironV1 have separate slots, exactly one route runs, failures never fall back, and shadow cannot return an executable candidate."],
             ["Host and service", "Authority-free contracts and typestates describe lifecycle, causality, generations, and borrows without compiling, loading, dispatching, waiting, or executing."],
-            ["Kernel to GPU", "The bounded shell lowers kernel.algorithm_root only to target-neutral gpu.* operations; it does not select AMDGCN or produce executable code."],
+            ["Checked device identity", "Pure-Rust KFD 1.18 and DRM UAPI bindings, strict sysfs topology discovery, and device-generation models admit the checked gfx942 identity. The observation is not sealed runtime authority and does not detect GPU reset."],
             ["Finalization", "The direction remains pinned upstream LLVM target-machine APIs plus in-process LLD. No COMGR path is introduced."],
           ].map(([name, detail], index) => (
             <div className="architecture-row" key={name}>
@@ -65,7 +65,8 @@ export function ArchitecturePage() {
           ))}
         </div>
         <p className="status-boundary">
-          These shells and contracts do not complete issue #134 or #135,
+          These services, models, and contracts do not complete issue #134,
+          #135, or #140,
           change kernel run/verify/evidence gates, make an explanatory lesson
           kernel functional, establish performance or GPU evidence, or promote
           cuda-oxide parity.

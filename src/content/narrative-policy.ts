@@ -137,8 +137,8 @@ export const stagedEvidenceLessonIds = deepFreeze([
 export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
   "read-the-evidence/differentiator": "7d4f9897c50993ecbe6e8d9f94162e6cf649f669f1f555627f9d2df5cb0147d7",
-  "read-the-evidence/compiler-refactor": "b04d7b2d88322033db782b209ac714a145523810bd40a6fdf247409f7ad09310",
-  "read-the-evidence/scalar-gemm-checkpoint": "02e62fa94cb828593cddd93c53e92f122ecd536c992f8fef29743f9ea097fe70",
+  "read-the-evidence/compiler-refactor": "f3a83b822f6f526b5899adc5dd1784a8b6681068efe3253bb4cd40b325148480",
+  "read-the-evidence/scalar-gemm-checkpoint": "2565983947f38bbc31d7708bf80cdb2c410837c01f1e1f177613adb698855b2a",
   "read-the-evidence/moe-bounded-evidence": "dbd3365e78d1b08d60b330328166e39fe46b1d7174d6ec0ca46811542757e361",
   "gfx942-setup/toolchain": "bde4a23bc51376d828c8b910ab8048c988c7f838736f1d309bea0294fde84ef3",
   "gfx942-setup/sequence": "00a0689fb93a27622076f9bd21c5fb8c0b78c57d88d79dc8db0bfb86596315da",

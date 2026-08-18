@@ -529,8 +529,8 @@ export const developmentCheckpoints = deepFreeze([
   {
     id: "compiler-refactor-infrastructure",
     kind: "narrative",
-    name: "Bounded compiler architecture refactor through db7bfdc8e",
-    commit: "db7bfdc8e0f1ab559b21662262516d0e5498180e",
+    name: "Pliron ownership and device identity at 2f7c4fd1d",
+    commit: "2f7c4fd1dfef7b9056caab0880700e3da7eeef03",
     state: "public",
     narrativeId: "progress/compiler-refactor-infrastructure",
   },

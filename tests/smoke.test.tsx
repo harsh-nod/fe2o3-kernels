@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("c84c272926c1")).toBeInTheDocument();
+    expect(screen.getByText("2f7c4fd1dfef")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,25 +113,26 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "df9ecbf578938ee1f178e1270a9e1e66760d73bd",
+      "96d4275e7efde8ef594ef34b1c28f95d3000c8dc",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
     const compilerRefactor = screen
-      .getByText("Bounded compiler architecture refactor through db7bfdc8e")
+      .getByText("Pliron ownership and device identity at 2f7c4fd1d")
       .closest("article");
     expect(compilerRefactor).toHaveTextContent("2610651306ea3ba670f68d5d8b1e1159bcd521ed");
-    expect(compilerRefactor).toHaveTextContent("no production selector is switched");
-    expect(compilerRefactor).toHaveTextContent("do not complete issue #134 or #135");
-    expect(compilerRefactor).toHaveTextContent("change any kernel run/verify/evidence gate");
-    expect(compilerRefactor).toHaveTextContent("7d783fdec1bc9439d0eadf2afde26dc2ab4f39fc");
-    expect(compilerRefactor).toHaveTextContent("canonical KIR V1-V5 bytes remain the only durable record");
+    expect(compilerRefactor).toHaveTextContent("PassPlan is bounded and non-executing");
+    expect(compilerRefactor).toHaveTextContent("Issues #134, #135, and #140 remain open");
+    expect(compilerRefactor).toHaveTextContent("run/verify/evidence gate");
+    expect(compilerRefactor).toHaveTextContent("opaque KIR bridge preserves canonical V1-V5 bytes");
     expect(compilerRefactor).toHaveTextContent("not a second KIR serialization or semantic lowering");
-    expect(compilerRefactor).toHaveTextContent("db7bfdc8e0f1ab559b21662262516d0e5498180e");
-    expect(compilerRefactor).toHaveTextContent("terminal typed errors");
+    expect(compilerRefactor).toHaveTextContent("detached context-bound services");
+    expect(compilerRefactor).toHaveTextContent("typed terminal errors");
     expect(compilerRefactor).toHaveTextContent("no fallback and no result after failure");
-    expect(compilerRefactor).toHaveTextContent("no COMGR path");
+    expect(compilerRefactor).toHaveTextContent("no COMGR or pliron-llvm path");
+    expect(compilerRefactor).toHaveTextContent("checked MI300X identity");
+    expect(compilerRefactor).toHaveTextContent("does not detect GPU reset");
     expect(screen.getByText("Worker V2 ACK harness isolation").closest("article")).toHaveTextContent(
       "test-harness determinism repair only",
     );
@@ -236,17 +237,20 @@ describe("application shell", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: "Bounded compiler refactor through db7bfdc8e",
+        name: "Pliron ownership and device identity at 2f7c4fd1d",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("#134 / #135 open")).toBeInTheDocument();
-    expect(screen.getByText(/Commit 7d783fdec preserves/)).toHaveTextContent(
-      "returning the original bytes",
+    expect(screen.getByText("#134 / #135 / #140 open")).toBeInTheDocument();
+    expect(screen.getByText(/The opaque exact-byte KIR/)).toHaveTextContent(
+      "rejects foreign-context substitution",
     );
-    expect(screen.getByText(/Commit db7bfdc8e maps only/)).toHaveTextContent(
-      "terminal typed errors with no fallback or result after failure",
+    expect(screen.getByText(/MIR-to-kernel and kernel-to-GPU/)).toHaveTextContent(
+      "not Pliron Pass implementations",
     );
-    expect(screen.getByText(/These shells and contracts do not complete/)).toHaveTextContent(
+    expect(screen.getByText(/Pure-Rust KFD 1.18 and DRM UAPI/)).toHaveTextContent(
+      "not sealed runtime authority",
+    );
+    expect(screen.getByText(/These services, models, and contracts do not complete/)).toHaveTextContent(
       "make an explanatory lesson kernel functional",
     );
     expect(screen.getByText(/The direction remains pinned upstream LLVM/)).toHaveTextContent(
@@ -256,7 +260,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open implementation checkpoint/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/c84c272926c14496282cdd355b580f40c04de6a7",
+      "https://github.com/harsh-nod/fe2o3/tree/2f7c4fd1dfef7b9056caab0880700e3da7eeef03",
     );
   });
 });

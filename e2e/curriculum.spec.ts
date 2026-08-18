@@ -388,10 +388,10 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Bounded compiler refactor through db7bfdc8e",
+      name: "Pliron ownership and device identity at 2f7c4fd1d",
     }),
   ).toBeVisible();
-  await expect(page.getByText(/These shells and contracts do not complete/)).toContainText(
+  await expect(page.getByText(/These services, models, and contracts do not complete/)).toContainText(
     "make an explanatory lesson kernel functional",
   );
   await page.goto("./#/status");
