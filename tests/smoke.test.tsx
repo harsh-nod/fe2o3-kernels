@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("86c4ca67a673")).toBeInTheDocument();
+    expect(screen.getByText("c84c272926c1")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,11 +113,25 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "28f0ef6525290eb1be2ddcad72a785816502f547",
+      "df9ecbf578938ee1f178e1270a9e1e66760d73bd",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
+    const compilerRefactor = screen
+      .getByText("Bounded compiler architecture refactor through db7bfdc8e")
+      .closest("article");
+    expect(compilerRefactor).toHaveTextContent("2610651306ea3ba670f68d5d8b1e1159bcd521ed");
+    expect(compilerRefactor).toHaveTextContent("no production selector is switched");
+    expect(compilerRefactor).toHaveTextContent("do not complete issue #134 or #135");
+    expect(compilerRefactor).toHaveTextContent("change any kernel run/verify/evidence gate");
+    expect(compilerRefactor).toHaveTextContent("7d783fdec1bc9439d0eadf2afde26dc2ab4f39fc");
+    expect(compilerRefactor).toHaveTextContent("canonical KIR V1-V5 bytes remain the only durable record");
+    expect(compilerRefactor).toHaveTextContent("not a second KIR serialization or semantic lowering");
+    expect(compilerRefactor).toHaveTextContent("db7bfdc8e0f1ab559b21662262516d0e5498180e");
+    expect(compilerRefactor).toHaveTextContent("terminal typed errors");
+    expect(compilerRefactor).toHaveTextContent("no fallback and no result after failure");
+    expect(compilerRefactor).toHaveTextContent("no COMGR path");
     expect(screen.getByText("Worker V2 ACK harness isolation").closest("article")).toHaveTextContent(
       "test-harness determinism repair only",
     );
@@ -214,6 +228,35 @@ describe("application shell", () => {
     expect(candidateCard).toHaveTextContent("all 625 count vectors");
     expect(candidateCard).toHaveTextContent(
       "upload/readback test is no kernel dispatch",
+    );
+  });
+
+  it("renders the compiler refactor as authority-free architecture infrastructure", () => {
+    renderApp("/architecture");
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Bounded compiler refactor through db7bfdc8e",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("#134 / #135 open")).toBeInTheDocument();
+    expect(screen.getByText(/Commit 7d783fdec preserves/)).toHaveTextContent(
+      "returning the original bytes",
+    );
+    expect(screen.getByText(/Commit db7bfdc8e maps only/)).toHaveTextContent(
+      "terminal typed errors with no fallback or result after failure",
+    );
+    expect(screen.getByText(/These shells and contracts do not complete/)).toHaveTextContent(
+      "make an explanatory lesson kernel functional",
+    );
+    expect(screen.getByText(/The direction remains pinned upstream LLVM/)).toHaveTextContent(
+      "No COMGR path is introduced",
+    );
+    expect(
+      screen.getByRole("link", { name: /Open implementation checkpoint/ }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/tree/c84c272926c14496282cdd355b580f40c04de6a7",
     );
   });
 });

@@ -385,6 +385,15 @@ test("every internal curriculum route resolves without page overflow", async ({
       name: "Evidence pipeline and authority boundaries",
     }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Bounded compiler refactor through db7bfdc8e",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText(/These shells and contracts do not complete/)).toContainText(
+    "make an explanatory lesson kernel functional",
+  );
   await page.goto("./#/status");
   await expect(
     page.getByRole("heading", {

@@ -30,6 +30,7 @@ export interface KernelProgress {
 
 export const developmentCheckpointIds = deepFreeze([
   "eventual-public-main",
+  "compiler-refactor-infrastructure",
   "worker-v2-ack-harness-isolation",
   "row-softmax-ordinary-source",
   "broker-durable-prepared-session",
@@ -129,7 +130,7 @@ export type DevelopmentCheckpoint =
   | StagedEvidenceDevelopmentCheckpoint;
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-17",
+  reviewedOn: "2026-08-18",
   auditedCommit: FE2O3_PIN.commit,
   lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
   lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
@@ -250,6 +251,10 @@ const developmentCheckpointSpecs = deepFreeze({
   "eventual-public-main": {
     kind: "publication-gate",
     commit: progressSnapshot.eventualPublicCommit,
+  },
+  "compiler-refactor-infrastructure": {
+    kind: "narrative",
+    narrativeId: "progress/compiler-refactor-infrastructure",
   },
   "worker-v2-ack-harness-isolation": {
     kind: "narrative",
@@ -520,6 +525,14 @@ export const developmentCheckpoints = deepFreeze([
     name: "Published implementation snapshot (publication gated)",
     commit: progressSnapshot.eventualPublicCommit,
     state: "public",
+  },
+  {
+    id: "compiler-refactor-infrastructure",
+    kind: "narrative",
+    name: "Bounded compiler architecture refactor through db7bfdc8e",
+    commit: "db7bfdc8e0f1ab559b21662262516d0e5498180e",
+    state: "public",
+    narrativeId: "progress/compiler-refactor-infrastructure",
   },
   {
     id: "worker-v2-ack-harness-isolation",

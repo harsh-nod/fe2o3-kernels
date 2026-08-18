@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`86c4ca67a673bfec966f79e6c701104db872d8ea`, tree
-`28f0ef6525290eb1be2ddcad72a785816502f547`. Deployment requires
+`c84c272926c14496282cdd355b580f40c04de6a7`, tree
+`df9ecbf578938ee1f178e1270a9e1e66760d73bd`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -347,11 +347,11 @@ Commit `5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4`, tree
 one core job, eight rustc-codegen shards covering all 19 current Cargo test
 targets exactly once, and a fail-closed aggregate. Locked Cargo metadata is the
 authoritative target inventory. All shards and policy checks passed in isolated
-MI300X worktrees. At the current public tip, the complete `powderluv/fe2o3`
+MI300X worktrees. At the later `86c4ca67a` public checkpoint, the complete `powderluv/fe2o3`
 GitHub-hosted generic run, including all eight shards and the fail-closed
 aggregate, also passed. The complete serial generic gate remains intact.
 
-Current public commit `86c4ca67a673bfec966f79e6c701104db872d8ea`, tree
+Ancestor public commit `86c4ca67a673bfec966f79e6c701104db872d8ea`, tree
 `28f0ef6525290eb1be2ddcad72a785816502f547`, integrates 34 descendants of
 that sharding checkpoint. The bounded delta canonicalizes provider identities
 and paths, completes the Wave64 and workgroup MIR V3 inputs, repins the exact
@@ -374,7 +374,7 @@ test-determinism, and release-order changes only; they do not
 promote a parity row or grant source-to-machine, memory-safety, race-freedom,
 protected-runtime, or GPU authority.
 
-The same public tip starts issue #134 Wave 0 with a normative Rust-first Pliron
+That ancestor starts issue #134 Wave 0 with a normative Rust-first Pliron
 architecture and proof-boundary decision, fixed-width Pliron-independent
 `KernelItemId` and `KernelInstId` V1 records, and frozen V1-V5 Kernel IR
 compatibility guards. The contracts suite passes 44 tests plus one doctest, and
@@ -382,6 +382,60 @@ the new compatibility suite passes six focused tests alongside 67 existing
 wire tests. This is identity, compatibility, and architecture infrastructure;
 no Pliron dependency or production selector has landed, and no executable
 Pliron lowering or #135 persistent-service implementation is claimed.
+
+Compiler-refactor sequence through
+`db7bfdc8e0f1ab559b21662262516d0e5498180e`, tree
+`70eeb4b9ac25f73017007e75dac9156176c07926`, adds bounded
+compiler architecture infrastructure on top of that starting point. Stable
+Pliron-independent MIR and AMDGCN models now sit below compatibility dialect
+facades, while bounded compiler, proof, service, and host contracts use
+fixed-width identities and explicit validation boundaries. The real Pliron D0
+context/pass shell is pinned to upstream Pliron v0.17.0 commit
+`2610651306ea3ba670f68d5d8b1e1159bcd521ed`; D0 has no `pliron-llvm`
+path. Target-neutral kernel, tile, schedule, autotune, dispatch, GPU, and proof
+dialect shells have explicit registration, and the real MIR Pliron shell is
+opt-in behind the `dialect-mir` `pliron` feature.
+
+The new driver isolates `Legacy`, `PlironShadow`, and `PlironV1`: exactly one
+selected backend runs, errors never fall back to a different backend, and the
+inspect-only shadow path cannot return an executable candidate. This does not
+switch the production compiler selector. Authority-free host/service contracts
+and typestates describe structural, causal, generation, and borrow boundaries
+without compiling, authenticating, loading, dispatching, waiting, executing,
+attesting quiescence, or releasing runtime authority. Commit `9796afeb6` adds
+one bounded `kernel.algorithm_root` to target-neutral `gpu.*` lowering shell;
+it does not select AMDGCN or compile, link, publish, load, launch, tune, or
+grant proof/runtime authority.
+
+Commit `7d783fdec1bc9439d0eadf2afde26dc2ab4f39fc` adds an
+authority-neutral exact-byte envelope between canonical KIR V1-V5 and the
+Pliron kernel/GPU shells. Canonical KIR bytes remain the only durable record
+and are stored unchanged with redundant wire-version and module-identity
+metadata. The deterministic shell projection is an inert index, not a second
+KIR serialization or semantic lowering; recovery returns the original bytes
+only after decoding, revalidation, redundant-field checks, and exact projection
+matching. Commit `db7bfdc8e0f1ab559b21662262516d0e5498180e` then adds a
+deliberately narrow, bounded MIR-to-kernel shell. It accepts only a verified
+`mir.module` whose functions contain canonical blocks and returns, maps those
+functions to source-ordered `kernel.algorithm_root` operations, and treats
+unsupported operations, malformed structure, unsupported rank, and exhausted
+source or rewrite bounds as terminal typed errors. It has no fallback and
+never reports a result after failure.
+
+These are issue #134/#135 infrastructure increments, not completion of either
+issue. They change no kernel functionality, performance, evidence, tutorial
+run/verify/evidence gate, explanatory-source label, or cuda-oxide parity row.
+No previously explanatory kernel becomes functional. Device-code finalization
+remains pinned upstream LLVM target-machine APIs plus in-process LLD, with no
+COMGR path.
+
+The checked-in publication target is descendant
+`c84c272926c14496282cdd355b580f40c04de6a7`, tree
+`df9ecbf578938ee1f178e1270a9e1e66760d73bd`, records the extended bridge and
+lowering boundaries in the implementation documentation. The compiler-refactor
+summary here remains bounded through `db7bfdc8e`; the later documentation pin
+does not change the kernel, performance, evidence, or authority limitations
+stated here.
 
 Ancestor commit `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
 `6636f342efa8d2caf40a9bed253330972090326f`, adds an independently accepted

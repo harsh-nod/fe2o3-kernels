@@ -1288,6 +1288,39 @@ describe("curriculum integrity", () => {
     expect(JSON.stringify(lessons)).not.toMatch(
       /guarded hardware (?:run|result)/iu,
     );
+
+    const compilerRefactor = JSON.stringify(
+      narrativeEntry("read-the-evidence/compiler-refactor"),
+    );
+    expect(compilerRefactor).toContain(
+      "9796afeb62e9bb0063d0facf34a4f21b1876377e",
+    );
+    expect(compilerRefactor).toContain(
+      "7d783fdec1bc9439d0eadf2afde26dc2ab4f39fc",
+    );
+    expect(compilerRefactor).toContain(
+      "canonical KIR bytes unchanged on a Pliron module",
+    );
+    expect(compilerRefactor).toContain(
+      "not a second KIR serialization, semantic lowering",
+    );
+    expect(compilerRefactor).toContain(
+      "db7bfdc8e0f1ab559b21662262516d0e5498180e",
+    );
+    expect(compilerRefactor).toContain("terminal typed errors");
+    expect(compilerRefactor).toContain("no fallback and no result after failure");
+    expect(compilerRefactor).toContain(
+      "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
+    );
+    expect(compilerRefactor).toContain("No production selector switches to Pliron");
+    expect(compilerRefactor).toContain("does not complete issue #134 or #135");
+    expect(compilerRefactor).toContain(
+      "make any explanatory lesson kernel functional",
+    );
+    expect(compilerRefactor).toContain(
+      "pinned upstream LLVM target-machine APIs plus in-process LLD",
+    );
+    expect(compilerRefactor).toContain("No COMGR path is introduced");
   });
 
   it("makes every glossary item searchable and navigable", () => {
@@ -1330,15 +1363,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-17",
+      reviewedOn: "2026-08-18",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
-      eventualPublicTree: "28f0ef6525290eb1be2ddcad72a785816502f547",
+      eventualPublicCommit: "c84c272926c14496282cdd355b580f40c04de6a7",
+      eventualPublicTree: "df9ecbf578938ee1f178e1270a9e1e66760d73bd",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
-        requiredTree: "28f0ef6525290eb1be2ddcad72a785816502f547",
+        requiredCommit: "c84c272926c14496282cdd355b580f40c04de6a7",
+        requiredTree: "df9ecbf578938ee1f178e1270a9e1e66760d73bd",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1356,6 +1389,42 @@ describe("implementation progress integrity", () => {
     expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
       "public-main documentation snapshot is publication-gated",
     );
+    const compilerRefactor = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.id === "compiler-refactor-infrastructure",
+    );
+    expect(compilerRefactor).toMatchObject({
+      name: "Bounded compiler architecture refactor through db7bfdc8e",
+      commit: "db7bfdc8e0f1ab559b21662262516d0e5498180e",
+      state: "public",
+      narrativeId: "progress/compiler-refactor-infrastructure",
+    });
+    const compilerRefactorDetail = developmentCheckpointDetail(compilerRefactor);
+    expect(compilerRefactorDetail).toContain(
+      "upstream Pliron v0.17.0 commit 2610651306ea3ba670f68d5d8b1e1159bcd521ed",
+    );
+    expect(compilerRefactorDetail).toContain("no production selector is switched");
+    expect(compilerRefactorDetail).toContain("do not complete issue #134 or #135");
+    expect(compilerRefactorDetail).toContain("make an explanatory kernel functional");
+    expect(compilerRefactorDetail).toContain(
+      "7d783fdec1bc9439d0eadf2afde26dc2ab4f39fc",
+    );
+    expect(compilerRefactorDetail).toContain(
+      "canonical KIR V1-V5 bytes remain the only durable record",
+    );
+    expect(compilerRefactorDetail).toContain(
+      "not a second KIR serialization or semantic lowering",
+    );
+    expect(compilerRefactorDetail).toContain(
+      "db7bfdc8e0f1ab559b21662262516d0e5498180e",
+    );
+    expect(compilerRefactorDetail).toContain("terminal typed errors");
+    expect(compilerRefactorDetail).toContain(
+      "no fallback and no result after failure",
+    );
+    expect(compilerRefactorDetail).toContain(
+      "pinned upstream LLVM target-machine APIs plus in-process LLD",
+    );
+    expect(compilerRefactorDetail).toContain("no COMGR path");
     const currentNarrative = JSON.stringify(
       narrativeEntry("read-the-evidence/scalar-gemm-checkpoint"),
     );
@@ -1929,7 +1998,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "86c4ca67a673bfec966f79e6c701104db872d8ea",
+      "c84c272926c14496282cdd355b580f40c04de6a7",
     );
 
     const lesson = curriculum

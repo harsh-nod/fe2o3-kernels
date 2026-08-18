@@ -55,6 +55,7 @@ const orientation: Lesson = {
   sections: [
     narrativeSection("read-the-evidence/labels"),
     narrativeSection("read-the-evidence/differentiator"),
+    narrativeSection("read-the-evidence/compiler-refactor"),
     narrativeSection("read-the-evidence/scalar-gemm-checkpoint"),
     narrativeSection("read-the-evidence/moe-bounded-evidence"),
     {
