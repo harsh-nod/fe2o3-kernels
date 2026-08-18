@@ -192,7 +192,7 @@ describe("curriculum integrity", () => {
     );
   });
 
-  it("labels the general GEMM and semantic rejection corpus as roadmap", () => {
+  it("separates Rust UI enforcement, structured KIR, and source diagnostics", () => {
     const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
     expect(lesson?.objectives).toContain(
       "Distinguish safe-Rust kernel source from sealed unsafe compiler and runtime implementation boundaries.",
@@ -202,7 +202,12 @@ describe("curriculum integrity", () => {
       narrativeEntry("gemm-tiling/general-contract"),
     );
     expect(contract).toContain("Current layers, no general execution");
-    expect(contract).toContain("SOURCE_TO_IR=false");
+    expect(contract).toContain(
+      "Only missing-publish and duplicate-store safe source fixtures currently reach semantic KIR diagnostics",
+    );
+    expect(contract).toContain(
+      "SOURCE_TO_IR remains false for the complete general family and all 15 source mutations",
+    );
     expect(contract).toContain("LOWERING=false");
     expect(contract).toContain("PROTECTED_EXECUTION=false");
     expect(contract).toContain("one workgroup per 16x16 C tile");
@@ -210,8 +215,9 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("defined BF16 +0");
     expect(contract).toContain("unconditional publish barrier");
     expect(contract).toContain("alpha*acc[m,n] + beta*C[m,n]");
-    expect(contract).toContain("safe Rust at the user source boundary");
-    expect(contract).toContain("unsafe never discharges or bypasses them");
+    expect(contract).toContain("Ten safe UI fixtures");
+    expect(contract).toContain("not fe2o3 semantic proof diagnostics");
+    expect(contract).toContain("unsafe never discharges or bypasses a verifier obligation");
     for (const [obligation, code] of [
       ["memory_safe", "0x46470101"],
       ["bounds_safe", "0x46470102"],
@@ -243,6 +249,10 @@ describe("curriculum integrity", () => {
     const failures = JSON.stringify(
       narrativeEntry("gemm-tiling/semantic-failures"),
     );
+    expect(failures).toContain("Rust UI and semantic proof are different");
+    expect(failures).toContain("Three local lifecycle mistakes");
+    expect(failures).toContain("Seven more have safe rustc UI tests");
+    expect(failures).toContain("The remaining five are verifier-only");
     for (const fixture of [
       "unguarded_a_tail_load",
       "unguarded_b_tail_load",
@@ -262,10 +272,25 @@ describe("curriculum integrity", () => {
     ]) {
       expect(failures).toContain(fixture);
     }
-    expect(failures).toContain("compile-tests one positive safe-Rust general source");
-    expect(failures).toContain("source/schema evidence only");
-    expect(failures).toContain("not yet passed through authenticated semantic MIR detection");
-    expect(failures).toContain("no descriptor, Worker handoff, object, HSACO");
+    expect(failures).toContain("Rust typestate UI");
+    expect(failures).toContain("Sealed-surface UI plus verifier");
+    expect(failures).toContain("Verifier-only; remains well-typed");
+    expect(failures).toContain("A rustc UI error is not a proof diagnostic");
+    expect(failures).toContain("All 15 are rejected as structured KIR");
+    expect(failures).toContain(
+      "not authenticated source derivation of all 15 graphs",
+    );
+    expect(failures).toContain("missing-publish");
+    expect(failures).toContain("initialized at gpu, 0x46470103; no artifact");
+    expect(failures).toContain("duplicate-store");
+    expect(failures).toContain(
+      "output_region_injective at tile, 0x46470106; no artifact",
+    );
+    expect(failures).toContain("verified but non-authoritative witness plan");
+    expect(failures).toContain("Complete-family flags remain false");
+    expect(failures).toContain("SOURCE_TO_IR=false");
+    expect(failures).toContain("LOWERING=false");
+    expect(failures).toContain("PROTECTED_EXECUTION=false");
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {

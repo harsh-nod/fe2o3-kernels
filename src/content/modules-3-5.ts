@@ -482,7 +482,7 @@ const gemmMapping: Lesson = {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use Worker V2 handoff, admits that handoff into a sealed authority-free exact-profile registry, finalizes it through direct upstream LLVM target-machine and LLD library APIs, prepares exact borrowed A/B/C views with a generated inert host adapter, and consumes those values through a private one-shot Joined -> Loaded -> Completed -> Unloaded lifecycle with exact context, resource, ABI, completion, cancellation, and terminal-unload checks. One public protected route passed on mi300x gfx942 over all 256 output bits with unchanged A/B values and A/B/C guard canaries. The exact bounded Slice 1 source and run are functional. For issue #138, the companion branches now define stable property and report/inventory diagnostic codes and add a compile-tested safe-Rust general source with a sealed typestate device surface. That source remains source-only with SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false; semantic MIR detection and actual compile-fail enforcement remain incomplete. Slice 1 does not authenticate compiler origin, consume Verus certificates, prove compiler refinement or general illegal-access/race freedom, generalize GEMM, or cover protected Slice 3/4, so it is not generalized GEMM or a complete production authority chain.",
+        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use Worker V2 handoff, admits that handoff into a sealed authority-free exact-profile registry, finalizes it through direct upstream LLVM target-machine and LLD library APIs, prepares exact borrowed A/B/C views with a generated inert host adapter, and consumes those values through a private one-shot Joined -> Loaded -> Completed -> Unloaded lifecycle with exact context, resource, ABI, completion, cancellation, and terminal-unload checks. One public protected route passed on mi300x gfx942 over all 256 output bits with unchanged A/B values and A/B/C guard canaries. The exact bounded Slice 1 source and run are functional. Issue #138's second checkpoint separately provides 10 safe companion UI failures, structured-Kernel-IR rejection of all 15 mutations with exact property/stage codes and no-artifact driver gating, and authenticated optimized-MIR integration for only missing-publish and duplicate-store safe source fixtures. Rust UI errors are not fe2o3 proof diagnostics, and the 15 structured mutations are not all source-derived. The positive source reaches only a non-authoritative witness plan; complete-family SOURCE_TO_IR, LOWERING, and PROTECTED_EXECUTION remain false. Slice 1 does not authenticate compiler origin, consume Verus certificates, prove compiler refinement or general illegal-access/race freedom, generalize GEMM, or cover protected Slice 3/4, so it is not generalized GEMM or a complete production authority chain.",
     },
     {
       kind: "compiler-hsaco-observed",
@@ -530,9 +530,9 @@ const gemmMapping: Lesson = {
       acceptance: "Equal output coordinates imply equal workgroup, lane, and fragment element identities.",
     },
     {
-      prompt: "Classify a missing reuse barrier without relying on ordinary Rust type errors.",
-      hint: "Track the LDS epoch read by one lane and the epoch overwritten by a peer in the next K phase.",
-      acceptance: "The fixture type-checks as Rust, fails the named fe2o3 epoch obligation, and publishes no device artifact.",
+      prompt: "Explain why two missing-publish failures can establish different facts.",
+      hint: "Compare the companion typestate UI escape with the separately integrated proof-sensitive safe source fixture.",
+      acceptance: "The rustc UI error carries no fe2o3 proof diagnostic; the integrated source fixture reaches semantic KIR, reports initialized/0x46470103, and emits no artifact.",
     },
   ],
   glossary: [

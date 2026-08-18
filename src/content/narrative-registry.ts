@@ -597,7 +597,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current layers, no general execution",
-        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. For issue #138, the companion compiler branch now implements the stable property and report/inventory code registry shown here. The companion source branch adds a positive safe-Rust general kernel and sealed typestate device surface, but that increment is compile-tested source-only with SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false. Semantic MIR detection, actual negative-fixture enforcement, Pliron GEMM lowering, and general protected execution remain incomplete."
+        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138's second checkpoint adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and a bounded authenticated optimized-MIR frontend. Only missing-publish and duplicate-store safe source fixtures currently reach semantic KIR diagnostics. The positive source reaches a non-authoritative witness plan, then stops because runtime-plan binding, frontend promotion, and lowering are incomplete. SOURCE_TO_IR remains false for the complete general family and all 15 source mutations; LOWERING=false and PROTECTED_EXECUTION=false."
       },
       {
         "type": "paragraph",
@@ -644,7 +644,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Safe source, sealed implementation",
-        "text": "The #138 reference kernel is now represented by compile-tested source that uses safe Rust at the user source boundary: sealed compiler-issued lane/workgroup identities, global views, typestate LDS epochs, barriers, MFMA fragments, and disjoint stores do not require user-written unsafe. Compiler and runtime internals may use narrowly scoped unsafe for address-space pointers, intrinsics, and HSA/KFD ABIs behind sealed capabilities. An expert raw pointer, unchecked access, inline assembly, or other unsafe escape creates the same named proof obligations; unsafe never discharges or bypasses them. This source-only increment does not supersede the currently pinned Slice 1 execution evidence and establishes no source-to-IR, lowering, artifact, or GPU result."
+        "text": "The #138 reference source uses safe Rust at the user boundary: compiler-issued lane/workgroup identities, global views, LDS phase states, barriers, MFMA fragments, and disjoint stores are exposed by a sealed linear companion surface. Ten safe UI fixtures attempt invalid uses of that surface and fail under rustc. Those type, move, or visibility errors establish only the local API restriction; they are not fe2o3 semantic proof diagnostics and carry no 0x464701xx proof authority. Compiler and runtime internals may still use narrowly scoped unsafe behind sealed capabilities, but unsafe never discharges or bypasses a verifier obligation."
       },
       {
         "type": "table",
@@ -700,47 +700,72 @@ const narrativeRegistry = deepFreeze({
   },
   "gemm-tiling/semantic-failures": {
     "sectionId": "semantic-failures",
-    "title": "The semantic compile-fail corpus",
+    "title": "Rust UI and semantic proof are different",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The branch now compile-tests one positive safe-Rust general source and the 15 ordinary safe-Rust mutation sources below, and freezes each mutation's expected property, stage, and stable code. This is source/schema evidence only: the negative sources are not yet passed through authenticated semantic MIR detection, so the compiler has not demonstrated these semantic rejections. A rustc syntax, borrow-check, ordinary trait error, or generic portable-MIR identity mismatch would still not demonstrate that fe2o3 found the named GPU failure."
+        "text": "The safe companion contract assigns one honest source-enforcement owner to each canonical mutation. Three local lifecycle mistakes are fully rejected by Rust typestate. Seven more have safe rustc UI tests that reject attempts to escape the sealed surface, but those UI failures leave dynamic or cross-invocation verifier obligations. The remaining five are verifier-only: ordinary safe Rust can express them, so they must stay well-typed and reach proof-required compiler analysis."
       },
       {
         "type": "table",
         "headers": [
-          "Source fixture ID",
-          "Required failed obligation",
-          "Stable code",
-          "Mutation"
+          "Canonical mutation",
+          "Source enforcement",
+          "Structured-KIR result",
+          "Stage / code"
         ],
         "rows": [
-          ["unguarded_a_tail_load", "bounds_safe", "0x46470102", "Load A for a partial M or K tile without the in-range predicate."],
-          ["unguarded_b_tail_load", "bounds_safe", "0x46470102", "Load B for a partial K or N tile without the in-range predicate."],
-          ["unguarded_c_tail_store", "bounds_safe", "0x46470102", "Store an inactive M/N edge output to C."],
-          ["duplicate_lane_c_write", "output_region_injective", "0x46470106", "Map two lane fragments to the same active C element."],
-          ["overlapping_workgroup_c_tile", "output_region_injective", "0x46470106", "Map distinct workgroups to overlapping C tiles."],
-          ["duplicate_lds_write", "race_free", "0x46470104", "Give two lanes the same LDS destination slot in one phase."],
-          ["lds_read_before_initialization", "initialized", "0x46470103", "Consume an LDS fragment before all owned slots have value-or-zero initialization."],
-          ["missing_publish_barrier", "initialized", "0x46470103", "Read peer-staged LDS without the phase publish barrier."],
-          ["divergent_barrier", "barrier_convergent", "0x46470105", "Place a barrier behind a lane-varying branch or early return."],
-          ["missing_reuse_barrier", "lds_epoch_correct", "0x46470107", "Start overwriting the next K tile while peers may still read the current tile."],
-          ["expired_lds_epoch", "lds_epoch_correct", "0x46470107", "Reuse an LDS view or fragment capability after its phase epoch ends."],
-          ["staged_read_before_wait", "initialized", "0x46470103", "Read an asynchronous or staged transfer before its admitted completion event."],
-          ["accumulator_reset", "accumulator_phase_refinement", "0x46470108", "Replace the carried accumulator with zero between K phases."],
-          ["incorrect_k_tail_zero_fill", "tail_refinement", "0x46470109", "Retain stale LDS data or write a nonzero value for an inactive K element."],
-          ["incorrect_alpha_beta_epilogue", "epilogue_refinement", "0x4647010a", "Swap, omit, or otherwise alter alpha*acc + beta*C."]
+          ["unguarded_a_tail_load", "Verifier-only; remains well-typed", "bounds_safe", "tile / 0x46470102"],
+          ["unguarded_b_tail_load", "Verifier-only; remains well-typed", "bounds_safe", "tile / 0x46470102"],
+          ["unguarded_c_tail_store", "Sealed-surface UI plus verifier", "bounds_safe", "tile / 0x46470102"],
+          ["duplicate_lane_c_write", "Sealed-surface UI plus verifier", "output_region_injective", "tile / 0x46470106"],
+          ["overlapping_workgroup_c_tile", "Sealed-surface UI plus verifier", "output_region_injective", "tile / 0x46470106"],
+          ["duplicate_lds_write", "Sealed-surface UI plus verifier", "race_free", "gpu / 0x46470104"],
+          ["lds_read_before_initialization", "Sealed-surface UI plus verifier", "initialized", "gpu / 0x46470103"],
+          ["missing_publish_barrier", "Rust typestate UI", "initialized", "gpu / 0x46470103"],
+          ["divergent_barrier", "Verifier-only; remains well-typed", "barrier_convergent", "gpu / 0x46470105"],
+          ["missing_reuse_barrier", "Rust typestate UI", "lds_epoch_correct", "gpu / 0x46470107"],
+          ["expired_lds_epoch", "Rust typestate UI", "lds_epoch_correct", "gpu / 0x46470107"],
+          ["staged_read_before_wait", "Sealed-surface UI plus verifier", "initialized", "gpu / 0x46470103"],
+          ["accumulator_reset", "Sealed-surface UI plus verifier", "accumulator_phase_refinement", "kernel / 0x46470108"],
+          ["incorrect_k_tail_zero_fill", "Verifier-only; remains well-typed", "tail_refinement", "kernel / 0x46470109"],
+          ["incorrect_alpha_beta_epilogue", "Verifier-only; remains well-typed", "epilogue_refinement", "kernel / 0x4647010a"]
         ]
       },
       {
         "type": "callout",
         "tone": "warning",
-        "title": "Proof-required means fail closed",
-        "text": "For the proposed production profile, a counterexample, unsupported analysis, missing proof, timeout, incomplete coverage, or unresolved unsafe obligation must be a compile error. The stable property and report/inventory codes are implemented, but their existence is not semantic detection. Completion still requires authenticated MIR analysis to produce the expected failure, retain the kernel root and source span, distinguish a counterexample from unknown or unproved, remove preseeded stale outputs, and emit no descriptor, Worker handoff, object, HSACO, proof authority, or launch authority."
+        "title": "A rustc UI error is not a proof diagnostic",
+        "text": "All 10 companion UI fixtures use safe Rust. Three demonstrate that an invalid local phase transition is unrepresentable through the typestate API. Seven demonstrate that safe code cannot directly forge or duplicate a sealed capability, but each still names a remaining verifier obligation. These rustc type, move, or privacy diagnostics do not carry a fe2o3 0x464701xx property result and do not prove distributed bounds, initialization, injectivity, race freedom, or phase refinement."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "All 15 are rejected as structured KIR",
+        "text": "Independently of the source UI tests, the canonical bounded structured-KIR suite constructs each of the 15 hostile schedules and rejects it with the exact property, owning stage, and code shown above. The proof-required compiler driver consumes those findings through its no-artifact transaction gate. This establishes structured-IR verification and driver gating, not authenticated source derivation of all 15 graphs."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Authenticated source case",
+          "Observed frontend result",
+          "Checkpoint boundary"
+        ],
+        "rows": [
+          ["missing-publish", "initialized at gpu, 0x46470103; no artifact", "A separate well-typed proof-sensitive fixture reaches semantic KIR; this does not turn the companion typestate UI error into a proof result."],
+          ["duplicate-store", "output_region_injective at tile, 0x46470106; no artifact", "A separate safe source fixture reaches semantic KIR; it does not derive the other sealed-surface or corpus mutations."],
+          ["positive general source", "Reaches a verified but non-authoritative witness plan; no artifact", "Runtime-plan binding, frontend promotion, and lowering are incomplete."]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Complete-family flags remain false",
+        "text": "The two authenticated negative source cases are a bounded frontend checkpoint. SOURCE_TO_IR=false remains the honest status for the complete general kernel family and source derivation of all 15 mutations. LOWERING=false and PROTECTED_EXECUTION=false also remain unchanged. The positive witness plan grants no artifact, publication, launch, numerical, performance, or GPU authority."
       },
       {
         "type": "paragraph",
-        "text": "Lower-level hostile Pliron or pass fixtures remain necessary for verifier preservation, but they do not replace source fixtures. Conversely, invalid runtime dimensions, lengths, strides, aliases, or launch limits belong to checked host prepare() errors under the compiler-recorded preconditions, not to compile-time rejection of otherwise general source."
+        "text": "Dynamic dimensions, lengths, strides, aliases, or launch limits remain a third boundary: invalid host values fail checked prepare() under compiler-recorded preconditions. They are neither rustc typestate errors nor proof diagnostics for a static source mutation."
       }
     ]
   },
