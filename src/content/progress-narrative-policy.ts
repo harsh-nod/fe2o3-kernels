@@ -48,7 +48,7 @@ export type ProgressNarrativeId = (typeof progressNarrativeIds)[number];
 
 export const progressNarrativeFingerprints = deepFreeze({
   "progress/last-audited-public-baseline": "e1e6c3c7c92857aa439bdc6730b24b841c913ad80d7a961bcb5264145d93d89c",
-  "progress/compiler-refactor-infrastructure": "0b40ea035277344a129ee3bcd1d6a8d680dc123e3812c18f7b876c83300a2eeb",
+  "progress/compiler-refactor-infrastructure": "dc47a0a40c9acaf223fe474745aa610f2df8ce93dd30c09709aa28772b077017",
   "progress/worker-v2-ack-harness-isolation": "7ad80de98ea98c5a77250dca2c27f459578f1904a57cfffb3fb287017aa36800",
   "progress/row-softmax-ordinary-source": "c41e5a6c7cdd3e72778078784296c3653a7d9f3d5e049fa6ce7d3404739867a4",
   "progress/broker-durable-prepared-session": "645ae73c79a9a67c76acb71450bcb835900fee5a8215c3fe2066766bb60552d4",
