@@ -626,15 +626,15 @@ at compiler preflight with the expected property, stage, `0x464701xx` code, root
 symbol, source and terminal spans, reachable call chain, and no artifact.
 
 Those compile-time failures are bounded mutation-oracle source-to-diagnostic
-evidence. The positive production source reaches only a structural,
-non-authoritative frontend correspondence. The exact
-`collected-general-gemm-v1` selector and its in-process production route are
-wired, but authenticated proof execution always fails closed with
-`AuthenticatedRuntimeClosureUnavailable` before either schedule enters Worker
-V2 or durable publication. The private final pair join and a qualified protected
-general-GEMM hardware launch therefore remain unreachable in practice.
-Complete-family `SOURCE_TO_IR=false`, `LOWERING=false`, and
-`PROTECTED_EXECUTION=false` remain unchanged.
+evidence. The exact `collected-general-gemm-v1` selector exists, but canonical
+positive structural analysis always fails closed because a closed verifier for
+the safe-code root and its reachable helper MIR is not yet implemented. The
+failure occurs before any positive receipt, frontend correspondence,
+configuration admission, proof execution, Worker V2 handoff, private final pair
+join, durable publication, or protected launch. The authenticated proof runtime
+closure remains an independent second downstream blocker, but the current route
+does not reach configuration or proof. Complete-family `SOURCE_TO_IR=false`,
+`LOWERING=false`, and `PROTECTED_EXECUTION=false` remain unchanged.
 
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish

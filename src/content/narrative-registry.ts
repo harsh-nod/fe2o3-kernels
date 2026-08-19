@@ -667,7 +667,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "All 15 fail at compile time, no general execution",
-        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138 adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and authenticated optimized-MIR import. An exact safe Rust mutation-oracle corpus now derives all 15 files by one reversible edit of the same full baseline. Individual managed MI300X builds reject every mutation at compiler preflight with its expected property, stage, 0x464701xx code, root and span chain, and zero artifacts. The positive production source reaches only a structural non-authoritative frontend correspondence. The exact collected-general-gemm-v1 selector and its in-process production route are wired, but authenticated proof execution always fails closed with AuthenticatedRuntimeClosureUnavailable before Worker V2 or durable publication. The private final pair join and a qualified protected general-GEMM launch therefore remain unreachable in practice. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the complete-family status."
+        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138 adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and authenticated optimized-MIR import. An exact safe Rust mutation-oracle corpus now derives all 15 files by one reversible edit of the same full baseline. Individual managed MI300X builds reject every mutation at compiler preflight with its expected property, stage, 0x464701xx code, root and span chain, and zero artifacts. The exact collected-general-gemm-v1 selector exists, but canonical positive structural analysis always fails closed because no closed verifier yet covers the safe-code root and its reachable helper MIR. The failure occurs before any positive receipt, frontend correspondence, configuration admission, proof execution, Worker V2 handoff, private final pair join, durable publication, or protected launch. The authenticated proof runtime closure remains an independent second downstream blocker, but the current route does not reach it. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the complete-family status."
       },
       {
         "type": "paragraph",
@@ -828,9 +828,9 @@ const narrativeRegistry = deepFreeze({
           "Authority boundary"
         ],
         "rows": [
-          ["Positive production source", "Authenticates structural optimized-MIR facts into a non-Clone frontend correspondence", "The collected-general-gemm-v1 selector enters a dedicated no-fallback in-process route."],
-          ["Private final pair join", "Compiles and checks the source owner against verifier and post-link machine owners for the ordered reference and vectorized schedules", "The production route owns the join call, but the preceding fail-closed proof boundary makes it unreachable in practice; public identities cannot reconstruct it."],
-          ["Verus runtime closure", "Implements exact pinning and retention for the reviewed root-owned closure across the qualification boundaries", "Proof execution always returns AuthenticatedRuntimeClosureUnavailable before Worker V2 or durable publication."],
+          ["Positive production source", "Runs canonical optimized-MIR structural analysis without issuing a positive receipt or frontend correspondence", "The collected-general-gemm-v1 selector exists, but analysis always fails closed until a closed verifier covers the safe-code root and reachable helper MIR."],
+          ["Private final pair join", "Compiles and checks the source owner against verifier and post-link machine owners for the ordered reference and vectorized schedules", "It is unreachable because positive analysis stops before receipt, correspondence, configuration, and proof; public identities cannot reconstruct it."],
+          ["Verus runtime closure", "Implements exact pinning and retention for the reviewed root-owned closure across the qualification boundaries", "It remains a second downstream blocker, but the current positive route never reaches configuration or proof execution."],
           ["Protected hardware", "No qualified general-GEMM launch", "There is no protected dispatch, numerical GPU result, or production execution authority for the general kernel."]
         ]
       },
@@ -838,7 +838,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Complete-family flags remain false",
-        "text": "Authenticated mutation-oracle compile-time rejection of all 15 exact source edits does not establish positive source-to-IR semantic refinement. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the honest complete-family status. The structural positive correspondence and wired but proof-blocked private final join grant no proof, artifact, publication, load, launch, numerical, performance, or GPU authority."
+        "text": "Authenticated mutation-oracle compile-time rejection of all 15 exact source edits does not establish positive source-to-IR semantic refinement. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the honest complete-family status. Canonical positive structural analysis fails before receipt or correspondence, and the downstream private final join remains unreachable; neither grants proof, artifact, publication, load, launch, numerical, performance, or GPU authority."
       },
       {
         "type": "paragraph",

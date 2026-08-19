@@ -208,13 +208,19 @@ describe("curriculum integrity", () => {
     expect(contract).toContain(
       "Individual managed MI300X builds reject every mutation at compiler preflight",
     );
-    expect(contract).toContain("structural non-authoritative frontend correspondence");
-    expect(contract).toContain("collected-general-gemm-v1 selector");
-    expect(contract).toContain("in-process production route are wired");
-    expect(contract).toContain("AuthenticatedRuntimeClosureUnavailable");
-    expect(contract).toContain("before Worker V2 or durable publication");
-    expect(contract).toContain("qualified protected general-GEMM launch");
-    expect(contract).toContain("unreachable in practice");
+    expect(contract).toContain("collected-general-gemm-v1 selector exists");
+    expect(contract).toContain("canonical positive structural analysis always fails closed");
+    expect(contract).toContain("safe-code root and its reachable helper MIR");
+    expect(contract).toContain("before any positive receipt");
+    expect(contract).toContain("frontend correspondence");
+    expect(contract).toContain("configuration admission");
+    expect(contract).toContain("proof execution");
+    expect(contract).toContain("Worker V2 handoff");
+    expect(contract).toContain("private final pair join");
+    expect(contract).toContain("durable publication");
+    expect(contract).toContain("protected launch");
+    expect(contract).toContain("independent second downstream blocker");
+    expect(contract).toContain("current route does not reach it");
     expect(contract).toContain("SOURCE_TO_IR");
     expect(contract).toContain("LOWERING=false");
     expect(contract).toContain("PROTECTED_EXECUTION=false");
@@ -293,12 +299,13 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("failed at compiler preflight");
     expect(failures).toContain("empty artifact directory");
     expect(failures).toContain("Positive production source");
-    expect(failures).toContain("non-Clone frontend correspondence");
+    expect(failures).toContain("without issuing a positive receipt or frontend correspondence");
+    expect(failures).toContain("always fails closed");
+    expect(failures).toContain("safe-code root and reachable helper MIR");
     expect(failures).toContain("Private final pair join");
-    expect(failures).toContain("production route owns the join call");
-    expect(failures).toContain("unreachable in practice");
-    expect(failures).toContain("AuthenticatedRuntimeClosureUnavailable");
-    expect(failures).toContain("before Worker V2 or durable publication");
+    expect(failures).toContain("stops before receipt, correspondence, configuration, and proof");
+    expect(failures).toContain("second downstream blocker");
+    expect(failures).toContain("never reaches configuration or proof execution");
     expect(failures).toContain("No qualified general-GEMM launch");
     expect(failures).toContain("Complete-family flags remain false");
     expect(failures).toContain("SOURCE_TO_IR=false");
