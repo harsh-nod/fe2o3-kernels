@@ -659,6 +659,186 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "gemm-tiling/general-contract": {
+    "sectionId": "general-contract",
+    "title": "Issue #138: the general safe-Rust contract",
+    "blocks": [
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Current layers, no general execution",
+        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138's second checkpoint adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and a bounded authenticated optimized-MIR frontend. Only missing-publish and duplicate-store safe source fixtures currently reach semantic KIR diagnostics. The positive source reaches a non-authoritative witness plan, then stops because runtime-plan binding, frontend promotion, and lowering are incomplete. SOURCE_TO_IR remains false for the complete general family and all 15 source mutations; LOWERING=false and PROTECTED_EXECUTION=false."
+      },
+      {
+        "type": "paragraph",
+        "text": "The target is one ordinary #[kernel] Rust body for row-major BF16 A and B, FP32 accumulation and C, dynamic M/N/K, checked lda/ldb/ldc, runtime alpha/beta, multiple output workgroups, multiple K phases, and M/N/K tails. The first schedule stays conservative: gfx942:xnack-, wave64, one workgroup per 16x16 C tile, one 16x16x16 BF16 MFMA per K phase, single-buffered XOR4 LDS, and no vectorized, prefetched, double-buffered, or autotuned path."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Contract part",
+          "Required rule"
+        ],
+        "rows": [
+          [
+            "Host preparation",
+            "Use checked arithmetic. For nonempty regions require (M-1)*lda+(K-1) < len(A), (K-1)*ldb+(N-1) < len(B), and (M-1)*ldc+(N-1) < len(C), with lda >= K, ldb >= N, ldc >= N, valid aliases, and launch limits. Invalid dynamic values fail prepare() before launch; they are not Rust compile errors."
+          ],
+          [
+            "Workgroup ownership",
+            "Workgroup (gx,gy) owns rows 16*gy through 16*gy+15 and columns 16*gx through 16*gx+15 of C. Edge coordinates are inactive, and no two admitted workgroups may own the same active C element."
+          ],
+          [
+            "Lane ownership",
+            "For lane l in 0..64 and component c in 0..4, the MFMA C/D coordinate is local row 4*(l/16)+c and local column l%16. Equality of active store coordinates must imply the same workgroup, lane, and component."
+          ],
+          [
+            "K phases",
+            "The checked phase count is ceil_div(K,16). In phase p, lane l and component c own A(global row=16*gy+l%16, depth=16*p+4*(l/16)+c) and B(depth=16*p+4*(l/16)+c, global column=16*gx+l%16) load slots. Accumulators carry across every phase and are never reset inside the loop."
+          ],
+          [
+            "Tails and initialization",
+            "Every lane writes each owned LDS slot in every phase. An in-range global coordinate contributes its BF16 value; an out-of-range M, N, or K coordinate contributes defined BF16 +0. This makes all MFMA fragment reads initialized without issuing an out-of-bounds global access."
+          ],
+          [
+            "Synchronization",
+            "All 64 lanes execute an unconditional publish barrier after staging and an unconditional reuse barrier after consuming the phase. No lane-varying branch, early return, or expired LDS epoch may bypass either dynamic barrier instance."
+          ],
+          [
+            "Epilogue",
+            "Each active owner writes C[m,n] = alpha*acc[m,n] + beta*C[m,n] using the declared BF16/F32 numerical policy. M=0 or N=0 performs no dispatch; K=0 has an empty product and applies the checked beta*C epilogue to active outputs."
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Safe source, sealed implementation",
+        "text": "The #138 reference source uses safe Rust at the user boundary: compiler-issued lane/workgroup identities, global views, LDS phase states, barriers, MFMA fragments, and disjoint stores are exposed by a sealed linear companion surface. Ten safe UI fixtures attempt invalid uses of that surface and fail under rustc. Those type, move, or visibility errors establish only the local API restriction; they are not fe2o3 semantic proof diagnostics and carry no 0x464701xx proof authority. Compiler and runtime internals may still use narrowly scoped unsafe behind sealed capabilities, but unsafe never discharges or bypasses a verifier obligation."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Branch property spelling",
+          "Stable code",
+          "What must be established independently"
+        ],
+        "rows": [
+          ["memory_safe", "0x46470101", "Global and LDS accesses retain valid regions, provenance, alignment, lifetimes, and admitted alias relationships."],
+          ["bounds_safe", "0x46470102", "Every executed A/B/C and LDS address is inside its recorded allocation or tile extent under its exact predicate."],
+          ["initialized", "0x46470103", "Every global or LDS read observes a value initialized in the admitted phase and epoch."],
+          ["race_free", "0x46470104", "Unordered conflicting accesses cannot overlap across workgroups, lanes, fragments, or LDS writers."],
+          ["barrier_convergent", "0x46470105", "Every required workgroup participant reaches the same publish and reuse barrier instances."],
+          ["output_region_injective", "0x46470106", "Each active C coordinate has exactly one workgroup/lane/component writer."],
+          ["lds_epoch_correct", "0x46470107", "Publish orders current-phase reads and reuse orders next-phase overwrites; capabilities cannot outlive their epoch."],
+          ["accumulator_phase_refinement", "0x46470108", "The accumulator covers exactly the completed K intervals and reaches the full mathematical product."],
+          ["tail_refinement", "0x46470109", "M/N stores are predicated and invalid A/B/K loads become defined zero contributions."],
+          ["epilogue_refinement", "0x4647010a", "The active store implements the recorded alpha/beta equation, including zero K."],
+          ["numerical_contract", "0x4647010b", "BF16 conversion, FP32 MFMA accumulation order, rounding, exceptional values, and comparison policy are explicit."],
+          ["machine_refinement_boundary", "0x4647010c", "The final covered LLVM/ISA boundary preserves the exact proven effects; source proof alone cannot promote it."]
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Report/inventory code",
+          "Implemented structural rejection"
+        ],
+        "rows": [
+          ["0x46470001", "The report names a different obligation-set commitment."],
+          ["0x46470002", "The report duplicates an aggregate or unsafe obligation."],
+          ["0x46470003", "An unsafe-source obligation remains unresolved."],
+          ["0x46470004", "Proof evaluation failed to return a complete bounded report."],
+          ["0x46470005", "Reported unsafe findings do not match the compiler-owned inventory."],
+          ["0x46470006", "Compiler-owned requirements do not bind the active request."]
+        ]
+      },
+      {
+        "type": "links",
+        "items": [
+          {
+            "label": "#138 General tiled GEMM and semantic compile-fail corpus",
+            "href": "https://github.com/harsh-nod/fe2o3/issues/138"
+          },
+          {
+            "label": "#134 Rust-first Pliron compiler and proof architecture",
+            "href": "https://github.com/harsh-nod/fe2o3/issues/134"
+          }
+        ]
+      }
+    ]
+  },
+  "gemm-tiling/semantic-failures": {
+    "sectionId": "semantic-failures",
+    "title": "Rust UI and semantic proof are different",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "The safe companion contract assigns one honest source-enforcement owner to each canonical mutation. Three local lifecycle mistakes are fully rejected by Rust typestate. Seven more have safe rustc UI tests that reject attempts to escape the sealed surface, but those UI failures leave dynamic or cross-invocation verifier obligations. The remaining five are verifier-only: ordinary safe Rust can express them, so they must stay well-typed and reach proof-required compiler analysis."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Canonical mutation",
+          "Source enforcement",
+          "Structured-KIR result",
+          "Stage / code"
+        ],
+        "rows": [
+          ["unguarded_a_tail_load", "Verifier-only; remains well-typed", "bounds_safe", "tile / 0x46470102"],
+          ["unguarded_b_tail_load", "Verifier-only; remains well-typed", "bounds_safe", "tile / 0x46470102"],
+          ["unguarded_c_tail_store", "Sealed-surface UI plus verifier", "bounds_safe", "tile / 0x46470102"],
+          ["duplicate_lane_c_write", "Sealed-surface UI plus verifier", "output_region_injective", "tile / 0x46470106"],
+          ["overlapping_workgroup_c_tile", "Sealed-surface UI plus verifier", "output_region_injective", "tile / 0x46470106"],
+          ["duplicate_lds_write", "Sealed-surface UI plus verifier", "race_free", "gpu / 0x46470104"],
+          ["lds_read_before_initialization", "Sealed-surface UI plus verifier", "initialized", "gpu / 0x46470103"],
+          ["missing_publish_barrier", "Rust typestate UI", "initialized", "gpu / 0x46470103"],
+          ["divergent_barrier", "Verifier-only; remains well-typed", "barrier_convergent", "gpu / 0x46470105"],
+          ["missing_reuse_barrier", "Rust typestate UI", "lds_epoch_correct", "gpu / 0x46470107"],
+          ["expired_lds_epoch", "Rust typestate UI", "lds_epoch_correct", "gpu / 0x46470107"],
+          ["staged_read_before_wait", "Sealed-surface UI plus verifier", "initialized", "gpu / 0x46470103"],
+          ["accumulator_reset", "Sealed-surface UI plus verifier", "accumulator_phase_refinement", "kernel / 0x46470108"],
+          ["incorrect_k_tail_zero_fill", "Verifier-only; remains well-typed", "tail_refinement", "kernel / 0x46470109"],
+          ["incorrect_alpha_beta_epilogue", "Verifier-only; remains well-typed", "epilogue_refinement", "kernel / 0x4647010a"]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "warning",
+        "title": "A rustc UI error is not a proof diagnostic",
+        "text": "All 10 companion UI fixtures use safe Rust. Three demonstrate that an invalid local phase transition is unrepresentable through the typestate API. Seven demonstrate that safe code cannot directly forge or duplicate a sealed capability, but each still names a remaining verifier obligation. These rustc type, move, or privacy diagnostics do not carry a fe2o3 0x464701xx property result and do not prove distributed bounds, initialization, injectivity, race freedom, or phase refinement."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "All 15 are rejected as structured KIR",
+        "text": "Independently of the source UI tests, the canonical bounded structured-KIR suite constructs each of the 15 hostile schedules and rejects it with the exact property, owning stage, and code shown above. The proof-required compiler driver consumes those findings through its no-artifact transaction gate. This establishes structured-IR verification and driver gating, not authenticated source derivation of all 15 graphs."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Authenticated source case",
+          "Observed frontend result",
+          "Checkpoint boundary"
+        ],
+        "rows": [
+          ["missing-publish", "initialized at gpu, 0x46470103; no artifact", "A separate well-typed proof-sensitive fixture reaches semantic KIR; this does not turn the companion typestate UI error into a proof result."],
+          ["duplicate-store", "output_region_injective at tile, 0x46470106; no artifact", "A separate safe source fixture reaches semantic KIR; it does not derive the other sealed-surface or corpus mutations."],
+          ["positive general source", "Reaches a verified but non-authoritative witness plan; no artifact", "Runtime-plan binding, frontend promotion, and lowering are incomplete."]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Complete-family flags remain false",
+        "text": "The two authenticated negative source cases are a bounded frontend checkpoint. SOURCE_TO_IR=false remains the honest status for the complete general kernel family and source derivation of all 15 mutations. LOWERING=false and PROTECTED_EXECUTION=false also remain unchanged. The positive witness plan grants no artifact, publication, launch, numerical, performance, or GPU authority."
+      },
+      {
+        "type": "paragraph",
+        "text": "Dynamic dimensions, lengths, strides, aliases, or launch limits remain a third boundary: invalid host values fail checked prepare() under compiler-recorded preconditions. They are neither rustc typestate errors nor proof diagnostics for a static source mutation."
+      }
+    ]
+  },
   "gemm-tiling/mapping": {
     "sectionId": "mapping",
     "title": "Freeze the coordinate map",

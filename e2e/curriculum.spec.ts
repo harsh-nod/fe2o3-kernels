@@ -153,6 +153,42 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(page.getByRole("tabpanel")).toContainText(
     "not generalized GEMM",
   );
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Issue #138: the general safe-Rust contract",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Current layers, no general execution"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Rust UI and semantic proof are different"),
+  ).toBeVisible();
+  await expect(page.getByText("0x46470101", { exact: true })).toBeVisible();
+  await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();
+  await expect(page.getByText("unguarded_a_tail_load", { exact: true })).toBeVisible();
+  await expect(page.getByText("missing_publish_barrier", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("duplicate_lane_c_write", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("A rustc UI error is not a proof diagnostic"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("All 15 are rejected as structured KIR"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Complete-family flags remain false"),
+  ).toBeVisible();
+  await expect(page.getByText("missing-publish", { exact: true })).toBeVisible();
+  await expect(page.getByText("duplicate-store", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: /#138 General tiled GEMM/ }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/issues/138",
+  );
   for (const issue of [85, 86, 87, 88, 89, 90, 96, 97, 99, 100]) {
     await expect(
       page.getByRole("link", { name: new RegExp(`#${String(issue)} `, "u") }),

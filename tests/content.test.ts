@@ -192,6 +192,107 @@ describe("curriculum integrity", () => {
     );
   });
 
+  it("separates Rust UI enforcement, structured KIR, and source diagnostics", () => {
+    const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
+    expect(lesson?.objectives).toContain(
+      "Distinguish safe-Rust kernel source from sealed unsafe compiler and runtime implementation boundaries.",
+    );
+
+    const contract = JSON.stringify(
+      narrativeEntry("gemm-tiling/general-contract"),
+    );
+    expect(contract).toContain("Current layers, no general execution");
+    expect(contract).toContain(
+      "Only missing-publish and duplicate-store safe source fixtures currently reach semantic KIR diagnostics",
+    );
+    expect(contract).toContain(
+      "SOURCE_TO_IR remains false for the complete general family and all 15 source mutations",
+    );
+    expect(contract).toContain("LOWERING=false");
+    expect(contract).toContain("PROTECTED_EXECUTION=false");
+    expect(contract).toContain("one workgroup per 16x16 C tile");
+    expect(contract).toContain("ceil_div(K,16)");
+    expect(contract).toContain("defined BF16 +0");
+    expect(contract).toContain("unconditional publish barrier");
+    expect(contract).toContain("alpha*acc[m,n] + beta*C[m,n]");
+    expect(contract).toContain("Ten safe UI fixtures");
+    expect(contract).toContain("not fe2o3 semantic proof diagnostics");
+    expect(contract).toContain("unsafe never discharges or bypasses a verifier obligation");
+    for (const [obligation, code] of [
+      ["memory_safe", "0x46470101"],
+      ["bounds_safe", "0x46470102"],
+      ["initialized", "0x46470103"],
+      ["race_free", "0x46470104"],
+      ["barrier_convergent", "0x46470105"],
+      ["output_region_injective", "0x46470106"],
+      ["lds_epoch_correct", "0x46470107"],
+      ["accumulator_phase_refinement", "0x46470108"],
+      ["tail_refinement", "0x46470109"],
+      ["epilogue_refinement", "0x4647010a"],
+      ["numerical_contract", "0x4647010b"],
+      ["machine_refinement_boundary", "0x4647010c"],
+    ]) {
+      expect(contract).toContain(obligation);
+      expect(contract).toContain(code);
+    }
+    for (const code of [
+      "0x46470001",
+      "0x46470002",
+      "0x46470003",
+      "0x46470004",
+      "0x46470005",
+      "0x46470006",
+    ]) {
+      expect(contract).toContain(code);
+    }
+
+    const failures = JSON.stringify(
+      narrativeEntry("gemm-tiling/semantic-failures"),
+    );
+    expect(failures).toContain("Rust UI and semantic proof are different");
+    expect(failures).toContain("Three local lifecycle mistakes");
+    expect(failures).toContain("Seven more have safe rustc UI tests");
+    expect(failures).toContain("The remaining five are verifier-only");
+    for (const fixture of [
+      "unguarded_a_tail_load",
+      "unguarded_b_tail_load",
+      "unguarded_c_tail_store",
+      "duplicate_lane_c_write",
+      "overlapping_workgroup_c_tile",
+      "duplicate_lds_write",
+      "lds_read_before_initialization",
+      "missing_publish_barrier",
+      "divergent_barrier",
+      "missing_reuse_barrier",
+      "expired_lds_epoch",
+      "staged_read_before_wait",
+      "accumulator_reset",
+      "incorrect_k_tail_zero_fill",
+      "incorrect_alpha_beta_epilogue",
+    ]) {
+      expect(failures).toContain(fixture);
+    }
+    expect(failures).toContain("Rust typestate UI");
+    expect(failures).toContain("Sealed-surface UI plus verifier");
+    expect(failures).toContain("Verifier-only; remains well-typed");
+    expect(failures).toContain("A rustc UI error is not a proof diagnostic");
+    expect(failures).toContain("All 15 are rejected as structured KIR");
+    expect(failures).toContain(
+      "not authenticated source derivation of all 15 graphs",
+    );
+    expect(failures).toContain("missing-publish");
+    expect(failures).toContain("initialized at gpu, 0x46470103; no artifact");
+    expect(failures).toContain("duplicate-store");
+    expect(failures).toContain(
+      "output_region_injective at tile, 0x46470106; no artifact",
+    );
+    expect(failures).toContain("verified but non-authoritative witness plan");
+    expect(failures).toContain("Complete-family flags remain false");
+    expect(failures).toContain("SOURCE_TO_IR=false");
+    expect(failures).toContain("LOWERING=false");
+    expect(failures).toContain("PROTECTED_EXECUTION=false");
+  });
+
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {
     const lesson = lessons.find((entry) => entry.id === "softmax-invariant");
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");

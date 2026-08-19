@@ -468,11 +468,13 @@ const gemmMapping: Lesson = {
   title: "Tiled GEMM: map ownership first",
   summary:
     "Design a workgroup tile by fixing global output ownership, cooperative loads, and boundary predicates before optimizing math.",
-  duration: "55 min",
+  duration: "70 min",
   prerequisites: ["LDS and barriers", "Matrix multiplication"],
   objectives: [
     "Map each workgroup to one C tile and each lane to disjoint output fragments.",
     "Prove cooperative A/B loads stay in bounds at edge tiles.",
+    "Distinguish safe-Rust kernel source from sealed unsafe compiler and runtime implementation boundaries.",
+    "Classify invalid kernels by the fe2o3 property that must reject them before artifact emission.",
     "Separate one exact bounded protected Slice 1 run from compiler-origin, proof, refinement, and generalized-GEMM claims.",
   ],
   claims: [
@@ -480,7 +482,7 @@ const gemmMapping: Lesson = {
       kind: "design-only",
       label: "Full GEMM roadmap",
       detail:
-        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use Worker V2 handoff, admits that handoff into a sealed authority-free exact-profile registry, finalizes it through direct upstream LLVM target-machine and LLD library APIs, prepares exact borrowed A/B/C views with a generated inert host adapter, and consumes those values through a private one-shot Joined -> Loaded -> Completed -> Unloaded lifecycle with exact context, resource, ABI, completion, cancellation, and terminal-unload checks. One public protected route passed on mi300x gfx942 over all 256 output bits with unchanged A/B values and A/B/C guard canaries. The exact bounded Slice 1 source and run are functional. They do not authenticate compiler origin, consume Verus certificates, prove compiler refinement or general illegal-access/race freedom, generalize GEMM, or cover protected Slice 3/4, so they are not generalized GEMM or a complete production authority chain.",
+        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use Worker V2 handoff, admits that handoff into a sealed authority-free exact-profile registry, finalizes it through direct upstream LLVM target-machine and LLD library APIs, prepares exact borrowed A/B/C views with a generated inert host adapter, and consumes those values through a private one-shot Joined -> Loaded -> Completed -> Unloaded lifecycle with exact context, resource, ABI, completion, cancellation, and terminal-unload checks. One public protected route passed on mi300x gfx942 over all 256 output bits with unchanged A/B values and A/B/C guard canaries. The exact bounded Slice 1 source and run are functional. Issue #138's second checkpoint separately provides 10 safe companion UI failures, structured-Kernel-IR rejection of all 15 mutations with exact property/stage codes and no-artifact driver gating, and authenticated optimized-MIR integration for only missing-publish and duplicate-store safe source fixtures. Rust UI errors are not fe2o3 proof diagnostics, and the 15 structured mutations are not all source-derived. The positive source reaches only a non-authoritative witness plan; complete-family SOURCE_TO_IR, LOWERING, and PROTECTED_EXECUTION remain false. Slice 1 does not authenticate compiler origin, consume Verus certificates, prove compiler refinement or general illegal-access/race freedom, generalize GEMM, or cover protected Slice 3/4, so it is not generalized GEMM or a complete production authority chain.",
     },
     {
       kind: "compiler-hsaco-observed",
@@ -506,6 +508,8 @@ const gemmMapping: Lesson = {
       kind: "staged-evidence",
       evidenceIds: [...stagedEvidenceOrder],
     },
+    narrativeSection("gemm-tiling/general-contract"),
+    narrativeSection("gemm-tiling/semantic-failures"),
     narrativeSection("gemm-tiling/mapping"),
     narrativeSection("gemm-tiling/loop-proof"),
   ],
@@ -525,8 +529,20 @@ const gemmMapping: Lesson = {
       hint: "Factor the map into a unique lane fragment and unique element within that fragment.",
       acceptance: "Equal output coordinates imply equal workgroup, lane, and fragment element identities.",
     },
+    {
+      prompt: "Explain why two missing-publish failures can establish different facts.",
+      hint: "Compare the companion typestate UI escape with the separately integrated proof-sensitive safe source fixture.",
+      acceptance: "The rustc UI error carries no fe2o3 proof diagnostic; the integrated source fixture reaches semantic KIR, reports initialized/0x46470103, and emits no artifact.",
+    },
   ],
-  glossary: ["GEMM", "tile", "MFMA", "accumulator invariant", "edge predicate"],
+  glossary: [
+    "GEMM",
+    "tile",
+    "MFMA",
+    "accumulator invariant",
+    "edge predicate",
+    "proof-required build",
+  ],
 };
 
 const gemmProof: Lesson = {

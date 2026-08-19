@@ -602,6 +602,33 @@ and measured route, not tutorial pseudocode. Each promoted Kernel, Verus, and
 Host tab also names the canonical evidence record that covers its exact source
 path and commit; curriculum validation rejects missing or mismatched links.
 
+The `gemm-tiling` lesson also records the proposed contract from
+[fe2o3 #138](https://github.com/harsh-nod/fe2o3/issues/138). The target is one
+safe-Rust user kernel for dynamic dimensions and strides, multiple 16-wide K
+phases, M/N/K tails with zero-filled LDS slots, unconditional publish/reuse
+barriers, disjoint lane and workgroup ownership, and the runtime `alpha/beta`
+epilogue. It catalogs 15 canonical semantic mutations and assigns each an
+honest source-enforcement owner plus a required structured-Kernel-IR result.
+These are roadmap requirements. The second checkpoint separates three
+enforcement layers.
+Ten safe companion UI fixtures fail under rustc: three are fully owned by local
+Rust typestate and seven reject sealed-surface escape attempts while retaining
+dynamic verifier obligations. The other five canonical mutations remain
+well-typed and verifier-only. None of those rustc UI errors is a fe2o3 proof
+diagnostic.
+
+Independently, canonical bounded structured Kernel IR rejects all 15 mutations
+with their exact property, stage, and `0x464701xx` code, and the compiler driver
+transaction emits no artifact. This is structured-IR evidence, not source
+derivation for all 15. Authenticated optimized-MIR import currently integrates
+only two safe source fixtures: missing-publish reports
+`initialized`/`0x46470103`, duplicate-store reports
+`output_region_injective`/`0x46470106`, and both emit no artifact. The positive
+source reaches a non-authoritative witness plan and stops because runtime-plan
+binding, frontend promotion, and lowering remain incomplete. Complete-family
+`SOURCE_TO_IR=false`, `LOWERING=false`, and `PROTECTED_EXECUTION=false` remain
+unchanged.
+
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish
 MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, generally prove
