@@ -667,7 +667,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "All 15 fail at compile time, no general execution",
-        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138 adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and authenticated optimized-MIR import. An exact safe Rust mutation-oracle corpus now derives all 15 files by one reversible edit of the same full baseline. Individual managed MI300X builds reject every mutation at compiler preflight with its expected property, stage, 0x464701xx code, root and span chain, and zero artifacts. The positive production source reaches only a structural non-authoritative frontend correspondence. A private final join for both schedules is compiled but unhooked, Verus authority is fail-closed pending a root-owned runtime closure, and no qualified protected general-GEMM launch exists. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the complete-family status."
+        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138 adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and authenticated optimized-MIR import. An exact safe Rust mutation-oracle corpus now derives all 15 files by one reversible edit of the same full baseline. Individual managed MI300X builds reject every mutation at compiler preflight with its expected property, stage, 0x464701xx code, root and span chain, and zero artifacts. The positive production source reaches only a structural non-authoritative frontend correspondence. The exact collected-general-gemm-v1 selector and its in-process production route are wired, but authenticated proof execution always fails closed with AuthenticatedRuntimeClosureUnavailable before Worker V2 or durable publication. The private final pair join and a qualified protected general-GEMM launch therefore remain unreachable in practice. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the complete-family status."
       },
       {
         "type": "paragraph",
@@ -828,9 +828,9 @@ const narrativeRegistry = deepFreeze({
           "Authority boundary"
         ],
         "rows": [
-          ["Positive production source", "Authenticates structural optimized-MIR facts into a non-Clone frontend correspondence", "The production preflight still returns an error and issues no artifact authority."],
-          ["Private final pair join", "Compiles and checks the source owner against verifier and post-link machine owners for the ordered reference and vectorized schedules", "It has no production caller and cannot be reconstructed from public identities."],
-          ["Verus runtime closure", "Implements exact pinning and retention for the reviewed root-owned closure across the qualification boundaries", "Proof execution still returns AuthenticatedRuntimeClosureUnavailable until that protected closure is provisioned."],
+          ["Positive production source", "Authenticates structural optimized-MIR facts into a non-Clone frontend correspondence", "The collected-general-gemm-v1 selector enters a dedicated no-fallback in-process route."],
+          ["Private final pair join", "Compiles and checks the source owner against verifier and post-link machine owners for the ordered reference and vectorized schedules", "The production route owns the join call, but the preceding fail-closed proof boundary makes it unreachable in practice; public identities cannot reconstruct it."],
+          ["Verus runtime closure", "Implements exact pinning and retention for the reviewed root-owned closure across the qualification boundaries", "Proof execution always returns AuthenticatedRuntimeClosureUnavailable before Worker V2 or durable publication."],
           ["Protected hardware", "No qualified general-GEMM launch", "There is no protected dispatch, numerical GPU result, or production execution authority for the general kernel."]
         ]
       },
@@ -838,7 +838,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Complete-family flags remain false",
-        "text": "Authenticated mutation-oracle compile-time rejection of all 15 exact source edits does not establish positive source-to-IR semantic refinement. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the honest complete-family status. The structural positive correspondence and unhooked private final join grant no proof, artifact, publication, load, launch, numerical, performance, or GPU authority."
+        "text": "Authenticated mutation-oracle compile-time rejection of all 15 exact source edits does not establish positive source-to-IR semantic refinement. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the honest complete-family status. The structural positive correspondence and wired but proof-blocked private final join grant no proof, artifact, publication, load, launch, numerical, performance, or GPU authority."
       },
       {
         "type": "paragraph",

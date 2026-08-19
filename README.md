@@ -627,12 +627,14 @@ symbol, source and terminal spans, reachable call chain, and no artifact.
 
 Those compile-time failures are bounded mutation-oracle source-to-diagnostic
 evidence. The positive production source reaches only a structural,
-non-authoritative frontend correspondence. A private owner-retaining final join
-for the reference and vectorized schedules is compiled but is not called by the
-production preflight. Verus proof execution remains fail-closed pending the
-pinned root-owned runtime closure, and no qualified protected general-GEMM
-hardware launch exists. Complete-family `SOURCE_TO_IR=false`, `LOWERING=false`,
-and `PROTECTED_EXECUTION=false` therefore remain unchanged.
+non-authoritative frontend correspondence. The exact
+`collected-general-gemm-v1` selector and its in-process production route are
+wired, but authenticated proof execution always fails closed with
+`AuthenticatedRuntimeClosureUnavailable` before either schedule enters Worker
+V2 or durable publication. The private final pair join and a qualified protected
+general-GEMM hardware launch therefore remain unreachable in practice.
+Complete-family `SOURCE_TO_IR=false`, `LOWERING=false`, and
+`PROTECTED_EXECUTION=false` remain unchanged.
 
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish

@@ -188,6 +188,9 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(page.getByText("Private final pair join", { exact: true })).toBeVisible();
   await expect(page.getByText("Verus runtime closure", { exact: true })).toBeVisible();
   await expect(page.getByText("Protected hardware", { exact: true })).toBeVisible();
+  await expect(page.getByText(/collected-general-gemm-v1 selector/u).first()).toBeVisible();
+  await expect(page.getByText(/before Worker V2 or durable publication/u).first()).toBeVisible();
+  await expect(page.getByText(/unreachable in practice/u).first()).toBeVisible();
   await expect(
     page.getByRole("link", { name: /#138 General tiled GEMM/ }),
   ).toHaveAttribute(

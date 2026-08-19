@@ -209,9 +209,12 @@ describe("curriculum integrity", () => {
       "Individual managed MI300X builds reject every mutation at compiler preflight",
     );
     expect(contract).toContain("structural non-authoritative frontend correspondence");
-    expect(contract).toContain("private final join for both schedules is compiled but unhooked");
-    expect(contract).toContain("root-owned runtime closure");
-    expect(contract).toContain("no qualified protected general-GEMM launch exists");
+    expect(contract).toContain("collected-general-gemm-v1 selector");
+    expect(contract).toContain("in-process production route are wired");
+    expect(contract).toContain("AuthenticatedRuntimeClosureUnavailable");
+    expect(contract).toContain("before Worker V2 or durable publication");
+    expect(contract).toContain("qualified protected general-GEMM launch");
+    expect(contract).toContain("unreachable in practice");
     expect(contract).toContain("SOURCE_TO_IR");
     expect(contract).toContain("LOWERING=false");
     expect(contract).toContain("PROTECTED_EXECUTION=false");
@@ -292,8 +295,10 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("Positive production source");
     expect(failures).toContain("non-Clone frontend correspondence");
     expect(failures).toContain("Private final pair join");
-    expect(failures).toContain("It has no production caller");
+    expect(failures).toContain("production route owns the join call");
+    expect(failures).toContain("unreachable in practice");
     expect(failures).toContain("AuthenticatedRuntimeClosureUnavailable");
+    expect(failures).toContain("before Worker V2 or durable publication");
     expect(failures).toContain("No qualified general-GEMM launch");
     expect(failures).toContain("Complete-family flags remain false");
     expect(failures).toContain("SOURCE_TO_IR=false");
