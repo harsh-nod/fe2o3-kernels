@@ -59,6 +59,31 @@ describe("lesson section rendering policy", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
+  it("renders the compile-time failure gallery with exact diagnostics", () => {
+    const lesson = lessons.find((candidate) => candidate.id === "gemm-tiling")!;
+    render(<LessonSections lessonId={lesson.id} sections={lesson.sections} />);
+
+    expect(
+      screen.getByRole("heading", {
+        name: "Five kernels that never become GPU artifacts",
+      }),
+    ).toBeInTheDocument();
+    const rejectionPath = screen.getByLabelText("Compile-time rejection path");
+    expect(rejectionPath).toHaveTextContent("Safe Rust source");
+    expect(rejectionPath).toHaveTextContent(
+      "Authenticated optimized-MIR admission",
+    );
+    expect(rejectionPath).toHaveTextContent("Structured KIR verifier");
+    expect(rejectionPath).toHaveTextContent("No artifact");
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(5);
+    expect(screen.getByText("Out-of-bounds global load")).toBeInTheDocument();
+    expect(screen.getByText("Duplicate output ownership")).toBeInTheDocument();
+    expect(screen.getByText("Lane-divergent barrier")).toBeInTheDocument();
+    expect(screen.getByText("LDS read before initialization")).toBeInTheDocument();
+    expect(screen.getByText("Incorrect alpha/beta epilogue")).toBeInTheDocument();
+    expect(screen.getAllByText("0x4647010a")).toHaveLength(2);
+  });
+
   it("rejects an unknown section kind without rendering attacker text", () => {
     const unsupportedAuthority =
       "Unknown lesson node grants protected accelerator authority.";

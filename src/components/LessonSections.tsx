@@ -1,4 +1,5 @@
 import { AlertTriangle, CircleHelp, ExternalLink, Info, ShieldCheck } from "lucide-react";
+import { CompileFailureGallery } from "./CompileFailureGallery";
 import type { CalloutTone, LessonBlock, LessonSection } from "../content/model";
 import {
   resolveNarrativeEntry,
@@ -166,6 +167,16 @@ function NarrativeBlocks({
             </tbody>
           </table>
         </div>
+      );
+    }
+    if (block.type === "compile-failures") {
+      return (
+        <CompileFailureGallery
+          heading={block.heading}
+          intro={block.intro}
+          examples={block.examples}
+          key={index}
+        />
       );
     }
     const Icon = calloutIcons[block.tone];

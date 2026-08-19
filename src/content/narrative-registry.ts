@@ -777,6 +777,63 @@ const narrativeRegistry = deepFreeze({
         "text": "The safe companion contract assigns one honest source-enforcement owner to each canonical mutation. Three local lifecycle mistakes are fully rejected by Rust typestate. Seven more have safe rustc UI tests that reject attempts to escape the sealed surface, but those UI failures leave dynamic or cross-invocation verifier obligations. The remaining five are verifier-only: ordinary safe Rust can express them, so they must stay well-typed and reach proof-required compiler analysis."
       },
       {
+        "type": "compile-failures",
+        "heading": "Five kernels that never become GPU artifacts",
+        "intro": "Each abridged body is an exact safe-Rust mutation from the 15-case diagnostic corpus. Rust ownership, privacy, and typestate make local capability misuse unrepresentable; authenticated optimized-MIR admission and structured KIR analysis check the cross-lane and algorithmic properties that remain well-typed. The expected result below is a compiler-preflight diagnostic, never a launch-time failure. These non-authoritative mutation-oracle results do not admit the positive general GEMM: optimized-MIR correspondence remains fail-closed before any receipt or artifact.",
+        "examples": [
+          {
+            "id": "unguarded_a_tail_load",
+            "title": "Out-of-bounds global load",
+            "source": "#[kernel]\npub fn unguarded_a_tail_load(context: &mut KernelContext<'_>) {\n    let value = context.load_a(context.row(), context.depth());\n    context.stage(context.lane, context.phase as u32, value);\n}",
+            "property": "bounds_safe",
+            "stage": "tile",
+            "code": "0x46470102",
+            "enforcement": "Verifier-only; remains well-typed",
+            "caught": "The load is missing row < M and depth < K guards. Safe Rust preserves the typed global-view operation, while tile analysis rejects the unproved dynamic address relation before code generation."
+          },
+          {
+            "id": "duplicate_lane_c_write",
+            "title": "Duplicate output ownership",
+            "source": "#[kernel]\npub fn duplicate_lane_c_write(context: &mut KernelContext<'_>) {\n    let duplicate_index = context.group_y * context.ldc + context.group_x;\n    context.store_c_index(duplicate_index, context.lane as f32);\n}",
+            "property": "output_region_injective",
+            "stage": "tile",
+            "code": "0x46470106",
+            "enforcement": "Sealed-surface UI plus verifier",
+            "caught": "All lanes in a workgroup compute the same C index. Sealed ownership capabilities cannot be forged in safe code, and the injectivity check finds the cross-lane collision that would otherwise become an unordered write race."
+          },
+          {
+            "id": "divergent_barrier",
+            "title": "Lane-divergent barrier",
+            "source": "#[kernel]\npub fn divergent_barrier(context: &mut KernelContext<'_>) {\n    context.stage(context.lane, context.phase as u32, context.lane as u16);\n    if context.lane.is_multiple_of(2) {\n        context.publish_barrier();\n    }\n}",
+            "property": "barrier_convergent",
+            "stage": "gpu",
+            "code": "0x46470105",
+            "enforcement": "Verifier-only; remains well-typed",
+            "caught": "The barrier sits behind a lane-varying branch, so only half of the workgroup participates. GPU-stage convergence analysis rejects the schedule even though the branch is valid safe Rust."
+          },
+          {
+            "id": "lds_read_before_initialization",
+            "title": "LDS read before initialization",
+            "source": "#[kernel]\npub fn lds_read_before_initialization(context: &mut KernelContext<'_>) {\n    let value = context.read_stage(context.lane, context.phase as u32);\n    context.store_c(context.row(), context.column(), value as f32);\n}",
+            "property": "initialized",
+            "stage": "gpu",
+            "code": "0x46470103",
+            "enforcement": "Sealed-surface UI plus verifier",
+            "caught": "No current-epoch stage and publish transition dominates the LDS read. Typestate protects the real phase capability, and GPU analysis independently rejects the missing initialization order."
+          },
+          {
+            "id": "incorrect_alpha_beta_epilogue",
+            "title": "Incorrect alpha/beta epilogue",
+            "source": "#[kernel]\npub fn incorrect_alpha_beta_epilogue(context: &mut KernelContext<'_>) {\n    let product = context.lane as f32;\n    let initial = context.load_c(context.row(), context.column());\n    let wrong = context.alpha * product + initial;\n    context.store_c(context.row(), context.column(), wrong);\n}",
+            "property": "epilogue_refinement",
+            "stage": "kernel",
+            "code": "0x4647010a",
+            "enforcement": "Verifier-only; remains well-typed",
+            "caught": "The expression omits beta * C. The type system keeps the typed operands and store effect intact; kernel-stage refinement compares the expression with alpha*AB + beta*C and rejects the semantic mismatch."
+          }
+        ]
+      },
+      {
         "type": "table",
         "headers": [
           "Canonical mutation",

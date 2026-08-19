@@ -99,7 +99,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
 
 test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   page,
-}) => {
+}, testInfo) => {
   await page.goto("./#/lesson/gemm-tiling");
   await expect(
     page.getByRole("heading", {
@@ -163,14 +163,48 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     page.getByText("All 15 fail at compile time, no general execution"),
   ).toBeVisible();
   await expect(
+    page.getByRole("heading", {
+      level: 3,
+      name: "Five kernels that never become GPU artifacts",
+    }),
+  ).toBeVisible();
+  const failureGallery = page.locator(".compile-failure-gallery");
+  await expect(failureGallery.getByText("Out-of-bounds global load")).toBeVisible();
+  await expect(failureGallery.getByText("Duplicate output ownership")).toBeVisible();
+  await expect(failureGallery.getByText("Lane-divergent barrier")).toBeVisible();
+  await expect(failureGallery.getByText("LDS read before initialization")).toBeVisible();
+  await expect(failureGallery.getByText("Incorrect alpha/beta epilogue")).toBeVisible();
+  await expect(failureGallery.getByText("0x46470102")).toBeVisible();
+  await expect(failureGallery.getByText("0x46470106")).toBeVisible();
+  await expect(failureGallery.getByText("0x46470105")).toBeVisible();
+  await expect(failureGallery.getByText("0x46470103")).toBeVisible();
+  await expect(failureGallery.getByText("0x4647010a")).toBeVisible();
+  await expect(
+    failureGallery.getByLabel("Compile-time rejection path"),
+  ).toContainText("No artifact");
+  await expect(
+    failureGallery.getByText(/exact safe-Rust mutation/u),
+  ).toBeVisible();
+  await page
+    .getByRole("heading", {
+      level: 3,
+      name: "Five kernels that never become GPU artifacts",
+    })
+    .scrollIntoViewIfNeeded();
+  await page.evaluate(() => window.scrollBy(0, -72));
+  await page.screenshot({
+    path: `/tmp/fe2o3-kernels-compile-errors-${testInfo.project.name}.png`,
+    animations: "disabled",
+  });
+  await expect(
     page.getByText("Rust UI and semantic proof are different"),
   ).toBeVisible();
   await expect(page.getByText("0x46470101", { exact: true })).toBeVisible();
   await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();
-  await expect(page.getByText("unguarded_a_tail_load", { exact: true })).toBeVisible();
-  await expect(page.getByText("missing_publish_barrier", { exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "unguarded_a_tail_load" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "missing_publish_barrier" })).toBeVisible();
   await expect(
-    page.getByText("duplicate_lane_c_write", { exact: true }),
+    page.getByRole("cell", { name: "duplicate_lane_c_write" }),
   ).toBeVisible();
   await expect(
     page.getByText("A rustc UI error is not a proof diagnostic"),

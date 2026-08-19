@@ -311,6 +311,39 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("SOURCE_TO_IR=false");
     expect(failures).toContain("LOWERING=false");
     expect(failures).toContain("PROTECTED_EXECUTION=false");
+
+    const failureGallery = narrativeEntry("gemm-tiling/semantic-failures")
+      .blocks.find((block) => block.type === "compile-failures");
+    expect(failureGallery?.type).toBe("compile-failures");
+    if (failureGallery?.type !== "compile-failures") return;
+    expect(failureGallery.examples).toHaveLength(5);
+    expect(failureGallery.intro).toContain("exact safe-Rust mutation");
+    expect(failureGallery.intro).toContain("authenticated optimized-MIR admission");
+    expect(failureGallery.intro).toContain("structured KIR analysis");
+    expect(failureGallery.intro).toContain("never a launch-time failure");
+    expect(failureGallery.intro).toContain("non-authoritative mutation-oracle");
+    expect(failureGallery.intro).toContain(
+      "optimized-MIR correspondence remains fail-closed",
+    );
+    expect(
+      failureGallery.examples.map(({ id, property, stage, code }) => ({
+        id,
+        property,
+        stage,
+        code,
+      })),
+    ).toEqual([
+      { id: "unguarded_a_tail_load", property: "bounds_safe", stage: "tile", code: "0x46470102" },
+      { id: "duplicate_lane_c_write", property: "output_region_injective", stage: "tile", code: "0x46470106" },
+      { id: "divergent_barrier", property: "barrier_convergent", stage: "gpu", code: "0x46470105" },
+      { id: "lds_read_before_initialization", property: "initialized", stage: "gpu", code: "0x46470103" },
+      { id: "incorrect_alpha_beta_epilogue", property: "epilogue_refinement", stage: "kernel", code: "0x4647010a" },
+    ]);
+    for (const example of failureGallery.examples) {
+      expect(example.source).toContain("#[kernel]");
+      expect(example.source).not.toContain("unsafe");
+      expect(example.caught.length).toBeGreaterThan(80);
+    }
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {

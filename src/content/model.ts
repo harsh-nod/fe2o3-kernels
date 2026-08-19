@@ -115,12 +115,29 @@ export interface Claim {
 
 export type CalloutTone = "info" | "proof" | "warning" | "boundary";
 
+export interface CompileFailureExample {
+  id: string;
+  title: string;
+  source: string;
+  property: string;
+  stage: string;
+  code: string;
+  enforcement: string;
+  caught: string;
+}
+
 export type LessonBlock =
   | { type: "paragraph"; text: string }
   | { type: "bullets"; items: string[] }
   | { type: "steps"; items: string[] }
   | { type: "links"; items: { label: string; href: string }[] }
   | { type: "callout"; tone: CalloutTone; title: string; text: string }
+  | {
+      type: "compile-failures";
+      heading: string;
+      intro: string;
+      examples: CompileFailureExample[];
+    }
   | {
       type: "table";
       headers: string[];
