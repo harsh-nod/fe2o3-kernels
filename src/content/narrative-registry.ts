@@ -666,8 +666,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Current layers, no general execution",
-        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138's second checkpoint adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and a bounded authenticated optimized-MIR frontend. Only missing-publish and duplicate-store safe source fixtures currently reach semantic KIR diagnostics. The positive source reaches a non-authoritative witness plan, then stops because runtime-plan binding, frontend promotion, and lowering are incomplete. SOURCE_TO_IR remains false for the complete general family and all 15 source mutations; LOWERING=false and PROTECTED_EXECUTION=false."
+        "title": "All 15 fail at compile time, no general execution",
+        "text": "The current functional implementation remains the exact fixed M=N=K=16 Slice 1 source and protected gfx942 observation described above, plus separate bounded Slice 2-4 model and machine-shape evidence. Issue #138 adds a safe companion surface, canonical bounded structured KIR verification, driver transaction gating, and authenticated optimized-MIR import. An exact safe Rust mutation-oracle corpus now derives all 15 files by one reversible edit of the same full baseline. Individual managed MI300X builds reject every mutation at compiler preflight with its expected property, stage, 0x464701xx code, root and span chain, and zero artifacts. The positive production source reaches only a structural non-authoritative frontend correspondence. A private final join for both schedules is compiled but unhooked, Verus authority is fail-closed pending a root-owned runtime closure, and no qualified protected general-GEMM launch exists. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the complete-family status."
       },
       {
         "type": "paragraph",
@@ -815,23 +815,30 @@ const narrativeRegistry = deepFreeze({
         "text": "Independently of the source UI tests, the canonical bounded structured-KIR suite constructs each of the 15 hostile schedules and rejects it with the exact property, owning stage, and code shown above. The proof-required compiler driver consumes those findings through its no-artifact transaction gate. This establishes structured-IR verification and driver gating, not authenticated source derivation of all 15 graphs."
       },
       {
+        "type": "callout",
+        "tone": "proof",
+        "title": "All 15 exact safe source mutations are diagnostic",
+        "text": "The authenticated mutation-oracle corpus is a separate source layer. Each file forbids unsafe code, retains the valid_proof_sensitive root, and is byte-identical to the full baseline after reversing its one named edit. On MI300X, each individual managed release build reached optimized-MIR admission and failed at compiler preflight with the expected property, stage, 0x464701xx code, source span, terminal spans, reachable call chain, and an empty artifact directory. This is source-to-diagnostic evidence for the exact mutation corpus, not a proof result for the positive kernel."
+      },
+      {
         "type": "table",
         "headers": [
-          "Authenticated source case",
-          "Observed frontend result",
-          "Checkpoint boundary"
+          "Owner-retaining layer",
+          "Implemented result",
+          "Authority boundary"
         ],
         "rows": [
-          ["missing-publish", "initialized at gpu, 0x46470103; no artifact", "A separate well-typed proof-sensitive fixture reaches semantic KIR; this does not turn the companion typestate UI error into a proof result."],
-          ["duplicate-store", "output_region_injective at tile, 0x46470106; no artifact", "A separate safe source fixture reaches semantic KIR; it does not derive the other sealed-surface or corpus mutations."],
-          ["positive general source", "Reaches a verified but non-authoritative witness plan; no artifact", "Runtime-plan binding, frontend promotion, and lowering are incomplete."]
+          ["Positive production source", "Authenticates structural optimized-MIR facts into a non-Clone frontend correspondence", "The production preflight still returns an error and issues no artifact authority."],
+          ["Private final pair join", "Compiles and checks the source owner against verifier and post-link machine owners for the ordered reference and vectorized schedules", "It has no production caller and cannot be reconstructed from public identities."],
+          ["Verus runtime closure", "Implements exact pinning and retention for the reviewed root-owned closure across the qualification boundaries", "Proof execution still returns AuthenticatedRuntimeClosureUnavailable until that protected closure is provisioned."],
+          ["Protected hardware", "No qualified general-GEMM launch", "There is no protected dispatch, numerical GPU result, or production execution authority for the general kernel."]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Complete-family flags remain false",
-        "text": "The two authenticated negative source cases are a bounded frontend checkpoint. SOURCE_TO_IR=false remains the honest status for the complete general kernel family and source derivation of all 15 mutations. LOWERING=false and PROTECTED_EXECUTION=false also remain unchanged. The positive witness plan grants no artifact, publication, launch, numerical, performance, or GPU authority."
+        "text": "Authenticated mutation-oracle compile-time rejection of all 15 exact source edits does not establish positive source-to-IR semantic refinement. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the honest complete-family status. The structural positive correspondence and unhooked private final join grant no proof, artifact, publication, load, launch, numerical, performance, or GPU authority."
       },
       {
         "type": "paragraph",

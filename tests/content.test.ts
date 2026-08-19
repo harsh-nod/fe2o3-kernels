@@ -201,13 +201,18 @@ describe("curriculum integrity", () => {
     const contract = JSON.stringify(
       narrativeEntry("gemm-tiling/general-contract"),
     );
-    expect(contract).toContain("Current layers, no general execution");
+    expect(contract).toContain("All 15 fail at compile time, no general execution");
     expect(contract).toContain(
-      "Only missing-publish and duplicate-store safe source fixtures currently reach semantic KIR diagnostics",
+      "all 15 files by one reversible edit of the same full baseline",
     );
     expect(contract).toContain(
-      "SOURCE_TO_IR remains false for the complete general family and all 15 source mutations",
+      "Individual managed MI300X builds reject every mutation at compiler preflight",
     );
+    expect(contract).toContain("structural non-authoritative frontend correspondence");
+    expect(contract).toContain("private final join for both schedules is compiled but unhooked");
+    expect(contract).toContain("root-owned runtime closure");
+    expect(contract).toContain("no qualified protected general-GEMM launch exists");
+    expect(contract).toContain("SOURCE_TO_IR");
     expect(contract).toContain("LOWERING=false");
     expect(contract).toContain("PROTECTED_EXECUTION=false");
     expect(contract).toContain("one workgroup per 16x16 C tile");
@@ -280,13 +285,16 @@ describe("curriculum integrity", () => {
     expect(failures).toContain(
       "not authenticated source derivation of all 15 graphs",
     );
-    expect(failures).toContain("missing-publish");
-    expect(failures).toContain("initialized at gpu, 0x46470103; no artifact");
-    expect(failures).toContain("duplicate-store");
-    expect(failures).toContain(
-      "output_region_injective at tile, 0x46470106; no artifact",
-    );
-    expect(failures).toContain("verified but non-authoritative witness plan");
+    expect(failures).toContain("All 15 exact safe source mutations are diagnostic");
+    expect(failures).toContain("retains the valid_proof_sensitive root");
+    expect(failures).toContain("failed at compiler preflight");
+    expect(failures).toContain("empty artifact directory");
+    expect(failures).toContain("Positive production source");
+    expect(failures).toContain("non-Clone frontend correspondence");
+    expect(failures).toContain("Private final pair join");
+    expect(failures).toContain("It has no production caller");
+    expect(failures).toContain("AuthenticatedRuntimeClosureUnavailable");
+    expect(failures).toContain("No qualified general-GEMM launch");
     expect(failures).toContain("Complete-family flags remain false");
     expect(failures).toContain("SOURCE_TO_IR=false");
     expect(failures).toContain("LOWERING=false");

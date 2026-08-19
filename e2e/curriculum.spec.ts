@@ -160,7 +160,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("Current layers, no general execution"),
+    page.getByText("All 15 fail at compile time, no general execution"),
   ).toBeVisible();
   await expect(
     page.getByText("Rust UI and semantic proof are different"),
@@ -179,10 +179,15 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     page.getByText("All 15 are rejected as structured KIR"),
   ).toBeVisible();
   await expect(
+    page.getByText("All 15 exact safe source mutations are diagnostic"),
+  ).toBeVisible();
+  await expect(
     page.getByText("Complete-family flags remain false"),
   ).toBeVisible();
-  await expect(page.getByText("missing-publish", { exact: true })).toBeVisible();
-  await expect(page.getByText("duplicate-store", { exact: true })).toBeVisible();
+  await expect(page.getByText("Positive production source", { exact: true })).toBeVisible();
+  await expect(page.getByText("Private final pair join", { exact: true })).toBeVisible();
+  await expect(page.getByText("Verus runtime closure", { exact: true })).toBeVisible();
+  await expect(page.getByText("Protected hardware", { exact: true })).toBeVisible();
   await expect(
     page.getByRole("link", { name: /#138 General tiled GEMM/ }),
   ).toHaveAttribute(
