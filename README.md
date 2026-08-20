@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`79b9f3daea585e6a99582798e354c6ddac39a087`, tree
-`73962ebfaf65f211cb58b2af162e10f62ff1135d`. Deployment requires
+`9be42ec1f2e3df70493849a1095f7d59ce0285fa`, tree
+`0fa8b783dd3f6598ec1bb3dfee8353287fd3c97c`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
