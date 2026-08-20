@@ -47,7 +47,7 @@ export function CompileFailureGallery({
             </header>
             <div className="compile-failure-body">
               <div className="compile-failure-source">
-                <span>Safe Rust mutation</span>
+                <span>Edited region from the full safe-Rust fixture</span>
                 <pre><code>{example.source}</code></pre>
               </div>
               <div className="compile-failure-verdict">
@@ -71,6 +71,10 @@ export function CompileFailureGallery({
                 </dl>
                 <p>{example.caught}</p>
               </div>
+            </div>
+            <div className="compile-failure-output">
+              <span>Compiler diagnostic</span>
+              <pre><code>{example.diagnostic}</code></pre>
             </div>
           </article>
         ))}

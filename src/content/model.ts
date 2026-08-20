@@ -119,6 +119,7 @@ export interface CompileFailureExample {
   id: string;
   title: string;
   source: string;
+  diagnostic: string;
   property: string;
   stage: string;
   code: string;

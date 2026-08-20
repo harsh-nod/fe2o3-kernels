@@ -317,7 +317,8 @@ describe("curriculum integrity", () => {
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
     expect(failureGallery.examples).toHaveLength(5);
-    expect(failureGallery.intro).toContain("exact safe-Rust mutation");
+    expect(failureGallery.intro).toContain("exact edited region");
+    expect(failureGallery.intro).toContain("stable diagnostic excerpt");
     expect(failureGallery.intro).toContain("authenticated optimized-MIR admission");
     expect(failureGallery.intro).toContain("structured KIR analysis");
     expect(failureGallery.intro).toContain("never a launch-time failure");
@@ -340,10 +341,19 @@ describe("curriculum integrity", () => {
       { id: "incorrect_alpha_beta_epilogue", property: "epilogue_refinement", stage: "kernel", code: "0x4647010a" },
     ]);
     for (const example of failureGallery.examples) {
-      expect(example.source).toContain("#[kernel]");
       expect(example.source).not.toContain("unsafe");
+      expect(example.source).not.toContain("KernelContext");
+      expect(example.diagnostic).toContain(example.code);
+      expect(example.diagnostic).toContain("no artifact authority was issued");
       expect(example.caught.length).toBeGreaterThan(80);
     }
+    expect(failureGallery.examples[0]?.source).toContain("if depth < k");
+    expect(failureGallery.examples[0]?.diagnostic).toContain(
+      "failed bound: A dimension 0 requires `row < m`",
+    );
+    expect(failureGallery.examples[0]?.diagnostic).toContain(
+      "proven bound: A dimension 1 satisfies `depth < k`",
+    );
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {

@@ -779,22 +779,24 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "compile-failures",
         "heading": "Five kernels that never become GPU artifacts",
-        "intro": "Each abridged body is an exact safe-Rust mutation from the 15-case diagnostic corpus. Rust ownership, privacy, and typestate make local capability misuse unrepresentable; authenticated optimized-MIR admission and structured KIR analysis check the cross-lane and algorithmic properties that remain well-typed. The expected result below is a compiler-preflight diagnostic, never a launch-time failure. These non-authoritative mutation-oracle results do not admit the positive general GEMM: optimized-MIR correspondence remains fail-closed before any receipt or artifact.",
+        "intro": "Each source panel is the exact edited region from a full safe-Rust fixture in the 15-case diagnostic corpus; unchanged surrounding kernel code is omitted. Rust ownership, privacy, and typestate make local capability misuse unrepresentable; authenticated optimized-MIR admission and structured KIR analysis check the cross-lane and algorithmic properties that remain well-typed. Each stable diagnostic excerpt is a compiler-preflight result, never a launch-time failure. These non-authoritative mutation-oracle results do not admit the positive general GEMM: optimized-MIR correspondence remains fail-closed before any receipt or artifact.",
         "examples": [
           {
             "id": "unguarded_a_tail_load",
             "title": "Out-of-bounds global load",
-            "source": "#[kernel]\npub fn unguarded_a_tail_load(context: &mut KernelContext<'_>) {\n    let value = context.load_a(context.row(), context.depth());\n    context.stage(context.lane, context.phase as u32, value);\n}",
+            "source": "let a_value = if depth < k {\n    context.load_a(a, row, depth, m, k, lda)\n} else {\n    0\n};",
+            "diagnostic": "general GEMM bounds_safe counterexample at tile (0x46470102)\nfailed bound: A dimension 0 requires `row < m`, but that relation is not established on every path to the access\nproven bound: A dimension 1 satisfies `depth < k`\nhelp: guard every path to the access with the failed relation or use a checked operation that supplies a defined tail value\nnote: no artifact authority was issued",
             "property": "bounds_safe",
             "stage": "tile",
             "code": "0x46470102",
             "enforcement": "Verifier-only; remains well-typed",
-            "caught": "The load is missing row < M and depth < K guards. Safe Rust preserves the typed global-view operation, while tile analysis rejects the unproved dynamic address relation before code generation."
+            "caught": "The load retains its depth < K guard but omits row < M. The compiler derives both dimensional obligations from the A-load signature, reports the failed row bound and the proven depth bound, and stops before code generation."
           },
           {
             "id": "duplicate_lane_c_write",
             "title": "Duplicate output ownership",
-            "source": "#[kernel]\npub fn duplicate_lane_c_write(context: &mut KernelContext<'_>) {\n    let duplicate_index = context.group_y * context.ldc + context.group_x;\n    context.store_c_index(duplicate_index, context.lane as f32);\n}",
+            "source": "context.store_epilogue(\n    &mut c,\n    row_base,\n    group_x * 16,\n    m,\n    n,\n    ldc,\n    value,\n    alpha,\n    accumulator0,\n    beta,\n    initial,\n);",
+            "diagnostic": "general GEMM output_region_injective counterexample at tile (0x46470106)\nnote: no artifact authority was issued",
             "property": "output_region_injective",
             "stage": "tile",
             "code": "0x46470106",
@@ -804,7 +806,8 @@ const narrativeRegistry = deepFreeze({
           {
             "id": "divergent_barrier",
             "title": "Lane-divergent barrier",
-            "source": "#[kernel]\npub fn divergent_barrier(context: &mut KernelContext<'_>) {\n    context.stage(context.lane, context.phase as u32, context.lane as u16);\n    if context.lane.is_multiple_of(2) {\n        context.publish_barrier();\n    }\n}",
+            "source": "context.stage([0; 4], [0; 4]);\ncontext.wait_stage(phase);\nif lane.is_multiple_of(2) {\n    context.publish();\n}",
+            "diagnostic": "general GEMM barrier_convergent counterexample at gpu (0x46470105)\nnote: no artifact authority was issued",
             "property": "barrier_convergent",
             "stage": "gpu",
             "code": "0x46470105",
@@ -814,7 +817,8 @@ const narrativeRegistry = deepFreeze({
           {
             "id": "lds_read_before_initialization",
             "title": "LDS read before initialization",
-            "source": "#[kernel]\npub fn lds_read_before_initialization(context: &mut KernelContext<'_>) {\n    let value = context.read_stage(context.lane, context.phase as u32);\n    context.store_c(context.row(), context.column(), value as f32);\n}",
+            "source": "context.stage_value(a_slot, phase, depth, k, a_value);\ncomponent += 1;",
+            "diagnostic": "general GEMM initialized counterexample at gpu (0x46470103)\nnote: no artifact authority was issued",
             "property": "initialized",
             "stage": "gpu",
             "code": "0x46470103",
@@ -824,7 +828,8 @@ const narrativeRegistry = deepFreeze({
           {
             "id": "incorrect_alpha_beta_epilogue",
             "title": "Incorrect alpha/beta epilogue",
-            "source": "#[kernel]\npub fn incorrect_alpha_beta_epilogue(context: &mut KernelContext<'_>) {\n    let product = context.lane as f32;\n    let initial = context.load_c(context.row(), context.column());\n    let wrong = context.alpha * product + initial;\n    context.store_c(context.row(), context.column(), wrong);\n}",
+            "source": "let initial = context.load_c(&c, row_base, column, m, n, ldc);\nlet value = alpha * accumulator0 + initial;",
+            "diagnostic": "general GEMM epilogue_refinement counterexample at kernel (0x4647010a)\nnote: no artifact authority was issued",
             "property": "epilogue_refinement",
             "stage": "kernel",
             "code": "0x4647010a",

@@ -174,16 +174,22 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(failureGallery.getByText("Lane-divergent barrier")).toBeVisible();
   await expect(failureGallery.getByText("LDS read before initialization")).toBeVisible();
   await expect(failureGallery.getByText("Incorrect alpha/beta epilogue")).toBeVisible();
-  await expect(failureGallery.getByText("0x46470102")).toBeVisible();
-  await expect(failureGallery.getByText("0x46470106")).toBeVisible();
-  await expect(failureGallery.getByText("0x46470105")).toBeVisible();
-  await expect(failureGallery.getByText("0x46470103")).toBeVisible();
-  await expect(failureGallery.getByText("0x4647010a")).toBeVisible();
+  await expect(failureGallery.getByText("0x46470102", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("0x46470106", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("0x46470105", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("0x46470103", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("0x4647010a", { exact: true })).toBeVisible();
   await expect(
     failureGallery.getByLabel("Compile-time rejection path"),
   ).toContainText("No artifact");
   await expect(
-    failureGallery.getByText(/exact safe-Rust mutation/u),
+    failureGallery.getByText(/exact edited region/u),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText(/failed bound: A dimension 0 requires `row < m`/u),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText(/proven bound: A dimension 1 satisfies `depth < k`/u),
   ).toBeVisible();
   await page
     .getByRole("heading", {
