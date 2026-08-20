@@ -1153,6 +1153,25 @@ p {
   font-weight: 750;
 }
 
+.runtime-statuses {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.runtime-status-unmeasured {
+  color: var(--muted);
+  background: var(--surface-soft);
+  border-color: var(--border-strong);
+}
+
+.runtime-status-measured {
+  color: var(--blue);
+  background: var(--blue-soft);
+  border-color: var(--blue);
+}
+
 .runtime-milestone-columns {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1181,6 +1200,86 @@ p {
 
 .runtime-milestone li + li {
   margin-top: 8px;
+}
+
+.runtime-pipeline {
+  display: grid;
+  grid-template-columns: minmax(190px, 0.32fr) minmax(0, 1fr);
+  gap: 34px;
+  padding: 26px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.runtime-pipeline-heading h3 {
+  line-height: 1.5;
+}
+
+.runtime-pipeline ol {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 26px;
+  padding: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.64;
+  list-style: none;
+  counter-reset: runtime-stage;
+}
+
+.runtime-pipeline li {
+  position: relative;
+  padding-left: 32px;
+  margin: 0 !important;
+  counter-increment: runtime-stage;
+}
+
+.runtime-pipeline li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--accent-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+  content: "0" counter(runtime-stage);
+}
+
+.runtime-outcomes {
+  padding: 26px 0 0;
+}
+
+.runtime-outcomes > h3 {
+  margin-bottom: 14px;
+}
+
+.runtime-outcomes dl {
+  margin: 0;
+  border-top: 1px solid var(--border);
+}
+
+.runtime-outcomes dl > div {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.24fr) minmax(0, 1fr);
+  gap: 22px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.runtime-outcomes dt {
+  color: var(--text-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.73rem;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.runtime-outcomes dd {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.64;
 }
 
 .runtime-try-it {
@@ -1243,6 +1342,61 @@ p {
   flex: 0 0 auto;
   margin-top: 3px;
   color: #73ceb9;
+}
+
+.runtime-hardware-command {
+  padding: 18px 16px;
+  margin: 26px 0;
+  background: var(--surface-soft);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--amber);
+  border-radius: 5px;
+}
+
+.runtime-hardware-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--amber);
+}
+
+.runtime-hardware-heading h3 {
+  margin: 2px 0 0;
+}
+
+.runtime-command-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 10px 10px 10px 12px;
+  color: var(--code-text);
+  background: var(--code-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+}
+
+.runtime-command-row code {
+  min-width: 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.runtime-command-row .icon-button {
+  width: 34px;
+  height: 34px;
+  color: var(--code-text);
+  border-color: color-mix(in srgb, var(--code-text) 30%, transparent);
+}
+
+.runtime-hardware-command > p {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
 }
 
 .runtime-evidence-boundary {
@@ -2613,7 +2767,12 @@ tr:last-child td {
   }
 
   .runtime-milestone-columns,
-  .runtime-evidence-boundary {
+  .runtime-evidence-boundary,
+  .runtime-pipeline {
+    grid-template-columns: 1fr;
+  }
+
+  .runtime-pipeline ol {
     grid-template-columns: 1fr;
   }
 
@@ -2742,9 +2901,10 @@ tr:last-child td {
     gap: 13px;
   }
 
-  .runtime-milestone-heading > .runtime-status-badge {
+  .runtime-milestone-heading > .runtime-statuses {
     grid-column: 2;
     justify-self: start;
+    justify-content: flex-start;
   }
 
   .runtime-try-it {
@@ -2753,6 +2913,11 @@ tr:last-child td {
     border-right: 0;
     border-left: 0;
     border-radius: 0;
+  }
+
+  .runtime-outcomes dl > div {
+    grid-template-columns: 1fr;
+    gap: 6px;
   }
 
   .code-tool {

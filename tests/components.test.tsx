@@ -40,16 +40,40 @@ describe("runtime milestones", () => {
     expect(
       screen.getByRole("heading", { name: "One runtime ownership pipeline" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Implementation checked")).toBeInTheDocument();
+    expect(screen.getAllByText("Implementation checked")).toHaveLength(2);
     expect(screen.getByText(/100,000 sequential dispatch/u)).toBeInTheDocument();
     expect(screen.getByText(/not yet been re-observed on MI300X/u)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Public one-shot synchronous vecadd API" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Exactly three ownership outcomes")).toBeInTheDocument();
+    expect(screen.getByText("DefinitelyNotPublished")).toBeInTheDocument();
+    expect(screen.getByText("RetainedTerminal")).toBeInTheDocument();
+    expect(screen.getByText(/released12 and retained0/u)).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Copy hardware command" })).toHaveLength(2);
+    expect(screen.getAllByText(/browser only copies this command/u)).toHaveLength(2);
+    expect(screen.getAllByText(/implementation-checked and unmeasured/u)).toHaveLength(2);
+    expect(screen.getByText("ceeaa7cfc973a576004ceaba10f95c4681a90b3edf266d382f6f8021e8083e2c")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "One bounded MI300X current-V2 requalification",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Evidence reviewed")).toBeInTheDocument();
+    expect(screen.getByText("Bounded MI300X observation")).toBeInTheDocument();
+    expect(screen.getByText(/group_status=1 afterward/u)).toBeInTheDocument();
+    expect(screen.getByText(/actual2\/expected1 defect remains open/u)).toBeInTheDocument();
+    expect(screen.getByText(/No rerun was performed/u)).toBeInTheDocument();
+    expect(screen.getByText("7324c8a8457c20298ccac1b7791fe219cf72d83dd982aea145c5b730fa19d6c3")).toBeInTheDocument();
     expect(screen.getByText("e5c8d66c5520d1bce7cf2db911c200f1cf4c5536")).toBeInTheDocument();
     expect(screen.getByText("1c694eed427526dc507a129a721237613bafe094")).toBeInTheDocument();
     expect(screen.getByText(/does not execute Rust, KFD, or GPU work/u)).toBeInTheDocument();
+    expect(screen.getByText(/Hardware commands are separated and labeled as copy-only/u)).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Current V2 hardware requalification" }),
+      screen.getByRole("heading", { name: "Hardware evidence and longer-lived execution" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Publish synchronous launch")).toBeInTheDocument();
+    expect(screen.getByText("Add the compiler leaf bridge")).toBeInTheDocument();
+    expect(screen.getByText("Repair the post-success validator")).toBeInTheDocument();
   });
 });
 

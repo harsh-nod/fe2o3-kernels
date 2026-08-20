@@ -67,6 +67,8 @@ describe("curriculum integrity", () => {
     expect(validateRuntimeMilestones()).toEqual([]);
     expect(runtimeMilestones.map(({ id }) => id)).toEqual([
       "runtime-ownership-pipeline-v2",
+      "public-vecadd-sync-v1",
+      "current-v2-mi300x-requalification-v1",
     ]);
     expect(runtimeMilestones[0].commit).toBe(
       "e5c8d66c5520d1bce7cf2db911c200f1cf4c5536",
@@ -76,6 +78,50 @@ describe("curriculum integrity", () => {
     );
     expect(runtimeMilestones[0].limitations.join(" ")).toContain(
       "not yet been re-observed on MI300X",
+    );
+    expect(runtimeMilestones[1]).toMatchObject({
+      commit: "e9d4adf9240684d39ce877306437d2e9b2de7115",
+      tree: "83cb7fb98519f1934af7f263f823363668c41ba7",
+      manifest: "ceeaa7cfc973a576004ceaba10f95c4681a90b3edf266d382f6f8021e8083e2c",
+      measurement: "unmeasured",
+    });
+    expect(runtimeMilestones[1].outcomes?.map(({ name }) => name)).toEqual([
+      "Completed",
+      "DefinitelyNotPublished",
+      "RetainedTerminal",
+    ]);
+    expect(runtimeMilestones[1].commands.join(" ")).not.toMatch(
+      /kfd-vecadd-sync <unique-id>/u,
+    );
+    expect(runtimeMilestones[1].hardwareExample?.command).toBe(
+      "kfd-vecadd-sync <unique-id> <exact-cov6-hsaco>",
+    );
+    expect(runtimeMilestones[1].limitations.join(" ")).toContain(
+      "implementation-checked and unmeasured",
+    );
+    expect(runtimeMilestones[2]).toMatchObject({
+      commit: "d892b66fe6e300990495e0b7728d5eee152ab66c",
+      tree: "33e4d9cf8592c39d831f8e240ebc5c0de4b233e3",
+      status: "evidence-reviewed",
+      measurement: "bounded-mi300x-observation",
+      evidenceRecord: {
+        path: "crates/fe2o3-kfd/evidence/current-v2-requalification-mi300x-20260820.record",
+        sha256: "7324c8a8457c20298ccac1b7791fe219cf72d83dd982aea145c5b730fa19d6c3",
+      },
+    });
+    expect(runtimeMilestones[2].manifest).toBeUndefined();
+    expect(runtimeMilestones[2].limitations.join(" ")).toContain(
+      "group_status=1",
+    );
+    expect(runtimeMilestones[2].limitations.join(" ")).toContain(
+      "actual2/expected1",
+    );
+    expect(runtimeMilestones[2].limitations.join(" ")).toContain(
+      "No rerun was performed",
+    );
+    expect(runtimeMilestones[2].commands.join(" ")).not.toContain("--live");
+    expect(runtimeMilestones[2].hardwareExample?.command).toContain(
+      "--live <unique-id>",
     );
   });
 

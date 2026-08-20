@@ -54,14 +54,38 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await expect(
     page.getByRole("heading", { name: "One runtime ownership pipeline" }),
   ).toBeVisible();
-  await expect(page.getByText("Implementation checked", { exact: true })).toBeVisible();
-  await expect(page.getByText("Run locally (CPU-safe)")).toBeVisible();
+  await expect(page.getByText("Implementation checked", { exact: true })).toHaveCount(2);
+  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(3);
   await expect(page.getByText(/cargo test -p fe2o3-runtime-model/u)).toBeVisible();
   await expect(page.getByText(/not yet been re-observed on MI300X/u)).toBeVisible();
   await expect(page.getByText(/FE2O3_RUN/u)).toHaveCount(0);
-  await expect(page.getByText("Publish synchronous launch")).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Public one-shot synchronous vecadd API" }),
+  ).toBeVisible();
+  await expect(page.getByText("Exactly three ownership outcomes")).toBeVisible();
+  await expect(page.getByText("DefinitelyNotPublished")).toBeVisible();
+  await expect(page.getByText("RetainedTerminal")).toBeVisible();
+  await expect(page.getByText(/released12 and retained0/u)).toBeVisible();
+  await expect(page.getByText(/implementation-checked and unmeasured/u)).toHaveCount(2);
+  await expect(page.getByText(/MI300X required; the browser only copies/u)).toHaveCount(2);
+  await expect(page.getByRole("button", { name: "Copy hardware command" })).toHaveCount(2);
+  await expect(
+    page.getByRole("heading", {
+      name: "One bounded MI300X current-V2 requalification",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Evidence reviewed", { exact: true })).toBeVisible();
+  await expect(page.getByText("Bounded MI300X observation")).toBeVisible();
+  await expect(page.getByText(/group_status=1 afterward/u)).toBeVisible();
+  await expect(page.getByText(/actual2\/expected1 defect remains open/u)).toBeVisible();
+  await expect(page.getByText(/No rerun was performed/u)).toBeVisible();
+  await expect(page.getByText("7324c8a8457c20298ccac1b7791fe219cf72d83dd982aea145c5b730fa19d6c3")).toBeVisible();
+  await expect(page.getByText("Add the compiler leaf bridge")).toBeVisible();
   await expect(
     page.getByText("1c694eed427526dc507a129a721237613bafe094"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("83cb7fb98519f1934af7f263f823363668c41ba7"),
   ).toBeVisible();
 
   const dimensions = await page.evaluate(() => ({
