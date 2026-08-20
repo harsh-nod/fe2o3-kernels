@@ -4,6 +4,7 @@ import { ArchitecturePage } from "./components/ArchitecturePage";
 import { GlossaryPage } from "./components/GlossaryPage";
 import { LessonPage } from "./components/LessonPage";
 import { ProgressPage } from "./components/ProgressPage";
+import { RuntimeMilestonesPage } from "./components/RuntimeMilestonesPage";
 import { SearchDialog } from "./components/SearchDialog";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
@@ -61,6 +62,7 @@ export function App() {
           />
           <Route path="/architecture" element={<ArchitecturePage />} />
           <Route path="/status" element={<ProgressPage />} />
+          <Route path="/runtime" element={<RuntimeMilestonesPage />} />
           <Route path="/glossary" element={<GlossaryPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

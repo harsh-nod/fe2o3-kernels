@@ -25,6 +25,7 @@ import {
   sourceMilestoneReference,
   validateSourceMilestoneCatalog,
 } from "./source-milestones";
+import { validateRuntimeMilestones } from "./runtime-milestones";
 
 const exactObjectName = /^[0-9a-f]{40}$/;
 const exactSha256 = /^[0-9a-f]{64}$/;
@@ -69,6 +70,10 @@ export function validateCurriculum(
   narratives?: Record<string, unknown>,
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [
+    ...validateRuntimeMilestones().map((message) => ({
+      path: "runtimeMilestones",
+      message,
+    })),
     ...validateStagedEvidenceCatalog().map((message) => ({
       path: "stagedEvidence",
       message,

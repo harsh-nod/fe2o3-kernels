@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { CodeTabs } from "../src/components/CodeTabs";
 import { LessonSections } from "../src/components/LessonSections";
+import { RuntimeMilestonesPage } from "../src/components/RuntimeMilestonesPage";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import type { LessonSection } from "../src/content/model";
 import { narrativeEntry } from "../src/content/narrative-registry";
@@ -29,6 +30,26 @@ describe("code tabs", () => {
     await user.click(screen.getByRole("button", { name: "Copy code" }));
     expect(writeText).toHaveBeenCalledWith(tabs[1].code);
     expect(screen.getByText("Copied")).toBeInTheDocument();
+  });
+});
+
+describe("runtime milestones", () => {
+  it("renders the implementation, runnable commands, and claim boundary", () => {
+    render(<RuntimeMilestonesPage />);
+
+    expect(
+      screen.getByRole("heading", { name: "One runtime ownership pipeline" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Implementation checked")).toBeInTheDocument();
+    expect(screen.getByText(/100,000 sequential dispatch/u)).toBeInTheDocument();
+    expect(screen.getByText(/not yet been re-observed on MI300X/u)).toBeInTheDocument();
+    expect(screen.getByText("e5c8d66c5520d1bce7cf2db911c200f1cf4c5536")).toBeInTheDocument();
+    expect(screen.getByText("1c694eed427526dc507a129a721237613bafe094")).toBeInTheDocument();
+    expect(screen.getByText(/does not execute Rust, KFD, or GPU work/u)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Current V2 hardware requalification" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Publish synchronous launch")).toBeInTheDocument();
   });
 });
 

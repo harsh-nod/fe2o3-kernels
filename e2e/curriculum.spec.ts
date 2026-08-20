@@ -41,6 +41,40 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
+test("runtime milestone exposes a safe runnable example and evidence boundary", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#/runtime");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "From one packet to a production runtime",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "One runtime ownership pipeline" }),
+  ).toBeVisible();
+  await expect(page.getByText("Implementation checked", { exact: true })).toBeVisible();
+  await expect(page.getByText("Run locally (CPU-safe)")).toBeVisible();
+  await expect(page.getByText(/cargo test -p fe2o3-runtime-model/u)).toBeVisible();
+  await expect(page.getByText(/not yet been re-observed on MI300X/u)).toBeVisible();
+  await expect(page.getByText(/FE2O3_RUN/u)).toHaveCount(0);
+  await expect(page.getByText("Publish synchronous launch")).toBeVisible();
+  await expect(
+    page.getByText("1c694eed427526dc507a129a721237613bafe094"),
+  ).toBeVisible();
+
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  await page.screenshot({
+    path: `/tmp/fe2o3-kernels-runtime-${testInfo.project.name}.png`,
+    animations: "disabled",
+  });
+});
+
 test("search, theme, tabs, and progress work together", async ({ page }) => {
   await page.goto("./#/lesson/read-the-evidence");
   await expect(

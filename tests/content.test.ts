@@ -38,6 +38,10 @@ import {
   sourceMilestoneRecord,
   validateSourceMilestoneCatalog,
 } from "../src/content/source-milestones";
+import {
+  runtimeMilestones,
+  validateRuntimeMilestones,
+} from "../src/content/runtime-milestones";
 import { validateCurriculum } from "../src/content/validate";
 
 function serializedLessonContent(lessonId: string): string {
@@ -59,6 +63,22 @@ function checkpointDetail(
 }
 
 describe("curriculum integrity", () => {
+  it("binds completed runtime milestones to safe reproducible evidence", () => {
+    expect(validateRuntimeMilestones()).toEqual([]);
+    expect(runtimeMilestones.map(({ id }) => id)).toEqual([
+      "runtime-ownership-pipeline-v2",
+    ]);
+    expect(runtimeMilestones[0].commit).toBe(
+      "e5c8d66c5520d1bce7cf2db911c200f1cf4c5536",
+    );
+    expect(runtimeMilestones[0].commands).not.toEqual(
+      expect.arrayContaining([expect.stringMatching(/FE2O3_RUN|\/dev\/kfd/u)]),
+    );
+    expect(runtimeMilestones[0].limitations.join(" ")).toContain(
+      "not yet been re-observed on MI300X",
+    );
+  });
+
   it("covers modules zero through eight in order", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8,
