@@ -1532,12 +1532,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-18",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "9be42ec1f2e3df70493849a1095f7d59ce0285fa",
-      eventualPublicTree: "0fa8b783dd3f6598ec1bb3dfee8353287fd3c97c",
+      eventualPublicCommit: "443915d1fd16f6c3a86352d886ffb15838ab8258",
+      eventualPublicTree: "835340f80db5e1092d896553d77781f54f03b1a3",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "9be42ec1f2e3df70493849a1095f7d59ce0285fa",
-        requiredTree: "0fa8b783dd3f6598ec1bb3dfee8353287fd3c97c",
+        requiredCommit: "443915d1fd16f6c3a86352d886ffb15838ab8258",
+        requiredTree: "835340f80db5e1092d896553d77781f54f03b1a3",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2163,7 +2163,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "9be42ec1f2e3df70493849a1095f7d59ce0285fa",
+      "443915d1fd16f6c3a86352d886ffb15838ab8258",
     );
 
     const lesson = curriculum

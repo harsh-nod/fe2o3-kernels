@@ -142,7 +142,7 @@ export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
   "read-the-evidence/differentiator": "7d4f9897c50993ecbe6e8d9f94162e6cf649f669f1f555627f9d2df5cb0147d7",
   "read-the-evidence/compiler-refactor": "b9b2de157842c4626cf236431e29e677d316ec7156189d507330891db4d409df",
-  "read-the-evidence/scalar-gemm-checkpoint": "01c837be7b868e2d85d273dba073b40c51ebdee44042f1a6a7a6593d11b475ca",
+  "read-the-evidence/scalar-gemm-checkpoint": "8910eeb46d590ffc48356ea53ac825652ed5ea4dad9e1255bd81281fc0a8715f",
   "read-the-evidence/moe-bounded-evidence": "dbd3365e78d1b08d60b330328166e39fe46b1d7174d6ec0ca46811542757e361",
   "gfx942-setup/toolchain": "bde4a23bc51376d828c8b910ab8048c988c7f838736f1d309bea0294fde84ef3",
   "gfx942-setup/sequence": "00a0689fb93a27622076f9bd21c5fb8c0b78c57d88d79dc8db0bfb86596315da",

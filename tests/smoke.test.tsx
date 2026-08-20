@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("9be42ec1f2e3")).toBeInTheDocument();
+    expect(screen.getByText("443915d1fd16")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "0fa8b783dd3f6598ec1bb3dfee8353287fd3c97c",
+      "835340f80db5e1092d896553d77781f54f03b1a3",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -260,7 +260,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open implementation checkpoint/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/9be42ec1f2e3df70493849a1095f7d59ce0285fa",
+      "https://github.com/harsh-nod/fe2o3/tree/443915d1fd16f6c3a86352d886ffb15838ab8258",
     );
   });
 });
