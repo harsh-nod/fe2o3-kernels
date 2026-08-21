@@ -19,7 +19,7 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
       page.getByRole("dialog", { name: "Curriculum navigation" }),
     ).toBeVisible();
     await page.screenshot({
-      path: "/tmp/fe2o3-kernels-mobile-drawer.png",
+      path: testInfo.outputPath("mobile-drawer.png"),
       animations: "disabled",
     });
     await page.getByRole("button", { name: "Close curriculum" }).click();
@@ -29,7 +29,7 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
     ).toBeVisible();
   }
 
-  const viewportScreenshot = `/tmp/fe2o3-kernels-${testInfo.project.name}.png`;
+  const viewportScreenshot = testInfo.outputPath("viewport.png");
   await page.screenshot({ path: viewportScreenshot, animations: "disabled" });
 
   const dimensions = await page.evaluate(() => ({
@@ -199,7 +199,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
   await page.screenshot({
-    path: `/tmp/fe2o3-kernels-compile-errors-${testInfo.project.name}.png`,
+    path: testInfo.outputPath("compile-errors.png"),
     animations: "disabled",
   });
   await expect(
