@@ -65,23 +65,21 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Five kernels that never become GPU artifacts",
+        name: "Five generic compiler passes that stop unsafe IR",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
-    expect(rejectionPath).toHaveTextContent("Safe Rust source");
-    expect(rejectionPath).toHaveTextContent(
-      "Authenticated optimized-MIR admission",
-    );
-    expect(rejectionPath).toHaveTextContent("Structured KIR verifier");
-    expect(rejectionPath).toHaveTextContent("No artifact");
+    expect(rejectionPath).toHaveTextContent("Rust semantic MIR / PLIRON");
+    expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
+    expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
+    expect(rejectionPath).toHaveTextContent("No lowering or artifact");
     expect(screen.getAllByText("Compilation stopped")).toHaveLength(5);
-    expect(screen.getByText("Out-of-bounds global load")).toBeInTheDocument();
-    expect(screen.getByText("Duplicate output ownership")).toBeInTheDocument();
-    expect(screen.getByText("Lane-divergent barrier")).toBeInTheDocument();
-    expect(screen.getByText("LDS read before initialization")).toBeInTheDocument();
-    expect(screen.getByText("Incorrect alpha/beta epilogue")).toBeInTheDocument();
-    expect(screen.getAllByText("0x4647010a")).toHaveLength(2);
+    expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
+    expect(screen.getByText("Cross-invocation write race")).toBeInTheDocument();
+    expect(screen.getByText("Invocation-divergent barrier")).toBeInTheDocument();
+    expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
+    expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
+    expect(screen.getByText("FE2O3-SEMANTIC-001")).toBeInTheDocument();
   });
 
   it("rejects an unknown section kind without rendering attacker text", () => {

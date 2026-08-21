@@ -201,26 +201,20 @@ describe("curriculum integrity", () => {
     const contract = JSON.stringify(
       narrativeEntry("gemm-tiling/general-contract"),
     );
-    expect(contract).toContain("All 15 fail at compile time, no general execution");
-    expect(contract).toContain(
-      "all 15 files by one reversible edit of the same full baseline",
-    );
-    expect(contract).toContain(
-      "Individual managed MI300X builds reject every mutation at compiler preflight",
-    );
-    expect(contract).toContain("collected-general-gemm-v1 selector exists");
-    expect(contract).toContain("canonical positive structural analysis always fails closed");
-    expect(contract).toContain("safe-code root and its reachable helper MIR");
-    expect(contract).toContain("before any positive receipt");
-    expect(contract).toContain("frontend correspondence");
-    expect(contract).toContain("configuration admission");
-    expect(contract).toContain("proof execution");
-    expect(contract).toContain("Worker V2 handoff");
-    expect(contract).toContain("private final pair join");
-    expect(contract).toContain("durable publication");
-    expect(contract).toContain("protected launch");
-    expect(contract).toContain("independent second downstream blocker");
-    expect(contract).toContain("current route does not reach it");
+    expect(contract).toContain("Generic PLIRON safety passes are mandatory before lowering");
+    expect(contract).toContain("one fixed sequence before Kernel IR lowering");
+    expect(contract).toContain("memory bounds");
+    expect(contract).toContain("global race freedom");
+    expect(contract).toContain("barrier convergence");
+    expect(contract).toContain("workgroup-memory initialization/publication");
+    expect(contract).toContain("declared semantic refinement");
+    expect(contract).toContain("bounded sparse index dataflow");
+    expect(contract).toContain("contain no GEMM names or schedule recognizers");
+    expect(contract).toContain("ThreadIndex/DisjointSlice dynamic-access contract");
+    expect(contract).toContain("Exact Rust CFG projection");
+    expect(contract).toContain("textual PLIRON lit cases");
+    expect(contract).toContain("15-case general-GEMM mutation oracle remains diagnostic-only");
+    expect(contract).toContain("blocked before receipt, proof, Worker, publication, or launch");
     expect(contract).toContain("SOURCE_TO_IR");
     expect(contract).toContain("LOWERING=false");
     expect(contract).toContain("PROTECTED_EXECUTION=false");
@@ -317,15 +311,11 @@ describe("curriculum integrity", () => {
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
     expect(failureGallery.examples).toHaveLength(5);
-    expect(failureGallery.intro).toContain("exact edited region");
-    expect(failureGallery.intro).toContain("stable diagnostic excerpt");
-    expect(failureGallery.intro).toContain("authenticated optimized-MIR admission");
-    expect(failureGallery.intro).toContain("structured KIR analysis");
-    expect(failureGallery.intro).toContain("never a launch-time failure");
-    expect(failureGallery.intro).toContain("non-authoritative mutation-oracle");
-    expect(failureGallery.intro).toContain(
-      "optimized-MIR correspondence remains fail-closed",
-    );
+    expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
+    expect(failureGallery.intro).toContain("bounds example is exercised end to end");
+    expect(failureGallery.intro).toContain("static index 64 into extent 64");
+    expect(failureGallery.intro).toContain("parsed textual PLIRON lit fixtures");
+    expect(failureGallery.intro).toContain("deliberately fail-closed");
     expect(
       failureGallery.examples.map(({ id, property, stage, code }) => ({
         id,
@@ -334,26 +324,25 @@ describe("curriculum integrity", () => {
         code,
       })),
     ).toEqual([
-      { id: "unguarded_a_tail_load", property: "bounds_safe", stage: "tile", code: "0x46470102" },
-      { id: "duplicate_lane_c_write", property: "output_region_injective", stage: "tile", code: "0x46470106" },
-      { id: "divergent_barrier", property: "barrier_convergent", stage: "gpu", code: "0x46470105" },
-      { id: "lds_read_before_initialization", property: "initialized", stage: "gpu", code: "0x46470103" },
-      { id: "incorrect_alpha_beta_epilogue", property: "epilogue_refinement", stage: "kernel", code: "0x4647010a" },
+      { id: "bounds_static_oob", property: "MemoryBounds", stage: "generic PLIRON pass 1/5", code: "FE2O3-BOUNDS-001" },
+      { id: "race_duplicate_output", property: "RaceFreedom", stage: "generic PLIRON pass 2/5", code: "FE2O3-RACE-001" },
+      { id: "barrier_divergent", property: "BarrierConvergence", stage: "generic PLIRON pass 3/5", code: "FE2O3-BARRIER-001" },
+      { id: "workgroup_uninitialized", property: "WorkgroupMemory", stage: "generic PLIRON pass 4/5", code: "FE2O3-WORKGROUP-001" },
+      { id: "semantic_mismatch", property: "SemanticRefinement", stage: "generic PLIRON pass 5/5", code: "FE2O3-SEMANTIC-001" },
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
       expect(example.source).not.toContain("KernelContext");
       expect(example.diagnostic).toContain(example.code);
-      expect(example.diagnostic).toContain("no artifact authority was issued");
+      expect(example.diagnostic).toContain("error[");
       expect(example.caught.length).toBeGreaterThan(80);
     }
-    expect(failureGallery.examples[0]?.source).toContain("if depth < k");
+    expect(failureGallery.examples[0]?.source).toContain("values[64]");
     expect(failureGallery.examples[0]?.diagnostic).toContain(
-      "failed bound: A dimension 0 requires `row < m`",
+      "required: 64 < 64",
     );
-    expect(failureGallery.examples[0]?.diagnostic).toContain(
-      "proven bound: A dimension 1 satisfies `depth < k`",
-    );
+    expect(failureGallery.examples[1]?.diagnostic).toContain("invocation [0]");
+    expect(failureGallery.examples[1]?.diagnostic).toContain("invocation [1]");
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {
@@ -1532,12 +1521,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-18",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "443915d1fd16f6c3a86352d886ffb15838ab8258",
-      eventualPublicTree: "835340f80db5e1092d896553d77781f54f03b1a3",
+      eventualPublicCommit: "fbe0941f37fd6d8f1db85a8b76f2bd328e3e8f5d",
+      eventualPublicTree: "efeee302e56e6bb5e60989b6446c0b90372f7432",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "443915d1fd16f6c3a86352d886ffb15838ab8258",
-        requiredTree: "835340f80db5e1092d896553d77781f54f03b1a3",
+        requiredCommit: "fbe0941f37fd6d8f1db85a8b76f2bd328e3e8f5d",
+        requiredTree: "efeee302e56e6bb5e60989b6446c0b90372f7432",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2163,7 +2152,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "443915d1fd16f6c3a86352d886ffb15838ab8258",
+      "fbe0941f37fd6d8f1db85a8b76f2bd328e3e8f5d",
     );
 
     const lesson = curriculum

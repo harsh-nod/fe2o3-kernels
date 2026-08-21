@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`443915d1fd16f6c3a86352d886ffb15838ab8258`, tree
-`835340f80db5e1092d896553d77781f54f03b1a3`. Deployment requires
+`fbe0941f37fd6d8f1db85a8b76f2bd328e3e8f5d`, tree
+`efeee302e56e6bb5e60989b6446c0b90372f7432`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -635,6 +635,17 @@ join, durable publication, or protected launch. The authenticated proof runtime
 closure remains an independent second downstream blocker, but the current route
 does not reach configuration or proof. Complete-family `SOURCE_TO_IR=false`,
 `LOWERING=false`, and `PROTECTED_EXECUTION=false` remain unchanged.
+
+Separately, the production semantic-MIR route now runs one fixed target-neutral
+ranked-PLIRON safety pipeline before Kernel IR lowering: bounds, global race
+freedom, barrier convergence, workgroup-memory initialization/publication, and
+declared semantic refinement. The passes share bounded sparse index dataflow
+and are tested by 20 parsed textual PLIRON lit fixtures plus focused hostile
+unit suites. Static ranked Rust accesses and checked `ThreadIndex` /
+`DisjointSlice` dynamic accesses reach that pipeline end to end. Exact Rust CFG
+projection for barriers and workgroup memory, other dynamic pointer provenance,
+and source-declared formulas remains fail-closed; the corresponding site cards
+are pass-level PLIRON examples, not completed Rust source-to-machine claims.
 
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish

@@ -23,13 +23,13 @@ export function CompileFailureGallery({
       </header>
 
       <div className="compile-failure-flow" aria-label="Compile-time rejection path">
-        <span><Braces size={15} aria-hidden="true" /> Safe Rust source</span>
+        <span><Braces size={15} aria-hidden="true" /> Rust semantic MIR / PLIRON</span>
         <ArrowRight size={15} aria-hidden="true" />
-        <span>Authenticated optimized-MIR admission</span>
+        <span>PLIRON dialect verification</span>
         <ArrowRight size={15} aria-hidden="true" />
-        <span><ShieldCheck size={15} aria-hidden="true" /> Structured KIR verifier</span>
+        <span><ShieldCheck size={15} aria-hidden="true" /> Fixed generic safety passes</span>
         <ArrowRight size={15} aria-hidden="true" />
-        <span><CircleX size={15} aria-hidden="true" /> No artifact</span>
+        <span><CircleX size={15} aria-hidden="true" /> No lowering or artifact</span>
       </div>
 
       <div className="compile-failure-list">
@@ -47,7 +47,7 @@ export function CompileFailureGallery({
             </header>
             <div className="compile-failure-body">
               <div className="compile-failure-source">
-                <span>Edited region from the full safe-Rust fixture</span>
+                <span>Input excerpt</span>
                 <pre><code>{example.source}</code></pre>
               </div>
               <div className="compile-failure-verdict">

@@ -160,41 +160,41 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("All 15 fail at compile time, no general execution"),
+    page.getByText("Generic PLIRON safety passes are mandatory before lowering"),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Five kernels that never become GPU artifacts",
+      name: "Five generic compiler passes that stop unsafe IR",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
-  await expect(failureGallery.getByText("Out-of-bounds global load")).toBeVisible();
-  await expect(failureGallery.getByText("Duplicate output ownership")).toBeVisible();
-  await expect(failureGallery.getByText("Lane-divergent barrier")).toBeVisible();
-  await expect(failureGallery.getByText("LDS read before initialization")).toBeVisible();
-  await expect(failureGallery.getByText("Incorrect alpha/beta epilogue")).toBeVisible();
-  await expect(failureGallery.getByText("0x46470102", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("0x46470106", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("0x46470105", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("0x46470103", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("0x4647010a", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("Static out-of-bounds access")).toBeVisible();
+  await expect(failureGallery.getByText("Cross-invocation write race")).toBeVisible();
+  await expect(failureGallery.getByText("Invocation-divergent barrier")).toBeVisible();
+  await expect(failureGallery.getByText("Workgroup read before initialization")).toBeVisible();
+  await expect(failureGallery.getByText("Declared formula mismatch")).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-RACE-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-BARRIER-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-WORKGROUP-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-SEMANTIC-001", { exact: true })).toBeVisible();
   await expect(
     failureGallery.getByLabel("Compile-time rejection path"),
-  ).toContainText("No artifact");
+  ).toContainText("No lowering or artifact");
   await expect(
-    failureGallery.getByText(/exact edited region/u),
+    failureGallery.getByText(/static index 64 into extent 64/u),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText(/failed bound: A dimension 0 requires `row < m`/u),
+    failureGallery.getByText(/required: 64 < 64/u),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText(/proven bound: A dimension 1 satisfies `depth < k`/u),
+    failureGallery.getByText(/second writer\/reader: invocation \[1\]/u),
   ).toBeVisible();
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Five kernels that never become GPU artifacts",
+      name: "Five generic compiler passes that stop unsafe IR",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
