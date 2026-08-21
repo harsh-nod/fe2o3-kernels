@@ -165,7 +165,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Five generic compiler passes that stop unsafe IR",
+      name: "Five representative failures with exact diagnostics",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -191,10 +191,22 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(
     failureGallery.getByText(/second writer\/reader: invocation \[1\]/u),
   ).toBeVisible();
+  await expect(
+    page.getByText("Generic does not mean automatically provable"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Complete ranked-PLIRON diagnostic code catalog"),
+  ).toBeVisible();
+  await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-BOUNDS-002" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-RACE-003" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeVisible();
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Five generic compiler passes that stop unsafe IR",
+      name: "Five representative failures with exact diagnostics",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
@@ -203,7 +215,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     animations: "disabled",
   });
   await expect(
-    page.getByText("Rust UI and semantic proof are different"),
+    page.getByText("Compile-time kernel diagnostics"),
   ).toBeVisible();
   await expect(page.getByText("0x46470101", { exact: true })).toBeVisible();
   await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();

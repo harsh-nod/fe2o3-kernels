@@ -770,15 +770,55 @@ const narrativeRegistry = deepFreeze({
   },
   "gemm-tiling/semantic-failures": {
     "sectionId": "semantic-failures",
-    "title": "Rust UI and semantic proof are different",
+    "title": "Compile-time kernel diagnostics",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The safe companion contract assigns one honest source-enforcement owner to each canonical mutation. Three local lifecycle mistakes are fully rejected by Rust typestate. Seven more have safe rustc UI tests that reject attempts to escape the sealed surface, but those UI failures leave dynamic or cross-invocation verifier obligations. The remaining five are verifier-only: ordinary safe Rust can express them, so they must stay well-typed and reach proof-required compiler analysis."
+        "text": "FE2O3 separates ordinary Rust UI errors from target-neutral kernel verification. Rust rejects local type, ownership, privacy, and typestate misuse. The kernel pipelines then analyze structured operations, SSA, control flow, indexed memory effects, invocation ownership, barriers, workgroup-memory epochs, and any explicitly declared semantic-equivalence obligation. These analyses consume workload-neutral Kernel IR or ranked PLIRON: none recognizes GEMM names, tile sizes, or schedules."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Generic does not mean automatically provable",
+        "text": "Bounds, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, launch contracts, and CFG. A kernel outside that analyzable subset is not treated as safe: the compiler reports an Incomplete proof obligation and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent the programmer's intended formula."
+      },
+      {
+        "type": "paragraph",
+        "text": "The fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory. The ranked-PLIRON pre-lowering order is memory bounds, race freedom, barrier convergence, workgroup memory, then declared semantic refinement; PLIRON dialect verification is a prerequisite of the first pass. No lowering pass may run between these checks."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Outcome",
+          "Meaning",
+          "Production consequence"
+        ],
+        "rows": [
+          ["Clean", "Every obligation handled by that pass was discharged.", "The next mandatory pass may run."],
+          ["Rejected", "The compiler found a concrete invalid IR condition or a conflicting execution witness.", "Compilation stops before lowering or artifact emission."],
+          ["Incomplete", "Safety could not be proved because a fact is dynamic, an effect or index is unresolved, or a bounded analysis limit was reached.", "The strict production route also stops; Incomplete does not claim that a concrete bug was proved."]
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Analysis ID",
+          "Kernel-general responsibility",
+          "Representative non-clean findings"
+        ],
+        "rows": [
+          ["kernel-structural-v1", "Verify module, function, kernel, SSA, type, operation, memory, synchronization, launch, and capability invariants.", "Invalid or duplicate identities; bad entry/signature; undefined or non-dominating values; type/result errors; invalid memory, barrier, atomic, fence, convergence, workgroup, wave, float, inline-assembly, or terminator operations; resource limits."],
+          ["kernel-control-flow-v1", "Build and validate the closed kernel CFG before dataflow facts are trusted.", "Declaration or empty body; duplicate block; missing terminator; unknown successor; irreducible control flow; bounded-analysis resource exhaustion."],
+          ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent.", "Static out-of-bounds witness; unresolved dynamic bound; unsupported index, CFG, or operation; analysis limit."],
+          ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, or alias relation; analysis limit."],
+          ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
+          ["kernel-workgroup-memory-v1", "Track workgroup-memory initialization, publication, compatible atomics, and conflicts by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; unresolved trace or analysis limit."],
+          ["kernel-semantic-refinement-v1", "Compare an actual target-neutral expression with a frontend-declared required expression.", "Declared formula mismatch; unresolved semantic expression or analysis limit. This pass checks a supplied contract rather than guessing intent."]
+        ]
       },
       {
         "type": "compile-failures",
-        "heading": "Five generic compiler passes that stop unsafe IR",
+        "heading": "Five representative failures with exact diagnostics",
         "intro": "Every example enters the same fixed workload-neutral PLIRON verifier sequence and stops before target lowering or artifact emission. The bounds example is exercised end to end from ordinary Rust semantic MIR: a checked dynamic access passes, while the static index 64 into extent 64 produces the diagnostic shown here. Race, barrier, workgroup-memory, and semantic-refinement examples are parsed textual PLIRON lit fixtures that exercise the mandatory production passes directly. Their Rust barrier/workgroup/semantic CFG projection is still deliberately fail-closed; the site does not claim those four source forms are connected end to end yet.",
         "examples": [
           {
@@ -836,6 +876,40 @@ const narrativeRegistry = deepFreeze({
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "The pass hash-conses the target-neutral expression DAG, normalizes commutative operand order without reassociating floating-point operations, and finds that beta times the prior value is missing."
           }
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Complete ranked-PLIRON diagnostic code catalog",
+        "text": "The table below enumerates every stable FE2O3 bounds, race, barrier, workgroup-memory, and declared-semantic diagnostic in the current production pre-lowering sequence. Prerequisite codes preserve the original earlier-pass failure; Incomplete codes are terminal proof failures, not claims that a concrete bug witness was found."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Diagnostic",
+          "Class",
+          "Exact condition reported"
+        ],
+        "rows": [
+          ["FE2O3-BOUNDS-000", "Prerequisite", "PLIRON structural verification failed before ranked bounds analysis."],
+          ["FE2O3-BOUNDS-001", "Rejected", "A read, write, or atomic index is statically outside a ranked extent; the diagnostic names the view, dimension, index, and required index < extent relation."],
+          ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
+          ["FE2O3-BOUNDS-003", "Incomplete", "Bounds analysis encountered an unreachable block, unsupported terminator or operation, sparse-index failure, or bounded resource limit."],
+          ["FE2O3-RACE-000", "Prerequisite", "Ranked bounds verification failed before race analysis."],
+          ["FE2O3-RACE-001", "Rejected", "Two concrete concurrent invocations have incompatible effects at the same coordinate; the diagnostic names both invocation and operation witnesses."],
+          ["FE2O3-RACE-002", "Incomplete", "Race freedom cannot be proved because a launch dimension or indexed coordinate is dynamic or unresolved."],
+          ["FE2O3-RACE-003", "Incomplete", "Sparse-index analysis failed or the exact invocation, effect-instance, or finding bound was exceeded."],
+          ["FE2O3-BARRIER-000", "Prerequisite", "Bounds verification failed before barrier-convergence analysis."],
+          ["FE2O3-BARRIER-001", "Rejected", "Two participating invocations execute different collective barrier identities or orders."],
+          ["FE2O3-BARRIER-002", "Incomplete", "Barrier convergence cannot be proved because the launch, branch, terminator, CFG, or bounded trace is unresolved or unsupported."],
+          ["FE2O3-WORKGROUP-000", "Prerequisite", "Bounds or barrier-convergence verification failed before workgroup-memory analysis."],
+          ["FE2O3-WORKGROUP-001", "Rejected", "An invocation reads a workgroup address without same-invocation initialization or a convergent acquire-release publication of a prior write."],
+          ["FE2O3-WORKGROUP-002", "Rejected", "Concurrent invocations perform incompatible workgroup-memory effects at the same address in one barrier epoch."],
+          ["FE2O3-WORKGROUP-003", "Incomplete", "Workgroup-memory safety cannot be proved because a trace or effect is unsupported or a finding/resource limit was reached."],
+          ["FE2O3-SEMANTIC-000", "Prerequisite", "Bounds verification failed before declared semantic refinement."],
+          ["FE2O3-SEMANTIC-001", "Rejected", "The actual expression is not equivalent to the explicitly declared required expression."],
+          ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."]
         ]
       },
       {

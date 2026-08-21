@@ -65,7 +65,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Five generic compiler passes that stop unsafe IR",
+        name: "Five representative failures with exact diagnostics",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -79,7 +79,12 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Invocation-divergent barrier")).toBeInTheDocument();
     expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
     expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
-    expect(screen.getByText("FE2O3-SEMANTIC-001")).toBeInTheDocument();
+    expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
+    expect(screen.getByText("Complete ranked-PLIRON diagnostic code catalog")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-002" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
   });
 
   it("rejects an unknown section kind without rendering attacker text", () => {

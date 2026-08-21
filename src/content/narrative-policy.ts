@@ -160,7 +160,7 @@ export const narrativeFingerprints = deepFreeze({
   "lds-barriers-atomics/atomics": "5f9311c3a1e2b97d5be96f4fd5a3bd25535e27586bbb0949391e889e21324582",
   "gemm-tiling/public-layout-proof": "1f78d8b76a7323822d77b025a919a44fb29e64dfcd1e19c5b0d1b0776cb8bc39",
   "gemm-tiling/general-contract": "fea50ac7ad00b7cebe61da4a990b64b9d9daffbf63a19cb357ea6f919517f2a9",
-  "gemm-tiling/semantic-failures": "8deb7ef41b629fa6038f06223d90d2b7cf9dd15d74119aadaa5a59579aa3820a",
+  "gemm-tiling/semantic-failures": "c4b72806f2b62f40c62465f6e81daaebd70155ea283e34c0a8ca4ca6f5ddf418",
   "gemm-tiling/mapping": "c2b015fa509dd2976748c2de7de3a0e5165ab33e3c83e3948700ce2f49654cf0",
   "gemm-tiling/loop-proof": "7c87b0639046276d51e796d2ea61e72401c97dbd89043505de446adb6a6d2d05",
   "gemm-proof-plan/proof-ledger": "635b84e78c427a7c59e189832896c38d0e3f50ba0249e203c3c1ab186daa77c2",

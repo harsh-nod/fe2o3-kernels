@@ -254,13 +254,21 @@ describe("curriculum integrity", () => {
       expect(contract).toContain(code);
     }
 
-    const failures = JSON.stringify(
-      narrativeEntry("gemm-tiling/semantic-failures"),
+    const semanticFailures = narrativeEntry("gemm-tiling/semantic-failures");
+    const failures = JSON.stringify(semanticFailures);
+    expect(failures).toContain("Compile-time kernel diagnostics");
+    expect(failures).toContain("none recognizes GEMM names, tile sizes, or schedules");
+    expect(failures).toContain("Generic does not mean automatically provable");
+    expect(failures).toContain("strict pre-lowering route fails closed");
+    expect(failures).toContain("does not invent the programmer's intended formula");
+    expect(failures).toContain(
+      "fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory",
     );
-    expect(failures).toContain("Rust UI and semantic proof are different");
-    expect(failures).toContain("Three local lifecycle mistakes");
-    expect(failures).toContain("Seven more have safe rustc UI tests");
-    expect(failures).toContain("The remaining five are verifier-only");
+    expect(failures).toContain(
+      "ranked-PLIRON pre-lowering order is memory bounds, race freedom, barrier convergence, workgroup memory, then declared semantic refinement",
+    );
+    expect(failures).toContain("No lowering pass may run between these checks");
+    expect(failures).toContain("Complete ranked-PLIRON diagnostic code catalog");
     for (const fixture of [
       "unguarded_a_tail_load",
       "unguarded_b_tail_load",
@@ -306,8 +314,70 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("LOWERING=false");
     expect(failures).toContain("PROTECTED_EXECUTION=false");
 
-    const failureGallery = narrativeEntry("gemm-tiling/semantic-failures")
-      .blocks.find((block) => block.type === "compile-failures");
+    const outcomeTable = semanticFailures.blocks.find(
+      (block) => block.type === "table" && block.headers[0] === "Outcome",
+    );
+    expect(outcomeTable?.type).toBe("table");
+    if (outcomeTable?.type !== "table") return;
+    expect(outcomeTable.rows.map(([outcome]) => outcome)).toEqual([
+      "Clean",
+      "Rejected",
+      "Incomplete",
+    ]);
+    expect(JSON.stringify(outcomeTable)).toContain(
+      "Incomplete does not claim that a concrete bug was proved",
+    );
+
+    const pipelineTable = semanticFailures.blocks.find(
+      (block) => block.type === "table" && block.headers[0] === "Analysis ID",
+    );
+    expect(pipelineTable?.type).toBe("table");
+    if (pipelineTable?.type !== "table") return;
+    expect(pipelineTable.rows.map(([pass]) => pass)).toEqual([
+      "kernel-structural-v1",
+      "kernel-control-flow-v1",
+      "kernel-memory-bounds-v1",
+      "kernel-race-freedom-v1",
+      "kernel-barrier-convergence-v1",
+      "kernel-workgroup-memory-v1",
+      "kernel-semantic-refinement-v1",
+    ]);
+    expect(JSON.stringify(pipelineTable)).toContain("irreducible control flow");
+    expect(JSON.stringify(pipelineTable)).toContain("compatible atomics");
+    expect(JSON.stringify(pipelineTable)).toContain("rather than guessing intent");
+
+    const diagnosticTable = semanticFailures.blocks.find(
+      (block) => block.type === "table" && block.headers[0] === "Diagnostic",
+    );
+    expect(diagnosticTable?.type).toBe("table");
+    if (diagnosticTable?.type !== "table") return;
+    expect(diagnosticTable.rows.map(([code]) => code)).toEqual([
+      "FE2O3-BOUNDS-000",
+      "FE2O3-BOUNDS-001",
+      "FE2O3-BOUNDS-002",
+      "FE2O3-BOUNDS-003",
+      "FE2O3-RACE-000",
+      "FE2O3-RACE-001",
+      "FE2O3-RACE-002",
+      "FE2O3-RACE-003",
+      "FE2O3-BARRIER-000",
+      "FE2O3-BARRIER-001",
+      "FE2O3-BARRIER-002",
+      "FE2O3-WORKGROUP-000",
+      "FE2O3-WORKGROUP-001",
+      "FE2O3-WORKGROUP-002",
+      "FE2O3-WORKGROUP-003",
+      "FE2O3-SEMANTIC-000",
+      "FE2O3-SEMANTIC-001",
+      "FE2O3-SEMANTIC-002",
+    ]);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(6);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(7);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
+
+    const failureGallery = semanticFailures.blocks.find(
+      (block) => block.type === "compile-failures",
+    );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
     expect(failureGallery.examples).toHaveLength(5);
