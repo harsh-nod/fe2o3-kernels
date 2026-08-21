@@ -40,7 +40,7 @@ describe("runtime milestones", () => {
     expect(
       screen.getByRole("heading", { name: "One runtime ownership pipeline" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Implementation checked")).toHaveLength(2);
+    expect(screen.getAllByText("Implementation checked")).toHaveLength(3);
     expect(screen.getByText(/100,000 sequential dispatch/u)).toBeInTheDocument();
     expect(screen.getByText(/not yet been re-observed on MI300X/u)).toBeInTheDocument();
     expect(
@@ -52,7 +52,7 @@ describe("runtime milestones", () => {
     expect(screen.getByText(/released12 and retained0/u)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Copy hardware command" })).toHaveLength(2);
     expect(screen.getAllByText(/browser only copies this command/u)).toHaveLength(2);
-    expect(screen.getAllByText(/implementation-checked and unmeasured/u)).toHaveLength(2);
+    expect(screen.getAllByText(/implementation-checked and unmeasured/u)).toHaveLength(3);
     expect(screen.getByText("ceeaa7cfc973a576004ceaba10f95c4681a90b3edf266d382f6f8021e8083e2c")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
@@ -65,14 +65,28 @@ describe("runtime milestones", () => {
     expect(screen.getByText(/actual2\/expected1 defect remains open/u)).toBeInTheDocument();
     expect(screen.getByText(/No rerun was performed/u)).toBeInTheDocument();
     expect(screen.getByText("7324c8a8457c20298ccac1b7791fe219cf72d83dd982aea145c5b730fa19d6c3")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Compiler-to-KFD compatibility leaf" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /deliberately rejected before bridge-owned VM, memory, queue, or packet work/u,
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/556f97ee4e509b4c/u)).toBeInTheDocument();
+    expect(screen.getByText(/RequiredWorkgroupSize \{ actual: None \}/u)).toBeInTheDocument();
+    expect(screen.getByText(/zero opens of \/dev\/kfd or \/dev\/dri/u)).toBeInTheDocument();
+    expect(screen.getByText(/one-bit payload substitution fails closed/u)).toBeInTheDocument();
+    expect(screen.getByText(/Compiler convergence and its source-closed c454 reproduction/u)).toBeInTheDocument();
     expect(screen.getByText("e5c8d66c5520d1bce7cf2db911c200f1cf4c5536")).toBeInTheDocument();
     expect(screen.getByText("1c694eed427526dc507a129a721237613bafe094")).toBeInTheDocument();
     expect(screen.getByText(/does not execute Rust, KFD, or GPU work/u)).toBeInTheDocument();
     expect(screen.getByText(/Hardware commands are separated and labeled as copy-only/u)).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Hardware evidence and longer-lived execution" }),
+      screen.getByRole("heading", { name: "Compiler convergence before another hardware claim" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Add the compiler leaf bridge")).toBeInTheDocument();
+    expect(screen.getByText("Converge compiler output to exact COV6")).toBeInTheDocument();
+    expect(screen.getByText("Review the joined compiler path")).toBeInTheDocument();
     expect(screen.getByText("Repair the post-success validator")).toBeInTheDocument();
   });
 });

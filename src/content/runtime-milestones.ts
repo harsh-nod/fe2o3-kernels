@@ -3,7 +3,8 @@ import { deepFreeze } from "./registry";
 export type RuntimeMilestoneId =
   | "runtime-ownership-pipeline-v2"
   | "public-vecadd-sync-v1"
-  | "current-v2-mi300x-requalification-v1";
+  | "current-v2-mi300x-requalification-v1"
+  | "compiler-generated-cov6-kfd-bridge-v1";
 
 export interface RuntimeMilestoneOutcome {
   name: "Completed" | "DefinitelyNotPublished" | "RetainedTerminal";
@@ -33,6 +34,8 @@ export interface RuntimeMilestone {
   why: readonly string[];
   enables: readonly string[];
   pipeline?: readonly string[];
+  pipelineKicker?: string;
+  pipelineTitle?: string;
   outcomes?: readonly RuntimeMilestoneOutcome[];
   commands: readonly string[];
   expected: readonly string[];
@@ -114,6 +117,8 @@ export const runtimeMilestones = deepFreeze([
       "Publish the kernel as packet 1, retain its exact dispatch/completion owner, and verify 256 outputs, 512 input values, and allocation canaries after completion.",
       "Release the exact completion owner, retire it in per-queue FIFO order, seal and jointly destroy the queue, then unmap and release user9 + queue3. Success reports released12 and retained0.",
     ],
+    pipelineKicker: "One canonical core",
+    pipelineTitle: "Nine resources, PM4 predecessor, dispatch, then exact teardown",
     outcomes: [
       {
         name: "Completed",
@@ -187,6 +192,8 @@ export const runtimeMilestones = deepFreeze([
       "The core verified 256 output values and 384 canary bytes, then released the completion owner and retired the dispatch in FIFO order.",
       "The queue was destroyed, nine user resources were unmapped, 12 total resources were released, and retained allocations reached 0.",
     ],
+    pipelineKicker: "One observed core run",
+    pipelineTitle: "PM4, dispatch, verification, then complete teardown",
     commands: [
       "cargo test --locked -p fe2o3-kfd --test current_v2_live_evidence",
       "cargo run --locked -p fe2o3-kfd --features live-validation --example kfd-current-v2-requalification",
@@ -222,6 +229,61 @@ export const runtimeMilestones = deepFreeze([
       "crates/fe2o3-kfd/tests/current_v2_live_evidence.rs",
       "crates/fe2o3-kfd/examples/kfd-current-v2-requalification.rs",
       "crates/fe2o3-kfd/src/queue_vecadd_launch.rs",
+    ],
+  },
+  {
+    id: "compiler-generated-cov6-kfd-bridge-v1",
+    number: "03",
+    title: "Compiler-to-KFD compatibility leaf",
+    state: "implemented",
+    status: "implementation-checked",
+    measurement: "unmeasured",
+    summary:
+      "A Linux/x86_64 leaf now authenticates a compiler-embedded typed vecadd payload and requires the unchanged exact c454 COV6 loader closure before it can delegate to the canonical KFD facade. The current exact-target development payload is deliberately rejected before bridge-owned VM, memory, queue, or packet work.",
+    why: [
+      "Compatibility must close before bridge-owned VM, memory, queue, or packet work. A mismatch after native effects begin may require process-lifetime retention, while this pure rejection remains definitely not published and preserves every caller-owned input.",
+      "The current development payload is SHA-256 556f97ee4e509b4cb3118ff73afae21491506a83077cdac2a3a0a250d56a3c68 and 6104 bytes. It authenticates as a compiler payload, then fails the exact COV6 binder at RequiredWorkgroupSize { actual: None }.",
+      "The dependency direction is one-way: the bridge depends on host authentication, the AMDHSA loader, and KFD. None of those lower layers depends on the bridge; KFD still does not depend on the host crate, and the leaf contains no packet, doorbell, ioctl, or raw-file-descriptor implementation.",
+    ],
+    enables: [
+      "A compiler-issued marker can be checked through container authentication, AMDHSA planning, selected-kernel closure, and the exact c454 binder without first constructing a checked device.",
+      "Callers that already own a checked gfx942:xnack- device receive that exact device and request back when compatibility or later proven-prepublication KFD setup rejects the attempt.",
+      "Once a compiler path emits the exact admitted executable, the leaf can call the existing one-shot facade exactly once instead of introducing another submission or teardown implementation.",
+    ],
+    pipeline: [
+      "Authenticate the embedded typed container, compiler profile, kernel binding, and redacted payload SHA-256 and byte length.",
+      "Validate the AMDHSA envelope, select vecadd, and require the unchanged gfx942:xnack- c454 COV6 kernarg, workgroup, resource, image, entry, and artifact closure.",
+      "Return DefinitelyNotPublished on any mismatch. The isolated current-development command takes no device input, and syscall calibration recorded zero opens of /dev/kfd or /dev/dri.",
+      "Only Compatible may delegate once to launch_vecadd_cov6_sync; the bridge itself owns no VM, allocation, queue, packet, MMIO, or teardown machinery.",
+    ],
+    pipelineKicker: "Pure compatibility gate",
+    pipelineTitle: "Compiler container, exact loader closure, then one canonical facade",
+    commands: [
+      "FE2O3_TARGET=gfx942:xnack- cargo run --locked -p cargo-fe2o3 -- run --locked --manifest-path crates/fe2o3-kfd-compiler-bridge/examples/compiler-generated-preflight/Cargo.toml",
+      "cargo test --locked -p fe2o3-kfd-compiler-bridge",
+      "FE2O3_TEST_VECADD_COV6=/absolute/path/to/vecadd-gfx942-xnack-off-cov6.hsaco cargo test --locked -p fe2o3-kfd-compiler-bridge --test real_cov6_compatibility -- --ignored --exact real_c454_payload_reaches_compatible_and_payload_substitution_fails_closed",
+    ],
+    expected: [
+      "The exact-target development command asserts payload 556f97ee... / 6104 bytes and prints definitely-not-published: current dev payload is not exact c454. A syscall-traced calibration of that command recorded zero device-path opens.",
+      "The bridge unit, dependency-direction, source-closure, and compile-fail UI tests pass without selecting a device or opening KFD.",
+      "The CPU-only c454 fixture reaches Compatible, while a one-bit payload substitution fails closed as DefinitelyNotPublished.",
+    ],
+    limitations: [
+      "This milestone is implementation-checked and unmeasured. No compiler-generated artifact reached CheckedDevice construction, KFD open, VM creation, allocation, queue creation, packet publication, MMIO, completion, or GPU execution.",
+      "The c454 positive test wraps the historical raw c454 payload in a test-fixture compiler container. It proves compatibility and mutation rejection, not that the current compiler emitted c454 or that the fixture container has compiler-origin authority.",
+      "The isolated development package binds only its independently generated raw payload identity. It does not reproduce the original compiler container identity and makes no release-mode artifact claim.",
+      "Compiler convergence and its source-closed c454 reproduction remain the next planned row, not a completed milestone. End-to-end compiler-to-KFD requalification, general kernels, performance, persistence, and publication all remain on hold.",
+    ],
+    commit: "c7b9b875504c4c5c4a3a05475a3915065360bccc",
+    tree: "725496758cb0ce438cb805a8906c1cc922bf1cdd",
+    sourcePaths: [
+      "crates/fe2o3-kfd-compiler-bridge/README.md",
+      "crates/fe2o3-kfd-compiler-bridge/src/linux.rs",
+      "crates/fe2o3-kfd-compiler-bridge/examples/compiler-generated-preflight/src/main.rs",
+      "crates/fe2o3-kfd-compiler-bridge/tests/real_cov6_compatibility.rs",
+      "crates/fe2o3-kfd-compiler-bridge/tests/dependency_direction.rs",
+      "crates/fe2o3-kfd-compiler-bridge/tests/source-manifest-v1.txt",
+      "scripts/workspace-dependency-policy.json",
     ],
   },
 ] satisfies RuntimeMilestone[]);

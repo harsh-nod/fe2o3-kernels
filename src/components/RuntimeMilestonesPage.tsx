@@ -113,8 +113,13 @@ export function RuntimeMilestonesPage() {
             {milestone.pipeline && (
               <div className="runtime-pipeline" aria-label="Canonical launch pipeline">
                 <div className="runtime-pipeline-heading">
-                  <p className="section-kicker">One canonical core</p>
-                  <h3>Nine resources, PM4 predecessor, dispatch, then exact teardown</h3>
+                  <p className="section-kicker">
+                    {milestone.pipelineKicker ?? "One canonical core"}
+                  </p>
+                  <h3>
+                    {milestone.pipelineTitle ??
+                      "Nine resources, PM4 predecessor, dispatch, then exact teardown"}
+                  </h3>
                 </div>
                 <ol>
                   {milestone.pipeline.map((step) => <li key={step}>{step}</li>)}
@@ -202,30 +207,39 @@ export function RuntimeMilestonesPage() {
 
       <section className="runtime-next-boundary">
         <p className="section-kicker">Next boundary</p>
-        <h2>Hardware evidence and longer-lived execution</h2>
+        <h2>Compiler convergence before another hardware claim</h2>
         <p>
           The public one-shot boundary remains implementation-checked and
           unmeasured as an API. One separate bounded MI300X requalification is
-          now retained, with no authority beyond its exact evidence record.
-          Publication remains on hold while the launcher validator defect and
-          longer-lived execution designs stay open.
+          retained, with no authority beyond its exact evidence record. The
+          compatibility leaf is also implementation-checked and unmeasured: its
+          current compiler payload stops before bridge-owned VM, memory, queue, or packet
+          work. Compiler convergence,
+          a joined compiler-generated GPU run, and publication remain on hold.
         </p>
         <div className="runtime-next-row">
           <span>01</span>
+          <div>
+            <strong>Converge compiler output to exact COV6</strong>
+            <p>Source-close and version the c454 reproduction and finalizer recipe. The separate convergence audit is not yet a committed milestone.</p>
+          </div>
+        </div>
+        <div className="runtime-next-row">
+          <span>02</span>
+          <div>
+            <strong>Review the joined compiler path</strong>
+            <p>Only after exact compatibility may a separately authorized, one-attempt compiler-to-KFD requalification be considered.</p>
+          </div>
+        </div>
+        <div className="runtime-next-row">
+          <span>03</span>
           <div>
             <strong>Repair the post-success validator</strong>
             <p>Distinguish the harmless preflight and core-completion lines instead of expecting one ordered-gate match.</p>
           </div>
         </div>
         <div className="runtime-next-row">
-          <span>02</span>
-          <div>
-            <strong>Add the compiler leaf bridge</strong>
-            <p>Join compiler-issued artifact authority to the facade without adding a fe2o3-host dependency to KFD.</p>
-          </div>
-        </div>
-        <div className="runtime-next-row">
-          <span>03</span>
+          <span>04</span>
           <div>
             <strong>Design for repeated work</strong>
             <p>Persistent contexts, batching, cancellation policy, and asynchronous progress remain separate designs.</p>

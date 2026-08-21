@@ -69,6 +69,7 @@ describe("curriculum integrity", () => {
       "runtime-ownership-pipeline-v2",
       "public-vecadd-sync-v1",
       "current-v2-mi300x-requalification-v1",
+      "compiler-generated-cov6-kfd-bridge-v1",
     ]);
     expect(runtimeMilestones[0].commit).toBe(
       "e5c8d66c5520d1bce7cf2db911c200f1cf4c5536",
@@ -122,6 +123,42 @@ describe("curriculum integrity", () => {
     expect(runtimeMilestones[2].commands.join(" ")).not.toContain("--live");
     expect(runtimeMilestones[2].hardwareExample?.command).toContain(
       "--live <unique-id>",
+    );
+    expect(runtimeMilestones[3]).toMatchObject({
+      commit: "c7b9b875504c4c5c4a3a05475a3915065360bccc",
+      tree: "725496758cb0ce438cb805a8906c1cc922bf1cdd",
+      status: "implementation-checked",
+      measurement: "unmeasured",
+    });
+    expect(runtimeMilestones[3].hardwareExample).toBeUndefined();
+    expect(runtimeMilestones[3].evidenceRecord).toBeUndefined();
+    expect(runtimeMilestones[3].summary).toContain(
+      "before bridge-owned VM, memory, queue, or packet work",
+    );
+    expect(runtimeMilestones[3].summary).not.toContain("before device work");
+    expect(runtimeMilestones[3].commands.join(" ")).not.toMatch(
+      /--live|FE2O3_RUN|\/dev\/kfd/u,
+    );
+    expect(runtimeMilestones[3].commands.join(" ")).toContain(
+      "FE2O3_TARGET=gfx942:xnack- cargo run --locked -p cargo-fe2o3",
+    );
+    expect(runtimeMilestones[3].why.join(" ")).toContain(
+      "556f97ee4e509b4cb3118ff73afae21491506a83077cdac2a3a0a250d56a3c68",
+    );
+    expect(runtimeMilestones[3].why.join(" ")).toContain(
+      "RequiredWorkgroupSize { actual: None }",
+    );
+    expect(runtimeMilestones[3].pipeline?.join(" ")).toContain(
+      "zero opens of /dev/kfd or /dev/dri",
+    );
+    expect(runtimeMilestones[3].expected.join(" ")).toContain(
+      "one-bit payload substitution fails closed",
+    );
+    expect(runtimeMilestones[3].limitations.join(" ")).toContain(
+      "not a completed milestone",
+    );
+    expect(runtimeMilestones[3].sourcePaths).toContain(
+      "scripts/workspace-dependency-policy.json",
     );
   });
 

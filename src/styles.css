@@ -1202,6 +1202,10 @@ p {
   margin-top: 8px;
 }
 
+.runtime-milestone li {
+  overflow-wrap: anywhere;
+}
+
 .runtime-pipeline {
   display: grid;
   grid-template-columns: minmax(190px, 0.32fr) minmax(0, 1fr);
