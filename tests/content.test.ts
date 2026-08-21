@@ -70,6 +70,7 @@ describe("curriculum integrity", () => {
       "public-vecadd-sync-v1",
       "current-v2-mi300x-requalification-v1",
       "compiler-generated-cov6-kfd-bridge-v1",
+      "kernel-ir-v1-c454-compiler-convergence-v1",
     ]);
     expect(runtimeMilestones[0].commit).toBe(
       "e5c8d66c5520d1bce7cf2db911c200f1cf4c5536",
@@ -159,6 +160,41 @@ describe("curriculum integrity", () => {
     );
     expect(runtimeMilestones[3].sourcePaths).toContain(
       "scripts/workspace-dependency-policy.json",
+    );
+    expect(runtimeMilestones[4]).toMatchObject({
+      commit: "08af31846f37d715cfde9af67c843761a78c2b71",
+      tree: "fc421688a08e5db538ef6729f280553a55e505cf",
+      status: "implementation-checked",
+      measurement: "unmeasured",
+    });
+    expect(runtimeMilestones[4].hardwareExample).toBeUndefined();
+    expect(runtimeMilestones[4].evidenceRecord).toBeUndefined();
+    expect(runtimeMilestones[4].commands.join(" ")).not.toMatch(
+      /--live|FE2O3_RUN|\/dev\/kfd/u,
+    );
+    expect(runtimeMilestones[4].commands[0]).toContain(
+      "FE2O3_CODEGEN_PIPELINE=kernel-ir-v1",
+    );
+    expect(runtimeMilestones[4].pipeline?.join(" ")).toContain(
+      "IR ec153356f5bd021b5d9a9dd6809eaa53cbfc43d3f3cc00c08c020ccbe1358d73 / 1779 bytes",
+    );
+    expect(runtimeMilestones[4].pipeline?.join(" ")).toContain(
+      "object 8ade5e0e3807c7ceed3ffbbe8b1d12c489a5079ade2d4e8ebec18af14c8b5dee / 4440 bytes",
+    );
+    expect(runtimeMilestones[4].pipeline?.join(" ")).toContain(
+      "HSACO c4547fe045f839711f1f022a485f50c7c1eafed7f5e4a7e96598e0d1c825908c / 5640 bytes",
+    );
+    expect(runtimeMilestones[4].pipeline?.join(" ")).toContain(
+      "zero /dev/kfd or /dev/dri opens and zero ioctl calls",
+    );
+    expect(runtimeMilestones[4].expected.join(" ")).toContain(
+      "existing fill path remains a separate explicit legacy-clang route",
+    );
+    expect(runtimeMilestones[4].limitations.join(" ")).toContain(
+      "no GPU execution, hardware result, numerical result, latency, throughput, or performance claim",
+    );
+    expect(runtimeMilestones[4].limitations.join(" ")).toContain(
+      "publication gate is unchanged and remains on hold",
     );
   });
 

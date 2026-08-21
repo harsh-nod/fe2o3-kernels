@@ -40,7 +40,7 @@ describe("runtime milestones", () => {
     expect(
       screen.getByRole("heading", { name: "One runtime ownership pipeline" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Implementation checked")).toHaveLength(3);
+    expect(screen.getAllByText("Implementation checked")).toHaveLength(4);
     expect(screen.getByText(/100,000 sequential dispatch/u)).toBeInTheDocument();
     expect(screen.getByText(/not yet been re-observed on MI300X/u)).toBeInTheDocument();
     expect(
@@ -78,17 +78,35 @@ describe("runtime milestones", () => {
     expect(screen.getByText(/zero opens of \/dev\/kfd or \/dev\/dri/u)).toBeInTheDocument();
     expect(screen.getByText(/one-bit payload substitution fails closed/u)).toBeInTheDocument();
     expect(screen.getByText(/Compiler convergence and its source-closed c454 reproduction/u)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Exact Kernel IR V1 compiler convergence" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("08af31846f37d715cfde9af67c843761a78c2b71"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /kernel_ir_v1_vecadd_cov6_llc_o2.rs/u }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/08af31846f37d715cfde9af67c843761a78c2b71/crates/rustc-codegen-fe2o3/src/kernel_ir_v1_vecadd_cov6_llc_o2.rs",
+    );
+    expect(screen.getAllByText(/ec153356f5bd021b5d9a9dd6809eaa53/u)).toHaveLength(2);
+    expect(screen.getAllByText(/8ade5e0e3807c7ceed3ffbbe8b1d12c4/u)).toHaveLength(2);
+    expect(screen.getAllByText(/c4547fe045f839711f1f022a485f50c7/u)).toHaveLength(3);
+    expect(screen.getByText(/zero \/dev\/kfd or \/dev\/dri opens and zero ioctl calls/u)).toBeInTheDocument();
+    expect(screen.getByText(/existing fill path remains a separate explicit legacy-clang route/u)).toBeInTheDocument();
+    expect(screen.getByText(/no GPU execution, hardware result, numerical result/u)).toBeInTheDocument();
     expect(screen.getByText("e5c8d66c5520d1bce7cf2db911c200f1cf4c5536")).toBeInTheDocument();
     expect(screen.getByText("1c694eed427526dc507a129a721237613bafe094")).toBeInTheDocument();
     expect(screen.getByText(/does not execute Rust, KFD, or GPU work/u)).toBeInTheDocument();
     expect(screen.getByText(/Hardware commands are separated and labeled as copy-only/u)).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "Compiler convergence before another hardware claim" }),
+      screen.getByRole("heading", { name: "One reviewed compiler-generated launch before repeated execution" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Converge compiler output to exact COV6")).toBeInTheDocument();
-    expect(screen.getByText("Review the joined compiler path")).toBeInTheDocument();
-    expect(screen.getByText("Repair the post-success validator")).toBeInTheDocument();
-  });
+    expect(screen.getByText("Freeze and review the joined compiler path")).toBeInTheDocument();
+    expect(screen.getByText("Run one bounded compiler-generated MI300X attempt")).toBeInTheDocument();
+    expect(screen.getByText("Build persistent repeated execution")).toBeInTheDocument();
+  }, 10_000);
 });
 
 describe("search index", () => {

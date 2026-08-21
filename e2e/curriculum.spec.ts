@@ -54,8 +54,8 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await expect(
     page.getByRole("heading", { name: "One runtime ownership pipeline" }),
   ).toBeVisible();
-  await expect(page.getByText("Implementation checked", { exact: true })).toHaveCount(3);
-  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(4);
+  await expect(page.getByText("Implementation checked", { exact: true })).toHaveCount(4);
+  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(5);
   await expect(page.getByText(/cargo test -p fe2o3-runtime-model/u)).toBeVisible();
   await expect(page.getByText(/not yet been re-observed on MI300X/u)).toBeVisible();
   await expect(page.getByText(/FE2O3_RUN/u)).toHaveCount(0);
@@ -92,8 +92,29 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await expect(page.getByText(/RequiredWorkgroupSize \{ actual: None \}/u)).toBeVisible();
   await expect(page.getByText(/zero opens of \/dev\/kfd or \/dev\/dri/u)).toBeVisible();
   await expect(page.getByText(/one-bit payload substitution fails closed/u)).toBeVisible();
-  await expect(page.getByText("Converge compiler output to exact COV6")).toBeVisible();
-  await expect(page.getByText("Review the joined compiler path")).toBeVisible();
+  const convergenceHeading = page.getByRole("heading", {
+    name: "Exact Kernel IR V1 compiler convergence",
+  });
+  await expect(convergenceHeading).toBeVisible();
+  await expect(
+    page.getByText("08af31846f37d715cfde9af67c843761a78c2b71"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: /kernel_ir_v1_vecadd_cov6_llc_o2.rs/u }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/08af31846f37d715cfde9af67c843761a78c2b71/crates/rustc-codegen-fe2o3/src/kernel_ir_v1_vecadd_cov6_llc_o2.rs",
+  );
+  await expect(page.getByText(/ec153356f5bd021b5d9a9dd6809eaa53/u)).toHaveCount(2);
+  await expect(page.getByText(/8ade5e0e3807c7ceed3ffbbe8b1d12c4/u)).toHaveCount(2);
+  await expect(page.getByText(/c4547fe045f839711f1f022a485f50c7/u)).toHaveCount(3);
+  await expect(
+    page.getByText(/zero \/dev\/kfd or \/dev\/dri opens and zero ioctl calls/u),
+  ).toBeVisible();
+  await expect(page.getByText(/legacy-clang route only when its untyped fill facts/u)).toBeVisible();
+  await expect(page.getByText(/no GPU execution, hardware result, numerical result/u)).toBeVisible();
+  await expect(page.getByText("Freeze and review the joined compiler path")).toBeVisible();
+  await expect(page.getByText("Run one bounded compiler-generated MI300X attempt")).toBeVisible();
   await expect(
     page.getByText("1c694eed427526dc507a129a721237613bafe094"),
   ).toBeVisible();
@@ -107,7 +128,12 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   }));
   expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
   await page.screenshot({
-    path: `/tmp/fe2o3-kernels-runtime-${testInfo.project.name}.png`,
+    path: `/tmp/fe2o3-kernels-runtime-top-${testInfo.project.name}.png`,
+    animations: "disabled",
+  });
+  await convergenceHeading.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: `/tmp/fe2o3-kernels-runtime-convergence-${testInfo.project.name}.png`,
     animations: "disabled",
   });
 });

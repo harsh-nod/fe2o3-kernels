@@ -4,7 +4,8 @@ export type RuntimeMilestoneId =
   | "runtime-ownership-pipeline-v2"
   | "public-vecadd-sync-v1"
   | "current-v2-mi300x-requalification-v1"
-  | "compiler-generated-cov6-kfd-bridge-v1";
+  | "compiler-generated-cov6-kfd-bridge-v1"
+  | "kernel-ir-v1-c454-compiler-convergence-v1";
 
 export interface RuntimeMilestoneOutcome {
   name: "Completed" | "DefinitelyNotPublished" | "RetainedTerminal";
@@ -284,6 +285,62 @@ export const runtimeMilestones = deepFreeze([
       "crates/fe2o3-kfd-compiler-bridge/tests/dependency_direction.rs",
       "crates/fe2o3-kfd-compiler-bridge/tests/source-manifest-v1.txt",
       "scripts/workspace-dependency-policy.json",
+    ],
+  },
+  {
+    id: "kernel-ir-v1-c454-compiler-convergence-v1",
+    number: "04",
+    title: "Exact Kernel IR V1 compiler convergence",
+    state: "implemented",
+    status: "implementation-checked",
+    measurement: "unmeasured",
+    summary:
+      "Authenticated typed vecadd under the exact gfx942:xnack- KernelIrV1 route now enters a source-closed exact finalizer through audited ROCm 7.2.4 llc -O2 and lld tools, reproduces the admitted c454 COV6 payload, and reaches the existing bridge's Compatible result without opening KFD or DRM.",
+    why: [
+      "Milestone 03 proved that the bridge would accept c454, but its positive path used a historical test fixture while the then-current compiler emitted 556f. This closes that gap: authenticated compiler input now produces the exact artifact that the unchanged loader closure admits.",
+      "The route authenticates exact input, target, typed profile, kernel binding, ROCm version bytes, executable paths, real paths, SHA-256 digests, lengths, modes, link counts, and open-file snapshots. It executes retained llc and lld file descriptors with a cleared environment, then revalidates the object, final HSACO, loader profile, and typed snapshots.",
+      "Once authenticated vecadd selects this route, any IR, tool, object, output, or loader mismatch fails without falling back to clang. That makes compiler compatibility a stable boundary instead of an optimization that could silently select different code generation.",
+    ],
+    enables: [
+      "The compiler-generated payload can traverse container authentication and the unchanged exact c454 loader binder to print Compatible while the process remains CPU-only and performs zero device actions.",
+      "A separately authorized one-attempt MI300X review can now join compiler origin, the exact admitted payload, and the canonical one-shot KFD facade without weakening either side of the boundary.",
+      "The narrow vecadd route provides an auditable baseline for later persistent execution and additional kernel profiles; those expansions must earn their own identities and evidence.",
+    ],
+    pipeline: [
+      "Require one authenticated typed VecAddRustcLayoutV2 root and owner, exact vecadd logical/export names and binding, exact generated IR, and the literal target gfx942:xnack-.",
+      "Authenticate the ROCm 7.2.4 version and sealed llc/lld executable snapshots, then finalize IR ec153356f5bd021b5d9a9dd6809eaa53cbfc43d3f3cc00c08c020ccbe1358d73 / 1779 bytes to object 8ade5e0e3807c7ceed3ffbbe8b1d12c489a5079ade2d4e8ebec18af14c8b5dee / 4440 bytes and HSACO c4547fe045f839711f1f022a485f50c7c1eafed7f5e4a7e96598e0d1c825908c / 5640 bytes.",
+      "Revalidate the immutable IR, object, HSACO, typed binding, gfx942:xnack- COV6 loader profile, workgroup [256, 1, 1], max-flat 256, wave64, and zero private/group segments. The exact reproduction completes twice with identical identities.",
+      "Pass the compiler container to the existing compatibility leaf. It prints Compatible; a syscall trace records zero /dev/kfd or /dev/dri opens and zero ioctl calls.",
+    ],
+    pipelineKicker: "One exact compiler route",
+    pipelineTitle: "Authenticated Kernel IR, sealed ROCm tools, exact c454, then Compatible",
+    commands: [
+      "FE2O3_TARGET=gfx942:xnack- FE2O3_CODEGEN_PIPELINE=kernel-ir-v1 cargo run --locked -p cargo-fe2o3 -- run --locked --manifest-path crates/fe2o3-kfd-compiler-bridge/examples/compiler-generated-preflight/Cargo.toml",
+      "cargo test --locked -p rustc-codegen-fe2o3 kernel_ir_v1_route_facts",
+      "cargo test --locked -p rustc-codegen-fe2o3 exact_rocm_route_reproduces_c454_twice -- --ignored",
+      "cargo test --locked -p fe2o3-kfd-compiler-bridge",
+    ],
+    expected: [
+      "The custom-backend example prints compatible: compiler-generated Kernel IR V1 payload is exact c454, with payload SHA-256 c4547fe045f839711f1f022a485f50c7c1eafed7f5e4a7e96598e0d1c825908c and length 5640.",
+      "The exact ROCm test reproduces IR ec153356f5bd021b5d9a9dd6809eaa53cbfc43d3f3cc00c08c020ccbe1358d73 / 1779 -> object 8ade5e0e3807c7ceed3ffbbe8b1d12c489a5079ade2d4e8ebec18af14c8b5dee / 4440 -> HSACO c4547fe045f839711f1f022a485f50c7c1eafed7f5e4a7e96598e0d1c825908c / 5640 twice; tool or output drift rejects the route.",
+      "Hostile route tests reject vecadd authority and target substitutions without fallback. The existing fill path remains a separate explicit legacy-clang route only when its untyped fill facts authenticate exactly.",
+    ],
+    limitations: [
+      "This milestone is implementation-checked, CPU-only, and unmeasured. It establishes no GPU execution, hardware result, numerical result, latency, throughput, or performance claim.",
+      "The exact finalizer is intentionally limited to authenticated KernelIrV1 VecAddRustcLayoutV2 on gfx942:xnack-. It does not generalize c454 admission, the ROCm tool closure, fill, or any other kernel profile.",
+      "The compatibility example and syscall trace construct no checked device and perform no KFD VM, allocation, queue, packet, MMIO, completion, or teardown action. Compatible is not launch authority or evidence that a GPU packet ran.",
+      "One reviewed compiler-generated MI300X launch, persistent or asynchronous execution, general-kernel support, and public deployment remain later milestones. The publication gate is unchanged and remains on hold.",
+    ],
+    commit: "08af31846f37d715cfde9af67c843761a78c2b71",
+    tree: "fc421688a08e5db538ef6729f280553a55e505cf",
+    sourcePaths: [
+      "crates/rustc-codegen-fe2o3/src/kernel_ir_v1_vecadd_cov6_llc_o2.rs",
+      "crates/rustc-codegen-fe2o3/src/lib.rs",
+      "crates/rustc-codegen-fe2o3/src/amdgpu_llvm.rs",
+      "crates/rustc-codegen-fe2o3/tests/fixtures/kernel-ir-v1-vecadd-cov6-llc-o2.ll",
+      "crates/rustc-codegen-fe2o3/tests/fixtures/kernel-ir-v1-vecadd-cov6-llc-o2-identity-v1.txt",
+      "crates/fe2o3-kfd-compiler-bridge/examples/compiler-generated-preflight/src/main.rs",
+      "crates/fe2o3-kfd-compiler-bridge/tests/source-manifest-v1.txt",
     ],
   },
 ] satisfies RuntimeMilestone[]);

@@ -207,42 +207,42 @@ export function RuntimeMilestonesPage() {
 
       <section className="runtime-next-boundary">
         <p className="section-kicker">Next boundary</p>
-        <h2>Compiler convergence before another hardware claim</h2>
+        <h2>One reviewed compiler-generated launch before repeated execution</h2>
         <p>
           The public one-shot boundary remains implementation-checked and
           unmeasured as an API. One separate bounded MI300X requalification is
-          retained, with no authority beyond its exact evidence record. The
-          compatibility leaf is also implementation-checked and unmeasured: its
-          current compiler payload stops before bridge-owned VM, memory, queue, or packet
-          work. Compiler convergence,
-          a joined compiler-generated GPU run, and publication remain on hold.
+          retained, with no authority beyond its exact evidence record. Exact
+          compiler convergence is now implementation-checked and CPU-only; it
+          does not promote that earlier observation or establish a joined GPU
+          result. A compiler-generated hardware run, reusable execution, and
+          publication remain on hold.
         </p>
         <div className="runtime-next-row">
           <span>01</span>
           <div>
-            <strong>Converge compiler output to exact COV6</strong>
-            <p>Source-close and version the c454 reproduction and finalizer recipe. The separate convergence audit is not yet a committed milestone.</p>
+            <strong>Freeze and review the joined compiler path</strong>
+            <p>Bind the final compiler commit, exact c454 output, compatibility leaf, and canonical KFD facade before any device action is authorized.</p>
           </div>
         </div>
         <div className="runtime-next-row">
           <span>02</span>
           <div>
-            <strong>Review the joined compiler path</strong>
-            <p>Only after exact compatibility may a separately authorized, one-attempt compiler-to-KFD requalification be considered.</p>
+            <strong>Run one bounded compiler-generated MI300X attempt</strong>
+            <p>Retain one-attempt chronology, exact source and artifact identities, result, teardown, and exclusions as a separately reviewed evidence record.</p>
           </div>
         </div>
         <div className="runtime-next-row">
           <span>03</span>
           <div>
-            <strong>Repair the post-success validator</strong>
-            <p>Distinguish the harmless preflight and core-completion lines instead of expecting one ordered-gate match.</p>
+            <strong>Build persistent repeated execution</strong>
+            <p>Reuse device and queue state while preserving exact dispatch ownership, FIFO retirement, bounded failure, and complete terminal teardown.</p>
           </div>
         </div>
         <div className="runtime-next-row">
           <span>04</span>
           <div>
-            <strong>Design for repeated work</strong>
-            <p>Persistent contexts, batching, cancellation policy, and asynchronous progress remain separate designs.</p>
+            <strong>Add asynchronous progress and more profiles</strong>
+            <p>Futures, deadlines, cancellation policy, batching, and general kernels remain distinct designs with separate publication evidence.</p>
           </div>
         </div>
       </section>
