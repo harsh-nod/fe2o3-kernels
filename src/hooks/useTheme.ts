@@ -4,8 +4,12 @@ export type Theme = "light" | "dark";
 const STORAGE_KEY = "fe2o3-kernels-theme";
 
 function initialTheme(): Theme {
-  const stored = window.localStorage.getItem(STORAGE_KEY);
-  if (stored === "light" || stored === "dark") return stored;
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    // Fall through to the system preference when storage is unavailable.
+  }
   return typeof window.matchMedia === "function" &&
     window.matchMedia("(prefers-color-scheme: dark)").matches
     ? "dark"
@@ -23,7 +27,11 @@ export function useTheme() {
     setTheme((current) => {
       const next = current === "light" ? "dark" : "light";
       document.documentElement.dataset.theme = next;
-      window.localStorage.setItem(STORAGE_KEY, next);
+      try {
+        window.localStorage.setItem(STORAGE_KEY, next);
+      } catch {
+        // Theme still applies for the current session.
+      }
       return next;
     });
   }, []);

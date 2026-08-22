@@ -1,3 +1,4 @@
+import { currentState } from "./current-state";
 import {
   FE2O3_PIN,
   type CurriculumModule,
@@ -153,6 +154,15 @@ function validateLesson(
       issues.push({
         path: tabPath,
         message: "code tab source SHA-256 is not exact",
+      });
+    }
+    if (
+      tab.explanatory === false &&
+      (!tab.sourcePath || !tab.sourceCommit || !tab.sourceSha256)
+    ) {
+      issues.push({
+        path: tabPath,
+        message: "real source tab lacks exact path, commit, or SHA-256",
       });
     }
     if (tab.evidenceId) {
@@ -346,6 +356,16 @@ function validateLesson(
         issues.push({
           path: claimPath,
           message: "lesson claim is not pinned to the lesson evidence tree",
+        });
+      }
+    } else if (reference.scope === "current-implementation") {
+      if (
+        reference.commit !== currentState.compilerCommit ||
+        reference.tree !== currentState.compilerTree
+      ) {
+        issues.push({
+          path: claimPath,
+          message: "current claim is not pinned to current compiler main",
         });
       }
     } else if (reference.scope === "source-milestone") {

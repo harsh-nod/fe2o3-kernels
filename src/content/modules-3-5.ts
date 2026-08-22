@@ -280,7 +280,11 @@ function exactGemmHostTab() {
       "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
     sourceCommit: protectedSlice1HardwareObservation.commit,
     evidenceId: "tiled-lds-protected-lifecycle-v1" as const,
-    explanatory: false,
+    sourceSha256:
+      "13be2ab972a35d97dcdb36b45f3c07ab81c697d1d4c28461abffbbacd761ee36",
+    explanatory: true,
+    notice:
+      "This tab is a replay command for the exact pinned hardware test, not a copy of the linked Rust file.",
   };
 }
 
@@ -509,7 +513,7 @@ const gemmMapping: Lesson = {
       evidenceIds: [...stagedEvidenceOrder],
     },
     narrativeSection("gemm-tiling/general-contract"),
-    narrativeSection("gemm-tiling/semantic-failures"),
+    narrativeSection("gemm-tiling/mutation-diagnostics"),
     narrativeSection("gemm-tiling/mapping"),
     narrativeSection("gemm-tiling/loop-proof"),
   ],
@@ -632,7 +636,11 @@ const softmax: Lesson = {
       code: rowSoftmaxAddressModel,
       sourcePath: "examples/row_softmax_v1/verus/row_softmax_v1.rs",
       sourceCommit: "dd841720591003f418d056b21a319088ce4559d6",
-      explanatory: false,
+      sourceSha256:
+        "cacf81e02eb071cc29b1124811e911097fd62e7d29556dda8380418a631f5db5",
+      explanatory: true,
+      notice:
+        "This tab shows the address-model excerpt used in the lesson; the link and digest identify the complete pinned proof source.",
     },
     {
       language: "rust",
@@ -640,7 +648,11 @@ const softmax: Lesson = {
       sourcePath:
         "crates/fe2o3-host/src/protected_row_softmax_v1_lifecycle.rs",
       sourceCommit: "38b0005765944de55bb32c559bc8431637317b2b",
-      explanatory: false,
+      sourceSha256:
+        "9bba17fdf73d1f0374a3ee44c9f795ab8d2c6273e64138c1ac5687d169eee5e5",
+      explanatory: true,
+      notice:
+        "This tab shows the protected-lifecycle excerpt used in the lesson; the link and digest identify the complete pinned host source.",
     },
     {
       language: "text",

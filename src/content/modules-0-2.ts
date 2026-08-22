@@ -1,19 +1,18 @@
 import { narrativeSection } from "./narrative-registry";
+import { currentState } from "./current-state";
+import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import vecaddHost from "../../examples/vecadd_host.rs?raw";
 import vecaddKernel from "../../examples/vecadd_kernel.rs?raw";
 import {
   FE2O3_PIN,
+  currentImplementationReference,
   pinnedReference,
   type CurriculumModule,
   type Lesson,
 } from "./model";
 import { completeTabs, noKernel, noProof, resultText } from "./shared";
-import {
-  stagedEvidenceClaim,
-  stagedEvidenceOrder,
-} from "./staged-evidence";
 
 const genericCommand = "scripts/ci-local.sh generic";
 const rocmCompileCommand =
@@ -50,18 +49,10 @@ const orientation: Lesson = {
         ["README.md", "docs/testing.md", "docs/verification-model.md"],
       ),
     },
-    ...stagedEvidenceOrder.map(stagedEvidenceClaim),
   ],
   sections: [
     narrativeSection("read-the-evidence/labels"),
     narrativeSection("read-the-evidence/differentiator"),
-    narrativeSection("read-the-evidence/compiler-refactor"),
-    narrativeSection("read-the-evidence/scalar-gemm-checkpoint"),
-    narrativeSection("read-the-evidence/moe-bounded-evidence"),
-    {
-      kind: "staged-evidence",
-      evidenceIds: [...stagedEvidenceOrder],
-    },
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -351,7 +342,7 @@ const verusBasics: Lesson = {
     narrativeSection("verus-contracts/negative"),
   ],
   tabs: completeTabs(
-    { language: "rust", code: fillKernel, explanatory: false },
+    { language: "rust", code: fillKernel, explanatory: true },
     {
       language: "rust",
       code: injectiveProof,
@@ -436,6 +427,117 @@ const memoryProofs: Lesson = {
   glossary: ["region", "provenance", "initialization", "injectivity", "race freedom"],
 };
 
+const compilerChecks: Lesson = {
+  id: "compiler-checks",
+  module: 2,
+  order: 2,
+  title: "Compiler checks: reject unsafe kernels",
+  summary:
+    "See workload-neutral PLIRON verifier passes reject unsafe Rust kernels before lowering or artifact emission.",
+  duration: "35 min",
+  prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
+  objectives: [
+    "Distinguish a proved static access from a checked dynamic access.",
+    "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
+    "Locate generic bounds, race, barrier, workgroup-memory, and semantic-refinement passes.",
+    "Explain why KernelContext carries IR ownership rather than GEMM semantics.",
+  ],
+  claims: [
+    {
+      kind: "compiler-hsaco-observed",
+      label: "Production ranked-bounds rejection",
+      detail:
+        "At current compiler main, ordinary Rust semantic MIR reaches ranked PLIRON. The generic bounds verifier accepts the checked dynamic output access and rejects input[64] for [f32; 64] with FE2O3-BOUNDS-001 before target lowering or artifact emission.",
+      reference: currentImplementationReference(
+        [
+          "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
+        ],
+        [
+          "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
+          "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_pipeline.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_race.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_barrier.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_workgroup_memory.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs",
+        ],
+        { target: "gfx942" },
+      ),
+    },
+  ],
+  sections: [
+    narrativeSection("compiler-checks/catalog"),
+    narrativeSection("compiler-checks/production-path"),
+  ],
+  tabs: completeTabs(
+    {
+      language: "rust",
+      code: compilerBoundsKernel,
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "ce4bfc61e99df240f32c24b4fb7a0f5971460a489084dbe19f3662cb4753ea0e",
+      explanatory: false,
+      notice:
+        "The oob feature selects the invalid body. input[63] is statically valid; input[64] is one past the declared extent.",
+    },
+    {
+      language: "text",
+      code: `Mandatory pre-lowering verification
+1. ranked bounds and address arithmetic
+2. race freedom
+3. barrier convergence
+4. workgroup-memory initialization and publication
+5. declared semantic refinement
+
+Rejected: the analysis proves a violation.
+Incomplete: the analysis cannot discharge an obligation within the supported model.
+Both stop strict production compilation.`,
+      explanatory: true,
+    },
+    {
+      language: "bash",
+      code: "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      explanatory: true,
+    },
+    {
+      language: "text",
+      code: resultText(
+        "compiler-hsaco-observed",
+        `error[FE2O3-BOUNDS-001]: ranked access is outside the declared bound
+required: 64 < 64
+Rust source: .../src/lib.rs:26:20
+ranked PLIRON before rejected lowering: kernel.index_constant 64
+lowering stopped before target IR or artifact emission`,
+      ),
+      explanatory: true,
+      notice:
+        "This is a compiler rejection, so no HSACO or runtime error exists for the invalid kernel.",
+    },
+  ),
+  diagram: "memory",
+  exercises: [
+    {
+      prompt: "Change input[64] to input[63], then explain why output.get_mut remains dynamic.",
+      hint: "One bound is part of the array type; the other depends on the runtime launch identity and slice length.",
+      acceptance:
+        "The static array access is proved from 63 < 64, while get_mut emits a checked dynamic access that is safe only on its Some branch.",
+    },
+  ],
+  glossary: [
+    "ranked PLIRON",
+    "Rejected",
+    "Incomplete",
+    "KernelContext",
+    "compiler safety pass",
+  ],
+};
+
 export const modules0to2: CurriculumModule[] = [
   {
     number: 0,
@@ -451,8 +553,8 @@ export const modules0to2: CurriculumModule[] = [
   },
   {
     number: 2,
-    title: "Formal verification",
-    summary: "Specify memory properties and make invalid variants fail.",
-    lessons: [verusBasics, memoryProofs],
+    title: "Verification and compiler checks",
+    summary: "Prove source properties and reject invalid kernel IR before lowering.",
+    lessons: [verusBasics, memoryProofs, compilerChecks],
   },
 ];

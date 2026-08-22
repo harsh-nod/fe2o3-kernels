@@ -1,4 +1,5 @@
 import publicationGate from "../../config/publication-gate.json";
+import { currentState } from "./current-state";
 import { FE2O3_PIN, type StagedEvidenceId } from "./model";
 import {
   resolveProgressNarrative,
@@ -130,7 +131,7 @@ export type DevelopmentCheckpoint =
   | StagedEvidenceDevelopmentCheckpoint;
 
 export const progressSnapshot = {
-  reviewedOn: "2026-08-18",
+  reviewedOn: currentState.reviewedOn,
   auditedCommit: FE2O3_PIN.commit,
   lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
   lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
@@ -1183,7 +1184,6 @@ export const kernelProgress: KernelProgress[] = [
       "protected Slice 3 and Slice 4 execution (fe2o3 #88 and #89)",
       "general dimensions, strides, tails, and coefficients (fe2o3 #90)",
       "source and Verus-to-machine refinement",
-      "IEEE BF16/F32 numerical contract (fe2o3 #109)",
     ],
     next: "Keep the promoted exact Slice 1 source, proof command, protected host command, and measured result pinned while binding that route to authenticated compiler origin, identity-bound proof certificates, and MIR/Kernel-IR/LLVM/ISA refinement; then carry Slice 3 and Slice 4 through protected execution and generalize the exact profiles.",
   },

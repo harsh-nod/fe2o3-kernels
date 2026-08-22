@@ -1,0 +1,55 @@
+{
+  "reviewedOn": "2026-08-21",
+  "plironCommit": "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
+  "issues": [
+    {"number": 109, "state": "closed", "label": "Shared BF16/F32 numerical contract"},
+    {"number": 134, "state": "open", "label": "Rust-first Pliron compiler architecture"},
+    {"number": 135, "state": "open", "label": "Verified persistent GPU execution"},
+    {"number": 137, "state": "open", "label": "Verified pure-Rust KFD runtime"},
+    {"number": 140, "state": "open", "label": "Owner-bound upstream Pliron arena handles"}
+  ],
+  "capabilities": [
+    {
+      "id": "context-ownership",
+      "label": "Pliron context ownership",
+      "status": "active",
+      "detail": "Process-local context identities, registered dialects, and context-bound handles are checked before operations are inspected. Generic safety passes execute today; issue #140 tracks stronger owner-aware upstream arena handles rather than blocking the production verifier sequence.",
+      "sourcePaths": ["crates/fe2o3-pliron/src/lib.rs", "crates/fe2o3-kernel-analysis/src/pliron_pipeline.rs"]
+    },
+    {
+      "id": "generic-safety",
+      "label": "Generic pre-lowering safety",
+      "status": "active",
+      "detail": "The mandatory workload-neutral sequence verifies ranked bounds, race freedom, barrier convergence, workgroup-memory initialization and publication, and declared semantic refinement. Rejected and Incomplete findings both stop strict production compilation before lowering.",
+      "sourcePaths": ["crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs", "crates/fe2o3-kernel-analysis/src/pliron_barrier.rs", "crates/fe2o3-kernel-analysis/src/pliron_workgroup_memory.rs", "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs"]
+    },
+    {
+      "id": "rust-production-route",
+      "label": "Rust production route",
+      "status": "partial",
+      "detail": "Ordinary Rust semantic MIR reaches ranked PLIRON and the production verifier for the checked dynamic and static-bounds fixture. Static out-of-bounds Rust is rejected with FE2O3-BOUNDS-001 and no artifact. Source projection for the other generic diagnostic families remains deliberately fail-closed.",
+      "sourcePaths": ["crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs", "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs", "crates/fe2o3-pliron/tests/production_ranked_pipeline.rs"]
+    },
+    {
+      "id": "compiler-analysis",
+      "label": "Bounded compiler analysis",
+      "status": "active",
+      "detail": "Closed control-flow validation, pruned SSA placement, uniformity, sparse index facts, exact bounded invocation traces, and stable diagnostics feed the safety pipeline. Unsupported operations and resource limits fail closed as Incomplete obligations.",
+      "sourcePaths": ["crates/fe2o3-kernel-analysis/src/control_flow.rs", "crates/fe2o3-kernel-analysis/src/ssa.rs", "crates/fe2o3-kernel-analysis/src/uniformity.rs", "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs", "crates/fe2o3-kernel-analysis/src/pliron_invocation_trace.rs"]
+    },
+    {
+      "id": "target-finalization",
+      "label": "Target finalization",
+      "status": "partial",
+      "detail": "Accepted bounded profiles use upstream LLVM target-machine APIs and in-process LLD with exact target, ABI, resource, and code-object inspection. These mechanics do not by themselves establish source-to-machine refinement or protected execution authority.",
+      "sourcePaths": ["crates/fe2o3-hsaco-finalize/src/lib.rs", "crates/rustc-codegen-fe2o3/src/lib.rs"]
+    },
+    {
+      "id": "runtime",
+      "label": "Runtime and persistent execution",
+      "status": "partial",
+      "detail": "Pure-Rust KFD topology, memory, queue, packet, and typed lifecycle foundations are present. Current main also completes authority-free crash-recovery mechanics for Worker V2 publication intents and predecessor cleanup through exact leases, private cleanup escrow, and restart-atomic retirement. These types explicitly grant no publication, load, or launch authority; verified persistent execution and complete production runtime authority remain open in issues #135 and #137.",
+      "sourcePaths": ["crates/fe2o3-kfd/src/lib.rs", "crates/fe2o3-hsa-runtime/src/lib.rs", "crates/cargo-fe2o3/src/worker_v2_restart.rs", "crates/fe2o3-artifact-transaction/src/worker_v2_publication_intent_cleanup_escrow.rs"]
+    }
+  ]
+}

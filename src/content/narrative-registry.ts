@@ -184,7 +184,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires commit 39c34775e60b838bfdbad14b398abdfd204da82e, tree dc13d3e7e85b20147fd3d6c3cc99139b732a30d0. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical lesson evidence remains independently pinned: protected GEMM stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A source stay at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
+        "text": "The checked-in publication gate requires commit 74bbb65f8dcb8bd75661e51903fe5aa271052066, tree 23a05adc76c39ac98fba3a913eea542944a21b4b. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical lesson evidence remains independently pinned: protected GEMM stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A source stay at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
       },
       {
         "type": "callout",
@@ -427,6 +427,200 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "compiler-checks/catalog": {
+    "sectionId": "compiler-checks-catalog",
+    "title": "Compile-time kernel diagnostics",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "FE2O3 separates ordinary Rust UI errors from target-neutral kernel verification. Rust rejects local type, ownership, privacy, and typestate misuse. The kernel pipelines then analyze structured operations, SSA, control flow, indexed memory effects, invocation ownership, barriers, workgroup-memory epochs, and any explicitly declared semantic-equivalence obligation. These analyses consume workload-neutral Kernel IR or ranked PLIRON: none recognizes GEMM names, tile sizes, or schedules."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Generic does not mean automatically provable",
+        "text": "Bounds, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, launch contracts, and CFG. A kernel outside that analyzable subset is not treated as safe: the compiler reports an Incomplete proof obligation and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent the programmer's intended formula."
+      },
+      {
+        "type": "paragraph",
+        "text": "The fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory. The ranked-PLIRON pre-lowering order is memory bounds, race freedom, barrier convergence, workgroup memory, then declared semantic refinement; PLIRON dialect verification is a prerequisite of the first pass. No lowering pass may run between these checks."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Outcome",
+          "Meaning",
+          "Production consequence"
+        ],
+        "rows": [
+          ["Clean", "Every obligation handled by that pass was discharged.", "The next mandatory pass may run."],
+          ["Rejected", "The compiler found a concrete invalid IR condition or a conflicting execution witness.", "Compilation stops before lowering or artifact emission."],
+          ["Incomplete", "Safety could not be proved because a fact is dynamic, an effect or index is unresolved, or a bounded analysis limit was reached.", "The strict production route also stops; Incomplete does not claim that a concrete bug was proved."]
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Analysis ID",
+          "Kernel-general responsibility",
+          "Representative non-clean findings"
+        ],
+        "rows": [
+          ["kernel-structural-v1", "Verify module, function, kernel, SSA, type, operation, memory, synchronization, launch, and capability invariants.", "Invalid or duplicate identities; bad entry/signature; undefined or non-dominating values; type/result errors; invalid memory, barrier, atomic, fence, convergence, workgroup, wave, float, inline-assembly, or terminator operations; resource limits."],
+          ["kernel-control-flow-v1", "Build and validate the closed kernel CFG before dataflow facts are trusted.", "Declaration or empty body; duplicate block; missing terminator; unknown successor; irreducible control flow; bounded-analysis resource exhaustion."],
+          ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent.", "Static out-of-bounds witness; unresolved dynamic bound; unsupported index, CFG, or operation; analysis limit."],
+          ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, or alias relation; analysis limit."],
+          ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
+          ["kernel-workgroup-memory-v1", "Track workgroup-memory initialization, publication, compatible atomics, and conflicts by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; unresolved trace or analysis limit."],
+          ["kernel-semantic-refinement-v1", "Compare an actual target-neutral expression with a frontend-declared required expression.", "Declared formula mismatch; unresolved semantic expression or analysis limit. This pass checks a supplied contract rather than guessing intent."]
+        ]
+      },
+      {
+        "type": "compile-failures",
+        "heading": "Five representative failures with exact diagnostics",
+        "intro": "Every example enters the same fixed workload-neutral PLIRON verifier sequence and stops before target lowering or artifact emission. The bounds example is exercised end to end from ordinary Rust semantic MIR: a checked dynamic access passes, while the static index 64 into extent 64 produces the diagnostic shown here. Race, barrier, workgroup-memory, and semantic-refinement examples are parsed textual PLIRON lit fixtures that exercise the mandatory production passes directly. Their Rust barrier/workgroup/semantic CFG projection is still deliberately fail-closed; the site does not claim those four source forms are connected end to end yet.",
+        "examples": [
+          {
+            "id": "bounds_static_oob",
+            "title": "Static out-of-bounds access",
+            "source": "#[kernel]\nfn out_of_bounds(values: &mut [u32; 64]) {\n    values[64] = 1;\n}",
+            "diagnostic": "error[FE2O3-BOUNDS-001]: statically out-of-bounds Write at block 0 op 2; access: %0 dimension 0; required: 64 < 64\n  --> Rust source ...:26:20\n  = ranked PLIRON before rejected lowering\n  = lowering stopped before target IR or artifact emission",
+            "property": "MemoryBounds",
+            "stage": "generic PLIRON pass 1/5",
+            "code": "FE2O3-BOUNDS-001",
+            "enforcement": "Rust production route and textual PLIRON lit",
+            "caught": "The frontend preserves the array extent and constant index in ranked PLIRON. The bounds pass compares index 64 with extent 64, names the failed dimension and exact relation, maps it back to the Rust span, and terminates compilation."
+          },
+          {
+            "id": "race_duplicate_output",
+            "title": "Cross-invocation write race",
+            "source": "%tid = kernel.invocation_index <0, 64>\n%zero = kernel.index_constant 0\nkernel.access Write %output[%zero]",
+            "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on %output[0]\nfirst writer/reader: invocation [0]\nsecond writer/reader: invocation [1]\nfailed proof: distinct concurrent invocations do not imply disjoint memory coordinates\nhelp: include an invocation-owned coordinate, use a disjoint view, or use a compatible atomic operation",
+            "property": "RaceFreedom",
+            "stage": "generic PLIRON pass 2/5",
+            "code": "FE2O3-RACE-001",
+            "enforcement": "Textual PLIRON lit; mandatory production pass",
+            "caught": "Every invocation writes coordinate zero. Sparse affine analysis cannot prove the output map injective, and exact bounded witness enumeration reports the first conflicting invocation pair. CUDA or HIP would normally compile this race."
+          },
+          {
+            "id": "barrier_divergent",
+            "title": "Invocation-divergent barrier",
+            "source": "%tid = kernel.invocation_index <0, 4>\nkernel.cond_br %tid < 2, ^sync, ^exit\n^sync:\n  gpu.barrier Workgroup AcquireRelease",
+            "diagnostic": "error[FE2O3-BARRIER-001]: divergent collective barrier trace; invocation [0] executes one workgroup barrier, while invocation [2] executes no barriers\nfailed proof: every participating invocation reaches the same barriers in the same order\nhelp: move the barrier out of invocation-varying control flow",
+            "property": "BarrierConvergence",
+            "stage": "generic PLIRON pass 3/5",
+            "code": "FE2O3-BARRIER-001",
+            "enforcement": "Textual PLIRON lit; mandatory production pass",
+            "caught": "The pass derives per-invocation CFG traces and compares collective barrier identities and order. Half the launch reaches the barrier and half bypasses it, so lowering is rejected before a possible GPU deadlock."
+          },
+          {
+            "id": "workgroup_uninitialized",
+            "title": "Workgroup read before initialization",
+            "source": "%lds = kernel.ranked_view <32, true, [64], Workgroup>\n%tid = kernel.invocation_index <0, 8>\nkernel.access Read %lds[%tid]",
+            "diagnostic": "error[FE2O3-WORKGROUP-001]: invocation [0] reads uninitialized workgroup address [0] at block 0 op 2\nfailed proof: the address is not initialized by this invocation and no convergent workgroup-memory barrier published a prior write\nhelp: initialize the address and publish it with a workgroup acquire-release barrier before the read",
+            "property": "WorkgroupMemory",
+            "stage": "generic PLIRON pass 4/5",
+            "code": "FE2O3-WORKGROUP-001",
+            "enforcement": "Textual PLIRON lit; mandatory production pass",
+            "caught": "The epoch analysis tracks writes, compatible atomics, and convergent workgroup publication. This read has neither a same-invocation initializer nor a published prior write, so the pass reports its invocation and address."
+          },
+          {
+            "id": "semantic_mismatch",
+            "title": "Declared formula mismatch",
+            "source": "%actual = kernel.semantic_add (%alpha * %acc), %initial\n%required = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nkernel.require_equivalent %actual, %required",
+            "diagnostic": "error[FE2O3-SEMANTIC-001]: declared semantic refinement failed at block 0 op 8\nactual expression `add(mul(s0,s1),s3)` is not equivalent to required expression `add(mul(s0,s1),mul(s2,s3))`\nhelp: preserve the frontend-declared target-neutral semantic formula",
+            "property": "SemanticRefinement",
+            "stage": "generic PLIRON pass 5/5",
+            "code": "FE2O3-SEMANTIC-001",
+            "enforcement": "Textual PLIRON lit; mandatory production pass",
+            "caught": "The pass hash-conses the target-neutral expression DAG, normalizes commutative operand order without reassociating floating-point operations, and finds that beta times the prior value is missing."
+          }
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Complete ranked-PLIRON diagnostic code catalog",
+        "text": "The table below enumerates every stable FE2O3 bounds, race, barrier, workgroup-memory, and declared-semantic diagnostic in the current production pre-lowering sequence. Prerequisite codes preserve the original earlier-pass failure; Incomplete codes are terminal proof failures, not claims that a concrete bug witness was found."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Diagnostic",
+          "Class",
+          "Exact condition reported"
+        ],
+        "rows": [
+          ["FE2O3-BOUNDS-000", "Prerequisite", "PLIRON structural verification failed before ranked bounds analysis."],
+          ["FE2O3-BOUNDS-001", "Rejected", "A read, write, or atomic index is statically outside a ranked extent; the diagnostic names the view, dimension, index, and required index < extent relation."],
+          ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
+          ["FE2O3-BOUNDS-003", "Incomplete", "Bounds analysis encountered an unreachable block, unsupported terminator or operation, sparse-index failure, or bounded resource limit."],
+          ["FE2O3-RACE-000", "Prerequisite", "Ranked bounds verification failed before race analysis."],
+          ["FE2O3-RACE-001", "Rejected", "Two concrete concurrent invocations have incompatible effects at the same coordinate; the diagnostic names both invocation and operation witnesses."],
+          ["FE2O3-RACE-002", "Incomplete", "Race freedom cannot be proved because a launch dimension or indexed coordinate is dynamic or unresolved."],
+          ["FE2O3-RACE-003", "Incomplete", "Sparse-index analysis failed or the exact invocation, effect-instance, or finding bound was exceeded."],
+          ["FE2O3-BARRIER-000", "Prerequisite", "Bounds verification failed before barrier-convergence analysis."],
+          ["FE2O3-BARRIER-001", "Rejected", "Two participating invocations execute different collective barrier identities or orders."],
+          ["FE2O3-BARRIER-002", "Incomplete", "Barrier convergence cannot be proved because the launch, branch, terminator, CFG, or bounded trace is unresolved or unsupported."],
+          ["FE2O3-WORKGROUP-000", "Prerequisite", "Bounds or barrier-convergence verification failed before workgroup-memory analysis."],
+          ["FE2O3-WORKGROUP-001", "Rejected", "An invocation reads a workgroup address without same-invocation initialization or a convergent acquire-release publication of a prior write."],
+          ["FE2O3-WORKGROUP-002", "Rejected", "Concurrent invocations perform incompatible workgroup-memory effects at the same address in one barrier epoch."],
+          ["FE2O3-WORKGROUP-003", "Incomplete", "Workgroup-memory safety cannot be proved because a trace or effect is unsupported or a finding/resource limit was reached."],
+          ["FE2O3-SEMANTIC-000", "Prerequisite", "Bounds verification failed before declared semantic refinement."],
+          ["FE2O3-SEMANTIC-001", "Rejected", "The actual expression is not equivalent to the explicitly declared required expression."],
+          ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Static and dynamic shapes have different proof outcomes",
+        "text": "A static extent and static index can produce a concrete Rejected witness such as 64 < 64. A dynamic extent is not deferred automatically to an unchecked runtime access. A dominating guard or explicitly checked access can make the path provably safe; otherwise the strict compiler reports FE2O3-BOUNDS-002 Incomplete and emits no artifact. Host prepare checks validate launch-time extents and aliases, but they do not convert an unproved device access into a safe kernel."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Kernel shape",
+          "Available fact",
+          "Strict compiler result"
+        ],
+        "rows": [
+          ["[T; 64] with index 64", "The extent and invalid index are static.", "Rejected with FE2O3-BOUNDS-001 and the failed 64 < 64 relation."],
+          ["&[T] with a dominating index < len guard", "Every path to the access carries the required dynamic bound.", "Clean when sparse-index analysis proves the guard dominates the access."],
+          ["&[T] with an unresolved index", "The compiler cannot establish index < extent on every path.", "Incomplete with FE2O3-BOUNDS-002; no target lowering or runtime artifact."],
+          ["Dynamic launch or alias relation", "Concurrency or disjointness cannot be resolved in the bounded model.", "The corresponding race or barrier pass reports Incomplete and compilation stops."]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "KernelContext is compiler ownership, not kernel knowledge",
+        "text": "A KernelContext owns the PLIRON arena, registered dialect operations, and context-bound handles used while constructing and verifying one kernel module. It prevents foreign, stale, or transplanted IR handles from being treated as valid. It does not encode GEMM rules, expected formulas, safe indices, or race-freedom facts; those are established by dialect verification and the generic analyses."
+      }
+    ]
+  },
+  "compiler-checks/production-path": {
+    "sectionId": "compiler-checks-production-path",
+    "title": "How a rejection reaches the Rust user",
+    "blocks": [
+      {
+        "type": "steps",
+        "items": [
+          "rustc preserves supported semantic MIR, source spans, ranked extents, checked branches, and memory effects.",
+          "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
+          "The mandatory workload-neutral passes run in their fixed order and return Clean, Rejected, or Incomplete.",
+          "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
+          "The production transaction stops before target IR, finalization, or artifact publication."
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Current end-to-end boundary",
+        "text": "Static ranked bounds and checked dynamic access are connected from ordinary Rust through the production PLIRON gate. Race, barrier, workgroup-memory, and semantic-refinement passes are mandatory and generic at PLIRON, while source projection for their unsupported Rust CFG forms still fails closed rather than fabricating an analyzable graph."
+      }
+    ]
+  },
   "reductions-scans/scope": {
     "sectionId": "scope",
     "title": "Scope is part of the operation",
@@ -635,7 +829,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Bounded execution is not production authority",
-        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Exact direct LLVM/LLD API finalization (#97), exact generated host preparation (#99), and the one-shot Joined -> Loaded -> Completed -> Unloaded implementation (#100) are also complete. #100 now has both fake-adapter adversarial coverage and one exact protected mi300x measurement. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. Neither the protected Slice 1 measurement nor the separate IR-derived observation proves compiler origin, general illegal-access safety, race freedom, or source-to-machine refinement. The shared IEEE BF16/F32 numerical contract remains open in #109. No production source execution is claimed. No production source-to-HSACO or Verus authority is claimed."
+        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Exact direct LLVM/LLD API finalization (#97), exact generated host preparation (#99), and the one-shot Joined -> Loaded -> Completed -> Unloaded implementation (#100) are also complete. #100 now has both fake-adapter adversarial coverage and one exact protected mi300x measurement. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. Neither the protected Slice 1 measurement nor the separate IR-derived observation proves compiler origin, general illegal-access safety, race freedom, or source-to-machine refinement. The shared IEEE BF16/F32 numerical contract and oracle were completed in #109; authenticated compiler, proof, and machine refinement remain separate open obligations. No production source execution is claimed. No production source-to-HSACO or Verus authority is claimed."
       },
       {
         "type": "links",
@@ -768,150 +962,10 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
-  "gemm-tiling/semantic-failures": {
-    "sectionId": "semantic-failures",
-    "title": "Compile-time kernel diagnostics",
+  "gemm-tiling/mutation-diagnostics": {
+    "sectionId": "mutation-diagnostics",
+    "title": "General GEMM mutation diagnostics",
     "blocks": [
-      {
-        "type": "paragraph",
-        "text": "FE2O3 separates ordinary Rust UI errors from target-neutral kernel verification. Rust rejects local type, ownership, privacy, and typestate misuse. The kernel pipelines then analyze structured operations, SSA, control flow, indexed memory effects, invocation ownership, barriers, workgroup-memory epochs, and any explicitly declared semantic-equivalence obligation. These analyses consume workload-neutral Kernel IR or ranked PLIRON: none recognizes GEMM names, tile sizes, or schedules."
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "Generic does not mean automatically provable",
-        "text": "Bounds, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, launch contracts, and CFG. A kernel outside that analyzable subset is not treated as safe: the compiler reports an Incomplete proof obligation and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent the programmer's intended formula."
-      },
-      {
-        "type": "paragraph",
-        "text": "The fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory. The ranked-PLIRON pre-lowering order is memory bounds, race freedom, barrier convergence, workgroup memory, then declared semantic refinement; PLIRON dialect verification is a prerequisite of the first pass. No lowering pass may run between these checks."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Outcome",
-          "Meaning",
-          "Production consequence"
-        ],
-        "rows": [
-          ["Clean", "Every obligation handled by that pass was discharged.", "The next mandatory pass may run."],
-          ["Rejected", "The compiler found a concrete invalid IR condition or a conflicting execution witness.", "Compilation stops before lowering or artifact emission."],
-          ["Incomplete", "Safety could not be proved because a fact is dynamic, an effect or index is unresolved, or a bounded analysis limit was reached.", "The strict production route also stops; Incomplete does not claim that a concrete bug was proved."]
-        ]
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Analysis ID",
-          "Kernel-general responsibility",
-          "Representative non-clean findings"
-        ],
-        "rows": [
-          ["kernel-structural-v1", "Verify module, function, kernel, SSA, type, operation, memory, synchronization, launch, and capability invariants.", "Invalid or duplicate identities; bad entry/signature; undefined or non-dominating values; type/result errors; invalid memory, barrier, atomic, fence, convergence, workgroup, wave, float, inline-assembly, or terminator operations; resource limits."],
-          ["kernel-control-flow-v1", "Build and validate the closed kernel CFG before dataflow facts are trusted.", "Declaration or empty body; duplicate block; missing terminator; unknown successor; irreducible control flow; bounded-analysis resource exhaustion."],
-          ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent.", "Static out-of-bounds witness; unresolved dynamic bound; unsupported index, CFG, or operation; analysis limit."],
-          ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, or alias relation; analysis limit."],
-          ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
-          ["kernel-workgroup-memory-v1", "Track workgroup-memory initialization, publication, compatible atomics, and conflicts by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; unresolved trace or analysis limit."],
-          ["kernel-semantic-refinement-v1", "Compare an actual target-neutral expression with a frontend-declared required expression.", "Declared formula mismatch; unresolved semantic expression or analysis limit. This pass checks a supplied contract rather than guessing intent."]
-        ]
-      },
-      {
-        "type": "compile-failures",
-        "heading": "Five representative failures with exact diagnostics",
-        "intro": "Every example enters the same fixed workload-neutral PLIRON verifier sequence and stops before target lowering or artifact emission. The bounds example is exercised end to end from ordinary Rust semantic MIR: a checked dynamic access passes, while the static index 64 into extent 64 produces the diagnostic shown here. Race, barrier, workgroup-memory, and semantic-refinement examples are parsed textual PLIRON lit fixtures that exercise the mandatory production passes directly. Their Rust barrier/workgroup/semantic CFG projection is still deliberately fail-closed; the site does not claim those four source forms are connected end to end yet.",
-        "examples": [
-          {
-            "id": "bounds_static_oob",
-            "title": "Static out-of-bounds access",
-            "source": "#[kernel]\nfn out_of_bounds(values: &mut [u32; 64]) {\n    values[64] = 1;\n}",
-            "diagnostic": "error[FE2O3-BOUNDS-001]: statically out-of-bounds Write at block 0 op 2; access: %0 dimension 0; required: 64 < 64\n  --> Rust source ...:26:20\n  = ranked PLIRON before rejected lowering\n  = lowering stopped before target IR or artifact emission",
-            "property": "MemoryBounds",
-            "stage": "generic PLIRON pass 1/5",
-            "code": "FE2O3-BOUNDS-001",
-            "enforcement": "Rust production route and textual PLIRON lit",
-            "caught": "The frontend preserves the array extent and constant index in ranked PLIRON. The bounds pass compares index 64 with extent 64, names the failed dimension and exact relation, maps it back to the Rust span, and terminates compilation."
-          },
-          {
-            "id": "race_duplicate_output",
-            "title": "Cross-invocation write race",
-            "source": "%tid = kernel.invocation_index <0, 64>\n%zero = kernel.index_constant 0\nkernel.access Write %output[%zero]",
-            "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on %output[0]\nfirst writer/reader: invocation [0]\nsecond writer/reader: invocation [1]\nfailed proof: distinct concurrent invocations do not imply disjoint memory coordinates\nhelp: include an invocation-owned coordinate, use a disjoint view, or use a compatible atomic operation",
-            "property": "RaceFreedom",
-            "stage": "generic PLIRON pass 2/5",
-            "code": "FE2O3-RACE-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "Every invocation writes coordinate zero. Sparse affine analysis cannot prove the output map injective, and exact bounded witness enumeration reports the first conflicting invocation pair. CUDA or HIP would normally compile this race."
-          },
-          {
-            "id": "barrier_divergent",
-            "title": "Invocation-divergent barrier",
-            "source": "%tid = kernel.invocation_index <0, 4>\nkernel.cond_br %tid < 2, ^sync, ^exit\n^sync:\n  gpu.barrier Workgroup AcquireRelease",
-            "diagnostic": "error[FE2O3-BARRIER-001]: divergent collective barrier trace; invocation [0] executes one workgroup barrier, while invocation [2] executes no barriers\nfailed proof: every participating invocation reaches the same barriers in the same order\nhelp: move the barrier out of invocation-varying control flow",
-            "property": "BarrierConvergence",
-            "stage": "generic PLIRON pass 3/5",
-            "code": "FE2O3-BARRIER-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "The pass derives per-invocation CFG traces and compares collective barrier identities and order. Half the launch reaches the barrier and half bypasses it, so lowering is rejected before a possible GPU deadlock."
-          },
-          {
-            "id": "workgroup_uninitialized",
-            "title": "Workgroup read before initialization",
-            "source": "%lds = kernel.ranked_view <32, true, [64], Workgroup>\n%tid = kernel.invocation_index <0, 8>\nkernel.access Read %lds[%tid]",
-            "diagnostic": "error[FE2O3-WORKGROUP-001]: invocation [0] reads uninitialized workgroup address [0] at block 0 op 2\nfailed proof: the address is not initialized by this invocation and no convergent workgroup-memory barrier published a prior write\nhelp: initialize the address and publish it with a workgroup acquire-release barrier before the read",
-            "property": "WorkgroupMemory",
-            "stage": "generic PLIRON pass 4/5",
-            "code": "FE2O3-WORKGROUP-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "The epoch analysis tracks writes, compatible atomics, and convergent workgroup publication. This read has neither a same-invocation initializer nor a published prior write, so the pass reports its invocation and address."
-          },
-          {
-            "id": "semantic_mismatch",
-            "title": "Declared formula mismatch",
-            "source": "%actual = kernel.semantic_add (%alpha * %acc), %initial\n%required = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nkernel.require_equivalent %actual, %required",
-            "diagnostic": "error[FE2O3-SEMANTIC-001]: declared semantic refinement failed at block 0 op 8\nactual expression `add(mul(s0,s1),s3)` is not equivalent to required expression `add(mul(s0,s1),mul(s2,s3))`\nhelp: preserve the frontend-declared target-neutral semantic formula",
-            "property": "SemanticRefinement",
-            "stage": "generic PLIRON pass 5/5",
-            "code": "FE2O3-SEMANTIC-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "The pass hash-conses the target-neutral expression DAG, normalizes commutative operand order without reassociating floating-point operations, and finds that beta times the prior value is missing."
-          }
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Complete ranked-PLIRON diagnostic code catalog",
-        "text": "The table below enumerates every stable FE2O3 bounds, race, barrier, workgroup-memory, and declared-semantic diagnostic in the current production pre-lowering sequence. Prerequisite codes preserve the original earlier-pass failure; Incomplete codes are terminal proof failures, not claims that a concrete bug witness was found."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Diagnostic",
-          "Class",
-          "Exact condition reported"
-        ],
-        "rows": [
-          ["FE2O3-BOUNDS-000", "Prerequisite", "PLIRON structural verification failed before ranked bounds analysis."],
-          ["FE2O3-BOUNDS-001", "Rejected", "A read, write, or atomic index is statically outside a ranked extent; the diagnostic names the view, dimension, index, and required index < extent relation."],
-          ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
-          ["FE2O3-BOUNDS-003", "Incomplete", "Bounds analysis encountered an unreachable block, unsupported terminator or operation, sparse-index failure, or bounded resource limit."],
-          ["FE2O3-RACE-000", "Prerequisite", "Ranked bounds verification failed before race analysis."],
-          ["FE2O3-RACE-001", "Rejected", "Two concrete concurrent invocations have incompatible effects at the same coordinate; the diagnostic names both invocation and operation witnesses."],
-          ["FE2O3-RACE-002", "Incomplete", "Race freedom cannot be proved because a launch dimension or indexed coordinate is dynamic or unresolved."],
-          ["FE2O3-RACE-003", "Incomplete", "Sparse-index analysis failed or the exact invocation, effect-instance, or finding bound was exceeded."],
-          ["FE2O3-BARRIER-000", "Prerequisite", "Bounds verification failed before barrier-convergence analysis."],
-          ["FE2O3-BARRIER-001", "Rejected", "Two participating invocations execute different collective barrier identities or orders."],
-          ["FE2O3-BARRIER-002", "Incomplete", "Barrier convergence cannot be proved because the launch, branch, terminator, CFG, or bounded trace is unresolved or unsupported."],
-          ["FE2O3-WORKGROUP-000", "Prerequisite", "Bounds or barrier-convergence verification failed before workgroup-memory analysis."],
-          ["FE2O3-WORKGROUP-001", "Rejected", "An invocation reads a workgroup address without same-invocation initialization or a convergent acquire-release publication of a prior write."],
-          ["FE2O3-WORKGROUP-002", "Rejected", "Concurrent invocations perform incompatible workgroup-memory effects at the same address in one barrier epoch."],
-          ["FE2O3-WORKGROUP-003", "Incomplete", "Workgroup-memory safety cannot be proved because a trace or effect is unsupported or a finding/resource limit was reached."],
-          ["FE2O3-SEMANTIC-000", "Prerequisite", "Bounds verification failed before declared semantic refinement."],
-          ["FE2O3-SEMANTIC-001", "Rejected", "The actual expression is not equivalent to the explicitly declared required expression."],
-          ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."]
-        ]
-      },
       {
         "type": "table",
         "headers": [
@@ -1524,7 +1578,7 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "lds-barriers-atomics/atomics":
     "3d19c81e59e9d80814ce7a5792ae8bd281a6360d8bfbb28e07948e13106eca03",
   "gemm-tiling/public-layout-proof":
-    "cb55340b23fed8480e93460f7ef6160258ed1e709a9688f214b54c989d248d0e",
+    "9cb4be57e0aff451d0e72b0129e2f1698fee55680e48d72e545bf06a8443d4d9",
   "gemm-proof-plan/evidence":
     "961353dad93a62fb2d79e63b2f0d738b7e37814346ab4d5f9113656a9c9edbff",
 } satisfies Record<NarrativeId, string>);

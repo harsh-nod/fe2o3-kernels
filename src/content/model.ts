@@ -1,4 +1,5 @@
 import type { NarrativeId } from "./narrative-policy";
+import { currentState } from "./current-state";
 
 export const FE2O3_PIN = {
   commit: "acb3d2752e4e50e4f4a99ebfc4b180eb79160930",
@@ -28,6 +29,11 @@ interface EvidenceReferenceBase {
 
 export interface LessonEvidenceReference extends EvidenceReferenceBase {
   scope: "lesson-evidence";
+}
+
+export interface CurrentImplementationEvidenceReference
+  extends EvidenceReferenceBase {
+  scope: "current-implementation";
 }
 
 export type StagedEvidenceAuthority =
@@ -103,6 +109,7 @@ export interface SourceMilestoneEvidenceReference
 
 export type EvidenceReference =
   | LessonEvidenceReference
+  | CurrentImplementationEvidenceReference
   | StagedEvidenceReference
   | SourceMilestoneEvidenceReference;
 
@@ -280,4 +287,22 @@ export function stagedReference(
   reference: Omit<StagedEvidenceReference, "scope">,
 ): StagedEvidenceReference {
   return { scope: "staged-progress", ...reference };
+}
+
+export function currentImplementationReference(
+  commands: string[],
+  sourcePaths: string[],
+  options: Pick<
+    CurrentImplementationEvidenceReference,
+    "target" | "note"
+  > = {},
+): CurrentImplementationEvidenceReference {
+  return {
+    scope: "current-implementation",
+    commit: currentState.compilerCommit,
+    tree: currentState.compilerTree,
+    commands,
+    sourcePaths,
+    ...options,
+  };
 }

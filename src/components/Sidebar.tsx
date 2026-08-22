@@ -1,4 +1,15 @@
-import { Activity, BookOpen, Check, GitBranch, Network, X } from "lucide-react";
+import {
+  Activity,
+  BookOpen,
+  Braces,
+  Check,
+  GitBranch,
+  History,
+  House,
+  Network,
+  X,
+} from "lucide-react";
+import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { curriculum, lessons } from "../content/curriculum";
 
@@ -7,15 +18,23 @@ interface SidebarProps {
   mobile?: boolean;
   onNavigate?: () => void;
   onClose?: () => void;
+  onPrune?: (validLessonIds: ReadonlySet<string>) => void;
 }
+
+const validLessonIds = new Set(lessons.map((lesson) => lesson.id));
 
 export function Sidebar({
   completed,
   mobile = false,
   onNavigate,
   onClose,
+  onPrune,
 }: SidebarProps) {
-  const progress = Math.round((completed.size / lessons.length) * 100);
+  useEffect(() => onPrune?.(validLessonIds), [onPrune]);
+  const completedCount = [...completed].filter((lessonId) =>
+    validLessonIds.has(lessonId),
+  ).length;
+  const progress = Math.round((completedCount / lessons.length) * 100);
 
   return (
     <aside
@@ -39,7 +58,7 @@ export function Sidebar({
       <div className="progress-block" aria-label={`${progress}% complete`}>
         <div className="progress-label">
           <span>Course progress</span>
-          <strong>{completed.size}/{lessons.length}</strong>
+          <strong>{completedCount}/{lessons.length}</strong>
         </div>
         <div className="progress-track" aria-hidden="true">
           <span style={{ width: `${progress}%` }} />
@@ -75,6 +94,15 @@ export function Sidebar({
       </nav>
 
       <nav className="reference-nav" aria-label="Reference">
+        <NavLink onClick={onNavigate} to="/" end>
+          <House size={16} /> Overview
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/lesson/compiler-checks">
+          <Braces size={16} /> Compiler checks
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/lesson/evidence-archive">
+          <History size={16} /> Evidence archive
+        </NavLink>
         <NavLink onClick={onNavigate} to="/status">
           <Activity size={16} /> Implementation status
         </NavLink>

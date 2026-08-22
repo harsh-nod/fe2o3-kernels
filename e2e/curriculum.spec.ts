@@ -41,12 +41,39 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
+test("search traps focus and restores its trigger", async ({ page }) => {
+  await page.goto("./#/");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "fe2o3 kernels" }),
+  ).toBeVisible();
+
+  const trigger = page.getByRole("button", { name: /Search/u });
+  await trigger.click();
+  const dialog = page.getByRole("dialog", {
+    name: "Search all lesson content",
+  });
+  const input = dialog.getByRole("combobox", {
+    name: "Search all lesson content",
+  });
+  await expect(input).toBeFocused();
+
+  const lastOption = dialog.getByRole("option").last();
+  await page.keyboard.press("Shift+Tab");
+  await expect(lastOption).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(input).toBeFocused();
+
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(trigger).toBeFocused();
+});
+
 test("search, theme, tabs, and progress work together", async ({ page }) => {
-  await page.goto("./#/lesson/read-the-evidence");
+  await page.goto("./#/lesson/evidence-archive");
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Read the evidence before the code",
+      name: "Historical evidence archive",
     }),
   ).toBeVisible();
   await expect(
@@ -59,8 +86,8 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.getByText(/all 625 count vectors/u)).toBeVisible();
   await expect(page.getByText(/no freshness or replay authority/u)).toBeVisible();
   await page.keyboard.press("Control+K");
-  const search = page.getByRole("textbox", {
-    name: "Search lessons and glossary",
+  const search = page.getByRole("combobox", {
+    name: "Search all lesson content",
   });
   await expect(search).toBeFocused();
   await search.fill("flash attention");
@@ -162,6 +189,13 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(
     page.getByText("Generic PLIRON safety passes are mandatory before lowering"),
   ).toBeVisible();
+  await page.goto("./#/lesson/compiler-checks");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Compiler checks: reject unsafe kernels",
+    }),
+  ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 3,
@@ -198,11 +232,11 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     page.getByText("Complete ranked-PLIRON diagnostic code catalog"),
   ).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-BOUNDS-002" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-RACE-003" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-BOUNDS-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-RACE-003", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002", exact: true })).toBeVisible();
   await page
     .getByRole("heading", {
       level: 3,
@@ -217,7 +251,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(
     page.getByText("Compile-time kernel diagnostics"),
   ).toBeVisible();
-  await expect(page.getByText("0x46470101", { exact: true })).toBeVisible();
+  await page.goto("./#/lesson/gemm-tiling");
   await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "unguarded_a_tail_load" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "missing_publish_barrier" })).toBeVisible();
@@ -451,15 +485,14 @@ test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {
   await page.goto("./#/lesson/read-the-evidence");
-  const routes = await page
-    .locator(".app-shell > .sidebar .tree-link")
-    .evaluateAll((links) =>
+  const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
+  await expect(routeLinks).toHaveCount(20);
+  const routes = await routeLinks.evaluateAll((links) =>
       links.map((link) => ({
         href: (link as HTMLAnchorElement).href,
         title: link.textContent?.trim() ?? "",
       })),
     );
-  expect(routes).toHaveLength(18);
 
   for (const route of routes) {
     await page.goto(route.href);
@@ -484,12 +517,12 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Pliron ownership and device identity at 2f7c4fd1d",
+      name: "Compiler main at 74bbb65f8d",
     }),
   ).toBeVisible();
-  await expect(page.getByText(/These services, models, and contracts do not complete/)).toContainText(
-    "make an explanatory lesson kernel functional",
-  );
+  await expect(
+    page.getByText(/generic safety sequence is active and mandatory before lowering/u),
+  ).toBeVisible();
   await page.goto("./#/status");
   await expect(
     page.getByRole("heading", {

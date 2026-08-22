@@ -15,13 +15,13 @@ function renderApp(path = "/lesson/read-the-evidence") {
 describe("application shell", () => {
   beforeEach(() => window.localStorage.clear());
 
-  it("renders the tutorial app as its first screen", () => {
+  it("renders the tutorial app as its first screen", async () => {
     renderApp();
     expect(
-      screen.getByRole("heading", {
+      await screen.findByRole("heading", {
         level: 1,
         name: "Read the evidence before the code",
-      }),
+      }, { timeout: 5_000 }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Curriculum")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Kernel" })).toBeInTheDocument();
@@ -30,9 +30,9 @@ describe("application shell", () => {
   it("persists completed lesson progress", async () => {
     const user = userEvent.setup();
     renderApp();
-    await user.click(screen.getByRole("button", { name: "Mark complete" }));
+    await user.click(await screen.findByRole("button", { name: "Mark complete" }, { timeout: 5_000 }));
     expect(screen.getByRole("button", { name: "Completed" })).toBeInTheDocument();
-    expect(window.localStorage.getItem("fe2o3-kernels-progress-v1")).toContain(
+    expect(window.localStorage.getItem("fe2o3-kernels-progress-v2")).toContain(
       "read-the-evidence",
     );
   });
@@ -41,9 +41,9 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderApp();
     await user.click(screen.getByRole("button", { name: /Search/ }));
-    const input = screen.getByRole("textbox", {
-      name: "Search lessons and glossary",
-    });
+    const input = await screen.findByRole("combobox", {
+      name: "Search all lesson content",
+    }, { timeout: 5_000 });
     await user.type(input, "flash attention");
     await user.click(
       screen.getByRole("option", { name: /Flash attention: online invariant/ }),
@@ -61,7 +61,7 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderApp("/lesson/softmax-invariant");
     expect(
-      screen.getByRole("heading", {
+      await screen.findByRole("heading", {
         level: 1,
         name: "Softmax: one fixed row, six evidence layers",
       }),
@@ -92,10 +92,10 @@ describe("application shell", () => {
     );
   });
 
-  it("shows public and candidate kernel delivery states separately", () => {
+  it("shows public and candidate kernel delivery states separately", async () => {
     renderApp("/status");
     expect(
-      screen.getByRole("heading", {
+      await screen.findByRole("heading", {
         level: 1,
         name: "Kernel delivery and verification progress",
       }),
@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("39c34775e60b")).toBeInTheDocument();
+    expect(screen.getByText("74bbb65f8dcb")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "dc13d3e7e85b20147fd3d6c3cc99139b732a30d0",
+      "23a05adc76c39ac98fba3a913eea542944a21b4b",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -232,35 +232,24 @@ describe("application shell", () => {
     );
   });
 
-  it("renders the compiler refactor as authority-free architecture infrastructure", () => {
+  it("renders current compiler architecture separately from history", async () => {
     renderApp("/architecture");
     expect(
-      screen.getByRole("heading", {
+      await screen.findByRole("heading", {
         level: 2,
-        name: "Pliron ownership and device identity at 2f7c4fd1d",
+        name: "Compiler main at 74bbb65f8d",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("#134 / #135 / #140 open")).toBeInTheDocument();
-    expect(screen.getByText(/The opaque exact-byte KIR/)).toHaveTextContent(
-      "rejects foreign-context substitution",
-    );
-    expect(screen.getByText(/MIR-to-kernel and kernel-to-GPU/)).toHaveTextContent(
-      "not Pliron Pass implementations",
-    );
-    expect(screen.getByText(/Pure-Rust KFD 1.18 and DRM UAPI/)).toHaveTextContent(
-      "not sealed runtime authority",
-    );
-    expect(screen.getByText(/These services, models, and contracts do not complete/)).toHaveTextContent(
-      "make an explanatory lesson kernel functional",
-    );
-    expect(screen.getByText(/The direction remains pinned upstream LLVM/)).toHaveTextContent(
-      "No COMGR path is introduced",
-    );
+    expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
+    expect(screen.getByText("#109")).toBeInTheDocument();
+    expect(screen.getByText("#109").closest("a")).toHaveTextContent("closed");
+    expect(screen.getByText("#140").closest("a")).toHaveTextContent("open");
+    expect(screen.getByText("Historical lesson evidence")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Open implementation checkpoint/ }),
+      screen.getByRole("link", { name: /Open current compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/39c34775e60b838bfdbad14b398abdfd204da82e",
+      "https://github.com/harsh-nod/fe2o3/tree/74bbb65f8dcb8bd75661e51903fe5aa271052066",
     );
   });
 });

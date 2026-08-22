@@ -766,8 +766,8 @@ const stagedEvidenceRecords = deepFreeze({
     claimLabel: "Canonical bounded matrix Kernel IR wire",
     claim: "compiler-hsaco-observed",
     authority: "wire-format-only",
-    commit: "1429ed6ae70dcd218376b777e0fef7db4413efdb",
-    tree: "0a2b7965ef678253ed4c028e27f5de4394d22eb5",
+    commit: "1429ed6ae46e14317bb5b927c8d9cb1f66f268c7",
+    tree: "0a2b79650673b2b9b42965307f2ac40d05324afe",
     commands: [
       "cargo test --locked -p fe2o3-kernel-ir --all-targets",
       "cargo clippy --locked -p fe2o3-kernel-ir --all-targets --no-deps -- -D warnings",
@@ -782,7 +782,7 @@ const stagedEvidenceRecords = deepFreeze({
     assertions: [
       {
         id: "matrix-wire-fields",
-        text: "Commit 1429ed6ae70dcd218376b777e0fef7db4413efdb adds canonical Kernel IR V5 bytes for matrix active lanes, convergence, every MFMA operand and profile field, LDS base/value operands, element/layout tags, and wave width.",
+        text: "Commit 1429ed6ae46e14317bb5b927c8d9cb1f66f268c7 adds canonical Kernel IR V5 bytes for matrix active lanes, convergence, every MFMA operand and profile field, LDS base/value operands, element/layout tags, and wave width.",
       },
       {
         id: "legacy-wire-closure",

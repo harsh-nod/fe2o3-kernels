@@ -17,13 +17,15 @@ export const narrativeIds = deepFreeze([
   "verus-contracts/negative",
   "memory-race-proof/regions",
   "memory-race-proof/dynamic-join",
+  "compiler-checks/catalog",
+  "compiler-checks/production-path",
   "reductions-scans/scope",
   "reductions-scans/scan",
   "lds-barriers-atomics/epochs",
   "lds-barriers-atomics/atomics",
   "gemm-tiling/public-layout-proof",
   "gemm-tiling/general-contract",
-  "gemm-tiling/semantic-failures",
+  "gemm-tiling/mutation-diagnostics",
   "gemm-tiling/mapping",
   "gemm-tiling/loop-proof",
   "gemm-proof-plan/proof-ledger",
@@ -53,10 +55,7 @@ export type NarrativeId = (typeof narrativeIds)[number];
 export const narrativeOrderByLesson = deepFreeze({
   "read-the-evidence": [
     "read-the-evidence/labels",
-    "read-the-evidence/differentiator",
-    "read-the-evidence/compiler-refactor",
-    "read-the-evidence/scalar-gemm-checkpoint",
-    "read-the-evidence/moe-bounded-evidence"
+    "read-the-evidence/differentiator"
   ],
   "gfx942-setup": [
     "gfx942-setup/toolchain",
@@ -78,6 +77,10 @@ export const narrativeOrderByLesson = deepFreeze({
     "memory-race-proof/regions",
     "memory-race-proof/dynamic-join"
   ],
+  "compiler-checks": [
+    "compiler-checks/catalog",
+    "compiler-checks/production-path"
+  ],
   "reductions-scans": [
     "reductions-scans/scope",
     "reductions-scans/scan"
@@ -89,7 +92,7 @@ export const narrativeOrderByLesson = deepFreeze({
   "gemm-tiling": [
     "gemm-tiling/public-layout-proof",
     "gemm-tiling/general-contract",
-    "gemm-tiling/semantic-failures",
+    "gemm-tiling/mutation-diagnostics",
     "gemm-tiling/mapping",
     "gemm-tiling/loop-proof"
   ],
@@ -123,6 +126,11 @@ export const narrativeOrderByLesson = deepFreeze({
     "what-verus-proves/proved",
     "what-verus-proves/ecosystem"
   ],
+  "evidence-archive": [
+    "read-the-evidence/compiler-refactor",
+    "read-the-evidence/scalar-gemm-checkpoint",
+    "read-the-evidence/moe-bounded-evidence"
+  ],
   "exercise-ladder": [
     "exercise-ladder/beginner",
     "exercise-ladder/advanced"
@@ -134,7 +142,7 @@ export const narrativeOrderByLesson = deepFreeze({
 } satisfies Record<string, readonly NarrativeId[]>);
 
 export const stagedEvidenceLessonIds = deepFreeze([
-  "read-the-evidence",
+  "evidence-archive",
   "gemm-tiling",
 ] as const);
 
@@ -142,7 +150,7 @@ export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
   "read-the-evidence/differentiator": "7d4f9897c50993ecbe6e8d9f94162e6cf649f669f1f555627f9d2df5cb0147d7",
   "read-the-evidence/compiler-refactor": "b9b2de157842c4626cf236431e29e677d316ec7156189d507330891db4d409df",
-  "read-the-evidence/scalar-gemm-checkpoint": "6fc383c73b493c8ef3f11dda9428989b7735f8472ffa99636f6b1c0054642247",
+  "read-the-evidence/scalar-gemm-checkpoint": "e708aef2b5b02d52bbdd9970852066c14c32130dde77fabb70d2e534ab674f9b",
   "read-the-evidence/moe-bounded-evidence": "dbd3365e78d1b08d60b330328166e39fe46b1d7174d6ec0ca46811542757e361",
   "gfx942-setup/toolchain": "bde4a23bc51376d828c8b910ab8048c988c7f838736f1d309bea0294fde84ef3",
   "gfx942-setup/sequence": "00a0689fb93a27622076f9bd21c5fb8c0b78c57d88d79dc8db0bfb86596315da",
@@ -154,13 +162,15 @@ export const narrativeFingerprints = deepFreeze({
   "verus-contracts/negative": "38875c71f6dd93237a558f59db083e9eb48b93d9407fa23f210d3dfd14c379ca",
   "memory-race-proof/regions": "e197e757e5e41a147309534e0659e257209745bcef5c6e11fa89d61947111835",
   "memory-race-proof/dynamic-join": "105fe75c7294f57013c1f2c1403a985908580947f9aa2b96095de318ea0cc392",
+  "compiler-checks/catalog": "824ebd25f50ee844b6a4bf1bc304489aef20e6b107964ccc7444d827f2d449f8",
+  "compiler-checks/production-path": "00eecb05d62860279b572013a4ce29d3534c4e56a61952e6e8edcfbf0f70b009",
   "reductions-scans/scope": "5a38b3d1c24f74c6ffe39078b8e8b26d2fc1d12547e452fa420355bc5dd25152",
   "reductions-scans/scan": "df55d3ca07a0baaeeabc318fd03122faf68c296fd94438781a95e2549af3d6e2",
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
   "lds-barriers-atomics/atomics": "5f9311c3a1e2b97d5be96f4fd5a3bd25535e27586bbb0949391e889e21324582",
   "gemm-tiling/public-layout-proof": "1f78d8b76a7323822d77b025a919a44fb29e64dfcd1e19c5b0d1b0776cb8bc39",
   "gemm-tiling/general-contract": "fea50ac7ad00b7cebe61da4a990b64b9d9daffbf63a19cb357ea6f919517f2a9",
-  "gemm-tiling/semantic-failures": "c4b72806f2b62f40c62465f6e81daaebd70155ea283e34c0a8ca4ca6f5ddf418",
+  "gemm-tiling/mutation-diagnostics": "9754e26dc2e16ab69551aa6bf5f1035c7742e0d0cc3672f3d94608d6348bc4b3",
   "gemm-tiling/mapping": "c2b015fa509dd2976748c2de7de3a0e5165ab33e3c83e3948700ce2f49654cf0",
   "gemm-tiling/loop-proof": "7c87b0639046276d51e796d2ea61e72401c97dbd89043505de446adb6a6d2d05",
   "gemm-proof-plan/proof-ledger": "635b84e78c427a7c59e189832896c38d0e3f50ba0249e203c3c1ab186daa77c2",

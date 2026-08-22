@@ -63,15 +63,17 @@ describe("curriculum integrity", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8,
     ]);
-    expect(lessons).toHaveLength(18);
+    expect(lessons).toHaveLength(20);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
-      lessons.flatMap((lesson) =>
-        lesson.sections.flatMap((section) =>
-          section.kind === "narrative" ? [section.narrativeId] : [],
+      new Set(
+        lessons.flatMap((lesson) =>
+          lesson.sections.flatMap((section) =>
+            section.kind === "narrative" ? [section.narrativeId] : [],
+          ),
         ),
       ),
-    ).toEqual(narrativeIds);
+    ).toEqual(new Set(narrativeIds));
   });
 
   it("uses every evidence label", () => {
@@ -126,6 +128,20 @@ describe("curriculum integrity", () => {
     }
   });
 
+  it("requires every real source tab to match its pinned digest", () => {
+    for (const lesson of lessons) {
+      for (const tab of lesson.tabs) {
+        if (tab.explanatory !== false) continue;
+        expect(tab.sourcePath).toBeTruthy();
+        expect(tab.sourceCommit).toMatch(/^[0-9a-f]{40}$/u);
+        expect(tab.sourceSha256).toMatch(/^[0-9a-f]{64}$/u);
+        expect(createHash("sha256").update(tab.code).digest("hex")).toBe(
+          tab.sourceSha256,
+        );
+      }
+    }
+  });
+
   it("pins the exact bounded GEMM source, proof, host, and result tabs", () => {
     for (const lessonId of ["gemm-tiling", "gemm-proof-plan"]) {
       const lesson = lessons.find((entry) => entry.id === lessonId);
@@ -161,7 +177,7 @@ describe("curriculum integrity", () => {
           "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
         sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
         evidenceId: "tiled-lds-protected-lifecycle-v1",
-        explanatory: false,
+        explanatory: true,
       });
       expect(host?.code).toContain(
         "FE2O3_RUN_GFX942_TILED_GEMM_LDS_SLICE1_WORKER_V2_HARDWARE=1",
@@ -254,8 +270,8 @@ describe("curriculum integrity", () => {
       expect(contract).toContain(code);
     }
 
-    const semanticFailures = narrativeEntry("gemm-tiling/semantic-failures");
-    const failures = JSON.stringify(semanticFailures);
+    const semanticFailures = narrativeEntry("compiler-checks/catalog");
+    const failures = JSON.stringify([semanticFailures, narrativeEntry("gemm-tiling/mutation-diagnostics")]);
     expect(failures).toContain("Compile-time kernel diagnostics");
     expect(failures).toContain("none recognizes GEMM names, tile sizes, or schedules");
     expect(failures).toContain("Generic does not mean automatically provable");
@@ -436,7 +452,7 @@ describe("curriculum integrity", () => {
     expect(proof).toMatchObject({
       sourcePath: "examples/row_softmax_v1/verus/row_softmax_v1.rs",
       sourceCommit: "dd841720591003f418d056b21a319088ce4559d6",
-      explanatory: false,
+      explanatory: true,
     });
     expect(proof?.code).toContain("active_element_address_is_in_row_v1");
     expect(proof?.code).toContain(
@@ -448,7 +464,7 @@ describe("curriculum integrity", () => {
       sourcePath:
         "crates/fe2o3-host/src/protected_row_softmax_v1_lifecycle.rs",
       sourceCommit: "38b0005765944de55bb32c559bc8431637317b2b",
-      explanatory: false,
+      explanatory: true,
     });
     expect(host?.code).toContain("JoinedProtectedRowSoftmaxV1");
     expect(host?.code).toContain("load_after_context_match");
@@ -844,7 +860,7 @@ describe("curriculum integrity", () => {
       const changed = structuredClone(curriculum);
       const lesson = changed
         .flatMap((module) => module.lessons)
-        .find((entry) => entry.id === "read-the-evidence");
+        .find((entry) => entry.id === "evidence-archive");
       const reference = lesson?.claims.find(
         (claim) => claim.label === "Staged tiled source bridge",
       )?.reference;
@@ -862,7 +878,7 @@ describe("curriculum integrity", () => {
   });
 
   it("records every staged tiled statement with exact limited authority", () => {
-    const lesson = lessons.find((entry) => entry.id === "read-the-evidence");
+    const lesson = lessons.find((entry) => entry.id === "evidence-archive");
     const staged = lesson?.claims.filter(
       (claim) => claim.reference?.scope === "staged-progress",
     );
@@ -1038,8 +1054,8 @@ describe("curriculum integrity", () => {
         label: "Canonical bounded matrix Kernel IR wire",
         kind: "compiler-hsaco-observed",
         evidenceId: "tiled-lds-matrix-wire-v5",
-        commit: "1429ed6ae70dcd218376b777e0fef7db4413efdb",
-        tree: "0a2b7965ef678253ed4c028e27f5de4394d22eb5",
+        commit: "1429ed6ae46e14317bb5b927c8d9cb1f66f268c7",
+        tree: "0a2b79650673b2b9b42965307f2ac40d05324afe",
         authority: "wire-format-only",
       },
       {
@@ -1480,7 +1496,7 @@ describe("curriculum integrity", () => {
     const changedClaims = structuredClone(curriculum);
     const claim = changedClaims
       .flatMap((module) => module.lessons)
-      .find((lesson) => lesson.id === "read-the-evidence")
+      .find((lesson) => lesson.id === "evidence-archive")
       ?.claims.find(
         (candidate) =>
           candidate.reference?.scope === "staged-progress" &&
@@ -1588,15 +1604,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-18",
+      reviewedOn: "2026-08-21",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "39c34775e60b838bfdbad14b398abdfd204da82e",
-      eventualPublicTree: "dc13d3e7e85b20147fd3d6c3cc99139b732a30d0",
+      eventualPublicCommit: "74bbb65f8dcb8bd75661e51903fe5aa271052066",
+      eventualPublicTree: "23a05adc76c39ac98fba3a913eea542944a21b4b",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "39c34775e60b838bfdbad14b398abdfd204da82e",
-        requiredTree: "dc13d3e7e85b20147fd3d6c3cc99139b732a30d0",
+        requiredCommit: "74bbb65f8dcb8bd75661e51903fe5aa271052066",
+        requiredTree: "23a05adc76c39ac98fba3a913eea542944a21b4b",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2222,7 +2238,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "39c34775e60b838bfdbad14b398abdfd204da82e",
+      "74bbb65f8dcb8bd75661e51903fe5aa271052066",
     );
 
     const lesson = curriculum
@@ -2271,7 +2287,7 @@ describe("implementation progress integrity", () => {
     );
     expect(expertResult?.code).toContain("No expert kernel was dispatched");
 
-    const orientation = serializedLessonContent("read-the-evidence");
+    const orientation = serializedLessonContent("evidence-archive");
     expect(orientation).toContain("Read bounded MoE evidence by layer");
     expect(orientation).toContain("all 625 count vectors");
     expect(orientation).toContain("uploads offsets and inverse together");
@@ -2823,13 +2839,12 @@ describe("implementation progress integrity", () => {
         "protected Slice 3 and Slice 4 execution (fe2o3 #88 and #89)",
         "general dimensions, strides, tails, and coefficients (fe2o3 #90)",
         "source and Verus-to-machine refinement",
-        "IEEE BF16/F32 numerical contract (fe2o3 #109)",
       ],
     });
   });
 
   it("teaches the staged tiled evidence boundaries without repinning claims", () => {
-    const orientation = serializedLessonContent("read-the-evidence");
+    const orientation = serializedLessonContent("evidence-archive");
     const mapping = serializedLessonContent("gemm-tiling");
     const proofPlan = serializedLessonContent("gemm-proof-plan");
     const renderedStaged = stagedEvidenceDetail(stagedEvidenceOrder);

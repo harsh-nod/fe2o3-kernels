@@ -47,6 +47,25 @@ describe("search index", () => {
     expect(results.some((result) => result.lessonId === "first-fill")).toBe(true);
   });
 });
+  it("indexes diagnostics and deep-links to the compiler-check catalog", () => {
+    for (const query of [
+      "FE2O3-BOUNDS-001",
+      "Cross-invocation write race",
+      "dynamic shapes",
+      "KernelContext",
+    ]) {
+      const results = searchCatalog(query, lessons, glossary);
+      expect(results.some((result) =>
+        result.lessonId === "compiler-checks" &&
+        result.hash === "compiler-checks-catalog"
+      )).toBe(true);
+    }
+    expect(searchCatalog("FE2O3-BOUNDS-001", lessons, glossary)[0]).toMatchObject({
+      kind: "diagnostic",
+      lessonId: "compiler-checks",
+      hash: "compiler-checks-catalog",
+    });
+  });
 
 describe("lesson section rendering policy", () => {
   it("renders canonical lesson sections", () => {
@@ -60,7 +79,7 @@ describe("lesson section rendering policy", () => {
   });
 
   it("renders the compile-time failure gallery with exact diagnostics", () => {
-    const lesson = lessons.find((candidate) => candidate.id === "gemm-tiling")!;
+    const lesson = lessons.find((candidate) => candidate.id === "compiler-checks")!;
     render(<LessonSections lessonId={lesson.id} sections={lesson.sections} />);
 
     expect(

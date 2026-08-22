@@ -12,9 +12,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: read
+      issues: read
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -24,6 +25,13 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+
+      - name: Check out compiler evidence repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: harsh-nod/fe2o3
+          fetch-depth: 0
+          path: .evidence/fe2o3
 
       - name: Enforce dual-repository publication gate
         env:
@@ -35,6 +43,11 @@ jobs:
 
       - name: Validate and build
         run: npm run validate
+
+      - name: Validate evidence objects and issue states
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: npm run validate:evidence -- --repository .evidence/fe2o3 --check-issues
 
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0

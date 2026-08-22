@@ -92,14 +92,8 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
 
       <section className="assurance-summary" aria-labelledby="assurance-heading">
         <p className="section-kicker">Boundary check</p>
-        <h2 id="assurance-heading">Proved, trusted, and not proved</h2>
+        <h2 id="assurance-heading">Trust boundaries</h2>
         <div className="assurance-columns">
-          <div>
-            <strong>Proved or observed</strong>
-            <ul>
-              {lesson.claims.map((claim) => <li key={claim.label}>{claim.detail}</li>)}
-            </ul>
-          </div>
           <div>
             <strong>Trusted in this lesson</strong>
             <ul>

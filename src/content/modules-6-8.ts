@@ -14,6 +14,10 @@ import {
   sourceMilestoneClaim,
   sourceMilestoneRecord,
 } from "./source-milestones";
+import {
+  stagedEvidenceClaim,
+  stagedEvidenceOrder,
+} from "./staged-evidence";
 
 const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
@@ -338,6 +342,61 @@ const assurance: Lesson = {
   glossary: ["Verified", "Checked", "Unsafe", "external body", "assumption audit"],
 };
 
+const evidenceArchive: Lesson = {
+  id: "evidence-archive",
+  module: 7,
+  order: 2,
+  title: "Historical evidence archive",
+  summary:
+    "Inspect the exact staged compiler, tiled GEMM, and bounded MoE records without confusing them with current compiler main.",
+  duration: "Reference",
+  prerequisites: ["From rustc to signed evidence"],
+  objectives: [
+    "Read each historical record at its exact commit and tree.",
+    "Separate staged authority from current implementation capability.",
+    "Preserve negative evidence and explicit limitations during later revisions.",
+  ],
+  claims: stagedEvidenceOrder.map(stagedEvidenceClaim),
+  sections: [
+    narrativeSection("read-the-evidence/compiler-refactor"),
+    narrativeSection("read-the-evidence/scalar-gemm-checkpoint"),
+    narrativeSection("read-the-evidence/moe-bounded-evidence"),
+    {
+      kind: "staged-evidence",
+      evidenceIds: [...stagedEvidenceOrder],
+    },
+  ],
+  tabs: completeTabs(
+    { language: "rust", code: noKernel, explanatory: true },
+    { language: "rust", code: noProof, explanatory: true },
+    {
+      language: "bash",
+      code: `# Every row supplies its own exact commit, tree, command, and paths.
+git show --no-patch --format='%H %T' <commit>
+git ls-tree -r --name-only <tree> -- <source-path>`,
+      explanatory: true,
+    },
+    {
+      language: "text",
+      code: resultText(
+        "compiler-hsaco-observed",
+        "Archived evidence is immutable historical support. The Architecture and Implementation status pages describe current main separately.",
+      ),
+      explanatory: true,
+    },
+  ),
+  diagram: "evidence",
+  exercises: [
+    {
+      prompt: "Choose one staged row and verify that its commit resolves to the recorded tree.",
+      hint: "Compare git show --format=%T with the evidence row before reading its claims.",
+      acceptance:
+        "The commit, tree, source paths, command, authority, and limitations are reviewed as one record.",
+    },
+  ],
+  glossary: ["evidence binding", "authority", "artifact binding"],
+};
+
 const exercises: Lesson = {
   id: "exercise-ladder",
   module: 8,
@@ -460,7 +519,7 @@ export const modules6to8: CurriculumModule[] = [
     number: 7,
     title: "Production evidence",
     summary: "Bind source, proofs, compiler output, runtime facts, and review.",
-    lessons: [pipeline, assurance],
+    lessons: [pipeline, assurance, evidenceArchive],
   },
   {
     number: 8,

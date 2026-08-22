@@ -1,5 +1,6 @@
 import { Menu, Moon, Search, Sun } from "lucide-react";
-import { FE2O3_PIN } from "../content/model";
+import { Link } from "react-router-dom";
+import { currentState } from "../content/current-state";
 import type { Theme } from "../hooks/useTheme";
 
 interface TopbarProps {
@@ -22,20 +23,26 @@ export function Topbar({ theme, onMenu, onSearch, onTheme }: TopbarProps) {
       >
         <Menu size={20} />
       </button>
-      <div className="brand-lockup">
+      <Link className="brand-lockup" to="/" aria-label="fe2o3 kernels overview">
         <span className="brand-mark">Fe</span>
         <div>
           <strong>fe2o3 kernels</strong>
           <span>proof-aware field guide</span>
         </div>
-      </div>
-      <div className="pin-summary" title={`Tree ${FE2O3_PIN.tree}`}>
+      </Link>
+      <div className="pin-summary" title={`Tree ${currentState.compilerTree}`}>
         <span className="pin-dot" aria-hidden="true" />
-        <span>lesson pin {FE2O3_PIN.shortCommit}</span>
+        <span>compiler main {currentState.compilerShortCommit}</span>
         <span className="pin-target">gfx942</span>
       </div>
       <div className="topbar-actions">
-        <button className="search-trigger" type="button" onClick={onSearch}>
+        <button
+          className="search-trigger"
+          type="button"
+          onClick={onSearch}
+          aria-label="Search curriculum"
+          title="Search curriculum"
+        >
           <Search size={17} aria-hidden="true" />
           <span>Search</span>
           <kbd>⌘ K</kbd>
