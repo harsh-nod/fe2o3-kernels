@@ -636,16 +636,27 @@ closure remains an independent second downstream blocker, but the current route
 does not reach configuration or proof. Complete-family `SOURCE_TO_IR=false`,
 `LOWERING=false`, and `PROTECTED_EXECUTION=false` remain unchanged.
 
-Separately, the production semantic-MIR route now runs one fixed target-neutral
-ranked-PLIRON safety pipeline before Kernel IR lowering: bounds, global race
-freedom, barrier convergence, workgroup-memory initialization/publication, and
-declared semantic refinement. The passes share bounded sparse index dataflow
-and are tested by 20 parsed textual PLIRON lit fixtures plus focused hostile
-unit suites. Static ranked Rust accesses and checked `ThreadIndex` /
-`DisjointSlice` dynamic accesses reach that pipeline end to end. Exact Rust CFG
-projection for barriers and workgroup memory, other dynamic pointer provenance,
-and source-declared formulas remains fail-closed; the corresponding site cards
-are pass-level PLIRON examples, not completed Rust source-to-machine claims.
+Separately, the production semantic-MIR route runs a fixed target-neutral
+ranked-PLIRON safety pipeline before Kernel IR lowering: bounds, atomic
+legality, global race freedom, barrier convergence, workgroup-memory
+must-initialization/publication by epoch, and declared semantic refinement.
+Dialect and structural verification are prerequisites. Bounded sparse affine
+index dataflow feeds bounds and ownership, and every pass has explicit resource
+ceilings that fail closed as Incomplete. Static ranked Rust accesses and checked
+dynamic accesses reach that pipeline end to end. Source projection for other
+atomic, race, barrier, workgroup-memory, and semantic forms remains fail-closed;
+the corresponding site cards are pass-level PLIRON examples, not completed Rust
+source-to-machine claims.
+
+Ordinary `#[kernel]` source is safe Rust. Rust enforces borrowing, moves,
+lifetimes, and local typestate inside one invocation. Compiler-issued
+`DisjointIndex`, `Shifted`, `GridExclusive`, `Blocked`,
+`DisjointBlock`, wave/collective/LDS/matrix capabilities, and typed global
+atomic views carry GPU facts that span invocations. Unsafe functions, blocks,
+and inline assembly are rejected from ordinary roots; only the explicitly
+separate `unsafe_asm` provider/test profile is a low-level escape. Atomic
+target-capability authentication, typed-view diagnostic authentication, and
+coherent system-allocation provenance remain incomplete integration work.
 
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish

@@ -433,17 +433,44 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "FE2O3 separates ordinary Rust UI errors from target-neutral kernel verification. Rust rejects local type, ownership, privacy, and typestate misuse. The kernel pipelines then analyze structured operations, SSA, control flow, indexed memory effects, invocation ownership, barriers, workgroup-memory epochs, and any explicitly declared semantic-equivalence obligation. These analyses consume workload-neutral Kernel IR or ranked PLIRON: none recognizes GEMM names, tile sizes, or schedules."
+        "text": "fe2o3 separates ordinary Rust UI errors from target-neutral kernel verification. Rust rejects local type, borrowing, ownership, privacy, and typestate misuse inside one invocation. The compiler then analyzes structured operations, SSA, control flow, indexed memory effects, cross-invocation ownership, atomics, barriers, workgroup-memory epochs, and explicitly declared semantic-equivalence obligations. These checks consume workload-neutral Kernel IR or ranked PLIRON: none recognizes GEMM names, tile sizes, or schedules."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Ordinary kernels are safe Rust",
+        "text": "An ordinary #[kernel] function has a safe signature and body. Unsafe functions, unsafe blocks, and inline assembly are rejected at the source boundary, including reachable device helpers. The explicitly separate unsafe_asm profile is the low-level provider and test escape hatch; selecting it does not weaken, discharge, or bypass any verifier obligation for an ordinary kernel. Trusted device APIs may contain narrowly reviewed unsafe implementation code behind safe surfaces. The compiler may treat an external device call as trusted only after exact diagnostic-item and provider authentication; the new typed atomic view identities remain pending below."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Pinned legacy snapshots remain historical evidence",
+        "text": "Several advanced lesson tabs are byte-for-byte snapshots of older source milestones and still show unsafe compiler-capability constructors. Their evidence hashes prevent this site from silently rewriting them. They are historical records, not source accepted by the ordinary safe-kernel contract; each must be migrated and re-pinned to a new compiler commit before the corresponding lesson can present it as current ordinary kernel source."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Layer",
+          "What it establishes",
+          "Representative form"
+        ],
+        "rows": [
+          ["Rust within one invocation", "Borrows, moves, lifetimes, visibility, and local typestate transitions.", "&mut T, non-Copy guards, safe methods"],
+          ["Compiler-issued index ownership", "A non-forgeable invocation identity and its permitted shifted, grid-exclusive, or blocked write partition.", "DisjointIndex, Shifted, GridExclusive, Blocked, DisjointBlock"],
+          ["Compiler-issued execution capabilities", "The current authenticated wave, collective participant set, LDS allocation and epoch, or matrix-instruction context.", "current wave/collective/LDS/matrix capabilities"],
+          ["Typed global atomic view", "A lifetime-bound AtomicU32, AtomicI32, AtomicU64, or AtomicI64 view without exposing a safe non-atomic dereference; every operation still states Ordering.", "DeviceGlobalMutPtr<T>::as_atomic()"],
+          ["Generic verifier passes", "Bounds, ownership, synchronization, atomic, and semantic facts that no local Rust borrow can establish across GPU invocations.", "ranked PLIRON plus launch and target facts"]
+        ]
       },
       {
         "type": "callout",
         "tone": "info",
         "title": "Generic does not mean automatically provable",
-        "text": "Bounds, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, launch contracts, and CFG. A kernel outside that analyzable subset is not treated as safe: the compiler reports an Incomplete proof obligation and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent the programmer's intended formula."
+        "text": "Bounds, atomic, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, launch contracts, target facts, and CFG. A kernel outside that analyzable subset is not treated as safe: the compiler reports an Incomplete proof obligation and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent the programmer's intended formula."
       },
       {
         "type": "paragraph",
-        "text": "The fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory. The ranked-PLIRON pre-lowering order is memory bounds, race freedom, barrier convergence, workgroup memory, then declared semantic refinement; PLIRON dialect verification is a prerequisite of the first pass. No lowering pass may run between these checks."
+        "text": "The fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory. The ranked-PLIRON pre-lowering order is memory bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement. PLIRON dialect verification is a prerequisite. No lowering pass may run between these checks. Sparse affine index propagation is shared analysis for bounds and ownership rather than a second competing verifier. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact."
       },
       {
         "type": "table",
@@ -469,16 +496,19 @@ const narrativeRegistry = deepFreeze({
           ["kernel-structural-v1", "Verify module, function, kernel, SSA, type, operation, memory, synchronization, launch, and capability invariants.", "Invalid or duplicate identities; bad entry/signature; undefined or non-dominating values; type/result errors; invalid memory, barrier, atomic, fence, convergence, workgroup, wave, float, inline-assembly, or terminator operations; resource limits."],
           ["kernel-control-flow-v1", "Build and validate the closed kernel CFG before dataflow facts are trusted.", "Declaration or empty body; duplicate block; missing terminator; unknown successor; irreducible control flow; bounded-analysis resource exhaustion."],
           ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent.", "Static out-of-bounds witness; unresolved dynamic bound; unsupported index, CFG, or operation; analysis limit."],
+          ["kernel-atomic-legality-v1", "Require a legal atomic kind, explicit ordering and scope, ranked-view provenance, supported element width/address space, bound target capability, and system-coherent allocation evidence.", "Missing or invalid ordering/scope; private-memory atomic; unavailable provenance or target capability; unauthenticated system coherence; analysis limit."],
           ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, or alias relation; analysis limit."],
           ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
-          ["kernel-workgroup-memory-v1", "Track workgroup-memory initialization, publication, compatible atomics, and conflicts by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; unresolved trace or analysis limit."],
-          ["kernel-semantic-refinement-v1", "Compare an actual target-neutral expression with a frontend-declared required expression.", "Declared formula mismatch; unresolved semantic expression or analysis limit. This pass checks a supplied contract rather than guessing intent."]
+          ["kernel-workgroup-memory-v1", "Run must-initialization dataflow and track publication, compatible atomics, conflicts, and reuse by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; stale or unresolved epoch/trace; analysis limit."],
+          ["kernel-semantic-refinement-v1", "Compare an actual target-neutral expression with a frontend-declared required expression.", "Declared formula mismatch; unresolved semantic expression or analysis limit. This pass checks a supplied contract rather than guessing intent."],
+          ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through SSA so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, or work-unit limit."],
+          ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
         ]
       },
       {
         "type": "compile-failures",
-        "heading": "Five representative failures with exact diagnostics",
-        "intro": "Every example enters the same fixed workload-neutral PLIRON verifier sequence and stops before target lowering or artifact emission. The bounds example is exercised end to end from ordinary Rust semantic MIR: a checked dynamic access passes, while the static index 64 into extent 64 produces the diagnostic shown here. Race, barrier, workgroup-memory, and semantic-refinement examples are parsed textual PLIRON lit fixtures that exercise the mandatory production passes directly. Their Rust barrier/workgroup/semantic CFG projection is still deliberately fail-closed; the site does not claim those four source forms are connected end to end yet.",
+        "heading": "Six representative failures with exact diagnostics",
+        "intro": "Every example enters the same fixed workload-neutral PLIRON verifier sequence and stops before target lowering or artifact emission. The bounds example is exercised end to end from ordinary Rust semantic MIR: a checked dynamic access passes, while the static index 64 into extent 64 produces the diagnostic shown here. Atomic, race, barrier, workgroup-memory, and semantic-refinement examples are parsed textual PLIRON lit fixtures that exercise the mandatory passes directly. Their unsupported Rust source projection still fails closed; the site does not claim those five source forms are connected end to end yet.",
         "examples": [
           {
             "id": "bounds_static_oob",
@@ -486,10 +516,21 @@ const narrativeRegistry = deepFreeze({
             "source": "#[kernel]\nfn out_of_bounds(values: &mut [u32; 64]) {\n    values[64] = 1;\n}",
             "diagnostic": "error[FE2O3-BOUNDS-001]: statically out-of-bounds Write at block 0 op 2; access: %0 dimension 0; required: 64 < 64\n  --> Rust source ...:26:20\n  = ranked PLIRON before rejected lowering\n  = lowering stopped before target IR or artifact emission",
             "property": "MemoryBounds",
-            "stage": "generic PLIRON pass 1/5",
+            "stage": "generic PLIRON pass 1/6",
             "code": "FE2O3-BOUNDS-001",
             "enforcement": "Rust production route and textual PLIRON lit",
             "caught": "The frontend preserves the array extent and constant index in ranked PLIRON. The bounds pass compares index 64 with extent 64, names the failed dimension and exact relation, maps it back to the Rust span, and terminates compilation."
+          },
+          {
+            "id": "atomic_invalid_ordering",
+            "title": "Illegal atomic ordering",
+            "source": "%target = kernel.ranked_view <32, true, [1], Global>\n%zero = kernel.index_constant 0\nkernel.access AtomicRead %target[%zero] <ordering = Release, scope = System>",
+            "diagnostic": "error[FE2O3-ATOMIC-001]: invalid Release ordering for AtomicRead at block 0 op 2; atomic loads cannot release and atomic stores cannot acquire\nhelp: retain a source ordering legal for the exact atomic operation",
+            "property": "AtomicLegality",
+            "stage": "generic PLIRON pass 2/6",
+            "code": "FE2O3-ATOMIC-001",
+            "enforcement": "Textual PLIRON lit; mandatory production pass",
+            "caught": "The atomic pass retains operation kind, ordering, scope, element width, address space, and view provenance as structured attributes. A release-only load is invalid independently of the kernel algorithm, so compilation stops before target selection or emission."
           },
           {
             "id": "race_duplicate_output",
@@ -497,7 +538,7 @@ const narrativeRegistry = deepFreeze({
             "source": "%tid = kernel.invocation_index <0, 64>\n%zero = kernel.index_constant 0\nkernel.access Write %output[%zero]",
             "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on %output[0]\nfirst writer/reader: invocation [0]\nsecond writer/reader: invocation [1]\nfailed proof: distinct concurrent invocations do not imply disjoint memory coordinates\nhelp: include an invocation-owned coordinate, use a disjoint view, or use a compatible atomic operation",
             "property": "RaceFreedom",
-            "stage": "generic PLIRON pass 2/5",
+            "stage": "generic PLIRON pass 3/6",
             "code": "FE2O3-RACE-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "Every invocation writes coordinate zero. Sparse affine analysis cannot prove the output map injective, and exact bounded witness enumeration reports the first conflicting invocation pair. CUDA or HIP would normally compile this race."
@@ -508,7 +549,7 @@ const narrativeRegistry = deepFreeze({
             "source": "%tid = kernel.invocation_index <0, 4>\nkernel.cond_br %tid < 2, ^sync, ^exit\n^sync:\n  gpu.barrier Workgroup AcquireRelease",
             "diagnostic": "error[FE2O3-BARRIER-001]: divergent collective barrier trace; invocation [0] executes one workgroup barrier, while invocation [2] executes no barriers\nfailed proof: every participating invocation reaches the same barriers in the same order\nhelp: move the barrier out of invocation-varying control flow",
             "property": "BarrierConvergence",
-            "stage": "generic PLIRON pass 3/5",
+            "stage": "generic PLIRON pass 4/6",
             "code": "FE2O3-BARRIER-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "The pass derives per-invocation CFG traces and compares collective barrier identities and order. Half the launch reaches the barrier and half bypasses it, so lowering is rejected before a possible GPU deadlock."
@@ -519,7 +560,7 @@ const narrativeRegistry = deepFreeze({
             "source": "%lds = kernel.ranked_view <32, true, [64], Workgroup>\n%tid = kernel.invocation_index <0, 8>\nkernel.access Read %lds[%tid]",
             "diagnostic": "error[FE2O3-WORKGROUP-001]: invocation [0] reads uninitialized workgroup address [0] at block 0 op 2\nfailed proof: the address is not initialized by this invocation and no convergent workgroup-memory barrier published a prior write\nhelp: initialize the address and publish it with a workgroup acquire-release barrier before the read",
             "property": "WorkgroupMemory",
-            "stage": "generic PLIRON pass 4/5",
+            "stage": "generic PLIRON pass 5/6",
             "code": "FE2O3-WORKGROUP-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "The epoch analysis tracks writes, compatible atomics, and convergent workgroup publication. This read has neither a same-invocation initializer nor a published prior write, so the pass reports its invocation and address."
@@ -530,7 +571,7 @@ const narrativeRegistry = deepFreeze({
             "source": "%actual = kernel.semantic_add (%alpha * %acc), %initial\n%required = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nkernel.require_equivalent %actual, %required",
             "diagnostic": "error[FE2O3-SEMANTIC-001]: declared semantic refinement failed at block 0 op 8\nactual expression `add(mul(s0,s1),s3)` is not equivalent to required expression `add(mul(s0,s1),mul(s2,s3))`\nhelp: preserve the frontend-declared target-neutral semantic formula",
             "property": "SemanticRefinement",
-            "stage": "generic PLIRON pass 5/5",
+            "stage": "generic PLIRON pass 6/6",
             "code": "FE2O3-SEMANTIC-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "The pass hash-conses the target-neutral expression DAG, normalizes commutative operand order without reassociating floating-point operations, and finds that beta times the prior value is missing."
@@ -540,8 +581,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "proof",
-        "title": "Complete ranked-PLIRON diagnostic code catalog",
-        "text": "The table below enumerates every stable FE2O3 bounds, race, barrier, workgroup-memory, and declared-semantic diagnostic in the current production pre-lowering sequence. Prerequisite codes preserve the original earlier-pass failure; Incomplete codes are terminal proof failures, not claims that a concrete bug witness was found."
+        "title": "Complete generic PLIRON diagnostic code catalog",
+        "text": "The table below enumerates every stable fe2o3 bounds, atomic, race, barrier, workgroup-memory, and declared-semantic diagnostic in the generic pre-lowering sequence. Prerequisite codes preserve the original earlier-pass failure; Incomplete codes are terminal proof failures, not claims that a concrete bug witness was found. Structural verifier diagnostics are operation-specific and resource ceilings are represented by each owning analysis rather than one misleading universal error code."
       },
       {
         "type": "table",
@@ -555,6 +596,9 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-BOUNDS-001", "Rejected", "A read, write, or atomic index is statically outside a ranked extent; the diagnostic names the view, dimension, index, and required index < extent relation."],
           ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
           ["FE2O3-BOUNDS-003", "Incomplete", "Bounds analysis encountered an unreachable block, unsupported terminator or operation, sparse-index failure, or bounded resource limit."],
+          ["FE2O3-ATOMIC-001", "Rejected", "An atomic access is malformed, lacks explicit ordering or scope, uses an ordering illegal for its kind, or names a scope illegal for its address space."],
+          ["FE2O3-ATOMIC-002", "Incomplete", "View provenance, target width/address-space/scope capability, or authenticated coherent-allocation evidence for system scope is unavailable."],
+          ["FE2O3-ATOMIC-003", "Incomplete", "Atomic legality exceeded its bounded operation or finding budget."],
           ["FE2O3-RACE-000", "Prerequisite", "Ranked bounds verification failed before race analysis."],
           ["FE2O3-RACE-001", "Rejected", "Two concrete concurrent invocations have incompatible effects at the same coordinate; the diagnostic names both invocation and operation witnesses."],
           ["FE2O3-RACE-002", "Incomplete", "Race freedom cannot be proved because a launch dimension or indexed coordinate is dynamic or unresolved."],
@@ -575,7 +619,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "info",
         "title": "Static and dynamic shapes have different proof outcomes",
-        "text": "A static extent and static index can produce a concrete Rejected witness such as 64 < 64. A dynamic extent is not deferred automatically to an unchecked runtime access. A dominating guard or explicitly checked access can make the path provably safe; otherwise the strict compiler reports FE2O3-BOUNDS-002 Incomplete and emits no artifact. Host prepare checks validate launch-time extents and aliases, but they do not convert an unproved device access into a safe kernel."
+        "text": "A static extent and static index can produce a concrete Rejected witness such as 64 < 64. A dynamic extent is not deferred automatically to an unchecked runtime access. A dominating guard or explicitly checked access carries the path fact needed to make the dynamic access provable; otherwise the strict compiler reports FE2O3-BOUNDS-002 Incomplete and emits no artifact. Host prepare checks validate launch-time extents and aliases, but they do not convert an unproved device access into a safe kernel."
       },
       {
         "type": "table",
@@ -594,8 +638,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "KernelContext is compiler ownership, not kernel knowledge",
-        "text": "A KernelContext owns the PLIRON arena, registered dialect operations, and context-bound handles used while constructing and verifying one kernel module. It prevents foreign, stale, or transplanted IR handles from being treated as valid. It does not encode GEMM rules, expected formulas, safe indices, or race-freedom facts; those are established by dialect verification and the generic analyses."
+        "title": "Atomic target and coherence authentication are still incomplete",
+        "text": "The generic atomic legality pass and lifetime-bound typed global atomic views cover the source and target-neutral IR contracts, but production use must also authenticate the exact device width/address-space/scope capability and, for system scope, the coherent allocation and launch context. The pass currently reports FE2O3-ATOMIC-002 Incomplete when those facts are absent. Compiler authentication of the new typed-view diagnostic items and the coherent-allocation join remain integration work, so this lesson does not claim a production system-scope atomic artifact."
       }
     ]
   },
@@ -607,6 +651,7 @@ const narrativeRegistry = deepFreeze({
         "type": "steps",
         "items": [
           "rustc preserves supported semantic MIR, source spans, ranked extents, checked branches, and memory effects.",
+          "The ordinary-kernel source contract rejects unsafe signatures, unsafe bodies, inline assembly, and reachable unsafe device functions; only the separate unsafe_asm profile admits the low-level escape.",
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
           "The mandatory workload-neutral passes run in their fixed order and return Clean, Rejected, or Incomplete.",
           "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
@@ -617,7 +662,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "Static ranked bounds and checked dynamic access are connected from ordinary Rust through the production PLIRON gate. Race, barrier, workgroup-memory, and semantic-refinement passes are mandatory and generic at PLIRON, while source projection for their unsupported Rust CFG forms still fails closed rather than fabricating an analyzable graph."
+        "text": "Static ranked bounds and checked dynamic access are connected from ordinary safe Rust through the production PLIRON gate. Atomic legality, race, barrier, workgroup-memory, and semantic-refinement passes are mandatory and generic at PLIRON, while source projection for unsupported Rust forms still fails closed rather than fabricating an analyzable graph. Atomic target capability, typed-view diagnostic authentication, and coherent system-allocation provenance remain incomplete integration boundaries."
       }
     ]
   },
@@ -861,7 +906,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Generic PLIRON safety passes are mandatory before lowering",
-        "text": "The production semantic-MIR route now constructs target-neutral ranked PLIRON and runs one fixed sequence before Kernel IR lowering: memory bounds, global race freedom, barrier convergence, workgroup-memory initialization/publication, and declared semantic refinement. These checks use dialect operations, bounded sparse index dataflow, CFG traces, and memory effects; they contain no GEMM names or schedule recognizers. Static ranked access and the checked ThreadIndex/DisjointSlice dynamic-access contract are connected from ordinary Rust through this verifier. Exact Rust CFG projection for barriers, workgroup memory, other dynamic pointer provenance, and source-declared equivalence remains fail-closed, so the corresponding examples below are honest textual PLIRON lit cases rather than claims of completed Rust source projection. Separately, the 15-case general-GEMM mutation oracle remains diagnostic-only and canonical positive GEMM correspondence remains blocked before receipt, proof, Worker, publication, or launch. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the complete-family GEMM status."
+        "text": "The production semantic-MIR route now constructs target-neutral ranked PLIRON and runs one fixed sequence before Kernel IR lowering: memory bounds, atomic legality, global race freedom, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. These checks use dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; they contain no GEMM names or schedule recognizers. Static ranked access and the checked ThreadIndex/DisjointSlice dynamic-access contract are connected from ordinary safe Rust through this verifier. Exact Rust source projection for atomic, barrier, workgroup-memory, other dynamic pointer provenance, and source-declared equivalence remains fail-closed, so the corresponding examples below are honest textual PLIRON lit cases rather than claims of completed Rust source projection. Atomic target capability and coherent system-allocation authentication are also incomplete. Separately, the 15-case general-GEMM mutation oracle remains diagnostic-only and canonical positive GEMM correspondence remains blocked before receipt, proof, Worker, publication, or launch. SOURCE_TO_IR=false, LOWERING=false, and PROTECTED_EXECUTION=false remain the complete-family GEMM status."
       },
       {
         "type": "paragraph",

@@ -193,22 +193,24 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Compiler checks: reject unsafe kernels",
+      name: "Compiler checks: reject invalid kernels",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Five representative failures with exact diagnostics",
+      name: "Six representative failures with exact diagnostics",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
   await expect(failureGallery.getByText("Static out-of-bounds access")).toBeVisible();
+  await expect(failureGallery.getByText("Illegal atomic ordering")).toBeVisible();
   await expect(failureGallery.getByText("Cross-invocation write race")).toBeVisible();
   await expect(failureGallery.getByText("Invocation-divergent barrier")).toBeVisible();
   await expect(failureGallery.getByText("Workgroup read before initialization")).toBeVisible();
   await expect(failureGallery.getByText("Declared formula mismatch")).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-ATOMIC-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-RACE-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BARRIER-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-WORKGROUP-001", { exact: true })).toBeVisible();
@@ -229,10 +231,11 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     page.getByText("Generic does not mean automatically provable"),
   ).toBeVisible();
   await expect(
-    page.getByText("Complete ranked-PLIRON diagnostic code catalog"),
+    page.getByText("Complete generic PLIRON diagnostic code catalog"),
   ).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BOUNDS-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-ATOMIC-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-RACE-003", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
@@ -240,7 +243,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Five representative failures with exact diagnostics",
+      name: "Six representative failures with exact diagnostics",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));

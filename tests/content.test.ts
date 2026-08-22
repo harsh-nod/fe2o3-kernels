@@ -220,14 +220,15 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("Generic PLIRON safety passes are mandatory before lowering");
     expect(contract).toContain("one fixed sequence before Kernel IR lowering");
     expect(contract).toContain("memory bounds");
+    expect(contract).toContain("atomic legality");
     expect(contract).toContain("global race freedom");
     expect(contract).toContain("barrier convergence");
-    expect(contract).toContain("workgroup-memory initialization/publication");
+    expect(contract).toContain("workgroup-memory must-initialization/publication by epoch");
     expect(contract).toContain("declared semantic refinement");
-    expect(contract).toContain("bounded sparse index dataflow");
+    expect(contract).toContain("bounded sparse affine index dataflow");
     expect(contract).toContain("contain no GEMM names or schedule recognizers");
     expect(contract).toContain("ThreadIndex/DisjointSlice dynamic-access contract");
-    expect(contract).toContain("Exact Rust CFG projection");
+    expect(contract).toContain("Exact Rust source projection");
     expect(contract).toContain("textual PLIRON lit cases");
     expect(contract).toContain("15-case general-GEMM mutation oracle remains diagnostic-only");
     expect(contract).toContain("blocked before receipt, proof, Worker, publication, or launch");
@@ -277,14 +278,29 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("Generic does not mean automatically provable");
     expect(failures).toContain("strict pre-lowering route fails closed");
     expect(failures).toContain("does not invent the programmer's intended formula");
+    expect(failures).toContain("Ordinary kernels are safe Rust");
+    expect(failures).toContain("unsafe_asm");
+    expect(failures).toContain("Pinned legacy snapshots remain historical evidence");
+    expect(failures).toContain("not source accepted by the ordinary safe-kernel contract");
+    for (const capability of [
+      "DisjointIndex",
+      "Shifted",
+      "GridExclusive",
+      "Blocked",
+      "DisjointBlock",
+      "current wave/collective/LDS/matrix capabilities",
+      "DeviceGlobalMutPtr<T>::as_atomic()",
+    ]) {
+      expect(failures).toContain(capability);
+    }
     expect(failures).toContain(
       "fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory",
     );
     expect(failures).toContain(
-      "ranked-PLIRON pre-lowering order is memory bounds, race freedom, barrier convergence, workgroup memory, then declared semantic refinement",
+      "ranked-PLIRON pre-lowering order is memory bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement",
     );
     expect(failures).toContain("No lowering pass may run between these checks");
-    expect(failures).toContain("Complete ranked-PLIRON diagnostic code catalog");
+    expect(failures).toContain("Complete generic PLIRON diagnostic code catalog");
     for (const fixture of [
       "unguarded_a_tail_load",
       "unguarded_b_tail_load",
@@ -353,10 +369,13 @@ describe("curriculum integrity", () => {
       "kernel-structural-v1",
       "kernel-control-flow-v1",
       "kernel-memory-bounds-v1",
+      "kernel-atomic-legality-v1",
       "kernel-race-freedom-v1",
       "kernel-barrier-convergence-v1",
       "kernel-workgroup-memory-v1",
       "kernel-semantic-refinement-v1",
+      "pliron-sparse-index-v1 (shared analysis)",
+      "bounded resources (cross-cutting)",
     ]);
     expect(JSON.stringify(pipelineTable)).toContain("irreducible control flow");
     expect(JSON.stringify(pipelineTable)).toContain("compatible atomics");
@@ -372,6 +391,9 @@ describe("curriculum integrity", () => {
       "FE2O3-BOUNDS-001",
       "FE2O3-BOUNDS-002",
       "FE2O3-BOUNDS-003",
+      "FE2O3-ATOMIC-001",
+      "FE2O3-ATOMIC-002",
+      "FE2O3-ATOMIC-003",
       "FE2O3-RACE-000",
       "FE2O3-RACE-001",
       "FE2O3-RACE-002",
@@ -387,8 +409,8 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-001",
       "FE2O3-SEMANTIC-002",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(6);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(7);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(7);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(9);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
     const failureGallery = semanticFailures.blocks.find(
@@ -396,12 +418,12 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(5);
+    expect(failureGallery.examples).toHaveLength(6);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
     expect(failureGallery.intro).toContain("bounds example is exercised end to end");
     expect(failureGallery.intro).toContain("static index 64 into extent 64");
     expect(failureGallery.intro).toContain("parsed textual PLIRON lit fixtures");
-    expect(failureGallery.intro).toContain("deliberately fail-closed");
+    expect(failureGallery.intro).toContain("still fails closed");
     expect(
       failureGallery.examples.map(({ id, property, stage, code }) => ({
         id,
@@ -410,11 +432,12 @@ describe("curriculum integrity", () => {
         code,
       })),
     ).toEqual([
-      { id: "bounds_static_oob", property: "MemoryBounds", stage: "generic PLIRON pass 1/5", code: "FE2O3-BOUNDS-001" },
-      { id: "race_duplicate_output", property: "RaceFreedom", stage: "generic PLIRON pass 2/5", code: "FE2O3-RACE-001" },
-      { id: "barrier_divergent", property: "BarrierConvergence", stage: "generic PLIRON pass 3/5", code: "FE2O3-BARRIER-001" },
-      { id: "workgroup_uninitialized", property: "WorkgroupMemory", stage: "generic PLIRON pass 4/5", code: "FE2O3-WORKGROUP-001" },
-      { id: "semantic_mismatch", property: "SemanticRefinement", stage: "generic PLIRON pass 5/5", code: "FE2O3-SEMANTIC-001" },
+      { id: "bounds_static_oob", property: "MemoryBounds", stage: "generic PLIRON pass 1/6", code: "FE2O3-BOUNDS-001" },
+      { id: "atomic_invalid_ordering", property: "AtomicLegality", stage: "generic PLIRON pass 2/6", code: "FE2O3-ATOMIC-001" },
+      { id: "race_duplicate_output", property: "RaceFreedom", stage: "generic PLIRON pass 3/6", code: "FE2O3-RACE-001" },
+      { id: "barrier_divergent", property: "BarrierConvergence", stage: "generic PLIRON pass 4/6", code: "FE2O3-BARRIER-001" },
+      { id: "workgroup_uninitialized", property: "WorkgroupMemory", stage: "generic PLIRON pass 5/6", code: "FE2O3-WORKGROUP-001" },
+      { id: "semantic_mismatch", property: "SemanticRefinement", stage: "generic PLIRON pass 6/6", code: "FE2O3-SEMANTIC-001" },
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
@@ -427,8 +450,11 @@ describe("curriculum integrity", () => {
     expect(failureGallery.examples[0]?.diagnostic).toContain(
       "required: 64 < 64",
     );
-    expect(failureGallery.examples[1]?.diagnostic).toContain("invocation [0]");
-    expect(failureGallery.examples[1]?.diagnostic).toContain("invocation [1]");
+    expect(failureGallery.examples[1]?.diagnostic).toContain("invalid Release ordering");
+    expect(failureGallery.examples[2]?.diagnostic).toContain("invocation [0]");
+    expect(failureGallery.examples[2]?.diagnostic).toContain("invocation [1]");
+    expect(failures).toContain("Atomic target and coherence authentication are still incomplete");
+    expect(failures).toContain("FE2O3-ATOMIC-002 Incomplete");
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {

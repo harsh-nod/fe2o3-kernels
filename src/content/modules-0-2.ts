@@ -431,16 +431,16 @@ const compilerChecks: Lesson = {
   id: "compiler-checks",
   module: 2,
   order: 2,
-  title: "Compiler checks: reject unsafe kernels",
+  title: "Compiler checks: reject invalid kernels",
   summary:
-    "See workload-neutral PLIRON verifier passes reject unsafe Rust kernels before lowering or artifact emission.",
+    "See safe Rust types and workload-neutral PLIRON verifier passes reject invalid kernels before lowering or artifact emission.",
   duration: "35 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
     "Distinguish a proved static access from a checked dynamic access.",
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
-    "Locate generic bounds, race, barrier, workgroup-memory, and semantic-refinement passes.",
-    "Explain why KernelContext carries IR ownership rather than GEMM semantics.",
+    "Locate structural, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
+    "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
   ],
   claims: [
     {
@@ -457,6 +457,7 @@ const compilerChecks: Lesson = {
           "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_pipeline.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_race.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_barrier.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_workgroup_memory.rs",
@@ -486,11 +487,16 @@ const compilerChecks: Lesson = {
     {
       language: "text",
       code: `Mandatory pre-lowering verification
+0. dialect and structural verification
 1. ranked bounds and address arithmetic
-2. race freedom
-3. barrier convergence
-4. workgroup-memory initialization and publication
-5. declared semantic refinement
+2. atomic legality, ordering, and scope
+3. race freedom and invocation ownership
+4. barrier convergence
+5. workgroup-memory must-initialization and epochs
+6. declared semantic refinement
+
+Shared: bounded sparse affine/index dataflow
+Cross-cutting: bounded compiler resources
 
 Rejected: the analysis proves a violation.
 Incomplete: the analysis cannot discharge an obligation within the supported model.
@@ -533,7 +539,7 @@ lowering stopped before target IR or artifact emission`,
     "ranked PLIRON",
     "Rejected",
     "Incomplete",
-    "KernelContext",
+    "compiler-issued capability",
     "compiler safety pass",
   ],
 };

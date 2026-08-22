@@ -87,7 +87,7 @@ const definitions: Record<string, string> = {
   "ranked PLIRON": "PLIRON kernel IR whose memory objects and accesses carry rank, extents, indices, and source locations for generic verification.",
   Rejected: "A compiler-analysis result that proves a kernel violates a mandatory safety or semantic obligation.",
   Incomplete: "A fail-closed compiler-analysis result indicating that the supported model or resource budget cannot discharge a mandatory obligation.",
-  KernelContext: "An owner-bound handle to one PLIRON context and its registered kernel dialect; it carries IR identity and lifetime, not workload-specific semantics.",
+  "compiler-issued capability": "A non-forgeable typed witness created only by the compiler for an authenticated invocation, ownership partition, participant set, memory epoch, matrix context, or atomic view.",
   "compiler safety pass": "A workload-neutral verifier scheduled before target lowering that accepts, rejects, or reports an incomplete obligation.",
   LLVM: "The compiler infrastructure used to lower and optimize AMDGPU IR.",
   LLD: "LLVM's linker, used by the direct-link worker to produce code objects.",
