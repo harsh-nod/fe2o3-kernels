@@ -78,6 +78,7 @@ export type CompletedIssue94IncrementId =
   | "tiled-lds-protected-lifecycle-v1";
 
 export type SourceMilestoneId =
+  | "dynamic-gemm-executable-source-v1"
   | "tiled-gemm-safe-source-v1"
   | "wave64-collectives-source-v1"
   | "workgroup-sync-source-v1"
@@ -187,6 +188,7 @@ export type DiagramKind =
   | "indexing"
   | "memory"
   | "reduction"
+  | "gemm-scalar"
   | "gemm"
   | "attention"
   | "moe";

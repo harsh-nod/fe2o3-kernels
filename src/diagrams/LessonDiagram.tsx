@@ -28,6 +28,8 @@ export function LessonDiagram({ kind }: { kind: DiagramKind }) {
       return <MemoryOwnership />;
     case "reduction":
       return <ReductionTree />;
+    case "gemm-scalar":
+      return <ScalarGemmOwnership />;
     case "gemm":
       return <GemmTiles />;
     case "attention":
@@ -186,6 +188,41 @@ function GemmTiles() {
       </div>
       <figcaption>
         The phase invariant covers K tiles already accumulated into one owned C tile.
+      </figcaption>
+    </figure>
+  );
+}
+
+function ScalarGemmOwnership() {
+  return (
+    <figure
+      className="diagram diagram-gemm-scalar"
+      aria-label="Dynamic GEMM invocation ownership"
+    >
+      <div className="scalar-gemm-flow">
+        <div className="scalar-gemm-step invocation">
+          <strong>global index i</strong>
+          <span>one physical C slot</span>
+        </div>
+        <ArrowRight size={22} aria-hidden="true" />
+        <div className="scalar-gemm-step coordinates">
+          <strong>row = i / ldc</strong>
+          <span>column = i % ldc</span>
+        </div>
+        <ArrowRight size={22} aria-hidden="true" />
+        <div className="scalar-gemm-step loop">
+          <strong>for depth in 0..K</strong>
+          <span>A[row, depth] * B[depth, column]</span>
+        </div>
+        <ArrowRight size={22} aria-hidden="true" />
+        <div className="scalar-gemm-step epilogue">
+          <strong>C[i] = alpha * sum + beta * C[i]</strong>
+          <span>one disjoint store</span>
+        </div>
+      </div>
+      <figcaption>
+        Padding columns and rounded-grid invocations return before memory access.
+        Every active invocation carries the unique capability for its C slot.
       </figcaption>
     </figure>
   );

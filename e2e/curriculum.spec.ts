@@ -139,78 +139,81 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
-test("tiled GEMM keeps the tutorial concise and preserves exact evidence", async ({
+test("dynamic GEMM shows exact executable source and separates optimization evidence", async ({
   page,
 }, testInfo) => {
   await page.goto("./#/lesson/gemm-tiling");
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Tiled GEMM in Fe2O3",
+      name: "Dynamic GEMM end to end",
     }),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Ordinary Rust source for the fixed Slice 1 LDS tiled GEMM",
+    "Safe Rust qualification kernel for dynamic strided matrix multiplication",
   );
+  await expect(
+    page.getByRole("tabpanel").locator(".token.keyword").first(),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("Dynamic GEMM invocation ownership"),
+  ).toContainText("for depth in 0..K");
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/tiled_gemm_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
-  await page.getByRole("tab", { name: "Verus proof" }).click();
+  await page.getByRole("tab", { name: "Compile & run" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "--test lds_source_refinement",
-  );
-  await expect(page.getByText(/Real pinned command and bounded Verus source/)).toContainText(
-    "96 obligations verify",
+    "FE2O3_EXTRACT_GFX942_LLVM_PATH_V1",
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/5a45239aeeda3ca64cf16beb7fb1d3589e649bfe/examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/tiled_gemm_general_v1/run-gfx942.sh",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "FE2O3_RUN_GFX942_TILED_GEMM_LDS_SLICE1_WORKER_V2_HARDWARE=1",
+    "multi-workgroup-dynamic-k",
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c4fcb4d980cf979c0527dfa135a7b9f4fe72a811/crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
-  await page.getByRole("tab", { name: "Expected result" }).click();
+  await page.getByRole("tab", { name: "MI300X result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0",
+    "59 correspondence blocks",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "all 256 output bit patterns",
+    "PASS strided-all-tails",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "A and B remained bitwise unchanged",
+    "PASS multi-workgroup-dynamic-k",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "1/1 passed in 14.36 seconds",
+    "PASS zero-k-epilogue",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "not generalized GEMM",
+    "scalar-per-output correctness baseline",
   );
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Freeze the coordinate map",
+      name: "Follow one output owner",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Decompose the K loop",
+      name: "Walk the dynamic K loop",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Issue #138: the general safe-Rust contract",
+      name: "Optimizing the executable baseline",
     }),
   ).toHaveCount(0);
 
@@ -218,7 +221,7 @@ test("tiled GEMM keeps the tutorial concise and preserves exact evidence", async
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Issue #138: the general safe-Rust contract",
+      name: "Optimizing the executable baseline",
     }),
   ).toBeVisible();
   await expect(
@@ -314,9 +317,10 @@ test("tiled GEMM keeps the tutorial concise and preserves exact evidence", async
     page.getByText("All 15 exact safe source mutations are diagnostic"),
   ).toBeVisible();
   await expect(
-    page.getByText("Complete-family flags remain false"),
+    page.getByText("Optimized-family flags remain false"),
   ).toBeVisible();
-  await expect(page.getByText("Positive production source", { exact: true })).toBeVisible();
+  await expect(page.getByText("Executable scalar source", { exact: true })).toBeVisible();
+  await expect(page.getByText("Optimized positive source", { exact: true })).toBeVisible();
   await expect(page.getByText("Private final pair join", { exact: true })).toBeVisible();
   await expect(page.getByText("Verus runtime closure", { exact: true })).toBeVisible();
   await expect(page.getByText("Protected hardware", { exact: true })).toBeVisible();
@@ -325,7 +329,7 @@ test("tiled GEMM keeps the tutorial concise and preserves exact evidence", async
     page.getByText(/before receipt, correspondence, configuration, and proof/u).first(),
   ).toBeVisible();
   await expect(
-    page.getByText(/downstream private final join remains unreachable/u).first(),
+    page.getByText(/It is unreachable because positive analysis stops/u).first(),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: /#138 General tiled GEMM/ }),
@@ -365,7 +369,7 @@ test("row softmax separates real source from pending and GPU evidence", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/row_softmax_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/row_softmax_v1/src/kernel.rs",
   );
   await expect(page.getByText(/complete syn AST structural admission/u)).toBeVisible();
 
@@ -567,7 +571,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at ae312f4218",
+      name: "Compiler main at 0d2437c48d",
     }),
   ).toBeVisible();
   await expect(

@@ -151,59 +151,59 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("pins the exact bounded GEMM source, proof, host, and result tabs", () => {
-    for (const lessonId of ["gemm-tiling", "gemm-proof-plan"]) {
-      const lesson = lessons.find((entry) => entry.id === lessonId);
-      const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
-      expect(kernel).toMatchObject({
-        sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
-        sourceSha256:
-          "f368ee28eb3c34e4a18a4ebf9e41ca599bb2e9ae054794ea621195b88124cca3",
-        evidenceId: "tiled-gemm-safe-source-v1",
-        explanatory: false,
-      });
-      expect(
-        createHash("sha256").update(kernel?.code ?? "").digest("hex"),
-      ).toBe("f368ee28eb3c34e4a18a4ebf9e41ca599bb2e9ae054794ea621195b88124cca3");
-      expect(kernel?.code).toContain("#[kernel(");
-      expect(kernel?.code).not.toMatch(/macro_rules!\s+[A-Za-z_]/u);
-      expect(kernel?.code).not.toMatch(/\bunsafe\b/u);
+  it("pins the executable dynamic GEMM and historical tiled evidence separately", () => {
+    const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
+    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
+    expect(kernel).toMatchObject({
+      sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
+      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      sourceSha256:
+        "5ff05418f771bee0e09a87dbb3c925b071059e39a8d58392f1cc6de2a1d1f927",
+      evidenceId: "dynamic-gemm-executable-source-v1",
+      explanatory: false,
+    });
+    expect(kernel?.code).toContain("while depth < k");
+    expect(kernel?.code).toContain("alpha * accumulator + beta * *output");
+    expect(kernel?.code).not.toMatch(/\bunsafe\b/u);
+    expect(lesson?.diagram).toBe("gemm-scalar");
 
-      const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
-      expect(proof).toMatchObject({
-        sourcePath:
-          "examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
-        sourceCommit: "5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
-        evidenceId: "tiled-lds-source-model-correspondence-v1",
-        explanatory: true,
-      });
-      expect(proof?.code).toContain("--test lds_source_refinement");
-      expect(proof?.notice).toContain("96 obligations verify");
+    const runner = lesson?.tabs.find((tab) => tab.kind === "verus");
+    expect(runner).toMatchObject({
+      label: "Compile & run",
+      sourcePath: "examples/tiled_gemm_general_v1/run-gfx942.sh",
+      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      sourceSha256:
+        "2d9d9e262a456da06a62f27e647bed09ff567a6d7343b61223135964dd5012dc",
+      explanatory: false,
+    });
+    expect(runner?.code).toContain("FE2O3_EXTRACT_GFX942_LLVM_PATH_V1");
 
-      const host = lesson?.tabs.find((tab) => tab.kind === "host");
-      expect(host).toMatchObject({
-        sourcePath:
-          "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
-        sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
-        evidenceId: "tiled-lds-protected-lifecycle-v1",
-        explanatory: true,
-      });
-      expect(host?.code).toContain(
-        "FE2O3_RUN_GFX942_TILED_GEMM_LDS_SLICE1_WORKER_V2_HARDWARE=1",
-      );
-      expect(host?.code).toContain("--ignored --exact --nocapture");
+    const host = lesson?.tabs.find((tab) => tab.kind === "host");
+    expect(host).toMatchObject({
+      sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
+      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      sourceSha256:
+        "6d0abb165c0b64283c5b98127fe1f127494cf1223818b62d9db81e19352d7ede",
+      explanatory: false,
+    });
+    expect(host?.code).toContain("multi-workgroup-dynamic-k");
+    expect(host?.code).toContain("LaunchConfig::for_num_elems(work_items)");
 
-      const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-      expect(result).toContain(
-        "FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0",
-      );
-      expect(result).toContain("all 256 output bit patterns");
-      expect(result).toContain("A and B remained bitwise unchanged");
-      expect(result).toContain("A/B/C prefix and suffix guard canary");
-      expect(result).toContain("1/1 passed in 14.36 seconds");
-      expect(result).toContain("not generalized GEMM");
-    }
+    const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    expect(result).toContain("59 correspondence blocks");
+    expect(result).toContain("PASS strided-all-tails");
+    expect(result).toContain("PASS multi-workgroup-dynamic-k");
+    expect(result).toContain("PASS zero-k-epilogue");
+    expect(result).toContain("scalar-per-output correctness baseline");
+
+    const proofLesson = lessons.find((entry) => entry.id === "gemm-proof-plan");
+    expect(proofLesson?.tabs.find((tab) => tab.kind === "kernel")).toMatchObject({
+      sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
+      evidenceId: "tiled-gemm-safe-source-v1",
+    });
+    expect(proofLesson?.tabs.find((tab) => tab.kind === "verus")?.code).toContain(
+      "--test lds_source_refinement",
+    );
 
     const changed = structuredClone(curriculum);
     const changedKernel = changed
@@ -221,14 +221,14 @@ describe("curriculum integrity", () => {
   it("keeps compiler diagnostics in the GEMM proof lesson", () => {
     const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
     expect(lesson?.objectives).toContain(
-      "Recognize the bounds, initialization, synchronization, and ownership guarantees expressed by the kernel types.",
+      "See how bounds checks and DisjointSlice ownership remain visible to generic compiler analysis.",
     );
 
     const contract = JSON.stringify(
       narrativeEntry("gemm-tiling/general-contract"),
     );
     expect(contract).toContain("Generic PLIRON safety passes are mandatory before lowering");
-    expect(contract).toContain("one fixed sequence before Kernel IR lowering");
+    expect(contract).toContain("mandatory workload-neutral safety sequence before Kernel IR lowering");
     expect(contract).toContain("memory bounds");
     expect(contract).toContain("atomic legality");
     expect(contract).toContain("global race freedom");
@@ -236,16 +236,13 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("workgroup-memory must-initialization/publication by epoch");
     expect(contract).toContain("declared semantic refinement");
     expect(contract).toContain("bounded sparse affine index dataflow");
-    expect(contract).toContain("contain no GEMM names or schedule recognizers");
-    expect(contract).toContain("ThreadIndex/DisjointSlice dynamic-access contract");
-    expect(contract).toContain("Exact Rust source projection");
-    expect(contract).toContain("textual PLIRON lit cases");
-    expect(contract).toContain("15-case general-GEMM mutation oracle remains diagnostic-only");
-    expect(contract).toContain("blocked before receipt, proof, Worker, publication, or launch");
-    expect(contract).toContain("SOURCE_TO_IR");
-    expect(contract).toContain("LOWERING=false");
-    expect(contract).toContain("PROTECTED_EXECUTION=false");
-    expect(contract).toContain("one workgroup per 16x16 C tile");
+    expect(contract).toContain("contains no GEMM names, tile-size tests, or schedule recognizers");
+    expect(contract).toContain("ThreadIndex/DisjointSlice dynamic access");
+    expect(contract).toContain("connected from ordinary safe Rust through LLVM and qualification launch");
+    expect(contract).toContain("Unsupported effects and ownership forms still fail closed");
+    expect(contract).toContain("15-case mutation oracle");
+    expect(contract).toContain("do not establish an executable dynamic tiled kernel");
+    expect(contract).toContain("safe cooperative LDS staging and MFMA fragments");
     expect(contract).toContain("ceil_div(K,16)");
     expect(contract).toContain("defined BF16 +0");
     expect(contract).toContain("unconditional publish barrier");
@@ -363,19 +360,20 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("retains the valid_proof_sensitive root");
     expect(failures).toContain("failed at compiler preflight");
     expect(failures).toContain("empty artifact directory");
-    expect(failures).toContain("Positive production source");
+    expect(failures).toContain("Executable scalar source");
+    expect(failures).toContain("Optimized positive source");
     expect(failures).toContain("without issuing a positive receipt or frontend correspondence");
-    expect(failures).toContain("always fails closed");
+    expect(failures).toContain("analysis fails closed");
     expect(failures).toContain("safe-code root and reachable helper MIR");
     expect(failures).toContain("Private final pair join");
     expect(failures).toContain("stops before receipt, correspondence, configuration, and proof");
     expect(failures).toContain("second downstream blocker");
     expect(failures).toContain("never reaches configuration or proof execution");
-    expect(failures).toContain("No qualified general-GEMM launch");
-    expect(failures).toContain("Complete-family flags remain false");
-    expect(failures).toContain("SOURCE_TO_IR=false");
-    expect(failures).toContain("LOWERING=false");
-    expect(failures).toContain("PROTECTED_EXECUTION=false");
+    expect(failures).toContain("No qualified optimized-GEMM launch");
+    expect(failures).toContain("Optimized-family flags remain false");
+    expect(failures).toContain("TILED_SOURCE_TO_IR=false");
+    expect(failures).toContain("TILED_LOWERING=false");
+    expect(failures).toContain("TILED_PROTECTED_EXECUTION=false");
 
     const outcomeTable = semanticFailures.blocks.find(
       (block) => block.type === "table" && block.headers[0] === "Outcome",
@@ -497,7 +495,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_v1/src/kernel.rs",
-      sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
       sourceSha256:
         "0b0d5e2964d4627bc7ef3dac882f86a9b3c49ab715245bacc3fc92f28f0d08b0",
       explanatory: false,
@@ -586,6 +584,7 @@ describe("curriculum integrity", () => {
 
   it("pins exact source-only kernel snapshots", () => {
     expect(sourceMilestoneOrder).toEqual([
+      "dynamic-gemm-executable-source-v1",
       "tiled-gemm-safe-source-v1",
       "wave64-collectives-source-v1",
       "workgroup-sync-source-v1",
@@ -1641,7 +1640,7 @@ describe("curriculum integrity", () => {
       const runnable = lesson.claims.some(
         (claim) => claim.kind === "runnable-now",
       );
-      expect(runnable).toBe(false);
+      expect(runnable).toBe(lesson.id === "gemm-tiling");
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
         [
           "gemm-tiling",
@@ -1669,12 +1668,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-22",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "ae312f421872e1eb9885217888548d74f79c3357",
-      eventualPublicTree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+      eventualPublicCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      eventualPublicTree: "ea623b864d47881b08bde45a4526ea28c9e0270f",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "ae312f421872e1eb9885217888548d74f79c3357",
-        requiredTree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+        requiredCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+        requiredTree: "ea623b864d47881b08bde45a4526ea28c9e0270f",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2300,7 +2299,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "ae312f421872e1eb9885217888548d74f79c3357",
+      "0d2437c48daadfe178513ca887a94c7c1f460aab",
     );
 
     const lesson = curriculum
@@ -2395,10 +2394,10 @@ describe("implementation progress integrity", () => {
       verify: "partial",
       evidence: "partial",
       dependsOn: [
-        "production protected transaction authenticator",
-        "authenticated analyzer-identity binding",
-        "compiler and address refinement",
-        "protected MI300X launch evidence",
+        "protected artifact publication and currentness",
+        "complete source-to-machine refinement",
+        "dynamic safe LDS/MFMA optimization",
+        "comparative performance evidence",
       ],
     });
     expect(checkpointDetail(
@@ -2949,11 +2948,11 @@ describe("implementation progress integrity", () => {
     expect(renderedStaged).not.toContain(
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
-    expect(mapping).toContain("Ordinary Rust source for the fixed Slice 1 LDS tiled GEMM");
-    expect(mapping).toContain("sourceCommit\":\"c4fcb4d980cf979c0527dfa135a7b9f4fe72a811");
-    expect(mapping).not.toContain("General GEMM mutation diagnostics");
+    expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
+    expect(mapping).toContain("sourceCommit\":\"0d2437c48daadfe178513ca887a94c7c1f460aab");
+    expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
-    expect(proofPlan).toContain("Complete-family flags remain false");
+    expect(proofPlan).toContain("Optimized-family flags remain false");
     expect(proofPlan).toContain("authenticates the exact attributed source");
     expect(proofPlan).toContain("stops before descriptor construction and Worker V2");
     expect(proofPlan).toContain("six cases checked 1,536 outputs");

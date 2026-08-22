@@ -191,7 +191,11 @@ function validateLesson(
             message: "code tab source path is not covered by its evidence",
           });
         }
-        if (isSourceMilestoneId(tab.evidenceId) && tab.explanatory === false) {
+        if (
+          isSourceMilestoneId(tab.evidenceId) &&
+          tab.kind === "kernel" &&
+          tab.explanatory === false
+        ) {
           const sourceMilestone = sourceMilestoneRecord(tab.evidenceId);
           if (
             tab.sourcePath !== sourceMilestone.primarySourcePath ||

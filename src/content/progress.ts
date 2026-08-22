@@ -1158,17 +1158,17 @@ export const kernelProgress: KernelProgress[] = [
   },
   {
     id: "scalar-gemm",
-    kernel: "Scalar reference GEMM",
+    kernel: "Dynamic strided scalar GEMM",
     run: "partial",
     verify: "partial",
     evidence: "partial",
     dependsOn: [
-      "production protected transaction authenticator",
-      "authenticated analyzer-identity binding",
-      "compiler and address refinement",
-      "protected MI300X launch evidence",
+      "protected artifact publication and currentness",
+      "complete source-to-machine refinement",
+      "dynamic safe LDS/MFMA optimization",
+      "comparative performance evidence",
     ],
-    next: "Bind the new analyzer identity into authenticated evidence, authenticate Verus execution, close compiler and address refinement, then admit the same bytes through the protected MI300X launch path.",
+    next: "Retain the working generic qualification route while joining its artifact to protected publication and complete refinement; optimize through generic LDS/MFMA capabilities and measure against an equivalent HIP kernel separately.",
   },
   {
     id: "tiled-gemm",

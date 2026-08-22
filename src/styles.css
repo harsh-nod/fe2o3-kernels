@@ -856,6 +856,56 @@ p {
   display: block;
 }
 
+.diagram-gemm-scalar {
+  display: block;
+}
+
+.scalar-gemm-flow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 760px;
+}
+
+.scalar-gemm-step {
+  display: grid;
+  flex: 1 0 0;
+  place-items: center;
+  min-height: 92px;
+  padding: 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  text-align: center;
+}
+
+.scalar-gemm-step strong {
+  color: var(--text-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.73rem;
+}
+
+.scalar-gemm-step span {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 0.64rem;
+}
+
+.scalar-gemm-step.invocation,
+.scalar-gemm-step.loop {
+  background: var(--blue-soft);
+  border-color: color-mix(in srgb, var(--blue) 35%, var(--border));
+}
+
+.scalar-gemm-step.coordinates {
+  background: var(--amber-soft);
+  border-color: color-mix(in srgb, var(--amber) 35%, var(--border));
+}
+
+.scalar-gemm-step.epilogue {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+}
+
 .gemm-flow {
   display: flex;
   align-items: center;

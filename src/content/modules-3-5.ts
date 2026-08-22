@@ -4,10 +4,14 @@ import flashAttentionKernel from "../../examples/flash_attention_v1/src/kernel.r
 import rowSoftmaxKernel from "../../examples/row_softmax_v1/src/kernel.rs?raw";
 import flashAttentionProof from "../../examples/flash_attention_v1/verus/flash_attention_v1.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
+import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.rs?raw";
+import dynamicGemmHost from "../../examples/tiled_gemm_general_v1/src/main.rs?raw";
+import dynamicGemmRunner from "../../examples/tiled_gemm_general_v1/run-gfx942.sh?raw";
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
 import {
   FE2O3_PIN,
+  currentImplementationReference,
   pinnedReference,
   type CurriculumModule,
   type Lesson,
@@ -26,6 +30,9 @@ import {
 
 const gemmSafeSource = sourceMilestoneRecord(
   "tiled-gemm-safe-source-v1",
+);
+const dynamicGemmSource = sourceMilestoneRecord(
+  "dynamic-gemm-executable-source-v1",
 );
 const gemmProofEvidence = stagedEvidenceRecord(
   "tiled-lds-source-model-correspondence-v1",
@@ -67,6 +74,29 @@ Every A/B/C prefix and suffix guard canary remained intact.
 Result: 1/1 passed in 14.36 seconds.
 
 Boundary: this is functional exact bounded Slice 1, not generalized GEMM, compiler-origin authentication, production certificate consumption, MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, a general illegal-access or race-freedom proof, or protected Slice 3/4 execution.`,
+);
+
+const dynamicGemmResult = resultText(
+  "runnable-now",
+  [
+    "Dynamic strided GEMM qualification run on MI300X",
+    "",
+    "fe2o3 production extraction: 1 semantic function, 59 correspondence blocks,",
+    "2 formal accesses, 2 ranked dynamic-index discharges,",
+    "workgroup [256, 1, 1], 8801 LLVM bytes, artifact/launch authority false",
+    "",
+    "PASS packed                       M=16 N=16 K=16 groups=1 max_error=0",
+    "PASS strided-all-tails            M=17 N=19 K=18 groups=3 max_error=0",
+    "PASS multi-workgroup-dynamic-k    M=33 N=35 K=33 groups=6 max_error=0",
+    "PASS zero-k-epilogue              M=17 N=19 K=0 groups=2 max_error=0",
+    "",
+    "Each case compared every active output with an independent CPU reference and",
+    "verified that row-padding slots remained unchanged.",
+    "",
+    "Boundary: this is the scalar-per-output correctness baseline and qualification",
+    "execution. It is not an LDS/MFMA optimization, a performance result, protected",
+    "release publication, or complete source-to-machine refinement.",
+  ].join("\n"),
 );
 
 const rowSoftmaxAddressModel = `pub open spec fn lane_input_index_v1(lane: nat) -> nat { lane }
@@ -207,7 +237,45 @@ GPU: no protected dispatch and no numerical GPU result are claimed.
 This evidence does not justify a cuda-oxide parity promotion.`,
 );
 
-function exactGemmKernelTab() {
+function exactDynamicGemmKernelTab() {
+  return {
+    language: "rust" as const,
+    code: dynamicGemmKernel,
+    sourcePath: dynamicGemmSource.primarySourcePath,
+    sourceCommit: dynamicGemmSource.commit,
+    sourceSha256: dynamicGemmSource.primarySourceSha256,
+    evidenceId: dynamicGemmSource.id,
+    explanatory: false,
+  };
+}
+
+function exactDynamicGemmRunnerTab() {
+  return {
+    language: "bash" as const,
+    code: dynamicGemmRunner,
+    sourcePath: "examples/tiled_gemm_general_v1/run-gfx942.sh",
+    sourceCommit: dynamicGemmSource.commit,
+    sourceSha256:
+      "2d9d9e262a456da06a62f27e647bed09ff567a6d7343b61223135964dd5012dc",
+    evidenceId: dynamicGemmSource.id,
+    explanatory: false,
+  };
+}
+
+function exactDynamicGemmHostTab() {
+  return {
+    language: "rust" as const,
+    code: dynamicGemmHost,
+    sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
+    sourceCommit: dynamicGemmSource.commit,
+    sourceSha256:
+      "6d0abb165c0b64283c5b98127fe1f127494cf1223818b62d9db81e19352d7ede",
+    evidenceId: dynamicGemmSource.id,
+    explanatory: false,
+  };
+}
+
+function exactTiledGemmKernelTab() {
   return {
     language: "rust" as const,
     code: gemmSlice1Kernel,
@@ -430,71 +498,79 @@ const gemmMapping: Lesson = {
   id: "gemm-tiling",
   module: 4,
   order: 0,
-  title: "Tiled GEMM in Fe2O3",
+  title: "Dynamic GEMM end to end",
   summary:
-    "Build one 16x16 BF16 GEMM tile with safe Rust, cooperative LDS staging, and disjoint output ownership.",
-  duration: "35 min",
-  prerequisites: ["LDS and barriers", "Matrix multiplication"],
+    "Run a safe Rust kernel with dynamic shapes, strides, edges, a K loop, multiple workgroups, and an alpha/beta epilogue.",
+  duration: "30 min",
+  prerequisites: ["Typed indexing and ownership", "Matrix multiplication"],
   objectives: [
-    "Map one workgroup to a C tile and each lane to four disjoint outputs.",
-    "Stage A and B through typed LDS states before invoking MFMA.",
-    "Recognize the bounds, initialization, synchronization, and ownership guarantees expressed by the kernel types.",
+    "Trace one invocation from its physical output slot through the dynamic K loop.",
+    "See how bounds checks and DisjointSlice ownership remain visible to generic compiler analysis.",
+    "Run the exact source through ranked PLIRON, Kernel IR, LLVM, HSACO, and fe2o3-host.",
   ],
   claims: [
-    sourceMilestoneClaim("tiled-gemm-safe-source-v1"),
+    sourceMilestoneClaim("dynamic-gemm-executable-source-v1"),
     {
-      kind: "compiler-hsaco-observed",
-      label: "MFMA and LDS lowering",
+      kind: "runnable-now",
+      label: "Current MI300X qualification path",
       detail:
-        "The compiler lowers this fixed gfx942 tile shape to XOR4 LDS operations and one BF16 16x16x16 MFMA profile.",
-      reference: pinnedReference(
+        "The exact safe Rust source compiles and launches through the current workload-neutral production extraction stack. Packed, strided-tail, multi-workgroup dynamic-K, and zero-K epilogue cases pass against an independent CPU reference.",
+      reference: currentImplementationReference(
         [
-          "cargo +nightly-2026-04-03 test --locked -p fe2o3-device -p fe2o3-kernel-ir -p dialect-amdgcn",
+          "examples/tiled_gemm_general_v1/run-gfx942.sh",
         ],
         [
-          "crates/fe2o3-device/src/tensor.rs",
-          "crates/fe2o3-kernel-ir/src/matrix.rs",
-          "crates/dialect-amdgcn/src/lib.rs",
+          "examples/tiled_gemm_general_v1/src/kernel.rs",
+          "examples/tiled_gemm_general_v1/src/main.rs",
+          "examples/tiled_gemm_general_v1/run-gfx942.sh",
         ],
         { target: FE2O3_PIN.target },
       ),
+    },
+    {
+      kind: "design-only",
+      label: "Optimization boundary",
+      detail:
+        "This current kernel is a scalar-per-output correctness baseline. Dynamic LDS/MFMA tiling remains an optimization milestone and has no performance claim here.",
     },
   ],
   sections: [
     narrativeSection("gemm-tiling/mapping"),
     narrativeSection("gemm-tiling/loop-proof"),
   ],
-  tabs: completeTabs(
-    exactGemmKernelTab(),
-    exactGemmProofTab(),
-    exactGemmHostTab(),
+  tabs: [
+    { kind: "kernel", label: "Kernel", ...exactDynamicGemmKernelTab() },
+    { kind: "verus", label: "Compile & run", ...exactDynamicGemmRunnerTab() },
+    { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
     {
+      kind: "result",
+      label: "MI300X result",
       language: "text",
-      code: gemmProtectedResult,
-    },
-  ),
-  diagram: "gemm",
-  exercises: [
-    {
-      prompt: "Prove the C stores for a 16x16 workgroup tile are injective.",
-      hint: "Factor the map into a unique lane fragment and unique element within that fragment.",
-      acceptance: "Equal output coordinates imply equal workgroup, lane, and fragment element identities.",
+      code: dynamicGemmResult,
     },
   ],
-  glossary: ["GEMM", "tile", "LDS", "MFMA", "accumulator invariant"],
+  diagram: "gemm-scalar",
+  exercises: [
+    {
+      prompt: "Explain why two invocations cannot write the same physical C slot.",
+      hint: "Follow output_index directly into DisjointSlice::get_mut.",
+      acceptance: "The argument identifies the unique invocation index for every executed store.",
+    },
+  ],
+  glossary: ["GEMM", "stride", "epilogue", "DisjointSlice", "qualification"],
 };
 
 const gemmProof: Lesson = {
   id: "gemm-proof-plan",
   module: 4,
   order: 1,
-  title: "GEMM proof and evidence plan",
+  title: "From scalar GEMM to LDS/MFMA",
   summary:
-    "Turn the tiled algorithm into independent proof obligations and define the evidence needed before calling it complete.",
+    "Separate the working scalar baseline from the proof and evidence needed for a dynamic tiled optimization.",
   duration: "38 min",
-  prerequisites: ["Tiled GEMM mapping"],
+  prerequisites: ["Dynamic GEMM end to end"],
   objectives: [
-    "Partition GEMM assurance into memory, synchronization, function, and numerical properties.",
+    "Partition a tiled optimization into memory, synchronization, function, and numerical properties.",
     "Pair every positive theorem with a targeted mutation.",
     "Define compiler, HSACO, and gfx942 observations for the same artifact identity.",
   ],
@@ -519,7 +595,7 @@ const gemmProof: Lesson = {
     narrativeSection("gemm-proof-plan/evidence"),
   ],
   tabs: completeTabs(
-    exactGemmKernelTab(),
+    exactTiledGemmKernelTab(),
     exactGemmProofTab(),
     exactGemmHostTab(),
     {
@@ -709,8 +785,8 @@ export const modules3to5: CurriculumModule[] = [
   },
   {
     number: 4,
-    title: "Tiled GEMM",
-    summary: "Design tile ownership and decompose the proof before optimization.",
+    title: "GEMM: correct, then fast",
+    summary: "Run the dynamic baseline, then reason about a safe LDS/MFMA optimization.",
     lessons: [gemmMapping, gemmProof],
   },
   {

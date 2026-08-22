@@ -119,7 +119,7 @@ export function ProgressPage() {
           {[
             ["01", "Frontend", "Structured control flow, helpers, aggregates, and checked multidimensional indexing."],
             ["02", "Collectives", "Wave64 operations followed by LDS ownership epochs and uniform workgroup barriers."],
-            ["03", "Dense compute", "Scalar reference GEMM followed by a fixed gfx942 BF16/F32 MFMA tile."],
+            ["03", "Dense compute", "Executable dynamic scalar GEMM followed by a safe dynamic gfx942 LDS/MFMA optimization."],
             ["04", "Attention", "Numerically specified row softmax followed by fixed-shape forward FlashAttention."],
             ["05", "Sparse compute", "Stable top-2 routing, expert GEMM, inverse permutation, and deterministic combine."],
             ["06", "Promotion", "Independent review and protected signed evidence before any Complete claim."],

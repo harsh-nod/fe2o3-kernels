@@ -37,11 +37,21 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`ae312f421872e1eb9885217888548d74f79c3357`, tree
-`2345f0b14dc92dcfce9d829433860f06f8f7b128`. Deployment requires
+`0d2437c48daadfe178513ca887a94c7c1f460aab`, tree
+`ea623b864d47881b08bde45a4526ea28c9e0270f`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
-both refs match, the live publication gate fails closed. This descendant contains
+both refs match, the live publication gate fails closed.
+
+This snapshot adds an executable safe Rust dynamic strided GEMM qualification
+path. Runtime M/N/K, lda/ldb/ldc, alpha/beta, multiple workgroups, edge returns,
+and the K loop lower through semantic MIR, ranked PLIRON, Kernel IR, gfx942
+LLVM, HSACO, and fe2o3-host. Four MI300X cases pass against an independent CPU
+reference. The kernel is a scalar correctness baseline, not an LDS/MFMA
+optimization or performance result, and its artifact is not protected release
+authority.
+
+This descendant also contains
 the exact protected Slice 1
 implementation and measured evidence pinned to commit
 `c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`, tree
@@ -68,10 +78,10 @@ rejects stale, missing, reordered, and substituted layouts. The normal pinned
 MI300X lifecycle then passed both exact kernels in debug and release with
 canaries, unchanged inputs, exact oracles, bounded completion, and terminal
 unload. This is a bounded observation, not compiler-origin or
-source/compiler/machine refinement authority. The Kernel tabs are now byte-pinned to the safe ordinary Rust source at current
-dual-repository main, commit
-`ae312f421872e1eb9885217888548d74f79c3357`, tree
-`2345f0b14dc92dcfce9d829433860f06f8f7b128`. Historical Phase A, compiler,
+source/compiler/machine refinement authority. The dynamic GEMM Kernel, Compile
+& run, and Host tabs are byte-pinned to current dual-repository main. Other
+advanced Kernel tabs retain their separately pinned safe source milestones.
+Historical Phase A, compiler,
 finalizer, runtime, and GPU evidence remains pinned to its original commits and
 does not transfer authority to the repinned source. A later exact Wave64 increment now reaches deterministic
 in-process upstream LLVM target emission and LLD library linking with exact
@@ -590,20 +600,18 @@ and B to remain unchanged, and checked all A/B/C guard canaries. It emitted:
 FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b523164b679ff7af3b4e819ad041713c53c6841399ac7cea95090f09774 unload=df2f77ee798444a9e1fe5e27f219bdf720386eb8603a9a74fccc0df8efb3921c
 ```
 
-The `gemm-tiling` and `gemm-proof-plan` lessons expose the bounded Slice 1
-algorithm alongside its evidence boundary. Their Kernel tabs reproduce the current safe ordinary
-`#[kernel(typed, ...)]` file from `examples/tiled_gemm_v1/src/kernel.rs` at
-`ae312f421872e1eb9885217888548d74f79c3357` byte for byte. The safe source
-contains no unsafe block. The historical protected result belongs to
-`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811` and does not transfer to this source. Their Verus tabs
-link the exact bounded source/model proof at `5a45239ae` and show its pinned
-replay command. Their Host tabs link and show the protected Worker V2 hardware
-test command at `c4fcb4d9`; the Result tabs record the exact marker, worker and
-LLVM identities, 256 bitwise oracle matches, immutable A/B checks, all A/B/C
-guard canaries, and the 14.36-second result. This is a real fixed-shape source
-and measured route, not tutorial pseudocode. Each promoted Kernel, Verus, and
-Host tab also names the canonical evidence record that covers its exact source
-path and commit; curriculum validation rejects missing or mismatched links.
+The `gemm-tiling` lesson now shows the exact current dynamic kernel, build
+script, host runner, and four-case MI300X result. The safe kernel is byte-pinned
+to `examples/tiled_gemm_general_v1/src/kernel.rs` at
+`0d2437c48daadfe178513ca887a94c7c1f460aab` and contains no unsafe block. Its
+host-only unsafe boundaries are visible and documented around external HSACO
+loading and physical ABI launch.
+
+The `gemm-proof-plan` lesson separately retains the fixed Slice 1 LDS/MFMA
+source and historical proof and protected-result evidence. That material
+describes an optimization direction and does not transfer performance,
+dynamic-shape, or protected-publication authority to the executable scalar
+kernel.
 
 The `gemm-proof-plan` lesson records the implementation contract from
 [fe2o3 #138](https://github.com/harsh-nod/fe2o3/issues/138). The target is one
@@ -629,15 +637,18 @@ at compiler preflight with the expected property, stage, `0x464701xx` code, root
 symbol, source and terminal spans, reachable call chain, and no artifact.
 
 Those compile-time failures are bounded mutation-oracle source-to-diagnostic
-evidence. The exact `collected-general-gemm-v1` selector exists, but canonical
-positive structural analysis always fails closed because a closed verifier for
-the safe-code root and its reachable helper MIR is not yet implemented. The
+evidence for the proposed optimized schedule. The scalar qualification kernel
+already lowers and runs. The exact `collected-general-gemm-v1` selector for the
+LDS/MFMA path exists, but canonical positive structural analysis fails closed
+because a closed verifier for that safe-code root and its reachable helper MIR
+is not yet implemented. The
 failure occurs before any positive receipt, frontend correspondence,
 configuration admission, proof execution, Worker V2 handoff, private final pair
 join, durable publication, or protected launch. The authenticated proof runtime
 closure remains an independent second downstream blocker, but the current route
-does not reach configuration or proof. Complete-family `SOURCE_TO_IR=false`,
-`LOWERING=false`, and `PROTECTED_EXECUTION=false` remain unchanged.
+does not reach configuration or proof. Optimized-family
+`TILED_SOURCE_TO_IR=false`, `TILED_LOWERING=false`, and
+`TILED_PROTECTED_EXECUTION=false` remain unchanged.
 
 Separately, the production semantic-MIR route runs a fixed target-neutral
 ranked-PLIRON safety pipeline before Kernel IR lowering: bounds, atomic
@@ -806,6 +817,11 @@ At the audited pin:
 - Scalar fill is runnable, with a legacy raw launch boundary called out in the
   lesson.
 - Typed vector addition is the strongest current single-source runnable path.
+- Dynamic strided GEMM now runs through the current semantic-MIR, ranked
+  PLIRON, Kernel IR, gfx942 LLVM, HSACO, and fe2o3-host qualification path.
+  Packed, strided-tail, multi-workgroup dynamic-K, and zero-K epilogue cases
+  pass on MI300X. It is a scalar correctness baseline without a performance or
+  protected-publication claim.
 - The associated Verus models cover bounds, initialization, overflow
   obligations, and injective ownership arguments at the modeled source level.
 - Exact ordinary attributed Rust sources now exist for one masked Wave64
@@ -870,9 +886,9 @@ At the audited pin:
   uses it to share a small body with Verus; it is not the GPU kernel marker,
   creates no runtime mechanism, and proves nothing by itself. Production kernel
   algorithms should remain ordinary attributed Rust and do not require it.
-- Tiled GEMM's exact fixed `16x16x16` Slice 1 Kernel, Host, and Result tabs are
-  real and pinned. Its generalized dimensions, K phases, grids, tails,
-  coefficients, and complete authority chain remain a design-level curriculum.
+- Tiled GEMM's exact fixed `16x16x16` Slice 1 source and historical evidence
+  remain pinned as the optimization proof plan. A dynamic safe LDS/MFMA
+  implementation and its performance evidence remain open.
   Row softmax now displays its exact ordinary example-owned attributed source,
   with complete AST structural admission before a fixed reviewed
   interpreter/model and digest/certificate binding. It also has an exact typed

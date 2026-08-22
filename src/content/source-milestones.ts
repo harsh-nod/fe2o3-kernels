@@ -9,6 +9,7 @@ export interface SourceMilestoneRecord {
   id: SourceMilestoneId;
   lessonId:
     | "gemm-tiling"
+    | "gemm-proof-plan"
     | "reductions-scans"
     | "lds-barriers-atomics"
     | "flash-attention"
@@ -28,6 +29,7 @@ export interface SourceMilestoneRecord {
 }
 
 export const sourceMilestoneOrder = deepFreeze([
+  "dynamic-gemm-executable-source-v1",
   "tiled-gemm-safe-source-v1",
   "wave64-collectives-source-v1",
   "workgroup-sync-source-v1",
@@ -40,9 +42,34 @@ export const sourceMilestoneOrder = deepFreeze([
 ] satisfies SourceMilestoneId[]);
 
 const sourceMilestoneRecords = deepFreeze({
+  "dynamic-gemm-executable-source-v1": {
+    id: "dynamic-gemm-executable-source-v1",
+    lessonId: "gemm-tiling",
+    claim: "source-tested",
+    authority: "source-tested-only",
+    claimLabel: "Executable dynamic GEMM source",
+    detail:
+      "Current public main contains an ordinary safe attributed Rust kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a real K loop; one-dimensional multi-workgroup ownership; edge handling; and a full epilogue. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, Kernel IR, formal memory admission, gfx942 LLVM, and HSACO. Four qualification cases passed on MI300X against an independent CPU reference. This is qualification execution, not protected artifact publication or an optimized LDS/MFMA performance result.",
+    commit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+    tree: "ea623b864d47881b08bde45a4526ea28c9e0270f",
+    commands: [
+      "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
+      "examples/tiled_gemm_general_v1/run-gfx942.sh",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_general_v1/src/kernel.rs",
+      "examples/tiled_gemm_general_v1/src/main.rs",
+      "examples/tiled_gemm_general_v1/run-gfx942.sh",
+      "examples/tiled_gemm_general_v1/README.md",
+    ],
+    primarySourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
+    primarySourceSha256:
+      "5ff05418f771bee0e09a87dbb3c925b071059e39a8d58392f1cc6de2a1d1f927",
+    target: "gfx942:xnack-",
+  },
   "tiled-gemm-safe-source-v1": {
     id: "tiled-gemm-safe-source-v1",
-    lessonId: "gemm-tiling",
+    lessonId: "gemm-proof-plan",
     claim: "source-tested",
     authority: "source-tested-only",
     claimLabel: "Current safe tiled GEMM source",
