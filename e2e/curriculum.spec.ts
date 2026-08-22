@@ -66,7 +66,7 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await expect(page.getByText("DefinitelyNotPublished", { exact: true })).toBeVisible();
   await expect(page.getByText("RetainedTerminal")).toBeVisible();
   await expect(page.getByText(/released12 and retained0/u)).toBeVisible();
-  await expect(page.getByText(/implementation-checked and unmeasured/u)).toHaveCount(3);
+  await expect(page.getByText(/implementation-checked and unmeasured/u)).toHaveCount(2);
   await expect(page.getByText(/MI300X required; the browser only copies/u)).toHaveCount(2);
   await expect(page.getByRole("button", { name: "Copy hardware command" })).toHaveCount(2);
   await expect(
@@ -113,8 +113,24 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   ).toBeVisible();
   await expect(page.getByText(/legacy-clang route only when its untyped fill facts/u)).toBeVisible();
   await expect(page.getByText(/no GPU execution, hardware result, numerical result/u)).toBeVisible();
-  await expect(page.getByText("Freeze and review the joined compiler path")).toBeVisible();
-  await expect(page.getByText("Run one bounded compiler-generated MI300X attempt")).toBeVisible();
+  const preflightHeading = page.getByRole("heading", {
+    name: "Authenticated compiler-build preflight",
+  });
+  await expect(preflightHeading).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      name: "Authenticated compiler-build preparation",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Try it (read-only)")).toHaveCount(2);
+  await expect(page.getByText(/08fcbdb9020960c32/u)).toHaveCount(2);
+  await expect(page.getByText(/81d5c89ae4d843e6/u)).toHaveCount(2);
+  await expect(page.getByText(/not milestone 05 and not a compiler build/u)).toBeVisible();
+  await expect(page.getByText("Run the reviewed compiler build")).toBeVisible();
+  await expect(
+    page.getByText("Approve one bounded compiler-generated MI300X attempt"),
+  ).toBeVisible();
+  await expect(page.getByText("Retain the one-attempt hardware record")).toBeVisible();
   await expect(
     page.getByText("1c694eed427526dc507a129a721237613bafe094"),
   ).toBeVisible();
@@ -134,6 +150,11 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await convergenceHeading.scrollIntoViewIfNeeded();
   await page.screenshot({
     path: `/tmp/fe2o3-kernels-runtime-convergence-${testInfo.project.name}.png`,
+    animations: "disabled",
+  });
+  await preflightHeading.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: `/tmp/fe2o3-kernels-runtime-preflight-${testInfo.project.name}.png`,
     animations: "disabled",
   });
 });

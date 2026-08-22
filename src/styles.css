@@ -1445,6 +1445,25 @@ p {
   text-decoration: underline;
 }
 
+.runtime-launch-control-heading {
+  max-width: 840px;
+}
+
+.runtime-launch-control-heading > p:last-child {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+.runtime-launch-control-list {
+  border-bottom: 1px solid var(--border);
+}
+
+.runtime-launch-control:last-child {
+  border-bottom: 0;
+}
+
 .runtime-next-boundary {
   max-width: 840px;
 }

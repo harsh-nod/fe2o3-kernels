@@ -52,7 +52,7 @@ describe("runtime milestones", () => {
     expect(screen.getByText(/released12 and retained0/u)).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Copy hardware command" })).toHaveLength(2);
     expect(screen.getAllByText(/browser only copies this command/u)).toHaveLength(2);
-    expect(screen.getAllByText(/implementation-checked and unmeasured/u)).toHaveLength(3);
+    expect(screen.getAllByText(/implementation-checked and unmeasured/u)).toHaveLength(2);
     expect(screen.getByText("ceeaa7cfc973a576004ceaba10f95c4681a90b3edf266d382f6f8021e8083e2c")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
@@ -96,15 +96,40 @@ describe("runtime milestones", () => {
     expect(screen.getByText(/zero \/dev\/kfd or \/dev\/dri opens and zero ioctl calls/u)).toBeInTheDocument();
     expect(screen.getByText(/existing fill path remains a separate explicit legacy-clang route/u)).toBeInTheDocument();
     expect(screen.getByText(/no GPU execution, hardware result, numerical result/u)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Preparation and preflight are closed before milestone 05",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Authenticated compiler-build preparation",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Authenticated compiler-build preflight",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Receipt committed")).toBeInTheDocument();
+    expect(screen.getByText("Receipt reviewed")).toBeInTheDocument();
+    expect(screen.getByText("Preparation only")).toBeInTheDocument();
+    expect(screen.getByText("Preflight only")).toBeInTheDocument();
+    expect(screen.getAllByText(/Verify the retained receipt on the prepared host/u)).toHaveLength(2);
+    expect(screen.getAllByText(/08fcbdb9020960c32/u).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getAllByText(/81d5c89ae4d843e6/u).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText(/110 authenticated records and 15 byte-identical/u)).toBeInTheDocument();
+    expect(screen.getByText(/not milestone 05 and not a compiler build/u)).toBeInTheDocument();
     expect(screen.getByText("e5c8d66c5520d1bce7cf2db911c200f1cf4c5536")).toBeInTheDocument();
     expect(screen.getByText("1c694eed427526dc507a129a721237613bafe094")).toBeInTheDocument();
     expect(screen.getByText(/does not execute Rust, KFD, or GPU work/u)).toBeInTheDocument();
     expect(screen.getByText(/Hardware commands are separated and labeled as copy-only/u)).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { name: "One reviewed compiler-generated launch before repeated execution" }),
+      screen.getByRole("heading", { name: "One reviewed compiler build before one joined launch" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Freeze and review the joined compiler path")).toBeInTheDocument();
-    expect(screen.getByText("Run one bounded compiler-generated MI300X attempt")).toBeInTheDocument();
+    expect(screen.getByText("Run the reviewed compiler build")).toBeInTheDocument();
+    expect(screen.getByText("Approve one bounded compiler-generated MI300X attempt")).toBeInTheDocument();
+    expect(screen.getByText("Retain the one-attempt hardware record")).toBeInTheDocument();
     expect(screen.getByText("Build persistent repeated execution")).toBeInTheDocument();
   }, 10_000);
 });

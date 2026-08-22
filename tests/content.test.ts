@@ -3,6 +3,11 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
+import {
+  launchControlMilestones,
+  type LaunchControlMilestone,
+  validateLaunchControlMilestones,
+} from "../src/content/launch-controls";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import {
   developmentCheckpointIds,
@@ -196,6 +201,146 @@ describe("curriculum integrity", () => {
     expect(runtimeMilestones[4].limitations.join(" ")).toContain(
       "publication gate is unchanged and remains on hold",
     );
+  });
+
+  it("binds completed preparation and preflight without claiming milestone 05", () => {
+    expect(validateLaunchControlMilestones()).toEqual([]);
+    expect(launchControlMilestones.map(({ id }) => id)).toEqual([
+      "authenticated-preparation-v1",
+      "authenticated-preflight-v1",
+    ]);
+    expect(launchControlMilestones.map(({ number }) => number)).toEqual([
+      "P1",
+      "P2",
+    ]);
+
+    const [preparation, preflight] = launchControlMilestones;
+    expect(preparation.evidence).toMatchObject({
+      receiptPath: "/home/harsh/m350-v2/prep-r",
+      manifestSha256:
+        "08fcbdb9020960c32151585ec131c27c0c76a37d55de9e4a81b260ca85be2ab0",
+      sourceTree: "6f82c75c948632005cd12e623a6dbc9acb6213b9",
+      preparationSha256:
+        "4d95ff570e3de0bb3f6877b7bcf15e3e6a046e7f9cc65b6b7669fda8ce6e1fac",
+    });
+    expect(preparation.expected.join(" ")).toContain(
+      "PASS_PREPARATION_ONLY_NO_COMPILER_BUILD",
+    );
+    expect(preparation.limitations.join(" ")).toContain(
+      "No compiler phase",
+    );
+    expect(preparation.limitations.join(" ")).toContain(
+      "no filesystem permanence is claimed",
+    );
+
+    expect(preflight.evidence).toMatchObject({
+      receiptPath: "/home/harsh/m350-v2/preflight-r3",
+      manifestSha256:
+        "81d5c89ae4d843e609cf7c2597f5f5f562d9cd7c54ac3b056cd66bccfe0898f6",
+      runnerSha256:
+        "97ed45265f4144eb7adf46f83865acffdc55a4c35512b6f382986daba5ebebab",
+      resultSha256:
+        "e85d45bb98304f4afd9a34025bd4673f022850f74c2aa8f3c5a671c47f1f2928",
+    });
+    expect(preflight.expected.join(" ")).toContain(
+      "PASS_PREFLIGHT_ONLY_NO_COMPILER_BUILD",
+    );
+    expect(preflight.summary).toContain("invoked no live KFD/GPU command");
+    expect(preflight.summary).not.toContain("opened no live GPU path");
+    expect(preflight.expected.join(" ")).toContain(
+      "successful_cargo_exec_count=0",
+    );
+    expect(preflight.limitations.join(" ")).toContain(
+      "not milestone 05",
+    );
+    expect(preflight.limitations.join(" ")).toContain(
+      "no filesystem permanence is claimed",
+    );
+    expect(
+      launchControlMilestones.flatMap(({ commands }) => commands).join(" "),
+    ).not.toMatch(/--build-only|--live|FE2O3_RUN|\/dev\/kfd/u);
+  });
+
+  it("rejects mutated launch-control commands and receipt paths", () => {
+    const changedCommand = structuredClone(
+      launchControlMilestones,
+    ) as unknown as LaunchControlMilestone[];
+    (changedCommand[0].commands as string[])[0] =
+      "/usr/bin/rm -rf /home/harsh/m350-v2";
+    expect(validateLaunchControlMilestones(changedCommand)).toContain(
+      "authenticated-preparation-v1: receipt commands differ from policy",
+    );
+
+    const changedPath = structuredClone(
+      launchControlMilestones,
+    ) as unknown as LaunchControlMilestone[];
+    changedPath[1].evidence.receiptPath =
+      "/home/harsh/m350-v2/../unreviewed-receipt";
+    expect(validateLaunchControlMilestones(changedPath)).toContain(
+      "authenticated-preflight-v1: receipt evidence differs from policy",
+    );
+
+    const changedScope = structuredClone(
+      launchControlMilestones,
+    ) as unknown as LaunchControlMilestone[];
+    changedScope[1].scope = "Preparation only";
+    expect(validateLaunchControlMilestones(changedScope)).toContain(
+      "authenticated-preflight-v1: launch-control classification differs from policy",
+    );
+
+    expect(validateLaunchControlMilestones([])).toContain(
+      "catalog: launch-control order differs from policy",
+    );
+    expect(
+      validateLaunchControlMilestones([
+        changedScope[1],
+        changedScope[0],
+      ]),
+    ).toContain("catalog: launch-control order differs from policy");
+
+    const unknownId = structuredClone(
+      launchControlMilestones,
+    ) as unknown as Array<{ id: string }>;
+    unknownId[0].id = "unknown-launch-control";
+    expect(
+      validateLaunchControlMilestones(
+        unknownId as unknown as LaunchControlMilestone[],
+      ),
+    ).toContain("unknown-launch-control: unknown launch-control ID");
+
+    const claimMutations: Array<
+      (milestones: LaunchControlMilestone[]) => void
+    > = [
+      (milestones) => {
+        milestones[0].title = "Unreviewed title";
+      },
+      (milestones) => {
+        milestones[0].summary = "Unreviewed summary";
+      },
+      (milestones) => {
+        (milestones[0].why as string[])[0] = "Unreviewed rationale";
+      },
+      (milestones) => {
+        (milestones[0].enables as string[])[0] = "Unreviewed capability";
+      },
+      (milestones) => {
+        (milestones[0].expected as string[])[0] =
+          "Unreviewed expected output";
+      },
+      (milestones) => {
+        (milestones[0].limitations as string[])[0] =
+          "No compiler phase ran, but this boundary is unreviewed. GPU.";
+      },
+    ];
+    for (const mutate of claimMutations) {
+      const changedClaims = structuredClone(
+        launchControlMilestones,
+      ) as unknown as LaunchControlMilestone[];
+      mutate(changedClaims);
+      expect(validateLaunchControlMilestones(changedClaims)).toContain(
+        "authenticated-preparation-v1: launch-control claims differ from policy",
+      );
+    }
   });
 
   it("covers modules zero through eight in order", () => {

@@ -25,6 +25,7 @@ import {
   sourceMilestoneReference,
   validateSourceMilestoneCatalog,
 } from "./source-milestones";
+import { validateLaunchControlMilestones } from "./launch-controls";
 import { validateRuntimeMilestones } from "./runtime-milestones";
 
 const exactObjectName = /^[0-9a-f]{40}$/;
@@ -70,6 +71,10 @@ export function validateCurriculum(
   narratives?: Record<string, unknown>,
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [
+    ...validateLaunchControlMilestones().map((message) => ({
+      path: "launchControlMilestones",
+      message,
+    })),
     ...validateRuntimeMilestones().map((message) => ({
       path: "runtimeMilestones",
       message,
