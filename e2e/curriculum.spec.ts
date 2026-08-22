@@ -55,8 +55,8 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
     page.getByRole("heading", { name: "One runtime ownership pipeline" }),
   ).toBeVisible();
   await expect(page.getByText("Implementation checked", { exact: true })).toHaveCount(4);
-  await expect(page.getByText("Formal model verified", { exact: true })).toHaveCount(1);
-  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(6);
+  await expect(page.getByText("Formal model verified", { exact: true })).toHaveCount(2);
+  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(7);
   await expect(
     page.getByText(/cargo test -p fe2o3-runtime-model --locked persistent_runtime/u),
   ).toBeVisible();
@@ -127,10 +127,30 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await expect(
     page.getByText("2e61da988c597d4357bd9a4bfbf9c03604015f90"),
   ).toBeVisible();
-  await expect(page.getByText("Local branch; remote links withheld")).toBeVisible();
+  await expect(page.getByText("Local branch; remote links withheld")).toHaveCount(2);
   await expect(
     page.locator('a[href*="2e61da988c597d4357bd9a4bfbf9c03604015f90"]'),
   ).toHaveCount(0);
+  const decisionKernelHeading = page.getByRole("heading", {
+    name: "Same-source bounded decision kernel",
+  });
+  await expect(decisionKernelHeading).toBeVisible();
+  await expect(
+    page.getByText("b0dd32a662fa618efc5a133901b69af685da4f72"),
+  ).toBeVisible();
+  await expect(
+    page.locator('a[href*="b0dd32a662fa618efc5a133901b69af685da4f72"]'),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText(/verification results:: 190 verified, 0 errors/u),
+  ).toBeVisible();
+  await expect(page.getByText(/exactly 40 pinned expected-negative mutations/u)).toBeVisible();
+  await expect(
+    page.getByText(/no machine-checked refinement from fe2o3-kfd or fe2o3-runtime-model/u),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/neither HIP\/HSA\/ROCr feature parity nor a basis for removing/u),
+  ).toBeVisible();
   const preflightHeading = page.getByRole("heading", {
     name: "Authenticated compiler-build preflight",
   });
@@ -173,6 +193,11 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await formalHeading.scrollIntoViewIfNeeded();
   await page.screenshot({
     path: `/tmp/fe2o3-kernels-runtime-formal-${testInfo.project.name}.png`,
+    animations: "disabled",
+  });
+  await decisionKernelHeading.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: `/tmp/fe2o3-kernels-runtime-decision-kernel-${testInfo.project.name}.png`,
     animations: "disabled",
   });
   await preflightHeading.scrollIntoViewIfNeeded();

@@ -97,6 +97,21 @@ describe("runtime milestones", () => {
     expect(screen.getByText(/existing fill path remains a separate explicit legacy-clang route/u)).toBeInTheDocument();
     expect(screen.getByText(/no GPU execution, hardware result, numerical result/u)).toBeInTheDocument();
     expect(
+      screen.getByRole("heading", { name: "Same-source bounded decision kernel" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Formal model verified")).toHaveLength(2);
+    expect(
+      screen.getByText(/same executable functions for ordinary Cargo tests and Verus/u),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/10,000 repeated exact Pending observations/u),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/all 64 bounded lifetime slots/u)).toBeInTheDocument();
+    expect(screen.getByText(/does not prove liveness/u)).toBeInTheDocument();
+    expect(
+      screen.getByText(/neither HIP\/HSA\/ROCr feature parity/u),
+    ).toBeInTheDocument();
+    expect(
       screen.getByRole("heading", {
         name: "Preparation and preflight are closed before milestone 05",
       }),
@@ -130,7 +145,10 @@ describe("runtime milestones", () => {
     expect(screen.getByText("Run the reviewed compiler build")).toBeInTheDocument();
     expect(screen.getByText("Approve one bounded compiler-generated MI300X attempt")).toBeInTheDocument();
     expect(screen.getByText("Retain the one-attempt hardware record")).toBeInTheDocument();
-    expect(screen.getByText("Build persistent repeated execution")).toBeInTheDocument();
+    expect(
+      screen.getByText("Refine the verified decision kernel into the KFD facade"),
+    ).toBeInTheDocument();
+    expect(screen.queryByText("Build persistent repeated execution")).not.toBeInTheDocument();
   }, 10_000);
 });
 

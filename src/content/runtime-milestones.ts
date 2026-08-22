@@ -6,7 +6,8 @@ export type RuntimeMilestoneId =
   | "current-v2-mi300x-requalification-v1"
   | "compiler-generated-cov6-kfd-bridge-v1"
   | "kernel-ir-v1-c454-compiler-convergence-v1"
-  | "bounded-persistent-lifecycle-verus-v1";
+  | "bounded-persistent-lifecycle-verus-v1"
+  | "same-source-bounded-decision-kernel-v2";
 
 export interface RuntimeMilestoneOutcome {
   name: "Completed" | "DefinitelyNotPublished" | "RetainedTerminal";
@@ -401,6 +402,73 @@ export const runtimeMilestones = deepFreeze([
       "crates/fe2o3-runtime-model/verus/persistent_runtime_lifecycle_v1.rs",
       "crates/fe2o3-kfd/src/persistent_runtime.rs",
       "crates/fe2o3-runtime-model/verus/verify-verus.sh",
+    ],
+  },
+  {
+    id: "same-source-bounded-decision-kernel-v2",
+    number: "V2",
+    title: "Same-source bounded decision kernel",
+    state: "implemented",
+    status: "formal-model-verified",
+    measurement: "unmeasured",
+    summary:
+      "The exact fe2o3-persistent-runtime-kernel src/lib.rs is now both ordinary executable Rust and the pinned cargo-verus proof input. For its bounded state space, Verus proves the encoded lifecycle contracts and invariant preservation, and seven executable witnesses cover the admitted full lifecycle, two-dispatch FIFO behavior, 64/65 capacity boundary, 10,000 stable Pending observations, terminal variants, exact cancellation restoration, and arithmetic rejection boundary.",
+    why: [
+      "Using the same executable functions for ordinary Cargo tests and Verus closes one important source-drift channel: the proved transition body is not a separately maintained pseudocode model. That does not prove its callers, operating-system effects, compiler, or machine code; it makes the exact bounded decision-kernel source itself an auditable proof boundary.",
+      "Persistent execution has long-lived authority. A publication, completion observation, credit release, retirement, destroy, or resource discharge can be prepared before an external effect and committed afterward. Move-only effect plans, pre-effect capacity reservation, exact cancellation restoration, and absorbing quarantine make the decision about what authority remains a checked state transition rather than an informal cleanup convention.",
+      "The invariant binds exact authority and memory-profile identities, monotonically fresh dispatch and completion identities, bounded outstanding and resource ledgers, trace capacity, retained terminal evidence, per-queue FIFO retirement, and ordered teardown. Proof development exposed invariant-admitted identifier-history and prepared-plan placement states that ordinary reachable-path tests did not reveal; closing those states is a concrete reason formal verification matters here.",
+      "The verifier lane authenticates the Verus release closure, Rust toolchain, Z3, vstd revision, isolated Cargo lock, kernel/tooling source closure, required proof markers, positive summary, and all 40 pinned expected-negative mutations. A pinned mutation counts only if Verus exits with calibrated proof-failure status 101 and reaches its reviewed function and proof diagnostic with exactly one verification error, so parser, import, type, timeout, signal, crash, or toolchain failures cannot masquerade as a successful negative proof test.",
+    ],
+    enables: [
+      "A proof-backed, CPU-executable decision boundary for prepare, commit, cancel, quarantine, stable Pending coalescing, exact terminal evidence, completion-credit custody, FIFO retirement, and resource-free shutdown within the published bounds.",
+      "A same-source regression gate in which changes to executable transition code must preserve the exact contracts and invariants, while the 40 reviewed expected-negative mutations must continue to fail at their pinned obligations. This does not claim that arbitrary unsafe specification weakening must fail; a weakened specification may verify and requires review.",
+      "A precise target for the next machine-checked refinement: typed KFD facade states can map raw driver observations and owned native resources into these proved decisions without inventing another lifecycle vocabulary.",
+      "A defensible separation between what is proved and what is still contracted. External authority provenance, completion-memory certificates, Linux/KFD effects, and hardware behavior can now be closed by later artifacts instead of being silently included in the decision-kernel claim.",
+    ],
+    pipeline: [
+      "Construct a bounded state from one exact runtime-authority identity and memory-profile identity. Validate exact live-completion certificates and reserve outstanding, resource, revision, and trace capacity before returning a move-only effect plan for an external action.",
+      "Consume each plan exactly once through its matching commit, exact no-effect cancellation, or terminal quarantine. Publication uncertainty retains the preallocated identities and capacity instead of relabeling an indeterminate effect as definitely absent.",
+      "Advance the oldest dispatch from Published through one revision-producing Pending observation, any number of exactly idempotent repeated Pending observations, exact Completed evidence, completion-credit release, and FIFO retirement. Foreign, stale, replayed, noncanonical, or wrong-identity evidence fails closed.",
+      "Enter monotonic quiescence, seal the queue and context with exact certificates, destroy only when outstanding work is empty, discharge completion resources in exact retirement order, and shut down only with no live authority. The seven public executable witnesses inhabit the principal accepted and rejected paths inside the same proved source.",
+    ],
+    pipelineKicker: "Same executable source",
+    pipelineTitle:
+      "Reserve before effect, decide exactly once, then retire and tear down in order",
+    commands: [
+      "cargo test --locked -p fe2o3-persistent-runtime-kernel",
+      "cargo test --locked -p fe2o3-persistent-runtime-kernel --test decision_model ten_thousand_pending_observations_are_exactly_idempotent -- --exact",
+      "cargo test --locked -p fe2o3-persistent-runtime-kernel --test decision_model sixty_four_lifetime_resources_are_honestly_bounded -- --exact",
+      "crates/fe2o3-persistent-runtime-kernel/verus/verify-same-source.sh --verify",
+    ],
+    expected: [
+      "The ordinary CPU suite reports 19 passed integration tests. It covers the seven inhabited executable witnesses plus exact identity, certificate, replay, terminal-reason, wrong-plan, cancellation, quarantine, and ordered-teardown behavior without opening KFD or selecting a GPU.",
+      "The focused Pending test reports one passed test after the first exact Pending observation advances once and 10,000 repeated exact Pending observations preserve the same public snapshot, revision, trace length, and retained authority.",
+      "The focused capacity test reports one passed test: all 64 bounded lifetime slots can complete and retire under the exact resource ledger, while the 65th admission fails closed without fabricating capacity or reusing an identity.",
+      "The authenticated same-source lane reports verification results:: 190 verified, 0 errors for the kernel itself and rejects exactly 40 pinned expected-negative mutations at their reviewed proof obligations. The vstd dependency's separate 2044-verified summary is not the kernel proof result.",
+    ],
+    limitations: [
+      "Formal verification covers only the contracts, invariants, proof lemmas, and seven executable witnesses encoded in the exact bounded decision-kernel source. It is not a proof of the complete fe2o3 runtime, all possible Rust programs, liveness under an uncooperative environment, or equivalence to another implementation.",
+      "Runtime-authority identities, live-completion certificates, teardown certificates, and their input values enter this boundary from callers. The kernel checks the encoded identity and state relationships; it does not prove external provenance, key custody, freshness across process loss, host memory coherence, or that a caller truthfully obtained those values.",
+      "The proof does not establish that arbitrary safe Rust callers satisfy every Verus precondition. There is no machine-checked refinement from fe2o3-kfd or fe2o3-runtime-model to this kernel yet, so those adapters remain Checked or Contracted rather than inheriting this formal status.",
+      "Linux, DRM and KFD ioctls, mappings, allocation and publication effects, AQL and system-scope memory ordering, firmware scheduling, GPU reset and isolation, completion hardware, compiler lowering, rustc/LLVM correctness, linking, and generated machine code are outside this proof.",
+      "This is a bounded decision kernel: lifetime and outstanding dispatch/resource histories are capped at 64 and the trace is capped at 2,048 entries. The deterministic ledger-fold receipt is a consistency value, not a cryptographic commitment, collision-resistance result, or proof of external authority.",
+      "EffectPlanV1 is move-only, but its public commit surface is not yet variant-typed. Passing a valid plan to the wrong commit method fails closed and consumes that caller token; it can leave the matching active effect stranded and therefore does not prove liveness. Typed plans are required before KFD facade refinement and integration.",
+      "This milestone has no hardware example or evidence record and performs no KFD, DRM, MMIO, packet, compiler-build, application, or GPU action. It establishes neither HIP/HSA/ROCr feature parity nor a basis for removing those runtimes from workloads that require their broader APIs, tooling, libraries, or device support.",
+    ],
+    commit: "b0dd32a662fa618efc5a133901b69af685da4f72",
+    tree: "5f2c5a2f408aed456e20ebf7b0e28fa652818152",
+    sourceAvailability: "local-branch",
+    sourcePaths: [
+      "crates/fe2o3-persistent-runtime-kernel/Cargo.toml",
+      "crates/fe2o3-persistent-runtime-kernel/src/lib.rs",
+      "crates/fe2o3-persistent-runtime-kernel/tests/decision_model.rs",
+      "crates/fe2o3-persistent-runtime-kernel/verus/VERIFICATION.md",
+      "crates/fe2o3-persistent-runtime-kernel/verus/verify-same-source.sh",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/SOURCE_CLOSURE_V1",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/SOURCE_REQUIREMENTS_V1.toml",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/MUTATIONS_V1.toml",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/POSITIVE_SUMMARY_V1",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/NEGATIVE_COUNT_V1",
     ],
   },
 ] satisfies RuntimeMilestone[]);

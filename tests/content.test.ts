@@ -77,6 +77,7 @@ describe("curriculum integrity", () => {
       "compiler-generated-cov6-kfd-bridge-v1",
       "kernel-ir-v1-c454-compiler-convergence-v1",
       "bounded-persistent-lifecycle-verus-v1",
+      "same-source-bounded-decision-kernel-v2",
     ]);
     expect(runtimeMilestones[0].commit).toBe(
       "e5c8d66c5520d1bce7cf2db911c200f1cf4c5536",
@@ -229,6 +230,56 @@ describe("curriculum integrity", () => {
     );
     expect(runtimeMilestones[5].hardwareExample).toBeUndefined();
     expect(runtimeMilestones[5].evidenceRecord).toBeUndefined();
+    expect(runtimeMilestones[6]).toMatchObject({
+      id: "same-source-bounded-decision-kernel-v2",
+      number: "V2",
+      commit: "b0dd32a662fa618efc5a133901b69af685da4f72",
+      tree: "5f2c5a2f408aed456e20ebf7b0e28fa652818152",
+      status: "formal-model-verified",
+      measurement: "unmeasured",
+      sourceAvailability: "local-branch",
+    });
+    expect(runtimeMilestones[6].commands).toEqual([
+      "cargo test --locked -p fe2o3-persistent-runtime-kernel",
+      "cargo test --locked -p fe2o3-persistent-runtime-kernel --test decision_model ten_thousand_pending_observations_are_exactly_idempotent -- --exact",
+      "cargo test --locked -p fe2o3-persistent-runtime-kernel --test decision_model sixty_four_lifetime_resources_are_honestly_bounded -- --exact",
+      "crates/fe2o3-persistent-runtime-kernel/verus/verify-same-source.sh --verify",
+    ]);
+    expect(runtimeMilestones[6].commands.join(" ")).not.toMatch(
+      /--live|FE2O3_RUN|\/dev\/kfd/u,
+    );
+    expect(runtimeMilestones[6].expected.join(" ")).toContain(
+      "verification results:: 190 verified, 0 errors",
+    );
+    expect(runtimeMilestones[6].expected.join(" ")).toContain(
+      "exactly 40 pinned expected-negative mutations",
+    );
+    expect(runtimeMilestones[6].enables.join(" ")).toContain(
+      "does not claim that arbitrary unsafe specification weakening must fail",
+    );
+    expect(runtimeMilestones[6].why.join(" ")).toContain(
+      "same executable functions for ordinary Cargo tests and Verus",
+    );
+    expect(runtimeMilestones[6].why.join(" ")).toContain(
+      "calibrated proof-failure status 101",
+    );
+    expect(runtimeMilestones[6].limitations.join(" ")).toContain(
+      "does not establish that arbitrary safe Rust callers satisfy every Verus precondition",
+    );
+    expect(runtimeMilestones[6].limitations.join(" ")).toContain(
+      "no machine-checked refinement from fe2o3-kfd or fe2o3-runtime-model",
+    );
+    expect(runtimeMilestones[6].limitations.join(" ")).toContain(
+      "does not prove liveness",
+    );
+    expect(runtimeMilestones[6].limitations.join(" ")).toContain(
+      "neither HIP/HSA/ROCr feature parity",
+    );
+    expect(runtimeMilestones[6].hardwareExample).toBeUndefined();
+    expect(runtimeMilestones[6].evidenceRecord).toBeUndefined();
+    expect(runtimeMilestones[6].sourcePaths).toContain(
+      "crates/fe2o3-persistent-runtime-kernel/src/lib.rs",
+    );
   });
 
   it("binds completed preparation and preflight without claiming milestone 05", () => {

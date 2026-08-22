@@ -335,7 +335,10 @@ export function RuntimeMilestonesPage() {
           reviewed preflight manifest can now gate one compiler build, but no
           build artifact or joined GPU result exists yet. Compiler build,
           artifact review, one bounded hardware attempt, reusable execution,
-          and publication remain on hold.
+          and publication remain on hold. The bounded decision kernel is proved
+          only at its exact source boundary; typed-plan integration and a
+          machine-checked KFD facade refinement remain on hold and do not
+          inherit hardware, HIP, HSA, or ROCr authority.
         </p>
         <div className="runtime-next-row">
           <span>01</span>
@@ -361,8 +364,8 @@ export function RuntimeMilestonesPage() {
         <div className="runtime-next-row">
           <span>04</span>
           <div>
-            <strong>Build persistent repeated execution</strong>
-            <p>Reuse device and queue state while preserving exact dispatch ownership, FIFO retirement, bounded failure, and complete terminal teardown.</p>
+            <strong>Refine the verified decision kernel into the KFD facade</strong>
+            <p>Introduce variant-typed effect plans and machine-check each persistent KFD adapter transition against the exact same-source kernel before any native constructor or hardware attempt is enabled.</p>
           </div>
         </div>
       </section>
