@@ -480,10 +480,10 @@ const compilerChecks: Lesson = {
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "ce4bfc61e99df240f32c24b4fb7a0f5971460a489084dbe19f3662cb4753ea0e",
+        "6a8d3073d8535a771accc4dc40920ffb95092f9a760ee3521c11908512074643",
       explanatory: false,
       notice:
-        "The oob feature selects the invalid body. input[63] is statically valid; input[64] is one past the declared extent.",
+        "Feature flags select the static-bounds, ownership-mapping, and barrier-convergence fixtures. The oob case rejects input[64] as one past the declared extent; the production driver also checks convergent, divergent, early-return, cyclic, and helper barrier placements.",
     },
     {
       language: "text",
@@ -529,7 +529,7 @@ Both stop strict production compilation.`,
         "compiler-hsaco-observed",
         `error[FE2O3-BOUNDS-001]: ranked access is outside the declared bound
 required: 64 < 64
-Rust source: .../src/lib.rs:26:20
+Rust source: .../src/lib.rs:65:20
 ranked PLIRON before rejected lowering: kernel.index_constant 64
 lowering stopped before target IR or artifact emission`,
       ),

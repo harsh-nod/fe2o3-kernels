@@ -440,7 +440,9 @@ describe("curriculum integrity", () => {
     if (failureGallery?.type !== "compile-failures") return;
     expect(failureGallery.examples).toHaveLength(6);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
-    expect(failureGallery.intro).toContain("bounds example is exercised end to end");
+    expect(failureGallery.intro).toContain(
+      "Bounds and barrier convergence are exercised end to end",
+    );
     expect(failureGallery.intro).toContain("static index 64 into extent 64");
     expect(failureGallery.intro).toContain("parsed textual PLIRON lit fixtures");
     expect(failureGallery.intro).toContain("explicitly unsupported and fail closed");
@@ -1655,12 +1657,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-21",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "74bbb65f8dcb8bd75661e51903fe5aa271052066",
-      eventualPublicTree: "23a05adc76c39ac98fba3a913eea542944a21b4b",
+      eventualPublicCommit: "2d025da5623d313a1aa2f118552682d9caa93fc4",
+      eventualPublicTree: "090531d62857a45d46aa81be87c0d59e4bb200d2",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "74bbb65f8dcb8bd75661e51903fe5aa271052066",
-        requiredTree: "23a05adc76c39ac98fba3a913eea542944a21b4b",
+        requiredCommit: "2d025da5623d313a1aa2f118552682d9caa93fc4",
+        requiredTree: "090531d62857a45d46aa81be87c0d59e4bb200d2",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2286,7 +2288,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "74bbb65f8dcb8bd75661e51903fe5aa271052066",
+      "2d025da5623d313a1aa2f118552682d9caa93fc4",
     );
 
     const lesson = curriculum

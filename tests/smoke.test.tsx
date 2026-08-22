@@ -103,7 +103,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("74bbb65f8dcb")).toBeInTheDocument();
+    expect(screen.getByText("2d025da5623d")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +113,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "23a05adc76c39ac98fba3a913eea542944a21b4b",
+      "090531d62857a45d46aa81be87c0d59e4bb200d2",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -237,7 +237,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler main at 74bbb65f8d",
+        name: "Compiler main at 2d025da562",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -249,7 +249,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open current compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/74bbb65f8dcb8bd75661e51903fe5aa271052066",
+      "https://github.com/harsh-nod/fe2o3/tree/2d025da5623d313a1aa2f118552682d9caa93fc4",
     );
   });
 });
