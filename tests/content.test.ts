@@ -157,15 +157,15 @@ describe("curriculum integrity", () => {
       const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
       expect(kernel).toMatchObject({
         sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
         sourceSha256:
-          "873d22ee1d8cbd450a38af2be2ce0329128de48c430f3c5aa56dbe4480148a61",
+          "f368ee28eb3c34e4a18a4ebf9e41ca599bb2e9ae054794ea621195b88124cca3",
         evidenceId: "tiled-gemm-safe-source-v1",
         explanatory: false,
       });
       expect(
         createHash("sha256").update(kernel?.code ?? "").digest("hex"),
-      ).toBe("873d22ee1d8cbd450a38af2be2ce0329128de48c430f3c5aa56dbe4480148a61");
+      ).toBe("f368ee28eb3c34e4a18a4ebf9e41ca599bb2e9ae054794ea621195b88124cca3");
       expect(kernel?.code).toContain("#[kernel(");
       expect(kernel?.code).not.toMatch(/macro_rules!\s+[A-Za-z_]/u);
       expect(kernel?.code).not.toMatch(/\bunsafe\b/u);
@@ -218,10 +218,10 @@ describe("curriculum integrity", () => {
     );
   });
 
-  it("separates Rust UI enforcement, structured KIR, and source diagnostics", () => {
+  it("keeps compiler diagnostics in the GEMM proof lesson", () => {
     const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
     expect(lesson?.objectives).toContain(
-      "Distinguish safe-Rust kernel source from sealed unsafe compiler and runtime implementation boundaries.",
+      "Recognize the bounds, initialization, synchronization, and ownership guarantees expressed by the kernel types.",
     );
 
     const contract = JSON.stringify(
@@ -497,7 +497,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_v1/src/kernel.rs",
-      sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+      sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       sourceSha256:
         "0b0d5e2964d4627bc7ef3dac882f86a9b3c49ab715245bacc3fc92f28f0d08b0",
       explanatory: false,
@@ -606,7 +606,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/wave64_collectives_v1/src/kernel.rs",
         sha256:
           "c649e38712232ed45c1d2f6f8a2a49405f12a5e308907b3265c2415f227803a2",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
       {
         lessonId: "lds-barriers-atomics",
@@ -615,7 +615,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/workgroup_sync_v1/src/kernel.rs",
         sha256:
           "1a28ca6d97d180c347be41ce65377d67e44773c539aa73610808585aedf125bf",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
       {
         lessonId: "flash-attention",
@@ -624,7 +624,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/flash_attention_v1/src/kernel.rs",
         sha256:
           "6dbaa2af88fd5edcdf0485f3da47b1319ce299422a77b99af56f9a3e77c2a421",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
       {
         lessonId: "moe-routing",
@@ -633,7 +633,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/moe_top2_v1/src/kernel.rs",
         sha256:
           "0260f144150e6fee7d9bd6a3d919e99ded0e43666509770f6e6186f5100fee25",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
       {
         lessonId: "moe-expert-compute",
@@ -641,8 +641,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/moe_expert_v1/src/kernel.rs",
         bundledPath: "examples/moe_expert_v1/src/kernel.rs",
         sha256:
-          "5ae3cfe59494347838fe4160c99c5b67968642d26550c01e27d2ee1247511aec",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+          "aa03fca2cea5bf590bf9e73f20f4945bac6cc93c0f85dcb5be8906d618dec69b",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
     ] as const;
 
@@ -736,7 +736,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/flash_attention_v1/verus/flash_attention_v1.rs",
         sha256:
           "e98b9fffc6e4c2fbcc5bca0ca706ac6575f93814afecf67be73de0f2d087d467",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
       {
         lessonId: "moe-routing",
@@ -744,7 +744,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
         sha256:
           "aee6c405f3e95be25bf0575a419ff6591153fce7ff9e950f7d3e5889188e354c",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
       {
         lessonId: "moe-expert-compute",
@@ -753,7 +753,7 @@ describe("curriculum integrity", () => {
           "examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
         sha256:
           "617e6741c5f1415a8e792e5e36e3526c04ba18903438e3af178bb107766383d1",
-        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
     ] as const;
     for (const profile of proofProfiles) {
@@ -1335,7 +1335,7 @@ describe("curriculum integrity", () => {
     const changed = structuredClone(curriculum);
     const section = changed
       .flatMap((module) => module.lessons)
-      .find((lesson) => lesson.id === "gemm-tiling")
+      .find((lesson) => lesson.id === "gemm-proof-plan")
       ?.sections.find((candidate) => candidate.kind === "staged-evidence");
     const mutable = section as unknown as Record<string, unknown>;
     mutable.kind = "narrative";
@@ -1528,7 +1528,7 @@ describe("curriculum integrity", () => {
     const changed = structuredClone(curriculum);
     const section = changed
       .flatMap((module) => module.lessons)
-      .find((lesson) => lesson.id === "gemm-tiling")
+      .find((lesson) => lesson.id === "gemm-proof-plan")
       ?.sections.find((candidate) => candidate.kind === "staged-evidence");
     const mutable = section as unknown as Record<string, unknown>;
     mutable.evidenceIds = ["unknown-staged-record"];
@@ -1666,15 +1666,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-21",
+      reviewedOn: "2026-08-22",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
-      eventualPublicTree: "f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc",
+      eventualPublicCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+      eventualPublicTree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
-        requiredTree: "f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc",
+        requiredCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+        requiredTree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2300,7 +2300,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+      "ae312f421872e1eb9885217888548d74f79c3357",
     );
 
     const lesson = curriculum
@@ -2951,25 +2951,27 @@ describe("implementation progress integrity", () => {
     );
     expect(mapping).toContain("Ordinary Rust source for the fixed Slice 1 LDS tiled GEMM");
     expect(mapping).toContain("sourceCommit\":\"c4fcb4d980cf979c0527dfa135a7b9f4fe72a811");
-    expect(mapping).toContain("not generalized GEMM or a complete production authority chain");
-    expect(mapping).toContain("authenticates the exact attributed source");
-    expect(mapping).toContain("stops before descriptor construction and Worker V2");
-    expect(mapping).toContain("six cases checked 1,536 outputs");
-    expect(mapping).toContain("not Rust-source correspondence");
-    expect(mapping).toContain("196 verified and 0 errors");
-    expect(mapping).toContain("not an attributed multi-phase GPU kernel");
-    expect(mapping).toContain("real two-trip SSA loop");
-    expect(mapping).toContain("macro-owned for general typed #[kernel]");
-    expect(mapping).toContain("fixed-K16 grid/stride source model");
-    expect(mapping).toContain("101 verified and 0 errors");
+    expect(mapping).not.toContain("General GEMM mutation diagnostics");
+    expect(mapping).not.toContain("staged-evidence");
+    expect(proofPlan).toContain("Complete-family flags remain false");
+    expect(proofPlan).toContain("authenticates the exact attributed source");
+    expect(proofPlan).toContain("stops before descriptor construction and Worker V2");
+    expect(proofPlan).toContain("six cases checked 1,536 outputs");
+    expect(proofPlan).toContain("not Rust-source correspondence");
+    expect(proofPlan).toContain("196 verified and 0 errors");
+    expect(proofPlan).toContain("not an attributed multi-phase GPU kernel");
+    expect(proofPlan).toContain("real two-trip SSA loop");
+    expect(proofPlan).toContain("macro-owned for general typed #[kernel]");
+    expect(proofPlan).toContain("fixed-K16 grid/stride source model");
+    expect(proofPlan).toContain("101 verified and 0 errors");
     expect(renderedStaged).toContain("12 expected negative rejections");
-    expect(mapping).toContain("M=64, N=48, K=16");
-    expect(mapping).toContain("gfx942:xnack- COV6");
-    expect(mapping).toContain("passed 1/1 in 14.36 seconds");
-    expect(mapping).toContain("one exact bounded Slice 1 protected hardware observation");
-    expect(mapping).toContain("Slice 4 at f24063534");
-    expect(mapping).toContain("Commit 35575cc32");
-    expect(mapping).toContain("M=17, N=19, K=18");
+    expect(proofPlan).toContain("M=64, N=48, K=16");
+    expect(proofPlan).toContain("gfx942:xnack- COV6");
+    expect(proofPlan).toContain("passed 1/1 in 14.36 seconds");
+    expect(proofPlan).toContain("one exact bounded Slice 1 protected hardware observation");
+    expect(proofPlan).toContain("Slice 4 at f24063534");
+    expect(proofPlan).toContain("Commit 35575cc32");
+    expect(proofPlan).toContain("M=17, N=19, K=18");
     for (const issue of [
       "#85",
       "#86",
@@ -2986,23 +2988,23 @@ describe("implementation progress integrity", () => {
       "#99",
       "#100",
     ]) {
-      expect(mapping).toContain(issue);
+      expect(proofPlan).toContain(issue);
     }
-    expect(mapping).toContain("fe2o3-kernels #2");
-    expect(mapping).toContain("the sealed authority-free exact-profile registry (#96) are complete");
-    expect(mapping).toContain("96 verified and 0 errors");
-    expect(mapping).toContain("76 debug tests, 76 release tests");
-    expect(mapping).toContain("Production certificate consumption is tracked in #91");
-    expect(mapping).toContain("No production source execution is claimed");
+    expect(proofPlan).toContain("fe2o3-kernels #2");
+    expect(proofPlan).toContain("the sealed authority-free exact-profile registry (#96) are complete");
+    expect(proofPlan).toContain("96 verified and 0 errors");
+    expect(proofPlan).toContain("76 debug tests, 76 release tests");
+    expect(proofPlan).toContain("Production certificate consumption is tracked in #91");
+    expect(proofPlan).toContain("No production source execution is claimed");
     for (const issue of [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 96, 97, 99, 100]) {
-      expect(mapping).toContain(
+      expect(proofPlan).toContain(
         `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,
       );
     }
-    expect(mapping).toContain(
+    expect(proofPlan).toContain(
       "https://github.com/harsh-nod/fe2o3-kernels/issues/2",
     );
-    expect(mapping).not.toContain("#[kernel] WG64 contract integration remain open");
+    expect(proofPlan).not.toContain("#[kernel] WG64 contract integration remain open");
 
     expect(proofPlan).toContain("multi-phase source-to-machine derivation");
     expect(proofPlan).toContain("remain separate from the attributed source");

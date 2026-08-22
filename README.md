@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`17e4fcb6f14b976efc2fce30b4c45ab47525a3d5`, tree
-`f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc`. Deployment requires
+`ae312f421872e1eb9885217888548d74f79c3357`, tree
+`2345f0b14dc92dcfce9d829433860f06f8f7b128`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -70,8 +70,8 @@ canaries, unchanged inputs, exact oracles, bounded completion, and terminal
 unload. This is a bounded observation, not compiler-origin or
 source/compiler/machine refinement authority. The Kernel tabs are now byte-pinned to the safe ordinary Rust source at current
 dual-repository main, commit
-`17e4fcb6f14b976efc2fce30b4c45ab47525a3d5`, tree
-`f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc`. Historical Phase A, compiler,
+`ae312f421872e1eb9885217888548d74f79c3357`, tree
+`2345f0b14dc92dcfce9d829433860f06f8f7b128`. Historical Phase A, compiler,
 finalizer, runtime, and GPU evidence remains pinned to its original commits and
 does not transfer authority to the repinned source. A later exact Wave64 increment now reaches deterministic
 in-process upstream LLVM target emission and LLD library linking with exact
@@ -593,7 +593,7 @@ FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b
 The `gemm-tiling` and `gemm-proof-plan` lessons expose the bounded Slice 1
 algorithm alongside its evidence boundary. Their Kernel tabs reproduce the current safe ordinary
 `#[kernel(typed, ...)]` file from `examples/tiled_gemm_v1/src/kernel.rs` at
-`17e4fcb6f14b976efc2fce30b4c45ab47525a3d5` byte for byte. The safe source
+`ae312f421872e1eb9885217888548d74f79c3357` byte for byte. The safe source
 contains no unsafe block. The historical protected result belongs to
 `c4fcb4d980cf979c0527dfa135a7b9f4fe72a811` and does not transfer to this source. Their Verus tabs
 link the exact bounded source/model proof at `5a45239ae` and show its pinned
@@ -605,7 +605,7 @@ and measured route, not tutorial pseudocode. Each promoted Kernel, Verus, and
 Host tab also names the canonical evidence record that covers its exact source
 path and commit; curriculum validation rejects missing or mismatched links.
 
-The `gemm-tiling` lesson also records the implementation contract from
+The `gemm-proof-plan` lesson records the implementation contract from
 [fe2o3 #138](https://github.com/harsh-nod/fe2o3/issues/138). The target is one
 safe-Rust user kernel for dynamic dimensions and strides, multiple 16-wide K
 phases, M/N/K tails with zero-filled LDS slots, unconditional publish/reuse

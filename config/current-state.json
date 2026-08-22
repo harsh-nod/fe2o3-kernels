@@ -1,5 +1,5 @@
 {
-  "reviewedOn": "2026-08-21",
+  "reviewedOn": "2026-08-22",
   "plironCommit": "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
   "issues": [
     {"number": 109, "state": "closed", "label": "Shared BF16/F32 numerical contract"},

@@ -90,14 +90,14 @@ export const narrativeOrderByLesson = deepFreeze({
     "lds-barriers-atomics/atomics"
   ],
   "gemm-tiling": [
-    "gemm-tiling/public-layout-proof",
-    "gemm-tiling/general-contract",
-    "gemm-tiling/mutation-diagnostics",
     "gemm-tiling/mapping",
     "gemm-tiling/loop-proof"
   ],
   "gemm-proof-plan": [
     "gemm-proof-plan/proof-ledger",
+    "gemm-tiling/general-contract",
+    "gemm-tiling/mutation-diagnostics",
+    "gemm-tiling/public-layout-proof",
     "gemm-proof-plan/evidence"
   ],
   "softmax-invariant": [
@@ -143,14 +143,14 @@ export const narrativeOrderByLesson = deepFreeze({
 
 export const stagedEvidenceLessonIds = deepFreeze([
   "evidence-archive",
-  "gemm-tiling",
+  "gemm-proof-plan",
 ] as const);
 
 export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
   "read-the-evidence/differentiator": "7d4f9897c50993ecbe6e8d9f94162e6cf649f669f1f555627f9d2df5cb0147d7",
   "read-the-evidence/compiler-refactor": "b9b2de157842c4626cf236431e29e677d316ec7156189d507330891db4d409df",
-  "read-the-evidence/scalar-gemm-checkpoint": "d3a5559284cbc6065af5d6a2f77aa2d8a3fc6453e4dba16d85b4163b807017e7",
+  "read-the-evidence/scalar-gemm-checkpoint": "2365d9b94fc9c8252dba3d6075b07480dc7b5081db6bd1190ecc1ed0cc9f06c7",
   "read-the-evidence/moe-bounded-evidence": "dbd3365e78d1b08d60b330328166e39fe46b1d7174d6ec0ca46811542757e361",
   "gfx942-setup/toolchain": "bde4a23bc51376d828c8b910ab8048c988c7f838736f1d309bea0294fde84ef3",
   "gfx942-setup/sequence": "00a0689fb93a27622076f9bd21c5fb8c0b78c57d88d79dc8db0bfb86596315da",
@@ -165,9 +165,9 @@ export const narrativeFingerprints = deepFreeze({
   "compiler-checks/catalog": "1928b156eb86595f1eff453b38c4015042dda083c4a8c78c24770a4fefdbb8ae",
   "compiler-checks/production-path": "5e440854810d095cff825de887bfd5189363295bbbb62d73359165739279731e",
   "reductions-scans/scope": "5a38b3d1c24f74c6ffe39078b8e8b26d2fc1d12547e452fa420355bc5dd25152",
-  "reductions-scans/scan": "08a43ce06783e79a9a5ca53d807f42decdb83d2d187dcd31c87cc54c6d0655da",
+  "reductions-scans/scan": "2694b624faa9d51616967d5e54166dede88ebc26408b5fff1dd570387228536b",
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
-  "lds-barriers-atomics/atomics": "53837e0e15e7bbbe78e51e29dcebeed47ca6a397c2f07c5df7bb4c1e7b9e6e99",
+  "lds-barriers-atomics/atomics": "d684bb507dfe7c741681705c4f5de5d145b49b0ec3dea7a7ac3e30a16b5cb19a",
   "gemm-tiling/public-layout-proof": "1f78d8b76a7323822d77b025a919a44fb29e64dfcd1e19c5b0d1b0776cb8bc39",
   "gemm-tiling/general-contract": "880164884acd1d7529c65addb6ff22e246941f6ac7b9239eb2e50b89c8373374",
   "gemm-tiling/mutation-diagnostics": "9754e26dc2e16ab69551aa6bf5f1035c7742e0d0cc3672f3d94608d6348bc4b3",

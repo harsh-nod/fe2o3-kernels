@@ -262,12 +262,16 @@ const vecadd: Lesson = {
     },
     {
       kind: "gpu-observed",
-      label: "GPU smoke coverage",
+      label: "MI300X correctness and HIP comparison",
       detail:
-        "The exact vecadd profile is included in the explicit hardware smoke campaign and compared with CPU results.",
-      reference: pinnedReference(
-        [hardwareCommand],
-        ["scripts/ci-local.sh", "examples/regression-manifest-v1.txt"],
+        "The production Fe2O3 kernel validated all 16,777,216 outputs. Its 42.52 us kernel average was at parity with the equivalent HIP kernel at 45.42 us; the current synchronous safe host path measured 67.38 us versus HIP at 47.34 us.",
+      reference: currentImplementationReference(
+        ["benchmarks/vecadd_hip/profile-mi300x.sh"],
+        [
+          "benchmarks/vecadd_hip/README.md",
+          "benchmarks/vecadd_hip/vecadd.hip",
+          "benchmarks/vecadd_hip/profile-mi300x.sh",
+        ],
         { target: FE2O3_PIN.target },
       ),
     },
@@ -295,8 +299,17 @@ const vecadd: Lesson = {
     {
       language: "text",
       code: resultText(
-        "runnable-now",
-        "vecadd passed for 1024 elements\nEach result is checked against a_host[i] + b_host[i] with tolerance 1e-5.",
+        "gpu-observed",
+        `MI300X, 16,777,216 f32 elements
+
+Correctness: every output matched the CPU reference.
+Kernel only (105 launches): Fe2O3 42.52 us, HIP 45.42 us.
+Host event interval (30 x 100 launches): Fe2O3 67.38 us, HIP 47.34 us.
+
+Interpretation: GPU execution is at parity within run-to-run noise. The current
+safe Fe2O3 launch waits for completion before releasing borrowed buffers, while
+HIP queues the launch batch asynchronously. The 1.42x host-path gap is dispatch
+policy overhead, not evidence that the generated kernel is slower.`,
       ),
     },
   ),

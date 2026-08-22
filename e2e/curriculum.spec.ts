@@ -130,7 +130,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/flash_attention_v1/verus/flash_attention_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/flash_attention_v1/verus/flash_attention_v1.rs",
   );
   await page.getByRole("button", { name: "Mark complete" }).click();
   await expect(page.getByRole("button", { name: "Completed" })).toBeVisible();
@@ -139,14 +139,14 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
-test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
+test("tiled GEMM keeps the tutorial concise and preserves exact evidence", async ({
   page,
 }, testInfo) => {
   await page.goto("./#/lesson/gemm-tiling");
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Tiled GEMM: map ownership first",
+      name: "Tiled GEMM in Fe2O3",
     }),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -155,7 +155,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/tiled_gemm_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/tiled_gemm_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus proof" }).click();
@@ -195,6 +195,26 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(page.getByRole("tabpanel")).toContainText(
     "not generalized GEMM",
   );
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Freeze the coordinate map",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Decompose the K loop",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Issue #138: the general safe-Rust contract",
+    }),
+  ).toHaveCount(0);
+
+  await page.goto("./#/lesson/gemm-proof-plan");
   await expect(
     page.getByRole("heading", {
       level: 2,
@@ -277,7 +297,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(
     page.getByText("Compile-time kernel diagnostics"),
   ).toBeVisible();
-  await page.goto("./#/lesson/gemm-tiling");
+  await page.goto("./#/lesson/gemm-proof-plan");
   await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "unguarded_a_tail_load" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "missing_publish_barrier" })).toBeVisible();
@@ -301,8 +321,12 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(page.getByText("Verus runtime closure", { exact: true })).toBeVisible();
   await expect(page.getByText("Protected hardware", { exact: true })).toBeVisible();
   await expect(page.getByText(/collected-general-gemm-v1 selector exists/u).first()).toBeVisible();
-  await expect(page.getByText(/before any positive receipt, frontend correspondence/u).first()).toBeVisible();
-  await expect(page.getByText(/independent second downstream blocker/u).first()).toBeVisible();
+  await expect(
+    page.getByText(/before receipt, correspondence, configuration, and proof/u).first(),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/downstream private final join remains unreachable/u).first(),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: /#138 General tiled GEMM/ }),
   ).toHaveAttribute(
@@ -341,7 +365,7 @@ test("row softmax separates real source from pending and GPU evidence", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/row_softmax_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/row_softmax_v1/src/kernel.rs",
   );
   await expect(page.getByText(/complete syn AST structural admission/u)).toBeVisible();
 
@@ -384,7 +408,7 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/wave64_collectives_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/wave64_collectives_v1/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -405,13 +429,13 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/workgroup_sync_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/workgroup_sync_v1/src/kernel.rs",
   );
   await expect(
     page.getByRole("link", { name: "Exact separate scoped_atomic.rs source" }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/workgroup_sync_v1/src/scoped_atomic.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/workgroup_sync_v1/src/scoped_atomic.rs",
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -440,7 +464,7 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/moe_expert_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/moe_expert_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
@@ -451,7 +475,7 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -543,7 +567,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 17e4fcb6f1",
+      name: "Compiler main at ae312f4218",
     }),
   ).toBeVisible();
   await expect(

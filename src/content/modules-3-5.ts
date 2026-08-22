@@ -430,31 +430,23 @@ const gemmMapping: Lesson = {
   id: "gemm-tiling",
   module: 4,
   order: 0,
-  title: "Tiled GEMM: map ownership first",
+  title: "Tiled GEMM in Fe2O3",
   summary:
-    "Design a workgroup tile by fixing global output ownership, cooperative loads, and boundary predicates before optimizing math.",
-  duration: "70 min",
+    "Build one 16x16 BF16 GEMM tile with safe Rust, cooperative LDS staging, and disjoint output ownership.",
+  duration: "35 min",
   prerequisites: ["LDS and barriers", "Matrix multiplication"],
   objectives: [
-    "Map each workgroup to one C tile and each lane to disjoint output fragments.",
-    "Prove cooperative A/B loads stay in bounds at edge tiles.",
-    "Distinguish safe-Rust kernel source from sealed unsafe compiler and runtime implementation boundaries.",
-    "Classify invalid kernels by the fe2o3 property that must reject them before artifact emission.",
-    "Separate one exact bounded protected Slice 1 run from compiler-origin, proof, refinement, and generalized-GEMM claims.",
+    "Map one workgroup to a C tile and each lane to four disjoint outputs.",
+    "Stage A and B through typed LDS states before invoking MFMA.",
+    "Recognize the bounds, initialization, synchronization, and ownership guarantees expressed by the kernel types.",
   ],
   claims: [
     sourceMilestoneClaim("tiled-gemm-safe-source-v1"),
     {
-      kind: "design-only",
-      label: "Full GEMM roadmap",
-      detail:
-        "fe2o3 now authenticates the fixed attributed LDS Slice 1 source through canonical V5 Kernel IR into an exact compiler-owned descriptor and single-use Worker V2 handoff, admits that handoff into a sealed authority-free exact-profile registry, finalizes it through direct upstream LLVM target-machine and LLD library APIs, prepares exact borrowed A/B/C views with a generated inert host adapter, and consumes those values through a private one-shot Joined -> Loaded -> Completed -> Unloaded lifecycle with exact context, resource, ABI, completion, cancellation, and terminal-unload checks. One public protected route passed on mi300x gfx942 over all 256 output bits with unchanged A/B values and A/B/C guard canaries. The exact bounded Slice 1 source and run are functional. Issue #138 separately provides 10 safe companion UI failures, structured-Kernel-IR rejection of all 15 mutations, and an exact safe Rust mutation-oracle corpus. Individual managed MI300X builds authenticate all 15 full-baseline mutations through optimized MIR and reject each at compiler preflight with its exact property, stage, diagnostic code, root and span chain, and zero artifacts. Rust UI errors are not fe2o3 proof diagnostics, and mutation-oracle source-to-diagnostic evidence is not positive source-to-IR refinement. The exact collected-general-gemm-v1 selector exists, but canonical positive structural analysis always fails closed because no closed verifier yet covers the safe-code root and its reachable helper MIR. It stops before any positive receipt, frontend correspondence, configuration admission, proof execution, Worker V2 handoff, private final pair join, durable publication, or protected launch. The authenticated proof runtime closure remains an independent second downstream blocker, but the route does not reach it. Complete-family SOURCE_TO_IR, LOWERING, and PROTECTED_EXECUTION remain false. Slice 1 does not authenticate compiler origin, consume Verus certificates, prove compiler refinement or general illegal-access/race freedom, generalize GEMM, or cover protected Slice 3/4, so it is not generalized GEMM or a complete production authority chain.",
-    },
-    {
       kind: "compiler-hsaco-observed",
-      label: "Reusable MFMA/LDS mechanics",
+      label: "MFMA and LDS lowering",
       detail:
-        "A narrow gfx942 BF16 16x16x16 MFMA and XOR4 LDS tile/stream contract exists in the device, Kernel IR, target, and lowering layers.",
+        "The compiler lowers this fixed gfx942 tile shape to XOR4 LDS operations and one BF16 16x16x16 MFMA profile.",
       reference: pinnedReference(
         [
           "cargo +nightly-2026-04-03 test --locked -p fe2o3-device -p fe2o3-kernel-ir -p dialect-amdgcn",
@@ -469,13 +461,6 @@ const gemmMapping: Lesson = {
     },
   ],
   sections: [
-    narrativeSection("gemm-tiling/public-layout-proof"),
-    {
-      kind: "staged-evidence",
-      evidenceIds: [...stagedEvidenceOrder],
-    },
-    narrativeSection("gemm-tiling/general-contract"),
-    narrativeSection("gemm-tiling/mutation-diagnostics"),
     narrativeSection("gemm-tiling/mapping"),
     narrativeSection("gemm-tiling/loop-proof"),
   ],
@@ -495,20 +480,8 @@ const gemmMapping: Lesson = {
       hint: "Factor the map into a unique lane fragment and unique element within that fragment.",
       acceptance: "Equal output coordinates imply equal workgroup, lane, and fragment element identities.",
     },
-    {
-      prompt: "Explain why a companion UI failure and an authenticated mutation-oracle failure establish different facts.",
-      hint: "Compare local typestate enforcement with one exact full-baseline source mutation reaching compiler preflight.",
-      acceptance: "The rustc UI error carries no fe2o3 proof diagnostic; the authenticated mutation-oracle build reports its exact property, stage, and code with no artifact, but grants no positive refinement or execution authority.",
-    },
   ],
-  glossary: [
-    "GEMM",
-    "tile",
-    "MFMA",
-    "accumulator invariant",
-    "edge predicate",
-    "proof-required build",
-  ],
+  glossary: ["GEMM", "tile", "LDS", "MFMA", "accumulator invariant"],
 };
 
 const gemmProof: Lesson = {
@@ -536,6 +509,13 @@ const gemmProof: Lesson = {
   ],
   sections: [
     narrativeSection("gemm-proof-plan/proof-ledger"),
+    narrativeSection("gemm-tiling/general-contract"),
+    narrativeSection("gemm-tiling/mutation-diagnostics"),
+    narrativeSection("gemm-tiling/public-layout-proof"),
+    {
+      kind: "staged-evidence",
+      evidenceIds: [...stagedEvidenceOrder],
+    },
     narrativeSection("gemm-proof-plan/evidence"),
   ],
   tabs: completeTabs(

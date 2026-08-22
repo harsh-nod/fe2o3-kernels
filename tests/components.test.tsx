@@ -166,7 +166,7 @@ describe("lesson section rendering policy", () => {
       view.unmount();
     }
 
-    const lesson = lessons.find((candidate) => candidate.id === "gemm-tiling")!;
+    const lesson = lessons.find((candidate) => candidate.id === "gemm-proof-plan")!;
     const sections = structuredClone(lesson.sections) as unknown as Array<
       Record<string, unknown>
     >;
@@ -188,7 +188,7 @@ describe("lesson section rendering policy", () => {
   it("rejects no-hash hardware authority reclassified as narrative", () => {
     const unsupportedAuthority =
       "The hardware harness establishes machine execution authority.";
-    const lesson = lessons.find((candidate) => candidate.id === "gemm-tiling")!;
+    const lesson = lessons.find((candidate) => candidate.id === "gemm-proof-plan")!;
     const sections = structuredClone(lesson.sections) as unknown as Array<
       Record<string, unknown>
     >;

@@ -1,4 +1,4 @@
-// Exact generated typed launch pattern from fe2o3 at acb3d275.
+// Current generated typed launch path; benchmark setup and validation omitted.
 let context = GpuContext::new(0)?;
 let stream = context.default_stream();
 let a_dev = DeviceBuffer::from_host(&stream, &a_host)?;
