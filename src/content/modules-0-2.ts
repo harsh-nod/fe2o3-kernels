@@ -433,7 +433,7 @@ const compilerChecks: Lesson = {
   order: 2,
   title: "Compiler checks: reject invalid kernels",
   summary:
-    "See safe Rust types and workload-neutral PLIRON verifier passes reject invalid kernels before lowering or artifact emission.",
+    "See authenticated safe Rust capabilities and workload-neutral verifier passes accept only the supported proof subset before lowering.",
   duration: "35 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
@@ -441,6 +441,7 @@ const compilerChecks: Lesson = {
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
     "Locate structural, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
+    "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
   ],
   claims: [
     {
@@ -497,6 +498,17 @@ const compilerChecks: Lesson = {
 
 Shared: bounded sparse affine/index dataflow
 Cross-cutting: bounded compiler resources
+
+Authenticated safe ownership mappings:
+- one-layer Shifted<Index1D, N>: supported
+- constant-leader GridExclusive: supported
+- Blocked<Index1D, 1, E>: supported
+- nested Shifted: Rejected
+- dynamic GridExclusive or Blocked with L > 1: Incomplete
+
+Semantic AtomicAccess preserves exact kind, ordering, and scope.
+Ordinary Rust core atomic operation terminals are explicitly unsupported.
+Rust Ordering is never used to invent a GPU scope.
 
 Rejected: the analysis proves a violation.
 Incomplete: the analysis cannot discharge an obligation within the supported model.

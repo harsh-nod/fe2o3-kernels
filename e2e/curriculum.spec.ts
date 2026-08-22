@@ -231,6 +231,14 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
     page.getByText("Generic does not mean automatically provable"),
   ).toBeVisible();
   await expect(
+    page.getByText("Supported safe ownership mappings", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("cell", { name: "Shifted<Index1D, N>", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "Blocked<Index1D, L, E> where L > 1", exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Ordinary Rust atomic terminals are explicitly unsupported"),
+  ).toBeVisible();
+  await expect(
     page.getByText("Complete generic PLIRON diagnostic code catalog"),
   ).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();

@@ -643,10 +643,12 @@ must-initialization/publication by epoch, and declared semantic refinement.
 Dialect and structural verification are prerequisites. Bounded sparse affine
 index dataflow feeds bounds and ownership, and every pass has explicit resource
 ceilings that fail closed as Incomplete. Static ranked Rust accesses and checked
-dynamic accesses reach that pipeline end to end. Source projection for other
-atomic, race, barrier, workgroup-memory, and semantic forms remains fail-closed;
-the corresponding site cards are pass-level PLIRON examples, not completed Rust
-source-to-machine claims.
+dynamic accesses reach that pipeline end to end. The authenticated ownership
+subset also includes one-layer `Shifted<Index1D, N>`, constant-leader
+`GridExclusive`, and `Blocked<Index1D, 1, E>` with exact mapping parameters.
+Nested `Shifted` is rejected; dynamic `GridExclusive` and blocked mappings with
+more than one lane are Incomplete. Pass-level diagnostic cards remain PLIRON
+examples rather than source-to-machine claims.
 
 Ordinary `#[kernel]` source is safe Rust. Rust enforces borrowing, moves,
 lifetimes, and local typestate inside one invocation. Compiler-issued
@@ -654,9 +656,14 @@ lifetimes, and local typestate inside one invocation. Compiler-issued
 `DisjointBlock`, wave/collective/LDS/matrix capabilities, and typed global
 atomic views carry GPU facts that span invocations. Unsafe functions, blocks,
 and inline assembly are rejected from ordinary roots; only the explicitly
-separate `unsafe_asm` provider/test profile is a low-level escape. Atomic
-target-capability authentication, typed-view diagnostic authentication, and
-coherent system-allocation provenance remain incomplete integration work.
+separate `unsafe_asm` provider/test profile is a low-level escape. Recognized
+device terminals require exact diagnostic items, canonical definition paths,
+reviewed provider identity, compiled-source verification, and pinned source
+digests. The four typed `as_atomic()` terminals are authenticated, but ordinary
+Rust core atomic operations remain explicitly unsupported. Semantic atomic IR
+retains exact kind, ordering, and scope; the compiler never derives GPU scope
+from Rust `Ordering`. Exact target capability and coherent system-allocation
+provenance remain required downstream facts.
 
 This is one exact bounded Slice 1 protected hardware observation. It does not
 authenticate compiler origin, consume a Verus certificate, establish

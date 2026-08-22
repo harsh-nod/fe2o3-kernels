@@ -293,6 +293,26 @@ describe("curriculum integrity", () => {
     ]) {
       expect(failures).toContain(capability);
     }
+    expect(failures).toContain("compiled SourceFileHash against the reviewed source root");
+    expect(failures).toContain("A crate name or same-named replacement is not sufficient");
+    expect(failures).toContain("Supported safe ownership mappings");
+
+    const ownershipTable = semanticFailures.blocks.find(
+      (block) => block.type === "table" && block.headers[0] === "Safe ownership form",
+    );
+    expect(ownershipTable?.type).toBe("table");
+    if (ownershipTable?.type !== "table") return;
+    expect(ownershipTable.rows.map(([mapping, state]) => [mapping, state])).toEqual([
+      ["thread::index_1d() with DisjointSlice::get_mut", "Supported"],
+      ["Shifted<Index1D, N>", "Supported for one shift layer"],
+      ["GridExclusive with a constant leader index", "Supported"],
+      ["Blocked<Index1D, 1, E> with DisjointBlock", "Supported for nonzero E and a constant component"],
+      ["Blocked<Index1D, L, E> where L > 1", "Incomplete"],
+      ["Malformed or substituted ownership mapping", "Rejected"],
+    ]);
+    expect(JSON.stringify(ownershipTable)).toContain("Nested Shifted<Shifted<...>> is rejected");
+    expect(JSON.stringify(ownershipTable)).toContain("dynamic or unresolved leader index is Incomplete");
+    expect(JSON.stringify(ownershipTable)).toContain("Wrong marker identity");
     expect(failures).toContain(
       "fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory",
     );
@@ -423,7 +443,7 @@ describe("curriculum integrity", () => {
     expect(failureGallery.intro).toContain("bounds example is exercised end to end");
     expect(failureGallery.intro).toContain("static index 64 into extent 64");
     expect(failureGallery.intro).toContain("parsed textual PLIRON lit fixtures");
-    expect(failureGallery.intro).toContain("still fails closed");
+    expect(failureGallery.intro).toContain("explicitly unsupported and fail closed");
     expect(
       failureGallery.examples.map(({ id, property, stage, code }) => ({
         id,
@@ -453,7 +473,9 @@ describe("curriculum integrity", () => {
     expect(failureGallery.examples[1]?.diagnostic).toContain("invalid Release ordering");
     expect(failureGallery.examples[2]?.diagnostic).toContain("invocation [0]");
     expect(failureGallery.examples[2]?.diagnostic).toContain("invocation [1]");
-    expect(failures).toContain("Atomic target and coherence authentication are still incomplete");
+    expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
+    expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
+    expect(failures).toContain("projection preserves the exact operation kind, ordering, and scope");
     expect(failures).toContain("FE2O3-ATOMIC-002 Incomplete");
   });
 

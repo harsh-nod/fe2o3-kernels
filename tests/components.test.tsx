@@ -53,6 +53,8 @@ describe("search index", () => {
       "Cross-invocation write race",
       "dynamic shapes",
       "DisjointIndex",
+      "Blocked<Index1D, 1, E>",
+      "ordinary Rust atomic terminals",
     ]) {
       const results = searchCatalog(query, lessons, glossary);
       expect(results.some((result) =>
@@ -100,6 +102,10 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
     expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
     expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
+    expect(screen.getByText("Supported safe ownership mappings")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Shifted<Index1D, N>" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Blocked<Index1D, L, E> where L > 1" })).toBeInTheDocument();
+    expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
     expect(screen.getByText("Complete generic PLIRON diagnostic code catalog")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-002" })).toBeInTheDocument();

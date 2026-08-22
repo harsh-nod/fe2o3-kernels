@@ -439,7 +439,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Ordinary kernels are safe Rust",
-        "text": "An ordinary #[kernel] function has a safe signature and body. Unsafe functions, unsafe blocks, and inline assembly are rejected at the source boundary, including reachable device helpers. The explicitly separate unsafe_asm profile is the low-level provider and test escape hatch; selecting it does not weaken, discharge, or bypass any verifier obligation for an ordinary kernel. Trusted device APIs may contain narrowly reviewed unsafe implementation code behind safe surfaces. The compiler may treat an external device call as trusted only after exact diagnostic-item and provider authentication; the new typed atomic view identities remain pending below."
+        "text": "An ordinary #[kernel] function has a safe signature and body. Unsafe functions, unsafe blocks, and inline assembly are rejected at the source boundary, including reachable device helpers. The explicitly separate unsafe_asm profile is the low-level provider and test escape hatch; selecting it does not weaken, discharge, or bypass any verifier obligation for an ordinary kernel. Trusted device APIs may contain narrowly reviewed unsafe implementation code behind safe surfaces. The compiler recognizes a capability terminal only after matching its exact diagnostic item and canonical DefPath, authenticating its reviewed provider identity, verifying rustc's compiled SourceFileHash against the reviewed source root, and matching the pinned source digest. A crate name or same-named replacement is not sufficient."
       },
       {
         "type": "callout",
@@ -456,17 +456,39 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           ["Rust within one invocation", "Borrows, moves, lifetimes, visibility, and local typestate transitions.", "&mut T, non-Copy guards, safe methods"],
-          ["Compiler-issued index ownership", "A non-forgeable invocation identity and its permitted shifted, grid-exclusive, or blocked write partition.", "DisjointIndex, Shifted, GridExclusive, Blocked, DisjointBlock"],
+          ["Compiler-issued index ownership", "A non-forgeable invocation identity and, for the supported mapping subset below, its shifted, grid-exclusive, or blocked write partition.", "DisjointIndex, Shifted, GridExclusive, Blocked, DisjointBlock"],
           ["Compiler-issued execution capabilities", "The current authenticated wave, collective participant set, LDS allocation and epoch, or matrix-instruction context.", "current wave/collective/LDS/matrix capabilities"],
-          ["Typed global atomic view", "A lifetime-bound AtomicU32, AtomicI32, AtomicU64, or AtomicI64 view without exposing a safe non-atomic dereference; every operation still states Ordering.", "DeviceGlobalMutPtr<T>::as_atomic()"],
+          ["Typed global atomic view", "The safe API retains the pointee type and lifetime without exposing a safe non-atomic dereference. Its four compiler terminals are authenticated, but ordinary Rust core atomic operations are not imported yet.", "DeviceGlobalMutPtr<T>::as_atomic()"],
           ["Generic verifier passes", "Bounds, ownership, synchronization, atomic, and semantic facts that no local Rust borrow can establish across GPU invocations.", "ranked PLIRON plus launch and target facts"]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Supported safe ownership mappings",
+        "text": "The production importer preserves each authenticated mapping identity and its const parameters into semantic MIR and ranked PLIRON. Supported safe accessors then enter the same generic bounds and race pipeline as every other ranked memory access. The compiler never silently substitutes a different mapping or treats an unsupported mapping as Clean."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Safe ownership form",
+          "Current production state",
+          "Fail-closed behavior"
+        ],
+        "rows": [
+          ["thread::index_1d() with DisjointSlice::get_mut", "Supported", "The authenticated base invocation index reaches general bounds and race verification."],
+          ["Shifted<Index1D, N>", "Supported for one shift layer", "The exact N is retained. Nested Shifted<Shifted<...>> is rejected during authenticated mapping/type validation because normalization is not implemented."],
+          ["GridExclusive with a constant leader index", "Supported", "A dynamic or unresolved leader index is Incomplete in ranked projection and emits no artifact."],
+          ["Blocked<Index1D, 1, E> with DisjointBlock", "Supported for nonzero E and a constant component", "The compiler retains E, checks arithmetic and slice extent guards, and lowers raw_index * E + component into the generic bounds and race pipeline."],
+          ["Blocked<Index1D, L, E> where L > 1", "Incomplete", "The semantic mapping is retained, but ranked projection stops until bounded quotient/remainder facts are available."],
+          ["Malformed or substituted ownership mapping", "Rejected", "Wrong marker identity, mismatched block/slice parameters, zero dimensions, or overflowing L * E cannot cross the safe-kernel compiler boundary."]
         ]
       },
       {
         "type": "callout",
         "tone": "info",
         "title": "Generic does not mean automatically provable",
-        "text": "Bounds, atomic, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, launch contracts, target facts, and CFG. A kernel outside that analyzable subset is not treated as safe: the compiler reports an Incomplete proof obligation and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent the programmer's intended formula."
+        "text": "Bounds, atomic, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, launch contracts, target facts, and CFG. They do not depend on GEMM structure. A kernel or safe ownership mapping outside that analyzable subset is not treated as safe: the compiler reports Rejected for a concrete invalid contract or Incomplete for an unresolved proof obligation, and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent the programmer's intended formula."
       },
       {
         "type": "paragraph",
@@ -508,7 +530,7 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "compile-failures",
         "heading": "Six representative failures with exact diagnostics",
-        "intro": "Every example enters the same fixed workload-neutral PLIRON verifier sequence and stops before target lowering or artifact emission. The bounds example is exercised end to end from ordinary Rust semantic MIR: a checked dynamic access passes, while the static index 64 into extent 64 produces the diagnostic shown here. Atomic, race, barrier, workgroup-memory, and semantic-refinement examples are parsed textual PLIRON lit fixtures that exercise the mandatory passes directly. Their unsupported Rust source projection still fails closed; the site does not claim those five source forms are connected end to end yet.",
+        "intro": "Every example enters the same fixed workload-neutral PLIRON verifier sequence and stops before target lowering or artifact emission. The bounds example is exercised end to end from ordinary Rust semantic MIR: a checked dynamic access passes, while the static index 64 into extent 64 produces the diagnostic shown here. Supported authenticated ownership accessors also reach the general bounds and race pipeline, as cataloged above. The atomic, race, barrier, workgroup-memory, and semantic-refinement cards below are parsed textual PLIRON lit fixtures that exercise the mandatory passes directly; they are not claims that each illustrated source form is connected end to end. Ordinary Rust atomic operation terminals are explicitly unsupported and fail closed.",
         "examples": [
           {
             "id": "bounds_static_oob",
@@ -530,7 +552,7 @@ const narrativeRegistry = deepFreeze({
             "stage": "generic PLIRON pass 2/6",
             "code": "FE2O3-ATOMIC-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "The atomic pass retains operation kind, ordering, scope, element width, address space, and view provenance as structured attributes. A release-only load is invalid independently of the kernel algorithm, so compilation stops before target selection or emission."
+            "caught": "Semantic atomic IR retains operation kind, ordering, scope, element width, address space, and view provenance as structured attributes. A release-only load is invalid independently of the kernel algorithm, so compilation stops before target selection or emission. This card starts from textual PLIRON; it does not claim ordinary Rust atomic terminal import."
           },
           {
             "id": "race_duplicate_output",
@@ -638,8 +660,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Atomic target and coherence authentication are still incomplete",
-        "text": "The generic atomic legality pass and lifetime-bound typed global atomic views cover the source and target-neutral IR contracts, but production use must also authenticate the exact device width/address-space/scope capability and, for system scope, the coherent allocation and launch context. The pass currently reports FE2O3-ATOMIC-002 Incomplete when those facts are absent. Compiler authentication of the new typed-view diagnostic items and the coherent-allocation join remain integration work, so this lesson does not claim a production system-scope atomic artifact."
+        "title": "Ordinary Rust atomic terminals are explicitly unsupported",
+        "text": "The compiler authenticates and reserves the four DeviceGlobalMutPtr<T>::as_atomic() terminals for u32, i32, u64, and i64, but the ordinary Rust source route is rejected until core Atomic<T> operation terminals are modeled. Rust Ordering does not imply a GPU memory scope, so the compiler does not invent one. For semantic AtomicAccess already present in IR, projection preserves the exact operation kind, ordering, and scope. The generic atomic pass then reports FE2O3-ATOMIC-002 Incomplete when exact target width/address-space/scope capability or, for system scope, authenticated coherent-allocation evidence is absent. No non-clean report grants lowering, artifact, or launch authority."
       }
     ]
   },
@@ -652,6 +674,8 @@ const narrativeRegistry = deepFreeze({
         "items": [
           "rustc preserves supported semantic MIR, source spans, ranked extents, checked branches, and memory effects.",
           "The ordinary-kernel source contract rejects unsafe signatures, unsafe bodies, inline assembly, and reachable unsafe device functions; only the separate unsafe_asm profile admits the low-level escape.",
+          "Every compiler-recognized device capability must match its exact diagnostic item and canonical DefPath, an authenticated reviewed provider identity, the compiled SourceFileHash under the reviewed source root, and the pinned provider source digest.",
+          "Supported safe ownership mappings retain their genuine marker identity and const parameters; malformed, substituted, or unsupported forms stop as Rejected or Incomplete before they can become memory effects.",
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
           "The mandatory workload-neutral passes run in their fixed order and return Clean, Rejected, or Incomplete.",
           "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
@@ -662,7 +686,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "Static ranked bounds and checked dynamic access are connected from ordinary safe Rust through the production PLIRON gate. Atomic legality, race, barrier, workgroup-memory, and semantic-refinement passes are mandatory and generic at PLIRON, while source projection for unsupported Rust forms still fails closed rather than fabricating an analyzable graph. Atomic target capability, typed-view diagnostic authentication, and coherent system-allocation provenance remain incomplete integration boundaries."
+        "text": "Static ranked bounds, checked dynamic access, one-layer Shifted, constant-leader GridExclusive, and Blocked<Index1D, 1, E> ownership are connected from authenticated ordinary safe Rust into the production bounds and race pipeline. Nested Shifted is Rejected; dynamic GridExclusive and Blocked with more than one lane are Incomplete. Atomic legality, barrier convergence, workgroup memory, and semantic refinement remain mandatory generic PLIRON passes. Semantic atomic IR preserves exact ordering and scope, but ordinary Rust core atomic operation terminals are explicitly unsupported; exact target capability and system-coherent allocation provenance remain required downstream facts. Every unsupported source projection fails closed rather than fabricating an analyzable graph."
       }
     ]
   },
