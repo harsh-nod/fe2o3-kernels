@@ -1,6 +1,7 @@
 import { Check, Copy, ExternalLink, Info } from "lucide-react";
 import { useState, type KeyboardEvent } from "react";
 import { sourceUrl, type CodeTab } from "../content/model";
+import { HighlightedCode } from "./HighlightedCode";
 
 export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
   const [active, setActive] = useState(0);
@@ -77,7 +78,7 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
         role="tabpanel"
         aria-labelledby={`code-tab-${active}`}
       >
-        <code>{current.code}</code>
+        <HighlightedCode code={current.code} language={current.language} />
       </pre>
       <span className="sr-only" aria-live="polite">
         {copied ? "Code copied" : ""}

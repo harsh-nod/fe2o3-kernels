@@ -12,6 +12,21 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   ).toBeVisible();
   await expect(page.getByLabel("Read and write region ownership")).toBeVisible();
 
+  const codePanel = page.getByRole("tabpanel");
+  await expect(codePanel.locator("code.language-rust")).toBeVisible();
+  await expect(codePanel.locator(".token.keyword").first()).toBeVisible();
+  const syntaxColors = await codePanel
+    .locator(".token.keyword, .token.function, .token.string")
+    .evaluateAll((tokens) =>
+      tokens.map((token) => getComputedStyle(token).color),
+    );
+  expect(syntaxColors.length).toBeGreaterThan(2);
+  expect(new Set(syntaxColors).size).toBeGreaterThan(1);
+  await codePanel.screenshot({
+    path: testInfo.outputPath("syntax-highlighting.png"),
+    animations: "disabled",
+  });
+
   const isMobile = testInfo.project.name === "mobile";
   if (isMobile) {
     await page.getByRole("button", { name: "Open curriculum" }).click();

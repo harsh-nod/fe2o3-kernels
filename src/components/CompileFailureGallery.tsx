@@ -1,6 +1,7 @@
 import { ArrowRight, Braces, CircleX, FileWarning, ShieldCheck } from "lucide-react";
 import type { CompileFailureExample } from "../content/model";
 import type { DeepReadonly } from "../content/registry";
+import { HighlightedCode } from "./HighlightedCode";
 
 export function CompileFailureGallery({
   heading,
@@ -48,7 +49,9 @@ export function CompileFailureGallery({
             <div className="compile-failure-body">
               <div className="compile-failure-source">
                 <span>Input excerpt</span>
-                <pre><code>{example.source}</code></pre>
+                <pre>
+                  <HighlightedCode code={example.source} language="rust" />
+                </pre>
               </div>
               <div className="compile-failure-verdict">
                 <p className="compile-failure-status">

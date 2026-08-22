@@ -22,6 +22,13 @@
   --red-soft: #fae8ea;
   --code-bg: #121a1d;
   --code-text: #dceae7;
+  --syntax-comment: #8da09f;
+  --syntax-punctuation: #afbfbd;
+  --syntax-keyword: #ff9d9d;
+  --syntax-name: #80caff;
+  --syntax-string: #a9d88e;
+  --syntax-number: #f1bd72;
+  --syntax-annotation: #dda8df;
   --shadow: 0 12px 32px rgb(23 33 38 / 10%);
   --topbar-height: 60px;
   --sidebar-width: 300px;
@@ -1741,6 +1748,75 @@ tr:last-child td {
   font-size: 0.77rem;
   line-height: 1.65;
   white-space: pre;
+}
+
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: var(--syntax-comment);
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: var(--syntax-punctuation);
+}
+
+.token.namespace {
+  opacity: 0.82;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted,
+.token.boolean,
+.token.number {
+  color: var(--syntax-number);
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: var(--syntax-string);
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+  color: var(--code-text);
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: var(--syntax-keyword);
+}
+
+.token.function,
+.token.class-name {
+  color: var(--syntax-name);
+}
+
+.token.regex,
+.token.important,
+.token.variable,
+.token.macro,
+.token.lifetime-annotation {
+  color: var(--syntax-annotation);
+}
+
+.token.important,
+.token.bold {
+  font-weight: 700;
+}
+
+.token.italic {
+  font-style: italic;
 }
 
 .assurance-columns {

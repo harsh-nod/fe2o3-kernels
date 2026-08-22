@@ -19,6 +19,11 @@ describe("code tabs", () => {
     const tabs = lessons.find((lesson) => lesson.id === "typed-vecadd")!.tabs;
     render(<CodeTabs tabs={tabs} />);
 
+    const panel = screen.getByRole("tabpanel");
+    expect(panel.querySelector("code.language-rust")).toBeInTheDocument();
+    expect(panel.querySelector(".token.keyword")).toBeInTheDocument();
+    expect(panel.textContent).toBe(tabs[0].code);
+
     const kernelTab = screen.getByRole("tab", { name: "Kernel" });
     kernelTab.focus();
     await user.keyboard("{ArrowRight}");
@@ -112,6 +117,12 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "FE2O3-ATOMIC-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
+    expect(
+      document.querySelectorAll(".compile-failure-source code.language-rust"),
+    ).toHaveLength(6);
+    expect(
+      document.querySelector(".compile-failure-source .token.keyword"),
+    ).toBeInTheDocument();
   });
 
   it("rejects an unknown section kind without rendering attacker text", () => {
