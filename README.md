@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`2d025da5623d313a1aa2f118552682d9caa93fc4`, tree
-`090531d62857a45d46aa81be87c0d59e4bb200d2`. Deployment requires
+`17e4fcb6f14b976efc2fce30b4c45ab47525a3d5`, tree
+`f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed. This descendant contains
@@ -68,11 +68,12 @@ rejects stale, missing, reordered, and substituted layouts. The normal pinned
 MI300X lifecycle then passed both exact kernels in debug and release with
 canaries, unchanged inputs, exact oracles, bounded completion, and terminal
 unload. This is a bounded observation, not compiler-origin or
-source/compiler/machine refinement authority. The
-lesson snapshots for those source-only milestones remain byte-pinned to commit
-`d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8`, tree
-`cdec8448a300aa71d17565ca50fd4d893932f602`, rather than silently following the
-newer publication gate. A later exact Wave64 increment now reaches deterministic
+source/compiler/machine refinement authority. The Kernel tabs are now byte-pinned to the safe ordinary Rust source at current
+dual-repository main, commit
+`17e4fcb6f14b976efc2fce30b4c45ab47525a3d5`, tree
+`f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc`. Historical Phase A, compiler,
+finalizer, runtime, and GPU evidence remains pinned to its original commits and
+does not transfer authority to the repinned source. A later exact Wave64 increment now reaches deterministic
 in-process upstream LLVM target emission and LLD library linking with exact
 post-link metadata, resource, relocation, dependency, and machine-call checks.
 Its typed one-shot HSA lifecycle also completed one protected gfx942 observation
@@ -589,10 +590,12 @@ and B to remain unchanged, and checked all A/B/C guard canaries. It emitted:
 FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b523164b679ff7af3b4e819ad041713c53c6841399ac7cea95090f09774 unload=df2f77ee798444a9e1fe5e27f219bdf720386eb8603a9a74fccc0df8efb3921c
 ```
 
-The `gemm-tiling` and `gemm-proof-plan` lessons now expose that bounded Slice 1
-increment directly. Their Kernel tabs reproduce the complete ordinary
+The `gemm-tiling` and `gemm-proof-plan` lessons expose the bounded Slice 1
+algorithm alongside its evidence boundary. Their Kernel tabs reproduce the current safe ordinary
 `#[kernel(typed, ...)]` file from `examples/tiled_gemm_v1/src/kernel.rs` at
-`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811` byte for byte. Their Verus tabs
+`17e4fcb6f14b976efc2fce30b4c45ab47525a3d5` byte for byte. The safe source
+contains no unsafe block. The historical protected result belongs to
+`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811` and does not transfer to this source. Their Verus tabs
 link the exact bounded source/model proof at `5a45239ae` and show its pinned
 replay command. Their Host tabs link and show the protected Worker V2 hardware
 test command at `c4fcb4d9`; the Result tabs record the exact marker, worker and

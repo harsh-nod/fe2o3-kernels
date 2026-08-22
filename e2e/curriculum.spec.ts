@@ -115,7 +115,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/5c25611adbd99e807957dfc9a0a6a63e83a9e099/examples/flash_attention_v1/verus/flash_attention_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/flash_attention_v1/verus/flash_attention_v1.rs",
   );
   await page.getByRole("button", { name: "Mark complete" }).click();
   await expect(page.getByRole("button", { name: "Completed" })).toBeVisible();
@@ -140,7 +140,7 @@ test("tiled GEMM shows exact source, proof, host, and bounded result", async ({
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c4fcb4d980cf979c0527dfa135a7b9f4fe72a811/examples/tiled_gemm_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/tiled_gemm_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus proof" }).click();
@@ -326,7 +326,7 @@ test("row softmax separates real source from pending and GPU evidence", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/86c4ca67a673bfec966f79e6c701104db872d8ea/examples/row_softmax_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/row_softmax_v1/src/kernel.rs",
   );
   await expect(page.getByText(/complete syn AST structural admission/u)).toBeVisible();
 
@@ -369,7 +369,7 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8/examples/wave64_collectives_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/wave64_collectives_v1/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -380,7 +380,7 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
     "protected four-mask gfx942 observation",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "historical source-model record itself grants no hardware authority",
+    "do not transfer hardware authority to the current source",
   );
 
   await page.goto("./#/lesson/lds-barriers-atomics");
@@ -390,13 +390,13 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8/examples/workgroup_sync_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/workgroup_sync_v1/src/kernel.rs",
   );
   await expect(
     page.getByRole("link", { name: "Exact separate scoped_atomic.rs source" }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8/examples/workgroup_sync_v1/src/scoped_atomic.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/workgroup_sync_v1/src/scoped_atomic.rs",
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -425,7 +425,7 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/b35c7ceff5b99494fcef2f419a4351dd5fb591cc/examples/moe_expert_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/moe_expert_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
@@ -436,7 +436,7 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ff0c08a5bdca2568178f690c04c0b0c6bfa6febe/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/17e4fcb6f14b976efc2fce30b4c45ab47525a3d5/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -528,7 +528,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 2d025da562",
+      name: "Compiler main at 17e4fcb6f1",
     }),
   ).toBeVisible();
   await expect(

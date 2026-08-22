@@ -1,5 +1,7 @@
+import { currentState } from "./current-state";
 import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_v1/src/kernel.rs?raw";
+import rowSoftmaxKernel from "../../examples/row_softmax_v1/src/kernel.rs?raw";
 import flashAttentionProof from "../../examples/flash_attention_v1/verus/flash_attention_v1.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
@@ -22,6 +24,9 @@ import {
   stagedEvidenceRecord,
 } from "./staged-evidence";
 
+const gemmSafeSource = sourceMilestoneRecord(
+  "tiled-gemm-safe-source-v1",
+);
 const gemmProofEvidence = stagedEvidenceRecord(
   "tiled-lds-source-model-correspondence-v1",
 );
@@ -46,6 +51,8 @@ const gemmProtectedResult = resultText(
   "gpu-observed",
   `Exact bounded Slice 1 protected result
 
+This result belongs to the historical protected source identified below. It does not transfer to the current safe kernel source tab.
+
 Commit: ${protectedSlice1HardwareObservation.commit}
 Tree: ${protectedSlice1HardwareObservation.tree}
 Target: ${protectedSlice1HardwareObservation.target} with HSA_XNACK=0
@@ -61,51 +68,6 @@ Result: 1/1 passed in 14.36 seconds.
 
 Boundary: this is functional exact bounded Slice 1, not generalized GEMM, compiler-origin authentication, production certificate consumption, MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, a general illegal-access or race-freedom proof, or protected Slice 3/4 execution.`,
 );
-
-const rowSoftmaxKernel = `#![allow(non_upper_case_globals)]
-
-use fe2o3_device::{DeviceMath, DisjointSlice, kernel, thread};
-
-const ROW_ELEMENTS: usize = 64;
-
-#[kernel(
-    typed,
-    namespace = "b9c43562d541f2f0489f311058c425d85a7ea6c328a3991bb6da17bdf85f766c",
-    launch(required = [64, 1, 1], max = [64, 1, 1]),
-    control_flow(loop_bounds(64, 64, 64))
-)]
-pub fn row_softmax_v1(input: &[f32], mut output: DisjointSlice<f32>) {
-    let lane = thread::index_1d().get();
-    if lane == 0 {
-        let mut maximum = f32::NEG_INFINITY;
-        let mut index = 0_usize;
-        while index < ROW_ELEMENTS {
-            let value = input[index];
-            if value > maximum {
-                maximum = value;
-            }
-            index += 1;
-        }
-
-        let math = unsafe { DeviceMath::from_compiler() };
-        let mut denominator = 0.0_f32;
-        index = 0;
-        while index < ROW_ELEMENTS {
-            denominator += math.exp_f32(input[index] - maximum);
-            index += 1;
-        }
-
-        index = 0;
-        while index < ROW_ELEMENTS {
-            let probability = math.exp_f32(input[index] - maximum) / denominator;
-            if let Some(slot) = unsafe { output.get_mut_at(index) } {
-                *slot = probability;
-            }
-            index += 1;
-        }
-    }
-}
-`;
 
 const rowSoftmaxAddressModel = `pub open spec fn lane_input_index_v1(lane: nat) -> nat { lane }
 pub open spec fn lane_scratch_index_v1(lane: nat) -> nat { lane }
@@ -235,7 +197,7 @@ const rowSoftmaxResult = resultText(
   "compiler-hsaco-observed",
   `Fixed-width row-softmax V1 evidence boundary
 
-Source: the ordinary example-owned attributed Rust #[kernel] body at examples/row_softmax_v1/src/kernel.rs fixes one unmasked 64-element row, WG64, and three bounded scalar loops executed by lane zero. Complete syn AST structural admission, a fixed reviewed interpreter/model, and digest/certificate binding cover this exact source under authenticated 64-element input/output preconditions. They do not establish Rust semantic refinement or observe runtime satisfaction of those preconditions.
+Source: the current safe ordinary example-owned attributed Rust #[kernel] body at examples/row_softmax_v1/src/kernel.rs fixes one unmasked 64-element row, WG64, and three bounded scalar loops executed by lane zero. Complete syn AST structural admission, a fixed reviewed interpreter/model, and digest/certificate binding cover this exact source under authenticated 64-element input/output preconditions. They do not establish Rust semantic refinement or observe runtime satisfaction of those preconditions.
 CPU: independent host reference and numerical-oracle tests exist; they are not GPU observations.
 Verus: the mathematical and address-set models verify bounded indices, row extents, and conditional disjoint-address obligations. They do not model concrete memory events or prove source-to-machine race freedom.
 Compiler/code object: focused source admission, pinned upstream LLVM target-machine plus in-process LLD finalization, and inspection mechanics exist. Release A 31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1/tree 293c6d39e47d64f5949d450d6041dc598aafd0fe and manifest B fd89390788adc5670c54ecc2517b9720f2f80113/tree af0156687517c0e71eb0d607917964b7c375af43 bind manifest SHA-256 9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c and one retained HSACO SHA-256 0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93. Two fresh complete MI300X runs passed; independent review accepted the evidence package. These non-GPU runs establish bounded compiler/code-object reproducibility and operator-selected reviewed integrity only, not authentication or refinement.
@@ -249,11 +211,10 @@ function exactGemmKernelTab() {
   return {
     language: "rust" as const,
     code: gemmSlice1Kernel,
-    sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-    sourceCommit: protectedSlice1HardwareObservation.commit,
-    sourceSha256:
-      "695e3449daa327944b0a9b0ecc081b0f1bd59eb60009cbe79ed6924942e86334",
-    evidenceId: "tiled-lds-protected-lifecycle-v1" as const,
+    sourcePath: gemmSafeSource.primarySourcePath,
+    sourceCommit: gemmSafeSource.commit,
+    sourceSha256: gemmSafeSource.primarySourceSha256,
+    evidenceId: gemmSafeSource.id,
     explanatory: false,
   };
 }
@@ -353,13 +314,13 @@ const collectives: Lesson = {
       code: noHost,
       explanatory: true,
       notice:
-        "This historical source-model record does not bundle the later typed one-shot Wave64 host/runtime path; see Implementation status for its separately pinned protected gfx942 observation.",
+        "This current safe source/model record does not inherit the separately pinned typed host/runtime or protected gfx942 observation; see Implementation status for those historical evidence boundaries.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "This pinned source-model record remains independently reviewable. A later publication-gated descendant adds exact compiler admission, direct upstream LLVM/LLD finalization, a typed one-shot runtime, and one protected four-mask gfx942 observation. Compiler and Verus-to-machine refinement remain open; the historical source-model record itself grants no hardware authority.",
+        "This current safe source/model record remains independently reviewable. Separately pinned historical checkpoints contain exact compiler admission, direct upstream LLVM/LLD finalization, a typed one-shot runtime, and one protected four-mask gfx942 observation. Compiler and Verus-to-machine refinement remain open; those observations do not transfer hardware authority to the current source.",
       ),
       explanatory: true,
       notice:
@@ -447,7 +408,7 @@ const synchronization: Lesson = {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. The publication-gated descendant adds exact compiler profiles, opaque direct upstream LLVM/LLD finalizer receipts, typed argument admission, private one-shot host/runtime lifecycles, exact dynamic-LDS dispatch binding, and one bounded protected MI300X observation for each profile in debug and release. Remaining gaps: source/compiler/machine refinement, generalized illegal-access safety, and generalized race freedom. The hardware result is exact-profile evidence only.",
+        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. Separately pinned historical checkpoints contain exact compiler profiles, opaque direct upstream LLVM/LLD finalizer receipts, typed argument admission, private one-shot host/runtime lifecycles, exact dynamic-LDS dispatch binding, and one bounded protected MI300X observation for each profile in debug and release. Those observations do not transfer to the current safe source. Remaining gaps: source/compiler/machine refinement, generalized illegal-access safety, and generalized race freedom. The hardware result is exact-profile evidence only.",
       ),
       explanatory: true,
       notice:
@@ -482,6 +443,7 @@ const gemmMapping: Lesson = {
     "Separate one exact bounded protected Slice 1 run from compiler-origin, proof, refinement, and generalized-GEMM claims.",
   ],
   claims: [
+    sourceMilestoneClaim("tiled-gemm-safe-source-v1"),
     {
       kind: "design-only",
       label: "Full GEMM roadmap",
@@ -564,6 +526,7 @@ const gemmProof: Lesson = {
     "Define compiler, HSACO, and gfx942 observations for the same artifact identity.",
   ],
   claims: [
+    sourceMilestoneClaim("tiled-gemm-safe-source-v1"),
     {
       kind: "design-only",
       label: "Acceptance plan",
@@ -626,9 +589,9 @@ const softmax: Lesson = {
       language: "rust",
       code: rowSoftmaxKernel,
       sourcePath: "examples/row_softmax_v1/src/kernel.rs",
-      sourceCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
+      sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4",
+        "0b0d5e2964d4627bc7ef3dac882f86a9b3c49ab715245bacc3fc92f28f0d08b0",
       explanatory: false,
     },
     {

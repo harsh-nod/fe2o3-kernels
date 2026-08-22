@@ -6,8 +6,9 @@
 #![allow(missing_docs)] // V1 generated typed-kernel modules lack rustdoc.
 
 use fe2o3_device::{
-    Bf16MfmaFragment, DeviceMatrix, DisjointSlice, F32AccumulatorFragment, Wave64, WaveLane,
-    gfx942_lds_bf16_tile_pair_m16x16_v1, kernel, sync, thread,
+    Bf16MfmaFragment, Blocked, DeviceMatrix, DisjointSlice, F32AccumulatorFragment, Index1D,
+    Wave64, WaveLane, gfx942_lds_bf16_tile_pair_m16x16_v1,
+    gfx942_publish_lds_bf16_tile_pair_m16x16_v1, kernel, thread,
 };
 
 use crate::contract::{
@@ -29,9 +30,10 @@ use crate::contract::{
 pub fn moe_expert_gemm_bf16_m16_n16_k16_v1(
     activations: &[u16],
     weights: &[u16],
-    mut output: DisjointSlice<f32>,
+    mut output: DisjointSlice<f32, Blocked<Index1D, 16, 4>>,
 ) {
-    let lane_index = thread::index_1d().get();
+    let thread_index = thread::index_1d();
+    let lane_index = thread_index.get();
     if lane_index >= 64
         || activations.len() != MOE_EXPERT_TILE_ELEMENTS_V1
         || weights.len() != MOE_EXPERT_TILE_ELEMENTS_V1
@@ -57,58 +59,39 @@ pub fn moe_expert_gemm_bf16_m16_n16_k16_v1(
         weights[(depth_base + 3) * MOE_EXPERT_OUTPUT_WIDTH_V1 + lane_column],
     ]);
 
-    // SAFETY: the fixed source profile admits exactly one gfx942 Wave64.
-    let Some(lane) = (unsafe { WaveLane::<Wave64>::from_raw(lane_index as u32) }) else {
+    let lane = WaveLane::<Wave64>::current();
+    let (mut activation_lds, mut weight_lds) = gfx942_lds_bf16_tile_pair_m16x16_v1();
+    activation_lds.write_mfma_fragment(&lane, activation_fragment);
+    weight_lds.write_mfma_fragment(&lane, weight_fragment);
+    let (activation_lds, weight_lds) =
+        gfx942_publish_lds_bf16_tile_pair_m16x16_v1(activation_lds, weight_lds);
+    let Some(lhs) = activation_lds.read_mfma_fragment(&lane) else {
         fe2o3_device::trap();
         return;
     };
-    // SAFETY: the exact profile provides two distinct aligned 512-byte tiles.
-    let (mut activation_lds, mut weight_lds) = unsafe { gfx942_lds_bf16_tile_pair_m16x16_v1() };
-    // SAFETY: each lane owns four distinct XOR4 locations in each tile.
-    let activation_staged =
-        unsafe { activation_lds.write_mfma_fragment(&lane, activation_fragment) };
-    let weight_staged = unsafe { weight_lds.write_mfma_fragment(&lane, weight_fragment) };
-    if !activation_staged || !weight_staged {
-        fe2o3_device::trap();
-        return;
-    }
-    // SAFETY: all 64 lanes execute the barrier after disjoint tile writes.
-    unsafe { sync::syncthreads() };
-    // SAFETY: the convergent barrier follows complete initialization.
-    let activation_lds = unsafe { activation_lds.assume_init() };
-    let weight_lds = unsafe { weight_lds.assume_init() };
-    let Some(lhs) = activation_lds.read_mfma_fragment(lane_index) else {
+    let Some(rhs) = weight_lds.read_mfma_fragment(&lane) else {
         fe2o3_device::trap();
         return;
     };
-    let Some(rhs) = weight_lds.read_mfma_fragment(lane_index) else {
+    let matrix = DeviceMatrix::current();
+    let result = matrix
+        .multiply_accumulate(lhs, rhs, F32AccumulatorFragment::ZERO)
+        .into_values();
+    let Some(output_block) = thread_index.checked_block::<16, 4>() else {
         fe2o3_device::trap();
         return;
     };
-    // SAFETY: exact gfx942 Wave64 source admission is required before lowering.
-    let matrix = unsafe { DeviceMatrix::from_compiler() };
-    let result =
-        unsafe { matrix.multiply_accumulate(lhs, rhs, F32AccumulatorFragment::ZERO) }.into_values();
 
-    // SAFETY: `(lane, component)` is a bijection over the 256 output elements.
-    if let Some(slot) =
-        unsafe { output.get_mut_at(depth_base * MOE_EXPERT_OUTPUT_WIDTH_V1 + lane_column) }
-    {
+    if let Some(slot) = output.get_block_mut(&output_block, 0) {
         *slot = result[0];
     }
-    if let Some(slot) =
-        unsafe { output.get_mut_at((depth_base + 1) * MOE_EXPERT_OUTPUT_WIDTH_V1 + lane_column) }
-    {
+    if let Some(slot) = output.get_block_mut(&output_block, 1) {
         *slot = result[1];
     }
-    if let Some(slot) =
-        unsafe { output.get_mut_at((depth_base + 2) * MOE_EXPERT_OUTPUT_WIDTH_V1 + lane_column) }
-    {
+    if let Some(slot) = output.get_block_mut(&output_block, 2) {
         *slot = result[2];
     }
-    if let Some(slot) =
-        unsafe { output.get_mut_at((depth_base + 3) * MOE_EXPERT_OUTPUT_WIDTH_V1 + lane_column) }
-    {
+    if let Some(slot) = output.get_block_mut(&output_block, 3) {
         *slot = result[3];
     }
 }

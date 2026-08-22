@@ -78,6 +78,7 @@ export type CompletedIssue94IncrementId =
   | "tiled-lds-protected-lifecycle-v1";
 
 export type SourceMilestoneId =
+  | "tiled-gemm-safe-source-v1"
   | "wave64-collectives-source-v1"
   | "workgroup-sync-source-v1"
   | "flash-attention-source-v1"

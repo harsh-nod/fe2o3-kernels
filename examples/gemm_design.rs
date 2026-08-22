@@ -8,8 +8,9 @@
 #![allow(missing_docs)] // Generated typed-kernel modules lack rustdoc in V1.
 
 use fe2o3_device::{
-    Bf16MfmaFragment, DeviceMatrix, DisjointSlice, F32AccumulatorFragment, Wave64, WaveLane,
-    gfx942_lds_bf16_tile_pair_m16x16_v1, kernel, sync, thread,
+    Bf16MfmaFragment, Blocked, DeviceMatrix, DisjointSlice, F32AccumulatorFragment, Index1D,
+    Wave64, WaveLane, gfx942_lds_bf16_tile_pair_m16x16_v1,
+    gfx942_publish_lds_bf16_tile_pair_m16x16_v1, kernel, thread,
 };
 
 /// Exact workgroup dimensions required by the Slice 1 source contract.
@@ -59,8 +60,13 @@ pub const LDS_SLICE1_SOURCE_BLOCKERS_V1: [&str; 4] = [
     namespace = "c09558e16157fec495e78bc32a23b082213fa4a6ddabe48445a54cb3de591295",
     launch(required = [64, 1, 1], max = [64, 1, 1])
 )]
-pub fn tiled_gemm_lds_slice1(a: &[u16], b: &[u16], mut c: DisjointSlice<f32>) {
-    let lane_index = thread::index_1d().get();
+pub fn tiled_gemm_lds_slice1(
+    a: &[u16],
+    b: &[u16],
+    mut c: DisjointSlice<f32, Blocked<Index1D, 16, 4>>,
+) {
+    let thread_index = thread::index_1d();
+    let lane_index = thread_index.get();
     if lane_index >= 64 || a.len() != 256 || b.len() != 256 || c.len() != 256 {
         fe2o3_device::trap();
         return;
@@ -83,60 +89,42 @@ pub fn tiled_gemm_lds_slice1(a: &[u16], b: &[u16], mut c: DisjointSlice<f32>) {
         b[(depth_base + 3) * 16 + lane_column],
     ]);
 
-    // SAFETY: the exact source contract fixes one gfx942 wave64 workgroup, and
-    // lane_index is checked above. Backend authentication remains required.
-    let Some(lane) = (unsafe { WaveLane::<Wave64>::from_raw(lane_index as u32) }) else {
+    let lane = WaveLane::<Wave64>::current();
+
+    let (mut a_lds, mut b_lds) = gfx942_lds_bf16_tile_pair_m16x16_v1();
+
+    a_lds.write_mfma_fragment(&lane, a_global);
+    b_lds.write_mfma_fragment(&lane, b_global);
+
+    let (a_lds, b_lds) = gfx942_publish_lds_bf16_tile_pair_m16x16_v1(a_lds, b_lds);
+    let Some(lhs) = a_lds.read_mfma_fragment(&lane) else {
+        fe2o3_device::trap();
+        return;
+    };
+    let Some(rhs) = b_lds.read_mfma_fragment(&lane) else {
         fe2o3_device::trap();
         return;
     };
 
-    // SAFETY: this exact call is admitted only for the authenticated Slice 1
-    // source profile. It issues separate aligned 512-byte A and B LDS tiles.
-    let (mut a_lds, mut b_lds) = unsafe { gfx942_lds_bf16_tile_pair_m16x16_v1() };
-
-    // SAFETY: every lane owns four distinct XOR4 locations in each separate
-    // tile. B's lane fragment is staged transposed as (column, depth).
-    let a_staged = unsafe { a_lds.write_mfma_fragment(&lane, a_global) };
-    let b_staged = unsafe { b_lds.write_mfma_fragment(&lane, b_global) };
-    if !a_staged || !b_staged {
-        fe2o3_device::trap();
-        return;
-    }
-
-    // SAFETY: all 64 physical lanes execute this call in uniform control flow
-    // after writing their four A and four B elements.
-    unsafe { sync::syncthreads() };
-
-    // SAFETY: the preceding convergent barrier follows complete, disjoint
-    // initialization of all 256 elements in both tiles.
-    let a_lds = unsafe { a_lds.assume_init() };
-    let b_lds = unsafe { b_lds.assume_init() };
-    let Some(lhs) = a_lds.read_mfma_fragment(lane_index) else {
-        fe2o3_device::trap();
-        return;
-    };
-    let Some(rhs) = b_lds.read_mfma_fragment(lane_index) else {
+    let matrix = DeviceMatrix::current();
+    let result = matrix
+        .multiply_accumulate(lhs, rhs, F32AccumulatorFragment::ZERO)
+        .into_values();
+    let Some(output_block) = thread_index.checked_block::<16, 4>() else {
         fe2o3_device::trap();
         return;
     };
 
-    // SAFETY: the compiler must issue this capability only for the exact
-    // gfx942:xnack- wave64 profile, and every lane calls the MFMA uniformly.
-    let matrix = unsafe { DeviceMatrix::from_compiler() };
-    let result =
-        unsafe { matrix.multiply_accumulate(lhs, rhs, F32AccumulatorFragment::ZERO) }.into_values();
-
-    // SAFETY: (lane, component) maps bijectively to all 256 C coordinates.
-    if let Some(output) = unsafe { c.get_mut_at(depth_base * 16 + lane_column) } {
+    if let Some(output) = c.get_block_mut(&output_block, 0) {
         *output = result[0];
     }
-    if let Some(output) = unsafe { c.get_mut_at((depth_base + 1) * 16 + lane_column) } {
+    if let Some(output) = c.get_block_mut(&output_block, 1) {
         *output = result[1];
     }
-    if let Some(output) = unsafe { c.get_mut_at((depth_base + 2) * 16 + lane_column) } {
+    if let Some(output) = c.get_block_mut(&output_block, 2) {
         *output = result[2];
     }
-    if let Some(output) = unsafe { c.get_mut_at((depth_base + 3) * 16 + lane_column) } {
+    if let Some(output) = c.get_block_mut(&output_block, 3) {
         *output = result[3];
     }
 }

@@ -142,23 +142,33 @@ describe("curriculum integrity", () => {
     }
   });
 
+  it("shows only safe Rust in every kernel tab", () => {
+    for (const lesson of lessons) {
+      for (const kernel of lesson.tabs.filter((tab) => tab.kind === "kernel")) {
+        expect(kernel.code).not.toMatch(/\bunsafe\b/u);
+        expect(kernel.code).not.toMatch(/unsafe\s*\{/u);
+      }
+    }
+  });
+
   it("pins the exact bounded GEMM source, proof, host, and result tabs", () => {
     for (const lessonId of ["gemm-tiling", "gemm-proof-plan"]) {
       const lesson = lessons.find((entry) => entry.id === lessonId);
       const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
       expect(kernel).toMatchObject({
         sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
-        sourceCommit: "c4fcb4d980cf979c0527dfa135a7b9f4fe72a811",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
         sourceSha256:
-          "695e3449daa327944b0a9b0ecc081b0f1bd59eb60009cbe79ed6924942e86334",
-        evidenceId: "tiled-lds-protected-lifecycle-v1",
+          "873d22ee1d8cbd450a38af2be2ce0329128de48c430f3c5aa56dbe4480148a61",
+        evidenceId: "tiled-gemm-safe-source-v1",
         explanatory: false,
       });
       expect(
         createHash("sha256").update(kernel?.code ?? "").digest("hex"),
-      ).toBe("695e3449daa327944b0a9b0ecc081b0f1bd59eb60009cbe79ed6924942e86334");
+      ).toBe("873d22ee1d8cbd450a38af2be2ce0329128de48c430f3c5aa56dbe4480148a61");
       expect(kernel?.code).toContain("#[kernel(");
       expect(kernel?.code).not.toMatch(/macro_rules!\s+[A-Za-z_]/u);
+      expect(kernel?.code).not.toMatch(/\bunsafe\b/u);
 
       const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
       expect(proof).toMatchObject({
@@ -280,8 +290,9 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("does not invent the programmer's intended formula");
     expect(failures).toContain("Ordinary kernels are safe Rust");
     expect(failures).toContain("unsafe_asm");
-    expect(failures).toContain("Pinned legacy snapshots remain historical evidence");
-    expect(failures).toContain("not source accepted by the ordinary safe-kernel contract");
+    expect(failures).toContain("Kernel tabs are current safe source");
+    expect(failures).toContain("contains no unsafe block");
+    expect(failures).toContain("do not transfer authority");
     for (const capability of [
       "DisjointIndex",
       "Shifted",
@@ -486,9 +497,9 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_v1/src/kernel.rs",
-      sourceCommit: "86c4ca67a673bfec966f79e6c701104db872d8ea",
+      sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       sourceSha256:
-        "c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4",
+        "0b0d5e2964d4627bc7ef3dac882f86a9b3c49ab715245bacc3fc92f28f0d08b0",
       explanatory: false,
     });
     expect(createHash("sha256").update(kernel?.code ?? "").digest("hex")).toBe(
@@ -496,7 +507,7 @@ describe("curriculum integrity", () => {
     );
     expect(kernel?.code).toContain("#[kernel(");
     expect(kernel?.code).toContain("control_flow(loop_bounds(64, 64, 64))");
-    expect(kernel?.code).toContain("DeviceMath::from_compiler()");
+    expect(kernel?.code).toContain("DeviceMath::current()");
 
     const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
     expect(proof).toMatchObject({
@@ -575,6 +586,7 @@ describe("curriculum integrity", () => {
 
   it("pins exact source-only kernel snapshots", () => {
     expect(sourceMilestoneOrder).toEqual([
+      "tiled-gemm-safe-source-v1",
       "wave64-collectives-source-v1",
       "workgroup-sync-source-v1",
       "flash-attention-source-v1",
@@ -593,8 +605,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/wave64_collectives_v1/src/kernel.rs",
         bundledPath: "examples/wave64_collectives_v1/src/kernel.rs",
         sha256:
-          "01ac1365b0fdfe91cdc8f7cf6a14ae5acbea41528103ec3de5fe6d895261625e",
-        sourceCommit: "d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8",
+          "c649e38712232ed45c1d2f6f8a2a49405f12a5e308907b3265c2415f227803a2",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
       {
         lessonId: "lds-barriers-atomics",
@@ -602,8 +614,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
         bundledPath: "examples/workgroup_sync_v1/src/kernel.rs",
         sha256:
-          "3e7ec081c7958288f9d997d40e6f41a7faabc56a3add734099cd1777443b2983",
-        sourceCommit: "d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8",
+          "1a28ca6d97d180c347be41ce65377d67e44773c539aa73610808585aedf125bf",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
       {
         lessonId: "flash-attention",
@@ -611,8 +623,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/flash_attention_v1/src/kernel.rs",
         bundledPath: "examples/flash_attention_v1/src/kernel.rs",
         sha256:
-          "2b00a64e43e69c416e70080e013edf90e861fef94ee66441da93d2c11b3e8f17",
-        sourceCommit: "5d4313bcda3479e6c77ce93350ca3428729fdbc0",
+          "6dbaa2af88fd5edcdf0485f3da47b1319ce299422a77b99af56f9a3e77c2a421",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
       {
         lessonId: "moe-routing",
@@ -620,8 +632,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/moe_top2_v1/src/kernel.rs",
         bundledPath: "examples/moe_top2_v1/src/kernel.rs",
         sha256:
-          "b77016caa0c3708e420e583712e65e4e6428db7b4feafd8d0a1d4bdc475ef6ff",
-        sourceCommit: "ebaf1d87ca6f35eba0c321e7cf2aac62ba9eebdc",
+          "0260f144150e6fee7d9bd6a3d919e99ded0e43666509770f6e6186f5100fee25",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
       {
         lessonId: "moe-expert-compute",
@@ -629,8 +641,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/moe_expert_v1/src/kernel.rs",
         bundledPath: "examples/moe_expert_v1/src/kernel.rs",
         sha256:
-          "aeb772a09c7a81e624b72e7e9a84f7b7cd8f63110d3ced5ed975c0104036f8ba",
-        sourceCommit: "b35c7ceff5b99494fcef2f419a4351dd5fb591cc",
+          "5ae3cfe59494347838fe4160c99c5b67968642d26550c01e27d2ee1247511aec",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
     ] as const;
 
@@ -723,16 +735,16 @@ describe("curriculum integrity", () => {
         evidenceId: "flash-attention-verus-v1",
         bundledPath: "examples/flash_attention_v1/verus/flash_attention_v1.rs",
         sha256:
-          "e1f48bb3dc7bee0678898d13660bf4ce02d9d8e5706e3969f11b11c8b1d7a2da",
-        sourceCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
+          "e98b9fffc6e4c2fbcc5bca0ca706ac6575f93814afecf67be73de0f2d087d467",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
       {
         lessonId: "moe-routing",
         evidenceId: "moe-top2-verus-v1",
         bundledPath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
         sha256:
-          "4c8db7b0d33c19d01677cf30ead3273844ffc480c70869181f6be0d9d3cc637f",
-        sourceCommit: "5c25611adbd99e807957dfc9a0a6a63e83a9e099",
+          "aee6c405f3e95be25bf0575a419ff6591153fce7ff9e950f7d3e5889188e354c",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
       {
         lessonId: "moe-expert-compute",
@@ -741,7 +753,7 @@ describe("curriculum integrity", () => {
           "examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
         sha256:
           "617e6741c5f1415a8e792e5e36e3526c04ba18903438e3af178bb107766383d1",
-        sourceCommit: "ff0c08a5bdca2568178f690c04c0b0c6bfa6febe",
+        sourceCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
       },
     ] as const;
     for (const profile of proofProfiles) {
@@ -765,7 +777,7 @@ describe("curriculum integrity", () => {
     const atomicPath = "examples/workgroup_sync_v1/src/scoped_atomic.rs";
     const atomic = readFileSync(atomicPath, "utf8");
     expect(createHash("sha256").update(atomic).digest("hex")).toBe(
-      "c0f00a14c5941f34741fc10ca7798ce9cf47288294b0bcc43cddb7d22bbfe97e",
+      "0531f894d0c6c94af9258717cf7ed52fab8f68785b361bd261f154ac9cf7ce14",
     );
     const synchronizationClaim = lessons
       .find((entry) => entry.id === "lds-barriers-atomics")
@@ -1657,12 +1669,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-21",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "2d025da5623d313a1aa2f118552682d9caa93fc4",
-      eventualPublicTree: "090531d62857a45d46aa81be87c0d59e4bb200d2",
+      eventualPublicCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+      eventualPublicTree: "f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "2d025da5623d313a1aa2f118552682d9caa93fc4",
-        requiredTree: "090531d62857a45d46aa81be87c0d59e4bb200d2",
+        requiredCommit: "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
+        requiredTree: "f15cbcce8f68e5dd6d0e6ae69638f9faa84233dc",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2288,7 +2300,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "2d025da5623d313a1aa2f118552682d9caa93fc4",
+      "17e4fcb6f14b976efc2fce30b4c45ab47525a3d5",
     );
 
     const lesson = curriculum
