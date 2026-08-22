@@ -76,6 +76,7 @@ describe("curriculum integrity", () => {
       "current-v2-mi300x-requalification-v1",
       "compiler-generated-cov6-kfd-bridge-v1",
       "kernel-ir-v1-c454-compiler-convergence-v1",
+      "bounded-persistent-lifecycle-verus-v1",
     ]);
     expect(runtimeMilestones[0].commit).toBe(
       "e5c8d66c5520d1bce7cf2db911c200f1cf4c5536",
@@ -201,6 +202,33 @@ describe("curriculum integrity", () => {
     expect(runtimeMilestones[4].limitations.join(" ")).toContain(
       "publication gate is unchanged and remains on hold",
     );
+    expect(runtimeMilestones[5]).toMatchObject({
+      number: "V1",
+      commit: "2e61da988c597d4357bd9a4bfbf9c03604015f90",
+      tree: "1fab7ac0a4356b9c8238ebdf514015debc7bd89a",
+      status: "formal-model-verified",
+      measurement: "unmeasured",
+      sourceAvailability: "local-branch",
+    });
+    expect(runtimeMilestones[5].commands).toEqual([
+      "cargo test -p fe2o3-runtime-model --locked persistent_runtime",
+      "cargo test -p fe2o3-kfd --locked persistent_runtime",
+      "crates/fe2o3-runtime-model/verus/verify-verus.sh",
+    ]);
+    expect(runtimeMilestones[5].expected.join(" ")).toContain(
+      "persistent_runtime_obligations=39 and mutations=93",
+    );
+    expect(runtimeMilestones[5].limitations.join(" ")).toContain(
+      "does not refine the 64-slot Rust implementation",
+    );
+    expect(runtimeMilestones[5].limitations.join(" ")).toContain(
+      "no public or native queue constructor",
+    );
+    expect(runtimeMilestones[5].limitations.join(" ")).toContain(
+      "performed no KFD, DRM, MMIO, packet, compiler-build, application, or GPU action",
+    );
+    expect(runtimeMilestones[5].hardwareExample).toBeUndefined();
+    expect(runtimeMilestones[5].evidenceRecord).toBeUndefined();
   });
 
   it("binds completed preparation and preflight without claiming milestone 05", () => {

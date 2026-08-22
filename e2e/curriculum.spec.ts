@@ -55,8 +55,11 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
     page.getByRole("heading", { name: "One runtime ownership pipeline" }),
   ).toBeVisible();
   await expect(page.getByText("Implementation checked", { exact: true })).toHaveCount(4);
-  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(5);
-  await expect(page.getByText(/cargo test -p fe2o3-runtime-model/u)).toBeVisible();
+  await expect(page.getByText("Formal model verified", { exact: true })).toHaveCount(1);
+  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(6);
+  await expect(
+    page.getByText(/cargo test -p fe2o3-runtime-model --locked persistent_runtime/u),
+  ).toBeVisible();
   await expect(page.getByText(/not yet been re-observed on MI300X/u)).toBeVisible();
   await expect(page.getByText(/FE2O3_RUN/u)).toHaveCount(0);
   await expect(
@@ -113,6 +116,21 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   ).toBeVisible();
   await expect(page.getByText(/legacy-clang route only when its untyped fill facts/u)).toBeVisible();
   await expect(page.getByText(/no GPU execution, hardware result, numerical result/u)).toBeVisible();
+  const formalHeading = page.getByRole("heading", {
+    name: "Bounded persistent lifecycle proof",
+  });
+  await expect(formalHeading).toBeVisible();
+  await expect(
+    page.getByText(/persistent_runtime_obligations=39 and mutations=93/u),
+  ).toBeVisible();
+  await expect(page.getByText(/does not refine the 64-slot Rust implementation/u)).toBeVisible();
+  await expect(
+    page.getByText("2e61da988c597d4357bd9a4bfbf9c03604015f90"),
+  ).toBeVisible();
+  await expect(page.getByText("Local branch; remote links withheld")).toBeVisible();
+  await expect(
+    page.locator('a[href*="2e61da988c597d4357bd9a4bfbf9c03604015f90"]'),
+  ).toHaveCount(0);
   const preflightHeading = page.getByRole("heading", {
     name: "Authenticated compiler-build preflight",
   });
@@ -150,6 +168,11 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await convergenceHeading.scrollIntoViewIfNeeded();
   await page.screenshot({
     path: `/tmp/fe2o3-kernels-runtime-convergence-${testInfo.project.name}.png`,
+    animations: "disabled",
+  });
+  await formalHeading.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: `/tmp/fe2o3-kernels-runtime-formal-${testInfo.project.name}.png`,
     animations: "disabled",
   });
   await preflightHeading.scrollIntoViewIfNeeded();

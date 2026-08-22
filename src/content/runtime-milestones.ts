@@ -5,7 +5,8 @@ export type RuntimeMilestoneId =
   | "public-vecadd-sync-v1"
   | "current-v2-mi300x-requalification-v1"
   | "compiler-generated-cov6-kfd-bridge-v1"
-  | "kernel-ir-v1-c454-compiler-convergence-v1";
+  | "kernel-ir-v1-c454-compiler-convergence-v1"
+  | "bounded-persistent-lifecycle-verus-v1";
 
 export interface RuntimeMilestoneOutcome {
   name: "Completed" | "DefinitelyNotPublished" | "RetainedTerminal";
@@ -29,7 +30,10 @@ export interface RuntimeMilestone {
   number: string;
   title: string;
   state: "implemented";
-  status: "implementation-checked" | "evidence-reviewed";
+  status:
+    | "implementation-checked"
+    | "formal-model-verified"
+    | "evidence-reviewed";
   measurement: "unmeasured" | "bounded-mi300x-observation";
   summary: string;
   why: readonly string[];
@@ -46,6 +50,7 @@ export interface RuntimeMilestone {
   tree: string;
   manifest?: string;
   evidenceRecord?: RuntimeEvidenceRecord;
+  sourceAvailability?: "github" | "local-branch";
   sourcePaths: readonly string[];
 }
 
@@ -341,6 +346,61 @@ export const runtimeMilestones = deepFreeze([
       "crates/rustc-codegen-fe2o3/tests/fixtures/kernel-ir-v1-vecadd-cov6-llc-o2-identity-v1.txt",
       "crates/fe2o3-kfd-compiler-bridge/examples/compiler-generated-preflight/src/main.rs",
       "crates/fe2o3-kfd-compiler-bridge/tests/source-manifest-v1.txt",
+    ],
+  },
+  {
+    id: "bounded-persistent-lifecycle-verus-v1",
+    number: "V1",
+    title: "Bounded persistent lifecycle proof",
+    state: "implemented",
+    status: "formal-model-verified",
+    measurement: "unmeasured",
+    summary:
+      "A pinned executable Verus model now proves the bounded create, multi-dispatch, completion-credit, FIFO retirement, quiesce, destroy, and shutdown lifecycle, while a separate capability-safe Rust facade remains unavailable to native KFD construction until source refinement closes.",
+    why: [
+      "Queue reuse changes the ownership problem from one packet to a protocol: multiple published dispatches, completion credits, mappings, publications, and queue resources can remain live at the same time. The invariant makes early release, non-FIFO retirement, post-quiesce publication, and shutdown with live resources mathematical proof obligations instead of conventions.",
+      "The authenticated Verus runner checks 39 persistent-lifecycle obligations and deliberately rejects eight unsafe mutations at their named postconditions. Its full closure counts 93 exact expected-negative checks, and every pinned unsafe mutation must fail before the transcript can remain green.",
+      "The proof boundary is explicit. The bounded Verus model is proved; the larger Rust model and KFD facade are Checked, Linux/KFD/GPU effects are Contracted, and no source-level refinement is inferred from matching tests, names, or hashes.",
+    ],
+    enables: [
+      "A reproducible formal regression gate for exact completion identity, retained credit, per-queue FIFO retirement, terminal phase monotonicity, and clean resource-free shutdown.",
+      "A checked CPU implementation with 64 bounded in-flight slots, stable Pending polling, whole-context quarantine, authenticated host-coherent completion memory, exact trace replay, and ownership-preserving terminal outcomes.",
+      "The next same-source Verus kernel can target a frozen transition vocabulary and replace the current Rust refinement HOLD without requiring a GPU experiment to stand in for proof.",
+    ],
+    pipeline: [
+      "Create one nonzero context, admit generation-bound queue and resource identities, and derive fresh dispatch and completion-credit identities instead of accepting caller substitutions.",
+      "Publish two dispatches, observe the later dispatch completing first, retain both credits, and reject non-FIFO retirement until the earlier dispatch releases and retires.",
+      "Enter monotonic quiescence, reject new publication, retire the remaining dispatch, destroy the empty queue, discharge abstract resources, and reach terminal revision 13.",
+      "Run every proof with the pinned Verus release and source closure; reject stale generation, post-quiesce dispatch, early credit release, non-FIFO retirement, outstanding destroy, live-resource shutdown, completion substitution, and terminal regression.",
+    ],
+    pipelineKicker: "Executable theorem package",
+    pipelineTitle: "Two in flight, FIFO retirement, then resource-free shutdown",
+    commands: [
+      "cargo test -p fe2o3-runtime-model --locked persistent_runtime",
+      "cargo test -p fe2o3-kfd --locked persistent_runtime",
+      "crates/fe2o3-runtime-model/verus/verify-verus.sh",
+    ],
+    expected: [
+      "The focused executable model reports 22 passed tests, including 10,000 stable Pending observations, whole-context quarantine, completion-memory rejection cases, exact trace substitutions, and clean shutdown.",
+      "The focused KFD facade reports 16 passed unit tests and eight passing compile-fail authority guards; it never opens a device and exposes no native constructor.",
+      "The pinned Verus lane reports persistent_runtime_obligations=39 and mutations=93 after all eight new persistent-runtime mutations fail at their intended postconditions and the 190-file verifier closure matches before and after.",
+    ],
+    limitations: [
+      "The proved state machine is bounded to two queue slots and four lifetime dispatch slots. It does not refine the 64-slot Rust implementation, stable Pending coalescing, whole-context quarantine, completion mapping/publication liveness, or cleanup-capacity arithmetic; those Rust properties remain Checked.",
+      "The KFD facade intentionally has no public or native queue constructor. It cannot execute a persistent GPU dispatch, and this milestone performed no KFD, DRM, MMIO, packet, compiler-build, application, or GPU action.",
+      "Linux ioctl behavior, firmware scheduling, AQL system-scope ordering, completion atomics, reset isolation, compiler lowering, and AMDHSA machine conformance remain external contracts. The proof does not establish HIP/ROCr feature parity or hardware correctness.",
+      "A same-source Verus transition kernel or machine-checked refinement is the release blocker before production orchestration can report Proved rather than Checked.",
+    ],
+    commit: "2e61da988c597d4357bd9a4bfbf9c03604015f90",
+    tree: "1fab7ac0a4356b9c8238ebdf514015debc7bd89a",
+    sourceAvailability: "local-branch",
+    sourcePaths: [
+      "docs/verified-persistent-runtime-v1.md",
+      "crates/fe2o3-runtime-model/src/persistent_runtime.rs",
+      "crates/fe2o3-runtime-model/verus/persistent_runtime_lifecycle_spec_v1.rs",
+      "crates/fe2o3-runtime-model/verus/persistent_runtime_lifecycle_v1.rs",
+      "crates/fe2o3-kfd/src/persistent_runtime.rs",
+      "crates/fe2o3-runtime-model/verus/verify-verus.sh",
     ],
   },
 ] satisfies RuntimeMilestone[]);

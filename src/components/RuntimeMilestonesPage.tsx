@@ -174,7 +174,9 @@ export function RuntimeMilestonesPage() {
                   <CheckCircle2 size={14} aria-hidden="true" />
                   {milestone.status === "evidence-reviewed"
                     ? "Evidence reviewed"
-                    : "Implementation checked"}
+                    : milestone.status === "formal-model-verified"
+                      ? "Formal model verified"
+                      : "Implementation checked"}
                 </span>
                 <span
                   className={`runtime-status-badge ${
@@ -284,7 +286,14 @@ export function RuntimeMilestonesPage() {
                     <code>{milestone.evidenceRecord.classification}</code>
                   </>
                 )}
-                {milestone.sourcePaths.map((path) => (
+                {milestone.sourceAvailability === "local-branch" ? (
+                  <>
+                    <span>Source availability</span>
+                    <code>Local branch; remote links withheld</code>
+                    <span>Local source paths</span>
+                    {milestone.sourcePaths.map((path) => <code key={path}>{path}</code>)}
+                  </>
+                ) : milestone.sourcePaths.map((path) => (
                   <a
                     href={sourceUrl(path, milestone.commit)}
                     key={path}
