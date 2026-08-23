@@ -49,22 +49,25 @@ const sourceMilestoneRecords = deepFreeze({
     authority: "source-tested-only",
     claimLabel: "Executable dynamic GEMM source",
     detail:
-      "Current public main contains an ordinary safe attributed Rust kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a real K loop; one-dimensional multi-workgroup ownership; edge handling; and a full epilogue. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, Kernel IR, formal memory admission, gfx942 LLVM, and HSACO. Four qualification cases passed on MI300X against an independent CPU reference. This is qualification execution, not protected artifact publication or an optimized LDS/MFMA performance result.",
-    commit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
-    tree: "ea623b864d47881b08bde45a4526ea28c9e0270f",
+      "Current public main contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, Kernel IR, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases pass at zero error, the disassembly contains V_MFMA_F32_16X16X16_BF16, and the repository includes a matched direct HIP benchmark. This is qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
+    commit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
+    tree: "464c1849d3c7f083598c66336e89dfe7e6f6e83b",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
       "examples/tiled_gemm_general_v1/run-gfx942.sh",
+      "examples/tiled_gemm_general_v1/run-benchmark.sh",
     ],
     sourcePaths: [
       "examples/tiled_gemm_general_v1/src/kernel.rs",
       "examples/tiled_gemm_general_v1/src/main.rs",
       "examples/tiled_gemm_general_v1/run-gfx942.sh",
+      "examples/tiled_gemm_general_v1/benchmark_hip.cpp",
+      "examples/tiled_gemm_general_v1/run-benchmark.sh",
       "examples/tiled_gemm_general_v1/README.md",
     ],
     primarySourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
     primarySourceSha256:
-      "5ff05418f771bee0e09a87dbb3c925b071059e39a8d58392f1cc6de2a1d1f927",
+      "53361801be92ee9ff6e6b88e67f37a0e5ce9c78ba17ad6d04fc58bf0b25f468d",
     target: "gfx942:xnack-",
   },
   "tiled-gemm-safe-source-v1": {

@@ -15,8 +15,8 @@ const ciWorkflow = readFileSync(
 describe("Pages publication policy", () => {
   it("pins the exact dual-repository gate in one checked-in config", () => {
     expect(publicationGate).toEqual({
-      requiredCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
-      requiredTree: "ea623b864d47881b08bde45a4526ea28c9e0270f",
+      requiredCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
+      requiredTree: "464c1849d3c7f083598c66336e89dfe7e6f6e83b",
       requiredRefs: [
         { repository: "harsh-nod/fe2o3", ref: "refs/heads/main" },
         { repository: "powderluv/fe2o3", ref: "refs/heads/main" },

@@ -27,7 +27,7 @@
       "id": "rust-production-route",
       "label": "Rust production route",
       "status": "partial",
-      "detail": "Ordinary safe Rust now reaches semantic MIR, ranked PLIRON verification, Kernel IR, formal memory admission, gfx942 LLVM, HSACO, and qualification launch for a dynamic strided kernel with loops, runtime dimensions, edge control flow, and disjoint output ownership. Static out-of-bounds Rust is still rejected with FE2O3-BOUNDS-001 and no artifact. Source projection for unsupported effects and ownership forms remains deliberately fail-closed.",
+      "detail": "Ordinary safe Rust now reaches semantic MIR, ranked PLIRON verification, Kernel IR, formal memory admission, gfx942 LLVM, HSACO, and qualification launch for a dynamic strided wave64 kernel with checked 2D ownership, runtime dimensions, edge control flow, a K loop, and target-neutral matrix fragments. Static out-of-bounds Rust is rejected with FE2O3-BOUNDS-001 and no artifact. Source projection for unsupported effects and ownership forms remains deliberately fail-closed.",
       "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs", "examples/tiled_gemm_general_v1/run-gfx942.sh", "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs", "crates/fe2o3-pliron/tests/production_ranked_pipeline.rs"]
     },
     {
@@ -41,7 +41,7 @@
       "id": "target-finalization",
       "label": "Target finalization",
       "status": "partial",
-      "detail": "The current dynamic qualification route emits gfx942 LLVM, links HSACO, loads it through fe2o3-host, and checks GPU results against an independent CPU reference. Protected release publication, artifact currentness, complete source-to-machine refinement, and optimized-kernel performance authority remain separate.",
+      "detail": "The current dynamic qualification route emits gfx942 LLVM with V_MFMA_F32_16X16X16_BF16, links HSACO, loads it through fe2o3-host, and checks four GPU cases against an independent CPU reference at zero error. A matched direct HIP benchmark is published without claiming a speed advantage. Protected release publication, artifact currentness, and complete source-to-machine refinement remain separate.",
       "sourcePaths": ["examples/tiled_gemm_general_v1/src/main.rs", "examples/tiled_gemm_general_v1/run-gfx942.sh", "crates/fe2o3-hsaco-finalize/src/lib.rs", "crates/rustc-codegen-fe2o3/src/lib.rs"]
     },
     {

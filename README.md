@@ -37,19 +37,18 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`0d2437c48daadfe178513ca887a94c7c1f460aab`, tree
-`ea623b864d47881b08bde45a4526ea28c9e0270f`. Deployment requires
+`3874a0c76b3e90f73ea8782b54bb6a45ea94f04d`, tree
+`464c1849d3c7f083598c66336e89dfe7e6f6e83b`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed.
 
-This snapshot adds an executable safe Rust dynamic strided GEMM qualification
-path. Runtime M/N/K, lda/ldb/ldc, alpha/beta, multiple workgroups, edge returns,
-and the K loop lower through semantic MIR, ranked PLIRON, Kernel IR, gfx942
-LLVM, HSACO, and fe2o3-host. Four MI300X cases pass against an independent CPU
-reference. The kernel is a scalar correctness baseline, not an LDS/MFMA
-optimization or performance result, and its artifact is not protected release
-authority.
+This snapshot contains an executable safe Rust dynamic strided MFMA GEMM.
+Runtime M/N/K, lda/ldb/ldc, alpha/beta, multiple workgroups, edge handling, and
+the K loop lower through semantic MIR, ranked PLIRON, Kernel IR, gfx942 LLVM,
+HSACO, and fe2o3-host. Four MI300X cases pass at zero error, the disassembly
+contains BF16/F32 MFMA, and a matched direct HIP benchmark is checked in. The
+qualification artifact is not protected release authority.
 
 This descendant also contains
 the exact protected Slice 1
@@ -603,15 +602,14 @@ FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b
 The `gemm-tiling` lesson now shows the exact current dynamic kernel, build
 script, host runner, and four-case MI300X result. The safe kernel is byte-pinned
 to `examples/tiled_gemm_general_v1/src/kernel.rs` at
-`0d2437c48daadfe178513ca887a94c7c1f460aab` and contains no unsafe block. Its
+`3874a0c76b3e90f73ea8782b54bb6a45ea94f04d` and contains no unsafe block. Its
 host-only unsafe boundaries are visible and documented around external HSACO
 loading and physical ABI launch.
 
 The `gemm-proof-plan` lesson separately retains the fixed Slice 1 LDS/MFMA
 source and historical proof and protected-result evidence. That material
-describes an optimization direction and does not transfer performance,
-dynamic-shape, or protected-publication authority to the executable scalar
-kernel.
+describes the additional cooperative-LDS direction and does not transfer
+protected-publication authority to the executable direct-global MFMA kernel.
 
 The `gemm-proof-plan` lesson records the implementation contract from
 [fe2o3 #138](https://github.com/harsh-nod/fe2o3/issues/138). The target is one
@@ -645,10 +643,11 @@ is not yet implemented. The
 failure occurs before any positive receipt, frontend correspondence,
 configuration admission, proof execution, Worker V2 handoff, private final pair
 join, durable publication, or protected launch. The authenticated proof runtime
-closure remains an independent second downstream blocker, but the current route
-does not reach configuration or proof. Optimized-family
+closure remains an independent second downstream blocker for that historical
+LDS family. Its
 `TILED_SOURCE_TO_IR=false`, `TILED_LOWERING=false`, and
-`TILED_PROTECTED_EXECUTION=false` remain unchanged.
+`TILED_PROTECTED_EXECUTION=false` flags do not describe the current direct-global
+MFMA qualification route.
 
 Separately, the production semantic-MIR route runs a fixed target-neutral
 ranked-PLIRON safety pipeline before Kernel IR lowering: bounds, atomic

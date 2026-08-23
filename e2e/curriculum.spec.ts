@@ -139,7 +139,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
 });
 
-test("dynamic GEMM shows exact executable source and separates optimization evidence", async ({
+test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", async ({
   page,
 }, testInfo) => {
   await page.goto("./#/lesson/gemm-tiling");
@@ -156,21 +156,23 @@ test("dynamic GEMM shows exact executable source and separates optimization evid
     page.getByRole("tabpanel").locator(".token.keyword").first(),
   ).toBeVisible();
   await expect(
-    page.getByLabel("Dynamic GEMM invocation ownership"),
-  ).toContainText("for depth in 0..K");
+    page.getByLabel("Dynamic GEMM wave tile ownership"),
+  ).toContainText("BF16 fragments → MFMA");
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
-  await page.getByRole("tab", { name: "Compile & run" }).click();
+  await page.getByRole("tab", { name: "Equivalent HIP" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "FE2O3_EXTRACT_GFX942_LLVM_PATH_V1",
+    "__builtin_amdgcn_mfma_f32_16x16x16bf16_1k",
   );
+  await expect(page.getByRole("tabpanel").locator("code.language-cpp")).toBeVisible();
+  await expect(page.getByRole("tabpanel").locator(".token.keyword").first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/tiled_gemm_general_v1/run-gfx942.sh",
+    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -179,12 +181,12 @@ test("dynamic GEMM shows exact executable source and separates optimization evid
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "59 correspondence blocks",
+    "111 correspondence blocks",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "PASS strided-all-tails",
@@ -196,18 +198,18 @@ test("dynamic GEMM shows exact executable source and separates optimization evid
     "PASS zero-k-epilogue",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "scalar-per-output correctness baseline",
+    "not faster than HIP yet",
   );
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Follow one output owner",
+      name: "Map a wave to a tile",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Walk the dynamic K loop",
+      name: "Walk the MFMA K loop",
     }),
   ).toBeVisible();
   await expect(
@@ -317,14 +319,14 @@ test("dynamic GEMM shows exact executable source and separates optimization evid
     page.getByText("All 15 exact safe source mutations are diagnostic"),
   ).toBeVisible();
   await expect(
-    page.getByText("Optimized-family flags remain false"),
+    page.getByText("Legacy LDS-family flags remain false"),
   ).toBeVisible();
-  await expect(page.getByText("Executable scalar source", { exact: true })).toBeVisible();
-  await expect(page.getByText("Optimized positive source", { exact: true })).toBeVisible();
+  await expect(page.getByText("Executable direct-global MFMA source", { exact: true })).toBeVisible();
+  await expect(page.getByText("Cooperative-LDS positive source", { exact: true })).toBeVisible();
   await expect(page.getByText("Private final pair join", { exact: true })).toBeVisible();
   await expect(page.getByText("Verus runtime closure", { exact: true })).toBeVisible();
-  await expect(page.getByText("Protected hardware", { exact: true })).toBeVisible();
-  await expect(page.getByText(/collected-general-gemm-v1 selector exists/u).first()).toBeVisible();
+  await expect(page.getByText("Current MFMA qualification", { exact: true })).toBeVisible();
+  await expect(page.getByText(/historical selector exists for the proposed LDS schedule/u).first()).toBeVisible();
   await expect(
     page.getByText(/before receipt, correspondence, configuration, and proof/u).first(),
   ).toBeVisible();
@@ -369,7 +371,7 @@ test("row softmax separates real source from pending and GPU evidence", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/0d2437c48daadfe178513ca887a94c7c1f460aab/examples/row_softmax_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/row_softmax_v1/src/kernel.rs",
   );
   await expect(page.getByText(/complete syn AST structural admission/u)).toBeVisible();
 
@@ -571,7 +573,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 0d2437c48d",
+      name: "Compiler main at 3874a0c76b",
     }),
   ).toBeVisible();
   await expect(

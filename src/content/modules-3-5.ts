@@ -6,7 +6,7 @@ import flashAttentionProof from "../../examples/flash_attention_v1/verus/flash_a
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.rs?raw";
 import dynamicGemmHost from "../../examples/tiled_gemm_general_v1/src/main.rs?raw";
-import dynamicGemmRunner from "../../examples/tiled_gemm_general_v1/run-gfx942.sh?raw";
+import dynamicGemmHip from "../../examples/tiled_gemm_general_v1/benchmark_hip.cpp?raw";
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
 import {
@@ -79,23 +79,28 @@ Boundary: this is functional exact bounded Slice 1, not generalized GEMM, compil
 const dynamicGemmResult = resultText(
   "runnable-now",
   [
-    "Dynamic strided GEMM qualification run on MI300X",
+    "Safe dynamic BF16/F32 MFMA GEMM on MI300X (gfx942)",
     "",
-    "fe2o3 production extraction: 1 semantic function, 59 correspondence blocks,",
-    "2 formal accesses, 2 ranked dynamic-index discharges,",
-    "workgroup [256, 1, 1], 8801 LLVM bytes, artifact/launch authority false",
+    "Rust -> semantic MIR -> ranked PLIRON -> Kernel IR -> formal/ranked memory",
+    "-> gfx942 LLVM -> HSACO -> fe2o3-host",
+    "1 semantic function, 111 correspondence blocks, 12 ranked dynamic-index discharges,",
+    "workgroup [64, 1, 1], 37129 LLVM bytes, artifact/launch authority false",
     "",
     "PASS packed                       M=16 N=16 K=16 groups=1 max_error=0",
-    "PASS strided-all-tails            M=17 N=19 K=18 groups=3 max_error=0",
-    "PASS multi-workgroup-dynamic-k    M=33 N=35 K=33 groups=6 max_error=0",
-    "PASS zero-k-epilogue              M=17 N=19 K=0 groups=2 max_error=0",
+    "PASS strided-all-tails            M=17 N=19 K=18 groups=4 max_error=0",
+    "PASS multi-workgroup-dynamic-k    M=33 N=35 K=33 groups=9 max_error=0",
+    "PASS zero-k-epilogue              M=17 N=19 K=0 groups=4 max_error=0",
+    "ISA: v_mfma_f32_16x16x16_bf16",
     "",
-    "Each case compared every active output with an independent CPU reference and",
-    "verified that row-padding slots remained unchanged.",
+    "Matched direct-kernel benchmark, 2026-08-22, 15 event-timed samples:",
+    "size    Fe2O3 median     HIP median       Fe2O3 / HIP",
+    "256     12.881 us         9.134 us         1.410x",
+    "512     28.655 us        25.193 us         1.137x",
+    "1024   137.551 us       130.821 us         1.051x",
     "",
-    "Boundary: this is the scalar-per-output correctness baseline and qualification",
-    "execution. It is not an LDS/MFMA optimization, a performance result, protected",
-    "release publication, or complete source-to-machine refinement.",
+    "This is a like-for-like MFMA kernel and host-launch comparison, not rocBLAS.",
+    "Fe2O3 is safer and more expressive here; it is not faster than HIP yet.",
+    "Protected release publication and complete source-to-machine refinement remain separate.",
   ].join("\n"),
 );
 
@@ -249,14 +254,14 @@ function exactDynamicGemmKernelTab() {
   };
 }
 
-function exactDynamicGemmRunnerTab() {
+function exactDynamicGemmHipTab() {
   return {
-    language: "bash" as const,
-    code: dynamicGemmRunner,
-    sourcePath: "examples/tiled_gemm_general_v1/run-gfx942.sh",
+    language: "cpp" as const,
+    code: dynamicGemmHip,
+    sourcePath: "examples/tiled_gemm_general_v1/benchmark_hip.cpp",
     sourceCommit: dynamicGemmSource.commit,
     sourceSha256:
-      "2d9d9e262a456da06a62f27e647bed09ff567a6d7343b61223135964dd5012dc",
+      "24233c267c1bad3bde9c4897fb063d2e48d6d2fa07439dd04f4d0c14bd2ea84c",
     evidenceId: dynamicGemmSource.id,
     explanatory: false,
   };
@@ -269,7 +274,7 @@ function exactDynamicGemmHostTab() {
     sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
     sourceCommit: dynamicGemmSource.commit,
     sourceSha256:
-      "6d0abb165c0b64283c5b98127fe1f127494cf1223818b62d9db81e19352d7ede",
+      "21684aba1e3b562d86caebc9ee636001e83bac7d1e2e727feb0225df57456b94",
     evidenceId: dynamicGemmSource.id,
     explanatory: false,
   };
@@ -500,13 +505,13 @@ const gemmMapping: Lesson = {
   order: 0,
   title: "Dynamic GEMM end to end",
   summary:
-    "Run a safe Rust kernel with dynamic shapes, strides, edges, a K loop, multiple workgroups, and an alpha/beta epilogue.",
-  duration: "30 min",
+    "Build and run a safe wave64 MFMA kernel with dynamic shapes, strides, tails, multiple workgroups, and an alpha/beta epilogue.",
+  duration: "24 min",
   prerequisites: ["Typed indexing and ownership", "Matrix multiplication"],
   objectives: [
-    "Trace one invocation from its physical output slot through the dynamic K loop.",
-    "See how bounds checks and DisjointSlice ownership remain visible to generic compiler analysis.",
-    "Run the exact source through ranked PLIRON, Kernel IR, LLVM, HSACO, and fe2o3-host.",
+    "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
+    "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
+    "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],
   claims: [
     sourceMilestoneClaim("dynamic-gemm-executable-source-v1"),
@@ -514,7 +519,7 @@ const gemmMapping: Lesson = {
       kind: "runnable-now",
       label: "Current MI300X qualification path",
       detail:
-        "The exact safe Rust source compiles and launches through the current workload-neutral production extraction stack. Packed, strided-tail, multi-workgroup dynamic-K, and zero-K epilogue cases pass against an independent CPU reference.",
+        "The exact safe Rust source compiles and launches through the workload-neutral production stack. Four dynamic correctness cases pass at zero error, the HSACO contains V_MFMA_F32_16X16X16_BF16, and a matched HIP comparison is recorded below.",
       reference: currentImplementationReference(
         [
           "examples/tiled_gemm_general_v1/run-gfx942.sh",
@@ -527,12 +532,6 @@ const gemmMapping: Lesson = {
         { target: FE2O3_PIN.target },
       ),
     },
-    {
-      kind: "design-only",
-      label: "Optimization boundary",
-      detail:
-        "This current kernel is a scalar-per-output correctness baseline. Dynamic LDS/MFMA tiling remains an optimization milestone and has no performance claim here.",
-    },
   ],
   sections: [
     narrativeSection("gemm-tiling/mapping"),
@@ -540,7 +539,7 @@ const gemmMapping: Lesson = {
   ],
   tabs: [
     { kind: "kernel", label: "Kernel", ...exactDynamicGemmKernelTab() },
-    { kind: "verus", label: "Compile & run", ...exactDynamicGemmRunnerTab() },
+    { kind: "verus", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
     {
       kind: "result",
@@ -552,9 +551,9 @@ const gemmMapping: Lesson = {
   diagram: "gemm-scalar",
   exercises: [
     {
-      prompt: "Explain why two invocations cannot write the same physical C slot.",
-      hint: "Follow output_index directly into DisjointSlice::get_mut.",
-      acceptance: "The argument identifies the unique invocation index for every executed store.",
+      prompt: "Explain why two lanes or workgroups cannot write the same C element.",
+      hint: "Follow the Tiled2D witness through workgroup tile, lane, and fragment component.",
+      acceptance: "The argument identifies a unique workgroup, lane, and component for every store.",
     },
   ],
   glossary: ["GEMM", "stride", "epilogue", "DisjointSlice", "qualification"],
@@ -564,9 +563,9 @@ const gemmProof: Lesson = {
   id: "gemm-proof-plan",
   module: 4,
   order: 1,
-  title: "From scalar GEMM to LDS/MFMA",
+  title: "Proving and extending the MFMA kernel",
   summary:
-    "Separate the working scalar baseline from the proof and evidence needed for a dynamic tiled optimization.",
+    "Separate the working direct-global MFMA kernel from the additional proof needed for cooperative LDS staging.",
   duration: "38 min",
   prerequisites: ["Dynamic GEMM end to end"],
   objectives: [

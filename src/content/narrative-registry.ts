@@ -184,7 +184,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires commit 0d2437c48daadfe178513ca887a94c7c1f460aab, tree ea623b864d47881b08bde45a4526ea28c9e0270f. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical execution and proof evidence remains independently pinned: the protected GEMM observation stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A evidence stays at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. Every displayed attributed kernel source is pinned to an exact immutable source milestone; the dynamic strided GEMM source at this gate compiles and passes four MI300X qualification cases; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
+        "text": "The checked-in publication gate requires commit 3874a0c76b3e90f73ea8782b54bb6a45ea94f04d, tree 464c1849d3c7f083598c66336e89dfe7e6f6e83b. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical execution and proof evidence remains independently pinned: the protected GEMM observation stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A evidence stays at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. Every displayed attributed kernel source is pinned to an exact immutable source milestone; the dynamic strided GEMM source at this gate compiles and passes four MI300X qualification cases; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
       },
       {
         "type": "callout",
@@ -932,11 +932,11 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Generic PLIRON safety passes are mandatory before lowering",
-        "text": "The executable scalar baseline constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: memory bounds, atomic legality, global race freedom, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. ThreadIndex/DisjointSlice dynamic access, runtime slice bounds, loops, branches, and supported ownership mappings are connected from ordinary safe Rust through LLVM and qualification launch. Unsupported effects and ownership forms still fail closed. The separate 15-case mutation oracle and historical LDS/MFMA evidence describe the proposed optimized schedule; they do not negate the working scalar route and do not establish an executable dynamic tiled kernel."
+        "text": "The executable MFMA kernel constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: memory bounds, atomic legality, global race freedom, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. ThreadIndex/DisjointSlice dynamic access, runtime slice bounds, loops, branches, Tiled2D ownership, and matrix terminals are connected from ordinary safe Rust through LLVM and qualification launch. Unsupported effects and ownership forms still fail closed."
       },
       {
         "type": "paragraph",
-        "text": "The next optimization target keeps the executable kernel's dynamic M/N/K, checked lda/ldb/ldc, runtime alpha/beta, multiple workgroups, K loop, and edge behavior while replacing scalar FP32 work with safe cooperative LDS staging and MFMA fragments. The compiler support must remain workload-neutral: generic effects, ownership, convergence, initialization, and bounds facts justify the schedule without recognizing matrix multiplication."
+        "text": "The current kernel already uses BF16/F32 MFMA with dynamic M/N/K, checked lda/ldb/ldc, runtime alpha/beta, multiple workgroups, a K loop, and edge handling. The remaining schedule optimization is cooperative LDS staging. Its compiler support must remain workload-neutral: generic effects, ownership, convergence, initialization, and bounds facts must justify LDS publication and reuse without recognizing matrix multiplication."
       },
       {
         "type": "table",
@@ -1089,32 +1089,32 @@ const narrativeRegistry = deepFreeze({
           "Authority boundary"
         ],
         "rows": [
-          ["Executable scalar source", "Compiles through ranked PLIRON, Kernel IR, gfx942 LLVM, HSACO, and qualification launch", "Four MI300X correctness cases pass; protected publication, performance, and complete refinement remain separate."],
-          ["Optimized positive source", "Runs canonical optimized-MIR structural analysis without issuing a positive receipt or frontend correspondence", "The collected-general-gemm-v1 selector exists for the proposed LDS/MFMA schedule, but analysis fails closed until a closed verifier covers the safe-code root and reachable helper MIR."],
+          ["Executable direct-global MFMA source", "Compiles through ranked PLIRON, Kernel IR, gfx942 LLVM, HSACO, and qualification launch", "Four MI300X correctness cases pass and a matched HIP result is published; protected publication and complete refinement remain separate."],
+          ["Cooperative-LDS positive source", "Runs canonical optimized-MIR structural analysis without issuing a positive receipt or frontend correspondence", "The historical selector exists for the proposed LDS schedule, but analysis fails closed until a closed verifier covers that safe-code root and reachable helper MIR."],
           ["Private final pair join", "Compiles and checks the source owner against verifier and post-link machine owners for the ordered reference and vectorized schedules", "It is unreachable because positive analysis stops before receipt, correspondence, configuration, and proof; public identities cannot reconstruct it."],
           ["Verus runtime closure", "Implements exact pinning and retention for the reviewed root-owned closure across the qualification boundaries", "It remains a second downstream blocker, but the current positive route never reaches configuration or proof execution."],
-          ["Protected hardware", "No qualified optimized-GEMM launch", "The scalar qualification route runs, but there is no protected dispatch, numerical GPU result, or production execution authority for the dynamic LDS/MFMA kernel."]
+          ["Current MFMA qualification", "The safe direct-global MFMA kernel builds and passes four MI300X numerical cases", "This grants qualification evidence only; protected publication and cooperative LDS execution remain separate."]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Optimized-family flags remain false",
-        "text": "Authenticated mutation-oracle compile-time rejection of all 15 exact source edits does not establish positive source-to-IR semantic refinement for the dynamic LDS/MFMA schedule. TILED_SOURCE_TO_IR=false, TILED_LOWERING=false, and TILED_PROTECTED_EXECUTION=false remain its honest status. This boundary does not apply to the scalar qualification kernel, which compiles and runs today; it does mean the current result carries no optimized performance or protected-publication claim."
+        "title": "Legacy LDS-family flags remain false",
+        "text": "TILED_SOURCE_TO_IR=false, TILED_LOWERING=false, and TILED_PROTECTED_EXECUTION=false describe the historical cooperative-LDS source family in this mutation archive. They do not describe the current direct-global MFMA kernel, which compiles and runs. The mutation oracle remains useful negative evidence but does not transfer protected publication or LDS execution authority."
       },
       {
         "type": "paragraph",
-        "text": "Dynamic values are not static compile-time facts. The current scalar kernel validates strides and extents before any access and ignores padding or rounded-grid invocations; a protected host adapter should reject invalid preparation before launch. These runtime checks are distinct from rustc typestate errors and static fe2o3 diagnostics."
+        "text": "Dynamic values are not static compile-time facts. The current MFMA kernel validates strides and extents before any access, zero-fills edge fragments, and suppresses out-of-range stores; a protected host adapter should reject invalid preparation before launch. These runtime checks are distinct from rustc typestate errors and static fe2o3 diagnostics."
       }
     ]
   },
   "gemm-tiling/mapping": {
     "sectionId": "mapping",
-    "title": "Follow one output owner",
+    "title": "Map a wave to a tile",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The launch covers M * ldc physical output slots, rounded to 256-thread workgroups. Invocation i computes row = i / ldc and column = i % ldc. Padding columns and the rounded grid edge return before touching memory. Every active i is also the unique DisjointSlice index used for the final C store."
+        "text": "Each 64-thread workgroup owns one 16x16 C tile. Lane l supplies four BF16 A values and four BF16 B values to one target-neutral matrix operation, then owns output rows 4*(l/16)+component at column l%16. The Tiled2D witness carries that unique workgroup, lane, and component mapping into every checked store."
       },
       {
         "type": "table",
@@ -1125,24 +1125,24 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           [
-            "Physical C slot",
-            "one invocation",
-            "output_index is the unique store capability"
+            "16x16 C tile",
+            "one workgroup",
+            "the 2D grid maps each tile coordinate once"
           ],
           [
-            "Padding column",
-            "no invocation writes it",
-            "column >= N returns before A, B, or C access"
+            "Four output elements",
+            "one lane",
+            "lane and component select unique local rows and one column"
           ],
           [
-            "A and B reads",
-            "the active invocation",
-            "validated extents plus row, column, and depth bounds"
+            "M, N, or K tail",
+            "checked access",
+            "loads become BF16 zero; stores outside logical C return None"
           ],
           [
-            "Accumulator",
-            "the active invocation",
-            "sum covers exactly depth values 0 through K - 1"
+            "Mutable C region",
+            "Tiled2D witness",
+            "generic race analysis proves disjoint physical addresses"
           ]
         ]
       }
@@ -1150,23 +1150,30 @@ const narrativeRegistry = deepFreeze({
   },
   "gemm-tiling/loop-proof": {
     "sectionId": "loop-proof",
-    "title": "Walk the dynamic K loop",
+    "title": "Walk the MFMA K loop",
     "blocks": [
       {
         "type": "steps",
         "items": [
           "Validate lda, ldb, ldc and the maximum accessed extent of every slice.",
-          "Return for padding columns and rounded-grid invocations before any memory access.",
-          "For each depth < K, derive A[row * lda + depth] and B[depth * ldb + column].",
-          "Advance depth once and preserve the accumulator as the sum of completed products.",
-          "Apply alpha * accumulator + beta * C exactly once through the invocation-owned output index."
+          "Derive the workgroup tile and the lane's four A/B fragment coordinates.",
+          "For each 16-wide K phase, load in-range BF16 values and use zero for edge coordinates.",
+          "Call DeviceMatrix::multiply_accumulate uniformly across the wave and carry four FP32 accumulators.",
+          "Advance the phase by 16 until every dynamic K element is covered.",
+          "Apply alpha * accumulator + beta * C once through each checked Tiled2D output witness."
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "The compiler does not recognize GEMM",
+        "text": "Bounds, sparse index facts, ownership, race freedom, uniformity, convergence, and ranked-memory verification operate on dialect operations and effects. The same passes analyze softmax, attention, MoE, reductions, and arbitrary kernels; matrix lowering only selects the target instruction after those generic obligations pass."
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Numerical contract required",
-        "text": "The qualification run compares FP32 results with a tolerance, but it is not a universal numerical theorem. An optimized BF16/F32 kernel must additionally state input conversion, MFMA accumulation order, rounding, exceptional values, and an error bound or exact reference relation."
+        "text": "The qualification cases are exact for their chosen BF16 inputs, but they are not a universal numerical theorem. Production use still needs a stated input conversion, MFMA accumulation order, rounding and exceptional-value policy, and error bound."
       }
     ]
   },

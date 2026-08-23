@@ -173,7 +173,7 @@ export type CodeTabKind = "kernel" | "verus" | "host" | "result";
 export interface CodeTab {
   kind: CodeTabKind;
   label: string;
-  language: "rust" | "bash" | "text";
+  language: "rust" | "bash" | "cpp" | "text";
   code: string;
   sourcePath?: string;
   sourceCommit?: string;

@@ -156,45 +156,50 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      sourceCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
       sourceSha256:
-        "5ff05418f771bee0e09a87dbb3c925b071059e39a8d58392f1cc6de2a1d1f927",
+        "53361801be92ee9ff6e6b88e67f37a0e5ce9c78ba17ad6d04fc58bf0b25f468d",
       evidenceId: "dynamic-gemm-executable-source-v1",
       explanatory: false,
     });
-    expect(kernel?.code).toContain("while depth < k");
-    expect(kernel?.code).toContain("alpha * accumulator + beta * *output");
+    expect(kernel?.code).toContain("while phase < k as usize");
+    expect(kernel?.code).toContain("matrix.multiply_accumulate(lhs, rhs, accumulator)");
+    expect(kernel?.code).toContain("alpha * values[0] + beta * *output");
     expect(kernel?.code).not.toMatch(/\bunsafe\b/u);
     expect(lesson?.diagram).toBe("gemm-scalar");
 
-    const runner = lesson?.tabs.find((tab) => tab.kind === "verus");
-    expect(runner).toMatchObject({
-      label: "Compile & run",
-      sourcePath: "examples/tiled_gemm_general_v1/run-gfx942.sh",
-      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+    const hip = lesson?.tabs.find((tab) => tab.kind === "verus");
+    expect(hip).toMatchObject({
+      label: "Equivalent HIP",
+      language: "cpp",
+      sourcePath: "examples/tiled_gemm_general_v1/benchmark_hip.cpp",
+      sourceCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
       sourceSha256:
-        "2d9d9e262a456da06a62f27e647bed09ff567a6d7343b61223135964dd5012dc",
+        "24233c267c1bad3bde9c4897fb063d2e48d6d2fa07439dd04f4d0c14bd2ea84c",
       explanatory: false,
     });
-    expect(runner?.code).toContain("FE2O3_EXTRACT_GFX942_LLVM_PATH_V1");
+    expect(hip?.code).toContain("__builtin_amdgcn_mfma_f32_16x16x16bf16_1k");
 
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      sourceCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
       sourceSha256:
-        "6d0abb165c0b64283c5b98127fe1f127494cf1223818b62d9db81e19352d7ede",
+        "21684aba1e3b562d86caebc9ee636001e83bac7d1e2e727feb0225df57456b94",
       explanatory: false,
     });
     expect(host?.code).toContain("multi-workgroup-dynamic-k");
-    expect(host?.code).toContain("LaunchConfig::for_num_elems(work_items)");
+    expect(host?.code).toContain("grid_dim: (workgroups, 1, 1)");
 
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    expect(result).toContain("59 correspondence blocks");
+    expect(result).toContain("111 correspondence blocks");
+    expect(result).toContain("v_mfma_f32_16x16x16_bf16");
     expect(result).toContain("PASS strided-all-tails");
     expect(result).toContain("PASS multi-workgroup-dynamic-k");
     expect(result).toContain("PASS zero-k-epilogue");
-    expect(result).toContain("scalar-per-output correctness baseline");
+    expect(result).toContain("Fe2O3 is safer and more expressive here; it is not faster than HIP yet");
+    expect(result).toContain("137.551 us");
+    expect(result).toContain("130.821 us");
 
     const proofLesson = lessons.find((entry) => entry.id === "gemm-proof-plan");
     expect(proofLesson?.tabs.find((tab) => tab.kind === "kernel")).toMatchObject({
@@ -221,7 +226,7 @@ describe("curriculum integrity", () => {
   it("keeps compiler diagnostics in the GEMM proof lesson", () => {
     const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
     expect(lesson?.objectives).toContain(
-      "See how bounds checks and DisjointSlice ownership remain visible to generic compiler analysis.",
+      "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
     );
 
     const contract = JSON.stringify(
@@ -238,11 +243,12 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("bounded sparse affine index dataflow");
     expect(contract).toContain("contains no GEMM names, tile-size tests, or schedule recognizers");
     expect(contract).toContain("ThreadIndex/DisjointSlice dynamic access");
+    expect(contract).toContain("Tiled2D ownership");
+    expect(contract).toContain("matrix terminals");
     expect(contract).toContain("connected from ordinary safe Rust through LLVM and qualification launch");
     expect(contract).toContain("Unsupported effects and ownership forms still fail closed");
-    expect(contract).toContain("15-case mutation oracle");
-    expect(contract).toContain("do not establish an executable dynamic tiled kernel");
-    expect(contract).toContain("safe cooperative LDS staging and MFMA fragments");
+    expect(contract).toContain("current kernel already uses BF16/F32 MFMA");
+    expect(contract).toContain("remaining schedule optimization is cooperative LDS staging");
     expect(contract).toContain("ceil_div(K,16)");
     expect(contract).toContain("defined BF16 +0");
     expect(contract).toContain("unconditional publish barrier");
@@ -360,8 +366,8 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("retains the valid_proof_sensitive root");
     expect(failures).toContain("failed at compiler preflight");
     expect(failures).toContain("empty artifact directory");
-    expect(failures).toContain("Executable scalar source");
-    expect(failures).toContain("Optimized positive source");
+    expect(failures).toContain("Executable direct-global MFMA source");
+    expect(failures).toContain("Cooperative-LDS positive source");
     expect(failures).toContain("without issuing a positive receipt or frontend correspondence");
     expect(failures).toContain("analysis fails closed");
     expect(failures).toContain("safe-code root and reachable helper MIR");
@@ -369,8 +375,8 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("stops before receipt, correspondence, configuration, and proof");
     expect(failures).toContain("second downstream blocker");
     expect(failures).toContain("never reaches configuration or proof execution");
-    expect(failures).toContain("No qualified optimized-GEMM launch");
-    expect(failures).toContain("Optimized-family flags remain false");
+    expect(failures).toContain("Current MFMA qualification");
+    expect(failures).toContain("Legacy LDS-family flags remain false");
     expect(failures).toContain("TILED_SOURCE_TO_IR=false");
     expect(failures).toContain("TILED_LOWERING=false");
     expect(failures).toContain("TILED_PROTECTED_EXECUTION=false");
@@ -495,7 +501,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_v1/src/kernel.rs",
-      sourceCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      sourceCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
       sourceSha256:
         "0b0d5e2964d4627bc7ef3dac882f86a9b3c49ab715245bacc3fc92f28f0d08b0",
       explanatory: false,
@@ -1668,12 +1674,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-22",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
-      eventualPublicTree: "ea623b864d47881b08bde45a4526ea28c9e0270f",
+      eventualPublicCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
+      eventualPublicTree: "464c1849d3c7f083598c66336e89dfe7e6f6e83b",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "0d2437c48daadfe178513ca887a94c7c1f460aab",
-        requiredTree: "ea623b864d47881b08bde45a4526ea28c9e0270f",
+        requiredCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
+        requiredTree: "464c1849d3c7f083598c66336e89dfe7e6f6e83b",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2299,7 +2305,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "0d2437c48daadfe178513ca887a94c7c1f460aab",
+      "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
     );
 
     const lesson = curriculum
@@ -2949,10 +2955,10 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"0d2437c48daadfe178513ca887a94c7c1f460aab");
+    expect(mapping).toContain("sourceCommit\":\"3874a0c76b3e90f73ea8782b54bb6a45ea94f04d");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
-    expect(proofPlan).toContain("Optimized-family flags remain false");
+    expect(proofPlan).toContain("Legacy LDS-family flags remain false");
     expect(proofPlan).toContain("authenticates the exact attributed source");
     expect(proofPlan).toContain("stops before descriptor construction and Worker V2");
     expect(proofPlan).toContain("six cases checked 1,536 outputs");
