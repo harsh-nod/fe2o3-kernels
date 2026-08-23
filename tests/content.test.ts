@@ -145,8 +145,9 @@ describe("curriculum integrity", () => {
   it("shows only safe Rust in every kernel tab", () => {
     for (const lesson of lessons) {
       for (const kernel of lesson.tabs.filter((tab) => tab.kind === "kernel")) {
-        expect(kernel.code).not.toMatch(/\bunsafe\b/u);
-        expect(kernel.code).not.toMatch(/unsafe\s*\{/u);
+        expect(kernel.code).not.toMatch(
+          /\bunsafe\s*(?:\{|fn\b|impl\b|trait\b|extern\b)/u,
+        );
       }
     }
   });
@@ -500,10 +501,10 @@ describe("curriculum integrity", () => {
     const lesson = lessons.find((entry) => entry.id === "softmax-invariant");
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
-      sourcePath: "examples/row_softmax_v1/src/kernel.rs",
-      sourceCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
+      sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
+      sourceCommit: "7411ed2225e16c14339c5686efcee7c03fe7a257",
       sourceSha256:
-        "0b0d5e2964d4627bc7ef3dac882f86a9b3c49ab715245bacc3fc92f28f0d08b0",
+        "e92f281bc584ae3c3554b95130290feb6e3481fdc0531b4f50e6f176c5527c03",
       explanatory: false,
     });
     expect(createHash("sha256").update(kernel?.code ?? "").digest("hex")).toBe(
@@ -512,6 +513,9 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain("#[kernel(");
     expect(kernel?.code).toContain("control_flow(loop_bounds(64, 64, 64))");
     expect(kernel?.code).toContain("DeviceMath::current()");
+    expect(kernel?.code).toContain("subgroup_reduce_max_f32::<64>");
+    expect(kernel?.code).toContain("subgroup_reduce_sum_f32::<64>");
+    expect(kernel?.code).toContain("checked_tiled_2d::<64, 64, 64, 64>");
 
     const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
     expect(proof).toMatchObject({
@@ -526,65 +530,31 @@ describe("curriculum integrity", () => {
 
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
-      sourcePath:
-        "crates/fe2o3-host/src/protected_row_softmax_v1_lifecycle.rs",
-      sourceCommit: "38b0005765944de55bb32c559bc8431637317b2b",
-      explanatory: true,
+      sourcePath: "examples/row_softmax_general_v1/src/main.rs",
+      sourceCommit: "7411ed2225e16c14339c5686efcee7c03fe7a257",
+      sourceSha256:
+        "f3ec05ee1bcbb0cea08bf90ee87121996dde519905a93469dd59442dd34f9a8b",
+      explanatory: false,
     });
-    expect(host?.code).toContain("JoinedProtectedRowSoftmaxV1");
-    expect(host?.code).toContain("load_after_context_match");
+    expect(host?.code).toContain("grid_dim: (case.rows, 1, 1)");
+    expect(host?.code).toContain("maximum-width");
+    expect(host?.code).toContain("wrote output padding");
 
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    for (const layer of [
-      "Source:",
-      "CPU:",
-      "Verus:",
-      "Compiler/code object:",
-      "Host:",
-      "GPU:",
-    ]) {
-      expect(result).toContain(layer);
-    }
-    expect(result).toContain("Release A 31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1");
-    expect(result).toContain("manifest B fd89390788adc5670c54ecc2517b9720f2f80113");
-    expect(result).toContain(
-      "9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c",
-    );
-    expect(result).toContain("Two fresh complete MI300X runs passed");
-    expect(result).toContain("independent review accepted the evidence package");
-    expect(result).toContain(
-      "0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93",
-    );
-    expect(result).toContain("examples/row_softmax_v1/src/kernel.rs");
-    expect(result).toContain("Complete syn AST structural admission");
-    expect(result).toContain("fixed reviewed interpreter/model");
-    expect(result).toContain("digest/certificate binding");
-    expect(result).toContain("do not establish Rust semantic refinement");
-    expect(result).toContain("runtime satisfaction of those preconditions");
-    expect(result).toContain("no protected dispatch");
-    expect(result).toContain("does not justify a cuda-oxide parity promotion");
+    expect(result).toContain("Dynamic row softmax qualification on MI300X/gfx942");
+    expect(result).toContain("PASS single-column");
+    expect(result).toContain("PASS maximum-width");
+    expect(result).toContain("four ranked dynamic-index obligations");
+    expect(result).toContain("12 ds_bpermute instructions and no MFMA");
+    expect(result).toContain("not a proof for every input or a performance claim");
 
     const proofNarrative = narrativeEntry("softmax-invariant/proof");
-    expect(JSON.stringify(proofNarrative)).not.toContain(
-      "row loads and output writes are bounded and race-free",
+    expect(JSON.stringify(proofNarrative)).toContain("PLIRON verification");
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "The compiler does not know this is softmax",
     );
     expect(JSON.stringify(proofNarrative)).toContain(
-      "Address separation is an obligation, not end-to-end race freedom",
-    );
-    expect(JSON.stringify(proofNarrative)).toContain(
-      "complete syn AST structural admission",
-    );
-    expect(JSON.stringify(proofNarrative)).toContain(
-      "fixed reviewed interpreter/model",
-    );
-    expect(JSON.stringify(proofNarrative)).toContain(
-      "no Rust semantic refinement",
-    );
-    expect(JSON.stringify(proofNarrative)).toContain(
-      "Compiler and GPU causality",
-    );
-    expect(JSON.stringify(proofNarrative)).toContain(
-      "generalized memory safety and race freedom",
+      "never matches a softmax name or loop pattern",
     );
   });
 
@@ -623,30 +593,12 @@ describe("curriculum integrity", () => {
         sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
       {
-        lessonId: "flash-attention",
-        evidenceId: "flash-attention-source-v1",
-        sourcePath: "examples/flash_attention_v1/src/kernel.rs",
-        bundledPath: "examples/flash_attention_v1/src/kernel.rs",
-        sha256:
-          "6dbaa2af88fd5edcdf0485f3da47b1319ce299422a77b99af56f9a3e77c2a421",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
-      },
-      {
         lessonId: "moe-routing",
         evidenceId: "moe-top2-source-v1",
         sourcePath: "examples/moe_top2_v1/src/kernel.rs",
         bundledPath: "examples/moe_top2_v1/src/kernel.rs",
         sha256:
           "0260f144150e6fee7d9bd6a3d919e99ded0e43666509770f6e6186f5100fee25",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
-      },
-      {
-        lessonId: "moe-expert-compute",
-        evidenceId: "moe-expert-source-v1",
-        sourcePath: "examples/moe_expert_v1/src/kernel.rs",
-        bundledPath: "examples/moe_expert_v1/src/kernel.rs",
-        sha256:
-          "aa03fca2cea5bf590bf9e73f20f4945bac6cc93c0f85dcb5be8906d618dec69b",
         sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
       },
     ] as const;
@@ -675,22 +627,10 @@ describe("curriculum integrity", () => {
         ).toBe(true);
       }
       expect(lesson?.tabs.find((tab) => tab.kind === "verus")?.explanatory).toBe(
-        ![
-          "flash-attention",
-          "moe-routing",
-          "moe-expert-compute",
-        ].includes(profile.lessonId),
+        profile.lessonId !== "moe-routing",
       );
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
-      const gaps = profile.lessonId === "flash-attention"
-        ? [
-            "W0 authenticated HostLinkClosureV1",
-            "W1 broker cargo-fe2o3 executable identity",
-            "exponential and IEEE FP32/OCML refinement",
-            "protected gfx942 output",
-            "source/model-to-machine refinement",
-          ]
-        : profile.lessonId === "moe-routing"
+      const gaps = profile.lessonId === "moe-routing"
         ? [
             "W0 authenticated HostLinkClosureV1",
             "W1 broker cargo-fe2o3 executable identity",
@@ -699,14 +639,7 @@ describe("curriculum integrity", () => {
             "IEEE FP32/compiler/logical-address refinement",
             "source/model-to-machine refinement",
           ]
-        : profile.lessonId === "moe-expert-compute"
-        ? [
-            "exact compiler admission",
-            "typed multi-dispatch runtime",
-            "protected gfx942 execution",
-            "source/model-to-machine refinement",
-          ]
-          : profile.lessonId === "lds-barriers-atomics"
+        : profile.lessonId === "lds-barriers-atomics"
           ? [
               "source/compiler/machine refinement",
               "generalized illegal-access safety",
@@ -1674,12 +1607,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-22",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
-      eventualPublicTree: "464c1849d3c7f083598c66336e89dfe7e6f6e83b",
+      eventualPublicCommit: "7411ed2225e16c14339c5686efcee7c03fe7a257",
+      eventualPublicTree: "b1cb08940a6b5984388c4f10ccdb9abd6d34afd7",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
-        requiredTree: "464c1849d3c7f083598c66336e89dfe7e6f6e83b",
+        requiredCommit: "7411ed2225e16c14339c5686efcee7c03fe7a257",
+        requiredTree: "b1cb08940a6b5984388c4f10ccdb9abd6d34afd7",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2200,20 +2133,22 @@ describe("implementation progress integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
-      sourcePath:
-        "crates/fe2o3-hsa-runtime/tests/flash_attention_v1_hardware.rs",
-      sourceCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
-      explanatory: true,
+      sourcePath: "examples/flash_attention_general_v1/src/main.rs",
+      sourceCommit: "7411ed2225e16c14339c5686efcee7c03fe7a257",
+      sourceSha256:
+        "d1ee9f0f3f72e74282706b16f3ac1272356dffb97e766bbc46e6d71ed02eebd1",
+      explanatory: false,
     });
-    expect(host?.code).toContain("protected_gfx942_flash_attention_v1_hardware");
+    expect(host?.code).toContain("tails-and-strides");
+    expect(host?.code).toContain("multi-head-multi-tile");
+    expect(host?.code).toContain("wrote output padding");
     expect(result?.explanatory).toBe(true);
+    expect(result?.code).toContain("Dynamic fused attention qualification");
+    expect(result?.code).toContain("V_MFMA_F32_16X16X16_BF16");
+    expect(result?.code).toContain("29 ranked dynamic-index obligations");
     expect(result?.code).toContain(
-      "d2aa57c0f468f574f44a9fea06bbb8e98aa9b60bb2d9303cc4d8b6caf0cfca54",
+      "claim of parity with a tuned production FlashAttention library",
     );
-    expect(result?.code).toContain(
-      "Reproducible machine bytes do not establish functional or numerical correctness",
-    );
-    expect(result?.code).toContain("No protected GPU dispatch");
   });
 
   it("tracks G5 MoE finalization and typed runtime without granting GPU authority", () => {
@@ -2305,7 +2240,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
+      "7411ed2225e16c14339c5686efcee7c03fe7a257",
     );
 
     const lesson = curriculum
@@ -2331,28 +2266,25 @@ describe("implementation progress integrity", () => {
     const expertHost = expertLesson?.tabs.find((tab) => tab.kind === "host");
     const expertResult = expertLesson?.tabs.find((tab) => tab.kind === "result");
     const expertContent = serializedLessonContent("moe-expert-compute");
-    expect(expertContent).toContain("E4/C4/routes16/width16/tile256");
-    expect(expertContent).toContain("19 verified obligations");
-    expect(expertContent).toContain("all seven expected-failure mutations");
-    expect(expertContent).toContain("all 625 possible expert-count vectors");
-    expect(expertContent).toContain(
-      "A consistent host snapshot is not router provenance",
-    );
-    expect(expertContent).toContain("no freshness or replay authority");
-    expect(expertHost?.code).toContain(
-      "scripts/test-moe-expert-compact-plan-verus.sh",
-    );
-    expect(expertHost?.code).toContain(
-      "gfx942_routing_bridge_upload_readback_and_denial_are_exact",
-    );
-    expect(expertHost?.notice).toContain("dispatches no kernel");
+    expect(expertContent).toContain("runtime padded rows");
+    expect(expertContent).toContain("MFMA is an operation, not a workload label");
+    expect(expertContent).toContain("17 tokens, 3 experts, 34 routes");
+    expect(expertContent).toContain("Host scheduling is still explicit");
+    expect(expertHost).toMatchObject({
+      sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
+      sourceCommit: "7411ed2225e16c14339c5686efcee7c03fe7a257",
+      sourceSha256:
+        "4a999e24699896c792c5b9e4a0c4428e08cd1e65d0bf0b5772aa4d721aafe5b9",
+      explanatory: false,
+    });
+    expect(expertHost?.code).toContain("launch_expert");
+    expect(expertHost?.code).toContain("routes[(token % EXPERTS)");
+    expect(expertHost?.notice).toContain("launches the same generated kernel");
+    expect(expertResult?.code).toContain("PASS top2-routed-moe");
+    expect(expertResult?.code).toContain("17 ranked dynamic-index obligations");
     expect(expertResult?.code).toContain(
-      "internal consistency of caller-supplied top2 experts",
+      "no GEMM, attention, routing, or MoE recognizer",
     );
-    expect(expertResult?.code).toContain(
-      "No functional expert GPU result or performance result is claimed",
-    );
-    expect(expertResult?.code).toContain("No expert kernel was dispatched");
 
     const orientation = serializedLessonContent("evidence-archive");
     expect(orientation).toContain("Read bounded MoE evidence by layer");

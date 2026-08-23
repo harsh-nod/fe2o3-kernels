@@ -66,7 +66,7 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
           </button>
         </div>
       </div>
-      {current.explanatory && (
+      {(current.explanatory || current.notice) && (
         <div className="code-status">
           <Info size={14} aria-hidden="true" />
           {current.notice ??

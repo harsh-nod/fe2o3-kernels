@@ -1,10 +1,13 @@
+import { currentState } from "./current-state";
 import { narrativeSection } from "./narrative-registry";
 import moeTop2Kernel from "../../examples/moe_top2_v1/src/kernel.rs?raw";
 import moeTop2Proof from "../../examples/moe_top2_v1/verus/moe_top2_v1.rs?raw";
-import moeExpertKernel from "../../examples/moe_expert_v1/src/kernel.rs?raw";
+import moeExpertKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel.rs?raw";
+import moeExpertHost from "../../examples/moe_grouped_expert_general_v1/src/main.rs?raw";
 import moeExpertProof from "../../examples/moe_expert_v1/verus/moe_expert_memory_v1.rs?raw";
 import {
   FE2O3_PIN,
+  currentImplementationReference,
   pinnedReference,
   type CurriculumModule,
   type Lesson,
@@ -21,7 +24,6 @@ import {
 
 const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
-const moeExpertSource = sourceMilestoneRecord("moe-expert-source-v1");
 const moeExpertVerus = sourceMilestoneRecord("moe-expert-verus-v1");
 
 const moeRouting: Lesson = {
@@ -30,7 +32,7 @@ const moeRouting: Lesson = {
   order: 0,
   title: "MoE routing: stable ownership",
   summary:
-    "Turn top-k choices into capacity-bounded, deterministic expert slots before launching any expert GEMM.",
+    "Establish the deterministic routing contract consumed by the dynamic grouped-expert kernel in the next lesson.",
   duration: "58 min",
   prerequisites: ["Scans", "Stable sorting", "Tiled GEMM"],
   objectives: [
@@ -115,19 +117,36 @@ const expertCompute: Lesson = {
   id: "moe-expert-compute",
   module: 6,
   order: 1,
-  title: "MoE expert GEMM and combine",
+  title: "Dynamic grouped-expert MoE with MFMA",
   summary:
-    "Compose verified routing ranges with per-expert matrix contracts and a deterministic weighted combine.",
-  duration: "50 min",
+    "Pack top-2 routes by expert, run one dynamic MFMA projection kernel for each expert, and combine weighted results in token order.",
+  duration: "45 min",
   prerequisites: ["MoE routing", "GEMM proof plan"],
   objectives: [
-    "Treat each expert's compacted token range as a bounded GEMM batch.",
-    "Carry route identity through expert output and inverse permutation.",
-    "State determinism and numerical contracts for weighted combine.",
-    "Separate host-snapshot consistency from authenticated router provenance.",
+    "Treat each expert's compacted token range as a dynamic matrix batch.",
+    "Trace BF16 matrix fragments through MFMA and the gated bias epilogue.",
+    "Carry route identity through expert output and deterministic combine.",
+    "Explain why the compiler pipeline needs no routing or MoE recognizer.",
   ],
   claims: [
-    sourceMilestoneClaim("moe-expert-source-v1"),
+    {
+      kind: "gpu-observed",
+      label: "Top-2 grouped experts on MI300X",
+      detail:
+        "A 17-token, 3-expert, 34-route case with dynamic K, N, strides, edge tiles, bias, gates, and combine matched an independent CPU oracle exactly on gfx942.",
+      reference: currentImplementationReference(
+        ["examples/moe_grouped_expert_general_v1/run-gfx942.sh"],
+        [
+          "examples/moe_grouped_expert_general_v1/src/kernel.rs",
+          "examples/moe_grouped_expert_general_v1/src/main.rs",
+          "examples/moe_grouped_expert_general_v1/run-gfx942.sh",
+        ],
+        {
+          target: "gfx942:xnack-",
+          note: "Qualification ran at d2281046486db830c2c815d6a887540716a7b158. Current main is a direct descendant with this source and pipeline unchanged; this is evidence for one top-2 routed case, not a router proof or performance result.",
+        },
+      ),
+    },
     sourceMilestoneClaim("moe-expert-verus-v1"),
   ],
   sections: [
@@ -139,10 +158,10 @@ const expertCompute: Lesson = {
     {
       language: "rust",
       code: moeExpertKernel,
-      sourcePath: moeExpertSource.primarySourcePath,
-      sourceCommit: moeExpertSource.commit,
-      sourceSha256: moeExpertSource.primarySourceSha256,
-      evidenceId: moeExpertSource.id,
+      sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "6c46aaf770537c62b43bef3c0e7bda77fe7c0bc2ed0df90ec5d5986315272154",
       explanatory: false,
     },
     {
@@ -154,50 +173,28 @@ const expertCompute: Lesson = {
       evidenceId: moeExpertVerus.id,
       explanatory: false,
       notice:
-        "This fixed logical model proves index bounds, padding separation, disjoint write owners, inverse-slot admission, and host phase order. It does not prove numerical or machine semantics.",
+        "This historical fixed-profile model proves index bounds, padding separation, disjoint write owners, inverse-slot admission, and host phase order. It does not cover the current dynamic kernel or prove numerical or machine semantics.",
     },
     {
-      language: "bash",
-      code: `cargo test --locked \\
-  --manifest-path examples/moe_expert_v1/Cargo.toml \\
-  --all-targets
-
-cargo test --locked --release \\
-  --manifest-path examples/moe_expert_v1/Cargo.toml \\
-  --all-targets
-
-VERUS=/absolute/path/to/pinned/verus \\
-  examples/moe_expert_v1/run-verus.sh
-
-VERUS=/absolute/path/to/pinned/verus \\
-  scripts/test-moe-expert-compact-plan-verus.sh
-
-cargo test --locked -p fe2o3-host \\
-  moe_routing_expert_bridge_v1 -- --nocapture
-
-cargo test --locked -p fe2o3-host \\
-  --test generated_moe_expert_v1_ui
-
-# Requires gfx942:xnack- and performs copies plus readback only. No kernel runs.
-cargo test --locked -p fe2o3-host \\
-  --test moe_expert_v1_upload_hardware \\
-  gfx942_routing_bridge_upload_readback_and_denial_are_exact \\
-  -- --ignored --exact --nocapture`,
-      sourcePath: "examples/moe_expert_v1/src/pipeline.rs",
-      sourceCommit: moeExpertSource.commit,
-      explanatory: true,
+      language: "rust",
+      code: moeExpertHost,
+      sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "4a999e24699896c792c5b9e4a0c4428e08cd1e65d0bf0b5772aa4d721aafe5b9",
+      explanatory: false,
       notice:
-        "These commands cover the host schedule, independent direct oracle, source checks, canaries, both pinned Verus models, host routing-snapshot checks, compile-fail boundaries, and the gfx942 offsets-plus-inverse upload/readback fixture. The upload fixture dispatches no kernel and grants no execution authority.",
+        "The host owns deterministic top-2 routing, packs each expert group, launches the same generated kernel for every nonempty expert, combines route-weighted outputs, and compares against an independent CPU oracle. Unsafe is confined to the host FFI boundary.",
     },
     {
       language: "text",
       code: resultText(
-        "source-model-verified",
-        "Commit ff0c08a5bdca2568178f690c04c0b0c6bfa6febe publishes two ordinary attributed kernels for the exact T8/E4/K2/C4, I16/O16 host-scheduled expert pipeline: one 16x16x16 BF16/F32 expert GEMM and one deterministic top-2 weighted combine. The executable host schedule and independent direct oracle agree on active and padded expert rows, compact outputs, dropped routes, route-order weighting, every final token output, unchanged inputs, and guard canaries in debug and release. The original logical memory/effect model verifies 15 obligations and rejects six pinned mutations. The publication-gated E4/C4/routes16/width16/tile256 bounded MoE V2 compact-plan model verifies 19 obligations, rejects seven expected-failure mutations, and exhaustively checks all 625 count vectors. The host bridge validates internal consistency of caller-supplied top2 experts, requested and admitted counts, offsets, route slots, permutation, and inverse; it uploads offsets and inverse together, retains both regions, and passed gfx942 upload/readback. That upload/readback test is no kernel dispatch. It does not authenticate router execution or readback provenance, derive top2 choices from logits, bind route weights or packed activations, or provide compiler, finalizer, artifact, dispatch, or expert-execution authority. It has no freshness or replay authority. Remaining gaps include those joins, exact compiler admission and direct finalization for both expert kernels, a typed multi-dispatch runtime, protected gfx942 execution of both expert kernels, GPU/oracle comparison, numerical refinement, generalized source/model-to-machine refinement, authenticated proof consumption, machine memory safety, and generalized race freedom. Grouped or persistent expert scheduling is still separate future work. No functional hardware result is claimed. No functional expert GPU result or performance result is claimed. No expert kernel was dispatched.",
+        "gpu-observed",
+        "PASS top2-routed-moe tokens=17 experts=3 K=18 N=19 routes=34 max_error=0\n\nThe production compiler collected one semantic function, discharged 17 ranked dynamic-index obligations, emitted a 39,896-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16. The kernel accepts runtime padded rows, output columns, reduction depth, independent strides, expert ID and expert count; safe edge predicates cover partial K and N tiles. The host fixture exercises three experts and top-2 routing, verifies untouched padding, and compares the combined result with an independent CPU oracle. The compiler sees only generic typed fragments, arithmetic, dynamic indices, disjoint output capabilities, and control flow. It has no GEMM, attention, routing, or MoE recognizer. This is correctness evidence for the listed case, not a routing proof, persistent scheduling implementation, or performance result.",
       ),
       explanatory: true,
       notice:
-        "Evidence boundary: real attributed source, host arithmetic, independent oracle, canaries, fixed-profile Verus models, exhaustive CPU checks, and a retained host-to-device upload/readback observation are integrated and publication-gated. The upload/readback test dispatches no kernel. Router and expert GPU execution, generalized source-to-machine refinement, numerical and performance results, memory-safety and race-freedom authority, compiler/finalizer/artifact joins, provenance, freshness, replay, and protected-execution authority remain absent, so this lesson stays Partial.",
+        "Evidence boundary: this is one direct grouped-expert qualification launch and numerical comparison. It does not establish a universal routing proof, persistent device scheduling, or a tuned MoE performance result.",
     },
   ),
   diagram: "moe",

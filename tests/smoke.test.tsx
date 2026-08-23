@@ -46,15 +46,17 @@ describe("application shell", () => {
     }, { timeout: 5_000 });
     await user.type(input, "flash attention");
     await user.click(
-      screen.getByRole("option", { name: /Flash attention: online invariant/ }),
+      screen.getByRole("option", {
+        name: /^Dynamic FlashAttention with MFMAModule 5/u,
+      }),
     );
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "Flash attention: online invariant",
+        name: "Dynamic FlashAttention with MFMA",
       }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Source tested").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
   });
 
   it("renders real row-softmax source without upgrading its evidence", async () => {
@@ -63,16 +65,16 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Softmax: one fixed row, six evidence layers",
+        name: "Dynamic row softmax",
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "pub fn row_softmax_v1",
+      "pub fn row_softmax_general_v1",
     );
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/row_softmax_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/7411ed2225e16c14339c5686efcee7c03fe7a257/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     await user.click(screen.getByRole("tab", { name: "Verus proof" }));
@@ -81,14 +83,14 @@ describe("application shell", () => {
     );
     await user.click(screen.getByRole("tab", { name: "Host" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "JoinedProtectedRowSoftmaxV1",
+      "name: \"single-column\"",
     );
     await user.click(screen.getByRole("tab", { name: "Expected result" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "no protected dispatch and no numerical GPU result",
+      "12 ds_bpermute instructions and no MFMA",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "does not justify a cuda-oxide parity promotion",
+      "not a proof for every input or a performance claim",
     );
   });
 
@@ -103,7 +105,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("3874a0c76b3e")).toBeInTheDocument();
+    expect(screen.getByText("7411ed2225e1")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -113,7 +115,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "464c1849d3c7f083598c66336e89dfe7e6f6e83b",
+      "b1cb08940a6b5984388c4f10ccdb9abd6d34afd7",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -237,7 +239,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler main at 3874a0c76b",
+        name: "Compiler main at 7411ed2225",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -249,7 +251,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open current compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d",
+      "https://github.com/harsh-nod/fe2o3/tree/7411ed2225e16c14339c5686efcee7c03fe7a257",
     );
   });
 });

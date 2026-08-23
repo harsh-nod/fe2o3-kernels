@@ -1,7 +1,9 @@
 import { currentState } from "./current-state";
 import { narrativeSection } from "./narrative-registry";
-import flashAttentionKernel from "../../examples/flash_attention_v1/src/kernel.rs?raw";
-import rowSoftmaxKernel from "../../examples/row_softmax_v1/src/kernel.rs?raw";
+import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
+import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
+import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel.rs?raw";
+import rowSoftmaxHost from "../../examples/row_softmax_general_v1/src/main.rs?raw";
 import flashAttentionProof from "../../examples/flash_attention_v1/verus/flash_attention_v1.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.rs?raw";
@@ -47,9 +49,6 @@ const collectivesSource = sourceMilestoneRecord(
 );
 const synchronizationSource = sourceMilestoneRecord(
   "workgroup-sync-source-v1",
-);
-const flashAttentionSource = sourceMilestoneRecord(
-  "flash-attention-source-v1",
 );
 const flashAttentionVerus = sourceMilestoneRecord(
   "flash-attention-verus-v1",
@@ -178,68 +177,30 @@ pub proof fn distinct_output_element_addresses_v1(base: int, left: nat, right: n
 }
 `;
 
-const rowSoftmaxHost = `/// Inert exact token/buffer join before a runtime is observed.
-#[must_use = "the joined row-softmax request must enter its one-shot lifecycle"]
-pub struct JoinedProtectedRowSoftmaxV1<'input, 'output> {
-    token: ProtectedRowSoftmaxV1HostTokenV1,
-    host: GeneratedProtectedRowSoftmaxV1HostAdapterV1<'input, 'output>,
-}
-
-/// Consumes the sealed token and exact generated binding into one linear join.
-pub fn join_protected_row_softmax_v1<'input, 'output>(
-    token: ProtectedRowSoftmaxV1HostTokenV1,
-    host: GeneratedProtectedRowSoftmaxV1HostAdapterV1<'input, 'output>,
-) -> Result<JoinedProtectedRowSoftmaxV1<'input, 'output>, ProtectedRowSoftmaxV1JoinErrorV1> {
-    validate_join(&token, &host)?;
-    Ok(JoinedProtectedRowSoftmaxV1 { token, host })
-}
-
-impl<'input, 'output> JoinedProtectedRowSoftmaxV1<'input, 'output> {
-    pub const fn token_identity(&self) -> ProtectedRowSoftmaxV1HostTokenIdentityV1 {
-        self.token.identity()
-    }
-
-    pub const fn admission_identity(&self) -> ProtectedRowSoftmaxV1AdmissionIdentityV1 {
-        self.token.admission_identity()
-    }
-
-    pub const fn finalized_artifact_identity(&self) -> FinalizedWorkerV2HsacoIdentityV1 {
-        self.token.finalized_artifact_identity()
-    }
-
-    pub fn load<A: ReviewedProtectedRowSoftmaxV1RuntimeAdapterV1>(
-        self,
-        mut adapter: A,
-    ) -> Result<
-        LoadedProtectedRowSoftmaxV1<'input, 'output, A>,
-        ProtectedRowSoftmaxV1LoadErrorV1<A::Error>,
-    > {
-        let context_identity = reviewed_adapter_call(|| unsafe { adapter.context_identity_v1() });
-        if !self
-            .host
-            .observed_context_v1()
-            .matches_core_context_identity_v1(context_identity)
-        {
-            return Err(ProtectedRowSoftmaxV1LoadErrorV1::ContextIdentity);
-        }
-        let state = load_after_context_match(self, adapter)?;
-        Ok(LoadedProtectedRowSoftmaxV1 { state })
-    }
-}
-`;
-
 const rowSoftmaxResult = resultText(
-  "compiler-hsaco-observed",
-  `Fixed-width row-softmax V1 evidence boundary
+  "gpu-observed",
+  `Dynamic row softmax qualification on MI300X/gfx942
 
-Source: the current safe ordinary example-owned attributed Rust #[kernel] body at examples/row_softmax_v1/src/kernel.rs fixes one unmasked 64-element row, WG64, and three bounded scalar loops executed by lane zero. Complete syn AST structural admission, a fixed reviewed interpreter/model, and digest/certificate binding cover this exact source under authenticated 64-element input/output preconditions. They do not establish Rust semantic refinement or observe runtime satisfaction of those preconditions.
-CPU: independent host reference and numerical-oracle tests exist; they are not GPU observations.
-Verus: the mathematical and address-set models verify bounded indices, row extents, and conditional disjoint-address obligations. They do not model concrete memory events or prove source-to-machine race freedom.
-Compiler/code object: focused source admission, pinned upstream LLVM target-machine plus in-process LLD finalization, and inspection mechanics exist. Release A 31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1/tree 293c6d39e47d64f5949d450d6041dc598aafd0fe and manifest B fd89390788adc5670c54ecc2517b9720f2f80113/tree af0156687517c0e71eb0d607917964b7c375af43 bind manifest SHA-256 9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c and one retained HSACO SHA-256 0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93. Two fresh complete MI300X runs passed; independent review accepted the evidence package. These non-GPU runs establish bounded compiler/code-object reproducibility and operator-selected reviewed integrity only, not authentication or refinement.
-Host: typed disjoint input/output binding and Joined -> Loaded -> Completed -> Unloaded source mechanics exist. The durable broker prepared-session consume foundation remains AUTHORITY=none and supplies no anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, or GPU authority; protected receipt injection and HSA load remain open.
-GPU: no protected dispatch and no numerical GPU result are claimed.
+PASS single-column      rows=3 columns=1 stride=4099 max_error=0
+PASS wave-tail          rows=5 columns=63 stride=4101 max_error=1.4901161e-8
+PASS multi-iteration    rows=7 columns=257 stride=4103 max_error=5.5879354e-9
+PASS maximum-width      rows=2 columns=4096 stride=4103 max_error=6.0535967e-9
 
-This evidence does not justify a cuda-oxide parity promotion.`,
+The production compiler collected one semantic function, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 16,378-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained 12 ds_bpermute instructions and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
+
+The logical column count and input stride are dynamic. Each physical row reserves 4,096 input and output elements, inactive input columns must be negative infinity, and columns above the logical width remain untouched. These qualification results establish the listed cases against an independent CPU oracle; they are not a proof for every input or a performance claim.`,
+);
+
+const flashAttentionResult = resultText(
+  "gpu-observed",
+  `Dynamic fused attention qualification on MI300X/gfx942
+
+PASS tails-and-strides        heads=1 queries=16/16 keys=13/16 depth=18 value_dim=7 max_error=4.4703484e-8
+PASS multi-head-multi-tile   heads=2 queries=17/32 keys=19/32 depth=33 value_dim=16 max_error=5.9604645e-8
+
+The same production pipeline collected one semantic function, discharged 29 ranked dynamic-index obligations, emitted a 150,852-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and ds_bpermute subgroup reductions. Scores are never materialized in global memory.
+
+The kernel accepts runtime head count, padded query/key lengths, depth up to 1,024, keys up to 4,096, value width up to 16, independent legal strides, scale, and an additive mask for causal, padding, or application masks. Q and K are BF16; V, mask, accumulation, and output are FP32. The current PV contraction is scalar/reduction based, so this is correctness evidence rather than a claim of parity with a tuned production FlashAttention library.`,
 );
 
 function exactDynamicGemmKernelTab() {
@@ -617,22 +578,34 @@ const softmax: Lesson = {
   id: "softmax-invariant",
   module: 5,
   order: 0,
-  title: "Softmax: one fixed row, six evidence layers",
+  title: "Dynamic row softmax",
   summary:
-    "Read the real width-64 kernel, address-set model, and typed host lifecycle without combining their separate authority levels.",
-  duration: "42 min",
+    "Use safe Rust, dynamic row dimensions, and subgroup reductions to compile and run row softmax through the production pipeline.",
+  duration: "35 min",
   prerequisites: ["Reductions", "Floating-point error basics"],
   objectives: [
-    "Trace the attributed max, exponential-sum, and normalization loops.",
-    "Distinguish address-set obligations from a source-to-machine race proof.",
-    "Separate CPU, Verus, compiler/code-object, host, and GPU evidence.",
+    "Map one wave to each row and distribute columns across its 64 lanes.",
+    "Explain why subgroup shuffles, rather than MFMA, implement softmax.",
+    "Trace dynamic bounds from safe Rust through ranked verification and GPU execution.",
   ],
   claims: [
     {
-      kind: "design-only",
-      label: "Production GPU boundary",
+      kind: "gpu-observed",
+      label: "Dynamic row softmax on MI300X",
       detail:
-        "Real attributed source, CPU checks, a Verus/address-set model, and compiler/host mechanics exist. Production authority still fails closed before HSA load, so there is no protected GPU result and no parity promotion.",
+        "Four dynamic-shape and strided cases compiled through the generic production pipeline and matched an independent CPU oracle on gfx942.",
+      reference: currentImplementationReference(
+        ["examples/row_softmax_general_v1/run-gfx942.sh"],
+        [
+          "examples/row_softmax_general_v1/src/kernel.rs",
+          "examples/row_softmax_general_v1/src/main.rs",
+          "examples/row_softmax_general_v1/run-gfx942.sh",
+        ],
+        {
+          target: "gfx942:xnack-",
+          note: "Qualification ran at d2281046486db830c2c815d6a887540716a7b158. Current main is a direct descendant with this source and pipeline unchanged; this is evidence for the four published cases, not a universal proof or performance result.",
+        },
+      ),
     },
   ],
   sections: [
@@ -643,10 +616,10 @@ const softmax: Lesson = {
     {
       language: "rust",
       code: rowSoftmaxKernel,
-      sourcePath: "examples/row_softmax_v1/src/kernel.rs",
+      sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "0b0d5e2964d4627bc7ef3dac882f86a9b3c49ab715245bacc3fc92f28f0d08b0",
+        "e92f281bc584ae3c3554b95130290feb6e3481fdc0531b4f50e6f176c5527c03",
       explanatory: false,
     },
     {
@@ -658,19 +631,18 @@ const softmax: Lesson = {
         "cacf81e02eb071cc29b1124811e911097fd62e7d29556dda8380418a631f5db5",
       explanatory: true,
       notice:
-        "This tab shows the address-model excerpt used in the lesson; the link and digest identify the complete pinned proof source.",
+        "This historical fixed-64 address model remains useful for its local ownership obligations. It does not prove the current dynamic row-softmax kernel or its source-to-machine lowering.",
     },
     {
       language: "rust",
       code: rowSoftmaxHost,
-      sourcePath:
-        "crates/fe2o3-host/src/protected_row_softmax_v1_lifecycle.rs",
-      sourceCommit: "38b0005765944de55bb32c559bc8431637317b2b",
+      sourcePath: "examples/row_softmax_general_v1/src/main.rs",
+      sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "9bba17fdf73d1f0374a3ee44c9f795ab8d2c6273e64138c1ac5687d169eee5e5",
-      explanatory: true,
+        "f3ec05ee1bcbb0cea08bf90ee87121996dde519905a93469dd59442dd34f9a8b",
+      explanatory: false,
       notice:
-        "This tab shows the protected-lifecycle excerpt used in the lesson; the link and digest identify the complete pinned host source.",
+        "The kernel remains entirely safe Rust. Unsafe is confined to the ordinary host FFI boundaries for loading a code object and launching its generated ABI.",
     },
     {
       language: "text",
@@ -682,8 +654,8 @@ const softmax: Lesson = {
   exercises: [
     {
       prompt: "Add masking without overstating the proof boundary.",
-      hint: "Change source, CPU policy, Verus premises, compiler profile, and typed host ABI independently.",
-      acceptance: "The proposal names one test or proof obligation for each of the six evidence layers.",
+      hint: "Encode inactive columns as negative infinity and keep at least one finite value in every row.",
+      acceptance: "The added cases cover an interior mask, a tail mask, untouched output padding, and the all-masked rejection policy.",
     },
   ],
   glossary: ["softmax", "max subtraction", "error budget", "masking"],
@@ -693,18 +665,35 @@ const flash: Lesson = {
   id: "flash-attention",
   module: 5,
   order: 1,
-  title: "Flash attention: online invariant",
+  title: "Dynamic FlashAttention with MFMA",
   summary:
-    "Inspect the exact fixed-shape causal Phase A kernel and its typed host/runtime mechanics, then close the protected execution and refinement gaps.",
-  duration: "65 min",
+    "Fuse QK score tiles, masking, softmax, and the V contraction without materializing the score matrix.",
+  duration: "55 min",
   prerequisites: ["GEMM proof plan", "Softmax invariant"],
   objectives: [
-    "Derive the online max, normalization sum, and output correction invariant.",
-    "Track Q, K, V, score, and output tiles through distinct memory epochs.",
-    "List masking, precision, and machine-effect evidence required for closure.",
+    "Trace BF16 QK fragments through target-neutral matrix types and gfx942 MFMA.",
+    "Use an additive mask and subgroup reductions for dynamic key tails.",
+    "Identify the current value-width and numerical limits without turning them into compiler assumptions.",
   ],
   claims: [
-    sourceMilestoneClaim("flash-attention-source-v1"),
+    {
+      kind: "gpu-observed",
+      label: "Dynamic fused attention on MI300X",
+      detail:
+        "Two tail, stride, depth, and multi-head cases compiled through the generic production pipeline and matched an independent CPU oracle on gfx942.",
+      reference: currentImplementationReference(
+        ["examples/flash_attention_general_v1/run-gfx942.sh"],
+        [
+          "examples/flash_attention_general_v1/src/kernel.rs",
+          "examples/flash_attention_general_v1/src/main.rs",
+          "examples/flash_attention_general_v1/run-gfx942.sh",
+        ],
+        {
+          target: "gfx942:xnack-",
+          note: "Qualification ran at d2281046486db830c2c815d6a887540716a7b158. Current main is a direct descendant with this source and pipeline unchanged; no tuned-library performance claim is made.",
+        },
+      ),
+    },
     sourceMilestoneClaim("flash-attention-verus-v1"),
   ],
   sections: [
@@ -716,10 +705,10 @@ const flash: Lesson = {
     {
       language: "rust",
       code: flashAttentionKernel,
-      sourcePath: flashAttentionSource.primarySourcePath,
-      sourceCommit: flashAttentionSource.commit,
-      sourceSha256: flashAttentionSource.primarySourceSha256,
-      evidenceId: flashAttentionSource.id,
+      sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "9f9830652ef4aa00a39255b1a886380b890228cd39d6bae4b06ec14e0d43590e",
       explanatory: false,
     },
     {
@@ -731,45 +720,33 @@ const flash: Lesson = {
       evidenceId: flashAttentionVerus.id,
       explanatory: false,
       notice:
-        "This pinned rational model proves the online recurrence and ownership obligations. Exponential-law, IEEE FP32/OCML, source refinement, compiled effects, and GPU execution remain open.",
+        "This historical fixed-profile model proves the online recurrence and ownership obligations. It does not cover the dynamic executable kernel, exponential-law or IEEE FP32/OCML refinement, or source-to-machine refinement.",
     },
     {
-      language: "bash",
-      code: `cargo test -p fe2o3-hsa-runtime \\
-  --test flash_attention_v1_hardware \\
-  independent_flash_oracle_covers_nominal_masked_equal_dominant_and_exceptional_cases \\
-  -- --exact --nocapture
-
-# This protected gate must fail closed before HSA load pending W0 authenticated
-# HostLinkClosureV1, W1 broker executable identity, and later receipt injection.
-cargo test -p fe2o3-hsa-runtime \\
-  --test flash_attention_v1_hardware \\
-  protected_gfx942_flash_attention_v1_hardware \\
-  -- --ignored --exact --nocapture`,
-      sourcePath:
-        "crates/fe2o3-hsa-runtime/tests/flash_attention_v1_hardware.rs",
-      sourceCommit: "26c80737e3380cd73df21d9a8abd1838cdfa76bc",
-      explanatory: true,
+      language: "rust",
+      code: flashAttentionHost,
+      sourcePath: "examples/flash_attention_general_v1/src/main.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "d1ee9f0f3f72e74282706b16f3ac1272356dffb97e766bbc46e6d71ed02eebd1",
+      explanatory: false,
       notice:
-        "The exact typed four-buffer adapter and linear lifecycle are source-tested. The independent CPU oracle passes, while the protected gate deliberately refuses raw bytes or an artifact path and fails before HSA load pending W0 authenticated HostLinkClosureV1, W1 broker cargo-fe2o3 executable identity, and subsequent receipt injection.",
+        "The host builds causal and padding masks, launches the generated ABI, compares every active output with an independent reference, and checks output padding. Unsafe is confined to the host code-object and launch FFI boundary.",
     },
     {
       language: "text",
-      code: resultText(
-        "source-model-verified",
-        "Exact ordinary attributed source, proof-facing models, a pinned Verus proof of the rational online recurrence, compiler admission, upstream LLVM/LLD finalization, and B1/H1/N8/D16 typed host/runtime mechanics are public. Commit c1aecbb11017125e84209a333d978ec6d5bdddb1 makes pinned upstream LLVM 22.1.8 the sole exact compiler identity and records two clean MI300X reproductions that agree at every measured stage; canonical kernel-body SHA-256 d2aa57c0f468f574f44a9fea06bbb8e98aa9b60bb2d9303cc4d8b6caf0cfca54 covers 2540 bytes, while ROCm LLVM 7.2.4 is rejected drift. The four-buffer binding retains input leases and a unique output lease, rejects aliases, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Nine compile-fail boundaries and an independent strict-f32 CPU oracle pass. Commit 182d5673327bdbf642e3328a50903a4607a1756c also adds an exhaustive fixed-domain memory/effect checker and a pinned Verus source: 13 obligations verify and eight named mutations fail. Its expected-evidence descriptor is inert, has no authenticated Verus receipt, and establishes no compiler, LLVM/ISA, logical-address, machine-safety, generalized race-freedom, or GPU-execution join. The protected test fails closed before HSA load pending W0 authenticated HostLinkClosureV1, W1 broker cargo-fe2o3 executable identity, and subsequent linear receipt injection. Remaining gaps: protected gfx942 output, GPU/oracle numerical comparison, exponential and IEEE FP32/OCML refinement, authenticated proof consumption, and source/model-to-machine refinement. Reproducible machine bytes do not establish functional or numerical correctness. No functional hardware result is claimed. No protected GPU dispatch occurred.",
-      ),
+      code: flashAttentionResult,
       explanatory: true,
       notice:
-        "Evidence boundary: this is source/model, bounded Verus memory/effect, pinned upstream machine-reproducibility, host/runtime mechanics, compile-fail, and CPU-oracle evidence. It does not establish an authenticated proof receipt, compiler or OCML semantics, compiled address/machine refinement, machine memory safety, generalized race freedom, protected GPU dispatch, or a numerical GPU result.",
+        "Evidence boundary: these are direct qualification launches and numerical comparisons for two cases. They do not establish a universal proof, complete numerical refinement, or tuned-library performance.",
     },
   ),
   diagram: "attention",
   exercises: [
     {
-      prompt: "Extend the online invariant with a causal mask.",
-      hint: "Quantify only keys whose absolute position does not exceed the query position.",
-      acceptance: "The processed set, maximum, sum, and numerator all use the identical masked domain.",
+      prompt: "Add a windowed causal mask.",
+      hint: "The additive mask is the workload policy; the compiler only sees ordinary indexed reads and arithmetic.",
+      acceptance: "CPU and GPU agree for left and right window edges, query/key tails, and multiple heads.",
     },
   ],
   glossary: ["flash attention", "online softmax", "causal mask", "numerical refinement"],
@@ -791,7 +768,7 @@ export const modules3to5: CurriculumModule[] = [
   {
     number: 5,
     title: "Softmax and attention",
-    summary: "State online numerical invariants and fused memory effects.",
+    summary: "Run dynamic wave reductions and fused MFMA attention through one compiler pipeline.",
     lessons: [softmax, flash],
   },
 ];

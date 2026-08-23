@@ -106,18 +106,16 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   });
   await expect(search).toBeFocused();
   await search.fill("flash attention");
-  await page
-    .getByRole("option", { name: /Flash attention: online invariant/ })
-    .click();
+  await page.locator("#lesson-flash-attention").click();
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Flash attention: online invariant",
+      name: "Dynamic FlashAttention with MFMA",
     }),
   ).toBeVisible();
   const lessonEvidence = page.getByLabel("Evidence for this lesson");
   await expect(
-    lessonEvidence.getByText("Source tested", { exact: true }),
+    lessonEvidence.getByText("GPU observed", { exact: true }),
   ).toBeVisible();
   await expect(
     lessonEvidence.getByText("Verus model", { exact: true }),
@@ -355,52 +353,52 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
 });
 
-test("row softmax separates real source from pending and GPU evidence", async ({
+test("row softmax shows dynamic source and GPU qualification", async ({
   page,
 }) => {
   await page.goto("./#/lesson/softmax-invariant");
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Softmax: one fixed row, six evidence layers",
+      name: "Dynamic row softmax",
     }),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "pub fn row_softmax_v1",
+    "pub fn row_softmax_general_v1",
   );
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/row_softmax_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/7411ed2225e16c14339c5686efcee7c03fe7a257/examples/row_softmax_general_v1/src/kernel.rs",
   );
-  await expect(page.getByText(/complete syn AST structural admission/u)).toBeVisible();
+  await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
   await page.getByRole("tab", { name: "Verus proof" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "separate_input_and_output_accesses_do_not_alias_v1",
   );
   await expect(
-    page.getByText("Address separation is an obligation, not end-to-end race freedom"),
+    page.getByText("The compiler does not know this is softmax"),
   ).toBeVisible();
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "JoinedProtectedRowSoftmaxV1",
+    "fn launch_case",
   );
   await expect(
-    page.getByText(/production authority still failing closed before HSA load/u),
+    page.getByText(/ordinary host FFI boundaries/u),
   ).toBeVisible();
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Two fresh complete MI300X runs passed",
+    "PASS single-column",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "independent review accepted the evidence package",
+    "PASS maximum-width",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "no protected dispatch and no numerical GPU result",
+    "12 ds_bpermute instructions and no MFMA",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "does not justify a cuda-oxide parity promotion",
+    "not a proof for every input or a performance claim",
   );
 });
 
@@ -455,22 +453,22 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
 });
 
-test("MoE expert lesson exposes attributed kernels and bounded proof evidence", async ({
+test("MoE expert lesson exposes dynamic MFMA source and qualification evidence", async ({
   page,
 }) => {
   await page.goto("./#/lesson/moe-expert-compute");
   await expect(page.getByRole("tabpanel")).toContainText(
-    "pub fn moe_expert_gemm_bf16_m16_n16_k16_v1",
+    "pub fn moe_grouped_expert_general_v1",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "pub fn moe_expert_combine_f32_t8_k2_o16_v1",
+    "matrix.multiply_accumulate(lhs, rhs, accumulator)",
   );
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/moe_expert_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/7411ed2225e16c14339c5686efcee7c03fe7a257/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
@@ -486,30 +484,30 @@ test("MoE expert lesson exposes attributed kernels and bounded proof evidence", 
 
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "examples/moe_expert_v1/run-verus.sh",
+    "fn launch_expert",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "scripts/test-moe-expert-compact-plan-verus.sh",
+    "routes[(token % EXPERTS)",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "gfx942_routing_bridge_upload_readback_and_denial_are_exact",
+    "PASS top2-routed-moe",
   );
   await expect(
-    page.getByText(/The upload fixture dispatches no kernel/u),
+    page.getByText(/launches the same generated kernel/u),
   ).toBeVisible();
 
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "No functional expert GPU result or performance result is claimed",
+    "17 ranked dynamic-index obligations",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "No expert kernel was dispatched",
+    "no GEMM, attention, routing, or MoE recognizer",
   );
+  await expect(
+    page.getByText(/one direct grouped-expert qualification launch/u),
+  ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "no freshness or replay authority",
-  );
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "Grouped or persistent expert scheduling is still separate future work",
+    "not a routing proof, persistent scheduling implementation, or performance result",
   );
 
   await page.goto("./#/status");
@@ -573,7 +571,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 3874a0c76b",
+      name: "Compiler main at 7411ed2225",
     }),
   ).toBeVisible();
   await expect(

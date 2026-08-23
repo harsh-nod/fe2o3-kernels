@@ -1247,26 +1247,26 @@ const narrativeRegistry = deepFreeze({
   },
   "softmax-invariant/spec": {
     "sectionId": "spec",
-    "title": "Start from the attributed fixed row",
+    "title": "One wave owns one dynamic row",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The sole ordinary example-owned source is examples/row_softmax_v1/src/kernel.rs at commit 86c4ca67a673bfec966f79e6c701104db872d8ea. The attributed V1 Rust kernel accepts one separate input and output, each exactly 64 f32 elements. Lane zero performs a 64-step maximum scan, a 64-step sum of DeviceMath::exp_f32(input[i] - maximum), and a 64-step normalization pass. V1 is unmasked and nonempty by construction; masking, batches, striding, and variable widths are different profiles, not implied features."
+        "text": "The current safe Rust kernel maps one 64-lane wave to each row. Lane l owns columns l + 64 * iteration, so every lane participates in the maximum and sum reductions while output writes remain disjoint. Rows, logical columns, and the input stride are runtime values. The physical row capacity is 4,096 elements; inactive input columns are negative infinity and inactive output columns are left untouched."
       },
       {
         "type": "bullets",
         "items": [
-          "Source evidence fixes the complete ordinary #[kernel] body, typed slices, WG64 launch, and three bounded loops through exact syn AST structural admission.",
-          "A fixed reviewed interpreter/model and digest/certificate bindings cover the admitted source and exact 64-element memory preconditions; they do not assign operational Rust semantics or observe a runtime launch.",
-          "CPU evidence checks an independent finite reference and comparison policy; it does not execute HSACO.",
-          "Numerical closure still requires explicit NaN, infinity, subnormal, OCML approximation, reduction-order, and error-bound semantics."
+          "Gfx942Collectives::subgroup_reduce_max_f32 and subgroup_reduce_sum_f32 lower to generic lane shuffles; softmax does not use MFMA because it contains no matrix contraction.",
+          "Tiled2D output ownership and ranked dynamic-index facts let the compiler admit bounds and disjoint writes without unsafe kernel code.",
+          "DeviceMath::exp_f32 is collected and lowered as an ordinary device math operation in the same semantic pipeline.",
+          "The current contract rejects empty rows and requires at least one finite active input; full NaN, infinity, subnormal, and all-masked semantics remain explicit numerical-policy work."
         ]
       }
     ]
   },
   "softmax-invariant/proof": {
     "sectionId": "proof",
-    "title": "Keep the evidence layers separate",
+    "title": "What the generic pipeline establishes",
     "blocks": [
       {
         "type": "table",
@@ -1276,54 +1276,54 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           [
-            "Source/model review",
-            "complete syn AST structural admission followed by a fixed reviewed interpreter/model and digest/certificate binding; no Rust semantic refinement"
+            "Rust typing",
+            "read-only input, disjoint tiled output capability, checked tile construction, and no unsafe kernel block"
           ],
           [
-            "Verus",
-            "mathematical and address-set obligations under explicit premises; no concrete memory-event model"
+            "PLIRON verification",
+            "ranked bounds, disjoint stores, uniform collective participation, and fail-closed unsupported effects"
           ],
           [
-            "Compiler/code object",
-            "focused source-admission, direct upstream LLVM/LLD, and inspection mechanics; the pending release manifest and two-run gate are not published here"
+            "Lowering",
+            "generic control flow, device math, and subgroup operations lower to gfx942 LLVM and HSACO"
           ],
           [
-            "Typed host",
-            "disjoint input/output leases and a linear Joined -> Loaded -> Completed -> Unloaded API, with production authority still failing closed before HSA load"
+            "Qualification host",
+            "four dynamic cases launch on MI300X, compare with an independent CPU oracle, and check untouched output padding"
           ],
           [
-            "GPU",
-            "no protected dispatch and no numerical GPU result"
+            "Remaining boundary",
+            "the observations are not a universal numerical proof, complete IEEE/OCML refinement, or a performance result"
           ]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Address separation is an obligation, not end-to-end race freedom",
-        "text": "The structural gate and fixed interpreter/model bind reviewed syntax and a bounded abstract trace; they do not prove Rust semantic refinement. The Verus model proves bounded indices, checked row extents, and conditional distinct addresses, but it does not model the attributed source's concrete memory events, AMDGPU scheduling, visibility, or emitted machine accesses. DeviceMath::exp_f32 remains a separate OCML and IEEE numerical obligation. Compiler and GPU causality, runtime execution and precondition satisfaction, generalized memory safety and race freedom, protected dispatch, and cuda-oxide parity promotion all remain unproved."
+        "title": "The compiler does not know this is softmax",
+        "text": "The pipeline reasons about typed capabilities, ranked indices, effects, control flow, collective convergence, and target-neutral operations. It never matches a softmax name or loop pattern. The same checks therefore apply to arbitrary kernels, while numerical policy remains visible in ordinary Rust source and explicit input contracts."
       }
     ]
   },
   "flash-attention/online": {
     "sectionId": "online",
-    "title": "Carry a normalized row state",
+    "title": "Fuse scores without materializing them",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "After processing key tiles 0..t, keep running_max m_t, running_sum l_t measured in the m_t frame, and output numerator o_t in the same frame. When a new tile raises the maximum, multiply both old l and old o by exp(m_old - m_new) before adding the new tile contributions."
+        "text": "Each wave produces a 16-query tile. Target-neutral BF16 fragments contract Q with transposed K in 16-key tiles, and the gfx942 backend lowers those matrix operations to V_MFMA_F32_16X16X16_BF16. The first pass finds each row maximum. The second recomputes score tiles, applies the additive mask, accumulates the denominator and V-weighted numerator, and writes FP32 output without storing the score matrix."
       },
       {
         "type": "callout",
         "tone": "proof",
-        "title": "Central invariant",
-        "text": "l_t equals the sum of exp(score - m_t) over exactly the processed, unmasked keys, and o_t equals the correspondingly weighted sum of V. Final output is o_t / l_t under the row-validity policy."
+        "title": "Numerical invariant",
+        "text": "For every active query row, the maximum, denominator, and numerator range over the identical set of keys admitted by the additive mask. The output is the masked weighted numerator divided by the masked exponential sum. Padding keys carry negative infinity in the mask and zero in K and V."
       }
     ]
   },
   "flash-attention/effects": {
     "sectionId": "effects",
-    "title": "Machine effects are part of the proof",
+    "title": "Separate matrix work from reductions",
     "blocks": [
       {
         "type": "table",
@@ -1334,49 +1334,49 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           [
-            "Q residency",
-            "register/LDS",
-            "row fragment initialized and stable"
+            "QK tile",
+            "BF16 fragments and MFMA accumulators",
+            "dynamic depth tails contribute zero"
           ],
           [
-            "K/V load",
-            "global to LDS",
-            "edge and causal predicates dominate reads"
+            "Mask",
+            "FP32 global read",
+            "causal and padding policy is additive data, not compiler knowledge"
           ],
           [
-            "Score tile",
-            "MFMA accumulators",
-            "layout matches lane fragments"
+            "Row maximum",
+            "16-lane subgroup max",
+            "all participating lanes execute the same collective"
           ],
           [
-            "Online update",
-            "wave/workgroup reductions",
-            "same active mask and order"
+            "PV numerator",
+            "scalar V loads and 16-lane sums",
+            "current value dimension is runtime-bounded to 16"
           ],
           [
             "Output",
-            "global",
-            "one owner per query/output element"
+            "Tiled2D disjoint capability",
+            "one owner per active query/output element and untouched stride padding"
           ]
         ]
       },
       {
         "type": "paragraph",
-        "text": "Causal masking, variable sequence lengths, head strides, grouped-query layouts, dropout, and backward propagation each change the specification. Introduce them as separate versioned profiles rather than optional booleans inside one unreviewed theorem."
+        "text": "Batch-head count, padded query and key lengths, depth, strides, scale, and additive mask are runtime values. The compiler verifies their generic indexed effects; it does not contain an attention recognizer. Grouped-query layouts, dropout, backward propagation, wider V tiles, and a matrix-accelerated PV contraction remain separate algorithm work."
       }
     ]
   },
   "flash-attention/closure": {
     "sectionId": "closure",
-    "title": "What hardware evidence must inspect",
+    "title": "What the MI300X qualification covers",
     "blocks": [
       {
         "type": "bullets",
         "items": [
-          "Exact gfx942 target, wave64 contract, kernarg ABI, LDS bytes, barriers, and MFMA forms.",
-          "Boundary sequence lengths, causal corners, all-masked policy, and canary regions.",
-          "Numerical comparison against an independent high-precision implementation with a stated tolerance envelope.",
-          "Identity binding from source and proofs through direct LLVM/LLD output and the loaded code object."
+          "Two cases cover key and query tails, multi-head and multi-tile launch geometry, non-multiple-of-16 depth, runtime strides, causal masks, and value widths 7 and 16.",
+          "The production route performs source collection, generic PLIRON safety verification, Kernel IR lowering, gfx942 LLVM emission, HSACO finalization, host launch, and CPU-oracle comparison.",
+          "Disassembly confirms MFMA score contractions and subgroup shuffle reductions; no global score matrix is allocated.",
+          "The result does not establish complete IEEE/OCML refinement, every legal shape, all-masked-row behavior, or performance parity with tuned FlashAttention libraries."
         ]
       }
     ]
@@ -1424,27 +1424,27 @@ const narrativeRegistry = deepFreeze({
   },
   "moe-expert-compute/composition": {
     "sectionId": "composition",
-    "title": "Range proofs become GEMM dimensions",
+    "title": "One kernel serves every expert group",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "For expert e, the scan establishes a compact range [base_e, base_e + count_e). Use count_e as M for that expert's token-by-weight GEMM. The weight tensor supplies K and N. The GEMM admission proof must bind these dimensions, layouts, and exact expert weight identity."
+        "text": "The host packs each expert's selected token routes into a 16-row-padded matrix and launches the same safe Rust kernel for every nonempty group. Runtime arguments supply padded rows, reduction depth, output columns, all matrix strides, expert ID, and expert count. The expert ID selects a strided weight and bias region; it does not select a compiler path."
       },
       {
         "type": "callout",
         "tone": "warning",
-        "title": "Dynamic scheduling changes the proof surface",
-        "text": "A persistent kernel or device work queue introduces atomics, liveness, and fairness assumptions. Begin with a deterministic host-scheduled expert order before adding that separate profile."
+        "title": "MFMA is an operation, not a workload label",
+        "text": "Target-neutral matrix fragments express the token-by-weight contraction. The gfx942 backend selects V_MFMA_F32_16X16X16_BF16, while generic ranked bounds, sparse index facts, race analysis, and edge predicates verify the surrounding dynamic code. No pass recognizes GEMM or MoE."
       }
     ]
   },
   "moe-expert-compute/combine": {
     "sectionId": "combine",
-    "title": "Return to token order",
+    "title": "Apply the epilogue and return to token order",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The inverse map ties every expert output row back to one original token and route rank. The combine writes one final token vector from its K routed results. Avoid cross-token races by assigning one owner to each final token; define route-weight normalization and accumulation order for numerical reproducibility."
+        "text": "The kernel computes gate * (projection + expert_bias) for every routed row. The host retains the route-to-token mapping, reads each expert result, and accumulates the two weighted routes into one token output in deterministic route order. The qualification case uses 17 tokens, 3 experts, 34 routes, K=18, and N=19 so both reduction and output edge predicates execute."
       },
       {
         "type": "table",
@@ -1457,22 +1457,22 @@ const narrativeRegistry = deepFreeze({
           [
             "Route",
             "token, expert, rank",
-            "unique bounded slot"
+            "stable host-owned packed row"
           ],
           [
             "Expert GEMM",
-            "expert, compact row",
-            "dimension/layout binding"
+            "expert ID, packed row",
+            "dynamic dimension, stride, and weight-region binding"
           ],
           [
             "Inverse",
             "slot to token/rank",
-            "bijection on accepted routes"
+            "recover original token for each routed result"
           ],
           [
             "Combine",
             "token and ordered routes",
-            "one writer; stated reduction order"
+            "deterministic gate-weighted accumulation"
           ]
         ]
       }
@@ -1480,17 +1480,17 @@ const narrativeRegistry = deepFreeze({
   },
   "moe-expert-compute/bounded-evidence": {
     "sectionId": "bounded-evidence",
-    "title": "The bounded compact-plan and host bridge",
+    "title": "Correctness and remaining limits",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The exact E4/C4/routes16/width16/tile256 compact-plan model turns monotone expert offsets into bounded source and destination ranges, pairwise disjoint ordered destination ranges, an accepted-prefix union, and a defined zero tail. Verus reports 19 verified obligations, all seven expected-failure mutations are rejected, and a Rust checker exhaustively covers all 625 possible expert-count vectors."
+        "text": "The production pipeline collected the dynamic expert kernel, discharged 17 ranked index obligations, emitted gfx942 LLVM and HSACO, and executed the top-2 case on MI300X. Every combined output matched an independent BF16-input/FP32-accumulation CPU oracle exactly, and output stride padding retained its sentinel."
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "A consistent host snapshot is not router provenance",
-        "text": "The host bridge validates the internal relation among caller-supplied top2 experts, requested and admitted counts, offsets, route slots, permutation, and inverse. It synchronously uploads offsets and inverse together and retains both immutable device regions; a gfx942 fixture read both arrays back exactly. It does not authenticate router completion or device readback, prove top2 selection from logits, bind route weights or packed activations, or grant compiler, finalizer, artifact, copy, load, dispatch, or expert GPU authority. The caller-supplied candidate can be checked again, so the resulting evidence has no freshness or replay authority."
+        "title": "Host scheduling is still explicit",
+        "text": "The current example qualifies deterministic host-scheduled top-2 routing and one kernel launch per expert. It does not implement a device router, capacity overflow policy, persistent expert queue, fairness or liveness guarantees, or a performance comparison. The historical Verus tab remains useful for fixed-profile ownership obligations, but it is not presented as a proof of this dynamic executable kernel."
       }
     ]
   },
