@@ -472,7 +472,7 @@ const gemmMapping: Lesson = {
   objectives: [
     "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
     "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
-    "Use KernelResult and ? for checked capability construction while preserving the unit GPU ABI.",
+    "Use KernelResult with ? or let Ok for fallible view and ownership construction, then consume zero-filled typed fragment loads directly.",
     "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],
   claims: [
@@ -709,7 +709,7 @@ const flash: Lesson = {
       sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "4a808f6eb7caecb4eac0a976cd723dcaf5d5a9ed15525ee3bf8bb3d1f0ff1411",
+        "836bcf365ea629191a677bfb7fc2b06864c7718b3acaaff7cb8fe6324989f414",
       explanatory: false,
     },
     {

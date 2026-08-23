@@ -67,7 +67,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
     primarySourceSha256:
-      "058c5dab9910124480974b69686b6a60a18016a50657286daa8df5c58d1aa48b",
+      "844d0aadba6ce977e2d4e2d3bd0fd556c92752fe5fa543099f81e806c0b5b663",
     target: "gfx942:xnack-",
   },
   "tiled-gemm-safe-source-v1": {
@@ -92,7 +92,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
     primarySourceSha256:
-      "f368ee28eb3c34e4a18a4ebf9e41ca599bb2e9ae054794ea621195b88124cca3",
+      "26a5ec889bc9122d6b91b956111d690e27c0b00997793e3600caaa79b601f2a3",
     target: "gfx942:xnack-",
   },
   "wave64-collectives-source-v1": {
@@ -259,7 +259,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/moe_expert_v1/src/kernel.rs",
     primarySourceSha256:
-      "aa03fca2cea5bf590bf9e73f20f4945bac6cc93c0f85dcb5be8906d618dec69b",
+      "aabf48081ef9e027c0e5520300a435cdeb830df5081dafcf719dc7159e804c81",
     target: "gfx942:xnack-",
   },
   "moe-expert-verus-v1": {

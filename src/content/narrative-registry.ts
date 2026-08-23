@@ -1366,7 +1366,13 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "Each 64-thread workgroup owns one 16x16 C tile. Lane l supplies four BF16 A values and four BF16 B values to one target-neutral matrix operation, then owns output rows 4*(l/16)+component at column l%16. The Tiled2D witness carries that unique workgroup, lane, and component mapping into every checked store."
+        "text": "Each 64-thread workgroup owns one 16x16 C tile. Lane l receives four BF16 A values and four BF16 B values from role-typed matrix views, then owns output rows 4*(l/16)+component at column l%16. The Tiled2D witness carries that unique workgroup, lane, and component mapping into every checked store."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Fallible views, total edge loads",
+        "text": "Bf16MfmaAMatrix::row_major and Bf16MfmaBMatrix::row_major return Result because invalid offsets, extents, or strides cannot form a matrix view; ordinary kernel code handles that boundary with ? or let Ok. Once the view exists, load_m16k16 and load_k16n16 return their role-typed fragments directly. A logical out-of-bounds coordinate or checked coordinate/address overflow contributes defined BF16 zero, so absence is data rather than an Option control-flow path. The compiler still emits four exact guarded loads for each fragment in Kernel IR V7: only the true edge may touch memory, while the false edge supplies zero, and the generic bounds pass verifies the true-edge address."
       },
       {
         "type": "table",
@@ -1407,9 +1413,9 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "steps",
         "items": [
-          "Validate lda, ldb, ldc and the maximum accessed extent of every slice.",
-          "Derive the workgroup tile and the lane's four A/B fragment coordinates.",
-          "For each 16-wide K phase, load in-range BF16 values and use zero for edge coordinates.",
+          "Validate lda, ldb, ldc and the maximum addressed extent, then construct fallible row-major A and B views.",
+          "Derive the workgroup tile; each role-typed view and the wave-lane capability determine the lane's four fragment coordinates.",
+          "For each 16-wide K phase, directly receive A and B fragments whose guarded in-range reads supply BF16 values and whose false edges supply zero.",
           "Call DeviceMatrix::multiply_accumulate uniformly across the wave and carry four FP32 accumulators.",
           "Advance the phase by 16 until every dynamic K element is covered.",
           "Apply alpha * accumulator + beta * C once through each checked Tiled2D output witness."

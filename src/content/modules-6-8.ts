@@ -161,7 +161,7 @@ const expertCompute: Lesson = {
       sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "5ee987539f339835f93c9acddb8245ee2adf2ad7705269ed1a65e8d36c5d773a",
+        "bd05eb1cf072401cf460ed7a939c1e9f9f202feb4eb52476424cc4830a179235",
       explanatory: false,
     },
     {

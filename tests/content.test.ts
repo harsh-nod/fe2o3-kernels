@@ -159,7 +159,7 @@ describe("curriculum integrity", () => {
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
       sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
       sourceSha256:
-        "058c5dab9910124480974b69686b6a60a18016a50657286daa8df5c58d1aa48b",
+        "844d0aadba6ce977e2d4e2d3bd0fd556c92752fe5fa543099f81e806c0b5b663",
       evidenceId: "dynamic-gemm-executable-source-v1",
       explanatory: false,
     });
@@ -167,6 +167,11 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain("matrix.multiply_accumulate(lhs, rhs, accumulator)");
     expect(kernel?.code).toContain("-> KernelResult");
     expect(kernel?.code).toContain(".ok_or(KernelError::OutOfBounds)?");
+    expect(kernel?.code).toContain("let Ok(a_matrix) = Bf16MfmaAMatrix::row_major");
+    expect(kernel?.code).toContain(
+      "let lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, phase);",
+    );
+    expect(kernel?.code).not.toMatch(/load_(?:m16k16|k16n16)\([^;]+\)\?/u);
     expect(kernel?.code).toContain("let matrix = Matrix::current()");
     expect(kernel?.code).toContain("alpha * values[0] + beta * *output");
     expect(kernel?.code).not.toMatch(/\bunsafe\b/u);
