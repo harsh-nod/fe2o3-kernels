@@ -150,6 +150,10 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel")).toContainText(
     "Safe Rust qualification kernel for dynamic strided matrix multiplication",
   );
+  await expect(page.getByRole("tabpanel")).toContainText("-> KernelResult");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    ".ok_or(KernelError::OutOfBounds)?",
+  );
   await expect(
     page.getByRole("tabpanel").locator(".token.keyword").first(),
   ).toBeVisible();
@@ -159,7 +163,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6a86f5cbb5049cd6895d47e6734048ddd4d308d5/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Equivalent HIP" }).click();
@@ -170,7 +174,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel").locator(".token.keyword").first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
+    "https://github.com/harsh-nod/fe2o3/blob/6a86f5cbb5049cd6895d47e6734048ddd4d308d5/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -179,12 +183,12 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/3874a0c76b3e90f73ea8782b54bb6a45ea94f04d/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6a86f5cbb5049cd6895d47e6734048ddd4d308d5/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "111 correspondence blocks",
+    "112 correspondence blocks",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "PASS strided-all-tails",
@@ -267,6 +271,17 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   ).toBeVisible();
   await expect(
     page.getByText("Generic does not mean automatically provable"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("One Rust type system, extended to GPU facts", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("What KernelResult means", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Where Verus fits", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByText("Supported safe ownership mappings", { exact: true }),
@@ -369,7 +384,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/7411ed2225e16c14339c5686efcee7c03fe7a257/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6a86f5cbb5049cd6895d47e6734048ddd4d308d5/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -468,7 +483,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/7411ed2225e16c14339c5686efcee7c03fe7a257/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6a86f5cbb5049cd6895d47e6734048ddd4d308d5/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
@@ -571,11 +586,14 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 7411ed2225",
+      name: "Compiler main at 6a86f5cbb5",
     }),
   ).toBeVisible();
   await expect(
     page.getByText(/generic safety sequence is active and mandatory before lowering/u),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/does not contain a second Rust borrow checker/u),
   ).toBeVisible();
   await page.goto("./#/status");
   await expect(

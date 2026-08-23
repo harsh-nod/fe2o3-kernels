@@ -25,10 +25,11 @@ export function ArchitecturePage() {
         <h2>No single layer declares a launch safe</h2>
         <div className="architecture-rows">
           {[
-            ["Rust types", "Prevent local misuse and retain launch-scoped ownership."],
+            ["rustc", "Enforces Rust moves, borrows, lifetimes, visibility, local typestate, and Result control flow."],
+            ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["Compiler analyses", "Reject or stop on incomplete bounds, race, barrier, workgroup-memory, and semantic obligations."],
-            ["Verus", "Proves named properties in a versioned source or source-model contract."],
+            ["Verus", "Proves named source or model properties; it neither replaces rustc nor currently proves full source-to-machine refinement."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
             ["Runtime", "Checks actual context, allocations, aliases, geometry, and lifetimes."],
@@ -93,7 +94,9 @@ export function ArchitecturePage() {
         </div>
         <p className="status-boundary">
           The generic safety sequence is active and mandatory before lowering.
-          Current Partial capabilities still grant no generalized
+          Fe2O3 does not contain a second Rust borrow checker: rustc owns local
+          language semantics, while sealed types and compiler passes cover GPU
+          facts that Rust alone cannot observe. Current Partial capabilities still grant no generalized
           source-to-machine refinement, protected launch authority, complete
           persistent execution, or automatic parity promotion.
         </p>

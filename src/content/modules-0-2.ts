@@ -454,6 +454,7 @@ const compilerChecks: Lesson = {
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
     "Locate structural, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
+    "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
     "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
   ],
   claims: [
@@ -527,6 +528,8 @@ Rejected: the analysis proves a violation.
 Incomplete: the analysis cannot discharge an obligation within the supported model.
 Both stop strict production compilation.`,
       explanatory: true,
+      notice:
+        "Typed kernels may use native KernelResult and ?. The attribute macro emits a private helper with the real Rust return type plus a unit-return GPU entry wrapper. Err terminates only that invocation; it is not copied to the host. The verifier still audits every reachable path and rejects lane-varying early exit before a required workgroup barrier.",
     },
     {
       language: "bash",

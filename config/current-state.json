@@ -1,5 +1,5 @@
 {
-  "reviewedOn": "2026-08-22",
+  "reviewedOn": "2026-08-23",
   "plironCommit": "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
   "issues": [
     {"number": 109, "state": "closed", "label": "Shared BF16/F32 numerical contract"},
@@ -9,6 +9,13 @@
     {"number": 140, "state": "open", "label": "Owner-bound upstream Pliron arena handles"}
   ],
   "capabilities": [
+    {
+      "id": "rust-semantics",
+      "label": "Rust ownership and result flow",
+      "status": "active",
+      "detail": "rustc remains the only Rust borrow checker: it enforces moves, borrows, lifetimes, visibility, and local typestate. Fe2O3 extends those rules with sealed non-Clone GPU capabilities and workload-neutral cross-invocation verification. Typed kernels may return KernelResult and use ?, while the macro emits a private unit-ABI entry wrapper and the compiler retains the helper's real MIR. Err ends only the current invocation and is not a host-visible error channel.",
+      "sourcePaths": ["crates/fe2o3-device/src/kernel_result.rs", "crates/fe2o3-macros/src/lib.rs", "crates/fe2o3-mir-model/src/semantic_option_dominance.rs", "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs"]
+    },
     {
       "id": "context-ownership",
       "label": "Pliron context ownership",
@@ -27,14 +34,14 @@
       "id": "rust-production-route",
       "label": "Rust production route",
       "status": "partial",
-      "detail": "Ordinary safe Rust reaches semantic MIR, ranked PLIRON verification, Kernel IR, formal memory admission, gfx942 LLVM, HSACO, and qualification launch for dynamic strided GEMM, row softmax, fused attention, and grouped-expert MoE. The kernels exercise target-neutral matrix fragments, subgroup collectives, device math, runtime dimensions, edge predicates, dynamic loops, additive masks, tiled disjoint outputs, and epilogues through one workload-neutral route. Unsupported effects and ownership forms remain deliberately fail-closed.",
+      "detail": "Ordinary safe Rust reaches semantic MIR, ranked PLIRON verification, canonical Kernel IR V6, formal memory admission, gfx942 LLVM, HSACO, and qualification launch for dynamic strided GEMM, row softmax, fused attention, and grouped-expert MoE. The kernels use native Result control flow, target-neutral Matrix, Subgroup, and Math capabilities, runtime dimensions, edge predicates, dynamic loops, additive masks, tiled disjoint outputs, and epilogues through one workload-neutral route. Unsupported effects and ownership forms remain deliberately fail-closed.",
       "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs", "examples/row_softmax_general_v1/src/kernel.rs", "examples/flash_attention_general_v1/src/kernel.rs", "examples/moe_grouped_expert_general_v1/src/kernel.rs", "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs", "crates/fe2o3-pliron/tests/production_ranked_pipeline.rs"]
     },
     {
       "id": "compiler-analysis",
       "label": "Bounded compiler analysis",
       "status": "active",
-      "detail": "Closed control-flow validation, pruned SSA placement, uniformity, sparse index facts, dynamic tiled-component reasoning, exact bounded invocation traces, and stable diagnostics feed every workload through the same safety pipeline. Pure device math and collective summaries preserve analysis facts without naming algorithms. Unsupported operations and resource limits fail closed as Incomplete obligations.",
+      "detail": "Closed control-flow validation, pruned SSA placement, uniformity, sparse index facts, dynamic tiled-component reasoning, exact bounded invocation traces, Result payload dominance, and stable diagnostics feed every workload through the same safety pipeline. Checked add, subtract, and multiply retain value plus overflow through canonical KIR V6; compiler-generated unchecked arithmetic is admitted only when the matching no-overflow edge dominates it. Pure device math and collective summaries preserve analysis facts without naming algorithms. Unsupported operations and resource limits fail closed as Incomplete obligations.",
       "sourcePaths": ["crates/fe2o3-kernel-analysis/src/control_flow.rs", "crates/fe2o3-kernel-analysis/src/ssa.rs", "crates/fe2o3-kernel-analysis/src/uniformity.rs", "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs", "crates/fe2o3-kernel-analysis/src/pliron_invocation_trace.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs"]
     },
     {

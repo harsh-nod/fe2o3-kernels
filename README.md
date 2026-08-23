@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`3874a0c76b3e90f73ea8782b54bb6a45ea94f04d`, tree
-`464c1849d3c7f083598c66336e89dfe7e6f6e83b`. Deployment requires
+`6a86f5cbb5049cd6895d47e6734048ddd4d308d5`, tree
+`a5940ad3729870dacc5a3fd7582224432a33860f`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed.
@@ -602,7 +602,7 @@ FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b
 The `gemm-tiling` lesson now shows the exact current dynamic kernel, build
 script, host runner, and four-case MI300X result. The safe kernel is byte-pinned
 to `examples/tiled_gemm_general_v1/src/kernel.rs` at
-`3874a0c76b3e90f73ea8782b54bb6a45ea94f04d` and contains no unsafe block. Its
+`6a86f5cbb5049cd6895d47e6734048ddd4d308d5` and contains no unsafe block. Its
 host-only unsafe boundaries are visible and documented around external HSACO
 loading and physical ABI launch.
 

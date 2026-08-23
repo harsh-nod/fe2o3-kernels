@@ -143,7 +143,7 @@ const expertCompute: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran at d2281046486db830c2c815d6a887540716a7b158. Current main is a direct descendant with this source and pipeline unchanged; this is evidence for one top-2 routed case, not a router proof or performance result.",
+          note: "Qualification ran from current compiler main 6a86f5cbb5049cd6895d47e6734048ddd4d308d5. This is evidence for one top-2 routed case, not a router proof or performance result.",
         },
       ),
     },
@@ -161,7 +161,7 @@ const expertCompute: Lesson = {
       sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "6c46aaf770537c62b43bef3c0e7bda77fe7c0bc2ed0df90ec5d5986315272154",
+        "5ee987539f339835f93c9acddb8245ee2adf2ad7705269ed1a65e8d36c5d773a",
       explanatory: false,
     },
     {
@@ -190,7 +190,7 @@ const expertCompute: Lesson = {
       language: "text",
       code: resultText(
         "gpu-observed",
-        "PASS top2-routed-moe tokens=17 experts=3 K=18 N=19 routes=34 max_error=0\n\nThe production compiler collected one semantic function, discharged 17 ranked dynamic-index obligations, emitted a 39,896-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16. The kernel accepts runtime padded rows, output columns, reduction depth, independent strides, expert ID and expert count; safe edge predicates cover partial K and N tiles. The host fixture exercises three experts and top-2 routing, verifies untouched padding, and compares the combined result with an independent CPU oracle. The compiler sees only generic typed fragments, arithmetic, dynamic indices, disjoint output capabilities, and control flow. It has no GEMM, attention, routing, or MoE recognizer. This is correctness evidence for the listed case, not a routing proof, persistent scheduling implementation, or performance result.",
+        "PASS top2-routed-moe tokens=17 experts=3 K=18 N=19 routes=34 max_error=0\n\nThe production compiler collected the public unit-ABI wrapper and private KernelResult helper as two semantic functions, discharged 17 ranked dynamic-index obligations, emitted a 40,876-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16. The kernel accepts runtime padded rows, output columns, reduction depth, independent strides, expert ID and expert count; safe edge predicates cover partial K and N tiles. The host fixture exercises three experts and top-2 routing, verifies untouched padding, and compares the combined result with an independent CPU oracle. The compiler sees only generic typed fragments, arithmetic, dynamic indices, disjoint output capabilities, and control flow. It has no GEMM, attention, routing, or MoE recognizer. This is correctness evidence for the listed case, not a routing proof, persistent scheduling implementation, or performance result.",
       ),
       explanatory: true,
       notice:

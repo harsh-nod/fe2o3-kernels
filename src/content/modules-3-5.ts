@@ -82,8 +82,8 @@ const dynamicGemmResult = resultText(
     "",
     "Rust -> semantic MIR -> ranked PLIRON -> Kernel IR -> formal/ranked memory",
     "-> gfx942 LLVM -> HSACO -> fe2o3-host",
-    "1 semantic function, 111 correspondence blocks, 12 ranked dynamic-index discharges,",
-    "workgroup [64, 1, 1], 37129 LLVM bytes, artifact/launch authority false",
+    "2 semantic functions, 112 correspondence blocks, 12 ranked dynamic-index discharges,",
+    "workgroup [64, 1, 1], 37213 LLVM bytes, artifact/launch authority false",
     "",
     "PASS packed                       M=16 N=16 K=16 groups=1 max_error=0",
     "PASS strided-all-tails            M=17 N=19 K=18 groups=4 max_error=0",
@@ -186,7 +186,7 @@ PASS wave-tail          rows=5 columns=63 stride=4101 max_error=1.4901161e-8
 PASS multi-iteration    rows=7 columns=257 stride=4103 max_error=5.5879354e-9
 PASS maximum-width      rows=2 columns=4096 stride=4103 max_error=6.0535967e-9
 
-The production compiler collected one semantic function, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 16,378-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained 12 ds_bpermute instructions and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
+The production compiler collected the public unit-ABI wrapper and private KernelResult helper as two semantic functions, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 16,431-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained 12 ds_bpermute instructions and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
 
 The logical column count and input stride are dynamic. Each physical row reserves 4,096 input and output elements, inactive input columns must be negative infinity, and columns above the logical width remain untouched. These qualification results establish the listed cases against an independent CPU oracle; they are not a proof for every input or a performance claim.`,
 );
@@ -198,7 +198,7 @@ const flashAttentionResult = resultText(
 PASS tails-and-strides        heads=1 queries=16/16 keys=13/16 depth=18 value_dim=7 max_error=4.4703484e-8
 PASS multi-head-multi-tile   heads=2 queries=17/32 keys=19/32 depth=33 value_dim=16 max_error=5.9604645e-8
 
-The same production pipeline collected one semantic function, discharged 29 ranked dynamic-index obligations, emitted a 150,852-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and ds_bpermute subgroup reductions. Scores are never materialized in global memory.
+The same production pipeline collected the public unit-ABI wrapper and private KernelResult helper as two semantic functions, discharged 29 ranked dynamic-index obligations, emitted a 150,685-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and ds_bpermute subgroup reductions. Scores are never materialized in global memory.
 
 The kernel accepts runtime head count, padded query/key lengths, depth up to 1,024, keys up to 4,096, value width up to 16, independent legal strides, scale, and an additive mask for causal, padding, or application masks. Q and K are BF16; V, mask, accumulation, and output are FP32. The current PV contraction is scalar/reduction based, so this is correctness evidence rather than a claim of parity with a tuned production FlashAttention library.`,
 );
@@ -472,6 +472,7 @@ const gemmMapping: Lesson = {
   objectives: [
     "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
     "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
+    "Use KernelResult and ? for checked capability construction while preserving the unit GPU ABI.",
     "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],
   claims: [
@@ -603,7 +604,7 @@ const softmax: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran at d2281046486db830c2c815d6a887540716a7b158. Current main is a direct descendant with this source and pipeline unchanged; this is evidence for the four published cases, not a universal proof or performance result.",
+          note: "Qualification ran from current compiler main 6a86f5cbb5049cd6895d47e6734048ddd4d308d5; this is evidence for the four published cases, not a universal proof or performance result.",
         },
       ),
     },
@@ -619,7 +620,7 @@ const softmax: Lesson = {
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "e92f281bc584ae3c3554b95130290feb6e3481fdc0531b4f50e6f176c5527c03",
+        "b1d742be6f4d782ff45afea4b61ed98294fa699c01882453bc35e60e0ad95ad0",
       explanatory: false,
     },
     {
@@ -690,7 +691,7 @@ const flash: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran at d2281046486db830c2c815d6a887540716a7b158. Current main is a direct descendant with this source and pipeline unchanged; no tuned-library performance claim is made.",
+          note: "Qualification ran from current compiler main 6a86f5cbb5049cd6895d47e6734048ddd4d308d5; no tuned-library performance claim is made.",
         },
       ),
     },
@@ -708,7 +709,7 @@ const flash: Lesson = {
       sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "9f9830652ef4aa00a39255b1a886380b890228cd39d6bae4b06ec14e0d43590e",
+        "4a808f6eb7caecb4eac0a976cd723dcaf5d5a9ed15525ee3bf8bb3d1f0ff1411",
       explanatory: false,
     },
     {
