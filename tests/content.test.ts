@@ -335,10 +335,13 @@ describe("curriculum integrity", () => {
       expect(typedPlans.limitations.join(" ")).toContain(finding);
     }
     expect(typedPlans.limitations.join(" ")).toContain(
-      "no native KFD persistent-driver execution",
+      "no native KFD persistent driver in this milestone",
     );
     expect(typedPlans.limitations.join(" ")).toContain(
-      "no MI300X measurement",
+      "one bounded, isolated MI300X current-V2 regression",
+    );
+    expect(typedPlans.limitations.join(" ")).toContain(
+      "neither executes nor measures the V3 persistent adapter",
     );
     expect(typedPlans.limitations.join(" ")).toContain(
       "neither HIP/HSA/ROCr feature parity nor a basis for removing those runtimes",

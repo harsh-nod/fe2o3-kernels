@@ -137,7 +137,9 @@ describe("runtime milestones", () => {
     ]) {
       expect(screen.getByText(new RegExp(finding, "u"))).toBeInTheDocument();
     }
-    expect(screen.getByText(/no MI300X measurement/u)).toBeInTheDocument();
+    expect(
+      screen.getByText(/one bounded, isolated MI300X current-V2 regression/u),
+    ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         name: "Preparation and preflight are closed before milestone 05",

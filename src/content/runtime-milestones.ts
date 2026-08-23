@@ -528,7 +528,7 @@ export const runtimeMilestones = deepFreeze([
       "HIGH TRACE_RESERVE_UNREFINED: facade-local trace arithmetic has no executable mapping to the verified kernel's exact reserve invariant across dispatch, observation, retirement, quarantine, and teardown.",
       "The redacted queue-admission projection is intentionally not native queue, packet, mapping, file-descriptor, doorbell, or teardown authority. The future bridge must privately bind the logical QueueKeyV1 to the kernel-returned native queue identity, including a valid native ID of zero, and consume the one-shot attachment at the actual publication cutpoint.",
       "Formal status applies only to the exact same-source decision kernel, its encoded contracts, and its bounded state space at the commit and tree below. KFD receipt and projection code is implementation-checked; the five audit findings prevent it from inheriting the kernel proof.",
-      "This milestone performed no native KFD persistent-driver execution, DRM or KFD ioctl, mapping, packet publication, MMIO write, compiler build, application run, or GPU action. It contains no MI300X measurement and establishes neither HIP/HSA/ROCr feature parity nor a basis for removing those runtimes.",
+      "The exact commit passed one bounded, isolated MI300X current-V2 regression with queue ID 0, 256 outputs and 384 canary bytes verified, 12 resources released, and nothing retained while remaining classified UnmeasuredRequalification. That pre-existing nonpersistent path neither executes nor measures the V3 persistent adapter, and it establishes neither HIP/HSA/ROCr feature parity nor a basis for removing those runtimes.",
     ],
     commit: "ccd402e3f349fa216ff8ee255eabe2e4bd95ff70",
     tree: "063be2f0356363ad098457fd5880d38c57a568c1",

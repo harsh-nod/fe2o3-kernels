@@ -173,7 +173,9 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await expect(page.getByText(/HIGH MODEL_EFFECT_CUTPOINT_UNREFINED/u)).toBeVisible();
   await expect(page.getByText(/HIGH CURRENTNESS_CERTIFICATE_UNBOUND/u)).toBeVisible();
   await expect(page.getByText(/HIGH TRACE_RESERVE_UNREFINED/u)).toBeVisible();
-  await expect(page.getByText(/no MI300X measurement/u)).toBeVisible();
+  await expect(
+    page.getByText(/one bounded, isolated MI300X current-V2 regression/u),
+  ).toBeVisible();
   const preflightHeading = page.getByRole("heading", {
     name: "Authenticated compiler-build preflight",
   });
