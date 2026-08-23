@@ -91,7 +91,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Six representative failures with exact diagnostics",
+        name: "Eighteen ways an invalid kernel stops at compile time",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -99,8 +99,14 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(6);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(18);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
+    expect(screen.getByText("Swapped MFMA operand roles")).toBeInTheDocument();
+    expect(screen.getByText("B fragment uses the wrong transpose")).toBeInTheDocument();
+    expect(screen.getByText("Partial tile has no edge policy")).toBeInTheDocument();
+    expect(screen.getByText("Different views still alias one allocation")).toBeInTheDocument();
+    expect(screen.getByText("Rounded 2D launch creates a partial workgroup")).toBeInTheDocument();
+    expect(screen.getByText("Kernel asks for an unsupported grid barrier")).toBeInTheDocument();
     expect(screen.getByText("Illegal atomic ordering")).toBeInTheDocument();
     expect(screen.getByText("Cross-invocation write race")).toBeInTheDocument();
     expect(screen.getByText("Invocation-divergent barrier")).toBeInTheDocument();
@@ -111,15 +117,20 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "Shifted<Index1D, N>" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "Blocked<Index1D, L, E> where L > 1" })).toBeInTheDocument();
     expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
-    expect(screen.getByText("Complete generic PLIRON diagnostic code catalog")).toBeInTheDocument();
+    expect(screen.getByText("Generic diagnostic catalog")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-ATOMIC-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
     expect(
       document.querySelectorAll(".compile-failure-source code.language-rust"),
-    ).toHaveLength(6);
+    ).toHaveLength(4);
+    expect(
+      document.querySelectorAll(".compile-failure-source code.language-text"),
+    ).toHaveLength(14);
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();

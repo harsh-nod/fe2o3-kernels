@@ -294,7 +294,7 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("none recognizes GEMM names, tile sizes, or schedules");
     expect(failures).toContain("Generic does not mean automatically provable");
     expect(failures).toContain("strict pre-lowering route fails closed");
-    expect(failures).toContain("does not invent the programmer's intended formula");
+    expect(failures).toContain("does not invent programmer intent");
     expect(failures).toContain("Ordinary kernels are safe Rust");
     expect(failures).toContain("One Rust type system, extended to GPU facts");
     expect(failures).toContain("does not implement a second borrow checker");
@@ -302,7 +302,7 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("physical unit-return GPU entry wrapper");
     expect(failures).toContain("Err is not a host-visible error payload");
     expect(failures).toContain("lane-varying ?");
-    expect(failures).toContain("canonical Kernel IR V6");
+    expect(failures).toContain("canonical Kernel IR V7");
     expect(failures).toContain("Where Verus fits");
     expect(failures).toContain("do not establish a general operational Rust-source-to-Kernel-IR-to-machine refinement theorem");
     expect(failures).toContain("unsafe_asm");
@@ -348,13 +348,13 @@ describe("curriculum integrity", () => {
     expect(JSON.stringify(ownershipTable)).toContain("dynamic or unresolved leader index is Incomplete");
     expect(JSON.stringify(ownershipTable)).toContain("Wrong marker identity");
     expect(failures).toContain(
-      "fixed Kernel IR order is structural, control flow, memory bounds, race freedom, barrier convergence, then workgroup memory",
+      "mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement",
     );
-    expect(failures).toContain(
-      "ranked-PLIRON pre-lowering order is memory bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement",
-    );
-    expect(failures).toContain("No lowering pass may run between these checks");
-    expect(failures).toContain("Complete generic PLIRON diagnostic code catalog");
+    expect(failures).toContain("No lowering pass may run between these seven checks");
+    expect(failures).toContain("Generic diagnostic catalog");
+    expect(failures).toContain("Correct relative to explicit contracts, never universally correct");
+    expect(failures).toContain("Storage swizzling describes addresses before a load");
+    expect(failures).toContain("A and B need not use the same storage transform");
     for (const fixture of [
       "unguarded_a_tail_load",
       "unguarded_b_tail_load",
@@ -423,6 +423,7 @@ describe("curriculum integrity", () => {
     expect(pipelineTable.rows.map(([pass]) => pass)).toEqual([
       "kernel-structural-v1",
       "kernel-control-flow-v1",
+      "kernel-tensor-layout-v1",
       "kernel-memory-bounds-v1",
       "kernel-atomic-legality-v1",
       "kernel-race-freedom-v1",
@@ -442,6 +443,9 @@ describe("curriculum integrity", () => {
     expect(diagnosticTable?.type).toBe("table");
     if (diagnosticTable?.type !== "table") return;
     expect(diagnosticTable.rows.map(([code]) => code)).toEqual([
+      "FE2O3-TENSOR-LAYOUT-001",
+      "FE2O3-TENSOR-LAYOUT-002",
+      "FE2O3-TENSOR-LAYOUT-003",
       "FE2O3-BOUNDS-000",
       "FE2O3-BOUNDS-001",
       "FE2O3-BOUNDS-002",
@@ -464,8 +468,8 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-001",
       "FE2O3-SEMANTIC-002",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(7);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(9);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(8);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(11);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
     const failureGallery = semanticFailures.blocks.find(
@@ -473,28 +477,29 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(6);
+    expect(failureGallery.examples).toHaveLength(18);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
-    expect(failureGallery.intro).toContain(
-      "Bounds and barrier convergence are exercised end to end",
-    );
-    expect(failureGallery.intro).toContain("static index 64 into extent 64");
-    expect(failureGallery.intro).toContain("parsed textual PLIRON lit fixtures");
-    expect(failureGallery.intro).toContain("explicitly unsupported and fail closed");
-    expect(
-      failureGallery.examples.map(({ id, property, stage, code }) => ({
-        id,
-        property,
-        stage,
-        code,
-      })),
-    ).toEqual([
-      { id: "bounds_static_oob", property: "MemoryBounds", stage: "generic PLIRON pass 1/6", code: "FE2O3-BOUNDS-001" },
-      { id: "atomic_invalid_ordering", property: "AtomicLegality", stage: "generic PLIRON pass 2/6", code: "FE2O3-ATOMIC-001" },
-      { id: "race_duplicate_output", property: "RaceFreedom", stage: "generic PLIRON pass 3/6", code: "FE2O3-RACE-001" },
-      { id: "barrier_divergent", property: "BarrierConvergence", stage: "generic PLIRON pass 4/6", code: "FE2O3-BARRIER-001" },
-      { id: "workgroup_uninitialized", property: "WorkgroupMemory", stage: "generic PLIRON pass 5/6", code: "FE2O3-WORKGROUP-001" },
-      { id: "semantic_mismatch", property: "SemanticRefinement", stage: "generic PLIRON pass 6/6", code: "FE2O3-SEMANTIC-001" },
+    expect(failureGallery.intro).toContain("tensor layout first");
+    expect(failureGallery.intro).toContain("do not imply that users write a separate kernel DSL");
+    expect(failureGallery.examples.map(({ id }) => id)).toEqual([
+      "mfma_operand_roles",
+      "tensor_wrong_b_map",
+      "tensor_accumulator_permutation",
+      "tensor_storage_transform",
+      "tensor_missing_tail_policy",
+      "tensor_divergent_collective",
+      "race_alias_views",
+      "race_multidimensional_constant_write",
+      "atomic_scope_too_narrow",
+      "barrier_partial_workgroup",
+      "workgroup_missing_publish",
+      "grid_barrier_unsupported",
+      "bounds_static_oob",
+      "atomic_invalid_ordering",
+      "race_duplicate_output",
+      "barrier_divergent",
+      "workgroup_uninitialized",
+      "semantic_mismatch",
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
@@ -503,13 +508,21 @@ describe("curriculum integrity", () => {
       expect(example.diagnostic).toContain("error[");
       expect(example.caught.length).toBeGreaterThan(80);
     }
-    expect(failureGallery.examples[0]?.source).toContain("values[64]");
-    expect(failureGallery.examples[0]?.diagnostic).toContain(
-      "required: 64 < 64",
-    );
-    expect(failureGallery.examples[1]?.diagnostic).toContain("invalid Release ordering");
-    expect(failureGallery.examples[2]?.diagnostic).toContain("invocation [0]");
-    expect(failureGallery.examples[2]?.diagnostic).toContain("invocation [1]");
+    const example = (id: string) => failureGallery.examples.find((item) => item.id === id);
+    expect(example("mfma_operand_roles")?.diagnostic).toContain("error[E0308]");
+    expect(example("tensor_wrong_b_map")?.diagnostic).toContain("B lane/component mapping does not match");
+    expect(example("tensor_accumulator_permutation")?.diagnostic).toContain("Accumulator lane/component mapping does not match");
+    expect(example("tensor_missing_tail_policy")?.diagnostic).toContain("tail-mask contract is incompatible");
+    expect(example("tensor_divergent_collective")?.diagnostic).toContain("divergent tensor-instruction trace");
+    expect(example("tensor_storage_transform")?.caught).toContain("direct B fragment may legally meet an XOR4-staged A fragment");
+    expect(example("race_alias_views")?.caught).toContain("allocation origin and alias class");
+    expect(example("race_multidimensional_constant_write")?.source).toContain("global = [2, 2, 1]");
+    expect(example("barrier_partial_workgroup")?.diagnostic).toContain("global extent X = 65");
+    expect(example("grid_barrier_unsupported")?.diagnostic).toContain("cooperative-launch and progress contract");
+    expect(example("bounds_static_oob")?.diagnostic).toContain("required: 64 < 64");
+    expect(example("atomic_invalid_ordering")?.diagnostic).toContain("invalid Release ordering");
+    expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [0]");
+    expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [1]");
     expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
     expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
     expect(failures).toContain("projection preserves the exact operation kind, ordering, and scope");

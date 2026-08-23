@@ -50,7 +50,10 @@ export function CompileFailureGallery({
               <div className="compile-failure-source">
                 <span>Input excerpt</span>
                 <pre>
-                  <HighlightedCode code={example.source} language="rust" />
+                  <HighlightedCode
+                    code={example.source}
+                    language={example.language ?? "rust"}
+                  />
                 </pre>
               </div>
               <div className="compile-failure-verdict">

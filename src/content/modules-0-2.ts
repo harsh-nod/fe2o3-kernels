@@ -452,7 +452,9 @@ const compilerChecks: Lesson = {
   objectives: [
     "Distinguish a proved static access from a checked dynamic access.",
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
-    "Locate structural, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
+    "Locate tensor-layout, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
+    "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
+    "Reason about multidimensional workgroups, alias classes, publication epochs, and atomic scope without relying on a workload recognizer.",
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
     "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
     "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
@@ -503,15 +505,23 @@ const compilerChecks: Lesson = {
       language: "text",
       code: `Mandatory pre-lowering verification
 0. dialect and structural verification
-1. ranked bounds and address arithmetic
-2. atomic legality, ordering, and scope
-3. race freedom and invocation ownership
-4. barrier convergence
-5. workgroup-memory must-initialization and epochs
-6. declared semantic refinement
+1. tensor instruction, fragment layout, tails, and convergence
+2. ranked bounds and address arithmetic
+3. atomic legality, ordering, and scope
+4. race freedom, alias classes, and invocation ownership
+5. barrier convergence
+6. workgroup-memory must-initialization and epochs
+7. declared semantic refinement
 
 Shared: bounded sparse affine/index dataflow
 Cross-cutting: bounded compiler resources
+
+MFMA contracts are workload-neutral:
+- role and register distribution are Rust fragment types
+- direct, row-major LDS, and XOR4 are per-operand storage facts
+- the tensor pass checks lane/component maps and edge policy
+- collective participation is derived from control flow
+- an unproved contract is Incomplete, never assumed safe
 
 Authenticated safe ownership mappings:
 - one-layer Shifted<Index1D, N>: supported

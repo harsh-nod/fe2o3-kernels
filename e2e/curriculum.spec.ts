@@ -241,10 +241,16 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Six representative failures with exact diagnostics",
+      name: "Eighteen ways an invalid kernel stops at compile time",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
+  await expect(failureGallery.getByText("Swapped MFMA operand roles")).toBeVisible();
+  await expect(failureGallery.getByText("B fragment uses the wrong transpose")).toBeVisible();
+  await expect(failureGallery.getByText("Partial tile has no edge policy")).toBeVisible();
+  await expect(failureGallery.getByText("Different views still alias one allocation")).toBeVisible();
+  await expect(failureGallery.getByText("Rounded 2D launch creates a partial workgroup")).toBeVisible();
+  await expect(failureGallery.getByText("Kernel asks for an unsupported grid barrier")).toBeVisible();
   await expect(failureGallery.getByText("Static out-of-bounds access")).toBeVisible();
   await expect(failureGallery.getByText("Illegal atomic ordering")).toBeVisible();
   await expect(failureGallery.getByText("Cross-invocation write race")).toBeVisible();
@@ -252,6 +258,8 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(failureGallery.getByText("Workgroup read before initialization")).toBeVisible();
   await expect(failureGallery.getByText("Declared formula mismatch")).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("E0308", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-TENSOR-LAYOUT-001", { exact: true }).first()).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-ATOMIC-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-RACE-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BARRIER-001", { exact: true })).toBeVisible();
@@ -261,7 +269,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     failureGallery.getByLabel("Compile-time rejection path"),
   ).toContainText("No lowering or artifact");
   await expect(
-    failureGallery.getByText(/static index 64 into extent 64/u),
+    failureGallery.getByText(/tensor layout first/u),
   ).toBeVisible();
   await expect(
     failureGallery.getByText(/required: 64 < 64/u),
@@ -292,9 +300,11 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByText("Ordinary Rust atomic terminals are explicitly unsupported"),
   ).toBeVisible();
   await expect(
-    page.getByText("Complete generic PLIRON diagnostic code catalog"),
+    page.getByText("Generic diagnostic catalog"),
   ).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BOUNDS-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-ATOMIC-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-RACE-003", exact: true })).toBeVisible();
@@ -304,7 +314,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Six representative failures with exact diagnostics",
+      name: "Eighteen ways an invalid kernel stops at compile time",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));

@@ -127,6 +127,7 @@ export type CalloutTone = "info" | "proof" | "warning" | "boundary";
 export interface CompileFailureExample {
   id: string;
   title: string;
+  language?: "rust" | "text";
   source: string;
   diagnostic: string;
   property: string;
