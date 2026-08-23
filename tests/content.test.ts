@@ -78,6 +78,7 @@ describe("curriculum integrity", () => {
       "kernel-ir-v1-c454-compiler-convergence-v1",
       "bounded-persistent-lifecycle-verus-v1",
       "same-source-bounded-decision-kernel-v2",
+      "operation-typed-runtime-effect-plans-v3",
     ]);
     expect(runtimeMilestones[0].commit).toBe(
       "e5c8d66c5520d1bce7cf2db911c200f1cf4c5536",
@@ -279,6 +280,77 @@ describe("curriculum integrity", () => {
     expect(runtimeMilestones[6].evidenceRecord).toBeUndefined();
     expect(runtimeMilestones[6].sourcePaths).toContain(
       "crates/fe2o3-persistent-runtime-kernel/src/lib.rs",
+    );
+    const typedPlans = runtimeMilestones[7];
+    expect(typedPlans).toMatchObject({
+      id: "operation-typed-runtime-effect-plans-v3",
+      number: "V3",
+      status: "formal-model-verified",
+      measurement: "unmeasured",
+      commit: "ccd402e3f349fa216ff8ee255eabe2e4bd95ff70",
+      tree: "063be2f0356363ad098457fd5880d38c57a568c1",
+      sourceAvailability: "local-branch",
+    });
+    expect(typedPlans.why.join(" ")).toContain(
+      "publication, Pending observation, completion observation, completion-credit release, retirement, destroy, and resource discharge",
+    );
+    expect(typedPlans.why.join(" ")).toContain(
+      "legacy untyped EffectPlanV1 prepare/commit/cancel/quarantine surface is private",
+    );
+    expect(typedPlans.why.join(" ")).toContain(
+      "Current NotObserved, Pending, or Complete evidence cannot be relabeled Unexpected",
+    );
+    expect(typedPlans.enables.join(" ")).toContain(
+      "prepare, read exact operands, perform one scoped effect, and resolve",
+    );
+    expect(typedPlans.pipeline?.join(" ")).toContain(
+      "confirmed no-effect restores the exact origin",
+    );
+    expect(typedPlans.pipeline?.join(" ")).toContain(
+      "possibly-effectful status quarantines the context",
+    );
+    expect(typedPlans.expected.join(" ")).toContain(
+      "24 passing hostile mutation cases",
+    );
+    expect(typedPlans.expected.join(" ")).toContain(
+      "verification results:: 253 verified, 0 errors",
+    );
+    expect(typedPlans.expected.join(" ")).toContain(
+      "exactly 73 calibrated expected-negative mutations",
+    );
+    expect(typedPlans.expected.join(" ")).toContain("exact landed source");
+    expect(typedPlans.commands).toContain(
+      "env PYTHONDONTWRITEBYTECODE=1 python3 scripts/persistent_runtime_refinement_audit.py; status=$?; test \"$status\" -eq 1",
+    );
+    expect(typedPlans.commands.join(" ")).not.toMatch(
+      /--live|FE2O3_RUN|\/dev\/kfd/u,
+    );
+    for (const finding of [
+      "NO_KERNEL_FACADE_REFINEMENT",
+      "NATIVE_BRIDGE_UNAVAILABLE",
+      "MODEL_EFFECT_CUTPOINT_UNREFINED",
+      "CURRENTNESS_CERTIFICATE_UNBOUND",
+      "TRACE_RESERVE_UNREFINED",
+    ]) {
+      expect(typedPlans.limitations.join(" ")).toContain(finding);
+    }
+    expect(typedPlans.limitations.join(" ")).toContain(
+      "no native KFD persistent-driver execution",
+    );
+    expect(typedPlans.limitations.join(" ")).toContain(
+      "no MI300X measurement",
+    );
+    expect(typedPlans.limitations.join(" ")).toContain(
+      "neither HIP/HSA/ROCr feature parity nor a basis for removing those runtimes",
+    );
+    expect(typedPlans.hardwareExample).toBeUndefined();
+    expect(typedPlans.evidenceRecord).toBeUndefined();
+    expect(typedPlans.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-persistent-runtime-kernel/src/lib.rs",
+        "crates/fe2o3-kfd/src/persistent_runtime_receipt.rs",
+        "scripts/persistent_runtime_refinement_audit.py",
+      ]),
     );
   });
 

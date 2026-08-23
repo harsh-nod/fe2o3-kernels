@@ -7,7 +7,8 @@ export type RuntimeMilestoneId =
   | "compiler-generated-cov6-kfd-bridge-v1"
   | "kernel-ir-v1-c454-compiler-convergence-v1"
   | "bounded-persistent-lifecycle-verus-v1"
-  | "same-source-bounded-decision-kernel-v2";
+  | "same-source-bounded-decision-kernel-v2"
+  | "operation-typed-runtime-effect-plans-v3";
 
 export interface RuntimeMilestoneOutcome {
   name: "Completed" | "DefinitelyNotPublished" | "RetainedTerminal";
@@ -469,6 +470,82 @@ export const runtimeMilestones = deepFreeze([
       "crates/fe2o3-persistent-runtime-kernel/verus/pins/MUTATIONS_V1.toml",
       "crates/fe2o3-persistent-runtime-kernel/verus/pins/POSITIVE_SUMMARY_V1",
       "crates/fe2o3-persistent-runtime-kernel/verus/pins/NEGATIVE_COUNT_V1",
+    ],
+  },
+  {
+    id: "operation-typed-runtime-effect-plans-v3",
+    number: "V3",
+    title: "Operation-typed runtime effect plans",
+    state: "implemented",
+    status: "formal-model-verified",
+    measurement: "unmeasured",
+    summary:
+      "The exact landed kernel replaces the public legacy untyped effect-plan surface with seven operation-typed, move-only same-source adapter plans. Exact operand getters expose only the copyable values needed to perform each external operation, while the plan itself remains the authority required by its matching resolver. Its authenticated Verus sweep proves 253 obligations and rejects all 73 calibrated unsafe mutations; KFD receipt and projection scaffolding remains Checked behind five explicit native-linkage HOLD findings.",
+    why: [
+      "Operation typing makes publication, Pending observation, completion observation, completion-credit release, retirement, destroy, and resource discharge distinct protocols. A caller cannot accidentally send a publication plan to a retirement resolver, and the legacy untyped EffectPlanV1 prepare/commit/cancel/quarantine surface is private instead of becoming an alternate public implementation that bypasses the typed contract.",
+      "Each typed plan has an exact operand getter. The adapter can copy the queue, dispatch, resource, certificate, evidence, and revision values needed for the concrete call without receiving a constructor, plan field, or clone operation that could forge, duplicate, or erase the sealed logical authority.",
+      "Resolution records three materially different facts. Confirmed no-effect restores the exact pre-prepare state; a successful effect applies the operation's exact successor; a possibly-effectful result enters absorbing quarantine and retains the reserved identities and custody. If the resolver is called against the wrong state, it returns the same rejected plan instead of consuming or silently dropping it.",
+      "Queue identity is split into stable admission and first-use attachment. A redacted admission projection can carry stable, non-authoritative queue facts before submission, while one attachment owner is latched at the first dispatch-bearing cutpoint and cannot be substituted by a later queue, lineage, or revision.",
+      "Unexpected completion evidence is exact rather than a fallback bucket: it requires current evidence whose acquired class is Unexpected. Current NotObserved, Pending, or Complete evidence cannot be relabeled Unexpected to advance either model.",
+      "KFD-side effect receipts are opaque and operation-typed, bind lineage, revision, request or observation payload, history, and a checked monotonically fresh call identity, and require the result of each scoped driver call to be checked against its corresponding seal. Exhaustion or mismatch retains terminal custody instead of manufacturing success.",
+      "The refinement auditor scans every non-test KFD Rust source and authenticates the kernel source, positive summary, and negative count through SOURCE_CLOSURE_V1. Its 24 hostile mutations make child-module native bridges, public receipt authority, freshness loss, mismatch-retention loss, missing result/seal checks, forged green counts, source substitution, and false proof-status promotion fail closed.",
+    ],
+    enables: [
+      "A concrete KFD adapter can be written as prepare, read exact operands, perform one scoped effect, and resolve with the retained typed plan. That is a narrower and more reviewable refinement target than translating an untyped token after the effect.",
+      "Confirmed no-effect paths can support an exact retry policy without confusing them with indeterminate effects, while possibly-effectful paths preserve process-lifetime custody and prevent unsafe teardown or identity reuse.",
+      "Stable admission plus latched attachment gives the future native bridge a place to bind a real created queue before any dispatch and a separate linear cutpoint for the first dispatch-bearing packet, without exposing the native handle as public authority.",
+      "CPU-only ordinary tests, same-source proof checks, and the hostile refinement audit can detect type erasure, evidence laundering, plan loss, forged receipts, and overclaimed status before any KFD device or GPU action is enabled.",
+      "The five remaining refinement gaps are now named release blockers rather than hidden assumptions. Closing them can establish an honest native bridge; until then the facade stays Checked and the same-source kernel proof is not transitively a proof of KFD effects.",
+    ],
+    pipeline: [
+      "Capture the redacted queue-admission projection only after queue creation has produced stable admitted facts. Preserve the native queue owner privately; the projection is copyable evidence, not permission to submit, destroy, or invent a kernel identity.",
+      "Prepare exactly one operation-specific adapter plan and copy only its exact operands into the matching driver call. Keep the move-only plan outside the driver so unwind, error, and mismatch handling cannot lose logical custody.",
+      "Resolve the returned effect with the same typed plan: success commits the exact successor, confirmed no-effect restores the exact origin, and possibly-effectful status quarantines the context while retaining reserved trace and resource authority. A rejected resolution returns its original plan unchanged.",
+      "For polling, accept Unexpected only for current acquired-class Unexpected evidence. Then require the operation-typed KFD result to match its opaque fresh seal before projecting the observation into the executable model.",
+      "Run the ordinary suites, authenticated same-source verifier, and 24-mutation fail-closed refinement audit in CPU-only CI. The real audit is expected to remain HOLD until all five native-refinement findings below are closed.",
+    ],
+    pipelineKicker: "Typed adapter cutpoint",
+    pipelineTitle:
+      "Prepare one operation, retain its authority, then resolve the exact effect",
+    commands: [
+      "cargo test --locked -p fe2o3-persistent-runtime-kernel",
+      "cargo test --locked -p fe2o3-runtime-model persistent_runtime",
+      "cargo test --locked -p fe2o3-kfd persistent_runtime",
+      "env PYTHONDONTWRITEBYTECODE=1 python3 scripts/tests/persistent_runtime_refinement_audit.py",
+      "env PYTHONDONTWRITEBYTECODE=1 python3 scripts/persistent_runtime_refinement_audit.py; status=$?; test \"$status\" -eq 1",
+      "crates/fe2o3-persistent-runtime-kernel/verus/verify-same-source.sh --verify",
+    ],
+    expected: [
+      "The ordinary CPU suites exercise all seven typed operation families, exact operand projection, exact no-effect restoration, possibly-effectful quarantine, rejected-plan retention, admission and attachment substitution, exact Unexpected evidence, and teardown without opening /dev/kfd or selecting a GPU.",
+      "The audit self-test suite reports 24 passing hostile mutation cases and checks that a real HOLD exits 1 while malformed audit input exits 2. The following real-audit command succeeds only when the current five-finding HOLD is preserved; it must not be read as a GO result.",
+      "The authenticated same-source command is CPU-only. At the exact landed source it reports verification results:: 253 verified, 0 errors and rejects exactly 73 calibrated expected-negative mutations at their pinned obligations.",
+    ],
+    limitations: [
+      "CRITICAL NO_KERNEL_FACADE_REFINEMENT: fe2o3-kfd does not yet depend on and consume the verified kernel, so no executable KFD state transition or external effect is linked to the same-source proof.",
+      "HIGH NATIVE_BRIDGE_UNAVAILABLE: the persistent effect trait remains private and has no production implementation or public constructor. There is no native KFD persistent driver in this milestone.",
+      "HIGH MODEL_EFFECT_CUTPOINT_UNREFINED: facade model commits still precede several concrete effects; confirmed-no-effect, indeterminate, error, and unwind paths are not yet refined through the kernel's exact typed resolution rules.",
+      "HIGH CURRENTNESS_CERTIFICATE_UNBOUND: facade lineage and a driver-supplied current bit do not yet construct the kernel's authenticated live-completion certificate, monotonic currentness epoch, admission identity, memory-profile generation, and revision binding.",
+      "HIGH TRACE_RESERVE_UNREFINED: facade-local trace arithmetic has no executable mapping to the verified kernel's exact reserve invariant across dispatch, observation, retirement, quarantine, and teardown.",
+      "The redacted queue-admission projection is intentionally not native queue, packet, mapping, file-descriptor, doorbell, or teardown authority. The future bridge must privately bind the logical QueueKeyV1 to the kernel-returned native queue identity, including a valid native ID of zero, and consume the one-shot attachment at the actual publication cutpoint.",
+      "Formal status applies only to the exact same-source decision kernel, its encoded contracts, and its bounded state space at the commit and tree below. KFD receipt and projection code is implementation-checked; the five audit findings prevent it from inheriting the kernel proof.",
+      "This milestone performed no native KFD persistent-driver execution, DRM or KFD ioctl, mapping, packet publication, MMIO write, compiler build, application run, or GPU action. It contains no MI300X measurement and establishes neither HIP/HSA/ROCr feature parity nor a basis for removing those runtimes.",
+    ],
+    commit: "ccd402e3f349fa216ff8ee255eabe2e4bd95ff70",
+    tree: "063be2f0356363ad098457fd5880d38c57a568c1",
+    sourceAvailability: "local-branch",
+    sourcePaths: [
+      "crates/fe2o3-persistent-runtime-kernel/src/lib.rs",
+      "crates/fe2o3-persistent-runtime-kernel/tests/decision_model.rs",
+      "crates/fe2o3-persistent-runtime-kernel/verus/verify-same-source.sh",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/SOURCE_CLOSURE_V1",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/POSITIVE_SUMMARY_V1",
+      "crates/fe2o3-persistent-runtime-kernel/verus/pins/NEGATIVE_COUNT_V1",
+      "crates/fe2o3-runtime-model/src/outstanding_dispatch_registry.rs",
+      "crates/fe2o3-kfd/src/persistent_runtime.rs",
+      "crates/fe2o3-kfd/src/persistent_runtime_receipt.rs",
+      "scripts/persistent_runtime_refinement_audit.py",
+      "scripts/tests/persistent_runtime_refinement_audit.py",
+      "scripts/ci-local.sh",
     ],
   },
 ] satisfies RuntimeMilestone[]);

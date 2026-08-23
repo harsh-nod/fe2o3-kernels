@@ -41,6 +41,7 @@ describe("runtime milestones", () => {
       screen.getByRole("heading", { name: "One runtime ownership pipeline" }),
     ).toBeInTheDocument();
     expect(screen.getAllByText("Implementation checked")).toHaveLength(4);
+    expect(screen.getAllByText("Formal model verified")).toHaveLength(3);
     expect(screen.getByText(/100,000 sequential dispatch/u)).toBeInTheDocument();
     expect(screen.getByText(/not yet been re-observed on MI300X/u)).toBeInTheDocument();
     expect(
@@ -99,7 +100,7 @@ describe("runtime milestones", () => {
     expect(
       screen.getByRole("heading", { name: "Same-source bounded decision kernel" }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Formal model verified")).toHaveLength(2);
+    expect(screen.getAllByText("Formal model verified")).toHaveLength(3);
     expect(
       screen.getByText(/same executable functions for ordinary Cargo tests and Verus/u),
     ).toBeInTheDocument();
@@ -109,8 +110,34 @@ describe("runtime milestones", () => {
     expect(screen.getByText(/all 64 bounded lifetime slots/u)).toBeInTheDocument();
     expect(screen.getByText(/does not prove liveness/u)).toBeInTheDocument();
     expect(
-      screen.getByText(/neither HIP\/HSA\/ROCr feature parity/u),
+      screen.getAllByText(/neither HIP\/HSA\/ROCr feature parity/u),
+    ).toHaveLength(2);
+    expect(
+      screen.getByRole("heading", { name: "Operation-typed runtime effect plans" }),
     ).toBeInTheDocument();
+    expect(screen.getAllByText("Completed runtime milestone")).toHaveLength(8);
+    expect(
+      screen.getByText(/seven operation-typed, move-only same-source adapter plans/u),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Current NotObserved, Pending, or Complete evidence cannot be relabeled Unexpected/u),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/24 passing hostile mutation cases/u)).toBeInTheDocument();
+    expect(
+      screen.getByText(/verification results:: 253 verified, 0 errors/u),
+    ).toBeInTheDocument();
+    expect(screen.getByText("ccd402e3f349fa216ff8ee255eabe2e4bd95ff70")).toBeInTheDocument();
+    expect(screen.getByText("063be2f0356363ad098457fd5880d38c57a568c1")).toBeInTheDocument();
+    for (const finding of [
+      "NO_KERNEL_FACADE_REFINEMENT",
+      "NATIVE_BRIDGE_UNAVAILABLE",
+      "MODEL_EFFECT_CUTPOINT_UNREFINED",
+      "CURRENTNESS_CERTIFICATE_UNBOUND",
+      "TRACE_RESERVE_UNREFINED",
+    ]) {
+      expect(screen.getByText(new RegExp(finding, "u"))).toBeInTheDocument();
+    }
+    expect(screen.getByText(/no MI300X measurement/u)).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         name: "Preparation and preflight are closed before milestone 05",
@@ -146,7 +173,7 @@ describe("runtime milestones", () => {
     expect(screen.getByText("Approve one bounded compiler-generated MI300X attempt")).toBeInTheDocument();
     expect(screen.getByText("Retain the one-attempt hardware record")).toBeInTheDocument();
     expect(
-      screen.getByText("Refine the verified decision kernel into the KFD facade"),
+      screen.getByText("Consume operation-typed plans in the KFD facade"),
     ).toBeInTheDocument();
     expect(screen.queryByText("Build persistent repeated execution")).not.toBeInTheDocument();
   }, 10_000);

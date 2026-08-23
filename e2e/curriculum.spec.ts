@@ -55,8 +55,8 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
     page.getByRole("heading", { name: "One runtime ownership pipeline" }),
   ).toBeVisible();
   await expect(page.getByText("Implementation checked", { exact: true })).toHaveCount(4);
-  await expect(page.getByText("Formal model verified", { exact: true })).toHaveCount(2);
-  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(7);
+  await expect(page.getByText("Formal model verified", { exact: true })).toHaveCount(3);
+  await expect(page.getByText("Run locally (CPU-safe)")).toHaveCount(8);
   await expect(
     page.getByText(/cargo test -p fe2o3-runtime-model --locked persistent_runtime/u),
   ).toBeVisible();
@@ -127,7 +127,7 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await expect(
     page.getByText("2e61da988c597d4357bd9a4bfbf9c03604015f90"),
   ).toBeVisible();
-  await expect(page.getByText("Local branch; remote links withheld")).toHaveCount(2);
+  await expect(page.getByText("Local branch; remote links withheld")).toHaveCount(3);
   await expect(
     page.locator('a[href*="2e61da988c597d4357bd9a4bfbf9c03604015f90"]'),
   ).toHaveCount(0);
@@ -150,7 +150,30 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   ).toBeVisible();
   await expect(
     page.getByText(/neither HIP\/HSA\/ROCr feature parity nor a basis for removing/u),
+  ).toHaveCount(2);
+  const typedPlansHeading = page.getByRole("heading", {
+    name: "Operation-typed runtime effect plans",
+  });
+  await expect(typedPlansHeading).toBeVisible();
+  await expect(page.getByText("Completed runtime milestone")).toHaveCount(8);
+  await expect(
+    page.getByText(/seven operation-typed, move-only same-source adapter plans/u),
   ).toBeVisible();
+  await expect(
+    page.getByText(/Current NotObserved, Pending, or Complete evidence cannot be relabeled Unexpected/u),
+  ).toBeVisible();
+  await expect(page.getByText(/24 passing hostile mutation cases/u)).toBeVisible();
+  await expect(
+    page.getByText(/verification results:: 253 verified, 0 errors/u),
+  ).toBeVisible();
+  await expect(page.getByText("ccd402e3f349fa216ff8ee255eabe2e4bd95ff70")).toBeVisible();
+  await expect(page.getByText("063be2f0356363ad098457fd5880d38c57a568c1")).toBeVisible();
+  await expect(page.getByText(/CRITICAL NO_KERNEL_FACADE_REFINEMENT/u)).toBeVisible();
+  await expect(page.getByText(/HIGH NATIVE_BRIDGE_UNAVAILABLE/u)).toBeVisible();
+  await expect(page.getByText(/HIGH MODEL_EFFECT_CUTPOINT_UNREFINED/u)).toBeVisible();
+  await expect(page.getByText(/HIGH CURRENTNESS_CERTIFICATE_UNBOUND/u)).toBeVisible();
+  await expect(page.getByText(/HIGH TRACE_RESERVE_UNREFINED/u)).toBeVisible();
+  await expect(page.getByText(/no MI300X measurement/u)).toBeVisible();
   const preflightHeading = page.getByRole("heading", {
     name: "Authenticated compiler-build preflight",
   });
@@ -198,6 +221,11 @@ test("runtime milestone exposes a safe runnable example and evidence boundary", 
   await decisionKernelHeading.scrollIntoViewIfNeeded();
   await page.screenshot({
     path: `/tmp/fe2o3-kernels-runtime-decision-kernel-${testInfo.project.name}.png`,
+    animations: "disabled",
+  });
+  await typedPlansHeading.scrollIntoViewIfNeeded();
+  await page.screenshot({
+    path: `/tmp/fe2o3-kernels-runtime-effect-plans-${testInfo.project.name}.png`,
     animations: "disabled",
   });
   await preflightHeading.scrollIntoViewIfNeeded();

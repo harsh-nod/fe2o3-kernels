@@ -364,8 +364,8 @@ export function RuntimeMilestonesPage() {
         <div className="runtime-next-row">
           <span>04</span>
           <div>
-            <strong>Refine the verified decision kernel into the KFD facade</strong>
-            <p>Introduce variant-typed effect plans and machine-check each persistent KFD adapter transition against the exact same-source kernel before any native constructor or hardware attempt is enabled.</p>
+            <strong>Consume operation-typed plans in the KFD facade</strong>
+            <p>Bind stable native queue admission, the first-use attachment, currentness certificates, effect cutpoints, and trace reserves to the exact same-source operands before exposing any native persistent constructor or hardware attempt.</p>
           </div>
         </div>
       </section>
