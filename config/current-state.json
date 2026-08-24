@@ -6,7 +6,9 @@
     {"number": 134, "state": "open", "label": "Rust-first Pliron compiler architecture"},
     {"number": 135, "state": "open", "label": "Verified persistent GPU execution"},
     {"number": 137, "state": "open", "label": "Verified pure-Rust KFD runtime"},
-    {"number": 140, "state": "open", "label": "Owner-bound upstream Pliron arena handles"}
+    {"number": 140, "state": "open", "label": "Owner-bound upstream Pliron arena handles"},
+    {"number": 215, "state": "open", "label": "Agent-native semantic GPU debugger and profiler"},
+    {"number": 216, "state": "open", "label": "Deterministic CPU semantic simulator and virtual GPU runtime"}
   ],
   "capabilities": [
     {
@@ -45,13 +47,6 @@
       "sourcePaths": ["crates/fe2o3-kernel-analysis/src/control_flow.rs", "crates/fe2o3-kernel-analysis/src/ssa.rs", "crates/fe2o3-kernel-analysis/src/uniformity.rs", "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs", "crates/fe2o3-kernel-analysis/src/pliron_invocation_trace.rs", "crates/fe2o3-kernel-analysis/src/pliron_tensor_layout.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs"]
     },
     {
-      "id": "kir-v7-simulation",
-      "label": "Bounded V7 simulation and semantic trace",
-      "status": "partial",
-      "detail": "An exact verified canonical Kernel IR V7 owner can enter a bounded deterministic CPU simulator for the supported integer and boolean subset: structured control flow and internal calls, private and global buffers or views, ordinary or guarded scalar loads, and D1-D3 invocation identities. The Linux-only fe2o3-kir-sim --kir-v7 boundary emits copied results and a bounded byte-level cross-invocation conflict assessment; a separate in-process adapter maps simulator events into observation-only semantic trace V1 records. The schedule is serial and canonical. Floating point, MFMA and wave operations, atomics, synchronization, workgroup memory, external calls, memory intrinsics, and inline assembly are rejected. Simulation and traces establish neither race freedom nor source-to-KIR or GPU equivalence, launch authority, timing, or performance, and they cannot execute the current numeric tutorial kernels.",
-      "sourcePaths": ["crates/fe2o3-kir-sim/README.md", "crates/fe2o3-kir-sim-cli/README.md", "crates/fe2o3-kir-sim-trace/README.md", "crates/fe2o3-semantic-trace/README.md"]
-    },
-    {
       "id": "target-finalization",
       "label": "Target finalization",
       "status": "partial",
@@ -62,8 +57,22 @@
       "id": "runtime",
       "label": "Runtime and persistent execution",
       "status": "partial",
-      "detail": "Pure-Rust KFD topology, memory, queue, packet, and typed lifecycle foundations are present. Current main also completes authority-free crash-recovery mechanics for Worker V2 publication intents and predecessor cleanup through exact leases, private cleanup escrow, and restart-atomic retirement. These types explicitly grant no publication, load, or launch authority; verified persistent execution and complete production runtime authority remain open in issues #135 and #137.",
-      "sourcePaths": ["crates/fe2o3-kfd/src/lib.rs", "crates/fe2o3-hsa-runtime/src/lib.rs", "crates/cargo-fe2o3/src/worker_v2_restart.rs", "crates/fe2o3-artifact-transaction/src/worker_v2_publication_intent_cleanup_escrow.rs"]
+      "detail": "Pure-Rust KFD topology, memory, queue, packet, and typed lifecycle foundations are present. The direct-KFD semantic observation boundary does not dispatch work: its redacted report exposes queue-lifecycle and resource facts only, with no dispatch identity, timing, KIR, workgroup, wave, lane, memory, or register observation. Authority-free Worker V2 crash-recovery mechanics remain separate. These records grant no publication, load, or launch authority; verified persistent execution and complete production runtime authority remain open in issues #135 and #137.",
+      "sourcePaths": ["crates/fe2o3-kfd/src/lib.rs", "crates/fe2o3-kfd/src/semantic_observation.rs", "crates/cargo-fe2o3/src/worker_v2_restart.rs", "crates/fe2o3-artifact-transaction/src/worker_v2_publication_intent_cleanup_escrow.rs"]
+    },
+    {
+      "id": "semantic-debug-profile",
+      "label": "Semantic debugging and profiling",
+      "status": "partial",
+      "detail": "Versioned semantic trace records, deterministic bounded hierarchy queries, and import boundaries establish an agent-readable foundation. The importer can retain selected rocprofv3 JSON dispatch-envelope and timing observations, ATT manifest metadata without decoded events, and sparse normalized ROCgdb records with explicit unavailable fields. There is no debugger or profiler UI, general source/MIR/KIR/ISA map, counter or PC-sample ingestion, ATT decoding, structured ROCgdb state, capture comparison, or diagnosis authority yet. Issue #215 tracks those layers.",
+      "sourcePaths": ["crates/fe2o3-semantic-trace/src/model.rs", "crates/fe2o3-semantic-query/src/lib.rs", "crates/fe2o3-semantic-import/src/lib.rs"]
+    },
+    {
+      "id": "cpu-semantic-simulation",
+      "label": "No-GPU CPU semantic simulation",
+      "status": "partial",
+      "detail": "cargo fe2o3 simulate can take ordinary typed source through semantic MIR, verified canonical Kernel IR V7, formal-memory admission, and bounded deterministic CPU execution. The fe2o3 path links and initializes no GPU runtime and performs no GPU enumeration; ordinary project Cargo build scripts remain trusted, unsandboxed host code outside that claim. The current slice covers structured scalar control flow and internal calls, private and global buffers or views, ordinary and guarded scalar loads, D1-D3 invocation identities, static scalar workgroup memory, and convergent workgroup barriers under one cooperative canonical schedule. The result includes copied buffers and a bounded byte-level cross-invocation conflict assessment; a separate adapter can emit observation-only semantic traces. It grants no race-freedom proof, source-to-KIR or GPU equivalence, launch authority, timing, or performance prediction. Floating point, MFMA and wave operations, atomics and fences, dynamic or non-scalar workgroup memory, external calls, memory intrinsics, inline assembly, schedule exploration, and a virtual host runtime remain open in issue #216.",
+      "sourcePaths": ["crates/cargo-fe2o3/src/main.rs", "crates/fe2o3-kir-sim/README.md", "crates/fe2o3-kir-sim/src/execute.rs", "crates/fe2o3-kir-sim/src/preflight.rs", "crates/fe2o3-kir-sim-cli/src/linux.rs", "crates/fe2o3-kir-sim-trace/README.md"]
     }
   ]
 }

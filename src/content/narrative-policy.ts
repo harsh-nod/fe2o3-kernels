@@ -13,6 +13,8 @@ export const narrativeIds = deepFreeze([
   "first-fill/trust",
   "typed-vecadd/same-body",
   "typed-vecadd/typed-host",
+  "cpu-semantic-simulation/pipeline",
+  "cpu-semantic-simulation/evidence-boundary",
   "verus-contracts/contract-shape",
   "verus-contracts/negative",
   "memory-race-proof/regions",
@@ -69,6 +71,10 @@ export const narrativeOrderByLesson = deepFreeze({
   "typed-vecadd": [
     "typed-vecadd/same-body",
     "typed-vecadd/typed-host"
+  ],
+  "cpu-semantic-simulation": [
+    "cpu-semantic-simulation/pipeline",
+    "cpu-semantic-simulation/evidence-boundary"
   ],
   "verus-contracts": [
     "verus-contracts/contract-shape",
@@ -152,7 +158,7 @@ export const narrativeFingerprints = deepFreeze({
   "read-the-evidence/labels": "ba7a316b9d4c6be7eeeb9bfbe48b6e9580a20f12d9fd934ab5d2a6fc7b74b8bb",
   "read-the-evidence/differentiator": "7d4f9897c50993ecbe6e8d9f94162e6cf649f669f1f555627f9d2df5cb0147d7",
   "read-the-evidence/compiler-refactor": "b9b2de157842c4626cf236431e29e677d316ec7156189d507330891db4d409df",
-  "read-the-evidence/scalar-gemm-checkpoint": "c9c91d9c0e9167024f293daa59acaf48a0cd1dad7a89e48365bd848d1ec96f77",
+  "read-the-evidence/scalar-gemm-checkpoint": "3072ec53df686c6132605876c78cc03a14ab02951a1dbd53f89864c25f433352",
   "read-the-evidence/moe-bounded-evidence": "dbd3365e78d1b08d60b330328166e39fe46b1d7174d6ec0ca46811542757e361",
   "gfx942-setup/toolchain": "bde4a23bc51376d828c8b910ab8048c988c7f838736f1d309bea0294fde84ef3",
   "gfx942-setup/sequence": "00a0689fb93a27622076f9bd21c5fb8c0b78c57d88d79dc8db0bfb86596315da",
@@ -160,6 +166,8 @@ export const narrativeFingerprints = deepFreeze({
   "first-fill/trust": "e8e35a73d58e59831b23c8bf97cc3b80fe539740444c0146995c3564699cd594",
   "typed-vecadd/same-body": "f13736ba4fb9726a65f1637d6658ce4ef5cdf9676ceeec1ebdea5a8728b629f8",
   "typed-vecadd/typed-host": "4533c94d3bacd2f8e2adcd64f6d534d594564ab81a4b8f6b6f628d2d22dbbe70",
+  "cpu-semantic-simulation/pipeline": "f7d61991560285f13300f0b306706cad46b1fc6a5282aa5c394737fdd5d1f00e",
+  "cpu-semantic-simulation/evidence-boundary": "b5b24011b7e8a35fe0c545a3b4a7594acad0ade957e44dd881ffb71251d57a5d",
   "verus-contracts/contract-shape": "6f0bce0ee5e7ee41dc19f9f0ed3b59e2c2238562ceac22380381454002d86ad1",
   "verus-contracts/negative": "38875c71f6dd93237a558f59db083e9eb48b93d9407fa23f210d3dfd14c379ca",
   "memory-race-proof/regions": "e197e757e5e41a147309534e0659e257209745bcef5c6e11fa89d61947111835",
@@ -168,9 +176,9 @@ export const narrativeFingerprints = deepFreeze({
   "compiler-checks/production-path": "565a195b23db4fc609b1c386f1b4b13b0f58ebfd7a172a442412a689f572b26c",
   "compiler-checks/v7-simulation": "1648884b36e18ba54e8066ef32a7c3d59c48b01de54fd6610695074b1fdc46a4",
   "reductions-scans/scope": "5a38b3d1c24f74c6ffe39078b8e8b26d2fc1d12547e452fa420355bc5dd25152",
-  "reductions-scans/scan": "2694b624faa9d51616967d5e54166dede88ebc26408b5fff1dd570387228536b",
+  "reductions-scans/scan": "fb4f1ffb04804cbf182657612798edb05be441d3cd56f9c5b6b8a4fbab8e7df1",
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
-  "lds-barriers-atomics/atomics": "d684bb507dfe7c741681705c4f5de5d145b49b0ec3dea7a7ac3e30a16b5cb19a",
+  "lds-barriers-atomics/atomics": "c4ca748c38ac5e5e4e5b3054265b25bda631c86ebb74348dacf69d074bf96bd5",
   "gemm-tiling/public-layout-proof": "1f78d8b76a7323822d77b025a919a44fb29e64dfcd1e19c5b0d1b0776cb8bc39",
   "gemm-tiling/general-contract": "2ff980b2d8e8185fe599886cb1a3beba7faae104037af9d130d4c5bdaa92484b",
   "gemm-tiling/mutation-diagnostics": "06343229f4fecd3339bd8a41cbaa0ab46215d527feca7b6b473131a696a43e56",

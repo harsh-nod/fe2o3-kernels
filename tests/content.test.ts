@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
+import { currentState } from "../src/content/current-state";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import {
@@ -63,7 +64,7 @@ describe("curriculum integrity", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8,
     ]);
-    expect(lessons).toHaveLength(20);
+    expect(lessons).toHaveLength(21);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
       new Set(
@@ -152,12 +153,91 @@ describe("curriculum integrity", () => {
     }
   });
 
+  it("keeps CPU semantic simulation exact and non-hardware", () => {
+    const lesson = lessons.find(
+      (candidate) => candidate.id === "cpu-semantic-simulation",
+    );
+    expect(lesson).toBeDefined();
+    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
+    expect(kernel).toMatchObject({
+      explanatory: false,
+      sourceCommit: currentState.compilerCommit,
+      sourcePath:
+        "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
+      sourceSha256:
+        "19854910d7488530033bbf4c15ed6b32283e56f4f8b6ed64f7775d68597a46dd",
+    });
+    expect(kernel?.code).toBe(
+      readFileSync("examples/cpu_simulation_kernel.rs", "utf8"),
+    );
+    const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code ?? "";
+    expect(host).toContain(
+      readFileSync("examples/cpu_simulation_request.json", "utf8").trim(),
+    );
+    expect(host).toContain("cargo fe2o3 simulate");
+    const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    for (const boundary of [
+      "authority: observation_only",
+      "simulated: true",
+      "hardware_observed: false",
+      "hardware_validation: false",
+      "performance_prediction: false",
+    ]) {
+      expect(result).toContain(boundary);
+    }
+    expect(result).toContain(
+      "kir.sha256: 64 lowercase hexadecimal digits (profile-specific)",
+    );
+    expect(result).toContain("kir.canonical_bytes: positive bounded byte length");
+    expect(result).toContain("counts.invocations_executed: 4");
+    expect(result).toContain("counts.workgroups_visited: 1");
+    expect(result).toContain("counts.scheduled_slots_visited: 64");
+    expect(result).toContain(
+      "schedule.identity: workgroup_major_local_zyx_cooperative_v1",
+    );
+    expect(result).toContain("0x11000000110000001100000011000000");
+    const reference = lesson?.claims[0].reference;
+    expect(reference).toMatchObject({
+      scope: "current-implementation",
+      commit: currentState.compilerCommit,
+      tree: currentState.compilerTree,
+      target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
+    });
+    expect(reference?.note).toContain("no GPU");
+    const content = serializedLessonContent("cpu-semantic-simulation");
+    expect(content).toContain("trusted, unsandboxed host code");
+    expect(content).toContain(
+      "hardware_observed: false describes fe2o3's simulator result",
+    );
+    expect(content).toContain("fresh ephemeral generation");
+    expect(content).toContain(
+      "without reusing an earlier simulation handoff or result",
+    );
+
+    expect(currentState.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ number: 215, state: "open" }),
+        expect.objectContaining({ number: 216, state: "open" }),
+      ]),
+    );
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "semantic-debug-profile",
+      )?.detail,
+    ).toContain("no debugger or profiler UI");
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "cpu-semantic-simulation",
+      )?.detail,
+    ).toContain("trusted, unsandboxed host code");
+  });
+
   it("pins the executable dynamic GEMM and historical tiled evidence separately", () => {
     const lesson = lessons.find((entry) => entry.id === "gemm-tiling");
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       sourceSha256:
         "1f76284197d14acb79ace32c5b78ef2914cf845418cb785a6fca86285db8ab5a",
       evidenceId: "dynamic-gemm-executable-source-v1",
@@ -182,7 +262,7 @@ describe("curriculum integrity", () => {
       label: "Equivalent HIP",
       language: "cpp",
       sourcePath: "examples/tiled_gemm_general_v1/benchmark_hip.cpp",
-      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       sourceSha256:
         "24233c267c1bad3bde9c4897fb063d2e48d6d2fa07439dd04f4d0c14bd2ea84c",
       explanatory: false,
@@ -192,7 +272,7 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       sourceSha256:
         "c324f239a9e5641c1861cbbb3800e8398cebad48bb125473b2b75ab85d3d4fc7",
       explanatory: false,
@@ -207,8 +287,8 @@ describe("curriculum integrity", () => {
     expect(result).toContain("PASS multi-workgroup-dynamic-k");
     expect(result).toContain("PASS zero-k-epilogue");
     expect(result).toContain("Fe2O3 is safer and more expressive here; it is not faster than HIP yet");
-    expect(result).toContain("138.112 us");
-    expect(result).toContain("130.541 us");
+    expect(result).toContain("138.005 us");
+    expect(result).toContain("130.514 us");
 
     const proofLesson = lessons.find((entry) => entry.id === "gemm-proof-plan");
     expect(proofLesson?.tabs.find((tab) => tab.kind === "kernel")).toMatchObject({
@@ -557,7 +637,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       sourceSha256:
         "13c02223d099abfdc8415c3149721b6e98170da69f0725d39a45186a83116314",
       explanatory: false,
@@ -588,7 +668,7 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
-      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       sourceSha256:
         "6bba6a37ce1db788207c59469a69c4a051ee7399c5da880041f650747be924ad",
       explanatory: false,
@@ -637,8 +717,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/wave64_collectives_v1/src/kernel.rs",
         bundledPath: "examples/wave64_collectives_v1/src/kernel.rs",
         sha256:
-          "c649e38712232ed45c1d2f6f8a2a49405f12a5e308907b3265c2415f227803a2",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+          "7c6ead1e7c01a61a8f31a010c9e8cb9bd1c21a905ba61e9d90c6c077c748ffd4",
+        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       },
       {
         lessonId: "lds-barriers-atomics",
@@ -646,8 +726,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
         bundledPath: "examples/workgroup_sync_v1/src/kernel.rs",
         sha256:
-          "1a28ca6d97d180c347be41ce65377d67e44773c539aa73610808585aedf125bf",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+          "991542b783a144598be967ae1671609b2a02a812ca084c3bf6358a9f70968105",
+        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       },
       {
         lessonId: "moe-routing",
@@ -655,8 +735,8 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/moe_top2_v1/src/kernel.rs",
         bundledPath: "examples/moe_top2_v1/src/kernel.rs",
         sha256:
-          "0260f144150e6fee7d9bd6a3d919e99ded0e43666509770f6e6186f5100fee25",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+          "0e4570bd52866dd23b8b00d83983aadc818c77580de8f7f5e2982e12a57e20e2",
+        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       },
     ] as const;
 
@@ -730,16 +810,16 @@ describe("curriculum integrity", () => {
         evidenceId: "flash-attention-verus-v1",
         bundledPath: "examples/flash_attention_v1/verus/flash_attention_v1.rs",
         sha256:
-          "e98b9fffc6e4c2fbcc5bca0ca706ac6575f93814afecf67be73de0f2d087d467",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+          "8fa4dce0bb6d60b24c0a61f9eb525bd5b90234689dbc215438499404cab8a21c",
+        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       },
       {
         lessonId: "moe-routing",
         evidenceId: "moe-top2-verus-v1",
         bundledPath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
         sha256:
-          "aee6c405f3e95be25bf0575a419ff6591153fce7ff9e950f7d3e5889188e354c",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+          "4a5a60b66284567522ab3f07d93309c7002abf75870f4aa9db752f8260cb296c",
+        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       },
       {
         lessonId: "moe-expert-compute",
@@ -748,7 +828,7 @@ describe("curriculum integrity", () => {
           "examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
         sha256:
           "617e6741c5f1415a8e792e5e36e3526c04ba18903438e3af178bb107766383d1",
-        sourceCommit: "ae312f421872e1eb9885217888548d74f79c3357",
+        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       },
     ] as const;
     for (const profile of proofProfiles) {
@@ -772,7 +852,7 @@ describe("curriculum integrity", () => {
     const atomicPath = "examples/workgroup_sync_v1/src/scoped_atomic.rs";
     const atomic = readFileSync(atomicPath, "utf8");
     expect(createHash("sha256").update(atomic).digest("hex")).toBe(
-      "0531f894d0c6c94af9258717cf7ed52fab8f68785b361bd261f154ac9cf7ce14",
+      "30931d5236c4730e2b6212644587fe76d37067d87a9b7f1dfadbe3ea02fef28b",
     );
     const synchronizationClaim = lessons
       .find((entry) => entry.id === "lds-barriers-atomics")
@@ -1664,12 +1744,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-24",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
-      eventualPublicTree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
+      eventualPublicCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      eventualPublicTree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
-        requiredTree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
+        requiredCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+        requiredTree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2191,7 +2271,7 @@ describe("implementation progress integrity", () => {
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       sourceSha256:
         "24ab06c4e5d3a6ffd4d859f3a4744106325d7d7cdcc7868ddd0fd9a294243e36",
       explanatory: false,
@@ -2297,7 +2377,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      "318c064c3a0aa8b03654f95461e3c894395a5d47",
     );
 
     const lesson = curriculum
@@ -2329,7 +2409,7 @@ describe("implementation progress integrity", () => {
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertHost).toMatchObject({
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
-      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
       sourceSha256:
         "1bcd872f696a9fd94da1f1f445bc07cbf64d3bfba2de87961204b9849a07c55e",
       explanatory: false,
@@ -2944,7 +3024,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"c88681a356516982bdb96496ac5f9839d0e91bd7");
+    expect(mapping).toContain("sourceCommit\":\"318c064c3a0aa8b03654f95461e3c894395a5d47");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family flags remain false");

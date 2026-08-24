@@ -56,6 +56,84 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
+test("CPU semantic simulation keeps its evidence boundary visible", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#/lesson/cpu-semantic-simulation");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Simulate typed source without a GPU",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Execute the compiler's semantic representation",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Read the result as a simulated observation",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("performance_prediction: false")).toBeVisible();
+  await expect(
+    page.getByText(/trusted, unsandboxed host code/u),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/does not attest arbitrary build-script behavior/u),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/fresh ephemeral generation/u),
+  ).toBeVisible();
+  await expect(
+    page.getByLabel("CPU semantic simulation of one authenticated WG64"),
+  ).toContainText("60 inactive slots");
+  await expect(page.getByRole("tabpanel")).toContainText("pub fn fill");
+  await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    /crates\/cargo-fe2o3\/tests\/fixtures\/simulation-source-fill\/src\/lib\.rs$/u,
+  );
+
+  await page.getByRole("tab", { name: "Host" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "fe2o3-simulation-request-v1",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "cargo fe2o3 simulate",
+  );
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "hardware_observed: false",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "0x11000000110000001100000011000000",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "counts.workgroups_visited: 1",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "counts.scheduled_slots_visited: 64",
+  );
+
+  const screenshot = testInfo.outputPath("cpu-semantic-simulation.png");
+  await page.screenshot({
+    path: screenshot,
+    animations: "disabled",
+    fullPage: true,
+  });
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+});
+
 test("search traps focus and restores its trigger", async ({ page }) => {
   await page.goto("./#/");
   await expect(
@@ -128,7 +206,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/flash_attention_v1/verus/flash_attention_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/flash_attention_v1/verus/flash_attention_v1.rs",
   );
   await page.getByRole("button", { name: "Mark complete" }).click();
   await expect(page.getByRole("button", { name: "Completed" })).toBeVisible();
@@ -163,7 +241,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Equivalent HIP" }).click();
@@ -174,7 +252,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel").locator(".token.keyword").first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -183,7 +261,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
@@ -399,7 +477,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -442,7 +520,7 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/wave64_collectives_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/wave64_collectives_v1/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -463,13 +541,13 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/workgroup_sync_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/workgroup_sync_v1/src/kernel.rs",
   );
   await expect(
     page.getByRole("link", { name: "Exact separate scoped_atomic.rs source" }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/workgroup_sync_v1/src/scoped_atomic.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/workgroup_sync_v1/src/scoped_atomic.rs",
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -498,7 +576,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
@@ -509,7 +587,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -570,7 +648,7 @@ test("every internal curriculum route resolves without page overflow", async ({
 }) => {
   await page.goto("./#/lesson/read-the-evidence");
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(20);
+  await expect(routeLinks).toHaveCount(21);
   const routes = await routeLinks.evaluateAll((links) =>
       links.map((link) => ({
         href: (link as HTMLAnchorElement).href,
@@ -601,7 +679,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at c88681a356",
+      name: "Compiler main at 318c064c3a",
     }),
   ).toBeVisible();
   await expect(

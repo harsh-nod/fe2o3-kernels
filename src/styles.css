@@ -718,6 +718,79 @@ p {
   border-style: dashed;
 }
 
+.simulation-flow {
+  display: flex;
+  align-items: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.simulation-unit {
+  display: flex;
+  align-items: center;
+  flex: 1 0 0;
+  gap: 10px;
+}
+
+.simulation-unit:last-child {
+  flex-grow: 0;
+}
+
+.simulation-stage {
+  display: grid;
+  place-items: center;
+  min-width: 150px;
+  min-height: 92px;
+  padding: 10px;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 48%, var(--border));
+  border-radius: 6px;
+  text-align: center;
+}
+
+.simulation-stage strong {
+  margin-top: 6px;
+  color: var(--text-strong);
+  font-size: 0.75rem;
+}
+
+.simulation-stage span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.61rem;
+}
+
+.simulation-workgroup {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(84px, 1fr)) minmax(130px, 1.5fr);
+  gap: 7px;
+  min-width: 620px;
+  max-width: 760px;
+  margin: 22px auto 0;
+}
+
+.simulation-lane {
+  display: grid;
+  place-items: center;
+  min-height: 82px;
+  padding: 8px 5px;
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  border-radius: 5px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.66rem;
+  text-align: center;
+}
+
+.simulation-lane.padding {
+  color: var(--red);
+  background: var(--red-soft);
+  border-color: var(--red);
+  border-style: dashed;
+}
+
 .diagram-legend {
   display: flex;
   justify-content: center;

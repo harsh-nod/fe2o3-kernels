@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`c88681a356516982bdb96496ac5f9839d0e91bd7`, tree
-`31bf39234539c90aabe310ebe0978de9dfd00b22`. Deployment requires
+`318c064c3a0aa8b03654f95461e3c894395a5d47`, tree
+`935bae695bb8a89762d2a44ccf027b01cee91e16`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed.
@@ -52,7 +52,7 @@ MI300X qualification covers four GEMM cases, four softmax cases, two
 one-pass-online attention cases, and five MoE output widths. Matrix
 contractions contain BF16/F32 MFMA; reductions contain subgroup shuffles. The
 matched direct HIP benchmark is checked in and shows that Fe2O3 is currently
-slower, approaching 94.5% of the HIP kernel's throughput at 1024. These
+slower, reaching 94.6% of the HIP kernel's throughput at 1024. These
 qualification artifacts are not protected release authority or universal
 correctness proofs.
 
@@ -608,7 +608,7 @@ FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b
 The `gemm-tiling` lesson now shows the exact current dynamic kernel, build
 script, host runner, and four-case MI300X result. The safe kernel is byte-pinned
 to `examples/tiled_gemm_general_v1/src/kernel.rs` at
-`c88681a356516982bdb96496ac5f9839d0e91bd7` and contains no unsafe block. Its
+`318c064c3a0aa8b03654f95461e3c894395a5d47` and contains no unsafe block. Its
 host-only unsafe boundaries are visible and documented around external HSACO
 loading and physical ABI launch.
 
@@ -982,10 +982,11 @@ other GPU languages are inherently unverifiable.
 
 ## Curriculum
 
-The documentation app contains 18 lessons across nine modules:
+The documentation app contains 21 lessons across nine modules:
 
 0. Evidence orientation and an MI300X/gfx942 setup.
-1. Fill, typed vector addition, indexing, `DisjointSlice`, and launch shape.
+1. Fill, typed vector addition, indexing, `DisjointSlice`, launch shape, and
+   source-first bounded CPU semantic simulation without a GPU runtime.
 2. Verus contracts, negative tests, overflow freedom, initialization, and
    injective writes.
 3. Bounded reduction/scan semantics, wave64, barriers, atomics, and LDS.

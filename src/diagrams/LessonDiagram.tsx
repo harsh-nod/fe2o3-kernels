@@ -24,6 +24,8 @@ export function LessonDiagram({ kind }: { kind: DiagramKind }) {
       return <EvidencePipeline />;
     case "indexing":
       return <IndexingMap />;
+    case "simulation":
+      return <SimulationWorkgroup />;
     case "memory":
       return <MemoryOwnership />;
     case "reduction":
@@ -90,6 +92,52 @@ function IndexingMap() {
       </div>
       <figcaption>
         The checked output guard dominates every input read and output write.
+      </figcaption>
+    </figure>
+  );
+}
+
+function SimulationWorkgroup() {
+  const stages = [
+    { icon: FileCode2, label: "Typed Rust", sub: "authenticated WG64" },
+    { icon: Binary, label: "KIR V7", sub: "exact and verified" },
+    { icon: Cpu, label: "CPU semantics", sub: "bounded · deterministic" },
+  ];
+  return (
+    <figure
+      className="diagram diagram-simulation"
+      aria-label="CPU semantic simulation of one authenticated WG64"
+    >
+      <div className="simulation-flow">
+        {stages.map((stage, index) => (
+          <div className="simulation-unit" key={stage.label}>
+            <div className="simulation-stage">
+              <stage.icon size={21} aria-hidden="true" />
+              <strong>{stage.label}</strong>
+              <span>{stage.sub}</span>
+            </div>
+            {index < stages.length - 1 && (
+              <ArrowRight size={18} aria-hidden="true" />
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="simulation-workgroup" aria-label="Four live invocations and 60 inactive slots">
+        {Array.from({ length: 4 }, (_, index) => (
+          <div className="simulation-lane" key={index}>
+            <span>t{index}</span>
+            <ArrowDown size={14} aria-hidden="true" />
+            <strong>out[{index}] = 17</strong>
+          </div>
+        ))}
+        <div className="simulation-lane padding">
+          <span>t4...t63</span>
+          <strong>60 inactive slots</strong>
+        </div>
+      </div>
+      <figcaption>
+        One visited WG64 schedules 64 slots; only the four in-grid logical
+        invocations execute and write typed output.
       </figcaption>
     </figure>
   );

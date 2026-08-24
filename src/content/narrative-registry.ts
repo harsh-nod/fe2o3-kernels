@@ -184,7 +184,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires commit c88681a356516982bdb96496ac5f9839d0e91bd7, tree 31bf39234539c90aabe310ebe0978de9dfd00b22. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical execution and proof evidence remains independently pinned: the protected GEMM observation stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A evidence stays at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. Every displayed attributed kernel source is pinned to an exact immutable source milestone; the dynamic strided GEMM source at this gate compiles and passes four MI300X qualification cases; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
+        "text": "The checked-in publication gate requires commit 318c064c3a0aa8b03654f95461e3c894395a5d47, tree 935bae695bb8a89762d2a44ccf027b01cee91e16. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical execution and proof evidence remains independently pinned: the protected GEMM observation stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A evidence stays at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. Every displayed attributed kernel source is pinned to an exact immutable source milestone; the dynamic strided GEMM source at this gate compiles and passes four MI300X qualification cases; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
       },
       {
         "type": "callout",
@@ -334,6 +334,94 @@ const narrativeRegistry = deepFreeze({
         "tone": "boundary",
         "title": "Arithmetic remains abstract",
         "text": "The real-body Verus proof deliberately does not claim IEEE-754 f32 addition, NaN behavior, signed zero, contraction, or operation ordering. GPU and CPU result checks are valuable empirical evidence, not a universal numerical theorem."
+      }
+    ]
+  },
+  "cpu-semantic-simulation/pipeline": {
+    "sectionId": "pipeline",
+    "title": "Execute the compiler's semantic representation",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "cargo fe2o3 simulate starts from the ordinary attributed Rust crate. The compiler collects the selected typed kernel, lowers its semantic MIR through the general frontend, verifies canonical Kernel IR V7, admits its formal-memory model, and hands the exact canonical bytes to the bounded CPU executor. The kernel body is not compiled as an ordinary host Rust function, and no algorithm-specific CPU implementation stands beside it."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Boundary",
+          "What crosses it",
+          "Failure behavior"
+        ],
+        "rows": [
+          [
+            "Source to semantic MIR",
+            "One selected ordinary safe Rust #[kernel(typed)] body, its authenticated required/max WG64 launch contract, and authenticated device operations.",
+            "Ambiguous kernels, unsupported source forms, and invalid typed operations fail closed."
+          ],
+          [
+            "Semantic MIR to KIR V7",
+            "Typed control flow, integer values, launch queries, calls, and memory operations in the canonical versioned representation.",
+            "Verification precedes execution; malformed or unsupported KIR is never simulated."
+          ],
+          [
+            "Formal memory to CPU execution",
+            "Virtual allocations retain element type, extent, alignment, access, initialization, and provenance.",
+            "The executor reports typed faults without dereferencing device addresses as host pointers."
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Scope the no-hardware claim",
+        "text": "The fe2o3 simulation path links and initializes no GPU runtime and performs no GPU enumeration. Ordinary project Cargo build scripts remain trusted, unsandboxed host code and can independently access hardware. hardware_observed: false describes fe2o3's simulator result; it does not attest arbitrary build-script behavior."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Same target, fresh simulation state",
+        "text": "Every source-simulation attempt uses a fresh ephemeral generation and removes that generation after success or failure. A retry may reuse the same Cargo target directory without reusing an earlier simulation handoff or result."
+      }
+    ]
+  },
+  "cpu-semantic-simulation/evidence-boundary": {
+    "sectionId": "evidence-boundary",
+    "title": "Read the result as a simulated observation",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "The V1 result binds the positive bounded length of the exact canonical KIR and reports its profile-specific SHA-256 as 64 lowercase hexadecimal digits, together with scalar target-profile identity, cooperative scheduler identity, launch hierarchy counts, and the typed output snapshot. The displayed command does not bind every compiler-profile input, so this tutorial does not pin one digest or byte length. The request uses one authenticated WG64 with four live logical invocations and 60 inactive scheduled slots. All four u32 elements become 17, encoded as four little-endian 0x11000000 values."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Result field",
+          "Meaning"
+        ],
+        "rows": [
+          [
+            "simulated: true",
+            "The canonical KIR executed in the bounded CPU semantic model."
+          ],
+          [
+            "hardware_observed: false",
+            "No physical GPU execution was observed."
+          ],
+          [
+            "hardware_validation: false",
+            "The result does not validate LLVM, ISA, HSACO, or GPU equivalence."
+          ],
+          [
+            "performance_prediction: false",
+            "CPU duration and deterministic schedule are not GPU timing, occupancy, or overlap estimates."
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Current supported slice",
+        "text": "The published milestone covers bounded scalar control flow and calls, integers, launch queries, typed global memory, static scalar workgroup memory, and convergent workgroup barriers. Unsupported operations return structured errors. Wave collectives, generic barriers, atomics and fences, dynamic or non-scalar workgroup memory, matrix operations, floating-point target contracts, seeded schedule exploration, replay, and a virtual host runtime are not claimed by this lesson."
       }
     ]
   },
@@ -1039,11 +1127,12 @@ const narrativeRegistry = deepFreeze({
           "Boundary"
         ],
         "rows": [
-          ["Schedule", "Workgroups and local slots run serially in canonical Z/Y/X order; every invocation runs to completion.", "This is deterministic CPU execution, not a GPU scheduler or progress model."],
+          ["Schedule", "Workgroups and local slots are created in canonical Z/Y/X order; live invocations advance cooperatively and yield at convergent workgroup barriers.", "This is deterministic CPU execution, not a GPU scheduler or progress model."],
           ["Guarded scalar load", "A false predicate returns the fallback without validating the pointer, touching memory, or emitting a read event.", "The simulator observes already-verified KIR behavior; it does not establish source-to-KIR refinement."],
           ["Memory conflicts", "The result contains a bounded byte-level cross-invocation global-memory conflict assessment.", "Clean is not a race-freedom proof; conflict and incomplete outcomes remain observations."],
           ["Semantic trace V1", "A separate in-process adapter maps simulator events to bounded observation-only trace records.", "Trace KIR identity and site ordinals are untrusted claims until rebound to an independently owned exact V7 module."],
-          ["Unsupported operations", "Floating point, external calls, atomics, synchronization, workgroup memory, wave and matrix operations, memory intrinsics, and inline assembly are rejected.", "The current GEMM, softmax, attention, and MoE tutorial kernels cannot run in this simulator profile."]
+          ["Workgroup cooperation", "Static scalar workgroup memory and convergent workgroup barriers model initialization, cross-lane publication, and one allocation per workgroup.", "Generic barriers, dynamic or non-scalar workgroup memory, and physical wave behavior are outside this profile."],
+          ["Unsupported operations", "Floating point, external calls, generic barriers, atomics, fences, dynamic or non-scalar workgroup memory, wave and matrix operations, memory intrinsics, and inline assembly are rejected.", "The current GEMM, softmax, attention, and MoE tutorial kernels cannot run in this simulator profile."]
         ]
       },
       {
@@ -1101,7 +1190,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current maturity",
-        "text": "The Kernel tab is the current safe public-main Wave64 source at ae312f421872e1eb9885217888548d74f79c3357. Its checked CPU oracle, mutation tests, and bounded Verus model retain source/model-only authority. Historical compiler, finalizer, runtime, and protected gfx942 observations remain separately pinned and do not prove source-to-machine refinement for the repinned source."
+        "text": "The Kernel tab is the current safe public-main Wave64 source at 318c064c3a0aa8b03654f95461e3c894395a5d47. Its checked CPU oracle, mutation tests, and bounded Verus model retain source/model-only authority. Historical compiler, finalizer, runtime, and protected gfx942 observations remain separately pinned and do not prove source-to-machine refinement for the repinned source."
       }
     ]
   },
@@ -1147,7 +1236,7 @@ const narrativeRegistry = deepFreeze({
         "items": [
           {
             "label": "Exact separate scoped_atomic.rs source",
-            "href": "https://github.com/harsh-nod/fe2o3/blob/ae312f421872e1eb9885217888548d74f79c3357/examples/workgroup_sync_v1/src/scoped_atomic.rs"
+            "href": "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/workgroup_sync_v1/src/scoped_atomic.rs"
           }
         ]
       }
@@ -2027,9 +2116,11 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "ddba56ca85167478abfccdaadcc790228c3d9ffd48f9a5f1605bba5c8431628d",
+    "3072ec53df686c6132605876c78cc03a14ab02951a1dbd53f89864c25f433352",
   "compiler-checks/catalog":
     "ca62b31f6a2453693caf154475a1d3edb9f5ec9c5ec60029198da854f34c0c52",
+  "compiler-checks/v7-simulation":
+    "898a468386559cbe68838e52818e018378e26d0211fd568a946c298507b3d251",
   "gemm-tiling/public-layout-proof":
     "9cb4be57e0aff451d0e72b0129e2f1698fee55680e48d72e545bf06a8443d4d9",
   "gemm-tiling/mutation-diagnostics":

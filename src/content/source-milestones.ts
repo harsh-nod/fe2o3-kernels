@@ -50,8 +50,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Executable dynamic GEMM source",
     detail:
       "Current public main contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. It returns KernelResult, uses ? for checked capability construction, and names the target-neutral Matrix capability. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, canonical Kernel IR V7 with guarded edge loads and tensor contracts, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases pass at zero error, the disassembly contains V_MFMA_F32_16X16X16_BF16, and the repository includes a matched direct HIP benchmark. This is qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
-    commit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
-    tree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
       "examples/tiled_gemm_general_v1/run-gfx942.sh",
@@ -78,8 +78,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe tiled GEMM source",
     detail:
       "Current public main contains the ordinary attributed 16x16x16 BF16/F32 tiled GEMM source with compiler-issued lane, LDS, matrix, barrier, and disjoint-output capabilities. The kernel and its reachable helpers contain no unsafe block. Source-boundary and ranked-pipeline tests cover this safe source shape, but historical proof, HSACO, and GPU observations remain pinned separately and do not transfer to this descendant source.",
-    commit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
-    tree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml",
       "cargo test --locked -p rustc-codegen-fe2o3 --test production_extraction_driver_v1 -- --ignored --exact production_collector_rejects_reachable_unsafe_rust_with_rooted_diagnostics",
@@ -103,8 +103,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe masked Wave64 source and model",
     detail:
       "Current public main contains ordinary safe attributed Rust for one fixed masked Wave64 reduction plus inclusive and exclusive scans, a checked CPU oracle, deterministic mutation tests, and the pinned Verus model. The kernel uses compiler-issued capabilities and contains no unsafe block. This source/model record grants no compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "cargo test --locked --manifest-path examples/wave64_collectives_v1/Cargo.toml",
       "VERUS=/absolute/path/to/pinned/verus examples/wave64_collectives_v1/run-verus.sh",
@@ -116,7 +116,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/wave64_collectives_v1/src/kernel.rs",
     primarySourceSha256:
-      "c649e38712232ed45c1d2f6f8a2a49405f12a5e308907b3265c2415f227803a2",
+      "7c6ead1e7c01a61a8f31a010c9e8cb9bd1c21a905ba61e9d90c6c077c748ffd4",
     target: "gfx942:xnack-",
   },
   "workgroup-sync-source-v1": {
@@ -127,8 +127,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe LDS and scoped-atomic sources",
     detail:
       "Current public main contains separate ordinary safe attributed Rust files for one fixed LDS reduction and one scoped global atomic add, checked CPU oracles, deterministic mutation tests, and a pinned Verus model. Compiler-issued invocation, LDS, collective, atomic, and disjoint-output capabilities remove user unsafe without granting compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "cargo test --locked --manifest-path examples/workgroup_sync_v1/Cargo.toml",
       "VERUS=/absolute/path/to/pinned/verus examples/workgroup_sync_v1/run-verus.sh",
@@ -140,7 +140,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
     primarySourceSha256:
-      "1a28ca6d97d180c347be41ce65377d67e44773c539aa73610808585aedf125bf",
+      "991542b783a144598be967ae1671609b2a02a812ca084c3bf6358a9f70968105",
     target: "gfx942:xnack-",
   },
   "flash-attention-source-v1": {
@@ -151,8 +151,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe causal FlashAttention source",
     detail:
       "Current public main contains ordinary safe attributed Rust for the exact B=1, H=1, N=8, D=16 FP32 causal fused online recurrence, an independent two-pass FP64 oracle, executable proof-facing models, and deterministic mutation tests. Compiler-issued math and disjoint-output capabilities remove user unsafe. This grants no Verus, compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "cargo test --locked --manifest-path examples/flash_attention_v1/Cargo.toml",
       "cargo test --locked --release --manifest-path examples/flash_attention_v1/Cargo.toml",
@@ -164,7 +164,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/flash_attention_v1/src/kernel.rs",
     primarySourceSha256:
-      "6dbaa2af88fd5edcdf0485f3da47b1319ce299422a77b99af56f9a3e77c2a421",
+      "da4f51b86cec00886d0261a35a2d4f97b67515c5449bb776feba4d4e5e1417cf",
     target: "gfx942:xnack-",
   },
   "flash-attention-verus-v1": {
@@ -175,8 +175,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Exact causal online-attention model",
     detail:
       "Pinned Verus proves the exact B=1, H=1, N=8, D=16 causal domain, rational online max/sum/numerator recurrence, positive denominator, reference correspondence, bounded indices, and exclusive output ownership. It does not prove the exponential abstraction, IEEE FP32 or OCML behavior, Rust-source refinement, compiler lowering, machine safety, or GPU execution.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "VERUS=/absolute/path/to/pinned/verus examples/flash_attention_v1/run-verus.sh",
     ],
@@ -188,7 +188,7 @@ const sourceMilestoneRecords = deepFreeze({
     primarySourcePath:
       "examples/flash_attention_v1/verus/flash_attention_v1.rs",
     primarySourceSha256:
-      "e98b9fffc6e4c2fbcc5bca0ca706ac6575f93814afecf67be73de0f2d087d467",
+      "8fa4dce0bb6d60b24c0a61f9eb525bd5b90234689dbc215438499404cab8a21c",
     target: "gfx942:xnack-",
   },
   "moe-top2-source-v1": {
@@ -199,8 +199,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe deterministic MoE top-2 source",
     detail:
       "Current public main contains ordinary safe attributed Rust for exact T8/E4/K2/C4 finite-FP32 routing, lower-expert tie breaking, stable-prefix capacity dropping, exclusive offsets, permutation, inverse mapping, and sentinel tails. An independent oracle, debug/release tests, a 6,561-case bounded corpus, executable proof-facing models, and hostile mutations are public. Compiler-issued disjoint-output capabilities remove user unsafe. This grants no Verus, compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "cargo test --locked --manifest-path examples/moe_top2_v1/Cargo.toml",
       "cargo test --locked --release --manifest-path examples/moe_top2_v1/Cargo.toml",
@@ -212,7 +212,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/moe_top2_v1/src/kernel.rs",
     primarySourceSha256:
-      "0260f144150e6fee7d9bd6a3d919e99ded0e43666509770f6e6186f5100fee25",
+      "0e4570bd52866dd23b8b00d83983aadc818c77580de8f7f5e2982e12a57e20e2",
     target: "gfx942:xnack-",
   },
   "moe-top2-verus-v1": {
@@ -223,8 +223,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Exact deterministic top-2 routing model",
     detail:
       "Pinned Verus proves the exact T8/E4/K2/C4 mathematical routing model: total top-2 order, requested and admitted counts, capacity, exclusive scans, stable dropping, unique bounded slots, permutation/inverse round trips, and sentinel tails. It does not prove IEEE FP32 selection, Rust-source refinement, compiler lowering, machine safety, race freedom, or GPU execution.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "VERUS=/absolute/path/to/pinned/verus examples/moe_top2_v1/run-verus.sh",
     ],
@@ -235,7 +235,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
     primarySourceSha256:
-      "aee6c405f3e95be25bf0575a419ff6591153fce7ff9e950f7d3e5889188e354c",
+      "4a5a60b66284567522ab3f07d93309c7002abf75870f4aa9db752f8260cb296c",
     target: "gfx942:xnack-",
   },
   "moe-expert-source-v1": {
@@ -246,8 +246,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe host-scheduled MoE expert source",
     detail:
       "Current public main contains ordinary safe attributed Rust for one exact 16x16x16 BF16/F32 expert GEMM and deterministic top-2 combine. Compiler-issued lane, LDS, matrix, barrier, math, and disjoint-output capabilities remove user unsafe. The host model and independent direct oracle retain their bounded source-tested authority; no compiler refinement, finalizer, runtime, protected GPU, numerical-refinement, or performance authority is granted.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "cargo test --locked --manifest-path examples/moe_expert_v1/Cargo.toml --all-targets",
       "cargo test --locked --release --manifest-path examples/moe_expert_v1/Cargo.toml --all-targets",
@@ -270,8 +270,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Exact MoE expert memory/effect model",
     detail:
       "Pinned Verus proves 15 fixed T8/E4/K2/C4 expert-pipeline obligations covering route, activation, weight, expert-tile, compact-output, and combined-output index bounds; padding separation; disjoint logical write owners; inverse-slot admission; and host phase order. Six named mutations fail. It proves no numerical correctness, Rust/compiler/LLVM/ISA refinement, machine memory safety, generalized race freedom, or GPU execution.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+    tree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
     commands: [
       "VERUS=/absolute/path/to/pinned/verus examples/moe_expert_v1/run-verus.sh",
     ],

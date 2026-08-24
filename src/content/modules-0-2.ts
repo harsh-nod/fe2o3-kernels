@@ -1,6 +1,8 @@
 import { narrativeSection } from "./narrative-registry";
 import { currentState } from "./current-state";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
+import cpuSimulationKernel from "../../examples/cpu_simulation_kernel.rs?raw";
+import cpuSimulationRequest from "../../examples/cpu_simulation_request.json?raw";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import vecaddHost from "../../examples/vecadd_host.rs?raw";
@@ -23,6 +25,10 @@ const vecaddRunCommand =
   "FE2O3_TARGET=gfx942:xnack- cargo +nightly-2026-04-03 run --locked -p cargo-fe2o3 -- run -p fe2o3-vecadd";
 const verusCommand =
   "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
+const cpuSimulationCommand =
+  "cargo fe2o3 simulate --request request.json --output result.json -- --package my-kernel";
+const cpuSimulationFixtureCommand =
+  "cargo fe2o3 simulate --request crates/cargo-fe2o3/tests/fixtures/simulate-fill-request-v1.json --output result.json -- --locked --manifest-path crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/Cargo.toml";
 
 const orientation: Lesson = {
   id: "read-the-evidence",
@@ -324,6 +330,115 @@ policy overhead, not evidence that the generated kernel is slower.`,
   glossary: ["typed kernel", "Prepared", "source sharing", "IEEE refinement"],
 };
 
+const cpuSimulation: Lesson = {
+  id: "cpu-semantic-simulation",
+  module: 1,
+  order: 2,
+  title: "Simulate typed source without a GPU",
+  summary:
+    "Run one ordinary safe Rust kernel through verified KIR and inspect a bounded deterministic CPU semantic result.",
+  duration: "24 min",
+  prerequisites: ["Typed vecadd", "JSON request files"],
+  objectives: [
+    "Run cargo fe2o3 simulate without a GPU or device runtime.",
+    "Trace the source-to-MIR-to-KIR V7-to-formal-memory simulation boundary.",
+    "Read simulated observation separately from hardware validation and performance evidence.",
+  ],
+  claims: [
+    {
+      kind: "runnable-now",
+      label: "Source-first CPU semantic execution",
+      detail:
+        "The command compiles ordinary typed source through semantic MIR, verified canonical KIR V7, and formal-memory admission, then executes that exact KIR in the bounded deterministic CPU simulator. The no-hardware path neither initializes a GPU/device runtime nor predicts GPU performance.",
+      reference: currentImplementationReference(
+        [cpuSimulationCommand, cpuSimulationFixtureCommand],
+        [
+          "crates/cargo-fe2o3/src/main.rs",
+          "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
+          "crates/cargo-fe2o3/tests/fixtures/simulate-fill-request-v1.json",
+          "crates/cargo-fe2o3/tests/simulation_source_e2e.rs",
+          "crates/fe2o3-kir-sim-cli/src/linux.rs",
+        ],
+        {
+          target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
+          note: "Observation-only CPU semantics; no GPU, device-runtime, hardware-validation, or performance-prediction authority.",
+        },
+      ),
+    },
+  ],
+  sections: [
+    narrativeSection("cpu-semantic-simulation/pipeline"),
+    narrativeSection("cpu-semantic-simulation/evidence-boundary"),
+  ],
+  tabs: completeTabs(
+    {
+      language: "rust",
+      code: cpuSimulationKernel,
+      sourcePath:
+        "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "19854910d7488530033bbf4c15ed6b32283e56f4f8b6ed64f7775d68597a46dd",
+      explanatory: false,
+    },
+    {
+      language: "rust",
+      code: noProof,
+      explanatory: true,
+      notice:
+        "No Verus theorem is claimed. This tab keeps dynamic simulator evidence separate from proof evidence.",
+    },
+    {
+      language: "bash",
+      code: `# Exact request used by the source fixture:
+REQUEST='${cpuSimulationRequest.trim()}'
+printf '%s\\n' "$REQUEST" > request.json
+
+# General source-first interface:
+${cpuSimulationCommand}`,
+    },
+    {
+      language: "text",
+      code: resultText(
+        "runnable-now",
+        `schema: fe2o3-simulation-result-v1
+status: ok
+authority: observation_only
+simulated: true
+hardware_observed: false
+hardware_validation: false
+performance_prediction: false
+target_profile.identity: amdgpu_64_little_endian_v1
+kir.sha256: 64 lowercase hexadecimal digits (profile-specific)
+kir.canonical_bytes: positive bounded byte length
+counts.invocations_executed: 4
+counts.workgroups_visited: 1
+counts.scheduled_slots_visited: 64
+schedule.identity: workgroup_major_local_zyx_cooperative_v1
+arguments[0].value.bytes: 0x11000000110000001100000011000000
+
+The complete JSON also binds the exact canonical KIR SHA-256 and byte length,
+the deterministic scheduler identity, typed argument state, and bounded counts.`,
+      ),
+    },
+  ),
+  diagram: "simulation",
+  exercises: [
+    {
+      prompt: "Change the fill value and predict the exact little-endian output bytes.",
+      hint: "Four live logical invocations write the u32 elements inside one authenticated WG64; the other 60 scheduled slots are inactive padding.",
+      acceptance:
+        "The answer derives four repeated four-byte values and does not make a GPU timing or hardware-equivalence claim.",
+    },
+  ],
+  glossary: [
+    "CPU semantic simulation",
+    "simulated observation",
+    "formal memory",
+    "deterministic schedule",
+  ],
+};
+
 const verusBasics: Lesson = {
   id: "verus-contracts",
   module: 2,
@@ -608,7 +723,7 @@ export const modules0to2: CurriculumModule[] = [
     number: 1,
     title: "First kernels",
     summary: "Write guarded elementwise kernels and launch the typed slice.",
-    lessons: [fill, vecadd],
+    lessons: [fill, vecadd, cpuSimulation],
   },
   {
     number: 2,
