@@ -192,7 +192,7 @@ const expertCompute: Lesson = {
         "e90e671831b8cef17960c276b930e39257c4399a64034554c9cabb4dbca494b7",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic routed rows, reduction and output extents, strides, expert selection, bias, gate, and preserved padding.",
+        "Safe sequential Rust defines dynamic routed rows, reduction and output extents, strides, expert selection, bias, gate, and preserved padding for runtime qualification. Its Vec allocation, loops, and calls place it outside compiler-authenticated reference-effect V1.",
     },
     {
       language: "rust",
@@ -203,7 +203,7 @@ const expertCompute: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem composes exact semantic equality and hierarchy ownership. The historical expert proof remains in the evidence catalog; dynamic arithmetic, routing-to-expert composition, and source-to-ISA refinement remain open.",
+        "This verified workload-neutral theorem states the generic equality-plus-hierarchy rule; it does not authenticate the dynamic Vec-returning MoE oracle against this kernel. Dynamic arithmetic, routing-to-expert composition, and source-to-ISA refinement remain open.",
     },
     {
       language: "rust",

@@ -354,10 +354,10 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     failureGallery.getByText("The grid leaves one output coordinate unwritten"),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("A CPU-reference equality has no Verus evidence"),
+    failureGallery.getByText("A CPU-reference effect has no authenticated proof"),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("The GPU expression disagrees with the CPU reference"),
+    failureGallery.getByText("The GPU write disagrees with the CPU reference"),
   ).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("E0308", { exact: true })).toBeVisible();
@@ -418,6 +418,24 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-003", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-001", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-008", exact: true })).toBeVisible();
+  await expect(page.getByText("Bind the reference as ordinary Rust", { exact: true })).toBeVisible();
+  await expect(page.getByText("Authenticate the proof execution and every input", { exact: true })).toBeVisible();
+  await expect(page.getByText(/runtime qualification oracles/u)).toBeVisible();
+
+  await page.getByRole("tab", { name: "Reference-bound kernel" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("reference = cpu_reference");
+  await page.getByRole("tab", { name: "Safe CPU reference" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("fn cpu_reference(output: &mut u32)");
+  await page.getByRole("tab", { name: "Effect + V2 receipt" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("proof.require_effect_refinement");
+  await expect(page.getByRole("tabpanel")).toContainText("SafeReferenceMirToKernelMir");
+  await expect(page.getByRole("tabpanel")).toContainText("authority.source_to_isa          = false");
+  await page.getByRole("tab", { name: "Bounds fixture" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("let selected = input[64]");
+  await page.getByRole("tab", { name: "Compile error" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("required: 64 < 64");
   await page
     .getByRole("heading", {
       level: 3,

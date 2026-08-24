@@ -444,7 +444,7 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("lane-varying ?");
     expect(failures).toContain("canonical Kernel IR V7");
     expect(failures).toContain("Where Verus fits");
-    expect(failures).toContain("do not establish a general operational Rust-source-to-Kernel-IR-to-machine refinement theorem");
+    expect(failures).toContain("does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem");
     expect(failures).toContain("unsafe_asm");
     expect(failures).toContain("Kernel tabs are current safe source");
     expect(failures).toContain("contains no unsafe block");
@@ -488,9 +488,9 @@ describe("curriculum integrity", () => {
     expect(JSON.stringify(ownershipTable)).toContain("dynamic or unresolved leader index is Incomplete");
     expect(JSON.stringify(ownershipTable)).toContain("Wrong marker identity");
     expect(failures).toContain(
-      "mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement",
+      "mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, then semantic refinement with effect refinement inside that final stage",
     );
-    expect(failures).toContain("No lowering pass may run between these seven checks");
+    expect(failures).toContain("No lowering pass may run between these eight checks");
     expect(failures).toContain("Stable pass diagnostic catalog");
     expect(failures).toContain("FE2O3-RACE-004");
     expect(failures).toContain("Other compile-time boundary");
@@ -569,6 +569,7 @@ describe("curriculum integrity", () => {
       "kernel-memory-bounds-v1",
       "kernel-atomic-legality-v1",
       "kernel-race-freedom-v1",
+      "kernel-hierarchy-ownership-v1",
       "kernel-barrier-convergence-v1",
       "kernel-workgroup-memory-v1",
       "kernel-semantic-refinement-v1",
@@ -635,6 +636,26 @@ describe("curriculum integrity", () => {
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(14);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
+    const effectDiagnosticTable = semanticFailures.blocks.find(
+      (block) => block.type === "table" && block.headers[0] === "Effect diagnostic",
+    );
+    expect(effectDiagnosticTable?.type).toBe("table");
+    if (effectDiagnosticTable?.type !== "table") return;
+    expect(effectDiagnosticTable.rows.map(([code]) => code)).toEqual([
+      "FE2O3-EFFECT-001",
+      "FE2O3-EFFECT-002",
+      "FE2O3-EFFECT-003",
+      "FE2O3-EFFECT-004",
+      "FE2O3-EFFECT-005",
+      "FE2O3-EFFECT-006",
+      "FE2O3-EFFECT-007",
+      "FE2O3-EFFECT-008",
+      "FE2O3-EFFECT-009",
+    ]);
+    expect(JSON.stringify(effectDiagnosticTable)).toContain(
+      "coordinate, invocation, workgroup, subgroup, lane",
+    );
+
     const failureGallery = semanticFailures.blocks.find(
       (block) => block.type === "compile-failures",
     );
@@ -689,10 +710,84 @@ describe("curriculum integrity", () => {
     expect(example("atomic_invalid_ordering")?.diagnostic).toContain("invalid Release ordering");
     expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [0]");
     expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [1]");
+    expect(example("reference_evidence_missing")?.diagnostic).toContain(
+      "FE2O3-EFFECT-007",
+    );
+    expect(example("reference_expression_mismatch")?.diagnostic).toContain(
+      "FE2O3-EFFECT-001",
+    );
     expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
     expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
     expect(failures).toContain("projection preserves the exact operation kind, ordering, and scope");
     expect(failures).toContain("FE2O3-ATOMIC-002 Incomplete");
+  });
+
+  it("teaches the authenticated safe-Rust reference path without promoting runtime oracles", () => {
+    const lesson = lessons.find((entry) => entry.id === "compiler-checks");
+    const bounds = lesson?.tabs.find((tab) => tab.kind === "kernel");
+    const boundKernel = lesson?.tabs.find((tab) => tab.kind === "comparison");
+    const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
+    const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
+    const result = lesson?.tabs.find((tab) => tab.kind === "result");
+
+    expect(bounds).toMatchObject({
+      label: "Bounds fixture",
+      explanatory: false,
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
+    });
+    expect(bounds?.code).toContain("let selected = input[64]");
+    expect(result?.code).toContain("required: 64 < 64");
+
+    expect(boundKernel).toMatchObject({
+      label: "Reference-bound kernel",
+      explanatory: true,
+    });
+    expect(boundKernel?.code).toContain("reference = cpu_reference");
+    expect(boundKernel?.code).toContain("#![forbid(unsafe_code)]");
+    expect(reference?.code).toContain("fn cpu_reference(output: &mut u32)");
+    expect(reference?.code).not.toMatch(/\bunsafe\b/u);
+    expect(proof?.code).toContain("proof.require_effect_refinement");
+    expect(proof?.code).toContain("SafeReferenceMirToKernelMir");
+    expect(proof?.code).toContain("authority.source_to_isa          = false");
+    expect(proof?.code).toContain("authority.artifact_or_launch     = false");
+
+    const narrative = JSON.stringify([
+      narrativeEntry("compiler-checks/catalog"),
+      narrativeEntry("compiler-checks/production-path"),
+    ]);
+    for (const boundary of [
+      "same compiler session",
+      "monomorphized kernel and reference Instances",
+      "Calls and loops or backedges",
+      "Add and Multiply",
+      "Runtime-only hierarchy ownership is Incomplete",
+      "proof.require_effect_refinement",
+      "Ed25519 V2 receipt",
+      "compiler-policy signer",
+      "grants no source-to-ISA",
+      "runtime qualification oracles",
+    ]) {
+      expect(narrative).toContain(boundary);
+    }
+
+    for (const lessonId of [
+      "gemm-tiling",
+      "gemm-proof-plan",
+      "softmax-invariant",
+      "flash-attention",
+      "moe-expert-compute",
+    ]) {
+      const advanced = lessons.find((entry) => entry.id === lessonId);
+      const advancedReference = advanced?.tabs.find((tab) => tab.kind === "reference");
+      expect(advancedReference?.code).toContain("Vec");
+      expect(advancedReference?.notice).toMatch(
+        /runtime qualification oracle|runtime qualification/u,
+      );
+      expect(advancedReference?.notice).toMatch(
+        /not .*compiler-authenticated|outside .*reference-effect V1/u,
+      );
+    }
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {

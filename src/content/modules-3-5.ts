@@ -462,6 +462,8 @@ const gemmMapping: Lesson = {
       sourceSha256:
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
+      notice:
+        "This host-allocating Vec reference is the runtime qualification oracle for MI300X. It is not the local acyclic, call-free #[kernel(reference = ...)] function consumed by compiler-authenticated reference-effect V1.",
     },
     {
       kind: "verus",
@@ -475,7 +477,7 @@ const gemmMapping: Lesson = {
       evidenceId: "reference-refinement-v1",
       explanatory: false,
       notice:
-        "This verified theorem is workload-neutral: exact per-coordinate semantic equality plus exact hierarchy ownership yields the complete CPU-reference output. It does not by itself prove GEMM arithmetic or rustc-to-ISA translation.",
+        "This verified workload-neutral composition theorem explains the required equality and hierarchy join. It is not an authenticated proof that this dynamic Vec-returning GEMM oracle refines the kernel; rustc-to-ISA translation also remains separate.",
     },
     { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
@@ -541,6 +543,8 @@ const gemmProof: Lesson = {
       sourceSha256:
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
+      notice:
+        "This host-allocating Vec reference remains a runtime qualification oracle. It is outside the initial local acyclic, call-free reference-effect V1 subset and carries no compiler-authenticated functional-refinement authority.",
     },
     exactGemmProofTab(),
     exactGemmHostTab(),
@@ -617,7 +621,7 @@ const softmax: Lesson = {
         "8ff11a0aa3806c2fe7d5f5aab8c5b055316039de718b28d69c6042e439bed73a",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy.",
+        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. Because it allocates and returns Vec and contains loops/calls, it is not yet a compiler-authenticated reference-effect V1 function.",
     },
     {
       language: "rust",
@@ -628,7 +632,7 @@ const softmax: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem composes exact semantic equality and hierarchy ownership. The current compiler enforces that join, but complete dynamic softmax arithmetic and rustc-to-ISA refinement remain open.",
+        "This verified workload-neutral theorem states the generic composition rule. It does not authenticate the dynamic Vec-returning softmax oracle against this kernel; complete floating-point/OCML and rustc-to-ISA refinement remain open.",
     },
     {
       language: "rust",
@@ -717,7 +721,7 @@ const flash: Lesson = {
         "f14413bd3662973a8803cdfdd23e6c6b23facc9d4c627e4e91d7a1e63ee7f203",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding; exact floating-point lowering remains a separate numerical-refinement obligation.",
+        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. Its Vec allocation, loops, and calls place it outside reference-effect V1; exact floating-point lowering remains a separate numerical-refinement obligation.",
     },
     {
       language: "rust",
@@ -728,7 +732,7 @@ const flash: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem composes exact semantic equality and hierarchy ownership. The pinned FlashAttention model remains linked in the evidence catalog; exponential-law, IEEE FP32/OCML, and source-to-ISA refinement remain open.",
+        "This verified workload-neutral theorem states the generic composition rule; it is not an authenticated link from the dynamic Vec-returning FlashAttention oracle to this kernel. Exponential-law, IEEE FP32/OCML, and source-to-ISA refinement remain open.",
     },
     {
       language: "rust",

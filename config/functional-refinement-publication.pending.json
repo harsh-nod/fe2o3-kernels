@@ -1,0 +1,17 @@
+{
+  "schema": "fe2o3-functional-refinement-tutorial-publication-v1",
+  "status": "pending-root-publication",
+  "compilerCommit": "PENDING_AFTER_COMPILER_PUBLICATION",
+  "compilerTree": "PENDING_AFTER_COMPILER_PUBLICATION",
+  "fixtureSourceSha256": "PENDING_AFTER_COMPILER_PUBLICATION",
+  "receiptFixtureSha256": "PENDING_AFTER_COMPILER_PUBLICATION",
+  "effectDiagnosticFixtureSha256": "PENDING_AFTER_COMPILER_PUBLICATION",
+  "referenceCompilerCommand": "PENDING_AFTER_COMPILER_PUBLICATION",
+  "requiredUpdates": [
+    "repin config/publication-gate.json to the dual-repository compiler main",
+    "replace explanatory compiler-reference tabs with exact published source paths and SHA-256 values",
+    "add the final compiler command and receipt fixture to the lesson evidence reference",
+    "replace publication-pending FE2O3-EFFECT diagnostic shapes with output derived from the published compiler tests",
+    "re-run npm run validate, npm run validate:evidence, and Playwright after repinning"
+  ]
+}

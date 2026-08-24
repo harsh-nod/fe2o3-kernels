@@ -1,6 +1,9 @@
 import { narrativeSection } from "./narrative-registry";
 import { currentState } from "./current-state";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
+import compilerReferenceEffect from "../../examples/compiler_reference_v2/effect-and-receipt.txt?raw";
+import compilerReferenceKernel from "../../examples/compiler_reference_v2/kernel.rs?raw";
+import compilerReferenceSource from "../../examples/compiler_reference_v2/reference.rs?raw";
 import cpuSimulationKernel from "../../examples/cpu_simulation_kernel.rs?raw";
 import cpuSimulationRequest from "../../examples/cpu_simulation_request.json?raw";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
@@ -612,12 +615,14 @@ const compilerChecks: Lesson = {
   order: 2,
   title: "Compiler checks: reject invalid kernels",
   summary:
-    "See authenticated safe Rust capabilities and workload-neutral verifier passes accept only the supported proof subset before lowering.",
-  duration: "35 min",
+    "Bind a safe Rust CPU reference to exact MIR, then see workload-neutral verifier passes reject invalid or unproved effects before lowering.",
+  duration: "42 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
     "Distinguish a proved static access from a checked dynamic access.",
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
+    "Bind a local safe Rust reference with #[kernel(typed, reference = ...)] and identify the exact same-session MIR identities.",
+    "Follow proof.require_effect_refinement through hierarchy witnesses and an authenticated Ed25519 V2 proof receipt.",
     "Locate tensor-layout, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
     "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
     "Reason about multidimensional workgroups, alias classes, publication epochs, and atomic scope without relying on a workload recognizer.",
@@ -657,8 +662,10 @@ const compilerChecks: Lesson = {
     narrativeSection("compiler-checks/production-path"),
     narrativeSection("compiler-checks/v7-simulation"),
   ],
-  tabs: completeTabs(
+  tabs: [
     {
+      kind: "kernel",
+      label: "Bounds fixture",
       language: "rust",
       code: compilerBoundsKernel,
       sourcePath:
@@ -671,66 +678,47 @@ const compilerChecks: Lesson = {
         "Feature flags select the static-bounds, ownership-mapping, and barrier-convergence fixtures. The oob case rejects input[64] as one past the declared extent; the production driver also checks convergent, divergent, early-return, cyclic, and helper barrier placements.",
     },
     {
-      language: "text",
-      code: `Mandatory pre-lowering verification
-0. dialect and structural verification
-1. tensor instruction, fragment layout, tails, and convergence
-2. ranked bounds and address arithmetic
-3. atomic legality, ordering, and scope
-4. race freedom, alias classes, and invocation ownership
-5. barrier convergence
-6. workgroup-memory must-initialization and epochs
-7. declared semantic refinement
-
-Shared analysis, once per immutable function:
-- sparse affine/index facts through reachable typed CFG edges
-- execution layout and exact bounded invocation traces
-- Pending waits for inputs; conflicting or unsupported facts become Unknown
-- a fresh manager is required after mutation or revalidation
-
-Cross-cutting: bounded values, uses, edges, iterations, traces, and work
-
-Guarded non-private loads must structurally tie slice data, slice length,
-selected index, and index < length to the same allocation. A guard proves
-bounds, not no-alias ownership.
-
-Dynamic race proofs accept authenticated checked-tile coordinate identity.
-Ordinary unresolved or potentially overflowing affine maps remain Incomplete.
-
-MFMA contracts are workload-neutral:
-- role and register distribution are Rust fragment types
-- direct, row-major LDS, and XOR4 are per-operand storage facts
-- the tensor pass checks lane/component maps and edge policy
-- collective participation is derived from control flow
-- an unproved contract is Incomplete, never assumed safe
-
-Authenticated safe ownership mappings:
-- one-layer Shifted<Index1D, N>: supported
-- constant-leader GridExclusive: supported
-- Blocked<Index1D, 1, E>: supported
-- nested Shifted: Rejected
-- dynamic GridExclusive or Blocked with L > 1: Incomplete
-
-Semantic AtomicAccess preserves exact kind, ordering, and scope.
-Ordinary Rust core atomic operation terminals are explicitly unsupported.
-Rust Ordering is never used to invent a GPU scope.
-
-Rejected: the analysis proves a violation.
-Incomplete: the analysis cannot discharge an obligation within the supported model.
-Both stop strict production compilation.`,
+      kind: "comparison",
+      label: "Reference-bound kernel",
+      language: "rust",
+      code: compilerReferenceKernel,
       explanatory: true,
       notice:
-        "Typed kernels may use native KernelResult and ?. The attribute macro emits a private helper with the real Rust return type plus a unit-return GPU entry wrapper. Err terminates only that invocation; it is not copied to the host. The verifier still audits every reachable path and rejects lane-varying early exit before a required workgroup barrier.",
+        "Minimal supported source shape for the compiler-authenticated reference path. The final compiler source link, commit, and SHA-256 are intentionally pending until the integrated compiler commit is published.",
     },
     {
+      kind: "reference",
+      label: "Safe CPU reference",
+      language: "rust",
+      code: compilerReferenceSource,
+      explanatory: true,
+      notice:
+        "Reference-effect V1 accepts a local safe Rust, non-variadic Rust-ABI function with explicit mutable outputs. The initial subset is bounded and acyclic: calls and loops or backedges are rejected rather than summarized.",
+    },
+    {
+      kind: "verus",
+      label: "Effect + V2 receipt",
+      language: "text",
+      code: compilerReferenceEffect,
+      explanatory: true,
+      notice:
+        "The operation is compiler-owned PLIRON, not user syntax. Import accepts exactly one policy-signed Proved receipt for the current reference MIR, kernel MIR, normalized obligation/effect IR, toolchain, execution, signer, and MIR boundary.",
+    },
+    {
+      kind: "host",
+      label: "Verify",
       language: "bash",
       code: "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
+      notice:
+        "This remains the exact published OOB production test. config/functional-refinement-publication.pending.json separately records the reference-binding commands and evidence fields that must be repinned after the compiler increment is published.",
     },
     {
+      kind: "result",
+      label: "Compile error",
       language: "text",
       code: resultText(
         "compiler-hsaco-observed",
@@ -744,7 +732,7 @@ lowering stopped before target IR or artifact emission`,
       notice:
         "This is a compiler rejection, so no HSACO or runtime error exists for the invalid kernel.",
     },
-  ),
+  ],
   diagram: "memory",
   exercises: [
     {

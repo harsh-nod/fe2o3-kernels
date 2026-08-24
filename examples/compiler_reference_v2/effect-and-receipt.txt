@@ -1,0 +1,41 @@
+# Mandatory workload-neutral pre-lowering order. The dialect prerequisite runs
+# first, followed by all eight verification passes:
+#   0. dialect verification
+#   1. tensor access
+#   2. bounds
+#   3. atomic legality
+#   4. race freedom
+#   5. hierarchy ownership
+#   6. barrier convergence
+#   7. workgroup memory
+#   8. semantic refinement (including the effect join below)
+# Rejected proves a concrete violation. Incomplete means the compiler cannot
+# discharge a required fact. Either result stops lowering.
+
+# Schematic rendering of the compiler-owned effect join. Users write Rust,
+# not this IR.
+proof.require_effect_refinement
+  view = %output, indices = [%index], obligation_id = <exact FunctionalRefinement id>
+  gpu_domain = %gpu_domain, reference_domain = %reference_domain
+  gpu_precondition = %gpu_precondition, reference_precondition = %reference_precondition
+  gpu_value = %gpu_value_17, reference_value = %reference_value_17
+
+# The fixed-width Ed25519 V2 receipt binds all authority-relevant inputs:
+safe_reference_identity       = <compiler-derived>
+safe_reference_mir_sha256     = <same-session monomorphized MIR>
+kernel_subject_identity       = <compiler-derived>
+kernel_mir_sha256             = <same-session monomorphized MIR>
+normalized_obligation_effect_ir_sha256 = <obligation plus effect IR>
+verus_executable_sha256       = <policy-pinned>
+verus_configuration_sha256    = <policy-pinned>
+z3_executable_sha256          = <policy-pinned>
+z3_configuration_sha256       = <policy-pinned>
+runtime_closure_sha256        = <policy-pinned>
+execution_identity            = <verified process result>
+result                        = Proved
+boundary                      = SafeReferenceMirToKernelMir
+signer_identity               = <compiler-policy key>
+
+authority.functional_refinement = true
+authority.source_to_isa          = false
+authority.artifact_or_launch     = false

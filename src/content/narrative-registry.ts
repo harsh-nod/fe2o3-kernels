@@ -593,19 +593,46 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Where Verus fits",
-        "text": "Verus is a separate proof layer for named source or mathematical-model properties such as loop invariants, ownership mappings, recurrence correspondence, and numerical preconditions. It does not replace rustc's borrow checker or the mandatory compiler verifiers. Current proof records associate exact sources and models with reviewed claims, but they do not establish a general operational Rust-source-to-Kernel-IR-to-machine refinement theorem or independently grant launch authority."
+        "text": "Verus is a separate proof layer for named MIR/effect or mathematical-model properties such as functional equality, ownership mappings, recurrence correspondence, and numerical preconditions. It does not replace rustc's borrow checker or the mandatory compiler verifiers. The V2 functional-refinement path authenticates one exact retained Verus/Z3 execution and consumes its signed MIR-bound result; it still does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem or independently grant artifact or launch authority."
       },
       {
         "type": "callout",
         "tone": "proof",
-        "title": "Safe CPU reference join",
-        "text": "A kernel may declare one exact FunctionalRefinement obligation linking a target-neutral GPU semantic expression to a safe sequential Rust reference expression. The semantic pass requires one exact proof.obligation, one exact Proved proof.evidence_ref at the Source boundary, and one proof.require_refinement with equivalent canonical expressions. Missing evidence is FE2O3-SEMANTIC-003; duplicate, mismatched, wrong-property, or orphan evidence is FE2O3-SEMANTIC-004; unequal expressions are FE2O3-SEMANTIC-001. The generic Verus composition theorem then states that per-coordinate equality plus exact hierarchy ownership yields the complete reference output. These checks never inspect a GEMM, softmax, attention, routing, or expert name."
+        "title": "Bind the reference as ordinary Rust",
+        "text": "The user writes #[kernel(typed, reference = cpu_reference, ...)]. The path must resolve to exactly one local safe Rust function in the same compiler session; no source-written hash or proof identity is trusted. The collector resolves the concrete monomorphized kernel and reference Instances, records their canonical identities and exact rustc MIR body SHA-256 values, checks the compiler-defined logical ABI relation, and translates the admitted reference MIR into bounded ReferenceEffectIrV1. This is workload-neutral MIR handling: no pass recognizes a GEMM, softmax, attention, routing, expert, or other algorithm name."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Reference-effect V1 rule",
+          "Accepted now",
+          "Fail-closed result"
+        ],
+        "rows": [
+          ["Safety and ABI", "Local safe fn, non-variadic Rust ABI, unit return, and supported scalar, scalar-reference, or scalar-slice argument relations.", "Unsafe references, user unsafe blocks, nonlocal bodies, wrong return type, or a logical ABI mismatch are Rejected before proof import."],
+          ["Control flow", "Acyclic MIR with assignments, supported scalar operations, goto, switch, assert, and return.", "Calls and loops or backedges are initially unsupported and stop compilation with a precise reference-effect diagnostic."],
+          ["Effect normalization", "The end-to-end equality join currently normalizes the supported Add and Multiply semantic expressions without floating-point reassociation.", "An opaque or unsupported domain, precondition, or value is Incomplete with FE2O3-EFFECT-008."],
+          ["Dynamic ownership", "A dynamic extent reduced to an exact value by sparse facts can be proved.", "Runtime-only hierarchy ownership is Incomplete with FE2O3-EFFECT-003; no artifact is emitted."],
+          ["Observable outputs", "Each reference output write maps to one exact GPU write view and coordinate relation.", "Orphan, ambiguous, duplicate, or unmodeled writes stop as FE2O3-EFFECT-005 or FE2O3-EFFECT-006."]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Compare complete effects across the GPU hierarchy",
+        "text": "proof.require_effect_refinement carries one ranked output view and indices plus paired GPU/reference domain, precondition, and value expressions. Whole-function analysis requires one real write at that site, exact MIR-bound FunctionalRefinement evidence, and Clean hierarchy ownership. It reconstructs concrete coordinate, invocation, workgroup, subgroup, and lane witnesses, rejects domain, precondition, or value disagreement with FE2O3-EFFECT-001, and reports any GPU write omitted by the sequential reference. The operation is inert structural IR; only the mandatory analysis and authenticated proof import can discharge it."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Authenticate the proof execution and every input",
+        "text": "A fixed-width domain-separated Ed25519 V2 receipt binds the safe-reference identity and MIR, kernel subject and MIR, normalized obligation/effect IR, Verus executable and configuration, Z3 executable and configuration, retained runtime closure, exact execution identity and Proved result, SafeReferenceMirToKernelMir boundary, and compiler-policy signer. The signer key comes from compiler policy, never kernel source. Import rejects a stale identity, wrong toolchain, wrong signer, invalid signature, non-Proved result, wrong boundary, duplicate receipt, or missing receipt; the resulting proof value is move-only and grants functional-refinement evidence only for that exact MIR/effect statement."
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Declared proof is not authenticated proof",
-        "text": "The current production recipe can materialize exact proof identities and the compiler rejects malformed joins, but it does not yet consume an unforgeable Verus certificate. The proof dialect metadata therefore grants no compiler-refinement, artifact, publication, load, or launch authority. Complete functional correctness additionally requires authentication of the Verus run, a proved correspondence from the safe Rust reference and kernel source into these semantic expressions, preservation through every lowering, a numerical model where relevant, and runtime satisfaction of dynamic preconditions."
+        "title": "The authenticated boundary is deliberately narrow",
+        "text": "This join does not establish source-to-MIR, MIR-to-Kernel-IR-to-LLVM/ISA preservation, artifact integrity, publication, load, launch, runtime behavior, hardware correctness, or an unstated numerical policy. Those require their own authenticated refinements and runtime precondition joins. The current advanced GEMM, row-softmax, FlashAttention, and grouped-expert MoE Safe CPU reference tabs return host Vec values and remain runtime qualification oracles; they are not silently reclassified as compiler-authenticated reference-effect V1 functions."
       },
       {
         "type": "callout",
@@ -622,7 +649,7 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           ["Rust types, borrowing, and wave lifetimes", "Well-typed local use of references, affine capabilities, MFMA roles, profiles, and phase transitions.", "Cross-invocation races, collective convergence, numerical intent, and generated machine behavior."],
-          ["Mandatory generic PLIRON verification", "Clean results for declared tensor layout, bounds, atomics, races, barriers, LDS epochs, and semantic expressions in the supported bounded model.", "An unmodeled effect, unresolved dynamic fact, or exhausted budget is Incomplete and emits no artifact."],
+          ["Mandatory generic PLIRON verification", "Clean results for declared tensor layout, bounds, atomics, races, hierarchy ownership, barriers, LDS epochs, semantic expressions, and reference effects in the supported bounded model.", "An unmodeled effect, unresolved dynamic fact, or exhausted budget is Incomplete and emits no artifact."],
           ["Verus named proofs", "The explicitly stated functional, ownership, recurrence, or numerical theorem holds for its versioned model and assumptions.", "Verus does not silently prove compiler refinement, target lowering, runtime inputs, or properties omitted from the theorem."],
           ["Source-to-machine refinement", "When separately established, each authenticated compiler stage preserves the named source and IR properties into the selected target artifact.", "A passing verifier or GPU sample alone is not this refinement theorem."],
           ["Runtime launch admission", "Dynamic dimensions, strides, allocations, alias promises, target profile, resources, and launch geometry satisfy recorded artifact preconditions.", "Host checks cannot repair an invalid or unproved device access."],
@@ -676,11 +703,11 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "info",
         "title": "Generic does not mean automatically provable",
-        "text": "Tensor-layout, bounds, atomic, race, barrier, and workgroup-memory checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, execution layouts, target facts, and CFG. They do not depend on GEMM, attention, softmax, MoE, tile-size, or schedule recognition. A kernel or safe ownership mapping outside that analyzable subset is not treated as safe: the compiler reports Rejected for a concrete invalid contract or Incomplete for an unresolved proof obligation, and the strict pre-lowering route fails closed. Semantic refinement is also workload-neutral, but it checks only explicit required expressions supplied by the frontend; without a declared contract, the compiler does not invent programmer intent."
+        "text": "Tensor-layout, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, semantic, and reference-effect checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, execution layouts, target facts, and CFG. They do not depend on GEMM, attention, softmax, MoE, tile-size, or schedule recognition. A kernel or safe ownership mapping outside that analyzable subset is not treated as safe: the compiler reports Rejected for a concrete invalid contract or Incomplete for an unresolved proof obligation, and the strict pre-lowering route fails closed. Semantic and effect refinement are also workload-neutral, but they check only explicit compiler-derived contracts; without a bound safe reference, the compiler does not invent programmer intent."
       },
       {
         "type": "paragraph",
-        "text": "PLIRON dialect and structural verification is the prerequisite. The mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement. No lowering pass may run between these seven checks. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact."
+        "text": "PLIRON dialect and structural verification is the prerequisite. The mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, then semantic refinement with effect refinement inside that final stage. No lowering pass may run between these eight checks. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact."
       },
       {
         "type": "callout",
@@ -743,9 +770,10 @@ const narrativeRegistry = deepFreeze({
           ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent.", "Static out-of-bounds witness; unresolved dynamic bound; unsupported index, CFG, or operation; analysis limit."],
           ["kernel-atomic-legality-v1", "Require a legal atomic kind, explicit ordering and scope, ranked-view provenance, supported element width/address space, bound target capability, and system-coherent allocation evidence.", "Missing or invalid ordering/scope; private-memory atomic; unavailable provenance or target capability; unauthenticated system coherence; analysis limit."],
           ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, or alias relation; analysis limit."],
+          ["kernel-hierarchy-ownership-v1", "Reconstruct each logical coordinate owner across invocation, lane, subgroup, workgroup, and grid, then require the declared coverage and density policy.", "Out-of-range owner; duplicate owner; grid coverage hole; non-rectangular subgroup or workgroup tile; runtime-only unresolved ownership; analysis limit."],
           ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
           ["kernel-workgroup-memory-v1", "Run must-initialization dataflow and track publication, compatible atomics, conflicts, and reuse by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; stale or unresolved epoch/trace; analysis limit."],
-          ["kernel-semantic-refinement-v1", "Compare an actual target-neutral expression with a frontend-declared required expression.", "Declared formula mismatch; unresolved semantic expression or analysis limit. This pass checks a supplied contract rather than guessing intent."],
+          ["kernel-semantic-refinement-v1", "Compare declared target-neutral expressions, then join each bound safe-reference effect to one real GPU write, exact hierarchy ownership, and MIR-bound authenticated proof evidence rather than guessing intent.", "Formula, domain, precondition, or value mismatch; missing, stale, duplicate, or invalid proof evidence; orphan, ambiguous, duplicate, or unmodeled write; unresolved ownership/expression/trace; analysis limit."],
           ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through values, reachable CFG edges, and block arguments so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Conflicting incoming facts; unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, edge, iteration, or work-unit limit."],
           ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
         ]
@@ -983,27 +1011,27 @@ const narrativeRegistry = deepFreeze({
           },
           {
             "id": "reference_evidence_missing",
-            "title": "A CPU-reference equality has no Verus evidence",
+            "title": "A CPU-reference effect has no authenticated proof",
             "language": "text",
-            "source": "proof.obligation <id = 4a.., property = FunctionalRefinement, subject = kernel.., model = cpu..>\nproof.require_refinement <obligation = 4a..> %gpu_expression, %cpu_expression",
-            "diagnostic": "error[FE2O3-SEMANTIC-003]: functional-reference obligation 4a.. is incomplete at block 0 op 5: the exact proof.evidence_ref record is missing",
+            "source": "proof.obligation <id = 4a.., property = FunctionalRefinement, subject = kernel_mir.., model = reference_mir..>\nproof.require_effect_refinement %output[%index], %gpu_domain, %reference_domain, %gpu_precondition, %reference_precondition, %gpu_value, %reference_value",
+            "diagnostic": "error[FE2O3-EFFECT-007]: <publication-pending integrated wording and source span>\nclassification: Incomplete\ncondition: the exact Proved MIR-bound evidence record is missing",
             "property": "FunctionalRefinementEvidence",
             "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-SEMANTIC-003",
-            "enforcement": "Proof dialect verifier plus semantic-refinement PLIRON lit",
-            "caught": "Expression equality alone is not treated as a discharged CPU-reference theorem. The exact obligation must have one Proved Source-bound evidence record; Checked, a different boundary, duplicates, and missing evidence fail closed."
+            "code": "FE2O3-EFFECT-007",
+            "enforcement": "Proof dialect verifier, effect-refinement analysis, and authenticated V2 receipt import",
+            "caught": "Equal expressions do not authenticate a proof run. The compiler requires exact reference/kernel MIR and effect identities plus one policy-signed V2 receipt for a verified Proved execution at the MIR boundary; missing, stale, forged, wrong-toolchain, wrong-boundary, and duplicate receipts fail closed."
           },
           {
             "id": "reference_expression_mismatch",
-            "title": "The GPU expression disagrees with the CPU reference",
+            "title": "The GPU write disagrees with the CPU reference",
             "language": "text",
-            "source": "%gpu = kernel.semantic_add (%alpha * %acc), %initial\n%cpu = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nproof.require_refinement <obligation = 4a..> %gpu, %cpu",
-            "diagnostic": "error[FE2O3-SEMANTIC-001]: declared semantic refinement failed; actual expression `(s0 * s1) + s3` is not equivalent to required expression `(s0 * s1) + (s2 * s3)`",
+            "source": "%gpu = kernel.semantic_add (%alpha * %acc), %initial\n%cpu = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nproof.require_effect_refinement %output[%index], %gpu_domain, %cpu_domain, %gpu_precondition, %cpu_precondition, %gpu, %cpu",
+            "diagnostic": "error[FE2O3-EFFECT-001]: <publication-pending integrated wording and locations>\nclassification: Rejected\ncondition: the normalized GPU value differs from the sequential reference; the implemented analysis supplies a coordinate, invocation, workgroup, subgroup, and lane witness",
             "property": "FunctionalRefinementExpression",
             "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-SEMANTIC-001",
-            "enforcement": "Production reference-refinement recipe plus semantic-refinement pass",
-            "caught": "Even a well-formed Proved evidence identity cannot hide a different expression. The compiler independently canonicalizes both target-neutral DAGs and rejects the missing beta multiplication."
+            "code": "FE2O3-EFFECT-001",
+            "enforcement": "Production reference-effect recipe inside the semantic-refinement stage",
+            "caught": "A valid signed proof receipt cannot hide a different GPU effect. The compiler independently normalizes the paired value expressions, joins them to the real write and hierarchy owner, and reports the first coordinate, invocation, workgroup, subgroup, and lane witness."
           }
         ]
       },
@@ -1011,7 +1039,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code. The effect table records implemented code classes and their Rejected or Incomplete outcomes; exact integrated command output, source spans, and evidence hashes remain publication-pending. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1071,8 +1099,27 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-SEMANTIC-000", "Prerequisite", "Bounds verification failed before declared semantic refinement."],
           ["FE2O3-SEMANTIC-001", "Rejected", "The actual expression is not equivalent to the explicitly declared required expression."],
           ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."],
-          ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation is missing exact Proved Source-bound evidence or carries a non-Proved status or wrong boundary."],
+          ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation is missing exact Proved MIR-bound evidence or carries a non-Proved status or wrong boundary."],
           ["FE2O3-SEMANTIC-004", "Rejected", "A functional-reference obligation or evidence record is duplicated, mismatched, malformed, wrong-property, or orphaned."]
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Effect diagnostic",
+          "Outcome",
+          "Exact condition reported"
+        ],
+        "rows": [
+          ["FE2O3-EFFECT-001", "Rejected", "GPU and sequential-reference domain, precondition, or value expressions differ; an available counterexample names coordinate, invocation, workgroup, subgroup, lane, block, and operation."],
+          ["FE2O3-EFFECT-002", "Incomplete", "The output view has no exact hierarchy-ownership contract."],
+          ["FE2O3-EFFECT-003", "Incomplete", "Dynamic ownership, guarded effect tracing, or a prerequisite ownership proof is unresolved; runtime-only extents are not guessed."],
+          ["FE2O3-EFFECT-004", "Rejected", "The hierarchy-ownership contract used by the effect statement is concretely invalid."],
+          ["FE2O3-EFFECT-005", "Rejected", "An effect contract is orphaned, matches multiple writes, or duplicates another contract for one write."],
+          ["FE2O3-EFFECT-006", "Incomplete", "A concrete GPU write has no modeled sequential-reference effect; the witness identifies its full hierarchy owner."],
+          ["FE2O3-EFFECT-007", "Rejected or Incomplete", "The exact MIR FunctionalRefinement evidence is invalid, or required Proved MIR-bound evidence is unavailable."],
+          ["FE2O3-EFFECT-008", "Incomplete", "A domain, precondition, or value expression is outside the bounded normalization subset."],
+          ["FE2O3-EFFECT-009", "Incomplete", "The function exceeds the explicit effect-contract resource limit."]
         ]
       },
       {
@@ -1148,12 +1195,16 @@ const narrativeRegistry = deepFreeze({
         "type": "steps",
         "items": [
           "rustc preserves supported semantic MIR, source spans, ranked extents, checked branches, and memory effects.",
+          "For reference = path, the collector resolves one local safe Rust function and the exact monomorphized kernel/reference Instances in the same session, then records compiler-derived identities and MIR body SHA-256 values; source cannot supply them.",
+          "The compiler-defined logical ABI relation maps kernel inputs and disjoint outputs to the sequential reference without requiring identical physical Rust signatures. ReferenceEffectIrV1 rejects unsupported calls, loops or backedges, unsafe code, ABI forms, and effects before any proof can be imported.",
           "The ordinary-kernel source contract rejects unsafe signatures, unsafe bodies, inline assembly, and reachable unsafe device functions; only the separate unsafe_asm profile admits the low-level escape.",
           "Every compiler-recognized device capability must match its exact diagnostic item and canonical DefPath, an authenticated reviewed provider identity, the compiled SourceFileHash under the reviewed source root, and the pinned provider source digest.",
           "Supported safe ownership mappings retain their genuine marker identity and const parameters; malformed, substituted, or unsupported forms stop as Rejected or Incomplete before they can become memory effects.",
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
           "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for the immutable function; reachable typed CFG edges are part of sparse propagation, and no cache survives mutation or revalidation.",
-          "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Every pass returns Clean, Rejected, or Incomplete.",
+          "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Effect refinement executes inside the final stage after hierarchy ownership. Every report returns Clean, Rejected, or Incomplete.",
+          "For each bound reference write, proof.require_effect_refinement names the exact output view/indices and paired domain, precondition, and value expressions. Analysis correlates it with one real GPU write and its coordinate, invocation, workgroup, subgroup, and lane ownership witnesses.",
+          "The compiler imports one move-only Ed25519 V2 proof only after the current MIR/effect identities, compiler-policy signer, pinned Verus/Z3/runtime closure, exact successful execution identity and Proved result, and SafeReferenceMirToKernelMir boundary all match.",
           "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
           "One move-only compiler-owned ranked-verification input retains the eight ordered live reports through checked lowering; no caller can reconstruct it from booleans or diagnostics. The historical inert V4 evidence wire format still serializes its original seven reports and explicitly does not claim the new hierarchy report.",
           "Protected production additionally admits a sealed V3 rustc-invocation descriptor against the live argv, cwd, complete environment, target, rustc image, backend image, and full compiler closure. Worker V3 inputs are preflighted before transaction consumption, and finalization binds the exact invocation, closure, transaction, link plan, measured worker response, raw HSACO, descriptor source, and finalized bytes.",
@@ -1164,7 +1215,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, hierarchy ownership, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, explicit output-ownership contracts, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. The hierarchy pass reconstructs coordinate owners and partitions them by lane, subgroup, workgroup, and grid, rejecting out-of-range writes, duplicate owners, coverage holes, or non-rectangular regions with concrete witnesses. Runtime-only unresolved extents remain Incomplete rather than being guessed. Exact source projection support is recorded per terminal; an unsupported terminal, unknown alias class, unresolved or overflowing dynamic map, cyclic trace, exhausted budget, or unavailable grid-progress fact is Rejected or Incomplete rather than replaced with fabricated evidence."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, hierarchy ownership, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, explicit output-ownership contracts, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. The hierarchy pass reconstructs coordinate owners and partitions them by lane, subgroup, workgroup, and grid, rejecting out-of-range writes, duplicate owners, coverage holes, or non-rectangular regions with concrete witnesses. Effect refinement then requires every declared sequential effect to match one real owned write and every real logical write to be modeled. Runtime-only unresolved extents remain Incomplete rather than being guessed. The current safe-reference subset is acyclic and call-free, and its normalized end-to-end expression join is initially Add/Multiply; unsupported reference MIR or expressions fail closed. Even a Clean MIR/effect proof grants no source-to-ISA, artifact, publication, load, launch, runtime, or hardware authority."
       }
     ]
   },
@@ -2064,6 +2115,18 @@ const narrativeRegistry = deepFreeze({
             "Verus and Kernel IR obligations"
           ],
           [
+            "Which sequential Rust program is the reference?",
+            "reference = path plus same-session monomorphized MIR identity"
+          ],
+          [
+            "Do all owned GPU writes match its effects?",
+            "proof.require_effect_refinement plus hierarchy witnesses"
+          ],
+          [
+            "Did the pinned Verus/Z3 closure prove this exact statement?",
+            "policy-signed Ed25519 V2 execution receipt"
+          ],
+          [
             "Do compiled effects match the model?",
             "translation validation and machine inspection"
           ],
@@ -2089,13 +2152,13 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "CUDA and HIP can be checked by sanitizers, static analyzers, symbolic executors, model checkers, and external proof developments. fe2o3's design goal is a Rust-native single-source path where proof properties and artifact/runtime evidence carry explicit identities and fail closed when a join is missing."
+        "text": "CUDA and HIP can be checked by sanitizers, static analyzers, symbolic executors, model checkers, and external proof developments. fe2o3's design goal is a Rust-native single-source path where a safe Rust reference is selected by an ordinary function path, rustc supplies exact MIR identity, workload-neutral effects and hierarchy ownership are checked in the compiler, and proof, artifact, and runtime evidence carry explicit identities and fail closed when a join is missing."
       },
       {
         "type": "callout",
         "tone": "warning",
         "title": "No proof by branding",
-        "text": "A Rust type, compiler attribute, manifest, signature, test, sanitizer result, or proof record is evidence at one boundary. None alone establishes the complete kernel claim."
+        "text": "A Rust type, compiler attribute, manifest, signature, test, sanitizer result, or proof record is evidence at one boundary. A valid V2 signature authenticates an exact MIR/effect proof result; it does not prove later compiler stages or GPU execution. None alone establishes the complete kernel claim."
       }
     ]
   },
@@ -2175,9 +2238,13 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/scalar-gemm-checkpoint":
     "f4ab5246ca7c54248e386c25400133b10e432973f0055f91cf6f4db45945e35e",
   "compiler-checks/catalog":
-    "2cc1e8038dacceb8e4dbaa0f7475b27bdfbe2ce571db6d1317ab43ea9f14e788",
+    "9e0c99290debca1fe3d44f4be4b73dfad106b2bac7be16f7e299c2e3b2593c6c",
   "compiler-checks/production-path":
-    "4886ee2b0655ba8dc5662906cc9cc072bcaf9e63bb1a54e2407f528b28f31254",
+    "c90bf2ce5182f7c5312d19a108083693e279a4d2052382ccfbd0cbfaf385420a",
+  "what-verus-proves/proved":
+    "9d946e986457e5eaec0248ab563487a964a613a94671e20c2b31bb56b4346cb2",
+  "what-verus-proves/ecosystem":
+    "75fb0827e574d4ee621bd93e00ac330f5f1903686447fddb000abfede72d1750",
   "compiler-checks/v7-simulation":
     "898a468386559cbe68838e52818e018378e26d0211fd568a946c298507b3d251",
   "gemm-tiling/public-layout-proof":

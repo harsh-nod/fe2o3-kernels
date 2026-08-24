@@ -134,8 +134,8 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
     expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
     expect(screen.getByText("The grid leaves one output coordinate unwritten")).toBeInTheDocument();
-    expect(screen.getByText("A CPU-reference equality has no Verus evidence")).toBeInTheDocument();
-    expect(screen.getByText("The GPU expression disagrees with the CPU reference")).toBeInTheDocument();
+    expect(screen.getByText("A CPU-reference effect has no authenticated proof")).toBeInTheDocument();
+    expect(screen.getByText("The GPU write disagrees with the CPU reference")).toBeInTheDocument();
     expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
     expect(screen.getByText("Supported safe ownership mappings")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "Shifted<Index1D, N>" })).toBeInTheDocument();
