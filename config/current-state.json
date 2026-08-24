@@ -71,7 +71,7 @@
       "id": "cpu-semantic-simulation",
       "label": "No-GPU CPU semantic simulation",
       "status": "partial",
-      "detail": "cargo fe2o3 simulate can take ordinary typed source through semantic MIR, verified canonical Kernel IR V6, formal-memory admission, and bounded deterministic CPU execution without GPU or device-runtime initialization. The current slice covers scalar control flow, calls, integers, launch queries, and typed global memory. It reports simulated observation only: no hardware observation or validation and no performance prediction. Wave collectives, LDS/workgroup synchronization, atomics, matrix and floating-point target contracts, schedule exploration, and a virtual host runtime remain open in issue #216.",
+      "detail": "cargo fe2o3 simulate can take ordinary typed source through semantic MIR, verified canonical Kernel IR V6, formal-memory admission, and bounded deterministic CPU execution. The fe2o3 path links and initializes no GPU runtime and performs no GPU enumeration; ordinary project Cargo build scripts remain trusted, unsandboxed host code outside that claim. The current slice covers scalar control flow, calls, integers, launch queries, and typed global memory. It reports simulated observation only: no hardware observation or validation and no performance prediction. Wave collectives, LDS/workgroup synchronization, atomics, matrix and floating-point target contracts, schedule exploration, and a virtual host runtime remain open in issue #216.",
       "sourcePaths": ["crates/cargo-fe2o3/src/main.rs", "crates/fe2o3-kir-sim/src/execute.rs", "crates/fe2o3-kir-sim/src/preflight.rs", "crates/fe2o3-kir-sim-cli/src/linux.rs"]
     }
   ]

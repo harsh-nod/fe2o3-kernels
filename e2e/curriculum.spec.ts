@@ -79,7 +79,15 @@ test("CPU semantic simulation keeps its evidence boundary visible", async ({
     }),
   ).toBeVisible();
   await expect(page.getByText("performance_prediction: false")).toBeVisible();
-  await expect(page.getByText(/does not initialize KFD, HSA, HIP, ROCm/u)).toBeVisible();
+  await expect(
+    page.getByText(/trusted, unsandboxed host code/u),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/does not attest arbitrary build-script behavior/u),
+  ).toBeVisible();
+  await expect(
+    page.getByText(/fresh ephemeral generation/u),
+  ).toBeVisible();
   await expect(
     page.getByLabel("CPU semantic simulation of one authenticated WG64"),
   ).toContainText("60 inactive slots");
@@ -454,7 +462,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/6a86f5cbb5049cd6895d47e6734048ddd4d308d5/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/3127eae84ef1c8f539d56bfb418ec859ba0dd706/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -553,7 +561,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/6a86f5cbb5049cd6895d47e6734048ddd4d308d5/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/3127eae84ef1c8f539d56bfb418ec859ba0dd706/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
@@ -656,7 +664,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 6a86f5cbb5",
+      name: "Compiler main at 3127eae84e",
     }),
   ).toBeVisible();
   await expect(
