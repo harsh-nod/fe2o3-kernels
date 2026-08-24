@@ -143,7 +143,7 @@ const expertCompute: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 6a86f5cbb5049cd6895d47e6734048ddd4d308d5. This is evidence for one top-2 routed case, not a router proof or performance result.",
+          note: "Qualification ran from current compiler main 859515320d757dc32001f664bc95ce2c700b8ff5. This is evidence for one top-2 routed case, not a router proof or performance result.",
         },
       ),
     },

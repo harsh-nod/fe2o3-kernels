@@ -157,7 +157,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
       sourceSha256:
         "844d0aadba6ce977e2d4e2d3bd0fd556c92752fe5fa543099f81e806c0b5b663",
       evidenceId: "dynamic-gemm-executable-source-v1",
@@ -182,7 +182,7 @@ describe("curriculum integrity", () => {
       label: "Equivalent HIP",
       language: "cpp",
       sourcePath: "examples/tiled_gemm_general_v1/benchmark_hip.cpp",
-      sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
       sourceSha256:
         "24233c267c1bad3bde9c4897fb063d2e48d6d2fa07439dd04f4d0c14bd2ea84c",
       explanatory: false,
@@ -192,7 +192,7 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-      sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
       sourceSha256:
         "21684aba1e3b562d86caebc9ee636001e83bac7d1e2e727feb0225df57456b94",
       explanatory: false,
@@ -539,7 +539,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
       sourceSha256:
         "b1d742be6f4d782ff45afea4b61ed98294fa699c01882453bc35e60e0ad95ad0",
       explanatory: false,
@@ -570,7 +570,7 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
-      sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
       sourceSha256:
         "f3ec05ee1bcbb0cea08bf90ee87121996dde519905a93469dd59442dd34f9a8b",
       explanatory: false,
@@ -1646,12 +1646,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-23",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
-      eventualPublicTree: "a5940ad3729870dacc5a3fd7582224432a33860f",
+      eventualPublicCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      eventualPublicTree: "82ffcda511f33038f0a1f4c59213c383eaf37476",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
-        requiredTree: "a5940ad3729870dacc5a3fd7582224432a33860f",
+        requiredCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+        requiredTree: "82ffcda511f33038f0a1f4c59213c383eaf37476",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2173,7 +2173,7 @@ describe("implementation progress integrity", () => {
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
       sourceSha256:
         "d1ee9f0f3f72e74282706b16f3ac1272356dffb97e766bbc46e6d71ed02eebd1",
       explanatory: false,
@@ -2279,7 +2279,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      "859515320d757dc32001f664bc95ce2c700b8ff5",
     );
 
     const lesson = curriculum
@@ -2311,7 +2311,7 @@ describe("implementation progress integrity", () => {
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertHost).toMatchObject({
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
-      sourceCommit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
+      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
       sourceSha256:
         "4a999e24699896c792c5b9e4a0c4428e08cd1e65d0bf0b5772aa4d721aafe5b9",
       explanatory: false,
@@ -2926,7 +2926,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"6a86f5cbb5049cd6895d47e6734048ddd4d308d5");
+    expect(mapping).toContain("sourceCommit\":\"859515320d757dc32001f664bc95ce2c700b8ff5");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Legacy LDS-family flags remain false");

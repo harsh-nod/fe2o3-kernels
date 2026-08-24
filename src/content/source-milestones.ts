@@ -49,9 +49,9 @@ const sourceMilestoneRecords = deepFreeze({
     authority: "source-tested-only",
     claimLabel: "Executable dynamic GEMM source",
     detail:
-      "Current public main contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. It returns KernelResult, uses ? for checked capability construction, and names the target-neutral Matrix capability. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, canonical Kernel IR V6, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases pass at zero error, the disassembly contains V_MFMA_F32_16X16X16_BF16, and the repository includes a matched direct HIP benchmark. This is qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
-    commit: "6a86f5cbb5049cd6895d47e6734048ddd4d308d5",
-    tree: "a5940ad3729870dacc5a3fd7582224432a33860f",
+      "Current public main contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. It returns KernelResult, uses ? for checked capability construction, and names the target-neutral Matrix capability. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, canonical Kernel IR V7 with guarded edge loads and tensor contracts, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases pass at zero error, the disassembly contains V_MFMA_F32_16X16X16_BF16, and the repository includes a matched direct HIP benchmark. This is qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
+    commit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+    tree: "82ffcda511f33038f0a1f4c59213c383eaf37476",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
       "examples/tiled_gemm_general_v1/run-gfx942.sh",

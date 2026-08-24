@@ -605,7 +605,7 @@ const softmax: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 6a86f5cbb5049cd6895d47e6734048ddd4d308d5; this is evidence for the four published cases, not a universal proof or performance result.",
+          note: "Qualification ran from current compiler main 859515320d757dc32001f664bc95ce2c700b8ff5; this is evidence for the four published cases, not a universal proof or performance result.",
         },
       ),
     },
@@ -692,7 +692,7 @@ const flash: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 6a86f5cbb5049cd6895d47e6734048ddd4d308d5; no tuned-library performance claim is made.",
+          note: "Qualification ran from current compiler main 859515320d757dc32001f664bc95ce2c700b8ff5; no tuned-library performance claim is made.",
         },
       ),
     },
