@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
+import { currentState } from "../src/content/current-state";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import {
@@ -63,7 +64,7 @@ describe("curriculum integrity", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8,
     ]);
-    expect(lessons).toHaveLength(20);
+    expect(lessons).toHaveLength(21);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
       new Set(
@@ -150,6 +151,66 @@ describe("curriculum integrity", () => {
         );
       }
     }
+  });
+
+  it("keeps CPU semantic simulation exact and non-hardware", () => {
+    const lesson = lessons.find(
+      (candidate) => candidate.id === "cpu-semantic-simulation",
+    );
+    expect(lesson).toBeDefined();
+    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
+    expect(kernel).toMatchObject({
+      explanatory: false,
+      sourceCommit: currentState.compilerCommit,
+      sourcePath:
+        "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
+      sourceSha256:
+        "b3a492774bfb604c35743fa1d635e01aa6c0ac901772795379203d22bca6ac2b",
+    });
+    expect(kernel?.code).toBe(
+      readFileSync("examples/cpu_simulation_kernel.rs", "utf8"),
+    );
+    const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code ?? "";
+    expect(host).toContain(
+      readFileSync("examples/cpu_simulation_request.json", "utf8").trim(),
+    );
+    expect(host).toContain("cargo fe2o3 simulate");
+    const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    for (const boundary of [
+      "authority: observation_only",
+      "simulated: true",
+      "hardware_observed: false",
+      "hardware_validation: false",
+      "performance_prediction: false",
+    ]) {
+      expect(result).toContain(boundary);
+    }
+    expect(result).toContain("0x11000000110000001100000011000000");
+    const reference = lesson?.claims[0].reference;
+    expect(reference).toMatchObject({
+      scope: "current-implementation",
+      commit: currentState.compilerCommit,
+      tree: currentState.compilerTree,
+      target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
+    });
+    expect(reference?.note).toContain("no GPU");
+
+    expect(currentState.issues).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ number: 215, state: "open" }),
+        expect.objectContaining({ number: 216, state: "open" }),
+      ]),
+    );
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "semantic-debug-profile",
+      )?.detail,
+    ).toContain("no debugger or profiler UI");
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "cpu-semantic-simulation",
+      )?.detail,
+    ).toContain("no performance prediction");
   });
 
   it("pins the executable dynamic GEMM and historical tiled evidence separately", () => {

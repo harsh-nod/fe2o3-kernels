@@ -337,6 +337,88 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "cpu-semantic-simulation/pipeline": {
+    "sectionId": "pipeline",
+    "title": "Execute the compiler's semantic representation",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "cargo fe2o3 simulate starts from the ordinary attributed Rust crate. The compiler collects the selected typed kernel, lowers its semantic MIR through the general frontend, verifies canonical Kernel IR V6, admits its formal-memory model, and hands the exact canonical bytes to the bounded CPU executor. The kernel body is not compiled as an ordinary host Rust function, and no algorithm-specific CPU implementation stands beside it."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Boundary",
+          "What crosses it",
+          "Failure behavior"
+        ],
+        "rows": [
+          [
+            "Source to semantic MIR",
+            "One selected ordinary safe Rust #[kernel(typed)] body and authenticated device operations.",
+            "Ambiguous kernels, unsupported source forms, and invalid typed operations fail closed."
+          ],
+          [
+            "Semantic MIR to KIR V6",
+            "Typed control flow, integer values, launch queries, calls, and memory operations in the canonical versioned representation.",
+            "Verification precedes execution; malformed or unsupported KIR is never simulated."
+          ],
+          [
+            "Formal memory to CPU execution",
+            "Virtual allocations retain element type, extent, alignment, access, initialization, and provenance.",
+            "The executor reports typed faults without dereferencing device addresses as host pointers."
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "No device prerequisite",
+        "text": "This path does not enumerate a GPU and does not initialize KFD, HSA, HIP, ROCm, or a device runtime. A fixed request and fixed verified KIR produce deterministic bounded semantic output on the CPU."
+      }
+    ]
+  },
+  "cpu-semantic-simulation/evidence-boundary": {
+    "sectionId": "evidence-boundary",
+    "title": "Read the result as a simulated observation",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "The V1 result binds the exact KIR digest, scalar target-profile identity, scheduler identity, launch hierarchy counts, and typed output snapshot. For the four-invocation fill request, all four u32 elements become 17, encoded as four little-endian 0x11000000 values."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Result field",
+          "Meaning"
+        ],
+        "rows": [
+          [
+            "simulated: true",
+            "The canonical KIR executed in the bounded CPU semantic model."
+          ],
+          [
+            "hardware_observed: false",
+            "No physical GPU execution was observed."
+          ],
+          [
+            "hardware_validation: false",
+            "The result does not validate LLVM, ISA, HSACO, or GPU equivalence."
+          ],
+          [
+            "performance_prediction: false",
+            "CPU duration and deterministic schedule are not GPU timing, occupancy, or overlap estimates."
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Current supported slice",
+        "text": "The published milestone covers a bounded scalar/control-flow, call, integer, launch-query, and typed global-memory subset. Unsupported operations return structured errors. Wave collectives, LDS/workgroup synchronization, atomics, matrix operations, floating-point target contracts, seeded exploration, replay, and a virtual host runtime are not claimed by this lesson."
+      }
+    ]
+  },
   "verus-contracts/contract-shape": {
     "sectionId": "contract-shape",
     "title": "State assumptions where they enter",

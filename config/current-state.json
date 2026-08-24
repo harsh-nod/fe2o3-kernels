@@ -6,7 +6,9 @@
     {"number": 134, "state": "open", "label": "Rust-first Pliron compiler architecture"},
     {"number": 135, "state": "open", "label": "Verified persistent GPU execution"},
     {"number": 137, "state": "open", "label": "Verified pure-Rust KFD runtime"},
-    {"number": 140, "state": "open", "label": "Owner-bound upstream Pliron arena handles"}
+    {"number": 140, "state": "open", "label": "Owner-bound upstream Pliron arena handles"},
+    {"number": 215, "state": "open", "label": "Agent-native semantic GPU debugger and profiler"},
+    {"number": 216, "state": "open", "label": "Deterministic CPU semantic simulator and virtual GPU runtime"}
   ],
   "capabilities": [
     {
@@ -55,8 +57,22 @@
       "id": "runtime",
       "label": "Runtime and persistent execution",
       "status": "partial",
-      "detail": "Pure-Rust KFD topology, memory, queue, packet, and typed lifecycle foundations are present. Current main also completes authority-free crash-recovery mechanics for Worker V2 publication intents and predecessor cleanup through exact leases, private cleanup escrow, and restart-atomic retirement. These types explicitly grant no publication, load, or launch authority; verified persistent execution and complete production runtime authority remain open in issues #135 and #137.",
-      "sourcePaths": ["crates/fe2o3-kfd/src/lib.rs", "crates/fe2o3-hsa-runtime/src/lib.rs", "crates/cargo-fe2o3/src/worker_v2_restart.rs", "crates/fe2o3-artifact-transaction/src/worker_v2_publication_intent_cleanup_escrow.rs"]
+      "detail": "Pure-Rust KFD topology, memory, queue, packet, and typed lifecycle foundations are present. The direct-KFD semantic observation boundary does not dispatch work: its redacted report exposes queue-lifecycle and resource facts only, with no dispatch identity, timing, KIR, workgroup, wave, lane, memory, or register observation. Authority-free Worker V2 crash-recovery mechanics remain separate. These records grant no publication, load, or launch authority; verified persistent execution and complete production runtime authority remain open in issues #135 and #137.",
+      "sourcePaths": ["crates/fe2o3-kfd/src/lib.rs", "crates/fe2o3-kfd/src/semantic_observation.rs", "crates/cargo-fe2o3/src/worker_v2_restart.rs", "crates/fe2o3-artifact-transaction/src/worker_v2_publication_intent_cleanup_escrow.rs"]
+    },
+    {
+      "id": "semantic-debug-profile",
+      "label": "Semantic debugging and profiling",
+      "status": "partial",
+      "detail": "Versioned semantic trace records, deterministic bounded hierarchy queries, and import boundaries establish an agent-readable foundation. The importer can retain selected rocprofv3 JSON dispatch-envelope and timing observations, ATT manifest metadata without decoded events, and sparse normalized ROCgdb records with explicit unavailable fields. There is no debugger or profiler UI, general source/MIR/KIR/ISA map, counter or PC-sample ingestion, ATT decoding, structured ROCgdb state, capture comparison, or diagnosis authority yet. Issue #215 tracks those layers.",
+      "sourcePaths": ["crates/fe2o3-semantic-trace/src/model.rs", "crates/fe2o3-semantic-query/src/lib.rs", "crates/fe2o3-semantic-import/src/lib.rs"]
+    },
+    {
+      "id": "cpu-semantic-simulation",
+      "label": "No-GPU CPU semantic simulation",
+      "status": "partial",
+      "detail": "cargo fe2o3 simulate can take ordinary typed source through semantic MIR, verified canonical Kernel IR V6, formal-memory admission, and bounded deterministic CPU execution without GPU or device-runtime initialization. The current slice covers scalar control flow, calls, integers, launch queries, and typed global memory. It reports simulated observation only: no hardware observation or validation and no performance prediction. Wave collectives, LDS/workgroup synchronization, atomics, matrix and floating-point target contracts, schedule exploration, and a virtual host runtime remain open in issue #216.",
+      "sourcePaths": ["crates/cargo-fe2o3/src/main.rs", "crates/fe2o3-kir-sim/src/execute.rs", "crates/fe2o3-kir-sim/src/preflight.rs", "crates/fe2o3-kir-sim-cli/src/linux.rs"]
     }
   ]
 }

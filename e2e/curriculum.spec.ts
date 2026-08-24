@@ -56,6 +56,67 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
+test("CPU semantic simulation keeps its evidence boundary visible", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#/lesson/cpu-semantic-simulation");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Simulate typed source without a GPU",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Execute the compiler's semantic representation",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Read the result as a simulated observation",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("performance_prediction: false")).toBeVisible();
+  await expect(page.getByText(/does not initialize KFD, HSA, HIP, ROCm/u)).toBeVisible();
+  await expect(page.getByRole("tabpanel")).toContainText("pub fn fill");
+  await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    /crates\/cargo-fe2o3\/tests\/fixtures\/simulation-source-fill\/src\/lib\.rs$/u,
+  );
+
+  await page.getByRole("tab", { name: "Host" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "fe2o3-simulation-request-v1",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "cargo fe2o3 simulate",
+  );
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "hardware_observed: false",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "0x11000000110000001100000011000000",
+  );
+
+  const screenshot = testInfo.outputPath("cpu-semantic-simulation.png");
+  await page.screenshot({
+    path: screenshot,
+    animations: "disabled",
+    fullPage: true,
+  });
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+});
+
 test("search traps focus and restores its trigger", async ({ page }) => {
   await page.goto("./#/");
   await expect(
@@ -555,7 +616,7 @@ test("every internal curriculum route resolves without page overflow", async ({
 }) => {
   await page.goto("./#/lesson/read-the-evidence");
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(20);
+  await expect(routeLinks).toHaveCount(21);
   const routes = await routeLinks.evaluateAll((links) =>
       links.map((link) => ({
         href: (link as HTMLAnchorElement).href,

@@ -975,10 +975,11 @@ other GPU languages are inherently unverifiable.
 
 ## Curriculum
 
-The documentation app contains 18 lessons across nine modules:
+The documentation app contains 21 lessons across nine modules:
 
 0. Evidence orientation and an MI300X/gfx942 setup.
-1. Fill, typed vector addition, indexing, `DisjointSlice`, and launch shape.
+1. Fill, typed vector addition, indexing, `DisjointSlice`, launch shape, and
+   source-first bounded CPU semantic simulation without a GPU runtime.
 2. Verus contracts, negative tests, overflow freedom, initialization, and
    injective writes.
 3. Bounded reduction/scan semantics, wave64, barriers, atomics, and LDS.
