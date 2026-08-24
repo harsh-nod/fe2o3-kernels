@@ -157,9 +157,9 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
       sourceSha256:
-        "844d0aadba6ce977e2d4e2d3bd0fd556c92752fe5fa543099f81e806c0b5b663",
+        "1f76284197d14acb79ace32c5b78ef2914cf845418cb785a6fca86285db8ab5a",
       evidenceId: "dynamic-gemm-executable-source-v1",
       explanatory: false,
     });
@@ -167,7 +167,7 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain("matrix.multiply_accumulate(lhs, rhs, accumulator)");
     expect(kernel?.code).toContain("-> KernelResult");
     expect(kernel?.code).toContain(".ok_or(KernelError::OutOfBounds)?");
-    expect(kernel?.code).toContain("let Ok(a_matrix) = Bf16MfmaAMatrix::row_major");
+    expect(kernel?.code).toContain("let a_matrix = Bf16MfmaAMatrix::row_major");
     expect(kernel?.code).toContain(
       "let lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, phase);",
     );
@@ -182,7 +182,7 @@ describe("curriculum integrity", () => {
       label: "Equivalent HIP",
       language: "cpp",
       sourcePath: "examples/tiled_gemm_general_v1/benchmark_hip.cpp",
-      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
       sourceSha256:
         "24233c267c1bad3bde9c4897fb063d2e48d6d2fa07439dd04f4d0c14bd2ea84c",
       explanatory: false,
@@ -192,23 +192,23 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
       sourceSha256:
-        "21684aba1e3b562d86caebc9ee636001e83bac7d1e2e727feb0225df57456b94",
+        "c324f239a9e5641c1861cbbb3800e8398cebad48bb125473b2b75ab85d3d4fc7",
       explanatory: false,
     });
     expect(host?.code).toContain("multi-workgroup-dynamic-k");
     expect(host?.code).toContain("grid_dim: (workgroups, 1, 1)");
 
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    expect(result).toContain("112 correspondence blocks");
+    expect(result).toContain("81 correspondence blocks");
     expect(result).toContain("v_mfma_f32_16x16x16_bf16");
     expect(result).toContain("PASS strided-all-tails");
     expect(result).toContain("PASS multi-workgroup-dynamic-k");
     expect(result).toContain("PASS zero-k-epilogue");
     expect(result).toContain("Fe2O3 is safer and more expressive here; it is not faster than HIP yet");
-    expect(result).toContain("137.551 us");
-    expect(result).toContain("130.821 us");
+    expect(result).toContain("138.112 us");
+    expect(result).toContain("130.541 us");
 
     const proofLesson = lessons.find((entry) => entry.id === "gemm-proof-plan");
     expect(proofLesson?.tabs.find((tab) => tab.kind === "kernel")).toMatchObject({
@@ -409,7 +409,7 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("second downstream blocker");
     expect(failures).toContain("never reaches configuration or proof execution");
     expect(failures).toContain("Current MFMA qualification");
-    expect(failures).toContain("Legacy LDS-family flags remain false");
+    expect(failures).toContain("Historical LDS-family flags remain false");
     expect(failures).toContain("TILED_SOURCE_TO_IR=false");
     expect(failures).toContain("TILED_LOWERING=false");
     expect(failures).toContain("TILED_PROTECTED_EXECUTION=false");
@@ -434,8 +434,6 @@ describe("curriculum integrity", () => {
     expect(pipelineTable?.type).toBe("table");
     if (pipelineTable?.type !== "table") return;
     expect(pipelineTable.rows.map(([pass]) => pass)).toEqual([
-      "kernel-structural-v1",
-      "kernel-control-flow-v1",
       "kernel-tensor-layout-v1",
       "kernel-memory-bounds-v1",
       "kernel-atomic-legality-v1",
@@ -446,7 +444,18 @@ describe("curriculum integrity", () => {
       "pliron-sparse-index-v1 (shared analysis)",
       "bounded resources (cross-cutting)",
     ]);
-    expect(JSON.stringify(pipelineTable)).toContain("irreducible control flow");
+    const prerequisiteTable = semanticFailures.blocks.find(
+      (block) =>
+        block.type === "table" &&
+        block.headers[0] === "Separate general Kernel IR check ID",
+    );
+    expect(prerequisiteTable?.type).toBe("table");
+    if (prerequisiteTable?.type !== "table") return;
+    expect(prerequisiteTable.rows.map(([check]) => check)).toEqual([
+      "kernel-structural-v1",
+      "kernel-control-flow-v1",
+    ]);
+    expect(JSON.stringify(prerequisiteTable)).toContain("irreducible control flow");
     expect(JSON.stringify(pipelineTable)).toContain("compatible atomics");
     expect(JSON.stringify(pipelineTable)).toContain("rather than guessing intent");
 
@@ -548,9 +557,9 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
       sourceSha256:
-        "b1d742be6f4d782ff45afea4b61ed98294fa699c01882453bc35e60e0ad95ad0",
+        "13c02223d099abfdc8415c3149721b6e98170da69f0725d39a45186a83116314",
       explanatory: false,
     });
     expect(createHash("sha256").update(kernel?.code ?? "").digest("hex")).toBe(
@@ -563,7 +572,7 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain("-> KernelResult");
     expect(kernel?.code).toContain("subgroup_reduce_max_f32::<64>");
     expect(kernel?.code).toContain("subgroup_reduce_sum_f32::<64>");
-    expect(kernel?.code).toContain("checked_tiled_2d::<64, 64, 64, 64>");
+    expect(kernel?.code).toContain("checked_row_striped_2d::<64, 64>");
 
     const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
     expect(proof).toMatchObject({
@@ -579,9 +588,9 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
-      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
       sourceSha256:
-        "f3ec05ee1bcbb0cea08bf90ee87121996dde519905a93469dd59442dd34f9a8b",
+        "6bba6a37ce1db788207c59469a69c4a051ee7399c5da880041f650747be924ad",
       explanatory: false,
     });
     expect(host?.code).toContain("grid_dim: (case.rows, 1, 1)");
@@ -593,7 +602,7 @@ describe("curriculum integrity", () => {
     expect(result).toContain("PASS single-column");
     expect(result).toContain("PASS maximum-width");
     expect(result).toContain("four ranked dynamic-index obligations");
-    expect(result).toContain("12 ds_bpermute instructions and no MFMA");
+    expect(result).toContain("lane shuffles and no MFMA");
     expect(result).toContain("not a proof for every input or a performance claim");
 
     const proofNarrative = narrativeEntry("softmax-invariant/proof");
@@ -1652,15 +1661,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-23",
+      reviewedOn: "2026-08-24",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
-      eventualPublicTree: "82ffcda511f33038f0a1f4c59213c383eaf37476",
+      eventualPublicCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+      eventualPublicTree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
-        requiredTree: "82ffcda511f33038f0a1f4c59213c383eaf37476",
+        requiredCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+        requiredTree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2182,9 +2191,9 @@ describe("implementation progress integrity", () => {
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
       sourceSha256:
-        "d1ee9f0f3f72e74282706b16f3ac1272356dffb97e766bbc46e6d71ed02eebd1",
+        "24ab06c4e5d3a6ffd4d859f3a4744106325d7d7cdcc7868ddd0fd9a294243e36",
       explanatory: false,
     });
     expect(host?.code).toContain("tails-and-strides");
@@ -2193,7 +2202,7 @@ describe("implementation progress integrity", () => {
     expect(result?.explanatory).toBe(true);
     expect(result?.code).toContain("Dynamic fused attention qualification");
     expect(result?.code).toContain("V_MFMA_F32_16X16X16_BF16");
-    expect(result?.code).toContain("29 ranked dynamic-index obligations");
+    expect(result?.code).toContain("17 ranked dynamic-index obligations");
     expect(result?.code).toContain(
       "claim of parity with a tuned production FlashAttention library",
     );
@@ -2288,7 +2297,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "859515320d757dc32001f664bc95ce2c700b8ff5",
+      "c88681a356516982bdb96496ac5f9839d0e91bd7",
     );
 
     const lesson = curriculum
@@ -2316,13 +2325,13 @@ describe("implementation progress integrity", () => {
     const expertContent = serializedLessonContent("moe-expert-compute");
     expect(expertContent).toContain("runtime padded rows");
     expect(expertContent).toContain("MFMA is an operation, not a workload label");
-    expect(expertContent).toContain("17 tokens, 3 experts, 34 routes");
+    expect(expertContent).toContain("41 tokens, 4 experts, 82 routes");
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertHost).toMatchObject({
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
-      sourceCommit: "859515320d757dc32001f664bc95ce2c700b8ff5",
+      sourceCommit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
       sourceSha256:
-        "4a999e24699896c792c5b9e4a0c4428e08cd1e65d0bf0b5772aa4d721aafe5b9",
+        "1bcd872f696a9fd94da1f1f445bc07cbf64d3bfba2de87961204b9849a07c55e",
       explanatory: false,
     });
     expect(expertHost?.code).toContain("launch_expert");
@@ -2935,10 +2944,10 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"859515320d757dc32001f664bc95ce2c700b8ff5");
+    expect(mapping).toContain("sourceCommit\":\"c88681a356516982bdb96496ac5f9839d0e91bd7");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
-    expect(proofPlan).toContain("Legacy LDS-family flags remain false");
+    expect(proofPlan).toContain("Historical LDS-family flags remain false");
     expect(proofPlan).toContain("authenticates the exact attributed source");
     expect(proofPlan).toContain("stops before descriptor construction and Worker V2");
     expect(proofPlan).toContain("six cases checked 1,536 outputs");

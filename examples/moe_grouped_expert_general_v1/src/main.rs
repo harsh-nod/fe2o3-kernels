@@ -1,17 +1,18 @@
 use fe2o3_core::{DeviceBuffer, GpuContext, GpuModule, LaunchConfig, Stream};
 use fe2o3_device::Bf16;
 use fe2o3_host::launch;
+use fe2o3_moe_grouped_expert_general_v1::kernel::MOE_EXPERT_WORKGROUP_V1;
 use std::path::PathBuf;
 
-const TOKENS: u32 = 17;
-const EXPERTS: u32 = 3;
-const REDUCTION: u32 = 18;
-const OUTPUT_COLUMNS: u32 = 19;
-const TOKEN_STRIDE: u32 = 23;
-const WEIGHT_STRIDE: u32 = 29;
+const TOKENS: u32 = 41;
+const EXPERTS: u32 = 4;
+const REDUCTION: u32 = 35;
+const MAX_OUTPUT_COLUMNS: u32 = 33;
+const TOKEN_STRIDE: u32 = 41;
+const WEIGHT_STRIDE: u32 = 39;
 const EXPERT_WEIGHT_STRIDE: u32 = REDUCTION * WEIGHT_STRIDE + 7;
-const BIAS_STRIDE: u32 = 23;
-const OUTPUT_STRIDE: u32 = 27;
+const BIAS_STRIDE: u32 = 37;
+const OUTPUT_STRIDE: u32 = 41;
 
 fn sample(seed: u32, modulus: u32, center: i32, scale: f32) -> f32 {
     ((seed % modulus) as i32 - center) as f32 * scale
@@ -26,11 +27,13 @@ fn launch_expert(
     bias: &DeviceBuffer<f32>,
     output: &DeviceBuffer<f32>,
     rows_padded: u32,
+    output_columns: u32,
     expert: u32,
 ) -> fe2o3_core::Result<()> {
-    let workgroups = (rows_padded / 16) * OUTPUT_COLUMNS.div_ceil(16);
-    // SAFETY: the five buffers and ten scalar arguments exactly match the
-    // generated kernel ABI and remain alive through readback.
+    let workgroups = (rows_padded / 16) * output_columns.div_ceil(16);
+    // SAFETY: the five non-aliasing buffers and ten scalars exactly match the
+    // generated ABI, remain alive through readback, and the grid covers every
+    // logical 16x16 output tile exactly once.
     unsafe {
         launch! {
             kernel: moe_grouped_expert_general_v1,
@@ -38,7 +41,11 @@ fn launch_expert(
             module: module,
             config: LaunchConfig {
                 grid_dim: (workgroups, 1, 1),
-                block_dim: (64, 1, 1),
+                block_dim: (
+                    MOE_EXPERT_WORKGROUP_V1[0],
+                    MOE_EXPERT_WORKGROUP_V1[1],
+                    MOE_EXPERT_WORKGROUP_V1[2],
+                ),
                 shared_mem_bytes: 0,
             },
             args: [
@@ -48,7 +55,7 @@ fn launch_expert(
                 slice(bias),
                 slice_mut(output),
                 scalar(rows_padded),
-                scalar(OUTPUT_COLUMNS),
+                scalar(output_columns),
                 scalar(REDUCTION),
                 scalar(TOKEN_STRIDE),
                 scalar(WEIGHT_STRIDE),
@@ -84,7 +91,7 @@ fn main() -> fe2o3_core::Result<()> {
     let mut bias = vec![0.0_f32; EXPERTS as usize * BIAS_STRIDE as usize];
     for expert in 0..EXPERTS {
         for d in 0..REDUCTION {
-            for column in 0..OUTPUT_COLUMNS {
+            for column in 0..MAX_OUTPUT_COLUMNS {
                 weights[expert as usize * EXPERT_WEIGHT_STRIDE as usize
                     + d as usize * WEIGHT_STRIDE as usize
                     + column as usize] =
@@ -92,7 +99,7 @@ fn main() -> fe2o3_core::Result<()> {
                         .to_bits();
             }
         }
-        for column in 0..OUTPUT_COLUMNS {
+        for column in 0..MAX_OUTPUT_COLUMNS {
             bias[expert as usize * BIAS_STRIDE as usize + column as usize] =
                 sample(expert * 19 + column * 3, 17, 8, 0.015625);
         }
@@ -105,89 +112,103 @@ fn main() -> fe2o3_core::Result<()> {
     }
     let weights_device = DeviceBuffer::from_host(&stream, &weights)?;
     let bias_device = DeviceBuffer::from_host(&stream, &bias)?;
-    let mut combined = vec![0.0_f32; TOKENS as usize * OUTPUT_COLUMNS as usize];
     let sentinel = -83.0_f32;
-    for expert in 0..EXPERTS {
-        let entries = &routes[expert as usize];
-        let rows_padded = (entries.len() as u32).div_ceil(16) * 16;
-        let mut routed_tokens =
-            vec![Bf16::ZERO.to_bits(); rows_padded as usize * TOKEN_STRIDE as usize];
-        let mut gates = vec![0.0_f32; rows_padded as usize];
-        for (row, (token, gate)) in entries.iter().copied().enumerate() {
-            routed_tokens
-                [row * TOKEN_STRIDE as usize..row * TOKEN_STRIDE as usize + REDUCTION as usize]
-                .copy_from_slice(
-                    &source[token as usize * TOKEN_STRIDE as usize
-                        ..token as usize * TOKEN_STRIDE as usize + REDUCTION as usize],
-                );
-            gates[row] = gate;
-        }
-        let output = vec![sentinel; rows_padded as usize * OUTPUT_STRIDE as usize];
-        let tokens_device = DeviceBuffer::from_host(&stream, &routed_tokens)?;
-        let gates_device = DeviceBuffer::from_host(&stream, &gates)?;
-        let output_device = DeviceBuffer::from_host(&stream, &output)?;
-        launch_expert(
-            &stream,
-            &module,
-            &tokens_device,
-            &weights_device,
-            &gates_device,
-            &bias_device,
-            &output_device,
-            rows_padded,
-            expert,
-        )?;
-        let actual = output_device.to_host_vec(&stream)?;
-        for (row, (token, _)) in entries.iter().copied().enumerate() {
-            for column in 0..OUTPUT_COLUMNS as usize {
-                combined[token as usize * OUTPUT_COLUMNS as usize + column] +=
-                    actual[row * OUTPUT_STRIDE as usize + column];
+    for output_columns in [1, 15, 16, 17, MAX_OUTPUT_COLUMNS] {
+        let mut combined = vec![0.0_f32; TOKENS as usize * output_columns as usize];
+        for expert in 0..EXPERTS {
+            let entries = &routes[expert as usize];
+            let rows_padded = (entries.len() as u32).div_ceil(16) * 16;
+            let mut routed_tokens =
+                vec![Bf16::ZERO.to_bits(); rows_padded as usize * TOKEN_STRIDE as usize];
+            let mut gates = vec![0.0_f32; rows_padded as usize];
+            for (row, (token, gate)) in entries.iter().copied().enumerate() {
+                routed_tokens
+                    [row * TOKEN_STRIDE as usize..row * TOKEN_STRIDE as usize + REDUCTION as usize]
+                    .copy_from_slice(
+                        &source[token as usize * TOKEN_STRIDE as usize
+                            ..token as usize * TOKEN_STRIDE as usize + REDUCTION as usize],
+                    );
+                gates[row] = gate;
             }
-        }
-        for row in 0..rows_padded as usize {
-            assert!(
-                actual[row * OUTPUT_STRIDE as usize + OUTPUT_COLUMNS as usize
-                    ..(row + 1) * OUTPUT_STRIDE as usize]
-                    .iter()
-                    .all(|value| *value == sentinel),
-                "expert {expert} wrote output padding"
-            );
-        }
-    }
-
-    let mut maximum_error = 0.0_f32;
-    for token in 0..TOKENS {
-        for column in 0..OUTPUT_COLUMNS {
-            let mut expected = 0.0_f32;
-            for (expert, gate) in [(token % EXPERTS, 0.65_f32), ((token + 1) % EXPERTS, 0.35)] {
-                let mut projection = 0.0_f32;
-                for d in 0..REDUCTION {
-                    projection += Bf16::from_bits(
-                        source[token as usize * TOKEN_STRIDE as usize + d as usize],
-                    )
-                    .to_f32()
-                        * Bf16::from_bits(
-                            weights[expert as usize * EXPERT_WEIGHT_STRIDE as usize
-                                + d as usize * WEIGHT_STRIDE as usize
-                                + column as usize],
-                        )
-                        .to_f32();
+            let output = vec![sentinel; rows_padded as usize * OUTPUT_STRIDE as usize];
+            let tokens_device = DeviceBuffer::from_host(&stream, &routed_tokens)?;
+            let gates_device = DeviceBuffer::from_host(&stream, &gates)?;
+            let output_device = DeviceBuffer::from_host(&stream, &output)?;
+            launch_expert(
+                &stream,
+                &module,
+                &tokens_device,
+                &weights_device,
+                &gates_device,
+                &bias_device,
+                &output_device,
+                rows_padded,
+                output_columns,
+                expert,
+            )?;
+            let actual = output_device.to_host_vec(&stream)?;
+            for (row, (token, _)) in entries.iter().copied().enumerate() {
+                for column in 0..output_columns as usize {
+                    combined[token as usize * output_columns as usize + column] +=
+                        actual[row * OUTPUT_STRIDE as usize + column];
                 }
-                projection += bias[expert as usize * BIAS_STRIDE as usize + column as usize];
-                expected += gate * projection;
             }
-            let actual = combined[token as usize * OUTPUT_COLUMNS as usize + column as usize];
-            let error = (actual - expected).abs();
-            maximum_error = maximum_error.max(error);
-            assert!(
-                error <= 2.0e-3,
-                "token {token} column {column}: actual={actual} expected={expected}"
-            );
+            for row in 0..rows_padded as usize {
+                assert!(
+                    actual[row * OUTPUT_STRIDE as usize + output_columns as usize
+                        ..(row + 1) * OUTPUT_STRIDE as usize]
+                        .iter()
+                        .all(|value| *value == sentinel),
+                    "expert {expert} wrote output padding for N={output_columns}"
+                );
+            }
+            for row in entries.len()..rows_padded as usize {
+                assert!(
+                    actual[row * OUTPUT_STRIDE as usize
+                        ..row * OUTPUT_STRIDE as usize + output_columns as usize]
+                        .iter()
+                        .all(|value| *value == 0.0),
+                    "expert {expert} produced a nonzero padded route row for N={output_columns}"
+                );
+            }
         }
+
+        let mut maximum_error = 0.0_f32;
+        for token in 0..TOKENS {
+            for column in 0..output_columns {
+                let mut expected = 0.0_f32;
+                for (expert, gate) in
+                    [(token % EXPERTS, 0.65_f32), ((token + 1) % EXPERTS, 0.35)]
+                {
+                    let mut projection = 0.0_f32;
+                    for d in 0..REDUCTION {
+                        projection += Bf16::from_bits(
+                            source[token as usize * TOKEN_STRIDE as usize + d as usize],
+                        )
+                        .to_f32()
+                            * Bf16::from_bits(
+                                weights[expert as usize * EXPERT_WEIGHT_STRIDE as usize
+                                    + d as usize * WEIGHT_STRIDE as usize
+                                    + column as usize],
+                            )
+                            .to_f32();
+                    }
+                    projection += bias[expert as usize * BIAS_STRIDE as usize + column as usize];
+                    expected += gate * projection;
+                }
+                let actual = combined[token as usize * output_columns as usize + column as usize];
+                let error = (actual - expected).abs();
+                maximum_error = maximum_error.max(error);
+                assert!(
+                    error <= 2.0e-3,
+                    "N={output_columns} token {token} column {column}: actual={actual} expected={expected}"
+                );
+            }
+        }
+        println!(
+            "PASS top2-routed-moe tokens={TOKENS} experts={EXPERTS} K={REDUCTION} N={output_columns} routes={} max_error={maximum_error}",
+            TOKENS * 2
+        );
     }
-    println!(
-        "PASS top2-routed-moe tokens={TOKENS} experts={EXPERTS} K={REDUCTION} N={OUTPUT_COLUMNS} routes={} max_error={maximum_error}",
-        TOKENS * 2
-    );
     Ok(())
 }

@@ -82,8 +82,8 @@ const dynamicGemmResult = resultText(
     "",
     "Rust -> semantic MIR -> ranked PLIRON -> Kernel IR -> formal/ranked memory",
     "-> gfx942 LLVM -> HSACO -> fe2o3-host",
-    "2 semantic functions, 112 correspondence blocks, 12 ranked dynamic-index discharges,",
-    "workgroup [64, 1, 1], 37213 LLVM bytes, artifact/launch authority false",
+    "2 semantic functions, 81 correspondence blocks, 8 formal-memory admissions,",
+    "12 ranked dynamic-index discharges, workgroup [64, 1, 1], 38,286 LLVM bytes",
     "",
     "PASS packed                       M=16 N=16 K=16 groups=1 max_error=0",
     "PASS strided-all-tails            M=17 N=19 K=18 groups=4 max_error=0",
@@ -91,11 +91,11 @@ const dynamicGemmResult = resultText(
     "PASS zero-k-epilogue              M=17 N=19 K=0 groups=4 max_error=0",
     "ISA: v_mfma_f32_16x16x16_bf16",
     "",
-    "Matched direct-kernel benchmark, 2026-08-22, 15 event-timed samples:",
-    "size    Fe2O3 median     HIP median       Fe2O3 / HIP",
-    "256     12.881 us         9.134 us         1.410x",
-    "512     28.655 us        25.193 us         1.137x",
-    "1024   137.551 us       130.821 us         1.051x",
+    "Matched direct-kernel benchmark, 2026-08-24, 15 event-timed samples:",
+    "size    Fe2O3 median   HIP median   Fe2O3/HIP   Fe2O3 throughput",
+    "256       13.652 us      9.152 us      1.492x      2,457.79 GFLOP/s",
+    "512       28.170 us     25.254 us      1.115x      9,529.13 GFLOP/s",
+    "1024     138.112 us    130.541 us      1.058x     15,548.82 GFLOP/s",
     "",
     "This is a like-for-like MFMA kernel and host-launch comparison, not rocBLAS.",
     "Fe2O3 is safer and more expressive here; it is not faster than HIP yet.",
@@ -181,14 +181,14 @@ const rowSoftmaxResult = resultText(
   "gpu-observed",
   `Dynamic row softmax qualification on MI300X/gfx942
 
-PASS single-column      rows=3 columns=1 stride=4099 max_error=0
-PASS wave-tail          rows=5 columns=63 stride=4101 max_error=1.4901161e-8
-PASS multi-iteration    rows=7 columns=257 stride=4103 max_error=5.5879354e-9
+PASS single-column      rows=3 columns=1 stride=7 max_error=0
+PASS wave-tail          rows=5 columns=63 stride=71 max_error=1.4901161e-8
+PASS multi-iteration    rows=7 columns=257 stride=269 max_error=5.5879354e-9
 PASS maximum-width      rows=2 columns=4096 stride=4103 max_error=6.0535967e-9
 
-The production compiler collected the public unit-ABI wrapper and private KernelResult helper as two semantic functions, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 16,431-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained 12 ds_bpermute instructions and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
+The production compiler collected two semantic functions and 58 correspondence blocks, admitted three formal-memory boundaries, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 21,941-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained lane shuffles and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
 
-The logical column count and input stride are dynamic. Each physical row reserves 4,096 input and output elements, inactive input columns must be negative infinity, and columns above the logical width remain untouched. These qualification results establish the listed cases against an independent CPU oracle; they are not a proof for every input or a performance claim.`,
+The logical column count and independent input/output strides are dynamic. Checked fallback loads supply negative infinity outside the logical row, row-striped ownership suppresses inactive stores, and output padding remains untouched. These qualification results establish the listed cases against an independent CPU oracle; they are not a proof for every input or a performance claim.`,
 );
 
 const flashAttentionResult = resultText(
@@ -198,7 +198,7 @@ const flashAttentionResult = resultText(
 PASS tails-and-strides        heads=1 queries=16/16 keys=13/16 depth=18 value_dim=7 max_error=4.4703484e-8
 PASS multi-head-multi-tile   heads=2 queries=17/32 keys=19/32 depth=33 value_dim=16 max_error=5.9604645e-8
 
-The same production pipeline collected the public unit-ABI wrapper and private KernelResult helper as two semantic functions, discharged 29 ranked dynamic-index obligations, emitted a 150,685-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and ds_bpermute subgroup reductions. Scores are never materialized in global memory.
+The same production pipeline collected two semantic functions and 219 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 162,782-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and subgroup shuffles. One key-tile pass advances the stable online maximum, denominator, and V numerator; scores are never materialized in global memory.
 
 The kernel accepts runtime head count, padded query/key lengths, depth up to 1,024, keys up to 4,096, value width up to 16, independent legal strides, scale, and an additive mask for causal, padding, or application masks. Q and K are BF16; V, mask, accumulation, and output are FP32. The current PV contraction is scalar/reduction based, so this is correctness evidence rather than a claim of parity with a tuned production FlashAttention library.`,
 );
@@ -235,7 +235,7 @@ function exactDynamicGemmHostTab() {
     sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
     sourceCommit: dynamicGemmSource.commit,
     sourceSha256:
-      "21684aba1e3b562d86caebc9ee636001e83bac7d1e2e727feb0225df57456b94",
+      "c324f239a9e5641c1861cbbb3800e8398cebad48bb125473b2b75ab85d3d4fc7",
     evidenceId: dynamicGemmSource.id,
     explanatory: false,
   };
@@ -473,7 +473,7 @@ const gemmMapping: Lesson = {
     "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
     "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
     "See how a loop-carried accumulator keeps its MFMA contract and current-wave provenance on every CFG edge.",
-    "Use KernelResult with ? or let Ok for fallible view and ownership construction, then consume zero-filled typed fragment loads directly.",
+    "Use KernelResult and ? for fallible view and ownership construction, then consume zero-filled typed fragment loads directly.",
     "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],
   claims: [
@@ -605,7 +605,7 @@ const softmax: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 859515320d757dc32001f664bc95ce2c700b8ff5; this is evidence for the four published cases, not a universal proof or performance result.",
+          note: "Qualification ran from current compiler main c88681a356516982bdb96496ac5f9839d0e91bd7; this is evidence for the four published cases, not a universal proof or performance result.",
         },
       ),
     },
@@ -621,7 +621,7 @@ const softmax: Lesson = {
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "b1d742be6f4d782ff45afea4b61ed98294fa699c01882453bc35e60e0ad95ad0",
+        "13c02223d099abfdc8415c3149721b6e98170da69f0725d39a45186a83116314",
       explanatory: false,
     },
     {
@@ -641,7 +641,7 @@ const softmax: Lesson = {
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "f3ec05ee1bcbb0cea08bf90ee87121996dde519905a93469dd59442dd34f9a8b",
+        "6bba6a37ce1db788207c59469a69c4a051ee7399c5da880041f650747be924ad",
       explanatory: false,
       notice:
         "The kernel remains entirely safe Rust. Unsafe is confined to the ordinary host FFI boundaries for loading a code object and launching its generated ABI.",
@@ -692,7 +692,7 @@ const flash: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 859515320d757dc32001f664bc95ce2c700b8ff5; no tuned-library performance claim is made.",
+          note: "Qualification ran from current compiler main c88681a356516982bdb96496ac5f9839d0e91bd7; no tuned-library performance claim is made.",
         },
       ),
     },
@@ -710,7 +710,7 @@ const flash: Lesson = {
       sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "836bcf365ea629191a677bfb7fc2b06864c7718b3acaaff7cb8fe6324989f414",
+        "0e46343e7634185a7944c8d97d05aafd5353bd942b472b964217e96b315a951c",
       explanatory: false,
     },
     {
@@ -730,7 +730,7 @@ const flash: Lesson = {
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "d1ee9f0f3f72e74282706b16f3ac1272356dffb97e766bbc46e6d71ed02eebd1",
+        "24ab06c4e5d3a6ffd4d859f3a4744106325d7d7cdcc7868ddd0fd9a294243e36",
       explanatory: false,
       notice:
         "The host builds causal and padding masks, launches the generated ABI, compares every active output with an independent reference, and checks output padding. Unsafe is confined to the host code-object and launch FFI boundary.",

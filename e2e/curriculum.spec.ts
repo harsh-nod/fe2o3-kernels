@@ -163,7 +163,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/859515320d757dc32001f664bc95ce2c700b8ff5/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Equivalent HIP" }).click();
@@ -174,7 +174,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel").locator(".token.keyword").first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/859515320d757dc32001f664bc95ce2c700b8ff5/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
+    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -183,12 +183,12 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/859515320d757dc32001f664bc95ce2c700b8ff5/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "112 correspondence blocks",
+    "81 correspondence blocks",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "PASS strided-all-tails",
@@ -347,7 +347,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByText("All 15 exact safe source mutations are diagnostic"),
   ).toBeVisible();
   await expect(
-    page.getByText("Legacy LDS-family flags remain false"),
+    page.getByText("Historical LDS-family flags remain false"),
   ).toBeVisible();
   await expect(page.getByText("Executable direct-global MFMA source", { exact: true })).toBeVisible();
   await expect(page.getByText("Cooperative-LDS positive source", { exact: true })).toBeVisible();
@@ -399,7 +399,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/859515320d757dc32001f664bc95ce2c700b8ff5/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -425,7 +425,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     "PASS maximum-width",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "12 ds_bpermute instructions and no MFMA",
+    "lane shuffles and no MFMA",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "not a proof for every input or a performance claim",
@@ -498,7 +498,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/859515320d757dc32001f664bc95ce2c700b8ff5/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/c88681a356516982bdb96496ac5f9839d0e91bd7/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
@@ -601,7 +601,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 859515320d",
+      name: "Compiler main at c88681a356",
     }),
   ).toBeVisible();
   await expect(

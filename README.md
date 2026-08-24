@@ -37,18 +37,24 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to public-main implementation commit
-`859515320d757dc32001f664bc95ce2c700b8ff5`, tree
-`82ffcda511f33038f0a1f4c59213c383eaf37476`. Deployment requires
+`c88681a356516982bdb96496ac5f9839d0e91bd7`, tree
+`31bf39234539c90aabe310ebe0978de9dfd00b22`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed.
 
-This snapshot contains an executable safe Rust dynamic strided MFMA GEMM.
-Runtime M/N/K, lda/ldb/ldc, alpha/beta, multiple workgroups, edge handling, and
-the K loop lower through semantic MIR, ranked PLIRON, Kernel IR, gfx942 LLVM,
-HSACO, and fe2o3-host. Four MI300X cases pass at zero error, the disassembly
-contains BF16/F32 MFMA, and a matched direct HIP benchmark is checked in. The
-qualification artifact is not protected release authority.
+This snapshot contains executable safe Rust dynamic GEMM, row-softmax,
+attention, and grouped-expert MoE kernels. Runtime dimensions, strides, edge
+handling, multiple workgroups, target-neutral matrix and subgroup operations,
+and workload epilogues all lower through one semantic MIR, ranked PLIRON,
+Kernel IR, formal-memory, gfx942 LLVM, HSACO, and fe2o3-host route. Current
+MI300X qualification covers four GEMM cases, four softmax cases, two
+one-pass-online attention cases, and five MoE output widths. Matrix
+contractions contain BF16/F32 MFMA; reductions contain subgroup shuffles. The
+matched direct HIP benchmark is checked in and shows that Fe2O3 is currently
+slower, approaching 94.5% of the HIP kernel's throughput at 1024. These
+qualification artifacts are not protected release authority or universal
+correctness proofs.
 
 This descendant also contains
 the exact protected Slice 1
@@ -602,7 +608,7 @@ FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b
 The `gemm-tiling` lesson now shows the exact current dynamic kernel, build
 script, host runner, and four-case MI300X result. The safe kernel is byte-pinned
 to `examples/tiled_gemm_general_v1/src/kernel.rs` at
-`859515320d757dc32001f664bc95ce2c700b8ff5` and contains no unsafe block. Its
+`c88681a356516982bdb96496ac5f9839d0e91bd7` and contains no unsafe block. Its
 host-only unsafe boundaries are visible and documented around external HSACO
 loading and physical ABI launch.
 

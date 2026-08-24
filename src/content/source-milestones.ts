@@ -50,8 +50,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Executable dynamic GEMM source",
     detail:
       "Current public main contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. It returns KernelResult, uses ? for checked capability construction, and names the target-neutral Matrix capability. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, canonical Kernel IR V7 with guarded edge loads and tensor contracts, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases pass at zero error, the disassembly contains V_MFMA_F32_16X16X16_BF16, and the repository includes a matched direct HIP benchmark. This is qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
-    commit: "859515320d757dc32001f664bc95ce2c700b8ff5",
-    tree: "82ffcda511f33038f0a1f4c59213c383eaf37476",
+    commit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+    tree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
       "examples/tiled_gemm_general_v1/run-gfx942.sh",
@@ -67,7 +67,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
     primarySourceSha256:
-      "844d0aadba6ce977e2d4e2d3bd0fd556c92752fe5fa543099f81e806c0b5b663",
+      "1f76284197d14acb79ace32c5b78ef2914cf845418cb785a6fca86285db8ab5a",
     target: "gfx942:xnack-",
   },
   "tiled-gemm-safe-source-v1": {
@@ -78,8 +78,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe tiled GEMM source",
     detail:
       "Current public main contains the ordinary attributed 16x16x16 BF16/F32 tiled GEMM source with compiler-issued lane, LDS, matrix, barrier, and disjoint-output capabilities. The kernel and its reachable helpers contain no unsafe block. Source-boundary and ranked-pipeline tests cover this safe source shape, but historical proof, HSACO, and GPU observations remain pinned separately and do not transfer to this descendant source.",
-    commit: "ae312f421872e1eb9885217888548d74f79c3357",
-    tree: "2345f0b14dc92dcfce9d829433860f06f8f7b128",
+    commit: "c88681a356516982bdb96496ac5f9839d0e91bd7",
+    tree: "31bf39234539c90aabe310ebe0978de9dfd00b22",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml",
       "cargo test --locked -p rustc-codegen-fe2o3 --test production_extraction_driver_v1 -- --ignored --exact production_collector_rejects_reachable_unsafe_rust_with_rooted_diagnostics",

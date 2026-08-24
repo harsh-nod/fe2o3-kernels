@@ -1,5 +1,5 @@
 {
-  "reviewedOn": "2026-08-23",
+  "reviewedOn": "2026-08-24",
   "plironCommit": "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
   "issues": [
     {"number": 109, "state": "closed", "label": "Shared BF16/F32 numerical contract"},
@@ -41,7 +41,7 @@
       "id": "compiler-analysis",
       "label": "Bounded compiler analysis",
       "status": "active",
-      "detail": "Closed control-flow validation, pruned SSA placement, block-argument uniformity, sparse index facts, dynamic tiled-component reasoning, subgroup-scoped bounded invocation traces, Result and Option payload dominance, and stable diagnostics feed every workload through the same safety pipeline. Checked add, subtract, and multiply retain value plus overflow through canonical KIR V7; compiler-generated unchecked arithmetic is admitted only when the matching no-overflow edge dominates it. Typed matrix producers retain operand role, profile, register distribution, storage provenance, wave association, and zero-fill policy without naming algorithms. Unsupported operations and resource limits fail closed as Incomplete obligations.",
+      "detail": "Closed control-flow validation, pruned SSA placement, block-argument uniformity, sparse index facts, dynamic tiled-component reasoning, subgroup-scoped bounded invocation traces, Result and Option payload dominance, and stable diagnostics feed every workload through the same safety pipeline. Bounded unsigned range facts propagate through add, subtract, divide, remainder, equality, and ordering guards only while exact CFG dominance and mutation analysis keep them valid; address escape or an unresolved write disables the proof. Checked add, subtract, and multiply retain value plus overflow through canonical KIR V7. Typed matrix producers retain operand role, profile, register distribution, storage provenance, wave association, and zero-fill policy without naming algorithms. Unsupported operations and resource limits fail closed as Incomplete obligations.",
       "sourcePaths": ["crates/fe2o3-kernel-analysis/src/control_flow.rs", "crates/fe2o3-kernel-analysis/src/ssa.rs", "crates/fe2o3-kernel-analysis/src/uniformity.rs", "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs", "crates/fe2o3-kernel-analysis/src/pliron_invocation_trace.rs", "crates/fe2o3-kernel-analysis/src/pliron_tensor_layout.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs"]
     },
     {
