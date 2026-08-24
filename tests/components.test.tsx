@@ -91,7 +91,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Eighteen ways an invalid kernel stops at compile time",
+        name: "Eighteen representative compile-time failures",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -117,7 +117,9 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "Shifted<Index1D, N>" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "Blocked<Index1D, L, E> where L > 1" })).toBeInTheDocument();
     expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
-    expect(screen.getByText("Generic diagnostic catalog")).toBeInTheDocument();
+    expect(screen.getByText("Stable pass diagnostic catalog")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-RACE-004" })).toBeInTheDocument();
+    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(14);
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002" })).toBeInTheDocument();

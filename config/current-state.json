@@ -45,6 +45,13 @@
       "sourcePaths": ["crates/fe2o3-kernel-analysis/src/control_flow.rs", "crates/fe2o3-kernel-analysis/src/ssa.rs", "crates/fe2o3-kernel-analysis/src/uniformity.rs", "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs", "crates/fe2o3-kernel-analysis/src/pliron_invocation_trace.rs", "crates/fe2o3-kernel-analysis/src/pliron_tensor_layout.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs"]
     },
     {
+      "id": "kir-v7-simulation",
+      "label": "Bounded V7 simulation and semantic trace",
+      "status": "partial",
+      "detail": "An exact verified canonical Kernel IR V7 owner can enter a bounded deterministic CPU simulator for the supported integer and boolean subset: structured control flow and internal calls, private and global buffers or views, ordinary or guarded scalar loads, and D1-D3 invocation identities. The Linux-only fe2o3-kir-sim --kir-v7 boundary emits copied results and a bounded byte-level cross-invocation conflict assessment; a separate in-process adapter maps simulator events into observation-only semantic trace V1 records. The schedule is serial and canonical. Floating point, MFMA and wave operations, atomics, synchronization, workgroup memory, external calls, memory intrinsics, and inline assembly are rejected. Simulation and traces establish neither race freedom nor source-to-KIR or GPU equivalence, launch authority, timing, or performance, and they cannot execute the current numeric tutorial kernels.",
+      "sourcePaths": ["crates/fe2o3-kir-sim/README.md", "crates/fe2o3-kir-sim-cli/README.md", "crates/fe2o3-kir-sim-trace/README.md", "crates/fe2o3-semantic-trace/README.md"]
+    },
+    {
       "id": "target-finalization",
       "label": "Target finalization",
       "status": "partial",

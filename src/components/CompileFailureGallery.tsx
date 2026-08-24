@@ -48,7 +48,11 @@ export function CompileFailureGallery({
             </header>
             <div className="compile-failure-body">
               <div className="compile-failure-source">
-                <span>Input excerpt</span>
+                <span>
+                  {example.language === "text"
+                    ? "Schematic semantic IR"
+                    : "Rust input excerpt"}
+                </span>
                 <pre>
                   <HighlightedCode
                     code={example.source}

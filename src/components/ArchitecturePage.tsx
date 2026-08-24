@@ -28,6 +28,7 @@ export function ArchitecturePage() {
             ["rustc", "Enforces Rust moves, borrows, lifetimes, visibility, local typestate, and Result control flow."],
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
+            ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
             ["Compiler analyses", "Run the seven ordered tensor, bounds, atomic, race, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse, layout, and trace facts only within one validation."],
             ["Verus", "Proves named source or model properties; it neither replaces rustc nor currently proves full source-to-machine refinement."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],

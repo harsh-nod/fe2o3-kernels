@@ -19,6 +19,7 @@ export const narrativeIds = deepFreeze([
   "memory-race-proof/dynamic-join",
   "compiler-checks/catalog",
   "compiler-checks/production-path",
+  "compiler-checks/v7-simulation",
   "reductions-scans/scope",
   "reductions-scans/scan",
   "lds-barriers-atomics/epochs",
@@ -79,7 +80,8 @@ export const narrativeOrderByLesson = deepFreeze({
   ],
   "compiler-checks": [
     "compiler-checks/catalog",
-    "compiler-checks/production-path"
+    "compiler-checks/production-path",
+    "compiler-checks/v7-simulation"
   ],
   "reductions-scans": [
     "reductions-scans/scope",
@@ -162,8 +164,9 @@ export const narrativeFingerprints = deepFreeze({
   "verus-contracts/negative": "38875c71f6dd93237a558f59db083e9eb48b93d9407fa23f210d3dfd14c379ca",
   "memory-race-proof/regions": "e197e757e5e41a147309534e0659e257209745bcef5c6e11fa89d61947111835",
   "memory-race-proof/dynamic-join": "105fe75c7294f57013c1f2c1403a985908580947f9aa2b96095de318ea0cc392",
-  "compiler-checks/catalog": "f361b1e6bc00b4cabaf7b61c69e8fc7a379c86682ced1c33293410d599ad0bee",
-  "compiler-checks/production-path": "5cbb79ac87694faf41054859a66520e9578ffd5f90ef3fa37609ac8cf5816cd1",
+  "compiler-checks/catalog": "3356005cf81e432257158ef5ed8816af2bf36eaa9f1cf6eb9ba5807e0c374001",
+  "compiler-checks/production-path": "565a195b23db4fc609b1c386f1b4b13b0f58ebfd7a172a442412a689f572b26c",
+  "compiler-checks/v7-simulation": "1648884b36e18ba54e8066ef32a7c3d59c48b01de54fd6610695074b1fdc46a4",
   "reductions-scans/scope": "5a38b3d1c24f74c6ffe39078b8e8b26d2fc1d12547e452fa420355bc5dd25152",
   "reductions-scans/scan": "2694b624faa9d51616967d5e54166dede88ebc26408b5fff1dd570387228536b",
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
@@ -172,11 +175,11 @@ export const narrativeFingerprints = deepFreeze({
   "gemm-tiling/general-contract": "2ff980b2d8e8185fe599886cb1a3beba7faae104037af9d130d4c5bdaa92484b",
   "gemm-tiling/mutation-diagnostics": "06343229f4fecd3339bd8a41cbaa0ab46215d527feca7b6b473131a696a43e56",
   "gemm-tiling/mapping": "2bc58458be611f511a12565f65b6b6db7270fa7d7b58022b75f476a569bd2c86",
-  "gemm-tiling/loop-proof": "efa78f60f05e17c0eaeca7ab41043f4f4d0349e1418df76030afa4e984a61e15",
+  "gemm-tiling/loop-proof": "a7af9d2844e7656d6a467090c72e8a72d2d44ed557b31fcb1e9f97f1c744784b",
   "gemm-proof-plan/proof-ledger": "635b84e78c427a7c59e189832896c38d0e3f50ba0249e203c3c1ab186daa77c2",
   "gemm-proof-plan/evidence": "f0dbe006815f0933162a243dd2f0a83e014a73444615e9e90e2501b6d9646ba5",
   "softmax-invariant/spec": "6b1ebe428fb51c5c9f2c7897a8d89681bb4c8111070069c57e3554e2561c07c5",
-  "softmax-invariant/proof": "e93c7bf421b973986f40ccfd6442640be17c7636e3328a327a9c1664d1c2d44a",
+  "softmax-invariant/proof": "95a1cfcc9018d7f93c2e56f64f1b8a18a091844ddb5950877e8a2081915fecab",
   "flash-attention/online": "42b54d5b9dade5a14e708a3d3db9179b9cddccd3fe1c63b8eb1774d0cc9cccab",
   "flash-attention/effects": "dec7a14c01e1f27c8cdae8f2bca1670775a4ee2fbcb4a50dfc0846b89d4f99d3",
   "flash-attention/closure": "d448209dc48bd0bfbaa296e9ec316810f0131c4bd129be23d3c18ad41a4f5a6b",

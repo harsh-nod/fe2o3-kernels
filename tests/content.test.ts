@@ -294,7 +294,11 @@ describe("curriculum integrity", () => {
     }
 
     const semanticFailures = narrativeEntry("compiler-checks/catalog");
-    const failures = JSON.stringify([semanticFailures, narrativeEntry("gemm-tiling/mutation-diagnostics")]);
+    const failures = JSON.stringify([
+      semanticFailures,
+      narrativeEntry("compiler-checks/v7-simulation"),
+      narrativeEntry("gemm-tiling/mutation-diagnostics"),
+    ]);
     expect(failures).toContain("Compile-time kernel diagnostics");
     expect(failures).toContain("none recognizes GEMM names, tile sizes, or schedules");
     expect(failures).toContain("Generic does not mean automatically provable");
@@ -356,7 +360,11 @@ describe("curriculum integrity", () => {
       "mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement",
     );
     expect(failures).toContain("No lowering pass may run between these seven checks");
-    expect(failures).toContain("Generic diagnostic catalog");
+    expect(failures).toContain("Stable pass diagnostic catalog");
+    expect(failures).toContain("FE2O3-RACE-004");
+    expect(failures).toContain("Other compile-time boundary");
+    expect(failures).toContain("fe2o3-kir-sim --kir-v7");
+    expect(failures).toContain("deterministic CPU execution, not a GPU scheduler");
     expect(failures).toContain("Correct relative to explicit contracts, never universally correct");
     expect(failures).toContain("Storage swizzling describes addresses before a load");
     expect(failures).toContain("A and B need not use the same storage transform");
@@ -462,6 +470,7 @@ describe("curriculum integrity", () => {
       "FE2O3-RACE-001",
       "FE2O3-RACE-002",
       "FE2O3-RACE-003",
+      "FE2O3-RACE-004",
       "FE2O3-BARRIER-000",
       "FE2O3-BARRIER-001",
       "FE2O3-BARRIER-002",
@@ -473,7 +482,7 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-001",
       "FE2O3-SEMANTIC-002",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(8);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(9);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(11);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
@@ -522,8 +531,8 @@ describe("curriculum integrity", () => {
     expect(example("tensor_storage_transform")?.caught).toContain("direct B fragment may legally meet an XOR4-staged A fragment");
     expect(example("race_alias_views")?.caught).toContain("allocation origin and alias class");
     expect(example("race_multidimensional_constant_write")?.source).toContain("global = [2, 2, 1]");
-    expect(example("barrier_partial_workgroup")?.diagnostic).toContain("global extent X = 65");
-    expect(example("grid_barrier_unsupported")?.diagnostic).toContain("cooperative-launch and progress contract");
+    expect(example("barrier_partial_workgroup")?.diagnostic).toContain("global extent 65 on axis 0");
+    expect(example("grid_barrier_unsupported")?.diagnostic).toContain("ordinary grid-wide barriers are unsupported");
     expect(example("bounds_static_oob")?.diagnostic).toContain("required: 64 < 64");
     expect(example("atomic_invalid_ordering")?.diagnostic).toContain("invalid Release ordering");
     expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [0]");

@@ -241,7 +241,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Eighteen ways an invalid kernel stops at compile time",
+      name: "Eighteen representative compile-time failures",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -261,9 +261,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(failureGallery.getByText("E0308", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-TENSOR-LAYOUT-001", { exact: true }).first()).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-ATOMIC-001", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-RACE-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-RACE-001", { exact: true }).first()).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BARRIER-001", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-WORKGROUP-001", { exact: true })).toBeVisible();
+  await expect(failureGallery.getByText("FE2O3-WORKGROUP-001", { exact: true }).first()).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-SEMANTIC-001", { exact: true })).toBeVisible();
   await expect(
     failureGallery.getByLabel("Compile-time rejection path"),
@@ -300,7 +300,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByText("Ordinary Rust atomic terminals are explicitly unsupported"),
   ).toBeVisible();
   await expect(
-    page.getByText("Generic diagnostic catalog"),
+    page.getByText("Stable pass diagnostic catalog"),
   ).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeVisible();
@@ -308,13 +308,14 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-BOUNDS-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-ATOMIC-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-RACE-003", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-RACE-004", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002", exact: true })).toBeVisible();
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Eighteen ways an invalid kernel stops at compile time",
+      name: "Eighteen representative compile-time failures",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
@@ -325,6 +326,10 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByText("Compile-time kernel diagnostics"),
   ).toBeVisible();
+  await expect(
+    page.getByText("Debug exact V7 without upgrading observation into proof"),
+  ).toBeVisible();
+  await expect(page.getByText(/fe2o3-kir-sim --kir-v7/u)).toBeVisible();
   await page.goto("./#/lesson/gemm-proof-plan");
   await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "unguarded_a_tail_load" })).toBeVisible();

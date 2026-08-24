@@ -489,6 +489,7 @@ const compilerChecks: Lesson = {
   sections: [
     narrativeSection("compiler-checks/catalog"),
     narrativeSection("compiler-checks/production-path"),
+    narrativeSection("compiler-checks/v7-simulation"),
   ],
   tabs: completeTabs(
     {

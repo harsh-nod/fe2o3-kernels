@@ -650,9 +650,10 @@ LDS family. Its
 MFMA qualification route.
 
 Separately, the production semantic-MIR route runs a fixed target-neutral
-ranked-PLIRON safety pipeline before Kernel IR lowering: bounds, atomic
-legality, global race freedom, barrier convergence, workgroup-memory
-must-initialization/publication by epoch, and declared semantic refinement.
+ranked-PLIRON safety pipeline before Kernel IR lowering: tensor layout and
+collective participation, bounds, atomic legality, global race freedom, barrier
+convergence, workgroup-memory must-initialization/publication by epoch, and
+declared semantic refinement.
 Dialect and structural verification are prerequisites. Bounded sparse affine
 index dataflow feeds bounds and ownership, and every pass has explicit resource
 ceilings that fail closed as Incomplete. Static ranked Rust accesses and checked
