@@ -201,12 +201,12 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
 
   await page.getByRole("tab", { name: "Verus proof" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "exact_evidence_identity_is_admitted_v1",
+    "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
   );
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/flash_attention_v1/verus/flash_attention_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
   await page.getByRole("button", { name: "Mark complete" }).click();
   await expect(page.getByRole("button", { name: "Completed" })).toBeVisible();
@@ -241,7 +241,18 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/src/kernel.rs",
+  );
+
+  await page.getByRole("tab", { name: "Safe CPU reference" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("#![forbid(unsafe_code)]");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn evaluate_reference_v1",
+  );
+
+  await page.getByRole("tab", { name: "Verus refinement" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
   );
 
   await page.getByRole("tab", { name: "Equivalent HIP" }).click();
@@ -252,7 +263,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel").locator(".token.keyword").first()).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -261,7 +272,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
@@ -299,17 +310,21 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     }),
   ).toHaveCount(0);
 
-  await page.goto("./#/lesson/gemm-proof-plan");
+  await page.evaluate(() => {
+    window.location.hash = "/lesson/gemm-proof-plan";
+  });
   await expect(
     page.getByRole("heading", {
       level: 2,
       name: "Optimizing the executable baseline",
     }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   await expect(
     page.getByText("Generic PLIRON safety passes are mandatory before lowering"),
   ).toBeVisible();
-  await page.goto("./#/lesson/compiler-checks");
+  await page.evaluate(() => {
+    window.location.hash = "/lesson/compiler-checks";
+  });
   await expect(
     page.getByRole("heading", {
       level: 1,
@@ -319,7 +334,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Eighteen representative compile-time failures",
+      name: "Twenty-one representative compile-time failures",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -335,6 +350,15 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(failureGallery.getByText("Invocation-divergent barrier")).toBeVisible();
   await expect(failureGallery.getByText("Workgroup read before initialization")).toBeVisible();
   await expect(failureGallery.getByText("Declared formula mismatch")).toBeVisible();
+  await expect(
+    failureGallery.getByText("The grid leaves one output coordinate unwritten"),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText("A CPU-reference equality has no Verus evidence"),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText("The GPU expression disagrees with the CPU reference"),
+  ).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("E0308", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-TENSOR-LAYOUT-001", { exact: true }).first()).toBeVisible();
@@ -342,7 +366,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(failureGallery.getByText("FE2O3-RACE-001", { exact: true }).first()).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BARRIER-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-WORKGROUP-001", { exact: true }).first()).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-SEMANTIC-001", { exact: true })).toBeVisible();
+  await expect(
+    failureGallery.getByText("FE2O3-SEMANTIC-001", { exact: true }).first(),
+  ).toBeVisible();
   await expect(
     failureGallery.getByLabel("Compile-time rejection path"),
   ).toContainText("No lowering or artifact");
@@ -387,13 +413,15 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-ATOMIC-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-RACE-003", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-RACE-004", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-OWN-006", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-003", exact: true })).toBeVisible();
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Eighteen representative compile-time failures",
+      name: "Twenty-one representative compile-time failures",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
@@ -477,13 +505,13 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
   await page.getByRole("tab", { name: "Verus proof" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "separate_input_and_output_accesses_do_not_alias_v1",
+    "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
   );
   await expect(
     page.getByText("The compiler does not know this is softmax"),
@@ -520,7 +548,7 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/wave64_collectives_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/wave64_collectives_v1/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -541,13 +569,13 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/workgroup_sync_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/workgroup_sync_v1/src/kernel.rs",
   );
   await expect(
     page.getByRole("link", { name: "Exact separate scoped_atomic.rs source" }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/workgroup_sync_v1/src/scoped_atomic.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/workgroup_sync_v1/src/scoped_atomic.rs",
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -576,18 +604,24 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+  );
+
+  await page.getByRole("tab", { name: "Safe CPU reference" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("#![forbid(unsafe_code)]");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn evaluate_reference_v1",
   );
 
   await page.getByRole("tab", { name: "Verus" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "pub proof fn host_schedule_phase_order_is_exact_v1",
+    "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
   );
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -679,7 +713,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 318c064c3a",
+      name: "Compiler main at af0fd523e3",
     }),
   ).toBeVisible();
   await expect(

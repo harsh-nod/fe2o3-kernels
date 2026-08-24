@@ -29,8 +29,8 @@
       "id": "generic-safety",
       "label": "Generic pre-lowering safety",
       "status": "active",
-      "detail": "The mandatory workload-neutral sequence verifies tensor layout and collective participation, ranked bounds, atomic legality, cross-invocation race freedom, barrier convergence, workgroup-memory initialization and publication, and declared semantic refinement. It reasons per subgroup, wave, workgroup, and grid where the execution contract provides authority. Rejected and Incomplete findings both stop strict production compilation before lowering.",
-      "sourcePaths": ["crates/fe2o3-kernel-analysis/src/pliron_tensor_layout.rs", "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs", "crates/fe2o3-kernel-analysis/src/pliron_atomic_legality.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs", "crates/fe2o3-kernel-analysis/src/pliron_barrier.rs", "crates/fe2o3-kernel-analysis/src/pliron_workgroup_memory.rs", "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs"]
+      "detail": "The mandatory workload-neutral sequence verifies tensor layout and collective participation, ranked bounds, atomic legality, cross-invocation race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory initialization and publication, and declared semantic refinement. It reconstructs invocation, subgroup, wave, workgroup, and grid ownership from generic write relations. Rejected and Incomplete findings both stop strict production compilation before lowering.",
+      "sourcePaths": ["crates/fe2o3-kernel-analysis/src/pliron_tensor_layout.rs", "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs", "crates/fe2o3-kernel-analysis/src/pliron_atomic_legality.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs", "crates/fe2o3-kernel-analysis/src/pliron_hierarchical_ownership.rs", "crates/fe2o3-kernel-analysis/src/pliron_barrier.rs", "crates/fe2o3-kernel-analysis/src/pliron_workgroup_memory.rs", "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs"]
     },
     {
       "id": "rust-production-route",

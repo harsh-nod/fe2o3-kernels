@@ -39,6 +39,19 @@ const functionalAlgorithmLessonIds = new Set([
   "gemm-tiling",
   "gemm-proof-plan",
 ]);
+const referenceKernelLessonIds = new Set([
+  "first-fill",
+  "typed-vecadd",
+  "cpu-semantic-simulation",
+  "reductions-scans",
+  "lds-barriers-atomics",
+  "gemm-tiling",
+  "gemm-proof-plan",
+  "softmax-invariant",
+  "flash-attention",
+  "moe-routing",
+  "moe-expert-compute",
+]);
 const stagedAuthorities = new Set([
   "source-admission-only",
   "harness-only",
@@ -121,14 +134,20 @@ function validateLesson(
   if (lesson.objectives.length < 2 || lesson.sections.length < 2) {
     issues.push({ path, message: "lesson lacks substantive structure" });
   }
-  if (lesson.tabs.length !== 4) {
-    issues.push({ path, message: "lesson must expose all four code tabs" });
+  if (lesson.tabs.length < 4 || lesson.tabs.length > 6) {
+    issues.push({ path, message: "lesson must expose four to six code tabs" });
   }
   const tabKinds = new Set(lesson.tabs.map((tab) => tab.kind));
   for (const kind of ["kernel", "verus", "host", "result"] as const) {
     if (!tabKinds.has(kind)) {
       issues.push({ path, message: `missing ${kind} tab` });
     }
+  }
+  if (
+    referenceKernelLessonIds.has(lesson.id) &&
+    !tabKinds.has("reference")
+  ) {
+    issues.push({ path, message: "kernel lesson is missing its safe CPU reference tab" });
   }
   for (const [tabIndex, tab] of lesson.tabs.entries()) {
     const tabPath = `${path}.tabs[${tabIndex}]`;

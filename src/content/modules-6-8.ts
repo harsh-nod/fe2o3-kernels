@@ -2,9 +2,11 @@ import { currentState } from "./current-state";
 import { narrativeSection } from "./narrative-registry";
 import moeTop2Kernel from "../../examples/moe_top2_v1/src/kernel.rs?raw";
 import moeTop2Proof from "../../examples/moe_top2_v1/verus/moe_top2_v1.rs?raw";
+import moeTop2Reference from "../../examples/moe_top2_v1/src/oracle.rs?raw";
 import moeExpertKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel.rs?raw";
 import moeExpertHost from "../../examples/moe_grouped_expert_general_v1/src/main.rs?raw";
-import moeExpertProof from "../../examples/moe_expert_v1/verus/moe_expert_memory_v1.rs?raw";
+import moeExpertReference from "../../examples/moe_grouped_expert_general_v1/src/reference.rs?raw";
+import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
   currentImplementationReference,
@@ -12,7 +14,14 @@ import {
   type CurriculumModule,
   type Lesson,
 } from "./model";
-import { completeTabs, noHost, noKernel, noProof, resultText } from "./shared";
+import {
+  completeReferenceTabs,
+  completeTabs,
+  noHost,
+  noKernel,
+  noProof,
+  resultText,
+} from "./shared";
 import {
   sourceMilestoneClaim,
   sourceMilestoneRecord,
@@ -24,7 +33,6 @@ import {
 
 const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
-const moeExpertVerus = sourceMilestoneRecord("moe-expert-verus-v1");
 
 const moeRouting: Lesson = {
   id: "moe-routing",
@@ -48,7 +56,7 @@ const moeRouting: Lesson = {
     narrativeSection("moe-routing/assumptions"),
     narrativeSection("moe-routing/permutation"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: moeTop2Kernel,
@@ -57,6 +65,17 @@ const moeRouting: Lesson = {
       sourceSha256: moeTop2Source.primarySourceSha256,
       evidenceId: moeTop2Source.id,
       explanatory: false,
+    },
+    {
+      language: "rust",
+      code: moeTop2Reference,
+      sourcePath: "examples/moe_top2_v1/src/oracle.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "a91d913d7fb7a91e0a24008ad4f1a15663225eb457ac0b0e3227f724a147785c",
+      explanatory: false,
+      notice:
+        "This safe sequential oracle defines deterministic top-2 tie breaking, capacity, compact slots, inverse permutation, and sentinels.",
     },
     {
       language: "rust",
@@ -143,7 +162,7 @@ const expertCompute: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 318c064c3a0aa8b03654f95461e3c894395a5d47. This is evidence for five output-width cases, not a router proof or performance result.",
+          note: "Qualification ran from current compiler main af0fd523e3b774377a9c5192cf0511e34fa19735. This is evidence for five output-width cases, not a router proof or performance result.",
         },
       ),
     },
@@ -154,7 +173,7 @@ const expertCompute: Lesson = {
     narrativeSection("moe-expert-compute/combine"),
     narrativeSection("moe-expert-compute/bounded-evidence"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: moeExpertKernel,
@@ -166,14 +185,25 @@ const expertCompute: Lesson = {
     },
     {
       language: "rust",
-      code: moeExpertProof,
-      sourcePath: moeExpertVerus.primarySourcePath,
-      sourceCommit: moeExpertVerus.commit,
-      sourceSha256: moeExpertVerus.primarySourceSha256,
-      evidenceId: moeExpertVerus.id,
+      code: moeExpertReference,
+      sourcePath: "examples/moe_grouped_expert_general_v1/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "e90e671831b8cef17960c276b930e39257c4399a64034554c9cabb4dbca494b7",
       explanatory: false,
       notice:
-        "This historical fixed-profile model proves index bounds, padding separation, disjoint write owners, inverse-slot admission, and host phase order. It does not cover the current dynamic kernel or prove numerical or machine semantics.",
+        "Safe sequential Rust defines dynamic routed rows, reduction and output extents, strides, expert selection, bias, gate, and preserved padding.",
+    },
+    {
+      language: "rust",
+      code: referenceRefinementProof,
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
+      explanatory: false,
+      notice:
+        "This verified workload-neutral theorem composes exact semantic equality and hierarchy ownership. The historical expert proof remains in the evidence catalog; dynamic arithmetic, routing-to-expert composition, and source-to-ISA refinement remain open.",
     },
     {
       language: "rust",
@@ -181,7 +211,7 @@ const expertCompute: Lesson = {
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "1bcd872f696a9fd94da1f1f445bc07cbf64d3bfba2de87961204b9849a07c55e",
+        "24838bcdd753efa2d5fac08798c10c4b75176cb18eee88bd05c20af4af04cb1d",
       explanatory: false,
       notice:
         "The host owns deterministic top-2 routing, packs each expert group, launches the same generated kernel for every nonempty expert, combines route-weighted outputs, and compares against an independent CPU oracle. Unsafe is confined to the host FFI boundary.",

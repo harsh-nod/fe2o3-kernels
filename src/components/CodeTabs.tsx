@@ -6,7 +6,8 @@ import { HighlightedCode } from "./HighlightedCode";
 export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
   const [active, setActive] = useState(0);
   const [copied, setCopied] = useState(false);
-  const current = tabs[active];
+  const activeIndex = active < tabs.length ? active : 0;
+  const current = tabs[activeIndex];
 
   const copy = async () => {
     await navigator.clipboard.writeText(current.code);
@@ -18,7 +19,7 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
     const delta = event.key === "ArrowRight" ? 1 : -1;
-    const next = (active + delta + tabs.length) % tabs.length;
+    const next = (activeIndex + delta + tabs.length) % tabs.length;
     setActive(next);
     document.getElementById(`code-tab-${next}`)?.focus();
   };
@@ -31,10 +32,10 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
             id={`code-tab-${index}`}
             type="button"
             role="tab"
-            aria-selected={active === index}
+            aria-selected={activeIndex === index}
             aria-controls="lesson-code-panel"
-            tabIndex={active === index ? 0 : -1}
-            className={active === index ? "active" : ""}
+            tabIndex={activeIndex === index ? 0 : -1}
+            className={activeIndex === index ? "active" : ""}
             onClick={() => setActive(index)}
             key={tab.kind}
           >
@@ -76,7 +77,7 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
       <pre
         id="lesson-code-panel"
         role="tabpanel"
-        aria-labelledby={`code-tab-${active}`}
+        aria-labelledby={`code-tab-${activeIndex}`}
       >
         <HighlightedCode code={current.code} language={current.language} />
       </pre>

@@ -87,7 +87,8 @@ export type SourceMilestoneId =
   | "moe-top2-source-v1"
   | "moe-top2-verus-v1"
   | "moe-expert-source-v1"
-  | "moe-expert-verus-v1";
+  | "moe-expert-verus-v1"
+  | "reference-refinement-v1";
 
 export type CodeTabEvidenceId =
   | StagedEvidenceId
@@ -169,7 +170,13 @@ export type LessonSection =
   | NarrativeLessonSection
   | StagedEvidenceLessonSection;
 
-export type CodeTabKind = "kernel" | "verus" | "host" | "result";
+export type CodeTabKind =
+  | "kernel"
+  | "reference"
+  | "verus"
+  | "comparison"
+  | "host"
+  | "result";
 
 export interface CodeTab {
   kind: CodeTabKind;

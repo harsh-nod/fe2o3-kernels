@@ -2,15 +2,20 @@ import { currentState } from "./current-state";
 import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
+import flashAttentionReference from "../../examples/flash_attention_general_v1/src/reference.rs?raw";
 import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel.rs?raw";
 import rowSoftmaxHost from "../../examples/row_softmax_general_v1/src/main.rs?raw";
-import flashAttentionProof from "../../examples/flash_attention_v1/verus/flash_attention_v1.rs?raw";
+import rowSoftmaxReference from "../../examples/row_softmax_general_v1/src/reference.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.rs?raw";
 import dynamicGemmHost from "../../examples/tiled_gemm_general_v1/src/main.rs?raw";
 import dynamicGemmHip from "../../examples/tiled_gemm_general_v1/benchmark_hip.cpp?raw";
+import dynamicGemmReference from "../../examples/tiled_gemm_general_v1/src/reference.rs?raw";
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
+import wave64CollectivesReference from "../../examples/wave64_collectives_v1/src/oracle.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
+import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/reference.rs?raw";
+import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
   currentImplementationReference,
@@ -18,7 +23,7 @@ import {
   type CurriculumModule,
   type Lesson,
 } from "./model";
-import { completeTabs, noHost, resultText } from "./shared";
+import { completeReferenceTabs, noHost, resultText } from "./shared";
 import {
   sourceMilestoneClaim,
   sourceMilestoneRecord,
@@ -49,9 +54,6 @@ const collectivesSource = sourceMilestoneRecord(
 );
 const synchronizationSource = sourceMilestoneRecord(
   "workgroup-sync-source-v1",
-);
-const flashAttentionVerus = sourceMilestoneRecord(
-  "flash-attention-verus-v1",
 );
 const gemmProtectedResult = resultText(
   "gpu-observed",
@@ -102,80 +104,6 @@ const dynamicGemmResult = resultText(
     "Protected release publication and complete source-to-machine refinement remain separate.",
   ].join("\n"),
 );
-
-const rowSoftmaxAddressModel = `pub open spec fn lane_input_index_v1(lane: nat) -> nat { lane }
-pub open spec fn lane_scratch_index_v1(lane: nat) -> nat { lane }
-pub open spec fn lane_output_index_v1(lane: nat) -> nat { lane }
-
-pub open spec fn element_address_v1(base: int, index: nat) -> int {
-    base + element_bytes_v1() * index
-}
-
-pub open spec fn row_region_fits_u64_v1(base: int) -> bool {
-    0 <= base && base + row_bytes_v1() <= 0x1_0000_0000_0000_0000int
-}
-
-pub open spec fn separate_rows_v1(input_base: int, output_base: int) -> bool {
-    input_base + row_bytes_v1() <= output_base
-        || output_base + row_bytes_v1() <= input_base
-}
-
-pub proof fn active_lane_indices_are_in_bounds_v1(active: Seq<bool>, lane: nat)
-    requires
-        explicit_activity_mask_v1(active),
-        lane < row_elements_v1(),
-    ensures
-        active[lane as int],
-        lane_input_index_v1(lane) < row_elements_v1(),
-        lane_scratch_index_v1(lane) < row_elements_v1(),
-        lane_output_index_v1(lane) < row_elements_v1(),
-{
-}
-
-pub proof fn active_element_address_is_in_row_v1(base: int, lane: nat)
-    requires
-        row_region_fits_u64_v1(base),
-        lane < row_elements_v1(),
-    ensures
-        base <= element_address_v1(base, lane),
-        element_address_v1(base, lane) + element_bytes_v1() <= base + row_bytes_v1(),
-        element_address_v1(base, lane) + element_bytes_v1()
-            <= 0x1_0000_0000_0000_0000int,
-{
-}
-
-pub proof fn separate_input_and_output_accesses_do_not_alias_v1(
-    input_base: int,
-    output_base: int,
-    reader: nat,
-    writer: nat,
-)
-    requires
-        row_region_fits_u64_v1(input_base),
-        row_region_fits_u64_v1(output_base),
-        separate_rows_v1(input_base, output_base),
-        reader < row_elements_v1(),
-        writer < row_elements_v1(),
-    ensures
-        element_address_v1(input_base, reader)
-            != element_address_v1(output_base, writer),
-{
-    active_element_address_is_in_row_v1(input_base, reader);
-    active_element_address_is_in_row_v1(output_base, writer);
-}
-
-pub proof fn distinct_output_element_addresses_v1(base: int, left: nat, right: nat)
-    requires
-        row_region_fits_u64_v1(base),
-        left < row_elements_v1(),
-        right < row_elements_v1(),
-        left != right,
-    ensures
-        element_address_v1(base, lane_output_index_v1(left))
-            != element_address_v1(base, lane_output_index_v1(right)),
-{
-}
-`;
 
 const rowSoftmaxResult = resultText(
   "gpu-observed",
@@ -235,7 +163,7 @@ function exactDynamicGemmHostTab() {
     sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
     sourceCommit: dynamicGemmSource.commit,
     sourceSha256:
-      "c324f239a9e5641c1861cbbb3800e8398cebad48bb125473b2b75ab85d3d4fc7",
+      "6a67bb4fbf8a097389ce184764db2734a4b88037ef65ac607c12effede331a05",
     evidenceId: dynamicGemmSource.id,
     explanatory: false,
   };
@@ -322,7 +250,7 @@ const collectives: Lesson = {
     narrativeSection("reductions-scans/scope"),
     narrativeSection("reductions-scans/scan"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: wave64CollectivesKernel,
@@ -331,6 +259,17 @@ const collectives: Lesson = {
       sourceSha256: collectivesSource.primarySourceSha256,
       evidenceId: collectivesSource.id,
       explanatory: false,
+    },
+    {
+      language: "rust",
+      code: wave64CollectivesReference,
+      sourcePath: "examples/wave64_collectives_v1/src/oracle.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "837aae894e5c04da4b598e45f344f2e5df0aa8bc6155acf0bf05809ecd86d407",
+      explanatory: false,
+      notice:
+        "This safe sequential oracle defines the complete masked reduction and scan result consumed by the generic reference-refinement obligation.",
     },
     {
       language: "bash",
@@ -411,7 +350,7 @@ const synchronization: Lesson = {
     narrativeSection("lds-barriers-atomics/epochs"),
     narrativeSection("lds-barriers-atomics/atomics"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: workgroupSyncKernel,
@@ -420,6 +359,17 @@ const synchronization: Lesson = {
       sourceSha256: synchronizationSource.primarySourceSha256,
       evidenceId: synchronizationSource.id,
       explanatory: false,
+    },
+    {
+      language: "rust",
+      code: workgroupSyncReference,
+      sourcePath: "examples/workgroup_sync_v1/src/contract.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "f1b32bea55b8a6b908caaeb3f08d069bf969231735966b81bc67aa0f87ed421c",
+      explanatory: false,
+      notice:
+        "These safe sequential LDS-reduction and scoped-atomic oracles define the observable results; synchronization safety remains a separate compiler obligation.",
     },
     {
       language: "bash",
@@ -502,7 +452,32 @@ const gemmMapping: Lesson = {
   ],
   tabs: [
     { kind: "kernel", label: "Kernel", ...exactDynamicGemmKernelTab() },
-    { kind: "verus", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
+    {
+      kind: "reference",
+      label: "Safe CPU reference",
+      language: "rust",
+      code: dynamicGemmReference,
+      sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
+      explanatory: false,
+    },
+    {
+      kind: "verus",
+      label: "Verus refinement",
+      language: "rust",
+      code: referenceRefinementProof,
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
+      evidenceId: "reference-refinement-v1",
+      explanatory: false,
+      notice:
+        "This verified theorem is workload-neutral: exact per-coordinate semantic equality plus exact hierarchy ownership yields the complete CPU-reference output. It does not by itself prove GEMM arithmetic or rustc-to-ISA translation.",
+    },
+    { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
     {
       kind: "result",
@@ -556,8 +531,17 @@ const gemmProof: Lesson = {
     },
     narrativeSection("gemm-proof-plan/evidence"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     exactTiledGemmKernelTab(),
+    {
+      language: "rust",
+      code: dynamicGemmReference,
+      sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
+      explanatory: false,
+    },
     exactGemmProofTab(),
     exactGemmHostTab(),
     {
@@ -605,7 +589,7 @@ const softmax: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 318c064c3a0aa8b03654f95461e3c894395a5d47; this is evidence for the four published cases, not a universal proof or performance result.",
+          note: "Qualification ran from current compiler main af0fd523e3b774377a9c5192cf0511e34fa19735; this is evidence for the four published cases, not a universal proof or performance result.",
         },
       ),
     },
@@ -614,26 +598,37 @@ const softmax: Lesson = {
     narrativeSection("softmax-invariant/spec"),
     narrativeSection("softmax-invariant/proof"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: rowSoftmaxKernel,
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "13c02223d099abfdc8415c3149721b6e98170da69f0725d39a45186a83116314",
+        "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
     },
     {
       language: "rust",
-      code: rowSoftmaxAddressModel,
-      sourcePath: "examples/row_softmax_v1/verus/row_softmax_v1.rs",
-      sourceCommit: "dd841720591003f418d056b21a319088ce4559d6",
+      code: rowSoftmaxReference,
+      sourcePath: "examples/row_softmax_general_v1/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "cacf81e02eb071cc29b1124811e911097fd62e7d29556dda8380418a631f5db5",
-      explanatory: true,
+        "8ff11a0aa3806c2fe7d5f5aab8c5b055316039de718b28d69c6042e439bed73a",
+      explanatory: false,
       notice:
-        "This historical fixed-64 address model remains useful for its local ownership obligations. It does not prove the current dynamic row-softmax kernel or its source-to-machine lowering.",
+        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy.",
+    },
+    {
+      language: "rust",
+      code: referenceRefinementProof,
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
+      explanatory: false,
+      notice:
+        "This verified workload-neutral theorem composes exact semantic equality and hierarchy ownership. The current compiler enforces that join, but complete dynamic softmax arithmetic and rustc-to-ISA refinement remain open.",
     },
     {
       language: "rust",
@@ -641,7 +636,7 @@ const softmax: Lesson = {
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "6bba6a37ce1db788207c59469a69c4a051ee7399c5da880041f650747be924ad",
+        "8df056afb9e91aa3e42b4372860431612a77ef71b0abb7ebdd088c7210a5a1bd",
       explanatory: false,
       notice:
         "The kernel remains entirely safe Rust. Unsafe is confined to the ordinary host FFI boundaries for loading a code object and launching its generated ABI.",
@@ -692,7 +687,7 @@ const flash: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main 318c064c3a0aa8b03654f95461e3c894395a5d47; no tuned-library performance claim is made.",
+          note: "Qualification ran from current compiler main af0fd523e3b774377a9c5192cf0511e34fa19735; no tuned-library performance claim is made.",
         },
       ),
     },
@@ -703,7 +698,7 @@ const flash: Lesson = {
     narrativeSection("flash-attention/effects"),
     narrativeSection("flash-attention/closure"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: flashAttentionKernel,
@@ -715,14 +710,25 @@ const flash: Lesson = {
     },
     {
       language: "rust",
-      code: flashAttentionProof,
-      sourcePath: flashAttentionVerus.primarySourcePath,
-      sourceCommit: flashAttentionVerus.commit,
-      sourceSha256: flashAttentionVerus.primarySourceSha256,
-      evidenceId: flashAttentionVerus.id,
+      code: flashAttentionReference,
+      sourcePath: "examples/flash_attention_general_v1/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "f14413bd3662973a8803cdfdd23e6c6b23facc9d4c627e4e91d7a1e63ee7f203",
       explanatory: false,
       notice:
-        "This historical fixed-profile model proves the online recurrence and ownership obligations. It does not cover the dynamic executable kernel, exponential-law or IEEE FP32/OCML refinement, or source-to-machine refinement.",
+        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding; exact floating-point lowering remains a separate numerical-refinement obligation.",
+    },
+    {
+      language: "rust",
+      code: referenceRefinementProof,
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
+      explanatory: false,
+      notice:
+        "This verified workload-neutral theorem composes exact semantic equality and hierarchy ownership. The pinned FlashAttention model remains linked in the evidence catalog; exponential-law, IEEE FP32/OCML, and source-to-ISA refinement remain open.",
     },
     {
       language: "rust",
@@ -730,7 +736,7 @@ const flash: Lesson = {
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "24ab06c4e5d3a6ffd4d859f3a4744106325d7d7cdcc7868ddd0fd9a294243e36",
+        "d119e41e3a15e0eb3e7866a439c23203b0e4983b3bd53d3fdc585e3bde2a4a25",
       explanatory: false,
       notice:
         "The host builds causal and padding masks, launches the generated ABI, compares every active output with an independent reference, and checks output padding. Unsafe is confined to the host code-object and launch FFI boundary.",

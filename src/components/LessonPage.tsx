@@ -87,7 +87,7 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
           Tabs are separate on purpose. Read the evidence label before using a
           snippet as executable source.
         </p>
-        <CodeTabs tabs={lesson.tabs} />
+        <CodeTabs key={lesson.id} tabs={lesson.tabs} />
       </section>
 
       <section className="assurance-summary" aria-labelledby="assurance-heading">

@@ -5,6 +5,8 @@ import cpuSimulationKernel from "../../examples/cpu_simulation_kernel.rs?raw";
 import cpuSimulationRequest from "../../examples/cpu_simulation_request.json?raw";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
+import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
+import safeCpuReferences from "../../examples/verus_vecadd/src/reference.rs?raw";
 import vecaddHost from "../../examples/vecadd_host.rs?raw";
 import vecaddKernel from "../../examples/vecadd_kernel.rs?raw";
 import {
@@ -14,7 +16,13 @@ import {
   type CurriculumModule,
   type Lesson,
 } from "./model";
-import { completeTabs, noKernel, noProof, resultText } from "./shared";
+import {
+  completeReferenceTabs,
+  completeTabs,
+  noKernel,
+  noProof,
+  resultText,
+} from "./shared";
 
 const genericCommand = "scripts/ci-local.sh generic";
 const rocmCompileCommand =
@@ -192,11 +200,22 @@ const fill: Lesson = {
     narrativeSection("first-fill/kernel-shape"),
     narrativeSection("first-fill/trust"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: fillKernel,
       sourcePath: "examples/fill/src/main.rs",
+    },
+    {
+      language: "rust",
+      code: safeCpuReferences,
+      sourcePath: "examples/verus_vecadd/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "5fd27aaa8e84786e83438ac7c0800a599c41704286131599dab2bb8a21b8c989",
+      explanatory: false,
+      notice:
+        "The generic safe map reference specializes to fill; no GPU capability or unsafe code is involved.",
     },
     {
       language: "rust",
@@ -286,16 +305,33 @@ const vecadd: Lesson = {
     narrativeSection("typed-vecadd/same-body"),
     narrativeSection("typed-vecadd/typed-host"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: vecaddKernel,
       sourcePath: "examples/vecadd/src/vecadd_body.rs",
     },
     {
-      language: "bash",
-      code: verusCommand,
-      sourcePath: "examples/verus_vecadd/run-verus.sh",
+      language: "rust",
+      code: safeCpuReferences,
+      sourcePath: "examples/verus_vecadd/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "5fd27aaa8e84786e83438ac7c0800a599c41704286131599dab2bb8a21b8c989",
+      explanatory: false,
+      notice:
+        "The generic safe zip reference specializes to vecadd and defines the sequential observable output.",
+    },
+    {
+      language: "rust",
+      code: referenceRefinementProof,
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
+      explanatory: false,
+      notice:
+        "The workload-neutral Verus theorem composes exact per-coordinate equality with hierarchy ownership; the shared-body suite supplies vecadd's local bounds and write facts.",
     },
     {
       language: "rust",
@@ -370,7 +406,7 @@ const cpuSimulation: Lesson = {
     narrativeSection("cpu-semantic-simulation/pipeline"),
     narrativeSection("cpu-semantic-simulation/evidence-boundary"),
   ],
-  tabs: completeTabs(
+  tabs: completeReferenceTabs(
     {
       language: "rust",
       code: cpuSimulationKernel,
@@ -383,10 +419,25 @@ const cpuSimulation: Lesson = {
     },
     {
       language: "rust",
-      code: noProof,
-      explanatory: true,
+      code: safeCpuReferences,
+      sourcePath: "examples/verus_vecadd/src/reference.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "5fd27aaa8e84786e83438ac7c0800a599c41704286131599dab2bb8a21b8c989",
+      explanatory: false,
       notice:
-        "No Verus theorem is claimed. This tab keeps dynamic simulator evidence separate from proof evidence.",
+        "The simulator's fill program is compared with the same safe sequential fill reference.",
+    },
+    {
+      language: "rust",
+      code: referenceRefinementProof,
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
+      explanatory: false,
+      notice:
+        "The generic theorem proves composition of semantic equality and exact ownership. It does not upgrade observation-only CPU simulation into GPU hardware evidence.",
     },
     {
       language: "bash",

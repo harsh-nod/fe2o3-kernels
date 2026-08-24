@@ -74,12 +74,12 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     await user.click(screen.getByRole("tab", { name: "Verus proof" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "separate_input_and_output_accesses_do_not_alias_v1",
+      "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
     );
     await user.click(screen.getByRole("tab", { name: "Host" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
@@ -105,7 +105,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
-    expect(screen.getByText("318c064c3a0a")).toBeInTheDocument();
+    expect(screen.getByText("af0fd523e3b7")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -115,7 +115,7 @@ describe("application shell", () => {
       "Both the commit and tree are required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "935bae695bb8a89762d2a44ccf027b01cee91e16",
+      "37ec6083aba26f3057bb21f3a51c619c17bceb49",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -239,7 +239,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler main at 318c064c3a",
+        name: "Compiler main at af0fd523e3",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -251,7 +251,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open current compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/318c064c3a0aa8b03654f95461e3c894395a5d47",
+      "https://github.com/harsh-nod/fe2o3/tree/af0fd523e3b774377a9c5192cf0511e34fa19735",
     );
   });
 });

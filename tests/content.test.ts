@@ -153,6 +153,36 @@ describe("curriculum integrity", () => {
     }
   });
 
+  it("pairs every executable kernel lesson with a safe CPU reference and Verus obligation", () => {
+    const referenceLessonIds = [
+      "first-fill",
+      "typed-vecadd",
+      "cpu-semantic-simulation",
+      "reductions-scans",
+      "lds-barriers-atomics",
+      "gemm-tiling",
+      "gemm-proof-plan",
+      "softmax-invariant",
+      "flash-attention",
+      "moe-routing",
+      "moe-expert-compute",
+    ];
+
+    for (const lessonId of referenceLessonIds) {
+      const lesson = lessons.find((entry) => entry.id === lessonId);
+      const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
+      const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
+      expect(reference, lessonId).toBeDefined();
+      expect(reference?.language, lessonId).toBe("rust");
+      expect(reference?.code, lessonId).not.toMatch(/\bunsafe\b/u);
+      expect(reference?.code.length, lessonId).toBeGreaterThan(100);
+      expect(proof, lessonId).toBeDefined();
+      expect(proof?.code, lessonId).not.toContain(
+        "No Verus theorem is claimed for this lesson",
+      );
+    }
+  });
+
   it("keeps CPU semantic simulation exact and non-hardware", () => {
     const lesson = lessons.find(
       (candidate) => candidate.id === "cpu-semantic-simulation",
@@ -237,7 +267,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       sourceSha256:
         "1f76284197d14acb79ace32c5b78ef2914cf845418cb785a6fca86285db8ab5a",
       evidenceId: "dynamic-gemm-executable-source-v1",
@@ -257,12 +287,33 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).not.toMatch(/\bunsafe\b/u);
     expect(lesson?.diagram).toBe("gemm-scalar");
 
-    const hip = lesson?.tabs.find((tab) => tab.kind === "verus");
+    const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
+    expect(reference).toMatchObject({
+      label: "Safe CPU reference",
+      sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      explanatory: false,
+    });
+    expect(reference?.code).toContain("#![forbid(unsafe_code)]");
+
+    const refinement = lesson?.tabs.find((tab) => tab.kind === "verus");
+    expect(refinement).toMatchObject({
+      label: "Verus refinement",
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      evidenceId: "reference-refinement-v1",
+      explanatory: false,
+    });
+    expect(refinement?.code).toContain(
+      "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
+    );
+
+    const hip = lesson?.tabs.find((tab) => tab.kind === "comparison");
     expect(hip).toMatchObject({
       label: "Equivalent HIP",
       language: "cpp",
       sourcePath: "examples/tiled_gemm_general_v1/benchmark_hip.cpp",
-      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       sourceSha256:
         "24233c267c1bad3bde9c4897fb063d2e48d6d2fa07439dd04f4d0c14bd2ea84c",
       explanatory: false,
@@ -272,9 +323,9 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       sourceSha256:
-        "c324f239a9e5641c1861cbbb3800e8398cebad48bb125473b2b75ab85d3d4fc7",
+        "6a67bb4fbf8a097389ce184764db2734a4b88037ef65ac607c12effede331a05",
       explanatory: false,
     });
     expect(host?.code).toContain("multi-workgroup-dynamic-k");
@@ -560,6 +611,13 @@ describe("curriculum integrity", () => {
       "FE2O3-RACE-002",
       "FE2O3-RACE-003",
       "FE2O3-RACE-004",
+      "FE2O3-OWN-001",
+      "FE2O3-OWN-002",
+      "FE2O3-OWN-003",
+      "FE2O3-OWN-004",
+      "FE2O3-OWN-005",
+      "FE2O3-OWN-006",
+      "FE2O3-OWN-007",
       "FE2O3-BARRIER-000",
       "FE2O3-BARRIER-001",
       "FE2O3-BARRIER-002",
@@ -570,9 +628,11 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-000",
       "FE2O3-SEMANTIC-001",
       "FE2O3-SEMANTIC-002",
+      "FE2O3-SEMANTIC-003",
+      "FE2O3-SEMANTIC-004",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(9);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(11);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(15);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(14);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
     const failureGallery = semanticFailures.blocks.find(
@@ -580,7 +640,7 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(18);
+    expect(failureGallery.examples).toHaveLength(21);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
     expect(failureGallery.intro).toContain("tensor layout first");
     expect(failureGallery.intro).toContain("do not imply that users write a separate kernel DSL");
@@ -603,6 +663,9 @@ describe("curriculum integrity", () => {
       "barrier_divergent",
       "workgroup_uninitialized",
       "semantic_mismatch",
+      "hierarchy_coverage_hole",
+      "reference_evidence_missing",
+      "reference_expression_mismatch",
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
@@ -637,9 +700,9 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       sourceSha256:
-        "13c02223d099abfdc8415c3149721b6e98170da69f0725d39a45186a83116314",
+        "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
     });
     expect(createHash("sha256").update(kernel?.code ?? "").digest("hex")).toBe(
@@ -656,21 +719,20 @@ describe("curriculum integrity", () => {
 
     const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
     expect(proof).toMatchObject({
-      sourcePath: "examples/row_softmax_v1/verus/row_softmax_v1.rs",
-      sourceCommit: "dd841720591003f418d056b21a319088ce4559d6",
-      explanatory: true,
+      sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      explanatory: false,
     });
-    expect(proof?.code).toContain("active_element_address_is_in_row_v1");
     expect(proof?.code).toContain(
-      "separate_input_and_output_accesses_do_not_alias_v1",
+      "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
     );
 
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
-      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       sourceSha256:
-        "6bba6a37ce1db788207c59469a69c4a051ee7399c5da880041f650747be924ad",
+        "8df056afb9e91aa3e42b4372860431612a77ef71b0abb7ebdd088c7210a5a1bd",
       explanatory: false,
     });
     expect(host?.code).toContain("grid_dim: (case.rows, 1, 1)");
@@ -707,6 +769,7 @@ describe("curriculum integrity", () => {
       "moe-top2-verus-v1",
       "moe-expert-source-v1",
       "moe-expert-verus-v1",
+      "reference-refinement-v1",
     ]);
     expect(validateSourceMilestoneCatalog()).toEqual([]);
 
@@ -718,7 +781,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/wave64_collectives_v1/src/kernel.rs",
         sha256:
           "7c6ead1e7c01a61a8f31a010c9e8cb9bd1c21a905ba61e9d90c6c077c748ffd4",
-        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+        sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       },
       {
         lessonId: "lds-barriers-atomics",
@@ -727,7 +790,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/workgroup_sync_v1/src/kernel.rs",
         sha256:
           "991542b783a144598be967ae1671609b2a02a812ca084c3bf6358a9f70968105",
-        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+        sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       },
       {
         lessonId: "moe-routing",
@@ -736,7 +799,7 @@ describe("curriculum integrity", () => {
         bundledPath: "examples/moe_top2_v1/src/kernel.rs",
         sha256:
           "0e4570bd52866dd23b8b00d83983aadc818c77580de8f7f5e2982e12a57e20e2",
-        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+        sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       },
     ] as const;
 
@@ -806,29 +869,12 @@ describe("curriculum integrity", () => {
 
     const proofProfiles = [
       {
-        lessonId: "flash-attention",
-        evidenceId: "flash-attention-verus-v1",
-        bundledPath: "examples/flash_attention_v1/verus/flash_attention_v1.rs",
-        sha256:
-          "8fa4dce0bb6d60b24c0a61f9eb525bd5b90234689dbc215438499404cab8a21c",
-        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
-      },
-      {
         lessonId: "moe-routing",
         evidenceId: "moe-top2-verus-v1",
         bundledPath: "examples/moe_top2_v1/verus/moe_top2_v1.rs",
         sha256:
           "4a5a60b66284567522ab3f07d93309c7002abf75870f4aa9db752f8260cb296c",
-        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
-      },
-      {
-        lessonId: "moe-expert-compute",
-        evidenceId: "moe-expert-verus-v1",
-        bundledPath:
-          "examples/moe_expert_v1/verus/moe_expert_memory_v1.rs",
-        sha256:
-          "617e6741c5f1415a8e792e5e36e3526c04ba18903438e3af178bb107766383d1",
-        sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+        sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       },
     ] as const;
     for (const profile of proofProfiles) {
@@ -1744,12 +1790,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-24",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
-      eventualPublicTree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
+      eventualPublicCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      eventualPublicTree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
-        requiredTree: "935bae695bb8a89762d2a44ccf027b01cee91e16",
+        requiredCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+        requiredTree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2271,9 +2317,9 @@ describe("implementation progress integrity", () => {
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       sourceSha256:
-        "24ab06c4e5d3a6ffd4d859f3a4744106325d7d7cdcc7868ddd0fd9a294243e36",
+        "d119e41e3a15e0eb3e7866a439c23203b0e4983b3bd53d3fdc585e3bde2a4a25",
       explanatory: false,
     });
     expect(host?.code).toContain("tails-and-strides");
@@ -2377,7 +2423,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      "af0fd523e3b774377a9c5192cf0511e34fa19735",
     );
 
     const lesson = curriculum
@@ -2409,9 +2455,9 @@ describe("implementation progress integrity", () => {
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertHost).toMatchObject({
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
-      sourceCommit: "318c064c3a0aa8b03654f95461e3c894395a5d47",
+      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
       sourceSha256:
-        "1bcd872f696a9fd94da1f1f445bc07cbf64d3bfba2de87961204b9849a07c55e",
+        "24838bcdd753efa2d5fac08798c10c4b75176cb18eee88bd05c20af4af04cb1d",
       explanatory: false,
     });
     expect(expertHost?.code).toContain("launch_expert");
@@ -3024,7 +3070,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"318c064c3a0aa8b03654f95461e3c894395a5d47");
+    expect(mapping).toContain("sourceCommit\":\"af0fd523e3b774377a9c5192cf0511e34fa19735");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family flags remain false");

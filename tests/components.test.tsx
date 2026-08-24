@@ -27,13 +27,34 @@ describe("code tabs", () => {
     const kernelTab = screen.getByRole("tab", { name: "Kernel" });
     kernelTab.focus();
     await user.keyboard("{ArrowRight}");
-    expect(screen.getByRole("tab", { name: "Verus proof" })).toHaveAttribute(
+    expect(screen.getByRole("tab", { name: "Safe CPU reference" })).toHaveAttribute(
       "aria-selected",
       "true",
     );
     await user.click(screen.getByRole("button", { name: "Copy code" }));
     expect(writeText).toHaveBeenCalledWith(tabs[1].code);
     expect(screen.getByText("Copied")).toBeInTheDocument();
+  });
+
+  it("resets safely when a new lesson has fewer tabs", async () => {
+    const user = userEvent.setup();
+    const sixTabs = lessons.find((lesson) => lesson.id === "gemm-tiling")!.tabs;
+    const fiveTabs = lessons.find((lesson) => lesson.id === "gemm-proof-plan")!.tabs;
+    const { rerender } = render(<CodeTabs tabs={sixTabs} />);
+
+    await user.click(screen.getByRole("tab", { name: "MI300X result" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "PASS multi-workgroup-dynamic-k",
+    );
+
+    rerender(<CodeTabs tabs={fiveTabs} />);
+    expect(screen.getByRole("tab", { name: "Kernel" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "pub fn tiled_gemm_lds_slice1",
+    );
   });
 });
 
@@ -91,7 +112,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Eighteen representative compile-time failures",
+        name: "Twenty-one representative compile-time failures",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -99,7 +120,7 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(18);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(21);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
     expect(screen.getByText("Swapped MFMA operand roles")).toBeInTheDocument();
     expect(screen.getByText("B fragment uses the wrong transpose")).toBeInTheDocument();
@@ -112,6 +133,9 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Invocation-divergent barrier")).toBeInTheDocument();
     expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
     expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
+    expect(screen.getByText("The grid leaves one output coordinate unwritten")).toBeInTheDocument();
+    expect(screen.getByText("A CPU-reference equality has no Verus evidence")).toBeInTheDocument();
+    expect(screen.getByText("The GPU expression disagrees with the CPU reference")).toBeInTheDocument();
     expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
     expect(screen.getByText("Supported safe ownership mappings")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "Shifted<Index1D, N>" })).toBeInTheDocument();
@@ -119,7 +143,7 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
     expect(screen.getByText("Stable pass diagnostic catalog")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-RACE-004" })).toBeInTheDocument();
-    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(14);
+    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(17);
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002" })).toBeInTheDocument();
@@ -132,7 +156,7 @@ describe("lesson section rendering policy", () => {
     ).toHaveLength(4);
     expect(
       document.querySelectorAll(".compile-failure-source code.language-text"),
-    ).toHaveLength(14);
+    ).toHaveLength(17);
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();

@@ -184,7 +184,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires commit 318c064c3a0aa8b03654f95461e3c894395a5d47, tree 935bae695bb8a89762d2a44ccf027b01cee91e16. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical execution and proof evidence remains independently pinned: the protected GEMM observation stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A evidence stays at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. Every displayed attributed kernel source is pinned to an exact immutable source milestone; the dynamic strided GEMM source at this gate compiles and passes four MI300X qualification cases; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
+        "text": "The checked-in publication gate requires commit af0fd523e3b774377a9c5192cf0511e34fa19735, tree 37ec6083aba26f3057bb21f3a51c619c17bceb49. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical execution and proof evidence remains independently pinned: the protected GEMM observation stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A evidence stays at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. Every displayed attributed kernel source is pinned to an exact immutable source milestone; the dynamic strided GEMM source at this gate compiles and passes four MI300X qualification cases; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
       },
       {
         "type": "callout",
@@ -597,6 +597,18 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "callout",
+        "tone": "proof",
+        "title": "Safe CPU reference join",
+        "text": "A kernel may declare one exact FunctionalRefinement obligation linking a target-neutral GPU semantic expression to a safe sequential Rust reference expression. The semantic pass requires one exact proof.obligation, one exact Proved proof.evidence_ref at the Source boundary, and one proof.require_refinement with equivalent canonical expressions. Missing evidence is FE2O3-SEMANTIC-003; duplicate, mismatched, wrong-property, or orphan evidence is FE2O3-SEMANTIC-004; unequal expressions are FE2O3-SEMANTIC-001. The generic Verus composition theorem then states that per-coordinate equality plus exact hierarchy ownership yields the complete reference output. These checks never inspect a GEMM, softmax, attention, routing, or expert name."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Declared proof is not authenticated proof",
+        "text": "The current production recipe can materialize exact proof identities and the compiler rejects malformed joins, but it does not yet consume an unforgeable Verus certificate. The proof dialect metadata therefore grants no compiler-refinement, artifact, publication, load, or launch authority. Complete functional correctness additionally requires authentication of the Verus run, a proved correspondence from the safe Rust reference and kernel source into these semantic expressions, preservation through every lowering, a numerical model where relevant, and runtime satisfaction of dynamic preconditions."
+      },
+      {
+        "type": "callout",
         "tone": "boundary",
         "title": "Kernel tabs are current safe source",
         "text": "Every attributed Rust Kernel tab is byte-pinned to the current dual-repository compiler main and contains no unsafe block. Compiler-issued capabilities provide lane, ownership, LDS, barrier, atomic, matrix, and math access through safe surfaces. Historical proof, HSACO, host, and GPU observations retain their original commits and do not transfer authority to a repinned source merely because the algorithm is related."
@@ -740,7 +752,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "compile-failures",
-        "heading": "Eighteen representative compile-time failures",
+        "heading": "Twenty-one representative compile-time failures",
         "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence: tensor layout first, then bounds, atomics, races, barriers, workgroup-memory epochs, and declared semantic refinement. Text snippets are compact schematic semantic IR; they do not imply that users write a separate kernel DSL, and the named compiler tests contain the exact textual PLIRON. Every displayed FE2O3 code, status, and pass owner follows the current stable diagnostics. These cards are representative rather than an exhaustive list of every source-admission, structural, lowering, or target failure. Rejected and Incomplete both stop before target lowering or artifact emission.",
         "examples": [
           {
@@ -762,7 +774,7 @@ const narrativeRegistry = deepFreeze({
             "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  a.map = (lane % 16, 4 * (lane / 16) + component)\n  b.map = (lane % 16, 4 * (lane / 16) + component)  // should be (k, column)",
             "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor B lane/component mapping does not match the target operand profile",
             "property": "TensorOperandMap",
-            "stage": "generic PLIRON pass 1/7",
+            "stage": "generic PLIRON pass 1/8",
             "code": "FE2O3-TENSOR-LAYOUT-001",
             "enforcement": "Tensor-layout PLIRON lit; mandatory production pass",
             "caught": "The verifier compares the bounded lane/component affine map for role B with the selected instruction profile. This detects a structurally valid fragment whose registers name the wrong matrix coordinates, without recognizing GEMM or any other workload."
@@ -774,7 +786,7 @@ const narrativeRegistry = deepFreeze({
             "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  accumulator.map = (4 * (lane / 16) + (3 - component), lane % 16)",
             "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor Accumulator lane/component mapping does not match the target operand profile",
             "property": "TensorAccumulatorMap",
-            "stage": "generic PLIRON pass 1/7",
+            "stage": "generic PLIRON pass 1/8",
             "code": "FE2O3-TENSOR-LAYOUT-001",
             "enforcement": "Tensor-layout PLIRON lit; mandatory production pass",
             "caught": "Every coordinate can remain in bounds while component order is wrong. Exhaustive bounded coverage and multiplicity checks compare accumulator coordinates across every active lane and component, so an in-bounds permutation is still a compile-time error."
@@ -786,7 +798,7 @@ const narrativeRegistry = deepFreeze({
             "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  a.register_distribution = canonical\n  a.storage = lds_xor8\n  b.register_distribution = canonical\n  b.storage = direct",
             "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor A LDS swizzle is incompatible with its layout",
             "property": "TensorStorageLayout",
-            "stage": "generic PLIRON pass 1/7",
+            "stage": "generic PLIRON pass 1/8",
             "code": "FE2O3-TENSOR-LAYOUT-001",
             "enforcement": "Tensor-layout Kernel IR unit; shared mandatory production verifier",
             "caught": "Register distribution and storage provenance are checked independently. A direct B fragment may legally meet an XOR4-staged A fragment after both loads produce the canonical register map; an unsupported transform on either operand is rejected on its own evidence."
@@ -798,7 +810,7 @@ const narrativeRegistry = deepFreeze({
             "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  logical_extent = [%m, %n, %k]\n  physical_tile = [16, 16, 16]\n  tail_policy = missing",
             "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor instruction tail-mask contract is incompatible with the exact-tile profile",
             "property": "TensorTailSafety",
-            "stage": "generic PLIRON pass 1/7",
+            "stage": "generic PLIRON pass 1/8",
             "code": "FE2O3-TENSOR-LAYOUT-001",
             "enforcement": "Tensor-layout PLIRON lit; mandatory production pass",
             "caught": "Dynamic shapes do not turn an unguarded edge into a runtime permission. The current profile admits an exact physical tile or authenticated zero-filled predicate inputs. Missing, raw predicate-mask, and unsupported tail claims are Rejected and compilation stops."
@@ -810,7 +822,7 @@ const narrativeRegistry = deepFreeze({
             "source": "let lane = WaveLane::<Wave64>::current();\nif lane.get() < 32 {\n    acc = matrix.multiply_accumulate(lhs, rhs, acc);\n}",
             "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: divergent tensor-instruction trace; invocation [0, 0, 0] executes [(1, 0)], while invocation [32, 0, 0] executes []; every subgroup participant must execute the same tensor instructions in the same order",
             "property": "TensorConvergence",
-            "stage": "generic PLIRON pass 1/7",
+            "stage": "generic PLIRON pass 1/8",
             "code": "FE2O3-TENSOR-LAYOUT-001",
             "enforcement": "Schematic Rust source; tensor-layout PLIRON lit",
             "caught": "This Rust-shaped snippet illustrates the source condition; the exact regression starts from projected PLIRON. The verifier derives control uniformity at the actual instruction block rather than trusting a uniform annotation. A lane-dependent branch lets half the wave execute a collective that requires the full recorded participant set, so the IR is rejected."
@@ -822,7 +834,7 @@ const narrativeRegistry = deepFreeze({
             "source": "gpu.execution_layout global = [128, 1, 1], workgroup = [64, 1, 1]\n%left  = kernel.ranked_view origin = 7, alias_class = 3\n%right = kernel.ranked_view origin = 7, alias_class = 3\nkernel.access Write %left[%tid]\nkernel.access Write %right[%tid + 1]",
             "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on a may-alias coordinate\nfailed proof: distinct concurrent invocations do not imply disjoint memory coordinates",
             "property": "AliasAwareRaceFreedom",
-            "stage": "generic PLIRON pass 4/7",
+            "stage": "generic PLIRON pass 4/8",
             "code": "FE2O3-RACE-001",
             "enforcement": "Multiview race unit; mandatory production pass",
             "caught": "Race keys use authenticated allocation origin and alias class, not the SSA name of a view. Renaming or slicing one allocation cannot hide a collision; distinct nonzero no-alias classes can establish disjointness, while unknown provenance fails closed."
@@ -834,7 +846,7 @@ const narrativeRegistry = deepFreeze({
             "source": "gpu.execution_layout global = [2, 2, 1], workgroup = [2, 2, 1]\n%zero = kernel.index_constant 0\nkernel.access Write %output[%zero]  // no invocation identity in the address",
             "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on output[0]\nfirst writer/reader: invocation [0, 0, 0]\nsecond writer/reader: invocation [0, 1, 0]",
             "property": "MultidimensionalRaceFreedom",
-            "stage": "generic PLIRON pass 4/7",
+            "stage": "generic PLIRON pass 4/8",
             "code": "FE2O3-RACE-001",
             "enforcement": "Multidimensional execution-layout race unit; mandatory production pass",
             "caught": "The execution layout defines the invocation domain even when the program never requests an invocation-index value. Componentwise X/Y/Z identities expose the constant-address collision instead of allowing a missing index operation to erase concurrent work-items."
@@ -846,7 +858,7 @@ const narrativeRegistry = deepFreeze({
             "source": "gpu.execution_layout global = [128, 1, 1], workgroup = [64, 1, 1]\nkernel.access AtomicRmw %counter[0] <ordering = AcqRel, scope = Workgroup>",
             "diagnostic": "error[FE2O3-RACE-004]: overlapping atomic effects use scopes Workgroup/Workgroup that do not cover the concurrent invocations\nfailed proof: cross-workgroup overlap requires compatible device-scope atomics",
             "property": "AtomicScope",
-            "stage": "generic PLIRON pass 4/7",
+            "stage": "generic PLIRON pass 4/8",
             "code": "FE2O3-RACE-004",
             "enforcement": "Atomic/race PLIRON lit; mandatory production passes",
             "caught": "Atomic syntax alone does not make a grid-wide update race-free. The legality and race passes retain the exact address space, ordering, and scope and compare them with the independently declared multidimensional execution domain."
@@ -858,7 +870,7 @@ const narrativeRegistry = deepFreeze({
             "source": "gpu.execution_layout global = [65, 64, 1], workgroup = [64, 1, 1]\nkernel.barrier <scope = Workgroup, ordering = AcqRel>",
             "diagnostic": "error[FE2O3-BARRIER-002]: cannot prove barrier convergence: Workgroup barrier has global extent 65 on axis 0, which is not a multiple of workgroup extent 64; rounded physical lanes and their activity paths are not represented",
             "property": "WorkgroupParticipation",
-            "stage": "generic PLIRON pass 5/7",
+            "stage": "generic PLIRON pass 6/8",
             "code": "FE2O3-BARRIER-002",
             "enforcement": "Multidimensional barrier unit; mandatory production pass",
             "caught": "Global and workgroup extents are independent componentwise facts. The pass checks every axis rather than multiplying them into one scalar, so a partial workgroup cannot be hidden by a divisible total invocation count."
@@ -870,7 +882,7 @@ const narrativeRegistry = deepFreeze({
             "source": "gpu.execution_layout global = [4, 1, 1], workgroup = [4, 1, 1]\n%lds = kernel.ranked_view <32, true, [4], Workgroup>\n%tid = kernel.invocation_index <0, 4>\nkernel.access Write %lds[%tid]\nkernel.access Read %lds[0]  // no workgroup acquire-release barrier",
             "diagnostic": "error[FE2O3-WORKGROUP-001]: invocation [1, 0, 0] reads uninitialized workgroup address [0] at block 0 op 4\nfailed proof: the address is not initialized by this invocation and no convergent workgroup-memory barrier published a prior write\nhelp: initialize the address and publish it with a workgroup acquire-release barrier before the read",
             "property": "WorkgroupPublication",
-            "stage": "generic PLIRON pass 6/7",
+            "stage": "generic PLIRON pass 7/8",
             "code": "FE2O3-WORKGROUP-001",
             "enforcement": "Workgroup-memory PLIRON lit; mandatory production pass",
             "caught": "An address initialized by one invocation is not automatically published to its peers. Must-initialization dataflow tracks writers, readers, epochs, and a convergent publication barrier before admitting the peer read."
@@ -882,7 +894,7 @@ const narrativeRegistry = deepFreeze({
             "source": "gpu.execution_layout global = [8, 8, 1], workgroup = [8, 8, 1]\nkernel.barrier <scope = Grid, ordering = AcqRel>",
             "diagnostic": "error[FE2O3-BARRIER-002]: cannot prove barrier convergence: ordinary grid-wide barriers are unsupported at block 0 op 2; use disjoint workgroup ownership or legal device-scope atomics",
             "property": "GridSynchronization",
-            "stage": "generic PLIRON pass 5/7",
+            "stage": "generic PLIRON pass 6/8",
             "code": "FE2O3-BARRIER-002",
             "enforcement": "Barrier PLIRON lit; strict production pass",
             "caught": "Ordinary workgroup synchronization cannot prove that all workgroups are resident or make progress together. Until an authenticated cooperative-launch model supplies those facts, grid barriers and spin-based global synchronization fail closed."
@@ -893,7 +905,7 @@ const narrativeRegistry = deepFreeze({
             "source": "#[kernel(typed)]\n#[allow(unconditional_panic)]\nfn out_of_bounds(value: f32, mut output: DisjointSlice<f32>) {\n    let input = [value; 64];\n    let selected = input[64];\n    if let Some(element) = output.get_mut(thread::index_1d()) {\n        *element = selected;\n    }\n}",
             "diagnostic": "error[FE2O3-BOUNDS-001]: statically out-of-bounds Read at block 0 op 3; access: %0 dimension 0; required: 64 < 64\n  --> Rust source ...:65:20\n  = ranked PLIRON before rejected lowering\n  = lowering stopped before target IR or artifact emission",
             "property": "MemoryBounds",
-            "stage": "generic PLIRON pass 2/7",
+            "stage": "generic PLIRON pass 2/8",
             "code": "FE2O3-BOUNDS-001",
             "enforcement": "Rust production route and textual PLIRON lit",
             "caught": "The frontend preserves the array extent and constant index in ranked PLIRON. The bounds pass compares index 64 with extent 64, names the failed dimension and exact relation, maps it back to the Rust span, and terminates compilation."
@@ -905,7 +917,7 @@ const narrativeRegistry = deepFreeze({
             "source": "%target = kernel.ranked_view <32, true, [1], Global>\n%zero = kernel.index_constant 0\nkernel.access AtomicRead %target[%zero] <ordering = Release, scope = System>",
             "diagnostic": "error[FE2O3-ATOMIC-001]: invalid Release ordering for AtomicRead at block 0 op 2; atomic loads cannot release and atomic stores cannot acquire\nhelp: retain a source ordering legal for the exact atomic operation",
             "property": "AtomicLegality",
-            "stage": "generic PLIRON pass 3/7",
+            "stage": "generic PLIRON pass 3/8",
             "code": "FE2O3-ATOMIC-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "Semantic atomic IR retains operation kind, ordering, scope, element width, address space, and view provenance as structured attributes. A release-only load is invalid independently of the kernel algorithm, so compilation stops before target selection or emission. This card starts from textual PLIRON; it does not claim ordinary Rust atomic terminal import."
@@ -917,7 +929,7 @@ const narrativeRegistry = deepFreeze({
             "source": "%tid = kernel.invocation_index <0, 64>\n%zero = kernel.index_constant 0\nkernel.access Write %output[%zero]",
             "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on %output[0]\nfirst writer/reader: invocation [0]\nsecond writer/reader: invocation [1]\nfailed proof: distinct concurrent invocations do not imply disjoint memory coordinates\nhelp: include an invocation-owned coordinate, use a disjoint view, or use a compatible atomic operation",
             "property": "RaceFreedom",
-            "stage": "generic PLIRON pass 4/7",
+            "stage": "generic PLIRON pass 4/8",
             "code": "FE2O3-RACE-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "Every invocation writes coordinate zero. Sparse affine analysis cannot prove the output map injective, and exact bounded witness enumeration reports the first conflicting invocation pair. CUDA or HIP would normally compile this race."
@@ -928,7 +940,7 @@ const narrativeRegistry = deepFreeze({
             "source": "#[kernel(typed, launch(required = [64, 1, 1], max = [64, 1, 1]))]\nfn divergent_barrier(mut output: DisjointSlice<f32, GridExclusive>) {\n    if let Some(leader) = thread::grid_leader() {\n        sync::syncthreads();\n        if let Some(element) = output.get_mut_exclusive(&leader, 0) {\n            *element = 1.0;\n        }\n    }\n}",
             "diagnostic": "error[FE2O3-BARRIER-001]: divergent collective barrier trace; invocation [0] executes one workgroup barrier, while invocation [2] executes no barriers\nfailed proof: every participating invocation reaches the same barriers in the same order\nhelp: move the barrier out of invocation-varying control flow",
             "property": "BarrierConvergence",
-            "stage": "generic PLIRON pass 5/7",
+            "stage": "generic PLIRON pass 6/8",
             "code": "FE2O3-BARRIER-001",
             "enforcement": "Rust production route and textual PLIRON lit",
             "caught": "The frontend authenticates the safe syncthreads terminal, preserves it as a workgroup barrier in the semantic CFG, and retains the leader-dependent branch. The pass derives per-invocation traces and compares collective barrier identities and order. One invocation reaches the barrier while peers bypass it, so lowering is rejected before a possible GPU deadlock."
@@ -940,7 +952,7 @@ const narrativeRegistry = deepFreeze({
             "source": "%lds = kernel.ranked_view <32, true, [64], Workgroup>\n%tid = kernel.invocation_index <0, 8>\nkernel.access Read %lds[%tid]",
             "diagnostic": "error[FE2O3-WORKGROUP-001]: invocation [0] reads uninitialized workgroup address [0] at block 0 op 2\nfailed proof: the address is not initialized by this invocation and no convergent workgroup-memory barrier published a prior write\nhelp: initialize the address and publish it with a workgroup acquire-release barrier before the read",
             "property": "WorkgroupMemory",
-            "stage": "generic PLIRON pass 6/7",
+            "stage": "generic PLIRON pass 7/8",
             "code": "FE2O3-WORKGROUP-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "The epoch analysis tracks writes, compatible atomics, and convergent workgroup publication. This read has neither a same-invocation initializer nor a published prior write, so the pass reports its invocation and address."
@@ -952,10 +964,46 @@ const narrativeRegistry = deepFreeze({
             "source": "%actual = kernel.semantic_add (%alpha * %acc), %initial\n%required = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nkernel.require_equivalent %actual, %required",
             "diagnostic": "error[FE2O3-SEMANTIC-001]: declared semantic refinement failed at block 0 op 8\nactual expression `add(mul(s0,s1),s3)` is not equivalent to required expression `add(mul(s0,s1),mul(s2,s3))`\nhelp: preserve the frontend-declared target-neutral semantic formula",
             "property": "SemanticRefinement",
-            "stage": "generic PLIRON pass 7/7",
+            "stage": "generic PLIRON pass 8/8",
             "code": "FE2O3-SEMANTIC-001",
             "enforcement": "Textual PLIRON lit; mandatory production pass",
             "caught": "The pass hash-conses the target-neutral expression DAG, normalizes commutative operand order without reassociating floating-point operations, and finds that beta times the prior value is missing."
+          },
+          {
+            "id": "hierarchy_coverage_hole",
+            "title": "The grid leaves one output coordinate unwritten",
+            "language": "text",
+            "source": "gpu.execution_layout global = [64, 1, 1], workgroup = [32, 1, 1], subgroup = 16\n%output = kernel.ranked_view <32, true, [128], Global>\nkernel.ownership_contract %output <ExactView, ExactSets>\n%tid = kernel.invocation_index <0, 64>\n%two = kernel.index_constant 2\n%even = kernel.index_binary Multiply %tid, %two\nkernel.access Write %output[%even]",
+            "diagnostic": "error[FE2O3-OWN-006]: exact ownership of %output has a hole at logical coordinate [1] within extents [128]; no invocation, subgroup, or workgroup owns that element",
+            "property": "GridCoverage",
+            "stage": "generic PLIRON pass 5/8",
+            "code": "FE2O3-OWN-006",
+            "enforcement": "Production ranked recipe plus hierarchy-ownership PLIRON pass",
+            "caught": "The pass derives actual writes, maps each invocation to lane, subgroup, and workgroup, and compares the union with the declared logical view. It reports the first missing coordinate without knowing what workload produced the write."
+          },
+          {
+            "id": "reference_evidence_missing",
+            "title": "A CPU-reference equality has no Verus evidence",
+            "language": "text",
+            "source": "proof.obligation <id = 4a.., property = FunctionalRefinement, subject = kernel.., model = cpu..>\nproof.require_refinement <obligation = 4a..> %gpu_expression, %cpu_expression",
+            "diagnostic": "error[FE2O3-SEMANTIC-003]: functional-reference obligation 4a.. is incomplete at block 0 op 5: the exact proof.evidence_ref record is missing",
+            "property": "FunctionalRefinementEvidence",
+            "stage": "generic PLIRON pass 8/8",
+            "code": "FE2O3-SEMANTIC-003",
+            "enforcement": "Proof dialect verifier plus semantic-refinement PLIRON lit",
+            "caught": "Expression equality alone is not treated as a discharged CPU-reference theorem. The exact obligation must have one Proved Source-bound evidence record; Checked, a different boundary, duplicates, and missing evidence fail closed."
+          },
+          {
+            "id": "reference_expression_mismatch",
+            "title": "The GPU expression disagrees with the CPU reference",
+            "language": "text",
+            "source": "%gpu = kernel.semantic_add (%alpha * %acc), %initial\n%cpu = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nproof.require_refinement <obligation = 4a..> %gpu, %cpu",
+            "diagnostic": "error[FE2O3-SEMANTIC-001]: declared semantic refinement failed; actual expression `(s0 * s1) + s3` is not equivalent to required expression `(s0 * s1) + (s2 * s3)`",
+            "property": "FunctionalRefinementExpression",
+            "stage": "generic PLIRON pass 8/8",
+            "code": "FE2O3-SEMANTIC-001",
+            "enforcement": "Production reference-refinement recipe plus semantic-refinement pass",
+            "caught": "Even a well-formed Proved evidence identity cannot hide a different expression. The compiler independently canonicalizes both target-neutral DAGs and rejects the missing beta multiplication."
           }
         ]
       },
@@ -963,7 +1011,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, barrier, workgroup-memory, and declared-semantic FE2O3 pass code. Other compiler boundaries reject additional invalid programs without inventing a seven-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1006,6 +1054,13 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-RACE-002", "Incomplete", "Race freedom cannot be proved because a launch, indexed coordinate, allocation/alias contract, or required happens-before relation is unresolved."],
           ["FE2O3-RACE-003", "Incomplete", "Sparse-index analysis failed or the exact invocation, effect-instance, or finding bound was exceeded."],
           ["FE2O3-RACE-004", "Rejected", "Overlapping atomic effects use scopes that do not cover the concrete concurrent invocations; cross-workgroup overlap requires compatible device-scope atomics."],
+          ["FE2O3-OWN-001", "Rejected", "An ownership contract is duplicated or is not unconditional entry-block metadata."],
+          ["FE2O3-OWN-002", "Incomplete", "The execution layout, dynamic extent, sparse coordinate, or exact guarded trace required for ownership cannot be resolved."],
+          ["FE2O3-OWN-003", "Incomplete", "The bounded ownership contract or exact domain limit was exceeded."],
+          ["FE2O3-OWN-004", "Rejected", "A concrete invocation owns a coordinate outside the contracted logical extent."],
+          ["FE2O3-OWN-005", "Rejected", "Two concrete hierarchy owners claim the same coordinate; the diagnostic names both invocations, workgroups, subgroups, lanes, and operations."],
+          ["FE2O3-OWN-006", "Rejected", "Exact grid coverage has a hole; the diagnostic names the first uncovered logical coordinate."],
+          ["FE2O3-OWN-007", "Rejected", "A requested dense subgroup or workgroup tile has a hole inside its bounding rectangle."],
           ["FE2O3-BARRIER-000", "Prerequisite", "Bounds verification failed before barrier-convergence analysis."],
           ["FE2O3-BARRIER-001", "Rejected", "Two participating invocations execute different collective barrier identities or orders."],
           ["FE2O3-BARRIER-002", "Incomplete", "Barrier convergence cannot be proved because the launch, branch, terminator, CFG, or bounded trace is unresolved or unsupported."],
@@ -1015,7 +1070,9 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-WORKGROUP-003", "Incomplete", "Workgroup-memory safety cannot be proved because a trace or effect is unsupported or a finding/resource limit was reached."],
           ["FE2O3-SEMANTIC-000", "Prerequisite", "Bounds verification failed before declared semantic refinement."],
           ["FE2O3-SEMANTIC-001", "Rejected", "The actual expression is not equivalent to the explicitly declared required expression."],
-          ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."]
+          ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."],
+          ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation is missing exact Proved Source-bound evidence or carries a non-Proved status or wrong boundary."],
+          ["FE2O3-SEMANTIC-004", "Rejected", "A functional-reference obligation or evidence record is duplicated, mismatched, malformed, wrong-property, or orphaned."]
         ]
       },
       {
@@ -1028,7 +1085,7 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           ["rustc and kernel macro", "Rust type, move, borrow, lifetime, visibility, attribute, signature, unsafe-body, or inline-assembly violation.", "rustc or source-admission diagnostic; not a PLIRON pass code."],
           ["semantic MIR import", "Unsupported terminal, ownership mapping, effect, call, or control-flow projection.", "Frontend Rejected or Incomplete diagnostic before ranked PLIRON authority."],
-          ["dialect and structural verification", "Malformed operation, type, SSA use, dominance, region, terminator, capability, or execution-layout contract; Kernel IR also rejects an illegal cast kind, scalar category, signedness, or width as InvalidCast.", "Structural diagnostic at the owning IR boundary; this is not an invented seven-pass code."],
+          ["dialect and structural verification", "Malformed operation, type, SSA use, dominance, region, terminator, capability, or execution-layout contract; Kernel IR also rejects an illegal cast kind, scalar category, signedness, or width as InvalidCast.", "Structural diagnostic at the owning IR boundary; this is not an invented eight-pass code."],
           ["checked lowering and Kernel IR verification", "A verified PLIRON fact cannot be represented faithfully in canonical KIR V7, or canonical KIR semantic verification fails.", "Lowering or KIR verification diagnostic; no target artifact is emitted."],
           ["formal memory admission", "A guarded non-private load does not bind data, length, selected index, and predicate to the same allocation, or its selected false address offset is not literal zero.", "Formal-memory rejection after KIR verification and before target lowering."],
           ["target and production boundary", "Unsupported target operation or profile, compiler invocation or closure mismatch, finalization failure, or artifact contract mismatch.", "Owning target, invocation, worker, or finalizer diagnostic; never a fabricated safety-pass code."]
@@ -1096,9 +1153,9 @@ const narrativeRegistry = deepFreeze({
           "Supported safe ownership mappings retain their genuine marker identity and const parameters; malformed, substituted, or unsupported forms stop as Rejected or Incomplete before they can become memory effects.",
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
           "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for the immutable function; reachable typed CFG edges are part of sparse propagation, and no cache survives mutation or revalidation.",
-          "The seven mandatory workload-neutral passes consume those shared facts in fixed order and return Clean, Rejected, or Incomplete.",
+          "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Every pass returns Clean, Rejected, or Incomplete.",
           "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
-          "One compiler-owned ranked-verification receipt binds the seven ordered pass results and remains in custody through checked lowering, Kernel IR, and formal-memory admission; no caller can reconstruct it from booleans or diagnostics.",
+          "One move-only compiler-owned ranked-verification input retains the eight ordered live reports through checked lowering; no caller can reconstruct it from booleans or diagnostics. The historical inert V4 evidence wire format still serializes its original seven reports and explicitly does not claim the new hierarchy report.",
           "Protected production additionally admits a sealed V3 rustc-invocation descriptor against the live argv, cwd, complete environment, target, rustc image, backend image, and full compiler closure. Worker V3 inputs are preflighted before transaction consumption, and finalization binds the exact invocation, closure, transaction, link plan, measured worker response, raw HSACO, descriptor source, and finalized bytes.",
           "The production transaction stops before target IR, finalization, or artifact publication on every Rejected or Incomplete result."
         ]
@@ -1107,7 +1164,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, authenticated ownership mappings, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. Exact source projection support is recorded per terminal; an unsupported terminal, unknown alias class, unresolved or overflowing dynamic map, cyclic trace, exhausted budget, or unavailable grid-progress fact is Rejected or Incomplete rather than replaced with fabricated evidence."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, hierarchy ownership, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, explicit output-ownership contracts, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. The hierarchy pass reconstructs coordinate owners and partitions them by lane, subgroup, workgroup, and grid, rejecting out-of-range writes, duplicate owners, coverage holes, or non-rectangular regions with concrete witnesses. Runtime-only unresolved extents remain Incomplete rather than being guessed. Exact source projection support is recorded per terminal; an unsupported terminal, unknown alias class, unresolved or overflowing dynamic map, cyclic trace, exhausted budget, or unavailable grid-progress fact is Rejected or Incomplete rather than replaced with fabricated evidence."
       }
     ]
   },
@@ -1190,7 +1247,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current maturity",
-        "text": "The Kernel tab is the current safe public-main Wave64 source at 318c064c3a0aa8b03654f95461e3c894395a5d47. Its checked CPU oracle, mutation tests, and bounded Verus model retain source/model-only authority. Historical compiler, finalizer, runtime, and protected gfx942 observations remain separately pinned and do not prove source-to-machine refinement for the repinned source."
+        "text": "The Kernel tab is the current safe public-main Wave64 source at af0fd523e3b774377a9c5192cf0511e34fa19735. Its checked CPU oracle, mutation tests, and bounded Verus model retain source/model-only authority. Historical compiler, finalizer, runtime, and protected gfx942 observations remain separately pinned and do not prove source-to-machine refinement for the repinned source."
       }
     ]
   },
@@ -1236,7 +1293,7 @@ const narrativeRegistry = deepFreeze({
         "items": [
           {
             "label": "Exact separate scoped_atomic.rs source",
-            "href": "https://github.com/harsh-nod/fe2o3/blob/318c064c3a0aa8b03654f95461e3c894395a5d47/examples/workgroup_sync_v1/src/scoped_atomic.rs"
+            "href": "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/workgroup_sync_v1/src/scoped_atomic.rs"
           }
         ]
       }
@@ -1383,7 +1440,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Generic PLIRON safety passes are mandatory before lowering",
-        "text": "The executable MFMA kernel constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: tensor-layout and collective-participation verification, memory bounds, atomic legality, global race freedom, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. ThreadIndex/DisjointSlice dynamic access, runtime slice bounds, loops, branches, Tiled2D ownership, and matrix terminals are connected from ordinary safe Rust through LLVM and qualification launch. Unsupported effects and ownership forms still fail closed."
+        "text": "The executable MFMA kernel constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: tensor-layout and collective-participation verification, memory bounds, atomic legality, global race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. ThreadIndex/DisjointSlice dynamic access, runtime slice bounds, loops, branches, Tiled2D ownership, and matrix terminals are connected from ordinary safe Rust through LLVM and qualification launch. Unsupported effects and ownership forms still fail closed."
       },
       {
         "type": "paragraph",
@@ -1624,7 +1681,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "The mandatory safety pipeline does not recognize GEMM",
-        "text": "The seven production ranked passes reason about bounds, typed-edge sparse index facts, ownership, race freedom, uniformity, convergence, and ranked-memory effects. One ephemeral manager shares sparse results, execution layout, and bounded traces across that ordered sequence. The same machinery analyzes softmax, attention, MoE, reductions, and any kernel expressible in the supported target-neutral operation and effect subset; unsupported or unresolved forms stop as Incomplete. Historical fixtures and qualification oracles may still describe specific workloads, but they grant no production safety authority. Matrix lowering only selects the target instruction after the generic obligations pass."
+        "text": "The eight production ranked passes reason about tensor layout, bounds, atomics, race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory epochs, and declared semantic refinement. One ephemeral manager shares sparse results, execution layout, and bounded traces across that ordered sequence. The same machinery analyzes softmax, attention, MoE, reductions, and any kernel expressible in the supported target-neutral operation and effect subset; unsupported or unresolved forms stop as Incomplete. Historical fixtures and qualification oracles may still describe specific workloads, but they grant no production safety authority. Matrix lowering only selects the target instruction after the generic obligations pass."
       },
       {
         "type": "callout",
@@ -2116,9 +2173,11 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "3072ec53df686c6132605876c78cc03a14ab02951a1dbd53f89864c25f433352",
+    "f4ab5246ca7c54248e386c25400133b10e432973f0055f91cf6f4db45945e35e",
   "compiler-checks/catalog":
-    "ca62b31f6a2453693caf154475a1d3edb9f5ec9c5ec60029198da854f34c0c52",
+    "2cc1e8038dacceb8e4dbaa0f7475b27bdfbe2ce571db6d1317ab43ea9f14e788",
+  "compiler-checks/production-path":
+    "4886ee2b0655ba8dc5662906cc9cc072bcaf9e63bb1a54e2407f528b28f31254",
   "compiler-checks/v7-simulation":
     "898a468386559cbe68838e52818e018378e26d0211fd568a946c298507b3d251",
   "gemm-tiling/public-layout-proof":
@@ -2127,10 +2186,16 @@ const reviewedNarrativeFingerprints = deepFreeze({
     "dfde97043d0ada591298d108a96ec048067a576fde51473c011ab8ffbc44e687",
   "gemm-tiling/mapping":
     "8b444ef89d0b6dc7c7c794da439308e8db4faa249b79f6190f72f51402db28d5",
+  "gemm-tiling/general-contract":
+    "61a6ca9ecff6e73815f5f3e83ef4c35eb4d813d1caea2892a254231c4189f3a2",
   "gemm-tiling/loop-proof":
-    "849837110a5532109ce4be9fd8a7fc6aac975fce2b0c51bc1378166c5e17a134",
+    "338755e9d8510e0405a0dc4e51b35e110169d00bfe709202d057a657719df2e1",
   "gemm-proof-plan/evidence":
     "961353dad93a62fb2d79e63b2f0d738b7e37814346ab4d5f9113656a9c9edbff",
+  "reductions-scans/scan":
+    "f584ec14d5676f5aa28093231ae42cc519b93d78367ef2388f61754b0e62fadf",
+  "lds-barriers-atomics/atomics":
+    "631bbb237c96f3dcc586e4a7c7a0d092a15f9e4e4466138bb57dda2ea25638a5",
   "softmax-invariant/spec":
     "33a9d720feac88f1e243fa8a9ba2f0338ca9296a6e5fbbbc404488111b8fd45f",
   "softmax-invariant/proof":
