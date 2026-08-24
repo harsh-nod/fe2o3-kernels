@@ -378,7 +378,7 @@ const cpuSimulation: Lesson = {
         "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "b3a492774bfb604c35743fa1d635e01aa6c0ac901772795379203d22bca6ac2b",
+        "19854910d7488530033bbf4c15ed6b32283e56f4f8b6ed64f7775d68597a46dd",
       explanatory: false,
     },
     {
@@ -409,9 +409,11 @@ hardware_observed: false
 hardware_validation: false
 performance_prediction: false
 target_profile.identity: amdgpu_64_little_endian_v1
+kir.sha256: 64 lowercase hexadecimal digits (profile-specific)
+kir.canonical_bytes: 626
 counts.invocations_executed: 4
-counts.workgroups_visited: 4
-counts.scheduled_slots_visited: 4
+counts.workgroups_visited: 1
+counts.scheduled_slots_visited: 64
 arguments[0].value.bytes: 0x11000000110000001100000011000000
 
 The complete JSON also binds the exact canonical KIR SHA-256 and byte length,
@@ -419,11 +421,11 @@ the deterministic scheduler identity, typed argument state, and bounded counts.`
       ),
     },
   ),
-  diagram: "indexing",
+  diagram: "simulation",
   exercises: [
     {
       prompt: "Change the fill value and predict the exact little-endian output bytes.",
-      hint: "Each of four u32 elements is written by one simulated logical invocation.",
+      hint: "Four live logical invocations write the u32 elements inside one authenticated WG64; the other 60 scheduled slots are inactive padding.",
       acceptance:
         "The answer derives four repeated four-byte values and does not make a GPU timing or hardware-equivalence claim.",
     },

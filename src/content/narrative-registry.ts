@@ -355,7 +355,7 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           [
             "Source to semantic MIR",
-            "One selected ordinary safe Rust #[kernel(typed)] body and authenticated device operations.",
+            "One selected ordinary safe Rust #[kernel(typed)] body, its authenticated required/max WG64 launch contract, and authenticated device operations.",
             "Ambiguous kernels, unsupported source forms, and invalid typed operations fail closed."
           ],
           [
@@ -384,7 +384,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The V1 result binds the exact KIR digest, scalar target-profile identity, scheduler identity, launch hierarchy counts, and typed output snapshot. For the four-invocation fill request, all four u32 elements become 17, encoded as four little-endian 0x11000000 values."
+        "text": "The V1 result binds the 626-byte canonical KIR and reports its profile-specific SHA-256 as 64 lowercase hexadecimal digits, together with scalar target-profile identity, scheduler identity, launch hierarchy counts, and the typed output snapshot. The displayed command does not bind every compiler-profile input, so this tutorial does not pin one digest. The request uses one authenticated WG64 with four live logical invocations and 60 inactive scheduled slots. All four u32 elements become 17, encoded as four little-endian 0x11000000 values."
       },
       {
         "type": "table",

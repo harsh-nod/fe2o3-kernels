@@ -80,6 +80,9 @@ test("CPU semantic simulation keeps its evidence boundary visible", async ({
   ).toBeVisible();
   await expect(page.getByText("performance_prediction: false")).toBeVisible();
   await expect(page.getByText(/does not initialize KFD, HSA, HIP, ROCm/u)).toBeVisible();
+  await expect(
+    page.getByLabel("CPU semantic simulation of one authenticated WG64"),
+  ).toContainText("60 inactive slots");
   await expect(page.getByRole("tabpanel")).toContainText("pub fn fill");
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(
@@ -102,6 +105,12 @@ test("CPU semantic simulation keeps its evidence boundary visible", async ({
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "0x11000000110000001100000011000000",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "counts.workgroups_visited: 1",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "counts.scheduled_slots_visited: 64",
   );
 
   const screenshot = testInfo.outputPath("cpu-semantic-simulation.png");

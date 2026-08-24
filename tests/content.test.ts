@@ -165,7 +165,7 @@ describe("curriculum integrity", () => {
       sourcePath:
         "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
       sourceSha256:
-        "b3a492774bfb604c35743fa1d635e01aa6c0ac901772795379203d22bca6ac2b",
+        "19854910d7488530033bbf4c15ed6b32283e56f4f8b6ed64f7775d68597a46dd",
     });
     expect(kernel?.code).toBe(
       readFileSync("examples/cpu_simulation_kernel.rs", "utf8"),
@@ -185,6 +185,13 @@ describe("curriculum integrity", () => {
     ]) {
       expect(result).toContain(boundary);
     }
+    expect(result).toContain(
+      "kir.sha256: 64 lowercase hexadecimal digits (profile-specific)",
+    );
+    expect(result).toContain("kir.canonical_bytes: 626");
+    expect(result).toContain("counts.invocations_executed: 4");
+    expect(result).toContain("counts.workgroups_visited: 1");
+    expect(result).toContain("counts.scheduled_slots_visited: 64");
     expect(result).toContain("0x11000000110000001100000011000000");
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({

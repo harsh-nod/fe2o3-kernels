@@ -186,6 +186,7 @@ export interface CodeTab {
 export type DiagramKind =
   | "evidence"
   | "indexing"
+  | "simulation"
   | "memory"
   | "reduction"
   | "gemm-scalar"
