@@ -472,6 +472,7 @@ const gemmMapping: Lesson = {
   objectives: [
     "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
     "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
+    "See how a loop-carried accumulator keeps its MFMA contract and current-wave provenance on every CFG edge.",
     "Use KernelResult with ? or let Ok for fallible view and ownership construction, then consume zero-filled typed fragment loads directly.",
     "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],

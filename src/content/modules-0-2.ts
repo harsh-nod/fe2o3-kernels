@@ -455,6 +455,7 @@ const compilerChecks: Lesson = {
     "Locate tensor-layout, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
     "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
     "Reason about multidimensional workgroups, alias classes, publication epochs, and atomic scope without relying on a workload recognizer.",
+    "Follow sparse index facts through reachable typed CFG edges and explain why analysis caches end at each validation boundary.",
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
     "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
     "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
@@ -473,6 +474,7 @@ const compilerChecks: Lesson = {
           "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
           "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_pipeline.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_analysis_manager.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_race.rs",
@@ -513,8 +515,20 @@ const compilerChecks: Lesson = {
 6. workgroup-memory must-initialization and epochs
 7. declared semantic refinement
 
-Shared: bounded sparse affine/index dataflow
-Cross-cutting: bounded compiler resources
+Shared analysis, once per immutable function:
+- sparse affine/index facts through reachable typed CFG edges
+- execution layout and exact bounded invocation traces
+- Pending waits for inputs; conflicting or unsupported facts become Unknown
+- a fresh manager is required after mutation or revalidation
+
+Cross-cutting: bounded values, uses, edges, iterations, traces, and work
+
+Guarded non-private loads must structurally tie slice data, slice length,
+selected index, and index < length to the same allocation. A guard proves
+bounds, not no-alias ownership.
+
+Dynamic race proofs accept authenticated checked-tile coordinate identity.
+Ordinary unresolved or potentially overflowing affine maps remain Incomplete.
 
 MFMA contracts are workload-neutral:
 - role and register distribution are Rust fragment types

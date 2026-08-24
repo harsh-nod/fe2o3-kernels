@@ -28,7 +28,7 @@ export function ArchitecturePage() {
             ["rustc", "Enforces Rust moves, borrows, lifetimes, visibility, local typestate, and Result control flow."],
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
-            ["Compiler analyses", "Reject or stop on incomplete bounds, race, barrier, workgroup-memory, and semantic obligations."],
+            ["Compiler analyses", "Run the seven ordered tensor, bounds, atomic, race, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse, layout, and trace facts only within one validation."],
             ["Verus", "Proves named source or model properties; it neither replaces rustc nor currently proves full source-to-machine refinement."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
@@ -98,7 +98,8 @@ export function ArchitecturePage() {
           language semantics, while sealed types and compiler passes cover GPU
           facts that Rust alone cannot observe. Current Partial capabilities still grant no generalized
           source-to-machine refinement, protected launch authority, complete
-          persistent execution, or automatic parity promotion.
+          persistent execution, universal functional or numerical correctness,
+          or automatic parity promotion.
         </p>
         <a
           className="source-button"

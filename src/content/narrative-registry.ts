@@ -469,6 +469,12 @@ const narrativeRegistry = deepFreeze({
         "text": "A typed BF16 MFMA fragment carries a wave lifetime, operand role A or B, instruction profile, register distribution, and lane width. Swapping A and B, mixing instruction profiles, changing the register distribution, retaining a fragment beyond its wave, copying a move-only fragment, or constructing its private representation is a rustc error. These types prevent local misuse; the tensor-layout pass separately proves that the compiler IR describes the required lane-to-matrix map and that all participating lanes execute the collective."
       },
       {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Typed fragments survive loops",
+        "text": "When a fragment or accumulator crosses a branch or loop backedge, semantic lowering gives the destination block typed SSA components plus a compiler-owned binding descriptor. Each incoming edge must supply the same fragment kind, instruction contract, and current-wave association; an ordinary four-float aggregate cannot stand in for that typed value. The descriptor restores wave provenance without transporting a forgeable phi token, and none of this requires recognizing a GEMM loop."
+      },
+      {
         "type": "table",
         "headers": [
           "MFMA fact",
@@ -574,7 +580,19 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "PLIRON dialect and structural verification is the prerequisite. The mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement. No lowering pass may run between these seven checks. Sparse affine index propagation and CFG uniformity are shared analyses rather than competing workload-specific verifiers. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact."
+        "text": "PLIRON dialect and structural verification is the prerequisite. The mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, barrier convergence, workgroup memory, then declared semantic refinement. No lowering pass may run between these seven checks. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "One bounded analysis context per run",
+        "text": "The production pipeline owns one ephemeral analysis manager over one immutable ranked-PLIRON function. Its three bounded cache roots hold sparse index results, execution layout, and exact invocation traces, so passes that need the same facts compute each root once. The manager is discarded before any second validation or changed function is checked, which prevents stale facts from crossing a revalidation boundary while keeping each pass result independently reportable."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Sparse facts meet at typed CFG edges",
+        "text": "Sparse index dataflow treats block arguments as real SSA definitions. Only reachable predecessor edges contribute; a not-yet-seen input is Pending, an unsupported or conflicting input is Unknown, identical incoming facts remain precise, and Unknown is absorbing. Unconditional, less-than, and equality branches type-check their carried operands before the incoming facts meet. Value, use, edge, iteration, and work-unit budgets make cyclic or oversized analysis return Incomplete instead of guessing."
       },
       {
         "type": "table",
@@ -606,7 +624,7 @@ const narrativeRegistry = deepFreeze({
           ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
           ["kernel-workgroup-memory-v1", "Run must-initialization dataflow and track publication, compatible atomics, conflicts, and reuse by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; stale or unresolved epoch/trace; analysis limit."],
           ["kernel-semantic-refinement-v1", "Compare an actual target-neutral expression with a frontend-declared required expression.", "Declared formula mismatch; unresolved semantic expression or analysis limit. This pass checks a supplied contract rather than guessing intent."],
-          ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through SSA so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, or work-unit limit."],
+          ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through values, reachable CFG edges, and block arguments so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Conflicting incoming facts; unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, edge, iteration, or work-unit limit."],
           ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
         ]
       },
@@ -619,8 +637,8 @@ const narrativeRegistry = deepFreeze({
             "id": "mfma_operand_roles",
             "title": "Swapped MFMA operand roles",
             "language": "rust",
-            "source": "let lhs: Bf16MfmaFragment<'_, B, M16x16x16Bf16, Canonical, Wave64> = load_b(...)?;\nlet rhs: Bf16MfmaFragment<'_, A, M16x16x16Bf16, Canonical, Wave64> = load_a(...)?;\nlet out = matrix.multiply_accumulate(lhs, rhs, F32AccumulatorFragment::zero(&lane));",
-            "diagnostic": "error[E0308]: arguments to this method are incorrect\nexpected Bf16MfmaFragment<'_, A, M16x16x16Bf16, Canonical, Wave64>\n   found Bf16MfmaFragment<'_, B, M16x16x16Bf16, Canonical, Wave64>\nexpected Bf16MfmaFragment<'_, B, M16x16x16Bf16, Canonical, Wave64>\n   found Bf16MfmaFragment<'_, A, M16x16x16Bf16, Canonical, Wave64>",
+            "source": "fn reject_swapped_roles<'wave>(\n    matrix: &DeviceMatrix,\n    lhs: Bf16MfmaBFragment<'wave>,\n    rhs: Bf16MfmaAFragment<'wave>,\n    accumulator: F32AccumulatorFragment<'wave>,\n) {\n    let _ = matrix.multiply_accumulate(lhs, rhs, accumulator);\n}",
+            "diagnostic": "error[E0308]: arguments to this method are incorrect\nexpected Bf16MfmaFragment<'_, MfmaOperandA, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\n   found Bf16MfmaFragment<'_, MfmaOperandB, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\nexpected Bf16MfmaFragment<'_, MfmaOperandB, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\n   found Bf16MfmaFragment<'_, MfmaOperandA, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\nhelp: swap these arguments\n  matrix.multiply_accumulate(rhs, lhs, accumulator)",
             "property": "TypedMfmaRoles",
             "stage": "rustc type checking",
             "code": "E0308",
@@ -906,8 +924,29 @@ const narrativeRegistry = deepFreeze({
           ["[T; 64] with index 64", "The extent and invalid index are static.", "Rejected with FE2O3-BOUNDS-001 and the failed 64 < 64 relation."],
           ["&[T] with a dominating index < len guard", "Every path to the access carries the required dynamic bound.", "Clean when sparse-index analysis proves the guard dominates the access."],
           ["&[T] with an unresolved index", "The compiler cannot establish index < extent on every path.", "Incomplete with FE2O3-BOUNDS-002; no target lowering or runtime artifact."],
+          ["Dynamic checked-tile ownership", "An authenticated checked-tile witness preserves an exact zero-offset, unit coordinate embedding for every active launch axis.", "The generic race pass can prove injectivity without enumerating the runtime grid."],
+          ["Ordinary dynamic affine write", "The address is dynamic but has no authenticated total ownership embedding.", "FE2O3-RACE-002 Incomplete; an expression that merely looks affine is not accepted as a partition."],
+          ["Potentially overflowing affine map", "A multiply or add is not proved total over the admitted launch domain.", "Race proof is Incomplete even if the mathematical, unbounded-integer formula would be injective."],
           ["Dynamic launch or alias relation", "Concurrency or disjointness cannot be resolved in the bounded model.", "The corresponding race or barrier pass reports Incomplete and compilation stops."]
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "A guarded load is a structural proof obligation",
+        "text": "For each non-private guarded load, formal-memory admission follows a bounded SSA def-use chain and requires one allocation throughout: slice data, slice length, the selected address, and the index in index < length must all agree. Its selected false offset is literal zero, and a false guard returns the fallback without a memory access. A similar-looking predicate over another slice, a detached length, a missing definition, a cycle, or an exhausted budget fails closed."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Bounds do not erase aliasing",
+        "text": "A guard proves that one access is within one recorded allocation; it does not prove that two views are disjoint. Race analysis keeps allocation origin and alias class, and remains conservative when relative slice offsets or provenance cannot establish separation. Safe DisjointSlice mappings can discharge that obligation because the compiler authenticates their ownership identity and exact coordinate transform; an ordinary may-alias slice cannot acquire that fact from a bounds predicate."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Cross-wave and cross-workgroup claims have explicit scope",
+        "text": "Within a workgroup, the verifier can relate multiple waves through LDS effects, initialization epochs, and convergent workgroup barriers. Across workgroups, it can prove disjoint global effects or compatible atomics from the execution layout and provenance. It does not assume simultaneous residency, forward progress, a grid-wide barrier, or coherent system allocation; those require separate authenticated launch and target contracts, otherwise compilation is Incomplete."
       },
       {
         "type": "callout",
@@ -929,7 +968,8 @@ const narrativeRegistry = deepFreeze({
           "Every compiler-recognized device capability must match its exact diagnostic item and canonical DefPath, an authenticated reviewed provider identity, the compiled SourceFileHash under the reviewed source root, and the pinned provider source digest.",
           "Supported safe ownership mappings retain their genuine marker identity and const parameters; malformed, substituted, or unsupported forms stop as Rejected or Incomplete before they can become memory effects.",
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
-          "The mandatory workload-neutral passes run in their fixed order and return Clean, Rejected, or Incomplete.",
+          "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for the immutable function; reachable typed CFG edges are part of sparse propagation, and no cache survives mutation or revalidation.",
+          "The seven mandatory workload-neutral passes consume those shared facts in fixed order and return Clean, Rejected, or Incomplete.",
           "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
           "One compiler-owned ranked-verification receipt binds the seven ordered pass results and remains in custody through checked lowering, Kernel IR, and formal-memory admission; no caller can reconstruct it from booleans or diagnostics.",
           "Protected production additionally admits a sealed V3 rustc-invocation descriptor against the live argv, cwd, complete environment, target, rustc image, backend image, and full compiler closure. Worker V3 inputs are preflighted before transaction consumption, and finalization binds the exact invocation, closure, transaction, link plan, measured worker response, raw HSACO, descriptor source, and finalized bytes.",
@@ -940,7 +980,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before the existing bounds, atomic, race, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals must preserve role, instruction profile, canonical register distribution, wave lifetime, independent operand storage provenance, zero-fill or predicate edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, checked dynamic access, authenticated ownership mappings, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. Exact source projection support is recorded per terminal; an unsupported terminal, unknown alias class, unresolved dynamic contract, cyclic trace, or unavailable grid-progress fact is Rejected or Incomplete rather than replaced with fabricated evidence."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, zero-fill or predicate edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, authenticated ownership mappings, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. Exact source projection support is recorded per terminal; an unsupported terminal, unknown alias class, unresolved or overflowing dynamic map, cyclic trace, exhausted budget, or unavailable grid-progress fact is Rejected or Incomplete rather than replaced with fabricated evidence."
       }
     ]
   },
@@ -1184,7 +1224,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Generic PLIRON safety passes are mandatory before lowering",
-        "text": "The executable MFMA kernel constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: memory bounds, atomic legality, global race freedom, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. ThreadIndex/DisjointSlice dynamic access, runtime slice bounds, loops, branches, Tiled2D ownership, and matrix terminals are connected from ordinary safe Rust through LLVM and qualification launch. Unsupported effects and ownership forms still fail closed."
+        "text": "The executable MFMA kernel constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: tensor-layout and collective-participation verification, memory bounds, atomic legality, global race freedom, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. ThreadIndex/DisjointSlice dynamic access, runtime slice bounds, loops, branches, Tiled2D ownership, and matrix terminals are connected from ordinary safe Rust through LLVM and qualification launch. Unsupported effects and ownership forms still fail closed."
       },
       {
         "type": "paragraph",
@@ -1372,7 +1412,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Fallible views, total edge loads",
-        "text": "Bf16MfmaAMatrix::row_major and Bf16MfmaBMatrix::row_major return Result because invalid offsets, extents, or strides cannot form a matrix view; ordinary kernel code handles that boundary with ? or let Ok. Once the view exists, load_m16k16 and load_k16n16 return their role-typed fragments directly. A logical out-of-bounds coordinate or checked coordinate/address overflow contributes defined BF16 zero, so absence is data rather than an Option control-flow path. The compiler still emits four exact guarded loads for each fragment in Kernel IR V7: only the true edge may touch memory, while the false edge supplies zero, and the generic bounds pass verifies the true-edge address."
+        "text": "Bf16MfmaAMatrix::row_major and Bf16MfmaBMatrix::row_major return Result because invalid offsets, extents, or strides cannot form a matrix view; ordinary kernel code handles that boundary with ? or let Ok. Once the view exists, load_m16k16 and load_k16n16 return role-typed fragments directly. A logical out-of-bounds coordinate or checked coordinate/address overflow contributes defined BF16 zero, so absence is data rather than an Option control-flow path. Kernel IR V7 still emits four exact guarded loads per fragment. Formal-memory admission proves that each true edge uses the same slice data, slice length, selected index, and index < length predicate; the false edge supplies zero without a memory access."
       },
       {
         "type": "table",
@@ -1416,7 +1456,7 @@ const narrativeRegistry = deepFreeze({
           "Validate lda, ldb, ldc and the maximum addressed extent, then construct fallible row-major A and B views.",
           "Derive the workgroup tile; each role-typed view and the wave-lane capability determine the lane's four fragment coordinates.",
           "For each 16-wide K phase, directly receive A and B fragments whose guarded in-range reads supply BF16 values and whose false edges supply zero.",
-          "Call DeviceMatrix::multiply_accumulate uniformly across the wave and carry four FP32 accumulators.",
+          "Call DeviceMatrix::multiply_accumulate uniformly across the wave; the loop backedge carries typed FP32 components while a compiler-owned descriptor retains the exact instruction contract and current-wave provenance.",
           "Advance the phase by 16 until every dynamic K element is covered.",
           "Apply alpha * accumulator + beta * C once through each checked Tiled2D output witness."
         ]
@@ -1425,7 +1465,13 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "The compiler does not recognize GEMM",
-        "text": "Bounds, sparse index facts, ownership, race freedom, uniformity, convergence, and ranked-memory verification operate on dialect operations and effects. The same passes analyze softmax, attention, MoE, reductions, and arbitrary kernels; matrix lowering only selects the target instruction after those generic obligations pass."
+        "text": "Bounds, typed-edge sparse index facts, ownership, race freedom, uniformity, convergence, and ranked-memory verification operate on dialect operations and effects. One ephemeral manager shares sparse results, execution layout, and bounded traces across the seven ordered passes. The same machinery analyzes softmax, attention, MoE, reductions, and arbitrary kernels; matrix lowering only selects the target instruction after those generic obligations pass."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Why the dynamic tile is provable",
+        "text": "Tiled2D is a compiler-authenticated ownership mapping, not a GEMM hint. Its checked witness embeds every active launch axis as an exact unit coordinate before applying the tile and lane transform, so the generic race pass can prove disjoint outputs for a runtime grid. An ordinary dynamic affine pointer expression gets no such exception, and any coordinate multiply or add that may overflow remains Incomplete."
       },
       {
         "type": "callout",
