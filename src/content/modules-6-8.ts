@@ -78,7 +78,7 @@ const moeRouting: Lesson = {
         "a91d913d7fb7a91e0a24008ad4f1a15663225eb457ac0b0e3227f724a147785c",
       explanatory: false,
       notice:
-        "This safe sequential oracle defines deterministic top-2 tie breaking, capacity, compact slots, inverse permutation, and sentinels.",
+        "This safe sequential oracle defines deterministic top-2 tie breaking, capacity, compact slots, inverse permutation, and sentinels. Its slice reads and multiple output views are not compiler-bound; stable output-specific hierarchy identities, exact routing numerical policy, and retained runtime support remain Incomplete.",
     },
     {
       language: "rust",
@@ -197,7 +197,7 @@ const expertCompute: Lesson = {
         "e90e671831b8cef17960c276b930e39257c4399a64034554c9cabb4dbca494b7",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic routed rows, reduction and output extents, strides, expert selection, bias, gate, and preserved padding for runtime qualification. Its Vec allocation, loops, and calls place it outside compiler-authenticated reference-effect V1.",
+        "Safe sequential Rust defines dynamic routed rows, reduction and output extents, strides, expert selection, bias, gate, and preserved padding for runtime qualification. Its Vec allocation and slice reads are not compiler-bound; claim-specific MFMA summaries, multi-output hierarchy identities, routed numerical proof, and retained runtime support remain Incomplete.",
     },
     {
       language: "rust",
@@ -215,7 +215,7 @@ const expertCompute: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states generic equality-plus-hierarchy composition, not a receipt for this compilation. A fresh generated obligation must bind the exact permutation, reference, PLIRON, and evidence identities; routed arithmetic, compiler projection, and LLVM-or-later refinement remain unproved.",
+        "This verified workload-neutral source model states generic equality-plus-hierarchy composition, not this compilation's generated receipt. Production composition is integrated; this lesson remains Incomplete on Vec/slice reads, claim-specific MFMA summaries, multi-output hierarchy identities, routed numerical proof, retained runtime, compiler projection, and LLVM-or-later refinement.",
     },
     {
       language: "rust",

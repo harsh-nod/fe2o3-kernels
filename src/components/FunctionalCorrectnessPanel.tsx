@@ -84,6 +84,10 @@ export function FunctionalCorrectnessPanel({
           <dd>{entry.hierarchyCoverage}</dd>
         </div>
         <div>
+          <dt>Production gate</dt>
+          <dd>{entry.productionPipeline}</dd>
+        </div>
+        <div>
           <dt>Per-compilation Verus</dt>
           <dd>{entry.perCompilationVerus}</dd>
         </div>

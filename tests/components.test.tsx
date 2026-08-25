@@ -73,12 +73,13 @@ describe("functional-correctness catalog", () => {
     expect(screen.getByText("Schedule relation")).toBeInTheDocument();
     expect(screen.getByText("Numerical policy")).toBeInTheDocument();
     expect(screen.getByText("GPU hierarchy")).toBeInTheDocument();
+    expect(screen.getByText("Production gate")).toBeInTheDocument();
     expect(screen.getByText("Per-compilation Verus")).toBeInTheDocument();
     expect(screen.getByText("Incomplete / trusted boundary")).toBeInTheDocument();
     expect(screen.getByText("pointwise + fold")).toBeInTheDocument();
     expect(screen.getByText("bounded recurrence")).toBeInTheDocument();
     expect(
-      screen.getByText(/No generated Verus receipt is bound/u),
+      screen.getByText(/no generated Verus report is bound/iu),
     ).toBeInTheDocument();
   });
 
@@ -144,7 +145,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Twenty-one representative compile-time failures",
+        name: "Twenty-three representative compile-time failures",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -152,7 +153,7 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(21);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(23);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
     expect(screen.getByText("Swapped MFMA operand roles")).toBeInTheDocument();
     expect(screen.getByText("B fragment uses the wrong transpose")).toBeInTheDocument();
@@ -168,6 +169,8 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("The grid leaves one output coordinate unwritten")).toBeInTheDocument();
     expect(screen.getByText("A CPU-reference effect has no authenticated proof")).toBeInTheDocument();
     expect(screen.getByText("The GPU write disagrees with the CPU reference")).toBeInTheDocument();
+    expect(screen.getByText("Multiple output views lack hierarchy identities")).toBeInTheDocument();
+    expect(screen.getByText("Compiler-derived parallel contract is invalid")).toBeInTheDocument();
     expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
     expect(screen.getByText("Supported safe ownership mappings")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "Shifted<Index1D, N>" })).toBeInTheDocument();
@@ -175,7 +178,7 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
     expect(screen.getByText("Stable pass diagnostic catalog")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-RACE-004" })).toBeInTheDocument();
-    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(17);
+    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(19);
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002" })).toBeInTheDocument();
@@ -183,12 +186,14 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "FE2O3-ATOMIC-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-016" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-017" })).toBeInTheDocument();
     expect(
       document.querySelectorAll(".compile-failure-source code.language-rust"),
     ).toHaveLength(4);
     expect(
       document.querySelectorAll(".compile-failure-source code.language-text"),
-    ).toHaveLength(17);
+    ).toHaveLength(19);
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();

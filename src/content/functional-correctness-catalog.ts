@@ -22,16 +22,20 @@ export interface FunctionalCorrectnessCatalogEntry {
   scheduleRelations: FunctionalRelation[];
   numericalPolicy: string;
   hierarchyCoverage: string;
+  productionPipeline: string;
   perCompilationVerus: string;
   disposition: FunctionalCorrectnessDisposition;
   boundary: string;
 }
 
+const productionGate =
+  "For an admitted reference-bound compilation, production derives and reconciles the compiler-owned semantic contract, derives and validates the strict parallel contract, then runs a generated per-compilation Verus conditional-lemma checker before KIR lowering. The production report cryptographically binds the exact check and retained receipts outside the lemma; this is not one whole-kernel theorem, and candidate declarations are never evidence.";
+
 const noCompilationReceipt =
-  "No generated Verus receipt is bound to this lesson's exact compilation. The generic composition theorem must be generated from, executed for, and authenticated against one compilation's MIR and live PLIRON identities.";
+  "The compiler gate is integrated, but no generated Verus report is bound to this lesson's exact compilation. Its generated source, conditional-lemma result, retained effect receipts, tool identity, and SafeReferenceMirToLivePliron boundary must all authenticate outside the lemma. mi300x lacks the root-owned /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 runtime, so no referenced production compile has completed the gate; cached Verus fixtures pass and there is no fallback.";
 
 const unsupportedReferenceBody =
-  "The safe reference uses slice reads, iterators or counted loops, helper calls, and in some cases Vec allocation or multiple effects. Any construct outside the compiler's admitted safe-MIR subset returns Incomplete; it is never replaced by an opaque summary.";
+  "The safe reference uses unbound Vec/slice reads and, depending on the lesson, dynamic loops without compiler range evidence, richer helpers, allocations, or multiple effects. Those constructs are outside the compiler-bound admitted point-output subset and return Incomplete; they are never replaced by opaque or workload-specific summaries.";
 
 export const functionalCorrectnessCatalog = deepFreeze([
   {
@@ -48,6 +52,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "Exact copied f32 bit pattern; no floating-point arithmetic theorem is needed.",
     hierarchyCoverage:
       "The required relation is a grid-to-output bijection through workgroup and invocation coordinates. The lesson's separate ownership model is not a per-compilation functional receipt.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "model-only",
     boundary:
@@ -66,10 +71,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "IEEE operator congruence is the relevant compiler policy. It does not prove target IEEE values, OCML behavior, or an error bound.",
     hierarchyCoverage:
       "The intended proof maps each grid invocation to exactly one final coordinate; no cross-wave communication is required.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The shared-body memory proof and MI300X comparison are independent evidence. Slice-load semantics and this exact source-to-kernel join remain unproved.",
+      "The shared-body memory proof and MI300X comparison are independent evidence. Safe slice-read binding, compiler extraction/projection soundness, and this exact reference-to-live-PLIRON join remain unproved.",
   },
   {
     lessonId: "cpu-semantic-simulation",
@@ -84,6 +90,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     numericalPolicy: "Exact u32 bit-vector assignment.",
     hierarchyCoverage:
       "Only the deterministic serial simulator schedule is observed. GPU wave, workgroup, grid, and machine schedules are not established.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "observation-only",
     boundary:
@@ -102,10 +109,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "Exact binary32 only for the bounded integer corpus and the named operation tree; reassociation or general IEEE values are outside the claim.",
     hierarchyCoverage:
       "The relation spans lane and Wave64 participation. Workgroup composition, multiple waves, and grid coverage need separate live hierarchy facts.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The pinned Verus model proves the bounded collective model, not source lowering, this oracle's MIR extraction, or GPU execution.",
+      "The pinned Verus model proves the bounded collective model, not safe slice-read binding, output-specific hierarchy identities for multiple views, reassociation/error bounds, retained runtime availability, compiler projection, or GPU execution.",
   },
   {
     lessonId: "lds-barriers-atomics",
@@ -120,10 +128,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "Exact mathematical i32 sum only under the oracle's no-overflow precondition; atomic contribution coverage alone proves no final value.",
     hierarchyCoverage:
       "Lane-to-workgroup ownership and epoch convergence are required. Device/system atomic visibility and finalization remain distinct obligations.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Barrier and atomic legality do not imply the reduction theorem. The rich Result-returning oracle is outside the admitted reference-MIR subset.",
+      "Barrier and atomic legality do not imply the reduction theorem. Slice reads, rich Result control flow, multiple output/effect identities, grid-visible finalization, and retained runtime support remain outside this exact admitted compilation.",
   },
   {
     lessonId: "gemm-tiling",
@@ -138,10 +147,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "A complete claim needs the exact BF16 conversion, MFMA contraction order, f32 epilogue policy, exceptional values, and either target-value authority or a proved error bound.",
     hierarchyCoverage:
       "Invocation fragments must cover each wave tile, waves each workgroup tile, and workgroups the dynamic output grid exactly once, including edges.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The Vec-returning reference and arbitrary slice loads are runtime-oracle evidence. Compiler projection soundness, LLVM+, hardware, and performance stay separate.",
+      "The Vec-returning reference and arbitrary slice loads are runtime-oracle evidence. Live MFMA sites still need claim-specific tensor summaries; the numerical contract still needs reassociation/error proof, and retained runtime, compiler projection, LLVM+, hardware, and performance stay separate.",
   },
   {
     lessonId: "gemm-proof-plan",
@@ -156,10 +166,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "The proof plan must select exact operator congruence or a proved error-bounded policy; test epsilon is not proof evidence.",
     hierarchyCoverage:
       "The plan requires fragment-to-wave, wave-to-workgroup, and workgroup-to-grid coverage plus final observable-frame facts.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Historical layout, source-model, machine, and hardware records remain separate. None is a per-compilation end-to-end functional receipt.",
+      "Layout, source-model, machine, and hardware records remain separate. Slice-read binding, claim-specific MFMA summaries, hierarchy identities, numerical proof, and the retained runtime are still required for an exact per-compilation receipt.",
   },
   {
     lessonId: "softmax-invariant",
@@ -174,10 +185,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "Error-bounded transcendental refinement is required but not admitted. IEEE operator congruence alone does not establish exp, denominator, or final target values.",
     hierarchyCoverage:
       "Each output row needs complete column contributions, a legal reduction schedule within its wave/workgroup, and total grid coverage.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Vec allocation, slice reads, loops, helpers, exponential semantics, narrow dynamic bounds, and full numerical refinement remain unproved.",
+      "Vec allocation, slice-read binding, exponential semantics, narrow dynamic bounds, output-specific hierarchy identities where multiple views are live, error-bound/reassociation proof, and retained runtime support remain unproved.",
   },
   {
     lessonId: "flash-attention",
@@ -192,10 +204,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "A proved error-bounded policy is required for MFMA, exp, rescaling, and normalization. No target IEEE-value or OCML authority is claimed.",
     hierarchyCoverage:
       "Fragment ownership must compose through wave and workgroup tiles to every head/query/output coordinate; masked key phases form the recurrence domain.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The current oracle and GPU comparisons do not authenticate arbitrary slice loads, recurrence extraction, dynamic range bounds, compiler projection, or LLVM+.",
+      "The current oracle and GPU comparisons do not authenticate slice reads, claim-specific tensor/MFMA summaries, multi-output hierarchy identities, error-bound/reassociation proof, retained runtime availability, compiler projection, or LLVM+.",
   },
   {
     lessonId: "moe-routing",
@@ -210,10 +223,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "Routing order needs an exact total-order policy for logits, including NaN and ties. The published model does not prove target FP32 comparison values.",
     hierarchyCoverage:
       "Token/expert contributions must compose from invocations through workgroups to one grid-wide stable permutation and inverse.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The source model, bounded corpus, typed ownership, and fail-closed protected path do not prove authenticated source-to-kernel or grid-wide machine execution.",
+      "The source model, bounded corpus, typed ownership, and fail-closed protected path do not bind slice reads, stable ranked-view identities for multiple outputs (FE2O3-PARALLEL-016), an exact routing numerical/order policy, retained runtime availability, compiler projection, or grid-wide machine execution.",
   },
   {
     lessonId: "moe-expert-compute",
@@ -228,10 +242,11 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "A complete policy must cover BF16 conversion, MFMA and f32 accumulation, bias, gate, route weights, combine order, exceptional values, and a proved bound when not exact.",
     hierarchyCoverage:
       "Route permutation and inverse span the grid; each expert contraction composes fragment, wave, workgroup, and grid ownership before deterministic combine.",
+    productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Five passing MI300X shapes are qualification evidence, not a universal router, arithmetic, compiler-refinement, hardware, or performance theorem.",
+      "Five passing MI300X shapes are qualification evidence. Slice-read binding, claim-specific tensor/MFMA summaries, stable identities for multiple output views, error-bound/reassociation proof, retained runtime support, compiler refinement, hardware, and performance remain outside the claim.",
   },
 ] satisfies FunctionalCorrectnessCatalogEntry[]);
 
@@ -262,6 +277,7 @@ function validateCatalog(): void {
       entry.admittedMirSubset,
       entry.numericalPolicy,
       entry.hierarchyCoverage,
+      entry.productionPipeline,
       entry.perCompilationVerus,
       entry.boundary,
     ];

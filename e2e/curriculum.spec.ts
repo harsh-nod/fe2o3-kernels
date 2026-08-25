@@ -346,7 +346,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Twenty-one representative compile-time failures",
+      name: "Twenty-three representative compile-time failures",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -444,7 +444,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
   await page.getByRole("tab", { name: "Effect + V2 receipt" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("proof.require_effect_refinement");
-  await expect(page.getByRole("tabpanel")).toContainText("SafeReferenceMirToKernelMir");
+  await expect(page.getByRole("tabpanel")).toContainText("SafeReferenceMirToLivePliron");
   await expect(page.getByRole("tabpanel")).toContainText(
     "proved_source_to_isa = false",
   );
@@ -455,7 +455,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Twenty-one representative compile-time failures",
+      name: "Twenty-three representative compile-time failures",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));

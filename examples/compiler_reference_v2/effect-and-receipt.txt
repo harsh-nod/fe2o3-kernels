@@ -30,13 +30,11 @@ RequestEffectRefinement(
 )
 
 # The reference effect comes from safe Rust MIR. The GPU output, ranked index,
-# constant RHS, and exact bounds-only selection come from the GPU projection.
+# typed value, and path condition come independently from the GPU projection.
 # A strict one-to-one match is required before this request is constructed.
-# Other logical GPU path conditions are rejected in the current source subset.
+# Unbound Vec/slice reads and unsupported CFG or expressions fail Incomplete.
 
-# On a machine with the exact fixed runtime, successful private receipt import
-# replaces only RequestEffectRefinement with RequireEffectRefinement. The
-# resulting recipe materializes these real PLIRON operations:
+# Per-effect receipt admission materializes these real PLIRON operations:
 #
 #   kernel.access (%output, %index) [kind=Write]
 #   kernel.ownership_contract (%output)
@@ -48,24 +46,29 @@ RequestEffectRefinement(
 #     %true, %true, %true, %true, %gpu_value, %reference_value
 #   )
 #
-# ValueAccess is a compiler-owned recipe operation, not a dialect operation:
-# its RHS is retained in the effect contract while the real write materializes
-# as kernel.access. The transcript binds the full ranked recipe and CFG,
-# execution layout, access site, ownership contract, formulas, reference site,
-# and exact same-session MIR identities.
+# Production then performs three mandatory compiler-owned stages in order:
+#
+#   1. derive/reconcile the exact semantic MIR/live-PLIRON contract
+#   2. derive/validate the strict pointwise/permutation/fold/recurrence contract
+#   3. generate and run one generic Verus conditional-lemma checker
+#
+# The production report cryptographically binds the exact instantiation,
+# retained effect receipts, and tool execution outside the lemma. Receipts are
+# not logical premises in one whole-kernel Verus theorem. Candidate
+# declarations and generated identity comments are not premises. The move-only
+# result is required before KIR lowering.
 
 receipt_format = Ed25519 V2
-receipt_boundary = SafeReferenceMirToKernelMir
+receipt_boundary = SafeReferenceMirToLivePliron
 receipt_public_authority = signature_and_policy_verified_only
 private_transition = RequestEffectRefinement -> RequireEffectRefinement
 
-requested_property = per_effect_partial_correctness
+requested_property = per_compilation_conditional_composition
 fixture_proof_admitted = false
 proved_total_output_coverage = false
 proved_source_to_isa = false
 proved_artifact_or_launch = false
 
-# A separate runtime-controller integration test executes one real generated
-# workload-neutral Verus proof under the pinned rust_verify/Z3 process policy.
-# The source fixture on this host stops earlier because /opt does not contain
-# the fixed production runtime closure.
+# The exact runtime is fixed at
+# /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5.
+# Its absence is terminal Incomplete; production has no fallback.

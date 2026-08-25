@@ -485,7 +485,7 @@ const gemmMapping: Lesson = {
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
       notice:
-        "This host-allocating Vec reference is the runtime qualification oracle for MI300X. It is not the local acyclic, call-free #[kernel(reference = ...)] function consumed by compiler-authenticated reference-effect V1.",
+        "This host-allocating Vec reference is the runtime qualification oracle for MI300X. Its Vec allocation and slice reads are outside the compiler-bound admitted point-output subset, so it is not authenticated by the production reference gate.",
     },
     {
       kind: "spec",
@@ -508,7 +508,7 @@ const gemmMapping: Lesson = {
       evidenceId: "reference-refinement-v1",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem explains equality-plus-hierarchy composition. It is not a receipt for this compilation. Production authority requires a newly generated obligation bound to this reference MIR, kernel MIR, live PLIRON graph, relations, policy, and retained identities; this dynamic Vec-returning oracle is currently Incomplete.",
+        "This verified workload-neutral source model explains equality-plus-hierarchy composition; it is not this compilation's generated receipt. The production per-compilation gate is integrated, but this Vec/slice reference, live MFMA summaries, hierarchy identities, numerical proof, and retained runtime are currently Incomplete.",
     },
     { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
@@ -576,7 +576,7 @@ const gemmProof: Lesson = {
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
       notice:
-        "This host-allocating Vec reference remains a runtime qualification oracle. It is outside the initial local acyclic, call-free reference-effect V1 subset and carries no compiler-authenticated functional-refinement authority.",
+        "This host-allocating Vec reference remains a runtime qualification oracle. Its Vec allocation and slice reads are not compiler-bound, and live MFMA summaries, hierarchy identities, numerical proof, and retained runtime support remain Incomplete.",
     },
     exactGemmProofTab(),
     exactGemmHostTab(),
@@ -655,7 +655,7 @@ const softmax: Lesson = {
         "8ff11a0aa3806c2fe7d5f5aab8c5b055316039de718b28d69c6042e439bed73a",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. Because it allocates and returns Vec and contains loops/calls, it is not yet a compiler-authenticated reference-effect V1 function.",
+        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. Its Vec allocation and slice reads are not compiler-bound; transcendental/error-bound semantics, output hierarchy identities, and retained runtime support are also Incomplete.",
     },
     {
       language: "rust",
@@ -673,7 +673,7 @@ const softmax: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the composition rule, not a receipt for this compilation. A fresh per-compilation obligation must authenticate the exact reference and PLIRON identities; exponential/OCML, target values, compiler projection, and LLVM-or-later refinement remain outside the claim.",
+        "This verified workload-neutral source model states the composition rule, not this compilation's generated receipt. Production composition is integrated, but slice reads, exponential/error-bound semantics, output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement remain outside this lesson's claim.",
     },
     {
       language: "rust",
@@ -764,7 +764,7 @@ const flash: Lesson = {
         "f14413bd3662973a8803cdfdd23e6c6b23facc9d4c627e4e91d7a1e63ee7f203",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. Its Vec allocation, loops, and calls place it outside reference-effect V1; exact floating-point lowering remains a separate numerical-refinement obligation.",
+        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. Its Vec allocation and slice reads are not compiler-bound; claim-specific MFMA summaries, multi-output hierarchy identities, error-bound/reassociation evidence, and retained runtime support are also Incomplete.",
     },
     {
       language: "rust",
@@ -782,7 +782,7 @@ const flash: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the generic composition rule, but is not an authenticated link from this dynamic oracle to the kernel. A per-compilation proof must bind the exact recurrence and evidence identities. Exponential-law, target IEEE FP32/OCML, compiler projection, and LLVM-or-later refinement remain open.",
+        "This verified workload-neutral source model states the generic composition rule, but is not an authenticated link from this dynamic oracle to the kernel. Production composition is integrated; this lesson remains Incomplete on slice reads, claim-specific tensor summaries, recurrence/numerical proof, multi-output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement.",
     },
     {
       language: "rust",

@@ -22,7 +22,8 @@ interface SemanticCorrectnessMilestoneManifest {
   compilerTree: string | null;
   preloweringReportVersion: string | null;
   functionalReceiptVersion: string | null;
-  sharedTheoremSha256: string | null;
+  perCompilationTemplateSha256: string | null;
+  perCompilationGeneratedFixtureSha256: string | null;
   verusVersion: string | null;
   verusExecutableSha256: string | null;
   mechanisms: SemanticCorrectnessMechanism[];
@@ -88,8 +89,12 @@ function validateSemanticCorrectnessMilestone(): void {
     milestone.preloweringReportVersion.length > 0 &&
     typeof milestone.functionalReceiptVersion === "string" &&
     milestone.functionalReceiptVersion.length > 0 &&
-    typeof milestone.sharedTheoremSha256 === "string" &&
-    /^[0-9a-f]{64}$/u.test(milestone.sharedTheoremSha256) &&
+    typeof milestone.perCompilationTemplateSha256 === "string" &&
+    /^[0-9a-f]{64}$/u.test(milestone.perCompilationTemplateSha256) &&
+    typeof milestone.perCompilationGeneratedFixtureSha256 === "string" &&
+    /^[0-9a-f]{64}$/u.test(
+      milestone.perCompilationGeneratedFixtureSha256,
+    ) &&
     typeof milestone.verusVersion === "string" &&
     milestone.verusVersion.length > 0 &&
     typeof milestone.verusExecutableSha256 === "string" &&
@@ -109,4 +114,4 @@ export const semanticCorrectnessMilestone = deepFreeze(milestone);
 export const semanticMilestoneBoundary =
   semanticCorrectnessMilestone.status === "integration-pending"
     ? `Milestone status: integration pending. The published compiler remains ${semanticCorrectnessMilestone.baselineCompilerCommit}; the contracts below are explanatory and grant no compiler, proof, artifact, launch, or hardware authority.`
-    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}, with ${semanticCorrectnessMilestone.preloweringReportVersion} and consumed ${semanticCorrectnessMilestone.functionalReceiptVersion} evidence. The published gate binds its admitted safe-reference MIR, kernel MIR, and live PLIRON facts, but its source-pinned shared theorem at ${semanticCorrectnessMilestone.sharedTheoremSha256} is not a per-compilation proof. Production functional authority now requires a fresh generic composition obligation bound to each compilation. That integration and final compiler pin remain pending, so every lesson below reports its exact Incomplete, model-only, or observation-only boundary. Unsupported reference constructs, unproved narrow dynamic bounds, target IEEE values, compiler projection soundness, LLVM-or-later refinement, artifacts, launch, hardware, performance, and universal correctness remain outside the claim.`;
+    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}, with ${semanticCorrectnessMilestone.preloweringReportVersion} and consumed ${semanticCorrectnessMilestone.functionalReceiptVersion} evidence. For an admitted reference-bound compilation, production derives and reconciles the semantic contract, derives and validates the strict parallel contract, and runs a generated per-compilation Verus conditional-lemma checker before KIR lowering. The production report cryptographically binds that check and the retained receipts outside the Verus lemma; it is not one whole-kernel theorem. The template ${semanticCorrectnessMilestone.perCompilationTemplateSha256} and generated fixture ${semanticCorrectnessMilestone.perCompilationGeneratedFixtureSha256} identify the mechanism; cached fixtures pass, but mi300x lacks the required root-owned /opt runtime, so no referenced production compile has completed this gate. The final integrated compiler commit and tree still require publication repinning. Every lesson below reports its exact boundary. Unsupported Vec/slice load binding, dynamic reference-loop range evidence, claim-specific tensor summaries, multi-output hierarchy identities, error-bound or reassociation proofs, target IEEE values, compiler extraction/projection and pass soundness, LLVM-or-later refinement, artifacts, launch, hardware, performance, and universal correctness remain outside the claim.`;

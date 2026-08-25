@@ -346,7 +346,7 @@ const vecadd: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "The workload-neutral Verus theorem composes exact per-coordinate equality with hierarchy ownership; the shared-body suite supplies vecadd's local bounds and write facts.",
+        "This workload-neutral source-model theorem composes exact per-coordinate equality with hierarchy ownership; it is not the compiler's generated per-compilation receipt, and the shared-body suite supplies only vecadd's local bounds and write facts.",
     },
     {
       language: "rust",
@@ -460,7 +460,7 @@ const cpuSimulation: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "The generic theorem proves composition of semantic equality and exact ownership. It does not upgrade observation-only CPU simulation into GPU hardware evidence.",
+        "This source-model theorem proves composition of semantic equality and exact ownership. It is not a generated production receipt and does not upgrade observation-only CPU simulation into GPU hardware evidence.",
     },
     {
       language: "bash",
@@ -650,6 +650,7 @@ const compilerChecks: Lesson = {
     "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
     "Reason about multidimensional workgroups, alias classes, publication epochs, and atomic scope without relying on a workload recognizer.",
     "Follow sparse index facts through reachable typed CFG edges and explain why analysis caches end at each validation boundary.",
+    "Follow compiler-owned semantic derivation, strict parallel derivation, and generated per-compilation Verus composition in their mandatory pre-KIR order.",
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
     "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
     "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
@@ -681,9 +682,9 @@ const compilerChecks: Lesson = {
     },
     {
       kind: "compiler-checked",
-      label: "Safe Rust effect-refinement join",
+      label: "Safe Rust per-compilation composition gate",
       detail:
-        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. It extracts the reference write from safe Rust MIR and the GPU output, ranked coordinate, constant RHS, and exact bounds-only selection from the GPU projection, then requires a strict one-to-one effect match. The compiler correlates that pair with one value-carrying ranked recipe write. The positive dynamic DisjointSlice fixture reaches the pinned proof-runtime boundary; changing only 17 to 18 is rejected as an RHS mismatch before Verus or target lowering. A successful retained proof would establish per-effect partial correctness only; this host fixture does not admit a receipt because the fixed production runtime is absent.",
+        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles the exact semantic contract, derives and independently validates the strongest supported pointwise/permutation/fold/recurrence parallel contract, then runs a generated workload-neutral Verus conditional-lemma checker. The production report binds that check, retained receipts, and SafeReferenceMirToLivePliron identities outside the lemma; it is not a whole-kernel theorem. Changing 17 to 18 is rejected earlier. mi300x lacks the root-owned retained /opt runtime, so no referenced production compile has completed the gate; cached fixtures pass and candidate declarations never replace evidence.",
       reference: currentImplementationReference(
         [
           "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
@@ -694,9 +695,13 @@ const compilerChecks: Lesson = {
           "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
           "crates/rustc-codegen-fe2o3/src/reference_effect_bijection_v1.rs",
           "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
-          "crates/fe2o3-pliron/src/production/ranked.rs",
-          "crates/fe2o3-verifier/src/functional_refinement_receipt_v2.rs",
-          "crates/fe2o3-verifier/src/functional_refinement_runtime_v1.rs",
+          "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
+          "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
+          "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs",
+          "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
+          "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/production_mir_pliron_verus_join_v1.rs",
         ],
         { target: "gfx942" },
       ),
@@ -745,11 +750,11 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "Reference-effect V1 accepts exactly one local safe Rust, non-variadic Rust-ABI function with up to three leading usize point axes and exactly one direct mutable scalar output write. The initial admitted subset is acyclic, call-free, and limited to unsigned or bool constant RHS expressions.",
+        "Reference-effect V1 accepts one local safe Rust, non-variadic Rust-ABI function with up to three leading usize point axes and bounded point-output effects. It admits typed scalar expressions, selected branches, canonical finite loops, and direct safe local scalar helpers only when independently lowered; Vec/slice value reads still require a bound GPU-load symbol and otherwise fail Incomplete.",
     },
     {
       kind: "verus",
-      label: "Effect + V2 receipt",
+      label: "Production proof gate",
       language: "text",
       code: compilerReferenceEffect,
       sourcePath:
@@ -757,7 +762,7 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "The display separates the compiler-owned ranked recipe from the PLIRON produced only after proof admission. Recipe ValueAccess carries the RHS; PLIRON retains the real kernel.access site and the RHS in proof.require_effect_refinement. The public receipt can report only signature-and-policy verification; only the same private compiler session can consume it.",
+        "The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus conditional-lemma checker before KIR lowering. A move-only report binds the check and retained receipts at SafeReferenceMirToLivePliron outside the lemma; compiler extraction/projection and pass soundness remain trusted.",
     },
     {
       kind: "host",
@@ -778,7 +783,7 @@ const compilerChecks: Lesson = {
       code: compilerReferenceDiagnostics,
       explanatory: true,
       notice:
-        "The positive fixture intentionally stops because the immutable production runtime is not installed at its fixed /opt path on the test host. The mutation failure occurs earlier and therefore does not depend on Verus availability.",
+        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no runtime fallback. The mutation failure and FE2O3-PARALLEL-016/017 construction failures occur earlier and do not depend on Verus availability.",
     },
   ],
   diagram: "memory",

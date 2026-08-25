@@ -5,9 +5,10 @@
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
   "compilerCommit": "1f05db4d308f65af28953264bfe0d4aacf93fe35",
   "compilerTree": "ff8f57223c23efd4cabede73c28a86b934d4daef",
-  "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputRefinementReportV2 + ProductionMirPlironSemanticContractReportV1",
-  "functionalReceiptVersion": "ImportedFunctionalRefinementProofV2",
-  "sharedTheoremSha256": "21c5cc55f95f4b38d65183f5912cc086d8c8ff35bb8135e6d6d0d21a3bbaaea2",
+  "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputRefinementReportV2 + ProductionMirPlironSemanticContractReportV1 + ProductionParallelReferenceContractReportV1 + ProductionMirPlironPerCompilationVerusReportV1",
+  "functionalReceiptVersion": "ImportedFunctionalRefinementProofV2 (SafeReferenceMirToLivePliron)",
+  "perCompilationTemplateSha256": "21615dee28aefff9a4792851287dca4ca2cc16838d0d528af195c3e614b45bc2",
+  "perCompilationGeneratedFixtureSha256": "25ac7ce744e3d489e8cd4c89489abbedc08484a53d6440dfdef4434d1bba3559",
   "verusVersion": "0.2026.08.02.b677dd5",
   "verusExecutableSha256": "ad2669f579d898ede53f2bf84e80a1daf4e3578739b0f5807ef209a0c9f382dd",
   "mechanisms": [
@@ -46,14 +47,16 @@
       "detail": "finite fold, bounded recurrence, and permutation-gather contracts with explicit domains, step bounds, order, numerical policy, typed-root reconciliation, coverage binding, and independent final-value proof",
       "evidence": [
         "crates/dialect-kernel/src/collective_semantics.rs",
+        "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
         "crates/fe2o3-kernel-analysis/tests/pliron_collective_semantics.rs",
-        "crates/fe2o3-pliron/tests/production_collective_semantics.rs"
+        "crates/fe2o3-pliron/tests/production_collective_semantics.rs",
+        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs"
       ]
     },
     {
       "id": "aggregate-mir-refinement-gate",
       "status": "published-current",
-      "detail": "non-vacuous aggregate join of TotalView, every modeled global write, typed semantic roots, finite collective value contracts, and retained functional-refinement evidence at the safe-reference-MIR to kernel-MIR boundary; it grants no source-to-MIR, lowering, target IEEE-value, artifact, launch, hardware, or universal-correctness authority",
+      "detail": "non-vacuous aggregate join of TotalView, every modeled global write, typed semantic roots, finite collective value contracts, and retained functional-refinement evidence at the SafeReferenceMirToLivePliron boundary; it grants no compiler extraction/projection soundness, LLVM-or-later, target IEEE-value, artifact, launch, hardware, or universal-correctness authority",
       "evidence": [
         "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
         "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
@@ -63,18 +66,29 @@
     {
       "id": "exact-mir-pliron-contract",
       "status": "published-current",
-      "detail": "an exact workload-neutral contract binds safe-reference MIR, kernel MIR, live PLIRON evidence, typed SSA identities and commitments, every reachable natural-loop backedge, finite collective contracts, and every total output; the admitted result is move-only and grants no LLVM-or-later authority",
+      "detail": "compiler-owned semantic derivation constructs and reconciles an exact workload-neutral contract binding safe-reference MIR, kernel MIR, live PLIRON evidence, typed SSA identities and commitments, every reachable natural-loop backedge, finite collective contracts, and every total output; the admitted result is move-only and grants no LLVM-or-later authority",
       "evidence": [
         "crates/fe2o3-functional-proof/src/mir_pliron_semantic_contract_v1.rs",
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_v1.rs",
+        "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
         "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs"
       ]
     },
     {
       "id": "per-compilation-verus-composition",
-      "status": "integration-pending",
-      "detail": "the production policy requires a fresh workload-neutral composition obligation for each compilation, bound to that compilation's safe-reference MIR, kernel MIR, live PLIRON graph, output relations, schedule relations, hierarchy facts, numerical policy, and retained proof identities; until the final compiler commit and receipt version are pinned here, no lesson receives this authority",
-      "evidence": []
+      "status": "published-current",
+      "detail": "before KIR lowering, production derives and reconciles the semantic contract, derives and validates the strict parallel contract without trusting candidate declarations, then runs a generated workload-neutral Verus conditional-lemma checker; the production report cryptographically binds its exact instantiation, retained effect receipts, tool execution, safe-reference MIR, kernel MIR, live PLIRON graph, output and schedule relations, hierarchy facts, numerical policy, and SafeReferenceMirToLivePliron boundary outside the lemma. This is not one whole-kernel Verus theorem",
+      "evidence": [
+        "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
+        "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
+        "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs",
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
+        "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+        "crates/rustc-codegen-fe2o3/src/production_mir_pliron_verus_join_v1.rs",
+        "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
+        "scripts/test-mir-pliron-per-compilation-verus.sh"
+      ]
     }
   ],
   "kernelLessons": [
@@ -93,8 +107,8 @@
   "publicationRequirements": [
     "pin an exact compiler commit and tree on both public main refs",
     "name the exact mandatory pre-lowering report and functional receipt versions",
-    "after compiler integration, promote per-compilation-verus-composition only with exact ProductionParallelReferenceContractReportV1 and ProductionMirPlironPerCompilationVerusReportV1 evidence paths and tests",
-    "publish FE2O3-PARALLEL-001 through FE2O3-PARALLEL-015 as fail-closed workload-neutral diagnostics without treating candidate declarations as evidence",
+    "repin the final compiler commit and tree after the integrated production composition changes are committed",
+    "publish FE2O3-PARALLEL-001 through FE2O3-PARALLEL-017 as fail-closed workload-neutral diagnostics without treating candidate declarations as evidence",
     "replace or retain every explanatory milestone specification according to its per-capability status and exact compiler-owned evidence",
     "run positive, negative, mutation, publication-gate, and browser validation",
     "state the remaining source-to-machine and floating-point trust boundaries"

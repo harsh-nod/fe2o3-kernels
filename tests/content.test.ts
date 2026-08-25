@@ -82,7 +82,7 @@ describe("curriculum integrity", () => {
       ["generic-semantic-composition", "published-current"],
       ["aggregate-mir-refinement-gate", "published-current"],
       ["exact-mir-pliron-contract", "published-current"],
-      ["per-compilation-verus-composition", "integration-pending"],
+      ["per-compilation-verus-composition", "published-current"],
     ]);
 
     for (const lesson of lessons) {
@@ -134,6 +134,12 @@ describe("curriculum integrity", () => {
       expect(entry.perCompilationVerus, entry.lessonId).toContain(
         "exact compilation",
       );
+      expect(entry.productionPipeline, entry.lessonId).toMatch(
+        /semantic contract.*parallel contract.*per-compilation Verus.*before KIR lowering/iu,
+      );
+      expect(entry.perCompilationVerus, entry.lessonId).toContain(
+        "SafeReferenceMirToLivePliron",
+      );
       expect(entry.boundary, entry.lessonId).not.toMatch(
         /universal(?:ly)? (?:correct|proved)/iu,
       );
@@ -162,6 +168,27 @@ describe("curriculum integrity", () => {
         (entry) => entry.lessonId === "cpu-semantic-simulation",
       )?.disposition,
     ).toBe("observation-only");
+
+    for (const lessonId of [
+      "gemm-tiling",
+      "gemm-proof-plan",
+      "flash-attention",
+      "moe-expert-compute",
+    ]) {
+      expect(
+        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
+          ?.boundary,
+        lessonId,
+      ).toMatch(/tensor|MFMA/iu);
+    }
+
+    for (const lessonId of ["moe-routing", "moe-expert-compute"]) {
+      expect(
+        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
+          ?.boundary,
+        lessonId,
+      ).toMatch(/multiple output|multiple outputs/iu);
+    }
   });
 
   it("rejects a kernel lesson detached from its cataloged safe reference", () => {
@@ -750,9 +777,11 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-002",
       "FE2O3-SEMANTIC-003",
       "FE2O3-SEMANTIC-004",
+      "FE2O3-PARALLEL-016",
+      "FE2O3-PARALLEL-017",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(15);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(14);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(16);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(15);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
     const effectDiagnosticTable = semanticFailures.blocks.find(
@@ -780,7 +809,7 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(21);
+    expect(failureGallery.examples).toHaveLength(23);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
     expect(failureGallery.intro).toContain("tensor layout first");
     expect(failureGallery.intro).toContain("do not imply that users write a separate kernel DSL");
@@ -806,6 +835,8 @@ describe("curriculum integrity", () => {
       "hierarchy_coverage_hole",
       "reference_evidence_missing",
       "reference_expression_mismatch",
+      "parallel_multi_output_identity",
+      "parallel_contract_construction",
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
@@ -834,6 +865,12 @@ describe("curriculum integrity", () => {
     );
     expect(example("reference_expression_mismatch")?.diagnostic).toContain(
       "FE2O3-EFFECT-001",
+    );
+    expect(example("parallel_multi_output_identity")?.diagnostic).toContain(
+      "FE2O3-PARALLEL-016",
+    );
+    expect(example("parallel_contract_construction")?.diagnostic).toContain(
+      "FE2O3-PARALLEL-017",
     );
     expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
     expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
@@ -873,8 +910,13 @@ describe("curriculum integrity", () => {
     expect(proof?.code).toContain("reference_output_site");
     expect(proof?.code).toContain("RequestEffectRefinement");
     expect(proof?.code).toContain("proof.require_effect_refinement");
-    expect(proof?.code).toContain("SafeReferenceMirToKernelMir");
-    expect(proof?.code).toContain("requested_property = per_effect_partial_correctness");
+    expect(proof?.code).toContain("SafeReferenceMirToLivePliron");
+    expect(proof?.code).toContain(
+      "requested_property = per_compilation_conditional_composition",
+    );
+    expect(proof?.code).toContain("derive/reconcile the exact semantic");
+    expect(proof?.code).toContain("derive/validate the strict");
+    expect(proof?.code).toContain("before KIR lowering");
     expect(proof?.code).toContain("fixture_proof_admitted = false");
     expect(proof?.code).toContain("proved_total_output_coverage = false");
     expect(proof?.code).toContain("proved_source_to_isa = false");
@@ -888,15 +930,17 @@ describe("curriculum integrity", () => {
     for (const boundary of [
       "same session",
       "strict bijection",
-      "Acyclic, call-free MIR",
-      "unsigned-or-bool scalar output",
-      "does not construct total runtime coverage",
+      "canonical finite loops",
+      "Vec/slice value reads",
       "RequestEffectRefinement",
-      "request-to-require normalization",
       "Ed25519 V2 receipt",
-      "compiler-policy signer",
-      "Public receipt inspection exposes signature-and-policy verification",
-      "One admitted receipt proves equality for that modeled effect only",
+      "SafeReferenceMirToLivePliron",
+      "compiler-owned semantic contract",
+      "strict compiler-owned parallel contract",
+      "generated workload-neutral Verus conditional-lemma checker",
+      "before KIR lowering",
+      "candidate declarations are not evidence",
+      "root-owned fixed /opt runtime",
     ]) {
       expect(narrative).toContain(boundary);
     }
@@ -915,7 +959,7 @@ describe("curriculum integrity", () => {
         /runtime qualification oracle|runtime qualification/u,
       );
       expect(advancedReference?.notice).toMatch(
-        /not .*compiler-authenticated|outside .*reference-effect V1/u,
+        /not .*authenticated|not compiler-bound|outside .*reference-effect V1/iu,
       );
     }
   });
