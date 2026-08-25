@@ -1,42 +1,61 @@
 {
   "schema": "fe2o3-semantic-correctness-tutorial-milestone-v1",
-  "status": "integration-pending",
+  "status": "partial-current",
   "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
-  "compilerCommit": null,
-  "compilerTree": null,
-  "preloweringReportVersion": null,
-  "functionalReceiptVersion": null,
+  "compilerCommit": "b561b1dd59ee93813f1d1fb8e90045450234a5ac",
+  "compilerTree": "6cd1903d28ab9e72f449f10136b52c10f8c1a734",
+  "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputRefinementReportV2",
+  "functionalReceiptVersion": "ImportedFunctionalRefinementProofV2",
   "mechanisms": [
     {
       "id": "finite-total-view",
-      "status": "integration-pending",
-      "detail": "finite total-view coverage, uniqueness, surjectivity, finality, and unmodeled-observable-write rejection",
-      "evidence": []
+      "status": "published-current",
+      "detail": "finite total-view coverage, uniqueness, surjectivity, finality, normal completion, allocation separation, and unmodeled-observable-write rejection",
+      "evidence": [
+        "crates/fe2o3-kernel-analysis/src/pliron_hierarchical_ownership.rs",
+        "crates/fe2o3-kernel-analysis/tests/pliron_hierarchical_ownership.rs"
+      ]
     },
     {
       "id": "atomic-contribution-coverage",
-      "status": "integration-pending",
+      "status": "published-current",
       "detail": "exactly-once atomic contribution coverage; this does not prove the reduction operator, order, or final fold value",
-      "evidence": []
+      "evidence": [
+        "crates/fe2o3-kernel-analysis/src/pliron_hierarchical_ownership.rs",
+        "crates/fe2o3-kernel-analysis/tests/pliron_hierarchical_ownership.rs"
+      ]
     },
     {
       "id": "typed-scalar-congruence",
-      "status": "integration-pending",
-      "detail": "typed closed scalar operator congruence with explicit numeric policy; exact IEEE operator congruence is not IEEE-value or target-instruction authority",
-      "evidence": []
+      "status": "published-current",
+      "detail": "closed typed scalar SSA with exact type, operator, cast, overflow, domain, rounding, exceptional-value, and commitment validation; IEEE operator congruence is not target IEEE-value authority",
+      "evidence": [
+        "crates/dialect-kernel/src/semantic_typed_contract.rs",
+        "crates/dialect-kernel/src/semantic_typed_expression.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs",
+        "crates/fe2o3-kernel-analysis/tests/pliron_semantic_refinement.rs"
+      ]
     },
     {
       "id": "generic-semantic-composition",
-      "status": "planned",
-      "detail": "generic fold, recurrence, permutation, and collective semantic refinement",
-      "evidence": []
+      "status": "published-current",
+      "detail": "finite fold, bounded recurrence, and permutation-gather contracts with explicit domains, step bounds, order, numerical policy, typed-root reconciliation, coverage binding, and independent final-value proof",
+      "evidence": [
+        "crates/dialect-kernel/src/collective_semantics.rs",
+        "crates/fe2o3-kernel-analysis/tests/pliron_collective_semantics.rs",
+        "crates/fe2o3-pliron/tests/production_collective_semantics.rs"
+      ]
     },
     {
-      "id": "complete-functional-join",
-      "status": "planned",
-      "detail": "same-session safe Rust reference identity, termination and arithmetic-definedness obligations, complete output semantics, and retained Verus evidence",
-      "evidence": []
+      "id": "aggregate-mir-refinement-gate",
+      "status": "published-current",
+      "detail": "non-vacuous aggregate join of TotalView, every modeled global write, typed semantic roots, finite collective value contracts, and retained functional-refinement evidence at the safe-reference-MIR to kernel-MIR boundary; it grants no source-to-MIR, lowering, target IEEE-value, artifact, launch, hardware, or universal-correctness authority",
+      "evidence": [
+        "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
+        "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
+        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs"
+      ]
     }
   ],
   "workloadExamples": [

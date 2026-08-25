@@ -1,27 +1,27 @@
 # Semantic-correctness tutorial publication
 
-The tutorial content introduced by this milestone is deliberately
-non-authoritative while
-`config/semantic-correctness-milestone.json.status` is
-`integration-pending`.
+The workload-neutral compiler mechanisms in this milestone are published at
+the exact compiler commit and tree in
+`config/semantic-correctness-milestone.json`. The aggregate status remains
+`partial-current`: the theorem ends at the safe-reference-MIR to kernel-MIR
+boundary for the admitted subset.
 
 ## Compiler integration checklist
 
-1. Update `config/publication-gate.json` only after both public compiler main
-   refs resolve to the same exact commit and tree.
-2. In `config/semantic-correctness-milestone.json`, set `compilerCommit`,
-   `compilerTree`, `preloweringReportVersion`, and `functionalReceiptVersion`.
-   Set the aggregate status to `partial-current` unless every listed mechanism
-   is published.
-3. Change a mechanism to `published-current` only with nonempty exact compiler
-   source paths in its `evidence` list. Keep generic fold, recurrence,
-   permutation, and collective semantic refinement `planned` unless those
-   contracts are part of the mandatory retained compiler report.
-4. Update the `generic-safety` and `functional-reference` entries in
-   `config/current-state.json` to match the exact theorem. Total-view coverage
+1. `config/publication-gate.json` pins both public compiler main refs to the
+   same exact commit and tree.
+2. `config/semantic-correctness-milestone.json` pins
+   `ProductionPlironPreloweringReportV2`, `ProductionMiddleEndEvidenceV5`,
+   `ProductionTotalOutputRefinementReportV2`, and the consumed
+   `ImportedFunctionalRefinementProofV2` boundary.
+3. Each `published-current` mechanism names exact compiler source and test
+   paths. Finite fold, bounded recurrence, and permutation-gather contracts
+   are mandatory semantic-pass inputs, not optional workload helpers.
+4. The `generic-safety` and `functional-reference` entries in
+   `config/current-state.json` state the exact theorem. Total-view coverage
    is not termination, arithmetic definedness, reduction-value correctness,
    floating-point value correctness, or source-to-machine refinement.
-5. Version and repin `config/functional-refinement-publication.json` if the
+5. Repin `config/functional-refinement-publication.json` whenever the
    report, obligation, receipt, runtime, or consumption boundary changes.
 
 ## Workload lesson checklist
@@ -33,13 +33,16 @@ by these exact lesson tabs:
   `flash-attention`
 - `src/content/modules-6-8.ts`: `moe-expert-compute`
 
-Replace an explanatory tab with exact compiler-owned source only after adding
-its source path, compiler commit, SHA-256, evidence record, positive proof, and
-negative mutations. Workload mathematics stays in the safe Rust and Verus
-specification; compiler mechanisms remain workload-neutral.
+The four workload contract tabs remain explanatory. The compiler now owns the
+generic contract vocabulary and validates its PLIRON representation, but it
+does not yet synthesize complete GEMM, softmax, attention, or MoE semantic
+contracts from arbitrary Rust loops, calls, loads, and multi-effect bodies.
+Workload mathematics stays in the safe Rust and Verus specification; compiler
+mechanisms remain workload-neutral.
 
-Changing the milestone status changes every canonical milestone callout.
-Recompute the 21 reviewed entries in `src/content/narrative-policy.ts`, then run:
+Changing the milestone status changes every canonical milestone callout. The
+21 reviewed entries in `src/content/narrative-policy.ts` must be recomputed,
+then validated with:
 
 ```bash
 npm run validate

@@ -257,7 +257,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel")).toContainText(
     "arithmetic_is_defined",
   );
-  await expect(page.getByText(/Integration-pending Verus specification/u)).toBeVisible();
+  await expect(page.getByText(/Explanatory workload specification/u)).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveCount(0);
 
   await page.getByRole("tab", { name: "Verus refinement" }).click();
@@ -537,7 +537,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ff710cd7886c82f91341897af103c7a42b8cb85d/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/b561b1dd59ee93813f1d1fb8e90045450234a5ac/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -636,7 +636,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ff710cd7886c82f91341897af103c7a42b8cb85d/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/b561b1dd59ee93813f1d1fb8e90045450234a5ac/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -653,7 +653,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ff710cd7886c82f91341897af103c7a42b8cb85d/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/b561b1dd59ee93813f1d1fb8e90045450234a5ac/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -745,7 +745,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at ff710cd788",
+      name: "Compiler main at b561b1dd59",
     }),
   ).toBeVisible();
   await expect(

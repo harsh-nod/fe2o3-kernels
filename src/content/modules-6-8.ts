@@ -203,7 +203,7 @@ const expertCompute: Lesson = {
       code: moeMilestoneSpec,
       explanatory: true,
       notice:
-        "Integration-pending Verus specification. It composes generic permutation, fold, total-view, and ordered-combine contracts; the compiler does not recognize MoE or routing names.",
+        "Explanatory workload specification. The published compiler validates generic permutation-gather, finite-fold, total-view, and aggregate MIR contracts without recognizing MoE or routing names, but it does not synthesize or prove this complete routed-expert composition from arbitrary Rust source.",
     },
     {
       language: "rust",

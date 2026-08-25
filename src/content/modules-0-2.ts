@@ -718,7 +718,7 @@ const compilerChecks: Lesson = {
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "a08c2253d960cdc8706b2227b4f5b2c94baef9291ea78f4196798ab4245f675e",
+        "b50e80f620ec69e18a4e623ccefa3b19a6c858c259c1417a195fae65eb853606",
       explanatory: false,
       notice:
         "Feature flags select the static-bounds, ownership-mapping, and barrier-convergence fixtures. The oob case rejects input[64] as one past the declared extent; the production driver also checks convergent, divergent, early-return, cyclic, and helper barrier placements.",

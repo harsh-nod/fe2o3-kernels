@@ -493,7 +493,7 @@ const gemmMapping: Lesson = {
       code: gemmMilestoneSpec,
       explanatory: true,
       notice:
-        "Integration-pending Verus specification. It composes generic total-view coverage and a typed fold with the safe CPU reference; it is not proof evidence at the published compiler pin.",
+        "Explanatory workload specification. The published compiler validates the generic total-view, typed-fold, and aggregate MIR contracts, but it does not synthesize this complete GEMM theorem from arbitrary Rust loops and MFMA source or consume a proof for this tab.",
     },
     {
       kind: "verus",
@@ -660,7 +660,7 @@ const softmax: Lesson = {
       code: rowSoftmaxMilestoneSpec,
       explanatory: true,
       notice:
-        "Integration-pending Verus specification. It composes generic contribution coverage, declared reductions, total output coverage, and an explicit numeric contract; no current proof receipt covers it.",
+        "Explanatory workload specification. The published compiler validates generic contribution, finite-fold, total-view, and numeric-policy contracts, but it does not synthesize this complete softmax theorem from arbitrary Rust loops, exponentials, and reductions or consume a proof for this tab.",
     },
     {
       language: "rust",
@@ -768,7 +768,7 @@ const flash: Lesson = {
       code: flashAttentionMilestoneSpec,
       explanatory: true,
       notice:
-        "Integration-pending Verus specification. It treats online softmax as a generic recurrence and composes its final state with total output effects; it grants no current compiler or machine authority.",
+        "Explanatory workload specification. The published compiler validates bounded recurrence, typed-root, coverage, and aggregate MIR contracts, but it does not synthesize this complete attention recurrence from arbitrary Rust loops, masking, exponentials, and contractions or consume a proof for this tab.",
     },
     {
       language: "rust",

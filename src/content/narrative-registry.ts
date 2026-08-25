@@ -194,7 +194,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires compiler commit ff710cd7886c82f91341897af103c7a42b8cb85d and tree 063dad99421e344c9b6d74c81d70b5992fbd8ee4 on both public main refs. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. The new safe-Rust functional-reference path admits only a bounded per-effect partial-correctness slice; it does not prove total output coverage, source-to-ISA refinement, artifact publication, launch behavior, or universal kernel correctness."
+        "text": "The checked-in publication gate requires compiler commit b561b1dd59ee93813f1d1fb8e90045450234a5ac and tree 6cd1903d28ab9e72f449f10136b52c10f8c1a734 on both public main refs. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. The aggregate gate can prove non-vacuous total-output refinement at the safe-reference-MIR to kernel-MIR boundary for its admitted finite subset. It does not prove arbitrary source extraction, termination, target IEEE values, source-to-ISA refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -2251,7 +2251,7 @@ const narrativeRegistry = deepFreeze({
     title: "Read the next theorem as a composition",
     blocks: [
       milestoneCallout(
-        "The intended result combines output coverage, value equivalence, explicit numeric semantics, termination and definedness, and retained proof evidence. Total output coverage is not total program correctness; none of these layers substitutes for source-to-machine refinement or runtime admission.",
+        "The current aggregate gate combines non-vacuous output coverage, per-effect value equivalence, closed typed scalar semantics, finite collective value contracts, and retained proof evidence at the MIR boundary. It does not prove arbitrary source extraction, termination, target arithmetic, source-to-machine refinement, or runtime admission.",
       ),
       {
         type: "table",
@@ -2270,7 +2270,7 @@ const narrativeRegistry = deepFreeze({
     title: "Run semantic gates before target gates",
     blocks: [
       milestoneCallout(
-        "Publication must pin the exact mandatory pre-lowering report and functional receipt versions before any lesson changes from explanatory to compiler-checked.",
+        "The publication pin names the exact mandatory pre-lowering report, V5 evidence, aggregate report, and consumed functional proof. Target compilation and hardware qualification remain later, separate gates.",
       ),
       {
         type: "steps",
@@ -2301,7 +2301,7 @@ const narrativeRegistry = deepFreeze({
     title: "Type the expression and the numeric policy",
     blocks: [
       milestoneCallout(
-        "The next expression contract is intended to preserve scalar type, signedness, width, operation, cast, comparison, select, overflow mode, and floating-point policy. A textual formula match is not enough.",
+        "Closed typed SSA preserves scalar type, signedness, width, operation, cast, comparison, select, overflow mode, definedness, and floating-point policy. The mandatory pass reconstructs and hashes the tree; a textual formula or opaque digest match is not enough.",
       ),
       {
         type: "table",
@@ -2371,7 +2371,7 @@ const narrativeRegistry = deepFreeze({
     title: "The additional generic rejection classes",
     blocks: [
       milestoneCallout(
-        "The planned checks extend the mandatory PLIRON sequence; they are not optional GEMM helpers. Concrete violations are Rejected. Unsupported dynamic domains, expressions, or proof relations are Incomplete and emit no artifact.",
+        "These checks are in the mandatory workload-neutral PLIRON sequence; they are not optional GEMM helpers. Concrete violations are Rejected. Unsupported dynamic domains, source expressions, or proof relations are Incomplete and emit no lowering input.",
       ),
       {
         type: "table",
@@ -2581,7 +2581,7 @@ const narrativeRegistry = deepFreeze({
     title: "Add the semantic contract to every contribution",
     blocks: [
       milestoneCallout(
-        "Until integration is published, contributors should treat these as design requirements. After publication, the exact manifest pin and mandatory diagnostics become part of the acceptance gate.",
+        "The exact manifest pin and mandatory diagnostics are now part of the acceptance gate. Contributors must also state which source, termination, numerical, lowering, artifact, runtime, and hardware boundaries remain unproved.",
       ),
       {
         type: "steps",
@@ -2605,7 +2605,7 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "7010fa60618f91d3a1a336df231545f53d47b66abea549fd6a1de970ff3867ad",
+    "36b75d96113f231111895b8b4fa9a163cb5adb1f98b7ac142fa732026fb6e889",
   "compiler-checks/catalog":
     "3d6f110f7f412903ebf44623addea020c0c9d2c2bad957554bcceb2f467f96d5",
   "compiler-checks/production-path":
