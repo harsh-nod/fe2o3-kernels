@@ -118,7 +118,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
   {
     lessonId: "lds-barriers-atomics",
     kernel: "LDS reduction and scoped atomic",
-    referenceSourcePath: "examples/workgroup_sync_v1/src/reference.rs",
+    referenceSourcePath: "examples/workgroup_sync_v1/src/contract.rs",
     referenceContract:
       "Safe Rust validates each lane's publish/read epochs, matching barriers, sole final owner, and the atomic contribution policy before updating output.",
     admittedMirSubset: unsupportedReferenceBody,

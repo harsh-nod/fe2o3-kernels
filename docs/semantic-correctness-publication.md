@@ -34,7 +34,7 @@ the exact compiler commit and tree in
    exact instantiation, tool run, and retained receipts outside the lemma;
    receipts are not logical premises in one whole-kernel theorem. Candidate
    declarations and generated identity comments are not premises.
-7. Repin this site to the final integrated compiler commit and tree. Publish
+7. Keep this site pinned to the final integrated compiler commit and tree. Publish
    `FE2O3-PARALLEL-001` through `FE2O3-PARALLEL-017` as the
    fail-closed diagnostics for semantic identity, coverage, hierarchy,
    schedules, dynamic bounds, numerical policies, calls, and tensor sites.

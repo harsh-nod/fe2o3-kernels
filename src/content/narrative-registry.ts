@@ -194,7 +194,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires compiler commit 1f05db4d308f65af28953264bfe0d4aacf93fe35 and tree ff8f57223c23efd4cabede73c28a86b934d4daef on both public main refs. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. The aggregate gate proves non-vacuous total-output refinement for its admitted finite subset and binds the exact MIR subjects, canonical natural loops, collectives, effects, and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate requires compiler commit a7a1f450b9bd440f6bafc22cde0ac35163edf05b and tree c37b21052346782ff4abf24d7f49468596855c7b on both public main refs. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. The aggregate gate proves non-vacuous total-output refinement for its admitted finite subset and binds the exact MIR subjects, canonical natural loops, collectives, effects, and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -2640,7 +2640,7 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "803a477c1d4b543fd6ed0336f1fcfd452b368ded53b05a6beddad1436fc70f87",
+    "8c482a8712f3256a33262d27892e5e886b5007ae34fc5708ca8bb59bc2f0536e",
   "compiler-checks/catalog":
     "78088987ceb9742a9f82258471d599f3eaca34eb95200e043d0c67de55a397ea",
   "compiler-checks/production-path":
@@ -2676,47 +2676,47 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "moe-expert-compute/combine":
     "a34ce5fab5137ded8844cddd4a3efe522a96b1bed4638791c017b618def489c1",
   "read-the-evidence/semantic-correctness-milestone":
-    "4fc9798f49d2817a03fa90607a78c02cb716b0ac5868d1491b910dfb30d6d3e6",
+    "53d0360cafc991307c69c819a3668ad138009aba0e26928c82c8d928a9b75b35",
   "gfx942-setup/semantic-gates":
-    "f1ac24d35d3d43cd9a0d05fa509238b90e3253fca570e601a30d8fe38ee951bd",
+    "b0831a0e31b89556e3d81243df93fab7452b422f38a1583c9f8e5fb0a1a7121f",
   "first-fill/total-output-coverage":
-    "3b423a538424e662f2fa991cf545508d82cf187d9c860938e1c4a30aadf7ac52",
+    "808404f79687a0d066421dd6a1a46017c29930fcf01db08523609e2802a841ba",
   "typed-vecadd/typed-arithmetic-contract":
-    "25e05add778b293d17f6999b917dfe94bb13b42e76c83104bb1ffb4b9508e38c",
+    "278a2525b31cce0a067c3dce8dd3686b95534f753d836e3d117baa1618ab7cda",
   "cpu-semantic-simulation/testing-is-not-proof":
-    "fc5896fe3113629f2988ad8ea2e2f295746ec9d1367876513399d78d2bd30d4a",
+    "093da9041743d3a54686dbd2deaf64101f015814d683f62053c7b22031cef812",
   "verus-contracts/compositional-reference":
-    "8b1e6427e413bb950e98672d916c92641a4a7e9c1021505c75e72299a2137ad5",
+    "9e4b522e64e749a847b342a6bd50b68b677029e16c146470aea64be3a3e483bb",
   "memory-race-proof/finality-and-frame":
-    "e4749ba6bd05abfab2579068295a8334d365a1244b4b2c0aae292a9a0dcef8db",
+    "dd9b0c0f3c3d7e670688763aab14db6ff354990943e87fd2ab1f2c6e71fd69a9",
   "compiler-checks/complete-correctness-catalog":
-    "c344a2b21c92d01e260119a4f5f1bd2ced85f01a896ff96ea465ba1c6d6f6395",
+    "166722cad2f275efd566d6ebd27b8141d6d8ba778c5aa692048bf18f996c5242",
   "reductions-scans/contribution-domain":
-    "bb1264d027c8a474d28601b99cd940673dd515c5cdad71f50315c0d54b4311d4",
+    "f5a9aa8ac2edb2fc290b8afbf10f86e5526cd2e2273700b54cc005b9c153caef",
   "lds-barriers-atomics/final-observable-effect":
-    "5086c1ffd515fe32d4208e45b72f9a18fd79f513ff6e2e6aad37f05429448cc9",
+    "976115f83552e83eae9b2849c7de99d1840109d6834d18e6e10f186749a44a17",
   "gemm-tiling/composed-reference":
-    "100631f796f419ed42713b4004d787640239ce25f0e0f75b9e00896c3e55d561",
+    "418ae3cd1f9901c456af31faaf63b31e8971e0f737f8e393ca374c4ee772da0d",
   "gemm-proof-plan/total-correctness-boundary":
-    "204bf79168b536387c63919fcec3e493c4e07ea8fd1e2b258a9ad088ad753876",
+    "69554423dbfaff5e70e06f06c71cab350f5c1268757739c8cf39c6c3f398e2c2",
   "softmax-invariant/composed-reference":
-    "61260f61e0acc2560a1f85dd7e727956b65e3086bb916fcde9cade1c2991f28f",
+    "d9246ecfbf07792edc6b2c7ea0a4baf137f1cb4a0cbbb9b0e8616b614f24d660",
   "flash-attention/composed-reference":
-    "88f1f92e2cc025479a61c65b0939be82ccfc862288d30265a2fe5ae5862e5783",
+    "ec16046cb96fe8bf223487d14cecc98f15c5bd2385beefc0fb2d6b92d17d9147",
   "moe-routing/composed-reference":
-    "6156b1b7c4a938380085924d547c91301da9c4357e584cdedf9a8b48ad055f17",
+    "1ff45d35a6360be39408c33b0267fb42a6a423300b3e550beb7ba9c5a9e7bc80",
   "moe-expert-compute/composed-reference":
-    "0db8155428e7c12248fbb83042670258f6d5146bed45e8118a8896c09130237d",
+    "e6343d4b8cab8c292d0245ba26632c62113b3d485d065f9be858c40c1cc7576c",
   "evidence-pipeline/total-correctness-receipt":
-    "9640393dfd64c4aee551e8d6936b24de8f78eefb9cf316782c618bbf84ab802f",
+    "5cecafb1e27299ebab0c479525cc45555bcfa0e6b38b6f5b9e28b633f4ec9ab8",
   "what-verus-proves/total-correctness-boundary":
-    "3324c6fdabfe209d100933b67093c07d7f412b7061b3cfd1297d5a3340273491",
+    "7251f3c6445882603c023d94d5879bd793c867d2fc63e5a2c11f998b0a571f63",
   "evidence-archive/non-retroactive-milestone":
-    "3b59a16272edd3130789980f4507d09f27c981bc100814b9db3316d2b19961de",
+    "747aeb6d8f39fd79433f494f21daa8a150ec156541f2b952c968259bfa46a523",
   "exercise-ladder/semantic-correctness":
-    "e25ae4e00e07f506abd32662b9f3ee57b2bdbfbc66e8ec5e725ab0ed8acc8bfb",
+    "fecd7c85d1762ccf824d3a98c8f466c5a18fbc900d9a7a5f69b7036f6f161678",
   "contributing-kernel/semantic-contract-checklist":
-    "c49ff34b14b0f8072b5bebfa4322c0f099f93885fabef706c5c57a60ef84c275",
+    "f31fcf944fd827e5dfbc22b3c2325d3a461737609351dab60b31bbeadee24352",
   "flash-attention/closure":
     "e2e278769f7ce11dbd7757806c13d4d7422200b8c863382f44b40e72e5304362",
   "moe-expert-compute/bounded-evidence":
