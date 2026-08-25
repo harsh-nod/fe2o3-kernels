@@ -17,7 +17,7 @@ import dynamicGemmReference from "../../examples/tiled_gemm_general_v1/src/refer
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
 import wave64CollectivesReference from "../../examples/wave64_collectives_v1/src/oracle.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
-import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/reference.rs?raw";
+import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/contract.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
@@ -383,7 +383,7 @@ const synchronization: Lesson = {
     {
       language: "rust",
       code: workgroupSyncReference,
-      sourcePath: "examples/workgroup_sync_v1/src/reference.rs",
+      sourcePath: "examples/workgroup_sync_v1/src/contract.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
         "f1b32bea55b8a6b908caaeb3f08d069bf969231735966b81bc67aa0f87ed421c",
