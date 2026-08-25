@@ -1,41 +1,71 @@
-# Mandatory workload-neutral pre-lowering order. The dialect prerequisite runs
-# first, followed by all eight verification passes:
-#   0. dialect verification
-#   1. tensor access
-#   2. bounds
-#   3. atomic legality
-#   4. race freedom
-#   5. hierarchy ownership
-#   6. barrier convergence
-#   7. workgroup memory
-#   8. semantic refinement (including the effect join below)
-# Rejected proves a concrete violation. Incomplete means the compiler cannot
-# discharge a required fact. Either result stops lowering.
+# Compiler-owned ranked recipe, simplified for display.
+# Users write the two safe Rust functions, not this recipe.
 
-# Schematic rendering of the compiler-owned effect join. Users write Rust,
-# not this IR.
-proof.require_effect_refinement
-  view = %output, indices = [%index], obligation_id = <exact FunctionalRefinement id>
-  gpu_domain = %gpu_domain, reference_domain = %reference_domain
-  gpu_precondition = %gpu_precondition, reference_precondition = %reference_precondition
-  gpu_value = %gpu_value_17, reference_value = %reference_value_17
+%true = SemanticConstant(value=1)
+%gpu_value = SemanticConstant(value=17)
+%reference_value = SemanticConstant(value=17)
+%point0 = SemanticSymbol(symbol=0)
+%index = InvocationIndex(dimension=0)
+%output = RankedView(shape=[dynamic], allocation_origin=1, writable=true)
 
-# The fixed-width Ed25519 V2 receipt binds all authority-relevant inputs:
-safe_reference_identity       = <compiler-derived>
-safe_reference_mir_sha256     = <same-session monomorphized MIR>
-kernel_subject_identity       = <compiler-derived>
-kernel_mir_sha256             = <same-session monomorphized MIR>
-normalized_obligation_effect_ir_sha256 = <obligation plus effect IR>
-verus_executable_sha256       = <policy-pinned>
-verus_configuration_sha256    = <policy-pinned>
-z3_executable_sha256          = <policy-pinned>
-z3_configuration_sha256       = <policy-pinned>
-runtime_closure_sha256        = <policy-pinned>
-execution_identity            = <verified process result>
-result                        = Proved
-boundary                      = SafeReferenceMirToKernelMir
-signer_identity               = <compiler-policy key>
+ValueAccess(kind=Write, view=%output, indices=[%index], value=%gpu_value)
+OwnershipContract(
+  view=%output,
+  coverage=ExactEffectDomain,
+  partition=ExactSets,
+)
+RequestEffectRefinement(
+  gpu_write_site=(block=2, operation=0),
+  reference_output_site=(argument=1, block=0, statement=0),
+  view=%output,
+  indices=[%index],
+  gpu_coordinates=[%point0],
+  reference_coordinates=[%point0],
+  gpu_domain=%true,
+  reference_domain=%true,
+  gpu_precondition=%true,
+  reference_precondition=%true,
+  gpu_value=%gpu_value,
+  reference_value=%reference_value,
+)
 
-authority.functional_refinement = true
-authority.source_to_isa          = false
-authority.artifact_or_launch     = false
+# The reference effect comes from safe Rust MIR. The GPU output, ranked index,
+# constant RHS, and exact bounds-only selection come from the GPU projection.
+# A strict one-to-one match is required before this request is constructed.
+# Other logical GPU path conditions are rejected in the current source subset.
+
+# On a machine with the exact fixed runtime, successful private receipt import
+# replaces only RequestEffectRefinement with RequireEffectRefinement. The
+# resulting recipe materializes these real PLIRON operations:
+#
+#   kernel.access (%output, %index) [kind=Write]
+#   kernel.ownership_contract (%output)
+#     [coverage=ExactEffectDomain, partition=ExactSets]
+#   proof.obligation <exact MIR/effect identities> FunctionalRefinement
+#   proof.evidence_ref <receipt identity> Proved Mir
+#   proof.require_effect_refinement (
+#     %output, %index, %point0, %point0,
+#     %true, %true, %true, %true, %gpu_value, %reference_value
+#   )
+#
+# ValueAccess is a compiler-owned recipe operation, not a dialect operation:
+# its RHS is retained in the effect contract while the real write materializes
+# as kernel.access. The transcript binds the full ranked recipe and CFG,
+# execution layout, access site, ownership contract, formulas, reference site,
+# and exact same-session MIR identities.
+
+receipt_format = Ed25519 V2
+receipt_boundary = SafeReferenceMirToKernelMir
+receipt_public_authority = signature_and_policy_verified_only
+private_transition = RequestEffectRefinement -> RequireEffectRefinement
+
+requested_property = per_effect_partial_correctness
+fixture_proof_admitted = false
+proved_total_output_coverage = false
+proved_source_to_isa = false
+proved_artifact_or_launch = false
+
+# A separate runtime-controller integration test executes one real generated
+# workload-neutral Verus proof under the pinned rust_verify/Z3 process policy.
+# The source fixture on this host stops earlier because /opt does not contain
+# the fixed production runtime closure.

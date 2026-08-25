@@ -1,0 +1,22 @@
+{
+  "schema": "fe2o3-functional-refinement-tutorial-publication-v1",
+  "status": "published-current",
+  "compilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
+  "compilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
+  "fixtureSourcePath": "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+  "fixtureSourceSha256": "cfcf354555472aab4deda749237e8939809968dad654ea152036352e4ace9783",
+  "receiptFixturePath": "crates/fe2o3-verifier/src/functional_refinement_receipt_v2.rs",
+  "receiptFixtureSha256": "0049b4e666c928c532898d09177cde23cca30e0ddff4f562db116804b7125063",
+  "runtimeControllerPath": "crates/fe2o3-verifier/src/functional_refinement_process_tree_v1_linux.rs",
+  "runtimeControllerSha256": "6b8a891e377275b32c574e6e71f85f138b9ae9b805b72e8f195f3ca6cb7e710d",
+  "effectDiagnosticFixturePath": "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+  "effectDiagnosticFixtureSha256": "b040d58f2b1acfaa5da2403f0ab4ca1c758041172082d735f029a5f067a57c1e",
+  "referenceCompilerCommand": "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
+  "validationCommands": [
+    "cargo test --locked -p fe2o3-verifier --tests",
+    "cargo test --locked -p fe2o3-kernel-analysis --test pliron_effect_refinement --test pliron_hierarchical_ownership --test pliron_race",
+    "cargo test --locked -p fe2o3-pliron --test production_ranked_pipeline",
+    "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
+    "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored"
+  ]
+}

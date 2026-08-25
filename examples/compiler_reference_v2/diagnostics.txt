@@ -1,0 +1,24 @@
+# Positive source on a machine without the pinned production runtime
+functional-refinement proof runtime unavailable at
+/opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5
+compilation stopped before proof admission or artifact emission
+
+# Mutate only the safe reference from 17 to 18
+source-to-proof V2 effect mismatch: output argument 1 RHS mismatch between
+reference block 0, statement 0 and GPU block 2, operation 0
+
+# The mismatch is found before Verus runs. Other terminal joins include:
+# - missing or extra GPU output effect
+# - output argument mismatch
+# - logical point coordinate mismatch
+# - non-bounds GPU control, which this initial source adapter rejects
+# - unsupported call, loop/backedge, unsafe function, or ABI
+# - unproved dynamic bound, ownership collision, or duplicate write site
+
+# Independent static bounds fixture
+error[FE2O3-BOUNDS-001]: statically out-of-bounds Read at block 2 op 0;
+access: v5 dimension 0;
+required: 64 < 64
+Rust source: .../src/lib.rs:65:20
+ranked PLIRON before rejected lowering: kernel.index_constant 64
+lowering stopped before target IR or artifact emission

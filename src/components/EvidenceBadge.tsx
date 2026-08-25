@@ -5,6 +5,7 @@ import {
   FlaskConical,
   Play,
   Route,
+  ShieldCheck,
 } from "lucide-react";
 import { evidenceLabels, type EvidenceKind } from "../content/model";
 
@@ -12,6 +13,7 @@ const icons = {
   "runnable-now": Play,
   "source-tested": FileCode2,
   "source-model-verified": BookOpenCheck,
+  "compiler-checked": ShieldCheck,
   "compiler-hsaco-observed": CircuitBoard,
   "gpu-observed": FlaskConical,
   "design-only": Route,

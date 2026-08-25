@@ -14,6 +14,7 @@ export type EvidenceKind =
   | "runnable-now"
   | "source-tested"
   | "source-model-verified"
+  | "compiler-checked"
   | "compiler-hsaco-observed"
   | "gpu-observed"
   | "design-only";
@@ -255,6 +256,11 @@ export const evidenceLabels: Record<
     short: "Verus model",
     description:
       "Verus checks a source or source-model property; machine refinement is separate.",
+  },
+  "compiler-checked": {
+    short: "Compiler checked",
+    description:
+      "An exact source-to-compiler path accepts or rejects at a named verification boundary; artifact generation and execution are separate.",
   },
   "compiler-hsaco-observed": {
     short: "HSACO mechanics",

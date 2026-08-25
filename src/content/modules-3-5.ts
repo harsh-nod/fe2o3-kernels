@@ -55,6 +55,9 @@ const collectivesSource = sourceMilestoneRecord(
 const synchronizationSource = sourceMilestoneRecord(
   "workgroup-sync-source-v1",
 );
+const referenceRefinementSource = sourceMilestoneRecord(
+  "reference-refinement-v1",
+);
 const gemmProtectedResult = resultText(
   "gpu-observed",
   `Exact bounded Slice 1 protected result
@@ -471,7 +474,7 @@ const gemmMapping: Lesson = {
       language: "rust",
       code: referenceRefinementProof,
       sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: referenceRefinementSource.commit,
       sourceSha256:
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       evidenceId: "reference-refinement-v1",
@@ -593,7 +596,7 @@ const softmax: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main af0fd523e3b774377a9c5192cf0511e34fa19735; this is evidence for the four published cases, not a universal proof or performance result.",
+          note: "Qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735; this is evidence for the four published cases, not a universal proof or performance result.",
         },
       ),
     },
@@ -627,7 +630,7 @@ const softmax: Lesson = {
       language: "rust",
       code: referenceRefinementProof,
       sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: referenceRefinementSource.commit,
       sourceSha256:
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
@@ -691,7 +694,7 @@ const flash: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main af0fd523e3b774377a9c5192cf0511e34fa19735; no tuned-library performance claim is made.",
+          note: "Qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735; no tuned-library performance claim is made.",
         },
       ),
     },
@@ -727,7 +730,7 @@ const flash: Lesson = {
       language: "rust",
       code: referenceRefinementProof,
       sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: referenceRefinementSource.commit,
       sourceSha256:
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,

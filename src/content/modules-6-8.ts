@@ -162,7 +162,7 @@ const expertCompute: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran from current compiler main af0fd523e3b774377a9c5192cf0511e34fa19735. This is evidence for five output-width cases, not a router proof or performance result.",
+          note: "Qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735. This is evidence for five output-width cases, not a router proof or performance result.",
         },
       ),
     },

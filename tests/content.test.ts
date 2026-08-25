@@ -291,7 +291,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "ff710cd7886c82f91341897af103c7a42b8cb85d",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -653,7 +653,7 @@ describe("curriculum integrity", () => {
       "FE2O3-EFFECT-009",
     ]);
     expect(JSON.stringify(effectDiagnosticTable)).toContain(
-      "coordinate, invocation, workgroup, subgroup, lane",
+      "block and operation are always reported",
     );
 
     const failureGallery = semanticFailures.blocks.find(
@@ -711,7 +711,7 @@ describe("curriculum integrity", () => {
     expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [0]");
     expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [1]");
     expect(example("reference_evidence_missing")?.diagnostic).toContain(
-      "FE2O3-EFFECT-007",
+      "FE2O3-SEMANTIC-003",
     );
     expect(example("reference_expression_mismatch")?.diagnostic).toContain(
       "FE2O3-EFFECT-001",
@@ -745,28 +745,39 @@ describe("curriculum integrity", () => {
     });
     expect(boundKernel?.code).toContain("reference = cpu_reference");
     expect(boundKernel?.code).toContain("#![forbid(unsafe_code)]");
-    expect(reference?.code).toContain("fn cpu_reference(output: &mut u32)");
+    expect(reference?.code).toContain(
+      "fn cpu_reference(_point: usize, output: &mut u32)",
+    );
     expect(reference?.code).not.toMatch(/\bunsafe\b/u);
+    expect(proof?.code).toContain("ValueAccess(kind=Write");
+    expect(proof?.code).toContain("gpu_write_site");
+    expect(proof?.code).toContain("reference_output_site");
+    expect(proof?.code).toContain("RequestEffectRefinement");
     expect(proof?.code).toContain("proof.require_effect_refinement");
     expect(proof?.code).toContain("SafeReferenceMirToKernelMir");
-    expect(proof?.code).toContain("authority.source_to_isa          = false");
-    expect(proof?.code).toContain("authority.artifact_or_launch     = false");
+    expect(proof?.code).toContain("requested_property = per_effect_partial_correctness");
+    expect(proof?.code).toContain("fixture_proof_admitted = false");
+    expect(proof?.code).toContain("proved_total_output_coverage = false");
+    expect(proof?.code).toContain("proved_source_to_isa = false");
+    expect(result?.code).toContain("RHS mismatch");
+    expect(result?.code).toContain("reference block 0, statement 0");
 
     const narrative = JSON.stringify([
       narrativeEntry("compiler-checks/catalog"),
       narrativeEntry("compiler-checks/production-path"),
     ]);
     for (const boundary of [
-      "same compiler session",
-      "monomorphized kernel and reference Instances",
-      "Calls and loops or backedges",
-      "Add and Multiply",
-      "Runtime-only hierarchy ownership is Incomplete",
-      "proof.require_effect_refinement",
+      "same session",
+      "strict bijection",
+      "Acyclic, call-free MIR",
+      "unsigned-or-bool scalar output",
+      "does not construct total runtime coverage",
+      "RequestEffectRefinement",
+      "request-to-require normalization",
       "Ed25519 V2 receipt",
       "compiler-policy signer",
-      "grants no source-to-ISA",
-      "runtime qualification oracles",
+      "Public receipt inspection exposes signature-and-policy verification",
+      "not total view coverage",
     ]) {
       expect(narrative).toContain(boundary);
     }
@@ -795,7 +806,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "ff710cd7886c82f91341897af103c7a42b8cb85d",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -825,7 +836,7 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "ff710cd7886c82f91341897af103c7a42b8cb85d",
       sourceSha256:
         "8df056afb9e91aa3e42b4372860431612a77ef71b0abb7ebdd088c7210a5a1bd",
       explanatory: false,
@@ -1885,12 +1896,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-24",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
-      eventualPublicTree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
+      eventualPublicCommit: "ff710cd7886c82f91341897af103c7a42b8cb85d",
+      eventualPublicTree: "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
       publicationGate: {
         state: "deployment-gated-exact-target",
-        requiredCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
-        requiredTree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
+        requiredCommit: "ff710cd7886c82f91341897af103c7a42b8cb85d",
+        requiredTree: "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -1946,11 +1957,12 @@ describe("implementation progress integrity", () => {
     const currentNarrative = JSON.stringify(
       narrativeEntry("read-the-evidence/scalar-gemm-checkpoint"),
     );
-    expect(currentNarrative).toContain("0 Complete / 97 Partial / 0 Missing / 12 N/A");
-    expect(currentNarrative).toContain("normative 0/82/0/12");
-    expect(currentNarrative).toContain("supplemental 0/15/0");
-    expect(currentNarrative).toContain("No tutorial run/verify/evidence status");
-    expect(currentNarrative).toContain("unrelated explanatory-source label");
+    expect(currentNarrative).toContain(progressSnapshot.eventualPublicCommit);
+    expect(currentNarrative).toContain(progressSnapshot.eventualPublicTree);
+    expect(currentNarrative).toContain("on both public main refs");
+    expect(currentNarrative).toContain(
+      "bounded per-effect partial-correctness slice",
+    );
     expect(
       developmentCheckpoints.find(
         (checkpoint) => checkpoint.id === "last-audited-public-baseline",
@@ -2412,7 +2424,7 @@ describe("implementation progress integrity", () => {
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "ff710cd7886c82f91341897af103c7a42b8cb85d",
       sourceSha256:
         "d119e41e3a15e0eb3e7866a439c23203b0e4983b3bd53d3fdc585e3bde2a4a25",
       explanatory: false,
@@ -2518,7 +2530,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      "ff710cd7886c82f91341897af103c7a42b8cb85d",
     );
 
     const lesson = curriculum
@@ -2550,7 +2562,7 @@ describe("implementation progress integrity", () => {
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertHost).toMatchObject({
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "ff710cd7886c82f91341897af103c7a42b8cb85d",
       sourceSha256:
         "24838bcdd753efa2d5fac08798c10c4b75176cb18eee88bd05c20af4af04cb1d",
       explanatory: false,
@@ -3128,8 +3140,9 @@ describe("implementation progress integrity", () => {
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
     expect(orientation).toContain(
-      "Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree",
+      "The checked-in publication gate requires compiler commit",
     );
+    expect(orientation).toContain("on both public main refs");
     expect(orientation).toContain("not a compiler refinement proof");
     expect(orientation).toContain("passed 1/1 in 40.92 seconds");
     expect(orientation).toContain("does not inspect machine-body semantics");
@@ -3165,7 +3178,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"af0fd523e3b774377a9c5192cf0511e34fa19735");
+    expect(mapping).toContain("sourceCommit\":\"ff710cd7886c82f91341897af103c7a42b8cb85d");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family flags remain false");

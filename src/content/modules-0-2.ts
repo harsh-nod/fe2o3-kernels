@@ -1,6 +1,7 @@
 import { narrativeSection } from "./narrative-registry";
 import { currentState } from "./current-state";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
+import compilerReferenceDiagnostics from "../../examples/compiler_reference_v2/diagnostics.txt?raw";
 import compilerReferenceEffect from "../../examples/compiler_reference_v2/effect-and-receipt.txt?raw";
 import compilerReferenceKernel from "../../examples/compiler_reference_v2/kernel.rs?raw";
 import compilerReferenceSource from "../../examples/compiler_reference_v2/reference.rs?raw";
@@ -615,14 +616,15 @@ const compilerChecks: Lesson = {
   order: 2,
   title: "Compiler checks: reject invalid kernels",
   summary:
-    "Bind a safe Rust CPU reference to exact MIR, then see workload-neutral verifier passes reject invalid or unproved effects before lowering.",
+    "See the complete workload-neutral error catalog, then bind safe Rust CPU semantics to one real GPU write and reject an incorrect result before lowering.",
   duration: "42 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
     "Distinguish a proved static access from a checked dynamic access.",
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
-    "Bind a local safe Rust reference with #[kernel(typed, reference = ...)] and identify the exact same-session MIR identities.",
-    "Follow proof.require_effect_refinement through hierarchy witnesses and an authenticated Ed25519 V2 proof receipt.",
+    "Bind a local safe Rust reference with #[kernel(typed, reference = ...)] and use leading usize arguments as logical point coordinates.",
+    "Follow one compiler-owned value-carrying ranked recipe write through a strict source-effect bijection and into a conditional retained Verus/Ed25519 V2 admission.",
+    "Distinguish per-effect partial correctness from total output coverage and full source-to-machine equivalence.",
     "Locate tensor-layout, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
     "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
     "Reason about multidimensional workgroups, alias classes, publication epochs, and atomic scope without relying on a workload recognizer.",
@@ -633,7 +635,7 @@ const compilerChecks: Lesson = {
   ],
   claims: [
     {
-      kind: "compiler-hsaco-observed",
+      kind: "compiler-checked",
       label: "Production ranked-bounds rejection",
       detail:
         "At current compiler main, ordinary Rust semantic MIR reaches ranked PLIRON. The generic bounds verifier accepts the checked dynamic output access and rejects input[64] for [f32; 64] with FE2O3-BOUNDS-001 before target lowering or artifact emission.",
@@ -656,6 +658,28 @@ const compilerChecks: Lesson = {
         { target: "gfx942" },
       ),
     },
+    {
+      kind: "compiler-checked",
+      label: "Safe Rust effect-refinement join",
+      detail:
+        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. It extracts the reference write from safe Rust MIR and the GPU output, ranked coordinate, constant RHS, and exact bounds-only selection from the GPU projection, then requires a strict one-to-one effect match. The compiler correlates that pair with one value-carrying ranked recipe write. The positive dynamic DisjointSlice fixture reaches the pinned proof-runtime boundary; changing only 17 to 18 is rejected as an RHS mismatch before Verus or target lowering. A successful retained proof would establish per-effect partial correctness only; this host fixture does not admit a receipt because the fixed production runtime is absent.",
+      reference: currentImplementationReference(
+        [
+          "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
+        ],
+        [
+          "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+          "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/reference_effect_bijection_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
+          "crates/fe2o3-pliron/src/production/ranked.rs",
+          "crates/fe2o3-verifier/src/functional_refinement_receipt_v2.rs",
+          "crates/fe2o3-verifier/src/functional_refinement_runtime_v1.rs",
+        ],
+        { target: "gfx942" },
+      ),
+    },
   ],
   sections: [
     narrativeSection("compiler-checks/catalog"),
@@ -672,7 +696,7 @@ const compilerChecks: Lesson = {
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "6a8d3073d8535a771accc4dc40920ffb95092f9a760ee3521c11908512074643",
+        "a08c2253d960cdc8706b2227b4f5b2c94baef9291ea78f4196798ab4245f675e",
       explanatory: false,
       notice:
         "Feature flags select the static-bounds, ownership-mapping, and barrier-convergence fixtures. The oob case rejects input[64] as one past the declared extent; the production driver also checks convergent, divergent, early-return, cyclic, and helper barrier placements.",
@@ -682,55 +706,57 @@ const compilerChecks: Lesson = {
       label: "Reference-bound kernel",
       language: "rust",
       code: compilerReferenceKernel,
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+      sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "Minimal supported source shape for the compiler-authenticated reference path. The final compiler source link, commit, and SHA-256 are intentionally pending until the integrated compiler commit is published.",
+        "Minimal form of the exact positive source fixture. The leading usize reference argument names logical point axis 0; it is not a physical GPU pointer or launch argument.",
     },
     {
       kind: "reference",
       label: "Safe CPU reference",
       language: "rust",
       code: compilerReferenceSource,
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+      sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "Reference-effect V1 accepts a local safe Rust, non-variadic Rust-ABI function with explicit mutable outputs. The initial subset is bounded and acyclic: calls and loops or backedges are rejected rather than summarized.",
+        "Reference-effect V1 accepts exactly one local safe Rust, non-variadic Rust-ABI function with up to three leading usize point axes and exactly one direct mutable scalar output write. The initial admitted subset is acyclic, call-free, and limited to unsigned or bool constant RHS expressions.",
     },
     {
       kind: "verus",
       label: "Effect + V2 receipt",
       language: "text",
       code: compilerReferenceEffect,
-      explanatory: true,
-      notice:
-        "The operation is compiler-owned PLIRON, not user syntax. Import accepts exactly one policy-signed Proved receipt for the current reference MIR, kernel MIR, normalized obligation/effect IR, toolchain, execution, signer, and MIR boundary.",
-    },
-    {
-      kind: "host",
-      label: "Verify",
-      language: "bash",
-      code: "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
       sourcePath:
-        "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+        "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "This remains the exact published OOB production test. config/functional-refinement-publication.pending.json separately records the reference-binding commands and evidence fields that must be repinned after the compiler increment is published.",
+        "The display separates the compiler-owned ranked recipe from the PLIRON produced only after proof admission. Recipe ValueAccess carries the RHS; PLIRON retains the real kernel.access site and the RHS in proof.require_effect_refinement. The public receipt can report only signature-and-policy verification; only the same private compiler session can consume it.",
+    },
+    {
+      kind: "host",
+      label: "Run fixtures",
+      language: "bash",
+      code: "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1\ncargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
+      sourceCommit: currentState.compilerCommit,
+      explanatory: true,
+      notice:
+        "The first command checks the positive boundary, the 17-to-18 mutation, and ten fail-closed reference forms. The second remains the exact static out-of-bounds production rejection.",
     },
     {
       kind: "result",
-      label: "Compile error",
+      label: "Reference diagnostics",
       language: "text",
-      code: resultText(
-        "compiler-hsaco-observed",
-        `error[FE2O3-BOUNDS-001]: ranked access is outside the declared bound
-required: 64 < 64
-Rust source: .../src/lib.rs:65:20
-ranked PLIRON before rejected lowering: kernel.index_constant 64
-lowering stopped before target IR or artifact emission`,
-      ),
+      code: compilerReferenceDiagnostics,
       explanatory: true,
       notice:
-        "This is a compiler rejection, so no HSACO or runtime error exists for the invalid kernel.",
+        "The positive fixture intentionally stops because the immutable production runtime is not installed at its fixed /opt path on the test host. The mutation failure occurs earlier and therefore does not depend on Verus availability.",
     },
   ],
   diagram: "memory",

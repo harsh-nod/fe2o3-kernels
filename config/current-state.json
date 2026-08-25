@@ -47,6 +47,13 @@
       "sourcePaths": ["crates/fe2o3-kernel-analysis/src/control_flow.rs", "crates/fe2o3-kernel-analysis/src/ssa.rs", "crates/fe2o3-kernel-analysis/src/uniformity.rs", "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs", "crates/fe2o3-kernel-analysis/src/pliron_invocation_trace.rs", "crates/fe2o3-kernel-analysis/src/pliron_tensor_layout.rs", "crates/fe2o3-kernel-analysis/src/pliron_race.rs"]
     },
     {
+      "id": "functional-reference",
+      "label": "Safe Rust functional references",
+      "status": "partial",
+      "detail": "A typed kernel may name exactly one local safe Rust CPU reference. The compiler authenticates same-session MIR, extracts one reference write independently from one GPU ranked write, requires exact output/coordinate/constant-RHS agreement, validates that the GPU selection is only the mandatory bounds guard, and generates a workload-neutral Verus obligation. The initial production subset permits up to three direct logical point axes, exactly one mutable unsigned-or-bool scalar output write, an acyclic call-free reference, and a constant RHS. A successfully admitted proof establishes per-effect partial correctness only: total output coverage, general path predicates or expressions, termination, numerical equivalence, compiler-extraction correctness, and source-to-ISA refinement remain outside the claim.",
+      "sourcePaths": ["crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs", "crates/rustc-codegen-fe2o3/src/reference_effect_bijection_v1.rs", "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs", "crates/fe2o3-verifier/src/functional_refinement_receipt_v2.rs", "crates/fe2o3-verifier/src/functional_refinement_runtime_v1.rs", "crates/fe2o3-verifier/src/functional_refinement_process_tree_v1_linux.rs"]
+    },
+    {
       "id": "target-finalization",
       "label": "Target finalization",
       "status": "partial",

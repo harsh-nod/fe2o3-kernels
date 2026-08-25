@@ -580,6 +580,7 @@ p {
   background: var(--accent-soft);
 }
 
+.evidence-compiler-checked,
 .evidence-compiler-hsaco-observed {
   color: var(--blue);
   background: var(--blue-soft);

@@ -184,7 +184,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires commit af0fd523e3b774377a9c5192cf0511e34fa19735, tree 37ec6083aba26f3057bb21f3a51c619c17bceb49. Deployment remains gated until both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main resolve to that exact commit and tree. Historical execution and proof evidence remains independently pinned: the protected GEMM observation stays at c4fcb4d980cf979c0527dfa135a7b9f4fe72a811, tree c65c6ab567409afaaef6ea39c8befcac21d47119; Wave64 and synchronization Phase A evidence stays at d592ecee1154ca39daf1f9b1c2e02ab462e6c5f8, tree cdec8448a300aa71d17565ca50fd4d893932f602. Every displayed attributed kernel source is pinned to an exact immutable source milestone; the dynamic strided GEMM source at this gate compiles and passes four MI300X qualification cases; and 96b9890c3ad33ad8c6b4239a9b567728a176d65f, tree f911f0c693238830ad6070b2674fb863857bfec1, remains a historical audited public baseline rather than the current tip. The integrated checkpoint retains the bounded protected GEMM, Wave64, and workgroup-synchronization observations and the fixed row-softmax, FlashAttention, and MoE source, proof, compiler, finalizer, and typed-runtime layers under each layer's existing limits. Accepted W0 ancestor 9f40bbff39156f8b5f05868377ee12a2c4f74207, tree fd05530d3728aa928090b8e7beb372eaaf22b477, adds descriptor-sealed HostLinkClosureV1 and a genuinely static host LLD built from pinned upstream LLVM/LLD archives. Two fresh guarded MI300X builds produced the same 85,597,472-byte tool with SHA-256 7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9. This is measured/no-authority evidence: it grants no protected publication, broker or durable artifact handoff, runtime, load, launch, GPU, memory-safety, race-freedom, source-to-machine, or Verus-to-machine authority. Ancestor 66393d3ca7a6805633ed94e12c707a6d22bdf1ad adds only an inert Broker V4 protocol foundation. Every V4 value reports AUTHORITY=none; no production durable replay registry or runtime-owned session capability exists. W1 durability mechanics now have a bounded foundation, but durable anti-rollback and production authority remain open. Commit 43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4 adds bounded source-model-to-canonical-Kernel-IR correspondence for the exact Wave64 profile: 38 tests pass with one existing hardware test ignored, Verus discharges 22 positive obligations, all eight expected-negative fixtures are rejected, and the checker records 4,359 deterministic mask observations. Its receipt omits the oracle and refinement-code hashes, KIR order is validated rather than operationally executed, and Verus relates internal mathematical definitions without computing SHA-256. It grants no source-to-model, compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity authority. Commit b8daeb2bc953924a424542820bed566e52d57290 adds only an inert protected-service descriptor-admission foundation with AUTHORITY=none. Its 27 unit tests and two compile-fail doctests pass; two privileged/root-only positives remain ignored and unexecuted. It establishes no liveness, PID-reuse protection, endpoint exclusivity, storage provenance or anti-rollback, replay, host-link, publication, load, launch, runtime, or GPU authority. Commit e874da2083c2a1eb192048ea5f88a053c28d0ee2 adds accepted reviewed attributed-source structural correspondence for the exact Wave64 kernel: an exact syn AST gate precedes a fixed reviewed interpreter, 17,436 observations pass, and Verus adds 13 positive obligations plus six expected-negative fixtures. Both paths report proves_source_to_model_refinement=false. Independent review limits this to structural and model-internal/definitional correspondence: constants are not a verified SHA computation, the interpreter is fixed after AST admission rather than derived from source semantics, and no operational Rust semantics is proved. It grants no compiler, LLVM/ISA, artifact, GPU, generalized safety or race-freedom, protected-execution, or parity authority. Ancestor commit 4aed8d4d394783362e289a558b6d94cc28ecda36 adds the accepted static pre-exec containment foundation with AUTHORITY=none: a freestanding syscall-only _start, exact descriptor-object and process-control revalidation, exact descriptor closure, empty target environment, fixed one-element argv, and post-exec PDEATHSIG(SIGKILL) coverage. Fourteen tests and Cargo integration pass; three builds produced the same 17,488-byte static executable with SHA-256 db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52. The boundary still trusts the supervisor and inherited process state: a preattached ptrace tracer, CAP_SYS_PTRACE, or inherited seccomp user notification can invalidate checks; descriptor state is coarse rather than complete open-file-description or socket authority; parent-start provenance relies on trusted procfs mount state; and ordinary target exec resets dumpability. It grants no broker session or replay, publication, link, load, launch, runtime, GPU, or parity authority. Commit 4639ff36c8651a859495da86ea2c75e735377440, tree f0d91caaf705a7542135226c20cdb794dbc4f542, adds only the bounded external anti-rollback anchor protocol with AUTHORITY=none. Its canonical fixed-width advance and recovery challenges, strict Ed25519 verification against a caller-pinned key, and move-only state transitions make a commit observation constructible only after a valid signed proposed-head observation. It does not provide key provenance, durable nonce freshness, transport, persistence, a monotonic anchor implementation, protected-service integration, or atomic publication, and it promotes no parity or lesson evidence. Commit c703eaa271040b7c297e0d3b9ea8cc9fa470f327, tree c75b6cb9d70c6984bb375d09f095580eb2f7581a, isolates production-deadline Worker V2 ACK fixtures behind one exclusive process lane; this is a test-only determinism repair. Commit f4dcafb8b95345a5203a7f2c9886f9600345405f, tree 9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df, makes examples/row_softmax_v1/src/kernel.rs the sole ordinary example-owned attributed source and adds complete syn AST structural admission before a fixed reviewed interpreter/model with digest and certificate binding. This is not Rust semantic refinement and grants no compiler/GPU causality, OCML/IEEE, runtime, memory/race, protected-dispatch, or parity authority. Commit 7139ccfd01e0ab8b0fc521613ac4356134d2e0c5, tree aef7f32c4dc3fe0087006e880cb535d8c8adaf1a, adds descriptor-relative durable prepared-session consume and recovery with AUTHORITY=none; anti-rollback, key provenance, hostile same-UID resistance, multiwriter coordination, cross-system atomicity, publication, runtime, and GPU authority remain absent. Commit 5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4, tree 37dc2765f30c50f99a3fb3f5b8e56d03a511c33e, adds eight metadata-authoritative rustc-codegen shards covering all 19 current Cargo test targets exactly once plus a fail-closed aggregate. Local policy and isolated MI300X runs passed; at the then-current public tip 86c4ca67a673bfec966f79e6c701104db872d8ea, the complete powderluv/fe2o3 GitHub-hosted generic run, including all eight shards and the fail-closed aggregate, passed. The device code-object path remains pinned to upstream LLVM target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker. The matrix remains 0 Complete / 97 Partial / 0 Missing / 12 N/A, with normative 0/82/0/12 and supplemental 0/15/0. No tutorial run/verify/evidence status or unrelated explanatory-source label changes, and Zero Missing records inventory coverage rather than cuda-oxide parity."
+        "text": "The checked-in publication gate requires compiler commit ff710cd7886c82f91341897af103c7a42b8cb85d and tree 063dad99421e344c9b6d74c81d70b5992fbd8ee4 on both public main refs. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. The new safe-Rust functional-reference path admits only a bounded per-effect partial-correctness slice; it does not prove total output coverage, source-to-ISA refinement, artifact publication, launch behavior, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -599,7 +599,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Bind the reference as ordinary Rust",
-        "text": "The user writes #[kernel(typed, reference = cpu_reference, ...)]. The path must resolve to exactly one local safe Rust function in the same compiler session; no source-written hash or proof identity is trusted. The collector resolves the concrete monomorphized kernel and reference Instances, records their canonical identities and exact rustc MIR body SHA-256 values, checks the compiler-defined logical ABI relation, and translates the admitted reference MIR into bounded ReferenceEffectIrV1. This is workload-neutral MIR handling: no pass recognizes a GEMM, softmax, attention, routing, expert, or other algorithm name."
+        "text": "The user writes #[kernel(typed, reference = cpu_reference, ...)]. The path must resolve to exactly one local safe Rust function in the same compiler session; no source-written hash or proof identity is trusted. The collector resolves the concrete monomorphized kernel and reference Instances, records their canonical identities and exact rustc MIR body SHA-256 values, and translates the admitted reference MIR into bounded ReferenceEffectIrV1. Leading usize parameters name logical point axes; a following &mut scalar names one observable output at that point. This is workload-neutral MIR handling: no pass recognizes a GEMM, softmax, attention, routing, expert, or other algorithm name."
       },
       {
         "type": "table",
@@ -609,30 +609,30 @@ const narrativeRegistry = deepFreeze({
           "Fail-closed result"
         ],
         "rows": [
-          ["Safety and ABI", "Local safe fn, non-variadic Rust ABI, unit return, and supported scalar, scalar-reference, or scalar-slice argument relations.", "Unsafe references, user unsafe blocks, nonlocal bodies, wrong return type, or a logical ABI mismatch are Rejected before proof import."],
-          ["Control flow", "Acyclic MIR with assignments, supported scalar operations, goto, switch, assert, and return.", "Calls and loops or backedges are initially unsupported and stop compilation with a precise reference-effect diagnostic."],
-          ["Effect normalization", "The end-to-end equality join currently normalizes the supported Add and Multiply semantic expressions without floating-point reassociation.", "An opaque or unsupported domain, precondition, or value is Incomplete with FE2O3-EFFECT-008."],
-          ["Dynamic ownership", "A dynamic extent reduced to an exact value by sparse facts can be proved.", "Runtime-only hierarchy ownership is Incomplete with FE2O3-EFFECT-003; no artifact is emitted."],
-          ["Observable outputs", "Each reference output write maps to one exact GPU write view and coordinate relation.", "Orphan, ambiguous, duplicate, or unmodeled writes stop as FE2O3-EFFECT-005 or FE2O3-EFFECT-006."]
+          ["Safety and ABI", "Local safe fn, non-variadic Rust ABI, unit return, leading usize logical point axes, and one direct mutable unsigned-or-bool scalar output.", "Unsafe references, user unsafe blocks, nonlocal bodies, wrong return type, an indirect output, or a logical ABI mismatch stop before proof import."],
+          ["Control flow", "Acyclic, call-free MIR whose observable write has one independently extracted path guard.", "Calls, loops or backedges, or an unsupported logical guard stop with a precise reference-effect diagnostic."],
+          ["Effect normalization", "The initial source join accepts a direct point coordinate and an unsigned-or-bool constant RHS. The GPU may omit only the exact bounds predicate already discharged by the mandatory bounds pass.", "An opaque coordinate, nonconstant RHS, non-bounds guard, atomic store, or unsupported scalar type fails closed before proof execution."],
+          ["Dynamic ownership", "ExactEffectDomain admits a structurally bounds-guarded dynamic DisjointSlice write after clean bounds and race reports and exactly one static write site.", "It does not claim every coordinate in the whole runtime view is written; unresolved bounds, collisions, or duplicate sites remain non-clean and emit no artifact."],
+          ["Observable outputs", "Independent reference and GPU effect sets must form an exact output, point-coordinate, guard, and RHS bijection before the proof request is constructed.", "Missing, extra, ambiguous, duplicate, mismatched, or unmodeled writes stop before Verus or lowering."]
         ]
       },
       {
         "type": "callout",
         "tone": "proof",
-        "title": "Compare complete effects across the GPU hierarchy",
-        "text": "proof.require_effect_refinement carries one ranked output view and indices plus paired GPU/reference domain, precondition, and value expressions. Whole-function analysis requires one real write at that site, exact MIR-bound FunctionalRefinement evidence, and Clean hierarchy ownership. It reconstructs concrete coordinate, invocation, workgroup, subgroup, and lane witnesses, rejects domain, precondition, or value disagreement with FE2O3-EFFECT-001, and reports any GPU write omitted by the sequential reference. The operation is inert structural IR; only the mandatory analysis and authenticated proof import can discharge it."
+        "title": "Compare the admitted GPU effect to safe Rust",
+        "text": "The private join converts only the correlated store into the compiler-owned ValueAccess ranked recipe operation and creates RequestEffectRefinement with the exact GPU block and operation, reference argument, block and statement, view, memory indices, logical coordinates, domains, preconditions, and RHS values. The current ExactEffectDomain path requires Clean bounds and race reports, one valid ownership contract, and a strict match for every static GPU output-write site in the admitted source subset; it does not construct total runtime coverage. After a matching retained proof, the same compiler session alone replaces the request with RequireEffectRefinement and reruns admission, which materializes the real kernel.access and proof.require_effect_refinement PLIRON operations."
       },
       {
         "type": "callout",
         "tone": "proof",
         "title": "Authenticate the proof execution and every input",
-        "text": "A fixed-width domain-separated Ed25519 V2 receipt binds the safe-reference identity and MIR, kernel subject and MIR, normalized obligation/effect IR, Verus executable and configuration, Z3 executable and configuration, retained runtime closure, exact execution identity and Proved result, SafeReferenceMirToKernelMir boundary, and compiler-policy signer. The signer key comes from compiler policy, never kernel source. Import rejects a stale identity, wrong toolchain, wrong signer, invalid signature, non-Proved result, wrong boundary, duplicate receipt, or missing receipt; the resulting proof value is move-only and grants functional-refinement evidence only for that exact MIR/effect statement."
+        "text": "A fixed-width domain-separated Ed25519 V2 receipt binds the safe-reference identity and MIR, kernel subject and MIR, full normalized ranked-graph obligation, Verus executable and configuration, Z3 executable and configuration, retained runtime closure, exact execution identity and Proved result, SafeReferenceMirToKernelMir boundary, and compiler-policy signer. The retained controller bounds the exact rust_verify, internal verifier, and Z3 descendant topology, executable mappings, inherited files, resources, output, timeout, and cleanup. Import rejects a stale identity, wrong toolchain, wrong signer, invalid signature, non-Proved result, wrong boundary, duplicate receipt, or missing receipt. The public proof value reports signature-and-policy verification only; private same-session compiler custody performs the authority-bearing request-to-require transition."
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "The authenticated boundary is deliberately narrow",
-        "text": "This join does not establish source-to-MIR, MIR-to-Kernel-IR-to-LLVM/ISA preservation, artifact integrity, publication, load, launch, runtime behavior, hardware correctness, or an unstated numerical policy. Those require their own authenticated refinements and runtime precondition joins. The current advanced GEMM, row-softmax, FlashAttention, and grouped-expert MoE Safe CPU reference tabs return host Vec values and remain runtime qualification oracles; they are not silently reclassified as compiler-authenticated reference-effect V1 functions."
+        "text": "The current theorem is per-effect partial correctness: every actual admitted GPU write has the same logical point and value as its paired safe Rust write. It does not establish total output coverage, termination, arbitrary expressions, floating-point or numerical equivalence, source-to-MIR or MIR-to-Kernel-IR-to-LLVM/ISA preservation, artifact integrity, publication, load, launch, runtime behavior, or hardware correctness. Those require separate coverage, refinement, and runtime precondition joins. The current advanced GEMM, row-softmax, FlashAttention, and grouped-expert MoE Safe CPU reference tabs return host Vec values and remain runtime qualification oracles; they are not silently reclassified as compiler-authenticated reference-effect V1 functions."
       },
       {
         "type": "callout",
@@ -931,7 +931,7 @@ const narrativeRegistry = deepFreeze({
             "id": "bounds_static_oob",
             "title": "Static out-of-bounds access",
             "source": "#[kernel(typed)]\n#[allow(unconditional_panic)]\nfn out_of_bounds(value: f32, mut output: DisjointSlice<f32>) {\n    let input = [value; 64];\n    let selected = input[64];\n    if let Some(element) = output.get_mut(thread::index_1d()) {\n        *element = selected;\n    }\n}",
-            "diagnostic": "error[FE2O3-BOUNDS-001]: statically out-of-bounds Read at block 0 op 3; access: %0 dimension 0; required: 64 < 64\n  --> Rust source ...:65:20\n  = ranked PLIRON before rejected lowering\n  = lowering stopped before target IR or artifact emission",
+            "diagnostic": "error[FE2O3-BOUNDS-001]: statically out-of-bounds Read at block 2 op 0; access: v5 dimension 0; required: 64 < 64\n  --> Rust source ...:65:20\n  = ranked PLIRON before rejected lowering\n  = lowering stopped before target IR or artifact emission",
             "property": "MemoryBounds",
             "stage": "generic PLIRON pass 2/8",
             "code": "FE2O3-BOUNDS-001",
@@ -1014,24 +1014,24 @@ const narrativeRegistry = deepFreeze({
             "title": "A CPU-reference effect has no authenticated proof",
             "language": "text",
             "source": "proof.obligation <id = 4a.., property = FunctionalRefinement, subject = kernel_mir.., model = reference_mir..>\nproof.require_effect_refinement %output[%index], %gpu_domain, %reference_domain, %gpu_precondition, %reference_precondition, %gpu_value, %reference_value",
-            "diagnostic": "error[FE2O3-EFFECT-007]: <publication-pending integrated wording and source span>\nclassification: Incomplete\ncondition: the exact Proved MIR-bound evidence record is missing",
+            "diagnostic": "error[FE2O3-SEMANTIC-003]: functional-reference obligation <obligation-id> is incomplete at block 0 op 2: the exact proof.evidence_ref record is missing\nclassification: Incomplete",
             "property": "FunctionalRefinementEvidence",
             "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-EFFECT-007",
-            "enforcement": "Proof dialect verifier, effect-refinement analysis, and authenticated V2 receipt import",
-            "caught": "Equal expressions do not authenticate a proof run. The compiler requires exact reference/kernel MIR and effect identities plus one policy-signed V2 receipt for a verified Proved execution at the MIR boundary; missing, stale, forged, wrong-toolchain, wrong-boundary, and duplicate receipts fail closed."
+            "code": "FE2O3-SEMANTIC-003",
+            "enforcement": "Proof dialect verifier, semantic-refinement prerequisite, and authenticated V2 receipt import",
+            "caught": "This is the direct PLIRON pass diagnostic, parameterized by the obligation identity and operation location. Equal expressions do not authenticate a proof run. The compiler requires exact reference/kernel MIR and effect identities plus one policy-signed V2 receipt for a verified Proved execution at the MIR boundary; missing, stale, forged, wrong-toolchain, wrong-boundary, and duplicate receipts fail closed."
           },
           {
             "id": "reference_expression_mismatch",
             "title": "The GPU write disagrees with the CPU reference",
             "language": "text",
-            "source": "%gpu = kernel.semantic_add (%alpha * %acc), %initial\n%cpu = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nproof.require_effect_refinement %output[%index], %gpu_domain, %cpu_domain, %gpu_precondition, %cpu_precondition, %gpu, %cpu",
-            "diagnostic": "error[FE2O3-EFFECT-001]: <publication-pending integrated wording and locations>\nclassification: Rejected\ncondition: the normalized GPU value differs from the sequential reference; the implemented analysis supplies a coordinate, invocation, workgroup, subgroup, and lane witness",
+            "source": "%gpu = kernel.semantic_constant 17\n%cpu = kernel.semantic_constant 18\nproof.require_effect_refinement %output[%index], %gpu_domain, %cpu_domain, %gpu_precondition, %cpu_precondition, %gpu, %cpu",
+            "diagnostic": "error[FE2O3-EFFECT-001]: value mismatch for %output at block 2 op 0; GPU `17` is not equivalent to sequential reference `18`\nclassification: Rejected",
             "property": "FunctionalRefinementExpression",
             "stage": "generic PLIRON pass 8/8",
             "code": "FE2O3-EFFECT-001",
             "enforcement": "Production reference-effect recipe inside the semantic-refinement stage",
-            "caught": "A valid signed proof receipt cannot hide a different GPU effect. The compiler independently normalizes the paired value expressions, joins them to the real write and hierarchy owner, and reports the first coordinate, invocation, workgroup, subgroup, and lane witness."
+            "caught": "This is the direct PLIRON pass diagnostic shape; operand names and locations come from the rejected IR. ExactView inputs may append a bounded hierarchy witness when one was constructed. The current source subset rejects a 17-to-18 mutation earlier in the compiler-private effect bijection, before Verus, with exact reference and GPU sites but no invented FE2O3 pass code."
           }
         ]
       },
@@ -1039,7 +1039,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code. The effect table records implemented code classes and their Rejected or Incomplete outcomes; exact integrated command output, source spans, and evidence hashes remain publication-pending. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code. The effect table records implemented code classes and their Rejected or Incomplete outcomes; direct PLIRON diagnostics carry stable codes, while source-join failures currently use precise rustc diagnostics without inventing a pass code. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1111,12 +1111,12 @@ const narrativeRegistry = deepFreeze({
           "Exact condition reported"
         ],
         "rows": [
-          ["FE2O3-EFFECT-001", "Rejected", "GPU and sequential-reference domain, precondition, or value expressions differ; an available counterexample names coordinate, invocation, workgroup, subgroup, lane, block, and operation."],
+          ["FE2O3-EFFECT-001", "Rejected", "GPU and sequential-reference domain, precondition, or value expressions differ; block and operation are always reported, and an ExactView bounded trace may add a hierarchy witness."],
           ["FE2O3-EFFECT-002", "Incomplete", "The output view has no exact hierarchy-ownership contract."],
-          ["FE2O3-EFFECT-003", "Incomplete", "Dynamic ownership, guarded effect tracing, or a prerequisite ownership proof is unresolved; runtime-only extents are not guessed."],
+          ["FE2O3-EFFECT-003", "Incomplete", "Under ExactView, dynamic ownership, guarded effect tracing, or a prerequisite ownership proof is unresolved; ExactEffectDomain deliberately checks only the modeled static write domain."],
           ["FE2O3-EFFECT-004", "Rejected", "The hierarchy-ownership contract used by the effect statement is concretely invalid."],
           ["FE2O3-EFFECT-005", "Rejected", "An effect contract is orphaned, matches multiple writes, or duplicates another contract for one write."],
-          ["FE2O3-EFFECT-006", "Incomplete", "A concrete GPU write has no modeled sequential-reference effect; the witness identifies its full hierarchy owner."],
+          ["FE2O3-EFFECT-006", "Incomplete", "A concrete GPU write has no modeled sequential-reference effect; a full hierarchy owner is included only when a bounded ExactView trace supplied one."],
           ["FE2O3-EFFECT-007", "Rejected or Incomplete", "The exact MIR FunctionalRefinement evidence is invalid, or required Proved MIR-bound evidence is unavailable."],
           ["FE2O3-EFFECT-008", "Incomplete", "A domain, precondition, or value expression is outside the bounded normalization subset."],
           ["FE2O3-EFFECT-009", "Incomplete", "The function exceeds the explicit effect-contract resource limit."]
@@ -1195,16 +1195,18 @@ const narrativeRegistry = deepFreeze({
         "type": "steps",
         "items": [
           "rustc preserves supported semantic MIR, source spans, ranked extents, checked branches, and memory effects.",
-          "For reference = path, the collector resolves one local safe Rust function and the exact monomorphized kernel/reference Instances in the same session, then records compiler-derived identities and MIR body SHA-256 values; source cannot supply them.",
-          "The compiler-defined logical ABI relation maps kernel inputs and disjoint outputs to the sequential reference without requiring identical physical Rust signatures. ReferenceEffectIrV1 rejects unsupported calls, loops or backedges, unsafe code, ABI forms, and effects before any proof can be imported.",
+          "For reference = path, the collector resolves one local safe Rust function and the exact monomorphized kernel/reference Instances in the same session, then records compiler-derived identities and MIR body SHA-256 values; source cannot supply them. Leading usize reference arguments are logical point axes, followed by direct mutable scalar outputs.",
+          "ReferenceEffectIrV1 derives the reference output, logical point, path guard, and RHS from safe Rust MIR. Separately, the ranked GPU projection derives the output view, invocation coordinate, constant store RHS, and validates that the only selecting control is the exact bounds branch already discharged by the mandatory bounds pass; it then normalizes that selection away. Any other logical GPU path predicate is rejected in the current adapter. A strict bijection rejects missing or extra effects and any output, coordinate, or RHS mismatch before proof execution.",
           "The ordinary-kernel source contract rejects unsafe signatures, unsafe bodies, inline assembly, and reachable unsafe device functions; only the separate unsafe_asm profile admits the low-level escape.",
           "Every compiler-recognized device capability must match its exact diagnostic item and canonical DefPath, an authenticated reviewed provider identity, the compiled SourceFileHash under the reviewed source root, and the pinned provider source digest.",
           "Supported safe ownership mappings retain their genuine marker identity and const parameters; malformed, substituted, or unsupported forms stop as Rejected or Incomplete before they can become memory effects.",
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
           "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for the immutable function; reachable typed CFG edges are part of sparse propagation, and no cache survives mutation or revalidation.",
           "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Effect refinement executes inside the final stage after hierarchy ownership. Every report returns Clean, Rejected, or Incomplete.",
-          "For each bound reference write, proof.require_effect_refinement names the exact output view/indices and paired domain, precondition, and value expressions. Analysis correlates it with one real GPU write and its coordinate, invocation, workgroup, subgroup, and lane ownership witnesses.",
-          "The compiler imports one move-only Ed25519 V2 proof only after the current MIR/effect identities, compiler-policy signer, pinned Verus/Z3/runtime closure, exact successful execution identity and Proved result, and SafeReferenceMirToKernelMir boundary all match.",
+          "For the single paired write in the current subset, the private compiler rewrites only the exact projected store into a value-carrying ranked recipe access, then creates RequestEffectRefinement with exact GPU and reference sites, memory indices, logical coordinates, domains, preconditions, and RHS formulas. It does not invent lane, subgroup, or workgroup witnesses for ExactEffectDomain.",
+          "The normalized obligation binds the full validated ranked CFG, every operation and terminator, execution layout, real value-carrying access, view and allocation, ownership contract, exact reference site, formulas, and same-session MIR subjects. Only request-to-require normalization is excluded from the digest.",
+          "When the exact fixed runtime closure is installed, the workload-neutral controller supervises pinned rust_verify, its one retained internal verifier child, and Z3 as one bounded descendant tree. Executable mappings and PT_LOAD ranges, inherited file identities, process topology, resource limits, timeout, and terminal cleanup fail closed. A real generated proof passes the isolated controller integration test; the published source fixture on this host stops at the missing fixed /opt runtime before receipt admission.",
+          "The compiler imports one move-only Ed25519 V2 proof only after the current MIR/effect identities, compiler-policy signer, pinned Verus/Z3/runtime closure, exact successful execution identity and Proved result, and SafeReferenceMirToKernelMir boundary all match. Public receipt inspection exposes signature-and-policy verification, not compiler authority.",
           "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
           "One move-only compiler-owned ranked-verification input retains the eight ordered live reports through checked lowering; no caller can reconstruct it from booleans or diagnostics. The historical inert V4 evidence wire format still serializes its original seven reports and explicitly does not claim the new hierarchy report.",
           "Protected production additionally admits a sealed V3 rustc-invocation descriptor against the live argv, cwd, complete environment, target, rustc image, backend image, and full compiler closure. Worker V3 inputs are preflighted before transaction consumption, and finalization binds the exact invocation, closure, transaction, link plan, measured worker response, raw HSACO, descriptor source, and finalized bytes.",
@@ -1215,7 +1217,13 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, hierarchy ownership, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, explicit output-ownership contracts, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. The hierarchy pass reconstructs coordinate owners and partitions them by lane, subgroup, workgroup, and grid, rejecting out-of-range writes, duplicate owners, coverage holes, or non-rectangular regions with concrete witnesses. Effect refinement then requires every declared sequential effect to match one real owned write and every real logical write to be modeled. Runtime-only unresolved extents remain Incomplete rather than being guessed. The current safe-reference subset is acyclic and call-free, and its normalized end-to-end expression join is initially Add/Multiply; unsupported reference MIR or expressions fail closed. Even a Clean MIR/effect proof grants no source-to-ISA, artifact, publication, load, launch, runtime, or hardware authority."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, hierarchy ownership, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, explicit output-ownership contracts, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. ExactView hierarchy analysis can reconstruct coordinate owners and partition them by lane, subgroup, workgroup, and grid, rejecting out-of-range writes, duplicate owners, coverage holes, or non-rectangular regions with concrete witnesses. ExactEffectDomain instead admits one guarded dynamic output effect without pretending to prove every coordinate in the runtime view; it requires clean mandatory bounds and race reports and exactly one modeled static write site, but does not construct a total hierarchy trace. The current compiler-authenticated source subset is exactly one reference binding, up to three direct logical point axes, exactly one direct mutable unsigned-or-bool scalar output write, an acyclic call-free reference, bounds-only GPU control selection, and a constant RHS. A successfully admitted proof establishes equality for that modeled effect, not total view coverage, termination, arbitrary arithmetic, numerical equivalence, or source-to-ISA refinement. Unsupported reference MIR, dynamic formulas, extra effects, or unresolved bounds or race safety fail closed. Even a Clean MIR/effect proof grants no artifact, publication, load, launch, runtime, or hardware authority."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "What remains trusted",
+        "text": "Verus proves equality of the formulas generated for the paired effect. The rustc MIR collector, safe-reference extractor, GPU projection, bounds-only control validator, effect bijection, ranked-recipe construction, and transcript construction remain in the compiler trusted computing base. This path does not prove rustc source-to-MIR correctness, compiler extraction correctness, ranked-IR-to-ISA refinement, or hardware execution."
       }
     ]
   },
@@ -1298,7 +1306,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current maturity",
-        "text": "The Kernel tab is the current safe public-main Wave64 source at af0fd523e3b774377a9c5192cf0511e34fa19735. Its checked CPU oracle, mutation tests, and bounded Verus model retain source/model-only authority. Historical compiler, finalizer, runtime, and protected gfx942 observations remain separately pinned and do not prove source-to-machine refinement for the repinned source."
+        "text": "The Kernel tab is the pinned safe Wave64 source milestone at af0fd523e3b774377a9c5192cf0511e34fa19735. Its checked CPU oracle, mutation tests, and bounded Verus model retain source/model-only authority. Historical compiler, finalizer, runtime, and protected gfx942 observations remain separately pinned and do not prove source-to-machine refinement for that source."
       }
     ]
   },
@@ -2120,7 +2128,7 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Do all owned GPU writes match its effects?",
-            "proof.require_effect_refinement plus hierarchy witnesses"
+            "proof.require_effect_refinement; ExactView may add hierarchy witnesses"
           ],
           [
             "Did the pinned Verus/Z3 closure prove this exact statement?",
@@ -2236,13 +2244,13 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "f4ab5246ca7c54248e386c25400133b10e432973f0055f91cf6f4db45945e35e",
+    "7010fa60618f91d3a1a336df231545f53d47b66abea549fd6a1de970ff3867ad",
   "compiler-checks/catalog":
-    "9e0c99290debca1fe3d44f4be4b73dfad106b2bac7be16f7e299c2e3b2593c6c",
+    "3d6f110f7f412903ebf44623addea020c0c9d2c2bad957554bcceb2f467f96d5",
   "compiler-checks/production-path":
-    "c90bf2ce5182f7c5312d19a108083693e279a4d2052382ccfbd0cbfaf385420a",
+    "31dad2e3d24c450b68662409b11ceca6d7e7bc00338240cd06bb98523b38c0c3",
   "what-verus-proves/proved":
-    "9d946e986457e5eaec0248ab563487a964a613a94671e20c2b31bb56b4346cb2",
+    "2a78c253e95cbf6826428001cad64656d80dff375f62e471810ec1cbb0ae5876",
   "what-verus-proves/ecosystem":
     "75fb0827e574d4ee621bd93e00ac330f5f1903686447fddb000abfede72d1750",
   "compiler-checks/v7-simulation":
@@ -2260,7 +2268,7 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "gemm-proof-plan/evidence":
     "961353dad93a62fb2d79e63b2f0d738b7e37814346ab4d5f9113656a9c9edbff",
   "reductions-scans/scan":
-    "f584ec14d5676f5aa28093231ae42cc519b93d78367ef2388f61754b0e62fadf",
+    "60963f040ac2f5145bc906991ff12bbd2af10cdfc83bc74bce24f5b0c66ba4a8",
   "lds-barriers-atomics/atomics":
     "631bbb237c96f3dcc586e4a7c7a0d092a15f9e4e4466138bb57dda2ea25638a5",
   "softmax-invariant/spec":
