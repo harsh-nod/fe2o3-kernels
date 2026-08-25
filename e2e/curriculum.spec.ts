@@ -250,14 +250,16 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     "pub fn evaluate_reference_v1",
   );
 
-  await page.getByRole("tab", { name: "Workload contract" }).click();
+  await page.getByRole("tab", { name: "Sequential semantics" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "WORKLOAD SPECIFICATION",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "arithmetic_is_defined",
   );
-  await expect(page.getByText(/workload-specific obligation/u)).toBeVisible();
+  await expect(
+    page.getByText(/compiler relation vocabulary remains workload-neutral/u),
+  ).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveCount(0);
 
   await page.getByRole("tab", { name: "Verus refinement" }).click();

@@ -26,7 +26,7 @@ interface SemanticCorrectnessMilestoneManifest {
   verusVersion: string | null;
   verusExecutableSha256: string | null;
   mechanisms: SemanticCorrectnessMechanism[];
-  workloadExamples: string[];
+  kernelLessons: string[];
   publicationRequirements: string[];
 }
 
@@ -38,14 +38,14 @@ const exactObject = /^[0-9a-f]{40}$/u;
 function validateSemanticCorrectnessMilestone(): void {
   if (
     milestone.schema !==
-      "fe2o3-semantic-correctness-tutorial-milestone-v1" ||
+      "fe2o3-semantic-correctness-tutorial-milestone-v2" ||
     (milestone.status !== "integration-pending" &&
       milestone.status !== "partial-current" &&
       milestone.status !== "published-current") ||
     !exactObject.test(milestone.baselineCompilerCommit) ||
     !exactObject.test(milestone.baselineCompilerTree) ||
     milestone.mechanisms.length !== 7 ||
-    milestone.workloadExamples.length !== 4 ||
+    milestone.kernelLessons.length !== 11 ||
     milestone.publicationRequirements.length < 5
   ) {
     throw new Error("semantic-correctness milestone manifest is malformed");
@@ -109,4 +109,4 @@ export const semanticCorrectnessMilestone = deepFreeze(milestone);
 export const semanticMilestoneBoundary =
   semanticCorrectnessMilestone.status === "integration-pending"
     ? `Milestone status: integration pending. The published compiler remains ${semanticCorrectnessMilestone.baselineCompilerCommit}; the contracts below are explanatory and grant no compiler, proof, artifact, launch, or hardware authority.`
-    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}, with ${semanticCorrectnessMilestone.preloweringReportVersion} and consumed ${semanticCorrectnessMilestone.functionalReceiptVersion} evidence. The current gate binds admitted safe-reference MIR, kernel MIR, and live PLIRON to non-vacuous total-output, typed-root, canonical-loop, and finite-collective facts. The shared Verus theorem is source-pinned at ${semanticCorrectnessMilestone.sharedTheoremSha256}; it is build-verified, not rerun by the production gate for every compilation. Unsupported loop shapes, unproved narrow dynamic bounds, arbitrary source extraction, target IEEE values, LLVM-or-later refinement, artifacts, launch, hardware, and universal correctness remain outside the claim.`;
+    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}, with ${semanticCorrectnessMilestone.preloweringReportVersion} and consumed ${semanticCorrectnessMilestone.functionalReceiptVersion} evidence. The published gate binds its admitted safe-reference MIR, kernel MIR, and live PLIRON facts, but its source-pinned shared theorem at ${semanticCorrectnessMilestone.sharedTheoremSha256} is not a per-compilation proof. Production functional authority now requires a fresh generic composition obligation bound to each compilation. That integration and final compiler pin remain pending, so every lesson below reports its exact Incomplete, model-only, or observation-only boundary. Unsupported reference constructs, unproved narrow dynamic bounds, target IEEE values, compiler projection soundness, LLVM-or-later refinement, artifacts, launch, hardware, performance, and universal correctness remain outside the claim.`;

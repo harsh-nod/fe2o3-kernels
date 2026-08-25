@@ -2268,7 +2268,7 @@ const narrativeRegistry = deepFreeze({
           ["Composition", "Do reductions, recurrences, permutations, and collectives cover their declared domains?", "Rejected missing or duplicate contribution; Incomplete unsupported relation"],
           ["Loops", "Does every reachable backedge have one canonical finite induction contract?", "Rejected substituted bound, step, transition, or exit; Incomplete unsupported CFG or dynamic range"],
           ["Evidence", "Did the retained Verus run prove the exact compiler-derived obligation?", "Incomplete missing, stale, or wrong-boundary receipt"],
-          ["Shared theorem", "Does the pinned composition source verify and do targeted mutations fail?", "Build-time proof failure; no claim of per-compilation shared-theorem execution"],
+          ["Per-compilation composition", "Was a generic obligation generated and proved for these exact MIR, PLIRON, relation, hierarchy, policy, and evidence identities?", "Incomplete until the final compiler integration and receipt version are pinned"],
         ],
       },
     ],
@@ -2425,7 +2425,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose GEMM from workload-neutral contracts",
     blocks: [
       milestoneCallout(
-        "The Workload contract tab states the GEMM-specific obligation. The implemented compiler-facing facts are the exact live loop and PLIRON identity, a total output domain, typed roots, finite folds, final effects, and explicit numeric policy; GemmSpec still owns the product and epilogue meaning.",
+        "The Sequential semantics tab states the desired safe Rust result. The compiler-facing vocabulary is workload-neutral: exact live loop and PLIRON identities, total outputs, typed roots, finite folds, hierarchy relations, final effects, and numerical policy. This reference remains Incomplete until those facts are admitted and joined for one compilation.",
       ),
       {
         type: "steps",
@@ -2462,7 +2462,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose softmax from two reductions and a map",
     blocks: [
       milestoneCallout(
-        "The Workload contract tab states the softmax-specific obligation. Softmax intent stays in SoftmaxSpec; the implemented generic vocabulary covers active-column contributions, declared max and sum folds, canonical loops, total output effects, and explicit numerical policy.",
+        "The Sequential semantics tab states the safe Rust result. The generic compiler vocabulary covers active-column contributions, max and sum folds, recurrences, hierarchy coverage, total output effects, and numerical policy without recognizing softmax. The current reference remains Incomplete.",
       ),
       {
         type: "paragraph",
@@ -2475,7 +2475,7 @@ const narrativeRegistry = deepFreeze({
     title: "Treat online attention as a recurrence",
     blocks: [
       milestoneCallout(
-        "The Workload contract tab states the attention-specific transition. The compiler binds the exact live phase loop, typed roots, domains, effects, and output frame without recognizing attention; the user proof must still show that this transition is the online rescaling recurrence.",
+        "The Sequential semantics tab states the safe Rust transition. Generic compiler relations bind a live phase loop, typed roots, domains, hierarchy, effects, and output frame without recognizing attention; the per-compilation proof must still establish the recurrence, and the current reference is Incomplete.",
       ),
       {
         type: "steps",
@@ -2506,7 +2506,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose routing, expert folds, and combine",
     blocks: [
       milestoneCallout(
-        "The Workload contract tab states the MoE-specific composition. Grouped MoE closes by composing the compiler-checked routing permutation, canonical loops, per-expert typed folds, total expert outputs, inverse scatter, ordered weighted combine, and total token outputs. No compiler pass recognizes MoE.",
+        "The Sequential semantics tab states the safe Rust composition. Grouped expert correctness needs generic routing permutation, canonical loops, per-expert folds, hierarchy coverage, total expert outputs, inverse scatter, ordered weighted combine, and total token outputs. No compiler pass recognizes MoE, and this reference remains Incomplete.",
       ),
       {
         type: "table",
@@ -2649,47 +2649,47 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "moe-expert-compute/combine":
     "a34ce5fab5137ded8844cddd4a3efe522a96b1bed4638791c017b618def489c1",
   "read-the-evidence/semantic-correctness-milestone":
-    "1c6c03d0a4f94e43cf26341384ee8ca6dd58a53c8ce11c94e1cd58799d24ca1f",
+    "403d769b39d5bf4f770ae9b5c15d32fc58b7bf0c42c34001414c191fe553a12c",
   "gfx942-setup/semantic-gates":
-    "60ef61e6518cdbeac0b3fb391614693c4fa201b2828fb4315650609958997dbf",
+    "97088dc3229f4af88157e464094eb5be4baa57d23c94320a3fd1c59cdf705d85",
   "first-fill/total-output-coverage":
-    "322b1186c6e185bfa0ee92e11c9ec24112b4c834e11d63b049a719b6fb46d0bc",
+    "72c01d5eefee8186f421aa14d15efd21df81782f025c847473c3dc3ecafd89c2",
   "typed-vecadd/typed-arithmetic-contract":
-    "5ceed6510a03196b9344db2d7aa0c59df2fafc8be475f04d90341949626a3291",
+    "bfb32eb855f3701076daa3edd1cbbbe55e9f7f9a828c10eb57e77c714c76688c",
   "cpu-semantic-simulation/testing-is-not-proof":
-    "61253caae8b7e508247d03dd810c27a6d34144244843fee9a20eb84d96be1ab2",
+    "b3f60574431b55587fda6274caacf22a4ac4a6b85b8c81d3da011864bf60b39b",
   "verus-contracts/compositional-reference":
-    "aa6b6075b219be39ac3c216fcfa935ff98939cc835ff861c661750f9a8b8afe0",
+    "c03a1a5abe92c4689822717f0a97989e5815ee45bb9d75e1d72a454816621ba2",
   "memory-race-proof/finality-and-frame":
-    "b3cc2646333d916aa3696775f7646954cf837dee5dce20729e3a2fbd22185d14",
+    "4d19134182ba4ee7b5d05b174634e482b28968264e740e06ee639d9330394e0e",
   "compiler-checks/complete-correctness-catalog":
-    "8ec24477be7a5fd08c8f48b0d6adc923f111ad816d0bffe8f43f1fb94e6b8fed",
+    "f127e1c9f0a51d6f14d6fb2b3a02c879a1cb13eafa56877075d787cb194f38d9",
   "reductions-scans/contribution-domain":
-    "f89376c66ac8f7d7bf35768eb70628254193c4f9bf52287b699ccf04821d792a",
+    "0db306d906a72e8c4c305ba7e8d95c43422e2ba20350b325d6c5ad500cb4dd79",
   "lds-barriers-atomics/final-observable-effect":
-    "e9c65bce12a559288b8a5dd24b372764497acec6eaa081af70be781ef458f89a",
+    "1798577530135c4bde4226365370f590cfcc925eca996fa8c0188c65d49bfbe6",
   "gemm-tiling/composed-reference":
-    "a70d6f9ae299157cdb5eb5d6026be8e36ecc2af3b3ce570205a12566d0a0660d",
+    "8d5fe38b9f6d808422fba497588203246eb4888a98f3f0b0df048aa7eb1f2fb2",
   "gemm-proof-plan/total-correctness-boundary":
-    "7fcecb388f1928443e8d7d215bdb4c37f0094c8d805e715a4ed8ad5618c68dea",
+    "960576660556e1aedabff8e1e5ae91de95fda96f5b165bcf0539bdc8940b600a",
   "softmax-invariant/composed-reference":
-    "05284cd15166d4dafbe251fd800a9cdc9f44f2482a01f880d6132dbcd978bfa3",
+    "cbf77eb156fc0ce73b56218e3a876b9a274338884e6bbb3523cb48c4d6ffd8de",
   "flash-attention/composed-reference":
-    "bca28cb687c1066bbe2f08ca5032ae379ed485deec7b23a7cfbf3256cb4fdb71",
+    "ee7a43b1dd6cc0b11f6c55901d3ac1997bfe4c7a9017176f6cae14df33a1131d",
   "moe-routing/composed-reference":
-    "dfa68e27a4d6ee2d0a162cb1975821e81ed7ff4341fa7f724bc4e95198932daa",
+    "3e59392dcc01b5e5d018c91f063252234446ceac79ea2a81f1885f1293a6cc81",
   "moe-expert-compute/composed-reference":
-    "b704e10d3a0654e6af43d3fee38e64fb244053be0aba1e12f89908dee790d813",
+    "079662bd26846a01137d6f7a519eefe1da373bf5d685e3bb0c4dcf12c6f7d7f8",
   "evidence-pipeline/total-correctness-receipt":
-    "f7822d8fcb62d92f65a1dc78133c61b2884b6e3c511051669de22b93ab8cdf15",
+    "4f9b7199153e00f9cf2234f3fa3b43a6733560b55dce9a92b5b4dc5b45641055",
   "what-verus-proves/total-correctness-boundary":
-    "85e01f7ed9f8e72c8e4ca46b73524c5b444dca19f1755606f4b4c6168c7bc7df",
+    "8b1f583017c763194a546c3a668f3d770397bb454be83f159d4824a3cf93d4ac",
   "evidence-archive/non-retroactive-milestone":
-    "9f5c8463114bc0981b211469d79192de2a9e963076d180562054552616046d4c",
+    "a76ca56c4bd5b57aafa67e0fd4afdb4ca5eed9bdeebd8a5df3762c41e0361cd6",
   "exercise-ladder/semantic-correctness":
-    "597ba58090af3ca08327a1993aabeba5a02465dca0e344fe7eeece8d2b88c02c",
+    "1f3d711154c726f23bdc087ae3e19c6c446c114e86f1fcf478d9fba02ad6eb52",
   "contributing-kernel/semantic-contract-checklist":
-    "0b80c41cd9310534254e11e0c6892d6995f1d6e63cc08e9ceae05681fc60c84f",
+    "386802d66997a37fe8d8bd5033c60cbe5d3e84babc5dcae7d453ef638e7d5d97",
   "flash-attention/closure":
     "e2e278769f7ce11dbd7757806c13d4d7422200b8c863382f44b40e72e5304362",
   "moe-expert-compute/bounded-evidence":

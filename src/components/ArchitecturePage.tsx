@@ -30,7 +30,7 @@ export function ArchitecturePage() {
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
             ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse, layout, and trace facts only within one validation."],
-            ["Verus", "Proves compiler-generated scalar effect obligations in a retained bounded runtime, and separately proves named source models. Neither replaces rustc or currently proves full source-to-machine refinement."],
+            ["Verus", "Proves admitted scalar effects and generic output/schedule composition only when the generated obligation and retained receipt are bound to that exact compilation. Separately proved source models carry no compilation authority."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
             ["Runtime", "Checks actual context, allocations, aliases, geometry, and lifetimes."],
@@ -97,10 +97,14 @@ export function ArchitecturePage() {
           The generic safety sequence is active and mandatory before lowering.
           Fe2O3 does not contain a second Rust borrow checker: rustc owns local
           language semantics, while sealed types and compiler passes cover GPU
-          facts that Rust alone cannot observe. Current Partial capabilities still grant no generalized
-          source-to-machine refinement, protected launch authority, complete
-          persistent execution, universal functional or numerical correctness,
-          or automatic parity promotion.
+          facts that Rust alone cannot observe. The functional-correctness
+          catalog requires a compilation-specific join of the safe reference,
+          output and schedule relations, numerical policy, hierarchy facts, and
+          live MIR/PLIRON identities. Missing support is Incomplete, never an
+          assumed summary. Current Partial capabilities still grant no
+          generalized compiler-projection or source-to-machine refinement,
+          protected launch authority, complete persistent execution, universal
+          functional or numerical correctness, or automatic parity promotion.
         </p>
         <a
           className="source-button"

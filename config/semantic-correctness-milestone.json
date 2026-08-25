@@ -1,5 +1,5 @@
 {
-  "schema": "fe2o3-semantic-correctness-tutorial-milestone-v1",
+  "schema": "fe2o3-semantic-correctness-tutorial-milestone-v2",
   "status": "partial-current",
   "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
@@ -71,26 +71,30 @@
       ]
     },
     {
-      "id": "shared-verus-composition",
-      "status": "published-current",
-      "detail": "the pinned shared Verus source proves exact-total-output composition and finite recurrence, with structural GEMM, softmax, attention, and MoE instantiations; eight obligations verify and four targeted mutations are rejected, but the production gate does not execute this shared source once per compilation",
-      "evidence": [
-        "crates/fe2o3-verifier/verus/mir_pliron_semantic_refinement_v1.rs",
-        "crates/fe2o3-verifier/verus/pins/MIR_PLIRON_SEMANTIC_REFINEMENT_V1.manifest",
-        "crates/fe2o3-verifier/tests/mir_pliron_semantic_refinement_v1.rs",
-        "scripts/test-mir-pliron-semantic-refinement-verus.sh"
-      ]
+      "id": "per-compilation-verus-composition",
+      "status": "integration-pending",
+      "detail": "the production policy requires a fresh workload-neutral composition obligation for each compilation, bound to that compilation's safe-reference MIR, kernel MIR, live PLIRON graph, output relations, schedule relations, hierarchy facts, numerical policy, and retained proof identities; until the final compiler commit and receipt version are pinned here, no lesson receives this authority",
+      "evidence": []
     }
   ],
-  "workloadExamples": [
-    "examples/tiled_gemm_general_v1",
-    "examples/row_softmax_general_v1",
-    "examples/flash_attention_general_v1",
-    "examples/moe_grouped_expert_general_v1"
+  "kernelLessons": [
+    "first-fill",
+    "typed-vecadd",
+    "cpu-semantic-simulation",
+    "reductions-scans",
+    "lds-barriers-atomics",
+    "gemm-tiling",
+    "gemm-proof-plan",
+    "softmax-invariant",
+    "flash-attention",
+    "moe-routing",
+    "moe-expert-compute"
   ],
   "publicationRequirements": [
     "pin an exact compiler commit and tree on both public main refs",
     "name the exact mandatory pre-lowering report and functional receipt versions",
+    "after compiler integration, promote per-compilation-verus-composition only with exact ProductionParallelReferenceContractReportV1 and ProductionMirPlironPerCompilationVerusReportV1 evidence paths and tests",
+    "publish FE2O3-PARALLEL-001 through FE2O3-PARALLEL-015 as fail-closed workload-neutral diagnostics without treating candidate declarations as evidence",
     "replace or retain every explanatory milestone specification according to its per-capability status and exact compiler-owned evidence",
     "run positive, negative, mutation, publication-gate, and browser validation",
     "state the remaining source-to-machine and floating-point trust boundaries"

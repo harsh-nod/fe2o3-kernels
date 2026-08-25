@@ -383,7 +383,7 @@ const synchronization: Lesson = {
     {
       language: "rust",
       code: workgroupSyncReference,
-      sourcePath: "examples/workgroup_sync_v1/src/contract.rs",
+      sourcePath: "examples/workgroup_sync_v1/src/reference.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
         "f1b32bea55b8a6b908caaeb3f08d069bf969231735966b81bc67aa0f87ed421c",
@@ -489,12 +489,12 @@ const gemmMapping: Lesson = {
     },
     {
       kind: "spec",
-      label: "Workload contract",
+      label: "Sequential semantics",
       language: "rust",
       code: gemmMilestoneSpec,
       explanatory: true,
       notice:
-        "This is the workload-specific obligation, not compiler-generated evidence. The current compiler exactly binds canonical loop structure, the complete live PLIRON graph, typed roots, total outputs, and retained MIR receipts. It does not derive the GEMM product sequence or epilogue theorem from arbitrary Rust/MFMA bodies.",
+        "This specification names the sequential result; it is not compiler-generated evidence. The compiler relation vocabulary remains workload-neutral, and this Vec-returning source is Incomplete until its loops, slice reads, arithmetic, outputs, and hierarchy facts are admitted and joined for one compilation.",
     },
     {
       kind: "verus",
@@ -508,7 +508,7 @@ const gemmMapping: Lesson = {
       evidenceId: "reference-refinement-v1",
       explanatory: false,
       notice:
-        "This verified workload-neutral composition theorem explains the equality-and-hierarchy join. Compiler main also pins the newer MIR/PLIRON theorem (8 verified obligations and 4 expected mutation failures), but does not rerun that shared source per compilation or authenticate this dynamic Vec-returning GEMM oracle against the kernel. LLVM-or-later refinement remains separate.",
+        "This verified workload-neutral theorem explains equality-plus-hierarchy composition. It is not a receipt for this compilation. Production authority requires a newly generated obligation bound to this reference MIR, kernel MIR, live PLIRON graph, relations, policy, and retained identities; this dynamic Vec-returning oracle is currently Incomplete.",
     },
     { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
@@ -662,7 +662,7 @@ const softmax: Lesson = {
       code: rowSoftmaxMilestoneSpec,
       explanatory: true,
       notice:
-        "This is the workload-specific obligation. The compiler validates finite contribution domains, typed roots, exact ownership, and total output without recognizing softmax, but it does not derive the max, exponential, and denominator recurrences from arbitrary Rust calls and loops.",
+        "This specification names the sequential max, exponential, denominator, and normalization result. The compiler uses only generic fold, recurrence, output, hierarchy, and numerical-policy relations; this source remains Incomplete because its full MIR and transcendental semantics are not admitted.",
     },
     {
       language: "rust",
@@ -673,7 +673,7 @@ const softmax: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the generic composition rule. Compiler main pins an additional maximum-trace instantiation, but the production gate does not authenticate this dynamic Vec-returning oracle or prove exponential/OCML and LLVM-or-later refinement.",
+        "This verified workload-neutral theorem states the composition rule, not a receipt for this compilation. A fresh per-compilation obligation must authenticate the exact reference and PLIRON identities; exponential/OCML, target values, compiler projection, and LLVM-or-later refinement remain outside the claim.",
     },
     {
       language: "rust",
@@ -771,7 +771,7 @@ const flash: Lesson = {
       code: flashAttentionMilestoneSpec,
       explanatory: true,
       notice:
-        "This is the workload-specific obligation. The compiler binds the exact canonical loop transition identity, typed roots, finite domains, ownership, and outputs, but it does not derive online rescaling, masking, exponential, or value-contraction semantics from arbitrary Rust bodies.",
+        "This specification names the sequential masked online recurrence. The compiler vocabulary remains generic: bounded recurrence, fold, pointwise output, hierarchy coverage, and numerical policy. This source is Incomplete until arbitrary slice reads, helpers, dynamic bounds, and transcendental semantics are admitted.",
     },
     {
       language: "rust",
@@ -782,7 +782,7 @@ const flash: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the generic composition rule. Compiler main pins an attention value-recurrence instantiation and rejects a missing-rescale mutation, but that is not an authenticated link from this dynamic oracle to the kernel. Exponential-law, IEEE FP32/OCML, and LLVM-or-later refinement remain open.",
+        "This verified workload-neutral theorem states the generic composition rule, but is not an authenticated link from this dynamic oracle to the kernel. A per-compilation proof must bind the exact recurrence and evidence identities. Exponential-law, target IEEE FP32/OCML, compiler projection, and LLVM-or-later refinement remain open.",
     },
     {
       language: "rust",

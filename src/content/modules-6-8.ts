@@ -204,7 +204,7 @@ const expertCompute: Lesson = {
       code: moeMilestoneSpec,
       explanatory: true,
       notice:
-        "This is the workload-specific obligation. The compiler validates exact permutation-gather identities, finite folds, typed roots, total views, and the aggregate MIR/PLIRON contract without recognizing MoE, but it does not derive the complete routed-expert arithmetic from arbitrary Rust source.",
+        "This specification names the sequential routed-expert result. The compiler vocabulary remains generic: permutation, fold, recurrence, pointwise outputs, hierarchy coverage, and numerical policy. This source is Incomplete until its full safe Rust MIR and arithmetic are admitted.",
     },
     {
       language: "rust",
@@ -215,7 +215,7 @@ const expertCompute: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the generic equality-plus-hierarchy rule. Compiler main pins an inverse-permutation injectivity theorem and rejects a non-injective mutation, but it does not authenticate this dynamic oracle or prove routed expert arithmetic and LLVM-or-later refinement.",
+        "This verified workload-neutral theorem states generic equality-plus-hierarchy composition, not a receipt for this compilation. A fresh generated obligation must bind the exact permutation, reference, PLIRON, and evidence identities; routed arithmetic, compiler projection, and LLVM-or-later refinement remain unproved.",
     },
     {
       language: "rust",

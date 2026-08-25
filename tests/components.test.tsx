@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { CodeTabs } from "../src/components/CodeTabs";
+import { FunctionalCorrectnessPanel } from "../src/components/FunctionalCorrectnessPanel";
 import { LessonSections } from "../src/components/LessonSections";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import type { LessonSection } from "../src/content/model";
@@ -55,6 +56,37 @@ describe("code tabs", () => {
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "pub fn tiled_gemm_lds_slice1",
     );
+  });
+});
+
+describe("functional-correctness catalog", () => {
+  it("renders the exact fail-closed contract for an advanced kernel", () => {
+    render(<FunctionalCorrectnessPanel lessonId="flash-attention" />);
+
+    expect(
+      screen.getByRole("heading", { name: "Functional-correctness catalog" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Incomplete")).toBeInTheDocument();
+    expect(screen.getByText("Safe Rust reference")).toBeInTheDocument();
+    expect(screen.getByText("Admitted MIR subset")).toBeInTheDocument();
+    expect(screen.getByText("Output relation")).toBeInTheDocument();
+    expect(screen.getByText("Schedule relation")).toBeInTheDocument();
+    expect(screen.getByText("Numerical policy")).toBeInTheDocument();
+    expect(screen.getByText("GPU hierarchy")).toBeInTheDocument();
+    expect(screen.getByText("Per-compilation Verus")).toBeInTheDocument();
+    expect(screen.getByText("Incomplete / trusted boundary")).toBeInTheDocument();
+    expect(screen.getByText("pointwise + fold")).toBeInTheDocument();
+    expect(screen.getByText("bounded recurrence")).toBeInTheDocument();
+    expect(
+      screen.getByText(/No generated Verus receipt is bound/u),
+    ).toBeInTheDocument();
+  });
+
+  it("does not render a functional claim for a non-kernel lesson", () => {
+    const { container } = render(
+      <FunctionalCorrectnessPanel lessonId="read-the-evidence" />,
+    );
+    expect(container).toBeEmptyDOMElement();
   });
 });
 

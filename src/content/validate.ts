@@ -1,5 +1,9 @@
 import { currentState } from "./current-state";
 import {
+  functionalCorrectnessCatalog,
+  functionalCorrectnessEntry,
+} from "./functional-correctness-catalog";
+import {
   FE2O3_PIN,
   type CurriculumModule,
   type Lesson,
@@ -39,19 +43,9 @@ const functionalAlgorithmLessonIds = new Set([
   "gemm-tiling",
   "gemm-proof-plan",
 ]);
-const referenceKernelLessonIds = new Set([
-  "first-fill",
-  "typed-vecadd",
-  "cpu-semantic-simulation",
-  "reductions-scans",
-  "lds-barriers-atomics",
-  "gemm-tiling",
-  "gemm-proof-plan",
-  "softmax-invariant",
-  "flash-attention",
-  "moe-routing",
-  "moe-expert-compute",
-]);
+const referenceKernelLessonIds = new Set(
+  functionalCorrectnessCatalog.map((entry) => entry.lessonId),
+);
 const stagedAuthorities = new Set([
   "source-admission-only",
   "harness-only",
@@ -148,6 +142,23 @@ function validateLesson(
     !tabKinds.has("reference")
   ) {
     issues.push({ path, message: "kernel lesson is missing its safe CPU reference tab" });
+  }
+  const functionalContract = functionalCorrectnessEntry(lesson.id);
+  if (referenceKernelLessonIds.has(lesson.id) && !functionalContract) {
+    issues.push({
+      path,
+      message: "kernel lesson is missing its functional-correctness catalog entry",
+    });
+  }
+  if (functionalContract) {
+    const reference = lesson.tabs.find((tab) => tab.kind === "reference");
+    if (reference?.sourcePath !== functionalContract.referenceSourcePath) {
+      issues.push({
+        path,
+        message:
+          "safe CPU reference tab does not match the functional-correctness catalog",
+      });
+    }
   }
   for (const [tabIndex, tab] of lesson.tabs.entries()) {
     const tabPath = `${path}.tabs[${tabIndex}]`;

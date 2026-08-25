@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
+import { functionalCorrectnessCatalog } from "../src/content/functional-correctness-catalog";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
 import {
@@ -81,7 +82,7 @@ describe("curriculum integrity", () => {
       ["generic-semantic-composition", "published-current"],
       ["aggregate-mir-refinement-gate", "published-current"],
       ["exact-mir-pliron-contract", "published-current"],
-      ["shared-verus-composition", "published-current"],
+      ["per-compilation-verus-composition", "integration-pending"],
     ]);
 
     for (const lesson of lessons) {
@@ -99,16 +100,83 @@ describe("curriculum integrity", () => {
       const lesson = lessons.find((candidate) => candidate.id === lessonId);
       const specification = lesson?.tabs.find((tab) => tab.kind === "spec");
       expect(specification, lessonId).toMatchObject({
-        label: "Workload contract",
+        label: "Sequential semantics",
         language: "rust",
         explanatory: true,
       });
       expect(specification?.notice, lessonId).toContain(
-        "workload-specific obligation",
+        "compiler",
       );
+      expect(specification?.notice, lessonId).toContain("Incomplete");
       expect(specification?.code, lessonId).toContain("WORKLOAD SPECIFICATION");
       expect(specification?.code, lessonId).toContain("arithmetic_is_defined");
     }
+  });
+
+  it("catalogs the functional-correctness boundary for every kernel lesson", () => {
+    expect(functionalCorrectnessCatalog.map((entry) => entry.lessonId)).toEqual(
+      semanticCorrectnessMilestone.kernelLessons,
+    );
+    expect(functionalCorrectnessCatalog).toHaveLength(11);
+
+    for (const entry of functionalCorrectnessCatalog) {
+      const lesson = lessons.find((candidate) => candidate.id === entry.lessonId);
+      const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
+      expect(lesson, entry.lessonId).toBeDefined();
+      expect(reference?.sourcePath, entry.lessonId).toBe(
+        entry.referenceSourcePath,
+      );
+      expect(existsSync(entry.referenceSourcePath), entry.referenceSourcePath).toBe(
+        true,
+      );
+      expect(entry.outputRelations.length, entry.lessonId).toBeGreaterThan(0);
+      expect(entry.scheduleRelations.length, entry.lessonId).toBeGreaterThan(0);
+      expect(entry.perCompilationVerus, entry.lessonId).toContain(
+        "exact compilation",
+      );
+      expect(entry.boundary, entry.lessonId).not.toMatch(
+        /universal(?:ly)? (?:correct|proved)/iu,
+      );
+    }
+
+    expect(
+      functionalCorrectnessCatalog
+        .filter((entry) =>
+          [
+            "typed-vecadd",
+            "reductions-scans",
+            "lds-barriers-atomics",
+            "gemm-tiling",
+            "gemm-proof-plan",
+            "softmax-invariant",
+            "flash-attention",
+            "moe-routing",
+            "moe-expert-compute",
+          ].includes(entry.lessonId),
+        )
+        .every((entry) => entry.disposition === "incomplete"),
+    ).toBe(true);
+
+    expect(
+      functionalCorrectnessCatalog.find(
+        (entry) => entry.lessonId === "cpu-semantic-simulation",
+      )?.disposition,
+    ).toBe("observation-only");
+  });
+
+  it("rejects a kernel lesson detached from its cataloged safe reference", () => {
+    const changed = structuredClone(curriculum);
+    const lesson = changed
+      .flatMap((module) => module.lessons)
+      .find((candidate) => candidate.id === "flash-attention")!;
+    lesson.tabs.find((tab) => tab.kind === "reference")!.sourcePath =
+      "examples/flash_attention_general_v1/src/not-the-reference.rs";
+
+    expect(validateCurriculum(changed)).toContainEqual({
+      path: "lesson[flash-attention]",
+      message:
+        "safe CPU reference tab does not match the functional-correctness catalog",
+    });
   });
 
   it("covers modules zero through eight in order", () => {

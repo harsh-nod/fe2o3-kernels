@@ -12,6 +12,7 @@ import { LessonDiagram } from "../diagrams/LessonDiagram";
 import { ClaimList } from "./ClaimList";
 import { CodeTabs } from "./CodeTabs";
 import { EvidenceBadge } from "./EvidenceBadge";
+import { FunctionalCorrectnessPanel } from "./FunctionalCorrectnessPanel";
 import { LessonSections } from "./LessonSections";
 
 interface LessonPageProps {
@@ -79,6 +80,7 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
       {lesson.diagram && <LessonDiagram kind={lesson.diagram} />}
       <ClaimList claims={lesson.claims} />
       <LessonSections lessonId={lesson.id} sections={lesson.sections} />
+      <FunctionalCorrectnessPanel lessonId={lesson.id} />
 
       <section className="code-section">
         <p className="section-kicker">Workbench</p>
