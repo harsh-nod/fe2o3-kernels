@@ -55,9 +55,9 @@ const semanticCorrectnessSources: GitEvidenceObject = {
   label: "MIR/PLIRON semantic-correctness milestone",
   commit: semanticCorrectnessMilestone.compilerCommit!,
   tree: semanticCorrectnessMilestone.compilerTree!,
-  sourcePaths: semanticCorrectnessMilestone.mechanisms.flatMap((mechanism) => [
-    ...mechanism.evidence,
-  ]),
+  sourcePaths: semanticCorrectnessMilestone.mechanisms
+    .filter((mechanism) => mechanism.status === "published-current")
+    .flatMap((mechanism) => [...mechanism.evidence]),
 };
 
 export const evidenceCatalog = {

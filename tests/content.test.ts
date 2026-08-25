@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
+import { evidenceCatalog } from "../src/content/evidence-catalog";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import { functionalCorrectnessCatalog } from "../src/content/functional-correctness-catalog";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
@@ -80,6 +81,8 @@ describe("curriculum integrity", () => {
       ["atomic-contribution-coverage", "published-current"],
       ["typed-scalar-congruence", "published-current"],
       ["generic-semantic-composition", "published-current"],
+      ["output-numerical-refinement", "implemented-unpinned"],
+      ["cooperative-tensor-composition", "implemented-unpinned"],
       ["aggregate-mir-refinement-gate", "published-current"],
       ["exact-mir-pliron-contract", "published-current"],
       ["per-compilation-verus-composition", "published-current"],
@@ -90,6 +93,19 @@ describe("curriculum integrity", () => {
         "Milestone status: partial-current",
       );
     }
+
+    const semanticEvidence = evidenceCatalog.gitObjects.find(
+      (object) => object.label === "MIR/PLIRON semantic-correctness milestone",
+    );
+    const publishedPaths = semanticCorrectnessMilestone.mechanisms
+      .filter((mechanism) => mechanism.status === "published-current")
+      .flatMap((mechanism) => mechanism.evidence);
+    expect(semanticEvidence?.sourcePaths).toEqual(publishedPaths);
+    expect(
+      semanticCorrectnessMilestone.mechanisms.some(
+        (mechanism) => mechanism.status === "implemented-unpinned",
+      ),
+    ).toBe(true);
 
     for (const lessonId of [
       "gemm-tiling",
@@ -180,6 +196,27 @@ describe("curriculum integrity", () => {
           ?.boundary,
         lessonId,
       ).toMatch(/tensor|MFMA/iu);
+      expect(
+        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
+          ?.cooperativeTensor,
+        lessonId,
+      ).toMatch(/gfx942.*m16n16k16.*one output/iu);
+    }
+
+    for (const lessonId of [
+      "typed-vecadd",
+      "reductions-scans",
+      "gemm-tiling",
+      "gemm-proof-plan",
+      "softmax-invariant",
+      "flash-attention",
+      "moe-expert-compute",
+    ]) {
+      expect(
+        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
+          ?.numericalPolicy,
+        lessonId,
+      ).toMatch(/exact equality.*FE2O3-PARALLEL-010/isu);
     }
 
     for (const lessonId of ["moe-routing", "moe-expert-compute"]) {
@@ -777,11 +814,15 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-002",
       "FE2O3-SEMANTIC-003",
       "FE2O3-SEMANTIC-004",
+      "FE2O3-PARALLEL-010",
+      "FE2O3-PARALLEL-012",
+      "FE2O3-PARALLEL-013",
+      "FE2O3-PARALLEL-014",
       "FE2O3-PARALLEL-016",
       "FE2O3-PARALLEL-017",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(16);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(15);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(18);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(17);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
     const effectDiagnosticTable = semanticFailures.blocks.find(

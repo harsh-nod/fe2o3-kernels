@@ -79,6 +79,12 @@ export function FunctionalCorrectnessPanel({
           <dt>Numerical policy</dt>
           <dd>{entry.numericalPolicy}</dd>
         </div>
+        {entry.cooperativeTensor ? (
+          <div>
+            <dt>Cooperative tensor</dt>
+            <dd>{entry.cooperativeTensor}</dd>
+          </div>
+        ) : null}
         <div>
           <dt>GPU hierarchy</dt>
           <dd>{entry.hierarchyCoverage}</dd>

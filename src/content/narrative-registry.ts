@@ -642,7 +642,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "The authenticated boundary is deliberately narrow",
-        "text": "The generated Verus program checks generic conditional lemmas over the admitted relation shape. Exact contracts and retained effect receipts are cryptographically bound by the production report outside those lemmas; the receipts are not logical premises in one whole-kernel Verus theorem. This does not bind arbitrary Vec/slice loads, prove dynamic reference-loop ranges, derive claim-specific tensor summaries, identify multiple output views, prove error bounds or reassociation, establish compiler extraction/projection and pass soundness, or grant LLVM+, artifact, launch, runtime, or hardware authority. Advanced GEMM, softmax, FlashAttention, routing, and grouped-expert references remain Incomplete."
+        "text": "The generated Verus program checks generic conditional lemmas over the admitted relation shape. Exact contracts and retained effect receipts are cryptographically bound by the production report outside those lemmas; the receipts are not logical premises in one whole-kernel Verus theorem. Generic output-numerical and cooperative-tensor contracts are implemented-unpinned: the former needs an exact canonical receipt for every non-exact claim, while the latter currently covers compiler-bound gfx942 BF16/F32 m16n16k16 Wave64 sites and one output relation. This still does not bind arbitrary Vec/slice loads, prove narrow dynamic reference-loop ranges, identify multiple output views, synthesize transcendental or reassociation proofs, establish compiler extraction/projection and pass soundness, or grant LLVM+, artifact, launch, runtime, or hardware authority. Advanced GEMM, softmax, FlashAttention, routing, and grouped-expert references remain Incomplete."
       },
       {
         "type": "callout",
@@ -1073,7 +1073,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code plus the two newest compiler-owned parallel derivation outcomes. The effect table records implemented code classes and their Rejected or Incomplete outcomes; direct PLIRON diagnostics carry stable codes, while source-join failures currently use precise rustc diagnostics without inventing a pass code. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code plus the relevant compiler-owned numerical, call-summary, tensor-site, and multi-output derivation outcomes. The effect table records implemented code classes and their Rejected or Incomplete outcomes; direct PLIRON diagnostics carry stable codes, while source-join failures currently use precise rustc diagnostics without inventing a pass code. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1135,6 +1135,10 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."],
           ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation is missing exact Proved MIR-bound evidence or carries a non-Proved status or wrong boundary."],
           ["FE2O3-SEMANTIC-004", "Rejected", "A functional-reference obligation or evidence record is duplicated, mismatched, malformed, wrong-property, or orphaned."],
+          ["FE2O3-PARALLEL-010", "Incomplete", "An ErrorBounded output relation lacks an exactly matching retained numerical-refinement contract, witness, and authenticated receipt. The built-in generator supplies exact equality only."],
+          ["FE2O3-PARALLEL-012", "Rejected", "A helper, intrinsic, or cooperative-tensor summary differs from the independently rederived live typed roots, scope, callsite, numerical policy, or authenticated proof."],
+          ["FE2O3-PARALLEL-013", "Incomplete", "A cooperative-tensor site lacks a clean live fragment ownership, convergence, typed capability, staging/barrier, contribution, or unique total-view scatter fact."],
+          ["FE2O3-PARALLEL-014", "Rejected", "The modeled cooperative-tensor summary count differs from the live ranked tensor-site count."],
           ["FE2O3-PARALLEL-016", "Incomplete", "Multiple live output views cannot be bound independently because the hierarchy report lacks stable ranked-view identities."],
           ["FE2O3-PARALLEL-017", "Rejected", "The workload-neutral parallel contract constructed from compiler-owned live evidence fails its independent contract validation."]
         ]
@@ -1254,7 +1258,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. For a reference-bound compilation, compiler-owned semantic derivation reconciles safe-reference MIR, kernel MIR, admitted effects, typed roots, canonical loops, collectives, TotalView, and live PLIRON identity. Strict parallel derivation constructs and validates the strongest supported pointwise, permutation, fold, or recurrence relation. A generated Verus program then checks generic conditional lemmas; the production report binds the exact instantiation and retained receipts outside the lemmas before KIR lowering. The point-output subset does not bind Vec/slice loads or unsupported dynamic reference loops. Tensor/MFMA calls still need claim-specific summaries, multiple outputs need stable hierarchy identities, and non-exact schedules need error-bound/reassociation proofs. mi300x lacks the required root-owned /opt runtime. Compiler extraction/projection and pass soundness, LLVM+, artifacts, launch, hardware, and performance remain outside the receipt."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. For a reference-bound compilation, compiler-owned semantic derivation reconciles safe-reference MIR, kernel MIR, admitted effects, typed roots, canonical loops, collectives, TotalView, and live PLIRON identity. Strict parallel derivation constructs and validates the strongest supported pointwise, permutation, fold, or recurrence relation. A generated Verus program then checks generic conditional lemmas; the production report binds the exact instantiation and retained receipts outside the lemmas before KIR lowering. Implemented-unpinned extensions derive generic cooperative-tensor summaries from live ranked sites and admit an output ErrorBounded policy only from an exactly matching retained numerical obligation. The built-in numerical generator proves exact equality only. The point-output subset still does not bind Vec/slice loads or unsupported dynamic reference loops; multiple outputs need stable hierarchy identities, non-exact schedules need an independently verified canonical receipt, and unsupported tensor profiles fail closed. mi300x lacks the required root-owned /opt runtime. Compiler extraction/projection and pass soundness, LLVM+, artifacts, launch, hardware, and performance remain outside the receipt."
       },
       {
         "type": "callout",
@@ -2452,7 +2456,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose GEMM from workload-neutral contracts",
     blocks: [
       milestoneCallout(
-        "The Sequential semantics tab states the desired safe Rust result. The compiler-facing vocabulary is workload-neutral: exact live loop and PLIRON identities, total outputs, typed roots, finite folds, hierarchy relations, final effects, and numerical policy. This reference remains Incomplete until those facts are admitted and joined for one compilation.",
+        "The Sequential semantics tab states the desired safe Rust result. The compiler-facing vocabulary is workload-neutral: exact live loop and PLIRON identities, total outputs, typed roots, finite folds, hierarchy relations, final effects, output numerical refinement, and generic cooperative-tensor summaries. The tensor summary binds the gfx942 site without naming GEMM. This reference remains Incomplete because its slice reads and dynamic reference loop are not admitted and its non-exact BF16/F32 relation has no exact canonical receipt.",
       ),
       {
         type: "steps",
@@ -2489,7 +2493,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose softmax from two reductions and a map",
     blocks: [
       milestoneCallout(
-        "The Sequential semantics tab states the safe Rust result. The generic compiler vocabulary covers active-column contributions, max and sum folds, recurrences, hierarchy coverage, total output effects, and numerical policy without recognizing softmax. The current reference remains Incomplete.",
+        "The Sequential semantics tab states the safe Rust result. The generic compiler vocabulary covers active-column contributions, max and sum folds, recurrences, hierarchy coverage, total output effects, and output numerical refinement without recognizing softmax. The numerical contract can carry a verified bound but cannot synthesize exp semantics or a nonzero bound. Slice reads, dynamic reference-loop evidence, and an exact softmax receipt remain Incomplete.",
       ),
       {
         type: "paragraph",
@@ -2502,7 +2506,7 @@ const narrativeRegistry = deepFreeze({
     title: "Treat online attention as a recurrence",
     blocks: [
       milestoneCallout(
-        "The Sequential semantics tab states the safe Rust transition. Production can compose compiler-derived recurrence, typed-root, domain, hierarchy, effect, and output-frame facts without recognizing attention, but this reference remains Incomplete on slice reads, tensor summaries, hierarchy identities, and error-bound/reassociation evidence before its per-compilation proof can run.",
+        "The Sequential semantics tab states the safe Rust transition. Production can compose compiler-derived recurrence, typed-root, domain, hierarchy, effect, output-frame, numerical-refinement, and generic cooperative-tensor facts without recognizing attention. The tensor site no longer needs a workload-specific summary, but slice reads, dynamic reference-loop evidence, multi-output hierarchy identities, and an independently verified non-exact attention receipt remain Incomplete.",
       ),
       {
         type: "steps",
@@ -2642,9 +2646,9 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "read-the-evidence/scalar-gemm-checkpoint":
     "44fbf6c19b481c9adeccdbfe5c52228242744e558a2f4cb3abbac8f08ddc7b8f",
   "compiler-checks/catalog":
-    "78088987ceb9742a9f82258471d599f3eaca34eb95200e043d0c67de55a397ea",
+    "9d10e8a0e16cc8297384142dfb10e55f44d964856cb29d635abf414aa9a86e8f",
   "compiler-checks/production-path":
-    "326e2d76dee5da308f46bc68551eeb0e8075f4d483885d42ed9c516550a3f53e",
+    "55c9dcdd3fe9d34d1b84d016a84f29737ced0c2bbe96a5dd11a811d9c7697c5b",
   "what-verus-proves/proved":
     "2a78c253e95cbf6826428001cad64656d80dff375f62e471810ec1cbb0ae5876",
   "what-verus-proves/ecosystem":
@@ -2676,47 +2680,47 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "moe-expert-compute/combine":
     "a34ce5fab5137ded8844cddd4a3efe522a96b1bed4638791c017b618def489c1",
   "read-the-evidence/semantic-correctness-milestone":
-    "c48df00a775efc63b3b198fe658e65af158419b2b1d2c022af9510a807608b95",
+    "7287c799a890f02824e461185aef3559f3c815ce22a1f4fd6788a2064db53354",
   "gfx942-setup/semantic-gates":
-    "40b3f80243ab52914d66de9b0f7acf71ea96552425c35f2d91e203976328156f",
+    "9b81b308e09624fed50bf25d3c6f846f49fae91ca61b7697d45969895a7ff42d",
   "first-fill/total-output-coverage":
-    "3b6ce04c3fb217a875efadbc00a0378cf4f8d4af1f20d2961c7f08a8fafbdf40",
+    "fe53a4dc293dc714d220136b8ecf23794fee3d3cb3b42df06b0c05a87b2d1917",
   "typed-vecadd/typed-arithmetic-contract":
-    "93267244c8d0270e3d083e69dfc7cb0f1ba82583c0ebf08d0fb163bb4a84a1e4",
+    "aa97a4d409daa86c30e6d0a8459829329ff71d7faefb6b4f232e5947f3ca8d88",
   "cpu-semantic-simulation/testing-is-not-proof":
-    "91098e76572a8c68b167028c367623865dc89f1298eced45ee7bb93d510129c9",
+    "43306a1541c37f1b76a9a7583db8bffc3ba744cfbb9277ef79b2782b69216f32",
   "verus-contracts/compositional-reference":
-    "1e064d39354265ae72fd606b78d2c883aa837511a71edeb770576b71d6bce5f0",
+    "cfdb590a20f6a3a905f270238cf307bee71795a36749787ec3cf4f83283d65db",
   "memory-race-proof/finality-and-frame":
-    "cf2dff38fdeb5e334e8e3e8f122a7574b029b5de7e299c4216e259c33d953129",
+    "e867937c378c800e502c5df90db627c2c577a6354b2942392f530fca93f808bc",
   "compiler-checks/complete-correctness-catalog":
-    "7b582c54a8b11a31c5402e2597c0665fd56b35baef8694d99e4374d4b77c5278",
+    "e8cd3fda26818d2b5553358de06c1ce0bb5cb8de93ba8c4a0e68431d7bb0508a",
   "reductions-scans/contribution-domain":
-    "c63fec73abdf6ac56aee647c7a8ab4165e5b9fee73139ef32e2e8e0ce1b62704",
+    "ed0ae9cde28ae3ecd5dbb955c85621c8d3a4f6d519117bc3e87fd7ccb2ed87ad",
   "lds-barriers-atomics/final-observable-effect":
-    "1aff962712f8ff8739ff8d3d4d2f8aa3d61ddf5eb526b54afca7c382e5cdddd5",
+    "bab22d7d37bc51e48eeae72c90b0ba3181efafe2f9b9ae302e54c5e6d685cefe",
   "gemm-tiling/composed-reference":
-    "a92983fedd9b6d8e8ec8bfe64a6ac8b43f25294d4ca25fffd2a15306145b47ae",
+    "769637d96f0cee848aa39b58a72e68ff6d356b8579fbb8b8f747e62bf6a2ee37",
   "gemm-proof-plan/total-correctness-boundary":
-    "5bbc714d0e83064e792a6e491404110da7ea4085cf425abd62dbdb18a5b9adbd",
+    "da916c14d590b3aa898ea673147735eb96ef06364272e10b91ab82077d3952d5",
   "softmax-invariant/composed-reference":
-    "5052c4270c6194dd0a86432dc07195bf792d270b46d50cd99629895e56f1032a",
+    "dea9fa8642ffbfa3023d8e39dd914ba13ddbd186128b9dd2c9f3a1f91ee4762c",
   "flash-attention/composed-reference":
-    "271b68ad0b0bfeecd770b05bf6c80768dc9a850bec455f7d45ffc966760d5b6b",
+    "348582722d0b7c4455ea72d746196ef6456aff3ee2c45f4bc068a6c96822d52a",
   "moe-routing/composed-reference":
-    "bf20232e025a21670b3e16ee6eceb1aaa8503e06774509213f81a6bd13dfb857",
+    "0686936c90e29a4e9cfb58410586f5a381797fb7911db74f3e2bf9213e5fb376",
   "moe-expert-compute/composed-reference":
-    "5f4fdd1b68b867e6889e2abd3e3f61a24290574b328b83945a7ac9f7e0fea793",
+    "651ac0319fb197aefb0fb8cfd34948254d74c95bfd8d6985c990dcc00b306c01",
   "evidence-pipeline/total-correctness-receipt":
-    "657245b565f194487730e34c7f005a5461bce5034f4a192078aa46b39b7d179b",
+    "37eb68d66a7b1a5d1fa8e6b5705fc48fa43ff51ac1da83e85540e7f5355f0346",
   "what-verus-proves/total-correctness-boundary":
-    "4023f713217db4b7c5166566b7ef404db664261a8f8918df2c3fc3dfa7647acd",
+    "72cff3f5019c0e929a2aac7aa25bb5d330f86e45af651063a0430d916248a5bb",
   "evidence-archive/non-retroactive-milestone":
-    "23219066209e3e3c59208d9c228e1887157e11d3c0e28d9fdd7099460acedf64",
+    "4b1bf7bfaa31896f6bec6ad1ad37e3605c74a5a3ca9c042d5e75dc8f080cb269",
   "exercise-ladder/semantic-correctness":
-    "73725600149dcba31218a4298208da4f126d905c5d1a2cc271b8cd53db617778",
+    "fc992267e8d5c285ad62be105bd8d30126ef62c02d951e0d4953fe6484363224",
   "contributing-kernel/semantic-contract-checklist":
-    "80b5ee45093354b87d97681bb2ea4338e3aeafc03d5e4418cb035119d007053e",
+    "6c3fdaac1d0a7bb39145769fa93f2cf329d7abc7ca98a0bc35a092dc1e2886b6",
   "flash-attention/closure":
     "e2e278769f7ce11dbd7757806c13d4d7422200b8c863382f44b40e72e5304362",
   "moe-expert-compute/bounded-evidence":

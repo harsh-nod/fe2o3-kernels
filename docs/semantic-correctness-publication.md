@@ -21,6 +21,9 @@ the exact compiler commit and tree in
 3. Each `published-current` mechanism names exact compiler source and test
    paths. Finite fold, bounded recurrence, and permutation-gather contracts
    are mandatory semantic-pass inputs, not optional workload helpers.
+   `implemented-unpinned` records describe reviewed integration work but are
+   deliberately excluded from the evidence catalog until the exact integrated
+   compiler commit and tree are repinned.
 4. The `generic-safety` and `functional-reference` entries in
    `config/current-state.json` state the exact theorem. Total-view coverage
    is not termination, arithmetic definedness, reduction-value correctness,
@@ -38,6 +41,19 @@ the exact compiler commit and tree in
    `FE2O3-PARALLEL-001` through `FE2O3-PARALLEL-017` as the
    fail-closed diagnostics for semantic identity, coverage, hierarchy,
    schedules, dynamic bounds, numerical policies, calls, and tensor sites.
+8. The generic output numerical obligation is a relation over actual,
+   reference, Boolean domain and precondition roots plus finite nonnegative
+   absolute/relative bounds. The built-in generator proves only exact equality.
+   Non-exact or reassociated arithmetic requires an independently verified
+   receipt for the exact canonical obligation; otherwise
+   `FE2O3-PARALLEL-010` fails closed.
+9. The generic cooperative-tensor summary binds live ranked sites, target-owned
+   instruction data, exact lane/component layouts, convergence, typed
+   capability roots, edge policy, staging/barrier evidence, contribution
+   schedule, total-view scatter, numerical policy, and proof identity. Current
+   target data covers gfx942 BF16/F32 m16n16k16 Wave64 and one output relation.
+   `FE2O3-PARALLEL-012/013/014/016` reject summary substitution, incomplete
+   ownership, unmodeled sites, and unsupported multi-output composition.
 
 ## Kernel lesson checklist
 
@@ -56,9 +72,12 @@ ordered set. The UI renders each entry next to its lesson and reports:
 The catalog covers fill, vecadd, CPU semantic simulation, Wave64 collectives,
 workgroup synchronization, GEMM, softmax, FlashAttention, top-2 routing, and
 grouped-expert compute. Advanced Vec/slice-reading references remain
-`Incomplete`: slice-read binding, claim-specific tensor/MFMA summaries,
-stable ranked-view identities for multiple outputs, error-bound/reassociation
-proofs, and fixed retained `/opt` runtime support are not generally available.
+`Incomplete`: slice-read binding, narrow dynamic reference-loop evidence,
+stable ranked-view identities for multiple outputs, lesson-specific verified
+non-exact/reassociation receipts, and fixed retained `/opt` runtime support
+are not generally available. Generic MFMA summaries remove the old
+workload-specific summary gap only for compiler-bound live sites; they do not
+admit an unsupported reference or prove target instruction semantics.
 Runtime CPU oracles, source models, and GPU comparisons do not substitute for
 the exact per-compilation reference-MIR to live-PLIRON receipt.
 

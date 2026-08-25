@@ -100,9 +100,12 @@ export function ArchitecturePage() {
           facts that Rust alone cannot observe. The functional-correctness
           catalog reflects the integrated production order: compiler-owned
           semantic derivation, strict parallel derivation, then generated
-          per-compilation Verus composition before KIR lowering. Missing slice
-          reads, tensor summaries, multi-output identities, numerical proofs,
-          or retained runtime support are Incomplete, never assumed summaries.
+          per-compilation Verus composition before KIR lowering. Generic
+          output-numerical and cooperative-tensor contracts are implemented but
+          remain unpinned in this publication. Missing slice reads, unsupported
+          dynamic reference loops or tensor profiles, multi-output identities,
+          lesson-specific numerical receipts, or retained runtime support are
+          Incomplete, never assumed summaries.
           Current Partial capabilities still grant no compiler extraction,
           projection, pass-soundness, or source-to-machine refinement,
           protected launch authority, complete persistent execution, universal

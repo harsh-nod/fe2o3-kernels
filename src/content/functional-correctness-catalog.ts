@@ -21,6 +21,7 @@ export interface FunctionalCorrectnessCatalogEntry {
   outputRelations: FunctionalRelation[];
   scheduleRelations: FunctionalRelation[];
   numericalPolicy: string;
+  cooperativeTensor?: string;
   hierarchyCoverage: string;
   productionPipeline: string;
   perCompilationVerus: string;
@@ -29,13 +30,19 @@ export interface FunctionalCorrectnessCatalogEntry {
 }
 
 const productionGate =
-  "For an admitted reference-bound compilation, production derives and reconciles the compiler-owned semantic contract, derives and validates the strict parallel contract, then runs a generated per-compilation Verus conditional-lemma checker before KIR lowering. The production report cryptographically binds the exact check and retained receipts outside the lemma; this is not one whole-kernel theorem, and candidate declarations are never evidence.";
+  "For an admitted reference-bound compilation, production derives and reconciles the compiler-owned semantic contract, derives and validates the strict parallel contract, then runs a generated per-compilation Verus conditional-lemma checker before KIR lowering. The production report cryptographically binds the exact check and retained receipts outside the lemma; this is not one whole-kernel theorem, and candidate declarations are never evidence. The output-numerical and cooperative-tensor extensions are implemented-unpinned and become publication evidence only after the compiler commit and tree are repinned.";
 
 const noCompilationReceipt =
   "The compiler gate is integrated, but no generated Verus report is bound to this lesson's exact compilation. Its generated source, conditional-lemma result, retained effect receipts, tool identity, and SafeReferenceMirToLivePliron boundary must all authenticate outside the lemma. mi300x lacks the root-owned /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 runtime, so no referenced production compile has completed the gate; cached Verus fixtures pass and there is no fallback.";
 
 const unsupportedReferenceBody =
   "The safe reference uses unbound Vec/slice reads and, depending on the lesson, dynamic loops without compiler range evidence, richer helpers, allocations, or multiple effects. Those constructs are outside the compiler-bound admitted point-output subset and return Incomplete; they are never replaced by opaque or workload-specific summaries.";
+
+const numericalRefinementGate =
+  "The generic output-relation contract binds actual and reference scalar roots, Boolean domain and precondition roots, finite nonnegative absolute/relative f64-bit bounds, the exact ranked graph, MIR subjects, and an authenticated receipt. It states that active values are finite and satisfy abs(actual-reference) <= abs_bound + rel_bound * abs(reference). The built-in generator discharges only exact equality; genuinely non-exact or reassociated arithmetic needs an independently verified receipt for this exact claim, or FE2O3-PARALLEL-010 fails closed.";
+
+const cooperativeTensorGate =
+  "The generic cooperative-tensor contract binds every live ranked site to target-owned instruction data, exact fragment roles and lane coordinates, subgroup convergence, context and operand/accumulator/result roots, tail policy, staging swizzle and a dominating workgroup barrier, contribution schedule, unique total-view scatter, numerical policy, live PLIRON evidence, and proof identity. Current target data admits gfx942 BF16/F32 m16n16k16 Wave64 and one output relation. Summary substitution, incomplete ownership, and unmodeled sites fail closed with FE2O3-PARALLEL-012/013/014; multiple outputs fail with FE2O3-PARALLEL-016.";
 
 export const functionalCorrectnessCatalog = deepFreeze([
   {
@@ -68,7 +75,8 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise"],
     scheduleRelations: ["pointwise"],
     numericalPolicy:
-      "IEEE operator congruence is the relevant compiler policy. It does not prove target IEEE values, OCML behavior, or an error bound.",
+      "IEEE operator congruence is the relevant compiler policy. It does not prove target IEEE values or an error bound. " +
+      numericalRefinementGate,
     hierarchyCoverage:
       "The intended proof maps each grid invocation to exactly one final coordinate; no cross-wave communication is required.",
     productionPipeline: productionGate,
@@ -106,14 +114,15 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise", "fold"],
     scheduleRelations: ["fold", "bounded recurrence"],
     numericalPolicy:
-      "Exact binary32 only for the bounded integer corpus and the named operation tree; reassociation or general IEEE values are outside the claim.",
+      "Exact binary32 only for the bounded integer corpus and the named operation tree. A changed reduction tree needs an exact matching numerical receipt. " +
+      numericalRefinementGate,
     hierarchyCoverage:
       "The relation spans lane and Wave64 participation. Workgroup composition, multiple waves, and grid coverage need separate live hierarchy facts.",
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The pinned Verus model proves the bounded collective model, not safe slice-read binding, output-specific hierarchy identities for multiple views, reassociation/error bounds, retained runtime availability, compiler projection, or GPU execution.",
+      "The pinned Verus model proves the bounded collective model, not safe slice-read binding, output-specific hierarchy identities for multiple views, a lesson-specific non-exact reduction receipt, retained runtime availability, compiler projection, or GPU execution.",
   },
   {
     lessonId: "lds-barriers-atomics",
@@ -144,14 +153,16 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise", "fold"],
     scheduleRelations: ["bounded recurrence"],
     numericalPolicy:
-      "A complete claim needs the exact BF16 conversion, MFMA contraction order, f32 epilogue policy, exceptional values, and either target-value authority or a proved error bound.",
+      "A complete claim needs the exact BF16 conversion, MFMA contraction order, f32 epilogue policy, exceptional values, and either target-value authority or an exact matching output-refinement receipt. " +
+      numericalRefinementGate,
+    cooperativeTensor: cooperativeTensorGate,
     hierarchyCoverage:
       "Invocation fragments must cover each wave tile, waves each workgroup tile, and workgroups the dynamic output grid exactly once, including edges.",
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The Vec-returning reference and arbitrary slice loads are runtime-oracle evidence. Live MFMA sites still need claim-specific tensor summaries; the numerical contract still needs reassociation/error proof, and retained runtime, compiler projection, LLVM+, hardware, and performance stay separate.",
+      "The generic tensor summary can represent the live MFMA site without recognizing GEMM, but this Vec-returning reference still has unbound slice reads and a dynamic reference loop without a narrow range receipt. The non-exact BF16/F32 relation also needs an independently verified canonical numerical receipt. Retained runtime, compiler projection, LLVM+, hardware, and performance stay separate.",
   },
   {
     lessonId: "gemm-proof-plan",
@@ -163,14 +174,16 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise", "fold"],
     scheduleRelations: ["bounded recurrence"],
     numericalPolicy:
-      "The proof plan must select exact operator congruence or a proved error-bounded policy; test epsilon is not proof evidence.",
+      "The proof plan must select exact operator congruence or an authenticated output-refinement contract; test epsilon is not proof evidence. " +
+      numericalRefinementGate,
+    cooperativeTensor: cooperativeTensorGate,
     hierarchyCoverage:
       "The plan requires fragment-to-wave, wave-to-workgroup, and workgroup-to-grid coverage plus final observable-frame facts.",
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Layout, source-model, machine, and hardware records remain separate. Slice-read binding, claim-specific MFMA summaries, hierarchy identities, numerical proof, and the retained runtime are still required for an exact per-compilation receipt.",
+      "Layout, source-model, machine, and hardware records remain separate. Generic MFMA composition is implemented, but slice-read binding, dynamic reference-loop evidence, the exact non-exact numerical receipt, and the retained runtime are still required for this per-compilation receipt.",
   },
   {
     lessonId: "softmax-invariant",
@@ -182,14 +195,15 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise", "fold"],
     scheduleRelations: ["fold", "bounded recurrence"],
     numericalPolicy:
-      "Error-bounded transcendental refinement is required but not admitted. IEEE operator congruence alone does not establish exp, denominator, or final target values.",
+      "IEEE operator congruence alone does not establish exp, denominator, or final target values. The generic output-refinement contract can carry a verified bound, but the compiler does not synthesize transcendental semantics or a nonzero bound. " +
+      numericalRefinementGate,
     hierarchyCoverage:
       "Each output row needs complete column contributions, a legal reduction schedule within its wave/workgroup, and total grid coverage.",
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Vec allocation, slice-read binding, exponential semantics, narrow dynamic bounds, output-specific hierarchy identities where multiple views are live, error-bound/reassociation proof, and retained runtime support remain unproved.",
+      "Vec allocation, slice-read binding, exponential semantics, narrow dynamic reference-loop bounds, an independently verified softmax numerical receipt, output-specific hierarchy identities where multiple views are live, and retained runtime support remain unproved.",
   },
   {
     lessonId: "flash-attention",
@@ -201,14 +215,16 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise", "fold"],
     scheduleRelations: ["bounded recurrence"],
     numericalPolicy:
-      "A proved error-bounded policy is required for MFMA, exp, rescaling, and normalization. No target IEEE-value or OCML authority is claimed.",
+      "A verified output-refinement receipt is required for MFMA, exp, rescaling, and normalization. No target IEEE-value or transcendental-library authority is claimed. " +
+      numericalRefinementGate,
+    cooperativeTensor: cooperativeTensorGate,
     hierarchyCoverage:
       "Fragment ownership must compose through wave and workgroup tiles to every head/query/output coordinate; masked key phases form the recurrence domain.",
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The current oracle and GPU comparisons do not authenticate slice reads, claim-specific tensor/MFMA summaries, multi-output hierarchy identities, error-bound/reassociation proof, retained runtime availability, compiler projection, or LLVM+.",
+      "The generic tensor contract can summarize each compiler-bound MFMA site, but the current oracle and GPU comparisons do not authenticate slice reads, dynamic reference-loop ranges, multi-output hierarchy identities, or an exact non-exact attention receipt. Retained runtime availability, compiler projection, and LLVM+ remain separate.",
   },
   {
     lessonId: "moe-routing",
@@ -220,7 +236,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise", "permutation", "fold"],
     scheduleRelations: ["permutation", "fold"],
     numericalPolicy:
-      "Routing order needs an exact total-order policy for logits, including NaN and ties. The published model does not prove target FP32 comparison values.",
+      "Routing order needs an exact total-order policy for logits, including NaN and ties. An absolute/relative output bound does not establish that control-flow ordering. The published model does not prove target FP32 comparison values.",
     hierarchyCoverage:
       "Token/expert contributions must compose from invocations through workgroups to one grid-wide stable permutation and inverse.",
     productionPipeline: productionGate,
@@ -239,14 +255,16 @@ export const functionalCorrectnessCatalog = deepFreeze([
     outputRelations: ["pointwise", "permutation", "fold"],
     scheduleRelations: ["permutation", "bounded recurrence"],
     numericalPolicy:
-      "A complete policy must cover BF16 conversion, MFMA and f32 accumulation, bias, gate, route weights, combine order, exceptional values, and a proved bound when not exact.",
+      "A complete policy must cover BF16 conversion, MFMA and f32 accumulation, bias, gate, route weights, combine order, exceptional values, and an authenticated output-refinement contract when not exact. " +
+      numericalRefinementGate,
+    cooperativeTensor: cooperativeTensorGate,
     hierarchyCoverage:
       "Route permutation and inverse span the grid; each expert contraction composes fragment, wave, workgroup, and grid ownership before deterministic combine.",
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Five passing MI300X shapes are qualification evidence. Slice-read binding, claim-specific tensor/MFMA summaries, stable identities for multiple output views, error-bound/reassociation proof, retained runtime support, compiler refinement, hardware, and performance remain outside the claim.",
+      "Five passing MI300X shapes are qualification evidence. Generic MFMA summaries are implemented, but slice-read binding, dynamic reference-loop evidence, stable identities for multiple output views, a routed non-exact numerical receipt, retained runtime support, compiler refinement, hardware, and performance remain outside the claim.",
   },
 ] satisfies FunctionalCorrectnessCatalogEntry[]);
 

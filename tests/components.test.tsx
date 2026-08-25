@@ -72,6 +72,7 @@ describe("functional-correctness catalog", () => {
     expect(screen.getByText("Output relation")).toBeInTheDocument();
     expect(screen.getByText("Schedule relation")).toBeInTheDocument();
     expect(screen.getByText("Numerical policy")).toBeInTheDocument();
+    expect(screen.getByText("Cooperative tensor")).toBeInTheDocument();
     expect(screen.getByText("GPU hierarchy")).toBeInTheDocument();
     expect(screen.getByText("Production gate")).toBeInTheDocument();
     expect(screen.getByText("Per-compilation Verus")).toBeInTheDocument();
@@ -80,6 +81,9 @@ describe("functional-correctness catalog", () => {
     expect(screen.getByText("bounded recurrence")).toBeInTheDocument();
     expect(
       screen.getByText(/no generated Verus report is bound/iu),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/FE2O3-PARALLEL-012\/013\/014/iu),
     ).toBeInTheDocument();
   });
 

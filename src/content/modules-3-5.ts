@@ -508,7 +508,7 @@ const gemmMapping: Lesson = {
       evidenceId: "reference-refinement-v1",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model explains equality-plus-hierarchy composition; it is not this compilation's generated receipt. The production per-compilation gate is integrated, but this Vec/slice reference, live MFMA summaries, hierarchy identities, numerical proof, and retained runtime are currently Incomplete.",
+        "This verified workload-neutral source model explains equality-plus-hierarchy composition; it is not this compilation's generated receipt. Generic cooperative-tensor summaries and output numerical obligations are implemented-unpinned, but this Vec/slice reference, dynamic reference-loop evidence, exact non-exact numerical receipt, and retained runtime are currently Incomplete.",
     },
     { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
@@ -576,7 +576,7 @@ const gemmProof: Lesson = {
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
       notice:
-        "This host-allocating Vec reference remains a runtime qualification oracle. Its Vec allocation and slice reads are not compiler-bound, and live MFMA summaries, hierarchy identities, numerical proof, and retained runtime support remain Incomplete.",
+        "This host-allocating Vec reference remains a runtime qualification oracle. Its Vec allocation and slice reads are not compiler-bound. Generic MFMA summaries can bind the live ranked site, but dynamic reference-loop evidence, an exact BF16/F32 numerical receipt, and retained runtime support remain Incomplete.",
     },
     exactGemmProofTab(),
     exactGemmHostTab(),
@@ -655,7 +655,7 @@ const softmax: Lesson = {
         "8ff11a0aa3806c2fe7d5f5aab8c5b055316039de718b28d69c6042e439bed73a",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. Its Vec allocation and slice reads are not compiler-bound; transcendental/error-bound semantics, output hierarchy identities, and retained runtime support are also Incomplete.",
+        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. Its Vec allocation and slice reads are not compiler-bound; dynamic reference-loop evidence, transcendental semantics, an independently verified output bound, output hierarchy identities, and retained runtime support are also Incomplete.",
     },
     {
       language: "rust",
@@ -673,7 +673,7 @@ const softmax: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model states the composition rule, not this compilation's generated receipt. Production composition is integrated, but slice reads, exponential/error-bound semantics, output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement remain outside this lesson's claim.",
+        "This verified workload-neutral source model states the composition rule, not this compilation's generated receipt. Generic output numerical refinement is implemented-unpinned, but it does not invent exp semantics or a nonzero bound. Slice reads, dynamic reference-loop evidence, an exact softmax receipt, output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement remain outside this lesson's claim.",
     },
     {
       language: "rust",
@@ -764,7 +764,7 @@ const flash: Lesson = {
         "f14413bd3662973a8803cdfdd23e6c6b23facc9d4c627e4e91d7a1e63ee7f203",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. Its Vec allocation and slice reads are not compiler-bound; claim-specific MFMA summaries, multi-output hierarchy identities, error-bound/reassociation evidence, and retained runtime support are also Incomplete.",
+        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. Its Vec allocation and slice reads are not compiler-bound. Generic MFMA summaries are implemented-unpinned, while dynamic reference-loop evidence, multi-output hierarchy identities, an exact non-exact attention receipt, and retained runtime support are still Incomplete.",
     },
     {
       language: "rust",
@@ -782,7 +782,7 @@ const flash: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model states the generic composition rule, but is not an authenticated link from this dynamic oracle to the kernel. Production composition is integrated; this lesson remains Incomplete on slice reads, claim-specific tensor summaries, recurrence/numerical proof, multi-output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement.",
+        "This verified workload-neutral source model states the generic composition rule, but is not an authenticated link from this dynamic oracle to the kernel. Generic tensor and output numerical composition are implemented-unpinned without recognizing attention; this lesson remains Incomplete on slice reads, dynamic reference-loop evidence, the non-exact recurrence receipt, multi-output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement.",
     },
     {
       language: "rust",
