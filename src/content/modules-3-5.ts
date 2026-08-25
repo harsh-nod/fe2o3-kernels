@@ -508,7 +508,7 @@ const gemmMapping: Lesson = {
       evidenceId: "reference-refinement-v1",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model explains equality-plus-hierarchy composition; it is not this compilation's generated receipt. Ranked one-dimensional reads and canonical dynamic-loop termination are implemented-unpinned. MFMA layout/convergence are structurally checked, but tensor arithmetic stops at FE2O3-PARALLEL-013. This reference's multidimensional reads, nested recurrence, independently imported full-domain numerical receipt, and retained runtime remain Incomplete.",
+        "This verified workload-neutral source model explains equality-plus-hierarchy composition; it is not this compilation's generated receipt. Ranked one-dimensional reads and canonical dynamic-loop termination are published at the exact final compiler pin. MFMA layout/convergence are structurally checked, but tensor arithmetic stops at FE2O3-PARALLEL-013. This reference's multidimensional reads, nested recurrence, independently imported full-domain numerical receipt, and retained runtime remain Incomplete.",
     },
     { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
@@ -673,7 +673,7 @@ const softmax: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model states the composition rule, not this compilation's generated receipt. Generic ranked reads and canonical loop termination are implemented-unpinned. ErrorBounded authority is never automatic: it requires an independently imported claim-specific receipt with canonical-true domain and precondition over the complete output. This oracle's range slices, richer folds, exp semantics, retained runtime, compiler projection, and LLVM-or-later refinement remain outside the claim.",
+        "This verified workload-neutral source model states the composition rule, not this compilation's generated receipt. Generic ranked reads and canonical loop termination are published at the exact final compiler pin. ErrorBounded authority is never automatic: it requires an independently imported claim-specific receipt with canonical-true domain and precondition over the complete output. This oracle's range slices, richer folds, exp semantics, retained runtime, compiler projection, and LLVM-or-later refinement remain outside the claim.",
     },
     {
       language: "rust",

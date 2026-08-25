@@ -15,6 +15,16 @@ reference block 0, statement 0 and GPU block 2, operation 0
 # - unsupported call, unsafe function, or ABI
 # - multidimensional/raw read or unresolved ranked-load reconciliation
 # - non-unit, eventful, noncanonical, or unproved loop termination
+
+# Numerical sites are bound to exactly one complete logical output
+error[FE2O3-PARALLEL-023]: numerical refinement site 0 does not match any logical output actual/reference roots
+error[FE2O3-PARALLEL-024]: numerical refinement site 0 ambiguously matches 2 logical outputs
+error[FE2O3-PARALLEL-025]: logical output 0 has more than one numerical refinement site
+error[FE2O3-PARALLEL-026]: numerical refinement for logical output 0 is not total:
+domain must be the canonical typed constant true
+
+# These are independent of FE2O3-PARALLEL-010, which rejects missing
+# claim-specific ErrorBounded authority.
 # - unproved output separation, ownership collision, or duplicate write site
 
 # Independent static bounds fixture

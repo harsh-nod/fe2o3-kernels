@@ -258,7 +258,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     "arithmetic_is_defined",
   );
   await expect(
-    page.getByText(/compiler relation vocabulary remains workload-neutral/u),
+    page.getByText(/workload-neutral compiler can bind eligible one-dimensional reads/u),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveCount(0);
 
@@ -428,6 +428,8 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-OWN-006", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-023", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-026", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-003", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-001", exact: true })).toBeVisible();
@@ -435,7 +437,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByText("Bind the reference as ordinary Rust", { exact: true })).toBeVisible();
   await expect(page.getByText("Authenticate the proof execution and every input", { exact: true })).toBeVisible();
   await expect(
-    page.getByText(/Advanced GEMM, softmax, FlashAttention, routing, and grouped-expert references remain Incomplete/u),
+    page.getByText(/unsupported tensor arithmetic, and absent claim receipts remain Incomplete/u),
   ).toBeVisible();
 
   await page.getByRole("tab", { name: "Reference-bound kernel" }).click();
@@ -541,7 +543,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/1f32591bf16533cc91460e815d388d7f7689aeb6/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0864e367f453943671c992fb918de56c19fca144/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -640,7 +642,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/1f32591bf16533cc91460e815d388d7f7689aeb6/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0864e367f453943671c992fb918de56c19fca144/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -657,7 +659,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/1f32591bf16533cc91460e815d388d7f7689aeb6/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0864e367f453943671c992fb918de56c19fca144/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -749,7 +751,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at 1f32591bf1",
+      name: "Compiler main at 0864e367f4",
     }),
   ).toBeVisible();
   await expect(
@@ -770,4 +772,127 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", { level: 1, name: "Glossary and API index" }),
   ).toBeVisible();
+});
+
+test("correctness catalog and advanced lessons stay visually coherent", async ({
+  page,
+}, testInfo) => {
+  const browserFailures: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "error") browserFailures.push(message.text());
+  });
+  page.on("pageerror", (error) => browserFailures.push(error.message));
+
+  const routes = [
+    {
+      id: "correctness-catalog",
+      lesson: "compiler-checks",
+      title: "Compiler checks: reject invalid kernels",
+      target: "Stable pass diagnostic catalog",
+    },
+    {
+      id: "gemm",
+      lesson: "gemm-tiling",
+      title: "Dynamic GEMM end to end",
+      target: "Functional-correctness catalog",
+    },
+    {
+      id: "softmax",
+      lesson: "softmax-invariant",
+      title: "Dynamic row softmax",
+      target: "Functional-correctness catalog",
+    },
+    {
+      id: "attention",
+      lesson: "flash-attention",
+      title: "Dynamic FlashAttention with MFMA",
+      target: "Functional-correctness catalog",
+    },
+    {
+      id: "moe",
+      lesson: "moe-expert-compute",
+      title: "Dynamic grouped-expert MoE with MFMA",
+      target: "Functional-correctness catalog",
+    },
+  ] as const;
+
+  for (const route of routes) {
+    await page.goto(`./#/lesson/${route.lesson}`);
+    await expect(
+      page.getByRole("heading", { level: 1, name: route.title }),
+    ).toBeVisible();
+
+    const shellLayout = await page.evaluate(() => {
+      const topbar = document.querySelector<HTMLElement>(".topbar");
+      const firstContent = document.querySelector<HTMLElement>(
+        ".lesson-page > .lesson-header",
+      );
+      const sidebar = document.querySelector<HTMLElement>(
+        ".app-shell > .sidebar",
+      );
+      const main = document.querySelector<HTMLElement>(".main-content");
+      const topbarRect = topbar?.getBoundingClientRect();
+      const firstRect = firstContent?.getBoundingClientRect();
+      const sidebarRect = sidebar?.getBoundingClientRect();
+      const mainRect = main?.getBoundingClientRect();
+      return {
+        horizontalOverflow:
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth,
+        topbarOverlap:
+          Boolean(topbarRect && firstRect) &&
+          topbarRect!.bottom > firstRect!.top + 0.5,
+        sidebarOverlap:
+          Boolean(sidebarRect && mainRect && sidebar!.getClientRects().length) &&
+          sidebarRect!.right > mainRect!.left + 0.5,
+      };
+    });
+    expect(shellLayout.horizontalOverflow, route.id).toBe(false);
+    expect(shellLayout.topbarOverlap, route.id).toBe(false);
+    expect(shellLayout.sidebarOverlap, route.id).toBe(false);
+
+    const target = page.getByText(route.target, { exact: true }).first();
+    await target.scrollIntoViewIfNeeded();
+    await expect(target).toBeVisible();
+
+    const contentLayout = await page.evaluate(() => {
+      const panel = document.querySelector<HTMLElement>(
+        ".functional-correctness-panel",
+      );
+      const headingItems = panel
+        ? [...panel.querySelectorAll<HTMLElement>(".section-heading-row > *")]
+        : [];
+      const rows = panel
+        ? [...panel.querySelectorAll<HTMLElement>(".functional-contract-rows > div")]
+        : [];
+      const intersects = (left: DOMRect, right: DOMRect) =>
+        Math.min(left.right, right.right) - Math.max(left.left, right.left) > 0.5 &&
+        Math.min(left.bottom, right.bottom) - Math.max(left.top, right.top) > 0.5;
+      return {
+        panelOverflow: panel ? panel.scrollWidth > panel.clientWidth : false,
+        headingOverlap:
+          headingItems.length === 2 &&
+          intersects(
+            headingItems[0].getBoundingClientRect(),
+            headingItems[1].getBoundingClientRect(),
+          ),
+        rowOverlap: rows.some((row, index) =>
+          index > 0
+            ? row.getBoundingClientRect().top <
+              rows[index - 1].getBoundingClientRect().bottom - 0.5
+            : false,
+        ),
+      };
+    });
+    expect(contentLayout.panelOverflow, route.id).toBe(false);
+    expect(contentLayout.headingOverlap, route.id).toBe(false);
+    expect(contentLayout.rowOverlap, route.id).toBe(false);
+
+    await page.screenshot({
+      path: testInfo.outputPath(`${route.id}-viewport.png`),
+      animations: "disabled",
+    });
+  }
+
+  expect(browserFailures).toEqual([]);
 });

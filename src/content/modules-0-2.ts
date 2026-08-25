@@ -783,7 +783,7 @@ const compilerChecks: Lesson = {
       code: compilerReferenceDiagnostics,
       explanatory: true,
       notice:
-        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no runtime fallback. Load/loop reconciliation, output-product FE2O3-PARALLEL-018 through 021, tensor-arithmetic FE2O3-PARALLEL-013, and contract-construction failures occur before Verus execution.",
+        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no runtime fallback. Load/loop reconciliation, output-product FE2O3-PARALLEL-018 through 021, numerical-site FE2O3-PARALLEL-023 through 026, tensor-arithmetic FE2O3-PARALLEL-013, and contract-construction failures occur before Verus execution.",
     },
   ],
   diagram: "memory",

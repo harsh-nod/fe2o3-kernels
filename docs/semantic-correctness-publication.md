@@ -21,9 +21,8 @@ the exact compiler commit and tree in
 3. Each `published-current` mechanism names exact compiler source and test
    paths. Finite fold, bounded recurrence, and permutation-gather contracts
    are mandatory semantic-pass inputs, not optional workload helpers.
-   `implemented-unpinned` records describe reviewed integration work but are
-   deliberately excluded from the evidence catalog until the exact integrated
-   compiler commit and tree are repinned.
+   The evidence validator resolves every named path from the exact integrated
+   compiler commit and rejects a missing object, tree, or path.
 4. The `generic-safety` and `functional-reference` entries in
    `config/current-state.json` state the exact theorem. Total-view coverage
    is not termination, arithmetic definedness, reduction-value correctness,
@@ -39,7 +38,7 @@ the exact compiler commit and tree in
    declarations and generated identity comments are not premises.
 7. Keep this site pinned to the final integrated compiler commit and tree.
    Publish the stable `FE2O3-PARALLEL` diagnostics through
-   `FE2O3-PARALLEL-021` without treating source declarations as evidence.
+   `FE2O3-PARALLEL-026` without treating source declarations as evidence.
 8. A safe CPU `input[index]` read joins only to an independently
    reconciled typed ranked GPU load with the same view, index, scalar,
    allocation origin, and stride. Canonical dynamic unit-step loops bind the
@@ -50,7 +49,11 @@ the exact compiler commit and tree in
    receipt and canonical-true domain and precondition roots covering the
    complete output. Automatic numerical proof requests, partial domains,
    reassociation without that receipt, and unsupported transcendental claims
-   fail closed with `FE2O3-PARALLEL-010`.
+   fail closed with `FE2O3-PARALLEL-010`. Unmatched numerical sites fail at
+   `FE2O3-PARALLEL-023`, ambiguous sites at `FE2O3-PARALLEL-024`,
+   duplicate sites for one output at `FE2O3-PARALLEL-025`, and a domain or
+   precondition that is not canonical true over the complete output at
+   `FE2O3-PARALLEL-026`.
 10. Multiple distinct outputs compose as an ordered product only when
     compiler-derived allocation origins and distinct nonzero noalias classes
     prove separation. Each output retains its own TotalView, hierarchy
