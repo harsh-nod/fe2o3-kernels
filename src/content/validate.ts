@@ -134,8 +134,8 @@ function validateLesson(
   if (lesson.objectives.length < 2 || lesson.sections.length < 2) {
     issues.push({ path, message: "lesson lacks substantive structure" });
   }
-  if (lesson.tabs.length < 4 || lesson.tabs.length > 6) {
-    issues.push({ path, message: "lesson must expose four to six code tabs" });
+  if (lesson.tabs.length < 4 || lesson.tabs.length > 7) {
+    issues.push({ path, message: "lesson must expose four to seven code tabs" });
   }
   const tabKinds = new Set(lesson.tabs.map((tab) => tab.kind));
   for (const kind of ["kernel", "verus", "host", "result"] as const) {

@@ -6,6 +6,7 @@ import moeTop2Reference from "../../examples/moe_top2_v1/src/oracle.rs?raw";
 import moeExpertKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel.rs?raw";
 import moeExpertHost from "../../examples/moe_grouped_expert_general_v1/src/main.rs?raw";
 import moeExpertReference from "../../examples/moe_grouped_expert_general_v1/src/reference.rs?raw";
+import moeMilestoneSpec from "../../examples/semantic_reference_vnext/moe_verus.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
@@ -15,6 +16,7 @@ import {
   type Lesson,
 } from "./model";
 import {
+  completeReferenceSpecTabs,
   completeReferenceTabs,
   completeTabs,
   noHost,
@@ -55,6 +57,7 @@ const moeRouting: Lesson = {
   sections: [
     narrativeSection("moe-routing/assumptions"),
     narrativeSection("moe-routing/permutation"),
+    narrativeSection("moe-routing/composed-reference"),
   ],
   tabs: completeReferenceTabs(
     {
@@ -172,8 +175,9 @@ const expertCompute: Lesson = {
     narrativeSection("moe-expert-compute/composition"),
     narrativeSection("moe-expert-compute/combine"),
     narrativeSection("moe-expert-compute/bounded-evidence"),
+    narrativeSection("moe-expert-compute/composed-reference"),
   ],
-  tabs: completeReferenceTabs(
+  tabs: completeReferenceSpecTabs(
     {
       language: "rust",
       code: moeExpertKernel,
@@ -193,6 +197,13 @@ const expertCompute: Lesson = {
       explanatory: false,
       notice:
         "Safe sequential Rust defines dynamic routed rows, reduction and output extents, strides, expert selection, bias, gate, and preserved padding for runtime qualification. Its Vec allocation, loops, and calls place it outside compiler-authenticated reference-effect V1.",
+    },
+    {
+      language: "rust",
+      code: moeMilestoneSpec,
+      explanatory: true,
+      notice:
+        "Integration-pending Verus specification. It composes generic permutation, fold, total-view, and ordered-combine contracts; the compiler does not recognize MoE or routing names.",
     },
     {
       language: "rust",
@@ -285,6 +296,7 @@ const pipeline: Lesson = {
   sections: [
     narrativeSection("evidence-pipeline/chain"),
     narrativeSection("evidence-pipeline/why-direct"),
+    narrativeSection("evidence-pipeline/total-correctness-receipt"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -345,6 +357,7 @@ const assurance: Lesson = {
   sections: [
     narrativeSection("what-verus-proves/proved"),
     narrativeSection("what-verus-proves/ecosystem"),
+    narrativeSection("what-verus-proves/total-correctness-boundary"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -366,7 +379,14 @@ const assurance: Lesson = {
       acceptance: "The report separates theorem conclusions from each unproved refinement boundary.",
     },
   ],
-  glossary: ["Verified", "Checked", "Unsafe", "external body", "assumption audit"],
+  glossary: [
+    "Verified",
+    "Checked",
+    "Unsafe",
+    "external body",
+    "assumption audit",
+    "total correctness",
+  ],
 };
 
 const evidenceArchive: Lesson = {
@@ -388,6 +408,7 @@ const evidenceArchive: Lesson = {
     narrativeSection("read-the-evidence/compiler-refactor"),
     narrativeSection("read-the-evidence/scalar-gemm-checkpoint"),
     narrativeSection("read-the-evidence/moe-bounded-evidence"),
+    narrativeSection("evidence-archive/non-retroactive-milestone"),
     {
       kind: "staged-evidence",
       evidenceIds: [...stagedEvidenceOrder],
@@ -449,6 +470,7 @@ const exercises: Lesson = {
   sections: [
     narrativeSection("exercise-ladder/beginner"),
     narrativeSection("exercise-ladder/advanced"),
+    narrativeSection("exercise-ladder/semantic-correctness"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -508,6 +530,7 @@ const contributing: Lesson = {
   sections: [
     narrativeSection("contributing-kernel/checklist"),
     narrativeSection("contributing-kernel/review"),
+    narrativeSection("contributing-kernel/semantic-contract-checklist"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },

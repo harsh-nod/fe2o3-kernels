@@ -5,6 +5,7 @@ import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
+import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
 import {
   developmentCheckpointIds,
   developmentCheckpoints,
@@ -60,6 +61,48 @@ function checkpointDetail(
 }
 
 describe("curriculum integrity", () => {
+  it("keeps the semantic-correctness milestone explicit in every lesson", () => {
+    expect(semanticCorrectnessMilestone.status).toBe("integration-pending");
+    expect(semanticCorrectnessMilestone.compilerCommit).toBeNull();
+    expect(semanticCorrectnessMilestone.compilerTree).toBeNull();
+    expect(
+      semanticCorrectnessMilestone.mechanisms.map((mechanism) => [
+        mechanism.id,
+        mechanism.status,
+      ]),
+    ).toEqual([
+      ["finite-total-view", "integration-pending"],
+      ["atomic-contribution-coverage", "integration-pending"],
+      ["typed-scalar-congruence", "integration-pending"],
+      ["generic-semantic-composition", "planned"],
+      ["complete-functional-join", "planned"],
+    ]);
+
+    for (const lesson of lessons) {
+      expect(serializedLessonContent(lesson.id), lesson.id).toContain(
+        "Milestone status: integration pending",
+      );
+    }
+
+    for (const lessonId of [
+      "gemm-tiling",
+      "softmax-invariant",
+      "flash-attention",
+      "moe-expert-compute",
+    ]) {
+      const lesson = lessons.find((candidate) => candidate.id === lessonId);
+      const specification = lesson?.tabs.find((tab) => tab.kind === "spec");
+      expect(specification, lessonId).toMatchObject({
+        label: "Milestone contract",
+        language: "rust",
+        explanatory: true,
+      });
+      expect(specification?.notice, lessonId).toContain("Integration-pending");
+      expect(specification?.code, lessonId).toContain("MILESTONE SPECIFICATION");
+      expect(specification?.code, lessonId).toContain("arithmetic_is_defined");
+    }
+  });
+
   it("covers modules zero through eight in order", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8,

@@ -1,0 +1,55 @@
+{
+  "schema": "fe2o3-semantic-correctness-tutorial-milestone-v1",
+  "status": "integration-pending",
+  "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
+  "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
+  "compilerCommit": null,
+  "compilerTree": null,
+  "preloweringReportVersion": null,
+  "functionalReceiptVersion": null,
+  "mechanisms": [
+    {
+      "id": "finite-total-view",
+      "status": "integration-pending",
+      "detail": "finite total-view coverage, uniqueness, surjectivity, finality, and unmodeled-observable-write rejection",
+      "evidence": []
+    },
+    {
+      "id": "atomic-contribution-coverage",
+      "status": "integration-pending",
+      "detail": "exactly-once atomic contribution coverage; this does not prove the reduction operator, order, or final fold value",
+      "evidence": []
+    },
+    {
+      "id": "typed-scalar-congruence",
+      "status": "integration-pending",
+      "detail": "typed closed scalar operator congruence with explicit numeric policy; exact IEEE operator congruence is not IEEE-value or target-instruction authority",
+      "evidence": []
+    },
+    {
+      "id": "generic-semantic-composition",
+      "status": "planned",
+      "detail": "generic fold, recurrence, permutation, and collective semantic refinement",
+      "evidence": []
+    },
+    {
+      "id": "complete-functional-join",
+      "status": "planned",
+      "detail": "same-session safe Rust reference identity, termination and arithmetic-definedness obligations, complete output semantics, and retained Verus evidence",
+      "evidence": []
+    }
+  ],
+  "workloadExamples": [
+    "examples/tiled_gemm_general_v1",
+    "examples/row_softmax_general_v1",
+    "examples/flash_attention_general_v1",
+    "examples/moe_grouped_expert_general_v1"
+  ],
+  "publicationRequirements": [
+    "pin an exact compiler commit and tree on both public main refs",
+    "name the exact mandatory pre-lowering report and functional receipt versions",
+    "replace or retain every explanatory milestone specification according to its per-capability status and exact compiler-owned evidence",
+    "run positive, negative, mutation, publication-gate, and browser validation",
+    "state the remaining source-to-machine and floating-point trust boundaries"
+  ]
+}

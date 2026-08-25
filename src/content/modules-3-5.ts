@@ -3,9 +3,12 @@ import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
 import flashAttentionReference from "../../examples/flash_attention_general_v1/src/reference.rs?raw";
+import flashAttentionMilestoneSpec from "../../examples/semantic_reference_vnext/flash_attention_verus.rs?raw";
+import gemmMilestoneSpec from "../../examples/semantic_reference_vnext/gemm_verus.rs?raw";
 import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel.rs?raw";
 import rowSoftmaxHost from "../../examples/row_softmax_general_v1/src/main.rs?raw";
 import rowSoftmaxReference from "../../examples/row_softmax_general_v1/src/reference.rs?raw";
+import rowSoftmaxMilestoneSpec from "../../examples/semantic_reference_vnext/softmax_verus.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
 import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.rs?raw";
 import dynamicGemmHost from "../../examples/tiled_gemm_general_v1/src/main.rs?raw";
@@ -23,7 +26,12 @@ import {
   type CurriculumModule,
   type Lesson,
 } from "./model";
-import { completeReferenceTabs, noHost, resultText } from "./shared";
+import {
+  completeReferenceSpecTabs,
+  completeReferenceTabs,
+  noHost,
+  resultText,
+} from "./shared";
 import {
   sourceMilestoneClaim,
   sourceMilestoneRecord,
@@ -252,6 +260,7 @@ const collectives: Lesson = {
   sections: [
     narrativeSection("reductions-scans/scope"),
     narrativeSection("reductions-scans/scan"),
+    narrativeSection("reductions-scans/contribution-domain"),
   ],
   tabs: completeReferenceTabs(
     {
@@ -311,7 +320,14 @@ const collectives: Lesson = {
       acceptance: "Inactive lanes contribute no value and every active result contains only earlier active lanes.",
     },
   ],
-  glossary: ["wave64", "active mask", "reduction", "scan", "participation scope"],
+  glossary: [
+    "wave64",
+    "active mask",
+    "reduction",
+    "scan",
+    "participation scope",
+    "contribution domain",
+  ],
 };
 
 const synchronization: Lesson = {
@@ -352,6 +368,7 @@ const synchronization: Lesson = {
   sections: [
     narrativeSection("lds-barriers-atomics/epochs"),
     narrativeSection("lds-barriers-atomics/atomics"),
+    narrativeSection("lds-barriers-atomics/final-observable-effect"),
   ],
   tabs: completeReferenceTabs(
     {
@@ -452,6 +469,7 @@ const gemmMapping: Lesson = {
   sections: [
     narrativeSection("gemm-tiling/mapping"),
     narrativeSection("gemm-tiling/loop-proof"),
+    narrativeSection("gemm-tiling/composed-reference"),
   ],
   tabs: [
     { kind: "kernel", label: "Kernel", ...exactDynamicGemmKernelTab() },
@@ -467,6 +485,15 @@ const gemmMapping: Lesson = {
       explanatory: false,
       notice:
         "This host-allocating Vec reference is the runtime qualification oracle for MI300X. It is not the local acyclic, call-free #[kernel(reference = ...)] function consumed by compiler-authenticated reference-effect V1.",
+    },
+    {
+      kind: "spec",
+      label: "Milestone contract",
+      language: "rust",
+      code: gemmMilestoneSpec,
+      explanatory: true,
+      notice:
+        "Integration-pending Verus specification. It composes generic total-view coverage and a typed fold with the safe CPU reference; it is not proof evidence at the published compiler pin.",
     },
     {
       kind: "verus",
@@ -535,6 +562,7 @@ const gemmProof: Lesson = {
       evidenceIds: [...stagedEvidenceOrder],
     },
     narrativeSection("gemm-proof-plan/evidence"),
+    narrativeSection("gemm-proof-plan/total-correctness-boundary"),
   ],
   tabs: completeReferenceTabs(
     exactTiledGemmKernelTab(),
@@ -604,8 +632,9 @@ const softmax: Lesson = {
   sections: [
     narrativeSection("softmax-invariant/spec"),
     narrativeSection("softmax-invariant/proof"),
+    narrativeSection("softmax-invariant/composed-reference"),
   ],
-  tabs: completeReferenceTabs(
+  tabs: completeReferenceSpecTabs(
     {
       language: "rust",
       code: rowSoftmaxKernel,
@@ -625,6 +654,13 @@ const softmax: Lesson = {
       explanatory: false,
       notice:
         "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. Because it allocates and returns Vec and contains loops/calls, it is not yet a compiler-authenticated reference-effect V1 function.",
+    },
+    {
+      language: "rust",
+      code: rowSoftmaxMilestoneSpec,
+      explanatory: true,
+      notice:
+        "Integration-pending Verus specification. It composes generic contribution coverage, declared reductions, total output coverage, and an explicit numeric contract; no current proof receipt covers it.",
     },
     {
       language: "rust",
@@ -704,8 +740,9 @@ const flash: Lesson = {
     narrativeSection("flash-attention/online"),
     narrativeSection("flash-attention/effects"),
     narrativeSection("flash-attention/closure"),
+    narrativeSection("flash-attention/composed-reference"),
   ],
-  tabs: completeReferenceTabs(
+  tabs: completeReferenceSpecTabs(
     {
       language: "rust",
       code: flashAttentionKernel,
@@ -725,6 +762,13 @@ const flash: Lesson = {
       explanatory: false,
       notice:
         "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. Its Vec allocation, loops, and calls place it outside reference-effect V1; exact floating-point lowering remains a separate numerical-refinement obligation.",
+    },
+    {
+      language: "rust",
+      code: flashAttentionMilestoneSpec,
+      explanatory: true,
+      notice:
+        "Integration-pending Verus specification. It treats online softmax as a generic recurrence and composes its final state with total output effects; it grants no current compiler or machine authority.",
     },
     {
       language: "rust",
@@ -764,7 +808,13 @@ const flash: Lesson = {
       acceptance: "CPU and GPU agree for left and right window edges, query/key tails, and multiple heads.",
     },
   ],
-  glossary: ["flash attention", "online softmax", "causal mask", "numerical refinement"],
+  glossary: [
+    "flash attention",
+    "online softmax",
+    "causal mask",
+    "numerical refinement",
+    "recurrence",
+  ],
 };
 
 export const modules3to5: CurriculumModule[] = [

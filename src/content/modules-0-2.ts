@@ -71,6 +71,7 @@ const orientation: Lesson = {
   sections: [
     narrativeSection("read-the-evidence/labels"),
     narrativeSection("read-the-evidence/differentiator"),
+    narrativeSection("read-the-evidence/semantic-correctness-milestone"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -139,6 +140,7 @@ const setup: Lesson = {
   sections: [
     narrativeSection("gfx942-setup/toolchain"),
     narrativeSection("gfx942-setup/sequence"),
+    narrativeSection("gfx942-setup/semantic-gates"),
   ],
   tabs: completeTabs(
     { language: "rust", code: noKernel, explanatory: true },
@@ -203,6 +205,7 @@ const fill: Lesson = {
   sections: [
     narrativeSection("first-fill/kernel-shape"),
     narrativeSection("first-fill/trust"),
+    narrativeSection("first-fill/total-output-coverage"),
   ],
   tabs: completeReferenceTabs(
     {
@@ -246,7 +249,14 @@ const fill: Lesson = {
       acceptance: "The extra lanes return None and no output index changes twice.",
     },
   ],
-  glossary: ["ThreadIndex", "DisjointSlice", "rounded tail", "write partition"],
+  glossary: [
+    "ThreadIndex",
+    "DisjointSlice",
+    "rounded tail",
+    "write partition",
+    "total output coverage",
+    "finality",
+  ],
 };
 
 const vecadd: Lesson = {
@@ -308,6 +318,7 @@ const vecadd: Lesson = {
   sections: [
     narrativeSection("typed-vecadd/same-body"),
     narrativeSection("typed-vecadd/typed-host"),
+    narrativeSection("typed-vecadd/typed-arithmetic-contract"),
   ],
   tabs: completeReferenceTabs(
     {
@@ -367,7 +378,14 @@ policy overhead, not evidence that the generated kernel is slower.`,
       acceptance: "The output guard currently dominates both input reads; moving a read bypasses that bound.",
     },
   ],
-  glossary: ["typed kernel", "Prepared", "source sharing", "IEEE refinement"],
+  glossary: [
+    "typed kernel",
+    "Prepared",
+    "source sharing",
+    "IEEE refinement",
+    "numeric contract",
+    "arithmetic definedness",
+  ],
 };
 
 const cpuSimulation: Lesson = {
@@ -409,6 +427,7 @@ const cpuSimulation: Lesson = {
   sections: [
     narrativeSection("cpu-semantic-simulation/pipeline"),
     narrativeSection("cpu-semantic-simulation/evidence-boundary"),
+    narrativeSection("cpu-semantic-simulation/testing-is-not-proof"),
   ],
   tabs: completeReferenceTabs(
     {
@@ -523,6 +542,7 @@ const verusBasics: Lesson = {
   sections: [
     narrativeSection("verus-contracts/contract-shape"),
     narrativeSection("verus-contracts/negative"),
+    narrativeSection("verus-contracts/compositional-reference"),
   ],
   tabs: completeTabs(
     { language: "rust", code: fillKernel, explanatory: true },
@@ -586,6 +606,7 @@ const memoryProofs: Lesson = {
   sections: [
     narrativeSection("memory-race-proof/regions"),
     narrativeSection("memory-race-proof/dynamic-join"),
+    narrativeSection("memory-race-proof/finality-and-frame"),
   ],
   tabs: completeTabs(
     { language: "rust", code: vecaddKernel },
@@ -685,6 +706,7 @@ const compilerChecks: Lesson = {
     narrativeSection("compiler-checks/catalog"),
     narrativeSection("compiler-checks/production-path"),
     narrativeSection("compiler-checks/v7-simulation"),
+    narrativeSection("compiler-checks/complete-correctness-catalog"),
   ],
   tabs: [
     {

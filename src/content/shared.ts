@@ -39,3 +39,21 @@ export function completeReferenceTabs(
     { kind: "result", label: "Expected result", ...result },
   ];
 }
+
+export function completeReferenceSpecTabs(
+  kernel: Omit<CodeTab, "kind" | "label">,
+  reference: Omit<CodeTab, "kind" | "label">,
+  spec: Omit<CodeTab, "kind" | "label">,
+  verus: Omit<CodeTab, "kind" | "label">,
+  host: Omit<CodeTab, "kind" | "label">,
+  result: Omit<CodeTab, "kind" | "label">,
+): CodeTab[] {
+  return [
+    { kind: "kernel", label: "Kernel", ...kernel },
+    { kind: "reference", label: "Safe CPU reference", ...reference },
+    { kind: "spec", label: "Milestone contract", ...spec },
+    { kind: "verus", label: "Verus proof", ...verus },
+    { kind: "host", label: "Host", ...host },
+    { kind: "result", label: "Expected result", ...result },
+  ];
+}

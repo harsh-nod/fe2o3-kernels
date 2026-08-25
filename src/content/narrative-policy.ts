@@ -50,7 +50,28 @@ export const narrativeIds = deepFreeze([
   "exercise-ladder/beginner",
   "exercise-ladder/advanced",
   "contributing-kernel/checklist",
-  "contributing-kernel/review"
+  "contributing-kernel/review",
+  "read-the-evidence/semantic-correctness-milestone",
+  "gfx942-setup/semantic-gates",
+  "first-fill/total-output-coverage",
+  "typed-vecadd/typed-arithmetic-contract",
+  "cpu-semantic-simulation/testing-is-not-proof",
+  "verus-contracts/compositional-reference",
+  "memory-race-proof/finality-and-frame",
+  "compiler-checks/complete-correctness-catalog",
+  "reductions-scans/contribution-domain",
+  "lds-barriers-atomics/final-observable-effect",
+  "gemm-tiling/composed-reference",
+  "gemm-proof-plan/total-correctness-boundary",
+  "softmax-invariant/composed-reference",
+  "flash-attention/composed-reference",
+  "moe-routing/composed-reference",
+  "moe-expert-compute/composed-reference",
+  "evidence-pipeline/total-correctness-receipt",
+  "what-verus-proves/total-correctness-boundary",
+  "evidence-archive/non-retroactive-milestone",
+  "exercise-ladder/semantic-correctness",
+  "contributing-kernel/semantic-contract-checklist"
 ] as const);
 
 export type NarrativeId = (typeof narrativeIds)[number];
@@ -58,94 +79,115 @@ export type NarrativeId = (typeof narrativeIds)[number];
 export const narrativeOrderByLesson = deepFreeze({
   "read-the-evidence": [
     "read-the-evidence/labels",
-    "read-the-evidence/differentiator"
+    "read-the-evidence/differentiator",
+    "read-the-evidence/semantic-correctness-milestone"
   ],
   "gfx942-setup": [
     "gfx942-setup/toolchain",
-    "gfx942-setup/sequence"
+    "gfx942-setup/sequence",
+    "gfx942-setup/semantic-gates"
   ],
   "first-fill": [
     "first-fill/kernel-shape",
-    "first-fill/trust"
+    "first-fill/trust",
+    "first-fill/total-output-coverage"
   ],
   "typed-vecadd": [
     "typed-vecadd/same-body",
-    "typed-vecadd/typed-host"
+    "typed-vecadd/typed-host",
+    "typed-vecadd/typed-arithmetic-contract"
   ],
   "cpu-semantic-simulation": [
     "cpu-semantic-simulation/pipeline",
-    "cpu-semantic-simulation/evidence-boundary"
+    "cpu-semantic-simulation/evidence-boundary",
+    "cpu-semantic-simulation/testing-is-not-proof"
   ],
   "verus-contracts": [
     "verus-contracts/contract-shape",
-    "verus-contracts/negative"
+    "verus-contracts/negative",
+    "verus-contracts/compositional-reference"
   ],
   "memory-race-proof": [
     "memory-race-proof/regions",
-    "memory-race-proof/dynamic-join"
+    "memory-race-proof/dynamic-join",
+    "memory-race-proof/finality-and-frame"
   ],
   "compiler-checks": [
     "compiler-checks/catalog",
     "compiler-checks/production-path",
-    "compiler-checks/v7-simulation"
+    "compiler-checks/v7-simulation",
+    "compiler-checks/complete-correctness-catalog"
   ],
   "reductions-scans": [
     "reductions-scans/scope",
-    "reductions-scans/scan"
+    "reductions-scans/scan",
+    "reductions-scans/contribution-domain"
   ],
   "lds-barriers-atomics": [
     "lds-barriers-atomics/epochs",
-    "lds-barriers-atomics/atomics"
+    "lds-barriers-atomics/atomics",
+    "lds-barriers-atomics/final-observable-effect"
   ],
   "gemm-tiling": [
     "gemm-tiling/mapping",
-    "gemm-tiling/loop-proof"
+    "gemm-tiling/loop-proof",
+    "gemm-tiling/composed-reference"
   ],
   "gemm-proof-plan": [
     "gemm-proof-plan/proof-ledger",
     "gemm-tiling/general-contract",
     "gemm-tiling/mutation-diagnostics",
     "gemm-tiling/public-layout-proof",
-    "gemm-proof-plan/evidence"
+    "gemm-proof-plan/evidence",
+    "gemm-proof-plan/total-correctness-boundary"
   ],
   "softmax-invariant": [
     "softmax-invariant/spec",
-    "softmax-invariant/proof"
+    "softmax-invariant/proof",
+    "softmax-invariant/composed-reference"
   ],
   "flash-attention": [
     "flash-attention/online",
     "flash-attention/effects",
-    "flash-attention/closure"
+    "flash-attention/closure",
+    "flash-attention/composed-reference"
   ],
   "moe-routing": [
     "moe-routing/assumptions",
-    "moe-routing/permutation"
+    "moe-routing/permutation",
+    "moe-routing/composed-reference"
   ],
   "moe-expert-compute": [
     "moe-expert-compute/composition",
     "moe-expert-compute/combine",
-    "moe-expert-compute/bounded-evidence"
+    "moe-expert-compute/bounded-evidence",
+    "moe-expert-compute/composed-reference"
   ],
   "evidence-pipeline": [
     "evidence-pipeline/chain",
-    "evidence-pipeline/why-direct"
+    "evidence-pipeline/why-direct",
+    "evidence-pipeline/total-correctness-receipt"
   ],
   "what-verus-proves": [
     "what-verus-proves/proved",
-    "what-verus-proves/ecosystem"
+    "what-verus-proves/ecosystem",
+    "what-verus-proves/total-correctness-boundary"
   ],
   "evidence-archive": [
     "read-the-evidence/compiler-refactor",
     "read-the-evidence/scalar-gemm-checkpoint",
-    "read-the-evidence/moe-bounded-evidence"
+    "read-the-evidence/moe-bounded-evidence",
+    "evidence-archive/non-retroactive-milestone"
   ],
   "exercise-ladder": [
     "exercise-ladder/beginner",
-    "exercise-ladder/advanced"
+    "exercise-ladder/advanced",
+    "exercise-ladder/semantic-correctness"
   ],
   "contributing-kernel": [
     "contributing-kernel/checklist",
-    "contributing-kernel/review"
+    "contributing-kernel/review",
+    "contributing-kernel/semantic-contract-checklist"
   ]
 } satisfies Record<string, readonly NarrativeId[]>);
 
@@ -203,5 +245,26 @@ export const narrativeFingerprints = deepFreeze({
   "exercise-ladder/beginner": "8bf6d0afffdeb372df635265ab58dc5618ed72ae3c36840210665ae6dc12af67",
   "exercise-ladder/advanced": "9ab054160ebcd2cc8b3a744686102c9e0d62da2bcebad1fb3155639e16ffd16a",
   "contributing-kernel/checklist": "3655a026b9d3851266779266faf0ab4d405fc00172e4e6cdeb3424381ed08b02",
-  "contributing-kernel/review": "9b62429c8ac23851756fdbe8c218b7e32a2e86cceaf21380cdd53182b467a856"
+  "contributing-kernel/review": "9b62429c8ac23851756fdbe8c218b7e32a2e86cceaf21380cdd53182b467a856",
+  "read-the-evidence/semantic-correctness-milestone": "e5fd730b9da56bbc41b7267746f8e94db0f7dfdadded96f28e420c1f89132bb1",
+  "gfx942-setup/semantic-gates": "56feff127c2bca6896ebf7671d9f15570d11fce910bdc9fef43920d98fd04242",
+  "first-fill/total-output-coverage": "6910fb57d2546350d84fec24f32e4377e2d757432ab8b014a1bae26a4b2ac515",
+  "typed-vecadd/typed-arithmetic-contract": "f6b60735f8bdcb2e5e703c9147bafde93c4ff822a388502cbca14fc5f199b71e",
+  "cpu-semantic-simulation/testing-is-not-proof": "18846a9284030dca1554c510c1bdba8998754887a0ed877695572727573a0ede",
+  "verus-contracts/compositional-reference": "fcdb7c12aa55a1ba095d8f5588ddd9845df20b3ce9ff2b3d75faf4842b28f90f",
+  "memory-race-proof/finality-and-frame": "ec44033afef900cf14d269cdf935ff6f9c26be0906ed48223a00fd728400cc9c",
+  "compiler-checks/complete-correctness-catalog": "79553c984d147eaa10302376a3b30d6ae6c54e1937420938bbda522b0805e5ee",
+  "reductions-scans/contribution-domain": "5db301562810d21036f39d26eea5afc0fec5aa5ba67420225a9f29c412516950",
+  "lds-barriers-atomics/final-observable-effect": "38b62b5c26737af0ae9ab6424d15152e09cde81dd35031410b399e386ace4002",
+  "gemm-tiling/composed-reference": "5036e2bddd4d1a17d395f3c9bff4c4a03f6a1383d05564d0cd1fb65358b0ea1c",
+  "gemm-proof-plan/total-correctness-boundary": "3665466f9a47eeca3d0a6f41ffa1028118f867351fc08b75e318e8bd2c307be9",
+  "softmax-invariant/composed-reference": "8245df0a06b3f754645f9b5a7dda6c9d503c61e9c30c6a71c278112ff877d4b9",
+  "flash-attention/composed-reference": "d4f034c3f9112502c93fd60405e5cc6ccfde5b2ebd884efa9546faef27b48a4b",
+  "moe-routing/composed-reference": "6706bc5368e23d71c209d8442b6a8dad98bc00d51d6e743aeada8318af193c55",
+  "moe-expert-compute/composed-reference": "9ce9e8a20b3fcd373e4ad32bee8c8c97f174aa951b4be0c96c9700e29a1c7181",
+  "evidence-pipeline/total-correctness-receipt": "4a40a0f2dd6a8ecc65ccc2853fcbff42580dec89134aae9d3fad7c6ae3e840ea",
+  "what-verus-proves/total-correctness-boundary": "1bf489ee112e464b12fa4da3c394df473234771e4ca09a4d076002b4d6024dc0",
+  "evidence-archive/non-retroactive-milestone": "0eb725b9dc6716f6c75b850a247d308917ebeef850bb02f8369b4f2868cf8a92",
+  "exercise-ladder/semantic-correctness": "3e04dc90a00e9acaac4391f257286320e6f131bfacf331e183f93815cecc8569",
+  "contributing-kernel/semantic-contract-checklist": "e94cfd0166d360b7ea89e76a00abc54b182b8d893ec385b850a655e11520ba04"
 } satisfies Record<NarrativeId, string>);

@@ -174,6 +174,7 @@ export type LessonSection =
 export type CodeTabKind =
   | "kernel"
   | "reference"
+  | "spec"
   | "verus"
   | "comparison"
   | "host"

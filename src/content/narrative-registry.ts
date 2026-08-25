@@ -8,11 +8,21 @@ import {
   type NarrativeId,
 } from "./narrative-policy";
 import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
+import { semanticMilestoneBoundary } from "./semantic-correctness-milestone";
 
 export interface NarrativeRegistryEntry {
   sectionId: string;
   title: string;
   blocks: LessonBlock[];
+}
+
+function milestoneCallout(text: string): LessonBlock {
+  return {
+    type: "callout",
+    tone: "boundary",
+    title: "Semantic-correctness milestone",
+    text: `${semanticMilestoneBoundary} ${text}`,
+  };
 }
 
 const narrativeRegistry = deepFreeze({
@@ -2235,6 +2245,357 @@ const narrativeRegistry = deepFreeze({
         "text": "At this tutorial baseline the dashboard has no Complete rows. A Partial row may contain substantial implementation and tests while still lacking one acceptance class or authenticated join."
       }
     ]
+  },
+  "read-the-evidence/semantic-correctness-milestone": {
+    sectionId: "semantic-correctness-milestone",
+    title: "Read the next theorem as a composition",
+    blocks: [
+      milestoneCallout(
+        "The intended result combines output coverage, value equivalence, explicit numeric semantics, termination and definedness, and retained proof evidence. Total output coverage is not total program correctness; none of these layers substitutes for source-to-machine refinement or runtime admission.",
+      ),
+      {
+        type: "table",
+        headers: ["Layer", "Question", "Fail-closed result"],
+        rows: [
+          ["Coverage", "Was every required output written exactly once as the final observable effect?", "Rejected hole, duplicate, overwrite, or unmodeled write; Incomplete unresolved domain"],
+          ["Value", "Does each final value equal the safe Rust reference expression?", "Rejected typed-expression mismatch; Incomplete unsupported expression"],
+          ["Composition", "Do reductions, recurrences, permutations, and collectives cover their declared domains?", "Rejected missing or duplicate contribution; Incomplete unsupported relation"],
+          ["Evidence", "Did the retained Verus run prove the exact compiler-derived obligation?", "Incomplete missing, stale, or wrong-boundary receipt"],
+        ],
+      },
+    ],
+  },
+  "gfx942-setup/semantic-gates": {
+    sectionId: "semantic-gates",
+    title: "Run semantic gates before target gates",
+    blocks: [
+      milestoneCallout(
+        "Publication must pin the exact mandatory pre-lowering report and functional receipt versions before any lesson changes from explanatory to compiler-checked.",
+      ),
+      {
+        type: "steps",
+        items: [
+          "Run generic positive, negative, and mutation suites without a GPU.",
+          "Require every unsupported domain, expression, or collective relation to report Incomplete before lowering.",
+          "Run the retained Verus runtime against the exact compiler-generated obligation.",
+          "Only then run gfx942 compile, inspection, and hardware qualification as separate evidence layers.",
+        ],
+      },
+    ],
+  },
+  "first-fill/total-output-coverage": {
+    sectionId: "total-output-coverage",
+    title: "From a safe write to a complete output",
+    blocks: [
+      milestoneCallout(
+        "Fill is the smallest total-view example: the logical output domain must map onto all required coordinates, each coordinate must have one owner and one final write, and no other observable global write may escape the model.",
+      ),
+      {
+        type: "paragraph",
+        text: "Bounds proves that an executed access is inside an allocation. Race freedom proves that conflicting invocations do not overlap. Total coverage adds surjectivity: every required coordinate has an executed owner. Finality adds that the modeled value is not overwritten later. These are independent obligations.",
+      },
+    ],
+  },
+  "typed-vecadd/typed-arithmetic-contract": {
+    sectionId: "typed-arithmetic-contract",
+    title: "Type the expression and the numeric policy",
+    blocks: [
+      milestoneCallout(
+        "The next expression contract is intended to preserve scalar type, signedness, width, operation, cast, comparison, select, overflow mode, and floating-point policy. A textual formula match is not enough.",
+      ),
+      {
+        type: "table",
+        headers: ["Contract", "Admitted meaning", "Still separate"],
+        rows: [
+          ["Exact bit-vector", "The same fixed-width integer expression under the named wrapping or checked-overflow policy", "Source-to-ISA preservation"],
+          ["Checked arithmetic", "Overflow, division-by-zero, signed division overflow, invalid remainder, shift-range, and narrowing-cast preconditions are explicit", "A matching expression does not prove a trap is unreachable"],
+          ["Exact IEEE-754", "The same typed floating operator symbols, rounding mode, and exceptional-value policy", "Operator congruence alone proves neither IEEE values nor target instructions"],
+          ["Relaxed or error-bounded", "Only a proved tolerance relation", "No tolerance is inferred from a passing test"],
+        ],
+      },
+    ],
+  },
+  "cpu-semantic-simulation/testing-is-not-proof": {
+    sectionId: "testing-is-not-proof",
+    title: "Use simulation as a counterexample tool",
+    blocks: [
+      milestoneCallout(
+        "CPU semantic simulation can exercise domains and expose counterexamples, but it cannot establish universal coverage, arithmetic equivalence, or GPU refinement. The proof obligation remains quantified over the declared logical domain.",
+      ),
+      {
+        type: "paragraph",
+        text: "A useful workflow runs generated edge cases through the simulator and safe Rust reference before proof. A mismatch blocks the candidate immediately. Matching finite cases improve confidence in the specification and fixtures; only the compiler and Verus layers can discharge the universal obligation they explicitly model.",
+      },
+    ],
+  },
+  "verus-contracts/compositional-reference": {
+    sectionId: "compositional-reference",
+    title: "Prove reusable contracts, then compose them",
+    blocks: [
+      milestoneCallout(
+        "The safe Rust reference owns workload intent. Verus proves workload lemmas over generic compiler facts such as total views, contribution sets, folds, recurrences, and permutations; compiler passes never recognize an algorithm name.",
+      ),
+      {
+        type: "bullets",
+        items: [
+          "A pointwise lemma relates one final effect to one reference point.",
+          "A coverage lemma lifts pointwise equality to the complete output domain.",
+          "A fold or recurrence lemma relates parallel intermediate states to the sequential reference state.",
+          "A permutation lemma carries identity through packing and inverse scatter.",
+          "A numeric lemma states exact or bounded arithmetic semantics explicitly.",
+        ],
+      },
+    ],
+  },
+  "memory-race-proof/finality-and-frame": {
+    sectionId: "finality-and-frame",
+    title: "Add finality and a complete frame condition",
+    blocks: [
+      milestoneCallout(
+        "A total-output theorem must reject a correct intermediate write that is overwritten, an extra global write absent from the reference, and a required output that is never written, even when every individual access is in bounds and race-free.",
+      ),
+      {
+        type: "table",
+        headers: ["Property", "Positive fact", "Representative failure"],
+        rows: [
+          ["Uniqueness", "One final owner per coordinate", "Two invocations write the same output"],
+          ["Surjectivity", "Every required coordinate has an owner", "Rounded grid omits a tail coordinate"],
+          ["Finality", "The matched effect is the last observable write", "A later store replaces the proved value"],
+          ["Frame", "All observable global writes are modeled", "A debug or scratch write escapes the declared effect set"],
+        ],
+      },
+    ],
+  },
+  "compiler-checks/complete-correctness-catalog": {
+    sectionId: "complete-correctness-catalog",
+    title: "The additional generic rejection classes",
+    blocks: [
+      milestoneCallout(
+        "The planned checks extend the mandatory PLIRON sequence; they are not optional GEMM helpers. Concrete violations are Rejected. Unsupported dynamic domains, expressions, or proof relations are Incomplete and emit no artifact.",
+      ),
+      {
+        type: "table",
+        headers: ["Generic check", "Rejects", "Needs a proof contract for"],
+        rows: [
+          ["Total view", "Coverage holes, duplicate final owners, overwritten matches, unmodeled global writes", "Symbolic or unbounded domains"],
+          ["Typed expression", "Type, operator, cast, overflow, rounding, or exceptional-policy mismatch", "Unsupported calls, loops, or relaxed relations"],
+          ["Arithmetic definedness", "A checked-overflow trap or invalid div, rem, shift, or cast precondition", "Symbolic preconditions outside the supported solver model"],
+          ["Contribution domain", "Missing, duplicate, non-atomic, or out-of-domain contributions", "Reduction operator and final fold value"],
+          ["Recurrence/permutation", "Wrong phase transition or non-bijective identity mapping", "Workload recurrence and permutation semantics"],
+        ],
+      },
+    ],
+  },
+  "reductions-scans/contribution-domain": {
+    sectionId: "contribution-domain",
+    title: "Separate participation from reduction meaning",
+    blocks: [
+      milestoneCallout(
+        "A generic contribution pass can prove that every declared participant contributes exactly once through a legal operation. The user specification must still name the operator, identity, order policy, and sequential fold it is meant to refine.",
+      ),
+      {
+        type: "paragraph",
+        text: "For associative exact arithmetic, a multiset contract may permit tree reordering. For floating point, order changes values, so the numeric contract must either retain the exact reduction tree or prove an explicit error bound. Atomic legality alone proves neither coverage nor the final reduced value.",
+      },
+    ],
+  },
+  "lds-barriers-atomics/final-observable-effect": {
+    sectionId: "final-observable-effect",
+    title: "Track epochs to the final observable effect",
+    blocks: [
+      milestoneCallout(
+        "LDS initialization, publication, and barriers prove that intermediate reads are legal. Functional correctness additionally relates the final global effect to the reference and rejects later overwrites or unmodeled global effects.",
+      ),
+      {
+        type: "paragraph",
+        text: "Workgroup-local scratch is usually internal to the refinement boundary. Its epochs still matter because a bad publication can corrupt the final value. Global atomics require a declared contribution contract: exact participation, legal scope and ordering, a reduction relation, and a finalization policy are separate facts.",
+      },
+    ],
+  },
+  "gemm-tiling/composed-reference": {
+    sectionId: "composed-reference",
+    title: "Compose GEMM from workload-neutral contracts",
+    blocks: [
+      milestoneCallout(
+        "The Milestone contract tab is explanatory. It places GEMM math only in GemmSpec while the compiler-facing facts remain a total output domain, a typed K-fold, exact final effects, and an explicit numeric policy.",
+      ),
+      {
+        type: "steps",
+        items: [
+          "Prove the workgroup, wave, lane, and fragment map is a bijection onto the active output tile.",
+          "Relate each loop or MFMA phase to a prefix of the declared contribution fold.",
+          "Relate the alpha/beta epilogue to the safe Rust point function.",
+          "Lift point equality through total-view coverage and the no-unmodeled-effect frame.",
+          "Bind any floating-point claim to the exact MFMA and epilogue numeric contract.",
+        ],
+      },
+    ],
+  },
+  "gemm-proof-plan/total-correctness-boundary": {
+    sectionId: "total-correctness-boundary",
+    title: "What closes the functional theorem",
+    blocks: [
+      milestoneCallout(
+        "Memory safety plus a per-effect equality theorem is not full functional correctness. The proof closes only when coverage, phase semantics, epilogue semantics, numeric policy, and complete observable frame are joined to the same kernel and reference identities.",
+      ),
+      {
+        type: "bullets",
+        items: [
+          "Termination or a bounded phase count is required before a total-correctness claim.",
+          "MFMA layout proof relates lane fragments to a logical contraction; it does not name GEMM.",
+          "The workload proof instantiates that contraction inside the K-fold.",
+          "Source-to-Kernel-IR and Kernel-IR-to-ISA preservation remain separate authenticated refinements.",
+        ],
+      },
+    ],
+  },
+  "softmax-invariant/composed-reference": {
+    sectionId: "composed-reference",
+    title: "Compose softmax from two reductions and a map",
+    blocks: [
+      milestoneCallout(
+        "The Milestone contract tab is explanatory. Softmax intent stays in SoftmaxSpec; the generic proof vocabulary covers active-column contributions, declared max and sum folds, total output effects, and an explicit exponential and division policy.",
+      ),
+      {
+        type: "paragraph",
+        text: "The proof needs a max-reduction relation, a denominator-reduction relation, a nonzero or all-masked policy, and pointwise normalization. For exact IEEE claims it must retain operation order and exceptional behavior. For tolerant claims it needs a proved bound, not a hard-coded test epsilon.",
+      },
+    ],
+  },
+  "flash-attention/composed-reference": {
+    sectionId: "composed-reference",
+    title: "Treat online attention as a recurrence",
+    blocks: [
+      milestoneCallout(
+        "The Milestone contract tab is explanatory. FlashAttention becomes workload-neutral to the compiler when its user spec defines one phase transition and proves the GPU trace refines that recurrence over the declared key-tile domain.",
+      ),
+      {
+        type: "steps",
+        items: [
+          "Define the safe Rust score, mask, online maximum, normalization sum, and value-accumulator transition.",
+          "Prove each GPU phase consumes exactly the declared key tile and preserves the recurrence invariant.",
+          "Prove the final normalized state equals the sequential reference row.",
+          "Use total-view coverage for every query, head, and output component, with no unmodeled global write.",
+        ],
+      },
+    ],
+  },
+  "moe-routing/composed-reference": {
+    sectionId: "composed-reference",
+    title: "Make routing a proved permutation contract",
+    blocks: [
+      milestoneCallout(
+        "MoE routing math belongs in the safe Rust and Verus specification. The compiler only needs a generic relation proving that accepted route identities map bijectively to compact slots and that inverse scatter restores the declared token and route coordinates.",
+      ),
+      {
+        type: "paragraph",
+        text: "Top-k order, ties, capacity, dropped routes, sentinels, and stable rank are workload policies. Once specified, generic range, uniqueness, surjectivity, and inverse laws can be reused for sorting, transposes, sparse layouts, and other permutations.",
+      },
+    ],
+  },
+  "moe-expert-compute/composed-reference": {
+    sectionId: "composed-reference",
+    title: "Compose routing, expert folds, and combine",
+    blocks: [
+      milestoneCallout(
+        "The Milestone contract tab is explanatory. Grouped MoE closes by composing a routing permutation, per-expert typed folds, total expert outputs, inverse scatter, ordered weighted combine, and total token outputs. No compiler pass recognizes MoE.",
+      ),
+      {
+        type: "table",
+        headers: ["Stage", "Generic compiler fact", "User theorem"],
+        rows: [
+          ["Pack", "Permutation is bounded and bijective", "Stable routing policy selects these routes"],
+          ["Expert", "Each compact output has one final owner and matching fold", "Fold is the expert transformation"],
+          ["Scatter", "Inverse mapping restores route identity", "Route belongs to the original token and rank"],
+          ["Combine", "Each token output is final and total", "Ordered weighted sum matches safe Rust"],
+        ],
+      },
+    ],
+  },
+  "evidence-pipeline/total-correctness-receipt": {
+    sectionId: "total-correctness-receipt",
+    title: "Retain the complete obligation through lowering",
+    blocks: [
+      milestoneCallout(
+        "A clean helper result is insufficient. The mandatory report must retain coverage and semantic facts in the non-Clone lowering input, and the proof receipt must bind the exact normalized obligation, compiler subjects, tools, policy, and execution result.",
+      ),
+      {
+        type: "steps",
+        items: [
+          "Construct coverage, expression, contribution, recurrence, and permutation obligations from authenticated IR.",
+          "Fail closed before target lowering on Rejected or Incomplete results.",
+          "Generate and retain the exact Verus obligation under bounded process control.",
+          "Consume the receipt only in the originating compiler session.",
+          "Carry the admitted report into lowering and bind later artifact and runtime evidence separately.",
+        ],
+      },
+    ],
+  },
+  "what-verus-proves/total-correctness-boundary": {
+    sectionId: "total-correctness-boundary",
+    title: "State the theorem and its trusted joins",
+    blocks: [
+      milestoneCallout(
+        "Verus can prove the generated mathematical obligation, including quantified coverage and compositional workload lemmas. It does not by itself prove that rustc extraction, PLIRON construction, target lowering, hardware arithmetic, or runtime inputs implement that obligation.",
+      ),
+      {
+        type: "paragraph",
+        text: "A defensible guarantee names the theorem, domain, numeric model, termination assumptions, extraction and lowering trust, proof toolchain, artifact identity, and runtime preconditions. The word arbitrary means arbitrary kernels expressible in the supported generic contracts, not arbitrary Rust or unbounded undecidable programs.",
+      },
+    ],
+  },
+  "evidence-archive/non-retroactive-milestone": {
+    sectionId: "non-retroactive-milestone",
+    title: "New proofs do not upgrade old evidence",
+    blocks: [
+      milestoneCallout(
+        "Historical source, model, machine, and GPU records keep their original authority. A new total-correctness report or receipt cannot retroactively promote an artifact unless every required identity is joined and revalidated.",
+      ),
+      {
+        type: "paragraph",
+        text: "Keep historical records useful by treating them as bounded regression evidence. Publication of this milestone requires new exact compiler pins, proof identities, mutation results, and site evidence rather than rewriting the meaning of an earlier commit.",
+      },
+    ],
+  },
+  "exercise-ladder/semantic-correctness": {
+    sectionId: "semantic-correctness",
+    title: "Exercise the proof composition",
+    blocks: [
+      milestoneCallout(
+        "Each exercise should name one generic compiler fact, one workload lemma, one negative mutation, and the remaining trusted boundary.",
+      ),
+      {
+        type: "steps",
+        items: [
+          "Prove total fill coverage, then reject one missing tail owner and one later overwrite.",
+          "Prove an exact wrapping-integer map, then reject a signedness or overflow-policy mismatch.",
+          "Prove a reduction contribution domain, then add the fold theorem and mutate one duplicate contribution.",
+          "Prove a bounded recurrence and mutate one phase transition.",
+          "Prove a permutation and inverse, then compose it with a total output theorem.",
+        ],
+      },
+    ],
+  },
+  "contributing-kernel/semantic-contract-checklist": {
+    sectionId: "semantic-contract-checklist",
+    title: "Add the semantic contract to every contribution",
+    blocks: [
+      milestoneCallout(
+        "Until integration is published, contributors should treat these as design requirements. After publication, the exact manifest pin and mandatory diagnostics become part of the acceptance gate.",
+      ),
+      {
+        type: "steps",
+        items: [
+          "Provide a local safe Rust CPU reference with an explicit logical domain and observable outputs.",
+          "Declare exact bit-vector, exact IEEE-754, relaxed, or error-bounded numeric semantics without an implicit default.",
+          "Prove loop termination and every checked-overflow, div, rem, shift, cast, indexing, and trap precondition required by the total-program claim.",
+          "Describe reductions, recurrences, permutations, and collectives through generic contracts.",
+          "Require total output coverage, unique final owners, finality, and a complete observable frame.",
+          "Add positive proofs plus holes, duplicates, overwrites, unmodeled effects, arithmetic mismatches, and missing-receipt mutations.",
+          "Record exact compiler report, receipt, source, proof, artifact, target, and runtime identities.",
+        ],
+      },
+    ],
   }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
