@@ -32,7 +32,10 @@ RequestEffectRefinement(
 # The reference effect comes from safe Rust MIR. The GPU output, ranked index,
 # typed value, and path condition come independently from the GPU projection.
 # A strict one-to-one match is required before this request is constructed.
-# Unbound Vec/slice reads and unsupported CFG or expressions fail Incomplete.
+# A direct safe input[index] read joins only to matching ranked read/view/index,
+# scalar, allocation-origin, stride, and guard evidence. Multidimensional or raw
+# reads, unresolved load symbols, noncanonical loops, and unsupported expressions
+# fail Incomplete.
 
 # Per-effect receipt admission materializes these real PLIRON operations:
 #

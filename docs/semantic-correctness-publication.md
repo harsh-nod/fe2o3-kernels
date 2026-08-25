@@ -37,24 +37,31 @@ the exact compiler commit and tree in
    exact instantiation, tool run, and retained receipts outside the lemma;
    receipts are not logical premises in one whole-kernel theorem. Candidate
    declarations and generated identity comments are not premises.
-7. Keep this site pinned to the final integrated compiler commit and tree. Publish
-   `FE2O3-PARALLEL-001` through `FE2O3-PARALLEL-017` as the
-   fail-closed diagnostics for semantic identity, coverage, hierarchy,
-   schedules, dynamic bounds, numerical policies, calls, and tensor sites.
-8. The generic output numerical obligation is a relation over actual,
-   reference, Boolean domain and precondition roots plus finite nonnegative
-   absolute/relative bounds. The built-in generator proves only exact equality.
-   Non-exact or reassociated arithmetic requires an independently verified
-   receipt for the exact canonical obligation; otherwise
-   `FE2O3-PARALLEL-010` fails closed.
-9. The generic cooperative-tensor summary binds live ranked sites, target-owned
-   instruction data, exact lane/component layouts, convergence, typed
-   capability roots, edge policy, staging/barrier evidence, contribution
-   schedule, total-view scatter, numerical policy, and proof identity. Current
-   target data covers gfx942 BF16/F32 m16n16k16 Wave64 and one output relation.
-   `FE2O3-PARALLEL-012/013/014/016` reject summary substitution, incomplete
-   ownership, unmodeled sites, and unsupported multi-output composition.
-
+7. Keep this site pinned to the final integrated compiler commit and tree.
+   Publish the stable `FE2O3-PARALLEL` diagnostics through
+   `FE2O3-PARALLEL-021` without treating source declarations as evidence.
+8. A safe CPU `input[index]` read joins only to an independently
+   reconciled typed ranked GPU load with the same view, index, scalar,
+   allocation origin, and stride. Canonical dynamic unit-step loops bind the
+   compiler-derived finite-domain symbol, full u64 bound, transition,
+   termination variant, and maximum-step identity. Multidimensional or raw
+   reads and noncanonical loops fail closed.
+9. ErrorBounded authority requires an independently imported claim-specific
+   receipt and canonical-true domain and precondition roots covering the
+   complete output. Automatic numerical proof requests, partial domains,
+   reassociation without that receipt, and unsupported transcendental claims
+   fail closed with `FE2O3-PARALLEL-010`.
+10. Multiple distinct outputs compose as an ordered product only when
+    compiler-derived allocation origins and distinct nonzero noalias classes
+    prove separation. Each output retains its own TotalView, hierarchy
+    identity, frame, receipt, and schedule. `FE2O3-PARALLEL-018` through
+    `FE2O3-PARALLEL-021` reject duplicate, overlapping, unclassified,
+    coverage-mismatched, or reordered products.
+11. Cooperative-tensor checks validate target-owned fragment layout, lane
+    coordinates, convergence, tail policy, staging/swizzle, and dominating
+    publication barriers for supported live sites. They do not prove tensor
+    arithmetic. `FE2O3-PARALLEL-013` fails closed until typed tensor SSA
+    def-use and result-to-output bindings plus claim-specific receipts exist.
 ## Kernel lesson checklist
 
 `config/semantic-correctness-milestone.json` names every executable kernel
@@ -71,16 +78,15 @@ ordered set. The UI renders each entry next to its lesson and reports:
 
 The catalog covers fill, vecadd, CPU semantic simulation, Wave64 collectives,
 workgroup synchronization, GEMM, softmax, FlashAttention, top-2 routing, and
-grouped-expert compute. Advanced Vec/slice-reading references remain
-`Incomplete`: slice-read binding, narrow dynamic reference-loop evidence,
-stable ranked-view identities for multiple outputs, lesson-specific verified
-non-exact/reassociation receipts, and fixed retained `/opt` runtime support
-are not generally available. Generic MFMA summaries remove the old
-workload-specific summary gap only for compiler-bound live sites; they do not
-admit an unsupported reference or prove target instruction semantics.
-Runtime CPU oracles, source models, and GPU comparisons do not substitute for
-the exact per-compilation reference-MIR to live-PLIRON receipt.
-
+grouped-expert compute. The generic compiler can prove direct one-dimensional
+safe-slice reads, canonical unit-step dynamic-loop termination, and separated
+multiple-output products. Individual advanced references remain `Incomplete`
+when they use Vec allocation/return, multidimensional reads, range slices,
+nested or eventful recurrence, rich helper control flow, unsupported tensor
+arithmetic, or lack a claim-specific numerical receipt. MFMA layout and
+convergence checks do not establish the contraction value. Runtime CPU
+oracles, source models, and GPU comparisons do not substitute for the exact
+per-compilation reference-MIR to live-PLIRON receipt.
 The root-owned retained runtime is not installed on mi300x, so no referenced
 production compilation has completed the aggregate gate there. Cached Verus
 template/generated-fixture checks pass; they demonstrate the conditional
@@ -91,13 +97,12 @@ sequential behavior; generic pointwise/permutation/fold/recurrence and
 hierarchy relations describe its parallel implementation. No pass recognizes
 GEMM, softmax, attention, routing, or MoE.
 
-The current canonical loop subset is an increasing `IndexLessThan` induction
-with one preheader, one matching latch update, and an exact exit. Static trip
-counts are recomputed. Dynamic loops require the full `u64` type bound and a
-constant unit step; a claimed narrower bound is rejected until a production
-range receipt can prove it. Irreducible or otherwise unsupported CFGs fail
-closed.
-
+The current canonical dynamic-loop subset is a compiler-derived unit-step
+induction with exact finite-domain symbol, full u64 machine bound, transition,
+termination variant, and maximum-step identity; stale or narrowed mutations are
+rejected. This proves termination only for that exact form. Non-unit, eventful,
+or noncanonical loops, additional loop-carried recurrence, arbitrary
+break/continue, and loops without a termination proof remain fail closed.
 Changing the milestone status changes every canonical milestone callout. The
 changed reviewed entries in `src/content/narrative-policy.ts` must be
 recomputed, then validated with:

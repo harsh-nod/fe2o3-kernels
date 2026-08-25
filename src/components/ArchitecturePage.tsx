@@ -101,11 +101,13 @@ export function ArchitecturePage() {
           catalog reflects the integrated production order: compiler-owned
           semantic derivation, strict parallel derivation, then generated
           per-compilation Verus composition before KIR lowering. Generic
-          output-numerical and cooperative-tensor contracts are implemented but
-          remain unpinned in this publication. Missing slice reads, unsupported
-          dynamic reference loops or tensor profiles, multi-output identities,
-          lesson-specific numerical receipts, or retained runtime support are
-          Incomplete, never assumed summaries.
+          ranked safe-reference loads, canonical dynamic loops, output-numerical
+          contracts, cooperative-tensor structural checks, and separated
+          multiple-output products are implemented but remain unpinned. Direct
+          one-dimensional reads and canonical loops require exact live evidence;
+          distinct outputs require nonzero noalias classes. ErrorBounded claims
+          require imported full-domain receipts, and tensor arithmetic still
+          stops at FE2O3-PARALLEL-013. Unsupported forms remain Incomplete.
           Current Partial capabilities still grant no compiler extraction,
           projection, pass-soundness, or source-to-machine refinement,
           protected launch authority, complete persistent execution, universal

@@ -81,8 +81,11 @@ describe("curriculum integrity", () => {
       ["atomic-contribution-coverage", "published-current"],
       ["typed-scalar-congruence", "published-current"],
       ["generic-semantic-composition", "published-current"],
+      ["ranked-safe-reference-loads", "implemented-unpinned"],
+      ["canonical-dynamic-loop-refinement", "implemented-unpinned"],
       ["output-numerical-refinement", "implemented-unpinned"],
-      ["cooperative-tensor-composition", "implemented-unpinned"],
+      ["cooperative-tensor-structural-validation", "implemented-unpinned"],
+      ["multiple-output-refinement", "implemented-unpinned"],
       ["aggregate-mir-refinement-gate", "published-current"],
       ["exact-mir-pliron-contract", "published-current"],
       ["per-compilation-verus-composition", "published-current"],
@@ -200,7 +203,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.cooperativeTensor,
         lessonId,
-      ).toMatch(/gfx942.*m16n16k16.*one output/iu);
+      ).toMatch(/gfx942.*m16n16k16.*FE2O3-PARALLEL-013/iu);
     }
 
     for (const lessonId of [
@@ -216,7 +219,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.numericalPolicy,
         lessonId,
-      ).toMatch(/exact equality.*FE2O3-PARALLEL-010/isu);
+      ).toMatch(/independently imported.*canonical-true.*FE2O3-PARALLEL-010/isu);
     }
 
     for (const lessonId of ["moe-routing", "moe-expert-compute"]) {
@@ -224,7 +227,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.boundary,
         lessonId,
-      ).toMatch(/multiple output|multiple outputs/iu);
+      ).toMatch(/multiple output|multiple outputs|output product/iu);
     }
   });
 
@@ -815,13 +818,14 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-003",
       "FE2O3-SEMANTIC-004",
       "FE2O3-PARALLEL-010",
-      "FE2O3-PARALLEL-012",
       "FE2O3-PARALLEL-013",
-      "FE2O3-PARALLEL-014",
-      "FE2O3-PARALLEL-016",
       "FE2O3-PARALLEL-017",
+      "FE2O3-PARALLEL-018",
+      "FE2O3-PARALLEL-019",
+      "FE2O3-PARALLEL-020",
+      "FE2O3-PARALLEL-021",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(18);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(19);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(17);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
@@ -850,7 +854,7 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(23);
+    expect(failureGallery.examples).toHaveLength(24);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
     expect(failureGallery.intro).toContain("tensor layout first");
     expect(failureGallery.intro).toContain("do not imply that users write a separate kernel DSL");
@@ -876,7 +880,8 @@ describe("curriculum integrity", () => {
       "hierarchy_coverage_hole",
       "reference_evidence_missing",
       "reference_expression_mismatch",
-      "parallel_multi_output_identity",
+      "parallel_output_disjointness",
+      "parallel_tensor_arithmetic_binding",
       "parallel_contract_construction",
     ]);
     for (const example of failureGallery.examples) {
@@ -907,8 +912,11 @@ describe("curriculum integrity", () => {
     expect(example("reference_expression_mismatch")?.diagnostic).toContain(
       "FE2O3-EFFECT-001",
     );
-    expect(example("parallel_multi_output_identity")?.diagnostic).toContain(
-      "FE2O3-PARALLEL-016",
+    expect(example("parallel_output_disjointness")?.diagnostic).toContain(
+      "FE2O3-PARALLEL-019",
+    );
+    expect(example("parallel_tensor_arithmetic_binding")?.diagnostic).toContain(
+      "FE2O3-PARALLEL-013",
     );
     expect(example("parallel_contract_construction")?.diagnostic).toContain(
       "FE2O3-PARALLEL-017",

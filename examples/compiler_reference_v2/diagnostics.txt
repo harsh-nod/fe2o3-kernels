@@ -12,8 +12,10 @@ reference block 0, statement 0 and GPU block 2, operation 0
 # - output argument mismatch
 # - logical point coordinate mismatch
 # - non-bounds GPU control, which this initial source adapter rejects
-# - unsupported call, loop/backedge, unsafe function, or ABI
-# - unproved dynamic bound, ownership collision, or duplicate write site
+# - unsupported call, unsafe function, or ABI
+# - multidimensional/raw read or unresolved ranked-load reconciliation
+# - non-unit, eventful, noncanonical, or unproved loop termination
+# - unproved output separation, ownership collision, or duplicate write site
 
 # Independent static bounds fixture
 error[FE2O3-BOUNDS-001]: statically out-of-bounds Read at block 2 op 0;

@@ -1,5 +1,5 @@
 {
-  "schema": "fe2o3-semantic-correctness-tutorial-milestone-v3",
+  "schema": "fe2o3-semantic-correctness-tutorial-milestone-v4",
   "status": "partial-current",
   "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
@@ -54,9 +54,37 @@
       ]
     },
     {
+      "id": "ranked-safe-reference-loads",
+      "status": "implemented-unpinned",
+      "detail": "a safe CPU slice read input[index] joins only to a compiler-derived typed GPU load when the live ranked read, view, index, scalar, allocation origin, and stride evidence independently reconcile. Raw-pointer reads, multidimensional CPU slice-read joins, and unresolved load symbols fail closed",
+      "evidence": [
+        "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
+        "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
+        "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+        "crates/fe2o3-pliron/src/production/semantic_expression_v2.rs",
+        "crates/fe2o3-pliron/src/production/ranked.rs",
+        "crates/fe2o3-pliron/tests/production_ranked_pipeline.rs",
+        "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs"
+      ]
+    },
+    {
+      "id": "canonical-dynamic-loop-refinement",
+      "status": "implemented-unpinned",
+      "detail": "canonical dynamic unit-step loops carry the exact compiler-derived finite-domain symbol, full u64 machine bound, transition, termination variant, and maximum-step identity. Stale or narrowed mutations are rejected; non-unit, eventful, noncanonical, additional loop-carried recurrence, arbitrary break/continue, and unproved loops fail closed",
+      "evidence": [
+        "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
+        "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_v1.rs",
+        "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
+        "crates/fe2o3-pliron/src/pliron_invocation_trace.rs",
+        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
+        "crates/fe2o3-pliron/tests/production_ranked_pipeline.rs",
+        "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs"
+      ]
+    },
+    {
       "id": "output-numerical-refinement",
       "status": "implemented-unpinned",
-      "detail": "a workload-neutral output-relation obligation binds actual and reference scalar roots, Boolean domain and precondition roots, finite nonnegative absolute and relative f64-bit bounds, the exact ranked graph, MIR subjects, and an authenticated receipt. The built-in generator discharges only exact equality; genuinely non-exact or reassociated arithmetic requires an independently verified receipt for the exact canonical claim, and FE2O3-PARALLEL-010 fails closed otherwise",
+      "detail": "a workload-neutral ErrorBounded output relation binds actual and reference scalar roots, Boolean domain and precondition roots, finite nonnegative absolute and relative f64-bit bounds, the exact ranked graph, MIR subjects, and an authenticated receipt. Authority requires an independently imported claim-specific receipt and canonical-true domain and precondition roots covering the complete output; automatic numerical proof requests, partial domains, and unsupported reassociation claims fail closed with FE2O3-PARALLEL-010",
       "evidence": [
         "crates/dialect-proof/src/lib.rs",
         "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs",
@@ -71,18 +99,31 @@
       ]
     },
     {
-      "id": "cooperative-tensor-composition",
+      "id": "cooperative-tensor-structural-validation",
       "status": "implemented-unpinned",
-      "detail": "compiler-derived cooperative-tensor summaries bind each live ranked site to target-owned instruction data, exact typed fragment roles and lane coordinates, subgroup convergence, context and operand/accumulator/result roots, tail policy, staging swizzle and dominating workgroup publication barrier, contribution schedule, unique total-view scatter, numerical policy, live PLIRON evidence, and authenticated proof identity. Current target data covers the gfx942 BF16/F32 m16n16k16 Wave64 profile and one output relation; substitutions and unsupported forms fail closed",
+      "detail": "compiler-derived cooperative-tensor checks validate each live ranked site against target-owned instruction data, exact typed fragment roles and lane coordinates, subgroup convergence, tail policy, staging swizzle, and dominating workgroup publication barriers. Current target data covers the gfx942 BF16/F32 m16n16k16 Wave64 profile. Functional tensor arithmetic composition is not admitted: FE2O3-PARALLEL-013 fails closed until typed tensor SSA def-use and result-to-output bindings plus claim-specific receipts exist",
       "evidence": [
+        "crates/dialect-kernel/src/tensor_layout.rs",
         "crates/fe2o3-kernel-ir/src/matrix.rs",
         "crates/fe2o3-kernel-ir/tests/matrix_operations.rs",
-        "crates/fe2o3-pliron/src/production/ranked.rs",
-        "crates/fe2o3-pliron/src/production/middle_end_evidence_v4.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_tensor_layout.rs",
+        "crates/fe2o3-kernel-analysis/tests/pliron_tensor_layout.rs",
+        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_valid_direct.pliron",
+        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_valid_lds_xor4.pliron",
+        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_divergent.pliron",
+        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_wrong_role.pliron"
+      ]
+    },
+    {
+      "id": "multiple-output-refinement",
+      "status": "implemented-unpinned",
+      "detail": "compiler-owned output bindings compose multiple distinct outputs as an ordered product only when allocation origins and distinct nonzero noalias classes prove separation, every output has its own TotalView and hierarchy identity, and output-specific frames, receipts, and schedules reconcile. Duplicate, overlapping, unclassified, mismatched, or reordered products fail closed with FE2O3-PARALLEL-018 through FE2O3-PARALLEL-021",
+      "evidence": [
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
-        "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
-        "crates/fe2o3-kernel-analysis/tests/pliron_lit.rs",
-        "crates/fe2o3-pliron/tests/production_ranked_pipeline.rs"
+        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
+        "crates/fe2o3-kernel-analysis/tests/lit/ownership_total_multi_output_disjoint.pliron",
+        "crates/fe2o3-kernel-analysis/tests/lit/ownership_total_multi_output_overlap.pliron",
+        "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs"
       ]
     },
     {
@@ -140,7 +181,7 @@
     "pin an exact compiler commit and tree on both public main refs",
     "name the exact mandatory pre-lowering report and functional receipt versions",
     "retain the exact integrated compiler commit and tree after publication to both public main refs",
-    "publish FE2O3-PARALLEL-001 through FE2O3-PARALLEL-017 as fail-closed workload-neutral diagnostics without treating candidate declarations as evidence",
+    "publish FE2O3-PARALLEL-001 through FE2O3-PARALLEL-021 as fail-closed workload-neutral diagnostics without treating candidate declarations as evidence",
     "promote implemented-unpinned mechanisms only after their exact integrated compiler commit and tree are repinned",
     "replace or retain every explanatory milestone specification according to its per-capability status and exact compiler-owned evidence",
     "run positive, negative, mutation, publication-gate, and browser validation",

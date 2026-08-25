@@ -485,7 +485,7 @@ const gemmMapping: Lesson = {
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
       notice:
-        "This host-allocating Vec reference is the runtime qualification oracle for MI300X. Its Vec allocation and slice reads are outside the compiler-bound admitted point-output subset, so it is not authenticated by the production reference gate.",
+        "This host-allocating Vec reference is the runtime qualification oracle for MI300X. The complete oracle is not compiler-bound. The compiler can bind direct one-dimensional input[index] reads and canonical unit-step loops, but this reference's Vec allocation/return, multidimensional affine reads, nested reduction, and richer recurrence remain outside the admitted subset.",
     },
     {
       kind: "spec",
@@ -494,7 +494,7 @@ const gemmMapping: Lesson = {
       code: gemmMilestoneSpec,
       explanatory: true,
       notice:
-        "This specification names the sequential result; it is not compiler-generated evidence. The compiler relation vocabulary remains workload-neutral, and this Vec-returning source is Incomplete until its loops, slice reads, arithmetic, outputs, and hierarchy facts are admitted and joined for one compilation.",
+        "This specification names the sequential result; it is not compiler-generated evidence. The workload-neutral compiler can bind eligible one-dimensional reads and canonical loops, but this Vec-returning source remains Incomplete until its multidimensional reads, nested recurrence, tensor arithmetic, output relation, and hierarchy facts are joined for one compilation.",
     },
     {
       kind: "verus",
@@ -508,7 +508,7 @@ const gemmMapping: Lesson = {
       evidenceId: "reference-refinement-v1",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model explains equality-plus-hierarchy composition; it is not this compilation's generated receipt. Generic cooperative-tensor summaries and output numerical obligations are implemented-unpinned, but this Vec/slice reference, dynamic reference-loop evidence, exact non-exact numerical receipt, and retained runtime are currently Incomplete.",
+        "This verified workload-neutral source model explains equality-plus-hierarchy composition; it is not this compilation's generated receipt. Ranked one-dimensional reads and canonical dynamic-loop termination are implemented-unpinned. MFMA layout/convergence are structurally checked, but tensor arithmetic stops at FE2O3-PARALLEL-013. This reference's multidimensional reads, nested recurrence, independently imported full-domain numerical receipt, and retained runtime remain Incomplete.",
     },
     { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
@@ -576,7 +576,7 @@ const gemmProof: Lesson = {
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
       notice:
-        "This host-allocating Vec reference remains a runtime qualification oracle. Its Vec allocation and slice reads are not compiler-bound. Generic MFMA summaries can bind the live ranked site, but dynamic reference-loop evidence, an exact BF16/F32 numerical receipt, and retained runtime support remain Incomplete.",
+        "This host-allocating Vec reference remains a runtime qualification oracle. The complete oracle is not compiler-bound. Direct one-dimensional reads and canonical loops can be compiler-bound, but its Vec allocation/return, multidimensional accesses, and nested recurrence are not. MFMA layout and convergence are structurally checked; functional tensor arithmetic stops at FE2O3-PARALLEL-013. An independently imported claim-specific BF16/F32 receipt over canonical-true full coverage and retained runtime support remain Incomplete.",
     },
     exactGemmProofTab(),
     exactGemmHostTab(),
@@ -655,7 +655,7 @@ const softmax: Lesson = {
         "8ff11a0aa3806c2fe7d5f5aab8c5b055316039de718b28d69c6042e439bed73a",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. Its Vec allocation and slice reads are not compiler-bound; dynamic reference-loop evidence, transcendental semantics, an independently verified output bound, output hierarchy identities, and retained runtime support are also Incomplete.",
+        "Safe sequential Rust defines dynamic rows, columns, independent strides, padding, and the stable max-subtracted policy for runtime qualification. The complete oracle is not compiler-bound. Direct one-dimensional reads and canonical unit-step loops can be compiler-bound, but this oracle uses range slicing, iterators, Vec allocation, richer folds, and transcendentals outside that subset. A claim-specific full-domain output receipt and retained runtime remain Incomplete.",
     },
     {
       language: "rust",
@@ -673,7 +673,7 @@ const softmax: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model states the composition rule, not this compilation's generated receipt. Generic output numerical refinement is implemented-unpinned, but it does not invent exp semantics or a nonzero bound. Slice reads, dynamic reference-loop evidence, an exact softmax receipt, output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement remain outside this lesson's claim.",
+        "This verified workload-neutral source model states the composition rule, not this compilation's generated receipt. Generic ranked reads and canonical loop termination are implemented-unpinned. ErrorBounded authority is never automatic: it requires an independently imported claim-specific receipt with canonical-true domain and precondition over the complete output. This oracle's range slices, richer folds, exp semantics, retained runtime, compiler projection, and LLVM-or-later refinement remain outside the claim.",
     },
     {
       language: "rust",
@@ -764,14 +764,14 @@ const flash: Lesson = {
         "f14413bd3662973a8803cdfdd23e6c6b23facc9d4c627e4e91d7a1e63ee7f203",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. Its Vec allocation and slice reads are not compiler-bound. Generic MFMA summaries are implemented-unpinned, while dynamic reference-loop evidence, multi-output hierarchy identities, an exact non-exact attention receipt, and retained runtime support are still Incomplete.",
+        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification. The complete oracle is not compiler-bound. Direct one-dimensional reads, canonical loops, and separated multiple-output products are implemented generically, but this oracle's Vec score allocation, multidimensional accesses, nested/eventful recurrence, and transcendentals exceed that subset. MFMA arithmetic stops at FE2O3-PARALLEL-013; a claim-specific full-domain attention receipt and retained runtime remain Incomplete.",
     },
     {
       language: "rust",
       code: flashAttentionMilestoneSpec,
       explanatory: true,
       notice:
-        "This specification names the sequential masked online recurrence. The compiler vocabulary remains generic: bounded recurrence, fold, pointwise output, hierarchy coverage, and numerical policy. This source is Incomplete until arbitrary slice reads, helpers, dynamic bounds, and transcendental semantics are admitted.",
+        "This specification names the sequential masked online recurrence. The compiler vocabulary remains generic: bounded recurrence, fold, pointwise and separated output products, hierarchy coverage, and numerical policy. This source remains Incomplete for multidimensional reads, Vec score allocation, nested/eventful recurrence, helper semantics, tensor arithmetic, and transcendentals.",
     },
     {
       language: "rust",
@@ -782,7 +782,7 @@ const flash: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model states the generic composition rule, but is not an authenticated link from this dynamic oracle to the kernel. Generic tensor and output numerical composition are implemented-unpinned without recognizing attention; this lesson remains Incomplete on slice reads, dynamic reference-loop evidence, the non-exact recurrence receipt, multi-output hierarchy identities, retained runtime, compiler projection, and LLVM-or-later refinement.",
+        "This verified workload-neutral source model states the generic composition rule, but is not an authenticated link from this dynamic oracle to the kernel. The compiler supports eligible ranked reads, canonical loops, and separated output products without recognizing attention. Tensor layout/convergence are structural only and arithmetic fails at FE2O3-PARALLEL-013. The oracle's richer recurrence, an independently imported full-domain numerical receipt, retained runtime, compiler projection, and LLVM-or-later refinement remain Incomplete.",
     },
     {
       language: "rust",

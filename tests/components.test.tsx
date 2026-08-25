@@ -83,8 +83,8 @@ describe("functional-correctness catalog", () => {
       screen.getByText(/no generated Verus report is bound/iu),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/FE2O3-PARALLEL-012\/013\/014/iu),
-    ).toBeInTheDocument();
+      screen.getAllByText(/FE2O3-PARALLEL-013/iu),
+    ).toHaveLength(2);
   });
 
   it("does not render a functional claim for a non-kernel lesson", () => {
@@ -157,7 +157,7 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(23);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(24);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
     expect(screen.getByText("Swapped MFMA operand roles")).toBeInTheDocument();
     expect(screen.getByText("B fragment uses the wrong transpose")).toBeInTheDocument();
@@ -173,7 +173,8 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("The grid leaves one output coordinate unwritten")).toBeInTheDocument();
     expect(screen.getByText("A CPU-reference effect has no authenticated proof")).toBeInTheDocument();
     expect(screen.getByText("The GPU write disagrees with the CPU reference")).toBeInTheDocument();
-    expect(screen.getByText("Multiple output views lack hierarchy identities")).toBeInTheDocument();
+    expect(screen.getByText("Multiple outputs lack noalias separation")).toBeInTheDocument();
+    expect(screen.getByText("Tensor arithmetic is not bound to the output")).toBeInTheDocument();
     expect(screen.getByText("Compiler-derived parallel contract is invalid")).toBeInTheDocument();
     expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
     expect(screen.getByText("Supported safe ownership mappings")).toBeInTheDocument();
@@ -182,7 +183,7 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
     expect(screen.getByText("Stable pass diagnostic catalog")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-RACE-004" })).toBeInTheDocument();
-    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(19);
+    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(20);
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002" })).toBeInTheDocument();
@@ -190,14 +191,15 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "FE2O3-ATOMIC-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-016" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-019" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-021" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-017" })).toBeInTheDocument();
     expect(
       document.querySelectorAll(".compile-failure-source code.language-rust"),
     ).toHaveLength(4);
     expect(
       document.querySelectorAll(".compile-failure-source code.language-text"),
-    ).toHaveLength(19);
+    ).toHaveLength(20);
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();

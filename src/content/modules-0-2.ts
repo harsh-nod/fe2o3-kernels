@@ -750,7 +750,7 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "Reference-effect V1 accepts one local safe Rust, non-variadic Rust-ABI function with up to three leading usize point axes and bounded point-output effects. It admits typed scalar expressions, selected branches, canonical finite loops, and direct safe local scalar helpers only when independently lowered; Vec/slice value reads still require a bound GPU-load symbol and otherwise fail Incomplete.",
+        "Reference-effect V1 accepts one local safe Rust, non-variadic Rust-ABI function with up to three leading usize point axes and bounded point-output effects. Direct one-dimensional input[index] reads join only to independently derived ranked load/view/index/scalar/allocation-origin/stride evidence. Canonical dynamic unit-step loops carry the exact finite-domain symbol, u64 bound, transition, variant, and maximum-step identity. Multidimensional or raw reads, unresolved load symbols, and noncanonical loops fail closed.",
     },
     {
       kind: "verus",
@@ -783,7 +783,7 @@ const compilerChecks: Lesson = {
       code: compilerReferenceDiagnostics,
       explanatory: true,
       notice:
-        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no runtime fallback. The mutation failure and FE2O3-PARALLEL-016/017 construction failures occur earlier and do not depend on Verus availability.",
+        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no runtime fallback. Load/loop reconciliation, output-product FE2O3-PARALLEL-018 through 021, tensor-arithmetic FE2O3-PARALLEL-013, and contract-construction failures occur before Verus execution.",
     },
   ],
   diagram: "memory",
