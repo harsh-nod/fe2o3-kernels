@@ -51,7 +51,7 @@ export function completeReferenceSpecTabs(
   return [
     { kind: "kernel", label: "Kernel", ...kernel },
     { kind: "reference", label: "Safe CPU reference", ...reference },
-    { kind: "spec", label: "Milestone contract", ...spec },
+    { kind: "spec", label: "Workload contract", ...spec },
     { kind: "verus", label: "Verus proof", ...verus },
     { kind: "host", label: "Host", ...host },
     { kind: "result", label: "Expected result", ...result },

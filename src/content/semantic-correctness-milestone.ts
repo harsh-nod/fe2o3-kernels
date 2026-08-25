@@ -22,6 +22,9 @@ interface SemanticCorrectnessMilestoneManifest {
   compilerTree: string | null;
   preloweringReportVersion: string | null;
   functionalReceiptVersion: string | null;
+  sharedTheoremSha256: string | null;
+  verusVersion: string | null;
+  verusExecutableSha256: string | null;
   mechanisms: SemanticCorrectnessMechanism[];
   workloadExamples: string[];
   publicationRequirements: string[];
@@ -41,7 +44,7 @@ function validateSemanticCorrectnessMilestone(): void {
       milestone.status !== "published-current") ||
     !exactObject.test(milestone.baselineCompilerCommit) ||
     !exactObject.test(milestone.baselineCompilerTree) ||
-    milestone.mechanisms.length !== 5 ||
+    milestone.mechanisms.length !== 7 ||
     milestone.workloadExamples.length !== 4 ||
     milestone.publicationRequirements.length < 5
   ) {
@@ -84,7 +87,13 @@ function validateSemanticCorrectnessMilestone(): void {
     typeof milestone.preloweringReportVersion === "string" &&
     milestone.preloweringReportVersion.length > 0 &&
     typeof milestone.functionalReceiptVersion === "string" &&
-    milestone.functionalReceiptVersion.length > 0;
+    milestone.functionalReceiptVersion.length > 0 &&
+    typeof milestone.sharedTheoremSha256 === "string" &&
+    /^[0-9a-f]{64}$/u.test(milestone.sharedTheoremSha256) &&
+    typeof milestone.verusVersion === "string" &&
+    milestone.verusVersion.length > 0 &&
+    typeof milestone.verusExecutableSha256 === "string" &&
+    /^[0-9a-f]{64}$/u.test(milestone.verusExecutableSha256);
 
   if (published !== hasExactPublication) {
     throw new Error(
@@ -100,4 +109,4 @@ export const semanticCorrectnessMilestone = deepFreeze(milestone);
 export const semanticMilestoneBoundary =
   semanticCorrectnessMilestone.status === "integration-pending"
     ? `Milestone status: integration pending. The published compiler remains ${semanticCorrectnessMilestone.baselineCompilerCommit}; the contracts below are explanatory and grant no compiler, proof, artifact, launch, or hardware authority.`
-    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}, with ${semanticCorrectnessMilestone.preloweringReportVersion} and consumed ${semanticCorrectnessMilestone.functionalReceiptVersion} evidence. The current aggregate theorem is non-vacuous total-output refinement at the safe-reference-MIR to kernel-MIR boundary for admitted finite contracts. It grants no arbitrary source extraction, termination, target IEEE-value, lowering, artifact, launch, hardware, or universal-correctness authority.`;
+    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}, with ${semanticCorrectnessMilestone.preloweringReportVersion} and consumed ${semanticCorrectnessMilestone.functionalReceiptVersion} evidence. The current gate binds admitted safe-reference MIR, kernel MIR, and live PLIRON to non-vacuous total-output, typed-root, canonical-loop, and finite-collective facts. The shared Verus theorem is source-pinned at ${semanticCorrectnessMilestone.sharedTheoremSha256}; it is build-verified, not rerun by the production gate for every compilation. Unsupported loop shapes, unproved narrow dynamic bounds, arbitrary source extraction, target IEEE values, LLVM-or-later refinement, artifacts, launch, hardware, and universal correctness remain outside the claim.`;

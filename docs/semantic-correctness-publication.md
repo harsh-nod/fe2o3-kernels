@@ -12,8 +12,10 @@ boundary for the admitted subset.
    same exact commit and tree.
 2. `config/semantic-correctness-milestone.json` pins
    `ProductionPlironPreloweringReportV2`, `ProductionMiddleEndEvidenceV5`,
-   `ProductionTotalOutputRefinementReportV2`, and the consumed
-   `ImportedFunctionalRefinementProofV2` boundary.
+   `ProductionTotalOutputRefinementReportV2`,
+   `ProductionMirPlironSemanticContractReportV1`, the consumed
+   `ImportedFunctionalRefinementProofV2` boundary, and the exact shared Verus
+   theorem and tool identities.
 3. Each `published-current` mechanism names exact compiler source and test
    paths. Finite fold, bounded recurrence, and permutation-gather contracts
    are mandatory semantic-pass inputs, not optional workload helpers.
@@ -23,6 +25,10 @@ boundary for the admitted subset.
    floating-point value correctness, or source-to-machine refinement.
 5. Repin `config/functional-refinement-publication.json` whenever the
    report, obligation, receipt, runtime, or consumption boundary changes.
+6. `scripts/test-mir-pliron-semantic-refinement-verus.sh` requires the pinned
+   Verus executable, verifies eight positive obligations, and requires four
+   targeted workload mutations to fail. The compiler gate pins this theorem;
+   it does not execute the shared source again for each compilation.
 
 ## Workload lesson checklist
 
@@ -33,16 +39,24 @@ by these exact lesson tabs:
   `flash-attention`
 - `src/content/modules-6-8.ts`: `moe-expert-compute`
 
-The four workload contract tabs remain explanatory. The compiler now owns the
-generic contract vocabulary and validates its PLIRON representation, but it
-does not yet synthesize complete GEMM, softmax, attention, or MoE semantic
-contracts from arbitrary Rust loops, calls, loads, and multi-effect bodies.
-Workload mathematics stays in the safe Rust and Verus specification; compiler
-mechanisms remain workload-neutral.
+The four workload contract tabs remain workload-specific specifications. The
+compiler owns the generic contract vocabulary and exactly joins live typed
+roots, canonical natural loops, finite collectives, effects, ownership, and
+retained MIR-bound proof receipts. It does not yet synthesize each complete
+GEMM, softmax, attention, or MoE theorem from arbitrary Rust loops, calls,
+loads, and multi-effect bodies. Workload mathematics stays in the safe Rust
+and Verus specification; compiler mechanisms remain workload-neutral.
+
+The current canonical loop subset is an increasing `IndexLessThan` induction
+with one preheader, one matching latch update, and an exact exit. Static trip
+counts are recomputed. Dynamic loops require the full `u64` type bound and a
+constant unit step; a claimed narrower bound is rejected until a production
+range receipt can prove it. Irreducible or otherwise unsupported CFGs fail
+closed.
 
 Changing the milestone status changes every canonical milestone callout. The
-21 reviewed entries in `src/content/narrative-policy.ts` must be recomputed,
-then validated with:
+changed reviewed entries in `src/content/narrative-policy.ts` must be
+recomputed, then validated with:
 
 ```bash
 npm run validate
@@ -50,6 +64,7 @@ npm run validate:evidence -- --repository /path/to/fe2o3
 npm run test:e2e
 ```
 
-The final publication review must continue to state any remaining loop
-termination, checked-overflow/trap, div/rem/shift/cast, IEEE-value,
+The final publication review must continue to state any remaining unsupported
+loop shapes, narrow dynamic-range proofs, checked-overflow/trap,
+div/rem/shift/cast, IEEE-value,
 target-instruction, lowering, artifact, runtime, and hardware boundaries.

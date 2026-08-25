@@ -149,6 +149,7 @@ const expertCompute: Lesson = {
     "Trace BF16 matrix fragments through MFMA and the gated bias epilogue.",
     "Carry route identity through expert output and deterministic combine.",
     "Explain why the compiler pipeline needs no routing or MoE recognizer.",
+    "Separate permutation/inverse and expert-fold obligations from generic hierarchy ownership and total-output composition.",
   ],
   claims: [
     {
@@ -203,7 +204,7 @@ const expertCompute: Lesson = {
       code: moeMilestoneSpec,
       explanatory: true,
       notice:
-        "Explanatory workload specification. The published compiler validates generic permutation-gather, finite-fold, total-view, and aggregate MIR contracts without recognizing MoE or routing names, but it does not synthesize or prove this complete routed-expert composition from arbitrary Rust source.",
+        "This is the workload-specific obligation. The compiler validates exact permutation-gather identities, finite folds, typed roots, total views, and the aggregate MIR/PLIRON contract without recognizing MoE, but it does not derive the complete routed-expert arithmetic from arbitrary Rust source.",
     },
     {
       language: "rust",
@@ -214,7 +215,7 @@ const expertCompute: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the generic equality-plus-hierarchy rule; it does not authenticate the dynamic Vec-returning MoE oracle against this kernel. Dynamic arithmetic, routing-to-expert composition, and source-to-ISA refinement remain open.",
+        "This verified workload-neutral theorem states the generic equality-plus-hierarchy rule. Compiler main pins an inverse-permutation injectivity theorem and rejects a non-injective mutation, but it does not authenticate this dynamic oracle or prove routed expert arithmetic and LLVM-or-later refinement.",
     },
     {
       language: "rust",
@@ -231,7 +232,7 @@ const expertCompute: Lesson = {
       language: "text",
       code: resultText(
         "gpu-observed",
-        "PASS top2-routed-moe tokens=41 experts=4 K=35 N=1 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=15 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=16 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=17 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=33 routes=82 max_error=0\n\nThe production compiler collected two semantic functions and 104 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 53,080-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16. The kernel accepts runtime padded rows, output columns, reduction depth, independent strides, expert ID and expert count; safe edge predicates cover partial K and N tiles. The host fixture exercises four experts and top-2 routing, verifies active and padded edge rows plus untouched output padding, and compares the combined result with an independent CPU oracle. The compiler sees only generic typed fragments, arithmetic, dynamic indices, disjoint output capabilities, and control flow. It has no GEMM, attention, routing, or MoE recognizer. This is correctness evidence for the listed cases, not a routing proof, persistent scheduling implementation, or performance result.",
+        "PASS top2-routed-moe tokens=41 experts=4 K=35 N=1 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=15 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=16 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=17 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=33 routes=82 max_error=0\n\nThe explicit grouped-expert qualification oracle collected two semantic functions and 104 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 53,080-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. This nonpublishing route cannot complete the production transaction. Disassembly contained V_MFMA_F32_16X16X16_BF16. The kernel accepts runtime padded rows, output columns, reduction depth, independent strides, expert ID and expert count; safe edge predicates cover partial K and N tiles. The host fixture exercises four experts and top-2 routing, verifies active and padded edge rows plus untouched output padding, and compares the combined result with an independent CPU oracle. The compiler sees only generic typed fragments, arithmetic, dynamic indices, disjoint output capabilities, and control flow. It has no GEMM, attention, routing, or MoE recognizer. This is correctness evidence for the listed cases, not a routing proof, persistent scheduling implementation, or performance result.",
       ),
       explanatory: true,
       notice:

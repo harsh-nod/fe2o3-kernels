@@ -1,8 +1,8 @@
 {
   "schema": "fe2o3-functional-refinement-tutorial-publication-v1",
   "status": "published-current",
-  "compilerCommit": "b561b1dd59ee93813f1d1fb8e90045450234a5ac",
-  "compilerTree": "6cd1903d28ab9e72f449f10136b52c10f8c1a734",
+  "compilerCommit": "1f05db4d308f65af28953264bfe0d4aacf93fe35",
+  "compilerTree": "ff8f57223c23efd4cabede73c28a86b934d4daef",
   "fixtureSourcePath": "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
   "fixtureSourceSha256": "cfcf354555472aab4deda749237e8939809968dad654ea152036352e4ace9783",
   "receiptFixturePath": "crates/fe2o3-verifier/src/functional_refinement_receipt_v2.rs",
@@ -10,12 +10,13 @@
   "runtimeControllerPath": "crates/fe2o3-verifier/src/functional_refinement_process_tree_v1_linux.rs",
   "runtimeControllerSha256": "6b8a891e377275b32c574e6e71f85f138b9ae9b805b72e8f195f3ca6cb7e710d",
   "effectDiagnosticFixturePath": "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
-  "effectDiagnosticFixtureSha256": "b040d58f2b1acfaa5da2403f0ab4ca1c758041172082d735f029a5f067a57c1e",
+  "effectDiagnosticFixtureSha256": "8a0c3065b837579f2513a9102bef566e3f6f234ade79226c1a1a67d51faac6aa",
   "referenceCompilerCommand": "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
   "validationCommands": [
     "cargo test --locked -p fe2o3-verifier --tests",
     "cargo test --locked -p fe2o3-kernel-analysis --test pliron_effect_refinement --test pliron_hierarchical_ownership --test pliron_race --test pliron_semantic_refinement --test pliron_collective_semantics --test pliron_lit",
     "cargo test --locked -p fe2o3-pliron --test production_ranked_pipeline --test production_collective_semantics --test production_middle_end_evidence_v4",
+    "VERUS=/absolute/path/to/pinned/verus scripts/test-mir-pliron-semantic-refinement-verus.sh",
     "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
     "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored"
   ]

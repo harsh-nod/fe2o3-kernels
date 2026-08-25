@@ -194,7 +194,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Newer progress, unchanged lesson pin",
-        "text": "The checked-in publication gate requires compiler commit b561b1dd59ee93813f1d1fb8e90045450234a5ac and tree 6cd1903d28ab9e72f449f10136b52c10f8c1a734 on both public main refs. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. The aggregate gate can prove non-vacuous total-output refinement at the safe-reference-MIR to kernel-MIR boundary for its admitted finite subset. It does not prove arbitrary source extraction, termination, target IEEE values, source-to-ISA refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate requires compiler commit 1f05db4d308f65af28953264bfe0d4aacf93fe35 and tree ff8f57223c23efd4cabede73c28a86b934d4daef on both public main refs. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. The aggregate gate proves non-vacuous total-output refinement for its admitted finite subset and binds the exact MIR subjects, canonical natural loops, collectives, effects, and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -642,7 +642,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "The authenticated boundary is deliberately narrow",
-        "text": "The current theorem is per-effect partial correctness: every actual admitted GPU write has the same logical point and value as its paired safe Rust write. It does not establish total output coverage, termination, arbitrary expressions, floating-point or numerical equivalence, source-to-MIR or MIR-to-Kernel-IR-to-LLVM/ISA preservation, artifact integrity, publication, load, launch, runtime behavior, or hardware correctness. Those require separate coverage, refinement, and runtime precondition joins. The current advanced GEMM, row-softmax, FlashAttention, and grouped-expert MoE Safe CPU reference tabs return host Vec values and remain runtime qualification oracles; they are not silently reclassified as compiler-authenticated reference-effect V1 functions."
+        "text": "Each retained per-effect receipt proves that one admitted GPU write has the same logical point and value as its paired safe Rust write. The aggregate gate now composes every such receipt with non-vacuous TotalView coverage, typed roots, collective value proofs, and an exact MIR/PLIRON contract. Canonical increasing induction loops have exact structural and termination checks; unsupported loop shapes and unproved narrow dynamic bounds fail closed. This still does not admit arbitrary reference expressions or loops, prove floating-point values, source-to-MIR extraction, LLVM-or-later preservation, artifacts, launch, runtime behavior, or hardware. The advanced GEMM, row-softmax, FlashAttention, and grouped-expert MoE Vec-returning CPU tabs remain qualification oracles, not silently reclassified reference-effect V1 functions."
       },
       {
         "type": "callout",
@@ -1227,7 +1227,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, hierarchy ownership, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, explicit output-ownership contracts, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. ExactView hierarchy analysis can reconstruct coordinate owners and partition them by lane, subgroup, workgroup, and grid, rejecting out-of-range writes, duplicate owners, coverage holes, or non-rectangular regions with concrete witnesses. ExactEffectDomain instead admits one guarded dynamic output effect without pretending to prove every coordinate in the runtime view; it requires clean mandatory bounds and race reports and exactly one modeled static write site, but does not construct a total hierarchy trace. The current compiler-authenticated source subset is exactly one reference binding, up to three direct logical point axes, exactly one direct mutable unsigned-or-bool scalar output write, an acyclic call-free reference, bounds-only GPU control selection, and a constant RHS. A successfully admitted proof establishes equality for that modeled effect, not total view coverage, termination, arbitrary arithmetic, numerical equivalence, or source-to-ISA refinement. Unsupported reference MIR, dynamic formulas, extra effects, or unresolved bounds or race safety fail closed. Even a Clean MIR/effect proof grants no artifact, publication, load, launch, runtime, or hardware authority."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomic, race, hierarchy ownership, barrier, workgroup-memory, and semantic-refinement checks. Typed MFMA terminals and loop-carried block parameters preserve role, instruction profile, canonical register distribution, current-wave provenance, independent operand storage provenance, the current exact-tile or authenticated zero-fill edge policy, and their actual CFG site into ranked PLIRON. Static ranked bounds, structurally guarded dynamic access, explicit output-ownership contracts, allocation origins and alias classes, multidimensional execution layout, and safe collective control flow then enter the same generic sequence. ExactView hierarchy analysis can reconstruct coordinate owners and partition them by lane, subgroup, workgroup, and grid, rejecting out-of-range writes, duplicate owners, coverage holes, or non-rectangular regions with concrete witnesses. ExactEffectDomain instead admits one guarded dynamic output effect without pretending to prove every coordinate in the runtime view; it requires clean mandatory bounds and race reports and exactly one modeled static write site, but does not construct a total hierarchy trace. The current compiler-authenticated source subset is exactly one reference binding, up to three direct logical point axes, exactly one direct mutable unsigned-or-bool scalar output write, an acyclic call-free reference, bounds-only GPU control selection, and a constant RHS. One admitted receipt proves equality for that modeled effect only. The aggregate gate separately requires TotalView coverage, all modeled effects, canonical-loop contracts, collectives, and the complete live PLIRON identity. Unsupported reference MIR, dynamic formulas, extra effects, unsupported control flow, or unresolved bounds or race safety fail closed. Neither gate proves arbitrary numerical semantics, LLVM-or-later preservation, artifacts, publication, load, launch, runtime behavior, or hardware."
       },
       {
         "type": "callout",
@@ -1760,6 +1760,12 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "callout",
+        "tone": "proof",
+        "title": "The loop contract binds live CFG, not a workload name",
+        "text": "The MIR/PLIRON gate enumerates every reachable natural backedge and requires one exact contract for each. The supported form has a unique preheader, an IndexLessThan header, a matching latch update, a distinct exit, and an exact transition identity that includes the complete ranked kernel. Static trip counts are recomputed. A dynamic loop needs the full u64 type bound and constant unit step; a narrower claimed bound is rejected until a production range receipt proves it. This establishes finite canonical control flow, not the GEMM product recurrence."
+      },
+      {
+        "type": "callout",
         "tone": "boundary",
         "title": "Numerical contract required",
         "text": "The qualification cases are exact for their chosen BF16 inputs, but they are not a universal numerical theorem. Production use still needs a stated input conversion, MFMA accumulation order, rounding and exceptional-value policy, and error bound."
@@ -1963,7 +1969,7 @@ const narrativeRegistry = deepFreeze({
         "type": "bullets",
         "items": [
           "Two cases cover key and query tails, multi-head and multi-tile launch geometry, non-multiple-of-16 depth, runtime strides, causal masks, and value widths 7 and 16.",
-          "The production route performs source collection, generic PLIRON safety verification, Kernel IR lowering, gfx942 LLVM emission, HSACO finalization, host launch, and CPU-oracle comparison.",
+          "An explicitly selected FlashAttention qualification oracle performs source collection, generic PLIRON safety verification, Kernel IR lowering, gfx942 LLVM emission, HSACO finalization, host launch, and CPU-oracle comparison; its capability cannot complete or publish the production transaction.",
           "Disassembly confirms MFMA score contractions and subgroup shuffle reductions; no global score matrix is allocated.",
           "The result does not establish complete IEEE/OCML refinement, every legal shape, all-masked-row behavior, or performance parity with tuned FlashAttention libraries."
         ]
@@ -2073,7 +2079,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The production pipeline collected the dynamic expert kernel, discharged 17 ranked index obligations, emitted gfx942 LLVM and HSACO, and executed the top-2 case on MI300X. Every combined output matched an independent BF16-input/FP32-accumulation CPU oracle exactly, and output stride padding retained its sentinel."
+        "text": "The explicitly selected, nonpublishing grouped-expert qualification oracle collected the dynamic expert kernel, discharged 17 ranked index obligations, emitted gfx942 LLVM and HSACO, and executed the top-2 case on MI300X. Its capability cannot complete the production transaction. Every combined output matched an independent BF16-input/FP32-accumulation CPU oracle exactly, and output stride padding retained its sentinel."
       },
       {
         "type": "callout",
@@ -2251,7 +2257,7 @@ const narrativeRegistry = deepFreeze({
     title: "Read the next theorem as a composition",
     blocks: [
       milestoneCallout(
-        "The current aggregate gate combines non-vacuous output coverage, per-effect value equivalence, closed typed scalar semantics, finite collective value contracts, and retained proof evidence at the MIR boundary. It does not prove arbitrary source extraction, termination, target arithmetic, source-to-machine refinement, or runtime admission.",
+        "The current aggregate gate combines non-vacuous output coverage, per-effect value equivalence, closed typed scalar semantics, exact canonical-loop structure, finite collective value contracts, retained proof evidence, and the complete live PLIRON identity. It does not prove arbitrary reference extraction, unsupported loop forms, target arithmetic, LLVM-or-later refinement, or runtime admission.",
       ),
       {
         type: "table",
@@ -2260,7 +2266,9 @@ const narrativeRegistry = deepFreeze({
           ["Coverage", "Was every required output written exactly once as the final observable effect?", "Rejected hole, duplicate, overwrite, or unmodeled write; Incomplete unresolved domain"],
           ["Value", "Does each final value equal the safe Rust reference expression?", "Rejected typed-expression mismatch; Incomplete unsupported expression"],
           ["Composition", "Do reductions, recurrences, permutations, and collectives cover their declared domains?", "Rejected missing or duplicate contribution; Incomplete unsupported relation"],
+          ["Loops", "Does every reachable backedge have one canonical finite induction contract?", "Rejected substituted bound, step, transition, or exit; Incomplete unsupported CFG or dynamic range"],
           ["Evidence", "Did the retained Verus run prove the exact compiler-derived obligation?", "Incomplete missing, stale, or wrong-boundary receipt"],
+          ["Shared theorem", "Does the pinned composition source verify and do targeted mutations fail?", "Build-time proof failure; no claim of per-compilation shared-theorem execution"],
         ],
       },
     ],
@@ -2417,7 +2425,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose GEMM from workload-neutral contracts",
     blocks: [
       milestoneCallout(
-        "The Milestone contract tab is explanatory. It places GEMM math only in GemmSpec while the compiler-facing facts remain a total output domain, a typed K-fold, exact final effects, and an explicit numeric policy.",
+        "The Workload contract tab states the GEMM-specific obligation. The implemented compiler-facing facts are the exact live loop and PLIRON identity, a total output domain, typed roots, finite folds, final effects, and explicit numeric policy; GemmSpec still owns the product and epilogue meaning.",
       ),
       {
         type: "steps",
@@ -2441,7 +2449,7 @@ const narrativeRegistry = deepFreeze({
       {
         type: "bullets",
         items: [
-          "Termination or a bounded phase count is required before a total-correctness claim.",
+          "The canonical finite-loop pass proves the supported phase-count structure; other loop forms still require a separate termination proof.",
           "MFMA layout proof relates lane fragments to a logical contraction; it does not name GEMM.",
           "The workload proof instantiates that contraction inside the K-fold.",
           "Source-to-Kernel-IR and Kernel-IR-to-ISA preservation remain separate authenticated refinements.",
@@ -2454,7 +2462,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose softmax from two reductions and a map",
     blocks: [
       milestoneCallout(
-        "The Milestone contract tab is explanatory. Softmax intent stays in SoftmaxSpec; the generic proof vocabulary covers active-column contributions, declared max and sum folds, total output effects, and an explicit exponential and division policy.",
+        "The Workload contract tab states the softmax-specific obligation. Softmax intent stays in SoftmaxSpec; the implemented generic vocabulary covers active-column contributions, declared max and sum folds, canonical loops, total output effects, and explicit numerical policy.",
       ),
       {
         type: "paragraph",
@@ -2467,7 +2475,7 @@ const narrativeRegistry = deepFreeze({
     title: "Treat online attention as a recurrence",
     blocks: [
       milestoneCallout(
-        "The Milestone contract tab is explanatory. FlashAttention becomes workload-neutral to the compiler when its user spec defines one phase transition and proves the GPU trace refines that recurrence over the declared key-tile domain.",
+        "The Workload contract tab states the attention-specific transition. The compiler binds the exact live phase loop, typed roots, domains, effects, and output frame without recognizing attention; the user proof must still show that this transition is the online rescaling recurrence.",
       ),
       {
         type: "steps",
@@ -2498,7 +2506,7 @@ const narrativeRegistry = deepFreeze({
     title: "Compose routing, expert folds, and combine",
     blocks: [
       milestoneCallout(
-        "The Milestone contract tab is explanatory. Grouped MoE closes by composing a routing permutation, per-expert typed folds, total expert outputs, inverse scatter, ordered weighted combine, and total token outputs. No compiler pass recognizes MoE.",
+        "The Workload contract tab states the MoE-specific composition. Grouped MoE closes by composing the compiler-checked routing permutation, canonical loops, per-expert typed folds, total expert outputs, inverse scatter, ordered weighted combine, and total token outputs. No compiler pass recognizes MoE.",
       ),
       {
         type: "table",
@@ -2599,17 +2607,17 @@ const narrativeRegistry = deepFreeze({
   }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
-// Keep progress-only narrative review deltas explicit without repinning lessons.
+// Keep reviewed narrative deltas explicit without repinning unchanged lessons.
 const reviewedNarrativeFingerprints = deepFreeze({
   ...narrativeFingerprints,
   "read-the-evidence/differentiator":
     "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint":
-    "36b75d96113f231111895b8b4fa9a163cb5adb1f98b7ac142fa732026fb6e889",
+    "803a477c1d4b543fd6ed0336f1fcfd452b368ded53b05a6beddad1436fc70f87",
   "compiler-checks/catalog":
-    "3d6f110f7f412903ebf44623addea020c0c9d2c2bad957554bcceb2f467f96d5",
+    "6b45b75ccb488731f69b35f48e78c2899cdc12e5eb24e7cbe3e18854215f022f",
   "compiler-checks/production-path":
-    "31dad2e3d24c450b68662409b11ceca6d7e7bc00338240cd06bb98523b38c0c3",
+    "0f8635a89e323ccac50ce3922c4bda2378cf89758bb0b8f81fe3cdd02591d24d",
   "what-verus-proves/proved":
     "2a78c253e95cbf6826428001cad64656d80dff375f62e471810ec1cbb0ae5876",
   "what-verus-proves/ecosystem":
@@ -2625,7 +2633,7 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "gemm-tiling/general-contract":
     "61a6ca9ecff6e73815f5f3e83ef4c35eb4d813d1caea2892a254231c4189f3a2",
   "gemm-tiling/loop-proof":
-    "338755e9d8510e0405a0dc4e51b35e110169d00bfe709202d057a657719df2e1",
+    "0be13df58c55fda5a85306e39b36db21d83c3bfd67dcc4eff887cd50a4a6c25e",
   "gemm-proof-plan/evidence":
     "961353dad93a62fb2d79e63b2f0d738b7e37814346ab4d5f9113656a9c9edbff",
   "reductions-scans/scan":
@@ -2640,6 +2648,52 @@ const reviewedNarrativeFingerprints = deepFreeze({
     "535b3c1727e15ba539d244fe050a67d1a15ac6666e9e94e3814424895ee46f25",
   "moe-expert-compute/combine":
     "a34ce5fab5137ded8844cddd4a3efe522a96b1bed4638791c017b618def489c1",
+  "read-the-evidence/semantic-correctness-milestone":
+    "1c6c03d0a4f94e43cf26341384ee8ca6dd58a53c8ce11c94e1cd58799d24ca1f",
+  "gfx942-setup/semantic-gates":
+    "60ef61e6518cdbeac0b3fb391614693c4fa201b2828fb4315650609958997dbf",
+  "first-fill/total-output-coverage":
+    "322b1186c6e185bfa0ee92e11c9ec24112b4c834e11d63b049a719b6fb46d0bc",
+  "typed-vecadd/typed-arithmetic-contract":
+    "5ceed6510a03196b9344db2d7aa0c59df2fafc8be475f04d90341949626a3291",
+  "cpu-semantic-simulation/testing-is-not-proof":
+    "61253caae8b7e508247d03dd810c27a6d34144244843fee9a20eb84d96be1ab2",
+  "verus-contracts/compositional-reference":
+    "aa6b6075b219be39ac3c216fcfa935ff98939cc835ff861c661750f9a8b8afe0",
+  "memory-race-proof/finality-and-frame":
+    "b3cc2646333d916aa3696775f7646954cf837dee5dce20729e3a2fbd22185d14",
+  "compiler-checks/complete-correctness-catalog":
+    "8ec24477be7a5fd08c8f48b0d6adc923f111ad816d0bffe8f43f1fb94e6b8fed",
+  "reductions-scans/contribution-domain":
+    "f89376c66ac8f7d7bf35768eb70628254193c4f9bf52287b699ccf04821d792a",
+  "lds-barriers-atomics/final-observable-effect":
+    "e9c65bce12a559288b8a5dd24b372764497acec6eaa081af70be781ef458f89a",
+  "gemm-tiling/composed-reference":
+    "a70d6f9ae299157cdb5eb5d6026be8e36ecc2af3b3ce570205a12566d0a0660d",
+  "gemm-proof-plan/total-correctness-boundary":
+    "7fcecb388f1928443e8d7d215bdb4c37f0094c8d805e715a4ed8ad5618c68dea",
+  "softmax-invariant/composed-reference":
+    "05284cd15166d4dafbe251fd800a9cdc9f44f2482a01f880d6132dbcd978bfa3",
+  "flash-attention/composed-reference":
+    "bca28cb687c1066bbe2f08ca5032ae379ed485deec7b23a7cfbf3256cb4fdb71",
+  "moe-routing/composed-reference":
+    "dfa68e27a4d6ee2d0a162cb1975821e81ed7ff4341fa7f724bc4e95198932daa",
+  "moe-expert-compute/composed-reference":
+    "b704e10d3a0654e6af43d3fee38e64fb244053be0aba1e12f89908dee790d813",
+  "evidence-pipeline/total-correctness-receipt":
+    "f7822d8fcb62d92f65a1dc78133c61b2884b6e3c511051669de22b93ab8cdf15",
+  "what-verus-proves/total-correctness-boundary":
+    "85e01f7ed9f8e72c8e4ca46b73524c5b444dca19f1755606f4b4c6168c7bc7df",
+  "evidence-archive/non-retroactive-milestone":
+    "9f5c8463114bc0981b211469d79192de2a9e963076d180562054552616046d4c",
+  "exercise-ladder/semantic-correctness":
+    "597ba58090af3ca08327a1993aabeba5a02465dca0e344fe7eeece8d2b88c02c",
+  "contributing-kernel/semantic-contract-checklist":
+    "0b80c41cd9310534254e11e0c6892d6995f1d6e63cc08e9ceae05681fc60c84f",
+  "flash-attention/closure":
+    "e2e278769f7ce11dbd7757806c13d4d7422200b8c863382f44b40e72e5304362",
+  "moe-expert-compute/bounded-evidence":
+    "f487bf7cb22e04e2a77c0591b65c9e104d552b0bc0e3282cb988456f51eead01",
 } satisfies Record<NarrativeId, string>);
 
 export function narrativeSection(narrativeId: NarrativeId): NarrativeLessonSection {

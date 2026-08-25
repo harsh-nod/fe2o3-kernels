@@ -1,5 +1,6 @@
 import { lessons } from "./curriculum";
 import { currentState } from "./current-state";
+import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
 
 export interface GitEvidenceObject {
   label: string;
@@ -50,8 +51,17 @@ const currentSources: GitEvidenceObject = {
   ]),
 };
 
+const semanticCorrectnessSources: GitEvidenceObject = {
+  label: "MIR/PLIRON semantic-correctness milestone",
+  commit: semanticCorrectnessMilestone.compilerCommit!,
+  tree: semanticCorrectnessMilestone.compilerTree!,
+  sourcePaths: semanticCorrectnessMilestone.mechanisms.flatMap((mechanism) => [
+    ...mechanism.evidence,
+  ]),
+};
+
 export const evidenceCatalog = {
-  gitObjects: [...claims, currentSources],
+  gitObjects: [...claims, currentSources, semanticCorrectnessSources],
   sources: tabs,
   issues: currentState.issues.map((issue) => ({
     number: issue.number,

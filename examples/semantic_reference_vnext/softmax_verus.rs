@@ -1,4 +1,4 @@
-// MILESTONE SPECIFICATION: explanatory until the site manifest is published-current.
+// WORKLOAD SPECIFICATION: not compiler-generated or authenticated per compilation.
 verus! {
     spec fn softmax_point(spec: SoftmaxSpec, row: int, col: int) -> F32Bits {
         let maximum = reduce(spec.active_columns(row), spec.neg_inf(), spec.max_op());

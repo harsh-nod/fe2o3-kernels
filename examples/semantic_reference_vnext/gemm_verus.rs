@@ -1,4 +1,4 @@
-// MILESTONE SPECIFICATION: explanatory until the site manifest is published-current.
+// WORKLOAD SPECIFICATION: not compiler-generated or authenticated per compilation.
 verus! {
     spec fn gemm_point(spec: GemmSpec, row: int, col: int) -> F32Bits {
         spec.epilogue(

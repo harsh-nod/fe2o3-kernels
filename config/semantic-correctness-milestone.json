@@ -3,10 +3,13 @@
   "status": "partial-current",
   "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
-  "compilerCommit": "b561b1dd59ee93813f1d1fb8e90045450234a5ac",
-  "compilerTree": "6cd1903d28ab9e72f449f10136b52c10f8c1a734",
-  "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputRefinementReportV2",
+  "compilerCommit": "1f05db4d308f65af28953264bfe0d4aacf93fe35",
+  "compilerTree": "ff8f57223c23efd4cabede73c28a86b934d4daef",
+  "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputRefinementReportV2 + ProductionMirPlironSemanticContractReportV1",
   "functionalReceiptVersion": "ImportedFunctionalRefinementProofV2",
+  "sharedTheoremSha256": "21c5cc55f95f4b38d65183f5912cc086d8c8ff35bb8135e6d6d0d21a3bbaaea2",
+  "verusVersion": "0.2026.08.02.b677dd5",
+  "verusExecutableSha256": "ad2669f579d898ede53f2bf84e80a1daf4e3578739b0f5807ef209a0c9f382dd",
   "mechanisms": [
     {
       "id": "finite-total-view",
@@ -55,6 +58,27 @@
         "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
         "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
         "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs"
+      ]
+    },
+    {
+      "id": "exact-mir-pliron-contract",
+      "status": "published-current",
+      "detail": "an exact workload-neutral contract binds safe-reference MIR, kernel MIR, live PLIRON evidence, typed SSA identities and commitments, every reachable natural-loop backedge, finite collective contracts, and every total output; the admitted result is move-only and grants no LLVM-or-later authority",
+      "evidence": [
+        "crates/fe2o3-functional-proof/src/mir_pliron_semantic_contract_v1.rs",
+        "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_v1.rs",
+        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs"
+      ]
+    },
+    {
+      "id": "shared-verus-composition",
+      "status": "published-current",
+      "detail": "the pinned shared Verus source proves exact-total-output composition and finite recurrence, with structural GEMM, softmax, attention, and MoE instantiations; eight obligations verify and four targeted mutations are rejected, but the production gate does not execute this shared source once per compilation",
+      "evidence": [
+        "crates/fe2o3-verifier/verus/mir_pliron_semantic_refinement_v1.rs",
+        "crates/fe2o3-verifier/verus/pins/MIR_PLIRON_SEMANTIC_REFINEMENT_V1.manifest",
+        "crates/fe2o3-verifier/tests/mir_pliron_semantic_refinement_v1.rs",
+        "scripts/test-mir-pliron-semantic-refinement-verus.sh"
       ]
     }
   ],

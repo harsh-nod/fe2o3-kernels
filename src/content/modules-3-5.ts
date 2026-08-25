@@ -125,7 +125,7 @@ PASS wave-tail          rows=5 columns=63 stride=71 max_error=1.4901161e-8
 PASS multi-iteration    rows=7 columns=257 stride=269 max_error=5.5879354e-9
 PASS maximum-width      rows=2 columns=4096 stride=4103 max_error=6.0535967e-9
 
-The production compiler collected two semantic functions and 58 correspondence blocks, admitted three formal-memory boundaries, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 21,941-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained lane shuffles and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
+The explicit row-softmax qualification oracle collected two semantic functions and 58 correspondence blocks, admitted three formal-memory boundaries, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 21,941-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. This nonpublishing route cannot complete the production transaction. Disassembly contained lane shuffles and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
 
 The logical column count and independent input/output strides are dynamic. Checked fallback loads supply negative infinity outside the logical row, row-striped ownership suppresses inactive stores, and output padding remains untouched. These qualification results establish the listed cases against an independent CPU oracle; they are not a proof for every input or a performance claim.`,
 );
@@ -137,7 +137,7 @@ const flashAttentionResult = resultText(
 PASS tails-and-strides        heads=1 queries=16/16 keys=13/16 depth=18 value_dim=7 max_error=4.4703484e-8
 PASS multi-head-multi-tile   heads=2 queries=17/32 keys=19/32 depth=33 value_dim=16 max_error=5.9604645e-8
 
-The same production pipeline collected two semantic functions and 219 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 162,782-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and subgroup shuffles. One key-tile pass advances the stable online maximum, denominator, and V numerator; scores are never materialized in global memory.
+The explicit FlashAttention qualification oracle collected two semantic functions and 219 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 162,782-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. This nonpublishing route cannot complete the production transaction. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and subgroup shuffles. One key-tile pass advances the stable online maximum, denominator, and V numerator; scores are never materialized in global memory.
 
 The kernel accepts runtime head count, padded query/key lengths, depth up to 1,024, keys up to 4,096, value width up to 16, independent legal strides, scale, and an additive mask for causal, padding, or application masks. Q and K are BF16; V, mask, accumulation, and output are FP32. The current PV contraction is scalar/reduction based, so this is correctness evidence rather than a claim of parity with a tuned production FlashAttention library.`,
 );
@@ -443,6 +443,7 @@ const gemmMapping: Lesson = {
     "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
     "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
     "See how a loop-carried accumulator keeps its MFMA contract and current-wave provenance on every CFG edge.",
+    "Separate the compiler-proved canonical loop and total-output facts from the workload-specific GEMM recurrence obligation.",
     "Use KernelResult and ? for fallible view and ownership construction, then consume zero-filled typed fragment loads directly.",
     "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],
@@ -452,7 +453,7 @@ const gemmMapping: Lesson = {
       kind: "runnable-now",
       label: "Current MI300X qualification path",
       detail:
-        "The exact safe Rust source compiles and launches through the workload-neutral production stack. Four dynamic correctness cases pass at zero error, the HSACO contains V_MFMA_F32_16X16X16_BF16, and a matched HIP comparison is recorded below.",
+        "The exact safe Rust source compiles and launches through an explicit nonpublishing qualification oracle that shares the workload-neutral compiler machinery but cannot complete the production transaction. Four dynamic correctness cases pass at zero error, the HSACO contains V_MFMA_F32_16X16X16_BF16, and a matched HIP comparison is recorded below.",
       reference: currentImplementationReference(
         [
           "examples/tiled_gemm_general_v1/run-gfx942.sh",
@@ -488,12 +489,12 @@ const gemmMapping: Lesson = {
     },
     {
       kind: "spec",
-      label: "Milestone contract",
+      label: "Workload contract",
       language: "rust",
       code: gemmMilestoneSpec,
       explanatory: true,
       notice:
-        "Explanatory workload specification. The published compiler validates the generic total-view, typed-fold, and aggregate MIR contracts, but it does not synthesize this complete GEMM theorem from arbitrary Rust loops and MFMA source or consume a proof for this tab.",
+        "This is the workload-specific obligation, not compiler-generated evidence. The current compiler exactly binds canonical loop structure, the complete live PLIRON graph, typed roots, total outputs, and retained MIR receipts. It does not derive the GEMM product sequence or epilogue theorem from arbitrary Rust/MFMA bodies.",
     },
     {
       kind: "verus",
@@ -507,7 +508,7 @@ const gemmMapping: Lesson = {
       evidenceId: "reference-refinement-v1",
       explanatory: false,
       notice:
-        "This verified workload-neutral composition theorem explains the required equality and hierarchy join. It is not an authenticated proof that this dynamic Vec-returning GEMM oracle refines the kernel; rustc-to-ISA translation also remains separate.",
+        "This verified workload-neutral composition theorem explains the equality-and-hierarchy join. Compiler main also pins the newer MIR/PLIRON theorem (8 verified obligations and 4 expected mutation failures), but does not rerun that shared source per compilation or authenticate this dynamic Vec-returning GEMM oracle against the kernel. LLVM-or-later refinement remains separate.",
     },
     { kind: "comparison", label: "Equivalent HIP", ...exactDynamicGemmHipTab() },
     { kind: "host", label: "Host", ...exactDynamicGemmHostTab() },
@@ -601,20 +602,21 @@ const softmax: Lesson = {
   order: 0,
   title: "Dynamic row softmax",
   summary:
-    "Use safe Rust, dynamic row dimensions, and subgroup reductions to compile and run row softmax through the production pipeline.",
+    "Use safe Rust, dynamic row dimensions, and subgroup reductions to compile and run row softmax through an explicit qualification oracle.",
   duration: "35 min",
   prerequisites: ["Reductions", "Floating-point error basics"],
   objectives: [
     "Map one wave to each row and distribute columns across its 64 lanes.",
     "Explain why subgroup shuffles, rather than MFMA, implement softmax.",
     "Trace dynamic bounds from safe Rust through ranked verification and GPU execution.",
+    "Distinguish max/sum recurrence equality from generic contribution coverage and total-output composition.",
   ],
   claims: [
     {
       kind: "gpu-observed",
       label: "Dynamic row softmax on MI300X",
       detail:
-        "Four dynamic-shape and strided cases compiled through the generic production pipeline and matched an independent CPU oracle on gfx942.",
+        "Four dynamic-shape and strided cases compiled through the explicit nonpublishing row-softmax qualification oracle and matched an independent CPU oracle on gfx942.",
       reference: currentImplementationReference(
         ["examples/row_softmax_general_v1/run-gfx942.sh"],
         [
@@ -660,7 +662,7 @@ const softmax: Lesson = {
       code: rowSoftmaxMilestoneSpec,
       explanatory: true,
       notice:
-        "Explanatory workload specification. The published compiler validates generic contribution, finite-fold, total-view, and numeric-policy contracts, but it does not synthesize this complete softmax theorem from arbitrary Rust loops, exponentials, and reductions or consume a proof for this tab.",
+        "This is the workload-specific obligation. The compiler validates finite contribution domains, typed roots, exact ownership, and total output without recognizing softmax, but it does not derive the max, exponential, and denominator recurrences from arbitrary Rust calls and loops.",
     },
     {
       language: "rust",
@@ -671,7 +673,7 @@ const softmax: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the generic composition rule. It does not authenticate the dynamic Vec-returning softmax oracle against this kernel; complete floating-point/OCML and rustc-to-ISA refinement remain open.",
+        "This verified workload-neutral theorem states the generic composition rule. Compiler main pins an additional maximum-trace instantiation, but the production gate does not authenticate this dynamic Vec-returning oracle or prove exponential/OCML and LLVM-or-later refinement.",
     },
     {
       language: "rust",
@@ -714,13 +716,14 @@ const flash: Lesson = {
     "Trace BF16 QK fragments through target-neutral matrix types and gfx942 MFMA.",
     "Use an additive mask and subgroup reductions for dynamic key tails.",
     "Identify the current value-width and numerical limits without turning them into compiler assumptions.",
+    "Separate the online rescaling recurrence from generic finite-loop, ownership, and total-output proofs.",
   ],
   claims: [
     {
       kind: "gpu-observed",
       label: "Dynamic fused attention on MI300X",
       detail:
-        "Two tail, stride, depth, and multi-head cases compiled through the generic production pipeline and matched an independent CPU oracle on gfx942.",
+        "Two tail, stride, depth, and multi-head cases compiled through the explicit nonpublishing FlashAttention qualification oracle and matched an independent CPU oracle on gfx942.",
       reference: currentImplementationReference(
         ["examples/flash_attention_general_v1/run-gfx942.sh"],
         [
@@ -768,7 +771,7 @@ const flash: Lesson = {
       code: flashAttentionMilestoneSpec,
       explanatory: true,
       notice:
-        "Explanatory workload specification. The published compiler validates bounded recurrence, typed-root, coverage, and aggregate MIR contracts, but it does not synthesize this complete attention recurrence from arbitrary Rust loops, masking, exponentials, and contractions or consume a proof for this tab.",
+        "This is the workload-specific obligation. The compiler binds the exact canonical loop transition identity, typed roots, finite domains, ownership, and outputs, but it does not derive online rescaling, masking, exponential, or value-contraction semantics from arbitrary Rust bodies.",
     },
     {
       language: "rust",
@@ -779,7 +782,7 @@ const flash: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral theorem states the generic composition rule; it is not an authenticated link from the dynamic Vec-returning FlashAttention oracle to this kernel. Exponential-law, IEEE FP32/OCML, and source-to-ISA refinement remain open.",
+        "This verified workload-neutral theorem states the generic composition rule. Compiler main pins an attention value-recurrence instantiation and rejects a missing-rescale mutation, but that is not an authenticated link from this dynamic oracle to the kernel. Exponential-law, IEEE FP32/OCML, and LLVM-or-later refinement remain open.",
     },
     {
       language: "rust",

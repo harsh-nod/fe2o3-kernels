@@ -1,4 +1,4 @@
-// MILESTONE SPECIFICATION: explanatory until the site manifest is published-current.
+// WORKLOAD SPECIFICATION: not compiler-generated or authenticated per compilation.
 verus! {
     proof fn grouped_moe_refines_safe_reference(
         spec: MoeSpec,
