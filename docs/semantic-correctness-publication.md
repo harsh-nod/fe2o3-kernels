@@ -41,12 +41,12 @@ admitted exact-formula subset.
    They do not assume a generic relation premise. Per-output receipts are
    policy-checked `Checked` role bindings and grant no authority alone. One
    generated run binds each supported exact formula replay and the tool run to
-   one compilation; it is the sole functional-formula refinement authority in
-   this path. PLIRON separately proves and reconciles total coverage,
+   one compilation; it is the only external formula proof execution in this
+   path. PLIRON separately proves and reconciles total coverage,
    allocation separation, frames, schedules, and ordered-product identity.
    `ProductionTotalOutputStagingReportV2` carries those structural facts
-   inertly. A private move-only join requires matching structural and formula
-   results before the kernel can proceed.
+   inertly. The private move-only join is the admission authority and requires
+   matching structural and formula results before the kernel can proceed.
    Every workload enters this same unified, unversioned production pipeline;
    no retired application-specific route supplies proof authority.
 7. Keep this site pinned to the final integrated compiler commit and tree.

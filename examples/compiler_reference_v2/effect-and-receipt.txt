@@ -64,7 +64,7 @@ RequestEffectRefinement(
 # over the complete output domain.
 
 # Per-output admission materializes one exact live-PLIRON relation and one
-# policy-checked Checked staging record for output0, then does the same
+# status-Checked policy-staging record for output0, then does the same
 # independently for output1.
 # The private request-to-require transition is represented by:
 #

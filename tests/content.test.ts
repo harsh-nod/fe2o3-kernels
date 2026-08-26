@@ -1095,7 +1095,7 @@ describe("curriculum integrity", () => {
       "strict compiler-owned parallel contract",
       "generated workload-neutral Verus checker",
       "without a generic relation premise",
-      "policy-checked Checked staging record each",
+      "status-Checked policy-staging record each",
       "overflow-safe final latch",
       "identical symbolic ranked extents",
       "exact invariant/variant proof requests",

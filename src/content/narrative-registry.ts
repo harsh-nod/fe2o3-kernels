@@ -626,7 +626,7 @@ const narrativeRegistry = deepFreeze({
           ["Control flow", "Bounded typed branches, direct local safe scalar helpers, and canonical finite unit-step loops with exact machine bounds, transition, variant, maximum-step identity, and overflow-safe final latch.", "Other loop SCCs emit an exact invariant/variant request. An imported answer cannot yet grant formula authority."],
           ["Effect normalization", "Closed typed expressions, guards, point coordinates, and output effects are derived from MIR. A direct safe one-dimensional input[index] retains its exact bound and reconciles with the live ranked GPU read identity.", "Full-domain discharge accepts an identical symbolic ranked extent or an overflow-checked bounded static affine interval. Unrelated extents, missing or unused assertions, unsafe intervals, overflow, raw pointers, multidimensional, opaque, or unmatched effects fail closed."],
           ["Dynamic ownership", "ExactEffectDomain can admit a structurally bounds-guarded dynamic point write after clean bounds and race reports; TotalView is required for complete output coverage.", "A point effect alone does not claim the whole runtime view is written; unresolved bounds, collisions, missing output identities, or duplicate sites remain non-clean and emit no artifact."],
-          ["Observable outputs", "PLIRON forms and reconciles an ordered separated product only from compiler-derived noalias, TotalView, hierarchy, frame, and schedule evidence. Each point output keeps one policy-checked Checked staging record; one generated run separately replays every supported formula.", "Staging grants no authority. Duplicate, overlapping, unclassified, coverage-mismatched, reordered, ambiguous, or unmodeled outputs stop before the private joined admission."]
+          ["Observable outputs", "PLIRON forms and reconciles an ordered separated product only from compiler-derived noalias, TotalView, hierarchy, frame, and schedule evidence. Each point output keeps one status-Checked policy-staging record; one generated run separately replays every supported formula.", "Staging grants no authority. Duplicate, overlapping, unclassified, coverage-mismatched, reordered, ambiguous, or unmodeled outputs stop before the private joined admission."]
         ]
       },
       {
@@ -639,7 +639,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Bind proof execution without trusting staging",
-        "text": "A fixed-width domain-separated Ed25519 V2 record can bind the safe-reference identity and MIR, kernel subject and MIR, live PLIRON obligation, generated formula source, tool identities, execution identity, boundary, and policy signer. Public import demotes it to policy-checked Checked staging: caller-selected signer and policy checks do not establish proof execution or compiler authority. The retained controller still bounds rust_verify, its internal verifier, Z3, mappings, inherited files, resources, output, timeout, and cleanup. The private generated execution is the formula authority; stale, mismatched, duplicate, wrong-boundary, non-Checked, or missing staging fails closed, and generated identity comments remain binding inputs rather than Verus premises."
+        "text": "A fixed-width domain-separated Ed25519 V2 record can bind the safe-reference identity and MIR, kernel subject and MIR, live PLIRON obligation, generated formula source, tool identities, execution identity, boundary, and policy signer. Public import demotes it to status-Checked policy staging: caller-selected signer and policy checks do not establish proof execution or compiler authority. The retained controller still bounds rust_verify, its internal verifier, Z3, mappings, inherited files, resources, output, timeout, and cleanup. Private generated execution establishes the formula result, while the move-only join is the admission authority; stale, mismatched, duplicate, wrong-boundary, non-Checked, or missing staging fails closed, and generated identity comments remain binding inputs rather than Verus premises."
       },
       {
         "type": "callout",
@@ -786,7 +786,7 @@ const narrativeRegistry = deepFreeze({
           ["kernel-hierarchy-ownership-v1", "Reconstruct each logical coordinate owner across invocation, lane, subgroup, workgroup, and grid, then require the declared coverage and density policy.", "Out-of-range owner; duplicate owner; grid coverage hole; non-rectangular subgroup or workgroup tile; runtime-only unresolved ownership; analysis limit."],
           ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
           ["kernel-workgroup-memory-v1", "Run must-initialization dataflow and track publication, compatible atomics, conflicts, and reuse by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; stale or unresolved epoch/trace; analysis limit."],
-          ["kernel-semantic-refinement-v1", "Compare declared target-neutral expressions, then join each bound safe-reference effect to one real GPU write, exact hierarchy ownership, and policy-checked Checked MIR-bound staging rather than guessing intent.", "Formula, domain, precondition, or value mismatch; missing, stale, duplicate, non-Checked, or invalid staging; orphan, ambiguous, duplicate, or unmodeled write; unresolved ownership/expression/trace; analysis limit. Staging grants no authority."],
+          ["kernel-semantic-refinement-v1", "Compare declared target-neutral expressions, then join each bound safe-reference effect to one real GPU write, exact hierarchy ownership, and status-Checked MIR-bound policy staging rather than guessing intent.", "Formula, domain, precondition, or value mismatch; missing, stale, duplicate, non-Checked, or invalid staging; orphan, ambiguous, duplicate, or unmodeled write; unresolved ownership/expression/trace; analysis limit. Staging grants no authority."],
           ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through values, reachable CFG edges, and block arguments so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Conflicting incoming facts; unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, edge, iteration, or work-unit limit."],
           ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
         ]
@@ -1032,7 +1032,7 @@ const narrativeRegistry = deepFreeze({
             "stage": "generic PLIRON pass 8/8",
             "code": "FE2O3-SEMANTIC-003",
             "enforcement": "Proof dialect verifier and semantic-refinement policy-staging prerequisite",
-            "caught": "This direct PLIRON diagnostic names the obligation and operation. Equal expressions and caller-selected signature policy do not prove execution. The compiler requires exact reference/kernel MIR and effect identities plus policy-checked Checked staging at the exact MIR boundary; missing, stale, forged, wrong-toolchain, wrong-boundary, non-Checked, and duplicate records fail closed. Staging remains non-authoritative until private exact-formula execution and the move-only join."
+            "caught": "This direct PLIRON diagnostic names the obligation and operation. Equal expressions and caller-selected signature policy do not prove execution. The compiler requires exact reference/kernel MIR and effect identities plus status-Checked policy staging at the exact MIR boundary; missing, stale, forged, wrong-toolchain, wrong-boundary, non-Checked, and duplicate records fail closed. Staging remains non-authoritative until private exact-formula execution and the move-only admission join."
           },
           {
             "id": "reference_expression_mismatch",
@@ -1156,7 +1156,7 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-SEMANTIC-000", "Prerequisite", "Bounds verification failed before declared semantic refinement."],
           ["FE2O3-SEMANTIC-001", "Rejected", "The actual expression is not equivalent to the explicitly declared required expression."],
           ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."],
-          ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation lacks exact policy-checked Checked staging at the MIR boundary, or the staged identity or boundary is wrong. Staging alone grants no authority."],
+          ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation lacks exact status-Checked policy staging at the MIR boundary, or the staged identity or boundary is wrong. Staging alone grants no authority."],
           ["FE2O3-SEMANTIC-004", "Rejected", "A functional-reference obligation or evidence record is duplicated, mismatched, malformed, wrong-property, or orphaned."],
           ["FE2O3-SEMANTIC-005", "Incomplete", "A finite fold, recurrence, or permutation contract lacks a required structural witness or cannot be resolved within the bounded subset."],
           ["FE2O3-SEMANTIC-006", "Rejected", "A finite collective contract is invalid, including a coverage, policy, type, order, or mapping mismatch."],
@@ -1210,7 +1210,7 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-EFFECT-004", "Rejected", "The hierarchy-ownership contract used by the effect statement is concretely invalid."],
           ["FE2O3-EFFECT-005", "Rejected", "An effect contract is orphaned, matches multiple writes, or duplicates another contract for one write."],
           ["FE2O3-EFFECT-006", "Incomplete", "A concrete GPU write has no modeled sequential-reference effect; a full hierarchy owner is included only when a bounded ExactView trace supplied one."],
-          ["FE2O3-EFFECT-007", "Rejected or Incomplete", "Effect refinement V1 requires policy-checked Checked staging at the exact MIR boundary; invalid staging is rejected and unavailable staging is Incomplete. Staging alone grants no authority."],
+          ["FE2O3-EFFECT-007", "Rejected or Incomplete", "Effect refinement V1 requires status-Checked policy staging at the exact MIR boundary; invalid staging is rejected and unavailable staging is Incomplete. Staging alone grants no authority."],
           ["FE2O3-EFFECT-008", "Incomplete", "A domain, precondition, or value expression is outside the bounded normalization subset."],
           ["FE2O3-EFFECT-009", "Incomplete", "The function exceeds the explicit effect-contract resource limit."]
         ]
@@ -1297,11 +1297,11 @@ const narrativeRegistry = deepFreeze({
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
           "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for the immutable function; reachable typed CFG edges are part of sparse propagation, and no cache survives mutation or revalidation.",
           "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Effect refinement executes inside the final stage after hierarchy ownership. Every report returns Clean, Rejected, or Incomplete.",
-          "For each paired effect, the private compiler carries exact GPU and reference sites, memory indices, logical coordinates, domains, preconditions, typed formulas, and eligible ranked-read identities into the value-carrying recipe. Multiple separated point outputs retain one policy-checked Checked staging record each. PLIRON independently proves and reconciles noalias separation, TotalView, frames, schedules, and ordered-product identity; staging grants no authority.",
+          "For each paired effect, the private compiler carries exact GPU and reference sites, memory indices, logical coordinates, domains, preconditions, typed formulas, and eligible ranked-read identities into the value-carrying recipe. Multiple separated point outputs retain one status-Checked policy-staging record each. PLIRON independently proves and reconciles noalias separation, TotalView, frames, schedules, and ordered-product identity; staging grants no authority.",
           "The normalized obligation binds the full validated ranked CFG, every operation and terminator, execution layout, real value-carrying access, view and allocation, ownership contract, exact reference site, formulas, and same-session MIR subjects. Only request-to-require normalization is excluded from the digest.",
           "When the exact fixed runtime closure is installed, the workload-neutral controller supervises pinned rust_verify, its retained internal verifier child, and Z3 as one bounded descendant tree. Executable mappings, inherited files, process topology, resources, timeout, and cleanup fail closed. Cached template/generated-fixture checks pass, but mi300x lacks the root-owned fixed /opt runtime, so no referenced production compilation has completed the formula gate.",
           "Production derives and reconciles the compiler-owned semantic contract, derives and independently validates the strict compiler-owned parallel contract, then runs one generated workload-neutral Verus checker. Exact pointwise integer and compiler-side IEEE operator-DAG claims replay the compiler-derived coordinate, domain, precondition, and value formulas directly, without a generic relation premise. Candidate declarations are not evidence, and unsupported replay roles fail closed before KIR lowering.",
-          "The compiler retains Ed25519 V2 records only as policy-checked Checked staging after the exact MIR, live PLIRON, relation, retained-effect, tool, execution, signer, and boundary identities match. Caller-selected policy does not establish proof execution or compiler authority. Private generated formula execution supplies its own report, and one move-only join requires that report plus the reconciled PLIRON structure at SafeReferenceMirToLivePliron.",
+          "The compiler retains Ed25519 V2 records only as status-Checked policy staging after the exact MIR, live PLIRON, relation, retained-effect, tool, execution, signer, and boundary identities match. Caller-selected policy does not establish proof execution or compiler authority. Private generated formula execution supplies its own report, and the move-only admission join requires that report plus the reconciled PLIRON structure at SafeReferenceMirToLivePliron.",
           "A non-clean pass finding carries its assigned stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists. Source joins and later verifier replay failures remain precise without inventing pass codes.",
           "One move-only compiler-owned ranked-verification input retains the eight ordered live reports through checked lowering; no caller can reconstruct it from booleans or diagnostics. The historical inert V4 evidence wire format still serializes its original seven reports and explicitly does not claim the new hierarchy report.",
           "Protected production additionally admits a sealed V3 rustc-invocation descriptor against the live argv, cwd, complete environment, target, rustc image, backend image, and full compiler closure. Worker V3 inputs are preflighted before transaction consumption, and finalization binds the exact invocation, closure, transaction, link plan, measured worker response, raw HSACO, descriptor source, and finalized bytes.",
@@ -1312,7 +1312,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. One generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity; policy-checked Checked staging grants no authority, and a private move-only join requires both result classes. Canonical loops include an overflow-safe final latch. Dynamic safe-slice reads accept only identical symbolic ranked extents or overflow-checked bounded static affine intervals. Noncanonical SCC requests, typed tensor result-component/store claims, ErrorBounded sites, folds, recurrences, and permutations retain exact claim data but cannot compose with formula authority. mi300x lacks the required root-owned /opt runtime and there is no fallback. No compiler extraction/projection, pass soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, hardware, or performance authority is claimed."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. One generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity; status-Checked policy staging grants no authority, and the private move-only admission join requires both result classes. Canonical loops include an overflow-safe final latch. Dynamic safe-slice reads accept only identical symbolic ranked extents or overflow-checked bounded static affine intervals. Noncanonical SCC requests, typed tensor result-component/store claims, ErrorBounded sites, folds, recurrences, and permutations retain exact claim data but cannot compose with formula authority. mi300x lacks the required root-owned /opt runtime and there is no fallback. No compiler extraction/projection, pass soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, hardware, or performance authority is claimed."
       },
       {
         "type": "callout",
@@ -2696,52 +2696,8 @@ const narrativeRegistry = deepFreeze({
   }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
-// Keep reviewed narrative deltas explicit without repinning unchanged lessons.
-const reviewedNarrativeFingerprints = deepFreeze({
-  ...narrativeFingerprints,
-  "read-the-evidence/differentiator": "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
-  "read-the-evidence/scalar-gemm-checkpoint": "c6d92d845e6ac91b5a5d14d23646b2393a504fc45e76f0bfb88e6732b4269451",
-  "compiler-checks/catalog": "aa4218ef048fe37301f12a544f182df4df7456c14d80fb03e62484e41dae3c24",
-  "compiler-checks/production-path": "831f840a488b668ae16150a3ebe8077bf278df2e607f5983169c030cbf79ddde",
-  "compiler-checks/v7-simulation": "898a468386559cbe68838e52818e018378e26d0211fd568a946c298507b3d251",
-  "reductions-scans/scan": "60963f040ac2f5145bc906991ff12bbd2af10cdfc83bc74bce24f5b0c66ba4a8",
-  "lds-barriers-atomics/atomics": "631bbb237c96f3dcc586e4a7c7a0d092a15f9e4e4466138bb57dda2ea25638a5",
-  "gemm-tiling/public-layout-proof": "9cb4be57e0aff451d0e72b0129e2f1698fee55680e48d72e545bf06a8443d4d9",
-  "gemm-tiling/general-contract": "61a6ca9ecff6e73815f5f3e83ef4c35eb4d813d1caea2892a254231c4189f3a2",
-  "gemm-tiling/mutation-diagnostics": "dfde97043d0ada591298d108a96ec048067a576fde51473c011ab8ffbc44e687",
-  "gemm-tiling/mapping": "8b444ef89d0b6dc7c7c794da439308e8db4faa249b79f6190f72f51402db28d5",
-  "gemm-tiling/loop-proof": "e2831c8b61cf91ea7e720c8ccb87efa2a0b47d8c4040fa39e450a4087a2477f8",
-  "gemm-proof-plan/evidence": "961353dad93a62fb2d79e63b2f0d738b7e37814346ab4d5f9113656a9c9edbff",
-  "softmax-invariant/spec": "33a9d720feac88f1e243fa8a9ba2f0338ca9296a6e5fbbbc404488111b8fd45f",
-  "softmax-invariant/proof": "dd78a39bb530df4def497bbe7fa702256075f9f5a827ca0178f3946e27369e5f",
-  "flash-attention/online": "535b3c1727e15ba539d244fe050a67d1a15ac6666e9e94e3814424895ee46f25",
-  "flash-attention/closure": "e2e278769f7ce11dbd7757806c13d4d7422200b8c863382f44b40e72e5304362",
-  "moe-expert-compute/combine": "a34ce5fab5137ded8844cddd4a3efe522a96b1bed4638791c017b618def489c1",
-  "moe-expert-compute/bounded-evidence": "f487bf7cb22e04e2a77c0591b65c9e104d552b0bc0e3282cb988456f51eead01",
-  "what-verus-proves/proved": "2a78c253e95cbf6826428001cad64656d80dff375f62e471810ec1cbb0ae5876",
-  "what-verus-proves/ecosystem": "75fb0827e574d4ee621bd93e00ac330f5f1903686447fddb000abfede72d1750",
-  "read-the-evidence/semantic-correctness-milestone": "d08cbf4e016da2500952c1e299696f28b39b843b500c2f7a85f6fdcb5ed20ebd",
-  "gfx942-setup/semantic-gates": "582b846e86e5e75b0cce32bc5103bb10d92d099bd5deff10842e5ca6da2094de",
-  "first-fill/total-output-coverage": "bbfcd3efa0fba269c1690b2175fd399f52e9e57ecfcb9d6ee2c03d1034364df9",
-  "typed-vecadd/typed-arithmetic-contract": "ff8f3541b7c34d84b95cfc1619881c471fcdd72b668c07ae079700c632aae216",
-  "cpu-semantic-simulation/testing-is-not-proof": "1d32dcf5ba6f05a963f5cc8962f3e5d606e79a9aa76f3a00733d975a106381a0",
-  "verus-contracts/compositional-reference": "3d04a16f75fb24cbea01c532d693f429ff0bf120f4ad6e64e06dde448623a1ca",
-  "memory-race-proof/finality-and-frame": "3b37527ddebbb556e00247cd046585780570c45c6e088907b5d0029c76ef51f0",
-  "compiler-checks/complete-correctness-catalog": "1bd972d01009a72f6008b04df0aba046dc73cb7110e69542117e169004b6cc0f",
-  "reductions-scans/contribution-domain": "6dc9a9c5903126385180a4f29105a4808c396caac86a7acfac8ce4fe12bf1412",
-  "lds-barriers-atomics/final-observable-effect": "0d6089efd424f0764142a2fb87c8ac4161c524972bb10d06bc56b9dd5cdcc7d3",
-  "gemm-tiling/composed-reference": "4156b7ae8462a075d8a29a6a4c7a3eb3cc68953df3d25b6a49e87fa000415c29",
-  "gemm-proof-plan/total-correctness-boundary": "857d2a7d520a25acc7acb3638b5eaf556da2d360a209d91d8e97681eeb96b34c",
-  "softmax-invariant/composed-reference": "dbb4d0416d5f5d5fc77c10eb16bd2c0e182d54349317d01c89fa6a07bd365d7f",
-  "flash-attention/composed-reference": "4b57d9b8caa2e5153a42483ff1cf6b7ca46c661b3e3ef71ad087591253a1e8e4",
-  "moe-routing/composed-reference": "76de7584a9834dfc0a74ee446f71afd728c591dcc80392cf9fbdf7b74fd4ab09",
-  "moe-expert-compute/composed-reference": "cd197ede304e7ae94684b279e825d8a6c38bde4b090e17ad91fc9a8cba663519",
-  "evidence-pipeline/total-correctness-receipt": "268365dc3ee4b44708f3a996331a58acb6daa081ba253238183e82dd42f109a0",
-  "what-verus-proves/total-correctness-boundary": "5c49f70794701a73dcee248132e757776c881b4ead065bf396dd1c514615824b",
-  "evidence-archive/non-retroactive-milestone": "32d9ec57484f53171516f9c9d8073fe2968ac8919c755540b6b9eb716e8b742c",
-  "exercise-ladder/semantic-correctness": "1ae53b71253d18d91f6eebb9fead98202c8e06b2849d928fd56bb5e51362547b",
-  "contributing-kernel/semantic-contract-checklist": "bf63e027388929b8478c7d7bed42f8b79093789282295eef14e7d59c68aea6b7",
-} satisfies Record<NarrativeId, string>);
+// The policy manifest is the single reviewed source for canonical fingerprints.
+const reviewedNarrativeFingerprints = narrativeFingerprints;
 
 export function narrativeSection(narrativeId: NarrativeId): NarrativeLessonSection {
   return { kind: "narrative", narrativeId };

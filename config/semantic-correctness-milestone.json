@@ -150,7 +150,7 @@
     {
       "id": "aggregate-mir-refinement-gate",
       "status": "implemented-unpinned",
-      "detail": "one generated per-compilation Verus run is the sole functional-formula refinement authority. It independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formula without a generic relation premise. PLIRON separately proves and reconciles total coverage, separation, frames, schedules, and ordered-product identity. Inert total-output and per-output staging grant no authority; a private move-only join requires both result classes. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until exact formula replay is implemented",
+      "detail": "one generated per-compilation Verus run is the only external formula proof execution. It independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formula without a generic relation premise. PLIRON separately proves and reconciles total coverage, separation, frames, schedules, and ordered-product identity. Inert total-output and per-output staging grant no authority; the private move-only join is the admission authority and requires both result classes. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until exact formula replay is implemented",
       "evidence": [
         "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
         "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
@@ -177,7 +177,7 @@
     {
       "id": "per-compilation-verus-composition",
       "status": "implemented-unpinned",
-      "detail": "before KIR lowering, one generated Verus checker is the sole functional-formula refinement authority: it independently replays each supported exact pointwise formula. PLIRON, not the generated checker, proves and reconciles total coverage, allocation separation, and the ordered output product. The Verus report binds its exact instantiation, policy-checked Checked staging inputs, tool execution, MIR, live PLIRON, and SafeReferenceMirToLivePliron identity; a private move-only join requires matching structural and formula results. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
+      "detail": "before KIR lowering, one generated Verus checker is the only external formula proof execution and independently replays each supported exact pointwise formula. PLIRON, not the generated checker, proves and reconciles total coverage, allocation separation, and the ordered output product. The Verus report binds its exact instantiation, status-Checked policy-staging inputs, tool execution, MIR, live PLIRON, and SafeReferenceMirToLivePliron identity; the private move-only join is the admission authority and requires matching structural and formula results. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
       "evidence": [
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",

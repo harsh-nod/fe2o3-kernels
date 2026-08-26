@@ -30,7 +30,7 @@ export function ArchitecturePage() {
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
             ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse, layout, and trace facts only within one validation."],
-            ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Policy-checked Checked staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; a private move-only join requires both structural and formula results."],
+            ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Status-Checked policy staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; the private move-only join is the admission authority and requires both structural and formula results."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
             ["Runtime", "Checks actual context, allocations, aliases, geometry, and lifetimes."],
