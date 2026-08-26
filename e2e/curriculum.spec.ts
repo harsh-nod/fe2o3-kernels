@@ -441,10 +441,10 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-001", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-008", exact: true })).toBeVisible();
   await expect(page.getByText("Bind the reference as ordinary Rust", { exact: true })).toBeVisible();
-  await expect(page.getByText("Authenticate the proof execution and every input", { exact: true })).toBeVisible();
+  await expect(page.getByText("Bind proof execution without trusting staging", { exact: true })).toBeVisible();
   await expect(
     page.getByText(
-      /The aggregate Verus checker currently replays exact pointwise integer and compiler-side IEEE operator-DAG formulas/u,
+      /The generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas/u,
     ),
   ).toBeVisible();
 
