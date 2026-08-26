@@ -13,7 +13,7 @@ export function ArchitecturePage() {
         <p className="lesson-breadcrumb">Reference / architecture</p>
         <h1>Evidence pipeline and authority boundaries</h1>
         <p>
-          Current compiler capability and immutable historical lesson evidence
+          The published compiler baseline and immutable historical lesson evidence
           are shown separately. Neither status is inferred from the other.
         </p>
       </header>
@@ -46,8 +46,8 @@ export function ArchitecturePage() {
       </section>
 
       <section>
-        <p className="section-kicker">Current implementation</p>
-        <h2>Compiler main at {currentState.compilerShortCommit}</h2>
+        <p className="section-kicker">Published implementation baseline</p>
+        <h2>Compiler baseline at {currentState.compilerShortCommit}</h2>
         <div className="pin-details">
           <div><span>Commit</span><code>{currentState.compilerCommit}</code></div>
           <div><span>Tree</span><code>{currentState.compilerTree}</code></div>
@@ -102,8 +102,8 @@ export function ArchitecturePage() {
           semantic derivation, strict parallel derivation, then generated
           per-compilation Verus composition before KIR lowering. Generic
           exact pointwise formula replay, overflow-safe canonical loops, and
-          PLIRON structural multiple-output reconciliation are implemented but
-          remain unpinned. Each separated point output gets one policy-checked
+          PLIRON structural multiple-output reconciliation are pinned for the
+          supported subset. Each separated point output gets one policy-checked
           Checked staging record; staging grants no authority. The generated
           checker replays formulas, while a private move-only join requires its
           report and the PLIRON coverage, separation, and ordered-product
@@ -116,7 +116,7 @@ export function ArchitecturePage() {
           at the claim boundary; tensor-component theorem replay still fails
           closed. ErrorBounded formula replay is also incomplete.
           mi300x has no production proof-runtime fallback.
-          Current Partial capabilities still grant no compiler extraction,
+          Partial capabilities at this baseline still grant no compiler extraction,
           projection, pass-soundness, or source-to-machine refinement,
           LLVM or target arithmetic proof, protected launch authority, complete
           persistent execution, universal functional or numerical correctness,
@@ -128,7 +128,7 @@ export function ArchitecturePage() {
           target="_blank"
           rel="noreferrer"
         >
-          <ShieldCheck size={17} /> Open current compiler source <ExternalLink size={14} />
+          <ShieldCheck size={17} /> Open pinned compiler source <ExternalLink size={14} />
         </a>
       </section>
 
@@ -138,7 +138,7 @@ export function ArchitecturePage() {
         <p>
           Lessons keep their reproduced commit until their commands, source,
           and claims are audited again. This pin is evidence history, not the
-          current compiler capability snapshot above.
+          published compiler capability baseline above.
         </p>
         <div className="pin-details">
           <div><span>Commit</span><code>{FE2O3_PIN.commit}</code></div>

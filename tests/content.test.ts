@@ -2212,7 +2212,7 @@ describe("curriculum integrity", () => {
 });
 
 describe("implementation progress integrity", () => {
-  it("gates the eventual public target on both public main refs", () => {
+  it("gates the published compiler baseline on both public main refs", () => {
     expect(validateProgress()).toEqual([]);
     expect(developmentCheckpoints.map((checkpoint) => checkpoint.id)).toEqual(
       developmentCheckpointIds,
@@ -2225,9 +2225,10 @@ describe("implementation progress integrity", () => {
       eventualPublicCommit: "df63236de13f7572bad2c5e25e90d5b1bc4927c1",
       eventualPublicTree: "d1068313b6bab22b5bb071fc8b39113e76cfb0a3",
       publicationGate: {
-        state: "deployment-gated-exact-target",
+        state: "deployment-gated-contained-object",
         requiredCommit: "df63236de13f7572bad2c5e25e90d5b1bc4927c1",
         requiredTree: "d1068313b6bab22b5bb071fc8b39113e76cfb0a3",
+        requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
           "powderluv/fe2o3@refs/heads/main",
@@ -2235,7 +2236,7 @@ describe("implementation progress integrity", () => {
       },
     });
     expect(progressSnapshot.publicationGate.requirement).toContain(
-      "required commit and required tree",
+      "contain the exact required commit",
     );
     expect(developmentCheckpoints[0]).toMatchObject({
       name: "Published implementation snapshot (publication gated)",
@@ -2243,7 +2244,7 @@ describe("implementation progress integrity", () => {
       state: "public",
     });
     expect(developmentCheckpointDetail(developmentCheckpoints[0])).toContain(
-      "public-main documentation snapshot is publication-gated",
+      "published compiler baseline is publication-gated",
     );
     const compilerRefactor = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "compiler-refactor-infrastructure",
@@ -2285,7 +2286,7 @@ describe("implementation progress integrity", () => {
     );
     expect(currentNarrative).toContain(progressSnapshot.eventualPublicCommit);
     expect(currentNarrative).toContain(progressSnapshot.eventualPublicTree);
-    expect(currentNarrative).toContain("on both public main refs");
+    expect(currentNarrative).toContain("Both public main refs must contain");
     expect(currentNarrative).toContain(
       "PLIRON proves and reconciles non-vacuous total coverage",
     );
@@ -3467,9 +3468,9 @@ describe("implementation progress integrity", () => {
 
     expect(orientation).toContain(tiledGemmV1Commits.structuralAdmission);
     expect(orientation).toContain(
-      "The checked-in publication gate requires compiler commit",
+      "The checked-in publication gate pins compiler commit",
     );
-    expect(orientation).toContain("on both public main refs");
+    expect(orientation).toContain("Both public main refs must contain");
     expect(orientation).toContain("not a compiler refinement proof");
     expect(orientation).toContain("passed 1/1 in 40.92 seconds");
     expect(orientation).toContain("does not inspect machine-body semantics");

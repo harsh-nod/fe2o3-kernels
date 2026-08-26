@@ -104,15 +104,15 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
-    expect(screen.getByText("Publication-gated snapshot")).toBeInTheDocument();
+    expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
     expect(screen.getByText("df63236de13f")).toBeInTheDocument();
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
-      "publication workflow verifies that harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main both resolve exactly",
+      "publication workflow verifies that harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main both contain",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "Both the commit and tree are required",
+      "The ancestry, commit, and tree are all required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
       "d1068313b6bab22b5bb071fc8b39113e76cfb0a3",
@@ -234,12 +234,12 @@ describe("application shell", () => {
     );
   });
 
-  it("renders current compiler architecture separately from history", async () => {
+  it("renders the published compiler baseline separately from history", async () => {
     renderApp("/architecture");
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler main at df63236de1",
+        name: "Compiler baseline at df63236de1",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -248,7 +248,7 @@ describe("application shell", () => {
     expect(screen.getByText("#140").closest("a")).toHaveTextContent("open");
     expect(screen.getByText("Historical lesson evidence")).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Open current compiler source/ }),
+      screen.getByRole("link", { name: /Open pinned compiler source/ }),
     ).toHaveAttribute(
       "href",
       "https://github.com/harsh-nod/fe2o3/tree/df63236de13f7572bad2c5e25e90d5b1bc4927c1",

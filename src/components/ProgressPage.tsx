@@ -52,7 +52,7 @@ export function ProgressPage() {
             <code>{progressSnapshot.lastAuditedPublicCommit.slice(0, 12)}</code>
           </div>
           <div>
-            <span>Publication-gated snapshot</span>
+            <span>Publication-gated baseline</span>
             <code>{progressSnapshot.eventualPublicCommit.slice(0, 12)}</code>
           </div>
           <div>
@@ -62,10 +62,10 @@ export function ProgressPage() {
         </div>
         <p className="status-boundary">
           This site build is valid only after the publication workflow verifies
-          that harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main both resolve
-          exactly to commit {progressSnapshot.publicationGate.requiredCommit} and
-          tree {progressSnapshot.publicationGate.requiredTree}. Both the commit
-          and tree are required. Lessons
+          that harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main both contain
+          commit {progressSnapshot.publicationGate.requiredCommit}, whose tree is
+          exactly {progressSnapshot.publicationGate.requiredTree}. The ancestry,
+          commit, and tree are all required. Lessons
           continue to cite their independently audited commits until a repin
           campaign reproduces each claim at one exact tree.
         </p>

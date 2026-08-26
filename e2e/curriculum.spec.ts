@@ -759,7 +759,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler main at df63236de1",
+      name: "Compiler baseline at df63236de1",
     }),
   ).toBeVisible();
   await expect(

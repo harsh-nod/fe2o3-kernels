@@ -1,16 +1,17 @@
 # Semantic-correctness tutorial publication
 
 The exact compiler commit and tree in
-`config/semantic-correctness-milestone.json` identify the currently published
-compiler. Every listed mechanism is `published-current` at that pin, including
+`config/semantic-correctness-milestone.json` identify the published compiler
+baseline. Every listed mechanism is `published-current` at that pin, including
 its explicit fail-closed unsupported cases. The aggregate status remains
 `partial-current`: the private joined authority ends at
 `SafeReferenceMirToLivePliron` for the admitted exact-formula subset.
 
 ## Compiler integration checklist
 
-1. `config/publication-gate.json` pins both public compiler main refs to the
-   same exact commit and tree.
+1. `config/publication-gate.json` pins one exact compiler commit and tree. The
+   deployment gate requires both public compiler main refs to contain that
+   commit; a deleted, rewritten, or divergent history fails closed.
 2. `config/semantic-correctness-milestone.json` pins
    `ProductionPlironPreloweringReportV2`, `ProductionMiddleEndEvidenceV5`,
    `ProductionTotalOutputStagingReportV2`,

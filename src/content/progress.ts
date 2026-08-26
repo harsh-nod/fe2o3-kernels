@@ -138,14 +138,15 @@ export const progressSnapshot = {
   eventualPublicCommit: publicationGate.requiredCommit,
   eventualPublicTree: publicationGate.requiredTree,
   publicationGate: {
-    state: "deployment-gated-exact-target",
+    state: "deployment-gated-contained-object",
     requiredCommit: publicationGate.requiredCommit,
     requiredTree: publicationGate.requiredTree,
+    requiredRefRelationship: publicationGate.requiredRefRelationship,
     requiredRefs: publicationGate.requiredRefs.map(
       ({ repository, ref }) => `${repository}@${ref}`,
     ),
     requirement:
-      "Deployment requires both public refs to resolve exactly to the required commit and required tree; the gate fails closed until both identities match.",
+      "Deployment requires both public refs to contain the exact required commit, whose tree must match the required tree; rewritten, deleted, or divergent histories fail closed.",
   },
   repositories: publicationGate.requiredRefs.map(
     ({ repository }) => `https://github.com/${repository}`,
@@ -1107,7 +1108,7 @@ export function developmentCheckpointDetail(
       return SAFE_PROGRESS_DETAIL;
     }
   }
-  return `This public-main documentation snapshot is publication-gated. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main must resolve exactly to commit ${publicationGate.requiredCommit} and tree ${publicationGate.requiredTree}; the deployment workflow verifies both identities.`;
+  return `This published compiler baseline is publication-gated. Both harsh-nod/fe2o3@refs/heads/main and powderluv/fe2o3@refs/heads/main must contain commit ${publicationGate.requiredCommit}, and that commit must have tree ${publicationGate.requiredTree}; the deployment workflow verifies the ancestry and immutable object identities.`;
 }
 
 export const kernelProgress: KernelProgress[] = [
@@ -1311,6 +1312,12 @@ export function validateProgress(
   }
   if (progressSnapshot.publicationGate.requiredRefs.length !== 2) {
     issues.push("publication gate does not require both public refs");
+  }
+  if (
+    progressSnapshot.publicationGate.requiredRefRelationship !==
+    "contains-required-commit"
+  ) {
+    issues.push("publication gate does not require the pinned commit as an ancestor");
   }
   const actualCheckpointIds = checkpoints.map(
     (checkpoint) => (checkpoint as Record<string, unknown>).id,
