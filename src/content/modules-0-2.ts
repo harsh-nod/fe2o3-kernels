@@ -47,10 +47,10 @@ const orientation: Lesson = {
   id: "read-the-evidence",
   module: 0,
   order: 0,
-  title: "Read the evidence before the code",
+  title: "How to read this guide",
   summary:
-    "Learn the five labels this guide uses to keep source proofs, compiler checks, and hardware observations separate.",
-  duration: "12 min",
+    "Learn which code runs today and where compiler checks, proofs, and hardware observations fit.",
+  duration: "8 min",
   prerequisites: ["Comfort reading Rust"],
   objectives: [
     "Distinguish a Verus source-model theorem from a machine-code theorem.",
@@ -518,6 +518,7 @@ const verusBasics: Lesson = {
   id: "verus-contracts",
   module: 2,
   order: 0,
+  proofDetailsInitiallyOpen: true,
   title: "Verus contracts and expected failures",
   summary:
     "Write requires and ensures clauses, then prove that meaningful mutations are rejected for the intended reason.",
@@ -576,6 +577,7 @@ const memoryProofs: Lesson = {
   id: "memory-race-proof",
   module: 2,
   order: 1,
+  proofDetailsInitiallyOpen: true,
   title: "Bounds, initialization, and race freedom",
   summary:
     "Decompose GPU memory safety into region bounds, initialized reads, and non-conflicting concurrent effects.",

@@ -534,6 +534,7 @@ const gemmProof: Lesson = {
   id: "gemm-proof-plan",
   module: 4,
   order: 1,
+  proofDetailsInitiallyOpen: true,
   title: "Proving and extending the MFMA kernel",
   summary:
     "Separate the working direct-global MFMA kernel from the additional proof needed for cooperative LDS staging.",

@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
+  ChevronDown,
   Circle,
   Clock3,
   ListChecks,
@@ -30,6 +31,9 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
   const previous = lessons[lessonIndex - 1];
   const next = lessons[lessonIndex + 1];
   const isComplete = completed.has(lesson.id);
+  const hasSafeReference = lesson.tabs.some(
+    (tab) => tab.kind === "reference",
+  );
 
   return (
     <article className="lesson-page">
@@ -84,33 +88,54 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
 
       <section className="code-section">
         <p className="section-kicker">Workbench</p>
-        <h2>Source, proof, host, and result</h2>
+        <h2>
+          {hasSafeReference
+            ? "Kernel, reference, host, and result"
+            : "Kernel, host, and result"}
+        </h2>
         <p>
-          Tabs are separate on purpose. Read the evidence label before using a
-          snippet as executable source.
+          {hasSafeReference
+            ? "Ordinary Rust and the safe CPU reference define the tutorial path."
+            : "The kernel and host path define the tutorial."}{" "}
+          Formal specifications and Verus models are supporting proof details.
         </p>
-        <CodeTabs key={lesson.id} tabs={lesson.tabs} />
+        <CodeTabs
+          key={lesson.id}
+          tabs={lesson.tabs}
+          proofDetailsInitiallyOpen={lesson.proofDetailsInitiallyOpen}
+        />
       </section>
 
-      <section className="assurance-summary" aria-labelledby="assurance-heading">
-        <p className="section-kicker">Boundary check</p>
-        <h2 id="assurance-heading">Trust boundaries</h2>
-        <div className="assurance-columns">
-          <div>
-            <strong>Trusted in this lesson</strong>
-            <ul>
-              <li>The pinned toolchain and commands execute as documented.</li>
-              <li>Model premises and runtime observations are supplied at their named boundaries.</li>
-            </ul>
+      <section className="assurance-summary" aria-label="Trust boundaries">
+        <details className="lesson-disclosure">
+          <summary>
+            <span>
+              <span className="section-kicker">Audit details</span>
+              <span className="disclosure-title" role="heading" aria-level={2}>
+                Trust boundaries
+              </span>
+            </span>
+            <span className="disclosure-meta">
+              <ChevronDown size={17} aria-hidden="true" />
+            </span>
+          </summary>
+          <div className="assurance-columns">
+            <div>
+              <strong>Trusted in this lesson</strong>
+              <ul>
+                <li>The pinned toolchain and commands execute as documented.</li>
+                <li>Model premises and runtime observations are supplied at their named boundaries.</li>
+              </ul>
+            </div>
+            <div>
+              <strong>Not proved by implication</strong>
+              <ul>
+                <li>No label upgrades another evidence class automatically.</li>
+                <li>Source-to-machine refinement requires its own authenticated evidence.</li>
+              </ul>
+            </div>
           </div>
-          <div>
-            <strong>Not proved by implication</strong>
-            <ul>
-              <li>No label upgrades another evidence class automatically.</li>
-              <li>Source-to-machine refinement requires its own authenticated evidence.</li>
-            </ul>
-          </div>
-        </div>
+        </details>
       </section>
 
       <section className="exercise-section" aria-labelledby="exercise-heading">

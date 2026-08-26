@@ -1,9 +1,9 @@
 import {
   Activity,
   ArrowRight,
+  BookOpen,
   BookOpenCheck,
   Braces,
-  History,
   Network,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -11,8 +11,8 @@ import { currentState } from "../content/current-state";
 
 const paths = [
   {
-    label: "Start with a kernel",
-    detail: "Set up gfx942, run Fill, then follow the typed Vecadd vertical slice.",
+    label: "Write your first kernel",
+    detail: "Set up gfx942, run Fill, then extend the typed Vecadd kernel.",
     to: "/lesson/gfx942-setup",
   },
   {
@@ -21,9 +21,9 @@ const paths = [
     to: "/lesson/compiler-checks",
   },
   {
-    label: "Audit production evidence",
-    detail: "Separate current compiler capability from immutable historical evidence records.",
-    to: "/lesson/evidence-pipeline",
+    label: "Explore formal verification",
+    detail: "Read the Verus model and compiler refinement only when you need the proof layer.",
+    to: "/lesson/verus-contracts",
   },
 ] as const;
 
@@ -38,8 +38,8 @@ export function OverviewPage() {
         <p className="lesson-breadcrumb">Current field guide</p>
         <h1>fe2o3 kernels</h1>
         <p>
-          Rust GPU kernels, workload-neutral compiler checks, source-model
-          proofs, gfx942 execution, and the evidence boundaries between them.
+          Write safe Rust kernels, compile them for gfx942, and see what fe2o3
+          checks before code reaches the GPU.
         </p>
         <div className="overview-snapshot" aria-label="Current compiler snapshot">
           <div>
@@ -58,6 +58,11 @@ export function OverviewPage() {
       </header>
 
       <nav className="overview-actions" aria-label="Primary destinations">
+        <Link to="/lesson/gfx942-setup">
+          <BookOpen size={19} aria-hidden="true" />
+          <span><strong>Start tutorial</strong><small>Setup and first kernel</small></span>
+          <ArrowRight size={17} aria-hidden="true" />
+        </Link>
         <Link to="/lesson/compiler-checks">
           <Braces size={19} aria-hidden="true" />
           <span><strong>Compiler checks</strong><small>Complete diagnostic catalog</small></span>
@@ -73,17 +78,12 @@ export function OverviewPage() {
           <span><strong>Architecture</strong><small>Current authority boundaries</small></span>
           <ArrowRight size={17} aria-hidden="true" />
         </Link>
-        <Link to="/lesson/evidence-archive">
-          <History size={19} aria-hidden="true" />
-          <span><strong>Evidence archive</strong><small>Immutable historical records</small></span>
-          <ArrowRight size={17} aria-hidden="true" />
-        </Link>
       </nav>
 
       <section className="overview-section">
         <div>
           <p className="section-kicker">Choose a path</p>
-          <h2>Move from code to evidence</h2>
+          <h2>Learn in layers</h2>
         </div>
         <div className="overview-paths">
           {paths.map((path, index) => (

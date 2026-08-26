@@ -27,7 +27,7 @@ export function Topbar({ theme, onMenu, onSearch, onTheme }: TopbarProps) {
         <span className="brand-mark">Fe</span>
         <div>
           <strong>fe2o3 kernels</strong>
-          <span>proof-aware field guide</span>
+          <span>Rust GPU field guide</span>
         </div>
       </Link>
       <div className="pin-summary" title={`Tree ${currentState.compilerTree}`}>

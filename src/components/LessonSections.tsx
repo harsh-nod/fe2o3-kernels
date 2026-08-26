@@ -1,4 +1,11 @@
-import { AlertTriangle, CircleHelp, ExternalLink, Info, ShieldCheck } from "lucide-react";
+import {
+  AlertTriangle,
+  ChevronDown,
+  CircleHelp,
+  ExternalLink,
+  Info,
+  ShieldCheck,
+} from "lucide-react";
 import { CompileFailureGallery } from "./CompileFailureGallery";
 import type { CalloutTone, LessonBlock, LessonSection } from "../content/model";
 import {
@@ -180,6 +187,24 @@ function NarrativeBlocks({
       );
     }
     const Icon = calloutIcons[block.tone];
+    if (block.title === "Semantic-correctness milestone") {
+      return (
+        <details
+          className="callout callout-boundary milestone-callout"
+          key={index}
+        >
+          <summary>
+            <Icon size={19} aria-hidden="true" />
+            <span>
+              <strong>{block.title}</strong>
+              <small>Compiler proof boundary</small>
+            </span>
+            <ChevronDown size={17} aria-hidden="true" />
+          </summary>
+          <p>{block.text}</p>
+        </details>
+      );
+    }
     return (
       <aside className={`callout callout-${block.tone}`} key={index}>
         <Icon size={19} aria-hidden="true" />

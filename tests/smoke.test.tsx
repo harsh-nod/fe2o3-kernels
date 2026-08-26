@@ -15,12 +15,27 @@ function renderApp(path = "/lesson/read-the-evidence") {
 describe("application shell", () => {
   beforeEach(() => window.localStorage.clear());
 
+  it("makes the code-first tutorial the primary overview action", async () => {
+    renderApp("/");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "fe2o3 kernels",
+      }, { timeout: 5_000 }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Start tutorial/ })).toHaveAttribute(
+      "href",
+      "/lesson/gfx942-setup",
+    );
+    expect(screen.getByText(/Write safe Rust kernels/)).toBeInTheDocument();
+  });
+
   it("renders the tutorial app as its first screen", async () => {
     renderApp();
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Read the evidence before the code",
+        name: "How to read this guide",
       }, { timeout: 5_000 }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Curriculum")).toBeInTheDocument();
@@ -77,6 +92,12 @@ describe("application shell", () => {
       "https://github.com/harsh-nod/fe2o3/blob/df63236de13f7572bad2c5e25e90d5b1bc4927c1/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
+    expect(
+      screen.queryByRole("tab", { name: "Verus proof" }),
+    ).not.toBeInTheDocument();
+    await user.click(
+      screen.getByRole("button", { name: "Show proof details" }),
+    );
     await user.click(screen.getByRole("tab", { name: "Verus proof" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "exact_hierarchy_writes_refine_safe_cpu_reference_v1",

@@ -1,13 +1,41 @@
-import { Check, Copy, ExternalLink, Info } from "lucide-react";
+import {
+  Check,
+  ChevronDown,
+  Copy,
+  ExternalLink,
+  Info,
+  ShieldCheck,
+} from "lucide-react";
 import { useState, type KeyboardEvent } from "react";
 import { sourceUrl, type CodeTab } from "../content/model";
 import { HighlightedCode } from "./HighlightedCode";
 
-export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
+function isProofDetail(tab: CodeTab): boolean {
+  return tab.kind === "spec" || tab.kind === "verus";
+}
+
+export function CodeTabs({
+  tabs,
+  proofDetailsInitiallyOpen = false,
+}: {
+  tabs: CodeTab[];
+  proofDetailsInitiallyOpen?: boolean;
+}) {
   const [active, setActive] = useState(0);
   const [copied, setCopied] = useState(false);
-  const activeIndex = active < tabs.length ? active : 0;
-  const current = tabs[activeIndex];
+  const [showProofDetails, setShowProofDetails] = useState(
+    proofDetailsInitiallyOpen,
+  );
+  const hasProofDetails = tabs.some(isProofDetail);
+  const visibleTabs = tabs
+    .map((tab, sourceIndex) => ({ tab, sourceIndex }))
+    .filter(({ tab }) => showProofDetails || !isProofDetail(tab));
+  const activeVisibleIndex = visibleTabs.findIndex(
+    ({ sourceIndex }) => sourceIndex === active,
+  );
+  const currentVisibleIndex = activeVisibleIndex >= 0 ? activeVisibleIndex : 0;
+  const currentEntry = visibleTabs[currentVisibleIndex];
+  const current = currentEntry.tab;
 
   const copy = async () => {
     await navigator.clipboard.writeText(current.code);
@@ -19,24 +47,48 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
     if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
     event.preventDefault();
     const delta = event.key === "ArrowRight" ? 1 : -1;
-    const next = (activeIndex + delta + tabs.length) % tabs.length;
-    setActive(next);
-    document.getElementById(`code-tab-${next}`)?.focus();
+    const next =
+      (currentVisibleIndex + delta + visibleTabs.length) % visibleTabs.length;
+    const nextSourceIndex = visibleTabs[next].sourceIndex;
+    setActive(nextSourceIndex);
+    document.getElementById(`code-tab-${nextSourceIndex}`)?.focus();
   };
 
   return (
     <section className="code-tool" aria-label="Lesson code">
-      <div className="code-tabs" role="tablist" onKeyDown={handleKeys}>
-        {tabs.map((tab, index) => (
+      {hasProofDetails && (
+        <div className="proof-detail-control">
           <button
-            id={`code-tab-${index}`}
+            type="button"
+            aria-expanded={showProofDetails}
+            onClick={() => {
+              if (
+                showProofDetails &&
+                tabs[active] &&
+                isProofDetail(tabs[active])
+              ) {
+                setActive(0);
+              }
+              setShowProofDetails((shown) => !shown);
+            }}
+          >
+            <ShieldCheck size={15} aria-hidden="true" />
+            {showProofDetails ? "Hide proof details" : "Show proof details"}
+            <ChevronDown size={15} aria-hidden="true" />
+          </button>
+        </div>
+      )}
+      <div className="code-tabs" role="tablist" onKeyDown={handleKeys}>
+        {visibleTabs.map(({ tab, sourceIndex }) => (
+          <button
+            id={`code-tab-${sourceIndex}`}
             type="button"
             role="tab"
-            aria-selected={activeIndex === index}
+            aria-selected={currentEntry.sourceIndex === sourceIndex}
             aria-controls="lesson-code-panel"
-            tabIndex={activeIndex === index ? 0 : -1}
-            className={activeIndex === index ? "active" : ""}
-            onClick={() => setActive(index)}
+            tabIndex={currentEntry.sourceIndex === sourceIndex ? 0 : -1}
+            className={currentEntry.sourceIndex === sourceIndex ? "active" : ""}
+            onClick={() => setActive(sourceIndex)}
             key={tab.kind}
           >
             {tab.label}
@@ -77,7 +129,7 @@ export function CodeTabs({ tabs }: { tabs: CodeTab[] }) {
       <pre
         id="lesson-code-panel"
         role="tabpanel"
-        aria-labelledby={`code-tab-${activeIndex}`}
+        aria-labelledby={`code-tab-${currentEntry.sourceIndex}`}
       >
         <HighlightedCode code={current.code} language={current.language} />
       </pre>

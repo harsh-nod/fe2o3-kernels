@@ -57,15 +57,53 @@ describe("code tabs", () => {
       "pub fn tiled_gemm_lds_slice1",
     );
   });
+
+  it("keeps Verus and sequential specifications optional", async () => {
+    const user = userEvent.setup();
+    const tabs = lessons.find((lesson) => lesson.id === "gemm-tiling")!.tabs;
+    render(<CodeTabs tabs={tabs} />);
+
+    expect(
+      screen.queryByRole("tab", { name: "Sequential semantics" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("tab", { name: "Verus refinement" }),
+    ).not.toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: "Show proof details" }),
+    );
+    expect(
+      screen.getByRole("tab", { name: "Sequential semantics" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("tab", { name: "Verus refinement" }),
+    ).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: "Hide proof details" }),
+    );
+    expect(
+      screen.queryByRole("tab", { name: "Verus refinement" }),
+    ).not.toBeInTheDocument();
+  });
 });
 
 describe("functional-correctness catalog", () => {
-  it("renders the exact fail-closed contract for an advanced kernel", () => {
+  it("keeps the exact fail-closed contract in an optional disclosure", async () => {
+    const user = userEvent.setup();
     render(<FunctionalCorrectnessPanel lessonId="flash-attention" />);
 
     expect(
-      screen.getByRole("heading", { name: "Functional-correctness catalog" }),
+      screen.getByRole("heading", { name: "Correctness contract" }),
     ).toBeInTheDocument();
+    const disclosure = screen
+      .getByRole("heading", { name: "Correctness contract" })
+      .closest("details");
+    expect(disclosure).not.toHaveAttribute("open");
+
+    await user.click(screen.getByText("Correctness contract"));
+    expect(disclosure).toHaveAttribute("open");
     expect(screen.getByText("Incomplete")).toBeInTheDocument();
     expect(screen.getByText("Safe Rust reference")).toBeInTheDocument();
     expect(screen.getByText("Admitted MIR subset")).toBeInTheDocument();

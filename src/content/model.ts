@@ -222,6 +222,7 @@ export interface Lesson {
   claims: Claim[];
   sections: LessonSection[];
   tabs: CodeTab[];
+  proofDetailsInitiallyOpen?: boolean;
   diagram?: DiagramKind;
   exercises: Exercise[];
   glossary: string[];

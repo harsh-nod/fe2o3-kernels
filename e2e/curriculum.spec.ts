@@ -11,6 +11,18 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
     }),
   ).toBeVisible();
   await expect(page.getByLabel("Read and write region ownership")).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Show proof details" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("tab", { name: "Verus proof" }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByLabel("Evidence for this lesson").locator("details"),
+  ).not.toHaveAttribute("open");
+  await expect(
+    page.getByLabel("Correctness contract").locator("details"),
+  ).not.toHaveAttribute("open");
 
   const codePanel = page.getByRole("tabpanel");
   await expect(codePanel.locator("code.language-rust")).toBeVisible();
@@ -192,6 +204,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
     }),
   ).toBeVisible();
   const lessonEvidence = page.getByLabel("Evidence for this lesson");
+  await lessonEvidence.locator("summary").click();
   await expect(
     lessonEvidence.getByText("GPU observed", { exact: true }),
   ).toBeVisible();
@@ -199,6 +212,7 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
     lessonEvidence.getByText("Verus model", { exact: true }),
   ).toBeVisible();
 
+  await page.getByRole("button", { name: "Show proof details" }).click();
   await page.getByRole("tab", { name: "Verus proof" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
@@ -250,6 +264,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     "pub fn evaluate_reference_v1",
   );
 
+  await page.getByRole("button", { name: "Show proof details" }).click();
   await page.getByRole("tab", { name: "Sequential semantics" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "WORKLOAD SPECIFICATION",
@@ -448,6 +463,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     ),
   ).toBeVisible();
 
+  await page.getByRole("button", { name: "Show proof details" }).click();
   await page.getByRole("tab", { name: "Reference-bound kernel" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("reference = cpu_reference");
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -555,6 +571,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
+  await page.getByRole("button", { name: "Show proof details" }).click();
   await page.getByRole("tab", { name: "Verus proof" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
@@ -659,6 +676,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     "pub fn evaluate_reference_v1",
   );
 
+  await page.getByRole("button", { name: "Show proof details" }).click();
   await page.getByRole("tab", { name: "Verus" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
@@ -802,25 +820,25 @@ test("correctness catalog and advanced lessons stay visually coherent", async ({
       id: "gemm",
       lesson: "gemm-tiling",
       title: "Dynamic GEMM end to end",
-      target: "Functional-correctness catalog",
+      target: "Correctness contract",
     },
     {
       id: "softmax",
       lesson: "softmax-invariant",
       title: "Dynamic row softmax",
-      target: "Functional-correctness catalog",
+      target: "Correctness contract",
     },
     {
       id: "attention",
       lesson: "flash-attention",
       title: "Dynamic FlashAttention with MFMA",
-      target: "Functional-correctness catalog",
+      target: "Correctness contract",
     },
     {
       id: "moe",
       lesson: "moe-expert-compute",
       title: "Dynamic grouped-expert MoE with MFMA",
-      target: "Functional-correctness catalog",
+      target: "Correctness contract",
     },
   ] as const;
 
@@ -862,6 +880,12 @@ test("correctness catalog and advanced lessons stay visually coherent", async ({
     const target = page.getByText(route.target, { exact: true }).first();
     await target.scrollIntoViewIfNeeded();
     await expect(target).toBeVisible();
+    if (route.target === "Correctness contract") {
+      await page
+        .getByLabel("Correctness contract")
+        .locator("summary")
+        .click();
+    }
 
     const contentLayout = await page.evaluate(() => {
       const panel = document.querySelector<HTMLElement>(
