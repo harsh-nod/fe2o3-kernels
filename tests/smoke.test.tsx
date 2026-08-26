@@ -75,7 +75,7 @@ describe("application shell", () => {
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
   });
 
-  it("renders the gfx950 FP4 attention source and pending evidence boundary", async () => {
+  it("renders the gfx950 FP4 attention source and external runtime boundary", async () => {
     const user = userEvent.setup();
     renderApp("/lesson/gfx950-fp4-attention");
     expect(
@@ -99,10 +99,10 @@ describe("application shell", () => {
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Runtime device: pending",
+      "AMD Instinct MI350X (gfx950)",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "current host exposes gfx1036",
+      "all passed with max_error=0",
     );
   }, 30_000);
 

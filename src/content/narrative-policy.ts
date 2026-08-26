@@ -291,12 +291,12 @@ export const narrativeFingerprints = deepFreeze({
   "evidence-archive/non-retroactive-milestone": "3e7029c3a5b6e02973e1cf8f00e2982524cf650c1e40199fb0102508308bea3d",
   "exercise-ladder/semantic-correctness": "b29d912671ee8e8a1c81d186d35271f6e9c5ec428c4b71f99630726aae91d54f",
   "contributing-kernel/semantic-contract-checklist": "1b7b587de6ad35e384f0ce8d4ea83f2807b9ce262e4fe60d09d4358ba7663812",
-  "gfx950-fp4-gemm/prerequisites": "1cf3462c7360205910eda0039f0f3f783e698decc23c21decc01318049cf7585",
+  "gfx950-fp4-gemm/prerequisites": "ec98ccf5958697caed1c3bb8b6d6ab73eec2472d69015ceb343b197c97272edc",
   "gfx950-fp4-gemm/tile-accumulator": "baeea1167e660906f7d49ab5385b20bc32330105df93c13276b027e9ff6ac988",
   "gfx950-fp8-gemm/format-layout": "f3797f1bb2c30b940177420eee1c9b88a756097b234aa25b9165166fb6269e3f",
   "gfx950-fp8-gemm/tile-accumulator": "e55543136278b6abd091c5673e42be8a62049f6f6dcaaa7e42eec525c8365387",
   "gfx950-fp4-attention/transpose-pipeline": "7408abba226683748c2b0cc157ee3bc9beea4c7e0d252bc9c51f10eaa45a66ed",
   "gfx950-fp4-attention/online-softmax": "b95271a39f518dfc37184f32511f3da6e228e8680aa5b1dcdf1ed9b75e69209a",
-  "gfx950-fp8-attention/transpose-pipeline": "484f43ebe570e8881f52f28593947937f59b70f59f92fa492da25cf961df2db7",
-  "gfx950-fp8-attention/evidence-boundary": "2b4931bc87321435fc17a50219463a2bc2a6305d295efc37fd8f7f1ce67da0a0"
+  "gfx950-fp8-attention/transpose-pipeline": "e42948b74bdeb326cccc60cf05881875992898ad9c1135f17897d5649ea22a5e",
+  "gfx950-fp8-attention/evidence-boundary": "b79bd304fc52c9aba38bb3ace2443ad87aaf61c9797446e4ea6ad0da7396ad6b"
 } satisfies Record<NarrativeId, string>);

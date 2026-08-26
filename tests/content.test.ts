@@ -340,7 +340,7 @@ describe("curriculum integrity", () => {
         "--offload-arch=gfx950",
       );
       expect(lesson?.tabs.find((tab) => tab.kind === "result")?.code).toContain(
-        "Runtime device: pending",
+        "AMD Instinct MI350X (gfx950)",
       );
     }
 
@@ -353,7 +353,7 @@ describe("curriculum integrity", () => {
     expect(fp4Attention).toContain("Multi-tile online rescaling");
     const fp8Attention = serializedLessonContent("gfx950-fp8-attention");
     expect(fp8Attention).toContain("ds_read_b64_tr_b8");
-    expect(fp8Attention).toContain("current host's gfx1036 agent");
+    expect(fp8Attention).toContain("matched all four CPU oracles exactly");
   });
 
   it("uses every evidence label", () => {

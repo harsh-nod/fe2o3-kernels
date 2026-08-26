@@ -2749,9 +2749,9 @@ const narrativeRegistry = deepFreeze({
       },
       {
         type: "callout",
-        tone: "warning",
-        title: "Hardware execution is pending",
-        text: "The current build host reports gfx1036, not gfx950. Cross-compilation and ISA inspection can validate object shape, but they do not establish an MI350 or MI355X execution result. Only attach GPU-observed evidence after rocminfo names gfx950 and the exact artifact is dispatched there.",
+        tone: "proof",
+        title: "Hardware execution is recorded separately",
+        text: "On 2026-08-26, ssh host mi350 reported AMD Instinct MI350X gfx950 agents and all four fixed examples matched their CPU oracles with max_error=0 under ROCm 7.2.1. The source-example lesson label remains conservative because this site has not imported that external run into its pinned evidence registry.",
       },
       milestoneCallout(
         "These low-precision examples add a target-specific source and inspection path. They do not inherit the existing gfx942 semantic-correctness, artifact, runtime, or hardware authority.",
@@ -2894,7 +2894,7 @@ const narrativeRegistry = deepFreeze({
         ],
       },
       milestoneCallout(
-        "A valid gfx950 object remains below hardware evidence. The current host's gfx1036 agent cannot execute this target, so no result or performance label is promoted here.",
+        "A valid gfx950 object remains below hardware evidence. A separate MI350X run matched all four CPU oracles exactly, but no performance label or site evidence promotion is inferred from that observation.",
       ),
     ],
   },
@@ -2915,8 +2915,8 @@ const narrativeRegistry = deepFreeze({
       {
         type: "callout",
         tone: "boundary",
-        title: "Pending field is data, not failure",
-        text: "Use pending for the runtime fields until a gfx950 agent is available. Do not replace the device identity with the build host's gfx1036 observation and do not turn successful cross-compilation into a GPU-observed badge.",
+        title: "Keep external observations distinct",
+        text: "The 2026-08-26 mi350 run records an MI350X gfx950 identity and four exact CPU-oracle matches. Keep the earlier gfx1036 compile host, the later gfx950 runtime, artifact hashes, and the still-pending performance field separate; do not promote the site badge without importing a pinned evidence record.",
       },
     ],
   }

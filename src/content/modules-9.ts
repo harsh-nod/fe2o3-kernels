@@ -36,7 +36,7 @@ function tutorialTabs(
       language: "cpp",
       code: kernelExcerpt(symbol, nextSymbol),
       explanatory: true,
-      notice: `Exact excerpt from ${sourcePath}. The combined source contains the independent CPU oracle and all four launch paths; gfx950 hardware execution is pending.`,
+      notice: `Exact excerpt from ${sourcePath}. A 2026-08-26 MI350X run passed all four CPU-oracle comparisons with max_error=0; the source-example label does not import that external run as site authority.`,
     },
     {
       kind: "verus",
@@ -70,7 +70,7 @@ function tutorialTabs(
       language: "bash",
       code: buildAndTest,
       explanatory: true,
-      notice: "Use --compile-only without a visible gfx950 agent. The script refuses to turn the current gfx1036 device into a gfx950 runtime result.",
+      notice: "Use --compile-only without a visible gfx950 agent. The script ran normally on ssh host mi350 and still refuses non-gfx950 devices.",
     },
     {
       kind: "result",
@@ -83,16 +83,17 @@ function tutorialTabs(
           `Source: ${sourcePath}`,
           "Target: gfx950",
           `Required ISA: ${requiredIsa.join(", ")}`,
-          "Compile/ISA result: attach the saved command, tool versions, HSACO SHA-256, and scoped disassembly.",
-          "Runtime device: pending (current host exposes gfx1036, not gfx950).",
-          "GPU oracle result: pending.",
+          "Compile/ISA observation: ROCm 7.2.1 selected the required gfx950 MFMA and transpose instructions.",
+          "HSACO SHA-256: f0fb73acb365b40fe08b7f534d4cada2bfa0559cdbfc1f37a991634ffdeeb096",
+          "Runtime observation: AMD Instinct MI350X (gfx950), ssh host mi350, 2026-08-26.",
+          "GPU oracle observation: FP4 GEMM, FP8 GEMM, FP4 attention, and FP8 attention all passed with max_error=0.",
           "Performance result: pending.",
           "",
-          "Do not promote this record to compiler-checked or GPU-observed without exact retained evidence.",
+          "The example README and issue #217 retain the external observation. This lesson remains source-example until the site evidence registry imports a pinned runtime record.",
         ].join("\n"),
       ),
       explanatory: true,
-      notice: "Bounded evidence template. Pending fields are intentionally not inferred from source or ISA inspection.",
+      notice: "Bounded external observation. It does not promote the lesson beyond its source-example evidence label.",
     },
   ];
 }
@@ -114,14 +115,14 @@ const fp4Gemm: Lesson = {
   objectives: [
     "Map eight packed E2M1 values per dword into a 128-element K phase.",
     "Assign four FP32 accumulator components to every wave64 lane.",
-    "Inspect the exact gfx950 MFMA mnemonic without claiming execution.",
+    "Inspect the exact gfx950 MFMA mnemonic while keeping source, ISA, and runtime evidence distinct.",
   ],
   claims: [
     {
       kind: "source-example",
       label: "Runnable HIP source published",
       detail:
-        "The tutorial includes the exact combined HIP source, CPU oracle, compile-only path, and symbol-scoped ISA checks. The current host cannot supply gfx950 runtime evidence.",
+        "The tutorial includes the exact combined HIP source, CPU oracle, compile-only path, and symbol-scoped ISA checks. A separate MI350X run is recorded without promoting this source-example claim.",
     },
   ],
   sections: [
@@ -167,7 +168,7 @@ const fp8Gemm: Lesson = {
       kind: "source-example",
       label: "Runnable HIP source published",
       detail:
-        "The exact source contains an E4M3 CPU decode/reference and refuses execution on non-gfx950 devices. No gfx950 run is claimed by this site build.",
+        "The exact source contains an E4M3 CPU decode/reference and refuses execution on non-gfx950 devices. A separate MI350X run is recorded without promoting this site claim.",
     },
   ],
   sections: [
@@ -214,7 +215,7 @@ const fp4Attention: Lesson = {
       kind: "source-example",
       label: "Fused HIP attention source published",
       detail:
-        "The source keeps the QK score tile in registers, uses a format-specific LDS transpose-read builtin, and includes an independent CPU attention reference. Hardware execution remains pending.",
+        "The source keeps the QK score tile in registers, uses a format-specific LDS transpose-read builtin, and includes an independent CPU attention reference. A separate MI350X run passed exactly.",
     },
   ],
   sections: [
@@ -260,7 +261,7 @@ const fp8Attention: Lesson = {
       kind: "source-example",
       label: "Fused HIP attention source published",
       detail:
-        "The exact source, compile-only command, symbol-scoped B8/MFMA checks, device guard, and CPU oracle are present. No MI350 runtime or performance result is asserted.",
+        "The exact source, compile-only command, symbol-scoped B8/MFMA checks, device guard, and CPU oracle are present. A separate MI350X run passed; no performance result is asserted.",
     },
   ],
   sections: [
@@ -274,10 +275,10 @@ const fp8Attention: Lesson = {
   diagram: "attention",
   exercises: [
     {
-      prompt: "Produce a reviewable compile-only evidence bundle.",
-      hint: "Retain source and HSACO digests, compiler versions, the full command, symbol-scoped disassembly, and the non-gfx950 device observation separately.",
+      prompt: "Produce a reviewable hardware evidence bundle.",
+      hint: "Retain source and HSACO digests, compiler versions, the full command, symbol-scoped disassembly, runtime identity, and oracle output separately.",
       acceptance:
-        "The bundle proves which object was inspected and leaves runtime/oracle/performance fields pending.",
+        "The bundle binds the inspected object to the gfx950 runtime and oracle output while leaving performance pending.",
     },
   ],
   glossary: ["gfx950", "FP8", "transpose load", "artifact binding", "online softmax"],

@@ -762,7 +762,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
   await expect(expertRow).toContainText("freshness and replay authority");
 });
 
-test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
+test("gfx950 lessons expose source, ISA, and external runtime evidence", async ({
   page,
 }) => {
   await page.goto("./#/lesson/gfx950-fp4-attention");
@@ -790,8 +790,9 @@ test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
 
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Runtime device: pending",
+    "AMD Instinct MI350X (gfx950)",
   );
+  await expect(page.getByRole("tabpanel")).toContainText("max_error=0");
 
   await page.goto("./#/lesson/gfx950-fp8-attention");
   await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
