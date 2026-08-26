@@ -1,5 +1,6 @@
 import { narrativeSection } from "./narrative-registry";
 import { currentState } from "./current-state";
+import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
 import compilerReferenceDiagnostics from "../../examples/compiler_reference_v2/diagnostics.txt?raw";
 import compilerReferenceEffect from "../../examples/compiler_reference_v2/effect-and-receipt.txt?raw";
@@ -644,7 +645,7 @@ const compilerChecks: Lesson = {
     "Distinguish a proved static access from a checked dynamic access.",
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
     "Bind a local safe Rust reference with #[kernel(typed, reference = ...)] and use leading usize arguments as logical point coordinates.",
-    "Follow one compiler-owned value-carrying ranked recipe write through a strict source-effect bijection and into a conditional retained Verus/Ed25519 V2 admission.",
+    "Follow compiler-owned ranked writes through a strict source-effect bijection, exact per-output formula replay, and one separated-output aggregate Verus/Ed25519 V2 admission.",
     "Distinguish per-effect partial correctness from total output coverage and full source-to-machine equivalence.",
     "Locate tensor-layout, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
     "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
@@ -687,10 +688,10 @@ const compilerChecks: Lesson = {
       kind: "compiler-checked",
       label: "Safe Rust per-compilation composition gate",
       detail:
-        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles their exact contracts, then generates one workload-neutral Verus checker. Exact pointwise integer or compiler-side IEEE operator-DAG claims replay the compiler-derived coordinate, domain, precondition, and value formulas directly. Separated point outputs retain one receipt each and share one aggregate proof run. mi300x lacks the root-owned /opt runtime, so no referenced production compile has completed this gate and there is no fallback.",
+        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles their exact contracts, then generates one workload-neutral Verus checker. Exact pointwise integer or compiler-side IEEE operator-DAG claims replay the compiler-derived coordinate, domain, precondition, and value formulas directly. Separated point outputs retain one staged role binding each; those bindings grant no authority until the aggregate checker independently replays every formula and the output product. mi300x lacks the root-owned /opt runtime, so no referenced production compile has completed this gate and there is no fallback.",
       reference: currentImplementationReference(
         [
-          "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
+          "cargo test --locked -p rustc-codegen-fe2o3 --features qualification-oracles-test-only --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
         ],
         [
           "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
@@ -699,12 +700,19 @@ const compilerChecks: Lesson = {
           "crates/rustc-codegen-fe2o3/src/reference_effect_bijection_v1.rs",
           "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
           "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
+          "crates/fe2o3-pliron/src/production/noncanonical_loop_proof_v1.rs",
+          "crates/fe2o3-pliron/tests/noncanonical_loop_proof_v1.rs",
           "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
+          "crates/dialect-proof/src/lib.rs",
+          "crates/dialect-proof/tests/hostile.rs",
           "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs",
           "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
           "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
+          "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
+          "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs",
           "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
           "crates/rustc-codegen-fe2o3/src/production_mir_pliron_verus_join_v1.rs",
+          "scripts/test-mir-pliron-per-compilation-verus.sh",
         ],
         { target: "gfx942" },
       ),
@@ -765,13 +773,13 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus checker before KIR lowering. The checker replays each supported exact point formula and one aggregate separated-output product. A move-only report binds the replay, per-output receipts, and compilation identity at SafeReferenceMirToLivePliron; compiler extraction/projection and pass soundness remain trusted.",
+        `The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus checker before KIR lowering. The checker independently replays each supported exact point formula and one aggregate separated-output product; staged per-output role bindings grant no authority by themselves. The pinned positive fixture is ${semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath}; its exact substitution negative is ${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixturePath}. A move-only aggregate report is the sole refinement authority and binds the replay, staged inputs, and compilation identity at SafeReferenceMirToLivePliron; compiler extraction/projection and pass soundness remain trusted.`,
     },
     {
       kind: "host",
       label: "Run fixtures",
       language: "bash",
-      code: "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1\ncargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
+      code: "cargo test --locked -p rustc-codegen-fe2o3 --features qualification-oracles-test-only --test reference_binding_v1 -- --ignored --nocapture --test-threads=1\ncargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
       sourceCommit: currentState.compilerCommit,

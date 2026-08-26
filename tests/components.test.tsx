@@ -197,6 +197,8 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-021" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-023" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-026" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-027" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-031" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-017" })).toBeInTheDocument();
     expect(
       document.querySelectorAll(".compile-failure-source code.language-rust"),

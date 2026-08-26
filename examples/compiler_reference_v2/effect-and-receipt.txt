@@ -1,23 +1,36 @@
 # Compiler-owned ranked recipe, simplified for display.
-# Users write the two safe Rust functions, not this recipe.
+# Users write safe Rust reference and kernel functions, not this recipe.
 
 %true = SemanticConstant(value=1)
-%gpu_value = SemanticConstant(value=17)
-%reference_value = SemanticConstant(value=17)
+%gpu_value0 = SemanticConstant(value=17)
+%reference_value0 = SemanticConstant(value=17)
+%gpu_value1 = SemanticConstant(value=29)
+%reference_value1 = SemanticConstant(value=29)
 %point0 = SemanticSymbol(symbol=0)
 %index = InvocationIndex(dimension=0)
-%output = RankedView(shape=[dynamic], allocation_origin=1, writable=true)
+%output0 = RankedView(
+  shape=[dynamic], allocation_origin=1, noalias_class=1, writable=true,
+)
+%output1 = RankedView(
+  shape=[dynamic], allocation_origin=2, noalias_class=2, writable=true,
+)
 
-ValueAccess(kind=Write, view=%output, indices=[%index], value=%gpu_value)
+ValueAccess(kind=Write, view=%output0, indices=[%index], value=%gpu_value0)
+ValueAccess(kind=Write, view=%output1, indices=[%index], value=%gpu_value1)
 OwnershipContract(
-  view=%output,
-  coverage=ExactEffectDomain,
+  view=%output0,
+  coverage=TotalView,
+  partition=ExactSets,
+)
+OwnershipContract(
+  view=%output1,
+  coverage=TotalView,
   partition=ExactSets,
 )
 RequestEffectRefinement(
   gpu_write_site=(block=2, operation=0),
   reference_output_site=(argument=1, block=0, statement=0),
-  view=%output,
+  view=%output0,
   indices=[%index],
   gpu_coordinates=[%point0],
   reference_coordinates=[%point0],
@@ -25,48 +38,78 @@ RequestEffectRefinement(
   reference_domain=%true,
   gpu_precondition=%true,
   reference_precondition=%true,
-  gpu_value=%gpu_value,
-  reference_value=%reference_value,
+  gpu_value=%gpu_value0,
+  reference_value=%reference_value0,
+)
+RequestEffectRefinement(
+  gpu_write_site=(block=2, operation=1),
+  reference_output_site=(argument=2, block=0, statement=1),
+  view=%output1,
+  indices=[%index],
+  gpu_coordinates=[%point0],
+  reference_coordinates=[%point0],
+  gpu_domain=%true,
+  reference_domain=%true,
+  gpu_precondition=%true,
+  reference_precondition=%true,
+  gpu_value=%gpu_value1,
+  reference_value=%reference_value1,
 )
 
-# The reference effect comes from safe Rust MIR. The GPU output, ranked index,
-# typed value, and path condition come independently from the GPU projection.
-# A strict one-to-one match is required before this request is constructed.
-# A direct safe input[index] read joins only to matching ranked read/view/index,
-# scalar, allocation-origin, stride, and guard evidence. Multidimensional or raw
-# reads, unresolved load symbols, noncanonical loops, and unsupported expressions
-# fail Incomplete.
+# Safe Rust MIR supplies each reference effect. The GPU projection supplies
+# its output view, index, typed value, and path condition independently. A
+# strict one-to-one match is required before either request is constructed.
+# A direct safe input[index] read retains its exact Rust bounds condition, but
+# it remains Incomplete until compiler-owned extent facts imply that condition
+# over the complete output domain.
 
-# Per-effect receipt admission materializes these real PLIRON operations:
+# Per-output admission materializes one exact live-PLIRON relation and one
+# retained receipt for output0, then does the same independently for output1.
+# The private request-to-require transition is represented by:
 #
-#   kernel.access (%output, %index) [kind=Write]
-#   kernel.ownership_contract (%output)
-#     [coverage=ExactEffectDomain, partition=ExactSets]
-#   proof.obligation <exact MIR/effect identities> FunctionalRefinement
-#   proof.evidence_ref <receipt identity> Proved Mir
-#   proof.require_effect_refinement (
-#     %output, %index, %point0, %point0,
-#     %true, %true, %true, %true, %gpu_value, %reference_value
-#   )
+#   proof.require_effect_refinement(output0, exact formulas, staged receipt0)
+#   proof.require_effect_refinement(output1, exact formulas, staged receipt1)
 #
-# Production then performs three mandatory compiler-owned stages in order:
+# These operations bind roles and inputs; they do not prove equality.
+# The generated checker does not assume a generic relation lemma. For each
+# output it reconstructs and evaluates the compiler-derived formula graphs:
 #
-#   1. derive/reconcile the exact semantic MIR/live-PLIRON contract
-#   2. derive/validate the strict pointwise/permutation/fold/recurrence contract
-#   3. generate and run one generic Verus conditional-lemma checker
+#   coordinates: gpu_coordinates(point) == reference_coordinates(point)
+#   domain:       gpu_domain(point)      == reference_domain(point)
+#   precondition: gpu_precondition(point) == reference_precondition(point)
+#   value:        gpu_value(point)       == reference_value(point)
 #
-# The production report cryptographically binds the exact instantiation,
-# retained effect receipts, and tool execution outside the lemma. Receipts are
-# not logical premises in one whole-kernel Verus theorem. Candidate
-# declarations and generated identity comments are not premises. The move-only
-# result is required before KIR lowering.
+# Exact pointwise bit-vector formulas and identical compiler-side IEEE
+# operator DAGs are replayable. Receipts authenticate which MIR and PLIRON
+# facts were retained; they are binding inputs to the run, never premises that
+# make either value equality true.
+
+# One whole-compilation theorem then independently replays both per-output
+# formulas with the staged, compiler-verified TotalView and separation facts.
+# The total-output staging report grants no authority before this replay:
+#
+#   output_product = [output0, output1]
+#   separated(output0, output1) =
+#     allocation_origin(1) != allocation_origin(2)
+#     && noalias_class(1) != noalias_class(2)
+#   aggregate = exact_formula(output0)
+#            && exact_formula(output1)
+#            && total_and_separated(output_product)
+#
+# Duplicate views, missing outputs, reordered products, overlapping ownership,
+# or substituted formulas stop compilation. ErrorBounded, tensor-component,
+# fold, recurrence, permutation, and noncanonical-loop replay roles also stop
+# with UnsupportedFormulaReplayRole. That verifier boundary has no invented
+# FE2O3-PARALLEL pass code.
 
 receipt_format = Ed25519 V2
 receipt_boundary = SafeReferenceMirToLivePliron
-receipt_public_authority = signature_and_policy_verified_only
+receipt_public_inspection = signature_and_policy_verified_only
 private_transition = RequestEffectRefinement -> RequireEffectRefinement
 
-requested_property = per_compilation_conditional_composition
+requested_property = per_compilation_exact_formula_replay
+maximum_logical_outputs_and_refinement_sites = 64
+maximum_tensor_component_pairs_per_receipt = 64
 fixture_proof_admitted = false
 proved_total_output_coverage = false
 proved_source_to_isa = false

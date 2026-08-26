@@ -30,7 +30,7 @@ export function ArchitecturePage() {
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
             ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse, layout, and trace facts only within one validation."],
-            ["Verus", "After compiler-owned semantic and strict parallel derivation, replays exact pointwise integer or compiler-side IEEE operator-DAG formulas in one generated checker. The production report binds the formulas, tool run, receipts, and SafeReferenceMirToLivePliron identities; no generic relation premise supplies the result."],
+            ["Verus", "After compiler-owned semantic and strict parallel derivation, independently replays exact pointwise integer or compiler-side IEEE operator-DAG formulas in one generated checker. Staged role-binding receipts grant no authority alone; the aggregate report is the sole refinement authority and binds formulas, tool run, staged inputs, and SafeReferenceMirToLivePliron identities."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
             ["Runtime", "Checks actual context, allocations, aliases, geometry, and lifetimes."],
@@ -103,8 +103,9 @@ export function ArchitecturePage() {
           per-compilation Verus composition before KIR lowering. Generic
           exact pointwise formula replay, overflow-safe canonical loops, and
           separated multiple-output aggregation are implemented but remain
-          unpinned. Each separated point output gets one receipt and the whole
-          kernel gets one aggregate proof run. Dynamic safe-slice reads remain
+          unpinned. Each separated point output gets one staged role binding;
+          only the independent whole-kernel aggregate replay grants refinement
+          authority. Dynamic safe-slice reads remain
           Incomplete until a compiler-owned extent implication proves the bound
           over the complete output domain. Noncanonical loops emit exact SCC
           invariant/variant requests, but imported answers cannot yet grant

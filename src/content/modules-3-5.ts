@@ -443,7 +443,7 @@ const gemmMapping: Lesson = {
     "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
     "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
     "See how a loop-carried accumulator keeps its MFMA contract and current-wave provenance on every CFG edge.",
-    "Separate the compiler-proved canonical loop and total-output facts from the workload-specific GEMM recurrence obligation.",
+    "Separate compiler-verified canonical-loop and total-output staging facts from aggregate replay authority and the workload-specific GEMM recurrence obligation.",
     "Use KernelResult and ? for fallible view and ownership construction, then consume zero-filled typed fragment loads directly.",
     "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],
@@ -716,7 +716,7 @@ const flash: Lesson = {
     "Trace BF16 QK fragments through target-neutral matrix types and gfx942 MFMA.",
     "Use an additive mask and subgroup reductions for dynamic key tails.",
     "Identify the current value-width and numerical limits without turning them into compiler assumptions.",
-    "Separate the online rescaling recurrence from generic finite-loop, ownership, and total-output proofs.",
+    "Separate the online rescaling recurrence from generic finite-loop and ownership facts, inert total-output staging, and aggregate replay authority.",
   ],
   claims: [
     {

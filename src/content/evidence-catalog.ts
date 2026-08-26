@@ -1,5 +1,9 @@
 import { lessons } from "./curriculum";
 import { currentState } from "./current-state";
+import {
+  functionalRefinementPublication,
+  functionalRefinementPublicationSources,
+} from "./functional-refinement-publication";
 import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
 
 export interface GitEvidenceObject {
@@ -56,13 +60,63 @@ const semanticCorrectnessSources: GitEvidenceObject = {
   commit: semanticCorrectnessMilestone.compilerCommit!,
   tree: semanticCorrectnessMilestone.compilerTree!,
   sourcePaths: semanticCorrectnessMilestone.mechanisms
-    .filter((mechanism) => mechanism.status === "published-current")
+    .filter((mechanism) =>
+      mechanism.status === "published-current" ||
+      mechanism.status === "implemented-unpinned"
+    )
     .flatMap((mechanism) => [...mechanism.evidence]),
 };
 
+const semanticCorrectnessDigests: GitEvidenceSource[] = [
+  {
+    label: "generated multi-output aggregate Verus fixture",
+    commit: semanticCorrectnessMilestone.compilerCommit!,
+    sourcePath:
+      semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath!,
+    sha256:
+      semanticCorrectnessMilestone.perCompilationMultiOutputFixtureSha256!,
+  },
+  {
+    label: "multi-output formula-substitution negative Verus fixture",
+    commit: semanticCorrectnessMilestone.compilerCommit!,
+    sourcePath:
+      semanticCorrectnessMilestone
+        .perCompilationMultiOutputSubstitutionFixturePath!,
+    sha256:
+      semanticCorrectnessMilestone
+        .perCompilationMultiOutputSubstitutionFixtureSha256!,
+  },
+];
+
+const functionalRefinementSources: GitEvidenceObject = {
+  label: "functional-refinement publication manifest",
+  commit: functionalRefinementPublication.compilerCommit,
+  tree: functionalRefinementPublication.compilerTree,
+  sourcePaths: functionalRefinementPublicationSources.map(
+    (source) => source.sourcePath,
+  ),
+};
+
+const functionalRefinementDigests: GitEvidenceSource[] =
+  functionalRefinementPublicationSources.map((source) => ({
+    label: source.label,
+    commit: functionalRefinementPublication.compilerCommit,
+    sourcePath: source.sourcePath,
+    sha256: source.sha256,
+  }));
+
 export const evidenceCatalog = {
-  gitObjects: [...claims, currentSources, semanticCorrectnessSources],
-  sources: tabs,
+  gitObjects: [
+    ...claims,
+    currentSources,
+    semanticCorrectnessSources,
+    functionalRefinementSources,
+  ],
+  sources: [
+    ...tabs,
+    ...semanticCorrectnessDigests,
+    ...functionalRefinementDigests,
+  ],
   issues: currentState.issues.map((issue) => ({
     number: issue.number,
     state: issue.state,

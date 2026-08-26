@@ -8,7 +8,10 @@ import {
   type NarrativeId,
 } from "./narrative-policy";
 import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
-import { semanticMilestoneBoundary } from "./semantic-correctness-milestone";
+import {
+  semanticMilestoneBoundary,
+  semanticMilestoneLessonBoundary,
+} from "./semantic-correctness-milestone";
 
 export interface NarrativeRegistryEntry {
   sectionId: string;
@@ -16,12 +19,12 @@ export interface NarrativeRegistryEntry {
   blocks: LessonBlock[];
 }
 
-function milestoneCallout(text: string): LessonBlock {
+function milestoneCallout(text: string, fullBoundary = false): LessonBlock {
   return {
     type: "callout",
     tone: "boundary",
     title: "Semantic-correctness milestone",
-    text: `${semanticMilestoneBoundary} ${text}`,
+    text: `${fullBoundary ? semanticMilestoneBoundary : semanticMilestoneLessonBoundary} ${text}`,
   };
 }
 
@@ -630,7 +633,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Compare the admitted GPU effect to safe Rust",
-        "text": "The private join converts each correlated admitted store into a compiler-owned value-carrying ranked recipe operation and creates RequestEffectRefinement with the exact GPU and reference sites, view, indices, logical coordinates, domains, preconditions, and typed values. ExactEffectDomain proves only the modeled point effect; TotalView and output-specific hierarchy evidence are separate requirements for total coverage. The same compiler session derives and reconciles the semantic and strict parallel contracts, then one generated Verus checker replays every supported exact point formula and the separated-output aggregate. The production report binds that replay, each output receipt, and the compilation identity before KIR lowering."
+        "text": "The private join converts each correlated admitted store into a compiler-owned value-carrying ranked recipe operation and creates RequestEffectRefinement with the exact GPU and reference sites, view, indices, logical coordinates, domains, preconditions, and typed values. ExactEffectDomain, TotalView, hierarchy evidence, and the total-output report are staged structural facts, not refinement authority by themselves. The same compiler session derives and reconciles the semantic and strict parallel contracts, then one generated Verus checker independently replays every supported exact point formula and the separated-output aggregate. Only that aggregate report grants refinement authority; it binds the replay, staged inputs, and compilation identity before KIR lowering."
       },
       {
         "type": "callout",
@@ -642,7 +645,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "The authenticated boundary is deliberately narrow",
-        "text": "The generated Verus checker replays exact pointwise integer and compiler-side IEEE operator-DAG formulas without a generic relation premise. Canonical loops include an overflow-safe final latch, and separated point outputs retain one receipt each before one aggregate proof. Dynamic safe-slice reads fail closed without compiler-owned full-domain extent implication. Noncanonical SCC requests, typed tensor component/store claims, and ErrorBounded sites retain exact data but do not yet compose with aggregate authority. Compiler extraction/projection and pass soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, runtime, and hardware authority remain outside the claim."
+        "text": "The generated Verus checker replays exact pointwise integer and compiler-side IEEE operator-DAG formulas without a generic relation premise. Canonical loops include an overflow-safe final latch. Each separated point output retains one staged exact role binding, but only the independent aggregate formula and output-product replay grants refinement authority. Dynamic safe-slice reads fail closed without compiler-owned full-domain extent implication. Noncanonical SCC requests, typed tensor component/store claims, and ErrorBounded sites retain exact data but do not yet compose with aggregate authority. Compiler extraction/projection and pass soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, runtime, and hardware authority remain outside the claim."
       },
       {
         "type": "callout",
@@ -1085,7 +1088,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code plus the relevant compiler-owned numerical, call-summary, tensor-site, and multi-output derivation outcomes. The effect table records implemented code classes and their Rejected or Incomplete outcomes; direct PLIRON diagnostics carry stable codes, while source-join failures currently use precise rustc diagnostics without inventing a pass code. Other compiler boundaries reject additional invalid programs without inventing an eight-pass code. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code plus every currently assigned compiler-owned parallel-relation code through FE2O3-PARALLEL-031. The effect table records implemented code classes and their Rejected or Incomplete outcomes. Direct PLIRON diagnostics carry stable codes; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1147,18 +1150,40 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."],
           ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation is missing exact Proved MIR-bound evidence or carries a non-Proved status or wrong boundary."],
           ["FE2O3-SEMANTIC-004", "Rejected", "A functional-reference obligation or evidence record is duplicated, mismatched, malformed, wrong-property, or orphaned."],
-          ["FE2O3-PARALLEL-010", "Incomplete", "An ErrorBounded site is exact, but aggregate finite-error-formula theorem replay is unsupported. A receipt or test epsilon cannot replace that theorem."],
-          ["FE2O3-PARALLEL-013", "Incomplete", "Tensor layout and typed result-component/store binding passed, but aggregate tensor-component theorem replay is unsupported."],
+          ["FE2O3-PARALLEL-001", "Rejected", "The parallel relation does not bind the exact compiler-verified MIR/PLIRON semantic contract."],
+          ["FE2O3-PARALLEL-002", "Incomplete", "The logical-output relation count does not equal the live total-output ownership proof count."],
+          ["FE2O3-PARALLEL-003", "Rejected", "An output relation does not match its compiler-derived domain, view, values, or ownership contract."],
+          ["FE2O3-PARALLEL-004", "Incomplete", "The compiler cannot derive nonempty ownership for a required GPU hierarchy level."],
+          ["FE2O3-PARALLEL-005", "Incomplete", "No retained authenticated per-compilation proof has the required identity."],
+          ["FE2O3-PARALLEL-006", "Incomplete", "A schedule relation lacks the compiler-derived facts required by its declared relation kind."],
+          ["FE2O3-PARALLEL-007", "Rejected", "The order claimed for a fold relation is not justified by the live schedule."],
+          ["FE2O3-PARALLEL-008", "Incomplete", "A dynamic bounded recurrence does not match the finite-bound identity of the live canonical loop."],
+          ["FE2O3-PARALLEL-009", "Rejected", "A relation's numerical policy is invalid for its live typed values or schedule."],
+          ["FE2O3-PARALLEL-010", "Incomplete", "A finite-error policy lacks its live typed witness or retained authenticated proof. Passing this join would still leave aggregate ErrorBounded formula replay separate."],
+          ["FE2O3-PARALLEL-013", "Incomplete", "The number of exact tensor result-component/output receipt bindings does not cover all live tensor instruction sites. Passing this join would still leave aggregate tensor-component replay separate."],
+          ["FE2O3-PARALLEL-015", "Rejected", "A parallel relation count cannot be represented in the production report."],
+          ["FE2O3-PARALLEL-016", "Incomplete", "An output does not resolve to exactly one compiler-materialized ranked view identity."],
           ["FE2O3-PARALLEL-017", "Rejected", "The workload-neutral parallel contract constructed from compiler-owned live evidence fails its independent contract validation."],
           ["FE2O3-PARALLEL-018", "Rejected", "Two output bindings name the same ranked view; a product requires distinct outputs."],
           ["FE2O3-PARALLEL-019", "Incomplete", "Distinct output allocation origins or distinct nonzero noalias classes do not prove separation."],
-          ["FE2O3-PARALLEL-020", "Rejected", "An output-specific TotalView or hierarchy identity does not match its bound output."],
+          ["FE2O3-PARALLEL-020", "Incomplete", "An output lacks an exact output-specific TotalView ownership and complete hierarchy binding."],
           ["FE2O3-PARALLEL-021", "Rejected", "The ordered output product differs from the compiler-derived bindings, frames, receipts, or schedules."],
           ["FE2O3-PARALLEL-023", "Rejected", "A numerical refinement site does not match any logical output's actual and reference roots."],
           ["FE2O3-PARALLEL-024", "Rejected", "A numerical refinement site ambiguously matches more than one logical output."],
           ["FE2O3-PARALLEL-025", "Rejected", "One logical output has more than one numerical refinement site."],
-          ["FE2O3-PARALLEL-026", "Incomplete", "A numerical refinement domain or precondition is not the canonical typed constant true over the complete logical output."]
+          ["FE2O3-PARALLEL-026", "Rejected", "A numerical refinement domain or precondition is not the canonical typed constant true over the complete logical output."],
+          ["FE2O3-PARALLEL-027", "Rejected", "A tensor refinement site does not match any logical output view and actual/reference roots."],
+          ["FE2O3-PARALLEL-028", "Rejected", "A tensor refinement site ambiguously matches more than one logical output."],
+          ["FE2O3-PARALLEL-029", "Rejected", "One logical output has more than one tensor refinement receipt."],
+          ["FE2O3-PARALLEL-030", "Rejected", "A tensor refinement receipt names a tensor instruction site that is not live."],
+          ["FE2O3-PARALLEL-031", "Rejected", "One live tensor instruction site has more than one tensor refinement receipt."]
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Claim joins are not aggregate replay",
+        "text": "The compiler accepts at most 64 logical outputs and refinement sites, and each tensor receipt carries at most 64 typed component pairs. After these bounded joins, the per-compilation verifier still rejects ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles with UnsupportedFormulaReplayRole until their exact theorem replay exists. UnsupportedFormulaReplayRole is a later verifier error, not a FE2O3-PARALLEL pass code."
       },
       {
         "type": "table",
@@ -1261,12 +1286,12 @@ const narrativeRegistry = deepFreeze({
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
           "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for the immutable function; reachable typed CFG edges are part of sparse propagation, and no cache survives mutation or revalidation.",
           "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Effect refinement executes inside the final stage after hierarchy ownership. Every report returns Clean, Rejected, or Incomplete.",
-          "For each paired effect, the private compiler carries exact GPU and reference sites, memory indices, logical coordinates, domains, preconditions, typed formulas, and eligible ranked-read identities into the value-carrying recipe. Multiple separated point outputs retain one receipt each, then enter one aggregate compilation proof; the compiler does not invent noalias or coverage witnesses.",
+          "For each paired effect, the private compiler carries exact GPU and reference sites, memory indices, logical coordinates, domains, preconditions, typed formulas, and eligible ranked-read identities into the value-carrying recipe. Multiple separated point outputs retain one staged role binding each, then enter one aggregate compilation proof. A staged binding grants no authority by itself, and the compiler does not invent noalias or coverage witnesses.",
           "The normalized obligation binds the full validated ranked CFG, every operation and terminator, execution layout, real value-carrying access, view and allocation, ownership contract, exact reference site, formulas, and same-session MIR subjects. Only request-to-require normalization is excluded from the digest.",
           "When the exact fixed runtime closure is installed, the workload-neutral controller supervises pinned rust_verify, its retained internal verifier child, and Z3 as one bounded descendant tree. Executable mappings, inherited files, process topology, resources, timeout, and cleanup fail closed. Cached template/generated-fixture checks pass, but mi300x lacks the root-owned fixed /opt runtime, so no referenced production compilation has completed the aggregate gate.",
           "Production derives and reconciles the compiler-owned semantic contract, derives and independently validates the strict compiler-owned parallel contract, then runs one generated workload-neutral Verus checker. Exact pointwise integer and compiler-side IEEE operator-DAG claims replay the compiler-derived coordinate, domain, precondition, and value formulas directly, without a generic relation premise. Candidate declarations are not evidence, and unsupported replay roles fail closed before KIR lowering.",
           "The compiler imports one move-only Ed25519 V2 proof only after the exact MIR, live PLIRON, relation, hierarchy, numerical-policy, retained-effect, tool, execution, signer, and SafeReferenceMirToLivePliron identities match. Public receipt inspection exposes signature-and-policy verification, not compiler authority.",
-          "A non-clean finding carries a stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists.",
+          "A non-clean pass finding carries its assigned stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists. Source joins and later verifier replay failures remain precise without inventing pass codes.",
           "One move-only compiler-owned ranked-verification input retains the eight ordered live reports through checked lowering; no caller can reconstruct it from booleans or diagnostics. The historical inert V4 evidence wire format still serializes its original seven reports and explicitly does not claim the new hierarchy report.",
           "Protected production additionally admits a sealed V3 rustc-invocation descriptor against the live argv, cwd, complete environment, target, rustc image, backend image, and full compiler closure. Worker V3 inputs are preflighted before transaction consumption, and finalization binds the exact invocation, closure, transaction, link plan, measured worker response, raw HSACO, descriptor source, and finalized bytes.",
           "The production transaction stops before target IR, finalization, or artifact publication on every Rejected or Incomplete result."
@@ -1276,7 +1301,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. The aggregate Verus checker currently replays exact pointwise integer and compiler-side IEEE operator-DAG formulas. Canonical loops include an overflow-safe final latch, and separated point outputs use one receipt each plus one whole-compilation proof. Dynamic safe-slice reads fail closed without a compiler-owned full-domain extent implication. Noncanonical SCC requests, typed tensor result-component/store claims, and ErrorBounded sites retain exact claim data but cannot yet compose with aggregate authority. mi300x lacks the required root-owned /opt runtime and there is no fallback. No compiler extraction/projection, pass soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, hardware, or performance authority is claimed."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. The aggregate Verus checker currently replays exact pointwise integer and compiler-side IEEE operator-DAG formulas. Canonical loops include an overflow-safe final latch. Separated point outputs use staged role bindings that grant no authority until one whole-compilation checker independently replays the formulas and output product. Dynamic safe-slice reads fail closed without a compiler-owned full-domain extent implication. Noncanonical SCC requests, typed tensor result-component/store claims, and ErrorBounded sites retain exact claim data but cannot yet compose with aggregate authority. mi300x lacks the required root-owned /opt runtime and there is no fallback. No compiler extraction/projection, pass soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, hardware, or performance authority is claimed."
       },
       {
         "type": "callout",
@@ -2307,6 +2332,7 @@ const narrativeRegistry = deepFreeze({
     blocks: [
       milestoneCallout(
         "The current aggregate gate combines non-vacuous output coverage, per-effect value equivalence, closed typed scalar semantics, exact canonical-loop structure, finite collective value contracts, retained proof evidence, and the complete live PLIRON identity. It does not prove arbitrary reference extraction, unsupported loop forms, target arithmetic, LLVM-or-later refinement, or runtime admission.",
+        true,
       ),
       {
         type: "table",
@@ -2345,7 +2371,7 @@ const narrativeRegistry = deepFreeze({
     title: "From a safe write to a complete output",
     blocks: [
       milestoneCallout(
-        "Fill is the smallest total-view example: the logical output domain must map onto all required coordinates, each coordinate must have one owner and one final write, and no other observable global write may escape the model.",
+        "Fill is the smallest total-view example: the logical output domain must map onto all required coordinates, each coordinate must have one owner and one final write, and no other observable global write may escape the model. The ownership verifier records these structural facts, while the inert total-output staging report grants no refinement authority until aggregate replay.",
       ),
       {
         type: "paragraph",
@@ -2435,9 +2461,9 @@ const narrativeRegistry = deepFreeze({
         headers: ["Relation", "Current behavior", "Why it stops"],
         rows: [
           ["Exact point output", "Replays integer or compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formulas", "Target IEEE values and LLVM or target arithmetic are outside the theorem"],
-          ["Separated point outputs", "Keeps one receipt per output, then runs one aggregate compilation proof", "Aliasing, missing coverage, or reordered products fail closed"],
+          ["Separated point outputs", "Stages one role binding and one total-output frame per output, then independently replays one aggregate compilation proof", "The staging reports grant no authority alone; aliasing, missing coverage, or reordered products fail closed"],
           ["Canonical finite loop", "Checks the exact transition, variant, step bound, and final-latch increment", "A possible final increment overflow is rejected"],
-          ["Dynamic slice read", "Retains and reports the exact unsafe bound", "No compiler-owned full-domain extent implication exists yet"],
+          ["Dynamic slice read", "Retains the exact Rust bounds condition and matching ranked-load identity", "No compiler-owned fact yet implies that condition over the complete output domain"],
           ["Noncanonical loop", "Emits an exact SCC invariant/variant request", "Imported proof answers do not yet compose with aggregate authority"],
           ["Tensor/MFMA component", "Binds the typed result component to the exact store", "Aggregate tensor-component theorem replay is not implemented"],
           ["ErrorBounded", "Binds exact roots, formulas, finite bounds, graph, and MIR sites", "Aggregate finite-error-formula replay is not implemented"],
@@ -2663,8 +2689,8 @@ const reviewedNarrativeFingerprints = deepFreeze({
   ...narrativeFingerprints,
   "read-the-evidence/differentiator": "e1873a4af9a5be85a19c85076924f286aa92a189ba6d15c00f95289e8f90ee5b",
   "read-the-evidence/scalar-gemm-checkpoint": "a6e029ab11d92ee85bab9d2f169b2f607c7fac9491b2f89e56cee0c11cc01808",
-  "compiler-checks/catalog": "e89785a3ce56a3a22ab6e5624eef79b4bfa8293fd8afb5a9e1da59d7c62f739d",
-  "compiler-checks/production-path": "6d5bbd3a3cd7206dcf540cc97d3482b4e54fadc313551bad453a4125e6139b3a",
+  "compiler-checks/catalog": "ad69bbea3040af514a72817ce3fe3f04c607326396af7848904cc47f410b9264",
+  "compiler-checks/production-path": "54f41bcb0a7db46549272159de338efb90b21cc006e47bad99f503e89cb91b1a",
   "compiler-checks/v7-simulation": "898a468386559cbe68838e52818e018378e26d0211fd568a946c298507b3d251",
   "reductions-scans/scan": "60963f040ac2f5145bc906991ff12bbd2af10cdfc83bc74bce24f5b0c66ba4a8",
   "lds-barriers-atomics/atomics": "631bbb237c96f3dcc586e4a7c7a0d092a15f9e4e4466138bb57dda2ea25638a5",
@@ -2682,27 +2708,27 @@ const reviewedNarrativeFingerprints = deepFreeze({
   "moe-expert-compute/bounded-evidence": "f487bf7cb22e04e2a77c0591b65c9e104d552b0bc0e3282cb988456f51eead01",
   "what-verus-proves/proved": "2a78c253e95cbf6826428001cad64656d80dff375f62e471810ec1cbb0ae5876",
   "what-verus-proves/ecosystem": "75fb0827e574d4ee621bd93e00ac330f5f1903686447fddb000abfede72d1750",
-  "read-the-evidence/semantic-correctness-milestone": "20f0ef743f09fd360878064ba2ea891cc25f3ffca693edcb33b3e90aece3e9a5",
-  "gfx942-setup/semantic-gates": "9d242fc4fd20fa4058f3d8a0cbdaa8d4793d56ca26f96a6df4ebaa49ffe5b7ea",
-  "first-fill/total-output-coverage": "69be43738b9fb0b2777df5ac5a52a7b7128c1755466613bf57cb78feaf7b2f1a",
-  "typed-vecadd/typed-arithmetic-contract": "02e2b8eee19487c1b26e5d6f4403300191a7f342ad9a36b7f0ca263bc65e3eab",
-  "cpu-semantic-simulation/testing-is-not-proof": "6d6a26766a0ec476dfadfd162908b873d4cd5f6a2526285f38ab9d13b9d1fa60",
-  "verus-contracts/compositional-reference": "8908d9182f622b2d0ad0f8c13875df547994938cf71e220c7450264360443314",
-  "memory-race-proof/finality-and-frame": "b34b760fc027771c167f7b4aa907f8741e7db7ce477a26f6c0ed256079783b66",
-  "compiler-checks/complete-correctness-catalog": "e6a54af9f1d6b71d79ca6a43564b3c20c73a3aa76198f34d49c71c0f87f9de32",
-  "reductions-scans/contribution-domain": "dd28ae85986b556e5f48d1103119548647d091e19e967e738068dd8ee086c261",
-  "lds-barriers-atomics/final-observable-effect": "c6bc392986f668b420cef15a7211d56f156bf1b6a8a2351723d4aae3ce1d1c3f",
-  "gemm-tiling/composed-reference": "c79c5444518b977ce72963e35073576298dd90d4f0d9305fd82392fcd93fda93",
-  "gemm-proof-plan/total-correctness-boundary": "c95e9831d67861a7d11fc75bdcfdb7ea589b5016e6d75561a161a41244bc2aac",
-  "softmax-invariant/composed-reference": "c067b6fa49d91957233b384472a6e65fc9be6db58b0d50087996606585a6e46f",
-  "flash-attention/composed-reference": "3f2d4a2dd340a0e77ee89742277ffa06f7966681b10ce1a170392dbab97a0fa0",
-  "moe-routing/composed-reference": "467066b874d1a8ac6133205a9964f165b8c08f92f832cfa353c35d504d60fbe5",
-  "moe-expert-compute/composed-reference": "2a5bf4a753c69a878ff1e79a011330ebc8f085da39afcb191e6b5ea5102bb3bb",
-  "evidence-pipeline/total-correctness-receipt": "6810d5dd15406a5d924476f5afa1c01d53184093b02fcb6826b6cb9219d3928c",
-  "what-verus-proves/total-correctness-boundary": "24e90978a22ce4178803c240b0c63c117a49f993cbd4821d9b98a3116c6d413e",
-  "evidence-archive/non-retroactive-milestone": "be4c56e3b91ea147cbf59239f375df010b9b09106d57c5f5f70accdbcbc3c8db",
-  "exercise-ladder/semantic-correctness": "3555886bdd1a452ece43406c99d292913b571d936960b2502690c1afd1e254f4",
-  "contributing-kernel/semantic-contract-checklist": "fe70b40b3e05c084cbdcd0be814956d4985d71f61fa6ae3427908455b1864956",
+  "read-the-evidence/semantic-correctness-milestone": "b2ea03ec51050524d8f28073d48ef9d2889e1c4934da4d2506cc362aeef71874",
+  "gfx942-setup/semantic-gates": "3c921838549e496296716db603e2075e65b72f943fd2ada80b4e7a988e44bf59",
+  "first-fill/total-output-coverage": "bbfcd3efa0fba269c1690b2175fd399f52e9e57ecfcb9d6ee2c03d1034364df9",
+  "typed-vecadd/typed-arithmetic-contract": "ff8f3541b7c34d84b95cfc1619881c471fcdd72b668c07ae079700c632aae216",
+  "cpu-semantic-simulation/testing-is-not-proof": "1d32dcf5ba6f05a963f5cc8962f3e5d606e79a9aa76f3a00733d975a106381a0",
+  "verus-contracts/compositional-reference": "3d04a16f75fb24cbea01c532d693f429ff0bf120f4ad6e64e06dde448623a1ca",
+  "memory-race-proof/finality-and-frame": "3b37527ddebbb556e00247cd046585780570c45c6e088907b5d0029c76ef51f0",
+  "compiler-checks/complete-correctness-catalog": "c00f25775eff0f4b3b60a4ef61f078a76db10c5e725c6ad0c25949ebe38968a1",
+  "reductions-scans/contribution-domain": "6dc9a9c5903126385180a4f29105a4808c396caac86a7acfac8ce4fe12bf1412",
+  "lds-barriers-atomics/final-observable-effect": "0d6089efd424f0764142a2fb87c8ac4161c524972bb10d06bc56b9dd5cdcc7d3",
+  "gemm-tiling/composed-reference": "7b05526090bf8337cb46a5408633e94dc967af193f10dd44dec0d418f78ffa44",
+  "gemm-proof-plan/total-correctness-boundary": "857d2a7d520a25acc7acb3638b5eaf556da2d360a209d91d8e97681eeb96b34c",
+  "softmax-invariant/composed-reference": "dbb4d0416d5f5d5fc77c10eb16bd2c0e182d54349317d01c89fa6a07bd365d7f",
+  "flash-attention/composed-reference": "fe3c74b5c96200b1e6c9784929656c1ebb1f91fd5a7cee821e330f507815c1a0",
+  "moe-routing/composed-reference": "76de7584a9834dfc0a74ee446f71afd728c591dcc80392cf9fbdf7b74fd4ab09",
+  "moe-expert-compute/composed-reference": "cd197ede304e7ae94684b279e825d8a6c38bde4b090e17ad91fc9a8cba663519",
+  "evidence-pipeline/total-correctness-receipt": "349ecad0ceb0260ebcb006335abc26c40809dc5ff8b335c6975cf648fde49452",
+  "what-verus-proves/total-correctness-boundary": "5c49f70794701a73dcee248132e757776c881b4ead065bf396dd1c514615824b",
+  "evidence-archive/non-retroactive-milestone": "32d9ec57484f53171516f9c9d8073fe2968ac8919c755540b6b9eb716e8b742c",
+  "exercise-ladder/semantic-correctness": "1ae53b71253d18d91f6eebb9fead98202c8e06b2849d928fd56bb5e51362547b",
+  "contributing-kernel/semantic-contract-checklist": "3c835daaff3d5b2a0192ecb2ce6d67be2af739a0ae1d5510b91ed1026a1db33b",
 } satisfies Record<NarrativeId, string>);
 
 export function narrativeSection(narrativeId: NarrativeId): NarrativeLessonSection {

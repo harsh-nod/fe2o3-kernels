@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
+import { functionalRefinementPublication } from "../src/content/functional-refinement-publication";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import { functionalCorrectnessCatalog } from "../src/content/functional-correctness-catalog";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
@@ -71,6 +72,16 @@ describe("curriculum integrity", () => {
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
       "adce2c4e6c38a9e682cc64fd998e24ee1d161d15",
     );
+    expect(semanticCorrectnessMilestone).toMatchObject({
+      perCompilationMultiOutputFixturePath:
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
+      perCompilationMultiOutputFixtureSha256:
+        "2425d9c3640de0f8476ba61e751485e7b0d02b7984fd303a12e601fdaf2cc8bc",
+      perCompilationMultiOutputSubstitutionFixturePath:
+        "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs",
+      perCompilationMultiOutputSubstitutionFixtureSha256:
+        "b0406bca54d4f0b1bac434cc26d3ec80d9c117b48ecfbc78daa2a915807dbcd8",
+    });
     expect(
       semanticCorrectnessMilestone.mechanisms.map((mechanism) => [
         mechanism.id,
@@ -100,10 +111,14 @@ describe("curriculum integrity", () => {
     const semanticEvidence = evidenceCatalog.gitObjects.find(
       (object) => object.label === "MIR/PLIRON semantic-correctness milestone",
     );
-    const publishedPaths = semanticCorrectnessMilestone.mechanisms
-      .filter((mechanism) => mechanism.status === "published-current")
+    const eligiblePaths = semanticCorrectnessMilestone.mechanisms
+      .filter(
+        (mechanism) =>
+          mechanism.status === "published-current" ||
+          mechanism.status === "implemented-unpinned",
+      )
       .flatMap((mechanism) => mechanism.evidence);
-    expect(semanticEvidence?.sourcePaths).toEqual(publishedPaths);
+    expect(semanticEvidence?.sourcePaths).toEqual(eligiblePaths);
     expect(
       semanticCorrectnessMilestone.mechanisms.some(
         (mechanism) => mechanism.status === "implemented-unpinned",
@@ -130,6 +145,36 @@ describe("curriculum integrity", () => {
       expect(specification?.code, lessonId).toContain("WORKLOAD SPECIFICATION");
       expect(specification?.code, lessonId).toContain("arithmetic_is_defined");
     }
+  });
+
+  it("parses and joins the functional-refinement publication manifest", () => {
+    expect(functionalRefinementPublication).toMatchObject({
+      schema: "fe2o3-functional-refinement-tutorial-publication-v1",
+      status: "published-current",
+      compilerCommit: semanticCorrectnessMilestone.compilerCommit,
+      compilerTree: semanticCorrectnessMilestone.compilerTree,
+    });
+    expect(functionalRefinementPublication.referenceCompilerCommand).toContain(
+      "--features qualification-oracles-test-only",
+    );
+    expect(
+      functionalRefinementPublication.validationCommands.filter((command) =>
+        command.includes("--test reference_binding_v1"),
+      ),
+    ).toSatisfy((commands: readonly string[]) =>
+      commands.every((command) =>
+        command.includes("--features qualification-oracles-test-only"),
+      ),
+    );
+    const evidence = evidenceCatalog.gitObjects.find(
+      (object) => object.label === "functional-refinement publication manifest",
+    );
+    expect(evidence?.sourcePaths).toEqual([
+      functionalRefinementPublication.fixtureSourcePath,
+      functionalRefinementPublication.receiptFixturePath,
+      functionalRefinementPublication.runtimeControllerPath,
+      functionalRefinementPublication.effectDiagnosticFixturePath,
+    ]);
   });
 
   it("catalogs the functional-correctness boundary for every kernel lesson", () => {
@@ -817,8 +862,19 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-002",
       "FE2O3-SEMANTIC-003",
       "FE2O3-SEMANTIC-004",
+      "FE2O3-PARALLEL-001",
+      "FE2O3-PARALLEL-002",
+      "FE2O3-PARALLEL-003",
+      "FE2O3-PARALLEL-004",
+      "FE2O3-PARALLEL-005",
+      "FE2O3-PARALLEL-006",
+      "FE2O3-PARALLEL-007",
+      "FE2O3-PARALLEL-008",
+      "FE2O3-PARALLEL-009",
       "FE2O3-PARALLEL-010",
       "FE2O3-PARALLEL-013",
+      "FE2O3-PARALLEL-015",
+      "FE2O3-PARALLEL-016",
       "FE2O3-PARALLEL-017",
       "FE2O3-PARALLEL-018",
       "FE2O3-PARALLEL-019",
@@ -828,9 +884,14 @@ describe("curriculum integrity", () => {
       "FE2O3-PARALLEL-024",
       "FE2O3-PARALLEL-025",
       "FE2O3-PARALLEL-026",
+      "FE2O3-PARALLEL-027",
+      "FE2O3-PARALLEL-028",
+      "FE2O3-PARALLEL-029",
+      "FE2O3-PARALLEL-030",
+      "FE2O3-PARALLEL-031",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(22);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(18);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(32);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(24);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
     const effectDiagnosticTable = semanticFailures.blocks.find(
@@ -937,6 +998,7 @@ describe("curriculum integrity", () => {
     const boundKernel = lesson?.tabs.find((tab) => tab.kind === "comparison");
     const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
     const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
+    const host = lesson?.tabs.find((tab) => tab.kind === "host");
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
 
     expect(bounds).toMatchObject({
@@ -965,16 +1027,29 @@ describe("curriculum integrity", () => {
     expect(proof?.code).toContain("proof.require_effect_refinement");
     expect(proof?.code).toContain("SafeReferenceMirToLivePliron");
     expect(proof?.code).toContain(
-      "requested_property = per_compilation_conditional_composition",
+      "requested_property = per_compilation_exact_formula_replay",
     );
-    expect(proof?.code).toContain("derive/reconcile the exact semantic");
-    expect(proof?.code).toContain("derive/validate the strict");
-    expect(proof?.code).toContain("before KIR lowering");
+    expect(proof?.code).toContain("output_product = [output0, output1]");
+    expect(proof?.code).toContain("exact_formula(output0)");
+    expect(proof?.code).toContain("exact_formula(output1)");
+    expect(proof?.code).toContain("UnsupportedFormulaReplayRole");
+    expect(proof?.code).toContain(
+      "maximum_logical_outputs_and_refinement_sites = 64",
+    );
+    expect(proof?.code).toContain(
+      "maximum_tensor_component_pairs_per_receipt = 64",
+    );
     expect(proof?.code).toContain("fixture_proof_admitted = false");
     expect(proof?.code).toContain("proved_total_output_coverage = false");
     expect(proof?.code).toContain("proved_source_to_isa = false");
     expect(result?.code).toContain("RHS mismatch");
     expect(result?.code).toContain("reference block 0, statement 0");
+    expect(result?.code).toContain("FE2O3-PARALLEL-027");
+    expect(result?.code).toContain("FE2O3-PARALLEL-031");
+    expect(result?.code).toContain("UnsupportedFormulaReplayRole");
+    expect(host?.code).toContain(
+      "--features qualification-oracles-test-only --test reference_binding_v1",
+    );
 
     const narrative = JSON.stringify([
       narrativeEntry("compiler-checks/catalog"),
@@ -992,7 +1067,7 @@ describe("curriculum integrity", () => {
       "strict compiler-owned parallel contract",
       "generated workload-neutral Verus checker",
       "without a generic relation premise",
-      "one receipt each",
+      "one staged role binding each",
       "overflow-safe final latch",
       "full-domain extent implication",
       "exact invariant/variant proof requests",

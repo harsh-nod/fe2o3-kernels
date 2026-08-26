@@ -28,6 +28,10 @@ interface SemanticCorrectnessMilestoneManifest {
   functionalReceiptVersion: string | null;
   perCompilationTemplateSha256: string | null;
   perCompilationGeneratedFixtureSha256: string | null;
+  perCompilationMultiOutputFixturePath: string | null;
+  perCompilationMultiOutputFixtureSha256: string | null;
+  perCompilationMultiOutputSubstitutionFixturePath: string | null;
+  perCompilationMultiOutputSubstitutionFixtureSha256: string | null;
   verusVersion: string | null;
   verusExecutableSha256: string | null;
   mechanisms: SemanticCorrectnessMechanism[];
@@ -39,11 +43,19 @@ const milestone =
   milestoneData as unknown as SemanticCorrectnessMilestoneManifest;
 
 const exactObject = /^[0-9a-f]{40}$/u;
+const exactSha256 = /^[0-9a-f]{64}$/u;
+
+function isRepositoryPath(path: unknown): path is string {
+  return typeof path === "string" &&
+    path.trim().length > 0 &&
+    !path.startsWith("/") &&
+    !path.split("/").includes("..");
+}
 
 function validateSemanticCorrectnessMilestone(): void {
   if (
     milestone.schema !==
-      "fe2o3-semantic-correctness-tutorial-milestone-v4" ||
+      "fe2o3-semantic-correctness-tutorial-milestone-v5" ||
     (milestone.status !== "integration-pending" &&
       milestone.status !== "partial-current" &&
       milestone.status !== "published-current") ||
@@ -98,8 +110,19 @@ function validateSemanticCorrectnessMilestone(): void {
     typeof milestone.perCompilationTemplateSha256 === "string" &&
     /^[0-9a-f]{64}$/u.test(milestone.perCompilationTemplateSha256) &&
     typeof milestone.perCompilationGeneratedFixtureSha256 === "string" &&
-    /^[0-9a-f]{64}$/u.test(
+    exactSha256.test(
       milestone.perCompilationGeneratedFixtureSha256,
+    ) &&
+    isRepositoryPath(milestone.perCompilationMultiOutputFixturePath) &&
+    typeof milestone.perCompilationMultiOutputFixtureSha256 === "string" &&
+    exactSha256.test(milestone.perCompilationMultiOutputFixtureSha256) &&
+    isRepositoryPath(
+      milestone.perCompilationMultiOutputSubstitutionFixturePath,
+    ) &&
+    typeof milestone.perCompilationMultiOutputSubstitutionFixtureSha256 ===
+      "string" &&
+    exactSha256.test(
+      milestone.perCompilationMultiOutputSubstitutionFixtureSha256,
     ) &&
     typeof milestone.verusVersion === "string" &&
     milestone.verusVersion.length > 0 &&
@@ -117,7 +140,12 @@ validateSemanticCorrectnessMilestone();
 
 export const semanticCorrectnessMilestone = deepFreeze(milestone);
 
+export const semanticMilestoneLessonBoundary =
+  semanticCorrectnessMilestone.status === "integration-pending"
+    ? `Milestone status: integration pending. This lesson describes an unpinned compiler capability and grants no proof or execution authority.`
+    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}. Read the capability below together with its explicit fail-closed boundary.`;
+
 export const semanticMilestoneBoundary =
   semanticCorrectnessMilestone.status === "integration-pending"
     ? `Milestone status: integration pending. The published compiler remains ${semanticCorrectnessMilestone.baselineCompilerCommit}; the contracts below are explanatory and grant no compiler, proof, artifact, launch, or hardware authority.`
-    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}. This pin predates the completeness integration described in this lesson and must be refreshed before publication. The integration replays exact pointwise integer and compiler-side IEEE operator-DAG formulas without a generic relation premise, proves canonical loop termination with an overflow-safe final latch, and gives each separated point output one receipt before one whole-compilation aggregate proof. Dynamic safe-slice reads remain fail closed until compiler-owned extent facts imply the retained bound over the complete output domain. Noncanonical SCCs receive exact invariant/variant requests, but imported answers cannot grant aggregate authority. Tensor/MFMA components bind exact result roots and stores at the claim boundary, while aggregate tensor-component replay remains unsupported. ErrorBounded aggregate formula replay is also unsupported. The template ${semanticCorrectnessMilestone.perCompilationTemplateSha256} and generated fixture ${semanticCorrectnessMilestone.perCompilationGeneratedFixtureSha256} still identify the previous publication pin. mi300x lacks the required root-owned /opt runtime; no referenced production compile has completed the aggregate gate and there is no fallback. Compiler extraction/projection and pass soundness, target IEEE values, LLVM-or-later refinement, target instruction arithmetic, artifacts, launch, hardware, performance, and universal correctness remain outside the claim.`;
+    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}. Exact pointwise integer and compiler-side IEEE operator-DAG formulas replay without a generic relation premise. Each of at most 64 separated point outputs has one staged role binding; those bindings grant no authority until the sole authoritative aggregate checker independently replays every formula and the output product. Dynamic safe-slice reads retain their exact Rust bound but remain fail closed until compiler-owned extent facts imply it over the complete output domain. Noncanonical SCCs retain exact invariant/variant requests without aggregate authority. Tensor/MFMA bindings cover at most 64 sites and 64 component pairs per receipt, while aggregate tensor-component replay remains unsupported. ErrorBounded aggregate formula replay is also unsupported. Positive multi-output fixture ${semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath} (${semanticCorrectnessMilestone.perCompilationMultiOutputFixtureSha256}) and substitution fixture ${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixturePath} (${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixtureSha256}) bind the generator boundary. mi300x lacks the required root-owned /opt runtime; no referenced production compile has completed the aggregate gate and there is no fallback. Compiler extraction/projection and pass soundness, target IEEE values, LLVM-or-later refinement, target instruction arithmetic, artifacts, launch, hardware, performance, and universal correctness remain outside the claim.`;

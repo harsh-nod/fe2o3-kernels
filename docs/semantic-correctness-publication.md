@@ -36,11 +36,20 @@ admitted subset.
    generates and runs one workload-neutral Verus checker before KIR lowering.
    Exact pointwise integer and compiler-side IEEE operator-DAG congruence replay
    the compiler-derived coordinate, domain, precondition, and value formulas.
-   They do not assume a generic relation premise. The report binds the exact
-   instantiation, tool run, and retained receipts to the compilation.
+   They do not assume a generic relation premise. Per-output receipts are
+   staged exact role bindings and grant no authority alone. The aggregate
+   report binds those inputs, the exact replay, and the tool run to one
+   compilation; it is the sole refinement authority in this path.
+   `ProductionTotalOutputRefinementReportV2` is likewise an inert staging
+   report: it carries compiler-verified ownership and frame facts into the
+   checker but does not prove total output refinement on its own.
+   Every workload enters this same unified, unversioned production pipeline;
+   no retired application-specific route supplies proof authority.
 7. Keep this site pinned to the final integrated compiler commit and tree.
-   Publish the stable `FE2O3-PARALLEL` diagnostics through
-   `FE2O3-PARALLEL-026` without treating source declarations as evidence.
+   Publish every assigned stable `FE2O3-PARALLEL` diagnostic through
+   `FE2O3-PARALLEL-031` without treating source declarations as evidence.
+   Codes `011`, `012`, `014`, and `022` are unassigned; later
+   `UnsupportedFormulaReplayRole` failures do not invent a pass code.
 8. A safe CPU `input[index]` read retains its exact bounds condition and joins
    only to a ranked GPU load with the same view, index, scalar, allocation
    origin, and stride. Dynamic reads still fail closed until a compiler-owned
@@ -52,16 +61,23 @@ admitted subset.
    exact SCC request containing entries, backedges, exits, guards, transitions,
    and carried values. Imported invariant/variant answers do not yet compose
    with the aggregate theorem and therefore cannot grant authority.
-10. Multiple separated point outputs use one compiler-derived receipt per
-    output and one aggregate compilation proof. Distinct allocation origins
+10. Multiple separated point outputs use one compiler-derived staged role
+    binding per output and one aggregate compilation proof. The staged
+    bindings grant no authority until the aggregate checker independently
+    replays them. Distinct allocation origins
     and nonzero noalias classes prove separation; every output retains its own
     TotalView, hierarchy identity, frame, and schedule. Duplicate, overlapping,
     coverage-mismatched, or reordered products fail closed.
+    The positive generated fixture and its exact value-substitution negative
+    are pinned by path and SHA-256 in the milestone manifest. The aggregate
+    gate accepts at most 64 logical outputs and refinement sites.
 11. Cooperative-tensor checks validate target-owned fragment layout, lane
     coordinates, convergence, tail policy, staging/swizzle, and publication.
     Typed tensor result components also bind the exact scalar policy and output
-    store at the claim boundary. Aggregate tensor-component theorem replay is
-    not implemented, so these claims remain fail closed.
+    store at the claim boundary. A compilation accepts at most 64 tensor
+    refinement sites, and one receipt carries at most 64 component pairs.
+    Aggregate tensor-component theorem replay is not implemented, so these
+    claims remain fail closed.
 12. ErrorBounded sites bind exact roots, formulas, finite bounds, graph, and MIR
     identities, but aggregate finite-error-formula replay is not implemented.
     Test epsilons, reassociation assumptions, and receipts cannot substitute for
@@ -95,8 +111,9 @@ oracles, source models, and GPU comparisons do not substitute for the exact
 per-compilation reference-MIR to live-PLIRON receipt.
 The root-owned retained runtime is not installed on mi300x, so no referenced
 production compilation has completed the aggregate gate there. Cached Verus
-template/generated-fixture checks pass; they demonstrate the conditional
-lemmas and generator, not a completed lesson-kernel receipt.
+template and generated-fixture checks replay exact supported formulas and the
+separated-output aggregate; they test the generator, not a completed
+lesson-kernel receipt.
 
 The compiler contract vocabulary remains workload-neutral. Safe Rust names the
 sequential behavior; generic pointwise/permutation/fold/recurrence and

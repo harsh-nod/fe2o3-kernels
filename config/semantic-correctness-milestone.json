@@ -1,5 +1,5 @@
 {
-  "schema": "fe2o3-semantic-correctness-tutorial-milestone-v4",
+  "schema": "fe2o3-semantic-correctness-tutorial-milestone-v5",
   "status": "partial-current",
   "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
@@ -9,13 +9,17 @@
   "functionalReceiptVersion": "ImportedFunctionalRefinementProofV2 (SafeReferenceMirToLivePliron)",
   "perCompilationTemplateSha256": "21615dee28aefff9a4792851287dca4ca2cc16838d0d528af195c3e614b45bc2",
   "perCompilationGeneratedFixtureSha256": "45fd007ba323c29cabbe337f8ab7b1994aef41e513ec81e5849c6a6bef5188c2",
+  "perCompilationMultiOutputFixturePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
+  "perCompilationMultiOutputFixtureSha256": "2425d9c3640de0f8476ba61e751485e7b0d02b7984fd303a12e601fdaf2cc8bc",
+  "perCompilationMultiOutputSubstitutionFixturePath": "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs",
+  "perCompilationMultiOutputSubstitutionFixtureSha256": "b0406bca54d4f0b1bac434cc26d3ec80d9c117b48ecfbc78daa2a915807dbcd8",
   "verusVersion": "0.2026.08.02.b677dd5",
   "verusExecutableSha256": "ad2669f579d898ede53f2bf84e80a1daf4e3578739b0f5807ef209a0c9f382dd",
   "mechanisms": [
     {
       "id": "finite-total-view",
       "status": "published-current",
-      "detail": "finite total-view coverage, uniqueness, surjectivity, finality, normal completion, allocation separation, and unmodeled-observable-write rejection",
+      "detail": "finite total-view coverage, uniqueness, surjectivity, finality, normal completion, allocation separation, and unmodeled-observable-write rejection are compiler-verified structural facts. The total-output refinement report stages those facts inertly and grants no refinement authority before aggregate Verus replay",
       "evidence": [
         "crates/fe2o3-kernel-analysis/src/pliron_hierarchical_ownership.rs",
         "crates/fe2o3-kernel-analysis/tests/pliron_hierarchical_ownership.rs"
@@ -75,7 +79,9 @@
         "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_v1.rs",
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
+        "crates/fe2o3-pliron/src/production/noncanonical_loop_proof_v1.rs",
         "crates/fe2o3-kernel-analysis/src/pliron_invocation_trace.rs",
+        "crates/fe2o3-pliron/tests/noncanonical_loop_proof_v1.rs",
         "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
         "crates/fe2o3-pliron/tests/production_ranked_pipeline.rs",
         "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs"
@@ -111,29 +117,45 @@
         "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_valid_direct.pliron",
         "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_valid_lds_xor4.pliron",
         "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_divergent.pliron",
-        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_wrong_role.pliron"
+        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_wrong_role.pliron",
+        "crates/dialect-kernel/src/semantic_typed_contract.rs",
+        "crates/dialect-proof/src/lib.rs",
+        "crates/dialect-proof/tests/hostile.rs",
+        "crates/fe2o3-pliron/src/production/ranked.rs",
+        "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
+        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
+        "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs"
       ]
     },
     {
       "id": "multiple-output-refinement",
       "status": "implemented-unpinned",
-      "detail": "multiple separated point outputs retain one compiler-owned receipt per output and compose in one aggregate compilation proof when allocation origins, distinct nonzero noalias classes, TotalView, hierarchy, frames, and schedules reconcile. Duplicate, overlapping, mismatched, or reordered products fail closed",
+      "detail": "multiple separated point outputs retain one compiler-owned staged role binding per output. A staged binding grants no authority by itself; the aggregate checker independently replays each exact formula and the separated product when allocation origins, distinct nonzero noalias classes, TotalView, hierarchy, frames, and schedules reconcile. Duplicate, overlapping, mismatched, or reordered products fail closed",
       "evidence": [
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
         "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
         "crates/fe2o3-kernel-analysis/tests/lit/ownership_total_multi_output_disjoint.pliron",
         "crates/fe2o3-kernel-analysis/tests/lit/ownership_total_multi_output_overlap.pliron",
-        "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs"
+        "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs",
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
+        "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs",
+        "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
+        "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
+        "scripts/test-mir-pliron-per-compilation-verus.sh"
       ]
     },
     {
       "id": "aggregate-mir-refinement-gate",
       "status": "implemented-unpinned",
-      "detail": "the generated aggregate theorem replays exact pointwise integer and compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formulas without a generic relation premise. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until their exact theorem replay is implemented. No compiler, LLVM, target, artifact, launch, or hardware authority is granted",
+      "detail": "the generated aggregate theorem is the sole refinement authority. It independently replays exact pointwise integer and compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formulas plus the staged total-output product without a generic relation premise. The inert total-output and per-output staging reports grant no authority by themselves. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until their exact theorem replay is implemented. No compiler, LLVM, target, artifact, launch, or hardware authority is granted",
       "evidence": [
         "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
         "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
-        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs"
+        "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
+        "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs",
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
+        "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs"
       ]
     },
     {
@@ -144,19 +166,23 @@
         "crates/fe2o3-functional-proof/src/mir_pliron_semantic_contract_v1.rs",
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_v1.rs",
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
+        "crates/fe2o3-pliron/src/production/noncanonical_loop_proof_v1.rs",
+        "crates/fe2o3-pliron/tests/noncanonical_loop_proof_v1.rs",
         "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs"
       ]
     },
     {
       "id": "per-compilation-verus-composition",
       "status": "implemented-unpinned",
-      "detail": "before KIR lowering, one generated Verus checker replays each supported exact pointwise formula and the whole separated-output aggregate. The report binds its exact instantiation, per-output receipts, tool execution, MIR, live PLIRON, hierarchy, and SafeReferenceMirToLivePliron identity. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
+      "detail": "before KIR lowering, one generated Verus checker is the sole refinement authority: it independently replays each supported exact pointwise formula and the whole separated-output aggregate. The report binds its exact instantiation, staged per-output role bindings, tool execution, MIR, live PLIRON, hierarchy, and SafeReferenceMirToLivePliron identity. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
       "evidence": [
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
         "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs",
         "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
         "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
+        "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs",
         "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
         "crates/rustc-codegen-fe2o3/src/production_mir_pliron_verus_join_v1.rs",
         "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
@@ -181,7 +207,7 @@
     "pin an exact compiler commit and tree on both public main refs",
     "name the exact mandatory pre-lowering report and functional receipt versions",
     "retain the exact integrated compiler commit and tree after publication to both public main refs",
-    "publish FE2O3-PARALLEL-001 through FE2O3-PARALLEL-026 as fail-closed workload-neutral diagnostics without treating candidate declarations as evidence",
+    "publish every assigned FE2O3-PARALLEL diagnostic through FE2O3-PARALLEL-031 as a fail-closed workload-neutral diagnostic without treating candidate declarations as evidence or inventing codes for later verifier errors",
     "validate every published mechanism path against the exact integrated compiler commit and tree",
     "replace or retain every explanatory milestone specification according to its per-capability status and exact compiler-owned evidence",
     "run positive, negative, mutation, publication-gate, and browser validation",

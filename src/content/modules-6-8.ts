@@ -78,7 +78,7 @@ const moeRouting: Lesson = {
         "a91d913d7fb7a91e0a24008ad4f1a15663225eb457ac0b0e3227f724a147785c",
       explanatory: false,
       notice:
-        "This safe sequential oracle defines deterministic top-2 tie breaking, capacity, compact slots, inverse permutation, and sentinels. The compiler supports exact point formulas, overflow-safe canonical loops, and multiple separated point outputs with one receipt each plus one aggregate proof. Dynamic slice extent implication, this returned composite structure, helper sorting, array mutation, comparison policy, and the retained runtime remain Incomplete. ErrorBounded relations do not prove control-flow ordering.",
+        "This safe sequential oracle defines deterministic top-2 tie breaking, capacity, compact slots, inverse permutation, and sentinels. The compiler supports exact point formulas, overflow-safe canonical loops, and multiple separated point outputs with staged role bindings that grant authority only after independent aggregate replay. Dynamic slice extent implication, this returned composite structure, helper sorting, array mutation, comparison policy, and the retained runtime remain Incomplete. ErrorBounded relations do not prove control-flow ordering.",
     },
     {
       language: "rust",

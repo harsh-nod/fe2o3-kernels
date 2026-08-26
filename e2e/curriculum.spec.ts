@@ -430,8 +430,12 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-OWN-006", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-010", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-013", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-023", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-026", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-027", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-031", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-003", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-001", exact: true })).toBeVisible();

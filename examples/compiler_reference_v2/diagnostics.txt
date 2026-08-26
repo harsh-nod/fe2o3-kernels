@@ -17,14 +17,26 @@ reference block 0, statement 0 and GPU block 2, operation 0
 # - non-unit, eventful, noncanonical, or unproved loop termination
 
 # Numerical sites are bound to exactly one complete logical output
+error[FE2O3-PARALLEL-010]: finite error policy for relation 0 lacks a live typed witness or retained authenticated proof
 error[FE2O3-PARALLEL-023]: numerical refinement site 0 does not match any logical output actual/reference roots
 error[FE2O3-PARALLEL-024]: numerical refinement site 0 ambiguously matches 2 logical outputs
 error[FE2O3-PARALLEL-025]: logical output 0 has more than one numerical refinement site
 error[FE2O3-PARALLEL-026]: numerical refinement for logical output 0 is not total:
 domain must be the canonical typed constant true
 
-# These are independent of FE2O3-PARALLEL-010, which rejects missing
-# claim-specific ErrorBounded authority.
+# Tensor receipts must bind every live tensor instruction to exactly one
+# logical output and one bounded component map.
+error[FE2O3-PARALLEL-013]: cooperative tensor functional refinement is incomplete: 1 live tensor site(s), but 0 exact result-component/output receipt binding(s)
+error[FE2O3-PARALLEL-027]: tensor refinement site 0 does not match any logical output view and actual/reference roots
+error[FE2O3-PARALLEL-028]: tensor refinement site 0 ambiguously matches 2 logical outputs
+error[FE2O3-PARALLEL-029]: logical output 0 has more than one tensor refinement receipt
+error[FE2O3-PARALLEL-030]: tensor refinement names non-live tensor instruction site ^bb2:0
+error[FE2O3-PARALLEL-031]: tensor instruction site ^bb2:0 has more than one tensor refinement receipt
+
+# Passing these claim-site joins is not aggregate theorem authority. The later
+# per-compilation verifier stops unsupported ErrorBounded, tensor-component,
+# fold, recurrence, permutation, and noncanonical-loop roles with
+# UnsupportedFormulaReplayRole. That error is not a FE2O3-PARALLEL pass code.
 # - unproved output separation, ownership collision, or duplicate write site
 
 # Independent static bounds fixture
