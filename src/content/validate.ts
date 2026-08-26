@@ -361,11 +361,11 @@ function validateLesson(
 
   for (const [index, claim] of lesson.claims.entries()) {
     const claimPath = `${path}.claims[${index}]`;
-    if (claim.kind === "design-only") {
+    if (claim.kind === "design-only" || claim.kind === "source-example") {
       if (claim.reference) {
         issues.push({
           path: claimPath,
-          message: "design-only claims must not cite execution evidence",
+          message: `${claim.kind} claims must not cite execution evidence`,
         });
       }
       continue;

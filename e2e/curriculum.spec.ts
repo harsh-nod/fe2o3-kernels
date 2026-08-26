@@ -741,12 +741,67 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
   await expect(expertRow).toContainText("freshness and replay authority");
 });
 
+test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
+  page,
+}) => {
+  await page.goto("./#/lesson/gfx950-fp4-attention");
+  await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+    timeout: 120_000,
+  });
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "gfx950 FP4 flash attention",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Source example", { exact: true }).first(),
+  ).toBeVisible();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "gfx950_fp4_flash_attention",
+  );
+
+  await page.getByRole("tab", { name: "ISA checks" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("ds_read_b64_tr_b4");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "v_mfma_f32_16x16x128_f8f6f4",
+  );
+
+  await page.getByRole("tab", { name: "Evidence record" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Runtime device: pending",
+  );
+
+  await page.goto("./#/lesson/gfx950-fp8-attention");
+  await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+    timeout: 120_000,
+  });
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "gfx950 FP8 flash attention",
+    }),
+  ).toBeVisible();
+  await page.getByRole("tab", { name: "ISA checks" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("ds_read_b64_tr_b8");
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth >
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(false);
+});
+
 test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {
   await page.goto("./#/lesson/read-the-evidence");
+  await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+    timeout: 120_000,
+  });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(21);
+  await expect(routeLinks).toHaveCount(25);
   const routes = await routeLinks.evaluateAll((links) =>
       links.map((link) => ({
         href: (link as HTMLAnchorElement).href,

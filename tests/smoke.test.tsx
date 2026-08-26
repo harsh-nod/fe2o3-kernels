@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/App";
+import "../src/components/LessonPage";
 
 function renderApp(path = "/lesson/read-the-evidence") {
   return render(
@@ -73,6 +74,37 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
   });
+
+  it("renders the gfx950 FP4 attention source and pending evidence boundary", async () => {
+    const user = userEvent.setup();
+    renderApp("/lesson/gfx950-fp4-attention");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "gfx950 FP4 flash attention",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "gfx950_fp4_flash_attention",
+    );
+
+    await user.click(screen.getByRole("tab", { name: "ISA checks" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "ds_read_b64_tr_b4",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "v_mfma_f32_16x16x128_f8f6f4",
+    );
+
+    await user.click(screen.getByRole("tab", { name: "Evidence record" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Runtime device: pending",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "current host exposes gfx1036",
+    );
+  }, 30_000);
 
   it("renders real row-softmax source without upgrading its evidence", async () => {
     const user = userEvent.setup();

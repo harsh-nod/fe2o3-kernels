@@ -147,6 +147,19 @@ describe("search index", () => {
     expect(results.some((result) => result.kind === "glossary")).toBe(true);
     expect(results.some((result) => result.lessonId === "first-fill")).toBe(true);
   });
+
+  it("indexes gfx950 MFMA and format-specific transpose lessons", () => {
+    const fp4 = searchCatalog("ds_read_b64_tr_b4", lessons, glossary);
+    expect(fp4.some((result) => result.lessonId === "gfx950-fp4-attention")).toBe(
+      true,
+    );
+
+    const fp8 = searchCatalog("gfx950 FP8 GEMM", lessons, glossary);
+    expect(fp8[0]).toMatchObject({
+      kind: "lesson",
+      lessonId: "gfx950-fp8-gemm",
+    });
+  });
 });
   it("indexes diagnostics and deep-links to the compiler-check catalog", () => {
     for (const query of [

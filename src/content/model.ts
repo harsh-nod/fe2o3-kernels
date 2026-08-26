@@ -12,6 +12,7 @@ export const FE2O3_PIN = {
 
 export type EvidenceKind =
   | "runnable-now"
+  | "source-example"
   | "source-tested"
   | "source-model-verified"
   | "compiler-checked"
@@ -248,6 +249,11 @@ export const evidenceLabels: Record<
   "runnable-now": {
     short: "Runnable now",
     description: "An exact current fe2o3 path builds and executes this kernel.",
+  },
+  "source-example": {
+    short: "Source example",
+    description:
+      "Exact tutorial source and bounded build/inspection commands are published; compiler and GPU results remain separate evidence.",
   },
   "source-tested": {
     short: "Source tested",

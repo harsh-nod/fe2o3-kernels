@@ -11,6 +11,7 @@ import { evidenceLabels, type EvidenceKind } from "../content/model";
 
 const icons = {
   "runnable-now": Play,
+  "source-example": FileCode2,
   "source-tested": FileCode2,
   "source-model-verified": BookOpenCheck,
   "compiler-checked": ShieldCheck,

@@ -2693,6 +2693,193 @@ const narrativeRegistry = deepFreeze({
         ],
       },
     ],
+  },
+  "gfx950-fp4-gemm/prerequisites": {
+    sectionId: "gfx950-prerequisites",
+    title: "Qualify the gfx950 toolchain before reading results",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Check", "Command", "Required observation"],
+        rows: [
+          ["Device", "rocminfo | grep -i 'Name:.*gfx950'", "At least one gfx950 agent for an execution claim."],
+          ["Compiler", "/opt/rocm/llvm/bin/clang++ --version", "A ROCm LLVM build whose AMDGPU backend accepts --offload-arch=gfx950."],
+          ["Disassembler", "/opt/rocm/llvm/bin/llvm-objdump --version", "AMDGPU is a registered target; use the same ROCm toolchain that produced the object."],
+          ["fe2o3", "git rev-parse HEAD && git status --short", "Record the exact source commit and every local modification before attaching evidence."],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        title: "Hardware execution is pending",
+        text: "The current build host reports gfx1036, not gfx950. Cross-compilation and ISA inspection can validate object shape, but they do not establish an MI350 or MI355X execution result. Only attach GPU-observed evidence after rocminfo names gfx950 and the exact artifact is dispatched there.",
+      },
+      milestoneCallout(
+        "These low-precision examples add a target-specific source and inspection path. They do not inherit the existing gfx942 semantic-correctness, artifact, runtime, or hardware authority.",
+      ),
+    ],
+  },
+  "gfx950-fp4-gemm/tile-accumulator": {
+    sectionId: "fp4-gemm-tile-accumulator",
+    title: "Map packed FP4 into one wave64 accumulator tile",
+    blocks: [
+      {
+        type: "paragraph",
+        text: "One wave computes a 16 x 16 output tile with one fixed K=128 phase because v_mfma_f32_16x16x128_f8f6f4 consumes that logical reduction depth. Eight E2M1 values occupy each 32-bit packed word. The current builtin call encodes identity scale operands as constants; it has no runtime E8M0 scale arrays.",
+      },
+      {
+        type: "table",
+        headers: ["Object", "Logical shape", "Lane-local responsibility"],
+        rows: [
+          ["A fragment", "16 x 128 FP4 E2M1", "Packed source tuple selected as FP4 for matrix A."],
+          ["B fragment", "128 x 16 FP4 E2M1", "Packed source tuple selected as FP4 for matrix B."],
+          ["Accumulator", "16 x 16 FP32", "Four FP32 components per lane across wave64; initialize once and carry through every K phase."],
+          ["Output", "16 x 16 FP32", "Store only the lane's four coordinates, with edge predicates for partial M or N tiles."],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Inspect the machine instruction, not the intrinsic spelling",
+        text: "The Clang builtin and LLVM intrinsic contain mfma_scale, but gfx950 disassembly prints v_mfma_f32_16x16x128_f8f6f4. Acceptance checks must match the emitted ISA mnemonic and inspect cbsz:4 blgp:4 for FP4. Runtime block scales are a future extension; the current source passes constant identity-scale operands.",
+      },
+    ],
+  },
+  "gfx950-fp8-gemm/format-layout": {
+    sectionId: "fp8-format-layout",
+    title: "Keep FP8 format and scale metadata visible",
+    blocks: [
+      {
+        type: "paragraph",
+        text: "The unified gfx950 f8f6f4 MFMA opcode selects its A and B element formats through instruction operands. This lesson uses E4M3 for both matrices and FP32 accumulation. Four FP8 values occupy each packed 32-bit word. Mixed E4M3, E5M2, FP6, or FP4 variants require different selector contracts even when the printed opcode is unchanged.",
+      },
+      {
+        type: "bullets",
+        items: [
+          "Record the A and B format selectors independently; an opcode grep cannot prove their values.",
+          "Keep the current identity-scale constants visible. If runtime E8M0 scale arrays are added, associate each scale with an exact packed block and reject a shifted index.",
+          "Define saturation, NaN, infinity, signed-zero, and accumulation-error policies before comparing with a CPU reference.",
+          "The current source is fixed at K=128 with no tail. A dynamic extension must pad to 128-element phases and guard logical tails during packing.",
+        ],
+      },
+      milestoneCallout(
+        "Source compilation and ISA presence do not establish the quantization relation. A functional claim still needs a bound safe reference, exact format/scale policy, and independently recorded runtime evidence.",
+      ),
+    ],
+  },
+  "gfx950-fp8-gemm/tile-accumulator": {
+    sectionId: "fp8-gemm-tile-accumulator",
+    title: "Walk the FP8 K loop without losing accumulator ownership",
+    blocks: [
+      {
+        type: "steps",
+        items: [
+          "Choose one 16 x 16 output tile per wave64 and zero four FP32 accumulator components per lane.",
+          "Load the lane's packed E4M3 A and B fragments for the current 128-element K phase.",
+          "Pass the current identity-scale constants and issue the single gfx950 low-precision MFMA for K=128.",
+          "Retain the returned FP32 fragment. A multi-phase extension must carry it as SrcC rather than reinitializing it.",
+          "Convert lane/component coordinates to four unique fixed 16 x 16 output positions. Dynamic M/N edge predicates are an extension.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "proof",
+        title: "Accumulator invariant",
+        text: "For the current single phase, each lane component represents its four output coordinates accumulated over exactly 128 E4M3 elements with identity scale and FP32 accumulation. For an extension with p phases, the invariant must cover exactly min(p * 128, logical K) elements and name the runtime scale and tail-zero policies.",
+      },
+    ],
+  },
+  "gfx950-fp4-attention/transpose-pipeline": {
+    sectionId: "fp4-attention-transpose",
+    title: "Transpose packed FP4 in LDS before QK",
+    blocks: [
+      {
+        type: "paragraph",
+        text: "Flash attention needs K in the matrix-B register orientation while retaining coalesced packed storage. On gfx950 the FP4 path must lower its format-specific LDS read to ds_read_b64_tr_b4. The resulting fragments feed v_mfma_f32_16x16x128_f8f6f4 for QK score tiles; a generic LDS load followed by scalar repacking does not satisfy this lesson's ISA contract.",
+      },
+      {
+        type: "table",
+        headers: ["Stage", "Tile", "Required machine family"],
+        rows: [
+          ["Q fragment", "16 queries x 128 depth, packed E2M1", "Packed directly from global input with constant identity-scale operands."],
+          ["K transpose read", "16 keys x 128 depth, packed E2M1", "ds_read_b64_tr_b4"],
+          ["QK contraction", "16 queries x 16 keys", "v_mfma_f32_16x16x128_f8f6f4 with FP32 accumulator."],
+          ["PV accumulation", "16 queries x 16 values", "Current source decodes FP4 V and accumulates a scalar FP32 loop; a second MFMA is only a future extension."],
+        ],
+      },
+      milestoneCallout(
+        "The transpose-load and MFMA opcodes are target-machine facts only. They do not by themselves prove the Q/K layout mapping, online-softmax recurrence, numerical policy, or final O stores.",
+      ),
+    ],
+  },
+  "gfx950-fp4-attention/online-softmax": {
+    sectionId: "fp4-attention-online-softmax",
+    title: "Bound the one-tile softmax, then define the online extension",
+    blocks: [
+      {
+        type: "paragraph",
+        text: "Packed Q, K, and V reduce bandwidth, but the score accumulator, row maximum, denominator, and scalar PV numerator remain FP32. The current fixed source has exactly one unmasked 16-key tile, computes its maximum and denominator, then decodes V and accumulates PV in a scalar FP32 loop. Multi-tile online rescaling, causal masks, and tail keys are extensions.",
+      },
+      {
+        type: "callout",
+        tone: "proof",
+        title: "Per-row recurrence",
+        text: "The current one-tile result covers exactly 16 unmasked keys. For a multi-tile extension, after tile t, (m, l, numerator) must represent exactly the active, unmasked keys in tiles [0, t), and the previous state must be rescaled when the maximum changes.",
+      },
+      {
+        type: "bullets",
+        items: [
+          "A causal or padding-mask extension must place excluded keys outside the logical score domain before max reduction.",
+          "The current source uses identity-scale constants. A runtime-scale extension must bind Q, K, and V scale indices independently.",
+          "Inspect both ds_read_b64_tr_b4 and v_mfma_f32_16x16x128_f8f6f4 in the final code object.",
+        ],
+      },
+    ],
+  },
+  "gfx950-fp8-attention/transpose-pipeline": {
+    sectionId: "fp8-attention-transpose",
+    title: "Use the FP8 transpose-load contract",
+    blocks: [
+      {
+        type: "paragraph",
+        text: "The FP8 attention layout parallels FP4 but packs four E4M3 values per dword and uses ds_read_b64_tr_b8 for the K and V register orientation required by the matrix path. The transpose opcode is format-specific: ds_read_b64_tr_b4 is not interchangeable with ds_read_b64_tr_b8.",
+      },
+      {
+        type: "steps",
+        items: [
+          "Pack fixed E4M3 Q/K blocks for one K=128 phase; the current builtin call uses identity-scale constants rather than runtime scale arrays.",
+          "Read the matrix-B fragment through ds_read_b64_tr_b8 and wait for LDS completion before use.",
+          "Issue v_mfma_f32_16x16x128_f8f6f4 with E4M3 selectors and carry the FP32 score fragment.",
+          "Compute one unmasked 16-key softmax tile in FP32, then decode V and accumulate PV through the current scalar FP32 loop.",
+          "Write the fixed 16 x 16 O tile. Masking, edge predicates, multi-tile recurrence, and MFMA-accelerated PV are extensions.",
+        ],
+      },
+      milestoneCallout(
+        "A valid gfx950 object remains below hardware evidence. The current host's gfx1036 agent cannot execute this target, so no result or performance label is promoted here.",
+      ),
+    ],
+  },
+  "gfx950-fp8-attention/evidence-boundary": {
+    sectionId: "fp8-attention-evidence",
+    title: "Record compiler, ISA, and hardware evidence separately",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Evidence field", "Required record", "Claim limit"],
+        rows: [
+          ["Source", "Commit, tree, source SHA-256, compiler command", "Identifies inputs; does not prove compilation."],
+          ["Code object", "HSACO SHA-256, target ID, symbol and metadata inspection", "Establishes object identity and ABI facts only."],
+          ["ISA", "Saved llvm-objdump output containing both exact required mnemonics", "Establishes instruction presence, not algorithm semantics."],
+          ["Execution", "gfx950 rocminfo identity, launch command, oracle cases, tolerances, output and canaries", "Establishes only the recorded cases on the recorded device."],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Pending field is data, not failure",
+        text: "Use pending for the runtime fields until a gfx950 agent is available. Do not replace the device identity with the build host's gfx1036 observation and do not turn successful cross-compilation into a GPU-observed badge.",
+      },
+    ],
   }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 

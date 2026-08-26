@@ -1,6 +1,7 @@
 import { modules0to2 } from "./modules-0-2";
 import { modules3to5 } from "./modules-3-5";
 import { modules6to8 } from "./modules-6-8";
+import { modules9 } from "./modules-9";
 import type { GlossaryEntry, Lesson } from "./model";
 import { validateCurriculum } from "./validate";
 
@@ -8,6 +9,7 @@ export const curriculum = [
   ...modules0to2,
   ...modules3to5,
   ...modules6to8,
+  ...modules9,
 ];
 
 const issues = validateCurriculum(curriculum);
@@ -116,6 +118,11 @@ const definitions: Record<string, string> = {
   "protected policy": "Promotion rules and verifier inputs obtained from a protected base rather than candidate content.",
   "independent review": "A separate trusted signature over the exact evidence set required for Complete.",
   Complete: "A parity status requiring every row-specific acceptance class and protected signed evidence; absent at this baseline.",
+  gfx950: "The AMD CDNA 4 processor target used by MI350 and MI355X accelerators; a gfx950 code object is not evidence that the current runtime device is gfx950.",
+  FP4: "A four-bit floating-point operand format; these lessons use packed E2M1 values with explicit block-scale semantics.",
+  FP8: "An eight-bit floating-point operand format; these lessons use packed E4M3 values with explicit block-scale semantics.",
+  E8M0: "An exponent-only eight-bit block-scale format applied to a declared group of low-precision matrix elements.",
+  "transpose load": "A format-specific gfx950 LDS read that rearranges packed fragment data into the register orientation consumed by a matrix instruction.",
 };
 
 export const glossary: GlossaryEntry[] = Array.from(

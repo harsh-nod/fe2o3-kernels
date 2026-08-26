@@ -574,6 +574,7 @@ p {
 }
 
 .evidence-runnable-now,
+.evidence-source-example,
 .evidence-source-tested,
 .evidence-source-model-verified {
   color: var(--accent-strong);

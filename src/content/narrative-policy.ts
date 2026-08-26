@@ -71,7 +71,15 @@ export const narrativeIds = deepFreeze([
   "what-verus-proves/total-correctness-boundary",
   "evidence-archive/non-retroactive-milestone",
   "exercise-ladder/semantic-correctness",
-  "contributing-kernel/semantic-contract-checklist"
+  "contributing-kernel/semantic-contract-checklist",
+  "gfx950-fp4-gemm/prerequisites",
+  "gfx950-fp4-gemm/tile-accumulator",
+  "gfx950-fp8-gemm/format-layout",
+  "gfx950-fp8-gemm/tile-accumulator",
+  "gfx950-fp4-attention/transpose-pipeline",
+  "gfx950-fp4-attention/online-softmax",
+  "gfx950-fp8-attention/transpose-pipeline",
+  "gfx950-fp8-attention/evidence-boundary"
 ] as const);
 
 export type NarrativeId = (typeof narrativeIds)[number];
@@ -188,6 +196,22 @@ export const narrativeOrderByLesson = deepFreeze({
     "contributing-kernel/checklist",
     "contributing-kernel/review",
     "contributing-kernel/semantic-contract-checklist"
+  ],
+  "gfx950-fp4-gemm": [
+    "gfx950-fp4-gemm/prerequisites",
+    "gfx950-fp4-gemm/tile-accumulator"
+  ],
+  "gfx950-fp8-gemm": [
+    "gfx950-fp8-gemm/format-layout",
+    "gfx950-fp8-gemm/tile-accumulator"
+  ],
+  "gfx950-fp4-attention": [
+    "gfx950-fp4-attention/transpose-pipeline",
+    "gfx950-fp4-attention/online-softmax"
+  ],
+  "gfx950-fp8-attention": [
+    "gfx950-fp8-attention/transpose-pipeline",
+    "gfx950-fp8-attention/evidence-boundary"
   ]
 } satisfies Record<string, readonly NarrativeId[]>);
 
@@ -266,5 +290,13 @@ export const narrativeFingerprints = deepFreeze({
   "what-verus-proves/total-correctness-boundary": "1f3643b440249954673bc28c5aa1c6c5f355b199925a433a434281512128056e",
   "evidence-archive/non-retroactive-milestone": "789496f0859df6934579ea991cc58d9d15d23ee383b9a1e86eabed80d38eb1aa",
   "exercise-ladder/semantic-correctness": "09369081f7214213213ec32cea3083322917771b57e06ed902b76be5c79b9f21",
-  "contributing-kernel/semantic-contract-checklist": "02c7e918222f26aa22f2ddd04e76e494ad794f3d7efb31197cf9c70a754c3120"
+  "contributing-kernel/semantic-contract-checklist": "02c7e918222f26aa22f2ddd04e76e494ad794f3d7efb31197cf9c70a754c3120",
+  "gfx950-fp4-gemm/prerequisites": "085033c973f46b98de15c2dd7295b427477f9688518fd4774653377618553fcf",
+  "gfx950-fp4-gemm/tile-accumulator": "baeea1167e660906f7d49ab5385b20bc32330105df93c13276b027e9ff6ac988",
+  "gfx950-fp8-gemm/format-layout": "c43b7a5c378f3850cc6a26c63323e4f7385c317ded6d1945110a408a9908186a",
+  "gfx950-fp8-gemm/tile-accumulator": "e55543136278b6abd091c5673e42be8a62049f6f6dcaaa7e42eec525c8365387",
+  "gfx950-fp4-attention/transpose-pipeline": "39a6a5a9881226177d61cf0ebfcb3d5b81dc8f66a6b82f6e94c82f1e6019d12e",
+  "gfx950-fp4-attention/online-softmax": "b95271a39f518dfc37184f32511f3da6e228e8680aa5b1dcdf1ed9b75e69209a",
+  "gfx950-fp8-attention/transpose-pipeline": "3c0d1de6932ae2a37b110bd721900d46ce3813cceafde5e4dd8d88f6cec2ebc6",
+  "gfx950-fp8-attention/evidence-boundary": "2b4931bc87321435fc17a50219463a2bc2a6305d295efc37fd8f7f1ce67da0a0"
 } satisfies Record<NarrativeId, string>);

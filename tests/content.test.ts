@@ -297,11 +297,11 @@ describe("curriculum integrity", () => {
     });
   });
 
-  it("covers modules zero through eight in order", () => {
+  it("covers modules zero through nine in order", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
-      0, 1, 2, 3, 4, 5, 6, 7, 8,
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
     ]);
-    expect(lessons).toHaveLength(21);
+    expect(lessons).toHaveLength(25);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
       new Set(
@@ -314,6 +314,48 @@ describe("curriculum integrity", () => {
     ).toEqual(new Set(narrativeIds));
   });
 
+  it("publishes bounded gfx950 low-precision source and ISA lessons", () => {
+    const expected = [
+      ["gfx950-fp4-gemm", "gfx950_fp4_gemm", "cbsz:4 blgp:4"],
+      ["gfx950-fp8-gemm", "gfx950_fp8_gemm", "v_mfma_f32_16x16x128_f8f6f4"],
+      ["gfx950-fp4-attention", "gfx950_fp4_flash_attention", "ds_read_b64_tr_b4"],
+      ["gfx950-fp8-attention", "gfx950_fp8_flash_attention", "ds_read_b64_tr_b8"],
+    ] as const;
+
+    for (const [lessonId, symbol, requiredIsa] of expected) {
+      const lesson = lessons.find((candidate) => candidate.id === lessonId);
+      expect(lesson, lessonId).toBeDefined();
+      expect(lesson?.module).toBe(9);
+      expect(lesson?.claims).toEqual([
+        expect.objectContaining({ kind: "source-example" }),
+      ]);
+      expect(lesson?.claims[0].reference).toBeUndefined();
+      expect(lesson?.tabs.find((tab) => tab.kind === "kernel")?.code).toContain(
+        symbol,
+      );
+      expect(
+        lesson?.tabs.find((tab) => tab.kind === "comparison")?.code,
+      ).toContain(requiredIsa);
+      expect(lesson?.tabs.find((tab) => tab.kind === "host")?.code).toContain(
+        "--offload-arch=gfx950",
+      );
+      expect(lesson?.tabs.find((tab) => tab.kind === "result")?.code).toContain(
+        "Runtime device: pending",
+      );
+    }
+
+    const fp4Gemm = serializedLessonContent("gfx950-fp4-gemm");
+    expect(fp4Gemm).toContain("one fixed K=128 phase");
+    expect(fp4Gemm).toContain("identity scale operands as constants");
+    const fp4Attention = serializedLessonContent("gfx950-fp4-attention");
+    expect(fp4Attention).toContain("ds_read_b64_tr_b4");
+    expect(fp4Attention).toContain("scalar FP32 loop");
+    expect(fp4Attention).toContain("Multi-tile online rescaling");
+    const fp8Attention = serializedLessonContent("gfx950-fp8-attention");
+    expect(fp8Attention).toContain("ds_read_b64_tr_b8");
+    expect(fp8Attention).toContain("current host's gfx1036 agent");
+  });
+
   it("uses every evidence label", () => {
     const kinds = new Set(
       lessons.flatMap((lesson) => lesson.claims.map((claim) => claim.kind)),
@@ -324,7 +366,7 @@ describe("curriculum integrity", () => {
   it("pins every evidenced claim to exact source and commands", () => {
     for (const lesson of lessons) {
       for (const claim of lesson.claims) {
-        if (claim.kind === "design-only") {
+        if (claim.kind === "design-only" || claim.kind === "source-example") {
           expect(claim.reference).toBeUndefined();
           continue;
         }
