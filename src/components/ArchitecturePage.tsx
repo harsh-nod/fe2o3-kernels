@@ -30,7 +30,7 @@ export function ArchitecturePage() {
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
             ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse, layout, and trace facts only within one validation."],
-            ["Verus", "After compiler-owned semantic and strict parallel derivation, runs one generated generic conditional-lemma checker. The production report cryptographically binds its exact instantiation, tool run, retained receipts, and SafeReferenceMirToLivePliron identities outside the lemma; this is not one whole-kernel theorem."],
+            ["Verus", "After compiler-owned semantic and strict parallel derivation, replays exact pointwise integer or compiler-side IEEE operator-DAG formulas in one generated checker. The production report binds the formulas, tool run, receipts, and SafeReferenceMirToLivePliron identities; no generic relation premise supplies the result."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
             ["Runtime", "Checks actual context, allocations, aliases, geometry, and lifetimes."],
@@ -101,17 +101,22 @@ export function ArchitecturePage() {
           catalog reflects the integrated production order: compiler-owned
           semantic derivation, strict parallel derivation, then generated
           per-compilation Verus composition before KIR lowering. Generic
-          ranked safe-reference loads, canonical dynamic loops, output-numerical
-          contracts, cooperative-tensor structural checks, and separated
-          multiple-output products are implemented but remain unpinned. Direct
-          one-dimensional reads and canonical loops require exact live evidence;
-          distinct outputs require nonzero noalias classes. ErrorBounded claims
-          require imported full-domain receipts, and tensor arithmetic still
-          stops at FE2O3-PARALLEL-013. Unsupported forms remain Incomplete.
+          exact pointwise formula replay, overflow-safe canonical loops, and
+          separated multiple-output aggregation are implemented but remain
+          unpinned. Each separated point output gets one receipt and the whole
+          kernel gets one aggregate proof run. Dynamic safe-slice reads remain
+          Incomplete until a compiler-owned extent implication proves the bound
+          over the complete output domain. Noncanonical loops emit exact SCC
+          invariant/variant requests, but imported answers cannot yet grant
+          aggregate authority. Tensor/MFMA result components bind exact stores
+          at the claim boundary; tensor-component theorem replay still fails
+          closed. ErrorBounded formula replay is also incomplete.
+          mi300x has no production proof-runtime fallback.
           Current Partial capabilities still grant no compiler extraction,
           projection, pass-soundness, or source-to-machine refinement,
-          protected launch authority, complete persistent execution, universal
-          functional or numerical correctness, or automatic parity promotion.
+          LLVM or target arithmetic proof, protected launch authority, complete
+          persistent execution, universal functional or numerical correctness,
+          or automatic parity promotion.
         </p>
         <a
           className="source-button"

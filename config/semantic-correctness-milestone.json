@@ -55,8 +55,8 @@
     },
     {
       "id": "ranked-safe-reference-loads",
-      "status": "published-current",
-      "detail": "a safe CPU slice read input[index] joins only to a compiler-derived typed GPU load when the live ranked read, view, index, scalar, allocation origin, and stride evidence independently reconcile. Raw-pointer reads, multidimensional CPU slice-read joins, and unresolved load symbols fail closed",
+      "status": "implemented-unpinned",
+      "detail": "the compiler retains the exact safe CPU input[index] bounds condition and reconciles scalar, view, index, allocation origin, and stride with the ranked GPU load. Dynamic reads fail closed until compiler-owned extent facts imply that condition over the complete output domain; a syntactic assertion does not grant authority",
       "evidence": [
         "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
         "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
@@ -69,8 +69,8 @@
     },
     {
       "id": "canonical-dynamic-loop-refinement",
-      "status": "published-current",
-      "detail": "canonical dynamic unit-step loops carry the exact compiler-derived finite-domain symbol, full u64 machine bound, transition, termination variant, and maximum-step identity. Stale or narrowed mutations are rejected; non-unit, eventful, noncanonical, additional loop-carried recurrence, arbitrary break/continue, and unproved loops fail closed",
+      "status": "implemented-unpinned",
+      "detail": "canonical dynamic unit-step loops carry the exact compiler-derived finite-domain symbol, full u64 machine bound, transition, termination variant, maximum-step identity, and overflow-safe final latch. Noncanonical SCCs produce exact invariant/variant proof requests, but imported answers cannot yet compose with aggregate authority",
       "evidence": [
         "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_v1.rs",
@@ -83,8 +83,8 @@
     },
     {
       "id": "output-numerical-refinement",
-      "status": "published-current",
-      "detail": "a workload-neutral ErrorBounded output relation binds actual and reference scalar roots, Boolean domain and precondition roots, finite nonnegative absolute and relative f64-bit bounds, the exact ranked graph, MIR subjects, and an authenticated receipt. Authority requires an independently imported claim-specific receipt and canonical-true domain and precondition roots covering the complete output. Automatic numerical proof requests and unsupported reassociation claims fail closed with FE2O3-PARALLEL-010; unmatched, ambiguous, duplicate, or non-total numerical sites fail with FE2O3-PARALLEL-023 through FE2O3-PARALLEL-026",
+      "status": "implemented-unpinned",
+      "detail": "ErrorBounded sites bind actual and reference roots, domain and precondition formulas, finite absolute and relative bounds, the ranked graph, and MIR subjects. Aggregate finite-error-formula theorem replay is not implemented, so ErrorBounded remains fail closed; test epsilons, reassociation assumptions, or receipts do not grant authority",
       "evidence": [
         "crates/dialect-proof/src/lib.rs",
         "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs",
@@ -100,8 +100,8 @@
     },
     {
       "id": "cooperative-tensor-structural-validation",
-      "status": "published-current",
-      "detail": "compiler-derived cooperative-tensor checks validate each live ranked site against target-owned instruction data, exact typed fragment roles and lane coordinates, subgroup convergence, tail policy, staging swizzle, and dominating workgroup publication barriers. Current target data covers the gfx942 BF16/F32 m16n16k16 Wave64 profile. Functional tensor arithmetic composition is not admitted: FE2O3-PARALLEL-013 fails closed until typed tensor SSA def-use and result-to-output bindings plus claim-specific receipts exist",
+      "status": "implemented-unpinned",
+      "detail": "compiler-derived cooperative-tensor checks validate instruction identity, typed fragment roles, lane coordinates, convergence, tail policy, staging, and publication. Typed result components bind exact result roots, component ordinals, scalar policies, and output stores at the claim boundary. Aggregate tensor-component theorem replay is not implemented and remains fail closed",
       "evidence": [
         "crates/dialect-kernel/src/tensor_layout.rs",
         "crates/fe2o3-kernel-ir/src/matrix.rs",
@@ -116,8 +116,8 @@
     },
     {
       "id": "multiple-output-refinement",
-      "status": "published-current",
-      "detail": "compiler-owned output bindings compose multiple distinct outputs as an ordered product only when allocation origins and distinct nonzero noalias classes prove separation, every output has its own TotalView and hierarchy identity, and output-specific frames, receipts, and schedules reconcile. Duplicate, overlapping, unclassified, mismatched, or reordered products fail closed with FE2O3-PARALLEL-018 through FE2O3-PARALLEL-021",
+      "status": "implemented-unpinned",
+      "detail": "multiple separated point outputs retain one compiler-owned receipt per output and compose in one aggregate compilation proof when allocation origins, distinct nonzero noalias classes, TotalView, hierarchy, frames, and schedules reconcile. Duplicate, overlapping, mismatched, or reordered products fail closed",
       "evidence": [
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
         "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
@@ -128,8 +128,8 @@
     },
     {
       "id": "aggregate-mir-refinement-gate",
-      "status": "published-current",
-      "detail": "non-vacuous aggregate join of TotalView, every modeled global write, typed semantic roots, finite collective value contracts, and retained functional-refinement evidence at the SafeReferenceMirToLivePliron boundary; it grants no compiler extraction/projection soundness, LLVM-or-later, target IEEE-value, artifact, launch, hardware, or universal-correctness authority",
+      "status": "implemented-unpinned",
+      "detail": "the generated aggregate theorem replays exact pointwise integer and compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formulas without a generic relation premise. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until their exact theorem replay is implemented. No compiler, LLVM, target, artifact, launch, or hardware authority is granted",
       "evidence": [
         "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
         "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
@@ -138,8 +138,8 @@
     },
     {
       "id": "exact-mir-pliron-contract",
-      "status": "published-current",
-      "detail": "compiler-owned semantic derivation constructs and reconciles an exact workload-neutral contract binding safe-reference MIR, kernel MIR, live PLIRON evidence, typed SSA identities and commitments, every reachable natural-loop backedge, finite collective contracts, and every total output; the admitted result is move-only and grants no LLVM-or-later authority",
+      "status": "implemented-unpinned",
+      "detail": "compiler-owned semantic derivation binds safe-reference MIR, kernel MIR, live PLIRON, typed SSA, canonical loops, and every total output. Unsupported loop SCCs retain exact entries, backedges, exits, guards, transitions, carried values, and ranked evidence in a proof request; that request is not aggregate authority",
       "evidence": [
         "crates/fe2o3-functional-proof/src/mir_pliron_semantic_contract_v1.rs",
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_v1.rs",
@@ -149,8 +149,8 @@
     },
     {
       "id": "per-compilation-verus-composition",
-      "status": "published-current",
-      "detail": "before KIR lowering, production derives and reconciles the semantic contract, derives and validates the strict parallel contract without trusting candidate declarations, then runs a generated workload-neutral Verus conditional-lemma checker; the production report cryptographically binds its exact instantiation, retained effect receipts, tool execution, safe-reference MIR, kernel MIR, live PLIRON graph, output and schedule relations, hierarchy facts, numerical policy, and SafeReferenceMirToLivePliron boundary outside the lemma. This is not one whole-kernel Verus theorem",
+      "status": "implemented-unpinned",
+      "detail": "before KIR lowering, one generated Verus checker replays each supported exact pointwise formula and the whole separated-output aggregate. The report binds its exact instantiation, per-output receipts, tool execution, MIR, live PLIRON, hierarchy, and SafeReferenceMirToLivePliron identity. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
       "evidence": [
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",

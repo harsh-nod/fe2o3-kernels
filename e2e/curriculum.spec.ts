@@ -258,7 +258,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     "arithmetic_is_defined",
   );
   await expect(
-    page.getByText(/workload-neutral compiler can bind eligible one-dimensional reads/u),
+    page
+      .locator(".code-status")
+      .filter({ hasText: /workload-neutral compiler replays eligible exact point formulas/u }),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveCount(0);
 
@@ -437,7 +439,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByText("Bind the reference as ordinary Rust", { exact: true })).toBeVisible();
   await expect(page.getByText("Authenticate the proof execution and every input", { exact: true })).toBeVisible();
   await expect(
-    page.getByText(/unsupported tensor arithmetic, and absent claim receipts remain Incomplete/u),
+    page.getByText(
+      /The aggregate Verus checker currently replays exact pointwise integer and compiler-side IEEE operator-DAG formulas/u,
+    ),
   ).toBeVisible();
 
   await page.getByRole("tab", { name: "Reference-bound kernel" }).click();

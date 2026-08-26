@@ -81,14 +81,14 @@ describe("curriculum integrity", () => {
       ["atomic-contribution-coverage", "published-current"],
       ["typed-scalar-congruence", "published-current"],
       ["generic-semantic-composition", "published-current"],
-      ["ranked-safe-reference-loads", "published-current"],
-      ["canonical-dynamic-loop-refinement", "published-current"],
-      ["output-numerical-refinement", "published-current"],
-      ["cooperative-tensor-structural-validation", "published-current"],
-      ["multiple-output-refinement", "published-current"],
-      ["aggregate-mir-refinement-gate", "published-current"],
-      ["exact-mir-pliron-contract", "published-current"],
-      ["per-compilation-verus-composition", "published-current"],
+      ["ranked-safe-reference-loads", "implemented-unpinned"],
+      ["canonical-dynamic-loop-refinement", "implemented-unpinned"],
+      ["output-numerical-refinement", "implemented-unpinned"],
+      ["cooperative-tensor-structural-validation", "implemented-unpinned"],
+      ["multiple-output-refinement", "implemented-unpinned"],
+      ["aggregate-mir-refinement-gate", "implemented-unpinned"],
+      ["exact-mir-pliron-contract", "implemented-unpinned"],
+      ["per-compilation-verus-composition", "implemented-unpinned"],
     ]);
 
     for (const lesson of lessons) {
@@ -108,7 +108,7 @@ describe("curriculum integrity", () => {
       semanticCorrectnessMilestone.mechanisms.some(
         (mechanism) => mechanism.status === "implemented-unpinned",
       ),
-    ).toBe(false);
+    ).toBe(true);
 
     for (const lessonId of [
       "gemm-tiling",
@@ -203,7 +203,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.cooperativeTensor,
         lessonId,
-      ).toMatch(/gfx942.*m16n16k16.*FE2O3-PARALLEL-013/iu);
+      ).toMatch(/typed result component.*exact output store.*aggregate tensor-component theorem replay/isu);
     }
 
     for (const lessonId of [
@@ -219,7 +219,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.numericalPolicy,
         lessonId,
-      ).toMatch(/independently imported.*canonical-true.*FE2O3-PARALLEL-010/isu);
+      ).toMatch(/aggregate finite-error-formula replay is not implemented.*target IEEE.*LLVM/isu);
     }
 
     for (const lessonId of ["moe-routing", "moe-expert-compute"]) {
@@ -982,17 +982,24 @@ describe("curriculum integrity", () => {
     ]);
     for (const boundary of [
       "same session",
-      "strict bijection",
-      "canonical finite loops",
-      "Vec/slice value reads",
+      "Dynamic slice reads still fail closed",
+      "canonical finite unit-step loops",
+      "safe one-dimensional input[index]",
       "RequestEffectRefinement",
       "Ed25519 V2 receipt",
       "SafeReferenceMirToLivePliron",
       "compiler-owned semantic contract",
       "strict compiler-owned parallel contract",
-      "generated workload-neutral Verus conditional-lemma checker",
+      "generated workload-neutral Verus checker",
+      "without a generic relation premise",
+      "one receipt each",
+      "overflow-safe final latch",
+      "full-domain extent implication",
+      "exact invariant/variant proof requests",
+      "result-component/store claims",
+      "ErrorBounded sites",
       "before KIR lowering",
-      "candidate declarations are not evidence",
+      "Candidate declarations are not evidence",
       "root-owned fixed /opt runtime",
     ]) {
       expect(narrative).toContain(boundary);

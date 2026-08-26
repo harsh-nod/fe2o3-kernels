@@ -651,6 +651,9 @@ const compilerChecks: Lesson = {
     "Reason about multidimensional workgroups, alias classes, publication epochs, and atomic scope without relying on a workload recognizer.",
     "Follow sparse index facts through reachable typed CFG edges and explain why analysis caches end at each validation boundary.",
     "Follow compiler-owned semantic derivation, strict parallel derivation, and generated per-compilation Verus composition in their mandatory pre-KIR order.",
+    "Explain exact pointwise formula replay without a generic relation premise.",
+    "Distinguish canonical-loop authority from noncanonical SCC proof requests.",
+    "Identify why dynamic slice bounds, tensor components, and ErrorBounded relations currently fail closed at aggregate composition.",
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
     "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
     "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
@@ -684,7 +687,7 @@ const compilerChecks: Lesson = {
       kind: "compiler-checked",
       label: "Safe Rust per-compilation composition gate",
       detail:
-        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles the exact semantic contract, derives and independently validates the strongest supported pointwise/permutation/fold/recurrence parallel contract, then runs a generated workload-neutral Verus conditional-lemma checker. The production report binds that check, retained receipts, and SafeReferenceMirToLivePliron identities outside the lemma; it is not a whole-kernel theorem. Changing 17 to 18 is rejected earlier. mi300x lacks the root-owned retained /opt runtime, so no referenced production compile has completed the gate; cached fixtures pass and candidate declarations never replace evidence.",
+        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles their exact contracts, then generates one workload-neutral Verus checker. Exact pointwise integer or compiler-side IEEE operator-DAG claims replay the compiler-derived coordinate, domain, precondition, and value formulas directly. Separated point outputs retain one receipt each and share one aggregate proof run. mi300x lacks the root-owned /opt runtime, so no referenced production compile has completed this gate and there is no fallback.",
       reference: currentImplementationReference(
         [
           "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
@@ -750,7 +753,7 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "Reference-effect V1 accepts one local safe Rust, non-variadic Rust-ABI function with up to three leading usize point axes and bounded point-output effects. Direct one-dimensional input[index] reads join only to independently derived ranked load/view/index/scalar/allocation-origin/stride evidence. Canonical dynamic unit-step loops carry the exact finite-domain symbol, u64 bound, transition, variant, and maximum-step identity. Multidimensional or raw reads, unresolved load symbols, and noncanonical loops fail closed.",
+        "Reference-effect V1 accepts one local safe Rust function with leading usize point axes and bounded point-output effects. Dynamic input[index] retains its exact bounds condition but remains Incomplete until compiler-owned extent facts imply it over the full output domain. Canonical unit-step loops include an overflow-safe final latch. Other loop SCCs produce exact invariant/variant proof requests that cannot yet grant aggregate authority.",
     },
     {
       kind: "verus",
@@ -762,7 +765,7 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus conditional-lemma checker before KIR lowering. A move-only report binds the check and retained receipts at SafeReferenceMirToLivePliron outside the lemma; compiler extraction/projection and pass soundness remain trusted.",
+        "The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus checker before KIR lowering. The checker replays each supported exact point formula and one aggregate separated-output product. A move-only report binds the replay, per-output receipts, and compilation identity at SafeReferenceMirToLivePliron; compiler extraction/projection and pass soundness remain trusted.",
     },
     {
       kind: "host",
@@ -783,7 +786,7 @@ const compilerChecks: Lesson = {
       code: compilerReferenceDiagnostics,
       explanatory: true,
       notice:
-        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no runtime fallback. Load/loop reconciliation, output-product FE2O3-PARALLEL-018 through 021, numerical-site FE2O3-PARALLEL-023 through 026, tensor-arithmetic FE2O3-PARALLEL-013, and contract-construction failures occur before Verus execution.",
+        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no fallback. Dynamic extent implication, noncanonical-loop aggregate composition, tensor-component theorem replay, ErrorBounded formula replay, and malformed multiple-output products all fail before proof execution.",
     },
   ],
   diagram: "memory",

@@ -83,7 +83,7 @@ describe("functional-correctness catalog", () => {
       screen.getByText(/no generated Verus report is bound/iu),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByText(/FE2O3-PARALLEL-013/iu),
+      screen.getAllByText(/aggregate tensor-component/iu),
     ).toHaveLength(2);
   });
 
@@ -174,7 +174,9 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("A CPU-reference effect has no authenticated proof")).toBeInTheDocument();
     expect(screen.getByText("The GPU write disagrees with the CPU reference")).toBeInTheDocument();
     expect(screen.getByText("Multiple outputs lack noalias separation")).toBeInTheDocument();
-    expect(screen.getByText("Tensor arithmetic is not bound to the output")).toBeInTheDocument();
+    expect(
+      screen.getByText("A tensor result component lacks an exact output binding"),
+    ).toBeInTheDocument();
     expect(screen.getByText("Compiler-derived parallel contract is invalid")).toBeInTheDocument();
     expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
     expect(screen.getByText("Supported safe ownership mappings")).toBeInTheDocument();
