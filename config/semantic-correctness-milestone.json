@@ -3,14 +3,14 @@
   "status": "partial-current",
   "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
-  "compilerCommit": "1f9ee2cbd4937da54613f4c367f33a8925215454",
-  "compilerTree": "adce2c4e6c38a9e682cc64fd998e24ee1d161d15",
+  "compilerCommit": "b00ea800a08f4b53bd68eec33b32f24794ffa529",
+  "compilerTree": "0747d0b913dfb91988deabfd692740cd81b284e5",
   "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputStagingReportV2 + ProductionMirPlironSemanticContractReportV1 + ProductionParallelReferenceContractReportV1 + ProductionMirPlironPerCompilationVerusReportV1",
   "functionalReceiptVersion": "ProductionPolicyCheckedRefinementStagingV2 (Checked; non-authoritative) + ProductionMirPlironPerCompilationVerusReportV1 (SafeReferenceMirToLivePliron)",
   "perCompilationTemplatePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
-  "perCompilationTemplateSha256": "21615dee28aefff9a4792851287dca4ca2cc16838d0d528af195c3e614b45bc2",
+  "perCompilationTemplateSha256": "0b958374e154e88a916f7573ffc7529f8e0ba40d19bd94dd49db5eb4630647f8",
   "perCompilationGeneratedFixturePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
-  "perCompilationGeneratedFixtureSha256": "45fd007ba323c29cabbe337f8ab7b1994aef41e513ec81e5849c6a6bef5188c2",
+  "perCompilationGeneratedFixtureSha256": "ffce962f103f6d518a2b629ad4a310f64630b53778a1315e91617558b254b9e8",
   "perCompilationMultiOutputFixturePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
   "perCompilationMultiOutputFixtureSha256": "2425d9c3640de0f8476ba61e751485e7b0d02b7984fd303a12e601fdaf2cc8bc",
   "perCompilationMultiOutputSubstitutionFixturePath": "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs",
@@ -61,7 +61,7 @@
     },
     {
       "id": "ranked-safe-reference-loads",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "the compiler retains the exact safe CPU input[index] bounds assertion and reconciles scalar, view, index, allocation origin, and stride with the ranked GPU load. Full-domain discharge accepts an exact identical symbolic ranked extent or an overflow-checked bounded static affine interval, including an empty domain. Unrelated dynamic extents, missing or unused assertions, unsafe intervals, and arithmetic overflow fail closed; ordinary independent slice lengths therefore remain unsupported",
       "evidence": [
         "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
@@ -76,7 +76,7 @@
     },
     {
       "id": "canonical-dynamic-loop-refinement",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "canonical dynamic unit-step loops carry the exact compiler-derived finite-domain symbol, full u64 machine bound, transition, termination variant, maximum-step identity, and overflow-safe final latch. Noncanonical SCCs produce exact invariant/variant proof requests, but imported answers cannot yet compose with aggregate authority",
       "evidence": [
         "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
@@ -92,7 +92,7 @@
     },
     {
       "id": "output-numerical-refinement",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "ErrorBounded sites bind actual and reference roots, domain and precondition formulas, finite absolute and relative bounds, the ranked graph, and MIR subjects. Aggregate finite-error-formula theorem replay is not implemented, so ErrorBounded remains fail closed; test epsilons, reassociation assumptions, or receipts do not grant authority",
       "evidence": [
         "crates/dialect-proof/src/lib.rs",
@@ -109,7 +109,7 @@
     },
     {
       "id": "cooperative-tensor-structural-validation",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "compiler-derived cooperative-tensor checks validate instruction identity, typed fragment roles, lane coordinates, convergence, tail policy, staging, and publication. Typed result components bind exact result roots, component ordinals, scalar policies, and output stores at the claim boundary. Tensor-component formula replay is not implemented and remains fail closed",
       "evidence": [
         "crates/dialect-kernel/src/tensor_layout.rs",
@@ -132,7 +132,7 @@
     },
     {
       "id": "multiple-output-refinement",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "multiple separated point outputs retain one compiler-owned staged role binding per output. PLIRON independently proves and reconciles distinct output views, allocation separation, output-specific TotalView and hierarchy facts, frames, schedules, and ordered-product identity. One generated Verus run replays each supported exact output formula, but does not replay the separated product. Staging alone grants no authority; the private move-only join requires both structural and formula reports",
       "evidence": [
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
@@ -149,7 +149,7 @@
     },
     {
       "id": "aggregate-mir-refinement-gate",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "one generated per-compilation Verus run is the only external formula proof execution. It independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formula without a generic relation premise. PLIRON separately proves and reconciles total coverage, separation, frames, schedules, and ordered-product identity. Inert total-output and per-output staging grant no authority; the private move-only join is the admission authority and requires both result classes. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until exact formula replay is implemented",
       "evidence": [
         "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
@@ -163,7 +163,7 @@
     },
     {
       "id": "exact-mir-pliron-contract",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "compiler-owned semantic derivation binds safe-reference MIR, kernel MIR, live PLIRON, typed SSA, canonical loops, and every total output. Unsupported loop SCCs retain exact entries, backedges, exits, guards, transitions, carried values, and ranked evidence in a proof request; that request is not aggregate authority",
       "evidence": [
         "crates/fe2o3-functional-proof/src/mir_pliron_semantic_contract_v1.rs",
@@ -176,7 +176,7 @@
     },
     {
       "id": "per-compilation-verus-composition",
-      "status": "implemented-unpinned",
+      "status": "published-current",
       "detail": "before KIR lowering, one generated Verus checker is the only external formula proof execution and independently replays each supported exact pointwise formula. PLIRON, not the generated checker, proves and reconciles total coverage, allocation separation, and the ordered output product. The Verus report binds its exact instantiation, status-Checked policy-staging inputs, tool execution, MIR, live PLIRON, and SafeReferenceMirToLivePliron identity; the private move-only join is the admission authority and requires matching structural and formula results. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
       "evidence": [
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",

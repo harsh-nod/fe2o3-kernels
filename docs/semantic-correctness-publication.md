@@ -2,11 +2,10 @@
 
 The exact compiler commit and tree in
 `config/semantic-correctness-milestone.json` identify the currently published
-baseline. Mechanisms marked `implemented-unpinned` describe the integrated
-completeness work awaiting a refreshed publication pin; they are not attributed
-to that older compiler object. The aggregate status remains `partial-current`:
-the private joined authority ends at `SafeReferenceMirToLivePliron` for the
-admitted exact-formula subset.
+compiler. Every listed mechanism is `published-current` at that pin, including
+its explicit fail-closed unsupported cases. The aggregate status remains
+`partial-current`: the private joined authority ends at
+`SafeReferenceMirToLivePliron` for the admitted exact-formula subset.
 
 ## Compiler integration checklist
 

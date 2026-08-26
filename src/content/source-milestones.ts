@@ -79,8 +79,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe tiled GEMM source",
     detail:
       "Current public main contains the ordinary attributed 16x16x16 BF16/F32 tiled GEMM source with compiler-issued lane, LDS, matrix, barrier, and disjoint-output capabilities. The kernel and its reachable helpers contain no unsafe block. Source-boundary and ranked-pipeline tests cover this safe source shape, but historical proof, HSACO, and GPU observations remain pinned separately and do not transfer to this descendant source.",
-    commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
-    tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
+    commit: "b00ea800a08f4b53bd68eec33b32f24794ffa529",
+    tree: "0747d0b913dfb91988deabfd692740cd81b284e5",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml",
       "cargo test --locked -p rustc-codegen-fe2o3 --test production_extraction_driver_v1 -- --ignored --exact production_collector_rejects_reachable_unsafe_rust_with_rooted_diagnostics",
@@ -93,7 +93,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
     primarySourceSha256:
-      "7824e75ee3160ed54d5b619009d4dfe48f117b31223b2ff7365efb1f2cfcf356",
+      "eab0ec261d3ce83813ec98c0d06eba40255bfc4d080b3e182a2e9a3ee8c3c78d",
     target: "gfx942:xnack-",
   },
   "wave64-collectives-source-v1": {
