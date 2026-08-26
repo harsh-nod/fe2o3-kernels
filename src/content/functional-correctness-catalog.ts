@@ -30,26 +30,26 @@ export interface FunctionalCorrectnessCatalogEntry {
 }
 
 const productionGate =
-  "For an admitted reference-bound compilation, production derives and reconciles the compiler-owned semantic contract, derives and validates the strict parallel contract, then runs one generated per-compilation Verus checker before KIR lowering. For exact pointwise integer and compiler-side IEEE operator-DAG congruence, that checker replays the compiler-derived domain, precondition, coordinate, and value formulas directly; it does not assume a generic relation premise. Candidate declarations and staged per-output role-binding receipts are never proof authority by themselves. The aggregate report is the sole refinement authority and binds the exact replay and all staged inputs to the same compilation.";
+  "For an admitted reference-bound compilation, production derives and reconciles the compiler-owned semantic contract, derives and validates the strict parallel contract, then runs one generated per-compilation Verus checker before KIR lowering. For exact pointwise integer and compiler-side IEEE operator-DAG congruence, that checker replays each compiler-derived domain, precondition, coordinate, and value formula directly; it does not assume a generic relation premise. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity. Candidate declarations and policy-checked Checked per-output staging are never authority by themselves; a private move-only join requires matching structural and formula results.";
 
 const noCompilationReceipt =
-  "The compiler gate is integrated, but no generated Verus report is bound to this lesson's exact compilation. Its generated formula-replay source and result, staged per-output role bindings, aggregate output product, tool identity, and SafeReferenceMirToLivePliron boundary must all authenticate as one compilation. The staged bindings grant no authority alone. mi300x lacks the root-owned /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 runtime, so no referenced production compile has completed the aggregate gate; cached Verus fixtures pass and there is no fallback.";
+  "The compiler gate is integrated, but no generated Verus report is bound to this lesson's exact compilation. Its generated formula-replay source and result, policy-checked Checked staging, PLIRON structural reports, tool identity, and SafeReferenceMirToLivePliron boundary must bind one compilation at the private move-only join. Staging grants no authority alone. mi300x lacks the root-owned /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 runtime, so no referenced production compile has completed the gate; cached Verus fixtures pass and there is no fallback.";
 
 const referenceMemoryAndLoopGate =
-  "The compiler retains the exact condition for a safe one-dimensional input[index] read and matches the live ranked GPU read by scalar, view, index, allocation origin, and stride. A dynamic read still fails closed until a compiler-owned extent implication proves that condition over the complete output domain; a syntactic Rust bounds check is not converted into proof authority. Canonical dynamic unit-step loops carry the exact finite-domain symbol, full u64 machine bound, transition, termination variant, maximum-step identity, and an overflow-safe final latch. Noncanonical loops produce an exact SCC invariant/variant proof request, but an imported answer cannot yet grant aggregate authority.";
+  "The compiler retains the exact assertion for a safe one-dimensional input[index] read and matches the live ranked GPU read by scalar, view, index, allocation origin, and stride. It discharges the full-domain bound only from an identical symbolic ranked extent or an overflow-checked bounded static affine interval; unrelated dynamic extents, missing or unused assertions, unsafe intervals, and overflow fail closed. The Rust assertion is matched but is not itself the proof. Canonical dynamic unit-step loops carry the exact finite-domain symbol, full u64 machine bound, transition, termination variant, maximum-step identity, and an overflow-safe final latch. Noncanonical loops produce an exact SCC invariant/variant proof request, but an imported answer cannot yet grant formula authority.";
 
 const unsupportedReferenceBody =
   referenceMemoryAndLoopGate +
   " This exact safe reference still uses broader iterators, range slices, nested or noncanonical control flow, Vec allocation/return, composite effects, or helpers outside that admitted subset. The compiler reports Incomplete instead of replacing them with workload-specific summaries.";
 
 const numericalRefinementGate =
-  "The compiler binds ErrorBounded sites to actual and reference scalar roots, Boolean domain and precondition roots, finite nonnegative absolute/relative f64-bit bounds, the exact ranked graph, and MIR subjects. Aggregate finite-error-formula replay is not implemented, so ErrorBounded requests fail closed instead of gaining authority from a receipt or test epsilon. Reassociation, transcendental semantics, target IEEE values, and LLVM-or-later arithmetic are not claimed.";
+  "The compiler binds ErrorBounded sites to actual and reference scalar roots, Boolean domain and precondition roots, finite nonnegative absolute/relative f64-bit bounds, the exact ranked graph, and MIR subjects. Finite-error-formula replay is not implemented, so ErrorBounded requests fail closed instead of gaining authority from staging or a test epsilon. Reassociation, transcendental semantics, target IEEE values, and LLVM-or-later arithmetic are not claimed.";
 
 const multiOutputGate =
-  "Multiple separated point outputs use one compiler-derived staged role binding per output and one aggregate compilation proof. Allocation origins, distinct nonzero noalias classes, TotalView, hierarchy, frame, and schedule are inert structural inputs until the aggregate checker independently replays the formula and separated output product. The staging reports grant no authority alone. Duplicate views, unproved disjointness, output-specific coverage mismatch, and product-order mismatch fail closed.";
+  "Multiple separated point outputs use one compiler-derived policy-checked Checked staging record per output. PLIRON independently proves and reconciles distinct views, allocation separation, output-specific TotalView and hierarchy facts, frames, schedules, and ordered-product identity. One generated Verus run replays each supported exact formula, but does not prove the separated product. Staging grants no authority alone, and the private move-only join requires both result classes. Duplicate views, unproved disjointness, output-specific coverage mismatch, and product-order mismatch fail closed.";
 
 const cooperativeTensorGate =
-  "The generic cooperative-tensor checks validate live ranked sites against target-owned instruction data, exact fragment roles and lane coordinates, subgroup convergence, tail policy, staging swizzle, and dominating workgroup publication barriers. A typed result component now binds the tensor result root, component ordinal, scalar policy, and exact output store at the claim boundary. Aggregate tensor-component theorem replay is not implemented, so this exact claim still fails closed; no tensor arithmetic, target instruction, LLVM, or hardware value theorem is implied.";
+  "The generic cooperative-tensor checks validate live ranked sites against target-owned instruction data, exact fragment roles and lane coordinates, subgroup convergence, tail policy, staging swizzle, and dominating workgroup publication barriers. A typed result component now binds the tensor result root, component ordinal, scalar policy, and exact output store at the claim boundary. Tensor-component formula replay is not implemented, so this exact claim still fails closed; no tensor arithmetic, target instruction, LLVM, or hardware value theorem is implied.";
 export const functionalCorrectnessCatalog = deepFreeze([
   {
     lessonId: "first-fill",
@@ -89,7 +89,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The ranked-load mechanism matches direct one-dimensional input[index] identities, but dynamic slice extent implication is not yet compiler-owned and this iterator/closure reference is outside the admitted form. The shared-body memory proof and MI300X comparison remain independent evidence; compiler extraction/projection soundness and this exact reference-to-live-PLIRON join are unproved.",
+      "The ranked-load mechanism proves direct one-dimensional input[index] identities only with identical symbolic ranked extents or safe overflow-checked static affine intervals. This iterator/closure reference uses independent lengths and remains outside the admitted form. The shared-body memory proof and MI300X comparison remain independent evidence; compiler extraction/projection soundness and this exact reference-to-live-PLIRON join are unproved.",
   },
   {
     lessonId: "cpu-semantic-simulation",
@@ -129,7 +129,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The pinned Verus model proves the bounded collective model. Exact point formulas, canonical loop termination, and separated output products have generic compiler mechanisms, but dynamic slice extent implication, this oracle's arrays and helper control flow, the collective value proof, and exact output bindings are not a generated lesson receipt. Aggregate numerical-error replay, the retained runtime, compiler projection, and GPU execution remain outside the claim.",
+      "The pinned Verus model proves the bounded collective model. Exact point formulas, canonical loop termination, and PLIRON structural separated-output reconciliation have generic compiler mechanisms, but this oracle's arrays and helper control flow, the collective value proof, and exact output bindings are not a generated lesson report. Its independent slice lengths also lack an exact ranked extent relation. Numerical-error replay, the retained runtime, compiler projection, and GPU execution remain outside the claim.",
   },
   {
     lessonId: "lds-barriers-atomics",
@@ -170,7 +170,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Canonical unit-step loop termination is implemented generically, including the final-latch overflow check, but dynamic slice extent implication and this Vec-returning reference's multidimensional affine reads, nested reductions, recurrence, and allocation remain unsupported. The MFMA result component and output store are bound exactly at the claim boundary; aggregate tensor-component theorem replay still fails closed. Aggregate BF16/F32 error-bound replay, the retained runtime, compiler projection, LLVM+, hardware, and performance stay separate.",
+      "Canonical unit-step loop termination is implemented generically, including the final-latch overflow check, but this Vec-returning reference's independent dynamic slice extents, multidimensional affine reads, nested reductions, recurrence, and allocation remain unsupported. The MFMA result component and output store are bound exactly at the claim boundary; tensor-component formula replay still fails closed. BF16/F32 error-bound replay, the retained runtime, compiler projection, LLVM+, hardware, and performance stay separate.",
   },
   {
     lessonId: "gemm-proof-plan",
@@ -191,7 +191,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Layout, source-model, machine, and hardware records remain separate. The generic compiler replays eligible exact point formulas and proves canonical loop termination. It binds typed MFMA result components to exact stores, but aggregate tensor-component theorem replay still fails closed. Dynamic slice extent implication, this reference's nested affine reads and recurrence, aggregate numerical-error replay, and the retained runtime are still required.",
+      "Layout, source-model, machine, and hardware records remain separate. The generic compiler replays eligible exact point formulas and proves canonical loop termination. It binds typed MFMA result components to exact stores, but tensor-component formula replay still fails closed. This reference's independent extents, nested affine reads and recurrence, numerical-error replay, and the retained runtime are still required.",
   },
   {
     lessonId: "softmax-invariant",
@@ -211,7 +211,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Exact point formulas, canonical unit-step termination, and separated output products have workload-neutral mechanisms. Dynamic slice extent implication and this reference's range slicing, iterators, Vec allocation, richer reduction control, and exponential semantics remain outside the admitted subset. Aggregate numerical-error theorem replay and the retained runtime remain unavailable.",
+      "Exact point formulas, canonical unit-step termination, and PLIRON structural separated-output reconciliation have workload-neutral mechanisms. This reference's independent slice extents, range slicing, iterators, Vec allocation, richer reduction control, and exponential semantics remain outside the admitted subset. Numerical-error theorem replay and the retained runtime remain unavailable.",
   },
   {
     lessonId: "flash-attention",
@@ -233,7 +233,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "The generic tensor path validates MFMA layout and convergence and binds typed result components to exact output stores. Aggregate tensor-component theorem replay still fails closed. The current oracle's dynamic and multidimensional reads, Vec score allocation, nested/eventful recurrence, and transcendental operations exceed the admitted subset. Multiple separated point outputs are supported generically, but this exact product still needs its compiler-derived bindings. Numerical-error replay, the retained runtime, compiler projection, and LLVM+ remain separate.",
+      "The generic tensor path validates MFMA layout and convergence and binds typed result components to exact output stores. Tensor-component formula replay still fails closed. The current oracle's independent and multidimensional reads, Vec score allocation, nested/eventful recurrence, and transcendental operations exceed the admitted subset. PLIRON supports separated point-output structure generically, but this exact product still needs its compiler-derived bindings. Numerical-error replay, the retained runtime, compiler projection, and LLVM+ remain separate.",
   },
   {
     lessonId: "moe-routing",
@@ -275,7 +275,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
     boundary:
-      "Five passing MI300X shapes are qualification evidence. Exact point formulas, canonical loops, and separated output products have generic compiler mechanisms, but dynamic slice extent implication and this reference's multidimensional affine reads, nested recurrence, Vec return, and routed composition remain outside that subset. The MFMA component/store claim is exact while aggregate tensor-component replay still fails closed. Numerical-error replay, the retained runtime, compiler refinement, hardware, and performance remain outside the claim.",
+      "Five passing MI300X shapes are qualification evidence. Exact point formulas, canonical loops, and PLIRON structural separated-output reconciliation have generic compiler mechanisms, but this reference's independent slice extents, multidimensional affine reads, nested recurrence, Vec return, and routed composition remain outside that subset. The MFMA component/store claim is exact while tensor-component formula replay still fails closed. Numerical-error replay, the retained runtime, compiler refinement, hardware, and performance remain outside the claim.",
   },
 ] satisfies FunctionalCorrectnessCatalogEntry[]);
 

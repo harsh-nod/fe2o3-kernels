@@ -645,7 +645,7 @@ const compilerChecks: Lesson = {
     "Distinguish a proved static access from a checked dynamic access.",
     "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
     "Bind a local safe Rust reference with #[kernel(typed, reference = ...)] and use leading usize arguments as logical point coordinates.",
-    "Follow compiler-owned ranked writes through a strict source-effect bijection, exact per-output formula replay, and one separated-output aggregate Verus/Ed25519 V2 admission.",
+    "Follow compiler-owned ranked writes through a strict source-effect bijection, PLIRON structural output reconciliation, exact per-output formula replay, and one private joined admission.",
     "Distinguish per-effect partial correctness from total output coverage and full source-to-machine equivalence.",
     "Locate tensor-layout, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
     "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
@@ -654,7 +654,7 @@ const compilerChecks: Lesson = {
     "Follow compiler-owned semantic derivation, strict parallel derivation, and generated per-compilation Verus composition in their mandatory pre-KIR order.",
     "Explain exact pointwise formula replay without a generic relation premise.",
     "Distinguish canonical-loop authority from noncanonical SCC proof requests.",
-    "Identify why dynamic slice bounds, tensor components, and ErrorBounded relations currently fail closed at aggregate composition.",
+    "Identify the exact ranked-extent subset that proves dynamic slice bounds and why tensor components and ErrorBounded relations still fail closed at formula replay.",
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
     "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
     "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
@@ -688,7 +688,7 @@ const compilerChecks: Lesson = {
       kind: "compiler-checked",
       label: "Safe Rust per-compilation composition gate",
       detail:
-        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles their exact contracts, then generates one workload-neutral Verus checker. Exact pointwise integer or compiler-side IEEE operator-DAG claims replay the compiler-derived coordinate, domain, precondition, and value formulas directly. Separated point outputs retain one staged role binding each; those bindings grant no authority until the aggregate checker independently replays every formula and the output product. mi300x lacks the root-owned /opt runtime, so no referenced production compile has completed this gate and there is no fallback.",
+        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles their exact contracts, then generates one workload-neutral Verus checker. Exact pointwise integer or compiler-side IEEE operator-DAG claims replay each compiler-derived coordinate, domain, precondition, and value formula directly. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity. Policy-checked Checked staging grants no authority; a private move-only join requires matching structural and formula reports. mi300x lacks the root-owned /opt runtime, so no referenced production compile has completed this gate and there is no fallback.",
       reference: currentImplementationReference(
         [
           "cargo test --locked -p rustc-codegen-fe2o3 --features qualification-oracles-test-only --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
@@ -697,6 +697,7 @@ const compilerChecks: Lesson = {
           "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
           "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
           "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/production_reference_bounds_v2.rs",
           "crates/rustc-codegen-fe2o3/src/reference_effect_bijection_v1.rs",
           "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
           "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
@@ -761,7 +762,7 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        "Reference-effect V1 accepts one local safe Rust function with leading usize point axes and bounded point-output effects. Dynamic input[index] retains its exact bounds condition but remains Incomplete until compiler-owned extent facts imply it over the full output domain. Canonical unit-step loops include an overflow-safe final latch. Other loop SCCs produce exact invariant/variant proof requests that cannot yet grant aggregate authority.",
+        "Reference-effect V1 accepts one local safe Rust function with leading usize point axes and bounded point-output effects. Dynamic input[index] retains and matches its exact bounds assertion. It is discharged only when an identical symbolic ranked extent or an overflow-checked bounded static affine interval proves the full-domain bound; unrelated lengths, missing assertions, unsafe intervals, and overflow remain Incomplete. Canonical unit-step loops include an overflow-safe final latch. Other loop SCCs produce exact invariant/variant proof requests that cannot yet grant formula authority.",
     },
     {
       kind: "verus",
@@ -773,7 +774,7 @@ const compilerChecks: Lesson = {
       sourceCommit: currentState.compilerCommit,
       explanatory: true,
       notice:
-        `The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus checker before KIR lowering. The checker independently replays each supported exact point formula and one aggregate separated-output product; staged per-output role bindings grant no authority by themselves. The pinned positive fixture is ${semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath}; its exact substitution negative is ${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixturePath}. A move-only aggregate report is the sole refinement authority and binds the replay, staged inputs, and compilation identity at SafeReferenceMirToLivePliron; compiler extraction/projection and pass soundness remain trusted.`,
+        `The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus checker before KIR lowering. The checker independently replays each supported exact point formula; PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity. Policy-checked Checked staging grants no authority. The pinned positive fixture is ${semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath}; its exact substitution negative is ${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixturePath}. A private move-only join requires matching structural and formula reports at SafeReferenceMirToLivePliron; compiler extraction/projection and pass soundness remain trusted.`,
     },
     {
       kind: "host",
@@ -794,7 +795,7 @@ const compilerChecks: Lesson = {
       code: compilerReferenceDiagnostics,
       explanatory: true,
       notice:
-        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no fallback. Dynamic extent implication, noncanonical-loop aggregate composition, tensor-component theorem replay, ErrorBounded formula replay, and malformed multiple-output products all fail before proof execution.",
+        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no fallback. Unrelated dynamic extents, missing assertions, unsafe affine bounds, overflow, noncanonical-loop composition, tensor-component replay, ErrorBounded formula replay, and malformed multiple-output products all fail closed.",
     },
   ],
   diagram: "memory",

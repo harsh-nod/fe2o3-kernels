@@ -16,8 +16,25 @@ reference block 0, statement 0 and GPU block 2, operation 0
 # - multidimensional/raw read or unresolved ranked-load reconciliation
 # - non-unit, eventful, noncanonical, or unproved loop termination
 
+# Dynamic safe-slice bounds: an identical ranked extent is accepted.
+# The Rust bounds assertion is retained and matched to the exact access, while
+# the independent ranked relation proves point[0] < %arg3 over the full domain.
+accepted: input_extent = %arg3, point_domain[0] = %arg3, index = point[0]
+
+# An unrelated runtime length remains terminal Incomplete.
+source-to-proof V2 cannot establish safe Rust slice bounds authority in reference block 0:
+cannot prove full-domain bound `point[0]` < `%arg3` over point[0] < %arg4:
+no exact ranked extent relation connects this bound to every point-coordinate extent
+
+# Static affine bounds use an overflow-checked interval over the full domain.
+accepted: input_extent = 16, point_domain[0] = 8, index = point[0] * 2 + 1
+rejected: input_extent = 8, point_domain[0] = 8, index = point[0] + 1
+derived index range 1..=8; the retained extent is unsafe or mismatched
+rejected: index addition can overflow
+rejected: safe-slice access `point[0]` has no exact retained bounds assertion
+
 # Numerical sites are bound to exactly one complete logical output
-error[FE2O3-PARALLEL-010]: finite error policy for relation 0 lacks a live typed witness or retained authenticated proof
+error[FE2O3-PARALLEL-010]: finite error policy for relation 0 lacks a live typed witness or policy-checked staging record
 error[FE2O3-PARALLEL-023]: numerical refinement site 0 does not match any logical output actual/reference roots
 error[FE2O3-PARALLEL-024]: numerical refinement site 0 ambiguously matches 2 logical outputs
 error[FE2O3-PARALLEL-025]: logical output 0 has more than one numerical refinement site
@@ -33,7 +50,7 @@ error[FE2O3-PARALLEL-029]: logical output 0 has more than one tensor refinement 
 error[FE2O3-PARALLEL-030]: tensor refinement names non-live tensor instruction site ^bb2:0
 error[FE2O3-PARALLEL-031]: tensor instruction site ^bb2:0 has more than one tensor refinement receipt
 
-# Passing these claim-site joins is not aggregate theorem authority. The later
+# Passing these claim-site joins is not formula-replay authority. The later
 # per-compilation verifier stops unsupported ErrorBounded, tensor-component,
 # fold, recurrence, permutation, and noncanonical-loop roles with
 # UnsupportedFormulaReplayRole. That error is not a FE2O3-PARALLEL pass code.

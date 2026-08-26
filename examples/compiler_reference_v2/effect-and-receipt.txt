@@ -64,11 +64,12 @@ RequestEffectRefinement(
 # over the complete output domain.
 
 # Per-output admission materializes one exact live-PLIRON relation and one
-# retained receipt for output0, then does the same independently for output1.
+# policy-checked Checked staging record for output0, then does the same
+# independently for output1.
 # The private request-to-require transition is represented by:
 #
-#   proof.require_effect_refinement(output0, exact formulas, staged receipt0)
-#   proof.require_effect_refinement(output1, exact formulas, staged receipt1)
+#   proof.require_effect_refinement(output0, exact formulas, checked staging0)
+#   proof.require_effect_refinement(output1, exact formulas, checked staging1)
 #
 # These operations bind roles and inputs; they do not prove equality.
 # The generated checker does not assume a generic relation lemma. For each
@@ -80,21 +81,21 @@ RequestEffectRefinement(
 #   value:        gpu_value(point)       == reference_value(point)
 #
 # Exact pointwise bit-vector formulas and identical compiler-side IEEE
-# operator DAGs are replayable. Receipts authenticate which MIR and PLIRON
-# facts were retained; they are binding inputs to the run, never premises that
-# make either value equality true.
-
-# One whole-compilation theorem then independently replays both per-output
-# formulas with the staged, compiler-verified TotalView and separation facts.
-# The total-output staging report grants no authority before this replay:
+# operator DAGs are replayable. Caller-selected signature and policy checks do
+# not establish proof execution or compiler authority. Checked staging records
+# bind the retained MIR and PLIRON inputs but never make either equality true.
+#
+# PLIRON independently proves and reconciles TotalView, allocation separation,
+# output-specific frames and schedules, and ordered-product identity. The
+# generated checker does not replay those structural theorems:
 #
 #   output_product = [output0, output1]
 #   separated(output0, output1) =
 #     allocation_origin(1) != allocation_origin(2)
 #     && noalias_class(1) != noalias_class(2)
-#   aggregate = exact_formula(output0)
-#            && exact_formula(output1)
-#            && total_and_separated(output_product)
+#   pliron_structure = total_and_separated(output_product)
+#   verus_formulas = exact_formula(output0) && exact_formula(output1)
+#   admitted = private_move_only_join(pliron_structure, verus_formulas)
 #
 # Duplicate views, missing outputs, reordered products, overlapping ownership,
 # or substituted formulas stop compilation. ErrorBounded, tensor-component,
@@ -102,9 +103,11 @@ RequestEffectRefinement(
 # with UnsupportedFormulaReplayRole. That verifier boundary has no invented
 # FE2O3-PARALLEL pass code.
 
-receipt_format = Ed25519 V2
-receipt_boundary = SafeReferenceMirToLivePliron
-receipt_public_inspection = signature_and_policy_verified_only
+staging_format = Ed25519 V2
+staging_status = Checked
+staging_authority = none
+joined_boundary = SafeReferenceMirToLivePliron
+public_staging_inspection = signature_and_policy_checked_only
 private_transition = RequestEffectRefinement -> RequireEffectRefinement
 
 requested_property = per_compilation_exact_formula_replay

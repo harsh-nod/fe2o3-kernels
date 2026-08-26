@@ -73,6 +73,10 @@ describe("curriculum integrity", () => {
       "adce2c4e6c38a9e682cc64fd998e24ee1d161d15",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
+      perCompilationTemplatePath:
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
+      perCompilationGeneratedFixturePath:
+        "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
       perCompilationMultiOutputFixturePath:
         "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
       perCompilationMultiOutputFixtureSha256:
@@ -174,6 +178,8 @@ describe("curriculum integrity", () => {
       functionalRefinementPublication.receiptFixturePath,
       functionalRefinementPublication.runtimeControllerPath,
       functionalRefinementPublication.effectDiagnosticFixturePath,
+      functionalRefinementPublication.authorityNegativeFixturePath,
+      functionalRefinementPublication.dynamicBoundsSourcePath,
     ]);
   });
 
@@ -248,7 +254,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.cooperativeTensor,
         lessonId,
-      ).toMatch(/typed result component.*exact output store.*aggregate tensor-component theorem replay/isu);
+      ).toMatch(/typed result component.*exact output store.*tensor-component formula replay/isu);
     }
 
     for (const lessonId of [
@@ -264,7 +270,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.numericalPolicy,
         lessonId,
-      ).toMatch(/aggregate finite-error-formula replay is not implemented.*target IEEE.*LLVM/isu);
+      ).toMatch(/finite-error-formula replay is not implemented.*target IEEE.*LLVM/isu);
     }
 
     for (const lessonId of ["moe-routing", "moe-expert-compute"]) {
@@ -272,7 +278,7 @@ describe("curriculum integrity", () => {
         functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
           ?.boundary,
         lessonId,
-      ).toMatch(/multiple output|multiple outputs|output product/iu);
+      ).toMatch(/multiple output|multiple outputs|output product|separated-output/iu);
     }
   });
 
@@ -850,6 +856,14 @@ describe("curriculum integrity", () => {
       "FE2O3-OWN-005",
       "FE2O3-OWN-006",
       "FE2O3-OWN-007",
+      "FE2O3-OWN-008",
+      "FE2O3-OWN-009",
+      "FE2O3-OWN-010",
+      "FE2O3-OWN-011",
+      "FE2O3-OWN-012",
+      "FE2O3-OWN-013",
+      "FE2O3-OWN-014",
+      "FE2O3-OWN-015",
       "FE2O3-BARRIER-000",
       "FE2O3-BARRIER-001",
       "FE2O3-BARRIER-002",
@@ -862,6 +876,9 @@ describe("curriculum integrity", () => {
       "FE2O3-SEMANTIC-002",
       "FE2O3-SEMANTIC-003",
       "FE2O3-SEMANTIC-004",
+      "FE2O3-SEMANTIC-005",
+      "FE2O3-SEMANTIC-006",
+      "FE2O3-SEMANTIC-007",
       "FE2O3-PARALLEL-001",
       "FE2O3-PARALLEL-002",
       "FE2O3-PARALLEL-003",
@@ -890,8 +907,8 @@ describe("curriculum integrity", () => {
       "FE2O3-PARALLEL-030",
       "FE2O3-PARALLEL-031",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(32);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(24);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(42);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(25);
     expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(5);
 
     const effectDiagnosticTable = semanticFailures.blocks.find(
@@ -1032,6 +1049,10 @@ describe("curriculum integrity", () => {
     expect(proof?.code).toContain("output_product = [output0, output1]");
     expect(proof?.code).toContain("exact_formula(output0)");
     expect(proof?.code).toContain("exact_formula(output1)");
+    expect(proof?.code).toContain("pliron_structure = total_and_separated");
+    expect(proof?.code).toContain("private_move_only_join");
+    expect(proof?.code).toContain("staging_status = Checked");
+    expect(proof?.code).toContain("staging_authority = none");
     expect(proof?.code).toContain("UnsupportedFormulaReplayRole");
     expect(proof?.code).toContain(
       "maximum_logical_outputs_and_refinement_sites = 64",
@@ -1047,6 +1068,13 @@ describe("curriculum integrity", () => {
     expect(result?.code).toContain("FE2O3-PARALLEL-027");
     expect(result?.code).toContain("FE2O3-PARALLEL-031");
     expect(result?.code).toContain("UnsupportedFormulaReplayRole");
+    expect(result?.code).toContain(
+      "accepted: input_extent = %arg3, point_domain[0] = %arg3",
+    );
+    expect(result?.code).toContain("no exact ranked extent relation");
+    expect(result?.code).toContain("derived index range 1..=8");
+    expect(result?.code).toContain("index addition can overflow");
+    expect(result?.code).toContain("no exact retained bounds assertion");
     expect(host?.code).toContain(
       "--features qualification-oracles-test-only --test reference_binding_v1",
     );
@@ -1057,19 +1085,19 @@ describe("curriculum integrity", () => {
     ]);
     for (const boundary of [
       "same session",
-      "Dynamic slice reads still fail closed",
+      "Reference bounds V2 accepts",
       "canonical finite unit-step loops",
       "safe one-dimensional input[index]",
       "RequestEffectRefinement",
-      "Ed25519 V2 receipt",
+      "Ed25519 V2 records",
       "SafeReferenceMirToLivePliron",
       "compiler-owned semantic contract",
       "strict compiler-owned parallel contract",
       "generated workload-neutral Verus checker",
       "without a generic relation premise",
-      "one staged role binding each",
+      "policy-checked Checked staging record each",
       "overflow-safe final latch",
-      "full-domain extent implication",
+      "identical symbolic ranked extents",
       "exact invariant/variant proof requests",
       "result-component/store claims",
       "ErrorBounded sites",
@@ -2259,7 +2287,7 @@ describe("implementation progress integrity", () => {
     expect(currentNarrative).toContain(progressSnapshot.eventualPublicTree);
     expect(currentNarrative).toContain("on both public main refs");
     expect(currentNarrative).toContain(
-      "non-vacuous total-output refinement for its admitted finite subset",
+      "PLIRON proves and reconciles non-vacuous total coverage",
     );
     expect(currentNarrative).toContain("complete live PLIRON graph");
     expect(

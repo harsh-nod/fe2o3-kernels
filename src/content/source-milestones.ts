@@ -93,7 +93,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
     primarySourceSha256:
-      "26a5ec889bc9122d6b91b956111d690e27c0b00997793e3600caaa79b601f2a3",
+      "7824e75ee3160ed54d5b619009d4dfe48f117b31223b2ff7365efb1f2cfcf356",
     target: "gfx942:xnack-",
   },
   "wave64-collectives-source-v1": {

@@ -348,7 +348,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Twenty-three representative compile-time failures",
+      name: "Twenty-four representative compile-time failures",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -368,7 +368,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     failureGallery.getByText("The grid leaves one output coordinate unwritten"),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("A CPU-reference effect has no authenticated proof"),
+    failureGallery.getByText("A CPU-reference effect has no policy-checked staging"),
   ).toBeVisible();
   await expect(
     failureGallery.getByText("The GPU write disagrees with the CPU reference"),
@@ -467,7 +467,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Twenty-three representative compile-time failures",
+      name: "Twenty-four representative compile-time failures",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));

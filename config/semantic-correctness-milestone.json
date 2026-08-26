@@ -5,9 +5,11 @@
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
   "compilerCommit": "1f9ee2cbd4937da54613f4c367f33a8925215454",
   "compilerTree": "adce2c4e6c38a9e682cc64fd998e24ee1d161d15",
-  "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputRefinementReportV2 + ProductionMirPlironSemanticContractReportV1 + ProductionParallelReferenceContractReportV1 + ProductionMirPlironPerCompilationVerusReportV1",
-  "functionalReceiptVersion": "ImportedFunctionalRefinementProofV2 (SafeReferenceMirToLivePliron)",
+  "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputStagingReportV2 + ProductionMirPlironSemanticContractReportV1 + ProductionParallelReferenceContractReportV1 + ProductionMirPlironPerCompilationVerusReportV1",
+  "functionalReceiptVersion": "ProductionPolicyCheckedRefinementStagingV2 (Checked; non-authoritative) + ProductionMirPlironPerCompilationVerusReportV1 (SafeReferenceMirToLivePliron)",
+  "perCompilationTemplatePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
   "perCompilationTemplateSha256": "21615dee28aefff9a4792851287dca4ca2cc16838d0d528af195c3e614b45bc2",
+  "perCompilationGeneratedFixturePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
   "perCompilationGeneratedFixtureSha256": "45fd007ba323c29cabbe337f8ab7b1994aef41e513ec81e5849c6a6bef5188c2",
   "perCompilationMultiOutputFixturePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
   "perCompilationMultiOutputFixtureSha256": "2425d9c3640de0f8476ba61e751485e7b0d02b7984fd303a12e601fdaf2cc8bc",
@@ -19,7 +21,7 @@
     {
       "id": "finite-total-view",
       "status": "published-current",
-      "detail": "finite total-view coverage, uniqueness, surjectivity, finality, normal completion, allocation separation, and unmodeled-observable-write rejection are compiler-verified structural facts. The total-output refinement report stages those facts inertly and grants no refinement authority before aggregate Verus replay",
+      "detail": "finite total-view coverage, uniqueness, surjectivity, finality, normal completion, allocation separation, and unmodeled-observable-write rejection are compiler-verified PLIRON structural facts. ProductionTotalOutputStagingReportV2 carries them inertly; staging alone grants no functional-refinement authority",
       "evidence": [
         "crates/fe2o3-kernel-analysis/src/pliron_hierarchical_ownership.rs",
         "crates/fe2o3-kernel-analysis/tests/pliron_hierarchical_ownership.rs"
@@ -48,7 +50,7 @@
     {
       "id": "generic-semantic-composition",
       "status": "published-current",
-      "detail": "finite fold, bounded recurrence, and permutation-gather contracts with explicit domains, step bounds, order, numerical policy, typed-root reconciliation, coverage binding, and independent final-value proof",
+      "detail": "finite fold, bounded recurrence, and permutation-gather contracts receive structural validation of domains, step bounds, order, numerical policy, typed roots, and coverage binding. Their final-value formulas are not replayed by the aggregate checker and fail closed with UnsupportedFormulaReplayRole",
       "evidence": [
         "crates/dialect-kernel/src/collective_semantics.rs",
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
@@ -60,9 +62,10 @@
     {
       "id": "ranked-safe-reference-loads",
       "status": "implemented-unpinned",
-      "detail": "the compiler retains the exact safe CPU input[index] bounds condition and reconciles scalar, view, index, allocation origin, and stride with the ranked GPU load. Dynamic reads fail closed until compiler-owned extent facts imply that condition over the complete output domain; a syntactic assertion does not grant authority",
+      "detail": "the compiler retains the exact safe CPU input[index] bounds assertion and reconciles scalar, view, index, allocation origin, and stride with the ranked GPU load. Full-domain discharge accepts an exact identical symbolic ranked extent or an overflow-checked bounded static affine interval, including an empty domain. Unrelated dynamic extents, missing or unused assertions, unsafe intervals, and arithmetic overflow fail closed; ordinary independent slice lengths therefore remain unsupported",
       "evidence": [
         "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
+        "crates/rustc-codegen-fe2o3/src/production_reference_bounds_v2.rs",
         "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
         "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
         "crates/fe2o3-pliron/src/production/semantic_expression_v2.rs",
@@ -107,7 +110,7 @@
     {
       "id": "cooperative-tensor-structural-validation",
       "status": "implemented-unpinned",
-      "detail": "compiler-derived cooperative-tensor checks validate instruction identity, typed fragment roles, lane coordinates, convergence, tail policy, staging, and publication. Typed result components bind exact result roots, component ordinals, scalar policies, and output stores at the claim boundary. Aggregate tensor-component theorem replay is not implemented and remains fail closed",
+      "detail": "compiler-derived cooperative-tensor checks validate instruction identity, typed fragment roles, lane coordinates, convergence, tail policy, staging, and publication. Typed result components bind exact result roots, component ordinals, scalar policies, and output stores at the claim boundary. Tensor-component formula replay is not implemented and remains fail closed",
       "evidence": [
         "crates/dialect-kernel/src/tensor_layout.rs",
         "crates/fe2o3-kernel-ir/src/matrix.rs",
@@ -130,7 +133,7 @@
     {
       "id": "multiple-output-refinement",
       "status": "implemented-unpinned",
-      "detail": "multiple separated point outputs retain one compiler-owned staged role binding per output. A staged binding grants no authority by itself; the aggregate checker independently replays each exact formula and the separated product when allocation origins, distinct nonzero noalias classes, TotalView, hierarchy, frames, and schedules reconcile. Duplicate, overlapping, mismatched, or reordered products fail closed",
+      "detail": "multiple separated point outputs retain one compiler-owned staged role binding per output. PLIRON independently proves and reconciles distinct output views, allocation separation, output-specific TotalView and hierarchy facts, frames, schedules, and ordered-product identity. One generated Verus run replays each supported exact output formula, but does not replay the separated product. Staging alone grants no authority; the private move-only join requires both structural and formula reports",
       "evidence": [
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
         "crates/fe2o3-pliron/tests/production_middle_end_evidence_v4.rs",
@@ -147,7 +150,7 @@
     {
       "id": "aggregate-mir-refinement-gate",
       "status": "implemented-unpinned",
-      "detail": "the generated aggregate theorem is the sole refinement authority. It independently replays exact pointwise integer and compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formulas plus the staged total-output product without a generic relation premise. The inert total-output and per-output staging reports grant no authority by themselves. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until their exact theorem replay is implemented. No compiler, LLVM, target, artifact, launch, or hardware authority is granted",
+      "detail": "one generated per-compilation Verus run is the sole functional-formula refinement authority. It independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formula without a generic relation premise. PLIRON separately proves and reconciles total coverage, separation, frames, schedules, and ordered-product identity. Inert total-output and per-output staging grant no authority; a private move-only join requires both result classes. ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles fail closed until exact formula replay is implemented",
       "evidence": [
         "crates/fe2o3-pliron/src/production/total_output_refinement_v2.rs",
         "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
@@ -174,7 +177,7 @@
     {
       "id": "per-compilation-verus-composition",
       "status": "implemented-unpinned",
-      "detail": "before KIR lowering, one generated Verus checker is the sole refinement authority: it independently replays each supported exact pointwise formula and the whole separated-output aggregate. The report binds its exact instantiation, staged per-output role bindings, tool execution, MIR, live PLIRON, hierarchy, and SafeReferenceMirToLivePliron identity. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
+      "detail": "before KIR lowering, one generated Verus checker is the sole functional-formula refinement authority: it independently replays each supported exact pointwise formula. PLIRON, not the generated checker, proves and reconciles total coverage, allocation separation, and the ordered output product. The Verus report binds its exact instantiation, policy-checked Checked staging inputs, tool execution, MIR, live PLIRON, and SafeReferenceMirToLivePliron identity; a private move-only join requires matching structural and formula results. Unsupported replay roles fail closed and the fixed production runtime remains mandatory",
       "evidence": [
         "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
         "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",

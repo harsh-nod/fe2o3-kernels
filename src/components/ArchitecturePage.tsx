@@ -30,7 +30,7 @@ export function ArchitecturePage() {
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
             ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse, layout, and trace facts only within one validation."],
-            ["Verus", "After compiler-owned semantic and strict parallel derivation, independently replays exact pointwise integer or compiler-side IEEE operator-DAG formulas in one generated checker. Staged role-binding receipts grant no authority alone; the aggregate report is the sole refinement authority and binds formulas, tool run, staged inputs, and SafeReferenceMirToLivePliron identities."],
+            ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Policy-checked Checked staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; a private move-only join requires both structural and formula results."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
             ["Runtime", "Checks actual context, allocations, aliases, geometry, and lifetimes."],
@@ -102,14 +102,17 @@ export function ArchitecturePage() {
           semantic derivation, strict parallel derivation, then generated
           per-compilation Verus composition before KIR lowering. Generic
           exact pointwise formula replay, overflow-safe canonical loops, and
-          separated multiple-output aggregation are implemented but remain
-          unpinned. Each separated point output gets one staged role binding;
-          only the independent whole-kernel aggregate replay grants refinement
-          authority. Dynamic safe-slice reads remain
-          Incomplete until a compiler-owned extent implication proves the bound
-          over the complete output domain. Noncanonical loops emit exact SCC
+          PLIRON structural multiple-output reconciliation are implemented but
+          remain unpinned. Each separated point output gets one policy-checked
+          Checked staging record; staging grants no authority. The generated
+          checker replays formulas, while a private move-only join requires its
+          report and the PLIRON coverage, separation, and ordered-product
+          results. Dynamic safe-slice reads are complete only for an identical
+          symbolic ranked extent or an overflow-checked bounded static affine
+          interval; unrelated lengths, missing assertions, unsafe intervals,
+          and overflow fail closed. Noncanonical loops emit exact SCC
           invariant/variant requests, but imported answers cannot yet grant
-          aggregate authority. Tensor/MFMA result components bind exact stores
+          formula authority. Tensor/MFMA result components bind exact stores
           at the claim boundary; tensor-component theorem replay still fails
           closed. ErrorBounded formula replay is also incomplete.
           mi300x has no production proof-runtime fallback.

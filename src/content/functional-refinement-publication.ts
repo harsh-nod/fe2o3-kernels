@@ -16,6 +16,10 @@ interface FunctionalRefinementPublicationManifest {
   runtimeControllerSha256: string;
   effectDiagnosticFixturePath: string;
   effectDiagnosticFixtureSha256: string;
+  authorityNegativeFixturePath: string;
+  authorityNegativeFixtureSha256: string;
+  dynamicBoundsSourcePath: string;
+  dynamicBoundsSourceSha256: string;
   referenceCompilerCommand: string;
   validationCommands: string[];
 }
@@ -41,6 +45,11 @@ function validateFunctionalRefinementPublication(): void {
       manifest.effectDiagnosticFixturePath,
       manifest.effectDiagnosticFixtureSha256,
     ],
+    [
+      manifest.authorityNegativeFixturePath,
+      manifest.authorityNegativeFixtureSha256,
+    ],
+    [manifest.dynamicBoundsSourcePath, manifest.dynamicBoundsSourceSha256],
   ] as const;
 
   if (
@@ -115,5 +124,15 @@ export const functionalRefinementPublicationSources = deepFreeze([
     label: "ranked effect diagnostic fixture",
     sourcePath: manifest.effectDiagnosticFixturePath,
     sha256: manifest.effectDiagnosticFixtureSha256,
+  },
+  {
+    label: "non-authoritative receipt staging negative fixture",
+    sourcePath: manifest.authorityNegativeFixturePath,
+    sha256: manifest.authorityNegativeFixtureSha256,
+  },
+  {
+    label: "compiler-owned reference bounds discharge",
+    sourcePath: manifest.dynamicBoundsSourcePath,
+    sha256: manifest.dynamicBoundsSourceSha256,
   },
 ]);

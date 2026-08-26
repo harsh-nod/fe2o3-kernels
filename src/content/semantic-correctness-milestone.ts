@@ -26,7 +26,9 @@ interface SemanticCorrectnessMilestoneManifest {
   compilerTree: string | null;
   preloweringReportVersion: string | null;
   functionalReceiptVersion: string | null;
+  perCompilationTemplatePath: string | null;
   perCompilationTemplateSha256: string | null;
+  perCompilationGeneratedFixturePath: string | null;
   perCompilationGeneratedFixtureSha256: string | null;
   perCompilationMultiOutputFixturePath: string | null;
   perCompilationMultiOutputFixtureSha256: string | null;
@@ -44,6 +46,8 @@ const milestone =
 
 const exactObject = /^[0-9a-f]{40}$/u;
 const exactSha256 = /^[0-9a-f]{64}$/u;
+const CURRENT_PRELOWERING_REPORT_VERSION =
+  "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputStagingReportV2 + ProductionMirPlironSemanticContractReportV1 + ProductionParallelReferenceContractReportV1 + ProductionMirPlironPerCompilationVerusReportV1";
 
 function isRepositoryPath(path: unknown): path is string {
   return typeof path === "string" &&
@@ -103,12 +107,13 @@ function validateSemanticCorrectnessMilestone(): void {
     exactObject.test(milestone.compilerCommit) &&
     typeof milestone.compilerTree === "string" &&
     exactObject.test(milestone.compilerTree) &&
-    typeof milestone.preloweringReportVersion === "string" &&
-    milestone.preloweringReportVersion.length > 0 &&
+    milestone.preloweringReportVersion === CURRENT_PRELOWERING_REPORT_VERSION &&
     typeof milestone.functionalReceiptVersion === "string" &&
     milestone.functionalReceiptVersion.length > 0 &&
+    isRepositoryPath(milestone.perCompilationTemplatePath) &&
     typeof milestone.perCompilationTemplateSha256 === "string" &&
     /^[0-9a-f]{64}$/u.test(milestone.perCompilationTemplateSha256) &&
+    isRepositoryPath(milestone.perCompilationGeneratedFixturePath) &&
     typeof milestone.perCompilationGeneratedFixtureSha256 === "string" &&
     exactSha256.test(
       milestone.perCompilationGeneratedFixtureSha256,
@@ -148,4 +153,4 @@ export const semanticMilestoneLessonBoundary =
 export const semanticMilestoneBoundary =
   semanticCorrectnessMilestone.status === "integration-pending"
     ? `Milestone status: integration pending. The published compiler remains ${semanticCorrectnessMilestone.baselineCompilerCommit}; the contracts below are explanatory and grant no compiler, proof, artifact, launch, or hardware authority.`
-    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}. Exact pointwise integer and compiler-side IEEE operator-DAG formulas replay without a generic relation premise. Each of at most 64 separated point outputs has one staged role binding; those bindings grant no authority until the sole authoritative aggregate checker independently replays every formula and the output product. Dynamic safe-slice reads retain their exact Rust bound but remain fail closed until compiler-owned extent facts imply it over the complete output domain. Noncanonical SCCs retain exact invariant/variant requests without aggregate authority. Tensor/MFMA bindings cover at most 64 sites and 64 component pairs per receipt, while aggregate tensor-component replay remains unsupported. ErrorBounded aggregate formula replay is also unsupported. Positive multi-output fixture ${semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath} (${semanticCorrectnessMilestone.perCompilationMultiOutputFixtureSha256}) and substitution fixture ${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixturePath} (${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixtureSha256}) bind the generator boundary. mi300x lacks the required root-owned /opt runtime; no referenced production compile has completed the aggregate gate and there is no fallback. Compiler extraction/projection and pass soundness, target IEEE values, LLVM-or-later refinement, target instruction arithmetic, artifacts, launch, hardware, performance, and universal correctness remain outside the claim.`;
+    : `Milestone status: ${semanticCorrectnessMilestone.status} at compiler ${semanticCorrectnessMilestone.compilerCommit}. One generated checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas without a generic relation premise. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity; policy-checked Checked staging grants no authority, and a private move-only join requires both structural and formula results. Dynamic safe-slice reads are complete only for an exact identical symbolic ranked extent or an overflow-checked bounded static affine interval; unrelated independent lengths, missing assertions, unsafe intervals, and overflow fail closed. Noncanonical SCCs retain exact invariant/variant requests without formula authority. Tensor/MFMA bindings cover at most 64 sites and 64 component pairs per receipt, while tensor-component replay remains unsupported. ErrorBounded formula replay is also unsupported. Positive multi-output fixture ${semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath} (${semanticCorrectnessMilestone.perCompilationMultiOutputFixtureSha256}) and substitution fixture ${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixturePath} (${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixtureSha256}) bind the generator boundary. mi300x lacks the required root-owned /opt runtime; no referenced production compile has completed the gate and there is no fallback. Compiler extraction/projection and pass soundness, target IEEE values, LLVM-or-later refinement, target instruction arithmetic, artifacts, launch, hardware, performance, and universal correctness remain outside the claim.`;

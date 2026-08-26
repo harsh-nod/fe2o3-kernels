@@ -83,7 +83,7 @@ describe("functional-correctness catalog", () => {
       screen.getByText(/no generated Verus report is bound/iu),
     ).toBeInTheDocument();
     expect(
-      screen.getAllByText(/aggregate tensor-component/iu),
+      screen.getAllByText(/tensor-component.*replay/iu),
     ).toHaveLength(2);
   });
 
@@ -149,7 +149,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Twenty-three representative compile-time failures",
+        name: "Twenty-four representative compile-time failures",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -171,7 +171,7 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
     expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
     expect(screen.getByText("The grid leaves one output coordinate unwritten")).toBeInTheDocument();
-    expect(screen.getByText("A CPU-reference effect has no authenticated proof")).toBeInTheDocument();
+    expect(screen.getByText("A CPU-reference effect has no policy-checked staging")).toBeInTheDocument();
     expect(screen.getByText("The GPU write disagrees with the CPU reference")).toBeInTheDocument();
     expect(screen.getByText("Multiple outputs lack noalias separation")).toBeInTheDocument();
     expect(

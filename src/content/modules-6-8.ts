@@ -78,7 +78,7 @@ const moeRouting: Lesson = {
         "a91d913d7fb7a91e0a24008ad4f1a15663225eb457ac0b0e3227f724a147785c",
       explanatory: false,
       notice:
-        "This safe sequential oracle defines deterministic top-2 tie breaking, capacity, compact slots, inverse permutation, and sentinels. The compiler supports exact point formulas, overflow-safe canonical loops, and multiple separated point outputs with staged role bindings that grant authority only after independent aggregate replay. Dynamic slice extent implication, this returned composite structure, helper sorting, array mutation, comparison policy, and the retained runtime remain Incomplete. ErrorBounded relations do not prove control-flow ordering.",
+        "This safe sequential oracle defines deterministic top-2 tie breaking, capacity, compact slots, inverse permutation, and sentinels. The compiler supports exact point formulas, overflow-safe canonical loops, and multiple separated point outputs. PLIRON independently proves and reconciles their structural coverage and separation; one aggregate Verus execution replays each supported exact formula, and only the private move-only join can grant authority from both results. Dynamic slice extent implication, this returned composite structure, helper sorting, array mutation, comparison policy, and the retained runtime remain Incomplete. ErrorBounded relations do not prove control-flow ordering.",
     },
     {
       language: "rust",
@@ -197,7 +197,7 @@ const expertCompute: Lesson = {
         "e90e671831b8cef17960c276b930e39257c4399a64034554c9cabb4dbca494b7",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic routed rows, extents, strides, expert selection, bias, gate, and padding for runtime qualification; the complete oracle is not compiler-bound. Exact point formulas, canonical loops, and separated point outputs are generic. Dynamic slice extent implication, Vec allocation/return, multidimensional reads, nested recurrence, and routed composition remain unsupported. MFMA component/store binding is exact, but aggregate tensor-component replay, numerical-error replay, and the retained runtime remain Incomplete.",
+        "Safe sequential Rust defines dynamic routed rows, extents, strides, expert selection, bias, gate, and padding for runtime qualification; the complete oracle is not compiler-bound. Exact point formulas and canonical loops are generic, and PLIRON structurally reconciles separated outputs. Independent slice extents, Vec allocation/return, multidimensional reads, nested recurrence, and routed composition remain unsupported. MFMA component/store binding is exact, but tensor-component replay, numerical-error replay, and the retained runtime remain Incomplete.",
     },
     {
       language: "rust",
@@ -215,7 +215,7 @@ const expertCompute: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This verified workload-neutral source model states generic equality-plus-hierarchy composition, not this compilation's generated receipt. Exact point formulas, canonical loops, and separated point outputs are implemented without recognizing MoE. Tensor result components bind exact stores, but aggregate tensor-component replay is unsupported. Dynamic extent implication, this oracle's multidimensional recurrence, numerical-error replay, retained runtime, compiler projection, and LLVM-or-later refinement remain Incomplete.",
+        "This verified workload-neutral source model states generic equality-plus-hierarchy composition, not this compilation's generated report. Exact point formulas and canonical loops are implemented without recognizing MoE, and PLIRON structurally reconciles separated point outputs. Tensor result components bind exact stores, but tensor-component formula replay is unsupported. Independent extents, this oracle's multidimensional recurrence, numerical-error replay, retained runtime, compiler projection, and LLVM-or-later refinement remain Incomplete.",
     },
     {
       language: "rust",

@@ -69,7 +69,21 @@ const semanticCorrectnessSources: GitEvidenceObject = {
 
 const semanticCorrectnessDigests: GitEvidenceSource[] = [
   {
-    label: "generated multi-output aggregate Verus fixture",
+    label: "per-compilation Verus template",
+    commit: semanticCorrectnessMilestone.compilerCommit!,
+    sourcePath: semanticCorrectnessMilestone.perCompilationTemplatePath!,
+    sha256: semanticCorrectnessMilestone.perCompilationTemplateSha256!,
+  },
+  {
+    label: "generated single-output Verus fixture",
+    commit: semanticCorrectnessMilestone.compilerCommit!,
+    sourcePath:
+      semanticCorrectnessMilestone.perCompilationGeneratedFixturePath!,
+    sha256:
+      semanticCorrectnessMilestone.perCompilationGeneratedFixtureSha256!,
+  },
+  {
+    label: "generated multi-output formula-replay Verus fixture",
     commit: semanticCorrectnessMilestone.compilerCommit!,
     sourcePath:
       semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath!,
