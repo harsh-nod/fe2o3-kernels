@@ -197,7 +197,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit 29e65d78dd109ef7adca3e9853072d98ba56ae2b and tree 64f11f9cf93ef9e1aa7d925484fc5bb3a5a53208. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit d570d61d67fa5ae6fe3e2778f473b8ba5d5f9333 and tree b074653ed772c302b25e675dd361301e3c5de11f. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -744,13 +744,36 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "info",
         "title": "One bounded analysis context per run",
-        "text": "The production pipeline owns one ephemeral analysis manager over one immutable ranked-PLIRON function. Its four bounded cache roots hold sparse index results, execution layout, exact invocation traces, and tensor-layout dataflow, so passes that need the same facts compute each root once. The manager is discarded before any second validation or changed function is checked, which prevents stale facts from crossing a revalidation boundary while keeping each pass result independently reportable."
+        "text": "The production pipeline owns one ephemeral analysis manager over one immutable ranked-PLIRON function. Its five bounded cache roots hold sparse index results, execution layout, exact invocation traces, tensor-layout dataflow, and exact resource-bounded Presburger queries, so passes that need the same facts compute each root once. The manager is discarded before any second validation or changed function is checked, which prevents stale facts from crossing a revalidation boundary while keeping each pass result independently reportable."
       },
       {
         "type": "callout",
         "tone": "info",
         "title": "Sparse facts meet at typed CFG edges",
         "text": "Sparse index dataflow treats block arguments as real SSA definitions. Only reachable predecessor edges contribute; a not-yet-seen input is Pending, an unsupported or conflicting input is Unknown, identical incoming facts remain precise, and Unknown is absorbing. Unconditional, less-than, and equality branches type-check their carried operands before the incoming facts meet. Value, use, edge, iteration, and work-unit budgets make cyclic or oversized analysis return Incomplete instead of guessing."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Presburger queries reason about integer relations",
+        "text": "The shared pliron-presburger-v1 service accepts finite integer boxes, conjunctions of signed affine equalities and inequalities, constant-modulus congruences, and affine or remainder maps. It answers emptiness, range containment, injectivity, cross-map collision, total box coverage, and pointwise map equivalence with a deterministic first witness. Bounds, race, and hierarchy-ownership query it from their existing pass positions; it is shared compiler analysis, not a ninth policy pass. Unknown dynamic extents, nonlinear terms, machine-index overflow, malformed relations, and fixed-budget exhaustion return Incomplete rather than a guessed proof."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Presburger query",
+          "Compiler-visible result",
+          "Implementation evidence"
+        ],
+        "rows": [
+          ["Affine range containment", "An unguarded 2 * invocation + 1 read over launch extent 8 and view extent 12 is Rejected with FE2O3-BOUNDS-004: invocation [6] computes index 13.", "bounds_affine_oob.pliron and pliron_ranked_bounds::presburger_affine_failure_reports_invocation_and_index"],
+          ["Same-map collision and congruence", "invocation % 32 over 64 invocations has duplicate owners [0] and [32]; the race pass reports FE2O3-RACE-001. Small finite launches use the exact trace, while the same remainder relation is independently checked by pliron-presburger-v1.", "race_modulo_collision.pliron and pliron_presburger::modulo_ownership_reports_a_duplicate_owner"],
+          ["Cross-map intersection", "Overlapping affine read/write images produce a concrete conflicting coordinate; disjoint even-write and odd-read images prove race freedom beyond the exact-trace invocation cap.", "pliron_presburger::cross_effect_query_finds_a_race_between_distinct_invocations and race_presburger_disjoint.pliron"],
+          ["Finite-image coverage", "A missing logical output coordinate remains FE2O3-OWN-006. Hierarchy ownership routes its traced coordinate image through the shared exact box-coverage query.", "ownership_hole.pliron and pliron_presburger::traced_finite_image_uses_the_same_box_coverage_query"],
+          ["Pointwise map equivalence", "Equivalent affine coordinate formulas prove equal; a transpose mismatch returns domain [0, 1] with coordinates [0, 1] versus [1, 0]. The query is available to compiler clients; the rooted tensor-layout pass continues to own production FE2O3-TENSOR-LAYOUT diagnostics.", "pliron_presburger::layout_coordinate_comparison_proposes_a_concrete_mismatch and equivalent_layout_formulas_are_proved_pointwise"],
+          ["Finite-domain feasibility", "Contradictory signed loop-domain constraints prove Empty; a satisfiable phase returns a witness. This is an analysis-service result until a loop client requests it, not a new diagnostic code.", "pliron_presburger::invalid_loop_domain_is_empty_and_valid_domain_has_a_phase"],
+          ["Unsupported or over-budget relation", "A dynamic launch with no finite compiler bound, arithmetic overflow, or more than 1,048,576 work units returns Incomplete and cannot authorize lowering.", "pliron_presburger::dynamic_launch_without_a_finite_bound_is_unsupported, arithmetic_overflow_is_never_treated_as_a_proof, and resource_exhaustion_is_explicitly_incomplete"]
+        ]
       },
       {
         "type": "callout",
@@ -806,13 +829,14 @@ const narrativeRegistry = deepFreeze({
           ["kernel-workgroup-memory-v1", "Run must-initialization dataflow and track publication, compatible atomics, conflicts, and reuse by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; stale or unresolved epoch/trace; analysis limit."],
           ["kernel-semantic-refinement-v1", "Compare declared target-neutral expressions, then join each bound safe-reference effect to one real GPU write, exact hierarchy ownership, and status-Checked MIR-bound policy staging rather than guessing intent.", "Formula, domain, precondition, or value mismatch; missing, stale, duplicate, non-Checked, or invalid staging; orphan, ambiguous, duplicate, or unmodeled write; unresolved ownership/expression/trace; analysis limit. Staging grants no authority."],
           ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through values, reachable CFG edges, and block arguments so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Conflicting incoming facts; unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, edge, iteration, or work-unit limit."],
+          ["pliron-presburger-v1 (shared analysis)", "Decide finite signed-affine and constant-modulus integer-set and map queries for bounds, race, and hierarchy-ownership clients.", "Concrete range, collision, coverage, or equivalence witness; unknown dynamic extent; nonlinear expression; machine overflow; malformed relation; variable, constraint, output, or 1,048,576-work-unit limit."],
           ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
         ]
       },
       {
         "type": "compile-failures",
-        "heading": "Twenty-five representative compile-time failures",
-        "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence and the compiler-owned semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, barriers, workgroup-memory epochs, declared semantic refinement, strict parallel derivation, and per-compilation Verus composition. Text snippets are compact schematic semantic IR or compiler-derived report state; they do not imply that users write a separate kernel DSL, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current stable diagnostics. Errors from the eight-pass production sequence also carry a stable FE2O3-FIX repair action; the layout-flow example shows the rendered form. These cards are representative rather than an exhaustive list of every source-admission, structural, lowering, or target failure. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
+        "heading": "Twenty-six representative compile-time failures",
+        "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence and the compiler-owned semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, hierarchy ownership, barriers, workgroup-memory epochs, declared semantic refinement, strict parallel derivation, and per-compilation Verus composition. Text snippets are compact schematic semantic IR or compiler-derived report state; they do not imply that users write a separate kernel DSL, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current stable diagnostics. Errors from the eight-pass production sequence also carry a stable FE2O3-FIX repair action; the layout-flow and affine-bounds examples show the rendered form. These cards are representative rather than an exhaustive list of every source-admission, structural, lowering, or target failure. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
         "examples": [
           {
             "id": "mfma_operand_roles",
@@ -982,6 +1006,18 @@ const narrativeRegistry = deepFreeze({
             "caught": "The frontend preserves the array extent and constant index in ranked PLIRON. The bounds pass compares index 64 with extent 64, names the failed dimension and exact relation, maps it back to the Rust span, and terminates compilation."
           },
           {
+            "id": "bounds_affine_oob",
+            "title": "Affine access exceeds a finite view",
+            "language": "text",
+            "source": "%input = kernel.ranked_view <32, false, [12]>\n%tid = kernel.invocation_index <axis = 0, extent = 8>\n%two = kernel.index_constant 2\n%one = kernel.index_constant 1\n%index = kernel.index_binary Multiply %tid, %two\n%index = kernel.index_binary Add %index, %one\nkernel.access Read %input[%index]",
+            "diagnostic": "error[FE2O3-BOUNDS-004]: affine Read is out of bounds at block 0 op 6; access: v0 dimension 0; counterexample invocation [6] computes index 13, violating 13 < 12; help: guard the access with the failed relation or reduce the launch domain\nhelp[FE2O3-FIX-BOUNDS] (HasPlaceholders): guard every path to block 0 op 6 so v0 dimension 0 satisfies index < extent, or use an explicitly checked access tied to that ranked view",
+            "property": "AffineMemoryBounds",
+            "stage": "generic PLIRON pass 2/8",
+            "code": "FE2O3-BOUNDS-004",
+            "enforcement": "bounds_affine_oob.pliron; Presburger bounds unit tests; mandatory production pass",
+            "caught": "Sparse index analysis derives 2 * invocation + 1. The shared exact Presburger range query checks all eight finite invocations, returns the first violating invocation and computed index, and the bounds pass proposes the two general repairs: dominate the access with the failed relation or reduce the launch domain. No GEMM or other workload identity is involved."
+          },
+          {
             "id": "atomic_invalid_ordering",
             "title": "Illegal atomic ordering",
             "language": "text",
@@ -1049,8 +1085,8 @@ const narrativeRegistry = deepFreeze({
             "property": "GridCoverage",
             "stage": "generic PLIRON pass 5/8",
             "code": "FE2O3-OWN-006",
-            "enforcement": "Production ranked recipe plus hierarchy-ownership PLIRON pass",
-            "caught": "The pass derives actual writes, maps each invocation to lane, subgroup, and workgroup, and compares the union with the declared logical view. It reports the first missing coordinate without knowing what workload produced the write."
+            "enforcement": "ownership_hole.pliron; hierarchy-ownership unit tests; mandatory production pass",
+            "caught": "The pass derives actual writes, maps each invocation to lane, subgroup, and workgroup, and sends the finite coordinate image to the shared Presburger box-coverage query. It reports the first missing coordinate without knowing what workload produced the write."
           },
           {
             "id": "reference_evidence_missing",
@@ -1156,6 +1192,7 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-BOUNDS-001", "Rejected", "A read, write, or atomic index is statically outside a ranked extent; the diagnostic names the view, dimension, index, and required index < extent relation."],
           ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
           ["FE2O3-BOUNDS-003", "Incomplete", "Bounds analysis encountered an unreachable block, unsupported terminator or operation, sparse-index failure, or bounded resource limit."],
+          ["FE2O3-BOUNDS-004", "Rejected", "A finite affine access leaves its ranked extent; the diagnostic names the access and dimension, then gives the first invocation, computed index, failed bound, and a structured repair."],
           ["FE2O3-ATOMIC-001", "Rejected", "An atomic access is malformed, lacks explicit ordering or scope, uses an ordering illegal for its kind, or names a scope illegal for its address space."],
           ["FE2O3-ATOMIC-002", "Incomplete", "View provenance, target width/address-space/scope capability, or authenticated coherent-allocation evidence for system scope is unavailable."],
           ["FE2O3-ATOMIC-003", "Incomplete", "Atomic legality exceeded its bounded operation or finding budget."],
@@ -1268,7 +1305,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "info",
         "title": "Static and dynamic shapes have different proof outcomes",
-        "text": "A static extent and static index can produce a concrete Rejected witness such as 64 < 64. For device memory safety, a dominating guard can make a dynamic GPU access provable. For a safe CPU slice read, the compiler matches the exact Rust assertion to the access, then independently proves the full-domain bound from an identical symbolic ranked extent or an overflow-checked bounded static affine interval. Empty domains are safe. Unrelated extents, missing or unused assertions, unsafe intervals, and overflow fail closed; a host check or assertion alone does not supply the implication."
+        "text": "A static extent and static index can produce a concrete Rejected witness such as 64 < 64. A finite launch and affine or constant-modulus index map can also be decided exactly even when the index varies by invocation; this is where FE2O3-BOUNDS-004 and Presburger race proofs apply. For device memory safety, a dominating guard can make a dynamic GPU access provable. For a safe CPU slice read, the compiler matches the exact Rust assertion to the access, then independently proves the full-domain bound from an identical symbolic ranked extent or an overflow-checked bounded static affine interval. Empty domains are safe. An unbounded runtime extent, unrelated lengths, nonlinear terms, missing or unused assertions, unsafe intervals, and overflow fail closed; a host check or assertion alone does not supply the implication."
       },
       {
         "type": "table",
@@ -1279,11 +1316,14 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           ["[T; 64] with index 64", "The extent and invalid index are static.", "Rejected with FE2O3-BOUNDS-001 and the failed 64 < 64 relation."],
+          ["Finite launch 8 with input[2 * tid + 1] and extent 12", "The index varies, but its domain and signed-affine map are exact and finite.", "Rejected with FE2O3-BOUNDS-004; invocation [6] computes 13 and violates 13 < 12."],
+          ["Finite launch with even writes and odd reads", "Both affine images are exact over the compiler-bounded launch domain.", "The race pass proves the relation intersection empty even above the exact-trace invocation cap."],
           ["GPU &[T] access with a dominating index < len guard", "Every device path to the access carries the required dynamic bound.", "The GPU bounds pass can be Clean; this alone does not admit a dynamic CPU-reference read."],
           ["Dynamic CPU-reference input[index]", "The exact Rust bounds condition and matching GPU load identity are retained.", "Incomplete until a compiler-owned extent implication proves the condition over the complete output domain."],
           ["&[T] with an unresolved index", "The compiler cannot establish index < extent on every path.", "Incomplete with FE2O3-BOUNDS-002; no target lowering or runtime artifact."],
           ["Dynamic checked-tile ownership", "An authenticated checked-tile witness preserves an exact zero-offset, unit coordinate embedding for every active launch axis.", "The generic race pass can prove injectivity without enumerating the runtime grid."],
-          ["Ordinary dynamic affine write", "The address is dynamic but has no authenticated total ownership embedding.", "FE2O3-RACE-002 Incomplete; an expression that merely looks affine is not accepted as a partition."],
+          ["Finite compiler-bounded affine or remainder write", "The launch domain, allocation identity, machine arithmetic, and coordinate relation are all authenticated.", "The generic race pass can prove relation disjointness or report FE2O3-RACE-001 with a concrete collision witness."],
+          ["Runtime-unbounded affine-looking write", "No finite compiler bound exists for the relation domain.", "FE2O3-RACE-002 Incomplete; syntax that merely looks affine is not accepted as a partition."],
           ["Potentially overflowing affine map", "A multiply or add is not proved total over the admitted launch domain.", "Race proof is Incomplete even if the mathematical, unbounded-integer formula would be injective."],
           ["Dynamic launch or alias relation", "Concurrency or disjointness cannot be resolved in the bounded model.", "The corresponding race or barrier pass reports Incomplete and compilation stops."]
         ]
@@ -1868,7 +1908,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "The mandatory safety pipeline does not recognize GEMM",
-        "text": "The eight production ranked passes reason about tensor layout, bounds, atomics, race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory epochs, and declared semantic refinement. One ephemeral manager shares sparse results, execution layout, and bounded traces across that ordered sequence. The same machinery analyzes softmax, attention, MoE, reductions, and any kernel expressible in the supported target-neutral operation and effect subset; unsupported or unresolved forms stop as Incomplete. Historical fixtures and qualification oracles may still describe specific workloads, but they grant no production safety authority. Matrix lowering only selects the target instruction after the generic obligations pass."
+        "text": "The eight production ranked passes reason about tensor layout, bounds, atomics, race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory epochs, and declared semantic refinement. One ephemeral manager shares sparse results, execution layout, bounded traces, tensor-layout dataflow, and exact resource-bounded Presburger relations across that ordered sequence. The same machinery analyzes softmax, attention, MoE, reductions, and any kernel expressible in the supported target-neutral operation and effect subset; unsupported or unresolved forms stop as Incomplete. Historical fixtures and qualification oracles may still describe specific workloads, but they grant no production safety authority. Matrix lowering only selects the target instruction after the generic obligations pass."
       },
       {
         "type": "callout",
