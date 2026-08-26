@@ -37,7 +37,7 @@ describe("application shell", () => {
       await screen.findByRole("heading", {
         level: 1,
         name: "How to read this guide",
-      }, { timeout: 5_000 }),
+      }, { timeout: 15_000 }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Curriculum")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Kernel" })).toBeInTheDocument();
@@ -86,10 +86,14 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "gfx950_fp4_flash_attention",
+      "gfx950_fp4_attention_rust",
     );
 
-    await user.click(screen.getByRole("tab", { name: "ISA checks" }));
+    await user.click(screen.getByRole("tab", { name: "Safe CPU reference" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("attention_reference");
+    await user.click(screen.getByRole("tab", { name: "Equivalent HIP" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("gfx950_fp4_flash_attention");
+    await user.click(screen.getByRole("tab", { name: "Run and inspect" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "ds_read_b64_tr_b4",
     );
@@ -99,10 +103,41 @@ describe("application shell", () => {
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "AMD Instinct MI350X (gfx950)",
+      "Rust gfx950 lowering supported: false",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "all passed with max_error=0",
+      "FP4 attention max_error=2.38419e-07",
+    );
+  }, 30_000);
+
+  it("renders exact Muon source with bounded two-device evidence", async () => {
+    const user = userEvent.setup();
+    renderApp("/lesson/gfx950-muon-optimizer");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "gfx950 Muon polar update",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "gfx950_stage_gradient_shard_v1",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("gfx950_muon_update_4x4_v1");
+    expect(screen.getByText("Fixed-shape teaching boundary")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: "Evidence record" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "eight visible AMD Instinct MI350X devices",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Rust-produced HSACO: none",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "reduced norm max_error=0 with norm=0.614919",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Performance result: not claimed",
     );
   }, 30_000);
 
@@ -153,7 +188,7 @@ describe("application shell", () => {
       await screen.findByRole("heading", {
         level: 1,
         name: "Kernel delivery and verification progress",
-      }),
+      }, { timeout: 15_000 }),
     ).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();

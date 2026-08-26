@@ -79,7 +79,23 @@ export const narrativeIds = deepFreeze([
   "gfx950-fp4-attention/transpose-pipeline",
   "gfx950-fp4-attention/online-softmax",
   "gfx950-fp8-attention/transpose-pipeline",
-  "gfx950-fp8-attention/evidence-boundary"
+  "gfx950-fp8-attention/evidence-boundary",
+  "gfx950-advanced-moe/fixed-pipeline",
+  "gfx950-advanced-moe/scope-evidence",
+  "gfx950-kda-gdn-linear-attention/recurrence",
+  "gfx950-kda-gdn-linear-attention/scope-evidence",
+  "gfx950-indexed-sparse-attention/index-contract",
+  "gfx950-indexed-sparse-attention/scope-evidence",
+  "gfx950-compressed-hybrid-attention/fusion-contract",
+  "gfx950-compressed-hybrid-attention/scope-evidence",
+  "gfx950-attnres-gr-mhc/mixing-contract",
+  "gfx950-attnres-gr-mhc/scope-evidence",
+  "gfx950-speculative-mtp-verification/prefix-contract",
+  "gfx950-speculative-mtp-verification/scope-evidence",
+  "gfx950-ngram-embedding-gather/gather-contract",
+  "gfx950-ngram-embedding-gather/scope-evidence",
+  "gfx950-muon-optimizer/update-contract",
+  "gfx950-muon-optimizer/scope-evidence"
 ] as const);
 
 export type NarrativeId = (typeof narrativeIds)[number];
@@ -212,6 +228,38 @@ export const narrativeOrderByLesson = deepFreeze({
   "gfx950-fp8-attention": [
     "gfx950-fp8-attention/transpose-pipeline",
     "gfx950-fp8-attention/evidence-boundary"
+  ],
+  "gfx950-advanced-moe": [
+    "gfx950-advanced-moe/fixed-pipeline",
+    "gfx950-advanced-moe/scope-evidence"
+  ],
+  "gfx950-kda-gdn-linear-attention": [
+    "gfx950-kda-gdn-linear-attention/recurrence",
+    "gfx950-kda-gdn-linear-attention/scope-evidence"
+  ],
+  "gfx950-indexed-sparse-attention": [
+    "gfx950-indexed-sparse-attention/index-contract",
+    "gfx950-indexed-sparse-attention/scope-evidence"
+  ],
+  "gfx950-compressed-hybrid-attention": [
+    "gfx950-compressed-hybrid-attention/fusion-contract",
+    "gfx950-compressed-hybrid-attention/scope-evidence"
+  ],
+  "gfx950-attnres-gr-mhc": [
+    "gfx950-attnres-gr-mhc/mixing-contract",
+    "gfx950-attnres-gr-mhc/scope-evidence"
+  ],
+  "gfx950-speculative-mtp-verification": [
+    "gfx950-speculative-mtp-verification/prefix-contract",
+    "gfx950-speculative-mtp-verification/scope-evidence"
+  ],
+  "gfx950-ngram-embedding-gather": [
+    "gfx950-ngram-embedding-gather/gather-contract",
+    "gfx950-ngram-embedding-gather/scope-evidence"
+  ],
+  "gfx950-muon-optimizer": [
+    "gfx950-muon-optimizer/update-contract",
+    "gfx950-muon-optimizer/scope-evidence"
   ]
 } satisfies Record<string, readonly NarrativeId[]>);
 
@@ -291,12 +339,28 @@ export const narrativeFingerprints = deepFreeze({
   "evidence-archive/non-retroactive-milestone": "a617ed7d26093013c85b02935fbf371b283ebb10cfe2d122781a8b8d8a832f4d",
   "exercise-ladder/semantic-correctness": "7055f2d5b54aadf2fed5732b60ba1e502e2658386f44fb896a7e150a49d60373",
   "contributing-kernel/semantic-contract-checklist": "4dfa3529e8b98bc3d92530a8927fbfccd95f3e5053a8e7c4620ca27e57d2a8a8",
-  "gfx950-fp4-gemm/prerequisites": "95a9809ae08d57728f6976a5b8b1df30d964534aeba1041c148517a3ba24f01d",
-  "gfx950-fp4-gemm/tile-accumulator": "baeea1167e660906f7d49ab5385b20bc32330105df93c13276b027e9ff6ac988",
+  "gfx950-fp4-gemm/prerequisites": "1efa3480f4ff64fe6363bfec44cccdc86e5309adf064697878ad14599877b4d8",
+  "gfx950-fp4-gemm/tile-accumulator": "5344ade20517ee451723a9452ef2316ca7b174ed65c8c6c65e15efd732cfd2d2",
   "gfx950-fp8-gemm/format-layout": "d1fa273492799a5dd9919472e192839f443cbc46c8e0ae2bbc42f8a2d7acbfd8",
   "gfx950-fp8-gemm/tile-accumulator": "e55543136278b6abd091c5673e42be8a62049f6f6dcaaa7e42eec525c8365387",
   "gfx950-fp4-attention/transpose-pipeline": "e61eccaf1d60221b0378987f85f54d1360505ea9b7d9c705e49d8bcac4651074",
   "gfx950-fp4-attention/online-softmax": "b95271a39f518dfc37184f32511f3da6e228e8680aa5b1dcdf1ed9b75e69209a",
-  "gfx950-fp8-attention/transpose-pipeline": "4c1b228b233a22b707411e663205a76e88855eedf2b1f6c3e3873e94c70ca9be",
-  "gfx950-fp8-attention/evidence-boundary": "b79bd304fc52c9aba38bb3ace2443ad87aaf61c9797446e4ea6ad0da7396ad6b"
+  "gfx950-fp8-attention/transpose-pipeline": "2f958f735894420681532b10f6f3198f0a77ef0eaccd1df8f77bdd3b549ef5aa",
+  "gfx950-fp8-attention/evidence-boundary": "b4eea80d257f1552a836fad7de4a3725b19e0f2128ae5123f45753165605b86d",
+  "gfx950-advanced-moe/fixed-pipeline": "03558053c18a32924d4c4732123b6de56da9cfc699bd94bb956644df3c4c4475",
+  "gfx950-advanced-moe/scope-evidence": "eb08c8160d2c048ab18fada2ad07e6dce66dab58e11efe5491823213c8adcea2",
+  "gfx950-kda-gdn-linear-attention/recurrence": "40770fe318b15ba2549dac18e7b5c57fb9fc3c6b8baf87b0d222b8ae5898ad47",
+  "gfx950-kda-gdn-linear-attention/scope-evidence": "6600757082bc02dc11b58a66bb1e10949a624cc5d1717b081313fa9f8464c214",
+  "gfx950-indexed-sparse-attention/index-contract": "dea1a54cde93fbec18cfe7482ae18e391f0d74064c5f7c81bc3f169644eb6afd",
+  "gfx950-indexed-sparse-attention/scope-evidence": "e1c376d348e21cf93a4a38069fbc6be4b402013bf1ce101c286db479be7f68c2",
+  "gfx950-compressed-hybrid-attention/fusion-contract": "ef840e4a3e22aa5d13916c95de62f1b8f348c0b1dc723457180bbaa5e6350b1f",
+  "gfx950-compressed-hybrid-attention/scope-evidence": "e8b8a02eb41a3c2aada7934e0439b29b0c6a36955e8bc6f80d2f31ab3bf4a3e0",
+  "gfx950-attnres-gr-mhc/mixing-contract": "256492d391ed3e36f51e986e76d3a159f3be4c87c82adbadef4bc09a15f3c7c1",
+  "gfx950-attnres-gr-mhc/scope-evidence": "dc0f1dd1a1197bb37ab331df417d0c055e28b24b7b772c3b2bd1f2ac6906b427",
+  "gfx950-speculative-mtp-verification/prefix-contract": "df9aec9a9826fcd76b9a01b4440ef4e8d7e88e30ff7dd8c3d9ea5dbd3e423a13",
+  "gfx950-speculative-mtp-verification/scope-evidence": "9a5aaf0d40ac1f9bef1eb87a71c7675b03f5d4123b809fa41d9158be9897da88",
+  "gfx950-ngram-embedding-gather/gather-contract": "db4a533e14d8a8f5c22faa4fc90498f803da170da3547d6ec0ff9b4c5532e23e",
+  "gfx950-ngram-embedding-gather/scope-evidence": "db958611ab736db3d3e93218e22806fc4320591c06ca5c618a148ee5a115ebd4",
+  "gfx950-muon-optimizer/update-contract": "3f3750b43448b83ccfdad8e5f556a414bb090056828f433cf5c39231d50e1a57",
+  "gfx950-muon-optimizer/scope-evidence": "3c9c63da25e664afce70385e80eb330769e98fc107715d3aa390af0eb9fb2ed5"
 } satisfies Record<NarrativeId, string>);

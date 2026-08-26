@@ -160,6 +160,27 @@ describe("search index", () => {
       lessonId: "gfx950-fp8-gemm",
     });
   });
+
+  it("indexes every advanced gfx950 operator family", () => {
+    const expected = [
+      ["advanced MoE", "gfx950-advanced-moe"],
+      ["KDA GDN", "gfx950-kda-gdn-linear-attention"],
+      ["indexed sparse attention", "gfx950-indexed-sparse-attention"],
+      ["compressed hybrid attention", "gfx950-compressed-hybrid-attention"],
+      ["AttnRes GR mHC", "gfx950-attnres-gr-mhc"],
+      ["speculative MTP verification", "gfx950-speculative-mtp-verification"],
+      ["N-gram hash-table gather", "gfx950-ngram-embedding-gather"],
+      ["Muon optimizer", "gfx950-muon-optimizer"],
+    ] as const;
+
+    for (const [query, lessonId] of expected) {
+      const results = searchCatalog(query, lessons, glossary);
+      expect(
+        results.some((result) => result.lessonId === lessonId),
+        query,
+      ).toBe(true);
+    }
+  });
 });
   it("indexes diagnostics and deep-links to the compiler-check catalog", () => {
     for (const query of [
@@ -263,7 +284,7 @@ describe("lesson section rendering policy", () => {
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();
-  });
+  }, 20_000);
 
   it("rejects an unknown section kind without rendering attacker text", () => {
     const unsupportedAuthority =

@@ -297,11 +297,11 @@ describe("curriculum integrity", () => {
     });
   });
 
-  it("covers modules zero through nine in order", () => {
+  it("covers modules zero through ten in order", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     ]);
-    expect(lessons).toHaveLength(25);
+    expect(lessons).toHaveLength(33);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
       new Set(
@@ -316,13 +316,13 @@ describe("curriculum integrity", () => {
 
   it("publishes bounded gfx950 low-precision source and ISA lessons", () => {
     const expected = [
-      ["gfx950-fp4-gemm", "gfx950_fp4_gemm", "cbsz:4 blgp:4"],
-      ["gfx950-fp8-gemm", "gfx950_fp8_gemm", "v_mfma_f32_16x16x128_f8f6f4"],
-      ["gfx950-fp4-attention", "gfx950_fp4_flash_attention", "ds_read_b64_tr_b4"],
-      ["gfx950-fp8-attention", "gfx950_fp8_flash_attention", "ds_read_b64_tr_b8"],
+      ["gfx950-fp4-gemm", "gfx950_fp4_gemm_rust", "c8df66efc69ffcc731462d7600d7c307954fcd5bb5e311490fee1b253dafcab7", "gemm_reference", "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c", "gfx950_fp4_gemm", "cbsz:4 blgp:4"],
+      ["gfx950-fp8-gemm", "gfx950_fp8_gemm_rust", "07b51618ef69bda35e91e422ca948934a450e376dce68bb9ab62e0e8af1eedce", "gemm_reference", "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c", "gfx950_fp8_gemm", "v_mfma_f32_16x16x128_f8f6f4"],
+      ["gfx950-fp4-attention", "gfx950_fp4_attention_rust", "de73f75ba38cab5d88dd4889d0fe4cbc41295f49afec803774a6c9ace78f0062", "attention_reference", "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0", "gfx950_fp4_flash_attention", "ds_read_b64_tr_b4"],
+      ["gfx950-fp8-attention", "gfx950_fp8_attention_rust", "1bba502d11b4806e9bb14141049655e6f05ae7a2d2bfdad8fe3b22625feb6149", "attention_reference", "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0", "gfx950_fp8_flash_attention", "ds_read_b64_tr_b8"],
     ] as const;
 
-    for (const [lessonId, symbol, requiredIsa] of expected) {
+    for (const [lessonId, rustSymbol, rustSha256, referenceSymbol, referenceSha256, hipSymbol, requiredIsa] of expected) {
       const lesson = lessons.find((candidate) => candidate.id === lessonId);
       expect(lesson, lessonId).toBeDefined();
       expect(lesson?.module).toBe(9);
@@ -330,21 +330,53 @@ describe("curriculum integrity", () => {
         expect.objectContaining({ kind: "source-example" }),
       ]);
       expect(lesson?.claims[0].reference).toBeUndefined();
-      expect(lesson?.tabs.find((tab) => tab.kind === "kernel")?.code).toContain(
-        symbol,
+      expect(lesson?.tabs.map((tab) => tab.kind)).toEqual([
+        "kernel", "reference", "comparison", "verus", "host", "result",
+      ]);
+      const kernel = lesson?.tabs[0];
+      expect(kernel?.language).toBe("rust");
+      expect(kernel?.explanatory).toBe(false);
+      expect(kernel?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(kernel?.sourcePath).toBe("examples/gfx950_low_precision/src/kernel.rs");
+      expect(kernel?.code).toContain(rustSymbol);
+      expect(kernel?.sourceSha256).toBe(rustSha256);
+      const reference = lesson?.tabs[1];
+      expect(reference?.kind).toBe("reference");
+      expect(reference?.language).toBe("rust");
+      expect(reference?.explanatory).toBe(false);
+      expect(reference?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(reference?.code).toContain(referenceSymbol);
+      expect(reference?.sourceSha256).toBe(referenceSha256);
+      const comparison = lesson?.tabs[2];
+      expect(comparison?.label).toBe("Equivalent HIP");
+      expect(comparison?.code).toContain(hipSymbol);
+      expect(comparison?.sourceSha256).toBe(
+        "5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a",
       );
-      expect(
-        lesson?.tabs.find((tab) => tab.kind === "comparison")?.code,
-      ).toContain(requiredIsa);
-      expect(lesson?.tabs.find((tab) => tab.kind === "host")?.code).toContain(
+      expect(lesson?.tabs[3]?.kind).toBe("verus");
+      const host = lesson?.tabs[4];
+      expect(host?.code).toContain(requiredIsa);
+      expect(host?.code).toContain("cargo test --offline");
+      expect(host?.code).toContain("pinned fe2o3 core checkout");
+      expect(host?.code).toContain("fe2o3-kernels site checkout");
+      expect(host?.code).toContain(
         "--offload-arch=gfx950",
       );
-      expect(lesson?.tabs.find((tab) => tab.kind === "result")?.code).toContain(
-        "AMD Instinct MI350X (gfx950)",
-      );
+      const result = lesson?.tabs[5]?.code;
+      expect(result).toContain("Rust gfx950 lowering supported: false");
+      expect(result).toContain("Rust-produced HSACO: none");
+      expect(result).toContain("SEPARATE HIP COMPARISON LANE");
+      expect(result).toContain("MI350X gfx950");
+      expect(result).toContain("Core source commit: 91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
     }
 
     const fp4Gemm = serializedLessonContent("gfx950-fp4-gemm");
+    expect(
+      createHash("sha256")
+        .update(readFileSync("examples/gfx950_low_precision/gfx950_low_precision.hip"))
+        .digest("hex"),
+    ).toBe("5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a");
+    expect(fp4Gemm).toContain("ab39293c0f251678496cb5da026b8fb6ebbb4f6c96989ad5a2962d3ad6018379");
     expect(fp4Gemm).toContain("one fixed K=128 phase");
     expect(fp4Gemm).toContain("identity scale operands as constants");
     const fp4Attention = serializedLessonContent("gfx950-fp4-attention");
@@ -353,7 +385,122 @@ describe("curriculum integrity", () => {
     expect(fp4Attention).toContain("Multi-tile online rescaling");
     const fp8Attention = serializedLessonContent("gfx950-fp8-attention");
     expect(fp8Attention).toContain("ds_read_b64_tr_b8");
-    expect(fp8Attention).toContain("matched all four CPU oracles exactly");
+    expect(fp8Attention).toContain("attention max_error=2.38419e-07");
+    expect(fp8Attention).toContain("native CDNA 4 FP8 split packing");
+  });
+
+  it("publishes exact bounded advanced gfx950 source and evidence", () => {
+    const expected = [
+      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
+      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
+      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
+      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
+      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
+      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
+      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
+      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
+    ] as const;
+
+    const excerptHashes = {
+      "gfx950-advanced-moe": ["ebb73a207fa5f56c893db782ed5169aa1afe95241908c1ddff8f232fd1c216ed", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
+      "gfx950-kda-gdn-linear-attention": ["807a5e9c92ea2188fca93e4ec1ab0442c4ecf0ff0f3ecc60adf58a070242c571", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
+      "gfx950-indexed-sparse-attention": ["d73101786d16d612eb9fb5266f882d6e8107650550d6398ad01d004f32030ce3", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
+      "gfx950-compressed-hybrid-attention": ["aaf25c62fb72ed32b25eb840b3fba9f955783f1b63d0d3b019c89c6ef9eb9b0a", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
+      "gfx950-attnres-gr-mhc": ["9cbc16e2411298f9a452ee9d040b07c377f9d59b908eb89e1729595f4bb6f409", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
+      "gfx950-speculative-mtp-verification": ["c18a04e7de7af396288162bef82683ad944a620f18a65274bc03f5021820e520", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
+      "gfx950-ngram-embedding-gather": ["82fa12ab47a0d0dc82c75ed0ce552277adef0c4467b9d148bd35772aea6af362", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
+      "gfx950-muon-optimizer": ["2d648160c8507976040c4db8ed3b3c87ddf47e17ca108850911b19df380eb74f", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
+    } as const;
+
+    for (const [lessonId, sourcePath, rustSymbol, referenceSymbol, sourceFileSha256, hipSymbol, result, isa] of expected) {
+      const [rustExcerptSha256, referenceExcerptSha256] = excerptHashes[lessonId];
+      const advanced = lessons.find((candidate) => candidate.id === lessonId);
+      expect(advanced, lessonId).toBeDefined();
+      expect(advanced?.module).toBe(10);
+      expect(advanced?.claims).toEqual([
+        expect.objectContaining({ kind: "source-example" }),
+      ]);
+      expect(advanced?.claims[0].reference).toBeUndefined();
+      expect(advanced?.tabs.map((tab) => tab.kind)).toEqual([
+        "kernel",
+        "reference",
+        "comparison",
+        "verus",
+        "host",
+        "result",
+      ]);
+
+      const kernel = advanced?.tabs.find((tab) => tab.kind === "kernel");
+      expect(kernel?.sourcePath).toBe(sourcePath);
+      expect(kernel?.language).toBe("rust");
+      expect(kernel?.explanatory).toBe(false);
+      expect(kernel?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(kernel?.sourceSha256).toBe(rustExcerptSha256);
+      expect(kernel?.code).toContain(rustSymbol);
+      expect(kernel?.code).not.toContain("SOURCE MIRROR PENDING");
+      expect(createHash("sha256").update(readFileSync(sourcePath)).digest("hex")).toBe(
+        sourceFileSha256,
+      );
+
+      const reference = advanced?.tabs[1];
+      expect(reference?.kind).toBe("reference");
+      expect(reference?.language).toBe("rust");
+      expect(reference?.sourcePath).toBe(sourcePath.replace("kernel.rs", "reference.rs"));
+      expect(reference?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(reference?.sourceSha256).toBe(referenceExcerptSha256);
+      expect(reference?.explanatory).toBe(false);
+      expect(reference?.code).toContain(referenceSymbol);
+      const comparison = advanced?.tabs[2];
+      expect(comparison?.label).toBe("Equivalent HIP");
+      expect(comparison?.code).toContain(hipSymbol);
+      expect(advanced?.tabs[3]?.kind).toBe("verus");
+      const host = advanced?.tabs[4];
+      expect(host?.code).toContain(isa);
+      expect(host?.code).toContain("cargo test --offline");
+      expect(host?.code).toContain("pinned fe2o3 core checkout");
+      expect(host?.code).toContain("fe2o3-kernels site checkout");
+      expect(host?.code).toContain("--offload-arch=gfx950");
+
+      const evidence = advanced?.tabs.find((tab) => tab.kind === "result")?.code;
+      expect(evidence).toContain(`Kernel file SHA-256: ${sourceFileSha256}`);
+      expect(evidence).toContain("Core source commit: 91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(evidence).toContain(result);
+      expect(evidence).toContain("Rust gfx950 lowering supported: false");
+      expect(evidence).toContain("Rust-produced HSACO: none");
+      expect(evidence).toContain("HIP runtime observation:");
+      expect(evidence).toContain("do not bind to, lower, or execute the Rust source");
+      expect(evidence).toContain("Performance result: not claimed");
+      expect(evidence).toContain("Formal proof: not claimed");
+
+      const serialized = serializedLessonContent(lessonId);
+      expect(serialized).toContain("Fixed-shape teaching boundary");
+      expect(serialized).toContain("no production serving");
+      expect(serialized).toContain("full distributed collective");
+      expect(serialized).toContain("full-model-equivalence claim");
+    }
+  });
+
+  it("pins byte-exact Rust mirrors for all gfx950 packages", () => {
+    const mirrors = [
+      ["examples/gfx950_low_precision/README.md", "f3401cc5e0964cb2d3a71809e803edd83d52eec3537dd47aa5f81b5c2087d057"],
+      ["examples/gfx950_low_precision/Cargo.toml", "e208401265a5b0453846f98dce53d6b1d325d1aa1739f1a00ec86cbf7e476bb5"],
+      ["examples/gfx950_low_precision/src/kernel.rs", "1db40f7590af32b8b6781294ba184101a4e5cb7055a26e60bdf0aabec7145099"],
+      ["examples/gfx950_low_precision/src/reference.rs", "388ec3bf3fff9a5290456afc92b9bd24be8813d9ae914865f780affb7fb6e3e7"],
+      ["examples/gfx950_low_precision/src/lib.rs", "f0787e4d442e0ea31df61917f803f4b9732a99cf5ccc8e376de7c104bbc94ebd"],
+      ["examples/gfx950_advanced_attention/README.md", "7657397fea609f7da6ff930aa23e60775f59822c9f2c2daec3898054abaf49a6"],
+      ["examples/gfx950_advanced_attention/Cargo.toml", "15331511f974503b26131577ec321bd7283945360f31744c007ffba2c072acf8"],
+      ["examples/gfx950_advanced_attention/src/kernel.rs", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba"],
+      ["examples/gfx950_advanced_attention/src/reference.rs", "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9"],
+      ["examples/gfx950_advanced_attention/src/lib.rs", "af05bbaee839bd7c54ea87f986338ccc5b9555021f3fcd4815faf68d21c97f7f"],
+      ["examples/gfx950_advanced_systems/README.md", "2408f7085b5504b7b64ac34f4ef1ee1bf062ca2d326cd9c762f7464686e9e218"],
+      ["examples/gfx950_advanced_systems/Cargo.toml", "2b7f59fa6efbafafcb6f4ec67831119f6287b12d0a88e08af1e8cfad33767117"],
+      ["examples/gfx950_advanced_systems/src/kernel.rs", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081"],
+      ["examples/gfx950_advanced_systems/src/reference.rs", "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd"],
+      ["examples/gfx950_advanced_systems/src/lib.rs", "28782b1cf8d9a85973bc02011448cc18d6440aa504eadb48a479264dd08c93a9"],
+    ] as const;
+    for (const [path, digest] of mirrors) {
+      expect(createHash("sha256").update(readFileSync(path)).digest("hex"), path).toBe(digest);
+    }
   });
 
   it("uses every evidence label", () => {
@@ -2307,6 +2454,18 @@ describe("curriculum integrity", () => {
           "flash-attention",
           "moe-routing",
           "moe-expert-compute",
+          "gfx950-fp4-gemm",
+          "gfx950-fp8-gemm",
+          "gfx950-fp4-attention",
+          "gfx950-fp8-attention",
+          "gfx950-advanced-moe",
+          "gfx950-kda-gdn-linear-attention",
+          "gfx950-indexed-sparse-attention",
+          "gfx950-compressed-hybrid-attention",
+          "gfx950-attnres-gr-mhc",
+          "gfx950-speculative-mtp-verification",
+          "gfx950-ngram-embedding-gather",
+          "gfx950-muon-optimizer",
         ].includes(lesson.id)
           ? false
           : true,

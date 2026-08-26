@@ -779,10 +779,14 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
     page.getByText("Source example", { exact: true }).first(),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "gfx950_fp4_flash_attention",
+    "gfx950_fp4_attention_rust",
   );
 
-  await page.getByRole("tab", { name: "ISA checks" }).click();
+  await page.getByRole("tab", { name: "Safe CPU reference" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("attention_reference");
+  await page.getByRole("tab", { name: "Equivalent HIP" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("gfx950_fp4_flash_attention");
+  await page.getByRole("tab", { name: "Run and inspect" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("ds_read_b64_tr_b4");
   await expect(page.getByRole("tabpanel")).toContainText(
     "v_mfma_f32_16x16x128_f8f6f4",
@@ -790,9 +794,11 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
 
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "AMD Instinct MI350X (gfx950)",
+    "Rust gfx950 lowering supported: false",
   );
-  await expect(page.getByRole("tabpanel")).toContainText("max_error=0");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "FP4 attention max_error=2.38419e-07",
+  );
 
   await page.goto("./#/lesson/gfx950-fp8-attention");
   await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
@@ -804,7 +810,7 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
       name: "gfx950 FP8 flash attention",
     }),
   ).toBeVisible();
-  await page.getByRole("tab", { name: "ISA checks" }).click();
+  await page.getByRole("tab", { name: "Run and inspect" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("ds_read_b64_tr_b8");
   expect(
     await page.evaluate(
@@ -815,6 +821,60 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
   ).toBe(false);
 });
 
+test("advanced gfx950 source-example lessons render on desktop and mobile", async ({
+  page,
+}, testInfo) => {
+  const routes = [
+    ["gfx950-advanced-moe", "gfx950 advanced MoE pipeline", "gfx950_moe_route_fp4_t16_e4_k2_v1"],
+    ["gfx950-kda-gdn-linear-attention", "gfx950 KDA/GDN linear attention", "gfx950_kda_gdn_decode"],
+    ["gfx950-indexed-sparse-attention", "gfx950 indexed sparse attention", "gfx950_content_sparse_attention"],
+    ["gfx950-compressed-hybrid-attention", "gfx950 compressed hybrid attention", "gfx950_compressed_hybrid_attention"],
+    ["gfx950-attnres-gr-mhc", "gfx950 AttnRes, GR, and mHC mixing", "gfx950_attnres_aggregate"],
+    ["gfx950-speculative-mtp-verification", "gfx950 speculative and MTP verification", "gfx950_speculative_transaction_v1"],
+    ["gfx950-ngram-embedding-gather", "gfx950 N-gram hash-table gather", "gfx950_qwen_ngram_gather_v1"],
+    ["gfx950-muon-optimizer", "gfx950 Muon polar update", "gfx950_muon_update_4x4_v1"],
+  ] as const;
+
+  expect(["desktop", "mobile"]).toContain(testInfo.project.name);
+  for (const [lessonId, title, symbol] of routes) {
+    await page.goto(`./#/lesson/${lessonId}`);
+    await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+      timeout: 120_000,
+    });
+    await expect(
+      page.getByRole("heading", { level: 1, name: title }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Source example", { exact: true }).first(),
+    ).toBeVisible();
+    await expect(page.getByRole("tabpanel")).toContainText(
+      symbol,
+    );
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth,
+      ),
+      `${testInfo.project.name}:${lessonId}`,
+    ).toBe(false);
+  }
+
+  await page.getByRole("tab", { name: "Evidence record" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "eight visible AMD Instinct MI350X devices",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "reduced norm max_error=0 with norm=0.614919",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Rust-produced HSACO: none",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Formal proof: not claimed",
+  );
+});
+
 test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {
@@ -823,7 +883,7 @@ test("every internal curriculum route resolves without page overflow", async ({
     timeout: 120_000,
   });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(25);
+  await expect(routeLinks).toHaveCount(33);
   const routes = await routeLinks.evaluateAll((links) =>
       links.map((link) => ({
         href: (link as HTMLAnchorElement).href,

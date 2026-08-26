@@ -28,6 +28,39 @@ function milestoneCallout(text: string, fullBoundary = false): LessonBlock {
   };
 }
 
+function advancedScope(
+  sectionId: string,
+  title: string,
+  sourcePath: string,
+  familyBoundary: string,
+): NarrativeRegistryEntry {
+  return {
+    sectionId,
+    title,
+    blocks: [
+      {
+        type: "table",
+        headers: ["Integration field", "Current record", "Promotion requirement"],
+        rows: [
+          ["Rust source", `${sourcePath} and its independent safe Rust reference are mirrored exactly; both SHA-256 values are recorded.`, "Establishes source and CPU-oracle availability only; no gfx950 lowering, proof, or model equivalence."],
+          ["Fixed shape", "Every extent and operator stage is copied from the final teaching suite.", "No dynamic-shape or production generalization."],
+          ["Compiler and ISA", "Rust lowering_supported is false with an exact blocker. Separate HIP build and symbol-scoped ISA scripts plus the HIP gfx950 object digest are recorded.", "HIP instruction presence does not establish a Rust artifact or Rust algorithm semantics."],
+          ["Oracle and runtime", "The Rust CPU-reference command is separate from the exact HIP per-operator results and gfx950 environment.", "No Rust gfx950 execution; HIP covers only its deterministic recorded cases."],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Fixed-shape teaching boundary",
+        text: `This lesson covers only the source-declared fixed shape after mirroring. ${familyBoundary} It makes no production serving, full distributed collective, formal-proof, performance, convergence, training-quality, or full-model-equivalence claim.`,
+      },
+      milestoneCallout(
+        "This source-example lesson binds ordinary Rust to an independent safe CPU reference. It has no Rust gfx950 lowering, Rust HSACO, Rust GPU execution, proof execution, compiler-refinement receipt, or artifact authority; the HIP observation remains comparison-only.",
+      ),
+    ],
+  };
+}
+
 const narrativeRegistry = deepFreeze({
   "read-the-evidence/labels": {
     "sectionId": "labels",
@@ -2791,10 +2824,10 @@ const narrativeRegistry = deepFreeze({
         type: "callout",
         tone: "proof",
         title: "Hardware execution is recorded separately",
-        text: "On 2026-08-26, ssh host mi350 reported AMD Instinct MI350X gfx950 agents and all four fixed examples matched their CPU oracles with max_error=0 under ROCm 7.2.1. The source-example lesson label remains conservative because this site has not imported that external run into its pinned evidence registry.",
+        text: "On 2026-08-26, the separate HIP companion suite on ssh host mi350 reported AMD Instinct MI350X gfx950 agents, GEMM max_error=0, and attention max_error=2.38419e-07 under ROCm 7.2.1. Those observations do not bind to the mirrored Rust source, whose exact lowering flag is false and whose authority stops at source plus independent CPU reference.",
       },
       milestoneCallout(
-        "These low-precision examples add a target-specific source and inspection path. They do not inherit the existing gfx942 semantic-correctness, artifact, runtime, or hardware authority.",
+        "These lessons now start from ordinary attributed Rust plus an independent safe CPU reference. The Rust gfx950 device terminals are not lowered; companion HIP ISA and runtime evidence does not supply Rust semantic-correctness, artifact, runtime, or hardware authority.",
       ),
     ],
   },
@@ -2804,7 +2837,7 @@ const narrativeRegistry = deepFreeze({
     blocks: [
       {
         type: "paragraph",
-        text: "One wave computes a 16 x 16 output tile with one fixed K=128 phase because v_mfma_f32_16x16x128_f8f6f4 consumes that logical reduction depth. Eight E2M1 values occupy each 32-bit packed word. The current builtin call encodes identity scale operands as constants; it has no runtime E8M0 scale arrays.",
+        text: "The attributed Rust expresses one wave computing a 16 x 16 output tile with one fixed K=128 phase through typed gfx950 device terminals. Eight E2M1 values occupy each packed word. Rust lowering is currently blocked; the companion HIP builtin and disassembly encode identity scale operands as constants and provide no runtime E8M0 scale arrays.",
       },
       {
         type: "table",
@@ -2820,7 +2853,7 @@ const narrativeRegistry = deepFreeze({
         type: "callout",
         tone: "boundary",
         title: "Inspect the machine instruction, not the intrinsic spelling",
-        text: "The Clang builtin and LLVM intrinsic contain mfma_scale, but gfx950 disassembly prints v_mfma_f32_16x16x128_f8f6f4. Acceptance checks must match the emitted ISA mnemonic and inspect cbsz:4 blgp:4 for FP4. Runtime block scales are a future extension; the current source passes constant identity-scale operands.",
+        text: "The comparison HIP Clang builtin and LLVM intrinsic contain mfma_scale, but its gfx950 disassembly prints v_mfma_f32_16x16x128_f8f6f4. HIP acceptance checks inspect cbsz:4 blgp:4 for FP4; they do not prove Rust lowering. Runtime block scales are a future extension.",
       },
     ],
   },
@@ -2934,7 +2967,7 @@ const narrativeRegistry = deepFreeze({
         ],
       },
       milestoneCallout(
-        "A valid gfx950 object remains below hardware evidence. A separate MI350X run matched all four CPU oracles exactly, but no performance label or site evidence promotion is inferred from that observation.",
+        "A valid gfx950 object remains below hardware evidence. A separate MI350X run recorded max_error=0 for both GEMMs and 2.38419e-07 for both attention kernels after native B8 split-layout correction, but no performance label or site evidence promotion is inferred from that observation.",
       ),
     ],
   },
@@ -2956,10 +2989,229 @@ const narrativeRegistry = deepFreeze({
         type: "callout",
         tone: "boundary",
         title: "Keep external observations distinct",
-        text: "The 2026-08-26 mi350 run records an MI350X gfx950 identity and four exact CPU-oracle matches. Keep the earlier gfx1036 compile host, the later gfx950 runtime, artifact hashes, and the still-pending performance field separate; do not promote the site badge without importing a pinned evidence record.",
+        text: "The 2026-08-26 mi350 run records an MI350X gfx950 identity, GEMM max_error=0, and attention max_error=2.38419e-07 with non-uniform K, native CDNA 4 FP8 split packing, and finite-value rejection. Keep the earlier gfx1036 compile host, the later gfx950 runtime, final artifact hashes, and the still-pending performance field separate; do not promote the site badge without importing a pinned evidence record.",
       },
     ],
-  }
+  },
+  "gfx950-advanced-moe/fixed-pipeline": {
+    sectionId: "advanced-moe-fixed-pipeline",
+    title: "Treat the local MoE stages as separate contracts",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Stage", "Fixed-shape contract", "Failure to expose"],
+        rows: [
+          ["Route metadata", "Sixteen tokens choose two of four routed experts with lower-ID tie-breaking; all 32 routes receive compact slots.", "A reordered or duplicated route hidden by later combine."],
+          ["Expert-major dispatch", "One deterministic compact slot for every accepted token-route pair.", "Atomic arrival order silently becoming route order."],
+          ["Expert compute", "Five MFMA waves compute every routed and shared expert for all 16 tokens; dispatch metadata does not sparsify this fixed kernel.", "Claiming token dispatch avoided the unselected expert tiles."],
+          ["Combine", "Apply SiLU, top-2 softmax weights, and a 0.25 shared-expert contribution at the original token coordinate.", "Missing, repeated, or misweighted contributions."],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "The teaching pipeline keeps route IDs, compact slots, expert IDs, dense expert tiles, and token output coordinates distinct. The separate rank kernel reads its assigned two-expert partition. With eight visible MI350X devices, the final run used bidirectional peer copies and a GPU0 combine for two logical ranks; this is a bounded transport fixture, not a device collective or communication library.",
+      },
+    ],
+  },
+  "gfx950-advanced-moe/scope-evidence": advancedScope(
+    "advanced-moe-scope-evidence",
+    "Stop at the bounded two-rank teaching pipeline",
+    "examples/gfx950_advanced_systems/src/kernel.rs",
+    "It does not include route dropping, expert-parallel all-to-all, a device collective, capacity balancing across devices, a serving router, or end-to-end model execution.",
+  ),
+  "gfx950-kda-gdn-linear-attention/recurrence": {
+    sectionId: "kda-gdn-recurrence",
+    title: "Make recurrent state order reviewable",
+    blocks: [
+      {
+        type: "steps",
+        items: [
+          "Identify the source-declared initial state, fixed head shape, sequence extent, and working precision.",
+          "For each admitted token position, form a three-tap causal convolution and proposal tanh(convolution + 0.25 * state).",
+          "Compute sigmoid(gate_input), then update state = gate * state + (1 - gate) * proposal.",
+          "Reduce the 16 state squares and emit state * rsqrt(mean_square + 1e-5).",
+          "Carry the resulting state to the next position without parallelizing across a true recurrence dependency.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Family names are not a specification",
+        text: "KDA and GDN identify operator families, not one universal equation. This source is a bounded KDA/GDN-style teaching recurrence, not a complete Q/K/V linear-attention layer. Decode consumes one three-tap history; prefill carries 16 state values through eight tokens in two ordered four-token chunks.",
+      },
+    ],
+  },
+  "gfx950-kda-gdn-linear-attention/scope-evidence": advancedScope(
+    "kda-gdn-scope-evidence",
+    "Bound the recurrence and its evidence",
+    "examples/gfx950_advanced_attention/src/kernel.rs",
+    "It does not cover dynamic sequence lengths, persistent state across requests, KV-cache management, or equivalence to a named KDA/GDN model layer.",
+  ),
+  "gfx950-indexed-sparse-attention/index-contract": {
+    sectionId: "indexed-sparse-index-contract",
+    title: "An index table changes the attention domain",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Selection stage", "Fixed source behavior", "Oracle check"],
+        rows: [
+          ["Block rank", "Rank four four-token blocks by each block's maximum content score; retain two.", "Ties preserve the source-defined earlier block order."],
+          ["Token rank", "Rank the eight retained-block tokens by content score; retain three unique IDs.", "The output ID triplet exactly matches the independent selector."],
+          ["QK score", "Compute a 16-token FP8 score tile, then activate only the three selected token IDs.", "Unselected lanes become negative infinity before max reduction."],
+          ["PV output", "Normalize over exactly the selected IDs and use their matching V rows.", "No unselected token changes max, denominator, or numerator."],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Content rank, selected token ID order, packed fragment order, and logical attention order are separate mappings. The fixed source emits three selected IDs; it does not accept a caller-provided sparse-index table.",
+      },
+    ],
+  },
+  "gfx950-indexed-sparse-attention/scope-evidence": advancedScope(
+    "indexed-sparse-scope-evidence",
+    "Do not infer a production sparse-attention stack",
+    "examples/gfx950_advanced_attention/src/kernel.rs",
+    "It does not provide caller-supplied indices, dynamic sparse widths, a paged KV cache, block scheduling, cross-device KV exchange, or arbitrary mask support.",
+  ),
+  "gfx950-compressed-hybrid-attention/fusion-contract": {
+    sectionId: "compressed-hybrid-fusion-contract",
+    title: "Verify each branch before the hybrid fusion",
+    blocks: [
+      {
+        type: "steps",
+        items: [
+          "Define the fixed input domain summarized by the compressed-state branch and initialize every state element.",
+          "Define the separate fixed key domain and mask used by the direct-attention branch.",
+          "Map both branch outputs to identical logical query, head, and component coordinates.",
+          "Apply the source-declared coefficients, normalization, accumulator type, and operation order.",
+          "Store every fixed output coordinate once and retain isolated-branch oracle cases.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "warning",
+        title: "A plausible fusion is not the source contract",
+        text: "Do not infer concatenation or a different normalization from the hybrid label. The mirrored source uses three compressed four-token blocks, a local window at tokens 12-15, and sigmoid(score[0] * 0.01) to mix global and local outputs.",
+      },
+    ],
+  },
+  "gfx950-compressed-hybrid-attention/scope-evidence": advancedScope(
+    "compressed-hybrid-scope-evidence",
+    "Keep branch evidence and model claims separate",
+    "examples/gfx950_advanced_attention/src/kernel.rs",
+    "It does not establish state quality across layers, long-context accuracy, cache compression quality, or equivalence to a complete hybrid-attention architecture.",
+  ),
+  "gfx950-attnres-gr-mhc/mixing-contract": {
+    sectionId: "attnres-gr-mhc-mixing-contract",
+    title: "Name every residual stream and mixing coefficient",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Concern", "Review question", "Required negative case"],
+        rows: [
+          ["Stream identity", "Which input stream supplies each output term?", "Swap two equal-shaped streams."],
+          ["Gate or matrix", "Is the transform elementwise, per-stream, or a full mixing matrix?", "Transpose or broadcast coefficients incorrectly."],
+          ["Operation order", "Does normalization happen before or after mixing and residual addition?", "Move normalization across the mix."],
+          ["Aliasing", "Can output overlap an input without destroying a later read?", "Use an unsupported in-place buffer."],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "AttnRes, GR, and mHC remain three source-defined contracts. Similar shapes do not justify sharing an oracle equation, coefficient interpretation, or in-place policy.",
+      },
+    ],
+  },
+  "gfx950-attnres-gr-mhc/scope-evidence": advancedScope(
+    "attnres-gr-mhc-scope-evidence",
+    "Limit residual mixing to the exact local transform",
+    "examples/gfx950_advanced_attention/src/kernel.rs",
+    "It does not validate a network topology, residual-state lifetime across layers, training dynamics, or the architectural claims associated with AttnRes, GR, or mHC papers.",
+  ),
+  "gfx950-speculative-mtp-verification/prefix-contract": {
+    sectionId: "speculative-mtp-prefix-contract",
+    title: "Acceptance is a prefix, not a set of positions",
+    blocks: [
+      {
+        type: "steps",
+        items: [
+          "Gather the source-declared fixed-width candidate block and corresponding target values in range.",
+          "Compute the exact per-position acceptance predicate under the source-defined deterministic policy.",
+          "Find the first rejection; positions after it cannot extend the accepted prefix even if their local predicate is true.",
+          "Write the accepted length and any source-defined replacement output through one final owner.",
+        ],
+      },
+      {
+        type: "table",
+        headers: ["Boundary case", "Expected prefix property"],
+        rows: [
+          ["First candidate rejected", "Accepted length is zero."],
+          ["Interior candidate rejected", "Only the consecutive earlier candidates are accepted."],
+          ["Last candidate rejected", "Accepted length is fixed width minus one."],
+          ["All accepted", "Accepted length is exactly the fixed candidate width."],
+        ],
+      },
+    ],
+  },
+  "gfx950-speculative-mtp-verification/scope-evidence": advancedScope(
+    "speculative-mtp-scope-evidence",
+    "Verification is not a decoder or serving loop",
+    "examples/gfx950_advanced_systems/src/kernel.rs",
+    "It checks byte-identical rollback to one fixed base state, but does not provide draft generation, probabilistic sampling, a real KV cache, request scheduling, batching, or end-to-end decoding correctness.",
+  ),
+  "gfx950-ngram-embedding-gather/gather-contract": {
+    sectionId: "ngram-embedding-gather-contract",
+    title: "Bound lookup arithmetic before touching the table",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Phase", "Fixed-shape obligation", "Common error"],
+        rows: [
+          ["Window", "Admit only token positions with the source-declared N-gram context or apply its boundary policy.", "Reading before sequence start."],
+          ["Identifier", "Construct the lookup key without overflow in the admitted integer type.", "Wrapped multiplication or offset."],
+          ["Resolve", "Probe all 16 slots, require both the 64-bit hash and all three tokens to match, then choose greatest priority and lowest slot on a tie.", "Treating a hash collision as an exact key match."],
+          ["Gather", "Return the selected slot's integer table value, or -1 when no exact key matches.", "Claiming an embedding-vector load that the source does not perform."],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "The current source uses eight queries, three tokens per N-gram, FNV-style 64-bit hashing, 16 slots, integer priorities, integer table values, and -1 for a miss. An embedding-vector gather is a future extension, not current behavior.",
+      },
+    ],
+  },
+  "gfx950-ngram-embedding-gather/scope-evidence": advancedScope(
+    "ngram-gather-scope-evidence",
+    "Keep table lookup local and fixed",
+    "examples/gfx950_advanced_systems/src/kernel.rs",
+    "It does not load embedding vectors and does not cover dynamic hash-table construction, vocabulary updates, distributed embedding tables, caching, sharding, or a full embedding subsystem.",
+  ),
+  "gfx950-muon-optimizer/update-contract": {
+    sectionId: "muon-update-contract",
+    title: "Pin one optimizer step and its working precision",
+    blocks: [
+      {
+        type: "steps",
+        items: [
+          "Stage two 4 x 4 FP32 gradient shards and reduce them in fixed rank order into one matrix.",
+          "Compute the Frobenius norm and divide every element by norm + 1e-6.",
+          "Execute five source-declared Newton-Schulz-like updates X = 1.5 X - 0.5 (X X^T) X in order.",
+          "Scale the 16 output elements by -0.05 and write the reduced norm separately.",
+          "Leave parameter application, momentum, and persistent optimizer state outside this kernel.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "A step oracle is not optimizer convergence",
+        text: "A CPU comparison can check the two-shard reduction, norm, five fixed iterations, and emitted update for selected matrices. It cannot establish convergence, orthogonality for all inputs, training quality, stability, or throughput.",
+      },
+    ],
+  },
+  "gfx950-muon-optimizer/scope-evidence": advancedScope(
+    "muon-scope-evidence",
+    "Stop at one local fixed-shape update",
+    "examples/gfx950_advanced_systems/src/kernel.rs",
+    "It does not apply parameters or momentum and does not include a device collective, parameter sharding, master-weight management, checkpointing, loss scaling, or optimizer convergence.",
+  )
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
 // The policy manifest is the single reviewed source for canonical fingerprints.
