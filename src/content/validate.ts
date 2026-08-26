@@ -402,6 +402,22 @@ function validateLesson(
           message: "current claim is not pinned to current compiler main",
         });
       }
+    } else if (reference.scope === "historical-evidence") {
+      if (!reference.note?.match(/\b(archived|historical|retired)\b/iu)) {
+        issues.push({
+          path: claimPath,
+          message: "historical claim does not state its archived boundary",
+        });
+      }
+      if (
+        reference.commit === currentState.compilerCommit &&
+        reference.tree === currentState.compilerTree
+      ) {
+        issues.push({
+          path: claimPath,
+          message: "historical claim reuses the current compiler pin",
+        });
+      }
     } else if (reference.scope === "source-milestone") {
       if (!isSourceMilestoneId(reference.evidenceId)) {
         issues.push({

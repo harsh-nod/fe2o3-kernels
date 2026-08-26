@@ -38,6 +38,10 @@ const vecaddRunCommand =
   "FE2O3_TARGET=gfx942:xnack- cargo +nightly-2026-04-03 run --locked -p cargo-fe2o3 -- run -p fe2o3-vecadd";
 const verusCommand =
   "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
+const historicalSimulationCommit =
+  "df63236de13f7572bad2c5e25e90d5b1bc4927c1";
+const historicalSimulationTree =
+  "d1068313b6bab22b5bb071fc8b39113e76cfb0a3";
 const cpuSimulationCommand =
   "cargo fe2o3 simulate --request request.json --output result.json -- --package my-kernel";
 const cpuSimulationFixtureCommand =
@@ -393,36 +397,37 @@ const cpuSimulation: Lesson = {
   id: "cpu-semantic-simulation",
   module: 1,
   order: 2,
-  title: "Simulate typed source without a GPU",
+  title: "Review the retired CPU simulator",
   summary:
-    "Run one ordinary safe Rust kernel through verified KIR and inspect a bounded deterministic CPU semantic result.",
+    "Study the bounded CPU semantic experiment without treating it as a second production compiler pipeline.",
   duration: "24 min",
   prerequisites: ["Typed vecadd", "JSON request files"],
   objectives: [
-    "Run cargo fe2o3 simulate without a GPU or device runtime.",
-    "Trace the source-to-MIR-to-KIR V7-to-formal-memory simulation boundary.",
-    "Read simulated observation separately from hardware validation and performance evidence.",
+    "Trace the historical source-to-MIR-to-KIR V7-to-formal-memory simulation boundary.",
+    "Explain why the alternate Cargo simulation route was removed from current main.",
+    "Read the archived observation separately from current production, hardware validation, and performance evidence.",
   ],
   claims: [
     {
-      kind: "runnable-now",
-      label: "Source-first CPU semantic execution",
+      kind: "compiler-checked",
+      label: "Historical CPU semantic execution",
       detail:
-        "The command compiles ordinary typed source through semantic MIR, verified canonical KIR V7, and formal-memory admission, then executes that exact KIR in the bounded deterministic CPU simulator. The no-hardware path neither initializes a GPU/device runtime nor predicts GPU performance.",
-      reference: currentImplementationReference(
-        [cpuSimulationCommand, cpuSimulationFixtureCommand],
-        [
+        "At the pinned historical commit, the command compiled ordinary typed source through semantic MIR, verified canonical KIR V7, and formal-memory admission, then executed that exact KIR in the bounded deterministic CPU simulator. Current main removed this alternate Cargo route so production has one compiler architecture. The archived no-hardware result remains bounded evidence, not a current command or GPU-performance claim.",
+      reference: {
+        scope: "historical-evidence",
+        commit: historicalSimulationCommit,
+        tree: historicalSimulationTree,
+        commands: [cpuSimulationCommand, cpuSimulationFixtureCommand],
+        sourcePaths: [
           "crates/cargo-fe2o3/src/main.rs",
           "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
           "crates/cargo-fe2o3/tests/fixtures/simulate-fill-request-v1.json",
           "crates/cargo-fe2o3/tests/simulation_source_e2e.rs",
           "crates/fe2o3-kir-sim-cli/src/linux.rs",
         ],
-        {
-          target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
-          note: "Observation-only CPU semantics; no GPU, device-runtime, hardware-validation, or performance-prediction authority.",
-        },
-      ),
+        target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
+        note: "Historical observation-only CPU semantics. The alternate Cargo route is absent from current main and grants no production, GPU, device-runtime, hardware-validation, or performance-prediction authority.",
+      },
     },
   ],
   sections: [
@@ -436,7 +441,7 @@ const cpuSimulation: Lesson = {
       code: cpuSimulationKernel,
       sourcePath:
         "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: historicalSimulationCommit,
       sourceSha256:
         "19854910d7488530033bbf4c15ed6b32283e56f4f8b6ed64f7775d68597a46dd",
       explanatory: false,
@@ -465,7 +470,10 @@ const cpuSimulation: Lesson = {
     },
     {
       language: "bash",
-      code: `# Exact request used by the source fixture:
+      code: `# Historical interface at compiler ${historicalSimulationCommit}.
+# This command is not present on current main.
+
+# Exact request used by the source fixture:
 REQUEST='${cpuSimulationRequest.trim()}'
 printf '%s\\n' "$REQUEST" > request.json
 
@@ -475,9 +483,10 @@ ${cpuSimulationCommand}`,
     {
       language: "text",
       code: resultText(
-        "runnable-now",
+        "compiler-checked",
         `schema: fe2o3-simulation-result-v1
 status: ok
+availability: retired_from_current_main
 authority: observation_only
 simulated: true
 hardware_observed: false

@@ -3,8 +3,8 @@
   "status": "partial-current",
   "baselineCompilerCommit": "ff710cd7886c82f91341897af103c7a42b8cb85d",
   "baselineCompilerTree": "063dad99421e344c9b6d74c81d70b5992fbd8ee4",
-  "compilerCommit": "df63236de13f7572bad2c5e25e90d5b1bc4927c1",
-  "compilerTree": "d1068313b6bab22b5bb071fc8b39113e76cfb0a3",
+  "compilerCommit": "29e65d78dd109ef7adca3e9853072d98ba56ae2b",
+  "compilerTree": "64f11f9cf93ef9e1aa7d925484fc5bb3a5a53208",
   "preloweringReportVersion": "ProductionPlironPreloweringReportV2 + ProductionMiddleEndEvidenceV5 + ProductionTotalOutputStagingReportV2 + ProductionMirPlironSemanticContractReportV1 + ProductionParallelReferenceContractReportV1 + ProductionMirPlironPerCompilationVerusReportV1",
   "functionalReceiptVersion": "ProductionPolicyCheckedRefinementStagingV2 (Checked; non-authoritative) + ProductionMirPlironPerCompilationVerusReportV1 (SafeReferenceMirToLivePliron)",
   "perCompilationTemplatePath": "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
@@ -110,7 +110,7 @@
     {
       "id": "cooperative-tensor-structural-validation",
       "status": "published-current",
-      "detail": "compiler-derived cooperative-tensor checks validate instruction identity, typed fragment roles, lane coordinates, convergence, tail policy, staging, and publication. Typed result components bind exact result roots, component ordinals, scalar policies, and output stores at the claim boundary. Tensor-component formula replay is not implemented and remains fail closed",
+      "detail": "compiler-derived cooperative-tensor checks validate instruction identity, typed fragment roles, lane coordinates, convergence, tail policy, staging, and publication. Exact lhs, rhs, accumulator, and result roots survive ranked PLIRON materialization; bounded whole-function dataflow rejects incompatible producer joins and consumer ABIs. Typed result components bind the propagated result layout, component ordinals, scalar policies, and output stores to the safe-reference obligation at the claim boundary. Tensor-component formula replay is not implemented and remains fail closed",
       "evidence": [
         "crates/dialect-kernel/src/tensor_layout.rs",
         "crates/fe2o3-kernel-ir/src/matrix.rs",
@@ -121,6 +121,8 @@
         "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_valid_lds_xor4.pliron",
         "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_divergent.pliron",
         "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_wrong_role.pliron",
+        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_dataflow_compatible.pliron",
+        "crates/fe2o3-kernel-analysis/tests/lit/tensor_layout_dataflow_mismatch.pliron",
         "crates/dialect-kernel/src/semantic_typed_contract.rs",
         "crates/dialect-proof/src/lib.rs",
         "crates/dialect-proof/tests/hostile.rs",

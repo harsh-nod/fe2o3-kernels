@@ -197,7 +197,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit df63236de13f7572bad2c5e25e90d5b1bc4927c1 and tree d1068313b6bab22b5bb071fc8b39113e76cfb0a3. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit 29e65d78dd109ef7adca3e9853072d98ba56ae2b and tree 64f11f9cf93ef9e1aa7d925484fc5bb3a5a53208. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -352,11 +352,11 @@ const narrativeRegistry = deepFreeze({
   },
   "cpu-semantic-simulation/pipeline": {
     "sectionId": "pipeline",
-    "title": "Execute the compiler's semantic representation",
+    "title": "Why the alternate simulator was retired",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "cargo fe2o3 simulate starts from the ordinary attributed Rust crate. The compiler collects the selected typed kernel, lowers its semantic MIR through the general frontend, verifies canonical Kernel IR V7, admits its formal-memory model, and hands the exact canonical bytes to the bounded CPU executor. The kernel body is not compiled as an ordinary host Rust function, and no algorithm-specific CPU implementation stands beside it."
+        "text": "At compiler commit df63236de13f7572bad2c5e25e90d5b1bc4927c1, cargo fe2o3 simulate started from an ordinary attributed Rust crate, lowered semantic MIR through the general frontend, verified canonical Kernel IR V7, admitted formal memory, and handed the exact canonical bytes to a bounded CPU executor. Current main removed that alternate Cargo simulation route so source collection and production compilation have one architecture. The archived experiment remains useful design evidence; it is not a current command."
       },
       {
         "type": "table",
@@ -386,20 +386,20 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Scope the no-hardware claim",
-        "text": "The fe2o3 simulation path links and initializes no GPU runtime and performs no GPU enumeration. Ordinary project Cargo build scripts remain trusted, unsandboxed host code and can independently access hardware. hardware_observed: false describes fe2o3's simulator result; it does not attest arbitrary build-script behavior."
+        "title": "Scope the archived no-hardware claim",
+        "text": "The historical fe2o3 simulation path linked and initialized no GPU runtime and performed no GPU enumeration. Ordinary project Cargo build scripts were still trusted, unsandboxed host code and could independently access hardware. hardware_observed: false describes only that archived simulator result; it does not attest arbitrary build-script behavior or current main."
       },
       {
         "type": "callout",
         "tone": "info",
-        "title": "Same target, fresh simulation state",
-        "text": "Every source-simulation attempt uses a fresh ephemeral generation and removes that generation after success or failure. A retry may reuse the same Cargo target directory without reusing an earlier simulation handoff or result."
+        "title": "Historical state isolation",
+        "text": "Each historical source-simulation attempt used a fresh ephemeral generation and removed it after success or failure. That design prevented stale handoffs, but it did not justify maintaining a second Cargo compiler path beside production. The current repository retains no source-first cargo fe2o3 simulate fallback."
       }
     ]
   },
   "cpu-semantic-simulation/evidence-boundary": {
     "sectionId": "evidence-boundary",
-    "title": "Read the result as a simulated observation",
+    "title": "Read the archived result as an observation",
     "blocks": [
       {
         "type": "paragraph",
@@ -433,8 +433,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Current supported slice",
-        "text": "The published milestone covers bounded scalar control flow and calls, integers, launch queries, typed global memory, static scalar workgroup memory, and convergent workgroup barriers. Unsupported operations return structured errors. Wave collectives, generic barriers, atomics and fences, dynamic or non-scalar workgroup memory, matrix operations, floating-point target contracts, seeded schedule exploration, replay, and a virtual host runtime are not claimed by this lesson."
+        "title": "Historical supported slice",
+        "text": "The archived milestone covered bounded scalar control flow and calls, integers, launch queries, typed global memory, static scalar workgroup memory, and convergent workgroup barriers. Wave collectives, generic barriers, atomics and fences, dynamic or non-scalar workgroup memory, matrix operations, floating-point target contracts, seeded schedule exploration, replay, and a virtual host runtime were never established. Current main exposes no alternate source-first simulation command."
       }
     ]
   },
@@ -576,6 +576,12 @@ const narrativeRegistry = deepFreeze({
         "text": "When a fragment or accumulator crosses a branch or loop backedge, semantic lowering gives the destination block typed SSA components plus a compiler-owned binding descriptor. Each incoming edge must supply the same fragment kind, instruction contract, and current-wave association; an ordinary four-float aggregate cannot stand in for that typed value. The descriptor restores wave provenance without transporting a forgeable phi token, and none of this requires recognizing a GEMM loop."
       },
       {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Layout follows values across tensor instructions",
+        "text": "Ranked PLIRON retains compiler-derived lhs, rhs, accumulator, and result roots on every cooperative tensor site. The tensor-layout pass joins producer facts by exact root and checks each later use against the consumer's complete fragment ABI: role, element, shape, register map, packing, storage transform, component count, and subgroup width. A second instruction with a compatible ABI is allowed even when its profile name differs; an incompatible QK-to-PV composition is FE2O3-TENSOR-LAYOUT-005. A checked conversion or reload is accepted only when authenticated source projection gives it a distinct root."
+      },
+      {
         "type": "table",
         "headers": [
           "MFMA fact",
@@ -607,6 +613,18 @@ const narrativeRegistry = deepFreeze({
         "tone": "boundary",
         "title": "Where Verus fits",
         "text": "Verus is a separate proof layer for named MIR/effect or mathematical-model properties such as functional equality, ownership mappings, recurrence correspondence, and numerical preconditions. It does not replace rustc's borrow checker or the mandatory compiler verifiers. The V2 functional-refinement path authenticates one exact retained Verus/Z3 execution and consumes its signed MIR-bound result; it still does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem or independently grant artifact or launch authority."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "The CPU reference closes semantics, not hardware layout",
+        "text": "The compiler composes four independent obligations. The target descriptor validates the physical instruction layout. Rooted layout dataflow proves that each produced fragment reaches only ABI-compatible consumers. Semantic and effect refinement bind the exact propagated accumulator result, component stores, output coordinates, guards, and values to the safe Rust reference. The retained Verus result checks the admitted preconditions, postconditions, invariants, and formula boundary. A CPU reference cannot make a wrong lane packing valid, and a valid packing cannot substitute for the reference's functional theorem; both sides must pass."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Production errors include a repair contract",
+        "text": "Every error returned by the fixed eight-pass production PLIRON sequence carries a KernelCheckRepairV1 with a stable FE2O3-FIX code, owning pass, applicability, and actionable message. Layout failures name both producer and consumer sites and profiles. Suggestions are currently HasPlaceholders because choosing a new instruction, conversion, guard, ownership partition, or synchronization strategy is a semantic edit; the compiler never applies one silently."
       },
       {
         "type": "callout",
@@ -726,7 +744,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "info",
         "title": "One bounded analysis context per run",
-        "text": "The production pipeline owns one ephemeral analysis manager over one immutable ranked-PLIRON function. Its three bounded cache roots hold sparse index results, execution layout, and exact invocation traces, so passes that need the same facts compute each root once. The manager is discarded before any second validation or changed function is checked, which prevents stale facts from crossing a revalidation boundary while keeping each pass result independently reportable."
+        "text": "The production pipeline owns one ephemeral analysis manager over one immutable ranked-PLIRON function. Its four bounded cache roots hold sparse index results, execution layout, exact invocation traces, and tensor-layout dataflow, so passes that need the same facts compute each root once. The manager is discarded before any second validation or changed function is checked, which prevents stale facts from crossing a revalidation boundary while keeping each pass result independently reportable."
       },
       {
         "type": "callout",
@@ -779,7 +797,7 @@ const narrativeRegistry = deepFreeze({
           "Representative non-clean findings"
         ],
         "rows": [
-          ["kernel-tensor-layout-v1", "Validate each tensor instruction profile, A/B/accumulator role, element packing, register distribution, lane/component map, independent operand storage transform, edge policy, and derived collective participation.", "Wrong transpose or lane map; accumulator permutation; unsupported storage transform; missing tail policy; inactive or invocation-divergent collective; unresolved map or convergence; analysis limit."],
+          ["kernel-tensor-layout-v1", "Validate each tensor instruction profile, A/B/accumulator role, element packing, register distribution, lane/component map, independent operand storage transform, edge policy, derived collective participation, and rooted producer-to-consumer layout flow.", "Wrong transpose or lane map; accumulator permutation; incompatible producer join, operand, accumulator, or subgroup ABI; unsupported storage transform; missing tail policy; inactive or invocation-divergent collective; unresolved map or convergence; analysis limit."],
           ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent.", "Static out-of-bounds witness; unresolved dynamic bound; unsupported index, CFG, or operation; analysis limit."],
           ["kernel-atomic-legality-v1", "Require a legal atomic kind, explicit ordering and scope, ranked-view provenance, supported element width/address space, bound target capability, and system-coherent allocation evidence.", "Missing or invalid ordering/scope; private-memory atomic; unavailable provenance or target capability; unauthenticated system coherence; analysis limit."],
           ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, or alias relation; analysis limit."],
@@ -793,8 +811,8 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "compile-failures",
-        "heading": "Twenty-four representative compile-time failures",
-        "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence and the compiler-owned semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, barriers, workgroup-memory epochs, declared semantic refinement, strict parallel derivation, and per-compilation Verus composition. Text snippets are compact schematic semantic IR or compiler-derived report state; they do not imply that users write a separate kernel DSL, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current stable diagnostics. These cards are representative rather than an exhaustive list of every source-admission, structural, lowering, or target failure. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
+        "heading": "Twenty-five representative compile-time failures",
+        "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence and the compiler-owned semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, barriers, workgroup-memory epochs, declared semantic refinement, strict parallel derivation, and per-compilation Verus composition. Text snippets are compact schematic semantic IR or compiler-derived report state; they do not imply that users write a separate kernel DSL, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current stable diagnostics. Errors from the eight-pass production sequence also carry a stable FE2O3-FIX repair action; the layout-flow example shows the rendered form. These cards are representative rather than an exhaustive list of every source-admission, structural, lowering, or target failure. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
         "examples": [
           {
             "id": "mfma_operand_roles",
@@ -831,6 +849,18 @@ const narrativeRegistry = deepFreeze({
             "code": "FE2O3-TENSOR-LAYOUT-001",
             "enforcement": "Tensor-layout PLIRON lit; mandatory production pass",
             "caught": "Every coordinate can remain in bounds while component order is wrong. Exhaustive bounded coverage and multiplicity checks compare accumulator coordinates across every active lane and component, so an in-bounds permutation is still a compile-time error."
+          },
+          {
+            "id": "tensor_cross_instruction_layout",
+            "title": "PV MFMA consumes the wrong QK layout",
+            "language": "text",
+            "source": "// Phase labels are tutorial names; the pass only follows roots.\nQK: kernel.tensor_layout profile = Gfx942MfmaBf16F32M16N16K16Wave64\n    result_root = %scores\nPV: kernel.tensor_layout profile = IncompatibleWave32\n    lhs_root = %scores",
+            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-005]: tensor value root 000000000000000d000000000000000e000000000000000f0000000000000010 is produced at block 0 op 1 as profile Gfx942MfmaBf16F32M16N16K16Wave64, Accumulator F32 16x16 fragment with 4 components across wave64, but block 0 op 2 uses it as A for profile IncompatibleWave32, which requires A Bf16 16x16 fragment with 4 components across wave32; help: insert a checked conversion/repack from the produced accumulator layout to the required A fragment, or choose a consumer instruction whose A ABI accepts profile Gfx942MfmaBf16F32M16N16K16Wave64\nhelp[FE2O3-FIX-LAYOUT] (HasPlaceholders): before block 0 op 2, convert or checked-reload producer profile Gfx942MfmaBf16F32M16N16K16Wave64's accumulator into the A fragment ABI required by consumer profile IncompatibleWave32; source projection must retain the conversion as a new compiler-derived root",
+            "property": "TensorLayoutDataflow",
+            "stage": "generic PLIRON pass 1/8",
+            "code": "FE2O3-TENSOR-LAYOUT-005",
+            "enforcement": "tensor_layout_dataflow_mismatch.pliron; mandatory production pass",
+            "caught": "The exact QK result root carries its complete accumulator layout into the PV consumer. The pass reports both sites and proposes either a compatible consumer or an explicit checked conversion. It has no workload-specific rule: the same producer-to-consumer check applies to any cooperative tensor composition."
           },
           {
             "id": "tensor_storage_transform",
@@ -1088,7 +1118,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code plus every currently assigned compiler-owned parallel-relation code through FE2O3-PARALLEL-031. The effect table records implemented code classes and their Rejected or Incomplete outcomes. Direct PLIRON diagnostics carry stable codes; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code plus every currently assigned compiler-owned parallel-relation code through FE2O3-PARALLEL-031. The effect table records implemented code classes and their Rejected or Incomplete outcomes. Direct production-pipeline errors also render a structured FE2O3-FIX repair with explicit applicability; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1103,6 +1133,7 @@ const narrativeRegistry = deepFreeze({
           ["tensor storage layout", "An operand uses an unsupported direct/LDS transform or the declared transform does not produce its required register map.", "Storage provenance or transform evidence is unresolved."],
           ["tensor edge policy", "The exact-tile or authenticated zero-fill contract is inconsistent with the physical fragment.", "The frontend cannot establish one of the current profile's accepted edge policies."],
           ["tensor convergence", "Participating lanes execute different tensor-instruction sites or orders.", "Control uniformity, active participants, or a cyclic trace cannot be resolved."],
+          ["tensor producer/consumer flow", "Two producers assign incompatible layouts to one root, or a later operand/accumulator consumer requires a different role, map, element, component count, or subgroup width.", "An external root has no local producer fact; production source authority must independently authenticate its checked load, initializer, or conversion."],
           ["execution layout", "Global, workgroup, subgroup, or lane identities contradict one another; a per-axis partial workgroup violates a collective contract.", "A required dynamic extent or participant relation is unresolved."],
           ["allocation provenance and alias", "Two may-alias views expose an incompatible concrete concurrent effect.", "Allocation origin or alias class is unknown where disjointness is required."],
           ["synchronization scope", "An atomic or barrier scope is narrower than the participating conflict domain.", "Grid progress or cooperative-launch evidence is absent."]
@@ -1119,6 +1150,8 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-TENSOR-LAYOUT-001", "Rejected", "A tensor contract is malformed or disagrees with the instruction profile, including operand roles, width, packing, register maps, coordinate coverage, storage transform, tail policy, active lanes, or an exact divergent trace."],
           ["FE2O3-TENSOR-LAYOUT-002", "Incomplete", "Tensor layout or convergence cannot be proved, including an opaque lane map or unresolved cyclic control flow."],
           ["FE2O3-TENSOR-LAYOUT-003", "Incomplete", "Tensor verification exceeded an explicit operation, map, trace, finding, or work-unit limit."],
+          ["FE2O3-TENSOR-LAYOUT-004", "Rejected", "Incompatible producer layouts reach one exact compiler-derived tensor value root; both producer sites and layouts are reported."],
+          ["FE2O3-TENSOR-LAYOUT-005", "Rejected", "A rooted tensor result reaches an operand or accumulator consumer whose complete fragment ABI is incompatible; producer and consumer sites, profiles, layouts, and a repair are reported."],
           ["FE2O3-BOUNDS-000", "Prerequisite", "PLIRON structural verification failed before ranked bounds analysis."],
           ["FE2O3-BOUNDS-001", "Rejected", "A read, write, or atomic index is statically outside a ranked extent; the diagnostic names the view, dimension, index, and required index < extent relation."],
           ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
@@ -2043,6 +2076,12 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "paragraph",
         "text": "Batch-head count, padded query and key lengths, depth, strides, scale, and additive mask are runtime values. The compiler verifies their generic indexed effects; it does not contain an attention recognizer. Grouped-query layouts, dropout, backward propagation, wider V tiles, and a matrix-accelerated PV contraction remain separate algorithm work."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "A future matrix PV phase must accept the QK result layout",
+        "text": "The displayed attention kernel uses scalar V loads and subgroup sums for PV. If that phase is replaced by a second MFMA, the first MFMA's exact result root flows into the second site. FE2O3 accepts different instruction profiles only when their physical fragment ABIs are compatible; otherwise FE2O3-TENSOR-LAYOUT-005 stops before lowering and proposes a compatible consumer or an explicit checked conversion. The pass sees two tensor sites and one value root, not QK, PV, or attention."
       }
     ]
   },

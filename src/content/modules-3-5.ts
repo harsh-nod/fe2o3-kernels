@@ -21,7 +21,7 @@ import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/contrac
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
-  currentImplementationReference,
+  historicalReference,
   pinnedReference,
   type CurriculumModule,
   type Lesson,
@@ -49,6 +49,8 @@ const gemmSafeSource = sourceMilestoneRecord(
 const dynamicGemmSource = sourceMilestoneRecord(
   "dynamic-gemm-executable-source-v1",
 );
+const qualificationCommit = dynamicGemmSource.commit;
+const qualificationTree = dynamicGemmSource.tree;
 const gemmProofEvidence = stagedEvidenceRecord(
   "tiled-lds-source-model-correspondence-v1",
 );
@@ -450,11 +452,13 @@ const gemmMapping: Lesson = {
   claims: [
     sourceMilestoneClaim("dynamic-gemm-executable-source-v1"),
     {
-      kind: "runnable-now",
-      label: "Current MI300X qualification path",
+      kind: "gpu-observed",
+      label: "Pinned MI300X qualification run",
       detail:
-        "The exact safe Rust source compiles and launches through an explicit nonpublishing qualification oracle that shares the workload-neutral compiler machinery but cannot complete the production transaction. Four dynamic correctness cases pass at zero error, the HSACO contains V_MFMA_F32_16X16X16_BF16, and a matched HIP comparison is recorded below.",
-      reference: currentImplementationReference(
+        "At the pinned historical compiler commit, the exact safe Rust source compiled and launched through an explicit nonpublishing qualification oracle. Four dynamic correctness cases passed at zero error, the HSACO contained V_MFMA_F32_16X16X16_BF16, and a matched HIP comparison was recorded. Current main has retired this alternate qualification host route.",
+      reference: historicalReference(
+        qualificationCommit,
+        qualificationTree,
         [
           "examples/tiled_gemm_general_v1/run-gfx942.sh",
         ],
@@ -463,7 +467,10 @@ const gemmMapping: Lesson = {
           "examples/tiled_gemm_general_v1/src/main.rs",
           "examples/tiled_gemm_general_v1/run-gfx942.sh",
         ],
-        { target: FE2O3_PIN.target },
+        {
+          target: FE2O3_PIN.target,
+          note: "Historical GPU observation. Current main retains the kernel and unified compiler machinery but not this alternate qualification host route.",
+        },
       ),
     },
   ],
@@ -615,10 +622,12 @@ const softmax: Lesson = {
   claims: [
     {
       kind: "gpu-observed",
-      label: "Dynamic row softmax on MI300X",
+      label: "Pinned dynamic row softmax on MI300X",
       detail:
         "Four dynamic-shape and strided cases compiled through the explicit nonpublishing row-softmax qualification oracle and matched an independent CPU oracle on gfx942.",
-      reference: currentImplementationReference(
+      reference: historicalReference(
+        qualificationCommit,
+        qualificationTree,
         ["examples/row_softmax_general_v1/run-gfx942.sh"],
         [
           "examples/row_softmax_general_v1/src/kernel.rs",
@@ -627,7 +636,7 @@ const softmax: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735; this is evidence for the four published cases, not a universal proof or performance result.",
+          note: "Historical qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735; this is evidence for the four published cases, not a universal proof or performance result.",
         },
       ),
     },
@@ -680,7 +689,7 @@ const softmax: Lesson = {
       language: "rust",
       code: rowSoftmaxHost,
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: qualificationCommit,
       sourceSha256:
         "8df056afb9e91aa3e42b4372860431612a77ef71b0abb7ebdd088c7210a5a1bd",
       explanatory: false,
@@ -722,10 +731,12 @@ const flash: Lesson = {
   claims: [
     {
       kind: "gpu-observed",
-      label: "Dynamic fused attention on MI300X",
+      label: "Pinned dynamic fused attention on MI300X",
       detail:
         "Two tail, stride, depth, and multi-head cases compiled through the explicit nonpublishing FlashAttention qualification oracle and matched an independent CPU oracle on gfx942.",
-      reference: currentImplementationReference(
+      reference: historicalReference(
+        qualificationCommit,
+        qualificationTree,
         ["examples/flash_attention_general_v1/run-gfx942.sh"],
         [
           "examples/flash_attention_general_v1/src/kernel.rs",
@@ -734,7 +745,7 @@ const flash: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735; no tuned-library performance claim is made.",
+          note: "Historical qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735; no tuned-library performance claim is made.",
         },
       ),
     },
@@ -789,7 +800,7 @@ const flash: Lesson = {
       language: "rust",
       code: flashAttentionHost,
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: qualificationCommit,
       sourceSha256:
         "d119e41e3a15e0eb3e7866a439c23203b0e4983b3bd53d3fdc585e3bde2a4a25",
       explanatory: false,

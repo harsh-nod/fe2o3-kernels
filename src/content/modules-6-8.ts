@@ -10,7 +10,7 @@ import moeMilestoneSpec from "../../examples/semantic_reference_vnext/moe_verus.
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
-  currentImplementationReference,
+  historicalReference,
   pinnedReference,
   type CurriculumModule,
   type Lesson,
@@ -35,6 +35,9 @@ import {
 
 const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
+const moeExpertSource = sourceMilestoneRecord("moe-expert-source-v1");
+const qualificationCommit = moeExpertSource.commit;
+const qualificationTree = moeExpertSource.tree;
 
 const moeRouting: Lesson = {
   id: "moe-routing",
@@ -154,10 +157,12 @@ const expertCompute: Lesson = {
   claims: [
     {
       kind: "gpu-observed",
-      label: "Top-2 grouped experts on MI300X",
+      label: "Pinned top-2 grouped experts on MI300X",
       detail:
         "Five output widths across both sides of the 16-column tile boundary, with 41 tokens, 4 experts, 82 routes, K=35, strides, edge tiles, bias, gates, and combine, matched an independent CPU oracle exactly on gfx942.",
-      reference: currentImplementationReference(
+      reference: historicalReference(
+        qualificationCommit,
+        qualificationTree,
         ["examples/moe_grouped_expert_general_v1/run-gfx942.sh"],
         [
           "examples/moe_grouped_expert_general_v1/src/kernel.rs",
@@ -166,7 +171,7 @@ const expertCompute: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735. This is evidence for five output-width cases, not a router proof or performance result.",
+          note: "Historical qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735. This is evidence for five output-width cases, not a router proof or performance result.",
         },
       ),
     },
@@ -221,7 +226,7 @@ const expertCompute: Lesson = {
       language: "rust",
       code: moeExpertHost,
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: qualificationCommit,
       sourceSha256:
         "24838bcdd753efa2d5fac08798c10c4b75176cb18eee88bd05c20af4af04cb1d",
       explanatory: false,

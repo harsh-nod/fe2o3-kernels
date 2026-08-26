@@ -50,7 +50,7 @@ const sourceMilestoneRecords = deepFreeze({
     authority: "source-tested-only",
     claimLabel: "Executable dynamic GEMM source",
     detail:
-      "Current public main contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. It returns KernelResult, uses ? for checked capability construction, and names the target-neutral Matrix capability. The workload-neutral compiler route lowers the exact source through semantic MIR, ranked PLIRON verification, canonical Kernel IR V7 with guarded edge loads and tensor contracts, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases pass at zero error, the disassembly contains V_MFMA_F32_16X16X16_BF16, and the repository includes a matched direct HIP benchmark. This is qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
+      "The pinned historical commit contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. It returns KernelResult, uses ? for checked capability construction, and names the target-neutral Matrix capability. At that commit, the workload-neutral qualification route lowered the exact source through semantic MIR, ranked PLIRON verification, canonical Kernel IR V7 with guarded edge loads and tensor contracts, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases passed at zero error, the disassembly contained V_MFMA_F32_16X16X16_BF16, and the repository included a matched direct HIP benchmark. Current main retains the source and unified compiler analyses but has retired the alternate qualification host route. This is historical qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
     commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
     tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
     commands: [
@@ -79,8 +79,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current safe tiled GEMM source",
     detail:
       "Current public main contains the ordinary attributed 16x16x16 BF16/F32 tiled GEMM source with compiler-issued lane, LDS, matrix, barrier, and disjoint-output capabilities. The kernel and its reachable helpers contain no unsafe block. Source-boundary and ranked-pipeline tests cover this safe source shape, but historical proof, HSACO, and GPU observations remain pinned separately and do not transfer to this descendant source.",
-    commit: "df63236de13f7572bad2c5e25e90d5b1bc4927c1",
-    tree: "d1068313b6bab22b5bb071fc8b39113e76cfb0a3",
+    commit: "29e65d78dd109ef7adca3e9853072d98ba56ae2b",
+    tree: "64f11f9cf93ef9e1aa7d925484fc5bb3a5a53208",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml",
       "cargo test --locked -p rustc-codegen-fe2o3 --test production_extraction_driver_v1 -- --ignored --exact production_collector_rejects_reachable_unsafe_rust_with_rooted_diagnostics",

@@ -38,6 +38,10 @@ export interface CurrentImplementationEvidenceReference
   scope: "current-implementation";
 }
 
+export interface HistoricalEvidenceReference extends EvidenceReferenceBase {
+  scope: "historical-evidence";
+}
+
 export type StagedEvidenceAuthority =
   | "source-admission-only"
   | "harness-only"
@@ -115,6 +119,7 @@ export interface SourceMilestoneEvidenceReference
 export type EvidenceReference =
   | LessonEvidenceReference
   | CurrentImplementationEvidenceReference
+  | HistoricalEvidenceReference
   | StagedEvidenceReference
   | SourceMilestoneEvidenceReference;
 
@@ -327,6 +332,23 @@ export function currentImplementationReference(
     scope: "current-implementation",
     commit: currentState.compilerCommit,
     tree: currentState.compilerTree,
+    commands,
+    sourcePaths,
+    ...options,
+  };
+}
+
+export function historicalReference(
+  commit: string,
+  tree: string,
+  commands: string[],
+  sourcePaths: string[],
+  options: Pick<HistoricalEvidenceReference, "target" | "note"> = {},
+): HistoricalEvidenceReference {
+  return {
+    scope: "historical-evidence",
+    commit,
+    tree,
     commands,
     sourcePaths,
     ...options,
