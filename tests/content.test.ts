@@ -5,6 +5,15 @@ import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
 import { functionalRefinementPublication } from "../src/content/functional-refinement-publication";
+import {
+  advancedRustEvidence,
+  observedAdvancedEvidence,
+  type AdvancedRustEvidence,
+} from "../src/content/gfx950-advanced-evidence";
+import {
+  advancedCoreSourceCommit,
+  advancedCoreSourceTree,
+} from "../src/content/modules-10";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import { functionalCorrectnessCatalog } from "../src/content/functional-correctness-catalog";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
@@ -490,27 +499,82 @@ describe("curriculum integrity", () => {
     expect(fp8Attention).toContain("four ds_read_b64_tr_b8");
   });
 
-  it("publishes exact bounded advanced gfx950 source and evidence", () => {
+  it("publishes exact bounded advanced gfx950 source and fail-closed production runners", () => {
     const expected = [
-      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
-      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
-      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
-      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
-      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
-      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
-      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
-      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
+      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "06423d7bfd24be5a80da70e2835b40bd066aeb404f9bad887d9e7707d52c076b", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
+      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "3b0f6962ce41da008542fa7685633ab7f4bcabf5540af35b3c327c7802a77faa", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
+      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "3b0f6962ce41da008542fa7685633ab7f4bcabf5540af35b3c327c7802a77faa", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
+      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "3b0f6962ce41da008542fa7685633ab7f4bcabf5540af35b3c327c7802a77faa", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
+      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "3b0f6962ce41da008542fa7685633ab7f4bcabf5540af35b3c327c7802a77faa", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
+      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "06423d7bfd24be5a80da70e2835b40bd066aeb404f9bad887d9e7707d52c076b", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
+      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "06423d7bfd24be5a80da70e2835b40bd066aeb404f9bad887d9e7707d52c076b", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
+      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "06423d7bfd24be5a80da70e2835b40bd066aeb404f9bad887d9e7707d52c076b", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
     ] as const;
 
     const excerptHashes = {
-      "gfx950-advanced-moe": ["ebb73a207fa5f56c893db782ed5169aa1afe95241908c1ddff8f232fd1c216ed", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
-      "gfx950-kda-gdn-linear-attention": ["807a5e9c92ea2188fca93e4ec1ab0442c4ecf0ff0f3ecc60adf58a070242c571", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
-      "gfx950-indexed-sparse-attention": ["d73101786d16d612eb9fb5266f882d6e8107650550d6398ad01d004f32030ce3", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
-      "gfx950-compressed-hybrid-attention": ["aaf25c62fb72ed32b25eb840b3fba9f955783f1b63d0d3b019c89c6ef9eb9b0a", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
-      "gfx950-attnres-gr-mhc": ["9cbc16e2411298f9a452ee9d040b07c377f9d59b908eb89e1729595f4bb6f409", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
-      "gfx950-speculative-mtp-verification": ["c18a04e7de7af396288162bef82683ad944a620f18a65274bc03f5021820e520", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
-      "gfx950-ngram-embedding-gather": ["82fa12ab47a0d0dc82c75ed0ce552277adef0c4467b9d148bd35772aea6af362", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
-      "gfx950-muon-optimizer": ["2d648160c8507976040c4db8ed3b3c87ddf47e17ca108850911b19df380eb74f", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
+      "gfx950-advanced-moe": ["3d9561b2c86f94b0029a13cc8e0de78c1179dbd01ea0f860627bdccc2ae1095d", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
+      "gfx950-kda-gdn-linear-attention": ["e77e20f00c6fc8d3fb28c445f64a54df979732fc9545d4d88f8342d719dc5b90", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
+      "gfx950-indexed-sparse-attention": ["ec8250abcb0b9efa2cbd28f62764c45840f901db3824d3669a9e61209c13dba8", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
+      "gfx950-compressed-hybrid-attention": ["4de136e59115bb9ffdad9c836fd3be5a482002d1f5367fa65c0312ebc6a3bf38", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
+      "gfx950-attnres-gr-mhc": ["e5795670dff8822a51c0e5afbaea3054635d067e4dd51d6d8d9d8293cf2e4ea1", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
+      "gfx950-speculative-mtp-verification": ["829d1dd1b863202342a822ec48a61610f275eec943cbafab897c814300203df0", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
+      "gfx950-ngram-embedding-gather": ["bc99f70c6776d5b882e9f02dfea8de1a371ac4bb55145e54df800d72f1819bd2", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
+      "gfx950-muon-optimizer": ["d63a9d04e2ce3efb41837357fd50d7321fcea6c6d42eb017359723d6b2073e8b", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
+    } as const;
+
+    const productionRecords = {
+      "gfx950-advanced-moe": [
+        ["gfx950_moe_route_fp4_t16_e4_k2_v1", "run-moe-route-gfx950.sh", "gfx950_moe_route_rust_cov6_matches_cpu_reference"],
+        ["gfx950_moe_expert_rank_fp4_fp8_v1", "run-moe-expert-rank-gfx950.sh", "gfx950_moe_expert_rank_rust_cov6_matches_cpu_reference"],
+        ["gfx950_combine_expert_ranks_v1", "run-combine-expert-ranks-gfx950.sh", "gfx950_combine_expert_ranks_rust_cov6_matches_cpu_reference"],
+      ],
+      "gfx950-kda-gdn-linear-attention": [
+        ["gfx950_kda_gdn_decode", "run-kda-decode-gfx950.sh", "gfx950_kda_gdn_decode_rust_cov6_matches_cpu_reference"],
+        ["gfx950_kda_gdn_prefill", "run-kda-prefill-gfx950.sh", "gfx950_kda_gdn_prefill_rust_cov6_matches_cpu_reference"],
+      ],
+      "gfx950-indexed-sparse-attention": [
+        ["gfx950_content_sparse_attention", "run-content-sparse-attention-gfx950.sh", "gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference"],
+      ],
+      "gfx950-compressed-hybrid-attention": [
+        ["gfx950_compressed_hybrid_attention", "run-compressed-hybrid-attention-gfx950.sh", "gfx950_compressed_hybrid_attention_rust_cov6_matches_cpu_reference"],
+      ],
+      "gfx950-attnres-gr-mhc": [
+        ["gfx950_attnres_aggregate", "run-attnres-aggregate-gfx950.sh", "gfx950_attnres_aggregate_rust_cov6_matches_cpu_reference"],
+        ["gfx950_four_branch_residual", "run-four-branch-residual-gfx950.sh", "gfx950_four_branch_residual_rust_cov6_matches_cpu_reference"],
+        ["gfx950_mhc_sinkhorn_mix", "run-mhc-sinkhorn-mix-gfx950.sh", "gfx950_mhc_sinkhorn_mix_rust_cov6_matches_cpu_reference"],
+      ],
+      "gfx950-speculative-mtp-verification": [
+        ["gfx950_speculative_transaction_v1", "run-speculative-transaction-gfx950.sh", "gfx950_speculative_transaction_rust_cov6_matches_cpu_reference"],
+      ],
+      "gfx950-ngram-embedding-gather": [
+        ["gfx950_qwen_ngram_gather_v1", "run-qwen-ngram-gather-gfx950.sh", "gfx950_qwen_ngram_gather_rust_cov6_matches_cpu_reference"],
+      ],
+      "gfx950-muon-optimizer": [
+        ["gfx950_stage_gradient_shard_v1", "run-stage-gradient-shard-gfx950.sh", "gfx950_stage_gradient_shard_rust_cov6_matches_cpu_reference"],
+        ["gfx950_muon_update_4x4_v1", "run-muon-update-gfx950.sh", "gfx950_muon_update_rust_cov6_matches_cpu_reference"],
+      ],
+    } as const;
+
+    const referenceRecords = {
+      "gfx950-advanced-moe": ["moe_routing_reference", "moe_rank_reference"],
+      "gfx950-kda-gdn-linear-attention": [
+        "kda_gdn_decode_reference_v1",
+        "kda_gdn_prefill_reference_v1",
+      ],
+      "gfx950-indexed-sparse-attention": [
+        "content_sparse_attention_reference_v1",
+      ],
+      "gfx950-compressed-hybrid-attention": [
+        "compressed_hybrid_attention_reference_v1",
+      ],
+      "gfx950-attnres-gr-mhc": [
+        "attnres_aggregate_reference_v1",
+        "four_branch_residual_reference_v1",
+        "mhc_sinkhorn_mix_reference_v1",
+      ],
+      "gfx950-speculative-mtp-verification": ["speculative_reference"],
+      "gfx950-ngram-embedding-gather": ["ngram_reference"],
+      "gfx950-muon-optimizer": ["muon_reference"],
     } as const;
 
     for (const [lessonId, sourcePath, rustSymbol, referenceSymbol, sourceFileSha256, hipSymbol, result, isa] of expected) {
@@ -519,9 +583,10 @@ describe("curriculum integrity", () => {
       expect(advanced, lessonId).toBeDefined();
       expect(advanced?.module).toBe(10);
       expect(advanced?.claims).toEqual([
-        expect.objectContaining({ kind: "source-example" }),
+        expect.objectContaining({
+          kind: advancedCoreSourceTree === null ? "source-example" : "gpu-observed",
+        }),
       ]);
-      expect(advanced?.claims[0].reference).toBeUndefined();
       expect(advanced?.tabs.map((tab) => tab.kind)).toEqual([
         "kernel",
         "reference",
@@ -535,7 +600,7 @@ describe("curriculum integrity", () => {
       expect(kernel?.sourcePath).toBe(sourcePath);
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
-      expect(kernel?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(kernel?.sourceCommit).toBe(advancedCoreSourceCommit);
       expect(kernel?.sourceSha256).toBe(rustExcerptSha256);
       expect(kernel?.code).toContain(rustSymbol);
       expect(kernel?.code).not.toContain("SOURCE MIRROR PENDING");
@@ -547,9 +612,12 @@ describe("curriculum integrity", () => {
       expect(reference?.kind).toBe("reference");
       expect(reference?.language).toBe("rust");
       expect(reference?.sourcePath).toBe(sourcePath.replace("kernel.rs", "reference.rs"));
-      expect(reference?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(reference?.sourceCommit).toBe(advancedCoreSourceCommit);
       expect(reference?.sourceSha256).toBe(referenceExcerptSha256);
       expect(reference?.explanatory).toBe(false);
+      for (const exactReference of referenceRecords[lessonId]) {
+        expect(reference?.code).toContain(`pub fn ${exactReference}(`);
+      }
       expect(reference?.code).toContain(referenceSymbol);
       const comparison = advanced?.tabs[2];
       expect(comparison?.label).toBe("Equivalent HIP");
@@ -559,19 +627,43 @@ describe("curriculum integrity", () => {
       expect(host?.code).toContain(isa);
       expect(host?.code).toContain("cargo test --offline");
       expect(host?.code).toContain("pinned fe2o3 core checkout");
-      expect(host?.code).toContain("fe2o3-kernels site checkout");
-      expect(host?.code).toContain("--offload-arch=gfx950");
+      expect(host?.code).toContain("ordinary Rust -> LLVM -> COV6 HSACO");
+      expect(host?.code).toContain("gfx950:xnack-");
 
       const evidence = advanced?.tabs.find((tab) => tab.kind === "result")?.code;
       expect(evidence).toContain(`Kernel file SHA-256: ${sourceFileSha256}`);
-      expect(evidence).toContain("Core source commit: 91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(evidence).toContain(`Core source commit: ${advancedCoreSourceCommit}`);
       expect(evidence).toContain(result);
-      expect(evidence).toContain("Rust gfx950 lowering supported: false");
-      expect(evidence).toContain("Rust-produced HSACO: none");
+      expect(evidence).toContain("FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE");
+      expect(evidence).toContain("Rust gfx950 lowering supported: true");
+      expect(evidence).not.toContain("Rust-produced HSACO: none");
       expect(evidence).toContain("HIP runtime observation:");
-      expect(evidence).toContain("do not bind to, lower, or execute the Rust source");
+      expect(evidence).toContain("does not produce, bind, or authorize any Rust artifact");
       expect(evidence).toContain("Performance result: not claimed");
-      expect(evidence).toContain("Formal proof: not claimed");
+      expect(evidence).toContain("Formal source-to-machine proof: not claimed");
+
+      for (const [symbol, runner, hardwareTest] of productionRecords[lessonId]) {
+        const record = advancedRustEvidence[
+          symbol as keyof typeof advancedRustEvidence
+        ];
+        expect(record.status).toBe("observed");
+        if (record.status !== "observed") {
+          throw new Error(`${symbol} must have an observed MI350 record`);
+        }
+        expect(kernel?.code).toContain(`pub fn ${symbol}(`);
+        expect(host?.code).toContain(runner);
+        expect(evidence).toContain(`Symbol: ${symbol}`);
+        expect(evidence).toContain(`Production runner: bash examples/gfx950_advanced_`);
+        expect(evidence).toContain(runner);
+        expect(evidence).toContain(hardwareTest);
+        expect(evidence).toContain("Evidence status: observed");
+        expect(evidence).toContain(`Portable namespace: ${record.namespace}`);
+        expect(evidence).toContain(`Rust-produced LLVM SHA-256: ${record.llvmSha256}`);
+        expect(evidence).toContain(`Rust-produced HSACO SHA-256: ${record.hsacoSha256}`);
+        expect(evidence).toContain(`Rust numerical result: ${record.numericalResult}`);
+        expect(evidence).toContain(`Acceptance tolerance: ${record.tolerance}`);
+        expect(evidence).not.toContain("pending mi350 end-to-end execution");
+      }
 
       const serialized = serializedLessonContent(lessonId);
       expect(serialized).toContain("Fixed-shape teaching boundary");
@@ -579,6 +671,72 @@ describe("curriculum integrity", () => {
       expect(serialized).toContain("full distributed collective");
       expect(serialized).toContain("full-model-equivalence claim");
     }
+  });
+
+  it("keeps the advanced production evidence matrix exhaustive and fail-closed", () => {
+    expect(Object.keys(advancedRustEvidence)).toEqual([
+      "gfx950_kda_gdn_decode",
+      "gfx950_kda_gdn_prefill",
+      "gfx950_content_sparse_attention",
+      "gfx950_compressed_hybrid_attention",
+      "gfx950_attnres_aggregate",
+      "gfx950_four_branch_residual",
+      "gfx950_mhc_sinkhorn_mix",
+      "gfx950_moe_route_fp4_t16_e4_k2_v1",
+      "gfx950_moe_expert_rank_fp4_fp8_v1",
+      "gfx950_combine_expert_ranks_v1",
+      "gfx950_speculative_transaction_v1",
+      "gfx950_qwen_ngram_gather_v1",
+      "gfx950_stage_gradient_shard_v1",
+      "gfx950_muon_update_4x4_v1",
+    ]);
+
+    for (const [symbol, evidence] of Object.entries(
+      advancedRustEvidence,
+    ) as [string, AdvancedRustEvidence][]) {
+      expect(evidence.symbol).toBe(symbol);
+      expect(Object.isFrozen(evidence)).toBe(true);
+      expect(evidence.requiredIsa.length).toBeGreaterThan(0);
+      expect(evidence.kernargBytes).toBeGreaterThan(0);
+      expect(evidence.workgroupSize).toBeGreaterThan(0);
+      expect(evidence.ldsBytes).toBeGreaterThanOrEqual(0);
+      expect(evidence.status).toBe("observed");
+      if (evidence.status !== "observed") {
+        throw new Error(`${symbol} must not regress to pending evidence`);
+      }
+      expect(evidence.namespace).toMatch(/^[0-9a-f]{64}$/u);
+      expect(evidence.llvmSha256).toMatch(/^[0-9a-f]{64}$/u);
+      expect(evidence.hsacoSha256).toMatch(/^[0-9a-f]{64}$/u);
+      expect(evidence.numericalResult).not.toMatch(/\bpending\b/iu);
+      expect(evidence.tolerance).not.toMatch(/\bpending\b/iu);
+      expect(evidence.runtimeObservation).not.toMatch(/\bpending\b/iu);
+    }
+
+    expect(advancedRustEvidence.gfx950_moe_route_fp4_t16_e4_k2_v1.workgroupSize).toBe(256);
+    expect(advancedRustEvidence.gfx950_moe_expert_rank_fp4_fp8_v1.workgroupSize).toBe(256);
+
+    expect(() =>
+      observedAdvancedEvidence(
+        {
+          label: "invalid fixture",
+          symbol: "gfx950_invalid_fixture",
+          runnerPath:
+            "examples/gfx950_advanced_attention/run-invalid-fixture-gfx950.sh",
+          hardwareTest: "gfx950_invalid_fixture_rust_cov6_matches_cpu_reference",
+          requiredIsa: ["symbol"],
+          kernargBytes: 8,
+          workgroupSize: 64,
+        },
+        {
+          namespace: "not-a-digest",
+          llvmSha256: "0".repeat(64),
+          hsacoSha256: "1".repeat(64),
+          numericalResult: "max_error=0",
+          tolerance: "absolute tolerance 1e-5",
+          runtimeObservation: "mi350 fixture",
+        },
+      ),
+    ).toThrow("noncanonical namespace");
   });
 
   it("pins byte-exact Rust mirrors for all gfx950 packages", () => {
@@ -596,16 +754,47 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_low_precision/run-attention-gfx950.sh", "9253aa5c740671ff91d69c44917a75cb1dc7c69b6f596f6ed999ded9d6db93ff"],
       ["examples/gfx950_low_precision/gfx950-ocml-closure.sh", "4acd64af08347456aa9b8e2c105e1af7ce2946167e95496c02c5dc88e2544c6a"],
       ["examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest", "43b868ede4500d71ff0f81fe3db2b91cec5cf4c973befc1533adfac51d9accc6"],
-      ["examples/gfx950_advanced_attention/README.md", "7657397fea609f7da6ff930aa23e60775f59822c9f2c2daec3898054abaf49a6"],
-      ["examples/gfx950_advanced_attention/Cargo.toml", "15331511f974503b26131577ec321bd7283945360f31744c007ffba2c072acf8"],
-      ["examples/gfx950_advanced_attention/src/kernel.rs", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba"],
+      ["examples/gfx950_advanced_attention/Cargo.lock", "18020e1ef16fd0944e33717cd4c0351f4eb312f8a26d6d00560a134fb8dfaa82"],
+      ["examples/gfx950_advanced_attention/Cargo.toml", "2781ebfbd807f9dcc4c85b5d58283fe468ca61c9646a6c596074eed44e95d96b"],
+      ["examples/gfx950_advanced_attention/README.md", "0eff7b615464e446149e620d5e6706962befa521f272e1e33eeb6d8d63bfb8df"],
+      ["examples/gfx950_advanced_attention/build_and_test.sh", "edfb9d27b52a1493c6f9371ed0944d6bdbca230971cf0efcff35133c5b59e17d"],
+      ["examples/gfx950_advanced_attention/check_isa.sh", "2e9e76a93e2d66f13c489c68217bb1857a8b326861608c7cb04ca13fba081e45"],
+      ["examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh", "978e7f09899298c92bf44802b268e02480b9e00d6d93bf9720528ef649552985"],
+      ["examples/gfx950_advanced_attention/gfx950_advanced_attention.hip", "c44b4227c0ec525a367359bdc16aff69c3086676aa61def1b653266604d1ed1d"],
+      ["examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh", "b869214fcab25ac6768856cd5402ef098838a50f2a9626f90ee107f9d3be51b6"],
+      ["examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh", "6709edbd2da0424fbfbaeb02d4b612e4a78ca8e941929dc9ecc2ecd3ecaef779"],
+      ["examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh", "972e38c13f18c85fa087a3649d3f7ea4f5c7ebb7b97709b131386f4d0adc830c"],
+      ["examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh", "9c4a4c2fceee19680e6f6a844966f591ef12feb1093b0300750a4448f22d7bf5"],
+      ["examples/gfx950_advanced_attention/run-gfx950.sh", "adb07ae9965f74bea6301cff66bdfeacd20c7e1999757aca239b899188ad163e"],
+      ["examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh", "b52f355e42d920435f12f46c4727bafdcbb89460ffe7ade9a66170d14123fd07"],
+      ["examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh", "0546e3565717c05a5680420f5c87e1ee34b89ccce0d25f153bd3740cea6c3788"],
+      ["examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh", "5e17ad7d3e87b67342b49eba0615f106051827d664eea228780b80a05ef81b26"],
+      ["examples/gfx950_advanced_attention/src/kernel.rs", "3b0f6962ce41da008542fa7685633ab7f4bcabf5540af35b3c327c7802a77faa"],
       ["examples/gfx950_advanced_attention/src/reference.rs", "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9"],
-      ["examples/gfx950_advanced_attention/src/lib.rs", "af05bbaee839bd7c54ea87f986338ccc5b9555021f3fcd4815faf68d21c97f7f"],
-      ["examples/gfx950_advanced_systems/README.md", "2408f7085b5504b7b64ac34f4ef1ee1bf062ca2d326cd9c762f7464686e9e218"],
-      ["examples/gfx950_advanced_systems/Cargo.toml", "2b7f59fa6efbafafcb6f4ec67831119f6287b12d0a88e08af1e8cfad33767117"],
-      ["examples/gfx950_advanced_systems/src/kernel.rs", "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081"],
+      ["examples/gfx950_advanced_attention/src/lib.rs", "78a0532d2fb981ca27f0a1943e92e277868a86dcf7ee2c37acc42eef819b6e4b"],
+      ["examples/gfx950_advanced_attention/test-extractor-runtime.sh", "47f0fa7b258d7b59dae1da26377a8b5acfe992ddf62511f96cf24d7ab4549363"],
+      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "11a91a97b354e1ed0087b9b79c5a3985eb1038b844853d87b5a0b8299d8997a7"],
+      ["examples/gfx950_advanced_attention/tests/reference.rs", "fd2b801e20d8d53fbc53446ebf14866d7855ec9c10b1970251b020af8c74a1f8"],
+      ["examples/gfx950_advanced_systems/Cargo.lock", "ee4fc112b1116c91d80b07e51d45b328d51ba103a0ca120bc8ea80cacfa00e35"],
+      ["examples/gfx950_advanced_systems/Cargo.toml", "b6a1e49bf5d0405470045f9768a07d8063b2303eb1dd6ca693f30adccda24d97"],
+      ["examples/gfx950_advanced_systems/README.md", "a965134c4ed1f120f83308d21794d0c79e3ff42d54377274dc4dfa2c7f49262c"],
+      ["examples/gfx950_advanced_systems/build_and_test.sh", "20f05e523e56aa1fff05f5d766960ab0539dfcc2d1dd2d33405a15725c715d54"],
+      ["examples/gfx950_advanced_systems/check_isa.sh", "7a115cbdabc14575f597b35f8443a6d9db36261fbd8d31551447c55a02196b53"],
+      ["examples/gfx950_advanced_systems/gfx950_advanced_systems.hip", "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5"],
+      ["examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh", "d586548c5529ab771b8795132ed375e1ea79d5ccb22d36ce3783a30151e36071"],
+      ["examples/gfx950_advanced_systems/run-gfx950.sh", "bfc9dbc79e84a90f9a7b73a265b4c6f7bc5be938ec732e140f72e4615c37c922"],
+      ["examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh", "3f117cf3c2cb585dcabcf7b7e8d19f4c1f8c0b37d4c45faa957bcf736c65bb98"],
+      ["examples/gfx950_advanced_systems/run-moe-route-gfx950.sh", "176766f056546afff1b854cd0525b7475c36ea57371106a819bd367506832489"],
+      ["examples/gfx950_advanced_systems/run-muon-update-gfx950.sh", "d4bbf39e0e5fc38f7f767fffcae81bd1749911a2fdfcd250b0f79b0394cfbe3d"],
+      ["examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "d25726c4015a35e05ab31c8fa7f7f8f04cc10686727f982adb86eeda36d10da1"],
+      ["examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "a85a7c2317f10077dcf97c1df9e2d95326a843e6a325dce3062ae4d06e8629fd"],
+      ["examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh", "7f2bcc17211dcfc2b8234e0e1842a7f4b6166f8d31672636ee89f9604092f3c5"],
+      ["examples/gfx950_advanced_systems/src/kernel.rs", "06423d7bfd24be5a80da70e2835b40bd066aeb404f9bad887d9e7707d52c076b"],
       ["examples/gfx950_advanced_systems/src/reference.rs", "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd"],
-      ["examples/gfx950_advanced_systems/src/lib.rs", "28782b1cf8d9a85973bc02011448cc18d6440aa504eadb48a479264dd08c93a9"],
+      ["examples/gfx950_advanced_systems/src/lib.rs", "1792a7e6290becd3bcc9743c44378e52ebaff4c0f2750e13835e4b8b6bc3f976"],
+      ["examples/gfx950_advanced_systems/tests/references.rs", "dd16aa4d15c630a8756b5d96a0d505c8cbfd6cd7a4aa77692891304da219f5dd"],
+      ["examples/gfx950_advanced_systems/tests/source.rs", "d076047f939b49d10ca8b438b99cb1ba415d231a34fe471d5b9a028a48513fa4"],
+      ["crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs", "1ebe4e265eb20d518f0758802fdd908b220f94be5f6257d9666c6a89a287a654"],
     ] as const;
     for (const [path, digest] of mirrors) {
       expect(createHash("sha256").update(readFileSync(path)).digest("hex"), path).toBe(digest);
@@ -616,7 +805,12 @@ describe("curriculum integrity", () => {
     const kinds = new Set(
       lessons.flatMap((lesson) => lesson.claims.map((claim) => claim.kind)),
     );
-    expect(kinds).toEqual(new Set(Object.keys(evidenceLabels)));
+    expect(kinds).toEqual(
+      new Set(
+        Object.keys(evidenceLabels).filter((kind) => kind !== "source-example"),
+      ),
+    );
+    expect(evidenceLabels["source-example"].short).toBe("Source example");
   });
 
   it("pins every evidenced claim to exact source and commands", () => {
@@ -2713,7 +2907,7 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("keeps advanced runnable claims restricted while permitting Module 9 GPU observations", () => {
+  it("keeps advanced runnable claims restricted while permitting bounded Module 9 and 10 GPU observations", () => {
     for (const lesson of lessons.filter((entry) => entry.module >= 4)) {
       const runnable = lesson.claims.some(
         (claim) => claim.kind === "runnable-now",
@@ -2725,9 +2919,9 @@ describe("curriculum integrity", () => {
         ]);
       }
       if (lesson.module === 10) {
-        expect(
-          lesson.claims.some((claim) => claim.kind === "gpu-observed"),
-        ).toBe(false);
+        expect(lesson.claims.map((claim) => claim.kind)).toEqual([
+          "gpu-observed",
+        ]);
       }
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
         [

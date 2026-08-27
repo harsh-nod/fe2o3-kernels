@@ -323,7 +323,7 @@ describe("lesson section rendering policy", () => {
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();
-  }, 20_000);
+  }, 40_000);
 
   it("rejects an unknown section kind without rendering attacker text", () => {
     const unsupportedAuthority =

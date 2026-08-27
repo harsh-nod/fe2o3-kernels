@@ -890,7 +890,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
   }
 });
 
-test("advanced gfx950 source-example lessons render on desktop and mobile", async ({
+test("advanced gfx950 production Rust lessons render on desktop and mobile", async ({
   page,
 }, testInfo) => {
   const routes = [
@@ -914,7 +914,7 @@ test("advanced gfx950 source-example lessons render on desktop and mobile", asyn
       page.getByRole("heading", { level: 1, name: title }),
     ).toBeVisible();
     await expect(
-      page.getByText("Source example", { exact: true }).first(),
+      page.getByText(/^(?:Source example|GPU observed)$/u).first(),
     ).toBeVisible();
     await expect(page.getByRole("tabpanel")).toContainText(
       symbol,
@@ -937,10 +937,13 @@ test("advanced gfx950 source-example lessons render on desktop and mobile", asyn
     "reduced norm max_error=0 with norm=0.614919",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO: none",
+    "Rust-produced HSACO SHA-256: e36673b4eeb8eea0563a3b7141eee99da52843e53f967c53db56a8987e6f1a31",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Formal proof: not claimed",
+    "Evidence status: observed",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Formal source-to-machine proof: not claimed",
   );
 });
 

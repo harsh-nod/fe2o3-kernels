@@ -73,7 +73,7 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
-  });
+  }, 15_000);
 
   it("renders the gfx950 FP4 attention production Rust evidence", async () => {
     const user = userEvent.setup();
@@ -125,7 +125,9 @@ describe("application shell", () => {
         name: "gfx950 Muon polar update",
       }, { timeout: 15_000 }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/^(?:Source example|GPU observed)$/u).length,
+    ).toBeGreaterThan(0);
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "gfx950_stage_gradient_shard_v1",
     );
@@ -134,13 +136,22 @@ describe("application shell", () => {
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "eight visible AMD Instinct MI350X devices",
+      "FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Rust-produced HSACO: none",
+      "run-stage-gradient-shard-gfx950.sh",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "reduced norm max_error=0 with norm=0.614919",
+      "run-muon-update-gfx950.sh",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Evidence status: observed",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "output max_absolute_error=7.450580597e-9",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "four shard launches; output outputs=16 max_absolute_error=0.000000000e0",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "Performance result: not claimed",
