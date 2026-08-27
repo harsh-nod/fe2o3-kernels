@@ -15,8 +15,8 @@ const ciWorkflow = readFileSync(
 describe("Pages publication policy", () => {
   it("pins one exact compiler object contained by both public refs", () => {
     expect(publicationGate).toEqual({
-      requiredCommit: "29e65d78dd109ef7adca3e9853072d98ba56ae2b",
-      requiredTree: "64f11f9cf93ef9e1aa7d925484fc5bb3a5a53208",
+      requiredCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
+      requiredTree: "996fceca501b3ac514099e2802a021ea6099ead9",
       requiredRefRelationship: "contains-required-commit",
       requiredRefs: [
         { repository: "harsh-nod/fe2o3", ref: "refs/heads/main" },

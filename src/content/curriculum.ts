@@ -2,6 +2,7 @@ import { modules0to2 } from "./modules-0-2";
 import { modules3to5 } from "./modules-3-5";
 import { modules6to8 } from "./modules-6-8";
 import { modules9 } from "./modules-9";
+import { modules10 } from "./modules-10";
 import type { GlossaryEntry, Lesson } from "./model";
 import { validateCurriculum } from "./validate";
 
@@ -10,6 +11,7 @@ export const curriculum = [
   ...modules3to5,
   ...modules6to8,
   ...modules9,
+  ...modules10,
 ];
 
 const issues = validateCurriculum(curriculum);
@@ -123,6 +125,37 @@ const definitions: Record<string, string> = {
   FP8: "An eight-bit floating-point operand format; these lessons use packed E4M3 values with explicit block-scale semantics.",
   E8M0: "An exponent-only eight-bit block-scale format applied to a declared group of low-precision matrix elements.",
   "transpose load": "A format-specific gfx950 LDS read that rearranges packed fragment data into the register orientation consumed by a matrix instruction.",
+  "expert-major layout": "A compact layout grouping accepted token routes by expert for local expert computation.",
+  KDA: "A gated linear-attention family whose exact recurrent update must be taken from the named implementation, not inferred from the family name.",
+  GDN: "A gated delta-network family with ordered recurrent state updates; the lesson does not imply equivalence to every GDN formulation.",
+  "linear attention": "An attention formulation represented through a bounded state recurrence rather than a materialized full score matrix.",
+  "recurrent state": "State carried between ordered sequence steps under an explicit initialization and update rule.",
+  "indexed sparse attention": "Attention over key/value positions selected by an explicit bounded index table.",
+  "gather contract": "The bounds, invalid-index, duplicate, ordering, and multiplicity rules for indexed reads.",
+  "duplicate semantics": "The declared treatment of repeated logical indices, including whether each occurrence contributes independently.",
+  "compressed attention": "An attention branch that summarizes a declared input domain into a smaller state before readout.",
+  "hybrid attention": "An explicit combination of two or more attention branches with separately stated domains and fusion rules.",
+  "fusion contract": "The coordinate alignment, coefficient, numeric type, and operation order used to combine branch outputs.",
+  "model equivalence": "A demonstrated relation between a bounded operator implementation and the complete model-level computation; no advanced lesson claims it.",
+  AttnRes: "An attention-residual mixing family whose exact stream selection and coefficients are source-defined.",
+  GR: "A gated-residual mixing family; the exact gate transform and update order are part of the kernel contract.",
+  mHC: "A multi-stream residual mixing family; this curriculum treats its matrix and normalization behavior as source-defined.",
+  "residual mixing": "Combining named residual streams through explicit gates or mixing coefficients while preserving required inputs.",
+  "speculative decoding": "Drafting candidate tokens and verifying a deterministic accepted prefix against a target computation.",
+  MTP: "Multi-token prediction; this lesson covers only the fixed-width verification kernel, not a complete decoding system.",
+  "accepted prefix": "The consecutive candidate positions accepted before the first rejection under a declared verification rule.",
+  "verification kernel": "A bounded operator computing verification predicates and outputs, separate from scheduling, sampling, and serving control.",
+  "N-gram": "A fixed-order contiguous token sequence used as a lookup key under explicit boundary rules.",
+  "embedding gather": "Resolving bounded table rows and loading embedding components; the current N-gram teaching kernel stops at an integer table value.",
+  "hash-table gather": "Probing a bounded hash table, comparing exact keys, resolving matches, and returning the selected table value.",
+  "lookup miss": "A lookup key with no admitted table row, handled by an explicit sentinel, mask, or fallback value.",
+  Muon: "An optimizer family using a matrix orthogonalization transform; the current teaching kernel emits an update without momentum or parameter application.",
+  orthogonalization: "A bounded matrix transform intended to move an update toward an orthogonal form under a stated numeric policy.",
+  momentum: "Optimizer state updated from previous state and the current gradient under a named convention.",
+  "optimizer state": "Mutable state carried between optimizer steps, with explicit initialization, precision, and ownership.",
+  "polar iteration": "One bounded matrix update toward a polar factor; the Muon teaching kernel uses five Newton-Schulz-like iterations.",
+  "gradient shard": "One ordered partial gradient matrix staged for a later fixed reduction.",
+  "optimizer update": "The emitted scaled update tensor; the teaching kernel does not apply it to parameter or momentum state.",
 };
 
 export const glossary: GlossaryEntry[] = Array.from(

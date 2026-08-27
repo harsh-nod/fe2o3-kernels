@@ -374,7 +374,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Twenty-five representative compile-time failures",
+      name: "Thirty-nine representative compile-time failures",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -402,6 +402,15 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     failureGallery.getByText("The GPU write disagrees with the CPU reference"),
   ).toBeVisible();
+  await expect(
+    failureGallery.getByText("An analysis stage leaves a changed operator"),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText("An identity snapshot contains unsupported structure"),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText("An identity snapshot exceeds its bounded budget"),
+  ).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("E0308", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-TENSOR-LAYOUT-001", { exact: true }).first()).toBeVisible();
@@ -427,6 +436,11 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   ).toBeVisible();
   await expect(
     page.getByText("Generic does not mean automatically provable"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Checkpoint equality is a narrow guarantee", {
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(
     page.getByText("One Rust type system, extended to GPU facts", {
@@ -468,6 +482,12 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-OWN-006", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-000", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-001", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-010", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-025", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-028", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-010", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-013", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-023", exact: true })).toBeVisible();
@@ -506,7 +526,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Twenty-five representative compile-time failures",
+      name: "Thirty-nine representative compile-time failures",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
@@ -590,7 +610,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/29e65d78dd109ef7adca3e9853072d98ba56ae2b/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/73bc772f18816eeb83ba696ae655fa59ea946228/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -690,7 +710,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/29e65d78dd109ef7adca3e9853072d98ba56ae2b/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/73bc772f18816eeb83ba696ae655fa59ea946228/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -708,7 +728,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/29e65d78dd109ef7adca3e9853072d98ba56ae2b/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/73bc772f18816eeb83ba696ae655fa59ea946228/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -764,7 +784,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
   await expect(expertRow).toContainText("freshness and replay authority");
 });
 
-test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
+test("gfx950 lessons expose source, ISA, and external runtime evidence", async ({
   page,
 }) => {
   await page.goto("./#/lesson/gfx950-fp4-attention");
@@ -781,10 +801,14 @@ test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
     page.getByText("Source example", { exact: true }).first(),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "gfx950_fp4_flash_attention",
+    "gfx950_fp4_attention_rust",
   );
 
-  await page.getByRole("tab", { name: "ISA checks" }).click();
+  await page.getByRole("tab", { name: "Safe CPU reference" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("attention_reference");
+  await page.getByRole("tab", { name: "Equivalent HIP" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("gfx950_fp4_flash_attention");
+  await page.getByRole("tab", { name: "Run and inspect" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("ds_read_b64_tr_b4");
   await expect(page.getByRole("tabpanel")).toContainText(
     "v_mfma_f32_16x16x128_f8f6f4",
@@ -792,7 +816,10 @@ test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
 
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Runtime device: pending",
+    "Rust gfx950 lowering supported: false",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "FP4 attention max_error=2.38419e-07",
   );
 
   await page.goto("./#/lesson/gfx950-fp8-attention");
@@ -805,7 +832,7 @@ test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
       name: "gfx950 FP8 flash attention",
     }),
   ).toBeVisible();
-  await page.getByRole("tab", { name: "ISA checks" }).click();
+  await page.getByRole("tab", { name: "Run and inspect" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("ds_read_b64_tr_b8");
   expect(
     await page.evaluate(
@@ -816,6 +843,89 @@ test("gfx950 lessons expose source, ISA, and pending runtime evidence", async ({
   ).toBe(false);
 });
 
+test("every gfx950 low-precision lesson opens its Rust kernel", async ({ page }) => {
+  const lessons = [
+    ["gfx950-fp4-gemm", "gfx950 FP4 GEMM", "gfx950_fp4_gemm_rust"],
+    ["gfx950-fp8-gemm", "gfx950 FP8 GEMM", "gfx950_fp8_gemm_rust"],
+    ["gfx950-fp4-attention", "gfx950 FP4 flash attention", "gfx950_fp4_attention_rust"],
+    ["gfx950-fp8-attention", "gfx950 FP8 flash attention", "gfx950_fp8_attention_rust"],
+  ] as const;
+
+  for (const [lessonId, title, symbol] of lessons) {
+    await page.goto(`./#/lesson/${lessonId}`);
+    await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+      timeout: 120_000,
+    });
+    await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    await expect(page.getByRole("tab", { name: "Rust kernel" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await expect(page.getByRole("tabpanel")).toContainText(symbol);
+    await expect(page.getByRole("tabpanel")).toContainText("rust");
+    await expect(
+      page.getByRole("link", { name: "Source", exact: true }),
+    ).toHaveAttribute(
+      "href",
+      /\/blob\/91e3cf2b4d8145d8c269ea3f783da53f90c568f4\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+    );
+  }
+});
+
+test("advanced gfx950 source-example lessons render on desktop and mobile", async ({
+  page,
+}, testInfo) => {
+  const routes = [
+    ["gfx950-advanced-moe", "gfx950 advanced MoE pipeline", "gfx950_moe_route_fp4_t16_e4_k2_v1"],
+    ["gfx950-kda-gdn-linear-attention", "gfx950 KDA/GDN linear attention", "gfx950_kda_gdn_decode"],
+    ["gfx950-indexed-sparse-attention", "gfx950 indexed sparse attention", "gfx950_content_sparse_attention"],
+    ["gfx950-compressed-hybrid-attention", "gfx950 compressed hybrid attention", "gfx950_compressed_hybrid_attention"],
+    ["gfx950-attnres-gr-mhc", "gfx950 AttnRes, GR, and mHC mixing", "gfx950_attnres_aggregate"],
+    ["gfx950-speculative-mtp-verification", "gfx950 speculative and MTP verification", "gfx950_speculative_transaction_v1"],
+    ["gfx950-ngram-embedding-gather", "gfx950 N-gram hash-table gather", "gfx950_qwen_ngram_gather_v1"],
+    ["gfx950-muon-optimizer", "gfx950 Muon polar update", "gfx950_muon_update_4x4_v1"],
+  ] as const;
+
+  expect(["desktop", "mobile"]).toContain(testInfo.project.name);
+  for (const [lessonId, title, symbol] of routes) {
+    await page.goto(`./#/lesson/${lessonId}`);
+    await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+      timeout: 120_000,
+    });
+    await expect(
+      page.getByRole("heading", { level: 1, name: title }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Source example", { exact: true }).first(),
+    ).toBeVisible();
+    await expect(page.getByRole("tabpanel")).toContainText(
+      symbol,
+    );
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth >
+          document.documentElement.clientWidth,
+      ),
+      `${testInfo.project.name}:${lessonId}`,
+    ).toBe(false);
+  }
+
+  await page.getByRole("tab", { name: "Evidence record" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "eight visible AMD Instinct MI350X devices",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "reduced norm max_error=0 with norm=0.614919",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Rust-produced HSACO: none",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Formal proof: not claimed",
+  );
+});
+
 test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {
@@ -824,7 +934,7 @@ test("every internal curriculum route resolves without page overflow", async ({
     timeout: 120_000,
   });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(25);
+  await expect(routeLinks).toHaveCount(33);
   const routes = await routeLinks.evaluateAll((links) =>
       links.map((link) => ({
         href: (link as HTMLAnchorElement).href,
@@ -855,7 +965,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at 29e65d78dd",
+      name: "Compiler baseline at 73bc772f18",
     }),
   ).toBeVisible();
   await expect(

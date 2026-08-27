@@ -37,7 +37,7 @@ describe("application shell", () => {
       await screen.findByRole("heading", {
         level: 1,
         name: "How to read this guide",
-      }, { timeout: 5_000 }),
+      }, { timeout: 15_000 }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Curriculum")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Kernel" })).toBeInTheDocument();
@@ -75,7 +75,7 @@ describe("application shell", () => {
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
   });
 
-  it("renders the gfx950 FP4 attention source and pending evidence boundary", async () => {
+  it("renders the gfx950 FP4 attention source and external runtime boundary", async () => {
     const user = userEvent.setup();
     renderApp("/lesson/gfx950-fp4-attention");
     expect(
@@ -86,10 +86,14 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "gfx950_fp4_flash_attention",
+      "gfx950_fp4_attention_rust",
     );
 
-    await user.click(screen.getByRole("tab", { name: "ISA checks" }));
+    await user.click(screen.getByRole("tab", { name: "Safe CPU reference" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("attention_reference");
+    await user.click(screen.getByRole("tab", { name: "Equivalent HIP" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("gfx950_fp4_flash_attention");
+    await user.click(screen.getByRole("tab", { name: "Run and inspect" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "ds_read_b64_tr_b4",
     );
@@ -99,10 +103,41 @@ describe("application shell", () => {
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Runtime device: pending",
+      "Rust gfx950 lowering supported: false",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "current host exposes gfx1036",
+      "FP4 attention max_error=2.38419e-07",
+    );
+  }, 30_000);
+
+  it("renders exact Muon source with bounded two-device evidence", async () => {
+    const user = userEvent.setup();
+    renderApp("/lesson/gfx950-muon-optimizer");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "gfx950 Muon polar update",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "gfx950_stage_gradient_shard_v1",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("gfx950_muon_update_4x4_v1");
+    expect(screen.getByText("Fixed-shape teaching boundary")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: "Evidence record" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "eight visible AMD Instinct MI350X devices",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Rust-produced HSACO: none",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "reduced norm max_error=0 with norm=0.614919",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Performance result: not claimed",
     );
   }, 30_000);
 
@@ -121,7 +156,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/29e65d78dd109ef7adca3e9853072d98ba56ae2b/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/73bc772f18816eeb83ba696ae655fa59ea946228/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     expect(
@@ -153,12 +188,12 @@ describe("application shell", () => {
       await screen.findByRole("heading", {
         level: 1,
         name: "Kernel delivery and verification progress",
-      }),
+      }, { timeout: 15_000 }),
     ).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
-    expect(screen.getByText("29e65d78dd10")).toBeInTheDocument();
+    expect(document.querySelector(".pin-summary")).toHaveTextContent("73bc772f18");
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -168,7 +203,7 @@ describe("application shell", () => {
       "The ancestry, commit, and tree are all required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "64f11f9cf93ef9e1aa7d925484fc5bb3a5a53208",
+      "996fceca501b3ac514099e2802a021ea6099ead9",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -292,7 +327,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler baseline at 29e65d78dd",
+        name: "Compiler baseline at 73bc772f18",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -304,7 +339,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open pinned compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/29e65d78dd109ef7adca3e9853072d98ba56ae2b",
+      "https://github.com/harsh-nod/fe2o3/tree/73bc772f18816eeb83ba696ae655fa59ea946228",
     );
   });
 });

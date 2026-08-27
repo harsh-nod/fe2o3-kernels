@@ -1,0 +1,687 @@
+import advancedAttentionSource from "../../examples/gfx950_advanced_attention/gfx950_advanced_attention.hip?raw";
+import advancedAttentionRustKernel from "../../examples/gfx950_advanced_attention/src/kernel.rs?raw";
+import advancedAttentionRustReference from "../../examples/gfx950_advanced_attention/src/reference.rs?raw";
+import advancedAttentionRustContract from "../../examples/gfx950_advanced_attention/src/lib.rs?raw";
+import advancedAttentionBuild from "../../examples/gfx950_advanced_attention/build_and_test.sh?raw";
+import advancedAttentionIsa from "../../examples/gfx950_advanced_attention/check_isa.sh?raw";
+import advancedSystemsSource from "../../examples/gfx950_advanced_systems/gfx950_advanced_systems.hip?raw";
+import advancedSystemsRustKernel from "../../examples/gfx950_advanced_systems/src/kernel.rs?raw";
+import advancedSystemsRustReference from "../../examples/gfx950_advanced_systems/src/reference.rs?raw";
+import advancedSystemsRustContract from "../../examples/gfx950_advanced_systems/src/lib.rs?raw";
+import advancedSystemsBuild from "../../examples/gfx950_advanced_systems/build_and_test.sh?raw";
+import advancedSystemsIsa from "../../examples/gfx950_advanced_systems/check_isa.sh?raw";
+import { narrativeSection } from "./narrative-registry";
+import { resultText } from "./shared";
+import type { CodeTab, CurriculumModule, DiagramKind, Lesson } from "./model";
+import type { NarrativeId } from "./narrative-policy";
+
+type BundleId = "attention" | "systems";
+
+interface SourceBundle {
+  rustKernel: string;
+  rustReference: string;
+  rustContract: string;
+  rustKernelPath: string;
+  rustReferencePath: string;
+  rustKernelFileSha256: string;
+  rustReferenceFileSha256: string;
+  loweringConstant: string;
+  loweringBlocker: string;
+  manifestPath: string;
+  hipSource: string;
+  hipSourcePath: string;
+  build: string;
+  isa: string;
+  hipSourceSha256: string;
+  hipHsacoSha256: string;
+  compiler: string;
+  runtime: string;
+  inputPolicy: string;
+}
+
+const coreSourceCommit = "91e3cf2b4d8145d8c269ea3f783da53f90c568f4";
+
+const attentionBundle: SourceBundle = {
+  rustKernel: advancedAttentionRustKernel,
+  rustReference: advancedAttentionRustReference,
+  rustContract: advancedAttentionRustContract,
+  rustKernelPath: "examples/gfx950_advanced_attention/src/kernel.rs",
+  rustReferencePath: "examples/gfx950_advanced_attention/src/reference.rs",
+  rustKernelFileSha256: "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba",
+  rustReferenceFileSha256: "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9",
+  loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
+  loweringBlocker: "the seven fixed-shape attributed kernels have no authenticated MIR-to-Kernel-IR profiles; gfx950 tensor/transpose lowering, finalization, runtime execution, proof, and performance evidence are pending",
+  manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
+  hipSource: advancedAttentionSource,
+  hipSourcePath: "examples/gfx950_advanced_attention/gfx950_advanced_attention.hip",
+  build: advancedAttentionBuild,
+  isa: advancedAttentionIsa,
+  hipSourceSha256: "c44b4227c0ec525a367359bdc16aff69c3086676aa61def1b653266604d1ed1d",
+  hipHsacoSha256: "dcfb1e00354ac14dffae5e069138c5e212b0906133838195dd717686af26ce84",
+  compiler: "ROCm 7.2.1, HIP 7.2.53211, AMD Clang 22.0.0git",
+  runtime: "visible gfx950 device through ssh alias mi350 on 2026-08-26",
+  inputPolicy:
+    "deterministic inputs; attention Q/K/V use non-uniform exactly representable E4M3 values and CPU comparisons reject non-finite values",
+};
+
+const systemsBundle: SourceBundle = {
+  rustKernel: advancedSystemsRustKernel,
+  rustReference: advancedSystemsRustReference,
+  rustContract: advancedSystemsRustContract,
+  rustKernelPath: "examples/gfx950_advanced_systems/src/kernel.rs",
+  rustReferencePath: "examples/gfx950_advanced_systems/src/reference.rs",
+  rustKernelFileSha256: "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081",
+  rustReferenceFileSha256: "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd",
+  loweringConstant: "GFX950_ADVANCED_SYSTEMS_SOURCE_LOWERING_SUPPORTED",
+  loweringBlocker: "gfx950 FP4/FP8 MFMA and gfx950 production target lowering are not authenticated by rustc-codegen-fe2o3",
+  manifestPath: "examples/gfx950_advanced_systems/Cargo.toml",
+  hipSource: advancedSystemsSource,
+  hipSourcePath: "examples/gfx950_advanced_systems/gfx950_advanced_systems.hip",
+  build: advancedSystemsBuild,
+  isa: advancedSystemsIsa,
+  hipSourceSha256: "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5",
+  hipHsacoSha256: "5ccc37902f9b549ac405f1096ad6df8ea58eba5dd6a08c765f5ea3148eb47d16",
+  compiler: "ROCm 7.2.1, HIP 7.2.53211, AMD Clang 22",
+  runtime: "eight visible AMD Instinct MI350X devices through ssh host mi350 on 2026-08-26",
+  inputPolicy:
+    "deterministic inputs; floating-point comparisons reject non-finite values and speculative rollback is checked bitwise",
+};
+
+interface AdvancedLessonSpec {
+  id: string;
+  order: number;
+  title: string;
+  summary: string;
+  duration: string;
+  bundle: BundleId;
+  sourceRole: string;
+  rustSymbols: string[];
+  rustExcerptSha256: string;
+  referenceSymbols: string[];
+  referenceExcerptSha256: string;
+  hipSymbols: string[];
+  fixedShape: string;
+  isaRequirements: string[];
+  observedResults: string[];
+  prerequisites: string[];
+  objectives: string[];
+  narratives: [NarrativeId, NarrativeId];
+  obligations: string[];
+  diagram: DiagramKind;
+  exercise: {
+    prompt: string;
+    hint: string;
+    acceptance: string;
+  };
+  glossary: string[];
+}
+
+function sourceBundle(bundle: BundleId): SourceBundle {
+  return bundle === "attention" ? attentionBundle : systemsBundle;
+}
+
+function exactHipKernelExcerpts(
+  source: string,
+  sourcePath: string,
+  symbols: string[],
+): string {
+  return symbols.map((symbol) => {
+    const symbolPosition = source.indexOf(`void ${symbol}(`);
+    const start = source.lastIndexOf('extern "C" __global__', symbolPosition);
+    const nextKernel = source.indexOf('extern "C" __global__', symbolPosition + 1);
+    const main = source.indexOf("int main()", symbolPosition + 1);
+    const end = nextKernel >= 0 ? nextKernel : main;
+    if (symbolPosition < 0 || start < 0 || end < 0) {
+      throw new Error(`Missing ${symbol} in ${sourcePath}`);
+    }
+    return source.slice(start, end).trimEnd();
+  }).join("\n\n");
+}
+
+function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean): string {
+  const position = source.indexOf(`pub fn ${symbol}(`);
+  const start = attributed
+    ? source.lastIndexOf("#[kernel(", position)
+    : Math.max(0, source.lastIndexOf("///", position));
+  const open = source.indexOf("{", position);
+  if (position < 0 || start < 0 || open < 0) throw new Error(`Missing Rust function ${symbol}`);
+  let depth = 0;
+  for (let index = open; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start, index + 1);
+  }
+  throw new Error(`Unclosed Rust function ${symbol}`);
+}
+
+function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
+  const bundle = sourceBundle(spec.bundle);
+  const rustFragments = spec.rustSymbols.map((symbol) =>
+    rustFunctionExcerpt(bundle.rustKernel, symbol, true),
+  );
+  const referenceFragments = spec.referenceSymbols.map((symbol) =>
+    rustFunctionExcerpt(bundle.rustReference, symbol, false),
+  );
+  return [
+    {
+      kind: "kernel",
+      label: "Rust kernel",
+      language: "rust",
+      code: rustFragments.join("\n\n"),
+      sourcePath: bundle.rustKernelPath,
+      sourceCommit: coreSourceCommit,
+      sourceSha256: spec.rustExcerptSha256,
+      sourceDigestScope: "displayed",
+      sourceFragments: rustFragments,
+      explanatory: false,
+      notice: `Exact published ordinary attributed Rust for ${spec.rustSymbols.join(", ")}, pinned to the core commit and displayed-byte SHA-256. ${bundle.loweringConstant} remains false.`,
+    },
+    {
+      kind: "reference",
+      label: "Safe CPU reference",
+      language: "rust",
+      code: referenceFragments.join("\n\n"),
+      sourcePath: bundle.rustReferencePath,
+      sourceCommit: coreSourceCommit,
+      sourceSha256: spec.referenceExcerptSha256,
+      sourceDigestScope: "displayed",
+      sourceFragments: referenceFragments,
+      explanatory: false,
+      notice: `Exact published independent safe CPU reference functions, pinned to the core commit and displayed-byte SHA-256: ${spec.referenceSymbols.join(", ")}.`,
+    },
+    {
+      kind: "comparison",
+      label: "Equivalent HIP",
+      language: "cpp",
+      code: exactHipKernelExcerpts(bundle.hipSource, bundle.hipSourcePath, spec.hipSymbols),
+      sourcePath: bundle.hipSourcePath,
+      sourceSha256: bundle.hipSourceSha256,
+      explanatory: true,
+      notice: `Comparison-only HIP fixture. Its ${spec.isaRequirements.join("; ")} and recorded runtime do not establish Rust lowering.`,
+    },
+    {
+      kind: "verus",
+      label: "Proof obligations",
+      language: "text",
+      code: [
+        "NO VERUS RESULT IS CLAIMED FOR THIS RUST SOURCE.",
+        "",
+        ...spec.obligations.map((obligation) => `- ${obligation}`),
+        "- Rust source -> Kernel IR -> gfx950 ISA refinement remains unproved",
+      ].join("\n"),
+      explanatory: true,
+      notice: "Obligation ledger only; no proof transcript or correctness certificate is claimed.",
+    },
+    {
+      kind: "host",
+      label: "Run and inspect",
+      language: "bash",
+      code: `# In the pinned fe2o3 core checkout: Rust source and CPU-reference checks only.\ncargo test --offline --manifest-path ${bundle.manifestPath}\n\n# In the fe2o3-kernels site checkout: separate HIP compiler/ISA/hardware validation.\nbash ${bundle.manifestPath.replace("/Cargo.toml", "/build_and_test.sh")}\n\n# Exact mirrored HIP build script:\n${bundle.build}\n\n# Exact HIP-only symbol-scoped ISA checker:\n${bundle.isa}`,
+      explanatory: true,
+      notice:
+        "Run Cargo in the pinned fe2o3 core checkout, where the manifest's core-relative dependencies exist. It does not produce gfx950 HSACO. The site-local build and ISA scripts validate only the companion HIP artifact.",
+    },
+    {
+      kind: "result",
+      label: "Evidence record",
+      language: "text",
+      code: resultText(
+        "source-example",
+        [
+          "FE2O3 RUST SOURCE LANE",
+          `Kernel source: ${bundle.rustKernelPath}`,
+          `Kernel symbols: ${spec.rustSymbols.join(", ")}`,
+          `Core source commit: ${coreSourceCommit}`,
+          `Kernel file SHA-256: ${bundle.rustKernelFileSha256}`,
+          `CPU references: ${spec.referenceSymbols.join(", ")}`,
+          `Reference source: ${bundle.rustReferencePath}`,
+          `Reference file SHA-256: ${bundle.rustReferenceFileSha256}`,
+          `Fixed shape: ${spec.fixedShape}`,
+          `Rust gfx950 lowering supported: ${bundle.rustContract.includes(`${bundle.loweringConstant}: bool = false`) ? "false" : "missing boundary"}`,
+          `Exact blocker: ${bundle.loweringBlocker}`,
+          "Rust-produced HSACO: none",
+          "Rust gfx950 runtime observation: none",
+          "",
+          "SEPARATE HIP COMPARISON LANE",
+          `HIP source: ${bundle.hipSourcePath}`,
+          `HIP symbols: ${spec.hipSymbols.join(", ")}`,
+          `HIP source SHA-256: ${bundle.hipSourceSha256}`,
+          `HIP code-object SHA-256: ${bundle.hipHsacoSha256}`,
+          `HIP compiler observation: ${bundle.compiler}; ./build_and_test.sh.`,
+          `HIP runtime observation: ${bundle.runtime}.`,
+          `HIP ISA observation: ${spec.isaRequirements.join("; ")}.`,
+          `HIP CPU-oracle observation: ${spec.observedResults.join("; ")}.`,
+          `Input/error policy: ${bundle.inputPolicy}.`,
+          "The HIP artifact and run do not bind to, lower, or execute the Rust source.",
+          "Performance result: not claimed",
+          "Formal proof: not claimed",
+          "Model equivalence: not claimed",
+        ].join("\n"),
+      ),
+      explanatory: true,
+      notice:
+        "Rust source/CPU-reference evidence and HIP ISA/runtime evidence remain separate authority lanes.",
+    },
+  ];
+}
+
+function lesson(spec: AdvancedLessonSpec): Lesson {
+  return {
+    id: spec.id,
+    module: 10,
+    order: spec.order,
+    title: spec.title,
+    summary: spec.summary,
+    duration: spec.duration,
+    prerequisites: spec.prerequisites,
+    objectives: spec.objectives,
+    claims: [
+      {
+        kind: "source-example",
+        label: "Fixed-shape Rust source and CPU reference published",
+        detail:
+          "The lesson defaults to exact ordinary attributed Rust plus an independent safe CPU reference. Rust gfx950 lowering is explicitly unsupported; HIP build, ISA, and MI350 observations remain comparison-only evidence.",
+      },
+    ],
+    sections: [
+      narrativeSection(spec.narratives[0]),
+      narrativeSection(spec.narratives[1]),
+    ],
+    tabs: advancedTabs(spec),
+    diagram: spec.diagram,
+    exercises: [spec.exercise],
+    glossary: spec.glossary,
+  };
+}
+
+const advancedLessons = [
+  lesson({
+    id: "gfx950-advanced-moe",
+    order: 0,
+    title: "gfx950 advanced MoE pipeline",
+    summary:
+      "Trace one compile-time-bounded token-to-expert dispatch, local expert compute, and weighted combine without implying a production serving path.",
+    duration: "48 min",
+    bundle: "systems",
+    sourceRole: "stable top-2 metadata, all-expert MFMA, host-staged rank partial, and combine teaching kernels",
+    rustSymbols: [
+      "gfx950_moe_route_fp4_t16_e4_k2_v1",
+      "gfx950_moe_expert_rank_fp4_fp8_v1",
+      "gfx950_combine_expert_ranks_v1",
+    ],
+    rustExcerptSha256: "ebb73a207fa5f56c893db782ed5169aa1afe95241908c1ddff8f232fd1c216ed",
+    referenceSymbols: ["moe_routing_reference", "moe_rank_reference"],
+    referenceExcerptSha256: "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e",
+    hipSymbols: ["gfx950_fused_fp4_fp8_moe", "gfx950_expert_parallel_rank", "gfx950_combine_expert_ranks"],
+    fixedShape:
+      "16 tokens, hidden 128, output 16, four routed experts plus one shared expert, top-2 routing",
+    isaRequirements: [
+      "all three lesson symbols are present",
+      "gfx950_fused_fp4_fp8_moe contains exactly one v_mfma_f32_16x16x128_f8f6f4 with cbsz:4",
+      "gfx942 compilation is rejected",
+    ],
+    observedResults: [
+      "router top weights max_error=0",
+      "fused MoE max_error=0",
+      "expert counts=9,7,6,10",
+      "logical rank 0 max_error=3.25963e-09",
+      "logical rank 1 max_error=4.76837e-07",
+      "GPU0 rank combine max_error=4.76837e-07",
+      "transport mode=two-device-peer",
+    ],
+    prerequisites: ["gfx950 FP8 GEMM", "MoE routing", "Grouped GEMM", "Stable route ownership"],
+    objectives: [
+      "Separate stable top-2 routing, dispatch metadata, all-expert tile computation, and weighted combine contracts.",
+      "Audit fixed token, expert, top-k, and hidden extents before inspecting generated ISA.",
+      "Distinguish the bounded two-rank peer-copy fixture from production expert parallelism.",
+    ],
+    narratives: ["gfx950-advanced-moe/fixed-pipeline", "gfx950-advanced-moe/scope-evidence"],
+    obligations: [
+      "all 32 top-2 routes have one in-range expert and one deterministic compact slot",
+      "equal router logits choose the lower expert ID as in the CPU oracle",
+      "expert output returns to exactly its originating token-route pair",
+      "the weighted combine reads every accepted route once and writes every output once",
+    ],
+    diagram: "moe",
+    exercise: {
+      prompt: "Add an exact router-logit tie oracle case.",
+      hint: "Pin the lower-expert-ID tie rule for first and second selection, then inspect dispatch order.",
+      acceptance: "The expected top-2 expert IDs, weights, per-expert counts, and compact route order are explicit for all 16 tokens.",
+    },
+    glossary: ["gfx950", "mixture of experts", "top-k", "capacity", "expert-major layout"],
+  }),
+  lesson({
+    id: "gfx950-kda-gdn-linear-attention",
+    order: 1,
+    title: "gfx950 KDA/GDN linear attention",
+    summary:
+      "Study a fixed head and sequence recurrence for gated linear attention while keeping state-update order and numeric policy explicit.",
+    duration: "46 min",
+    bundle: "attention",
+    sourceRole: "KDA/GDN recurrent state-update and output teaching kernels",
+    rustSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
+    rustExcerptSha256: "807a5e9c92ea2188fca93e4ec1ab0442c4ecf0ff0f3ecc60adf58a070242c571",
+    referenceSymbols: ["kda_gdn_decode_reference_v1", "kda_gdn_prefill_reference_v1"],
+    referenceExcerptSha256: "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d",
+    hipSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
+    fixedShape:
+      "16 channels; three-tap decode; eight-token prefill in two ordered four-token chunks",
+    isaRequirements: [
+      "gfx950_kda_gdn_decode contains v_rsq_f32",
+      "gfx950_kda_gdn_prefill contains v_rsq_f32",
+    ],
+    observedResults: [
+      "decode state max_error=2.98023e-08",
+      "decode normalization max_error=4.76837e-07",
+      "prefill state max_error=1.49012e-08",
+      "prefill normalization max_error=3.57628e-07",
+    ],
+    prerequisites: ["Online recurrences", "Gated linear attention", "FP32 accumulator state", "Wave64 reductions"],
+    objectives: [
+      "Write the exact three-tap convolution, proposal, gate, state, and RMS-normalization transition.",
+      "Track history, gate, state, normalized output, and carried prefill state layouts independently.",
+      "Identify which recurrence dependencies prevent unconstrained parallel reordering.",
+    ],
+    narratives: ["gfx950-kda-gdn-linear-attention/recurrence", "gfx950-kda-gdn-linear-attention/scope-evidence"],
+    obligations: [
+      "the initial state, token order, three-tap causal history, gate transform, and normalized output are fully specified",
+      "each state element has one owner or a stated synchronization/reduction policy",
+      "the numeric oracle uses the same recurrence order, 1e-5 RMS epsilon, and declared tolerance",
+      "input/output/state aliases are excluded unless the source explicitly supports them",
+    ],
+    diagram: "attention",
+    exercise: {
+      prompt: "Write a two-step recurrence trace for one state element.",
+      hint: "Keep the three-tap convolution, proposal, gate, state update, and RMS normalization in source order.",
+      acceptance: "The trace names the initial state and both ordered updates without claiming equivalence to a full model layer.",
+    },
+    glossary: ["gfx950", "KDA", "GDN", "linear attention", "recurrent state"],
+  }),
+  lesson({
+    id: "gfx950-indexed-sparse-attention",
+    order: 2,
+    title: "gfx950 indexed sparse attention",
+    summary:
+      "Select a compile-time-bounded key/value subset from content scores and make the selected-ID, mask, and output semantics explicit.",
+    duration: "42 min",
+    bundle: "attention",
+    sourceRole: "content-indexed sparse QK, softmax, and PV teaching kernel",
+    rustSymbols: ["gfx950_content_sparse_attention"],
+    rustExcerptSha256: "d73101786d16d612eb9fb5266f882d6e8107650550d6398ad01d004f32030ce3",
+    referenceSymbols: ["content_sparse_attention_reference_v1"],
+    referenceExcerptSha256: "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
+    hipSymbols: ["gfx950_content_sparse_attention"],
+    fixedShape:
+      "16 tokens, head dimension 128, 16 value channels; top two four-token blocks then top three tokens",
+    isaRequirements: [
+      "gfx950_content_sparse_attention contains exactly four ds_read_b64_tr_b8 before one v_mfma_f32_16x16x128_f8f6f4",
+    ],
+    observedResults: [
+      "selected IDs=[7,1,4]",
+      "sparse attention max_error=2.98023e-08",
+    ],
+    prerequisites: ["gfx950 flash attention", "Gather bounds", "Masking", "Online softmax"],
+    objectives: [
+      "Trace deterministic top-two block and top-three token selection into the active score mask.",
+      "Keep content-score selection, selected token IDs, packed fragment layout, and logical attention order distinct.",
+      "Confirm that unselected tokens contribute neither to the maximum, denominator, nor value numerator.",
+    ],
+    narratives: ["gfx950-indexed-sparse-attention/index-contract", "gfx950-indexed-sparse-attention/scope-evidence"],
+    obligations: [
+      "top-two block selection uses the source-declared stable tie behavior",
+      "top-three token selection is unique and drawn only from the eight selected-block candidates",
+      "masked slots contribute neither to the maximum, denominator, nor value numerator",
+      "the output covers exactly the 16 fixed value channels with one final store each",
+    ],
+    diagram: "attention",
+    exercise: {
+      prompt: "Add tied block-score and tied token-score oracle cases.",
+      hint: "Follow the source's stable lower-position tie order through both selection stages.",
+      acceptance: "The expected three unique token IDs and active softmax domain are explicit for each tie case.",
+    },
+    glossary: ["gfx950", "indexed sparse attention", "gather contract", "duplicate semantics", "masking"],
+  }),
+  lesson({
+    id: "gfx950-compressed-hybrid-attention",
+    order: 3,
+    title: "gfx950 compressed hybrid attention",
+    summary:
+      "Combine one bounded compressed-state branch with one bounded direct-attention branch under an explicit fusion rule.",
+    duration: "48 min",
+    bundle: "attention",
+    sourceRole: "compressed-state, direct-attention, and hybrid fusion teaching kernels",
+    rustSymbols: ["gfx950_compressed_hybrid_attention"],
+    rustExcerptSha256: "aaf25c62fb72ed32b25eb840b3fba9f955783f1b63d0d3b019c89c6ef9eb9b0a",
+    referenceSymbols: ["compressed_hybrid_attention_reference_v1"],
+    referenceExcerptSha256: "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
+    hipSymbols: ["gfx950_compressed_hybrid_attention"],
+    fixedShape:
+      "16 tokens, head dimension 128, 16 value channels; three compressed four-token blocks plus tokens 12-15 as the local window",
+    isaRequirements: [
+      "gfx950_compressed_hybrid_attention contains exactly four ds_read_b64_tr_b8 before one v_mfma_f32_16x16x128_f8f6f4",
+    ],
+    observedResults: [
+      "compressed hybrid attention max_error=1.67638e-07",
+    ],
+    prerequisites: ["Linear attention", "Sparse attention", "State compression", "Numerical oracles"],
+    objectives: [
+      "Describe the compressed and direct branches as separate fixed-shape contracts.",
+      "Record the exact branch fusion order, weights, and accumulator precision.",
+      "Separate local kernel behavior from end-to-end hybrid-model equivalence.",
+    ],
+    narratives: ["gfx950-compressed-hybrid-attention/fusion-contract", "gfx950-compressed-hybrid-attention/scope-evidence"],
+    obligations: [
+      "compression reads the declared source domain and initializes every compressed-state element",
+      "the direct branch uses the declared key domain and mask",
+      "branch outputs have compatible logical coordinates before fusion",
+      "fusion order, coefficients, accumulator type, and final store ownership match the oracle",
+    ],
+    diagram: "attention",
+    exercise: {
+      prompt: "Isolate each hybrid branch in the CPU oracle.",
+      hint: "Choose fusion coefficients that select one branch at a time, then test their declared combination.",
+      acceptance: "Both isolated branches and the combined fixed case have independent expected outputs and tolerances.",
+    },
+    glossary: ["gfx950", "compressed attention", "hybrid attention", "fusion contract", "model equivalence"],
+  }),
+  lesson({
+    id: "gfx950-attnres-gr-mhc",
+    order: 4,
+    title: "gfx950 AttnRes, GR, and mHC mixing",
+    summary:
+      "Express bounded residual-stream selection, gating, and mixing as explicit tensor transforms with alias-safe stores.",
+    duration: "40 min",
+    bundle: "attention",
+    sourceRole: "AttnRes, gated-residual, and mHC residual-mixing teaching kernels",
+    rustSymbols: [
+      "gfx950_attnres_aggregate",
+      "gfx950_four_branch_residual",
+      "gfx950_mhc_sinkhorn_mix",
+    ],
+    rustExcerptSha256: "9cbc16e2411298f9a452ee9d040b07c377f9d59b908eb89e1729595f4bb6f409",
+    referenceSymbols: ["attnres_aggregate_reference_v1", "four_branch_residual_reference_v1", "mhc_sinkhorn_mix_reference_v1"],
+    referenceExcerptSha256: "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
+    hipSymbols: ["gfx950_attnres_aggregate", "gfx950_four_branch_residual", "gfx950_mhc_sinkhorn_mix"],
+    fixedShape:
+      "16 channels; four AttnRes depths, four gated residual branches, and four mHC streams with three Sinkhorn iterations",
+    isaRequirements: [
+      "gfx950_attnres_aggregate contains v_exp_f32",
+      "gfx950_four_branch_residual contains v_exp_f32",
+      "gfx950_mhc_sinkhorn_mix contains v_exp_f32",
+    ],
+    observedResults: [
+      "AttnRes max_error=0",
+      "four-branch residual max_error=0",
+      "mHC/Sinkhorn max_error=2.98023e-08",
+    ],
+    prerequisites: ["Residual connections", "Tensor layouts", "Gating", "Aliasing contracts"],
+    objectives: [
+      "Name the input streams, coefficient domain, mixing order, and output layout for each variant.",
+      "Distinguish elementwise gates from stream-mixing matrices and normalization steps.",
+      "Audit whether an in-place transform preserves unread residual inputs.",
+    ],
+    narratives: ["gfx950-attnres-gr-mhc/mixing-contract", "gfx950-attnres-gr-mhc/scope-evidence"],
+    obligations: [
+      "every output component names the exact source streams and coefficients it consumes",
+      "gate and mixing transforms use the source-declared order and numeric type",
+      "in-place stores cannot overwrite a residual value before its final read",
+      "the CPU oracle treats AttnRes, GR, and mHC as distinct contracts",
+    ],
+    diagram: "memory",
+    exercise: {
+      prompt: "Construct an aliasing-negative case for one mixing variant.",
+      hint: "Find an output store that would precede a later read if input and output shared storage.",
+      acceptance: "The host rejects the alias or the kernel stages all required inputs before the first clobbering store.",
+    },
+    glossary: ["gfx950", "AttnRes", "GR", "mHC", "residual mixing"],
+  }),
+  lesson({
+    id: "gfx950-speculative-mtp-verification",
+    order: 5,
+    title: "gfx950 speculative and MTP verification",
+    summary:
+      "Verify one fixed-width candidate block and compute a deterministic accepted prefix without claiming a serving scheduler or sampler.",
+    duration: "44 min",
+    bundle: "systems",
+    sourceRole: "speculative-decoding and multi-token-prediction verification teaching kernels",
+    rustSymbols: ["gfx950_speculative_transaction_v1"],
+    rustExcerptSha256: "c18a04e7de7af396288162bef82683ad944a620f18a65274bc03f5021820e520",
+    referenceSymbols: ["speculative_reference"],
+    referenceExcerptSha256: "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc",
+    hipSymbols: ["gfx950_speculative_transaction"],
+    fixedShape:
+      "eight candidates, four draft steps, eight state elements; commit state deltas only when all four steps pass",
+    isaRequirements: [
+      "gfx950_speculative_transaction symbol is present",
+      "gfx942 compilation is rejected for the complete suite",
+    ],
+    observedResults: [
+      "transaction state max_error=0",
+      "committed candidates=2",
+      "rolled-back candidates=6 with bitwise base-state equality",
+    ],
+    prerequisites: ["Prefix scans", "Token logits", "Deterministic acceptance policy", "Gather bounds"],
+    objectives: [
+      "Separate candidate gathering, target evaluation, acceptance predicates, and prefix length.",
+      "Define the first-rejection rule and output ownership for a fixed candidate width.",
+      "Keep verification-kernel evidence separate from decoder and serving-system claims.",
+    ],
+    narratives: ["gfx950-speculative-mtp-verification/prefix-contract", "gfx950-speculative-mtp-verification/scope-evidence"],
+    obligations: [
+      "each candidate position reads the declared token and target value in range",
+      "the acceptance predicate and first-rejection rule are deterministic for the teaching inputs",
+      "no position after the first rejection is reported as accepted",
+      "accepted length, commit flag, and fixed output state have one final owner per candidate",
+    ],
+    diagram: "reduction",
+    exercise: {
+      prompt: "Add all-accepted, first-rejected, and last-rejected prefix cases.",
+      hint: "Compute the per-position predicate first, then the accepted prefix length.",
+      acceptance: "The oracle covers all three boundaries and never treats independent accepted positions as a valid prefix.",
+    },
+    glossary: ["gfx950", "speculative decoding", "MTP", "accepted prefix", "verification kernel"],
+  }),
+  lesson({
+    id: "gfx950-ngram-embedding-gather",
+    order: 6,
+    title: "gfx950 N-gram hash-table gather",
+    summary:
+      "Resolve fixed-order N-gram identifiers through a bounded priority table and return one integer table value per query.",
+    duration: "36 min",
+    bundle: "systems",
+    sourceRole: "N-gram hash-table lookup and integer-value gather teaching kernel",
+    rustSymbols: ["gfx950_qwen_ngram_gather_v1"],
+    rustExcerptSha256: "82fa12ab47a0d0dc82c75ed0ce552277adef0c4467b9d148bd35772aea6af362",
+    referenceSymbols: ["ngram_reference"],
+    referenceExcerptSha256: "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1",
+    hipSymbols: ["gfx950_qwen_ngram_gather"],
+    fixedShape:
+      "eight queries, three tokens per N-gram, 16 table slots, integer table-value output",
+    isaRequirements: [
+      "gfx950_qwen_ngram_gather symbol is present",
+      "gfx942 compilation is rejected for the complete suite",
+    ],
+    observedResults: [
+      "hits=4",
+      "misses=4",
+      "deterministic duplicate-key tie value=4242",
+    ],
+    prerequisites: ["Hash tables", "Indexed gathers", "Integer overflow checks", "Deterministic tie-breaking"],
+    objectives: [
+      "Bound N-gram construction and table addressing without unchecked integer overflow.",
+      "Define lookup miss, hash collision, exact key comparison, and priority tie behavior.",
+      "Keep the current integer table-value output distinct from a future embedding-vector gather.",
+    ],
+    narratives: ["gfx950-ngram-embedding-gather/gather-contract", "gfx950-ngram-embedding-gather/scope-evidence"],
+    obligations: [
+      "token-window and N-gram identifier arithmetic cannot overflow its admitted integer type",
+      "every resolved table row is in range or follows an explicit miss policy",
+      "collisions and repeated identifiers have deterministic semantics",
+      "the best matching slot returns exactly one integer table value, with -1 for a miss",
+    ],
+    diagram: "indexing",
+    exercise: {
+      prompt: "Add hash-collision, repeated-key, priority-tie, and lookup-miss oracle cases.",
+      hint: "Make exact-key matching, priority ties, and the -1 miss value explicit before returning a table value.",
+      acceptance: "Every query has one declared integer result and every table read is in range.",
+    },
+    glossary: ["gfx950", "N-gram", "hash-table gather", "lookup miss", "gather contract"],
+  }),
+  lesson({
+    id: "gfx950-muon-optimizer",
+    order: 7,
+    title: "gfx950 Muon polar update",
+    summary:
+      "Reduce two fixed gradient shards, normalize one 4 x 4 matrix, run five polar iterations, and emit a scaled update.",
+    duration: "50 min",
+    bundle: "systems",
+    sourceRole: "Muon gradient staging, shard reduction, polar iteration, and update teaching kernels",
+    rustSymbols: ["gfx950_stage_gradient_shard_v1", "gfx950_muon_update_4x4_v1"],
+    rustExcerptSha256: "2d648160c8507976040c4db8ed3b3c87ddf47e17ca108850911b19df380eb74f",
+    referenceSymbols: ["muon_reference"],
+    referenceExcerptSha256: "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af",
+    hipSymbols: ["gfx950_stage_gradient_shard", "gfx950_muon_update"],
+    fixedShape:
+      "two gradient shards reduced in rank order into one 4 x 4 FP32 matrix; five polar iterations; learning-rate scale 0.05",
+    isaRequirements: [
+      "gfx950_stage_gradient_shard and gfx950_muon_update symbols are present",
+      "gfx942 compilation is rejected for the complete suite",
+    ],
+    observedResults: [
+      "staged shard max_error=0",
+      "polar update max_error=4.65661e-09",
+      "reduced norm max_error=0 with norm=0.614919",
+      "mode=two-device-host-staged",
+    ],
+    prerequisites: ["Matrix norms", "Shard reduction", "Iterative matrix transforms", "FP32 accumulation"],
+    objectives: [
+      "State the exact fixed matrix shape, shard order, iteration count, and update order.",
+      "Track working precision and normalization through the bounded orthogonalization loop.",
+      "Separate a single optimizer-step oracle from convergence or training-quality claims.",
+    ],
+    narratives: ["gfx950-muon-optimizer/update-contract", "gfx950-muon-optimizer/scope-evidence"],
+    obligations: [
+      "the two shards are reduced in fixed rank order before normalization",
+      "normalization handles the source-declared zero and non-finite policies",
+      "the orthogonalization loop executes the exact fixed iteration count in source order",
+      "all 16 update elements and the reduced norm receive one final in-range store",
+    ],
+    diagram: "gemm",
+    exercise: {
+      prompt: "Add zero-gradient and one bounded nonzero-matrix oracle cases.",
+      hint: "Record the normalization policy before applying the fixed orthogonalization iterations.",
+      acceptance: "The cases pin the reduced norm and 16 update outputs without making convergence, throughput, or model-quality claims.",
+    },
+    glossary: ["gfx950", "Muon", "polar iteration", "gradient shard", "optimizer update"],
+  }),
+];
+
+export const modules10: CurriculumModule[] = [
+  {
+    number: 10,
+    title: "gfx950 advanced operator kernels",
+    summary:
+      "Fixed-shape teaching contracts for advanced attention, routing, residual, decoding, N-gram lookup, and optimizer operators, with source and evidence integration kept fail-closed.",
+    lessons: advancedLessons,
+  },
+];
