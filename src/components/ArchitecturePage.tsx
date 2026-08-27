@@ -29,7 +29,7 @@ export function ArchitecturePage() {
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
-            ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. One ephemeral manager shares eight bounded roots: sparse indices, Presburger relations, address-space-aware provenance, execution layout, exact traces, tensor-layout dataflow, memory ordering, and SIMT protocol facts."],
+            ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. One ephemeral manager shares eight bounded analysis roots. One initial and eight post-stage structural snapshots detect persistent PLIRON changes; exact bytes are retained for revalidation, but checkpoint equality does not prove report soundness or detect mutate-then-restore behavior."],
             ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Status-Checked policy staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; the private move-only join is the admission authority and requires both structural and formula results."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
@@ -115,9 +115,15 @@ export function ArchitecturePage() {
           formula authority. Tensor/MFMA result components bind exact stores
           at the claim boundary; tensor-component theorem replay still fails
           closed. ErrorBounded formula replay is also incomplete.
+          Bounded canonical PLIRON identities now bracket the fixed eight-stage
+          analysis sequence. Persistent changes are attributed to the active
+          stage, and exact retained bytes participate in later revalidation;
+          digest labels are diagnostic only. This does not make the function
+          immutable during a stage or prove analysis-result soundness.
           mi300x has no production proof-runtime fallback.
           Partial capabilities at this baseline still grant no compiler extraction,
-          projection, pass-soundness, or source-to-machine refinement,
+          projection, analysis-result or transformation soundness, or
+          source-to-machine refinement,
           LLVM or target arithmetic proof, protected launch authority, complete
           persistent execution, universal functional or numerical correctness,
           or automatic parity promotion.

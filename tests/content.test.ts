@@ -67,10 +67,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606",
+      "73bc772f18816eeb83ba696ae655fa59ea946228",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "c9fa84b48b4b6f17563d627a93fa315afdc190b9",
+      "996fceca501b3ac514099e2802a021ea6099ead9",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -727,6 +727,16 @@ describe("curriculum integrity", () => {
         (capability) => capability.id === "cpu-semantic-simulation",
       )?.detail,
     ).toContain("not a current command");
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "compiler-analysis",
+      )?.detail,
+    ).toContain("Checkpoint equality does not detect transient mutate-then-restore behavior");
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "functional-reference",
+      )?.detail,
+    ).not.toContain("transition records");
   });
 
   it("pins the executable dynamic GEMM and historical tiled evidence separately", () => {
@@ -758,7 +768,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606",
+      sourceCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -915,6 +925,10 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("The CPU reference closes semantics, not hardware layout");
     expect(failures).toContain("Production errors include a repair contract");
     expect(failures).toContain("FE2O3-FIX-LAYOUT");
+    expect(failures).toContain("Checkpoint equality is a narrow guarantee");
+    expect(failures).toContain("Matching checkpoints do not detect transient mutate-then-restore behavior");
+    expect(failures).toContain("A transforming pass needs a separately validated semantic-refinement relation");
+    expect(failures).toContain("proof that trusted dialect encoders or printers are correct");
     expect(failures).toContain("does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem");
     expect(failures).toContain("unsafe_asm");
     expect(failures).toContain("Kernel tabs are current safe source");
@@ -1052,6 +1066,7 @@ describe("curriculum integrity", () => {
       "kernel-progress (semantic-stage analysis)",
       "kernel-target-contract (compiler-supplied precondition)",
       "kernel-ir-interprocedural-effects (shared analysis)",
+      "pliron-ranked-structural-identity-v1 (shared preservation root)",
       "bounded resources (cross-cutting)",
     ]);
     const prerequisiteTable = semanticFailures.blocks.find(
@@ -1075,6 +1090,19 @@ describe("curriculum integrity", () => {
     expect(diagnosticTable?.type).toBe("table");
     if (diagnosticTable?.type !== "table") return;
     expect(diagnosticTable.rows.map(([code]) => code)).toEqual([
+      "FE2O3-PRESERVE-000",
+      "FE2O3-PRESERVE-001",
+      "FE2O3-PRESERVE-002",
+      "FE2O3-PRESERVE-003",
+      "FE2O3-PRESERVE-004",
+      "FE2O3-PRESERVE-005",
+      "FE2O3-PRESERVE-010",
+      "FE2O3-PRESERVE-022",
+      "FE2O3-PRESERVE-024",
+      "FE2O3-PRESERVE-025",
+      "FE2O3-PRESERVE-026",
+      "FE2O3-PRESERVE-028",
+      "FE2O3-PRESERVE-029",
       "FE2O3-TENSOR-LAYOUT-001",
       "FE2O3-TENSOR-LAYOUT-002",
       "FE2O3-TENSOR-LAYOUT-003",
@@ -1180,9 +1208,9 @@ describe("curriculum integrity", () => {
       "FE2O3-ABI-006",
       "FE2O3-ABI-007",
     ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(61);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(37);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(6);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(68);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(41);
+    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(8);
 
     const effectDiagnosticTable = semanticFailures.blocks.find(
       (block) => block.type === "table" && block.headers[0] === "Effect diagnostic",
@@ -1209,7 +1237,7 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(36);
+    expect(failureGallery.examples).toHaveLength(39);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
     expect(failureGallery.intro).toContain("tensor layout first");
     expect(failureGallery.intro).toContain("users still write Rust");
@@ -1250,6 +1278,9 @@ describe("curriculum integrity", () => {
       "numerical_tree_mismatch",
       "target_lds_budget",
       "target_host_allocation_small",
+      "preserve_analysis_operator_mutation",
+      "preserve_unsupported_snapshot",
+      "preserve_snapshot_resource_limit",
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
@@ -1299,6 +1330,21 @@ describe("curriculum integrity", () => {
     );
     expect(example("parallel_contract_construction")?.diagnostic).toContain(
       "FE2O3-PARALLEL-017",
+    );
+    expect(example("preserve_analysis_operator_mutation")?.diagnostic).toContain(
+      "analysis-only pass MemoryBounds",
+    );
+    expect(example("preserve_analysis_operator_mutation")?.diagnostic).toContain(
+      "changed at block 0 op 2",
+    );
+    expect(example("preserve_analysis_operator_mutation")?.caught).toContain(
+      "does not detect mutate-then-restore behavior",
+    );
+    expect(example("preserve_unsupported_snapshot")?.diagnostic).toContain(
+      "post-pass structural identity is unavailable",
+    );
+    expect(example("preserve_snapshot_resource_limit")?.diagnostic).toContain(
+      "basic blocks count 1025",
     );
     expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
     expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
@@ -1401,6 +1447,9 @@ describe("curriculum integrity", () => {
       "before KIR lowering",
       "Candidate declarations are not evidence",
       "root-owned fixed /opt runtime",
+      "one immediately after each of the eight named analysis stages",
+      "Exact bytes, not the diagnostic digest",
+      "does not detect transient mutate-restore behavior or prove the stage report correct",
     ]) {
       expect(narrative).toContain(boundary);
     }
@@ -1429,7 +1478,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606",
+      sourceCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -2531,12 +2580,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-26",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606",
-      eventualPublicTree: "c9fa84b48b4b6f17563d627a93fa315afdc190b9",
+      eventualPublicCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
+      eventualPublicTree: "996fceca501b3ac514099e2802a021ea6099ead9",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606",
-        requiredTree: "c9fa84b48b4b6f17563d627a93fa315afdc190b9",
+        requiredCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
+        requiredTree: "996fceca501b3ac514099e2802a021ea6099ead9",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -3167,7 +3216,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606",
+      "73bc772f18816eeb83ba696ae655fa59ea946228",
     );
 
     const lesson = curriculum
@@ -3815,7 +3864,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606");
+    expect(mapping).toContain("sourceCommit\":\"73bc772f18816eeb83ba696ae655fa59ea946228");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family flags remain false");
