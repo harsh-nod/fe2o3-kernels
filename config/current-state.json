@@ -1,6 +1,6 @@
 {
-  "reviewedOn": "2026-08-26",
-  "plironCommit": "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
+  "reviewedOn": "2026-08-27",
+  "plironCommit": "5bdf861bf03e7f20242b25717fb653336d02e487",
   "issues": [
     {"number": 109, "state": "closed", "label": "Shared BF16/F32 numerical contract"},
     {"number": 134, "state": "open", "label": "Rust-first Pliron compiler architecture"},

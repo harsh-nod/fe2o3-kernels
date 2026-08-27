@@ -156,7 +156,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/73bc772f18816eeb83ba696ae655fa59ea946228/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     expect(
@@ -193,7 +193,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
-    expect(document.querySelector(".pin-summary")).toHaveTextContent("73bc772f18");
+    expect(document.querySelector(".pin-summary")).toHaveTextContent("61222da06c");
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -203,7 +203,7 @@ describe("application shell", () => {
       "The ancestry, commit, and tree are all required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "996fceca501b3ac514099e2802a021ea6099ead9",
+      "572828c0b3b454dc93518f20b306b0549a5ae839",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -327,7 +327,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler baseline at 73bc772f18",
+        name: "Compiler baseline at 61222da06c",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -339,7 +339,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open pinned compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/73bc772f18816eeb83ba696ae655fa59ea946228",
+      "https://github.com/harsh-nod/fe2o3/tree/61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
     );
   });
 });

@@ -67,10 +67,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "73bc772f18816eeb83ba696ae655fa59ea946228",
+      "61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "996fceca501b3ac514099e2802a021ea6099ead9",
+      "572828c0b3b454dc93518f20b306b0549a5ae839",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -784,7 +784,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
+      sourceCommit: "61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -1548,7 +1548,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
+      sourceCommit: "61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -2647,15 +2647,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-26",
+      reviewedOn: "2026-08-27",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
-      eventualPublicTree: "996fceca501b3ac514099e2802a021ea6099ead9",
+      eventualPublicCommit: "61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
+      eventualPublicTree: "572828c0b3b454dc93518f20b306b0549a5ae839",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
-        requiredTree: "996fceca501b3ac514099e2802a021ea6099ead9",
+        requiredCommit: "61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
+        requiredTree: "572828c0b3b454dc93518f20b306b0549a5ae839",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -3286,7 +3286,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "73bc772f18816eeb83ba696ae655fa59ea946228",
+      "61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
     );
 
     const lesson = curriculum
@@ -3934,7 +3934,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"73bc772f18816eeb83ba696ae655fa59ea946228");
+    expect(mapping).toContain("sourceCommit\":\"61222da06c5a4bd75485f2a4bcb375cd4087d3a9");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family flags remain false");
