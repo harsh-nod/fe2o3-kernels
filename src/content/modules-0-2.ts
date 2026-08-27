@@ -645,7 +645,7 @@ const compilerChecks: Lesson = {
   objectives: [
     "Follow the workload-neutral Rust MIR to ranked PLIRON to KIR path.",
     "Distinguish Rejected, Incomplete, Clean policy reports, and Complete raw-replay witnesses.",
-    "Explain why raw checked tiled and row-striped markers fail closed while explicit affine and Presburger maps remain supported.",
+    "Explain what checked tiled and row-striped obligation carriers validate structurally, and why their missing source-semantic custody still fails closed.",
     "Identify static bounded access as the sole Complete independent raw-replay fragment.",
     "Explain how exact typed replay admits index constant folding without authorizing other transformations.",
     "Recognize unsupported CFG, no-wrap, dynamic, alias, and tensor cases as fail-closed compilation results.",
@@ -670,6 +670,10 @@ const compilerChecks: Lesson = {
           "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_race.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_progress.rs",
+          "crates/dialect-kernel/src/ranked_memory.rs",
+          "crates/fe2o3-pliron/tests/production_predicated_access.rs",
+          "crates/fe2o3-kernel-analysis/tests/lit/race_predicated_checked_access_raw.pliron",
+          "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
         ],
         {
           target: "gfx942",
@@ -723,10 +727,10 @@ const compilerChecks: Lesson = {
       kind: "result",
       label: "Witness boundary",
       language: "text",
-      code: "Complete:\n  static bounded ranked access raw replay\n\nIncomplete:\n  nonempty tensor-layout replay without external-root / operational-SSA provenance\n  raw checked tiled or row-striped race markers\n  dynamic or over-budget bounds replay\n  every other current independent stage witness",
+      code: "Complete:\n  static bounded ranked access raw replay\n\nStructurally validated but Incomplete:\n  checked tiled or row-striped index + success + physical-extent carriers\n\nStill missing:\n  owner-custodied semantic MIR correspondence and exact receiver extent\n  two Option::Some paths plus allowed-use / CFG dominance\n  source provenance/noalias and retained KIR replay\n\nIncomplete:\n  nonempty tensor-layout replay without external-root / operational-SSA provenance\n  dynamic or over-budget bounds replay\n  every other current independent stage witness",
       explanatory: true,
       notice:
-        "A Clean policy report and a Complete independent witness are different results. Unsupported witness coverage stops compilation rather than becoming proof by omission.",
+        "Typed carrier validation is not a Clean race report or a Complete independent witness. Raw, textual, and public recipes stop at FE2O3-RACE-002 rather than becoming proof by omission.",
     },
     {
       kind: "host",

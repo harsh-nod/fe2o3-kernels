@@ -1064,7 +1064,13 @@ describe("curriculum integrity", () => {
       "Nonempty tensor-layout replay remains Incomplete",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "Raw checked tiled and row-striped markers fail closed with FE2O3-RACE-002",
+      "Checked tiled and row-striped recipes now carry a structural index",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "owner-custodied semantic MIR correspondence",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "no Clean race, KIR, functional-domain, lowering, launch, or hardware claim",
     );
     expect(compilerAnalysis?.detail).toContain(
       "One production transformation folds",
@@ -1074,6 +1080,10 @@ describe("curriculum integrity", () => {
         "crates/fe2o3-kernel-analysis/src/pliron_pass_contract.rs",
         "crates/fe2o3-kernel-analysis/src/pliron_report_validation.rs",
         "crates/fe2o3-kernel-analysis/src/pliron_analysis_witness.rs",
+        "crates/dialect-kernel/src/ranked_memory.rs",
+        "crates/fe2o3-pliron/tests/production_predicated_access.rs",
+        "crates/fe2o3-kernel-analysis/tests/lit/race_predicated_checked_access_raw.pliron",
+        "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
         "crates/fe2o3-pliron/src/production/ranked/ranked_index_constant_fold_v1.rs",
       ]),
     );
@@ -1243,8 +1253,8 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("bounded sparse affine index dataflow");
     expect(contract).toContain("contains no GEMM names, tile-size tests, or schedule recognizers");
     expect(contract).toContain("FE2O3-RACE-002");
-    expect(contract).toContain("checked structured ownership marker");
-    expect(contract).toContain("No KIR, LLVM, HSACO, or launch authority");
+    expect(contract).toContain("structural index, checked-success capability, and physical extent");
+    expect(contract).toContain("No Clean race result, KIR, LLVM, HSACO");
     expect(contract).toContain("fail closed as Incomplete");
     expect(contract).toContain("current kernel already uses BF16/F32 MFMA");
     expect(contract).toContain("remaining schedule optimization is cooperative LDS staging");
@@ -1309,7 +1319,7 @@ describe("curriculum integrity", () => {
       "every other current independent stage witness remain Incomplete",
     );
     expect(compilerNarrative).toContain(
-      "Raw checked tiled and row-striped markers",
+      "Checked tiled and row-striped recipes",
     );
     expect(compilerNarrative).toContain(
       "canonical single-entry multi-block forwarding SCCs",
@@ -1436,11 +1446,11 @@ describe("curriculum integrity", () => {
       "mutation-attempt epoch",
       "Static bounded ranked access witness",
       "Nonempty tensor-layout witness",
-      "Raw checked tiled and row-striped markers",
+      "Checked tiled and row-striped recipes",
       "Canonical single-entry multi-block forwarding SCCs",
       "Any other transformation",
       "kernel.index_unsigned_cast",
-      "current production matrix stops earlier at FE2O3-RACE-002",
+      "Raw, textual, and public recipes still stop at FE2O3-RACE-002",
       "not universal correctness",
     ]) {
       expect(narrative).toContain(boundary);
@@ -1509,6 +1519,13 @@ describe("curriculum integrity", () => {
     );
     expect(JSON.stringify(proofNarrative)).toContain(
       "never matches a softmax name or loop pattern",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain("FE2O3-RACE-002");
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "runtime checked stripe construction",
+    );
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "no current KIR or gfx942 lowering",
     );
   });
 
@@ -3127,6 +3144,10 @@ describe("implementation progress integrity", () => {
     expect(host?.code).toContain("multi-head-multi-tile");
     expect(host?.code).toContain("wrote output padding");
     expect(result?.explanatory).toBe(true);
+    const attentionContent = serializedLessonContent("flash-attention");
+    expect(attentionContent).toContain("FE2O3-RACE-002");
+    expect(attentionContent).toContain("runtime checked stores");
+    expect(attentionContent).toContain("do not establish a Clean race result");
     expect(result?.code).toContain("Historical dynamic fused attention qualification");
     expect(result?.code).toContain("workload-selecting route is not present");
     expect(result?.code).toContain("V_MFMA_F32_16X16X16_BF16");
@@ -3253,6 +3274,8 @@ describe("implementation progress integrity", () => {
     const expertContent = serializedLessonContent("moe-expert-compute");
     expect(expertContent).toContain("runtime padded rows");
     expect(expertContent).toContain("MFMA is an operation, not a workload label");
+    expect(expertContent).toContain("FE2O3-RACE-002");
+    expect(expertContent).toContain("safe Rust type intent do not authorize KIR");
     expect(expertContent).toContain("41 tokens, 4 experts, 82 routes");
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertLesson?.claims[0].reference).toMatchObject({

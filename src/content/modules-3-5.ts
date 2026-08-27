@@ -532,8 +532,8 @@ const gemmMapping: Lesson = {
   exercises: [
     {
       prompt: "Explain why two lanes or workgroups cannot write the same C element.",
-      hint: "Follow the Tiled2D witness through workgroup tile, lane, and fragment component.",
-      acceptance: "The argument identifies a unique workgroup, lane, and component for every store.",
+      hint: "Follow the Tiled2D source intent and structural carrier through workgroup tile, lane, fragment component, success, and physical extent.",
+      acceptance: "The source-level argument identifies a unique workgroup, lane, and component for every store and distinguishes that reasoning from the currently Incomplete compiler carrier.",
     },
   ],
   glossary: ["GEMM", "stride", "epilogue", "DisjointSlice", "qualification"],

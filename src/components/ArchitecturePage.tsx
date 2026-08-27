@@ -104,9 +104,13 @@ export function ArchitecturePage() {
           not prove report semantics. Independent raw replay is Complete only
           for the documented static bounded-access fragment. Nonempty tensor
           flow remains Incomplete until external roots are tied to operational
-          SSA values. Raw checked tiled and row-striped markers do not prove
-          dynamic race freedom; explicit affine or Presburger maps may, while
-          unsupported success/value contracts fail closed. The progress checker
+          SSA values. Checked tiled and row-striped recipes now carry a
+          structural index, checked-success capability, and physical extent;
+          typed live validation checks pairing, shape, substitution, and use
+          discipline. That carrier does not establish source-semantic custody,
+          so raw, textual, and public recipes still fail closed at
+          FE2O3-RACE-002. Explicit affine or Presburger maps may separately prove
+          supported relations. The progress checker
           accepts canonical single-entry multi-block forwarding loops with a
           positive constant step only when source-width and u64 updates cannot
           wrap. The constant-fold validator keeps one exact typed input clone,

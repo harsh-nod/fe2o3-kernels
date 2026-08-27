@@ -265,7 +265,7 @@ function ScalarGemmOwnership() {
         <ArrowRight size={22} aria-hidden="true" />
         <div className="scalar-gemm-step epilogue">
           <strong>C = alpha * acc + beta * C</strong>
-          <span>checked Tiled2D stores</span>
+          <span>runtime-checked Tiled2D stores</span>
         </div>
       </div>
       <figcaption>

@@ -186,7 +186,7 @@ describe("search index", () => {
     for (const query of [
       "FE2O3-BOUNDS-001",
       "Cross-invocation write race",
-      "checked tiled and row-striped",
+      "Checked tiled and row-striped recipes",
       "Nonempty tensor-layout witness",
       "receipt-owned output",
       "IndexBinary to IndexConstant",

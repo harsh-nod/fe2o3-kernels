@@ -61,10 +61,14 @@ fail closed.
 The current device and trusted-item surfaces also remove the exact Slice 1 LDS
 pair and publish intrinsics. The current MoE source passes its already loaded
 typed MFMA fragments directly to the matrix operation. The historical Slice 1
-source and evidence below remain immutable at their original coordinates. The
-published dynamic matrix currently stops at the generic FE2O3-RACE-002 proof
-boundary before Kernel IR, so the historical HSACO, hardware, and HIP
-measurements are not current launch claims or universal correctness proofs.
+source and evidence below remain immutable at their original coordinates.
+Checked tiled and row-striped recipes now carry a structural index, checked
+success capability, and destination physical extent. The typed live recipe
+validates their pairing, shape, substitution resistance, and allowed uses, but
+that carrier is not source-semantics proof. Raw, textual, and current public
+recipes still stop at FE2O3-RACE-002 before Kernel IR, so the historical HSACO,
+hardware, and HIP measurements are not current launch claims or universal
+correctness proofs.
 
 This descendant also contains
 the exact protected Slice 1
@@ -656,10 +660,15 @@ Those compile-time failures are historical bounded
 mutation-oracle source-to-diagnostic evidence for the proposed optimized
 schedule. The exact `collected-general-gemm-v1` selector, workload-specific
 final pair, and qualification host route were later deleted. Current production
-admits no alternate workload route: the dynamic matrix reaches the generic
-ranked analysis transaction and stops Incomplete at FE2O3-RACE-002 before KIR
-because the checked ownership marker has no independently validated
-success/value contract. The historical
+admits no alternate workload route. The dynamic matrix reaches the generic
+ranked analysis transaction with a checked-access obligation carrier that ties
+the produced index and success capability to the destination physical extent.
+Deterministic typed live verification checks the pair, shape, substitution,
+exactly one predicated use, and absence of an unpaired index use. It still stops
+Incomplete at FE2O3-RACE-002 before KIR because owner-custodied semantic MIR
+correspondence, the exact receiver/fat-pointer extent, the two relevant
+`Option::Some` paths, allowed-use and CFG-dominance proof, source
+provenance/noalias, and retained KIR replay are not implemented. The historical
 `TILED_SOURCE_TO_IR=false`, `TILED_LOWERING=false`, and
 `TILED_PROTECTED_EXECUTION=false` flags remain archive metadata, not current
 compiler switches.
@@ -671,8 +680,9 @@ convergence, workgroup-memory must-initialization/publication by epoch, and
 declared semantic refinement.
 Dialect and structural verification are prerequisites. Bounded sparse affine
 index dataflow feeds bounds and ownership, and every pass has explicit resource
-ceilings that fail closed as Incomplete. Static ranked Rust accesses and checked
-dynamic accesses reach that pipeline end to end. The authenticated ownership
+ceilings that fail closed as Incomplete. Static ranked Rust accesses reach the
+admitted fragment; checked dynamic accesses reach structural typed validation
+but do not pass the current race gate. The authenticated ownership
 subset also includes one-layer `Shifted<Index1D, N>`, constant-leader
 `GridExclusive`, and `Blocked<Index1D, 1, E>` with exact mapping parameters.
 Nested `Shifted` is rejected; dynamic `GridExclusive` and blocked mappings with
@@ -841,7 +851,8 @@ current replay instructions.
 - Dynamic strided GEMM remains a safe Rust tutorial source. Four packed,
   strided-tail, multi-workgroup dynamic-K, and zero-K epilogue cases passed
   through the retired qualification route at its pinned commit. Current
-  production stops at FE2O3-RACE-002 before KIR and makes no current launch,
+  production structurally validates its checked-access carrier, then stops at
+  FE2O3-RACE-002 before KIR. It makes no current compiler-proof, launch,
   performance, or protected-publication claim.
 - The associated Verus models cover bounds, initialization, overflow
   obligations, and injective ownership arguments at the modeled source level.
