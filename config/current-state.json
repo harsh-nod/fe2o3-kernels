@@ -75,6 +75,13 @@
       "sourcePaths": ["crates/fe2o3-kfd/src/lib.rs", "crates/fe2o3-kfd/src/semantic_observation.rs", "crates/cargo-fe2o3/src/protected_compiler_handoff_v3.rs"]
     },
     {
+      "id": "compiler-execution-attestation",
+      "label": "Compiler execution attestation",
+      "status": "partial",
+      "detail": "The protected authority service admits a hardened static issuer and immutable Ed25519 key, then maintains one signed, singleton, crash-safe compiler-execution journal with exact recovery and mutation checks. No public API can construct the supervised compiler-occurrence token. Supervised occurrence production, the bounded service loop, Worker V3 receipt carriage, and its independent protected rollback ledger remain open, so this mechanism grants no compiler, publication, load, or launch authority.",
+      "sourcePaths": ["crates/fe2o3-broker-authority-service/src/compiler_execution_issuer.rs", "crates/fe2o3-broker-authority-service/src/compiler_execution_issuer_durable.rs", "docs/compiler-execution-issuer-durable-v1.md"]
+    },
+    {
       "id": "semantic-debug-profile",
       "label": "Semantic debugging and profiling",
       "status": "partial",

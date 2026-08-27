@@ -37,7 +37,7 @@ export function ArchitecturePage() {
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
             ["Runtime", "Checks actual context, allocations, aliases, geometry, and lifetimes."],
-            ["Protected evidence", "Validates signed results and independent review before promotion."],
+            ["Protected evidence", "The local crash-safe compiler-execution issuer binds a signed ordered journal, but supervised occurrence production and the Worker V3 rollback-ledger join remain open. It grants no compiler, publication, load, or launch authority."],
           ].map(([name, detail], index) => (
             <div className="architecture-row" key={name}>
               <span>{String(index + 1).padStart(2, "0")}</span>

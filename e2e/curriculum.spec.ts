@@ -10,13 +10,13 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
       name: "Vecadd: the current typed vertical slice",
     }),
   ).toBeVisible();
-  await expect(page.getByLabel("Read and write region ownership")).toBeVisible();
+  await expect(
+    page.getByLabel("Read and write region ownership"),
+  ).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Show proof details" }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("tab", { name: "Verus proof" }),
-  ).toHaveCount(0);
+  await expect(page.getByRole("tab", { name: "Verus proof" })).toHaveCount(0);
   await expect(
     page.getByLabel("Evidence for this lesson").locator("details"),
   ).not.toHaveAttribute("open");
@@ -101,9 +101,13 @@ test("standalone CPU semantic simulation keeps its evidence boundary visible", a
     page.getByText(/The fixture's Rust KIR owner can reconstruct/u),
   ).toBeVisible();
   await expect(
-    page.getByLabel("Standalone CPU semantic simulation of one exact KIR V7 WG64"),
+    page.getByLabel(
+      "Standalone CPU semantic simulation of one exact KIR V7 WG64",
+    ),
   ).toContainText("60 inactive slots");
-  await expect(page.getByRole("tabpanel")).toContainText("canonical bytes: 245");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "canonical bytes: 245",
+  );
   await expect(page.getByRole("tabpanel")).toContainText(
     "e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384",
   );
@@ -195,7 +199,9 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText(/19 obligations/u)).toBeVisible();
   await expect(page.getByText(/all 625 count vectors/u)).toBeVisible();
-  await expect(page.getByText(/no freshness or replay authority/u)).toBeVisible();
+  await expect(
+    page.getByText(/no freshness or replay authority/u),
+  ).toBeVisible();
   await page.keyboard.press("Control+K");
   const search = page.getByRole("combobox", {
     name: "Search all lesson content",
@@ -210,9 +216,12 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("A future matrix PV phase must accept the QK result layout", {
-      exact: true,
-    }),
+    page.getByText(
+      "A future matrix PV phase must accept the QK result layout",
+      {
+        exact: true,
+      },
+    ),
   ).toBeVisible();
   const lessonEvidence = page.getByLabel("Evidence for this lesson");
   await lessonEvidence.locator("summary").click();
@@ -229,7 +238,9 @@ test("search, theme, tabs, and progress work together", async ({ page }) => {
     "exact_hierarchy_writes_refine_safe_cpu_reference_v1",
   );
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
@@ -264,13 +275,17 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByLabel("Dynamic GEMM wave tile ownership"),
   ).toContainText("BF16 fragments → MFMA");
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("#![forbid(unsafe_code)]");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "#![forbid(unsafe_code)]",
+  );
   await expect(page.getByRole("tabpanel")).toContainText(
     "pub fn evaluate_reference_v1",
   );
@@ -286,9 +301,14 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page
       .locator(".code-status")
-      .filter({ hasText: /workload-neutral compiler replays eligible exact point formulas/u }),
+      .filter({
+        hasText:
+          /workload-neutral compiler replays eligible exact point formulas/u,
+      }),
   ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveCount(0);
 
   await page.getByRole("tab", { name: "Verus refinement" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -299,9 +319,15 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel")).toContainText(
     "__builtin_amdgcn_mfma_f32_16x16x16bf16_1k",
   );
-  await expect(page.getByRole("tabpanel").locator("code.language-cpp")).toBeVisible();
-  await expect(page.getByRole("tabpanel").locator(".token.keyword").first()).toBeVisible();
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+  await expect(
+    page.getByRole("tabpanel").locator("code.language-cpp"),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("tabpanel").locator(".token.keyword").first(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/benchmark_hip.cpp",
   );
@@ -310,7 +336,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("tabpanel")).toContainText(
     "multi-workgroup-dynamic-k",
   );
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/src/main.rs",
   );
@@ -356,11 +384,13 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Optimizing the executable baseline",
+      name: "Historical executable baseline and current gate",
     }),
   ).toBeVisible({ timeout: 15_000 });
   await expect(
-    page.getByText("Generic PLIRON safety passes are mandatory before lowering"),
+    page.getByText(
+      "Generic PLIRON safety passes are mandatory before lowering",
+    ),
   ).toBeVisible();
   await page.evaluate(() => {
     window.location.hash = "/lesson/compiler-checks";
@@ -368,172 +398,87 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Compiler checks: reject invalid kernels",
+      name: "Compiler checks: one path, explicit boundaries",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Forty-two representative compile-time failures",
+      name: "Three representative compile-time rejections",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
-  await expect(failureGallery.getByText("Swapped MFMA operand roles")).toBeVisible();
-  await expect(failureGallery.getByText("B fragment uses the wrong transpose")).toBeVisible();
   await expect(
-    failureGallery.getByText("PV MFMA consumes the wrong QK layout"),
-  ).toBeVisible();
-  await expect(failureGallery.getByText("Partial tile has no edge policy")).toBeVisible();
-  await expect(failureGallery.getByText("Different views still alias one allocation")).toBeVisible();
-  await expect(failureGallery.getByText("Rounded 2D launch creates a partial workgroup")).toBeVisible();
-  await expect(failureGallery.getByText("Kernel asks for an unsupported grid barrier")).toBeVisible();
-  await expect(failureGallery.getByText("Static out-of-bounds access")).toBeVisible();
-  await expect(failureGallery.getByText("Illegal atomic ordering")).toBeVisible();
-  await expect(failureGallery.getByText("Cross-invocation write race")).toBeVisible();
-  await expect(failureGallery.getByText("Invocation-divergent barrier")).toBeVisible();
-  await expect(failureGallery.getByText("Workgroup read before initialization")).toBeVisible();
-  await expect(failureGallery.getByText("Declared formula mismatch")).toBeVisible();
-  await expect(
-    failureGallery.getByText("The grid leaves one output coordinate unwritten"),
+    failureGallery.getByText("Static out-of-bounds access"),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("A CPU-reference effect has no policy-checked staging"),
+    failureGallery.getByText("Cross-invocation write race"),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("The GPU write disagrees with the CPU reference"),
+    failureGallery.getByText(
+      "Incompatible tensor producer and consumer layouts",
+    ),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("An analysis stage leaves a changed operator"),
+    failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true }),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("An identity snapshot contains unsupported structure"),
+    failureGallery.getByText("FE2O3-TENSOR-LAYOUT-005", { exact: true }),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText("An identity snapshot exceeds its bounded budget"),
-  ).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("E0308", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-TENSOR-LAYOUT-001", { exact: true }).first()).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-TENSOR-LAYOUT-005", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-ATOMIC-001", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-RACE-001", { exact: true }).first()).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-BARRIER-001", { exact: true })).toBeVisible();
-  await expect(failureGallery.getByText("FE2O3-WORKGROUP-001", { exact: true }).first()).toBeVisible();
-  await expect(
-    failureGallery.getByText("FE2O3-SEMANTIC-001", { exact: true }).first(),
+    failureGallery.getByText("FE2O3-RACE-001", { exact: true }),
   ).toBeVisible();
   await expect(
     failureGallery.getByLabel("Compile-time rejection path"),
   ).toContainText("No lowering or artifact");
+  await expect(failureGallery.getByText(/requires 64 < 64/u)).toBeVisible();
   await expect(
-    failureGallery.getByText(/tensor layout first/u),
+    page.getByText("One completed witness is not universal correctness"),
   ).toBeVisible();
   await expect(
-    failureGallery.getByText(/required: 64 < 64/u),
-  ).toBeVisible();
-  await expect(
-    failureGallery.getByText(/second writer\/reader: invocation \[1\]/u),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Generic does not mean automatically provable"),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Mutation epoch plus exact checkpoints", {
-      exact: true,
+    page.getByRole("heading", {
+      level: 2,
+      name: "One production path, with explicit proof boundaries",
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("One Rust type system, extended to GPU facts", {
-      exact: true,
+    page.getByText("Current end-to-end boundary", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "What is complete today",
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("What KernelResult means", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Where Verus fits", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("The CPU reference closes semantics, not hardware layout", {
-      exact: true,
-    }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Production errors include a repair contract", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Supported safe ownership mappings", { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByRole("cell", { name: "Shifted<Index1D, N>", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "Blocked<Index1D, L, E> where L > 1", exact: true })).toBeVisible();
-  await expect(
-    page.getByText("Ordinary Rust atomic terminals are explicitly unsupported"),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Stable pass diagnostic catalog"),
-  ).toBeVisible();
-  await expect(page.getByText("Mutation epoch plus exact checkpoints")).toBeVisible();
-  await expect(page.getByText("A Clean report is diagnostic, not a proof")).toBeVisible();
-  await expect(page.getByText("Transforming passes use a different boundary")).toBeVisible();
-  await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-BOUNDS-002", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-ATOMIC-002", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-RACE-003", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-RACE-004", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-OWN-006", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-000", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-001", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-002", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-010", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-020", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-025", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-028", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-039", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-044", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-TRANSFORM-008", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-010", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-013", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-023", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-026", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-027", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-031", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-002", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-SEMANTIC-003", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-001", exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "FE2O3-EFFECT-008", exact: true })).toBeVisible();
-  await expect(page.getByText("Bind the reference as ordinary Rust", { exact: true })).toBeVisible();
-  await expect(page.getByText("Bind proof execution without trusting staging", { exact: true })).toBeVisible();
-  await expect(
-    page.getByText(
-      /The generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas/u,
-    ),
+    page.getByText("Complete is relation-specific", { exact: true }),
   ).toBeVisible();
 
   await page.getByRole("button", { name: "Show proof details" }).click();
-  await page.getByRole("tab", { name: "Reference-bound kernel" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("reference = cpu_reference");
-  await page.getByRole("tab", { name: "Safe CPU reference" }).click();
+  await page.getByRole("tab", { name: "Static bounds" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "fn cpu_reference(_point: usize, output: &mut u32)",
+    "let selected = input[64]",
   );
-  await page.getByRole("tab", { name: "Production proof gate" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("proof.require_effect_refinement");
-  await expect(page.getByRole("tabpanel")).toContainText("SafeReferenceMirToLivePliron");
+  await page.getByRole("tab", { name: "Checked fold" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "proved_source_to_isa = false",
+    "kernel.index_constant 12",
   );
-  await page.getByRole("tab", { name: "Bounds fixture" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("let selected = input[64]");
-  await page.getByRole("tab", { name: "Reference diagnostics" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("required: 64 < 64");
+  await page.getByRole("tab", { name: "Where Verus fits" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "You do not need to write a Verus proof to read a compiler diagnostic",
+  );
+  await page.getByRole("tab", { name: "Witness boundary" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "owner-custodied semantic MIR correspondence",
+  );
+  await page.getByRole("tab", { name: "Run checks" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "cargo test --locked -p fe2o3-kernel-analysis --test pliron_lit",
+  );
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Forty-two representative compile-time failures",
+      name: "Three representative compile-time rejections",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
@@ -542,63 +487,47 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     animations: "disabled",
   });
   await expect(
-    page.getByText("Compile-time kernel diagnostics"),
+    page.getByRole("heading", {
+      level: 2,
+      name: "Keep simulator evidence historical",
+    }),
   ).toBeVisible();
-  await expect(
-    page.getByText("Debug exact V7 without upgrading observation into proof"),
-  ).toBeVisible();
-  await expect(page.getByText(/fe2o3-kir-sim --kir-v7/u)).toBeVisible();
   await page.goto("./#/lesson/gemm-proof-plan");
-  await expect(page.getByText("0x46470006", { exact: true })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "unguarded_a_tail_load" })).toBeVisible();
-  await expect(page.getByRole("cell", { name: "missing_publish_barrier" })).toBeVisible();
   await expect(
-    page.getByRole("cell", { name: "duplicate_lane_c_write" }),
+    page.getByRole("heading", {
+      level: 1,
+      name: "Proving and extending the MFMA kernel",
+    }),
   ).toBeVisible();
   await expect(
-    page.getByText("A rustc UI error is not a proof diagnostic"),
+    page.getByRole("heading", { level: 2, name: "Property ledger" }),
   ).toBeVisible();
   await expect(
-    page.getByText("All 15 are rejected as structured KIR"),
+    page.getByRole("heading", {
+      level: 2,
+      name: "Historical executable baseline and current gate",
+    }),
   ).toBeVisible();
   await expect(
-    page.getByText("All 15 exact safe source mutations are diagnostic"),
+    page.getByText(
+      "Generic PLIRON safety passes are mandatory before lowering",
+    ),
   ).toBeVisible();
   await expect(
-    page.getByText("Historical LDS-family flags remain false"),
-  ).toBeVisible();
-  await expect(page.getByText("Executable direct-global MFMA source", { exact: true })).toBeVisible();
-  await expect(page.getByText("Cooperative-LDS positive source", { exact: true })).toBeVisible();
-  await expect(page.getByText("Private final pair join", { exact: true })).toBeVisible();
-  await expect(page.getByText("Verus runtime closure", { exact: true })).toBeVisible();
-  await expect(page.getByText("Current MFMA qualification", { exact: true })).toBeVisible();
-  await expect(page.getByText(/historical selector exists for the proposed LDS schedule/u).first()).toBeVisible();
-  await expect(
-    page.getByText(/before receipt, correspondence, configuration, and proof/u).first(),
+    page.getByRole("heading", {
+      level: 2,
+      name: "Optimized schedule mutation diagnostics",
+    }),
   ).toBeVisible();
   await expect(
-    page.getByText(/It is unreachable because positive analysis stops/u).first(),
+    page.getByRole("heading", { level: 2, name: "Artifact-level closure" }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: /#138 General tiled GEMM/ }),
-  ).toHaveAttribute(
-    "href",
-    "https://github.com/harsh-nod/fe2o3/issues/138",
-  );
-  for (const issue of [85, 86, 87, 88, 89, 90, 96, 97, 99, 100]) {
-    await expect(
-      page.getByRole("link", { name: new RegExp(`#${String(issue)} `, "u") }),
-    ).toHaveAttribute(
-      "href",
-      `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,
-    );
-  }
-  await expect(
-    page.getByRole("link", { name: /fe2o3-kernels #2/ }),
-  ).toHaveAttribute(
-    "href",
-    "https://github.com/harsh-nod/fe2o3-kernels/issues/2",
-  );
+    page.getByRole("heading", {
+      level: 2,
+      name: "What closes the functional theorem",
+    }),
+  ).toBeVisible();
 });
 
 test("row softmax shows dynamic source and GPU qualification", async ({
@@ -615,9 +544,11 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     "pub fn row_softmax_general_v1",
   );
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -630,19 +561,11 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     page.getByText("The compiler does not know this is softmax"),
   ).toBeVisible();
   await page.getByRole("tab", { name: "Host" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "fn launch_case",
-  );
-  await expect(
-    page.getByText(/ordinary host FFI boundaries/u),
-  ).toBeVisible();
+  await expect(page.getByRole("tabpanel")).toContainText("fn launch_case");
+  await expect(page.getByText(/ordinary host FFI boundaries/u)).toBeVisible();
   await page.getByRole("tab", { name: "Expected result" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "PASS single-column",
-  );
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "PASS maximum-width",
-  );
+  await expect(page.getByRole("tabpanel")).toContainText("PASS single-column");
+  await expect(page.getByRole("tabpanel")).toContainText("PASS maximum-width");
   await expect(page.getByRole("tabpanel")).toContainText(
     "lane shuffles and no MFMA",
   );
@@ -659,7 +582,9 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
     "pub fn wave64_collectives_v1",
   );
   await expect(page.getByText(/Explanatory source/)).toHaveCount(0);
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/wave64_collectives_v1/src/kernel.rs",
   );
@@ -680,7 +605,9 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   await expect(page.getByRole("tabpanel")).toContainText(
     "pub fn lds_publish_read_reduce_i32_v1",
   );
-  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
     "href",
     "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/workgroup_sync_v1/src/kernel.rs",
   );
@@ -717,11 +644,13 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("#![forbid(unsafe_code)]");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "#![forbid(unsafe_code)]",
+  );
   await expect(page.getByRole("tabpanel")).toContainText(
     "pub fn evaluate_reference_v1",
   );
@@ -735,13 +664,11 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "fn launch_expert",
-  );
+  await expect(page.getByRole("tabpanel")).toContainText("fn launch_expert");
   await expect(page.getByRole("tabpanel")).toContainText(
     "routes[(token % EXPERTS)",
   );
@@ -763,7 +690,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByText(/one direct grouped-expert qualification launch/u),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "not a routing proof, persistent scheduling implementation, or performance result",
+    "not a current launch path, routing proof, persistent scheduling implementation, or performance result",
   );
 
   await page.goto("./#/status");
@@ -775,12 +702,16 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     .locator("../..");
   await expect(checkpoint).toContainText("public");
   await expect(checkpoint).toContainText("19 verified obligations");
-  await expect(checkpoint).toContainText("all seven expected-failure mutations");
+  await expect(checkpoint).toContainText(
+    "all seven expected-failure mutations",
+  );
   await expect(checkpoint).toContainText("all 625 count vectors");
   await expect(checkpoint).toContainText(
     "does not authenticate router execution or device readback provenance",
   );
-  await expect(checkpoint).toContainText("upload/readback test is no kernel dispatch");
+  await expect(checkpoint).toContainText(
+    "upload/readback test is no kernel dispatch",
+  );
   const expertRow = page
     .getByRole("row")
     .filter({ hasText: "MoE expert GEMM and combine" });
@@ -795,7 +726,9 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
   page,
 }) => {
   await page.goto("./#/lesson/gfx950-fp4-attention");
-  await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+  await expect(
+    page.getByText("Loading content...", { exact: true }),
+  ).toBeHidden({
     timeout: 120_000,
   });
   await expect(
@@ -814,7 +747,9 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("attention_reference");
   await page.getByRole("tab", { name: "Equivalent HIP" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("gfx950_fp4_flash_attention");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "gfx950_fp4_flash_attention",
+  );
   await page.getByRole("tab", { name: "Run and inspect" }).click();
   await expect(page.getByRole("tabpanel")).toContainText("ds_read_b64_tr_b4");
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -833,7 +768,9 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
   );
 
   await page.goto("./#/lesson/gfx950-fp8-attention");
-  await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+  await expect(
+    page.getByText("Loading content...", { exact: true }),
+  ).toBeHidden({
     timeout: 120_000,
   });
   await expect(
@@ -853,27 +790,62 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
   ).toBe(false);
 });
 
-test("every gfx950 low-precision lesson opens its production Rust evidence", async ({ page }) => {
+test("every gfx950 low-precision lesson opens its production Rust evidence", async ({
+  page,
+}) => {
   const lessons = [
-    ["gfx950-fp4-gemm", "gfx950 FP4 GEMM", "gfx950_fp4_gemm_rust", "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d", "max_absolute_error=0"],
-    ["gfx950-fp8-gemm", "gfx950 FP8 GEMM", "gfx950_fp8_gemm_rust", "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f", "max_absolute_error=0"],
-    ["gfx950-fp4-attention", "gfx950 FP4 flash attention", "gfx950_fp4_attention_rust", "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008", "max_absolute_error=2.235174179e-8"],
-    ["gfx950-fp8-attention", "gfx950 FP8 flash attention", "gfx950_fp8_attention_rust", "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221", "max_absolute_error=5.960464478e-8"],
+    [
+      "gfx950-fp4-gemm",
+      "gfx950 FP4 GEMM",
+      "gfx950_fp4_gemm_rust",
+      "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d",
+      "max_absolute_error=0",
+    ],
+    [
+      "gfx950-fp8-gemm",
+      "gfx950 FP8 GEMM",
+      "gfx950_fp8_gemm_rust",
+      "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f",
+      "max_absolute_error=0",
+    ],
+    [
+      "gfx950-fp4-attention",
+      "gfx950 FP4 flash attention",
+      "gfx950_fp4_attention_rust",
+      "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+      "max_absolute_error=2.235174179e-8",
+    ],
+    [
+      "gfx950-fp8-attention",
+      "gfx950 FP8 flash attention",
+      "gfx950_fp8_attention_rust",
+      "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221",
+      "max_absolute_error=5.960464478e-8",
+    ],
   ] as const;
 
-  for (const [lessonId, title, symbol, hsacoSha256, numericalResult] of lessons) {
+  for (const [
+    lessonId,
+    title,
+    symbol,
+    hsacoSha256,
+    numericalResult,
+  ] of lessons) {
     await page.goto(`./#/lesson/${lessonId}`);
-    await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+    await expect(
+      page.getByText("Loading content...", { exact: true }),
+    ).toBeHidden({
       timeout: 120_000,
     });
-    await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { level: 1, name: title }),
+    ).toBeVisible();
     await expect(
       page.getByText("GPU observed", { exact: true }).first(),
     ).toBeVisible();
-    await expect(page.getByRole("tab", { name: "Rust kernel" })).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
+    await expect(
+      page.getByRole("tab", { name: "Rust kernel" }),
+    ).toHaveAttribute("aria-selected", "true");
     await expect(page.getByRole("tabpanel")).toContainText(symbol);
     await expect(page.getByRole("tabpanel")).toContainText("rust");
     await expect(
@@ -896,20 +868,54 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
   page,
 }, testInfo) => {
   const routes = [
-    ["gfx950-advanced-moe", "gfx950 advanced MoE pipeline", "gfx950_moe_route_fp4_t16_e4_k2_v1"],
-    ["gfx950-kda-gdn-linear-attention", "gfx950 KDA/GDN linear attention", "gfx950_kda_gdn_decode"],
-    ["gfx950-indexed-sparse-attention", "gfx950 indexed sparse attention", "gfx950_content_sparse_attention"],
-    ["gfx950-compressed-hybrid-attention", "gfx950 compressed hybrid attention", "gfx950_compressed_hybrid_attention"],
-    ["gfx950-attnres-gr-mhc", "gfx950 AttnRes, GR, and mHC mixing", "gfx950_attnres_aggregate"],
-    ["gfx950-speculative-mtp-verification", "gfx950 speculative and MTP verification", "gfx950_speculative_transaction_v1"],
-    ["gfx950-ngram-embedding-gather", "gfx950 N-gram hash-table gather", "gfx950_qwen_ngram_gather_v1"],
-    ["gfx950-muon-optimizer", "gfx950 Muon polar update", "gfx950_muon_update_4x4_v1"],
+    [
+      "gfx950-advanced-moe",
+      "gfx950 advanced MoE pipeline",
+      "gfx950_moe_route_fp4_t16_e4_k2_v1",
+    ],
+    [
+      "gfx950-kda-gdn-linear-attention",
+      "gfx950 KDA/GDN linear attention",
+      "gfx950_kda_gdn_decode",
+    ],
+    [
+      "gfx950-indexed-sparse-attention",
+      "gfx950 indexed sparse attention",
+      "gfx950_content_sparse_attention",
+    ],
+    [
+      "gfx950-compressed-hybrid-attention",
+      "gfx950 compressed hybrid attention",
+      "gfx950_compressed_hybrid_attention",
+    ],
+    [
+      "gfx950-attnres-gr-mhc",
+      "gfx950 AttnRes, GR, and mHC mixing",
+      "gfx950_attnres_aggregate",
+    ],
+    [
+      "gfx950-speculative-mtp-verification",
+      "gfx950 speculative and MTP verification",
+      "gfx950_speculative_transaction_v1",
+    ],
+    [
+      "gfx950-ngram-embedding-gather",
+      "gfx950 N-gram hash-table gather",
+      "gfx950_qwen_ngram_gather_v1",
+    ],
+    [
+      "gfx950-muon-optimizer",
+      "gfx950 Muon polar update",
+      "gfx950_muon_update_4x4_v1",
+    ],
   ] as const;
 
   expect(["desktop", "mobile"]).toContain(testInfo.project.name);
   for (const [lessonId, title, symbol] of routes) {
     await page.goto(`./#/lesson/${lessonId}`);
-    await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+    await expect(
+      page.getByText("Loading content...", { exact: true }),
+    ).toBeHidden({
       timeout: 120_000,
     });
     await expect(
@@ -918,9 +924,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     await expect(
       page.getByText(/^(?:Source example|GPU observed)$/u).first(),
     ).toBeVisible();
-    await expect(page.getByRole("tabpanel")).toContainText(
-      symbol,
-    );
+    await expect(page.getByRole("tabpanel")).toContainText(symbol);
     expect(
       await page.evaluate(
         () =>
@@ -953,17 +957,19 @@ test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {
   await page.goto("./#/lesson/read-the-evidence");
-  await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+  await expect(
+    page.getByText("Loading content...", { exact: true }),
+  ).toBeHidden({
     timeout: 120_000,
   });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
   await expect(routeLinks).toHaveCount(33);
   const routes = await routeLinks.evaluateAll((links) =>
-      links.map((link) => ({
-        href: (link as HTMLAnchorElement).href,
-        title: link.textContent?.trim() ?? "",
-      })),
-    );
+    links.map((link) => ({
+      href: (link as HTMLAnchorElement).href,
+      title: link.textContent?.trim() ?? "",
+    })),
+  );
 
   for (const route of routes) {
     await page.goto(route.href);
@@ -988,14 +994,14 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at 61222da06c",
+      name: "Compiler baseline at 03382595a6",
     }),
   ).toBeVisible();
   await expect(
-    page.getByText(/generic safety sequence is active and mandatory before lowering/u),
+    page.getByText(/fixed eight-pass workload-neutral pre-lowering sequence/u),
   ).toBeVisible();
   await expect(
-    page.getByText(/does not contain a second Rust borrow checker/u),
+    page.getByText(/rustc remains the only Rust borrow checker/u),
   ).toBeVisible();
   await page.goto("./#/status");
   await expect(
@@ -1004,7 +1010,9 @@ test("every internal curriculum route resolves without page overflow", async ({
       name: "Kernel delivery and verification progress",
     }),
   ).toBeVisible();
-  await expect(page.getByRole("table", { name: "Kernel implementation status" })).toBeVisible();
+  await expect(
+    page.getByRole("table", { name: "Kernel implementation status" }),
+  ).toBeVisible();
   await page.goto("./#/glossary");
   await expect(
     page.getByRole("heading", { level: 1, name: "Glossary and API index" }),
@@ -1024,8 +1032,8 @@ test("correctness catalog and advanced lessons stay visually coherent", async ({
     {
       id: "correctness-catalog",
       lesson: "compiler-checks",
-      title: "Compiler checks: reject invalid kernels",
-      target: "Stable pass diagnostic catalog",
+      title: "Compiler checks: one path, explicit boundaries",
+      target: "Three representative compile-time rejections",
     },
     {
       id: "gemm",
@@ -1080,8 +1088,9 @@ test("correctness catalog and advanced lessons stay visually coherent", async ({
           Boolean(topbarRect && firstRect) &&
           topbarRect!.bottom > firstRect!.top + 0.5,
         sidebarOverlap:
-          Boolean(sidebarRect && mainRect && sidebar!.getClientRects().length) &&
-          sidebarRect!.right > mainRect!.left + 0.5,
+          Boolean(
+            sidebarRect && mainRect && sidebar!.getClientRects().length,
+          ) && sidebarRect!.right > mainRect!.left + 0.5,
       };
     });
     expect(shellLayout.horizontalOverflow, route.id).toBe(false);
@@ -1092,10 +1101,7 @@ test("correctness catalog and advanced lessons stay visually coherent", async ({
     await target.scrollIntoViewIfNeeded();
     await expect(target).toBeVisible();
     if (route.target === "Correctness contract") {
-      await page
-        .getByLabel("Correctness contract")
-        .locator("summary")
-        .click();
+      await page.getByLabel("Correctness contract").locator("summary").click();
     }
 
     const contentLayout = await page.evaluate(() => {
@@ -1106,11 +1112,17 @@ test("correctness catalog and advanced lessons stay visually coherent", async ({
         ? [...panel.querySelectorAll<HTMLElement>(".section-heading-row > *")]
         : [];
       const rows = panel
-        ? [...panel.querySelectorAll<HTMLElement>(".functional-contract-rows > div")]
+        ? [
+            ...panel.querySelectorAll<HTMLElement>(
+              ".functional-contract-rows > div",
+            ),
+          ]
         : [];
       const intersects = (left: DOMRect, right: DOMRect) =>
-        Math.min(left.right, right.right) - Math.max(left.left, right.left) > 0.5 &&
-        Math.min(left.bottom, right.bottom) - Math.max(left.top, right.top) > 0.5;
+        Math.min(left.right, right.right) - Math.max(left.left, right.left) >
+          0.5 &&
+        Math.min(left.bottom, right.bottom) - Math.max(left.top, right.top) >
+          0.5;
       return {
         panelOverflow: panel ? panel.scrollWidth > panel.clientWidth : false,
         headingOverlap:

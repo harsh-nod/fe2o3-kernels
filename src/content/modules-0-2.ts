@@ -681,7 +681,7 @@ const compilerChecks: Lesson = {
         ],
         {
           target: "gfx942",
-          note: "Final compiler commit and tree pins are intentionally pending integration.",
+          note: "The publication gate pins the exact integrated compiler commit and tree.",
         },
       ),
     },
