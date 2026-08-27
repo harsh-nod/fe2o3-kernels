@@ -586,19 +586,19 @@ const narrativeRegistry = deepFreeze({
           ["Rejected", "The compiler reconstructed a concrete contradiction, such as a static out-of-bounds index, incompatible tensor layout, collision, or divergent collective.", "The diagnostic names the failed relation and proposes a source-level repair; no KIR lowering input is issued."],
           ["Incomplete", "The bounded analysis cannot prove or refute the required property, or its independent witness replay does not support that shape.", "Compilation fails closed. Missing evidence is never treated as a runtime check or a Clean result."],
           ["Clean report", "The policy pass found no failure in its supported model.", "Report integrity alone is not semantic authority. The matching independent witness must also be Complete where the production gate requires it."],
-          ["Complete raw replay", "A separate checker rebuilt the supported obligation directly from the exact live PLIRON and matched the sealed report.", "Today this is narrow: statically bounded ranked accesses and a rooted single-block canonical gfx942 wave64 tensor-layout fragment. Other pass witnesses remain Incomplete."],
-          ["Checked transform", "The before and after typed recipes satisfy the independently replayed constant-fold relation.", "Canonical hashes are labels only. Exact typed custody and structural replay are the acceptance boundary."]
+          ["Complete raw replay", "A separate checker rebuilt the supported obligation directly from the exact live PLIRON and matched the sealed report.", "Today this is only the single-block static bounded-access fragment with finite unique invocation dimensions and exact agreement with any retained execution layout. Nonempty tensor and all other pass witnesses remain Incomplete."],
+          ["Checked transform", "The before and after typed recipes satisfy the independently replayed constant-fold relation.", "One exact input clone and the moved receipt-owned output provide private typed custody. Canonical hashes are labels only."]
         ]
       },
       {
         "type": "table",
         "headers": ["Example", "Current compiler reasoning", "Fail-closed edge"],
         "rows": [
-          ["Static bounds", "A finite launch and checked constant or affine index map can be replayed for every admitted invocation and dimension.", "Dynamic launch, an exhausted replay cap, unsupported arithmetic, or possible machine overflow leaves the witness Incomplete."],
-          ["Dynamic checked ownership", "Authenticated checked tiled and row-striped mappings preserve a zero-offset unit embedding of active launch axes, allowing the generic race pass to prove injective writes without enumerating a runtime grid.", "Unresolved provenance, aliasing, non-unit embeddings, or an unproved multiply/add no-wrap condition is Incomplete."],
-          ["Canonical wave64 tensor flow", "The raw replay checks one linear rooted gfx942 tensor inventory, wave64 execution, exact contracts, result roots, and supported producer-to-consumer edges.", "CFG joins, unrooted sites, cyclic or forward roots, unsupported profiles, or source-projection correspondence remain Incomplete."],
-          ["Loop progress", "The committed progress checker proves the canonical two-block i < bound loop with one positive constant backedge update.", "Other SCC topology and any step whose final update lacks a static no-wrap proof remain Incomplete; concrete zero-step or no-exit cycles are Rejected."],
-          ["Constant folding", "5 + 7 and a later checked multiply can fold to exact constants in one forward fixed point before every verifier and proof digest.", "Overflow and divide or remainder by zero stay unfurled and then fail through existing verification; no reassociation or dynamic propagation is authorized."]
+          ["Static bounds", "A single-block finite launch replays every supported index from its unique invocation dimensions and checks any retained execution layout against that complete inventory.", "Dynamic or duplicate dimensions, layout mismatch, missing active axes, unsupported arithmetic, machine overflow, or an exhausted replay cap is Incomplete."],
+          ["Dynamic race freedom", "Explicit affine maps can prove a total injective address map; bounded Presburger replay can prove that conflicting invocation images do not intersect.", "Raw checked tiled and row-striped markers carry no success/value authority and stop at FE2O3-RACE-002 until such a contract is implemented."],
+          ["Tensor flow", "The policy pass can reject incompatible wave64 producer and consumer layouts.", "Every nonempty independent tensor replay is Incomplete until external roots have explicit operational-SSA provenance."],
+          ["Loop progress", "The checker supports canonical single-entry multi-block forwarding SCCs with i < bound and one positive constant latch step.", "The exact source integer width and the ranked u64 update must both be nonwrapping; other SCC shapes remain Incomplete and concrete nontermination is Rejected."],
+          ["Constant folding", "5 + 7 and a later checked multiply can fold to exact constants in one forward fixed point before every verifier and proof digest.", "Overflow and zero divisors stay unfurled and fail existing verification; no reassociation, cross-block definition, or dynamic propagation is authorized."]
         ]
       },
       {
@@ -628,7 +628,7 @@ const narrativeRegistry = deepFreeze({
             "stage": "kernel-race-freedom-v1",
             "code": "FE2O3-RACE-001",
             "enforcement": "generic Presburger relation and bounded counterexample replay",
-            "caught": "The race pass reconstructs the conflicting invocation pair. Checked tiled and row-striped maps can instead prove injectivity when their launch-axis embedding and no-wrap obligations are exact."
+            "caught": "The race pass reconstructs the conflicting invocation pair. An explicit affine or bounded Presburger map can prove injectivity; raw checked tiled and row-striped markers remain unresolved."
           },
           {
             "id": "tensor_layout_flow",
@@ -639,7 +639,7 @@ const narrativeRegistry = deepFreeze({
             "property": "TensorLayoutDataflow",
             "stage": "kernel-tensor-layout-v1",
             "code": "FE2O3-TENSOR-LAYOUT-005",
-            "enforcement": "rooted tensor-layout dataflow and narrow wave64 raw replay",
+            "enforcement": "rooted tensor-layout policy dataflow; independent nonempty replay remains Incomplete",
             "caught": "The compiler follows the exact result root and rejects a consumer contract that disagrees with its producer."
           }
         ]
@@ -647,8 +647,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Two completed witnesses are not universal correctness",
-        "text": "A Complete raw replay validates one sealed analysis result for one exact ranked function and checkpoint. It does not prove MIR projection, every analysis implementation, source-to-KIR refinement, LLVM or ISA lowering, numerical intent, artifact identity, launch admission, or hardware execution. Every unsupported witness remains explicitly Incomplete."
+        "title": "One completed witness is not universal correctness",
+        "text": "The Complete static-bounds replay validates one sealed analysis result for one exact ranked function and checkpoint. It does not prove MIR projection, tensor flow, race freedom, source-to-KIR refinement, LLVM or ISA lowering, numerical intent, artifact identity, launch admission, or hardware execution. Every unsupported witness remains explicitly Incomplete."
       }
     ]
   },
@@ -660,12 +660,12 @@ const narrativeRegistry = deepFreeze({
         "type": "steps",
         "items": [
           "The Rust frontend retains the supported MIR body, checked branches, source spans, and authenticated safe device capabilities.",
-          "Projection constructs one bounded ranked PLIRON CFG with typed SSA values, views, indices, effects, execution layout, tensor roots, and proof requests.",
-          "ProductionRankedKernelV1 performs the sealed checked constant fold. The independent validator permits only exact same-site constant rewrites and binds the one-shot session, implementation, configuration, and exact typed output.",
+          "Projection constructs one bounded ranked PLIRON CFG with typed SSA values, views, indices, effects, execution layout, tensor roots, and proof requests. After authenticating and replaying an exact unsigned MIR range and recurrence, it may emit a value-producing kernel.index_unsigned_cast whose conversion is value-preserving over that range.",
+          "ProductionRankedKernelV1 performs the sealed checked constant fold. The independent validator compares the exact typed input and output, permits only same-site constant rewrites, and moves the accepted output through a private receipt.",
           "PLIRON dialect verification runs before policy analysis. A context mutation-attempt epoch and exact structural checkpoints require all eight analysis stages to remain read-only.",
           "The fixed stages run in order: tensor layout, bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, and semantic refinement.",
-          "The compiler seals each report and independently replays its witness. Static bounded bounds and the narrow canonical wave64 tensor fragment can be Complete; every other current independent stage witness remains Incomplete even when its policy report is Clean.",
-          "Only the normalized ranked recipe and admitted reports proceed to KIR. A diagnostic keeps the pass, failed relation, PLIRON site, Rust source location when available, and a repair suggestion."
+          "The compiler seals each report and independently replays its witness. Only the admitted static bounded-access fragment can be Complete; nonempty tensor and every other current independent stage witness remain Incomplete even when a policy report is Clean.",
+          "Only the normalized ranked recipe and admitted reports can proceed to KIR. The current production matrix stops earlier at FE2O3-RACE-002 because its raw checked index marker has no validated success/value contract, so it has no current KIR or hardware result."
         ]
       },
       {
@@ -674,7 +674,7 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           ["Mutation epoch and exact snapshots", "Direct mutation, mutate-then-restore, failed mutable-borrow attempts, and retained changes during an analysis-only stage.", "That the analysis report itself is semantically correct."],
           ["Sealed report custody", "Omission, duplication, reordering, replay, stale checkpoints, and payload or status substitution.", "That a Clean payload follows from the live IR."],
-          ["Independent raw replay", "Exact supported bounds and tensor obligations reconstructed from live PLIRON rather than from report success bits.", "Unsupported passes or shapes; those remain Incomplete."],
+          ["Independent raw replay", "Exact supported static bounds reconstructed from live PLIRON rather than from report success bits.", "Nonempty tensor flow and every other pass or shape; those remain Incomplete."],
           ["Independent transform replay", "The exact checked IndexBinary to IndexConstant relation, value, position, result identity, CFG, types, effects, and proof sites.", "Any other optimization, algebraic equivalence, or semantic preservation theorem."],
           ["KIR custody", "Downstream lowering receives the transformed ranked recipe rather than the stale pre-transform form.", "KIR-to-LLVM, LLVM-to-ISA, artifact, launch, or hardware correctness."]
         ]
@@ -683,7 +683,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The compiler now has one checked transformation and two narrow Complete raw-replay witness fragments. All other independent stage witnesses remain Incomplete, so they cannot authorize KIR lowering merely because the policy report is Clean. Unsupported dynamic bounds, alias relations, tensor CFG shapes, progress topologies, and no-wrap obligations fail closed. This architecture makes specific compile-time guarantees without claiming that every accepted kernel is universally or numerically correct."
+        "text": "The compiler has one checked transformation and one narrow Complete raw-replay fragment for static bounds. Nonempty tensor flow, raw checked tiled or row-striped race markers, and every other independent stage witness remain Incomplete. Explicit affine or bounded Presburger ownership can still produce a Clean race policy result. Unsupported dynamic bounds, alias relations, SCC shapes, and source-width or u64 no-wrap obligations fail closed."
       }
     ]
   },
@@ -1833,13 +1833,13 @@ const narrativeRegistry = deepFreeze({
         type: "table",
         headers: ["Relation", "Current status", "Exact boundary"],
         rows: [
-          ["Static bounded ranked access witness", "Complete for the admitted raw-replay fragment", "Finite authenticated launch dimensions, static ranked extents, supported constant or affine/remainder maps, checked u64 evaluation, and the replay resource cap."],
-          ["Canonical wave64 tensor-layout witness", "Complete for the admitted raw-replay fragment", "One linear block, rooted canonical gfx942 wave64 tensor sites, supported exact contracts, and backward producer-to-consumer result-root edges. Source projection and operational SSA correspondence are not proved."],
+          ["Static bounded ranked access witness", "Complete for the admitted raw-replay fragment", "One block, finite unique invocation dimensions, at most one well-formed execution layout with exact active-axis agreement, static ranked extents, supported index producers, checked u64 evaluation, and the replay resource cap."],
+          ["Nonempty tensor-layout witness", "Incomplete", "Policy diagnostics can reject incompatible layouts, but external roots are not yet bound to operational SSA provenance. No nonempty tensor inventory receives Complete replay."],
           ["Bounds outside the raw fragment", "Incomplete", "Dynamic launch dimensions, unsupported maps, exhausted enumeration, malformed inventory, and any possible machine overflow fail closed."],
-          ["Race and ownership policy", "Clean is possible; independent witness remains Incomplete", "Checked tiled and row-striped dynamic mappings can prove injectivity in the policy pass. General witness authority has not been implemented, so this does not yet authorize KIR by itself."],
-          ["Loop progress policy", "Clean for the canonical committed form; independent witness remains Incomplete", "Only the canonical two-block positive constant induction loop is proved. Other SCC topology and unsupported no-wrap reasoning fail closed."],
+          ["Race and ownership policy", "Clean only for supported explicit relations; independent witness remains Incomplete", "Injective affine maps and bounded Presburger noncollision can be Clean. Raw checked tiled and row-striped markers return FE2O3-RACE-002 until a validated success/value contract exists."],
+          ["Loop progress policy", "Clean for the canonical committed form; independent witness remains Incomplete", "Canonical single-entry multi-block forwarding SCCs need i < bound, one positive constant latch step, and both source-width and ranked u64 no-wrap proofs."],
           ["Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses", "Incomplete", "Their reports can reject concrete errors, but a Clean report has no independent Complete replay yet."],
-          ["Checked index constant fold", "Applied or NotApplicable after exact typed replay", "Only exact preceding IndexConstant operands, checked Add or Multiply, and nonzero Divide or Remainder. Same CFG and positions are retained; all unrelated operations, values, types, effects, and proof sites must be identical."],
+          ["Checked index constant fold", "Applied or NotApplicable after exact typed replay", "Only exact preceding same-block IndexConstant operands, checked Add or Multiply, and nonzero Divide or Remainder. One input clone is replayed against the moved receipt-owned output; unrelated CFG, values, types, effects, and proof sites remain identical."],
           ["Any other transformation", "Unsupported", "No callback, pass name, digest match, or final structural equality can authorize another rewrite."]
         ],
       },

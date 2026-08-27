@@ -645,14 +645,14 @@ const compilerChecks: Lesson = {
   order: 2,
   title: "Compiler checks: one path, explicit boundaries",
   summary:
-    "Follow safe Rust through ranked PLIRON checks, one independently validated constant fold, and the narrow witness fragments that are complete today.",
+    "Follow safe Rust through ranked PLIRON checks, one independently validated constant fold, and the one raw-replay fragment that is complete today.",
   duration: "18 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
     "Follow the workload-neutral Rust MIR to ranked PLIRON to KIR path.",
     "Distinguish Rejected, Incomplete, Clean policy reports, and Complete raw-replay witnesses.",
-    "Explain why checked tiled and row-striped ownership can prove a dynamic race relation without proving every race witness.",
-    "Identify the narrow static-bounds and canonical wave64 tensor fragments with Complete independent replay.",
+    "Explain why raw checked tiled and row-striped markers fail closed while explicit affine and Presburger maps remain supported.",
+    "Identify static bounded access as the sole Complete independent raw-replay fragment.",
     "Explain how exact typed replay admits index constant folding without authorizing other transformations.",
     "Recognize unsupported CFG, no-wrap, dynamic, alias, and tensor cases as fail-closed compilation results.",
   ],
@@ -661,7 +661,7 @@ const compilerChecks: Lesson = {
       kind: "compiler-checked",
       label: "Fixed ranked verification with checked normalization",
       detail:
-        "The single production ranked route runs a sealed checked constant fold before the fixed eight analysis stages. Independent raw replay is Complete only for the documented static bounded-access and canonical rooted wave64 tensor fragments; all other current witnesses remain Incomplete and grant no KIR authority.",
+        "The single production ranked route runs a sealed checked constant fold before the fixed eight analysis stages. Independent raw replay is Complete only for the documented static bounded-access fragment; nonempty tensor flow and all other current witnesses remain Incomplete and grant no KIR authority.",
       reference: currentImplementationReference(
         [
           "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold",
@@ -719,7 +719,7 @@ const compilerChecks: Lesson = {
       label: "Where Verus fits",
       language: "text",
       code:
-        "You do not need to write a Verus proof to read a compiler diagnostic.\n\nVerus can state and prove a safe CPU reference contract. The compiler still needs a separate, supported refinement witness before that theorem says anything about an exact ranked PLIRON function. The two narrow raw-replay witnesses below are compiler-owned checks, not substitutes for a workload semantics proof.\n\n" +
+        "You do not need to write a Verus proof to read a compiler diagnostic.\n\nVerus can state and prove a safe CPU reference contract. The compiler still needs a separate, supported refinement witness before that theorem says anything about an exact ranked PLIRON function. The narrow static-bounds raw replay below is a compiler-owned check, not a substitute for a workload semantics proof.\n\n" +
         semanticMilestoneLessonBoundary,
       explanatory: true,
       notice:
@@ -729,7 +729,7 @@ const compilerChecks: Lesson = {
       kind: "result",
       label: "Witness boundary",
       language: "text",
-      code: "Complete:\n  static bounded ranked access raw replay\n  rooted single-block canonical gfx942 wave64 tensor-layout raw replay\n\nIncomplete:\n  every other current independent stage witness\n  dynamic or over-budget bounds replay\n  general tensor CFG and source-projection correspondence\n  general race, ownership, barrier, atomic, workgroup-memory, progress, and semantic replay",
+      code: "Complete:\n  static bounded ranked access raw replay\n\nIncomplete:\n  nonempty tensor-layout replay without external-root / operational-SSA provenance\n  raw checked tiled or row-striped race markers\n  dynamic or over-budget bounds replay\n  every other current independent stage witness",
       explanatory: true,
       notice:
         "A Clean policy report and a Complete independent witness are different results. Unsupported witness coverage stops compilation rather than becoming proof by omission.",

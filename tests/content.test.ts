@@ -845,13 +845,13 @@ describe("curriculum integrity", () => {
       "static bounded-access fragment",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "canonical gfx942 wave64 tensor-layout fragment",
+      "Nonempty tensor-layout replay remains Incomplete",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "every other stage witness remains Incomplete",
+      "Raw checked tiled and row-striped markers fail closed with FE2O3-RACE-002",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "One production transformation is admitted",
+      "One production transformation folds",
     );
     expect(compilerAnalysis?.sourcePaths).toEqual(
       expect.arrayContaining([
@@ -1053,25 +1053,25 @@ describe("curriculum integrity", () => {
       "Static bounded ranked access witness",
     );
     expect(compilerNarrative).toContain(
-      "Canonical wave64 tensor-layout witness",
+      "Nonempty tensor-layout witness",
     );
     expect(compilerNarrative).toContain(
-      "every other current independent stage witness remains Incomplete",
+      "every other current independent stage witness remain Incomplete",
     );
     expect(compilerNarrative).toContain(
-      "checked tiled and row-striped mappings",
+      "Raw checked tiled and row-striped markers",
     );
     expect(compilerNarrative).toContain(
-      "canonical two-block i < bound loop",
+      "canonical single-entry multi-block forwarding SCCs",
     );
     expect(compilerNarrative).toContain(
-      "final update lacks a static no-wrap proof",
+      "source integer width and the ranked u64 update",
     );
     expect(compilerNarrative).toContain(
       "independent exact typed structural replay",
     );
     expect(compilerNarrative).toContain(
-      "Overflow and divide or remainder by zero stay unfurled",
+      "Overflow and zero divisors stay unfurled",
     );
     expect(compilerNarrative).toContain(
       "Canonical hashes are labels only",
@@ -1107,7 +1107,7 @@ describe("curriculum integrity", () => {
     if (relationTable?.type !== "table") return;
     expect(relationTable.rows.map(([relation]) => relation)).toEqual([
       "Static bounded ranked access witness",
-      "Canonical wave64 tensor-layout witness",
+      "Nonempty tensor-layout witness",
       "Bounds outside the raw fragment",
       "Race and ownership policy",
       "Loop progress policy",
@@ -1115,6 +1115,11 @@ describe("curriculum integrity", () => {
       "Checked index constant fold",
       "Any other transformation",
     ]);
+    expect(
+      relationTable.rows.find(
+        ([relation]) => relation === "Nonempty tensor-layout witness",
+      )?.[1],
+    ).toBe("Incomplete");
   });
 
   it("teaches the single ranked compiler path and its narrow replay boundary", () => {
@@ -1144,10 +1149,13 @@ describe("curriculum integrity", () => {
       "static bounded ranked access raw replay",
     );
     expect(result?.code).toContain(
-      "canonical gfx942 wave64 tensor-layout raw replay",
+      "nonempty tensor-layout replay",
     );
     expect(result?.code).toContain(
       "every other current independent stage witness",
+    );
+    expect(result?.code.split("\n\nIncomplete:")[0]).not.toContain(
+      "tensor",
     );
     expect(host?.code).toContain("production_ranked_constant_fold");
     expect(host?.code).toContain("pliron_analysis_witness");
@@ -1177,10 +1185,12 @@ describe("curriculum integrity", () => {
       "exact preceding index constants",
       "mutation-attempt epoch",
       "Static bounded ranked access witness",
-      "Canonical wave64 tensor-layout witness",
-      "checked tiled and row-striped mappings",
-      "canonical two-block positive constant induction loop",
+      "Nonempty tensor-layout witness",
+      "Raw checked tiled and row-striped markers",
+      "Canonical single-entry multi-block forwarding SCCs",
       "Any other transformation",
+      "kernel.index_unsigned_cast",
+      "current production matrix stops earlier at FE2O3-RACE-002",
       "not universal correctness",
     ]) {
       expect(narrative).toContain(boundary);

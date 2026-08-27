@@ -187,8 +187,8 @@ describe("search index", () => {
       "FE2O3-BOUNDS-001",
       "Cross-invocation write race",
       "checked tiled and row-striped",
-      "canonical gfx942 wave64",
-      "exact typed custody",
+      "Nonempty tensor-layout witness",
+      "receipt-owned output",
       "IndexBinary to IndexConstant",
     ]) {
       const results = searchCatalog(query, lessons, glossary);
@@ -246,14 +246,14 @@ describe("lesson section rendering policy", () => {
     }
     for (const cell of [
       "Static bounded ranked access witness",
-      "Canonical wave64 tensor-layout witness",
+      "Nonempty tensor-layout witness",
       "Checked index constant fold",
       "Any other transformation",
     ]) {
       expect(screen.getByRole("cell", { name: cell })).toBeInTheDocument();
     }
     expect(
-      screen.getByText("Two completed witnesses are not universal correctness"),
+      screen.getByText("One completed witness is not universal correctness"),
     ).toBeInTheDocument();
     expect(screen.getByText("Current end-to-end boundary")).toBeInTheDocument();
     expect(screen.getByText(/error\[FE2O3-BOUNDS-001\]/)).toBeInTheDocument();

@@ -29,7 +29,7 @@ export function ArchitecturePage() {
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["Historical V7 simulator", "Retains bounded observation tooling for an already verified KIR subset; it is not a current source compiler, GPU execution, or proof."],
-            ["Compiler analyses", "Run the fixed eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. Static bounded bounds and a narrow rooted canonical wave64 tensor fragment have Complete independent raw replay; every other current stage witness remains Incomplete."],
+            ["Compiler analyses", "Run the fixed eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. Only the admitted static bounded-access fragment has Complete independent raw replay; nonempty tensor flow and every other current stage witness remain Incomplete."],
             ["Checked ranked transform", "Folds exact preceding index constants with checked u64 semantics before every downstream consumer. A separate exact typed structural replay admits only the same-site result; every other transformation is unsupported."],
             ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Status-Checked policy staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; the private move-only join is the admission authority and requires both structural and formula results."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
@@ -102,15 +102,17 @@ export function ArchitecturePage() {
           epoch, exact structural checkpoints, and sealed report custody. Those
           mechanisms detect compiler mutation and report substitution; they do
           not prove report semantics. Independent raw replay is Complete only
-          for the documented static bounded-access fragment and the narrow
-          rooted single-block canonical gfx942 wave64 tensor fragment. Dynamic
-          checked tiled and row-striped mappings can produce a Clean generic
-          race report, while the independent race witness remains Incomplete.
-          The committed progress checker covers only its canonical two-block
-          positive-induction form; unsupported CFG and no-wrap obligations fail
-          closed. The constant-fold validator uses exact typed custody and an
-          independent evaluator, so canonical hashes remain diagnostic labels
-          rather than acceptance authority. These specific guarantees do not
+          for the documented static bounded-access fragment. Nonempty tensor
+          flow remains Incomplete until external roots are tied to operational
+          SSA values. Raw checked tiled and row-striped markers do not prove
+          dynamic race freedom; explicit affine or Presburger maps may, while
+          unsupported success/value contracts fail closed. The progress checker
+          accepts canonical single-entry multi-block forwarding loops with a
+          positive constant step only when source-width and u64 updates cannot
+          wrap. The constant-fold validator keeps one exact typed input clone,
+          replays the structural relation, and moves the validated output through
+          its private receipt. Canonical hashes remain diagnostic labels rather
+          than acceptance authority. These specific guarantees do not
           establish compiler extraction, source-to-KIR refinement, numerical
           intent, LLVM or ISA correctness, artifact identity, launch admission,
           persistent execution, performance, or universal kernel correctness.
