@@ -762,7 +762,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
   await expect(expertRow).toContainText("freshness and replay authority");
 });
 
-test("gfx950 lessons expose source, ISA, and external runtime evidence", async ({
+test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", async ({
   page,
 }) => {
   await page.goto("./#/lesson/gfx950-fp4-attention");
@@ -776,7 +776,7 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
     }),
   ).toBeVisible();
   await expect(
-    page.getByText("Source example", { exact: true }).first(),
+    page.getByText("GPU observed", { exact: true }).first(),
   ).toBeVisible();
   await expect(page.getByRole("tabpanel")).toContainText(
     "gfx950_fp4_attention_rust",
@@ -794,10 +794,13 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
 
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust gfx950 lowering supported: false",
+    "Portable namespace: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "FP4 attention max_error=2.38419e-07",
+    "Rust-produced HSACO SHA-256: 390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Rust numerical result: max_absolute_error=2.235174179e-8",
   );
 
   await page.goto("./#/lesson/gfx950-fp8-attention");
@@ -821,20 +824,23 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
   ).toBe(false);
 });
 
-test("every gfx950 low-precision lesson opens its Rust kernel", async ({ page }) => {
+test("every gfx950 low-precision lesson opens its production Rust evidence", async ({ page }) => {
   const lessons = [
-    ["gfx950-fp4-gemm", "gfx950 FP4 GEMM", "gfx950_fp4_gemm_rust"],
-    ["gfx950-fp8-gemm", "gfx950 FP8 GEMM", "gfx950_fp8_gemm_rust"],
-    ["gfx950-fp4-attention", "gfx950 FP4 flash attention", "gfx950_fp4_attention_rust"],
-    ["gfx950-fp8-attention", "gfx950 FP8 flash attention", "gfx950_fp8_attention_rust"],
+    ["gfx950-fp4-gemm", "gfx950 FP4 GEMM", "gfx950_fp4_gemm_rust", "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d", "max_absolute_error=0"],
+    ["gfx950-fp8-gemm", "gfx950 FP8 GEMM", "gfx950_fp8_gemm_rust", "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f", "max_absolute_error=0"],
+    ["gfx950-fp4-attention", "gfx950 FP4 flash attention", "gfx950_fp4_attention_rust", "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008", "max_absolute_error=2.235174179e-8"],
+    ["gfx950-fp8-attention", "gfx950 FP8 flash attention", "gfx950_fp8_attention_rust", "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221", "max_absolute_error=5.960464478e-8"],
   ] as const;
 
-  for (const [lessonId, title, symbol] of lessons) {
+  for (const [lessonId, title, symbol, hsacoSha256, numericalResult] of lessons) {
     await page.goto(`./#/lesson/${lessonId}`);
     await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
       timeout: 120_000,
     });
     await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    await expect(
+      page.getByText("GPU observed", { exact: true }).first(),
+    ).toBeVisible();
     await expect(page.getByRole("tab", { name: "Rust kernel" })).toHaveAttribute(
       "aria-selected",
       "true",
@@ -845,7 +851,14 @@ test("every gfx950 low-precision lesson opens its Rust kernel", async ({ page })
       page.getByRole("link", { name: "Source", exact: true }),
     ).toHaveAttribute(
       "href",
-      /\/blob\/91e3cf2b4d8145d8c269ea3f783da53f90c568f4\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+      /\/blob\/a710b6c67a908caa23d2409a5d3c4a275103cd60\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+    );
+    await page.getByRole("tab", { name: "Evidence record" }).click();
+    await expect(page.getByRole("tabpanel")).toContainText(
+      `Rust-produced HSACO SHA-256: ${hsacoSha256}`,
+    );
+    await expect(page.getByRole("tabpanel")).toContainText(
+      `Rust numerical result: ${numericalResult}`,
     );
   }
 });

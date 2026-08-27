@@ -75,7 +75,7 @@ describe("application shell", () => {
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
   });
 
-  it("renders the gfx950 FP4 attention source and external runtime boundary", async () => {
+  it("renders the gfx950 FP4 attention production Rust evidence", async () => {
     const user = userEvent.setup();
     renderApp("/lesson/gfx950-fp4-attention");
     expect(
@@ -84,7 +84,7 @@ describe("application shell", () => {
         name: "gfx950 FP4 flash attention",
       }, { timeout: 15_000 }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "gfx950_fp4_attention_rust",
     );
@@ -103,10 +103,16 @@ describe("application shell", () => {
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Rust gfx950 lowering supported: false",
+      "Portable namespace: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "FP4 attention max_error=2.38419e-07",
+      "Rust-produced HSACO SHA-256: 390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Rust numerical result: max_absolute_error=2.235174179e-8",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "SEPARATE COMPARISON-ONLY HIP LANE",
     );
   }, 30_000);
 

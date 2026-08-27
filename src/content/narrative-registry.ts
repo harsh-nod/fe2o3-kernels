@@ -2823,11 +2823,11 @@ const narrativeRegistry = deepFreeze({
       {
         type: "callout",
         tone: "proof",
-        title: "Hardware execution is recorded separately",
-        text: "On 2026-08-26, the separate HIP companion suite on ssh host mi350 reported AMD Instinct MI350X gfx950 agents, GEMM max_error=0, and attention max_error=2.38419e-07 under ROCm 7.2.1. Those observations do not bind to the mirrored Rust source, whose exact lowering flag is false and whose authority stops at source plus independent CPU reference.",
+        title: "Exact Rust artifacts reached the recorded hardware",
+        text: "At fe2o3 core commit a710b6c67a908caa23d2409a5d3c4a275103cd60 with tree dfd5ec9a357d4cbd7879078c23f7b3114cdea641, the four exact Rust low-precision kernels lowered to gfx950 HSACO. On 2026-08-26, those Rust-origin artifacts were numerically observed on ssh host mi350 with GEMM max_error=0 and attention max_error=2.38419e-07 under ROCm 7.2.1.",
       },
       milestoneCallout(
-        "These lessons now start from ordinary attributed Rust plus an independent safe CPU reference. The Rust gfx950 device terminals are not lowered; companion HIP ISA and runtime evidence does not supply Rust semantic-correctness, artifact, runtime, or hardware authority.",
+        "The recorded lowering and mi350 cases establish exact artifact and bounded execution observations, not a source-to-machine proof, universal numerical theorem, or performance result. The protected Worker V3 native-build route and its measured provider/finalizer transcript remain a separate boundary.",
       ),
     ],
   },
@@ -2837,7 +2837,7 @@ const narrativeRegistry = deepFreeze({
     blocks: [
       {
         type: "paragraph",
-        text: "The attributed Rust expresses one wave computing a 16 x 16 output tile with one fixed K=128 phase through typed gfx950 device terminals. Eight E2M1 values occupy each packed word. Rust lowering is currently blocked; the companion HIP builtin and disassembly encode identity scale operands as constants and provide no runtime E8M0 scale arrays.",
+        text: "The exact attributed Rust expresses one wave computing a 16 x 16 output tile with one fixed K=128 phase through typed gfx950 device terminals. Eight E2M1 values occupy each packed word. At the pinned core commit and tree, that Rust kernel lowers to gfx950 HSACO with identity-scale operands encoded as constants and no runtime E8M0 scale arrays; its mi350 comparison reported max_error=0.",
       },
       {
         type: "table",
@@ -2853,7 +2853,7 @@ const narrativeRegistry = deepFreeze({
         type: "callout",
         tone: "boundary",
         title: "Inspect the machine instruction, not the intrinsic spelling",
-        text: "The comparison HIP Clang builtin and LLVM intrinsic contain mfma_scale, but its gfx950 disassembly prints v_mfma_f32_16x16x128_f8f6f4. HIP acceptance checks inspect cbsz:4 blgp:4 for FP4; they do not prove Rust lowering. Runtime block scales are a future extension.",
+        text: "The exact Rust-origin gfx950 disassembly prints v_mfma_f32_16x16x128_f8f6f4, and the FP4 acceptance check inspects cbsz:4 blgp:4. That establishes an instruction fact for the pinned artifact, not semantic refinement, a performance claim, or completion of the protected Worker V3 native-build route. Runtime block scales are a future extension.",
       },
     ],
   },
@@ -2875,7 +2875,7 @@ const narrativeRegistry = deepFreeze({
         ],
       },
       milestoneCallout(
-        "Source compilation and ISA presence do not establish the quantization relation. A functional claim still needs a bound safe reference, exact format/scale policy, and independently recorded runtime evidence.",
+        "The exact Rust FP8 GEMM now lowers to gfx950 HSACO and its mi350 comparison reported max_error=0. That recorded case and ISA presence do not prove the quantization relation, source-to-machine refinement, performance, or a protected Worker V3 native build; broader claims still need the bound safe reference and exact format/scale policy.",
       ),
     ],
   },
@@ -2897,7 +2897,7 @@ const narrativeRegistry = deepFreeze({
         type: "callout",
         tone: "proof",
         title: "Accumulator invariant",
-        text: "For the current single phase, each lane component represents its four output coordinates accumulated over exactly 128 E4M3 elements with identity scale and FP32 accumulation. For an extension with p phases, the invariant must cover exactly min(p * 128, logical K) elements and name the runtime scale and tail-zero policies.",
+        text: "For the current single phase, each lane component represents its four output coordinates accumulated over exactly 128 E4M3 elements with identity scale and FP32 accumulation. The exact Rust kernel lowered to gfx950 HSACO and reported max_error=0 on mi350, but that observation is not a proof or performance result and does not complete the protected Worker V3 native-build route. For an extension with p phases, the invariant must cover exactly min(p * 128, logical K) elements and name the runtime scale and tail-zero policies.",
       },
     ],
   },
@@ -2907,7 +2907,7 @@ const narrativeRegistry = deepFreeze({
     blocks: [
       {
         type: "paragraph",
-        text: "Flash attention needs K in the matrix-B register orientation while retaining coalesced packed storage. On gfx950 the FP4 path must lower its format-specific LDS read to ds_read_b64_tr_b4. The resulting fragments feed v_mfma_f32_16x16x128_f8f6f4 for QK score tiles; a generic LDS load followed by scalar repacking does not satisfy this lesson's ISA contract.",
+        text: "Flash attention needs K in the matrix-B register orientation while retaining coalesced packed storage. The exact Rust FP4 attention kernel now lowers through the gfx950 tr4/MFMA route: its format-specific K read emits ds_read_b64_tr_b4, and the resulting fragments feed v_mfma_f32_16x16x128_f8f6f4 for QK score tiles. A generic LDS load followed by scalar repacking does not satisfy this lesson's ISA contract.",
       },
       {
         type: "table",
@@ -2920,7 +2920,7 @@ const narrativeRegistry = deepFreeze({
         ],
       },
       milestoneCallout(
-        "The transpose-load and MFMA opcodes are target-machine facts only. They do not by themselves prove the Q/K layout mapping, online-softmax recurrence, numerical policy, or final O stores.",
+        "The exact Rust-origin HSACO using tr4 plus MFMA reported attention max_error=2.38419e-07 on mi350. The opcodes and recorded case remain target-machine and bounded execution facts only: they do not prove the Q/K layout, online-softmax recurrence, numerical policy, final O stores, performance, or the protected Worker V3 native-build route.",
       ),
     ],
   },
@@ -2930,7 +2930,7 @@ const narrativeRegistry = deepFreeze({
     blocks: [
       {
         type: "paragraph",
-        text: "Packed Q, K, and V reduce bandwidth, but the score accumulator, row maximum, denominator, and scalar PV numerator remain FP32. The current fixed source has exactly one unmasked 16-key tile, computes its maximum and denominator, then decodes V and accumulates PV in a scalar FP32 loop. Multi-tile online rescaling, causal masks, and tail keys are extensions.",
+        text: "Packed Q, K, and V reduce bandwidth, but the score accumulator, row maximum, denominator, and scalar PV numerator remain FP32. The exact Rust kernel lowers to gfx950 HSACO and its mi350 comparison reported max_error=2.38419e-07 for the current fixed, unmasked 16-key tile. It computes the maximum and denominator, then decodes V and accumulates PV in a scalar FP32 loop. Multi-tile online rescaling, causal masks, and tail keys are extensions.",
       },
       {
         type: "callout",
@@ -2944,6 +2944,7 @@ const narrativeRegistry = deepFreeze({
           "A causal or padding-mask extension must place excluded keys outside the logical score domain before max reduction.",
           "The current source uses identity-scale constants. A runtime-scale extension must bind Q, K, and V scale indices independently.",
           "Inspect both ds_read_b64_tr_b4 and v_mfma_f32_16x16x128_f8f6f4 in the final code object.",
+          "The recorded numerical case is not a recurrence proof or performance result, and it does not establish a protected Worker V3 native build.",
         ],
       },
     ],
@@ -2954,7 +2955,7 @@ const narrativeRegistry = deepFreeze({
     blocks: [
       {
         type: "paragraph",
-        text: "The FP8 attention layout parallels FP4 but packs four E4M3 values per dword and uses ds_read_b64_tr_b8 for the K and V register orientation required by the matrix path. The transpose opcode is format-specific: ds_read_b64_tr_b4 is not interchangeable with ds_read_b64_tr_b8.",
+        text: "The exact Rust FP8 attention kernel packs four E4M3 values per dword and lowers K through the gfx950 ds_read_b64_tr_b8 matrix-B path. V does not use a transpose read: the current kernel loads and decodes V for scalar FP32 PV accumulation. The K transpose opcode is format-specific; ds_read_b64_tr_b4 is not interchangeable with ds_read_b64_tr_b8.",
       },
       {
         type: "steps",
@@ -2962,12 +2963,12 @@ const narrativeRegistry = deepFreeze({
           "Pack fixed E4M3 Q/K blocks for one K=128 phase; the current builtin call uses identity-scale constants rather than runtime scale arrays.",
           "Read the matrix-B fragment through ds_read_b64_tr_b8 and wait for LDS completion before use.",
           "Issue v_mfma_f32_16x16x128_f8f6f4 with E4M3 selectors and carry the FP32 score fragment.",
-          "Compute one unmasked 16-key softmax tile in FP32, then decode V and accumulate PV through the current scalar FP32 loop.",
+          "Compute one unmasked 16-key softmax tile in FP32, then load and decode V without a transpose instruction and accumulate PV through the current scalar FP32 loop.",
           "Write the fixed 16 x 16 O tile. Masking, edge predicates, multi-tile recurrence, and MFMA-accelerated PV are extensions.",
         ],
       },
       milestoneCallout(
-        "A valid gfx950 object remains below hardware evidence. A separate MI350X run recorded max_error=0 for both GEMMs and 2.38419e-07 for both attention kernels after native B8 split-layout correction, but no performance label or site evidence promotion is inferred from that observation.",
+        "The exact Rust kernel lowered to gfx950 HSACO with tr8 only on K, MFMA for QK, and scalar PV from V; its mi350 comparison reported max_error=2.38419e-07. This is a bounded execution observation, not a proof, performance label, or completed protected Worker V3 native build.",
       ),
     ],
   },
@@ -2979,17 +2980,17 @@ const narrativeRegistry = deepFreeze({
         type: "table",
         headers: ["Evidence field", "Required record", "Claim limit"],
         rows: [
-          ["Source", "Commit, tree, source SHA-256, compiler command", "Identifies inputs; does not prove compilation."],
-          ["Code object", "HSACO SHA-256, target ID, symbol and metadata inspection", "Establishes object identity and ABI facts only."],
-          ["ISA", "Saved llvm-objdump output containing both exact required mnemonics", "Establishes instruction presence, not algorithm semantics."],
-          ["Execution", "gfx950 rocminfo identity, launch command, oracle cases, tolerances, output and canaries", "Establishes only the recorded cases on the recorded device."],
+          ["Source", "Core commit a710b6c67a908caa23d2409a5d3c4a275103cd60, tree dfd5ec9a357d4cbd7879078c23f7b3114cdea641, source SHA-256, compiler command", "Identifies the exact Rust inputs; does not prove semantic refinement."],
+          ["Code object", "Rust-origin gfx950 HSACO SHA-256, target ID, symbol and metadata inspection", "Establishes lowering and object identity/ABI facts only; protected Worker V3 native-build evidence remains separate."],
+          ["ISA", "Saved llvm-objdump output containing QK MFMA and the format-specific K transpose mnemonic", "Establishes instruction presence; V remains a load/decode plus scalar PV path in FP8 attention."],
+          ["Execution", "mi350 gfx950 identity, exact Rust-artifact launch command, oracle cases, tolerances, output and canaries", "Establishes only the recorded cases on the recorded device, not proof or performance."],
         ],
       },
       {
         type: "callout",
         tone: "boundary",
         title: "Keep external observations distinct",
-        text: "The 2026-08-26 mi350 run records an MI350X gfx950 identity, GEMM max_error=0, and attention max_error=2.38419e-07 with non-uniform K, native CDNA 4 FP8 split packing, and finite-value rejection. Keep the earlier gfx1036 compile host, the later gfx950 runtime, final artifact hashes, and the still-pending performance field separate; do not promote the site badge without importing a pinned evidence record.",
+        text: "The 2026-08-26 mi350 run records an MI350X gfx950 identity for the exact Rust-origin HSACOs, with GEMM max_error=0 and attention max_error=2.38419e-07. Keep the pinned Rust source, lowering transcript, final artifact hashes, runtime observation, still-pending performance field, proof obligations, and protected Worker V3 native-build/provider transcript as separate evidence layers; do not promote a broader claim from the numerical cases alone.",
       },
     ],
   },
