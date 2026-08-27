@@ -1,5 +1,11 @@
 import { currentState } from "./current-state";
 import {
+  debuggerProtocolRequests,
+  debuggerWorkbenchProjection,
+  validateDebuggerProtocolRequests,
+  validateDebuggerWorkbenchFixture,
+} from "./debugger-workbench";
+import {
   functionalCorrectnessCatalog,
   functionalCorrectnessEntry,
 } from "./functional-correctness-catalog";
@@ -75,8 +81,17 @@ export interface ValidationIssue {
 export function validateCurriculum(
   modules: CurriculumModule[],
   narratives?: Record<string, unknown>,
+  debuggerFixture: unknown = debuggerWorkbenchProjection,
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [
+    ...validateDebuggerWorkbenchFixture(debuggerFixture).map((message) => ({
+      path: "debuggerWorkbenchFixture",
+      message,
+    })),
+    ...validateDebuggerProtocolRequests(debuggerProtocolRequests).map((message) => ({
+      path: "debuggerProtocolRequests",
+      message,
+    })),
     ...validateStagedEvidenceCatalog().map((message) => ({
       path: "stagedEvidence",
       message,

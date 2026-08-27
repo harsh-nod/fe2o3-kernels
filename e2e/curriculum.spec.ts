@@ -1,4 +1,30 @@
 import { expect, test } from "@playwright/test";
+import { readFileSync } from "node:fs";
+
+interface ExactDebuggerResponse {
+  request_id: number;
+  session: { cursor: { event_sequence: number } };
+}
+
+interface ExactDebuggerProjection {
+  breakpoint_stop: ExactDebuggerResponse;
+  watchpoint_stop: ExactDebuggerResponse;
+  memory: ExactDebuggerResponse & Record<string, unknown>;
+}
+
+const exactDebuggerProjection = JSON.parse(
+  readFileSync(
+    new URL("../examples/debugger_workbench_v1.json", import.meta.url),
+    "utf8",
+  ),
+) as ExactDebuggerProjection;
+const exactDebuggerRequests = readFileSync(
+  new URL("../examples/debugger_requests_v1.jsonl", import.meta.url),
+  "utf8",
+)
+  .trimEnd()
+  .split("\n")
+  .map((line) => JSON.parse(line) as Record<string, unknown>);
 
 test("curriculum is responsive, navigable, and visually nonempty", async ({
   page,
@@ -103,8 +129,9 @@ test("standalone CPU semantic simulation keeps its evidence boundary visible", a
   await expect(
     page.getByLabel("Standalone CPU semantic simulation of one exact KIR V7 WG64"),
   ).toContainText("60 inactive slots");
-  await expect(page.getByRole("tabpanel")).toContainText("canonical bytes: 245");
-  await expect(page.getByRole("tabpanel")).toContainText(
+  const codePanel = page.locator("#lesson-code-panel");
+  await expect(codePanel).toContainText("canonical bytes: 245");
+  await expect(codePanel).toContainText(
     "e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384",
   );
   await expect(page.getByText(/Exact binary KIR V7 input/u)).toBeVisible();
@@ -116,28 +143,127 @@ test("standalone CPU semantic simulation keeps its evidence boundary visible", a
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText(
+  await expect(codePanel).toContainText(
     "fe2o3-simulation-request-v1",
   );
-  await expect(page.getByRole("tabpanel")).toContainText(
+  await expect(codePanel).toContainText(
     "./target/debug/fe2o3-kir-sim --kir-v7",
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText(
+  await expect(codePanel).toContainText(
     '"canonical_bytes":245',
   );
-  await expect(page.getByRole("tabpanel")).toContainText(
+  await expect(codePanel).toContainText(
     '"hardware_observed":false',
   );
-  await expect(page.getByRole("tabpanel")).toContainText(
+  await expect(codePanel).toContainText(
     "0x11000000110000001100000011000000",
   );
-  await expect(page.getByRole("tabpanel")).toContainText(
+  await expect(codePanel).toContainText(
     '"workgroups_visited":1',
   );
-  await expect(page.getByRole("tabpanel")).toContainText(
+  await expect(codePanel).toContainText(
     '"scheduled_slots_visited":64',
   );
+
+  const workbench = page.getByRole("region", {
+    name: "Inspect one deterministic KIR session",
+  });
+  await expect(workbench).toBeVisible();
+  const truth = workbench.getByLabel("Session provenance and truth");
+  await expect(truth).toContainText("Simulated semantic observation");
+  await expect(truth).toContainText("simulatedtrue");
+  await expect(truth).toContainText("hardware observedfalse");
+  await expect(truth).toContainText("performance predictionfalse");
+  await expect(truth).toContainText("wave modellogical only");
+  for (const label of [
+    "simulated",
+    "hardware observed",
+    "performance prediction",
+    "wave model",
+  ]) {
+    await expect(truth.getByText(label, { exact: true })).toBeVisible();
+  }
+  const truthBounds = await truth.evaluate((element) => ({
+    width: element.clientWidth,
+    scrollWidth: element.scrollWidth,
+  }));
+  expect(truthBounds.scrollWidth).toBeLessThanOrEqual(truthBounds.width);
+
+  const hierarchy = workbench.getByLabel(
+    "Workgroup logical wave and lane hierarchy",
+  );
+  await expect(hierarchy.getByText("Logical wave 0")).toBeVisible();
+  await expect(hierarchy.getByRole("button", { name: "Lane 0 active" })).toBeEnabled();
+  const finalLane = hierarchy.getByRole("button", { name: "Lane 63 inactive" });
+  await expect(finalLane).toBeVisible();
+  await expect(finalLane).toBeDisabled();
+  const hierarchyBounds = await hierarchy.evaluate((element) => ({
+    width: element.clientWidth,
+    scrollWidth: element.scrollWidth,
+  }));
+  expect(hierarchyBounds.scrollWidth).toBeLessThanOrEqual(
+    hierarchyBounds.width,
+  );
+
+  const breakpointCursor =
+    exactDebuggerProjection.breakpoint_stop.session.cursor.event_sequence;
+  await workbench
+    .getByRole("button", { name: new RegExp(`#${breakpointCursor} ·`, "u") })
+    .click();
+  await expect(workbench.getByText("breakpoint hit")).toBeVisible();
+
+  const watchpointCursor =
+    exactDebuggerProjection.watchpoint_stop.session.cursor.event_sequence;
+  await workbench
+    .getByRole("button", { name: new RegExp(`#${watchpointCursor} ·`, "u") })
+    .click();
+  await expect(workbench.getByText("watchpoint hit")).toBeVisible();
+
+  const memoryCursor = exactDebuggerProjection.memory.session.cursor.event_sequence;
+  await workbench
+    .getByRole("button", { name: new RegExp(`#${memoryCursor} ·`, "u") })
+    .click();
+  const inspectorTabs = workbench.getByRole("tablist", {
+    name: "State inspector",
+  });
+  await inspectorTabs.getByRole("tab", { name: "Memory" }).click();
+  await expect(workbench.getByText("0x11000000")).toBeVisible();
+
+  const agentTabs = workbench.getByRole("tablist", { name: "Agent operation" });
+  await agentTabs.getByRole("tab", { name: "Memory" }).click();
+  const exactMemoryRequest = exactDebuggerRequests.find(
+    (request) => request.request_id === exactDebuggerProjection.memory.request_id,
+  );
+  if (!exactMemoryRequest) throw new Error("exact memory request is missing");
+  await expect(workbench.getByTestId("debug-agent-request")).toHaveText(
+    JSON.stringify(exactMemoryRequest),
+  );
+  await expect(workbench.getByTestId("debug-agent-response")).toHaveText(
+    JSON.stringify(exactDebuggerProjection.memory),
+  );
+
+  await workbench.screenshot({
+    path: testInfo.outputPath("debugger-workbench.png"),
+    animations: "disabled",
+  });
+  await page.evaluate(async () => {
+    const workbenchElement = document.querySelector<HTMLElement>(
+      ".debugger-tutorial",
+    );
+    const topbar = document.querySelector<HTMLElement>(".topbar");
+    if (!workbenchElement) throw new Error("debugger workbench is missing");
+    document.documentElement.style.scrollBehavior = "auto";
+    const topbarHeight = topbar?.getBoundingClientRect().height ?? 0;
+    const workbenchTop =
+      workbenchElement.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo(0, Math.max(0, workbenchTop - topbarHeight - 12));
+    await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+  });
+  await page.screenshot({
+    path: testInfo.outputPath("debugger-workbench-viewport.png"),
+    animations: "disabled",
+  });
 
   const screenshot = testInfo.outputPath("cpu-semantic-simulation.png");
   await page.screenshot({
@@ -148,8 +274,15 @@ test("standalone CPU semantic simulation keeps its evidence boundary visible", a
   const dimensions = await page.evaluate(() => ({
     width: document.documentElement.scrollWidth,
     viewport: window.innerWidth,
+    workbenchWidth:
+      document.querySelector(".debugger-tutorial")?.scrollWidth ?? 0,
+    workbenchViewport:
+      document.querySelector(".debugger-tutorial")?.clientWidth ?? 0,
   }));
   expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  expect(dimensions.workbenchWidth).toBeLessThanOrEqual(
+    dimensions.workbenchViewport,
+  );
 });
 
 test("search traps focus and restores its trigger", async ({ page }) => {
@@ -617,7 +750,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d4ea0866b2d7517e126db2a409985294e847044a/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/f869d952de28af281f1d423a624a13dbb6f2c1d4/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -717,7 +850,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d4ea0866b2d7517e126db2a409985294e847044a/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/f869d952de28af281f1d423a624a13dbb6f2c1d4/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -735,7 +868,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d4ea0866b2d7517e126db2a409985294e847044a/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/f869d952de28af281f1d423a624a13dbb6f2c1d4/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -988,7 +1121,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at d4ea0866b2",
+      name: "Compiler baseline at f869d952de",
     }),
   ).toBeVisible();
   await expect(

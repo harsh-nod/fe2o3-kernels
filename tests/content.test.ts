@@ -3,6 +3,17 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
+import {
+  DEBUGGER_RESPONSES_SHA256,
+  DEBUGGER_WORKBENCH_PROJECTION_SHA256,
+  debuggerComparisonLinks,
+  debuggerComparisonRows,
+  debuggerProtocolRequests,
+  debuggerWorkbenchFixture,
+  debuggerWorkbenchProjection,
+  validateDebuggerProtocolRequests,
+  validateDebuggerWorkbenchFixture,
+} from "../src/content/debugger-workbench";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
 import { functionalRefinementPublication } from "../src/content/functional-refinement-publication";
 import {
@@ -72,14 +83,100 @@ function checkpointDetail(
   return checkpoint ? developmentCheckpointDetail(checkpoint) : "";
 }
 
+describe("debugger workbench content", () => {
+  it("keeps the committed fixture closed, simulated, and allocation-relative", () => {
+    const rawFixture = JSON.parse(
+      readFileSync("examples/debugger_workbench_v1.json", "utf8"),
+    ) as Record<string, unknown>;
+    expect(Object.keys(rawFixture).sort()).toEqual([
+      "breakpoint_stop",
+      "capabilities",
+      "events",
+      "hierarchy",
+      "limitations",
+      "memory",
+      "post_write_step",
+      "reverse_step",
+      "schema",
+      "source",
+      "trace",
+      "values",
+      "watchpoint_stop",
+    ]);
+    expect(validateDebuggerWorkbenchFixture(rawFixture)).toEqual([]);
+    expect(
+      createHash("sha256")
+        .update(readFileSync("examples/debugger_workbench_v1.json"))
+        .digest("hex"),
+    ).toBe(DEBUGGER_WORKBENCH_PROJECTION_SHA256);
+    expect(debuggerWorkbenchProjection.source.protocol_responses_sha256).toBe(
+      DEBUGGER_RESPONSES_SHA256,
+    );
+    expect(validateDebuggerProtocolRequests(debuggerProtocolRequests)).toEqual([]);
+    expect(debuggerProtocolRequests).toHaveLength(19);
+    expect(debuggerWorkbenchFixture.session).toMatchObject({
+      execution_kind: "cpu_kir_simulation",
+      simulated: true,
+      hardware_observed: false,
+      performance_prediction: false,
+      wave_interpretation: "logical_visualization",
+    });
+    const serialized = JSON.stringify(debuggerWorkbenchProjection);
+    expect(serialized).toContain("requires_authenticated_map");
+    expect(serialized).toContain("CPU KIR simulation does not expose hardware registers");
+    expect(serialized).toContain("allocation_relative_pointer");
+    expect(serialized).not.toMatch(/native_(?:address|pointer)|gpu_va|host_address/u);
+  });
+
+  it("rejects unknown fixture keys through curriculum content validation", () => {
+    const extraTopLevel = structuredClone(debuggerWorkbenchProjection) as unknown as Record<
+      string,
+      unknown
+    >;
+    extraTopLevel.native_address = "0xdeadbeef";
+    expect(validateDebuggerWorkbenchFixture(extraTopLevel)).toContain(
+      "fixture must contain only the exact CLI projection keys",
+    );
+    expect(validateCurriculum(curriculum, undefined, extraTopLevel)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ path: "debuggerWorkbenchFixture" }),
+      ]),
+    );
+
+    const extraEventField = structuredClone(debuggerWorkbenchProjection) as unknown as {
+      events: { result: { events: Array<Record<string, unknown>> } };
+    };
+    extraEventField.events.result.events[0].native_registers = ["exec"];
+    expect(validateDebuggerWorkbenchFixture(extraEventField)).toContain(
+      "event response is not a bounded exact-key semantic trace",
+    );
+  });
+
+  it("uses official comparison sources and complementary authority language", () => {
+    expect(debuggerComparisonLinks.map((entry) => entry.href)).toEqual([
+      "https://rocm.docs.amd.com/projects/ROCgdb/en/latest/ROCgdb/gdb/doc/gdb/AMD-GPU.html",
+      "https://rocm.docs.amd.com/projects/ROCgdb/en/latest/quick-reference/essential-commands.html",
+      "https://rocm.docs.amd.com/projects/rocprofiler-sdk/en/docs-7.2.3/how-to/using-thread-trace.html",
+      "https://rocm.docs.amd.com/en/docs-10.0.0/components/profilers-and-debuggers.html",
+      "https://docs.modular.com/mojo/cli/debug",
+    ]);
+    const comparison = JSON.stringify(debuggerComparisonRows);
+    expect(comparison).toContain("hardware wavefront as a debugger thread");
+    expect(comparison).toContain("early access");
+    expect(comparison).toContain("LLDB does not support Mojo GPU debugging");
+    expect(comparison).toContain("complements");
+    expect(comparison).not.toMatch(/better than|replaces ROCgdb|replaces rocprof/iu);
+  });
+});
+
 describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "d4ea0866b2d7517e126db2a409985294e847044a",
+      "f869d952de28af281f1d423a624a13dbb6f2c1d4",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "8fd560893daac0d879ed12fd6bd7c6601ef436d2",
+      "9ec9c7545c9cc285f5c7ee5e682df0188683c0d9",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -1038,7 +1135,12 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
       )?.detail,
-    ).toContain("no debugger or profiler UI");
+    ).toContain("tutorial workbench");
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "semantic-debug-profile",
+      )?.detail,
+    ).toContain("profiler UI remain open");
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "cpu-semantic-simulation",
@@ -1106,7 +1208,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
+      sourceCommit: "f869d952de28af281f1d423a624a13dbb6f2c1d4",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -1870,7 +1972,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
+      sourceCommit: "f869d952de28af281f1d423a624a13dbb6f2c1d4",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -2982,12 +3084,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-27",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
-      eventualPublicTree: "8fd560893daac0d879ed12fd6bd7c6601ef436d2",
+      eventualPublicCommit: "f869d952de28af281f1d423a624a13dbb6f2c1d4",
+      eventualPublicTree: "9ec9c7545c9cc285f5c7ee5e682df0188683c0d9",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
-        requiredTree: "8fd560893daac0d879ed12fd6bd7c6601ef436d2",
+        requiredCommit: "f869d952de28af281f1d423a624a13dbb6f2c1d4",
+        requiredTree: "9ec9c7545c9cc285f5c7ee5e682df0188683c0d9",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -3618,7 +3720,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "d4ea0866b2d7517e126db2a409985294e847044a",
+      "f869d952de28af281f1d423a624a13dbb6f2c1d4",
     );
 
     const lesson = curriculum
@@ -4266,7 +4368,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"d4ea0866b2d7517e126db2a409985294e847044a");
+    expect(mapping).toContain("sourceCommit\":\"f869d952de28af281f1d423a624a13dbb6f2c1d4");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family flags remain false");

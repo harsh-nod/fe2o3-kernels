@@ -1,15 +1,142 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { CodeTabs } from "../src/components/CodeTabs";
+import { DebuggerWorkbench } from "../src/components/DebuggerWorkbench";
 import { FunctionalCorrectnessPanel } from "../src/components/FunctionalCorrectnessPanel";
 import { LessonSections } from "../src/components/LessonSections";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
+import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
 import type { LessonSection } from "../src/content/model";
 import { narrativeEntry } from "../src/content/narrative-registry";
 import { stagedEvidenceRecord } from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
 import { searchCatalog } from "../src/lib/search";
+
+describe("semantic debugger workbench", () => {
+  it("links hierarchy, timeline, semantic state, and replay controls", async () => {
+    const user = userEvent.setup();
+    const unavailableSource = debuggerWorkbenchFixture.events.find(
+      (event) => event.site.source.availability === "unavailable",
+    )!;
+    const unavailableValue = debuggerWorkbenchFixture.limitations.find(
+      (limitation) => limitation.capability === "register_values",
+    )!;
+    const sourceReason =
+      unavailableSource.site.source.availability === "unavailable"
+        ? unavailableSource.site.source.reason
+        : "";
+    const valueReason = unavailableValue.reason;
+    const memoryEventIndex = debuggerWorkbenchFixture.events.findIndex(
+      (event) => event.memory.length > 0,
+    );
+    const memoryEvent = debuggerWorkbenchFixture.events[memoryEventIndex];
+    render(<DebuggerWorkbench fixture={debuggerWorkbenchFixture} />);
+
+    expect(screen.getByText("Simulated semantic observation")).toBeInTheDocument();
+    expect(screen.getByText("logical only")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Lane 32 inactive" })).toBeDisabled();
+    expect(screen.getByText(sourceReason)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(valueReason, "u"))).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("button", { name: new RegExp(memoryEvent.label, "u") }),
+    );
+    expect(
+      screen.getByText(
+        `block${memoryEvent.site.kir.block}:op${memoryEvent.site.kir.operation}:${memoryEvent.site.kir.point}`,
+      ),
+    ).toBeInTheDocument();
+
+    await user.click(
+      within(screen.getByRole("tablist", { name: "State inspector" })).getByRole(
+        "tab",
+        { name: "Memory" },
+      ),
+    );
+    expect(screen.getByText(memoryEvent.memory[0].bytes)).toBeInTheDocument();
+    expect(screen.getByText(`init ${memoryEvent.memory[0].initialized}`)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Reverse one semantic event" }));
+    expect(
+      screen.getByText(
+        `cursor ${debuggerWorkbenchFixture.events[memoryEventIndex - 1].cursor}/${debuggerWorkbenchFixture.events.at(-1)?.cursor}`,
+      ),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: "Logical wave" }));
+    expect(screen.getByRole("tab", { name: "Logical wave" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await user.click(screen.getByRole("button", { name: "Reset debug session" }));
+    expect(
+      screen.getByText(
+        `cursor ${debuggerWorkbenchFixture.events[0].cursor}/${debuggerWorkbenchFixture.events.at(-1)?.cursor}`,
+      ),
+    ).toBeInTheDocument();
+    const nextStop = debuggerWorkbenchFixture.events.findIndex(
+      (candidate, index) => index > 0 && candidate.stopped,
+    );
+    await user.click(screen.getByRole("button", { name: "Continue to next stop" }));
+    expect(
+      screen.getByText(
+        `cursor ${debuggerWorkbenchFixture.events[nextStop >= 0 ? nextStop : debuggerWorkbenchFixture.events.length - 1].cursor}/${debuggerWorkbenchFixture.events.at(-1)?.cursor}`,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("edits typed stop policy and emits correlated agent JSON", async () => {
+    const user = userEvent.setup();
+    const openSite = debuggerWorkbenchFixture.events.find(
+      (event) =>
+        !debuggerWorkbenchFixture.breakpoints.some(
+          (breakpoint) =>
+            breakpoint.block === event.site.kir.block &&
+            breakpoint.operation === event.site.kir.operation &&
+            breakpoint.point === event.site.kir.point,
+        ),
+    )!;
+    render(<DebuggerWorkbench fixture={debuggerWorkbenchFixture} />);
+
+    await user.click(
+      screen.getByRole("button", { name: new RegExp(openSite.label, "u") }),
+    );
+    await user.click(
+      screen.getByRole("button", { name: "Add breakpoint at current KIR site" }),
+    );
+    expect(screen.getByRole("button", { name: "Remove breakpoint 2" })).toBeInTheDocument();
+
+    await user.clear(screen.getByLabelText("Offset"));
+    await user.type(screen.getByLabelText("Offset"), "8");
+    await user.clear(screen.getByLabelText("Bytes"));
+    await user.type(screen.getByLabelText("Bytes"), "8");
+    await user.click(screen.getByRole("button", { name: "Add allocation watchpoint" }));
+    expect(screen.getByRole("button", { name: "Remove watchpoint 2" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: "Events" }));
+    const request = JSON.parse(screen.getByTestId("debug-agent-request").textContent ?? "{}");
+    const response = JSON.parse(screen.getByTestId("debug-agent-response").textContent ?? "{}");
+    expect(request).toMatchObject({
+      schema: "fe2o3-debug-request-v1",
+      operation: "query_events",
+      expected_revision: debuggerWorkbenchFixture.session.revision,
+    });
+    expect(request).toEqual(debuggerWorkbenchFixture.agent_pairs.events.request);
+    expect(response).toMatchObject({
+      schema: "fe2o3-debug-response-v1",
+      status: "ok",
+      operation: "query_events",
+      result: { result: "events" },
+      session: {
+        simulated: true,
+        hardware_observed: false,
+        performance_prediction: false,
+      },
+    });
+    expect(response).toEqual(debuggerWorkbenchFixture.agent_pairs.events.response);
+  });
+});
 
 describe("code tabs", () => {
   it("switches with arrow keys and copies the active source", async () => {
