@@ -36,12 +36,14 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The checked-in publication gate is pinned to public-main implementation commit
-`af0fd523e3b774377a9c5192cf0511e34fa19735`, tree
-`37ec6083aba26f3057bb21f3a51c619c17bceb49`. Deployment requires
+The checked-in publication gate is pinned to immutable implementation-evidence
+commit `2bee84b2201c5d51a0096ae192e269fa675d9c94`, tree
+`666de49cbbcf4690894368defd2f3f3617f69e6c`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
-`powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
-both refs match, the live publication gate fails closed.
+`powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
+commit object to resolve to the exact pinned tree. Either ref may advance to a
+descendant; the gate does not present the evidence commit as the current head.
+Missing ancestry, a rewritten commit, or a different tree fails closed.
 
 This snapshot contains safe Rust dynamic GEMM, row-softmax, attention, and
 grouped-expert MoE tutorial kernels. Their pinned historical qualification
@@ -1018,7 +1020,8 @@ The documentation app contains 21 lessons across nine modules:
 
 0. Evidence orientation and an MI300X/gfx942 setup.
 1. Fill, typed vector addition, indexing, `DisjointSlice`, launch shape, and
-   standalone exact-KIR V7 CPU semantic simulation without a GPU runtime.
+   ordinary-Rust-to-`.fe2sim` CPU semantic simulation, persisted replay, and
+   compiler-bundle-bound source debugging without a GPU runtime.
 2. Verus contracts, negative tests, overflow freedom, initialization, and
    injective writes.
 3. Bounded reduction/scan semantics, wave64, barriers, atomics, and LDS.
@@ -1033,8 +1036,8 @@ The documentation app contains 21 lessons across nine modules:
 8. Exercises and the contribution evidence packet for a new kernel.
 
 The first screen is the tutorial workbench: desktop curriculum tree or mobile
-drawer, lesson progress, evidence labels, four code tabs, exercises, glossary,
-search, architecture view, and light/dark themes.
+drawer, lesson progress, evidence labels, code and exact-protocol tabs,
+exercises, glossary, search, architecture view, and light/dark themes.
 
 ## Local development
 

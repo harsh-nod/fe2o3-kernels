@@ -366,7 +366,7 @@ describe("lesson section rendering policy", () => {
     for (const heading of [
       "From safe Rust to checked Kernel IR",
       "One production path, with explicit proof boundaries",
-      "Debug exact V7 without upgrading observation into proof",
+      "Debug the verified bundle without upgrading observation into proof",
       "What is complete today",
     ]) {
       expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();

@@ -13,8 +13,9 @@ export function ArchitecturePage() {
         <p className="lesson-breadcrumb">Reference / architecture</p>
         <h1>Evidence pipeline and authority boundaries</h1>
         <p>
-          The published compiler baseline and immutable historical lesson evidence
-          are shown separately. Neither status is inferred from the other.
+          The immutable published compiler evidence baseline and historical lesson
+          evidence are shown separately. Public main may point to a descendant of
+          the evidence commit; neither status is inferred from the other.
         </p>
       </header>
 
@@ -28,7 +29,7 @@ export function ArchitecturePage() {
             ["rustc", "Enforces Rust moves, borrows, lifetimes, visibility, local typestate, and Result control flow."],
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
-            ["Historical V7 simulator", "Retains bounded observation tooling for an already verified KIR subset; it is not a current source compiler, GPU execution, or proof."],
+            ["V7 simulator", "Consumes either exact KIR or an authority-free bundle exported through the sole production compiler transaction. It runs the supported subset with legal integer atomics and fences plus exact software F16/BF16/F32/F64 scalar bits on a bounded deterministic CPU schedule; it is not an alternate compiler, GPU execution, timing, performance prediction, or proof."],
             ["Compiler analyses", "Run the fixed eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. Only the admitted static bounded-access fragment has Complete independent raw replay; nonempty tensor flow and every other current stage witness remain Incomplete."],
             ["Target preflight", "Before target-aware verification scans launch facts, a bounded structural inventory accounts the closed ranked function and contains malformed input or verifier failure as FE2O3-TARGET-000."],
             ["Middle-end evidence", "ProductionMiddleEndEvidenceV5 is the sole live producer for the eight stages. The V4 decoder is archival-only, and the caller-declared V1 refinement API has been removed."],

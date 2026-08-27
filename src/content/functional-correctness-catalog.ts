@@ -93,22 +93,23 @@ export const functionalCorrectnessCatalog = deepFreeze([
   },
   {
     lessonId: "cpu-semantic-simulation",
-    kernel: "Exact KIR V7 fill fixture",
+    kernel: "Compiler-exported barrier-before-access bundle",
     referenceSourcePath: "examples/verus_vecadd/src/reference.rs",
     referenceContract:
-      "The independent safe fill reference states the repeated-value oracle shape; it is not associated with the exact KIR fixture and is not exact u32 source-refinement evidence.",
+      "The independent safe reference illustrates a sequential oracle shape; it is not a proved functional reference for the compiler-exported barrier kernel.",
     admittedMirSubset:
-      "Admission begins at exact verified canonical KIR V7 for a bounded scalar profile; the standalone CLI accepts no Rust source or MIR and proves no reference equivalence.",
+      "fe2o3-export-sim accepts ordinary attributed Rust through the sole production semantic MIR, ranked PLIRON, and target-neutral KIR stages, then publishes one authority-free bundle. The embedded map binds exact source locations to exact KIR content but does not authenticate compiler execution or prove reference equivalence.",
     outputRelations: ["pointwise"],
     scheduleRelations: ["pointwise"],
-    numericalPolicy: "Exact u32 bit-vector assignment.",
+    numericalPolicy:
+      "The observed f32 store is represented by exact software bits. This finite simulation does not prove target IEEE values or compiler arithmetic refinement.",
     hierarchyCoverage:
-      "Only the deterministic serial simulator schedule is observed. GPU wave, workgroup, grid, and machine schedules are not established.",
+      "The exact bounded runnable-invocation schedule is persisted and replayed. GPU wave, workgroup, queue, compute-unit, and machine schedules are not established or predicted.",
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "observation-only",
     boundary:
-      "Simulation is bounded host execution and debugging evidence, not source-to-KIR refinement, race-freedom proof, GPU execution, translation validation, timing, profiling, or performance evidence.",
+      "Simulation and compiler-bundle-bound debugging are bounded host observations, not protected compiler authentication, source-to-KIR refinement, race-freedom proof, GPU execution, translation validation, timing, profiling, performance prediction, or performance evidence.",
   },
   {
     lessonId: "reductions-scans",

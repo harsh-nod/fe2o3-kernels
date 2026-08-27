@@ -30,6 +30,13 @@ import { functionalCorrectnessCatalog } from "../src/content/functional-correctn
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
 import {
+  SOURCE_DEBUGGER_REQUESTS_SHA256,
+  SOURCE_DEBUGGER_RESPONSES_SHA256,
+  sourceDebuggerRequests,
+  sourceDebuggerResponses,
+  validateSourceDebuggerMilestone,
+} from "../src/content/source-debugger-milestone";
+import {
   developmentCheckpointIds,
   developmentCheckpoints,
   developmentCheckpointDetail,
@@ -173,10 +180,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d",
+      "2bee84b2201c5d51a0096ae192e269fa675d9c94",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "d81db8f59ebfe7d36e716d214b8f49d7dedf5ebc",
+      "666de49cbbcf4690894368defd2f3f3617f69e6c",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -1044,54 +1051,89 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("keeps standalone CPU semantic simulation exact and non-hardware", () => {
+  it("keeps source-to-bundle CPU simulation exact and non-hardware", () => {
     const lesson = lessons.find(
       (candidate) => candidate.id === "cpu-semantic-simulation",
     );
     expect(lesson).toBeDefined();
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
-      explanatory: true,
+      explanatory: false,
       sourceCommit: currentState.compilerCommit,
       sourcePath:
-        "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir",
+        "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
+      sourceDigestScope: "displayed",
     });
     expect(kernel?.code).toBe(
-      readFileSync("examples/cpu_simulation_kir_v7.txt", "utf8"),
+      readFileSync("examples/cpu_simulation_source.rs", "utf8"),
     );
-    expect(kernel?.code).toContain(
-      "e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384",
-    );
-    expect(kernel?.code).toContain("canonical bytes: 245");
-    expect(kernel?.code).toContain("no Rust-source-to-KIR association");
+    expect(kernel?.code).toContain("pub fn barrier_before_access");
+    expect(kernel?.code).toContain("syncthreads();");
     const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code ?? "";
     expect(host).toContain(
-      readFileSync("examples/cpu_simulation_request.json", "utf8").trim(),
+      readFileSync("examples/source_simulation_request.json", "utf8").trim(),
     );
-    expect(host).toContain("cargo build --locked -p fe2o3-kir-sim-cli");
-    expect(host).toContain("./target/debug/fe2o3-kir-sim --kir-v7");
-    expect(host).not.toContain("cargo fe2o3 simulate --request");
+    expect(host).toContain("fe2o3-export-sim --crate");
+    expect(host).toContain("fe2o3-kir-sim --bundle");
+    expect(host).toContain("--record-canonical-schedule");
+    expect(host).toContain("--replay-schedule");
+    expect(host).toContain("fe2o3-debug sim --bundle");
+    expect(host).not.toContain("--kir-v7");
+    const sourceDebug =
+      lesson?.tabs.find((tab) => tab.kind === "comparison")?.code ?? "";
+    expect(sourceDebug).toContain(
+      readFileSync("examples/source_debugger_requests_v1.jsonl", "utf8").trim(),
+    );
+    expect(sourceDebug).toContain(
+      readFileSync("examples/source_debugger_responses_v1.jsonl", "utf8").trim(),
+    );
+    expect(validateSourceDebuggerMilestone()).toEqual([]);
+    expect(sourceDebuggerRequests).toHaveLength(5);
+    expect(sourceDebuggerResponses).toHaveLength(5);
+    expect(
+      createHash("sha256")
+        .update(readFileSync("examples/source_debugger_requests_v1.jsonl"))
+        .digest("hex"),
+    ).toBe(SOURCE_DEBUGGER_REQUESTS_SHA256);
+    expect(
+      createHash("sha256")
+        .update(readFileSync("examples/source_debugger_responses_v1.jsonl"))
+        .digest("hex"),
+    ).toBe(SOURCE_DEBUGGER_RESPONSES_SHA256);
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    expect(result).toBe(
-      readFileSync("examples/cpu_simulation_result.json", "utf8"),
+    const simulationResult = JSON.parse(
+      readFileSync("examples/source_simulation_result.json", "utf8"),
+    ) as Record<string, unknown>;
+    const persistedSchedule = JSON.parse(
+      readFileSync("examples/source_simulation_schedule_v1.json", "utf8"),
+    ) as Record<string, unknown>;
+    expect(result).toContain(
+      readFileSync("examples/source_simulation_result.json", "utf8").trim(),
     );
-    for (const boundary of [
-      '"authority":"observation_only"',
-      '"simulated":true',
-      '"hardware_observed":false',
-      '"hardware_validation":false',
-      '"performance_prediction":false',
-    ]) {
-      expect(result).toContain(boundary);
-    }
-    expect(result).toContain('"canonical_bytes":245');
-    expect(result).toContain('"invocations_executed":4');
-    expect(result).toContain('"workgroups_visited":1');
-    expect(result).toContain('"scheduled_slots_visited":64');
-    expect(result).toContain('"steps_executed":20');
-    expect(result).toContain('"status":"no_conflicts_observed"');
-    expect(result).toContain('"identity":"workgroup_major_local_zyx_cooperative_v1"');
-    expect(result).toContain("0x11000000110000001100000011000000");
+    expect(result).toContain(
+      readFileSync("examples/source_simulation_schedule_v1.json", "utf8").trim(),
+    );
+    expect(simulationResult).toMatchObject({
+      authority: "observation_only",
+      simulated: true,
+      hardware_observed: false,
+      hardware_validation: false,
+      performance_prediction: false,
+      kir: { canonical_bytes: 1187 },
+      counts: {
+        workgroups_visited: 1,
+        scheduled_slots_visited: 64,
+        steps_executed: 43,
+      },
+      schedule: {
+        coverage: { decisions: 2, barrier_releases: 1, complete: true },
+      },
+    });
+    expect(persistedSchedule).toMatchObject({
+      schema: "fe2o3-simulation-schedule-v1",
+      artifact: { kind: "simulation_bundle_v1" },
+      coverage: { decisions: 2, barrier_releases: 1, complete: true },
+    });
     expect(lesson?.claims[0]).toMatchObject({
       kind: "runnable-now",
       reference: {
@@ -1107,23 +1149,31 @@ describe("curriculum integrity", () => {
       tree: currentState.compilerTree,
       target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
     });
-    expect(reference?.note).toContain("No source-to-KIR association");
+    expect(reference?.note).toContain("not protected compiler-execution authentication");
     expect(reference?.sourcePaths).toEqual(
       expect.arrayContaining([
-        "crates/fe2o3-kir-sim/src/resident.rs",
-        "crates/fe2o3-kir-sim-trace/src/lib.rs",
-        "crates/fe2o3-semantic-query/src/lib.rs",
+        "docs/simulation-bundle-v1.md",
+        "docs/semantic-schedule-v1.md",
+        "crates/rustc-codegen-fe2o3/src/bin/fe2o3-export-sim.rs",
+        "crates/fe2o3-kir-sim/src/schedule.rs",
       ]),
     );
     const content = serializedLessonContent("cpu-semantic-simulation");
-    expect(content).toContain("accepts no Rust source");
-    expect(content).toContain("Legacy V6");
-    expect(content).toContain("private 0600 file");
-    expect(content).toContain("Current milestone: exact KIR V7 simulation");
+    expect(content).toContain("ordinary attributed Rust");
+    expect(content).toContain("compiler_bundle_bound");
+    expect(content).toContain("Bundle-bound is not compiler-authenticated");
+    expect(content).toContain("Persist the schedule, then replay it");
+    expect(content).toContain("source breakpoints");
+    expect(content).toContain("captured stacks");
+    expect(content).toContain("Pure-KFD hardware V2");
     expect(content).toContain("Wave32/Wave64");
     expect(content).toContain("gfx950 LDS transpose");
     expect(content).toContain("no source-to-KIR refinement");
     expect(content).toContain("performance prediction");
+    expect(content).toContain("ROCgdb remains the hardware-debugging substrate");
+    expect(content).toContain("rocprofv3 and compute viewer");
+    expect(content).toContain("Native HIP or Mojo workflow");
+    expect(content).toContain("broader superiority is not claimed");
 
     expect(currentState.issues).toEqual(
       expect.arrayContaining([
@@ -1135,7 +1185,7 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
       )?.detail,
-    ).toContain("tutorial workbench");
+    ).toContain("exact ordinary-Rust bundle transcript");
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
@@ -1145,12 +1195,12 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "cpu-semantic-simulation",
       )?.detail,
-    ).toContain("accepts no Rust source");
+    ).toContain("authority-free .fe2sim");
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "cpu-semantic-simulation",
       )?.detail,
-    ).toContain("no source-to-KIR refinement");
+    ).toContain("no source refinement");
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "compiler-analysis",
@@ -1288,7 +1338,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d",
+      sourceCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -1464,7 +1514,7 @@ describe("curriculum integrity", () => {
       "Canonical hashes are labels only",
     );
     expect(compilerNarrative).toContain(
-      "Debug exact V7 without upgrading observation into proof",
+      "Debug the verified bundle without upgrading observation into proof",
     );
     expect(compilerNarrative).not.toContain(
       "production registry contains zero transforming passes",
@@ -1607,7 +1657,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d",
+      sourceCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -2748,12 +2798,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-08-27",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d",
-      eventualPublicTree: "d81db8f59ebfe7d36e716d214b8f49d7dedf5ebc",
+      eventualPublicCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
+      eventualPublicTree: "666de49cbbcf4690894368defd2f3f3617f69e6c",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d",
-        requiredTree: "d81db8f59ebfe7d36e716d214b8f49d7dedf5ebc",
+        requiredCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
+        requiredTree: "666de49cbbcf4690894368defd2f3f3617f69e6c",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -3389,7 +3439,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d",
+      "2bee84b2201c5d51a0096ae192e269fa675d9c94",
     );
 
     const lesson = curriculum
@@ -4044,7 +4094,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d");
+    expect(mapping).toContain("sourceCommit\":\"2bee84b2201c5d51a0096ae192e269fa675d9c94");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family routes are retired");

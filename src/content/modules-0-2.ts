@@ -2,9 +2,10 @@ import { narrativeSection } from "./narrative-registry";
 import { currentState } from "./current-state";
 import { semanticMilestoneLessonBoundary } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
-import cpuSimulationKir from "../../examples/cpu_simulation_kir_v7.txt?raw";
-import cpuSimulationRequest from "../../examples/cpu_simulation_request.json?raw";
-import cpuSimulationResult from "../../examples/cpu_simulation_result.json?raw";
+import cpuSimulationSource from "../../examples/cpu_simulation_source.rs?raw";
+import sourceSimulationRequest from "../../examples/source_simulation_request.json?raw";
+import sourceSimulationResult from "../../examples/source_simulation_result.json?raw";
+import sourceSimulationSchedule from "../../examples/source_simulation_schedule_v1.json?raw";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
@@ -25,6 +26,10 @@ import {
   noProof,
   resultText,
 } from "./shared";
+import {
+  sourceDebuggerRequestsJsonl,
+  sourceDebuggerTranscript,
+} from "./source-debugger-milestone";
 
 const genericCommand = "scripts/ci-local.sh generic";
 const rocmCompileCommand =
@@ -36,11 +41,17 @@ const vecaddRunCommand =
 const verusCommand =
   "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
 const cpuSimulationBuildCommand =
-  "cargo build --locked -p fe2o3-kir-sim-cli --bin fe2o3-kir-sim";
+  "cargo build --locked -p rustc-codegen-fe2o3 --bin fe2o3-export-sim --bin fe2o3-rustc-extract -p fe2o3-kir-sim-cli --bin fe2o3-kir-sim -p fe2o3-debug-cli --bin fe2o3-debug";
+const cpuSimulationExportCommand =
+  "./target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output \"$PWD/barrier-before-access.fe2sim\" --target gfx942 --target-dir target/tutorial-sim-export -- --package fe2o3-production-ranked-bounds-fixture --features barrier_before_access --lib";
 const cpuSimulationCommand =
-  "./target/debug/fe2o3-kir-sim --kir-v7 crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir --request crates/fe2o3-kir-sim-cli/tutorial/fill-v1/request.json";
+  "./target/debug/fe2o3-kir-sim --bundle \"$PWD/barrier-before-access.fe2sim\" --request \"$PWD/barrier-before-access-request.json\" --record-canonical-schedule \"$PWD/barrier-before-access-schedule.json\"";
+const cpuSimulationReplayCommand =
+  "./target/debug/fe2o3-kir-sim --bundle \"$PWD/barrier-before-access.fe2sim\" --request \"$PWD/barrier-before-access-request.json\" --replay-schedule \"$PWD/barrier-before-access-schedule.json\"";
+const cpuDebuggerCommand =
+  "./target/debug/fe2o3-debug sim --bundle \"$PWD/barrier-before-access.fe2sim\" --request \"$PWD/barrier-before-access-request.json\" --protocol jsonl --wave-width 64";
 const cpuSimulationTestCommand =
-  "cargo test --locked -p fe2o3-kir-sim-cli --test tutorial_fixture";
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_kernel_source_exports_one_verified_authority_free_simulation_bundle -- --ignored --exact";
 
 const orientation: Lesson = {
   id: "read-the-evidence",
@@ -392,44 +403,50 @@ const cpuSimulation: Lesson = {
   id: "cpu-semantic-simulation",
   module: 1,
   order: 2,
-  title: "Execute exact KIR without a GPU",
+  title: "Export and debug Rust without a GPU",
   summary:
-    "Run a pinned canonical Kernel IR V7 fixture through the standalone bounded CPU semantic executor.",
-  duration: "24 min",
-  prerequisites: ["Kernel IR evidence boundaries", "JSON request files"],
+    "Export an ordinary attributed Rust kernel once, then simulate, replay, and source-debug its authority-free bundle on a CPU.",
+  duration: "34 min",
+  prerequisites: ["Kernel IR evidence boundaries", "JSON and JSONL request files"],
   objectives: [
-    "Run fe2o3-kir-sim on an exact canonical KIR V7 file without a GPU runtime.",
-    "Trace secure file admission, KIR verification, preflight, formal memory, and deterministic execution.",
-    "Separate a simulated observation from source refinement, hardware validation, and performance evidence.",
+    "Export an ordinary #[kernel] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
+    "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
+    "Resolve source, stop at a source breakpoint, inspect a captured call stack, and step by source through the agent JSONL protocol.",
+    "Separate bundle-bound source association from protected compiler authentication, hardware validation, and performance evidence.",
   ],
   claims: [
     {
       kind: "runnable-now",
-      label: "Standalone exact-KIR CPU execution",
+      label: "Source-to-bundle CPU simulation and semantic debugging",
       detail:
-        "The Linux-only fe2o3-kir-sim command securely admits an exact verified canonical KIR V7 file and strict request, then executes the supported program in bounded deterministic CPU semantics. The versioned fill fixture pins a 245-byte KIR identity and complete result. This path accepts no Rust source and grants no source-refinement, proof, GPU-equivalence, timing, performance, or performance-prediction authority.",
+        "The Linux-only fe2o3-export-sim command sends ordinary attributed Rust through the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages, then publishes one authority-free .fe2sim. fe2o3-kir-sim consumes its embedded exact KIR V7 directly, persists and replays a strict bounded schedule, and fe2o3-debug uses its compiler-bundle-bound map for source resolution, source breakpoints, captured stacks, and source stepping. Bundle binding authenticates exact local content, not protected compiler execution, and grants no proof, artifact, compiler, hardware, load, launch, timing, profiling, or performance-prediction authority.",
       reference: currentImplementationReference(
         [
           cpuSimulationBuildCommand,
+          cpuSimulationExportCommand,
           cpuSimulationCommand,
+          cpuSimulationReplayCommand,
+          cpuDebuggerCommand,
           cpuSimulationTestCommand,
         ],
         [
-          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir",
-          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/request.json",
-          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/expected-result.json",
-          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/README.md",
-          "crates/fe2o3-kir-sim-cli/tests/tutorial_fixture.rs",
+          "docs/simulation-bundle-v1.md",
+          "docs/semantic-schedule-v1.md",
+          "crates/rustc-codegen-fe2o3/src/bin/fe2o3-export-sim.rs",
+          "crates/rustc-codegen-fe2o3/src/production_rustc_driver_v1.rs",
+          "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+          "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
           "crates/fe2o3-kir-sim-cli/src/linux.rs",
           "crates/fe2o3-kir-sim/src/preflight.rs",
           "crates/fe2o3-kir-sim/src/execute.rs",
-          "crates/fe2o3-kir-sim/src/resident.rs",
-          "crates/fe2o3-kir-sim-trace/src/lib.rs",
-          "crates/fe2o3-semantic-query/src/lib.rs",
+          "crates/fe2o3-kir-sim/src/schedule.rs",
+          "crates/fe2o3-kir-sim/tests/float_core.rs",
+          "crates/fe2o3-debug-cli/src/lib.rs",
+          "crates/fe2o3-debug-cli/tests/bundle_v1.rs",
         ],
         {
           target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
-          note: "Observation-only execution of an exact KIR V7 input. No source-to-KIR association, GPU/device-runtime use, hardware validation, timing, or performance prediction is claimed.",
+          note: "Observation-only execution of exact bundle content with compiler-bundle-bound source locations. This is not protected compiler-execution authentication, source-to-KIR refinement, GPU/device-runtime use, hardware validation, timing, or performance prediction.",
         },
       ),
     },
@@ -439,17 +456,26 @@ const cpuSimulation: Lesson = {
     narrativeSection("cpu-semantic-simulation/evidence-boundary"),
     narrativeSection("cpu-semantic-simulation/testing-is-not-proof"),
   ],
-  tabs: completeReferenceTabs(
+  tabs: [
     {
-      language: "text",
-      code: cpuSimulationKir,
-      sourcePath: "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir",
+      kind: "kernel",
+      label: "Kernel",
+      language: "rust",
+      code: cpuSimulationSource,
+      sourcePath:
+        "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceCommit: currentState.compilerCommit,
-      explanatory: true,
+      sourceSha256:
+        "49cb3a97f822e4b00cb3dafd7ee2fde81f12e9e2419d86d111f1f528e740fd67",
+      sourceDigestScope: "displayed",
+      sourceFragments: [cpuSimulationSource],
+      explanatory: false,
       notice:
-        "Exact binary KIR V7 input. The manifest is readable metadata; the standalone command consumes the pinned 245-byte file linked above.",
+        "Exact excerpt from the ordinary attributed Rust crate used by the pinned source-to-bundle production regression.",
     },
     {
+      kind: "reference",
+      label: "Safe CPU reference",
       language: "rust",
       code: safeCpuReferences,
       sourcePath: "examples/verus_vecadd/src/reference.rs",
@@ -458,9 +484,11 @@ const cpuSimulation: Lesson = {
         "5fd27aaa8e84786e83438ac7c0800a599c41704286131599dab2bb8a21b8c989",
       explanatory: false,
       notice:
-        "This independent fill reference illustrates the repeated-value oracle shape. It is not associated with the exact KIR fixture and establishes no source refinement.",
+        "This independent fill reference illustrates the repeated-value oracle shape. It is not associated with the compiler-exported bundle and establishes no source refinement.",
     },
     {
+      kind: "verus",
+      label: "Verus proof",
       language: "rust",
       code: referenceRefinementProof,
       sourcePath: "examples/verus_vecadd/verus/reference_refinement_v1.rs",
@@ -469,40 +497,60 @@ const cpuSimulation: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This reusable source-model theorem records a later proof obligation. It is not applied to the fixture and grants no source-to-KIR, compiler, or GPU refinement authority.",
+        "This reusable source-model theorem records a later proof obligation. It is not applied to the compiler-exported bundle and grants no source-to-KIR, compiler, or GPU refinement authority.",
     },
     {
+      kind: "host",
+      label: "Host",
       language: "bash",
-      code: `# Build the standalone Linux CLI. This is not cargo fe2o3 simulate.
+      code: `# Build the exporter and its sibling extraction compiler, simulator, and debugger.
 ${cpuSimulationBuildCommand}
 
-# Inspect the strict request paired with the exact KIR V7 fixture.
-REQUEST='${cpuSimulationRequest.trim()}'
-printf '%s\\n' "$REQUEST"
+# Export ordinary attributed Rust through the sole production lowering.
+${cpuSimulationExportCommand}
 
-# Execute the exact fixture and emit result JSON on stdout.
-${cpuSimulationCommand}`,
+# Publish the strict request used by the integration regression.
+REQUEST='${sourceSimulationRequest.trim()}'
+printf '%s\\n' "$REQUEST" > barrier-before-access-request.json
+
+# Record, then replay, the exact bounded semantic schedule.
+${cpuSimulationCommand}
+${cpuSimulationReplayCommand}
+
+# Run the source debugger against the map embedded in the same bundle.
+DEBUG_REQUESTS='${sourceDebuggerRequestsJsonl.trim()}'
+printf '%s\\n' "$DEBUG_REQUESTS" | ${cpuDebuggerCommand}`,
     },
     {
+      kind: "comparison",
+      label: "Source debug JSONL",
       language: "text",
-      code: cpuSimulationResult,
-      sourcePath:
-        "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/expected-result.json",
-      sourceCommit: currentState.compilerCommit,
-      sourceSha256:
-        "bd1acc8327b3c47f15ed0de69e990c5177c75bff54e958e458ec1789baf8f2a8",
-      explanatory: false,
+      code: sourceDebuggerTranscript,
+      explanatory: true,
       notice:
-        "Complete deterministic stdout for the exact versioned fixture; all negative authority fields are part of the result schema.",
+        "Exact checked-in request/response transcript captured by the pinned ordinary-Rust production integration test. Source provenance is compiler_bundle_bound, not compiler-execution authenticated.",
     },
-  ),
+    {
+      kind: "result",
+      label: "Expected result",
+      language: "text",
+      code: `# fe2o3-simulation-result-v1
+${sourceSimulationResult.trimEnd()}
+
+# fe2o3-simulation-schedule-v1
+${sourceSimulationSchedule.trimEnd()}`,
+      explanatory: true,
+      notice:
+        "Exact checked-in simulator output and persisted schedule from the same compiler-produced .fe2sim bundle. Canonical record and replay produced byte-identical result JSON.",
+    },
+  ],
   diagram: "simulation",
   exercises: [
     {
-      prompt: "Change the fill value and predict the exact little-endian output bytes.",
-      hint: "Four live logical invocations write the u32 elements inside one authenticated WG64; the other 60 scheduled slots are inactive padding.",
+      prompt: "Record a seeded schedule, replay it, and identify every identity that rejects substitution.",
+      hint: "Inspect the artifact, request, target, limits, context, transcript, record, coverage, and decision fields in the persisted document.",
       acceptance:
-        "The answer derives four repeated four-byte values and does not make a GPU timing or hardware-equivalence claim.",
+        "The answer explains why replay binds exact semantic custody while making no GPU scheduling, timing, or performance claim.",
     },
   ],
   glossary: [

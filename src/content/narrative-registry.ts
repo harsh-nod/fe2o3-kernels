@@ -230,7 +230,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit 03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d and tree d81db8f59ebfe7d36e716d214b8f49d7dedf5ebc. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit 2bee84b2201c5d51a0096ae192e269fa675d9c94 and tree 666de49cbbcf4690894368defd2f3f3617f69e6c. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -385,11 +385,11 @@ const narrativeRegistry = deepFreeze({
   },
   "cpu-semantic-simulation/pipeline": {
     "sectionId": "pipeline",
-    "title": "Execute an exact semantic input",
+    "title": "Keep one production lowering",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "fe2o3-kir-sim begins at an exact canonical Kernel IR V7 file, not Rust source or Cargo compiler orchestration. The standalone Linux command securely reads the KIR and strict request, verifies and preflights the supported program, constructs typed formal memory, and runs a bounded deterministic CPU schedule. The versioned fill fixture makes every input and output byte reproducible without creating a second source compiler path."
+        "text": "fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Extraction consumes that transaction immediately after exact KIR verification and publishes one private .fe2sim; it does not add a second importer or lowerer and never falls back from a hardware launch. fe2o3-kir-sim and fe2o3-debug then consume the exact embedded KIR and compiler-bound debug map without recompiling."
       },
       {
         "type": "table",
@@ -400,33 +400,33 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           [
-            "Linux file admission",
-            "One exact 245-byte KIR V7 file and one strict bounded JSON request, both opened as stable regular files.",
-            "Symlinks, special files, oversized inputs, mutable reads, duplicate fields, and unknown fields fail closed."
+            "Production extraction",
+            "Ordinary #[kernel] Rust, live rustc spans, semantic MIR ownership, ranked generic checks, and the same-session target-neutral KIR lowering.",
+            "Unsupported source, checks, KIR V7 projection, multiple bodies, or source-map function identity fail before publication."
           ],
           [
-            "KIR V7 verification and preflight",
-            "Typed control flow, integer values, launch queries, calls, memory operations, and resource bounds in the canonical versioned representation.",
-            "Legacy V6, malformed KIR, unsupported operations, and over-budget programs fail before execution effects."
+            ".fe2sim admission",
+            "One content-addressed bundle with exact extraction identities, target, KIR V8/V7 identities, kernel ABI, and optional bounded source map, plus one strict request.",
+            "Symlinks, special files, mutation, oversize, duplicate or unknown fields, stale subjects, stale KIR, and map substitution fail closed."
           ],
           [
-            "Formal memory to CPU execution",
-            "Virtual allocations retain element type, extent, alignment, access, initialization, and provenance.",
-            "The executor reports typed faults without dereferencing device addresses as host pointers."
+            "Semantic execution and replay",
+            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, and a bounded runnable-invocation decision record.",
+            "Unsupported operations, unavailable decisions, changed request or artifact custody, transcript drift, and every resource-limit violation fail before replay is accepted."
           ]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Scope the no-hardware claim",
-        "text": "The standalone simulator links and initializes no HSA, HIP, KFD, ROCm, or GPU runtime and performs no GPU enumeration. The ordinary Cargo build used to produce the CLI remains trusted host activity outside that runtime claim. hardware_observed: false describes the simulator result; it is not an attestation about every process on the host."
+        "title": "Bundle-bound is not compiler-authenticated",
+        "text": "compiler_bundle_bound means the exact source map is committed to the verified bundle subject and canonical KIR identity. The extraction bundle explicitly records compiler_execution_binding=extraction_only_unavailable and authenticates_compiler_execution=false. It grants no proof, artifact, compiler, hardware, load, or launch authority; display paths are inert labels and source files are not reopened."
       },
       {
         "type": "callout",
         "tone": "info",
-        "title": "Secure deterministic output",
-        "text": "Success can stream as bounded JSON on stdout. With --output, the CLI publishes a new private 0600 file through a pinned no-symlink parent, fsyncs the file and directory, and never replaces an existing name. The result binds the target profile, KIR identity and length, schedule, counts, conflict observation, and typed argument state."
+        "title": "Persist the schedule, then replay it",
+        "text": "The canonical or seeded schedule document binds exact KIR and bundle custody, request bytes, target, every simulator limit, context, transcript, coverage, seed, and each runnable local selection. Replay validates each decision against current semantic state. This makes the CPU counterexample reproducible; it neither describes nor predicts GPU wave, workgroup, queue, or compute-unit scheduling."
       }
     ]
   },
@@ -436,7 +436,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The V1 result binds KIR identity e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384 over exactly 245 canonical bytes. The request visits one fixed WG64 with four live logical invocations and 60 inactive scheduled slots. All four u32 elements become 17, encoded as four little-endian 0x11000000 values; the complete output also records 20 execution steps and no observed cross-invocation conflicts."
+        "text": "The checked-in production capture starts from barrier_before_access in an ordinary attributed Rust crate. Its bundle contains KIR identity 33d3bc2d6bdc307283bb148c726cd20ccbdd38ed78e265a1d96bad290a158edc over 1,187 canonical bytes. The request visits one WG64, crosses one barrier release, commits one f32 value as exact bits 0x3f800000, and records two runnable selections. Canonical record and replay produced byte-identical result JSON."
       },
       {
         "type": "table",
@@ -467,19 +467,74 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Observation begins at KIR",
-        "text": "The fixture's Rust KIR owner can reconstruct the canonical bytes for regression testing, but the result does not associate any attributed Rust kernel with those bytes. It grants no source-to-KIR refinement, compiler correctness, race-freedom proof, LLVM or ISA validation, artifact or launch authority, GPU equivalence, timing, profiling, or performance prediction."
+        "text": "The .fe2sim commits the compiler-emitted source map and exact KIR into one local content identity, so the debugger can associate source and KIR sites without reopening source files. The simulator's behavioral observation still begins at verified KIR: bundle association provides local source/KIR correlation but no source-to-KIR refinement, compiler-correctness proof, race-freedom proof, LLVM or ISA validation, GPU equivalence, timing, profiling, or performance prediction."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Debugger surface",
+          "Implemented now",
+          "Typed boundary"
+        ],
+        "rows": [
+          [
+            "CPU semantic session",
+            "Thread, logical Wave32/Wave64, workgroup and dispatch hierarchy; KIR/source breakpoints; allocation watchpoints; SSA and memory; captured stacks; source resolution and stepping; exact schedule replay.",
+            "Logical waves are visual partitions, not decoded hardware wavefronts. Raw-KIR sessions correctly report source as unavailable."
+          ],
+          [
+            "Pure-KFD hardware V2",
+            "ptrace/pidfd target ownership, redacted generation-aware device and queue snapshots, bounded runtime/exception events, suspend, resume and terminate over the existing linear KFD queue lifecycle.",
+            "Hardware wave/lane state, native registers, CWSR decoding, target memory, source/KIR stepping and hardware replay remain unavailable."
+          ],
+          [
+            "Agent contract",
+            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses.",
+            "Counter, PC-sample and ATT ingestion, capture comparison, automated diagnosis and profiler UI remain open work."
+          ]
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Workflow",
+          "What it is strongest at",
+          "How fe2o3 differs today"
+        ],
+        "rows": [
+          [
+            "fe2o3 semantic debugger",
+            "Deterministic no-GPU execution, exact schedule replay, logical thread/wave/workgroup hierarchy, compiler-bundle-bound source/KIR sites, allocation-relative state, and bounded evidence-linked JSONL.",
+            "The distinctive value is retained compiler semantics and agent-readable counterexamples. It has no native wave/register state or hardware performance evidence yet."
+          ],
+          [
+            "ROCgdb",
+            "Stopped physical GPU state, native wavefronts, registers, memory, source breakpoints, and target execution control where supported.",
+            "ROCgdb remains the hardware-debugging substrate. fe2o3 does not replace or infer its missing machine observations; future correlation should preserve both evidence origins."
+          ],
+          [
+            "rocprofv3 and compute viewer",
+            "Measured runtime traces, counters, PC samples, ATT/thread trace, ISA correlation, and performance timelines.",
+            "Those tools remain the profiling substrate. fe2o3's planned contribution is semantic attribution and agent queries; counter, PC-sample, and ATT ingestion are not implemented yet."
+          ],
+          [
+            "Native HIP or Mojo workflow",
+            "The language and vendor toolchain's supported compile, launch, debugger, and profiler path on physical hardware.",
+            "fe2o3 currently exposes source/KIR/schedule identities and deterministic CPU replay as first-class bounded records. Comparable toolchains can add similar metadata, so broader superiority is not claimed."
+          ]
+        ]
       },
       {
         "type": "callout",
         "tone": "info",
-        "title": "Current milestone: exact KIR V7 simulation",
-        "text": "The simulator covers bounded structured scalar control flow and internal calls, booleans and integers, D1-D3 launch queries, private memory, typed global memory with guarded loads, static scalar workgroup memory, and convergent workgroup barriers. Checked retained-capacity accounting bounds decoded KIR and execution state before effects. The trace adapter and query layer can organize semantic observations into logical workgroup, Wave32/Wave64, lane, operation-occurrence, memory, fault, provenance, and evidence pages; those wave views are logical and do not claim decoded GPU thread trace."
+        "title": "Current milestone: source, schedules, atomics, and exact scalar bits",
+        "text": "The simulator covers bounded structured scalar control flow and internal calls; booleans and fixed-width integers; D1-D3 launch queries; private, typed global, and static scalar workgroup memory; cooperative barriers; admitted integer atomic kinds, legal orderings and scopes; and explicit fence order points. F16, BF16, F32, and F64 constants, memory, arithmetic, comparisons, selects, casts, integer conversions, fused multiply-add, rounding, and BF16x2 use pinned software floating-point semantics and preserve exact bits rather than host floating arithmetic."
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Unsupported semantics fail closed",
-        "text": "Floating point, atomics and fences, wave and matrix operations, dynamic or non-scalar workgroup memory, gfx950 LDS transpose, external calls, memory intrinsics, inline assembly, schedule exploration, and a virtual host runtime fail closed or remain outside the claim. The retired source-first cargo fe2o3 simulate route is not an alternate path. No result establishes HSACO or ISA behavior, HSA, HIP, KFD, or ROCm execution, source equivalence, race freedom, timing, profiling, or performance prediction."
+        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, wave and matrix operations, dynamic or non-scalar workgroup memory, gfx950 LDS transpose, unresolved external calls, memory intrinsics, and inline assembly remain typed unsupported. Source-variable inspection is also typed unavailable because V1 maps sites rather than variable-to-SSA identity. V1 emits the final rustc call site rather than a macro expansion stack; synthetic KIR has no fabricated source; helper or multi-body maps fail until correspondence carries exact KIR function identity. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
       }
     ]
   },
@@ -717,33 +772,33 @@ const narrativeRegistry = deepFreeze({
   },
   "compiler-checks/v7-simulation": {
     "sectionId": "v7-simulation",
-    "title": "Debug exact V7 without upgrading observation into proof",
+    "title": "Debug the verified bundle without upgrading observation into proof",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The bounded deterministic CPU simulator consumes an exact VerifiedCanonicalKernelIrV7 owner. Its current subset executes integer and boolean scalar operations, structured control flow, internal calls, private and global buffers or views, ordinary or guarded scalar loads, and D1-D3 invocation identities. The standalone Linux boundary is fe2o3-kir-sim --kir-v7 kernel.kir --request request.json. Raw in-memory modules and older wire versions are not execution inputs."
+        "text": "fe2o3-export-sim extracts a content-addressed .fe2sim from the live production source-to-KIR transaction. fe2o3-kir-sim consumes that bundle directly, or an exact canonical KIR V7 file for a source-unavailable raw-KIR session. Both routes verify and preflight before bounded deterministic execution; neither authenticates compiler execution or grants proof, artifact, load, launch, or hardware authority."
       },
       {
         "type": "table",
         "headers": [
-          "V7 observation surface",
+          "Semantic observation surface",
           "Current behavior",
           "Boundary"
         ],
         "rows": [
-          ["Schedule", "Workgroups and local slots are created in canonical Z/Y/X order; live invocations advance cooperatively and yield at convergent workgroup barriers.", "This is deterministic CPU execution, not a GPU scheduler or progress model."],
+          ["Schedule and replay", "Canonical or seeded execution records every runnable local selection, binds the exact request, bundle or KIR custody, limits and target, then checks each decision during replay.", "This is deterministic CPU execution, not a GPU scheduler, timing model or performance prediction."],
           ["Guarded scalar load", "A false predicate returns the fallback without validating the pointer, touching memory, or emitting a read event.", "The simulator observes already-verified KIR behavior; it does not establish source-to-KIR refinement."],
           ["Memory conflicts", "The result contains a bounded byte-level cross-invocation global-memory conflict assessment.", "Clean is not a race-freedom proof; conflict and incomplete outcomes remain observations."],
-          ["Semantic trace V1", "A separate in-process adapter maps simulator events to bounded observation-only trace records.", "Trace KIR identity and site ordinals are untrusted claims until rebound to an independently owned exact V7 module."],
+          ["Source debugger", "A compiler-bound V1 map resolves KIR sites to source spans, breakpoints and captured frames; source and KIR stepping share the same deterministic session.", "Bundle-bound is not compiler-execution-authenticated, source files are not reopened, and source-variable inspection remains typed unavailable."],
           ["Workgroup cooperation", "Static scalar workgroup memory and convergent workgroup barriers model initialization, cross-lane publication, and one allocation per workgroup.", "Generic barriers, dynamic or non-scalar workgroup memory, and physical wave behavior are outside this profile."],
-          ["Unsupported operations", "Floating point, external calls, generic barriers, atomics, fences, dynamic or non-scalar workgroup memory, wave and matrix operations, memory intrinsics, and inline assembly are rejected.", "The current GEMM, softmax, attention, and MoE tutorial kernels cannot run in this simulator profile."]
+          ["Scalar semantics", "Booleans, fixed-width integers, legal integer atomics and fences, and exact software F16, BF16, F32 and F64 bits execute without host floating arithmetic.", "Unsupported scalar math, float atomics, wave and matrix operations, dynamic or non-scalar workgroup memory, unresolved external calls, memory intrinsics and inline assembly fail closed."]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "A debugger observation grants no execution authority",
-        "text": "Simulation results and semantic traces establish no race freedom, proof discharge, source-to-KIR or GPU equivalence, artifact identity, load or launch authority, timing, performance, or performance prediction. The CLI emits copied results and the conflict assessment. Semantic trace capture is a separate in-process adapter; the CLI does not silently promote a trace into verified evidence."
+        "text": "Simulation results, schedules, debug maps and transcripts establish no race freedom, proof discharge, source-to-KIR or GPU equivalence, artifact identity, load or launch authority, timing, profiling, performance, or performance prediction. The KFD-only hardware V2 surface independently exposes owned device, queue and event state plus suspend, resume and terminate; hardware wave/lane state, registers, CWSR, memory, source/KIR stepping and replay remain typed unavailable."
       }
     ]
   },
@@ -1813,11 +1868,11 @@ const narrativeRegistry = deepFreeze({
     title: "Use simulation as a counterexample tool",
     blocks: [
       milestoneCallout(
-        "CPU semantic simulation can expose counterexamples in an exact KIR program, but it cannot establish source association, universal coverage, arithmetic equivalence, race freedom, or GPU refinement. Those obligations remain separate and quantified over their declared domains.",
+        "CPU semantic simulation can expose counterexamples in exact bundle-bound KIR and relate observed sites to the bundle's compiler-emitted map, but it cannot authenticate compiler execution or establish source-to-KIR refinement, universal coverage, race freedom, or GPU refinement. Those obligations remain separate and quantified over their declared domains.",
       ),
       {
         type: "paragraph",
-        text: "Where an independent sequential oracle exists, run the same typed inputs through it and the exact KIR fixture. A mismatch blocks the candidate immediately. Matching finite cases improve confidence in the request, oracle, and fixture, but they do not prove that Rust source produced the KIR or discharge any universal compiler or Verus obligation.",
+        text: "Where an independent sequential oracle exists, run the same typed inputs through it and the exact bundle. A mismatch blocks the candidate immediately. Matching finite cases improve confidence in the request, oracle, bundle, and source map, but compiler-bundle binding alone does not prove protected compiler execution or discharge any universal compiler or Verus obligation.",
       },
     ],
   },

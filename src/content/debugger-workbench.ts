@@ -4,9 +4,9 @@ import requestsJsonl from "../../examples/debugger_requests_v1.jsonl?raw";
 export const DEBUGGER_WORKBENCH_SCHEMA =
   "fe2o3-debug-workbench-fixture-v1" as const;
 export const DEBUGGER_WORKBENCH_PROJECTION_SHA256 =
-  "750569b00d3339320afc4d04c5e62e00041a1d05f891838e4695c0d524fa3990" as const;
+  "43b6d186f2f0e7b93241ff53c95e8e933ffd48990efa2754acd21f86efd32a52" as const;
 export const DEBUGGER_RESPONSES_SHA256 =
-  "d779b816f636d3d31fd66aa5731b67a55f18f0932a91b7df67a0797582869cc6" as const;
+  "7283e69ea847b73d03df389afa315f015b2044119cf1a19ba72b7a3b5fdf7c18" as const;
 
 type Vec3 = [number, number, number];
 type JsonObject = Record<string, unknown>;
@@ -263,7 +263,7 @@ export const debuggerComparisonRows: DebuggerComparisonRow[] = [
   {
     surface: "Hierarchy and identity",
     fe2o3:
-      "Typed workgroup, logical-wave, lane, KIR-site, allocation, and event identities from one semantic session.",
+      "Typed workgroup, logical-wave, lane, KIR-site, allocation, and event identities from CPU semantic sessions; pure-KFD V2 adds redacted generation-aware hardware device and queue identities.",
     rocgdb:
       "Live AMD GPU debugging; ROCgdb documents each hardware wavefront as a debugger thread and exposes wave/lane IDs and register groups.",
     rocprof:
@@ -274,7 +274,7 @@ export const debuggerComparisonRows: DebuggerComparisonRow[] = [
   {
     surface: "Values and time",
     fe2o3:
-      "Deterministic replay links semantic events to captured SSA and allocation-relative memory; call-stack and native-register state remain explicitly unavailable in this CPU simulation capture.",
+      "Persisted deterministic replay links semantic events to captured SSA, allocation-relative memory, and paged call stacks. Native hardware registers remain explicitly unavailable.",
     rocgdb:
       "Live wave/lane state and GPU register inspection. This complements, rather than authenticates, a CPU semantic replay.",
     rocprof:
@@ -285,13 +285,24 @@ export const debuggerComparisonRows: DebuggerComparisonRow[] = [
   {
     surface: "Source and KIR",
     fe2o3:
-      "KIR sites remain usable without source; source is a typed unavailable value until an authenticated source map is bound.",
+      "Compiler-exported bundles bind rustc locations to exact KIR for source resolution, breakpoints, stepping, and stack sites. Raw KIR remains usable with source explicitly unavailable; bundle binding is not protected compiler authentication.",
     rocgdb:
       "Source and machine-debug information are native debugger inputs; ROCgdb is the appropriate surface for live hardware faults.",
     rocprof:
       "Thread trace and compute analysis focus on hardware execution, not KIR semantic state. ROCm 10.0 documentation labels ROCprof Compute Viewer early access.",
     mojo:
       "The documented command starts LLDB or cuda-gdb, so source support follows those backends and their current platform limits.",
+  },
+  {
+    surface: "Live hardware control",
+    fe2o3:
+      "Pure-KFD V2 owns a ptrace/pidfd target and exposes bounded runtime and exception events, device/queue snapshots, suspend, resume, and terminate. Wave, lane, register, CWSR, memory, source, and KIR control remain unavailable.",
+    rocgdb:
+      "Live AMD GPU debugging includes wavefront and lane selection, stepping, breakpoints, and register inspection on supported targets.",
+    rocprof:
+      "rocprofv3 captures hardware performance data and ATT instruction activity; it is a profiler rather than an interactive queue-control debugger.",
+    mojo:
+      "GPU control follows the selected underlying debugger and platform support rather than a Mojo-native hardware protocol.",
   },
   {
     surface: "Agent contract",

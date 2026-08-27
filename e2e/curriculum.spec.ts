@@ -94,20 +94,20 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
-test("standalone CPU semantic simulation keeps its evidence boundary visible", async ({
+test("source-to-bundle CPU simulation keeps its evidence boundary visible", async ({
   page,
 }, testInfo) => {
   await page.goto("./#/lesson/cpu-semantic-simulation");
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Execute exact KIR without a GPU",
+      name: "Export and debug Rust without a GPU",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Execute an exact semantic input",
+      name: "Keep one production lowering",
     }),
   ).toBeVisible();
   await expect(
@@ -116,48 +116,53 @@ test("standalone CPU semantic simulation keeps its evidence boundary visible", a
       name: "Read the result as an exact observation",
     }),
   ).toBeVisible();
-  await expect(page.getByText("performance_prediction: false")).toBeVisible();
   await expect(
-    page.getByText(/begins at an exact canonical Kernel IR V7 file/u),
+    page.getByText(/accepts an ordinary attributed Rust crate/u),
   ).toBeVisible();
   await expect(
-    page.getByText(/not Rust source or Cargo compiler orchestration/u),
+    page.getByText(/does not add a second importer or lowerer/u),
   ).toBeVisible();
   await expect(
-    page.getByText(/The fixture's Rust KIR owner can reconstruct/u),
+    page.getByText(/compiler_bundle_bound means the exact source map/u),
   ).toBeVisible();
   await expect(
-    page.getByLabel(
-      "Standalone CPU semantic simulation of one exact KIR V7 WG64",
-    ),
-  ).toContainText("60 inactive slots");
+    page.getByLabel("Attributed Rust to authority-free bundle and deterministic CPU replay"),
+  ).toContainText("0x3f800000");
   const codePanel = page.locator("#lesson-code-panel");
-  await expect(codePanel).toContainText("canonical bytes: 245");
-  await expect(codePanel).toContainText(
-    "e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384",
-  );
-  await expect(page.getByText(/Exact binary KIR V7 input/u)).toBeVisible();
+  await expect(codePanel).toContainText("pub fn barrier_before_access");
+  await expect(codePanel).toContainText("syncthreads");
+  await expect(page.getByText(/Exact excerpt from the ordinary attributed Rust crate/u)).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    /crates\/fe2o3-kir-sim-cli\/tutorial\/fill-v1\/kernel\.kir$/u,
+    /crates\/rustc-codegen-fe2o3\/tests\/fixtures\/production-ranked-bounds-device\/src\/lib\.rs$/u,
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(codePanel).toContainText("fe2o3-simulation-request-v1");
   await expect(codePanel).toContainText(
-    "./target/debug/fe2o3-kir-sim --kir-v7",
+    "./target/debug/fe2o3-export-sim --crate",
   );
+  await expect(codePanel).toContainText("--record-canonical-schedule");
+  await expect(codePanel).toContainText("--replay-schedule");
+  await expect(codePanel).toContainText("fe2o3-debug sim --bundle");
+
+  await page.getByRole("tab", { name: "Source debug JSONL" }).click();
+  await expect(codePanel).toContainText('"operation":"resolve_source"');
+  await expect(codePanel).toContainText('"provenance":"compiler_bundle_bound"');
+  await expect(codePanel).toContainText('"result":"stack"');
+  await expect(codePanel).toContainText('"values":{"status":"captured"');
+
   await page.getByRole("tab", { name: "Expected result" }).click();
-  await expect(codePanel).toContainText('"canonical_bytes":245');
+  await expect(codePanel).toContainText('"canonical_bytes":1187');
   await expect(codePanel).toContainText('"hardware_observed":false');
-  await expect(codePanel).toContainText("0x11000000110000001100000011000000");
-  await expect(codePanel).toContainText('"workgroups_visited":1');
-  await expect(codePanel).toContainText('"scheduled_slots_visited":64');
+  await expect(codePanel).toContainText('"performance_prediction":false');
+  await expect(codePanel).toContainText('"barrier_releases":1');
+  await expect(codePanel).toContainText('"record_sha256"');
 
   const workbench = page.getByRole("region", {
-    name: "Inspect one deterministic KIR session",
+    name: "Inspect one deterministic semantic trace",
   });
   await expect(workbench).toBeVisible();
   const truth = workbench.getByLabel("Session provenance and truth");
@@ -611,7 +616,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Debug exact V7 without upgrading observation into proof",
+      name: "Debug the verified bundle without upgrading observation into proof",
     }),
   ).toBeVisible();
   await page.goto("./#/lesson/gemm-proof-plan");
@@ -670,7 +675,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/2bee84b2201c5d51a0096ae192e269fa675d9c94/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -766,7 +771,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/2bee84b2201c5d51a0096ae192e269fa675d9c94/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -786,7 +791,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/03382595a672bdbc6aa7ca928f2b3b1b7d6d3e4d/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/2bee84b2201c5d51a0096ae192e269fa675d9c94/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -1116,7 +1121,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at 03382595a6",
+      name: "Compiler baseline at 2bee84b220",
     }),
   ).toBeVisible();
   await expect(

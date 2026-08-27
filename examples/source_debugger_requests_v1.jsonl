@@ -1,0 +1,5 @@
+{"expected_revision":0,"operation":"resolve_source","request_id":1,"schema":"fe2o3-debug-request-v1","site":{"block_ordinal":0,"function_ordinal":0,"point":{"kind":"operation","operation_ordinal":0}}}
+{"breakpoints":[{"enabled":true,"kind":{"kind":"source","source":{"byte_end":3456,"byte_start":3455,"file_identity":"50387ac4affdc2f06e8d4aefc9651acd91611f1f89d0c2373dda1174e5d0530b","map_identity":"c8416ec488b9c3766ccd5e284ebf493a9cd4771afe9579927044f6c1a78b3df1","provenance":"compiler_bundle_bound"}}}],"expected_revision":0,"operation":"set_breakpoints","request_id":2,"schema":"fe2o3-debug-request-v1"}
+{"expected_revision":1,"max_events":65536,"operation":"continue","request_id":3,"schema":"fe2o3-debug-request-v1"}
+{"expected_revision":2,"operation":"inspect_stack","page":{"limit":16},"request_id":4,"schema":"fe2o3-debug-request-v1","scope":{"level":"dispatch"}}
+{"count":1,"direction":"forward","expected_revision":2,"granularity":"source","operation":"step","request_id":5,"schema":"fe2o3-debug-request-v1"}

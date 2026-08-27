@@ -99,14 +99,14 @@ function IndexingMap() {
 
 function SimulationWorkgroup() {
   const stages = [
-    { icon: Binary, label: "Exact KIR V7", sub: "245 bytes · pinned identity" },
-    { icon: LockKeyhole, label: "Verify + preflight", sub: "strict · fail closed" },
-    { icon: Cpu, label: "CPU semantics", sub: "bounded · deterministic" },
+    { icon: FileCode2, label: "Attributed Rust", sub: "production stages" },
+    { icon: PackageCheck, label: ".fe2sim", sub: "KIR + source map" },
+    { icon: Cpu, label: "CPU replay", sub: "bounded schedule" },
   ];
   return (
     <figure
       className="diagram diagram-simulation"
-      aria-label="Standalone CPU semantic simulation of one exact KIR V7 WG64"
+      aria-label="Attributed Rust to authority-free bundle and deterministic CPU replay"
     >
       <div className="simulation-flow">
         {stages.map((stage, index) => (
@@ -122,22 +122,25 @@ function SimulationWorkgroup() {
           </div>
         ))}
       </div>
-      <div className="simulation-workgroup" aria-label="Four live invocations and 60 inactive slots">
-        {Array.from({ length: 4 }, (_, index) => (
-          <div className="simulation-lane" key={index}>
-            <span>t{index}</span>
-            <ArrowDown size={14} aria-hidden="true" />
-            <strong>out[{index}] = 17</strong>
-          </div>
-        ))}
+      <div className="simulation-workgroup" aria-label="One WG64 with one barrier release">
+        <div className="simulation-lane">
+          <span>phase 0</span>
+          <ArrowDown size={14} aria-hidden="true" />
+          <strong>barrier release</strong>
+        </div>
+        <div className="simulation-lane">
+          <span>phase 1 · t0</span>
+          <ArrowDown size={14} aria-hidden="true" />
+          <strong>out[1] = 1.0f32</strong>
+        </div>
         <div className="simulation-lane padding">
-          <span>t4...t63</span>
-          <strong>60 inactive slots</strong>
+          <span>exact bits</span>
+          <strong>0x3f800000</strong>
         </div>
       </div>
       <figcaption>
-        One visited WG64 schedules 64 slots; only the four in-grid logical
-        invocations execute and write typed output.
+        The persisted record binds the bundle, request, limits, two runnable
+        decisions, and one cooperative barrier release.
       </figcaption>
     </figure>
   );

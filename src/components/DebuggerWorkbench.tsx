@@ -391,11 +391,12 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
     <section className="debugger-tutorial" aria-labelledby="debugger-workbench-heading">
       <header className="debugger-tutorial-header">
         <div>
-          <p className="section-kicker">Semantic debugger preview</p>
-          <h2 id="debugger-workbench-heading">Inspect one deterministic KIR session</h2>
+          <p className="section-kicker">Raw-KIR companion session</p>
+          <h2 id="debugger-workbench-heading">Inspect one deterministic semantic trace</h2>
           <p>
-            This interactive fixture is simulated evidence. Logical waves organize CPU semantic
-            events; they are not decoded hardware wavefronts or performance measurements.
+            This interactive raw-KIR fixture has no source map, so source is explicitly unavailable.
+            The exact bundle transcript below demonstrates source debugging separately. Logical
+            waves are not decoded hardware wavefronts or performance measurements.
           </p>
         </div>
         <span className="debug-schema"><Braces size={15} /> {fixture.schema}</span>
@@ -554,7 +555,7 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
           </code>
         </div>
         <div>
-          <small>Source site · {event.site.source.availability}</small>
+          <small>Source site in this raw-KIR capture · {event.site.source.availability}</small>
           <code className="debug-unavailable">{event.site.source.reason}</code>
         </div>
       </section>
