@@ -42,10 +42,10 @@ function advancedScope(
         type: "table",
         headers: ["Integration field", "Current record", "Promotion requirement"],
         rows: [
-          ["Rust source", `${sourcePath} and its independent safe Rust reference are mirrored exactly; both SHA-256 values are recorded.`, "Establishes source and CPU-oracle availability only; no gfx950 lowering, proof, or model equivalence."],
+          ["Rust source", `${sourcePath} and its independent safe Rust reference are mirrored exactly; the pinned commit and both SHA-256 values are recorded.`, "Identifies the exact source and oracle; it does not by itself establish lowering, execution, proof, or model equivalence."],
           ["Fixed shape", "Every extent and operator stage is copied from the final teaching suite.", "No dynamic-shape or production generalization."],
-          ["Compiler and ISA", "Rust lowering_supported is false with an exact blocker. Separate HIP build and symbol-scoped ISA scripts plus the HIP gfx950 object digest are recorded.", "HIP instruction presence does not establish a Rust artifact or Rust algorithm semantics."],
-          ["Oracle and runtime", "The Rust CPU-reference command is separate from the exact HIP per-operator results and gfx950 environment.", "No Rust gfx950 execution; HIP covers only its deterministic recorded cases."],
+          ["Compiler and ISA", "Every Rust kernel has a dedicated runner for production extraction, authenticated Kernel IR, gfx950 LLVM, COV6 finalization, and symbol-scoped ISA inspection.", "A measured claim requires the runner's exact namespace plus LLVM and HSACO digests; the comparison-only HIP object grants no Rust authority."],
+          ["Oracle and runtime", "Every Rust kernel has a named digest-pinned HSA harness test against an independent safe CPU reference, with poison, canary, immutability, metadata, and finite-output checks.", "GPU-observed authority exists only when the evidence record names the mi350 environment, numerical result, and tolerance for that exact Rust HSACO."],
         ],
       },
       {
@@ -55,7 +55,7 @@ function advancedScope(
         text: `This lesson covers only the source-declared fixed shape after mirroring. ${familyBoundary} It makes no production serving, full distributed collective, formal-proof, performance, convergence, training-quality, or full-model-equivalence claim.`,
       },
       milestoneCallout(
-        "This source-example lesson binds ordinary Rust to an independent safe CPU reference. It has no Rust gfx950 lowering, Rust HSACO, Rust GPU execution, proof execution, compiler-refinement receipt, or artifact authority; the HIP observation remains comparison-only.",
+        "This lesson exposes the ordinary Rust source, its independent safe CPU reference, and the per-kernel production Rust-to-gfx950 runner. Treat a kernel as GPU-observed only when its evidence record contains the exact namespace, LLVM and HSACO digests, ISA requirements, mi350 runtime observation, numerical result, and tolerance. No formal compiler-refinement receipt, performance label, protected publication authority, or full-model result is implied; HIP remains comparison-only.",
       ),
     ],
   };
@@ -2279,7 +2279,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         type: "paragraph",
-        text: "The teaching pipeline keeps route IDs, compact slots, expert IDs, dense expert tiles, and token output coordinates distinct. The separate rank kernel reads its assigned two-expert partition. With eight visible MI350X devices, the final run used bidirectional peer copies and a GPU0 combine for two logical ranks; this is a bounded transport fixture, not a device collective or communication library.",
+        text: "The teaching pipeline keeps route IDs, compact slots, expert IDs, dense expert tiles, and token output coordinates distinct. The separate rank kernel reads its assigned two-expert partition, while a separate combine kernel merges rank partials. The production evidence is recorded per kernel and per exact Rust HSACO; it is not evidence of a device collective, communication library, or production expert-parallel transport.",
       },
     ],
   },

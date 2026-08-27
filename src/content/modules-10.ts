@@ -10,9 +10,24 @@ import advancedSystemsRustReference from "../../examples/gfx950_advanced_systems
 import advancedSystemsRustContract from "../../examples/gfx950_advanced_systems/src/lib.rs?raw";
 import advancedSystemsBuild from "../../examples/gfx950_advanced_systems/build_and_test.sh?raw";
 import advancedSystemsIsa from "../../examples/gfx950_advanced_systems/check_isa.sh?raw";
+import {
+  advancedEvidenceFor,
+  advancedHarnessPath,
+  advancedProductionTarget,
+  isObservedAdvancedEvidence,
+  type AdvancedRustEvidence,
+  type ObservedAdvancedRustEvidence,
+} from "./gfx950-advanced-evidence";
 import { narrativeSection } from "./narrative-registry";
 import { resultText } from "./shared";
-import type { CodeTab, CurriculumModule, DiagramKind, Lesson } from "./model";
+import {
+  historicalReference,
+  type Claim,
+  type CodeTab,
+  type CurriculumModule,
+  type DiagramKind,
+  type Lesson,
+} from "./model";
 import type { NarrativeId } from "./narrative-policy";
 
 type BundleId = "attention" | "systems";
@@ -23,11 +38,14 @@ interface SourceBundle {
   rustContract: string;
   rustKernelPath: string;
   rustReferencePath: string;
+  rustContractPath: string;
+  rustReadmePath: string;
+  rustLockPath: string;
   rustKernelFileSha256: string;
   rustReferenceFileSha256: string;
   loweringConstant: string;
-  loweringBlocker: string;
   manifestPath: string;
+  productionSupportPaths: string[];
   hipSource: string;
   hipSourcePath: string;
   build: string;
@@ -39,7 +57,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-const coreSourceCommit = "91e3cf2b4d8145d8c269ea3f783da53f90c568f4";
+export const advancedCoreSourceCommit = "63c5a5988b00b02bef07bdddcfa79039b1b0554e";
+export const advancedCoreSourceTree: string | null =
+  "771c00636db1437809fd7e6dec0de2d88bf6e0ff";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -47,11 +67,22 @@ const attentionBundle: SourceBundle = {
   rustContract: advancedAttentionRustContract,
   rustKernelPath: "examples/gfx950_advanced_attention/src/kernel.rs",
   rustReferencePath: "examples/gfx950_advanced_attention/src/reference.rs",
-  rustKernelFileSha256: "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba",
+  rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
+  rustReadmePath: "examples/gfx950_advanced_attention/README.md",
+  rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
+  rustKernelFileSha256: "3b0f6962ce41da008542fa7685633ab7f4bcabf5540af35b3c327c7802a77faa",
   rustReferenceFileSha256: "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
-  loweringBlocker: "the seven fixed-shape attributed kernels have no authenticated MIR-to-Kernel-IR profiles; gfx950 tensor/transpose lowering, finalization, runtime execution, proof, and performance evidence are pending",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
+  productionSupportPaths: [
+    "examples/gfx950_advanced_attention/run-gfx950.sh",
+    "examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh",
+    "examples/gfx950_advanced_attention/test-extractor-runtime.sh",
+    "examples/gfx950_advanced_attention/tests/kernel_source.rs",
+    "examples/gfx950_advanced_attention/tests/reference.rs",
+    "examples/gfx950_low_precision/gfx950-ocml-closure.sh",
+    "examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest",
+  ],
   hipSource: advancedAttentionSource,
   hipSourcePath: "examples/gfx950_advanced_attention/gfx950_advanced_attention.hip",
   build: advancedAttentionBuild,
@@ -70,11 +101,23 @@ const systemsBundle: SourceBundle = {
   rustContract: advancedSystemsRustContract,
   rustKernelPath: "examples/gfx950_advanced_systems/src/kernel.rs",
   rustReferencePath: "examples/gfx950_advanced_systems/src/reference.rs",
-  rustKernelFileSha256: "68f69c2da2d7b48191ec898b0d96a8164f938d1030fd51c333465088ece3d081",
+  rustContractPath: "examples/gfx950_advanced_systems/src/lib.rs",
+  rustReadmePath: "examples/gfx950_advanced_systems/README.md",
+  rustLockPath: "examples/gfx950_advanced_systems/Cargo.lock",
+  rustKernelFileSha256: "06423d7bfd24be5a80da70e2835b40bd066aeb404f9bad887d9e7707d52c076b",
   rustReferenceFileSha256: "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd",
   loweringConstant: "GFX950_ADVANCED_SYSTEMS_SOURCE_LOWERING_SUPPORTED",
-  loweringBlocker: "gfx950 FP4/FP8 MFMA and gfx950 production target lowering are not authenticated by rustc-codegen-fe2o3",
   manifestPath: "examples/gfx950_advanced_systems/Cargo.toml",
+  productionSupportPaths: [
+    "examples/gfx950_advanced_systems/run-gfx950.sh",
+    "examples/gfx950_advanced_attention/run-gfx950.sh",
+    "examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh",
+    "examples/gfx950_advanced_attention/test-extractor-runtime.sh",
+    "examples/gfx950_advanced_systems/tests/source.rs",
+    "examples/gfx950_advanced_systems/tests/references.rs",
+    "examples/gfx950_low_precision/gfx950-ocml-closure.sh",
+    "examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest",
+  ],
   hipSource: advancedSystemsSource,
   hipSourcePath: "examples/gfx950_advanced_systems/gfx950_advanced_systems.hip",
   build: advancedSystemsBuild,
@@ -154,8 +197,99 @@ function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean
   throw new Error(`Unclosed Rust function ${symbol}`);
 }
 
+function loweringSupported(bundle: SourceBundle): boolean {
+  return bundle.rustContract.includes(`${bundle.loweringConstant}: bool = true`);
+}
+
+function productionRunCommand(evidence: AdvancedRustEvidence): string {
+  return [
+    `# ${evidence.label}: ordinary Rust -> LLVM -> COV6 HSACO -> HSA numerical check`,
+    `bash ${evidence.runnerPath}`,
+  ].join("\n");
+}
+
+function evidenceLines(evidence: AdvancedRustEvidence): string[] {
+  const common = [
+    `KERNEL: ${evidence.label}`,
+    `Symbol: ${evidence.symbol}`,
+    `Production runner: bash ${evidence.runnerPath}`,
+    `Hardware harness: ${advancedHarnessPath}::${evidence.hardwareTest}`,
+    `Expected ABI: kernarg=${evidence.kernargBytes} bytes; required workgroup=${evidence.workgroupSize}x1x1; static LDS=${evidence.ldsBytes} bytes`,
+    `Required Rust ISA: ${evidence.requiredIsa.join("; ")}`,
+    `Target: ${advancedProductionTarget}, Wave64, code object V6`,
+  ];
+  if (!isObservedAdvancedEvidence(evidence)) {
+    return [
+      ...common,
+      "Evidence status: pending mi350 end-to-end execution",
+      "Portable namespace: pending",
+      "Rust-produced LLVM SHA-256: pending",
+      "Rust-produced HSACO SHA-256: pending",
+      "Rust numerical result: pending",
+      "Acceptance tolerance: pending",
+    ];
+  }
+  return [
+    ...common,
+    "Evidence status: observed",
+    `Portable namespace: ${evidence.namespace}`,
+    `Rust-produced LLVM SHA-256: ${evidence.llvmSha256}`,
+    `Rust-produced HSACO SHA-256: ${evidence.hsacoSha256}`,
+    `Rust runtime observation: ${evidence.runtimeObservation}`,
+    `Rust numerical result: ${evidence.numericalResult}`,
+    `Acceptance tolerance: ${evidence.tolerance}`,
+  ];
+}
+
+function advancedClaim(spec: AdvancedLessonSpec): Claim {
+  const evidence = advancedEvidenceFor(spec.rustSymbols);
+  if (
+    advancedCoreSourceTree !== null &&
+    loweringSupported(sourceBundle(spec.bundle)) &&
+    evidence.every(isObservedAdvancedEvidence)
+  ) {
+    const observed = evidence as ObservedAdvancedRustEvidence[];
+    return {
+      kind: "gpu-observed",
+      label: `Production Rust ${spec.sourceRole} observed on MI350X`,
+      detail:
+        `At the exact pinned core commit, every ordinary attributed Rust kernel in this lesson passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and its digest-pinned HSA numerical comparison on mi350. ${observed.map((entry) => `${entry.label}: ${entry.numericalResult}`).join("; ")}. This bounded observation is not a formal source-to-machine proof, performance result, protected publication, or full-model result.`,
+      reference: historicalReference(
+        advancedCoreSourceCommit,
+        advancedCoreSourceTree,
+        observed.map((entry) => `bash ${entry.runnerPath}`),
+        [
+          sourceBundle(spec.bundle).rustKernelPath,
+          sourceBundle(spec.bundle).rustReferencePath,
+          sourceBundle(spec.bundle).rustContractPath,
+          sourceBundle(spec.bundle).rustReadmePath,
+          sourceBundle(spec.bundle).rustLockPath,
+          sourceBundle(spec.bundle).manifestPath,
+          advancedHarnessPath,
+          ...sourceBundle(spec.bundle).productionSupportPaths,
+          ...observed.map((entry) => entry.runnerPath),
+        ],
+        {
+          target: advancedProductionTarget,
+          note: "Historical bounded raw-HSA MI350X observations only. Formal refinement, performance, protected publication authority, and protected Worker V3 native-build evidence remain separate.",
+        },
+      ),
+    };
+  }
+  return {
+    kind: "source-example",
+    label: "Production Rust pipeline integrated; mi350 record pending",
+    detail:
+      `The lesson displays the ordinary attributed Rust kernels and independent safe CPU references. Each kernel has a dedicated production ${advancedProductionTarget} runner and digest-pinned HSA harness entry. Measured namespaces, LLVM/HSACO digests, numerical results, and GPU-observed authority remain fail-closed until the mi350 campaign is recorded.`,
+  };
+}
+
 function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const bundle = sourceBundle(spec.bundle);
+  const productionEvidence = advancedEvidenceFor(spec.rustSymbols);
+  const allObserved =
+    loweringSupported(bundle) &&
+    productionEvidence.every(isObservedAdvancedEvidence);
   const rustFragments = spec.rustSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustKernel, symbol, true),
   );
@@ -169,12 +303,12 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       language: "rust",
       code: rustFragments.join("\n\n"),
       sourcePath: bundle.rustKernelPath,
-      sourceCommit: coreSourceCommit,
+      sourceCommit: advancedCoreSourceCommit,
       sourceSha256: spec.rustExcerptSha256,
       sourceDigestScope: "displayed",
       sourceFragments: rustFragments,
       explanatory: false,
-      notice: `Exact published ordinary attributed Rust for ${spec.rustSymbols.join(", ")}, pinned to the core commit and displayed-byte SHA-256. ${bundle.loweringConstant} remains false.`,
+      notice: `Exact published ordinary attributed Rust for ${spec.rustSymbols.join(", ")}, pinned to the core commit and displayed-byte SHA-256. The production evidence area lists one Rust-to-HSACO runner and one HSA harness test per kernel.`,
     },
     {
       kind: "reference",
@@ -182,7 +316,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       language: "rust",
       code: referenceFragments.join("\n\n"),
       sourcePath: bundle.rustReferencePath,
-      sourceCommit: coreSourceCommit,
+      sourceCommit: advancedCoreSourceCommit,
       sourceSha256: spec.referenceExcerptSha256,
       sourceDigestScope: "displayed",
       sourceFragments: referenceFragments,
@@ -197,7 +331,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       sourcePath: bundle.hipSourcePath,
       sourceSha256: bundle.hipSourceSha256,
       explanatory: true,
-      notice: `Comparison-only HIP fixture. Its ${spec.isaRequirements.join("; ")} and recorded runtime do not establish Rust lowering.`,
+      notice: `Comparison-only HIP fixture. Its ${spec.isaRequirements.join("; ")} and historical runtime are independent of the Rust-produced LLVM, HSACO, and HSA run records.`,
     },
     {
       kind: "verus",
@@ -216,33 +350,46 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       kind: "host",
       label: "Run and inspect",
       language: "bash",
-      code: `# In the pinned fe2o3 core checkout: Rust source and CPU-reference checks only.\ncargo test --offline --manifest-path ${bundle.manifestPath}\n\n# In the fe2o3-kernels site checkout: separate HIP compiler/ISA/hardware validation.\nbash ${bundle.manifestPath.replace("/Cargo.toml", "/build_and_test.sh")}\n\n# Exact mirrored HIP build script:\n${bundle.build}\n\n# Exact HIP-only symbol-scoped ISA checker:\n${bundle.isa}`,
+      code: `# In the pinned fe2o3 core checkout at ${advancedCoreSourceCommit}.\n# Each command extracts one ordinary Rust kernel, checks its compiler binding,\n# emits ${advancedProductionTarget} LLVM, finalizes COV6 HSACO, inspects symbol-scoped\n# ISA, and launches the digest-pinned CPU-oracle comparison on a gfx950 GPU.\n${productionEvidence.map(productionRunCommand).join("\n\n")}\n\n# Package-wide host source and CPU-reference tests.\ncargo test --offline --manifest-path ${bundle.manifestPath}\n\n# Comparison only: the separate HIP suite is not used by any Rust runner.\nbash ${bundle.manifestPath.replace("/Cargo.toml", "/build_and_test.sh")}\n\n# Exact mirrored comparison-only HIP build script:\n${bundle.build}\n\n# Exact comparison-only HIP ISA checker:\n${bundle.isa}`,
       explanatory: true,
       notice:
-        "Run Cargo in the pinned fe2o3 core checkout, where the manifest's core-relative dependencies exist. It does not produce gfx950 HSACO. The site-local build and ISA scripts validate only the companion HIP artifact.",
+        "Run the production commands in the exact pinned fe2o3 checkout. Each Rust runner owns its LLVM, HSACO, ISA, and numerical evidence. The separate site-local HIP command remains comparison-only.",
     },
     {
       kind: "result",
       label: "Evidence record",
       language: "text",
       code: resultText(
-        "source-example",
+        allObserved ? "gpu-observed" : "source-example",
         [
-          "FE2O3 RUST SOURCE LANE",
+          "FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE",
           `Kernel source: ${bundle.rustKernelPath}`,
           `Kernel symbols: ${spec.rustSymbols.join(", ")}`,
-          `Core source commit: ${coreSourceCommit}`,
+          `Core source commit: ${advancedCoreSourceCommit}`,
+          `Core source tree: ${advancedCoreSourceTree ?? "pending final core commit"}`,
           `Kernel file SHA-256: ${bundle.rustKernelFileSha256}`,
           `CPU references: ${spec.referenceSymbols.join(", ")}`,
           `Reference source: ${bundle.rustReferencePath}`,
           `Reference file SHA-256: ${bundle.rustReferenceFileSha256}`,
+          `Production contract: ${bundle.rustContractPath}`,
+          `Locked dependency graph: ${bundle.rustLockPath}`,
+          `Production support: ${bundle.productionSupportPaths.join(", ")}`,
           `Fixed shape: ${spec.fixedShape}`,
-          `Rust gfx950 lowering supported: ${bundle.rustContract.includes(`${bundle.loweringConstant}: bool = false`) ? "false" : "missing boundary"}`,
-          `Exact blocker: ${bundle.loweringBlocker}`,
-          "Rust-produced HSACO: none",
-          "Rust gfx950 runtime observation: none",
+          `Production flow: ordinary attributed Rust -> production extractor -> authenticated Kernel IR -> AMDGPU LLVM -> pinned gfx950 COV6 finalization -> symbol-scoped ISA -> digest-pinned HSA launch -> independent safe CPU reference`,
+          `Rust gfx950 lowering supported: ${loweringSupported(bundle) ? "true" : "pending final source mirror"}`,
           "",
-          "SEPARATE HIP COMPARISON LANE",
+          ...productionEvidence.flatMap((evidence) => [
+            ...evidenceLines(evidence),
+            "",
+          ]),
+          "Observation coverage: exact target metadata, kernel symbol and ABI, output poison/canaries, immutable inputs, finite outputs, and the kernel-specific numerical oracle.",
+          "Performance result: not claimed",
+          "Formal source-to-machine proof: not claimed",
+          "Protected publication authority: not claimed",
+          "Protected Worker V3 native-build evidence: not claimed",
+          "Full-model equivalence: not claimed",
+          "",
+          "SEPARATE COMPARISON-ONLY HIP LANE",
           `HIP source: ${bundle.hipSourcePath}`,
           `HIP symbols: ${spec.hipSymbols.join(", ")}`,
           `HIP source SHA-256: ${bundle.hipSourceSha256}`,
@@ -252,15 +399,14 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
           `HIP ISA observation: ${spec.isaRequirements.join("; ")}.`,
           `HIP CPU-oracle observation: ${spec.observedResults.join("; ")}.`,
           `Input/error policy: ${bundle.inputPolicy}.`,
-          "The HIP artifact and run do not bind to, lower, or execute the Rust source.",
-          "Performance result: not claimed",
-          "Formal proof: not claimed",
-          "Model equivalence: not claimed",
+          "The HIP artifact is an independent comparison. It does not produce, bind, or authorize any Rust artifact.",
         ].join("\n"),
       ),
       explanatory: true,
       notice:
-        "Rust source/CPU-reference evidence and HIP ISA/runtime evidence remain separate authority lanes.",
+        allObserved
+          ? "The pinned production Rust artifacts and MI350X runs support only these bounded GPU-observed claims. HIP remains a separate comparison; proof, performance, protected publication, and full-model claims are not promoted."
+          : "Production evidence is intentionally pending until every displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane.",
     },
   ];
 }
@@ -275,14 +421,7 @@ function lesson(spec: AdvancedLessonSpec): Lesson {
     duration: spec.duration,
     prerequisites: spec.prerequisites,
     objectives: spec.objectives,
-    claims: [
-      {
-        kind: "source-example",
-        label: "Fixed-shape Rust source and CPU reference published",
-        detail:
-          "The lesson defaults to exact ordinary attributed Rust plus an independent safe CPU reference. Rust gfx950 lowering is explicitly unsupported; HIP build, ISA, and MI350 observations remain comparison-only evidence.",
-      },
-    ],
+    claims: [advancedClaim(spec)],
     sections: [
       narrativeSection(spec.narratives[0]),
       narrativeSection(spec.narratives[1]),
@@ -309,7 +448,7 @@ const advancedLessons = [
       "gfx950_moe_expert_rank_fp4_fp8_v1",
       "gfx950_combine_expert_ranks_v1",
     ],
-    rustExcerptSha256: "ebb73a207fa5f56c893db782ed5169aa1afe95241908c1ddff8f232fd1c216ed",
+    rustExcerptSha256: "3d9561b2c86f94b0029a13cc8e0de78c1179dbd01ea0f860627bdccc2ae1095d",
     referenceSymbols: ["moe_routing_reference", "moe_rank_reference"],
     referenceExcerptSha256: "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e",
     hipSymbols: ["gfx950_fused_fp4_fp8_moe", "gfx950_expert_parallel_rank", "gfx950_combine_expert_ranks"],
@@ -360,7 +499,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "KDA/GDN recurrent state-update and output teaching kernels",
     rustSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
-    rustExcerptSha256: "807a5e9c92ea2188fca93e4ec1ab0442c4ecf0ff0f3ecc60adf58a070242c571",
+    rustExcerptSha256: "e77e20f00c6fc8d3fb28c445f64a54df979732fc9545d4d88f8342d719dc5b90",
     referenceSymbols: ["kda_gdn_decode_reference_v1", "kda_gdn_prefill_reference_v1"],
     referenceExcerptSha256: "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d",
     hipSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
@@ -407,7 +546,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "content-indexed sparse QK, softmax, and PV teaching kernel",
     rustSymbols: ["gfx950_content_sparse_attention"],
-    rustExcerptSha256: "d73101786d16d612eb9fb5266f882d6e8107650550d6398ad01d004f32030ce3",
+    rustExcerptSha256: "ec8250abcb0b9efa2cbd28f62764c45840f901db3824d3669a9e61209c13dba8",
     referenceSymbols: ["content_sparse_attention_reference_v1"],
     referenceExcerptSha256: "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
     hipSymbols: ["gfx950_content_sparse_attention"],
@@ -451,7 +590,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "compressed-state, direct-attention, and hybrid fusion teaching kernels",
     rustSymbols: ["gfx950_compressed_hybrid_attention"],
-    rustExcerptSha256: "aaf25c62fb72ed32b25eb840b3fba9f955783f1b63d0d3b019c89c6ef9eb9b0a",
+    rustExcerptSha256: "4de136e59115bb9ffdad9c836fd3be5a482002d1f5367fa65c0312ebc6a3bf38",
     referenceSymbols: ["compressed_hybrid_attention_reference_v1"],
     referenceExcerptSha256: "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
     hipSymbols: ["gfx950_compressed_hybrid_attention"],
@@ -498,7 +637,7 @@ const advancedLessons = [
       "gfx950_four_branch_residual",
       "gfx950_mhc_sinkhorn_mix",
     ],
-    rustExcerptSha256: "9cbc16e2411298f9a452ee9d040b07c377f9d59b908eb89e1729595f4bb6f409",
+    rustExcerptSha256: "e5795670dff8822a51c0e5afbaea3054635d067e4dd51d6d8d9d8293cf2e4ea1",
     referenceSymbols: ["attnres_aggregate_reference_v1", "four_branch_residual_reference_v1", "mhc_sinkhorn_mix_reference_v1"],
     referenceExcerptSha256: "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
     hipSymbols: ["gfx950_attnres_aggregate", "gfx950_four_branch_residual", "gfx950_mhc_sinkhorn_mix"],
@@ -545,7 +684,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "speculative-decoding and multi-token-prediction verification teaching kernels",
     rustSymbols: ["gfx950_speculative_transaction_v1"],
-    rustExcerptSha256: "c18a04e7de7af396288162bef82683ad944a620f18a65274bc03f5021820e520",
+    rustExcerptSha256: "829d1dd1b863202342a822ec48a61610f275eec943cbafab897c814300203df0",
     referenceSymbols: ["speculative_reference"],
     referenceExcerptSha256: "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc",
     hipSymbols: ["gfx950_speculative_transaction"],
@@ -591,7 +730,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "N-gram hash-table lookup and integer-value gather teaching kernel",
     rustSymbols: ["gfx950_qwen_ngram_gather_v1"],
-    rustExcerptSha256: "82fa12ab47a0d0dc82c75ed0ce552277adef0c4467b9d148bd35772aea6af362",
+    rustExcerptSha256: "bc99f70c6776d5b882e9f02dfea8de1a371ac4bb55145e54df800d72f1819bd2",
     referenceSymbols: ["ngram_reference"],
     referenceExcerptSha256: "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1",
     hipSymbols: ["gfx950_qwen_ngram_gather"],
@@ -637,7 +776,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "Muon gradient staging, shard reduction, polar iteration, and update teaching kernels",
     rustSymbols: ["gfx950_stage_gradient_shard_v1", "gfx950_muon_update_4x4_v1"],
-    rustExcerptSha256: "2d648160c8507976040c4db8ed3b3c87ddf47e17ca108850911b19df380eb74f",
+    rustExcerptSha256: "d63a9d04e2ce3efb41837357fd50d7321fcea6c6d42eb017359723d6b2073e8b",
     referenceSymbols: ["muon_reference"],
     referenceExcerptSha256: "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af",
     hipSymbols: ["gfx950_stage_gradient_shard", "gfx950_muon_update"],
