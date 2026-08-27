@@ -30,6 +30,8 @@ export function ArchitecturePage() {
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["Historical V7 simulator", "Retains bounded observation tooling for an already verified KIR subset; it is not a current source compiler, GPU execution, or proof."],
             ["Compiler analyses", "Run the fixed eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. Only the admitted static bounded-access fragment has Complete independent raw replay; nonempty tensor flow and every other current stage witness remain Incomplete."],
+            ["Target preflight", "Before target-aware verification scans launch facts, a bounded structural inventory accounts the closed ranked function and contains malformed input or verifier failure as FE2O3-TARGET-000."],
+            ["Middle-end evidence", "ProductionMiddleEndEvidenceV5 is the sole live producer for the eight stages. The V4 decoder is archival-only, and the caller-declared V1 refinement API has been removed."],
             ["Checked ranked transform", "Folds exact preceding index constants with checked u64 semantics before every downstream consumer. A separate exact typed structural replay admits only the same-site result; every other transformation is unsupported."],
             ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Status-Checked policy staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; the private move-only join is the admission authority and requires both structural and formula results."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
@@ -98,6 +100,11 @@ export function ArchitecturePage() {
           One production route carries supported Rust MIR into ranked PLIRON,
           runs the sealed checked index constant fold, verifies the fixed eight
           workload-neutral stages, and only then constructs KIR lowering input.
+          Target-aware entry points first account the bounded ranked structure,
+          then invoke recursive PLIRON verification under failure containment.
+          Malformed, unsupported, nested, or over-limit input stops as
+          FE2O3-TARGET-000 before launch-contract facts are scanned. V5 is the
+          sole live middle-end evidence producer; V4 decoding is archival-only.
           Analysis-only stages are protected by a monotonic mutation-attempt
           epoch, exact structural checkpoints, and sealed report custody. Those
           mechanisms detect compiler mutation and report substitution; they do
@@ -110,8 +117,12 @@ export function ArchitecturePage() {
           discipline. That carrier does not establish source-semantic custody,
           so raw, textual, and public recipes still fail closed at
           FE2O3-RACE-002. Explicit affine or Presburger maps may separately prove
-          supported relations. The progress checker
-          accepts canonical single-entry multi-block forwarding loops with a
+          supported relations.
+          The rejected source/ranked diagnostic sidecar was discarded rather
+          than admitted as proof. Same-TyCtxt descriptor identity hardens
+          substitution checks but does not supply the missing semantic custody
+          or close FE2O3-RACE-002.
+          The progress checker accepts canonical single-entry multi-block forwarding loops with a
           positive constant step only when source-width and u64 updates cannot
           wrap. The constant-fold validator keeps one exact typed input clone,
           replays the structural relation, and moves the validated output through

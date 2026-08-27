@@ -20,6 +20,14 @@ its explicit fail-closed unsupported cases. The aggregate status remains
    `ProductionMirPlironPerCompilationVerusReportV1`, policy-checked
    `Checked` staging, and the private move-only join at
    `SafeReferenceMirToLivePliron`.
+   `ProductionMiddleEndEvidenceV5` is the sole live producer for the fixed
+   eight-pass sequence. The strict V4 decoder is archival-only and grants no
+   producer authentication or authority. The caller-declared
+   `ProductionReferenceProofV1` and `RequireReferenceEquivalent` API is removed;
+   only authenticated current obligations can enter the live route.
+   Target-aware validation bounds the structural inventory before recursive
+   PLIRON verification or launch-fact scanning; malformed or over-limit input
+   stops as `FE2O3-TARGET-000` and grants no launch authority.
 3. Each `published-current` mechanism names exact compiler source and test
    paths. Finite fold, bounded recurrence, and permutation-gather contracts
    are mandatory structurally validated semantic-pass inputs, not optional
@@ -51,6 +59,10 @@ its explicit fail-closed unsupported cases. The aggregate status remains
    no retired application-specific route supplies proof authority. The
    standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages are deleted,
    so they cannot provide a second lowering path around ranked PLIRON.
+   The rejected source/ranked diagnostic sidecar was discarded and is not a
+   proof route. Same-`TyCtxt` descriptor identity hardens substitution checks,
+   but it does not establish source-semantic custody or discharge the current
+   `FE2O3-RACE-002` boundary.
    GFX950 Semantic MIR V6 and Kernel IR V9 selection depends on live collective
    and LDS-transpose operations rather than a workload or function name. Under
    the exact `gfx950:xnack-` full-active Wave64 profile, FP32 reductions admit

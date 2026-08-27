@@ -639,11 +639,11 @@ const compilerChecks: Lesson = {
   order: 2,
   title: "Compiler checks: one path, explicit boundaries",
   summary:
-    "Follow safe Rust through ranked PLIRON checks, one independently validated constant fold, and the one raw-replay fragment that is complete today.",
+    "Follow safe Rust through bounded target preflight, the fixed eight ranked PLIRON checks, one independently validated constant fold, and the one raw-replay fragment that is complete today.",
   duration: "18 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
-    "Follow the workload-neutral Rust MIR to ranked PLIRON to KIR path.",
+    "Follow the workload-neutral Rust MIR to ranked PLIRON to KIR path and its bounded target preflight.",
     "Distinguish Rejected, Incomplete, Clean policy reports, and Complete raw-replay witnesses.",
     "Explain what checked tiled and row-striped obligation carriers validate structurally, and why their missing source-semantic custody still fails closed.",
     "Identify static bounded access as the sole Complete independent raw-replay fragment.",
@@ -655,7 +655,7 @@ const compilerChecks: Lesson = {
       kind: "compiler-checked",
       label: "Fixed ranked verification with checked normalization",
       detail:
-        "The single production ranked route runs a sealed checked constant fold before the fixed eight analysis stages. Independent raw replay is Complete only for the documented static bounded-access fragment; nonempty tensor flow and all other current witnesses remain Incomplete and grant no KIR authority.",
+        "The single production ranked route runs bounded target preflight, a sealed checked constant fold, and the fixed eight analysis stages. V5 is the sole live middle-end evidence producer; V4 is decoder-only archival data and the V1 declarative refinement API is removed. Independent raw replay is Complete only for the documented static bounded-access fragment; nonempty tensor flow and all other current witnesses remain Incomplete and grant no KIR authority.",
       reference: currentImplementationReference(
         [
           "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold",
@@ -666,6 +666,10 @@ const compilerChecks: Lesson = {
           "crates/fe2o3-pliron/src/production/ranked/ranked_index_constant_fold_v1.rs",
           "crates/fe2o3-pliron/tests/production_ranked_constant_fold.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_pipeline.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_ir_identity.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_launch_contract.rs",
+          "crates/fe2o3-pliron/src/production/middle_end_evidence_v4.rs",
+          "crates/fe2o3-pliron/src/production/middle_end_evidence_v5.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_analysis_witness.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_race.rs",

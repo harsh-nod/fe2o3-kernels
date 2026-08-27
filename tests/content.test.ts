@@ -1054,6 +1054,31 @@ describe("curriculum integrity", () => {
         (capability) => capability.id === "compiler-analysis",
       )?.detail,
     ).toContain("context-wide monotonic PLIRON mutation-attempt epoch");
+    const middleEndCustody = currentState.capabilities.find(
+      (capability) => capability.id === "middle-end-custody",
+    );
+    expect(middleEndCustody?.detail).toContain(
+      "one fixed eight-pass sequence and one live evidence producer",
+    );
+    expect(middleEndCustody?.detail).toContain(
+      "V4 decoder is strict and archival-only",
+    );
+    expect(middleEndCustody?.detail).toContain(
+      "ProductionReferenceProofV1 and RequireReferenceEquivalent API is removed",
+    );
+    expect(middleEndCustody?.detail).toContain(
+      "bounded structural inventory before recursive PLIRON verification",
+    );
+    expect(middleEndCustody?.detail).toContain("FE2O3-TARGET-000");
+    expect(middleEndCustody?.detail).toContain(
+      "rejected source/ranked diagnostic sidecar is not present",
+    );
+    expect(middleEndCustody?.detail).toContain(
+      "same-TyCtxt descriptor identity hardens substitution without closing FE2O3-RACE-002",
+    );
+    expect(middleEndCustody?.sourcePaths).toContain(
+      "crates/fe2o3-pliron/tests/production_middle_end_evidence_v5.rs",
+    );
     const compilerAnalysis = currentState.capabilities.find(
       (capability) => capability.id === "compiler-analysis",
     );
@@ -1448,6 +1473,13 @@ describe("curriculum integrity", () => {
       "Nonempty tensor-layout witness",
       "Checked tiled and row-striped recipes",
       "Canonical single-entry multi-block forwarding SCCs",
+      "ProductionMiddleEndEvidenceV5 is the sole live middle-end evidence producer",
+      "V4 decoder is archival-only",
+      "ProductionReferenceProofV1 and RequireReferenceEquivalent API has been removed",
+      "bounded structural preflight accounts blocks, operations, values, operands, successors, attributes, and nesting",
+      "FE2O3-TARGET-000",
+      "source/ranked diagnostic sidecar was rejected and discarded",
+      "Same-TyCtxt descriptor identity hardens substitution checks",
       "Any other transformation",
       "kernel.index_unsigned_cast",
       "Raw, textual, and public recipes still stop at FE2O3-RACE-002",
@@ -1455,6 +1487,15 @@ describe("curriculum integrity", () => {
     ]) {
       expect(narrative).toContain(boundary);
     }
+    expect(narrative).toContain(
+      "Raw, textual, and public recipes still stop at FE2O3-RACE-002",
+    );
+    expect(narrative).toContain(
+      "owner-custodied semantic MIR correspondence",
+    );
+    expect(narrative).toContain(
+      "does not establish source-semantic custody or close the current FE2O3-RACE-002 boundary",
+    );
     expect(narrative).not.toContain("zero production transformations");
     expect(narrative).not.toContain("all eight independent semantic-witness");
   });

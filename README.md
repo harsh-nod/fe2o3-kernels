@@ -58,6 +58,19 @@ profile, FP32 subgroup reduction accepts each nonzero power-of-two tile width
 through 64; unsupported widths, targets, profiles, and dynamic source lanes
 fail closed.
 
+The middle end has one fixed eight-pass analysis sequence and one live evidence
+producer: `ProductionMiddleEndEvidenceV5`. The strict V4 decoder is retained
+only so immutable historical bytes remain inspectable; it cannot produce live
+evidence or grant refinement, lowering, artifact, or launch authority. The
+caller-declared `ProductionReferenceProofV1` and `RequireReferenceEquivalent`
+API has been removed rather than retained as a dormant proof route.
+Target-aware validation first performs a bounded structural inventory before
+recursive PLIRON verification or launch-contract scanning. Malformed,
+unsupported, nested, or over-limit input fails closed as `FE2O3-TARGET-000`.
+The investigated source/ranked diagnostic sidecar was rejected and discarded;
+same-`TyCtxt` descriptor identity hardens substitution checks but does not
+supply source-semantic custody or close `FE2O3-RACE-002`.
+
 The current device and trusted-item surfaces also remove the exact Slice 1 LDS
 pair and publish intrinsics. The current MoE source passes its already loaded
 typed MFMA fragments directly to the matrix operation. The historical Slice 1
@@ -675,9 +688,9 @@ compiler switches.
 
 Separately, the production semantic-MIR route runs a fixed target-neutral
 ranked-PLIRON safety pipeline before Kernel IR lowering: tensor layout and
-collective participation, bounds, atomic legality, global race freedom, barrier
-convergence, workgroup-memory must-initialization/publication by epoch, and
-declared semantic refinement.
+collective participation, bounds, atomic legality, global race freedom,
+hierarchy ownership, barrier convergence, workgroup-memory
+must-initialization/publication by epoch, and declared semantic refinement.
 Dialect and structural verification are prerequisites. Bounded sparse affine
 index dataflow feeds bounds and ownership, and every pass has explicit resource
 ceilings that fail closed as Incomplete. Static ranked Rust accesses reach the

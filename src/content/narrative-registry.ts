@@ -579,17 +579,28 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "fe2o3 keeps one workload-neutral route: rustc checks ordinary safe Rust and retains semantic MIR, the compiler projects a typed ranked PLIRON function, checked normalization and the fixed verifier sequence run there, and only the admitted result can become canonical Kernel IR. The retired standalone lowering and bridge packages are deleted rather than dormant. No pass recognizes GEMM, softmax, attention, routing, or another workload name."
+        "text": "fe2o3 keeps one workload-neutral route: rustc checks ordinary safe Rust and retains semantic MIR, the compiler projects a typed ranked PLIRON function, checked normalization and the fixed eight-pass verifier sequence run there, and only the admitted result can become canonical Kernel IR. ProductionMiddleEndEvidenceV5 is the sole live middle-end evidence producer. The retired standalone lowering and bridge packages are deleted rather than dormant. No pass recognizes GEMM, softmax, attention, routing, or another workload name."
       },
       {
         "type": "steps",
         "items": [
           "rustc enforces local types, borrows, moves, lifetimes, visibility, and the safe kernel boundary while preserving checked control flow and source locations in MIR.",
           "The frontend projects structured CFG, typed values, ranked views, allocation provenance, index expressions, memory effects, tensor contracts, and synchronization into ranked PLIRON.",
+          "Target-aware validation first performs a bounded structural preflight. It accounts the closed ranked function before recursive PLIRON verification, contains verifier failures, and reports malformed, nested, or resource-exhausting input as FE2O3-TARGET-000 before scanning launch-contract facts.",
           "The ranked constructor folds only checked index Add, Multiply, Divide, and Remainder when both operands are exact preceding index constants. An independent exact typed structural replay accepts only the same-site IndexBinary to IndexConstant rewrite with the same result identity and checked u64 value.",
-          "Dialect verification and the fixed eight analysis stages check tensor layout, bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and declared semantic refinement.",
+          "After structural and target preconditions, the fixed eight analysis stages check tensor layout, bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and declared semantic refinement.",
           "KIR lowering consumes the normalized ranked recipe and its checked reports. Rejected and Incomplete results stop before KIR. The retired standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages are absent, so no alternate host, lowering, or simulation route bypasses this sequence."
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "One live evidence version",
+        "text": "V5 is the sole live middle-end evidence producer and records the fixed eight-pass result. The V4 decoder is archival-only: it can validate the canonical shape of historical bytes but cannot create live evidence or grant refinement, lowering, artifact, or launch authority. The caller-declared ProductionReferenceProofV1 and RequireReferenceEquivalent API has been removed; a declaration can no longer masquerade as an authenticated refinement result."
+      },
+      {
+        "type": "paragraph",
+        "text": "The investigated source/ranked diagnostic sidecar was rejected and discarded rather than admitted as evidence. Same-TyCtxt descriptor identity hardens substitution checks, but it does not establish source-semantic custody or close the current FE2O3-RACE-002 boundary."
       },
       {
         "type": "table",
@@ -675,9 +686,11 @@ const narrativeRegistry = deepFreeze({
           "The Rust frontend retains the supported MIR body, checked branches, source spans, and authenticated safe device capabilities.",
           "Projection constructs one bounded ranked PLIRON CFG with typed SSA values, views, indices, effects, execution layout, tensor roots, and proof requests. Checked tiled and row-striped recipes include a produced index, checked-success capability, and destination physical extent. After authenticating and replaying an exact unsigned MIR range and recurrence, projection may emit a value-producing kernel.index_unsigned_cast whose conversion is value-preserving over that range.",
           "ProductionRankedKernelV1 performs the sealed checked constant fold. The independent validator compares the exact typed input and output, permits only same-site constant rewrites, and moves the accepted output through a private receipt.",
-          "PLIRON dialect verification runs before policy analysis. A context mutation-attempt epoch and exact structural checkpoints require all eight analysis stages to remain read-only.",
+          "For each target-aware entry point, a bounded structural preflight accounts blocks, operations, values, operands, successors, attributes, and nesting before invoking recursive PLIRON verification. Unsupported nesting, malformed operations, verifier failure, and exhausted limits stop as FE2O3-TARGET-000 before target facts are scanned.",
+          "After those structural and target preconditions, a context mutation-attempt epoch and exact structural checkpoints require all eight analysis stages to remain read-only.",
           "The fixed stages run in order: tensor layout, bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, and semantic refinement.",
           "The compiler seals each report and independently replays its witness. Only the admitted static bounded-access fragment can be Complete; nonempty tensor and every other current independent stage witness remain Incomplete even when a policy report is Clean.",
+          "ProductionMiddleEndEvidenceV5 is the only live producer for that ordered result. The strict V4 decoder remains only for immutable historical bytes, and the removed V1 declarative refinement API cannot be used as an alternate admission route.",
           "Only the normalized ranked recipe and admitted reports can proceed to KIR. Typed live validation checks the checked-access carrier pairing, shape, substitution resistance, exactly one predicated use, and no unpaired index use. Raw, textual, and public recipes still stop at FE2O3-RACE-002 because owner-custodied semantic MIR correspondence, exact receiver/fat-pointer extent, the two relevant Option::Some paths, allowed-use and CFG-dominance proof, source provenance/noalias, and retained KIR replay are missing. No Clean race result, KIR, functional-domain, lowering, launch, or hardware authority follows."
         ]
       },
@@ -686,6 +699,8 @@ const narrativeRegistry = deepFreeze({
         "headers": ["Boundary", "What it catches", "What it does not prove"],
         "rows": [
           ["Mutation epoch and exact snapshots", "Direct mutation, mutate-then-restore, failed mutable-borrow attempts, and retained changes during an analysis-only stage.", "That the analysis report itself is semantically correct."],
+          ["Bounded target preflight", "Malformed or unsupported ranked structure, nested regions, verifier failure, and exact resource-limit exhaustion before launch-contract scanning.", "Target feasibility, source-to-IR refinement, launch admission, or hardware execution."],
+          ["V5 evidence custody", "The exact fixed eight-pass order and its retained live production record; V4 bytes decode only as inert historical data.", "That a Clean report is independently correct, or that an archived V4 record is fresh or authoritative."],
           ["Sealed report custody", "Omission, duplication, reordering, replay, stale checkpoints, and payload or status substitution.", "That a Clean payload follows from the live IR."],
           ["Independent raw replay", "Exact supported static bounds reconstructed from live PLIRON rather than from report success bits.", "Nonempty tensor flow and every other pass or shape; those remain Incomplete."],
           ["Independent transform replay", "The exact checked IndexBinary to IndexConstant relation, value, position, result identity, CFG, types, effects, and proof sites.", "Any other optimization, algebraic equivalence, or semantic preservation theorem."],
