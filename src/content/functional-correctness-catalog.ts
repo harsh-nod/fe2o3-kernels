@@ -93,12 +93,12 @@ export const functionalCorrectnessCatalog = deepFreeze([
   },
   {
     lessonId: "cpu-semantic-simulation",
-    kernel: "Simulated typed fill",
+    kernel: "Exact KIR V7 fill fixture",
     referenceSourcePath: "examples/verus_vecadd/src/reference.rs",
     referenceContract:
-      "Safe Rust fill_reference is the sequential oracle for the bounded u32 fill request.",
+      "The independent safe fill reference states the repeated-value oracle shape; it is not associated with the exact KIR fixture and is not exact u32 source-refinement evidence.",
     admittedMirSubset:
-      "The simulator executes verified canonical KIR for a bounded scalar profile; it does not run or prove a reference-MIR equivalence obligation.",
+      "Admission begins at exact verified canonical KIR V7 for a bounded scalar profile; the standalone CLI accepts no Rust source or MIR and proves no reference equivalence.",
     outputRelations: ["pointwise"],
     scheduleRelations: ["pointwise"],
     numericalPolicy: "Exact u32 bit-vector assignment.",
@@ -108,7 +108,7 @@ export const functionalCorrectnessCatalog = deepFreeze([
     perCompilationVerus: noCompilationReceipt,
     disposition: "observation-only",
     boundary:
-      "Simulation is trusted unsandboxed host execution and debugging evidence, not GPU execution, translation validation, or performance evidence.",
+      "Simulation is bounded host execution and debugging evidence, not source-to-KIR refinement, race-freedom proof, GPU execution, translation validation, timing, profiling, or performance evidence.",
   },
   {
     lessonId: "reductions-scans",

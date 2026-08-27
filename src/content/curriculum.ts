@@ -45,7 +45,7 @@ const definitions: Record<string, string> = {
   "IEEE refinement": "A relation between abstract arithmetic and exact floating-point formats, operations, rounding, and exceptional values.",
   "numeric contract": "An explicit exact-bit-vector, exact-floating, relaxed, or error-bounded interpretation of arithmetic operations and exceptional behavior.",
   "arithmetic definedness": "The preconditions that rule out checked-overflow traps and invalid division, remainder, shift, cast, indexing, or other partial operations.",
-  "CPU semantic simulation": "Bounded deterministic execution of verified canonical Kernel IR on a CPU, without compiling the kernel body as an ordinary host function.",
+  "CPU semantic simulation": "Bounded deterministic execution of an exact verified canonical Kernel IR V7 input on a CPU; the standalone boundary accepts no Rust source.",
   "simulated observation": "A dynamic result from the CPU semantic simulator. It is neither a hardware observation nor proof that generated machine code is equivalent.",
   "formal memory": "The typed virtual memory boundary that tracks allocation identity, byte extent, alignment, permissions, initialization, and provenance without using raw host pointers.",
   "deterministic schedule": "A stable semantic work-item execution order recorded for reproducibility; it does not claim that GPU hardware uses the same order.",
