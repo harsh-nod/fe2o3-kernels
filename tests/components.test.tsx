@@ -221,7 +221,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Twenty-six representative compile-time failures",
+        name: "Thirty-six representative compile-time failures",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -229,7 +229,7 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(26);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(36);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
     expect(screen.getByText("Affine access exceeds a finite view")).toBeInTheDocument();
     expect(screen.getByText("Swapped MFMA operand roles")).toBeInTheDocument();
@@ -242,6 +242,16 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Cross-invocation write race")).toBeInTheDocument();
     expect(screen.getByText("Invocation-divergent barrier")).toBeInTheDocument();
     expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
+    expect(screen.getByText("An intermediate index multiplication overflows")).toBeInTheDocument();
+    expect(screen.getByText("One wave executes different tensor phases")).toBeInTheDocument();
+    expect(screen.getByText("Tensor metadata claims the wrong active lanes")).toBeInTheDocument();
+    expect(screen.getByText("Aliasing LDS views disagree about shape")).toBeInTheDocument();
+    expect(screen.getByText("Atomic flags do not invent publication")).toBeInTheDocument();
+    expect(screen.getByText("A live loop never advances")).toBeInTheDocument();
+    expect(screen.getByText("A dynamic tiled loop can wrap")).toBeInTheDocument();
+    expect(screen.getByText("Reassociated floating-point math lacks an error proof")).toBeInTheDocument();
+    expect(screen.getByText("Static LDS usage exceeds the target")).toBeInTheDocument();
+    expect(screen.getByText("The host buffer is smaller than its kernel view")).toBeInTheDocument();
     expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
     expect(screen.getByText("The grid leaves one output coordinate unwritten")).toBeInTheDocument();
     expect(screen.getByText("A CPU-reference effect has no policy-checked staging")).toBeInTheDocument();
@@ -258,13 +268,19 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
     expect(screen.getByText("Stable pass diagnostic catalog")).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-RACE-004" })).toBeInTheDocument();
-    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(22);
+    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(32);
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "pliron-presburger-v1 (shared analysis)" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "pliron-presburger (shared analysis)" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-004" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-005" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PROTOCOL-001" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PROGRESS-001" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-NUMERIC-001" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-RESOURCE-004" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-ABI-004" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-ATOMIC-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
@@ -280,7 +296,7 @@ describe("lesson section rendering policy", () => {
     ).toHaveLength(4);
     expect(
       document.querySelectorAll(".compile-failure-source code.language-text"),
-    ).toHaveLength(22);
+    ).toHaveLength(32);
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();

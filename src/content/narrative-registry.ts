@@ -230,7 +230,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit d570d61d67fa5ae6fe3e2778f473b8ba5d5f9333 and tree b074653ed772c302b25e675dd361301e3c5de11f. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit 7f7c93ddd7ebe1d5f2db8fc30a32df8bf9017606 and tree c9fa84b48b4b6f17563d627a93fa315afdc190b9. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -777,7 +777,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "info",
         "title": "One bounded analysis context per run",
-        "text": "The production pipeline owns one ephemeral analysis manager over one immutable ranked-PLIRON function. Its five bounded cache roots hold sparse index results, execution layout, exact invocation traces, tensor-layout dataflow, and exact resource-bounded Presburger queries, so passes that need the same facts compute each root once. The manager is discarded before any second validation or changed function is checked, which prevents stale facts from crossing a revalidation boundary while keeping each pass result independently reportable."
+        "text": "The production pipeline owns one ephemeral analysis manager over one immutable ranked-PLIRON function. Its eight bounded cache roots hold sparse index results, exact Presburger queries, provenance and alias facts, execution layout, exact invocation traces, tensor-layout dataflow, memory versions and happens-before edges, and SIMT collective protocol facts. Passes share those roots instead of reimplementing them. The manager is discarded before any second validation or changed function is checked, so stale facts cannot cross a revalidation boundary."
       },
       {
         "type": "callout",
@@ -789,7 +789,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Presburger queries reason about integer relations",
-        "text": "The shared pliron-presburger-v1 service accepts finite integer boxes, conjunctions of signed affine equalities and inequalities, constant-modulus congruences, and affine or remainder maps. It answers emptiness, range containment, injectivity, cross-map collision, total box coverage, and pointwise map equivalence with a deterministic first witness. Bounds, race, and hierarchy-ownership query it from their existing pass positions; it is shared compiler analysis, not a ninth policy pass. Unknown dynamic extents, nonlinear terms, machine-index overflow, malformed relations, and fixed-budget exhaustion return Incomplete rather than a guessed proof."
+        "text": "The shared pliron-presburger analysis accepts finite integer boxes, conjunctions of signed affine equalities and inequalities, constant-modulus congruences, and affine or remainder maps. It answers emptiness, range containment, injectivity, cross-map collision, total box coverage, pointwise map equivalence, and signed or unsigned machine-range containment with a deterministic first witness. Bounds, race, and hierarchy-ownership query it from their existing pass positions; it is shared compiler analysis, not a ninth policy pass. Retained add and constant-multiply index trees over bounded axes report exact intermediate overflow. A value that depends on an unbounded runtime axis, nonlinear terms, malformed relations, and fixed-budget exhaustion remain Incomplete."
       },
       {
         "type": "table",
@@ -800,13 +800,32 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           ["Affine range containment", "An unguarded 2 * invocation + 1 read over launch extent 8 and view extent 12 is Rejected with FE2O3-BOUNDS-004: invocation [6] computes index 13.", "bounds_affine_oob.pliron and pliron_ranked_bounds::presburger_affine_failure_reports_invocation_and_index"],
-          ["Same-map collision and congruence", "invocation % 32 over 64 invocations has duplicate owners [0] and [32]; the race pass reports FE2O3-RACE-001. Small finite launches use the exact trace, while the same remainder relation is independently checked by pliron-presburger-v1.", "race_modulo_collision.pliron and pliron_presburger::modulo_ownership_reports_a_duplicate_owner"],
+          ["Same-map collision and congruence", "invocation % 32 over 64 invocations has duplicate owners [0] and [32]; the race pass reports FE2O3-RACE-001. Small finite launches use the exact trace, while the same remainder relation is independently checked by pliron-presburger.", "race_modulo_collision.pliron and pliron_presburger::modulo_ownership_reports_a_duplicate_owner"],
           ["Cross-map intersection", "Overlapping affine read/write images produce a concrete conflicting coordinate; disjoint even-write and odd-read images prove race freedom beyond the exact-trace invocation cap.", "pliron_presburger::cross_effect_query_finds_a_race_between_distinct_invocations and race_presburger_disjoint.pliron"],
           ["Finite-image coverage", "A missing logical output coordinate remains FE2O3-OWN-006. Hierarchy ownership routes its traced coordinate image through the shared exact box-coverage query.", "ownership_hole.pliron and pliron_presburger::traced_finite_image_uses_the_same_box_coverage_query"],
           ["Pointwise map equivalence", "Equivalent affine coordinate formulas prove equal; a transpose mismatch returns domain [0, 1] with coordinates [0, 1] versus [1, 0]. The query is available to compiler clients; the rooted tensor-layout pass continues to own production FE2O3-TENSOR-LAYOUT diagnostics.", "pliron_presburger::layout_coordinate_comparison_proposes_a_concrete_mismatch and equivalent_layout_formulas_are_proved_pointwise"],
           ["Finite-domain feasibility", "Contradictory signed loop-domain constraints prove Empty; a satisfiable phase returns a witness. This is an analysis-service result until a loop client requests it, not a new diagnostic code.", "pliron_presburger::invalid_loop_domain_is_empty_and_valid_domain_has_a_phase"],
-          ["Unsupported or over-budget relation", "A dynamic launch with no finite compiler bound, arithmetic overflow, or more than 1,048,576 work units returns Incomplete and cannot authorize lowering.", "pliron_presburger::dynamic_launch_without_a_finite_bound_is_unsupported, arithmetic_overflow_is_never_treated_as_a_proof, and resource_exhaustion_is_explicitly_incomplete"]
+          ["Machine-range containment", "A retained u64 add or constant multiply that overflows reports FE2O3-BOUNDS-005 with its exact operation, operands, and invocation. Overflow dependent on an unbounded runtime axis remains FE2O3-BOUNDS-006 or an unproved bound.", "bounds_machine_integer_overflow.pliron, constant_overflow_is_rejected_with_a_dynamic_launch_extent, and dynamic_dependent_overflow_remains_incomplete_without_a_runtime_bound"],
+          ["Unsupported or over-budget relation", "A dynamic domain with no finite bound, a nonlinear relation, or more than 1,048,576 work units returns Incomplete and cannot authorize lowering.", "pliron_presburger::dynamic_launch_without_a_finite_bound_is_unsupported, arithmetic_overflow_is_never_treated_as_a_proof, and resource_exhaustion_is_explicitly_incomplete"]
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Memory and collectives use executed traces",
+        "text": "One provenance root assigns address-space-aware allocation classes. The workgroup-memory stage then builds concrete write versions and publishes them only through an executed convergent acquire-release workgroup barrier. A release/acquire annotation without a matched address never invents read-from. In parallel, the barrier stage compares each subgroup's actual tensor/barrier phase sequence and active lanes. These analyses inspect operations and CFG paths; source contracts cannot manufacture a version, happens-before edge, participant, or phase."
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Progress and numerical claims are deliberately narrow",
+        "text": "The semantic stage rejects a concrete live nonterminating cycle and proves only the retained positive-induction form when every update is nonwrapping. A symbolic non-unit step without an upper bound is Incomplete. Numerical refinement currently derives zero absolute and relative error only when the independently reconstructed GPU and reference typed operator trees are identical. Reassociation, transcendental bounds, and changed operation order need a future interval or error theorem; Checked evidence selects the obligation but cannot certify it."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Target admission uses compiler inputs",
+        "text": "A targeted prelowering entry point accepts target limits and origin-bound host allocation descriptors supplied by the compiler/host boundary. It checks grid, workgroup, subgroup, static LDS bytes, allocation count, byte length, and alignment before running the same eight policy passes. Dynamic sizes remain Incomplete unless guarded or specialized. The report does not authenticate runtime addresses and grants no launch authority."
       },
       {
         "type": "callout",
@@ -854,22 +873,28 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           ["kernel-tensor-layout-v1", "Validate each tensor instruction profile, A/B/accumulator role, element packing, register distribution, lane/component map, independent operand storage transform, edge policy, derived collective participation, and rooted producer-to-consumer layout flow.", "Wrong transpose or lane map; accumulator permutation; incompatible producer join, operand, accumulator, or subgroup ABI; unsupported storage transform; missing tail policy; inactive or invocation-divergent collective; unresolved map or convergence; analysis limit."],
-          ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent.", "Static out-of-bounds witness; unresolved dynamic bound; unsupported index, CFG, or operation; analysis limit."],
+          ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent and every retained u64 index intermediate is representable.", "Static out-of-bounds witness; exact add/multiply overflow witness; unresolved dynamic bound or overflow; unsupported index, CFG, or operation; analysis limit."],
           ["kernel-atomic-legality-v1", "Require a legal atomic kind, explicit ordering and scope, ranked-view provenance, supported element width/address space, bound target capability, and system-coherent allocation evidence.", "Missing or invalid ordering/scope; private-memory atomic; unavailable provenance or target capability; unauthenticated system coherence; analysis limit."],
-          ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, or alias relation; analysis limit."],
+          ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics and the shared allocation-provenance relation.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, origin, relative offset, or alias relation; analysis limit."],
           ["kernel-hierarchy-ownership-v1", "Reconstruct each logical coordinate owner across invocation, lane, subgroup, workgroup, and grid, then require the declared coverage and density policy.", "Out-of-range owner; duplicate owner; grid coverage hole; non-rectangular subgroup or workgroup tile; runtime-only unresolved ownership; analysis limit."],
-          ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same collective barriers in the same order.", "Divergent barrier trace; dynamic launch or branch trace that cannot be resolved; unsupported CFG or trace limit."],
-          ["kernel-workgroup-memory-v1", "Run must-initialization dataflow and track publication, compatible atomics, conflicts, and reuse by convergent barrier epoch.", "Read before initialization/publication; conflicting same-epoch effects; stale or unresolved epoch/trace; analysis limit."],
-          ["kernel-semantic-refinement-v1", "Compare declared target-neutral expressions, then join each bound safe-reference effect to one real GPU write, exact hierarchy ownership, and status-Checked MIR-bound policy staging rather than guessing intent.", "Formula, domain, precondition, or value mismatch; missing, stale, duplicate, non-Checked, or invalid staging; orphan, ambiguous, duplicate, or unmodeled write; unresolved ownership/expression/trace; analysis limit. Staging grants no authority."],
+          ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same barriers and tensor collectives in the same subgroup phase order with the CFG-derived active lanes.", "Divergent barrier or tensor phase trace; partial collective participation; false active-lane claim; unresolved cyclic/dynamic trace; analysis limit."],
+          ["kernel-workgroup-memory-v1", "Derive memory versions, same-invocation visibility, convergent barrier publication edges, same-epoch conflicts, and conservative atomic read-from obligations.", "Read before initialization/publication; conflicting same-epoch effects; unmatched atomic publication; fence/subgroup-only LDS publication; unresolved address or trace; analysis limit."],
+          ["kernel-semantic-refinement-v1", "Compare declared target-neutral expressions, prove supported loop progress, derive exact-zero numerical certificates from identical live typed trees, then join each bound safe-reference effect to one real GPU write and exact hierarchy ownership.", "Nonterminating or unproved loop; changed arithmetic tree without an error theorem; formula, domain, precondition, value, evidence, ownership, expression, or trace mismatch; analysis limit."],
           ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through values, reachable CFG edges, and block arguments so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Conflicting incoming facts; unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, edge, iteration, or work-unit limit."],
-          ["pliron-presburger-v1 (shared analysis)", "Decide finite signed-affine and constant-modulus integer-set and map queries for bounds, race, and hierarchy-ownership clients.", "Concrete range, collision, coverage, or equivalence witness; unknown dynamic extent; nonlinear expression; machine overflow; malformed relation; variable, constraint, output, or 1,048,576-work-unit limit."],
+          ["pliron-presburger (shared analysis)", "Decide finite signed-affine and constant-modulus integer-set and map queries for bounds, race, and hierarchy-ownership clients.", "Concrete range, collision, coverage, or equivalence witness; unknown dynamic extent; nonlinear expression; machine overflow; malformed relation; variable, constraint, output, or 1,048,576-work-unit limit."],
+          ["pliron-provenance-alias (shared analysis)", "Derive one address-space-aware allocation-origin and noalias relation for race and workgroup-memory clients.", "Unknown writable alias; noalias claim without origin; inconsistent origin/class; missing relative offset; incompatible view signature; subject limit."],
+          ["pliron-memory-order (shared analysis)", "Build exact-trace workgroup memory versions and barrier happens-before publication edges without inventing atomic read-from.", "Uninitialized read; same-epoch conflict; unmatched release/acquire publication; unresolved address; unsupported fence/subgroup publication; version or issue limit."],
+          ["pliron-simt-protocol (shared analysis)", "Compare per-subgroup tensor/barrier phase sequences and derive actual active lanes from executable CFG traces.", "Phase mismatch; partial tensor participation; claimed active-lane mismatch; exact-trace or issue limit."],
+          ["kernel-progress (semantic-stage analysis)", "Find live CFG cycles and prove the supported positive-induction ranking function with no wrapping update.", "Exit-free reachable SCC; zero-step witness; symbolic non-unit no-wrap obligation; noncanonical recurrence; block or edge limit."],
+          ["kernel-target-contract (compiler-supplied precondition)", "Check target grid/workgroup/subgroup limits, static LDS bytes, and origin-bound host allocation size/alignment before the same eight passes.", "Malformed or oversized launch; unsupported subgroup; LDS overflow/budget excess; missing, small, misaligned, dynamic, or excessive host allocations. This report grants no launch authority."],
+          ["kernel-ir-interprocedural-effects (shared analysis)", "Summarize bounded acyclic helper call graphs so compiler-derived pure helpers remain complete across calls.", "Declaration, recursion, inline assembly, resource exhaustion, or a memory-effecting helper whose argument/provenance coordinates cannot yet be substituted."],
           ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
         ]
       },
       {
         "type": "compile-failures",
-        "heading": "Twenty-six representative compile-time failures",
-        "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence and the compiler-owned semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, hierarchy ownership, barriers, workgroup-memory epochs, declared semantic refinement, strict parallel derivation, and per-compilation Verus composition. Text snippets are compact schematic semantic IR or compiler-derived report state; they do not imply that users write a separate kernel DSL, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current stable diagnostics. Errors from the eight-pass production sequence also carry a stable FE2O3-FIX repair action; the layout-flow and affine-bounds examples show the rendered form. These cards are representative rather than an exhaustive list of every source-admission, structural, lowering, or target failure. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
+        "heading": "Thirty-six representative compile-time failures",
+        "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence, its shared analyses, the compiler-supplied target precondition, and the semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, hierarchy ownership, barriers and SIMT protocol, workgroup memory ordering, and semantic refinement with progress, numerical, and reference-effect checks. Text snippets are compact schematic semantic IR or compiler-derived report state; users still write Rust, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current diagnostics. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
         "examples": [
           {
             "id": "mfma_operand_roles",
@@ -1180,6 +1205,126 @@ const narrativeRegistry = deepFreeze({
             "code": "FE2O3-PARALLEL-017",
             "enforcement": "Production parallel-reference contract constructor and negative tests",
             "caught": "The compiler constructs the strongest supported pointwise, permutation, fold, or recurrence relation from live semantic and hierarchy evidence, then validates it independently. If its own constructed contract is inconsistent, compilation stops instead of trusting a source or caller assertion."
+          },
+          {
+            "id": "bounds_machine_overflow",
+            "title": "An intermediate index multiplication overflows",
+            "language": "text",
+            "source": "gpu.execution_layout global = [3, 1, 1]\n%tid = kernel.invocation_index <axis = 0, extent = 3>\n%max = kernel.index_constant 18446744073709551615\n%index = kernel.index_binary Multiply %tid, %max\nkernel.access Read %input[%index]",
+            "diagnostic": "error[FE2O3-BOUNDS-005]: checked Read index arithmetic may overflow\ncounterexample invocation [2] evaluates 2 Multiply 18446744073709551615 outside the unsigned 64-bit range\nhelp: use checked arithmetic, narrow the launch domain, or prove a dominating in-range guard",
+            "property": "MachineIndexRepresentability",
+            "stage": "generic PLIRON pass 2/8",
+            "code": "FE2O3-BOUNDS-005",
+            "enforcement": "bounds_machine_integer_overflow.pliron; sparse and ranked-bounds mutations",
+            "caught": "Sparse SSA retains the first overflowing add or constant multiply instead of letting later arithmetic erase it. The finite launch gives a concrete invocation and operands. Constant overflow is still rejected when an unrelated launch axis is dynamic; overflow that actually depends on an unbounded axis remains Incomplete."
+          },
+          {
+            "id": "protocol_phase_mismatch",
+            "title": "One wave executes different tensor phases",
+            "language": "text",
+            "source": "if lane < 32 {\n  kernel.tensor_layout @first\n} else {\n  kernel.tensor_layout @second\n}",
+            "diagnostic": "error[FE2O3-PROTOCOL-001]: collective phase mismatch in grid 0 workgroup 0 subgroup 0\ninvocation [0, 0, 0] executes tensor instruction at block 1 op 0\ninvocation [32, 0, 0] executes tensor instruction at block 2 op 0\nhelp: reconverge control flow before the collective",
+            "property": "SimtCollectivePhaseOrder",
+            "stage": "generic PLIRON pass 6/8",
+            "code": "FE2O3-PROTOCOL-001",
+            "enforcement": "protocol-lit/phase_mismatch.pliron; mandatory barrier stage",
+            "caught": "Exact CFG traces are grouped by grid, workgroup, and subgroup. Every active lane must execute the same tensor/barrier sites in the same order, so equal instruction counts at different program points do not pass. No attention, GEMM, or other workload identity is used."
+          },
+          {
+            "id": "protocol_active_mask_claim",
+            "title": "Tensor metadata claims the wrong active lanes",
+            "language": "text",
+            "source": "gpu.execution_layout subgroup = 64\nkernel.tensor_layout <subgroup_width = 64, claimed_active_lanes = 32>",
+            "diagnostic": "error[FE2O3-PROTOCOL-003]: tensor collective claims 32 active lanes, but CFG-derived execution has 64\nfailed proof: retained participation metadata matches the executed active mask\nhelp: derive the tensor site after reconvergence and regenerate compiler-owned participation metadata",
+            "property": "SimtActiveMask",
+            "stage": "generic PLIRON pass 6/8",
+            "code": "FE2O3-PROTOCOL-003",
+            "enforcement": "protocol-lit/active_mask_claim.pliron; mandatory barrier stage",
+            "caught": "The operation's claim is compared with lanes that actually reach the site. Metadata cannot self-certify participation. A partial subgroup separately reports FE2O3-PROTOCOL-002 with the actual lane list."
+          },
+          {
+            "id": "workgroup_alias_signature",
+            "title": "Aliasing LDS views disagree about shape",
+            "language": "text",
+            "source": "%a = kernel.ranked_view <f32, [4], Workgroup, origin = 901, noalias = 71>\n%b = kernel.ranked_view <f32, [8], Workgroup, origin = 901, noalias = 71>\nkernel.access Write %a[...]\nkernel.access Read %b[...]",
+            "diagnostic": "error[FE2O3-WORKGROUP-003]: cannot prove workgroup-memory safety: potentially aliasing view class 71 in Workgroup memory has incompatible element widths or rank/shapes",
+            "property": "AllocationProvenance",
+            "stage": "generic PLIRON pass 7/8",
+            "code": "FE2O3-WORKGROUP-003",
+            "enforcement": "workgroup_alias_signature_incomplete.pliron; shared provenance mutations",
+            "caught": "Race and workgroup-memory clients share one address-space-aware provenance root. The workgroup client refuses to merge memory versions for incompatible views of the same possible allocation; missing relative offsets and unknown writable aliases fail closed for the same reason."
+          },
+          {
+            "id": "atomic_read_from_unresolved",
+            "title": "Atomic flags do not invent publication",
+            "language": "text",
+            "source": "invocation 0: data[0] = value; flag.atomic_store(1, Release)\ninvocation 1: flag.atomic_load(Acquire); read data[0]",
+            "diagnostic": "error[FE2O3-WORKGROUP-003]: cannot prove workgroup-memory safety: invocation [1, 0, 0] cannot derive read-from for workgroup address [0]\nan acquire/release declaration does not identify the write observed by this read",
+            "property": "AtomicPublicationReadFrom",
+            "stage": "generic PLIRON pass 7/8",
+            "code": "FE2O3-WORKGROUP-003",
+            "enforcement": "matched_atomic_flag_keeps_following_data_read_incomplete and unrelated_atomics_do_not_weaken_uninitialized_data_read",
+            "caught": "Memory ordering correlates plausible release/acquire candidates by resolved address and scope, but it never guesses which release an acquire observed. A matched flag leaves publication Incomplete until read-from exists; unrelated atomics cannot downgrade a definite uninitialized read."
+          },
+          {
+            "id": "progress_zero_step",
+            "title": "A live loop never advances",
+            "language": "text",
+            "source": "i = 0\nwhile i < 8 {\n  i = i\n}",
+            "diagnostic": "error[FE2O3-PROGRESS-001]: control-flow cycle does not terminate: the induction variable is unchanged on the backedge\ncounterexample: the live incoming edge carries i = 0 and bound = 8, so the true edge repeats forever\nhelp: advance the finite induction variable on every backedge",
+            "property": "KernelProgress",
+            "stage": "generic PLIRON pass 8/8",
+            "code": "FE2O3-PROGRESS-001",
+            "enforcement": "progress_zero_step.pliron; progress SCC and feasibility mutations",
+            "caught": "The semantic stage builds CFG strongly connected components and rejects this loop only after reconstructing a feasible incoming value. An infeasible zero-step edge is not falsely rejected, and a symbolic case is Incomplete rather than assigned an invented witness."
+          },
+          {
+            "id": "progress_symbolic_tiled_loop",
+            "title": "A dynamic tiled loop can wrap",
+            "language": "text",
+            "source": "i = 0\nwhile i < runtime_bound {\n  kernel.tensor_layout ...\n  i = i + 16\n}",
+            "diagnostic": "error[FE2O3-PROGRESS-002]: termination proof is incomplete: a symbolic bound with a non-unit step needs a no-wrap range proof\nhelp: retain a finite upper bound proving every i + 16 update is representable, or use a supported checked recurrence",
+            "property": "NonWrappingRankingFunction",
+            "stage": "generic PLIRON pass 8/8",
+            "code": "FE2O3-PROGRESS-002",
+            "enforcement": "tensor_layout_uniform_induction_loop.pliron; static positive-step progress mutations",
+            "caught": "A positive step is not enough under finite machine arithmetic. Step 1 terminates for any u64 bound; a larger step needs a static or otherwise proved upper bound so the last executed update cannot wrap. This Incomplete result now stops the strict pipeline."
+          },
+          {
+            "id": "numerical_tree_mismatch",
+            "title": "Reassociated floating-point math lacks an error proof",
+            "language": "text",
+            "source": "gpu = (a + b) + c\nreference = a + (b + c)\nproof.evidence_ref status = Checked",
+            "diagnostic": "error[FE2O3-NUMERIC-001]: numerical refinement is incomplete\nV1 derives a finite bound only from identical typed IEEE operator trees\nhelp: preserve the exact typed operator tree, or supply a future supported interval/error proof for the changed operation order",
+            "property": "NumericalRefinement",
+            "stage": "generic PLIRON pass 8/8",
+            "code": "FE2O3-NUMERIC-001",
+            "enforcement": "checked_evidence_cannot_make_different_float_trees_equivalent and numerical_bound_is_derived_from_identical_live_operator_trees",
+            "caught": "Checked evidence binds the obligation but cannot prove arithmetic. The compiler currently emits an exact-zero certificate only when independently reconstructed typed trees are identical. Floating-point reassociation needs a real range/error theorem and therefore fails closed today."
+          },
+          {
+            "id": "target_lds_budget",
+            "title": "Static LDS usage exceeds the target",
+            "language": "text",
+            "source": "target.max_lds = 65536 bytes\n%tile = kernel.ranked_view <f32, [20000], Workgroup, origin = 1>",
+            "diagnostic": "error[FE2O3-RESOURCE-004]: kernel requires 80000 workgroup-memory bytes, exceeding target limit 65536\nhelp: reduce or reuse staged storage\nhelp[FE2O3-FIX-TARGET]: use a target-supported LDS footprint",
+            "property": "TargetResourceFeasibility",
+            "stage": "compiler-supplied target precondition",
+            "code": "FE2O3-RESOURCE-004",
+            "enforcement": "target_lds_overflow.pliron; launch-contract resource mutations",
+            "caught": "Static workgroup views are counted by compiler-issued allocation origin, so multiple views of one allocation use its maximum extent while distinct allocations are summed. A concrete budget excess rejects before the unchanged eight policy passes."
+          },
+          {
+            "id": "target_host_allocation_small",
+            "title": "The host buffer is smaller than its kernel view",
+            "language": "text",
+            "source": "host allocation origin 2: bytes = 32, alignment = 16\n%output = kernel.ranked_view <f32, [16], Global, origin = 2>",
+            "diagnostic": "error[FE2O3-ABI-004]: global view origin 2 requires 64 bytes but the host contract provides 32\nhelp: bind a sufficiently large allocation or reduce the view\nhelp[FE2O3-FIX-TARGET]: bind each origin to a sufficiently large aligned host descriptor",
+            "property": "HostAbiFeasibility",
+            "stage": "compiler-supplied target precondition",
+            "code": "FE2O3-ABI-004",
+            "enforcement": "target_host_abi_small.pliron; launch-contract origin, size, and alignment mutations",
+            "caught": "The host descriptor is matched by compiler-issued allocation origin, not argument position or SSA name. Substituting another origin, providing insufficient alignment, overflowing size arithmetic, or leaving a dynamic size unguarded all stop admission with their own diagnostic."
           }
         ]
       },
@@ -1187,7 +1332,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable tensor-layout, bounds, atomic, race, hierarchical-ownership, barrier, workgroup-memory, and declared-semantic FE2O3 pass code plus every currently assigned compiler-owned parallel-relation code through FE2O3-PARALLEL-031. The effect table records implemented code classes and their Rejected or Incomplete outcomes. Direct production-pipeline errors also render a structured FE2O3-FIX repair with explicit applicability; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable code owned by the eight policy stages, their progress, numerical, and SIMT protocol analyses, the compiler-supplied target precondition, and the currently assigned compiler-owned parallel-relation codes through FE2O3-PARALLEL-031. The effect table records implemented code classes and their Rejected or Incomplete outcomes. Direct production-pipeline errors also render a structured FE2O3-FIX repair with explicit applicability; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1205,7 +1350,11 @@ const narrativeRegistry = deepFreeze({
           ["tensor producer/consumer flow", "Two producers assign incompatible layouts to one root, or a later operand/accumulator consumer requires a different role, map, element, component count, or subgroup width.", "An external root has no local producer fact; production source authority must independently authenticate its checked load, initializer, or conversion."],
           ["execution layout", "Global, workgroup, subgroup, or lane identities contradict one another; a per-axis partial workgroup violates a collective contract.", "A required dynamic extent or participant relation is unresolved."],
           ["allocation provenance and alias", "Two may-alias views expose an incompatible concrete concurrent effect.", "Allocation origin or alias class is unknown where disjointness is required."],
-          ["synchronization scope", "An atomic or barrier scope is narrower than the participating conflict domain.", "Grid progress or cooperative-launch evidence is absent."]
+          ["synchronization scope", "An atomic or barrier scope is narrower than the participating conflict domain.", "Grid progress or cooperative-launch evidence is absent."],
+          ["SIMT collective protocol", "Subgroup lanes execute different collective phases, only part of a tensor collective, or contradict the claimed active mask.", "The executed trace or bounded protocol analysis cannot be completed."],
+          ["loop progress", "A reachable cycle has a concrete nontermination witness such as an unchanged induction variable.", "The loop is outside the supported positive-induction, nonwrapping ranking proof."],
+          ["numerical refinement", "No broader numerical rejection is inferred from a changed operator tree.", "The GPU and reference typed operator trees differ and no supported interval or error theorem is available."],
+          ["target and host contract", "A concrete launch, LDS budget, allocation size, alignment, or allocation-count limit is violated.", "A required geometry, extent, provenance, or host-allocation fact remains dynamic or absent."]
         ]
       },
       {
@@ -1226,6 +1375,8 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
           ["FE2O3-BOUNDS-003", "Incomplete", "Bounds analysis encountered an unreachable block, unsupported terminator or operation, sparse-index failure, or bounded resource limit."],
           ["FE2O3-BOUNDS-004", "Rejected", "A finite affine access leaves its ranked extent; the diagnostic names the access and dimension, then gives the first invocation, computed index, failed bound, and a structured repair."],
+          ["FE2O3-BOUNDS-005", "Rejected", "Retained unsigned index add or constant-multiply arithmetic overflows on a concrete path; the operation, operands, invocation, and machine range are reported."],
+          ["FE2O3-BOUNDS-006", "Incomplete", "Index overflow safety depends on an unbounded runtime value, a non-entry path, or another relation the current machine-range proof cannot establish."],
           ["FE2O3-ATOMIC-001", "Rejected", "An atomic access is malformed, lacks explicit ordering or scope, uses an ordering illegal for its kind, or names a scope illegal for its address space."],
           ["FE2O3-ATOMIC-002", "Incomplete", "View provenance, target width/address-space/scope capability, or authenticated coherent-allocation evidence for system scope is unavailable."],
           ["FE2O3-ATOMIC-003", "Incomplete", "Atomic legality exceeded its bounded operation or finding budget."],
@@ -1252,6 +1403,10 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-BARRIER-000", "Prerequisite", "Bounds verification failed before barrier-convergence analysis."],
           ["FE2O3-BARRIER-001", "Rejected", "Two participating invocations execute different collective barrier identities or orders."],
           ["FE2O3-BARRIER-002", "Incomplete", "Barrier convergence cannot be proved because the launch, branch, terminator, CFG, or bounded trace is unresolved or unsupported."],
+          ["FE2O3-PROTOCOL-001", "Rejected", "Two active lanes in one subgroup execute different tensor/barrier phase identities or orders; both concrete invocation traces are reported."],
+          ["FE2O3-PROTOCOL-002", "Rejected", "Only a subset of the required physical subgroup reaches a tensor collective; the expected and actual active lanes are reported."],
+          ["FE2O3-PROTOCOL-003", "Rejected", "Compiler-retained collective participation metadata disagrees with the active lanes derived from executable CFG paths."],
+          ["FE2O3-PROTOCOL-004", "Incomplete", "SIMT protocol analysis exceeded its explicit bounded issue limit."],
           ["FE2O3-WORKGROUP-000", "Prerequisite", "Bounds or barrier-convergence verification failed before workgroup-memory analysis."],
           ["FE2O3-WORKGROUP-001", "Rejected", "An invocation reads a workgroup address without same-invocation initialization or a convergent acquire-release publication of a prior write."],
           ["FE2O3-WORKGROUP-002", "Rejected", "Concurrent invocations perform incompatible workgroup-memory effects at the same address in one barrier epoch."],
@@ -1264,6 +1419,10 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-SEMANTIC-005", "Incomplete", "A finite fold, recurrence, or permutation contract lacks a required structural witness or cannot be resolved within the bounded subset."],
           ["FE2O3-SEMANTIC-006", "Rejected", "A finite collective contract is invalid, including a coverage, policy, type, order, or mapping mismatch."],
           ["FE2O3-SEMANTIC-007", "Rejected", "A typed semantic-expression payload has invalid arity, types, operator policy, or commitment."],
+          ["FE2O3-PROGRESS-001", "Rejected", "A live control-flow cycle has a concrete nontermination witness, such as no exit or an induction variable unchanged on the backedge."],
+          ["FE2O3-PROGRESS-002", "Incomplete", "Termination cannot be proved by the supported positive constant-step induction form with a statically established nonwrapping update."],
+          ["FE2O3-PROGRESS-003", "Incomplete", "Progress analysis exceeded its explicit block, edge, or work limit."],
+          ["FE2O3-NUMERIC-001", "Incomplete", "The actual and reference live typed operator trees differ, so the current exact-zero absolute and relative error certificate does not apply."],
           ["FE2O3-PARALLEL-001", "Rejected", "The parallel relation does not bind the exact compiler-verified MIR/PLIRON semantic contract."],
           ["FE2O3-PARALLEL-002", "Incomplete", "The logical-output relation count does not equal the live total-output ownership proof count."],
           ["FE2O3-PARALLEL-003", "Rejected", "An output relation does not match its compiler-derived domain, view, values, or ownership contract."],
@@ -1290,7 +1449,26 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-PARALLEL-028", "Rejected", "A tensor refinement site ambiguously matches more than one logical output."],
           ["FE2O3-PARALLEL-029", "Rejected", "One logical output has more than one tensor refinement receipt."],
           ["FE2O3-PARALLEL-030", "Rejected", "A tensor refinement receipt names a tensor instruction site that is not live."],
-          ["FE2O3-PARALLEL-031", "Rejected", "One live tensor instruction site has more than one tensor refinement receipt."]
+          ["FE2O3-PARALLEL-031", "Rejected", "One live tensor instruction site has more than one tensor refinement receipt."],
+          ["FE2O3-TARGET-000", "Prerequisite", "Target feasibility was requested for a function that did not pass structural PLIRON verification."],
+          ["FE2O3-TARGET-001", "Incomplete", "The compiler-supplied target check has no retained execution layout."],
+          ["FE2O3-TARGET-002", "Rejected", "The kernel has more than one execution layout instead of one compiler-derived entry-block contract."],
+          ["FE2O3-TARGET-003", "Incomplete", "A dynamic grid axis cannot be compared statically with the selected target limit."],
+          ["FE2O3-TARGET-004", "Rejected", "A concrete grid-axis extent exceeds the selected target limit."],
+          ["FE2O3-TARGET-005", "Rejected", "A concrete workgroup-axis extent exceeds the selected target limit."],
+          ["FE2O3-TARGET-006", "Rejected", "The concrete workgroup invocation count exceeds the selected target limit."],
+          ["FE2O3-TARGET-007", "Rejected", "The kernel subgroup size is not supported by the selected target."],
+          ["FE2O3-RESOURCE-001", "Incomplete", "A dynamic workgroup-view extent prevents a static LDS byte calculation."],
+          ["FE2O3-RESOURCE-002", "Incomplete", "A workgroup view lacks the compiler-issued allocation origin required to deduplicate one physical allocation."],
+          ["FE2O3-RESOURCE-003", "Rejected", "Checked byte-size arithmetic for a workgroup allocation overflows."],
+          ["FE2O3-RESOURCE-004", "Rejected", "The deduplicated static workgroup-memory footprint exceeds the selected target's LDS limit."],
+          ["FE2O3-ABI-001", "Incomplete", "A global view lacks a compiler-issued allocation origin."],
+          ["FE2O3-ABI-002", "Incomplete", "No compiler/host allocation descriptor is bound to a global view's allocation origin."],
+          ["FE2O3-ABI-003", "Incomplete", "A dynamic global-view extent prevents static proof that the bound host allocation is large enough."],
+          ["FE2O3-ABI-004", "Rejected", "The origin-bound host allocation is smaller than the global view's checked static byte requirement."],
+          ["FE2O3-ABI-005", "Rejected", "The origin-bound host allocation guarantees less alignment than the global view requires."],
+          ["FE2O3-ABI-006", "Rejected", "The number of distinct live global allocation origins exceeds the selected target ABI limit."],
+          ["FE2O3-ABI-007", "Rejected", "Checked byte-size arithmetic for a global view overflows."]
         ]
       },
       {
