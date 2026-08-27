@@ -99,14 +99,14 @@ function IndexingMap() {
 
 function SimulationWorkgroup() {
   const stages = [
-    { icon: FileCode2, label: "Typed Rust", sub: "authenticated WG64" },
-    { icon: Binary, label: "KIR V7", sub: "exact and verified" },
+    { icon: Binary, label: "Exact KIR V7", sub: "245 bytes · pinned identity" },
+    { icon: LockKeyhole, label: "Verify + preflight", sub: "strict · fail closed" },
     { icon: Cpu, label: "CPU semantics", sub: "bounded · deterministic" },
   ];
   return (
     <figure
       className="diagram diagram-simulation"
-      aria-label="CPU semantic simulation of one authenticated WG64"
+      aria-label="Standalone CPU semantic simulation of one exact KIR V7 WG64"
     >
       <div className="simulation-flow">
         {stages.map((stage, index) => (

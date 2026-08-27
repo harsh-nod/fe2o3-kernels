@@ -385,11 +385,11 @@ const narrativeRegistry = deepFreeze({
   },
   "cpu-semantic-simulation/pipeline": {
     "sectionId": "pipeline",
-    "title": "Why the alternate simulator was retired",
+    "title": "Execute an exact semantic input",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "At compiler commit df63236de13f7572bad2c5e25e90d5b1bc4927c1, cargo fe2o3 simulate started from an ordinary attributed Rust crate, lowered semantic MIR through the general frontend, verified canonical Kernel IR V7, admitted formal memory, and handed the exact canonical bytes to a bounded CPU executor. Current main removed that alternate Cargo simulation route so source collection and production compilation have one architecture. The archived experiment remains useful design evidence; it is not a current command."
+        "text": "fe2o3-kir-sim begins at an exact canonical Kernel IR V7 file, not Rust source or Cargo compiler orchestration. The standalone Linux command securely reads the KIR and strict request, verifies and preflights the supported program, constructs typed formal memory, and runs a bounded deterministic CPU schedule. The versioned fill fixture makes every input and output byte reproducible without creating a second source compiler path."
       },
       {
         "type": "table",
@@ -400,14 +400,14 @@ const narrativeRegistry = deepFreeze({
         ],
         "rows": [
           [
-            "Source to semantic MIR",
-            "One selected ordinary safe Rust #[kernel(typed)] body, its authenticated required/max WG64 launch contract, and authenticated device operations.",
-            "Ambiguous kernels, unsupported source forms, and invalid typed operations fail closed."
+            "Linux file admission",
+            "One exact 245-byte KIR V7 file and one strict bounded JSON request, both opened as stable regular files.",
+            "Symlinks, special files, oversized inputs, mutable reads, duplicate fields, and unknown fields fail closed."
           ],
           [
-            "Semantic MIR to KIR V7",
-            "Typed control flow, integer values, launch queries, calls, and memory operations in the canonical versioned representation.",
-            "Verification precedes execution; malformed or unsupported KIR is never simulated."
+            "KIR V7 verification and preflight",
+            "Typed control flow, integer values, launch queries, calls, memory operations, and resource bounds in the canonical versioned representation.",
+            "Legacy V6, malformed KIR, unsupported operations, and over-budget programs fail before execution effects."
           ],
           [
             "Formal memory to CPU execution",
@@ -419,24 +419,24 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Scope the archived no-hardware claim",
-        "text": "The historical fe2o3 simulation path linked and initialized no GPU runtime and performed no GPU enumeration. Ordinary project Cargo build scripts were still trusted, unsandboxed host code and could independently access hardware. hardware_observed: false describes only that archived simulator result; it does not attest arbitrary build-script behavior or current main."
+        "title": "Scope the no-hardware claim",
+        "text": "The standalone simulator links and initializes no HSA, HIP, KFD, ROCm, or GPU runtime and performs no GPU enumeration. The ordinary Cargo build used to produce the CLI remains trusted host activity outside that runtime claim. hardware_observed: false describes the simulator result; it is not an attestation about every process on the host."
       },
       {
         "type": "callout",
         "tone": "info",
-        "title": "Historical state isolation",
-        "text": "Each historical source-simulation attempt used a fresh ephemeral generation and removed it after success or failure. That design prevented stale handoffs, but it did not justify maintaining a second Cargo compiler path beside production. The current repository retains no source-first cargo fe2o3 simulate fallback."
+        "title": "Secure deterministic output",
+        "text": "Success can stream as bounded JSON on stdout. With --output, the CLI publishes a new private 0600 file through a pinned no-symlink parent, fsyncs the file and directory, and never replaces an existing name. The result binds the target profile, KIR identity and length, schedule, counts, conflict observation, and typed argument state."
       }
     ]
   },
   "cpu-semantic-simulation/evidence-boundary": {
     "sectionId": "evidence-boundary",
-    "title": "Read the archived result as an observation",
+    "title": "Read the result as an exact observation",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The V1 result binds the positive bounded length of the exact canonical KIR and reports its profile-specific SHA-256 as 64 lowercase hexadecimal digits, together with scalar target-profile identity, cooperative scheduler identity, launch hierarchy counts, and the typed output snapshot. The displayed command does not bind every compiler-profile input, so this tutorial does not pin one digest or byte length. The request uses one authenticated WG64 with four live logical invocations and 60 inactive scheduled slots. All four u32 elements become 17, encoded as four little-endian 0x11000000 values."
+        "text": "The V1 result binds KIR identity e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384 over exactly 245 canonical bytes. The request visits one fixed WG64 with four live logical invocations and 60 inactive scheduled slots. All four u32 elements become 17, encoded as four little-endian 0x11000000 values; the complete output also records 20 execution steps and no observed cross-invocation conflicts."
       },
       {
         "type": "table",
@@ -466,8 +466,20 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Historical supported slice",
-        "text": "The archived milestone covered bounded scalar control flow and calls, integers, launch queries, typed global memory, static scalar workgroup memory, and convergent workgroup barriers. Wave collectives, generic barriers, atomics and fences, dynamic or non-scalar workgroup memory, matrix operations, floating-point target contracts, seeded schedule exploration, replay, and a virtual host runtime were never established. Current main exposes no alternate source-first simulation command."
+        "title": "Observation begins at KIR",
+        "text": "The fixture's Rust KIR owner can reconstruct the canonical bytes for regression testing, but the result does not associate any attributed Rust kernel with those bytes. It grants no source-to-KIR refinement, compiler correctness, race-freedom proof, LLVM or ISA validation, artifact or launch authority, GPU equivalence, timing, profiling, or performance prediction."
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "Current milestone: exact KIR V7 simulation",
+        "text": "The simulator covers bounded structured scalar control flow and internal calls, booleans and integers, D1-D3 launch queries, private memory, typed global memory with guarded loads, static scalar workgroup memory, and convergent workgroup barriers. Checked retained-capacity accounting bounds decoded KIR and execution state before effects. The trace adapter and query layer can organize semantic observations into logical workgroup, Wave32/Wave64, lane, operation-occurrence, memory, fault, provenance, and evidence pages; those wave views are logical and do not claim decoded GPU thread trace."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Unsupported semantics fail closed",
+        "text": "Floating point, atomics and fences, wave and matrix operations, dynamic or non-scalar workgroup memory, gfx950 LDS transpose, external calls, memory intrinsics, inline assembly, schedule exploration, and a virtual host runtime fail closed or remain outside the claim. The retired source-first cargo fe2o3 simulate route is not an alternate path. No result establishes HSACO or ISA behavior, HSA, HIP, KFD, or ROCm execution, source equivalence, race freedom, timing, profiling, or performance prediction."
       }
     ]
   },
@@ -1773,11 +1785,11 @@ const narrativeRegistry = deepFreeze({
     title: "Use simulation as a counterexample tool",
     blocks: [
       milestoneCallout(
-        "CPU semantic simulation can exercise domains and expose counterexamples, but it cannot establish universal coverage, arithmetic equivalence, or GPU refinement. The proof obligation remains quantified over the declared logical domain.",
+        "CPU semantic simulation can expose counterexamples in an exact KIR program, but it cannot establish source association, universal coverage, arithmetic equivalence, race freedom, or GPU refinement. Those obligations remain separate and quantified over their declared domains.",
       ),
       {
         type: "paragraph",
-        text: "A useful workflow runs generated edge cases through the simulator and safe Rust reference before proof. A mismatch blocks the candidate immediately. Matching finite cases improve confidence in the specification and fixtures; only the compiler and Verus layers can discharge the universal obligation they explicitly model.",
+        text: "Where an independent sequential oracle exists, run the same typed inputs through it and the exact KIR fixture. A mismatch blocks the candidate immediately. Matching finite cases improve confidence in the request, oracle, and fixture, but they do not prove that Rust source produced the KIR or discharge any universal compiler or Verus obligation.",
       },
     ],
   },

@@ -668,27 +668,35 @@ describe("curriculum integrity", () => {
 
   it("rejects historical evidence without an explicit and distinct boundary", () => {
     const missingBoundary = structuredClone(curriculum);
-    const missingReference = missingBoundary
+    const missingClaim = missingBoundary
       .flatMap((module) => module.lessons)
-      .find((lesson) => lesson.id === "cpu-semantic-simulation")!
-      .claims[0]!.reference!;
+      .flatMap((lesson) => lesson.claims)
+      .find((claim) => claim.reference?.scope === "historical-evidence")!;
+    const missingReference = missingClaim.reference!;
     missingReference.note = "Observation-only evidence.";
-    expect(validateCurriculum(missingBoundary)).toContainEqual({
-      path: "lesson[cpu-semantic-simulation].claims[0]",
-      message: "historical claim does not state its archived boundary",
-    });
+    expect(validateCurriculum(missingBoundary)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message: "historical claim does not state its archived boundary",
+        }),
+      ]),
+    );
 
     const currentPin = structuredClone(curriculum);
-    const currentReference = currentPin
+    const currentClaim = currentPin
       .flatMap((module) => module.lessons)
-      .find((lesson) => lesson.id === "cpu-semantic-simulation")!
-      .claims[0]!.reference!;
+      .flatMap((lesson) => lesson.claims)
+      .find((claim) => claim.reference?.scope === "historical-evidence")!;
+    const currentReference = currentClaim.reference!;
     currentReference.commit = currentState.compilerCommit;
     currentReference.tree = currentState.compilerTree;
-    expect(validateCurriculum(currentPin)).toContainEqual({
-      path: "lesson[cpu-semantic-simulation].claims[0]",
-      message: "historical claim reuses the current compiler pin",
-    });
+    expect(validateCurriculum(currentPin)).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          message: "historical claim reuses the current compiler pin",
+        }),
+      ]),
+    );
   });
 
   it("requires every real source tab to match its pinned digest", () => {
@@ -745,74 +753,86 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("keeps retired CPU semantic simulation exact and non-hardware", () => {
+  it("keeps standalone CPU semantic simulation exact and non-hardware", () => {
     const lesson = lessons.find(
       (candidate) => candidate.id === "cpu-semantic-simulation",
     );
     expect(lesson).toBeDefined();
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
-      explanatory: false,
-      sourceCommit: "df63236de13f7572bad2c5e25e90d5b1bc4927c1",
+      explanatory: true,
+      sourceCommit: currentState.compilerCommit,
       sourcePath:
-        "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
-      sourceSha256:
-        "19854910d7488530033bbf4c15ed6b32283e56f4f8b6ed64f7775d68597a46dd",
+        "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir",
     });
     expect(kernel?.code).toBe(
-      readFileSync("examples/cpu_simulation_kernel.rs", "utf8"),
+      readFileSync("examples/cpu_simulation_kir_v7.txt", "utf8"),
     );
+    expect(kernel?.code).toContain(
+      "e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384",
+    );
+    expect(kernel?.code).toContain("canonical bytes: 245");
+    expect(kernel?.code).toContain("no Rust-source-to-KIR association");
     const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code ?? "";
     expect(host).toContain(
       readFileSync("examples/cpu_simulation_request.json", "utf8").trim(),
     );
-    expect(host).toContain("cargo fe2o3 simulate");
-    expect(host).toContain("This command is not present on current main");
+    expect(host).toContain("cargo build --locked -p fe2o3-kir-sim-cli");
+    expect(host).toContain("./target/debug/fe2o3-kir-sim --kir-v7");
+    expect(host).not.toContain("cargo fe2o3 simulate --request");
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    expect(result).toBe(
+      readFileSync("examples/cpu_simulation_result.json", "utf8"),
+    );
     for (const boundary of [
-      "authority: observation_only",
-      "availability: retired_from_current_main",
-      "simulated: true",
-      "hardware_observed: false",
-      "hardware_validation: false",
-      "performance_prediction: false",
+      '"authority":"observation_only"',
+      '"simulated":true',
+      '"hardware_observed":false',
+      '"hardware_validation":false',
+      '"performance_prediction":false',
     ]) {
       expect(result).toContain(boundary);
     }
-    expect(result).toContain(
-      "kir.sha256: 64 lowercase hexadecimal digits (profile-specific)",
-    );
-    expect(result).toContain("kir.canonical_bytes: positive bounded byte length");
-    expect(result).toContain("counts.invocations_executed: 4");
-    expect(result).toContain("counts.workgroups_visited: 1");
-    expect(result).toContain("counts.scheduled_slots_visited: 64");
-    expect(result).toContain(
-      "schedule.identity: workgroup_major_local_zyx_cooperative_v1",
-    );
+    expect(result).toContain('"canonical_bytes":245');
+    expect(result).toContain('"invocations_executed":4');
+    expect(result).toContain('"workgroups_visited":1');
+    expect(result).toContain('"scheduled_slots_visited":64');
+    expect(result).toContain('"steps_executed":20');
+    expect(result).toContain('"status":"no_conflicts_observed"');
+    expect(result).toContain('"identity":"workgroup_major_local_zyx_cooperative_v1"');
     expect(result).toContain("0x11000000110000001100000011000000");
     expect(lesson?.claims[0]).toMatchObject({
-      kind: "compiler-checked",
+      kind: "runnable-now",
       reference: {
-        scope: "historical-evidence",
-        commit: "df63236de13f7572bad2c5e25e90d5b1bc4927c1",
-        tree: "d1068313b6bab22b5bb071fc8b39113e76cfb0a3",
+        scope: "current-implementation",
+        commit: currentState.compilerCommit,
+        tree: currentState.compilerTree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
-      scope: "historical-evidence",
-      commit: "df63236de13f7572bad2c5e25e90d5b1bc4927c1",
-      tree: "d1068313b6bab22b5bb071fc8b39113e76cfb0a3",
+      scope: "current-implementation",
+      commit: currentState.compilerCommit,
+      tree: currentState.compilerTree,
       target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
     });
-    expect(reference?.note).toContain("Historical observation-only");
-    const content = serializedLessonContent("cpu-semantic-simulation");
-    expect(content).toContain("trusted, unsandboxed host code");
-    expect(content).toContain(
-      "hardware_observed: false describes only that archived simulator result",
+    expect(reference?.note).toContain("No source-to-KIR association");
+    expect(reference?.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-kir-sim/src/resident.rs",
+        "crates/fe2o3-kir-sim-trace/src/lib.rs",
+        "crates/fe2o3-semantic-query/src/lib.rs",
+      ]),
     );
-    expect(content).toContain("fresh ephemeral generation");
-    expect(content).toContain("prevented stale handoffs");
+    const content = serializedLessonContent("cpu-semantic-simulation");
+    expect(content).toContain("accepts no Rust source");
+    expect(content).toContain("Legacy V6");
+    expect(content).toContain("private 0600 file");
+    expect(content).toContain("Current milestone: exact KIR V7 simulation");
+    expect(content).toContain("Wave32/Wave64");
+    expect(content).toContain("gfx950 LDS transpose");
+    expect(content).toContain("no source-to-KIR refinement");
+    expect(content).toContain("performance prediction");
 
     expect(currentState.issues).toEqual(
       expect.arrayContaining([
@@ -829,17 +849,19 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "cpu-semantic-simulation",
       )?.detail,
-    ).toContain("single production pipeline");
+    ).toContain("accepts no Rust source");
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "cpu-semantic-simulation",
       )?.detail,
-    ).toContain("not a current command");
+    ).toContain("no source-to-KIR refinement");
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "compiler-analysis",
+      )?.detail,
+    ).toContain("context-wide monotonic PLIRON mutation-attempt epoch");
     const compilerAnalysis = currentState.capabilities.find(
       (capability) => capability.id === "compiler-analysis",
-    );
-    expect(compilerAnalysis?.detail).toContain(
-      "context-wide mutation-attempt epoch",
     );
     expect(compilerAnalysis?.detail).toContain(
       "static bounded-access fragment",
