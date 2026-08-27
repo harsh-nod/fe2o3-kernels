@@ -372,7 +372,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Thirty-nine representative compile-time failures",
+      name: "Forty-two representative compile-time failures",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -436,7 +436,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByText("Generic does not mean automatically provable"),
   ).toBeVisible();
   await expect(
-    page.getByText("Checkpoint equality is a narrow guarantee", {
+    page.getByText("Mutation epoch plus exact checkpoints", {
       exact: true,
     }),
   ).toBeVisible();
@@ -470,6 +470,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByText("Stable pass diagnostic catalog"),
   ).toBeVisible();
+  await expect(page.getByText("Mutation epoch plus exact checkpoints")).toBeVisible();
+  await expect(page.getByText("A Clean report is diagnostic, not a proof")).toBeVisible();
+  await expect(page.getByText("Transforming passes use a different boundary")).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002", exact: true })).toBeVisible();
@@ -484,8 +487,12 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-001", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-010", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-020", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-025", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-028", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-039", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-044", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-TRANSFORM-008", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-010", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-013", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-023", exact: true })).toBeVisible();
@@ -524,7 +531,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Thirty-nine representative compile-time failures",
+      name: "Forty-two representative compile-time failures",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));

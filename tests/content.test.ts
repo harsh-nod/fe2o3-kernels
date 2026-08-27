@@ -731,7 +731,23 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "compiler-analysis",
       )?.detail,
-    ).toContain("Checkpoint equality does not detect transient mutate-then-restore behavior");
+    ).toContain("context-wide monotonic PLIRON mutation-attempt epoch");
+    const compilerAnalysis = currentState.capabilities.find(
+      (capability) => capability.id === "compiler-analysis",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "all eight independent semantic-witness checks remain Incomplete",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "zero production transformations are supported",
+    );
+    expect(compilerAnalysis?.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-kernel-analysis/src/pliron_pass_contract.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_report_validation.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
+      ]),
+    );
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "functional-reference",
@@ -925,9 +941,13 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("The CPU reference closes semantics, not hardware layout");
     expect(failures).toContain("Production errors include a repair contract");
     expect(failures).toContain("FE2O3-FIX-LAYOUT");
-    expect(failures).toContain("Checkpoint equality is a narrow guarantee");
-    expect(failures).toContain("Matching checkpoints do not detect transient mutate-then-restore behavior");
-    expect(failures).toContain("A transforming pass needs a separately validated semantic-refinement relation");
+    expect(failures).toContain("Mutation epoch plus exact checkpoints");
+    expect(failures).toContain("mutate-then-restore cannot disappear behind equal final bytes");
+    expect(failures).toContain("A Clean report is diagnostic, not a proof");
+    expect(failures).toContain("all eight independent semantic-witness checks remain Incomplete");
+    expect(failures).toContain("Transforming passes use a different boundary");
+    expect(failures).toContain("production registry contains zero transforming passes");
+    expect(failures).toContain("private test fixture exercises custody only");
     expect(failures).toContain("proof that trusted dialect encoders or printers are correct");
     expect(failures).toContain("does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem");
     expect(failures).toContain("unsafe_asm");
@@ -1067,6 +1087,8 @@ describe("curriculum integrity", () => {
       "kernel-target-contract (compiler-supplied precondition)",
       "kernel-ir-interprocedural-effects (shared analysis)",
       "pliron-ranked-structural-identity-v1 (shared preservation root)",
+      "pliron-analysis-report-validation-v1 (integrity boundary)",
+      "pliron-transform-refinement-v1 (separate transformation boundary)",
       "bounded resources (cross-cutting)",
     ]);
     const prerequisiteTable = semanticFailures.blocks.find(
@@ -1097,12 +1119,37 @@ describe("curriculum integrity", () => {
       "FE2O3-PRESERVE-004",
       "FE2O3-PRESERVE-005",
       "FE2O3-PRESERVE-010",
+      "FE2O3-PRESERVE-020",
+      "FE2O3-PRESERVE-021",
       "FE2O3-PRESERVE-022",
+      "FE2O3-PRESERVE-023",
       "FE2O3-PRESERVE-024",
       "FE2O3-PRESERVE-025",
       "FE2O3-PRESERVE-026",
+      "FE2O3-PRESERVE-027",
       "FE2O3-PRESERVE-028",
       "FE2O3-PRESERVE-029",
+      "FE2O3-PRESERVE-031",
+      "FE2O3-PRESERVE-032",
+      "FE2O3-PRESERVE-033",
+      "FE2O3-PRESERVE-035",
+      "FE2O3-PRESERVE-036",
+      "FE2O3-PRESERVE-037",
+      "FE2O3-PRESERVE-038",
+      "FE2O3-PRESERVE-039",
+      "FE2O3-PRESERVE-040",
+      "FE2O3-PRESERVE-041",
+      "FE2O3-PRESERVE-043",
+      "FE2O3-PRESERVE-044",
+      "FE2O3-TRANSFORM-001",
+      "FE2O3-TRANSFORM-002",
+      "FE2O3-TRANSFORM-003",
+      "FE2O3-TRANSFORM-004",
+      "FE2O3-TRANSFORM-005",
+      "FE2O3-TRANSFORM-006",
+      "FE2O3-TRANSFORM-007",
+      "FE2O3-TRANSFORM-008",
+      "FE2O3-TRANSFORM-009",
       "FE2O3-TENSOR-LAYOUT-001",
       "FE2O3-TENSOR-LAYOUT-002",
       "FE2O3-TENSOR-LAYOUT-003",
@@ -1237,7 +1284,7 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(39);
+    expect(failureGallery.examples).toHaveLength(42);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
     expect(failureGallery.intro).toContain("tensor layout first");
     expect(failureGallery.intro).toContain("users still write Rust");
@@ -1281,6 +1328,9 @@ describe("curriculum integrity", () => {
       "preserve_analysis_operator_mutation",
       "preserve_unsupported_snapshot",
       "preserve_snapshot_resource_limit",
+      "preserve_transient_mutation_attempt",
+      "preserve_report_payload_substitution",
+      "transform_without_semantic_checker",
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
@@ -1338,13 +1388,31 @@ describe("curriculum integrity", () => {
       "changed at block 0 op 2",
     );
     expect(example("preserve_analysis_operator_mutation")?.caught).toContain(
-      "does not detect mutate-then-restore behavior",
+      "Any mutable access attempt is attributed to that stage",
     );
     expect(example("preserve_unsupported_snapshot")?.diagnostic).toContain(
       "post-pass structural identity is unavailable",
     );
     expect(example("preserve_snapshot_resource_limit")?.diagnostic).toContain(
       "basic blocks count 1025",
+    );
+    expect(example("preserve_transient_mutation_attempt")?.diagnostic).toContain(
+      "FE2O3-PRESERVE-020",
+    );
+    expect(example("preserve_transient_mutation_attempt")?.caught).toContain(
+      "cannot restore the epoch",
+    );
+    expect(example("preserve_report_payload_substitution")?.diagnostic).toContain(
+      "FE2O3-PRESERVE-039",
+    );
+    expect(example("preserve_report_payload_substitution")?.caught).toContain(
+      "does not prove that the original analysis was semantically sound",
+    );
+    expect(example("transform_without_semantic_checker")?.diagnostic).toContain(
+      "FE2O3-TRANSFORM-008",
+    );
+    expect(example("transform_without_semantic_checker")?.caught).toContain(
+      "Production supports zero transformations",
     );
     expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
     expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
@@ -1447,9 +1515,11 @@ describe("curriculum integrity", () => {
       "before KIR lowering",
       "Candidate declarations are not evidence",
       "root-owned fixed /opt runtime",
-      "one immediately after each of the eight named analysis stages",
+      "one after every stage",
       "Exact bytes, not the diagnostic digest",
-      "does not detect transient mutate-restore behavior or prove the stage report correct",
+      "Any mutation attempt is attributed to the active stage",
+      "All eight independent semantic-witness checks remain Incomplete",
+      "Clean is diagnostic only",
     ]) {
       expect(narrative).toContain(boundary);
     }

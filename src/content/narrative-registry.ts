@@ -771,13 +771,13 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "PLIRON dialect and structural verification is the prerequisite. The mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, then semantic refinement with effect refinement inside that final stage. No lowering pass may run between these eight checks. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact. The production preservation session adds a separate fail-closed question: did a named analysis stage leave a persistent structural change in the verified ranked PLIRON?"
+        "text": "PLIRON dialect and structural verification is the prerequisite. The mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, then semantic refinement with effect refinement inside that final stage. No lowering pass may run between these eight checks. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact. The production integrity boundary asks two separate questions: did an analysis-only stage attempt any context-owned PLIRON mutation, and does the exact ranked structure still match its preceding checkpoint?"
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Checkpoint equality is a narrow guarantee",
-        "text": "The eight policy stages are analysis-only. The production session constructs one bounded canonical snapshot before the sequence and one immediately after each contiguous stage, for nine structural walks total. It retains operation classes, admitted attribute and type IDs plus their bounded registered encodings, SSA wiring, successors, regions, and deterministic alpha-numbering while ignoring display-only block and SSA labels. A persistent change is attributed to the active stage as FE2O3-PRESERVE-025 with nested FE2O3-PRESERVE-010 detail at the first changed site. Exact canonical bytes are retained for later production revalidation; SHA-256 and length are diagnostic labels, never the acceptance decision. Matching checkpoints do not detect transient mutate-then-restore behavior and do not prove that an analysis report is correct. A transforming pass needs a separately validated semantic-refinement relation."
+        "title": "Mutation epoch plus exact checkpoints",
+        "text": "The eight policy stages are analysis-only. PLIRON exposes one context-wide monotonic mutation-attempt epoch that advances before mutable access, arena allocation or removal, and even a failed mutable borrow. The production session compares the epoch around each named stage, so mutate-then-restore cannot disappear behind equal final bytes. It also constructs one bounded canonical snapshot before the sequence and one after each contiguous stage. Those snapshots retain operation classes, admitted attribute and type IDs plus bounded encodings, SSA wiring, successors, regions, and deterministic alpha-numbering while ignoring display-only labels. Any mutation attempt fails closed with the active stage named; a retained change additionally reports FE2O3-PRESERVE-010 detail at the first changed site. Exact bytes, not SHA-256 labels, drive comparison and later revalidation. Neither mechanism proves that the stage's analysis result is correct."
       },
       {
         "type": "table",
@@ -787,10 +787,40 @@ const narrativeRegistry = deepFreeze({
           "What is not granted"
         ],
         "rows": [
-          ["Ranked-PLIRON analysis stage", "One initial and eight post-stage snapshots require exact retained canonical bytes and report the named stage plus first persistent changed component.", "Transient mutate-restore behavior, correctness of the pass report, operational equivalence, lowering, artifact, or launch authority."],
+          ["Ranked-PLIRON analysis stage", "A context-wide epoch rejects any mutation attempt during the named stage; one initial and eight post-stage snapshots compare exact retained canonical bytes and locate the first retained changed component.", "Correctness of the pass report, operational equivalence, lowering, artifact, or launch authority."],
           ["Unsupported or oversized identity snapshot", "Unsupported structure is FE2O3-PRESERVE-001; a declared identity resource limit is FE2O3-PRESERVE-002. Both fail closed before comparison.", "An omitted operation, partial digest, best-effort comparison, or permission to continue."],
           ["Closed encoding boundary", "Only the admitted production operation classes, attribute IDs, and recursively admitted type classes enter a bounded snapshot.", "A proof that trusted dialect encoders or printers are correct, or permission for an unknown dialect entity to enter the pipeline."]
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "A Clean report is diagnostic, not a proof",
+        "text": "The compiler seals each actual report to one exact context, function owner, structural checkpoint, fixed stage position, implementation version, runtime configuration, report payload, and derived status. Private custody detects cross-session substitution, stale subjects, reordered or omitted stages, and payload, status, implementation, configuration, or checkpoint tampering. It does not independently replay the analysis: all eight independent semantic-witness checks remain Incomplete. A Clean pass result is useful diagnostic policy output but grants no proof, compiler-refinement, lowering, artifact, or launch authority."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Analysis report",
+          "Missing independent witness",
+          "Current validation"
+        ],
+        "rows": [
+          ["Tensor layout", "Exhaustive operation/value layout facts, propagation, and consumer compatibility.", "Incomplete"],
+          ["Ranked bounds", "Every access dimension and path domain plus independently checkable Presburger certificates.", "Incomplete"],
+          ["Atomic legality", "Exhaustive atomic enumeration joined to exact capability, provenance, scope, and ordering witnesses.", "Incomplete"],
+          ["Race freedom", "Every instantiated effect plus independently checkable alias, ownership, disjointness, and happens-before witnesses.", "Incomplete"],
+          ["Hierarchy ownership", "Every output/write domain plus range, injectivity, partition disjointness, and total-coverage certificates.", "Incomplete"],
+          ["Barrier convergence", "Every participant domain plus reachability, uniformity, phase, and postdominance certificates.", "Incomplete"],
+          ["Workgroup memory", "Every allocation and effect plus byte layout, lifetime, epoch, alias, and conflict-freedom witnesses.", "Incomplete"],
+          ["Semantic refinement", "Complete reference roots, outputs, control and loops, effects, arithmetic, and numerical proof objects.", "Incomplete"]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Transforming passes use a different boundary",
+        "text": "An intentional PLIRON rewrite cannot pass the analysis-only exact-identity contract. Its separate sealed refinement session binds the exact before and after owners and canonical structures, the pass implementation and configuration, an independent checker identity, and a one-shot checker-issued result. Rejected, Incomplete, replayed, substituted, mismatched, unchanged, and unsupported transformations fail closed. The production registry contains zero transforming passes because fe2o3 has no independent PLIRON-to-PLIRON semantic checker yet. The private test fixture exercises custody only; it is not transformation authority or a general equivalence theorem."
       },
       {
         "type": "callout",
@@ -907,13 +937,15 @@ const narrativeRegistry = deepFreeze({
           ["kernel-progress (semantic-stage analysis)", "Find live CFG cycles and prove the supported positive-induction ranking function with no wrapping update.", "Exit-free reachable SCC; zero-step witness; symbolic non-unit no-wrap obligation; noncanonical recurrence; block or edge limit."],
           ["kernel-target-contract (compiler-supplied precondition)", "Check target grid/workgroup/subgroup limits, static LDS bytes, and origin-bound host allocation size/alignment before the same eight passes.", "Malformed or oversized launch; unsupported subgroup; LDS overflow/budget excess; missing, small, misaligned, dynamic, or excessive host allocations. This report grants no launch authority."],
           ["kernel-ir-interprocedural-effects (shared analysis)", "Summarize bounded acyclic helper call graphs so compiler-derived pure helpers remain complete across calls.", "Declaration, recursion, inline assembly, resource exhaustion, or a memory-effecting helper whose argument/provenance coordinates cannot yet be substituted."],
-          ["pliron-ranked-structural-identity-v1 (shared preservation root)", "Construct closed, bounded deterministic identities for production ranked PLIRON and compare exact retained bytes across each named analysis checkpoint.", "Malformed, unsupported, externally referenced, nondeterministically rendered, panicking, or over-budget snapshots; first persistent changed operation, attribute, type, SSA edge, successor, or region."],
+          ["pliron-ranked-structural-identity-v1 (shared preservation root)", "Combine a context-wide mutation-attempt epoch with closed, bounded deterministic identities across each named analysis checkpoint.", "Any attempted mutable access during an analysis-only stage; malformed, unsupported, externally referenced, nondeterministically rendered, panicking, or over-budget snapshots; first retained changed operation, attribute, type, SSA edge, successor, or region."],
+          ["pliron-analysis-report-validation-v1 (integrity boundary)", "Seal every actual stage report to its exact owner, checkpoint, order, implementation, configuration, payload, and status, then expose the missing independently checkable semantic witness.", "Substitution, stale subject, reorder, omission, or tampering is Rejected. All eight independent witness checks remain Incomplete even when the policy report is Clean."],
+          ["pliron-transform-refinement-v1 (separate transformation boundary)", "Bind exact before/after owners and structures, pass implementation/configuration, checker identity, and one-shot checker result for intentional rewrites.", "Zero production transformations are supported; absent independent checking, every rewrite is Unsupported and grants no equivalence or lowering authority."],
           ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
         ]
       },
       {
         "type": "compile-failures",
-        "heading": "Thirty-nine representative compile-time failures",
+        "heading": "Forty-two representative compile-time failures",
         "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence, its shared analyses and persistent-structure preservation boundary, the compiler-supplied target precondition, and the semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, hierarchy ownership, barriers and SIMT protocol, workgroup memory ordering, and semantic refinement with progress, numerical, and reference-effect checks. Text snippets are compact schematic semantic IR or compiler-derived report state; users still write Rust, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current diagnostics. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
         "examples": [
           {
@@ -1356,7 +1388,7 @@ const narrativeRegistry = deepFreeze({
             "stage": "analysis-pass preservation boundary",
             "code": "FE2O3-PRESERVE-025",
             "enforcement": "pliron_pipeline::mutation_is_blamed_on_the_active_pass_and_has_a_compiler_repair; canonical identity mutation tests",
-            "caught": "The production wrapper takes an exact checkpoint after the stage and compares it with the retained preceding bytes. A persistent operator, attribute, type, SSA edge, successor, or region change is attributed to that stage and stops the pipeline. The check does not detect mutate-then-restore behavior or certify the analysis report."
+            "caught": "The production wrapper checks both the context-wide mutation-attempt epoch around the stage and an exact checkpoint against the retained preceding bytes. Any mutable access attempt is attributed to that stage even if it restores the same bytes; a retained operator, attribute, type, SSA edge, successor, or region change additionally identifies its first exact changed site. Neither check certifies the analysis report."
           },
           {
             "id": "preserve_unsupported_snapshot",
@@ -1381,6 +1413,42 @@ const narrativeRegistry = deepFreeze({
             "code": "FE2O3-PRESERVE-028",
             "enforcement": "Block, operation, value, operand, successor, attribute, text, and canonical-byte resource mutation tests",
             "caught": "Every identity resource has an explicit limit. Exceeding one is Incomplete and terminal rather than a truncated snapshot, hash-only comparison, or permission to continue. This keeps preservation checking deterministic and bounded for arbitrary kernels."
+          },
+          {
+            "id": "preserve_transient_mutation_attempt",
+            "title": "An analysis changes PLIRON and restores it",
+            "language": "text",
+            "source": "inside kernel-race-freedom-v1:\n  before epoch = 481\n  temporarily set %index.kind = Multiply\n  restore %index.kind = Add\n  after epoch = 483; exact bytes equal",
+            "diagnostic": "error[FE2O3-PRESERVE-020]: analysis-only pass RaceFreedom attempted PLIRON mutation (context epoch 481 -> 483); help: use only immutable analysis queries in this stage\nhelp[FE2O3-FIX-PASS-PRESERVATION] (Manual): compiler maintainer: remove mutable PLIRON access from the named analysis pass",
+            "property": "AnalysisOnlyMutationFreedom",
+            "stage": "analysis-pass preservation boundary",
+            "code": "FE2O3-PRESERVE-020",
+            "enforcement": "pliron_pass_contract mutation-attempt and mutate-restore adversarial tests",
+            "caught": "The context-wide epoch advances before mutable access is granted. Restoring the original operator makes the exact post-stage bytes equal but cannot restore the epoch, so the compiler names RaceFreedom and stops. Failed mutable borrows are detected by the same workload-neutral mechanism."
+          },
+          {
+            "id": "preserve_report_payload_substitution",
+            "title": "A sealed report payload is replaced",
+            "language": "text",
+            "source": "issued at stage 4/8: RaceFreedom Clean for exact checkpoint C\nsubmitted at stage 4/8: modified RaceFreedom findings for checkpoint C",
+            "diagnostic": "error[FE2O3-PRESERVE-039]: analysis facts or findings were modified after sealing at position 3; help: consume the compiler-issued report without reconstruction or mutation",
+            "property": "AnalysisReportCustody",
+            "stage": "analysis-report integrity boundary",
+            "code": "FE2O3-PRESERVE-039",
+            "enforcement": "pliron_report_validation report-payload mutation tests",
+            "caught": "The session keeps private custody of the issued report and compares the complete typed payload and derived status at the exact stage position. This rejects substitution; it does not prove that the original analysis was semantically sound. That independent witness remains Incomplete for all eight stages."
+          },
+          {
+            "id": "transform_without_semantic_checker",
+            "title": "A transforming pass has no independent checker",
+            "language": "text",
+            "source": "pass canonicalize-index rewrites exact before PLIRON B to exact after PLIRON A\nproduction semantic checker registry: empty",
+            "diagnostic": "error[FE2O3-TRANSFORM-008]: transforming pass canonicalize-index is unsupported: no independent PLIRON semantic checker is registered",
+            "property": "NamedTransformationRefinement",
+            "stage": "separate transforming-pass boundary",
+            "code": "FE2O3-TRANSFORM-008",
+            "enforcement": "pliron_transform_refinement empty-registry and unsupported-result adversarial tests",
+            "caught": "Exact before/after structure and a plausible pass name cannot certify a rewrite. The boundary requires a checker-issued result bound to the exact owners, pass implementation and configuration, checker identity, and one-shot session. Production supports zero transformations rather than treating structural change as equivalence."
           }
         ]
       },
@@ -1388,7 +1456,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable code owned by bounded PLIRON identity preservation, the eight policy stages, their progress, numerical, and SIMT protocol analyses, the compiler-supplied target precondition, and the currently assigned compiler-owned parallel-relation codes through FE2O3-PARALLEL-031. The effect table records implemented code classes and their Rejected or Incomplete outcomes. Direct production-pipeline errors also render a structured FE2O3-FIX repair with explicit applicability; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
+        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable code owned by bounded PLIRON identity, mutation-attempt preservation, report custody, the separate transforming-pass boundary, the eight policy stages, their progress, numerical and SIMT protocol analyses, the compiler-supplied target precondition, and the currently assigned parallel-relation codes through FE2O3-PARALLEL-031. Compiler-integrity and transformation rows diagnose compiler-owned invariants, not ordinary source mistakes and not semantic proof. The effect table records implemented Rejected or Incomplete outcomes. Direct production-pipeline errors also render a structured FE2O3-FIX repair with explicit applicability; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
       },
       {
         "type": "table",
@@ -1428,12 +1496,37 @@ const narrativeRegistry = deepFreeze({
           ["FE2O3-PRESERVE-004", "Incomplete", "A registered type or attribute cannot be rendered deterministically for canonical identity; the entity and exact site are reported."],
           ["FE2O3-PRESERVE-005", "Incomplete", "Bounded identity traversal panicked and was rejected instead of producing a snapshot."],
           ["FE2O3-PRESERVE-010", "Rejected", "Two successfully constructed structural identities differ; the first changed operation, attribute, type, SSA wiring, successor, region, or function component is reported as nested detail."],
+          ["FE2O3-PRESERVE-020", "Compiler integrity", "A named analysis-only stage attempted context-owned PLIRON mutation; the before and after mutation epochs and stage are reported even when exact bytes were restored."],
+          ["FE2O3-PRESERVE-021", "Compiler integrity", "A stage received a stale mutation epoch relative to the sealed session; restart the fixed pipeline from a fresh structural snapshot."],
           ["FE2O3-PRESERVE-022", "Rejected", "A production analysis stage ran outside the fixed eight-stage order; the expected and observed stages are reported."],
+          ["FE2O3-PRESERVE-023", "Compiler integrity", "The context mutation-attempt epoch is unavailable or exhausted, so the stage cannot certify a mutation-free interval."],
           ["FE2O3-PRESERVE-024", "Rejected", "The sealed session ended before all eight required stages completed; the first omitted stage is reported."],
           ["FE2O3-PRESERVE-025", "Rejected", "A named analysis stage left a persistent structural change, including a post-stage graph that cannot be snapshotted; nested detail reports the exact mismatch or snapshot failure."],
           ["FE2O3-PRESERVE-026", "Rejected", "A defensive non-contiguous stage entry observes bytes different from the retained prior checkpoint; the named stage and nested mismatch are reported."],
+          ["FE2O3-PRESERVE-027", "Compiler integrity", "A named analysis stage panicked; the stage is reported and no report or later-stage authority is retained."],
           ["FE2O3-PRESERVE-028", "Prerequisite", "The initial structural identity is unavailable because verification, closed admission, deterministic rendering, or a resource bound failed; the nested source code selects a source-side repair."],
           ["FE2O3-PRESERVE-029", "Rejected", "The sealed session state is invalid, such as overlapping stages, completion without an active stage, execution after the fixed sequence, or a missing retained checkpoint."],
+          ["FE2O3-PRESERVE-031", "Compiler integrity", "A report seal was not issued by the exact preservation and report-custody session."],
+          ["FE2O3-PRESERVE-032", "Compiler integrity", "A submitted report belongs to another PLIRON context."],
+          ["FE2O3-PRESERVE-033", "Compiler integrity", "A submitted report belongs to another PLIRON function owner."],
+          ["FE2O3-PRESERVE-035", "Compiler integrity", "A report appears at the wrong fixed stage position; expected and observed stages are reported."],
+          ["FE2O3-PRESERVE-036", "Compiler integrity", "Exact checkpoint position, pass, or diagnostic identity metadata was modified after issue."],
+          ["FE2O3-PRESERVE-037", "Compiler integrity", "The sealed analysis implementation/version identity was modified."],
+          ["FE2O3-PRESERVE-038", "Compiler integrity", "The sealed runtime analysis configuration was modified."],
+          ["FE2O3-PRESERVE-039", "Compiler integrity", "Typed analysis facts or findings differ from the compiler-issued report payload."],
+          ["FE2O3-PRESERVE-040", "Compiler integrity", "A submitted report status differs from the status derived from its sealed payload."],
+          ["FE2O3-PRESERVE-041", "Compiler integrity", "The exact-preservation manifest does not describe the same fixed eight report stages."],
+          ["FE2O3-PRESERVE-043", "Compiler integrity", "A required report was omitted; its exact position and pass are reported."],
+          ["FE2O3-PRESERVE-044", "Compiler integrity", "A report issued for one stage position was replayed at another position."],
+          ["FE2O3-TRANSFORM-001", "Transformation boundary", "The exact before/after owner or canonical structural identity is unavailable, or one-shot session identity is exhausted."],
+          ["FE2O3-TRANSFORM-002", "Transformation boundary", "Before and after structures are exactly identical; the pass belongs at the analysis-only boundary rather than the rewriting boundary."],
+          ["FE2O3-TRANSFORM-003", "Transformation boundary", "The executed pass implementation or configuration differs from its sealed contract."],
+          ["FE2O3-TRANSFORM-004", "Transformation boundary", "The checker identity or a checker-issued exact owner, structure, pass, implementation, or configuration binding differs from the live session."],
+          ["FE2O3-TRANSFORM-005", "Transformation boundary", "A checker result was replayed from another one-shot session."],
+          ["FE2O3-TRANSFORM-006", "Transformation boundary", "The independent semantic checker rejected the named transformation."],
+          ["FE2O3-TRANSFORM-007", "Transformation boundary", "The independent semantic checker could not prove the named transformation."],
+          ["FE2O3-TRANSFORM-008", "Transformation boundary", "The transformation is unsupported; the production registry currently contains zero entries."],
+          ["FE2O3-TRANSFORM-009", "Transformation boundary", "The checker diagnostic is empty, oversized, contains NUL, or is outside the bounded canonical ASCII form."],
           ["FE2O3-TENSOR-LAYOUT-001", "Rejected", "A tensor contract is malformed or disagrees with the instruction profile, including operand roles, width, packing, register maps, coordinate coverage, storage transform, tail policy, active lanes, or an exact divergent trace."],
           ["FE2O3-TENSOR-LAYOUT-002", "Incomplete", "Tensor layout or convergence cannot be proved, including an opaque lane map or unresolved cyclic control flow."],
           ["FE2O3-TENSOR-LAYOUT-003", "Incomplete", "Tensor verification exceeded an explicit operation, map, trace, finding, or work-unit limit."],
@@ -1576,7 +1669,9 @@ const narrativeRegistry = deepFreeze({
           ["rustc and kernel macro", "Rust type, move, borrow, lifetime, visibility, attribute, signature, unsafe-body, or inline-assembly violation.", "rustc or source-admission diagnostic; not a PLIRON pass code."],
           ["semantic MIR import", "Unsupported terminal, ownership mapping, effect, call, or control-flow projection.", "Frontend Rejected or Incomplete diagnostic before ranked PLIRON authority."],
           ["dialect and structural verification", "Malformed operation, type, SSA use, dominance, region, terminator, capability, or execution-layout contract; Kernel IR also rejects an illegal cast kind, scalar category, signedness, or width as InvalidCast.", "Structural diagnostic at the owning IR boundary; this is not an invented eight-pass code."],
-          ["analysis checkpoint preservation", "A bounded canonical snapshot is malformed, unsupported, externally referenced, nondeterministically rendered, over budget, stale, or persistently differs after a named analysis stage.", "FE2O3-PRESERVE-000..005, 010, 022, 024..026, or 028..029. Checkpoint equality does not detect transient mutate-restore behavior or prove analysis correctness."],
+          ["analysis-stage integrity", "The context mutation-attempt epoch changes, or a bounded canonical snapshot is malformed, unsupported, externally referenced, nondeterministically rendered, over budget, stale, or differs after a named analysis stage.", "Stage-attributed preservation diagnostics plus FE2O3-PRESERVE-000..005, 010, 022, 024..026, or 028..029. Epoch and checkpoint checks do not prove analysis correctness."],
+          ["analysis-report custody", "A sealed report is substituted, stale, reordered, replayed, omitted, or its checkpoint, implementation, configuration, payload, or status is modified.", "FE2O3-PRESERVE-031..033, 035..041, and 043..044 fail closed. Untampered custody still leaves every independent semantic witness Incomplete."],
+          ["transforming-pass refinement", "The before/after owner or structure, pass implementation/configuration, checker identity, one-shot session, or checker result is absent, mismatched, replayed, rejected, incomplete, or unsupported.", "FE2O3-TRANSFORM-001..009. Zero production transformations are currently supported."],
           ["checked lowering and Kernel IR verification", "A verified PLIRON fact cannot be represented faithfully in canonical KIR V7, or canonical KIR semantic verification fails.", "Lowering or KIR verification diagnostic; no target artifact is emitted."],
           ["formal memory admission", "A guarded non-private load does not bind data, length, selected index, and predicate to the same allocation, or its selected false address offset is not literal zero.", "Formal-memory rejection after KIR verification and before target lowering."],
           ["target and production boundary", "Unsupported target operation or profile, compiler invocation or closure mismatch, finalization failure, or artifact contract mismatch.", "Owning target, invocation, worker, or finalizer diagnostic; never a fabricated safety-pass code."]
@@ -1649,7 +1744,8 @@ const narrativeRegistry = deepFreeze({
           "Every compiler-recognized device capability must match its exact diagnostic item and canonical DefPath, an authenticated reviewed provider identity, the compiled SourceFileHash under the reviewed source root, and the pinned provider source digest.",
           "Supported safe ownership mappings retain their genuine marker identity and const parameters; malformed, substituted, or unsupported forms stop as Rejected or Incomplete before they can become memory effects.",
           "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
-          "The production preservation session constructs one bounded canonical identity before the sequence and one immediately after each of the eight named analysis stages. Unsupported or over-budget input snapshots report FE2O3-PRESERVE-028 with nested detail; persistent stage changes report FE2O3-PRESERVE-025 and the first changed site. Exact bytes, not the diagnostic digest, are retained for later revalidation. Checkpoint equality does not detect transient mutate-restore behavior or prove the stage report correct.",
+          "The production preservation session compares PLIRON's context-wide mutation-attempt epoch around each of the eight named analysis stages, then constructs one bounded canonical identity before the sequence and one after every stage. Any mutation attempt is attributed to the active stage even if bytes are restored. Unsupported or over-budget snapshots report FE2O3-PRESERVE-028 with nested detail; retained changes report FE2O3-PRESERVE-025 and the first changed site. Exact bytes, not the diagnostic digest, are retained for later revalidation. These checks do not prove the stage report correct.",
+          "A separate compiler-owned custody session seals each actual report to the exact context, function, checkpoint, stage position, implementation, configuration, payload, and status. It rejects substitution, replay, reordering, omission, and tampering. All eight independent semantic-witness checks remain Incomplete, so Clean is diagnostic only and grants no proof, lowering, artifact, or launch authority.",
           "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for each run; reachable typed CFG edges are part of sparse propagation. Production revalidation creates a fresh manager, reruns the sequence, and compares the retained exact output bytes.",
           "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Effect refinement executes inside the final stage after hierarchy ownership. Every report returns Clean, Rejected, or Incomplete. Exact identity does not replace any report or add a ninth policy pass.",
           "For each paired effect, the private compiler carries exact GPU and reference sites, memory indices, logical coordinates, domains, preconditions, typed formulas, and eligible ranked-read identities into the value-carrying recipe. Multiple separated point outputs retain one status-Checked policy-staging record each. PLIRON independently proves and reconciles noalias separation, TotalView, frames, schedules, and ordered-product identity; staging grants no authority.",
@@ -1667,13 +1763,13 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. One initial and eight post-stage structural identities now detect persistent changes across that fixed sequence; retained exact bytes also participate in later production revalidation. This does not establish immutable execution, transient mutation detection, or report soundness. One generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity; status-Checked policy staging grants no authority, and the private move-only admission join requires both result classes. Canonical loops include an overflow-safe final latch. Dynamic safe-slice reads accept only identical symbolic ranked extents or overflow-checked bounded static affine intervals. Noncanonical SCC requests, typed tensor result-component/store claims, ErrorBounded sites, folds, recurrences, and permutations retain exact claim data but cannot compose with formula authority. mi300x lacks the required root-owned /opt runtime and there is no fallback. No compiler extraction/projection, analysis-result or transformation soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, hardware, or performance authority is claimed."
+        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. A context-wide mutation-attempt epoch rejects mutable access during those analysis-only stages, including mutate-then-restore; one initial and eight post-stage exact identities locate retained changes and support revalidation. Sealed report custody binds the exact subject and payload, but every independent semantic-witness check remains Incomplete. Clean is therefore diagnostic and grants no proof, lowering, artifact, or launch authority. Intentional rewrites use a separate checker-bound transformation session, whose production registry is empty until an independent semantic checker exists. One generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity; status-Checked policy staging grants no authority, and the private move-only admission join requires both result classes. Canonical loops include an overflow-safe final latch. Dynamic safe-slice reads accept only identical symbolic ranked extents or overflow-checked bounded static affine intervals. Noncanonical SCC requests, typed tensor result-component/store claims, ErrorBounded sites, folds, recurrences, and permutations retain exact claim data but cannot compose with formula authority. mi300x lacks the required root-owned /opt runtime and there is no fallback. No compiler extraction/projection, analysis-result or transformation soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, hardware, or performance authority is claimed."
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "What remains trusted",
-        "text": "Verus proves equality of the formulas generated for the paired effect. PLIRON checkpoint identity detects persistent structure differences around each analysis stage, but it cannot detect mutate-then-restore behavior or prove that the stage computed a correct report. Registered dialect operation classes and attribute/type encodings remain trusted inputs to canonicalization. The rustc MIR collector, safe-reference extractor, GPU projection, bounds-only control validator, effect bijection, ranked-recipe construction, transcript construction, and transformation preservation remain in the compiler trusted computing base. This path does not prove rustc source-to-MIR correctness, compiler extraction or projection correctness, ranked-IR-to-ISA refinement, or hardware execution."
+        "text": "Verus proves equality of the formulas generated for the paired effect. The PLIRON mutation-attempt epoch and exact checkpoints detect attempted and retained structural changes around each analysis stage, while sealed custody detects report substitution and tampering. They do not prove that a stage computed a correct report: all eight independent semantic witnesses remain Incomplete. Registered dialect operation classes, mutation instrumentation, and attribute/type encodings remain trusted inputs. The rustc MIR collector, safe-reference extractor, GPU projection, bounds-only control validator, effect bijection, ranked-recipe construction, transcript construction, analysis implementations, and transformation preservation remain in the compiler trusted computing base. No transforming PLIRON pass is admitted. This path does not prove rustc source-to-MIR correctness, compiler extraction or projection correctness, ranked-IR-to-ISA refinement, or hardware execution."
       }
     ]
   },
