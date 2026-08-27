@@ -1,11 +1,7 @@
 import { narrativeSection } from "./narrative-registry";
 import { currentState } from "./current-state";
-import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
+import { semanticMilestoneLessonBoundary } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
-import compilerReferenceDiagnostics from "../../examples/compiler_reference_v2/diagnostics.txt?raw";
-import compilerReferenceEffect from "../../examples/compiler_reference_v2/effect-and-receipt.txt?raw";
-import compilerReferenceKernel from "../../examples/compiler_reference_v2/kernel.rs?raw";
-import compilerReferenceSource from "../../examples/compiler_reference_v2/reference.rs?raw";
 import cpuSimulationKernel from "../../examples/cpu_simulation_kernel.rs?raw";
 import cpuSimulationRequest from "../../examples/cpu_simulation_request.json?raw";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
@@ -647,91 +643,44 @@ const compilerChecks: Lesson = {
   id: "compiler-checks",
   module: 2,
   order: 2,
-  title: "Compiler checks: reject invalid kernels",
+  title: "Compiler checks: one path, explicit boundaries",
   summary:
-    "See the complete workload-neutral error catalog, learn what analysis integrity does and does not prove, then bind safe Rust CPU semantics to one real GPU write.",
-  duration: "42 min",
+    "Follow safe Rust through ranked PLIRON checks, one independently validated constant fold, and the narrow witness fragments that are complete today.",
+  duration: "18 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
-    "Distinguish a proved static access from a checked dynamic access.",
-    "Read Rejected and Incomplete diagnostics as fail-closed compilation results.",
-    "Bind a local safe Rust reference with #[kernel(typed, reference = ...)] and use leading usize arguments as logical point coordinates.",
-    "Follow compiler-owned ranked writes through a strict source-effect bijection, PLIRON structural output reconciliation, exact per-output formula replay, and one private joined admission.",
-    "Distinguish per-effect partial correctness from total output coverage and full source-to-machine equivalence.",
-    "Locate tensor-layout, bounds, atomic, race, barrier, workgroup-memory, semantic, and resource checks.",
-    "Explain why MFMA register layout, operand role, storage transform, wave participation, and edge policy are separate proof obligations.",
-    "Reason about multidimensional workgroups, alias classes, publication epochs, and atomic scope without relying on a workload recognizer.",
-    "Follow sparse index facts through reachable typed CFG edges and explain why analysis caches end at each validation boundary.",
-    "Follow compiler-owned semantic derivation, strict parallel derivation, and generated per-compilation Verus composition in their mandatory pre-KIR order.",
-    "Explain exact pointwise formula replay without a generic relation premise.",
-    "Distinguish canonical-loop authority from noncanonical SCC proof requests.",
-    "Identify the exact ranked-extent subset that proves dynamic slice bounds and why tensor components and ErrorBounded relations still fail closed at formula replay.",
-    "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
-    "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
-    "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
-    "Separate mutation-attempt detection, exact structural checkpoints, sealed report custody, and independent semantic witness checking.",
-    "Explain why transforming PLIRON passes require an independent checker and why none is admitted in production today.",
+    "Follow the workload-neutral Rust MIR to ranked PLIRON to KIR path.",
+    "Distinguish Rejected, Incomplete, Clean policy reports, and Complete raw-replay witnesses.",
+    "Explain why checked tiled and row-striped ownership can prove a dynamic race relation without proving every race witness.",
+    "Identify the narrow static-bounds and canonical wave64 tensor fragments with Complete independent replay.",
+    "Explain how exact typed replay admits index constant folding without authorizing other transformations.",
+    "Recognize unsupported CFG, no-wrap, dynamic, alias, and tensor cases as fail-closed compilation results.",
   ],
   claims: [
     {
       kind: "compiler-checked",
-      label: "Production ranked-bounds rejection",
+      label: "Fixed ranked verification with checked normalization",
       detail:
-        "At current compiler main, ordinary Rust semantic MIR reaches ranked PLIRON. The generic bounds verifier accepts the checked dynamic output access and rejects input[64] for [f32; 64] with FE2O3-BOUNDS-001 before target lowering or artifact emission.",
+        "The single production ranked route runs a sealed checked constant fold before the fixed eight analysis stages. Independent raw replay is Complete only for the documented static bounded-access and canonical rooted wave64 tensor fragments; all other current witnesses remain Incomplete and grant no KIR authority.",
       reference: currentImplementationReference(
         [
-          "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
+          "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold",
+          "cargo test --locked -p fe2o3-kernel-analysis --lib pliron_analysis_witness",
         ],
         [
-          "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
-          "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+          "crates/fe2o3-pliron/src/production/ranked.rs",
+          "crates/fe2o3-pliron/src/production/ranked/ranked_index_constant_fold_v1.rs",
+          "crates/fe2o3-pliron/tests/production_ranked_constant_fold.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_pipeline.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_analysis_manager.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_analysis_witness.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_ranked_bounds.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_sparse_index.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_race.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_barrier.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_workgroup_memory.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_pass_contract.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_report_validation.rs",
-          "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_progress.rs",
         ],
-        { target: "gfx942" },
-      ),
-    },
-    {
-      kind: "compiler-checked",
-      label: "Safe Rust per-compilation composition gate",
-      detail:
-        "The compiler resolves one local safe Rust reference and the kernel in one rustc session. Before KIR lowering it derives and reconciles their exact contracts, then generates one workload-neutral Verus checker. Exact pointwise integer or compiler-side IEEE operator-DAG claims replay each compiler-derived coordinate, domain, precondition, and value formula directly. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity. Status-Checked policy staging grants no authority; the private move-only join is the admission authority and requires matching structural and formula reports. mi300x lacks the root-owned /opt runtime, so no referenced production compile has completed this gate and there is no fallback.",
-      reference: currentImplementationReference(
-        [
-          "cargo test --locked -p rustc-codegen-fe2o3 --features qualification-oracles-test-only --test reference_binding_v1 -- --ignored --nocapture --test-threads=1",
-        ],
-        [
-          "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
-          "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
-          "crates/rustc-codegen-fe2o3/src/reference_effect_v1.rs",
-          "crates/rustc-codegen-fe2o3/src/production_reference_bounds_v2.rs",
-          "crates/rustc-codegen-fe2o3/src/reference_effect_bijection_v1.rs",
-          "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
-          "crates/fe2o3-pliron/src/production/mir_pliron_semantic_contract_derivation_v1.rs",
-          "crates/fe2o3-pliron/src/production/noncanonical_loop_proof_v1.rs",
-          "crates/fe2o3-pliron/tests/noncanonical_loop_proof_v1.rs",
-          "crates/fe2o3-pliron/src/production/parallel_reference_contract_v1.rs",
-          "crates/dialect-proof/src/lib.rs",
-          "crates/dialect-proof/tests/hostile.rs",
-          "crates/fe2o3-verifier/src/mir_pliron_per_compilation_verus_v1.rs",
-          "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_template_v1.rs",
-          "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_fixture_v1.rs",
-          "crates/fe2o3-verifier/verus/mir_pliron_per_compilation_generated_multi_output_fixture_v1.rs",
-          "crates/fe2o3-verifier/verus/negative/mir_pliron_per_compilation_multi_output_substitution_v1.rs",
-          "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
-          "crates/rustc-codegen-fe2o3/src/production_mir_pliron_verus_join_v1.rs",
-          "scripts/test-mir-pliron-per-compilation-verus.sh",
-        ],
-        { target: "gfx942" },
+        {
+          target: "gfx942",
+          note: "Final compiler commit and tree pins are intentionally pending integration.",
+        },
       ),
     },
   ],
@@ -744,7 +693,7 @@ const compilerChecks: Lesson = {
   tabs: [
     {
       kind: "kernel",
-      label: "Bounds fixture",
+      label: "Static bounds",
       language: "rust",
       code: compilerBoundsKernel,
       sourcePath:
@@ -754,84 +703,63 @@ const compilerChecks: Lesson = {
         "b50e80f620ec69e18a4e623ccefa3b19a6c858c259c1417a195fae65eb853606",
       explanatory: false,
       notice:
-        "Feature flags select the static-bounds, ownership-mapping, and barrier-convergence fixtures. The oob case rejects input[64] as one past the declared extent; the production driver also checks convergent, divergent, early-return, cyclic, and helper barrier placements.",
+        "The one-past-end array read is Rejected before KIR. A supported finite safe case can additionally receive a Complete raw bounds replay.",
     },
     {
       kind: "comparison",
-      label: "Reference-bound kernel",
-      language: "rust",
-      code: compilerReferenceKernel,
-      sourcePath:
-        "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
-      sourceCommit: currentState.compilerCommit,
+      label: "Checked fold",
+      language: "text",
+      code: "before:\n  %a = kernel.index_constant 5\n  %b = kernel.index_constant 7\n  %sum = kernel.index_binary Add %a, %b\nafter:\n  %a = kernel.index_constant 5\n  %b = kernel.index_constant 7\n  %sum = kernel.index_constant 12",
       explanatory: true,
       notice:
-        "Minimal form of the exact positive source fixture. The leading usize reference argument names logical point axis 0; it is not a physical GPU pointer or launch argument.",
-    },
-    {
-      kind: "reference",
-      label: "Safe CPU reference",
-      language: "rust",
-      code: compilerReferenceSource,
-      sourcePath:
-        "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
-      sourceCommit: currentState.compilerCommit,
-      explanatory: true,
-      notice:
-        "Reference-effect V1 accepts one local safe Rust function with leading usize point axes and bounded point-output effects. Dynamic input[index] retains and matches its exact bounds assertion. It is discharged only when an identical symbolic ranked extent or an overflow-checked bounded static affine interval proves the full-domain bound; unrelated lengths, missing assertions, unsafe intervals, and overflow remain Incomplete. Canonical unit-step loops include an overflow-safe final latch. Other loop SCCs produce exact invariant/variant proof requests that cannot yet grant formula authority.",
+        "The folder proposes the rewrite. A separate evaluator and structural replay check the u64 result, SSA identity, CFG, operation position, and every unrelated typed operation before the transformed recipe is admitted.",
     },
     {
       kind: "verus",
-      label: "Production proof gate",
+      label: "Where Verus fits",
       language: "text",
-      code: compilerReferenceEffect,
-      sourcePath:
-        "crates/rustc-codegen-fe2o3/src/production_reference_effect_join_v2.rs",
-      sourceCommit: currentState.compilerCommit,
+      code:
+        "You do not need to write a Verus proof to read a compiler diagnostic.\n\nVerus can state and prove a safe CPU reference contract. The compiler still needs a separate, supported refinement witness before that theorem says anything about an exact ranked PLIRON function. The two narrow raw-replay witnesses below are compiler-owned checks, not substitutes for a workload semantics proof.\n\n" +
+        semanticMilestoneLessonBoundary,
       explanatory: true,
       notice:
-        `The display begins with the compiler-owned effect join. Production then derives the semantic contract, derives the strict parallel contract, and runs one generated per-compilation Verus checker before KIR lowering. The checker independently replays each supported exact point formula; PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity. Status-Checked policy staging grants no authority. The pinned positive fixture is ${semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath}; its exact substitution negative is ${semanticCorrectnessMilestone.perCompilationMultiOutputSubstitutionFixturePath}. The private move-only join is the admission authority and requires matching structural and formula reports at SafeReferenceMirToLivePliron; compiler extraction/projection and pass soundness remain trusted.`,
-    },
-    {
-      kind: "host",
-      label: "Run fixtures",
-      language: "bash",
-      code: "cargo test --locked -p rustc-codegen-fe2o3 --features qualification-oracles-test-only --test reference_binding_v1 -- --ignored --nocapture --test-threads=1\ncargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
-      sourcePath:
-        "crates/rustc-codegen-fe2o3/tests/reference_binding_v1.rs",
-      sourceCommit: currentState.compilerCommit,
-      explanatory: true,
-      notice:
-        "The first command checks the positive boundary, the 17-to-18 mutation, and ten fail-closed reference forms. The second remains the exact static out-of-bounds production rejection.",
+        "Start with ordinary safe Rust and the compiler diagnostics. Add a Verus reference when you need an explicit functional contract; unsupported refinement remains Incomplete.",
     },
     {
       kind: "result",
-      label: "Reference diagnostics",
+      label: "Witness boundary",
       language: "text",
-      code: compilerReferenceDiagnostics,
+      code: "Complete:\n  static bounded ranked access raw replay\n  rooted single-block canonical gfx942 wave64 tensor-layout raw replay\n\nIncomplete:\n  every other current independent stage witness\n  dynamic or over-budget bounds replay\n  general tensor CFG and source-projection correspondence\n  general race, ownership, barrier, atomic, workgroup-memory, progress, and semantic replay",
       explanatory: true,
       notice:
-        "The positive fixture intentionally stops if /opt/fe2o3/verus-runtime-v2/functional-refinement-0.2026.08.02-b677dd5 is absent. There is no fallback. Unrelated dynamic extents, missing assertions, unsafe affine bounds, overflow, noncanonical-loop composition, tensor-component replay, ErrorBounded formula replay, and malformed multiple-output products all fail closed.",
+        "A Clean policy report and a Complete independent witness are different results. Unsupported witness coverage stops compilation rather than becoming proof by omission.",
+    },
+    {
+      kind: "host",
+      label: "Run checks",
+      language: "bash",
+      code: "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold\ncargo test --locked -p fe2o3-kernel-analysis --lib pliron_analysis_witness\ncargo test --locked -p fe2o3-kernel-analysis --test pliron_lit",
+      explanatory: true,
+      notice:
+        "These commands cover the checked transform, independent witness replay, and the textual workload-neutral PLIRON diagnostics. They do not execute a GPU artifact.",
     },
   ],
   diagram: "memory",
   exercises: [
     {
-      prompt: "Change input[64] to input[63], then explain why output.get_mut remains dynamic.",
-      hint: "One bound is part of the array type; the other depends on the runtime launch identity and slice length.",
+      prompt: "Explain why 5 + 7 may fold but u64::MAX + 1 must remain unfurled and fail closed.",
+      hint: "The validator uses checked u64 semantics and accepts only an exact same-site rewrite.",
       acceptance:
-        "The static array access is proved from 63 < 64, while get_mut emits a checked dynamic access that is safe only on its Some branch.",
+        "12 is an exact checked result. Overflow has no admitted constant result, so the original binary operation remains for existing verification to reject.",
     },
   ],
   glossary: [
     "ranked PLIRON",
     "Rejected",
     "Incomplete",
-    "compiler-issued capability",
-    "compiler safety pass",
-    "mutation-attempt epoch",
-    "semantic witness",
-    "transformation refinement",
+    "raw replay witness",
+    "checked transformation",
+    "exact typed custody",
   ],
 };
 

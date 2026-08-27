@@ -563,1245 +563,147 @@ const narrativeRegistry = deepFreeze({
   },
   "compiler-checks/catalog": {
     "sectionId": "compiler-checks-catalog",
-    "title": "Compile-time kernel diagnostics",
+    "title": "From safe Rust to checked Kernel IR",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "fe2o3 separates ordinary Rust UI errors from target-neutral kernel verification. Rust rejects local type, borrowing, ownership, privacy, and typestate misuse inside one invocation. The compiler then analyzes structured operations, SSA, control flow, indexed memory effects, cross-invocation ownership, atomics, barriers, workgroup-memory epochs, and explicitly declared semantic-equivalence obligations. These checks consume workload-neutral Kernel IR or ranked PLIRON: none recognizes GEMM names, tile sizes, or schedules."
+        "text": "fe2o3 keeps one workload-neutral route: rustc checks ordinary safe Rust and retains semantic MIR, the compiler projects a typed ranked PLIRON function, checked normalization and the fixed verifier sequence run there, and only the admitted result can become canonical Kernel IR. No pass recognizes GEMM, softmax, attention, routing, or another workload name."
       },
       {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Ordinary kernels are safe Rust",
-        "text": "An ordinary #[kernel] function has a safe signature and body. Unsafe functions, unsafe blocks, and inline assembly are rejected at the source boundary, including reachable device helpers. The explicitly separate unsafe_asm profile is the low-level provider and test escape hatch; selecting it does not weaken, discharge, or bypass any verifier obligation for an ordinary kernel. Trusted device APIs may contain narrowly reviewed unsafe implementation code behind safe surfaces. The compiler recognizes a capability terminal only after matching its exact diagnostic item and canonical DefPath, authenticating its reviewed provider identity, verifying rustc's compiled SourceFileHash against the reviewed source root, and matching the pinned source digest. A crate name or same-named replacement is not sufficient."
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "One Rust type system, extended to GPU facts",
-        "text": "Fe2O3 does not implement a second borrow checker. rustc remains authoritative for moves, borrows, lifetimes, visibility, and local typestate. Fe2O3's sealed non-Clone values carry those affine rules into GPU concepts such as invocation ownership, subgroup participation, LDS initialization epochs, matrix contexts, and launch-scoped resources. Ranked PLIRON and Kernel IR passes then verify cross-invocation facts that ordinary Rust cannot observe, including disjoint writes and convergent barriers."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Rust form",
-          "GPU meaning",
-          "Enforced by"
-        ],
-        "rows": [
-          ["&T and &mut T", "Shared reads and unique mutation remain lifetime-bound through typed host preparation and safe device views.", "rustc plus typed host/device APIs"],
-          ["non-Copy, non-Clone capability", "An invocation, tile, LDS epoch, or synchronization permission cannot be duplicated or forged in safe source.", "rustc plus authenticated constructors"],
-          ["Option and checked_*", "Dynamic shape and arithmetic checks produce ordinary enum control flow instead of magic verifier syntax.", "rustc MIR plus generic enum and bounds analysis"],
-          ["KernelResult and ?", "A failed checked operation returns from the current invocation through ordinary Rust control flow.", "rustc, the #[kernel] wrapper, and convergence verification"],
-          ["unsafe", "Ordinary kernels cannot delegate proof obligations to unchecked source; low-level providers use a separate reviewed profile.", "source-boundary admission"]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "MFMA identity lives in the types",
-        "text": "A typed BF16 MFMA fragment carries a wave lifetime, operand role A or B, instruction profile, register distribution, and lane width. Swapping A and B, mixing instruction profiles, changing the register distribution, retaining a fragment beyond its wave, copying a move-only fragment, or constructing its private representation is a rustc error. These types prevent local misuse; the tensor-layout pass separately proves that the compiler IR describes the required lane-to-matrix map and that all participating lanes execute the collective."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Typed fragments survive loops",
-        "text": "When a fragment or accumulator crosses a branch or loop backedge, semantic lowering gives the destination block typed SSA components plus a compiler-owned binding descriptor. Each incoming edge must supply the same fragment kind, instruction contract, and current-wave association; an ordinary four-float aggregate cannot stand in for that typed value. The descriptor restores wave provenance without transporting a forgeable phi token, and none of this requires recognizing a GEMM loop."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Layout follows values across tensor instructions",
-        "text": "Ranked PLIRON retains compiler-derived lhs, rhs, accumulator, and result roots on every cooperative tensor site. The tensor-layout pass joins producer facts by exact root and checks each later use against the consumer's complete fragment ABI: role, element, shape, register map, packing, storage transform, component count, and subgroup width. A second instruction with a compatible ABI is allowed even when its profile name differs; an incompatible QK-to-PV composition is FE2O3-TENSOR-LAYOUT-005. A checked conversion or reload is accepted only when authenticated source projection gives it a distinct root."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "MFMA fact",
-          "Where it belongs",
-          "Why it is separate"
-        ],
-        "rows": [
-          ["A, B, or accumulator role", "Rust fragment type and authenticated terminal", "Operand order is rejected before an instruction contract is formed."],
-          ["Instruction profile and register distribution", "Rust type plus tensor-layout contract", "A valid value representation must also match the target instruction lane/component map."],
-          ["direct global, row-major LDS, or XOR4 LDS", "Independent storage provenance for each operand", "Storage swizzling describes addresses before a load. It is not an MFMA register distribution, and A and B need not use the same storage transform."],
-          ["edge or K-tail behavior", "Exact-tile or authenticated zero-fill policy in the tensor-layout contract", "A fragment can have the correct register type while still reading an invalid physical edge or supplying undefined inactive components."],
-          ["active wave participation", "Uniformity and CFG dataflow at the actual collective site", "A textual uniform attribute is only a claim. The verifier derives control dependence and rejects lane-varying participation or order."]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "What KernelResult means",
-        "text": "KernelResult<T> is the ordinary Result<T, KernelError> shape used inside the kernel. The attribute macro emits a private helper with that return type and a physical unit-return GPU entry wrapper that calls it. The compiler keeps both functions, follows Ok and Err payloads through generic enum dominance, and verifies every reachable path. Err is not a host-visible error payload: it ends only the current invocation. A lane-varying ? before a required workgroup barrier is still rejected by barrier convergence analysis."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Checked arithmetic stays explicit",
-        "text": "Rust checked add, subtract, and multiply remain two-result operations, value plus overflow, through semantic MIR and canonical Kernel IR V7. Compiler-generated unchecked add, subtract, or multiply is admitted only when the exact matching checked operation uses the same operands and its zero-overflow edge dominates the unchecked operation. This is workload-neutral control-flow proof, not an algorithm recognizer. V7 carries the tensor contract; frozen V5 and V6 decoders cannot reconstruct missing tensor authority."
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Where Verus fits",
-        "text": "Verus is a separate proof layer for named MIR/effect or mathematical-model properties such as functional equality, ownership mappings, recurrence correspondence, and numerical preconditions. It does not replace rustc's borrow checker or the mandatory compiler verifiers. The V2 functional-refinement path authenticates one exact retained Verus/Z3 execution and consumes its signed MIR-bound result; it still does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem or independently grant artifact or launch authority."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "The CPU reference closes semantics, not hardware layout",
-        "text": "The compiler composes four independent obligations. The target descriptor validates the physical instruction layout. Rooted layout dataflow proves that each produced fragment reaches only ABI-compatible consumers. Semantic and effect refinement bind the exact propagated accumulator result, component stores, output coordinates, guards, and values to the safe Rust reference. The retained Verus result checks the admitted preconditions, postconditions, invariants, and formula boundary. A CPU reference cannot make a wrong lane packing valid, and a valid packing cannot substitute for the reference's functional theorem; both sides must pass."
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "Production errors include a repair contract",
-        "text": "Every error returned by the fixed eight-pass production PLIRON sequence carries a KernelCheckRepairV1 with a stable FE2O3-FIX code, owning pass, applicability, and actionable message. Layout failures name both producer and consumer sites and profiles. Suggestions are currently HasPlaceholders because choosing a new instruction, conversion, guard, ownership partition, or synchronization strategy is a semantic edit; the compiler never applies one silently."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Bind the reference as ordinary Rust",
-        "text": "The user writes #[kernel(typed, reference = cpu_reference, ...)]. The path must resolve to exactly one local safe Rust function in the same compiler session; no source-written hash or proof identity is trusted. The collector resolves the concrete monomorphized kernel and reference Instances, records their canonical identities and exact rustc MIR body SHA-256 values, and translates the admitted reference MIR into bounded ReferenceEffectIrV1. Leading usize parameters name logical point axes; a following &mut scalar names one observable output at that point. This is workload-neutral MIR handling: no pass recognizes a GEMM, softmax, attention, routing, expert, or other algorithm name."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Reference-effect V1 rule",
-          "Accepted now",
-          "Fail-closed result"
-        ],
-        "rows": [
-          ["Safety and ABI", "One local safe, non-variadic Rust-ABI function with unit return, up to three leading usize logical point axes, admitted scalar/shared-slice inputs, and bounded direct point-output effects.", "Unsafe references or bodies, nonlocal functions, wrong return type, indirect output, or logical ABI mismatch stop before proof import."],
-          ["Control flow", "Bounded typed branches, direct local safe scalar helpers, and canonical finite unit-step loops with exact machine bounds, transition, variant, maximum-step identity, and overflow-safe final latch.", "Other loop SCCs emit an exact invariant/variant request. An imported answer cannot yet grant formula authority."],
-          ["Effect normalization", "Closed typed expressions, guards, point coordinates, and output effects are derived from MIR. A direct safe one-dimensional input[index] retains its exact bound and reconciles with the live ranked GPU read identity.", "Full-domain discharge accepts an identical symbolic ranked extent or an overflow-checked bounded static affine interval. Unrelated extents, missing or unused assertions, unsafe intervals, overflow, raw pointers, multidimensional, opaque, or unmatched effects fail closed."],
-          ["Dynamic ownership", "ExactEffectDomain can admit a structurally bounds-guarded dynamic point write after clean bounds and race reports; TotalView is required for complete output coverage.", "A point effect alone does not claim the whole runtime view is written; unresolved bounds, collisions, missing output identities, or duplicate sites remain non-clean and emit no artifact."],
-          ["Observable outputs", "PLIRON forms and reconciles an ordered separated product only from compiler-derived noalias, TotalView, hierarchy, frame, and schedule evidence. Each point output keeps one status-Checked policy-staging record; one generated run separately replays every supported formula.", "Staging grants no authority. Duplicate, overlapping, unclassified, coverage-mismatched, reordered, ambiguous, or unmodeled outputs stop before the private joined admission."]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Compare the admitted GPU effect to safe Rust",
-        "text": "The private join converts each correlated admitted store into a compiler-owned value-carrying ranked recipe operation and creates RequestEffectRefinement with the exact GPU and reference sites, view, indices, logical coordinates, domains, preconditions, and typed values. ExactEffectDomain and ProductionTotalOutputStagingReportV2 carry PLIRON-proved TotalView, hierarchy, separation, frame, schedule, and ordered-product facts without granting authority. The same compiler session derives and reconciles the semantic and strict parallel contracts, then one generated Verus checker independently replays every supported exact point formula. A private move-only join requires matching structural and formula reports before KIR lowering."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Bind proof execution without trusting staging",
-        "text": "A fixed-width domain-separated Ed25519 V2 record can bind the safe-reference identity and MIR, kernel subject and MIR, live PLIRON obligation, generated formula source, tool identities, execution identity, boundary, and policy signer. Public import demotes it to status-Checked policy staging: caller-selected signer and policy checks do not establish proof execution or compiler authority. The retained controller still bounds rust_verify, its internal verifier, Z3, mappings, inherited files, resources, output, timeout, and cleanup. Private generated execution establishes the formula result, while the move-only join is the admission authority; stale, mismatched, duplicate, wrong-boundary, non-Checked, or missing staging fails closed, and generated identity comments remain binding inputs rather than Verus premises."
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "The authenticated boundary is deliberately narrow",
-        "text": "The generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas without a generic relation premise. Canonical loops include an overflow-safe final latch. PLIRON separately proves and reconciles structural coverage, separation, frames, schedules, and ordered-product identity; staging grants no authority, and the private move-only join requires both result classes. Dynamic safe-slice reads are complete only for identical symbolic ranked extents or overflow-checked bounded static affine intervals. Noncanonical SCC requests, typed tensor component/store claims, ErrorBounded sites, folds, recurrences, and permutations retain exact data but fail closed with UnsupportedFormulaReplayRole until their formulas can be replayed. Compiler extraction/projection and pass soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, runtime, and hardware authority remain outside the claim."
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Kernel tabs are current safe source",
-        "text": "Every attributed Rust Kernel tab is byte-pinned to the current dual-repository compiler main and contains no unsafe block. Compiler-issued capabilities provide lane, ownership, LDS, barrier, atomic, matrix, and math access through safe surfaces. Historical proof, HSACO, host, and GPU observations retain their original commits and do not transfer authority to a repinned source merely because the algorithm is related."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Guarantee layer",
-          "What may be claimed",
-          "What remains outside that claim"
-        ],
-        "rows": [
-          ["Rust types, borrowing, and wave lifetimes", "Well-typed local use of references, affine capabilities, MFMA roles, profiles, and phase transitions.", "Cross-invocation races, collective convergence, numerical intent, and generated machine behavior."],
-          ["Mandatory generic PLIRON verification", "Clean results for declared tensor layout, bounds, atomics, races, hierarchy ownership, barriers, LDS epochs, semantic expressions, and reference effects in the supported bounded model.", "An unmodeled effect, unresolved dynamic fact, or exhausted budget is Incomplete and emits no artifact."],
-          ["Verus named proofs", "The explicitly stated functional, ownership, recurrence, or numerical theorem holds for its versioned model and assumptions.", "Verus does not silently prove compiler refinement, target lowering, runtime inputs, or properties omitted from the theorem."],
-          ["Source-to-machine refinement", "When separately established, each authenticated compiler stage preserves the named source and IR properties into the selected target artifact.", "A passing verifier or GPU sample alone is not this refinement theorem."],
-          ["Runtime launch admission", "Dynamic dimensions, strides, allocations, alias promises, target profile, resources, and launch geometry satisfy recorded artifact preconditions.", "Host checks cannot repair an invalid or unproved device access."],
-          ["Observed hardware tests", "The pinned artifact produced the expected outputs for the recorded cases on the recorded device.", "Testing is not universal correctness and does not quantify over all inputs or executions."]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Correct relative to explicit contracts, never universally correct",
-        "text": "Fe2O3 can guarantee only the named properties whose assumptions, target profile, dynamic preconditions, verifier model, proof artifacts, compiler refinement, and launch authority are all bound together. It cannot infer full programmer intent or promise universal numerical, liveness, performance, or hardware correctness. A missing layer is reported as a boundary, Rejected, or Incomplete rather than converted into a broader claim."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Layer",
-          "What it establishes",
-          "Representative form"
-        ],
-        "rows": [
-          ["Rust within one invocation", "Borrows, moves, lifetimes, visibility, and local typestate transitions.", "&mut T, non-Copy guards, safe methods"],
-          ["Compiler-issued index ownership", "A non-forgeable invocation identity and, for the supported mapping subset below, its shifted, grid-exclusive, or blocked write partition.", "DisjointIndex, Shifted, GridExclusive, Blocked, DisjointBlock"],
-          ["Compiler-issued execution capabilities", "The current authenticated wave, collective participant set, LDS allocation and epoch, or matrix-instruction context.", "current wave/collective/LDS/matrix capabilities"],
-          ["Typed global atomic view", "The safe API retains the pointee type and lifetime without exposing a safe non-atomic dereference. Its four compiler terminals are authenticated, but ordinary Rust core atomic operations are not imported yet.", "DeviceGlobalMutPtr<T>::as_atomic()"],
-          ["Generic verifier passes", "Bounds, ownership, synchronization, atomic, and semantic facts that no local Rust borrow can establish across GPU invocations.", "ranked PLIRON plus launch and target facts"]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Supported safe ownership mappings",
-        "text": "The production importer preserves each authenticated mapping identity and its const parameters into semantic MIR and ranked PLIRON. Supported safe accessors then enter the same generic bounds and race pipeline as every other ranked memory access. The compiler never silently substitutes a different mapping or treats an unsupported mapping as Clean."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Safe ownership form",
-          "Current production state",
-          "Fail-closed behavior"
-        ],
-        "rows": [
-          ["thread::index_1d() with DisjointSlice::get_mut", "Supported", "The authenticated base invocation index reaches general bounds and race verification."],
-          ["Shifted<Index1D, N>", "Supported for one shift layer", "The exact N is retained. Nested Shifted<Shifted<...>> is rejected during authenticated mapping/type validation because normalization is not implemented."],
-          ["GridExclusive with a constant leader index", "Supported", "A dynamic or unresolved leader index is Incomplete in ranked projection and emits no artifact."],
-          ["Blocked<Index1D, 1, E> with DisjointBlock", "Supported for nonzero E and a constant component", "The compiler retains E, checks arithmetic and slice extent guards, and lowers raw_index * E + component into the generic bounds and race pipeline."],
-          ["Blocked<Index1D, L, E> where L > 1", "Incomplete", "The semantic mapping is retained, but ranked projection stops until bounded quotient/remainder facts are available."],
-          ["Malformed or substituted ownership mapping", "Rejected", "Wrong marker identity, mismatched block/slice parameters, zero dimensions, or overflowing L * E cannot cross the safe-kernel compiler boundary."]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "Generic does not mean automatically provable",
-        "text": "Tensor-layout, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, semantic, and reference-effect checks apply to any kernel represented with the supported target-neutral operations, address spaces, index expressions, execution layouts, target facts, and CFG. They do not depend on GEMM, attention, softmax, MoE, tile-size, or schedule recognition. A kernel or safe ownership mapping outside that analyzable subset is not treated as safe: the compiler reports Rejected for a concrete invalid contract or Incomplete for an unresolved proof obligation, and the strict pre-lowering route fails closed. Semantic and effect refinement are also workload-neutral, but they check only explicit compiler-derived contracts; without a bound safe reference, the compiler does not invent programmer intent."
-      },
-      {
-        "type": "paragraph",
-        "text": "PLIRON dialect and structural verification is the prerequisite. The mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, then semantic refinement with effect refinement inside that final stage. No lowering pass may run between these eight checks. Every analysis has explicit operation, fact, trace, finding, or work-unit limits; exhausting one returns Incomplete and emits no artifact. The production integrity boundary asks two separate questions: did an analysis-only stage attempt any context-owned PLIRON mutation, and does the exact ranked structure still match its preceding checkpoint?"
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Mutation epoch plus exact checkpoints",
-        "text": "The eight policy stages are analysis-only. PLIRON exposes one context-wide monotonic mutation-attempt epoch that advances before mutable access, arena allocation or removal, and even a failed mutable borrow. The production session compares the epoch around each named stage, so mutate-then-restore cannot disappear behind equal final bytes. It also constructs one bounded canonical snapshot before the sequence and one after each contiguous stage. Those snapshots retain operation classes, admitted attribute and type IDs plus bounded encodings, SSA wiring, successors, regions, and deterministic alpha-numbering while ignoring display-only labels. Any mutation attempt fails closed with the active stage named; a retained change additionally reports FE2O3-PRESERVE-010 detail at the first changed site. Exact bytes, not SHA-256 labels, drive comparison and later revalidation. Neither mechanism proves that the stage's analysis result is correct."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Preservation boundary",
-          "What is checked now",
-          "What is not granted"
-        ],
-        "rows": [
-          ["Ranked-PLIRON analysis stage", "A context-wide epoch rejects any mutation attempt during the named stage; one initial and eight post-stage snapshots compare exact retained canonical bytes and locate the first retained changed component.", "Correctness of the pass report, operational equivalence, lowering, artifact, or launch authority."],
-          ["Unsupported or oversized identity snapshot", "Unsupported structure is FE2O3-PRESERVE-001; a declared identity resource limit is FE2O3-PRESERVE-002. Both fail closed before comparison.", "An omitted operation, partial digest, best-effort comparison, or permission to continue."],
-          ["Closed encoding boundary", "Only the admitted production operation classes, attribute IDs, and recursively admitted type classes enter a bounded snapshot.", "A proof that trusted dialect encoders or printers are correct, or permission for an unknown dialect entity to enter the pipeline."]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "A Clean report is diagnostic, not a proof",
-        "text": "The compiler seals each actual report to one exact context, function owner, structural checkpoint, fixed stage position, implementation version, runtime configuration, report payload, and derived status. Private custody detects cross-session substitution, stale subjects, reordered or omitted stages, and payload, status, implementation, configuration, or checkpoint tampering. It does not independently replay the analysis: all eight independent semantic-witness checks remain Incomplete. A Clean pass result is useful diagnostic policy output but grants no proof, compiler-refinement, lowering, artifact, or launch authority."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Analysis report",
-          "Missing independent witness",
-          "Current validation"
-        ],
-        "rows": [
-          ["Tensor layout", "Exhaustive operation/value layout facts, propagation, and consumer compatibility.", "Incomplete"],
-          ["Ranked bounds", "Every access dimension and path domain plus independently checkable Presburger certificates.", "Incomplete"],
-          ["Atomic legality", "Exhaustive atomic enumeration joined to exact capability, provenance, scope, and ordering witnesses.", "Incomplete"],
-          ["Race freedom", "Every instantiated effect plus independently checkable alias, ownership, disjointness, and happens-before witnesses.", "Incomplete"],
-          ["Hierarchy ownership", "Every output/write domain plus range, injectivity, partition disjointness, and total-coverage certificates.", "Incomplete"],
-          ["Barrier convergence", "Every participant domain plus reachability, uniformity, phase, and postdominance certificates.", "Incomplete"],
-          ["Workgroup memory", "Every allocation and effect plus byte layout, lifetime, epoch, alias, and conflict-freedom witnesses.", "Incomplete"],
-          ["Semantic refinement", "Complete reference roots, outputs, control and loops, effects, arithmetic, and numerical proof objects.", "Incomplete"]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Transforming passes use a different boundary",
-        "text": "An intentional PLIRON rewrite cannot pass the analysis-only exact-identity contract. Its separate sealed refinement session binds the exact before and after owners and canonical structures, the pass implementation and configuration, an independent checker identity, and a one-shot checker-issued result. Rejected, Incomplete, replayed, substituted, mismatched, unchanged, and unsupported transformations fail closed. The production registry contains zero transforming passes because fe2o3 has no independent PLIRON-to-PLIRON semantic checker yet. The private test fixture exercises custody only; it is not transformation authority or a general equivalence theorem."
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "One bounded analysis context per run",
-        "text": "The production pipeline owns one ephemeral analysis manager over one live ranked-PLIRON function. Its eight bounded cache roots hold sparse index results, exact Presburger queries, provenance and alias facts, execution layout, exact invocation traces, tensor-layout dataflow, memory versions and happens-before edges, and SIMT collective protocol facts. Stages share those roots instead of reimplementing them. A separate bounded structural-identity root performs the nine checkpoint walks; it is not a ninth policy pass and it does not make cached analysis facts authoritative. The manager is discarded before revalidation, which reruns the fixed pipeline with a fresh manager and compares retained exact output bytes."
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "Sparse facts meet at typed CFG edges",
-        "text": "Sparse index dataflow treats block arguments as real SSA definitions. Only reachable predecessor edges contribute; a not-yet-seen input is Pending, an unsupported or conflicting input is Unknown, identical incoming facts remain precise, and Unknown is absorbing. Unconditional, less-than, and equality branches type-check their carried operands before the incoming facts meet. Value, use, edge, iteration, and work-unit budgets make cyclic or oversized analysis return Incomplete instead of guessing."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Presburger queries reason about integer relations",
-        "text": "The shared pliron-presburger analysis accepts finite integer boxes, conjunctions of signed affine equalities and inequalities, constant-modulus congruences, and affine or remainder maps. It answers emptiness, range containment, injectivity, cross-map collision, total box coverage, pointwise map equivalence, and signed or unsigned machine-range containment with a deterministic first witness. Bounds, race, and hierarchy-ownership query it from their existing pass positions; it is shared compiler analysis, not a ninth policy pass. Retained add and constant-multiply index trees over bounded axes report exact intermediate overflow. A value that depends on an unbounded runtime axis, nonlinear terms, malformed relations, and fixed-budget exhaustion remain Incomplete."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Presburger query",
-          "Compiler-visible result",
-          "Implementation evidence"
-        ],
-        "rows": [
-          ["Affine range containment", "An unguarded 2 * invocation + 1 read over launch extent 8 and view extent 12 is Rejected with FE2O3-BOUNDS-004: invocation [6] computes index 13.", "bounds_affine_oob.pliron and pliron_ranked_bounds::presburger_affine_failure_reports_invocation_and_index"],
-          ["Same-map collision and congruence", "invocation % 32 over 64 invocations has duplicate owners [0] and [32]; the race pass reports FE2O3-RACE-001. Small finite launches use the exact trace, while the same remainder relation is independently checked by pliron-presburger.", "race_modulo_collision.pliron and pliron_presburger::modulo_ownership_reports_a_duplicate_owner"],
-          ["Cross-map intersection", "Overlapping affine read/write images produce a concrete conflicting coordinate; disjoint even-write and odd-read images prove race freedom beyond the exact-trace invocation cap.", "pliron_presburger::cross_effect_query_finds_a_race_between_distinct_invocations and race_presburger_disjoint.pliron"],
-          ["Finite-image coverage", "A missing logical output coordinate remains FE2O3-OWN-006. Hierarchy ownership routes its traced coordinate image through the shared exact box-coverage query.", "ownership_hole.pliron and pliron_presburger::traced_finite_image_uses_the_same_box_coverage_query"],
-          ["Pointwise map equivalence", "Equivalent affine coordinate formulas prove equal; a transpose mismatch returns domain [0, 1] with coordinates [0, 1] versus [1, 0]. The query is available to compiler clients; the rooted tensor-layout pass continues to own production FE2O3-TENSOR-LAYOUT diagnostics.", "pliron_presburger::layout_coordinate_comparison_proposes_a_concrete_mismatch and equivalent_layout_formulas_are_proved_pointwise"],
-          ["Finite-domain feasibility", "Contradictory signed loop-domain constraints prove Empty; a satisfiable phase returns a witness. This is an analysis-service result until a loop client requests it, not a new diagnostic code.", "pliron_presburger::invalid_loop_domain_is_empty_and_valid_domain_has_a_phase"],
-          ["Machine-range containment", "A retained u64 add or constant multiply that overflows reports FE2O3-BOUNDS-005 with its exact operation, operands, and invocation. Overflow dependent on an unbounded runtime axis remains FE2O3-BOUNDS-006 or an unproved bound.", "bounds_machine_integer_overflow.pliron, constant_overflow_is_rejected_with_a_dynamic_launch_extent, and dynamic_dependent_overflow_remains_incomplete_without_a_runtime_bound"],
-          ["Unsupported or over-budget relation", "A dynamic domain with no finite bound, a nonlinear relation, or more than 1,048,576 work units returns Incomplete and cannot authorize lowering.", "pliron_presburger::dynamic_launch_without_a_finite_bound_is_unsupported, arithmetic_overflow_is_never_treated_as_a_proof, and resource_exhaustion_is_explicitly_incomplete"]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Memory and collectives use executed traces",
-        "text": "One provenance root assigns address-space-aware allocation classes. The workgroup-memory stage then builds concrete write versions and publishes them only through an executed convergent acquire-release workgroup barrier. A release/acquire annotation without a matched address never invents read-from. In parallel, the barrier stage compares each subgroup's actual tensor/barrier phase sequence and active lanes. These analyses inspect operations and CFG paths; source contracts cannot manufacture a version, happens-before edge, participant, or phase."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Progress and numerical claims are deliberately narrow",
-        "text": "The semantic stage rejects a concrete live nonterminating cycle and proves only the retained positive-induction form when every update is nonwrapping. A symbolic non-unit step without an upper bound is Incomplete. Numerical refinement currently derives zero absolute and relative error only when the independently reconstructed GPU and reference typed operator trees are identical. Reassociation, transcendental bounds, and changed operation order need a future interval or error theorem; Checked evidence selects the obligation but cannot certify it."
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "Target admission uses compiler inputs",
-        "text": "A targeted prelowering entry point accepts target limits and origin-bound host allocation descriptors supplied by the compiler/host boundary. It checks grid, workgroup, subgroup, static LDS bytes, allocation count, byte length, and alignment before running the same eight policy passes. Dynamic sizes remain Incomplete unless guarded or specialized. The report does not authenticate runtime addresses and grants no launch authority."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "A proof stays with one access",
-        "text": "For each retained UnsupportedIndexExpression obligation, semantic, ranked-PLIRON, KIR, and formal-memory owners jointly bind one access. The source record identifies the semantic block, statement or terminator, access ordinal, ranked block, and ranked operation; the compiler then rederives and compares the allocation origin, access kind, memory space, selected index, GEP, and unique consuming KIR access. Moving a GEP, changing its index, reusing one proof for two loads, swapping an allocation, or changing Read to Write fails closed. This is bounded compiler-internal custody for one access, not a general dynamic-bounds proof, hostile-caller authentication, or artifact and launch authority."
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "Workgroup identity is an exact quotient",
-        "text": "For a bound launch contract, global_index(axis) divided by the exact nonzero workgroup extent on the same axis is the workgroup index and is uniform within that workgroup. The theorem requires every kernel record for the entry to agree on the workgroup dimensions and accepts only direct constants or proved value-preserving constant casts. A wrong divisor, cross-axis divisor, narrowing or sign-changing cast, remainder, missing contract, or inconsistent duplicate entry remains varying or unsupported. This rule names launch arithmetic, not a workload."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Outcome",
-          "Meaning",
-          "Production consequence"
-        ],
-        "rows": [
-          ["Clean", "Every obligation handled by that pass was discharged.", "The next mandatory pass may run."],
-          ["Rejected", "The compiler found a concrete invalid IR condition or a conflicting execution witness.", "Compilation stops before lowering or artifact emission."],
-          ["Incomplete", "Safety could not be proved because a fact is dynamic, an effect or index is unresolved, or a bounded analysis limit was reached.", "The strict production route also stops; Incomplete does not claim that a concrete bug was proved."]
+        "type": "steps",
+        "items": [
+          "rustc enforces local types, borrows, moves, lifetimes, visibility, and the safe kernel boundary while preserving checked control flow and source locations in MIR.",
+          "The frontend projects structured CFG, typed values, ranked views, allocation provenance, index expressions, memory effects, tensor contracts, and synchronization into ranked PLIRON.",
+          "The ranked constructor folds only checked index Add, Multiply, Divide, and Remainder when both operands are exact preceding index constants. An independent exact typed structural replay accepts only the same-site IndexBinary to IndexConstant rewrite with the same result identity and checked u64 value.",
+          "Dialect verification and the fixed eight analysis stages check tensor layout, bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and declared semantic refinement.",
+          "KIR lowering consumes the normalized ranked recipe and its checked reports. Rejected and Incomplete results stop before KIR; no alternate host or simulation route bypasses this sequence."
         ]
       },
       {
         "type": "table",
-        "headers": [
-          "Separate general Kernel IR check ID",
-          "Kernel-general responsibility",
-          "Representative failure"
-        ],
+        "headers": ["Compiler result", "What it means", "Current boundary"],
         "rows": [
-          ["kernel-structural-v1", "Verify module, function, kernel, SSA, type, operation, memory, synchronization, launch, and capability invariants in the general Kernel IR pipeline.", "Invalid or duplicate identities; bad entry/signature; undefined or non-dominating values; type/result errors; illegal cast kind, category, signedness, or width; invalid memory, barrier, atomic, fence, convergence, workgroup, wave, float, inline-assembly, or terminator operations; resource limits."],
-          ["kernel-control-flow-v1", "Build and validate the closed kernel CFG before dataflow facts are trusted.", "Declaration or empty body; duplicate block; missing terminator; unknown successor; irreducible control flow; bounded-analysis resource exhaustion."]
+          ["Rejected", "The compiler reconstructed a concrete contradiction, such as a static out-of-bounds index, incompatible tensor layout, collision, or divergent collective.", "The diagnostic names the failed relation and proposes a source-level repair; no KIR lowering input is issued."],
+          ["Incomplete", "The bounded analysis cannot prove or refute the required property, or its independent witness replay does not support that shape.", "Compilation fails closed. Missing evidence is never treated as a runtime check or a Clean result."],
+          ["Clean report", "The policy pass found no failure in its supported model.", "Report integrity alone is not semantic authority. The matching independent witness must also be Complete where the production gate requires it."],
+          ["Complete raw replay", "A separate checker rebuilt the supported obligation directly from the exact live PLIRON and matched the sealed report.", "Today this is narrow: statically bounded ranked accesses and a rooted single-block canonical gfx942 wave64 tensor-layout fragment. Other pass witnesses remain Incomplete."],
+          ["Checked transform", "The before and after typed recipes satisfy the independently replayed constant-fold relation.", "Canonical hashes are labels only. Exact typed custody and structural replay are the acceptance boundary."]
         ]
       },
       {
         "type": "table",
-        "headers": [
-          "Analysis ID",
-          "Kernel-general responsibility",
-          "Representative non-clean findings"
-        ],
+        "headers": ["Example", "Current compiler reasoning", "Fail-closed edge"],
         "rows": [
-          ["kernel-tensor-layout-v1", "Validate each tensor instruction profile, A/B/accumulator role, element packing, register distribution, lane/component map, independent operand storage transform, edge policy, derived collective participation, and rooted producer-to-consumer layout flow.", "Wrong transpose or lane map; accumulator permutation; incompatible producer join, operand, accumulator, or subgroup ABI; unsupported storage transform; missing tail policy; inactive or invocation-divergent collective; unresolved map or convergence; analysis limit."],
-          ["kernel-memory-bounds-v1", "Prove every indexed read, write, and atomic access lies within every ranked extent and every retained u64 index intermediate is representable.", "Static out-of-bounds witness; exact add/multiply overflow witness; unresolved dynamic bound or overflow; unsupported index, CFG, or operation; analysis limit."],
-          ["kernel-atomic-legality-v1", "Require a legal atomic kind, explicit ordering and scope, ranked-view provenance, supported element width/address space, bound target capability, and system-coherent allocation evidence.", "Missing or invalid ordering/scope; private-memory atomic; unavailable provenance or target capability; unauthenticated system coherence; analysis limit."],
-          ["kernel-race-freedom-v1", "Prove incompatible effects from concurrent invocations address disjoint coordinates, accounting for compatible atomics and the shared allocation-provenance relation.", "Read/write or write/write conflict witness; unresolved dynamic launch, index, origin, relative offset, or alias relation; analysis limit."],
-          ["kernel-hierarchy-ownership-v1", "Reconstruct each logical coordinate owner across invocation, lane, subgroup, workgroup, and grid, then require the declared coverage and density policy.", "Out-of-range owner; duplicate owner; grid coverage hole; non-rectangular subgroup or workgroup tile; runtime-only unresolved ownership; analysis limit."],
-          ["kernel-barrier-convergence-v1", "Prove every participating invocation reaches the same barriers and tensor collectives in the same subgroup phase order with the CFG-derived active lanes.", "Divergent barrier or tensor phase trace; partial collective participation; false active-lane claim; unresolved cyclic/dynamic trace; analysis limit."],
-          ["kernel-workgroup-memory-v1", "Derive memory versions, same-invocation visibility, convergent barrier publication edges, same-epoch conflicts, and conservative atomic read-from obligations.", "Read before initialization/publication; conflicting same-epoch effects; unmatched atomic publication; fence/subgroup-only LDS publication; unresolved address or trace; analysis limit."],
-          ["kernel-semantic-refinement-v1", "Compare declared target-neutral expressions, prove supported loop progress, derive exact-zero numerical certificates from identical live typed trees, then join each bound safe-reference effect to one real GPU write and exact hierarchy ownership.", "Nonterminating or unproved loop; changed arithmetic tree without an error theorem; formula, domain, precondition, value, evidence, ownership, expression, or trace mismatch; analysis limit."],
-          ["pliron-sparse-index-v1 (shared analysis)", "Propagate bounded sparse affine and remainder facts through values, reachable CFG edges, and block arguments so bounds and ownership passes compare invocation-indexed coordinates without duplicating expression recognition.", "Conflicting incoming facts; unknown or unsupported expression; inconsistent launch extent; overflow; SSA value, use, edge, iteration, or work-unit limit."],
-          ["pliron-presburger (shared analysis)", "Decide finite signed-affine and constant-modulus integer-set and map queries for bounds, race, and hierarchy-ownership clients.", "Concrete range, collision, coverage, or equivalence witness; unknown dynamic extent; nonlinear expression; machine overflow; malformed relation; variable, constraint, output, or 1,048,576-work-unit limit."],
-          ["pliron-provenance-alias (shared analysis)", "Derive one address-space-aware allocation-origin and noalias relation for race and workgroup-memory clients.", "Unknown writable alias; noalias claim without origin; inconsistent origin/class; missing relative offset; incompatible view signature; subject limit."],
-          ["pliron-memory-order (shared analysis)", "Build exact-trace workgroup memory versions and barrier happens-before publication edges without inventing atomic read-from.", "Uninitialized read; same-epoch conflict; unmatched release/acquire publication; unresolved address; unsupported fence/subgroup publication; version or issue limit."],
-          ["pliron-simt-protocol (shared analysis)", "Compare per-subgroup tensor/barrier phase sequences and derive actual active lanes from executable CFG traces.", "Phase mismatch; partial tensor participation; claimed active-lane mismatch; exact-trace or issue limit."],
-          ["kernel-progress (semantic-stage analysis)", "Find live CFG cycles and prove the supported positive-induction ranking function with no wrapping update.", "Exit-free reachable SCC; zero-step witness; symbolic non-unit no-wrap obligation; noncanonical recurrence; block or edge limit."],
-          ["kernel-target-contract (compiler-supplied precondition)", "Check target grid/workgroup/subgroup limits, static LDS bytes, and origin-bound host allocation size/alignment before the same eight passes.", "Malformed or oversized launch; unsupported subgroup; LDS overflow/budget excess; missing, small, misaligned, dynamic, or excessive host allocations. This report grants no launch authority."],
-          ["kernel-ir-interprocedural-effects (shared analysis)", "Summarize bounded acyclic helper call graphs so compiler-derived pure helpers remain complete across calls.", "Declaration, recursion, inline assembly, resource exhaustion, or a memory-effecting helper whose argument/provenance coordinates cannot yet be substituted."],
-          ["pliron-ranked-structural-identity-v1 (shared preservation root)", "Combine a context-wide mutation-attempt epoch with closed, bounded deterministic identities across each named analysis checkpoint.", "Any attempted mutable access during an analysis-only stage; malformed, unsupported, externally referenced, nondeterministically rendered, panicking, or over-budget snapshots; first retained changed operation, attribute, type, SSA edge, successor, or region."],
-          ["pliron-analysis-report-validation-v1 (integrity boundary)", "Seal every actual stage report to its exact owner, checkpoint, order, implementation, configuration, payload, and status, then expose the missing independently checkable semantic witness.", "Substitution, stale subject, reorder, omission, or tampering is Rejected. All eight independent witness checks remain Incomplete even when the policy report is Clean."],
-          ["pliron-transform-refinement-v1 (separate transformation boundary)", "Bind exact before/after owners and structures, pass implementation/configuration, checker identity, and one-shot checker result for intentional rewrites.", "Zero production transformations are supported; absent independent checking, every rewrite is Unsupported and grants no equivalence or lowering authority."],
-          ["bounded resources (cross-cutting)", "Bound verifier memory and time through explicit operation, value, invocation, trace, effect, finding, and work-unit ceilings.", "Any exhausted budget is Incomplete, never Clean and never permission to continue lowering."]
+          ["Static bounds", "A finite launch and checked constant or affine index map can be replayed for every admitted invocation and dimension.", "Dynamic launch, an exhausted replay cap, unsupported arithmetic, or possible machine overflow leaves the witness Incomplete."],
+          ["Dynamic checked ownership", "Authenticated checked tiled and row-striped mappings preserve a zero-offset unit embedding of active launch axes, allowing the generic race pass to prove injective writes without enumerating a runtime grid.", "Unresolved provenance, aliasing, non-unit embeddings, or an unproved multiply/add no-wrap condition is Incomplete."],
+          ["Canonical wave64 tensor flow", "The raw replay checks one linear rooted gfx942 tensor inventory, wave64 execution, exact contracts, result roots, and supported producer-to-consumer edges.", "CFG joins, unrooted sites, cyclic or forward roots, unsupported profiles, or source-projection correspondence remain Incomplete."],
+          ["Loop progress", "The committed progress checker proves the canonical two-block i < bound loop with one positive constant backedge update.", "Other SCC topology and any step whose final update lacks a static no-wrap proof remain Incomplete; concrete zero-step or no-exit cycles are Rejected."],
+          ["Constant folding", "5 + 7 and a later checked multiply can fold to exact constants in one forward fixed point before every verifier and proof digest.", "Overflow and divide or remainder by zero stay unfurled and then fail through existing verification; no reassociation or dynamic propagation is authorized."]
         ]
       },
       {
         "type": "compile-failures",
-        "heading": "Forty-two representative compile-time failures",
-        "intro": "The first card is a local Rust type error. The remaining cards sample the fixed workload-neutral PLIRON verifier sequence, its shared analyses and persistent-structure preservation boundary, the compiler-supplied target precondition, and the semantic/parallel composition gate: tensor layout first, then bounds, atomics, races, hierarchy ownership, barriers and SIMT protocol, workgroup memory ordering, and semantic refinement with progress, numerical, and reference-effect checks. Text snippets are compact schematic semantic IR or compiler-derived report state; users still write Rust, and the named compiler tests contain the exact inputs. Every displayed FE2O3 code, status, and owner follows the current diagnostics. Rejected and Incomplete both stop before KIR or target lowering and artifact emission.",
+        "heading": "Three representative compile-time rejections",
+        "intro": "Each example is workload-neutral and stops before KIR. The repair is a source change, never an automatic semantic rewrite.",
         "examples": [
           {
-            "id": "mfma_operand_roles",
-            "title": "Swapped MFMA operand roles",
-            "language": "rust",
-            "source": "fn reject_swapped_roles<'wave>(\n    matrix: &DeviceMatrix,\n    lhs: Bf16MfmaBFragment<'wave>,\n    rhs: Bf16MfmaAFragment<'wave>,\n    accumulator: F32AccumulatorFragment<'wave>,\n) {\n    let _ = matrix.multiply_accumulate(lhs, rhs, accumulator);\n}",
-            "diagnostic": "error[E0308]: arguments to this method are incorrect\nexpected Bf16MfmaFragment<'_, MfmaOperandA, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\n   found Bf16MfmaFragment<'_, MfmaOperandB, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\nexpected Bf16MfmaFragment<'_, MfmaOperandB, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\n   found Bf16MfmaFragment<'_, MfmaOperandA, Bf16F32M16N16K16, MfmaRegisterTile16x16, Wave64>\nhelp: swap these arguments\n  matrix.multiply_accumulate(rhs, lhs, accumulator)",
-            "property": "TypedMfmaRoles",
-            "stage": "rustc type checking",
-            "code": "E0308",
-            "enforcement": "Safe Rust device API compile-fail test",
-            "caught": "A and B are different sealed fragment roles, even though both carry four BF16 register values. The method signature requires A then B for one instruction profile and wave lifetime, so invalid operand order never reaches PLIRON. The same type boundary rejects a wrong profile or unsupported register distribution."
-          },
-          {
-            "id": "tensor_wrong_b_map",
-            "title": "B fragment uses the wrong transpose",
-            "language": "text",
-            "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  a.map = (lane % 16, 4 * (lane / 16) + component)\n  b.map = (lane % 16, 4 * (lane / 16) + component)  // should be (k, column)",
-            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor B lane/component mapping does not match the target operand profile",
-            "property": "TensorOperandMap",
-            "stage": "generic PLIRON pass 1/8",
-            "code": "FE2O3-TENSOR-LAYOUT-001",
-            "enforcement": "Tensor-layout PLIRON lit; mandatory production pass",
-            "caught": "The verifier compares the bounded lane/component affine map for role B with the selected instruction profile. This detects a structurally valid fragment whose registers name the wrong matrix coordinates, without recognizing GEMM or any other workload."
-          },
-          {
-            "id": "tensor_accumulator_permutation",
-            "title": "Accumulator components are permuted",
-            "language": "text",
-            "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  accumulator.map = (4 * (lane / 16) + (3 - component), lane % 16)",
-            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor Accumulator lane/component mapping does not match the target operand profile",
-            "property": "TensorAccumulatorMap",
-            "stage": "generic PLIRON pass 1/8",
-            "code": "FE2O3-TENSOR-LAYOUT-001",
-            "enforcement": "Tensor-layout PLIRON lit; mandatory production pass",
-            "caught": "Every coordinate can remain in bounds while component order is wrong. Exhaustive bounded coverage and multiplicity checks compare accumulator coordinates across every active lane and component, so an in-bounds permutation is still a compile-time error."
-          },
-          {
-            "id": "tensor_cross_instruction_layout",
-            "title": "PV MFMA consumes the wrong QK layout",
-            "language": "text",
-            "source": "// Phase labels are tutorial names; the pass only follows roots.\nQK: kernel.tensor_layout profile = Gfx942MfmaBf16F32M16N16K16Wave64\n    result_root = %scores\nPV: kernel.tensor_layout profile = IncompatibleWave32\n    lhs_root = %scores",
-            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-005]: tensor value root 000000000000000d000000000000000e000000000000000f0000000000000010 is produced at block 0 op 1 as profile Gfx942MfmaBf16F32M16N16K16Wave64, Accumulator F32 16x16 fragment with 4 components across wave64, but block 0 op 2 uses it as A for profile IncompatibleWave32, which requires A Bf16 16x16 fragment with 4 components across wave32; help: insert a checked conversion/repack from the produced accumulator layout to the required A fragment, or choose a consumer instruction whose A ABI accepts profile Gfx942MfmaBf16F32M16N16K16Wave64\nhelp[FE2O3-FIX-LAYOUT] (HasPlaceholders): before block 0 op 2, convert or checked-reload producer profile Gfx942MfmaBf16F32M16N16K16Wave64's accumulator into the A fragment ABI required by consumer profile IncompatibleWave32; source projection must retain the conversion as a new compiler-derived root",
-            "property": "TensorLayoutDataflow",
-            "stage": "generic PLIRON pass 1/8",
-            "code": "FE2O3-TENSOR-LAYOUT-005",
-            "enforcement": "tensor_layout_dataflow_mismatch.pliron; mandatory production pass",
-            "caught": "The exact QK result root carries its complete accumulator layout into the PV consumer. The pass reports both sites and proposes either a compatible consumer or an explicit checked conversion. It has no workload-specific rule: the same producer-to-consumer check applies to any cooperative tensor composition."
-          },
-          {
-            "id": "tensor_storage_transform",
-            "title": "Unsupported operand storage transform",
-            "language": "text",
-            "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  a.register_distribution = canonical\n  a.storage = lds_xor8\n  b.register_distribution = canonical\n  b.storage = direct",
-            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor A LDS swizzle is incompatible with its layout",
-            "property": "TensorStorageLayout",
-            "stage": "generic PLIRON pass 1/8",
-            "code": "FE2O3-TENSOR-LAYOUT-001",
-            "enforcement": "Tensor-layout Kernel IR unit; shared mandatory production verifier",
-            "caught": "Register distribution and storage provenance are checked independently. A direct B fragment may legally meet an XOR4-staged A fragment after both loads produce the canonical register map; an unsupported transform on either operand is rejected on its own evidence."
-          },
-          {
-            "id": "tensor_missing_tail_policy",
-            "title": "Partial tile has no edge policy",
-            "language": "text",
-            "source": "kernel.tensor_layout profile = m16n16k16_bf16\n  logical_extent = [%m, %n, %k]\n  physical_tile = [16, 16, 16]\n  tail_policy = missing",
-            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: tensor layout rejected at block 0 op 2: tensor instruction tail-mask contract is incompatible with the exact-tile profile",
-            "property": "TensorTailSafety",
-            "stage": "generic PLIRON pass 1/8",
-            "code": "FE2O3-TENSOR-LAYOUT-001",
-            "enforcement": "Tensor-layout PLIRON lit; mandatory production pass",
-            "caught": "Dynamic shapes do not turn an unguarded edge into a runtime permission. The current profile admits an exact physical tile or authenticated zero-filled predicate inputs. Missing, raw predicate-mask, and unsupported tail claims are Rejected and compilation stops."
-          },
-          {
-            "id": "tensor_divergent_collective",
-            "title": "MFMA appears under lane-varying control",
-            "language": "rust",
-            "source": "let lane = WaveLane::<Wave64>::current();\nif lane.get() < 32 {\n    acc = matrix.multiply_accumulate(lhs, rhs, acc);\n}",
-            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-001]: divergent tensor-instruction trace; invocation [0, 0, 0] executes [(1, 0)], while invocation [32, 0, 0] executes []; every subgroup participant must execute the same tensor instructions in the same order",
-            "property": "TensorConvergence",
-            "stage": "generic PLIRON pass 1/8",
-            "code": "FE2O3-TENSOR-LAYOUT-001",
-            "enforcement": "Schematic Rust source; tensor-layout PLIRON lit",
-            "caught": "This Rust-shaped snippet illustrates the source condition; the exact regression starts from projected PLIRON. The verifier derives control uniformity at the actual instruction block rather than trusting a uniform annotation. A lane-dependent branch lets half the wave execute a collective that requires the full recorded participant set, so the IR is rejected."
-          },
-          {
-            "id": "race_alias_views",
-            "title": "Different views still alias one allocation",
-            "language": "text",
-            "source": "gpu.execution_layout global = [128, 1, 1], workgroup = [64, 1, 1]\n%left  = kernel.ranked_view origin = 7, alias_class = 3\n%right = kernel.ranked_view origin = 7, alias_class = 3\nkernel.access Write %left[%tid]\nkernel.access Write %right[%tid + 1]",
-            "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on a may-alias coordinate\nfailed proof: distinct concurrent invocations do not imply disjoint memory coordinates",
-            "property": "AliasAwareRaceFreedom",
-            "stage": "generic PLIRON pass 4/8",
-            "code": "FE2O3-RACE-001",
-            "enforcement": "Multiview race unit; mandatory production pass",
-            "caught": "Race keys use authenticated allocation origin and alias class, not the SSA name of a view. Renaming or slicing one allocation cannot hide a collision; distinct nonzero no-alias classes can establish disjointness, while unknown provenance fails closed."
-          },
-          {
-            "id": "race_multidimensional_constant_write",
-            "title": "A 2D launch writes one shared coordinate",
-            "language": "text",
-            "source": "gpu.execution_layout global = [2, 2, 1], workgroup = [2, 2, 1]\n%zero = kernel.index_constant 0\nkernel.access Write %output[%zero]  // no invocation identity in the address",
-            "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on output[0]\nfirst writer/reader: invocation [0, 0, 0]\nsecond writer/reader: invocation [0, 1, 0]",
-            "property": "MultidimensionalRaceFreedom",
-            "stage": "generic PLIRON pass 4/8",
-            "code": "FE2O3-RACE-001",
-            "enforcement": "Multidimensional execution-layout race unit; mandatory production pass",
-            "caught": "The execution layout defines the invocation domain even when the program never requests an invocation-index value. Componentwise X/Y/Z identities expose the constant-address collision instead of allowing a missing index operation to erase concurrent work-items."
-          },
-          {
-            "id": "atomic_scope_too_narrow",
-            "title": "Atomic scope is narrower than the conflict",
-            "language": "text",
-            "source": "gpu.execution_layout global = [128, 1, 1], workgroup = [64, 1, 1]\nkernel.access AtomicRmw %counter[0] <ordering = AcqRel, scope = Workgroup>",
-            "diagnostic": "error[FE2O3-RACE-004]: overlapping atomic effects use scopes Workgroup/Workgroup that do not cover the concurrent invocations\nfailed proof: cross-workgroup overlap requires compatible device-scope atomics",
-            "property": "AtomicScope",
-            "stage": "generic PLIRON pass 4/8",
-            "code": "FE2O3-RACE-004",
-            "enforcement": "Atomic/race PLIRON lit; mandatory production passes",
-            "caught": "Atomic syntax alone does not make a grid-wide update race-free. The legality and race passes retain the exact address space, ordering, and scope and compare them with the independently declared multidimensional execution domain."
-          },
-          {
-            "id": "barrier_partial_workgroup",
-            "title": "Rounded 2D launch creates a partial workgroup",
-            "language": "text",
-            "source": "gpu.execution_layout global = [65, 64, 1], workgroup = [64, 1, 1]\nkernel.barrier <scope = Workgroup, ordering = AcqRel>",
-            "diagnostic": "error[FE2O3-BARRIER-002]: cannot prove barrier convergence: Workgroup barrier has global extent 65 on axis 0, which is not a multiple of workgroup extent 64; rounded physical lanes and their activity paths are not represented",
-            "property": "WorkgroupParticipation",
-            "stage": "generic PLIRON pass 6/8",
-            "code": "FE2O3-BARRIER-002",
-            "enforcement": "Multidimensional barrier unit; mandatory production pass",
-            "caught": "Global and workgroup extents are independent componentwise facts. The pass checks every axis rather than multiplying them into one scalar, so a partial workgroup cannot be hidden by a divisible total invocation count."
-          },
-          {
-            "id": "workgroup_missing_publish",
-            "title": "A peer reads LDS before publication",
-            "language": "text",
-            "source": "gpu.execution_layout global = [4, 1, 1], workgroup = [4, 1, 1]\n%lds = kernel.ranked_view <32, true, [4], Workgroup>\n%tid = kernel.invocation_index <0, 4>\nkernel.access Write %lds[%tid]\nkernel.access Read %lds[0]  // no workgroup acquire-release barrier",
-            "diagnostic": "error[FE2O3-WORKGROUP-001]: invocation [1, 0, 0] reads uninitialized workgroup address [0] at block 0 op 4\nfailed proof: the address is not initialized by this invocation and no convergent workgroup-memory barrier published a prior write\nhelp: initialize the address and publish it with a workgroup acquire-release barrier before the read",
-            "property": "WorkgroupPublication",
-            "stage": "generic PLIRON pass 7/8",
-            "code": "FE2O3-WORKGROUP-001",
-            "enforcement": "Workgroup-memory PLIRON lit; mandatory production pass",
-            "caught": "An address initialized by one invocation is not automatically published to its peers. Must-initialization dataflow tracks writers, readers, epochs, and a convergent publication barrier before admitting the peer read."
-          },
-          {
-            "id": "grid_barrier_unsupported",
-            "title": "Kernel asks for an unsupported grid barrier",
-            "language": "text",
-            "source": "gpu.execution_layout global = [8, 8, 1], workgroup = [8, 8, 1]\nkernel.barrier <scope = Grid, ordering = AcqRel>",
-            "diagnostic": "error[FE2O3-BARRIER-002]: cannot prove barrier convergence: ordinary grid-wide barriers are unsupported at block 0 op 2; use disjoint workgroup ownership or legal device-scope atomics",
-            "property": "GridSynchronization",
-            "stage": "generic PLIRON pass 6/8",
-            "code": "FE2O3-BARRIER-002",
-            "enforcement": "Barrier PLIRON lit; strict production pass",
-            "caught": "Ordinary workgroup synchronization cannot prove that all workgroups are resident or make progress together. Until an authenticated cooperative-launch model supplies those facts, grid barriers and spin-based global synchronization fail closed."
-          },
-          {
-            "id": "bounds_static_oob",
+            "id": "static_oob",
             "title": "Static out-of-bounds access",
-            "source": "#[kernel(typed)]\n#[allow(unconditional_panic)]\nfn out_of_bounds(value: f32, mut output: DisjointSlice<f32>) {\n    let input = [value; 64];\n    let selected = input[64];\n    if let Some(element) = output.get_mut(thread::index_1d()) {\n        *element = selected;\n    }\n}",
-            "diagnostic": "error[FE2O3-BOUNDS-001]: statically out-of-bounds Read at block 2 op 0; access: v5 dimension 0; required: 64 < 64\n  --> Rust source ...:65:20\n  = ranked PLIRON before rejected lowering\n  = lowering stopped before target IR or artifact emission",
-            "property": "MemoryBounds",
-            "stage": "generic PLIRON pass 2/8",
+            "language": "rust",
+            "source": "let value = input[64]; // input: &[f32; 64]",
+            "diagnostic": "error[FE2O3-BOUNDS-001]: access dimension 0 requires 64 < 64; help: use an index below 64 or change the declared extent",
+            "property": "RankedBounds",
+            "stage": "kernel-memory-bounds-v1",
             "code": "FE2O3-BOUNDS-001",
-            "enforcement": "Rust production route and textual PLIRON lit",
-            "caught": "The frontend preserves the array extent and constant index in ranked PLIRON. The bounds pass compares index 64 with extent 64, names the failed dimension and exact relation, maps it back to the Rust span, and terminates compilation."
+            "enforcement": "static bounded raw replay and ranked-bounds policy",
+            "caught": "The exact constant index and extent contradict the required bound, so the compiler reports the failed relation at the access."
           },
           {
-            "id": "bounds_affine_oob",
-            "title": "Affine access exceeds a finite view",
-            "language": "text",
-            "source": "%input = kernel.ranked_view <32, false, [12]>\n%tid = kernel.invocation_index <axis = 0, extent = 8>\n%two = kernel.index_constant 2\n%one = kernel.index_constant 1\n%index = kernel.index_binary Multiply %tid, %two\n%index = kernel.index_binary Add %index, %one\nkernel.access Read %input[%index]",
-            "diagnostic": "error[FE2O3-BOUNDS-004]: affine Read is out of bounds at block 0 op 6; access: v0 dimension 0; counterexample invocation [6] computes index 13, violating 13 < 12; help: guard the access with the failed relation or reduce the launch domain\nhelp[FE2O3-FIX-BOUNDS] (HasPlaceholders): guard every path to block 0 op 6 so v0 dimension 0 satisfies index < extent, or use an explicitly checked access tied to that ranked view",
-            "property": "AffineMemoryBounds",
-            "stage": "generic PLIRON pass 2/8",
-            "code": "FE2O3-BOUNDS-004",
-            "enforcement": "bounds_affine_oob.pliron; Presburger bounds unit tests; mandatory production pass",
-            "caught": "Sparse index analysis derives 2 * invocation + 1. The shared exact Presburger range query checks all eight finite invocations, returns the first violating invocation and computed index, and the bounds pass proposes the two general repairs: dominate the access with the failed relation or reduce the launch domain. No GEMM or other workload identity is involved."
-          },
-          {
-            "id": "atomic_invalid_ordering",
-            "title": "Illegal atomic ordering",
-            "language": "text",
-            "source": "%target = kernel.ranked_view <32, true, [1], Global>\n%zero = kernel.index_constant 0\nkernel.access AtomicRead %target[%zero] <ordering = Release, scope = System>",
-            "diagnostic": "error[FE2O3-ATOMIC-001]: invalid Release ordering for AtomicRead at block 0 op 2; atomic loads cannot release and atomic stores cannot acquire\nhelp: retain a source ordering legal for the exact atomic operation",
-            "property": "AtomicLegality",
-            "stage": "generic PLIRON pass 3/8",
-            "code": "FE2O3-ATOMIC-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "Semantic atomic IR retains operation kind, ordering, scope, element width, address space, and view provenance as structured attributes. A release-only load is invalid independently of the kernel algorithm, so compilation stops before target selection or emission. This card starts from textual PLIRON; it does not claim ordinary Rust atomic terminal import."
-          },
-          {
-            "id": "race_duplicate_output",
+            "id": "dynamic_collision",
             "title": "Cross-invocation write race",
             "language": "text",
-            "source": "%tid = kernel.invocation_index <0, 64>\n%zero = kernel.index_constant 0\nkernel.access Write %output[%zero]",
-            "diagnostic": "error[FE2O3-RACE-001]: potentially conflicting incompatible Write/Write effects on %output[0]\nfirst writer/reader: invocation [0]\nsecond writer/reader: invocation [1]\nfailed proof: distinct concurrent invocations do not imply disjoint memory coordinates\nhelp: include an invocation-owned coordinate, use a disjoint view, or use a compatible atomic operation",
-            "property": "RaceFreedom",
-            "stage": "generic PLIRON pass 4/8",
+            "source": "two active invocations write output[0]",
+            "diagnostic": "error[FE2O3-RACE-001]: incompatible writes collide at coordinate [0]; help: use a compiler-authenticated injective ownership mapping",
+            "property": "CrossInvocationRaceFreedom",
+            "stage": "kernel-race-freedom-v1",
             "code": "FE2O3-RACE-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "Every invocation writes coordinate zero. Sparse affine analysis cannot prove the output map injective, and exact bounded witness enumeration reports the first conflicting invocation pair. CUDA or HIP would normally compile this race."
+            "enforcement": "generic Presburger relation and bounded counterexample replay",
+            "caught": "The race pass reconstructs the conflicting invocation pair. Checked tiled and row-striped maps can instead prove injectivity when their launch-axis embedding and no-wrap obligations are exact."
           },
           {
-            "id": "barrier_divergent",
-            "title": "Invocation-divergent barrier",
-            "source": "#[kernel(typed, launch(required = [64, 1, 1], max = [64, 1, 1]))]\nfn divergent_barrier(mut output: DisjointSlice<f32, GridExclusive>) {\n    if let Some(leader) = thread::grid_leader() {\n        sync::syncthreads();\n        if let Some(element) = output.get_mut_exclusive(&leader, 0) {\n            *element = 1.0;\n        }\n    }\n}",
-            "diagnostic": "error[FE2O3-BARRIER-001]: divergent collective barrier trace; invocation [0] executes one workgroup barrier, while invocation [2] executes no barriers\nfailed proof: every participating invocation reaches the same barriers in the same order\nhelp: move the barrier out of invocation-varying control flow",
-            "property": "BarrierConvergence",
-            "stage": "generic PLIRON pass 6/8",
-            "code": "FE2O3-BARRIER-001",
-            "enforcement": "Rust production route and textual PLIRON lit",
-            "caught": "The frontend authenticates the safe syncthreads terminal, preserves it as a workgroup barrier in the semantic CFG, and retains the leader-dependent branch. The pass derives per-invocation traces and compares collective barrier identities and order. One invocation reaches the barrier while peers bypass it, so lowering is rejected before a possible GPU deadlock."
-          },
-          {
-            "id": "workgroup_uninitialized",
-            "title": "Workgroup read before initialization",
+            "id": "tensor_layout_flow",
+            "title": "Incompatible tensor producer and consumer layouts",
             "language": "text",
-            "source": "%lds = kernel.ranked_view <32, true, [64], Workgroup>\n%tid = kernel.invocation_index <0, 8>\nkernel.access Read %lds[%tid]",
-            "diagnostic": "error[FE2O3-WORKGROUP-001]: invocation [0] reads uninitialized workgroup address [0] at block 0 op 2\nfailed proof: the address is not initialized by this invocation and no convergent workgroup-memory barrier published a prior write\nhelp: initialize the address and publish it with a workgroup acquire-release barrier before the read",
-            "property": "WorkgroupMemory",
-            "stage": "generic PLIRON pass 7/8",
-            "code": "FE2O3-WORKGROUP-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "The epoch analysis tracks writes, compatible atomics, and convergent workgroup publication. This read has neither a same-invocation initializer nor a published prior write, so the pass reports its invocation and address."
-          },
-          {
-            "id": "semantic_mismatch",
-            "title": "Declared formula mismatch",
-            "language": "text",
-            "source": "%actual = kernel.semantic_add (%alpha * %acc), %initial\n%required = kernel.semantic_add (%alpha * %acc), (%beta * %initial)\nkernel.require_equivalent %actual, %required",
-            "diagnostic": "error[FE2O3-SEMANTIC-001]: declared semantic refinement failed at block 0 op 8\nactual expression `add(mul(s0,s1),s3)` is not equivalent to required expression `add(mul(s0,s1),mul(s2,s3))`\nhelp: preserve the frontend-declared target-neutral semantic formula",
-            "property": "SemanticRefinement",
-            "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-SEMANTIC-001",
-            "enforcement": "Textual PLIRON lit; mandatory production pass",
-            "caught": "The pass hash-conses the target-neutral expression DAG, normalizes commutative operand order without reassociating floating-point operations, and finds that beta times the prior value is missing."
-          },
-          {
-            "id": "hierarchy_coverage_hole",
-            "title": "The grid leaves one output coordinate unwritten",
-            "language": "text",
-            "source": "gpu.execution_layout global = [64, 1, 1], workgroup = [32, 1, 1], subgroup = 16\n%output = kernel.ranked_view <32, true, [128], Global>\nkernel.ownership_contract %output <ExactView, ExactSets>\n%tid = kernel.invocation_index <0, 64>\n%two = kernel.index_constant 2\n%even = kernel.index_binary Multiply %tid, %two\nkernel.access Write %output[%even]",
-            "diagnostic": "error[FE2O3-OWN-006]: exact ownership of %output has a hole at logical coordinate [1] within extents [128]; no invocation, subgroup, or workgroup owns that element",
-            "property": "GridCoverage",
-            "stage": "generic PLIRON pass 5/8",
-            "code": "FE2O3-OWN-006",
-            "enforcement": "ownership_hole.pliron; hierarchy-ownership unit tests; mandatory production pass",
-            "caught": "The pass derives actual writes, maps each invocation to lane, subgroup, and workgroup, and sends the finite coordinate image to the shared Presburger box-coverage query. It reports the first missing coordinate without knowing what workload produced the write."
-          },
-          {
-            "id": "reference_evidence_missing",
-            "title": "A CPU-reference effect has no policy-checked staging",
-            "language": "text",
-            "source": "proof.obligation <id = 4a.., property = FunctionalRefinement, subject = kernel_mir.., model = reference_mir..>\nproof.require_effect_refinement %output[%index], %gpu_domain, %reference_domain, %gpu_precondition, %reference_precondition, %gpu_value, %reference_value",
-            "diagnostic": "error[FE2O3-SEMANTIC-003]: functional-reference obligation <obligation-id> is incomplete at block 0 op 2: the exact proof.evidence_ref record is missing\nclassification: Incomplete",
-            "property": "FunctionalRefinementEvidence",
-            "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-SEMANTIC-003",
-            "enforcement": "Proof dialect verifier and semantic-refinement policy-staging prerequisite",
-            "caught": "This direct PLIRON diagnostic names the obligation and operation. Equal expressions and caller-selected signature policy do not prove execution. The compiler requires exact reference/kernel MIR and effect identities plus status-Checked policy staging at the exact MIR boundary; missing, stale, forged, wrong-toolchain, wrong-boundary, non-Checked, and duplicate records fail closed. Staging remains non-authoritative until private exact-formula execution and the move-only admission join."
-          },
-          {
-            "id": "reference_expression_mismatch",
-            "title": "The GPU write disagrees with the CPU reference",
-            "language": "text",
-            "source": "%gpu = kernel.semantic_constant 17\n%cpu = kernel.semantic_constant 18\nproof.require_effect_refinement %output[%index], %gpu_domain, %cpu_domain, %gpu_precondition, %cpu_precondition, %gpu, %cpu",
-            "diagnostic": "error[FE2O3-EFFECT-001]: value mismatch for %output at block 2 op 0; GPU `17` is not equivalent to sequential reference `18`\nclassification: Rejected",
-            "property": "FunctionalRefinementExpression",
-            "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-EFFECT-001",
-            "enforcement": "Production reference-effect recipe inside the semantic-refinement stage",
-            "caught": "This is the direct PLIRON pass diagnostic shape; operand names and locations come from the rejected IR. ExactView inputs may append a bounded hierarchy witness when one was constructed. The current source subset rejects a 17-to-18 mutation earlier in the compiler-private effect bijection, before Verus, with exact reference and GPU sites but no invented FE2O3 pass code."
-          },
-          {
-            "id": "parallel_output_disjointness",
-            "title": "Multiple outputs lack noalias separation",
-            "language": "text",
-            "source": "compiler-derived output product\n  output[0] = view %a, allocation_origin = 7, noalias_class = 0\n  output[1] = view %b, allocation_origin = 8, noalias_class = 0",
-            "diagnostic": "error[FE2O3-PARALLEL-019]: distinct outputs do not carry distinct nonzero noalias classes, so output separation is unproved\nclassification: Incomplete",
-            "property": "MultipleOutputSeparation",
-            "stage": "compiler-owned strict parallel derivation",
-            "code": "FE2O3-PARALLEL-019",
-            "enforcement": "Production output-product derivation, ownership PLIRON lit tests, and middle-end tests",
-            "caught": "Multiple outputs are supported only when independently derived allocation origins and distinct nonzero noalias classes prove separation. Unclassified, same-class, or overlapping views fail closed before their TotalView, frame, receipt, and schedule relations can be composed."
-          },
-          {
-            "id": "parallel_tensor_arithmetic_binding",
-            "title": "A tensor result component lacks an exact output binding",
-            "language": "text",
-            "source": "compiler-derived cooperative tensor site\n  live_tensor_sites = 1\n  exact_result_component_output_bindings = 0",
-            "diagnostic": "error[FE2O3-PARALLEL-013]: cooperative tensor functional refinement is incomplete: 1 live tensor site(s), but 0 exact result-component/output receipt binding(s)\nclassification: Incomplete",
-            "property": "CooperativeTensorArithmetic",
-            "stage": "compiler-owned strict parallel derivation",
-            "code": "FE2O3-PARALLEL-013",
-            "enforcement": "Production cooperative-tensor structural validation and parallel-reference composition",
-            "caught": "The compiler requires each typed tensor result component to bind its exact result root, component ordinal, scalar policy, and output store. Once those claim-boundary bindings exist, tensor-component formula replay remains a separate unsupported role and still grants no functional authority."
-          },
-          {
-            "id": "parallel_contract_construction",
-            "title": "Compiler-derived parallel contract is invalid",
-            "language": "text",
-            "source": "compiler-derived relation\n  output = live ranked view\n  schedule = derived live collective\n  validate() = invalid",
-            "diagnostic": "error[FE2O3-PARALLEL-017]: compiler-derived parallel contract was invalid: <exact contract construction error>\nclassification: Rejected",
-            "property": "CompilerDerivedParallelContract",
-            "stage": "compiler-owned strict parallel derivation",
-            "code": "FE2O3-PARALLEL-017",
-            "enforcement": "Production parallel-reference contract constructor and negative tests",
-            "caught": "The compiler constructs the strongest supported pointwise, permutation, fold, or recurrence relation from live semantic and hierarchy evidence, then validates it independently. If its own constructed contract is inconsistent, compilation stops instead of trusting a source or caller assertion."
-          },
-          {
-            "id": "bounds_machine_overflow",
-            "title": "An intermediate index multiplication overflows",
-            "language": "text",
-            "source": "gpu.execution_layout global = [3, 1, 1]\n%tid = kernel.invocation_index <axis = 0, extent = 3>\n%max = kernel.index_constant 18446744073709551615\n%index = kernel.index_binary Multiply %tid, %max\nkernel.access Read %input[%index]",
-            "diagnostic": "error[FE2O3-BOUNDS-005]: checked Read index arithmetic may overflow\ncounterexample invocation [2] evaluates 2 Multiply 18446744073709551615 outside the unsigned 64-bit range\nhelp: use checked arithmetic, narrow the launch domain, or prove a dominating in-range guard",
-            "property": "MachineIndexRepresentability",
-            "stage": "generic PLIRON pass 2/8",
-            "code": "FE2O3-BOUNDS-005",
-            "enforcement": "bounds_machine_integer_overflow.pliron; sparse and ranked-bounds mutations",
-            "caught": "Sparse SSA retains the first overflowing add or constant multiply instead of letting later arithmetic erase it. The finite launch gives a concrete invocation and operands. Constant overflow is still rejected when an unrelated launch axis is dynamic; overflow that actually depends on an unbounded axis remains Incomplete."
-          },
-          {
-            "id": "protocol_phase_mismatch",
-            "title": "One wave executes different tensor phases",
-            "language": "text",
-            "source": "if lane < 32 {\n  kernel.tensor_layout @first\n} else {\n  kernel.tensor_layout @second\n}",
-            "diagnostic": "error[FE2O3-PROTOCOL-001]: collective phase mismatch in grid 0 workgroup 0 subgroup 0\ninvocation [0, 0, 0] executes tensor instruction at block 1 op 0\ninvocation [32, 0, 0] executes tensor instruction at block 2 op 0\nhelp: reconverge control flow before the collective",
-            "property": "SimtCollectivePhaseOrder",
-            "stage": "generic PLIRON pass 6/8",
-            "code": "FE2O3-PROTOCOL-001",
-            "enforcement": "protocol-lit/phase_mismatch.pliron; mandatory barrier stage",
-            "caught": "Exact CFG traces are grouped by grid, workgroup, and subgroup. Every active lane must execute the same tensor/barrier sites in the same order, so equal instruction counts at different program points do not pass. No attention, GEMM, or other workload identity is used."
-          },
-          {
-            "id": "protocol_active_mask_claim",
-            "title": "Tensor metadata claims the wrong active lanes",
-            "language": "text",
-            "source": "gpu.execution_layout subgroup = 64\nkernel.tensor_layout <subgroup_width = 64, claimed_active_lanes = 32>",
-            "diagnostic": "error[FE2O3-PROTOCOL-003]: tensor collective claims 32 active lanes, but CFG-derived execution has 64\nfailed proof: retained participation metadata matches the executed active mask\nhelp: derive the tensor site after reconvergence and regenerate compiler-owned participation metadata",
-            "property": "SimtActiveMask",
-            "stage": "generic PLIRON pass 6/8",
-            "code": "FE2O3-PROTOCOL-003",
-            "enforcement": "protocol-lit/active_mask_claim.pliron; mandatory barrier stage",
-            "caught": "The operation's claim is compared with lanes that actually reach the site. Metadata cannot self-certify participation. A partial subgroup separately reports FE2O3-PROTOCOL-002 with the actual lane list."
-          },
-          {
-            "id": "workgroup_alias_signature",
-            "title": "Aliasing LDS views disagree about shape",
-            "language": "text",
-            "source": "%a = kernel.ranked_view <f32, [4], Workgroup, origin = 901, noalias = 71>\n%b = kernel.ranked_view <f32, [8], Workgroup, origin = 901, noalias = 71>\nkernel.access Write %a[...]\nkernel.access Read %b[...]",
-            "diagnostic": "error[FE2O3-WORKGROUP-003]: cannot prove workgroup-memory safety: potentially aliasing view class 71 in Workgroup memory has incompatible element widths or rank/shapes",
-            "property": "AllocationProvenance",
-            "stage": "generic PLIRON pass 7/8",
-            "code": "FE2O3-WORKGROUP-003",
-            "enforcement": "workgroup_alias_signature_incomplete.pliron; shared provenance mutations",
-            "caught": "Race and workgroup-memory clients share one address-space-aware provenance root. The workgroup client refuses to merge memory versions for incompatible views of the same possible allocation; missing relative offsets and unknown writable aliases fail closed for the same reason."
-          },
-          {
-            "id": "atomic_read_from_unresolved",
-            "title": "Atomic flags do not invent publication",
-            "language": "text",
-            "source": "invocation 0: data[0] = value; flag.atomic_store(1, Release)\ninvocation 1: flag.atomic_load(Acquire); read data[0]",
-            "diagnostic": "error[FE2O3-WORKGROUP-003]: cannot prove workgroup-memory safety: invocation [1, 0, 0] cannot derive read-from for workgroup address [0]\nan acquire/release declaration does not identify the write observed by this read",
-            "property": "AtomicPublicationReadFrom",
-            "stage": "generic PLIRON pass 7/8",
-            "code": "FE2O3-WORKGROUP-003",
-            "enforcement": "matched_atomic_flag_keeps_following_data_read_incomplete and unrelated_atomics_do_not_weaken_uninitialized_data_read",
-            "caught": "Memory ordering correlates plausible release/acquire candidates by resolved address and scope, but it never guesses which release an acquire observed. A matched flag leaves publication Incomplete until read-from exists; unrelated atomics cannot downgrade a definite uninitialized read."
-          },
-          {
-            "id": "progress_zero_step",
-            "title": "A live loop never advances",
-            "language": "text",
-            "source": "i = 0\nwhile i < 8 {\n  i = i\n}",
-            "diagnostic": "error[FE2O3-PROGRESS-001]: control-flow cycle does not terminate: the induction variable is unchanged on the backedge\ncounterexample: the live incoming edge carries i = 0 and bound = 8, so the true edge repeats forever\nhelp: advance the finite induction variable on every backedge",
-            "property": "KernelProgress",
-            "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-PROGRESS-001",
-            "enforcement": "progress_zero_step.pliron; progress SCC and feasibility mutations",
-            "caught": "The semantic stage builds CFG strongly connected components and rejects this loop only after reconstructing a feasible incoming value. An infeasible zero-step edge is not falsely rejected, and a symbolic case is Incomplete rather than assigned an invented witness."
-          },
-          {
-            "id": "progress_symbolic_tiled_loop",
-            "title": "A dynamic tiled loop can wrap",
-            "language": "text",
-            "source": "i = 0\nwhile i < runtime_bound {\n  kernel.tensor_layout ...\n  i = i + 16\n}",
-            "diagnostic": "error[FE2O3-PROGRESS-002]: termination proof is incomplete: a symbolic bound with a non-unit step needs a no-wrap range proof\nhelp: retain a finite upper bound proving every i + 16 update is representable, or use a supported checked recurrence",
-            "property": "NonWrappingRankingFunction",
-            "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-PROGRESS-002",
-            "enforcement": "tensor_layout_uniform_induction_loop.pliron; static positive-step progress mutations",
-            "caught": "A positive step is not enough under finite machine arithmetic. Step 1 terminates for any u64 bound; a larger step needs a static or otherwise proved upper bound so the last executed update cannot wrap. This Incomplete result now stops the strict pipeline."
-          },
-          {
-            "id": "numerical_tree_mismatch",
-            "title": "Reassociated floating-point math lacks an error proof",
-            "language": "text",
-            "source": "gpu = (a + b) + c\nreference = a + (b + c)\nproof.evidence_ref status = Checked",
-            "diagnostic": "error[FE2O3-NUMERIC-001]: numerical refinement is incomplete\nV1 derives a finite bound only from identical typed IEEE operator trees\nhelp: preserve the exact typed operator tree, or supply a future supported interval/error proof for the changed operation order",
-            "property": "NumericalRefinement",
-            "stage": "generic PLIRON pass 8/8",
-            "code": "FE2O3-NUMERIC-001",
-            "enforcement": "checked_evidence_cannot_make_different_float_trees_equivalent and numerical_bound_is_derived_from_identical_live_operator_trees",
-            "caught": "Checked evidence binds the obligation but cannot prove arithmetic. The compiler currently emits an exact-zero certificate only when independently reconstructed typed trees are identical. Floating-point reassociation needs a real range/error theorem and therefore fails closed today."
-          },
-          {
-            "id": "target_lds_budget",
-            "title": "Static LDS usage exceeds the target",
-            "language": "text",
-            "source": "target.max_lds = 65536 bytes\n%tile = kernel.ranked_view <f32, [20000], Workgroup, origin = 1>",
-            "diagnostic": "error[FE2O3-RESOURCE-004]: kernel requires 80000 workgroup-memory bytes, exceeding target limit 65536\nhelp: reduce or reuse staged storage\nhelp[FE2O3-FIX-TARGET]: use a target-supported LDS footprint",
-            "property": "TargetResourceFeasibility",
-            "stage": "compiler-supplied target precondition",
-            "code": "FE2O3-RESOURCE-004",
-            "enforcement": "target_lds_overflow.pliron; launch-contract resource mutations",
-            "caught": "Static workgroup views are counted by compiler-issued allocation origin, so multiple views of one allocation use its maximum extent while distinct allocations are summed. A concrete budget excess rejects before the unchanged eight policy passes."
-          },
-          {
-            "id": "target_host_allocation_small",
-            "title": "The host buffer is smaller than its kernel view",
-            "language": "text",
-            "source": "host allocation origin 2: bytes = 32, alignment = 16\n%output = kernel.ranked_view <f32, [16], Global, origin = 2>",
-            "diagnostic": "error[FE2O3-ABI-004]: global view origin 2 requires 64 bytes but the host contract provides 32\nhelp: bind a sufficiently large allocation or reduce the view\nhelp[FE2O3-FIX-TARGET]: bind each origin to a sufficiently large aligned host descriptor",
-            "property": "HostAbiFeasibility",
-            "stage": "compiler-supplied target precondition",
-            "code": "FE2O3-ABI-004",
-            "enforcement": "target_host_abi_small.pliron; launch-contract origin, size, and alignment mutations",
-            "caught": "The host descriptor is matched by compiler-issued allocation origin, not argument position or SSA name. Substituting another origin, providing insufficient alignment, overflowing size arithmetic, or leaving a dynamic size unguarded all stop admission with their own diagnostic."
-          },
-          {
-            "id": "preserve_analysis_operator_mutation",
-            "title": "An analysis stage leaves a changed operator",
-            "language": "text",
-            "source": "before kernel-memory-bounds-v1:\n  %index = kernel.index_binary Add %tid, %one\nafter kernel-memory-bounds-v1:\n  %index = kernel.index_binary Multiply %tid, %one",
-            "diagnostic": "error[FE2O3-PRESERVE-025]: analysis-only pass MemoryBounds changed retained structural identity; error[FE2O3-PRESERVE-010]: verified PLIRON structure changed at block 0 op 2 (kernel.index_binary), component attributes: before `kernel.index_binary_kind Add`, after `kernel.index_binary_kind Multiply`; help: preserve the exact ranked IR structure or re-run correctness verification for the transformed function\nhelp[FE2O3-FIX-PASS-PRESERVATION] (Manual): compiler maintainer: remove the persistent structural mutation from the named analysis pass",
-            "property": "PersistentPassStructuralIdentity",
-            "stage": "analysis-pass preservation boundary",
-            "code": "FE2O3-PRESERVE-025",
-            "enforcement": "pliron_pipeline::mutation_is_blamed_on_the_active_pass_and_has_a_compiler_repair; canonical identity mutation tests",
-            "caught": "The production wrapper checks both the context-wide mutation-attempt epoch around the stage and an exact checkpoint against the retained preceding bytes. Any mutable access attempt is attributed to that stage even if it restores the same bytes; a retained operator, attribute, type, SSA edge, successor, or region change additionally identifies its first exact changed site. Neither check certifies the analysis report."
-          },
-          {
-            "id": "preserve_unsupported_snapshot",
-            "title": "An identity snapshot contains unsupported structure",
-            "language": "text",
-            "source": "before TensorLayout: verified builtin.func in the closed ranked subset\nafter TensorLayout, block 0 op 0:\n  %lane = gpu.hierarchy_id Lane  // not admitted by structural identity V1",
-            "diagnostic": "error[FE2O3-PRESERVE-025]: analysis-only pass TensorLayout changed retained structural identity; error[FE2O3-PRESERVE-001]: post-pass structural identity is unavailable: error[FE2O3-PRESERVE-001]: unsupported structure at block 0 op 0 (gpu.hierarchy_id): operation is outside the closed ranked operation allowlist; help: lower the construct into the closed production ranked PLIRON subset before preservation checking\nhelp[FE2O3-FIX-PASS-PRESERVATION] (Manual): compiler maintainer: remove the persistent structural mutation from the named analysis pass",
-            "property": "BoundedStructuralSnapshot",
-            "stage": "analysis-pass preservation boundary",
-            "code": "FE2O3-PRESERVE-025",
-            "enforcement": "Unsupported-root and unsupported-operation identity mutation tests",
-            "caught": "The identity builder never skips an operation it cannot represent. Because the input checkpoint succeeded, an unsupported post-stage structure is attributed to TensorLayout as a persistent mutation. No partial digest or failed snapshot can authorize the next compiler stage."
-          },
-          {
-            "id": "preserve_snapshot_resource_limit",
-            "title": "An identity snapshot exceeds its bounded budget",
-            "language": "text",
-            "source": "verified builtin.func @oversized {\n  // 1,025 blocks; identity V1 admits at most 1,024\n}",
-            "diagnostic": "error[FE2O3-PRESERVE-028]: structural identity is unavailable; error[FE2O3-PRESERVE-002]: basic blocks count 1025 at function exceeds identity limit 1024; help: split or simplify the function before preservation checking\nhelp[FE2O3-FIX-STRUCTURE] (Manual): split or simplify the function so structural identity construction remains within its audited resource bounds",
-            "property": "BoundedStructuralSnapshot",
-            "stage": "analysis-pass preservation boundary",
-            "code": "FE2O3-PRESERVE-028",
-            "enforcement": "Block, operation, value, operand, successor, attribute, text, and canonical-byte resource mutation tests",
-            "caught": "Every identity resource has an explicit limit. Exceeding one is Incomplete and terminal rather than a truncated snapshot, hash-only comparison, or permission to continue. This keeps preservation checking deterministic and bounded for arbitrary kernels."
-          },
-          {
-            "id": "preserve_transient_mutation_attempt",
-            "title": "An analysis changes PLIRON and restores it",
-            "language": "text",
-            "source": "inside kernel-race-freedom-v1:\n  before epoch = 481\n  temporarily set %index.kind = Multiply\n  restore %index.kind = Add\n  after epoch = 483; exact bytes equal",
-            "diagnostic": "error[FE2O3-PRESERVE-020]: analysis-only pass RaceFreedom attempted PLIRON mutation (context epoch 481 -> 483); help: use only immutable analysis queries in this stage\nhelp[FE2O3-FIX-PASS-PRESERVATION] (Manual): compiler maintainer: remove mutable PLIRON access from the named analysis pass",
-            "property": "AnalysisOnlyMutationFreedom",
-            "stage": "analysis-pass preservation boundary",
-            "code": "FE2O3-PRESERVE-020",
-            "enforcement": "pliron_pass_contract mutation-attempt and mutate-restore adversarial tests",
-            "caught": "The context-wide epoch advances before mutable access is granted. Restoring the original operator makes the exact post-stage bytes equal but cannot restore the epoch, so the compiler names RaceFreedom and stops. Failed mutable borrows are detected by the same workload-neutral mechanism."
-          },
-          {
-            "id": "preserve_report_payload_substitution",
-            "title": "A sealed report payload is replaced",
-            "language": "text",
-            "source": "issued at stage 4/8: RaceFreedom Clean for exact checkpoint C\nsubmitted at stage 4/8: modified RaceFreedom findings for checkpoint C",
-            "diagnostic": "error[FE2O3-PRESERVE-039]: analysis facts or findings were modified after sealing at position 3; help: consume the compiler-issued report without reconstruction or mutation",
-            "property": "AnalysisReportCustody",
-            "stage": "analysis-report integrity boundary",
-            "code": "FE2O3-PRESERVE-039",
-            "enforcement": "pliron_report_validation report-payload mutation tests",
-            "caught": "The session keeps private custody of the issued report and compares the complete typed payload and derived status at the exact stage position. This rejects substitution; it does not prove that the original analysis was semantically sound. That independent witness remains Incomplete for all eight stages."
-          },
-          {
-            "id": "transform_without_semantic_checker",
-            "title": "A transforming pass has no independent checker",
-            "language": "text",
-            "source": "pass canonicalize-index rewrites exact before PLIRON B to exact after PLIRON A\nproduction semantic checker registry: empty",
-            "diagnostic": "error[FE2O3-TRANSFORM-008]: transforming pass canonicalize-index is unsupported: no independent PLIRON semantic checker is registered",
-            "property": "NamedTransformationRefinement",
-            "stage": "separate transforming-pass boundary",
-            "code": "FE2O3-TRANSFORM-008",
-            "enforcement": "pliron_transform_refinement empty-registry and unsupported-result adversarial tests",
-            "caught": "Exact before/after structure and a plausible pass name cannot certify a rewrite. The boundary requires a checker-issued result bound to the exact owners, pass implementation and configuration, checker identity, and one-shot session. Production supports zero transformations rather than treating structural change as equivalence."
+            "source": "a rooted tensor result is consumed with a different role or register map",
+            "diagnostic": "error[FE2O3-TENSOR-LAYOUT-005]: result-root layout is incompatible with the consumer; help: select a compatible instruction or add an authenticated conversion",
+            "property": "TensorLayoutDataflow",
+            "stage": "kernel-tensor-layout-v1",
+            "code": "FE2O3-TENSOR-LAYOUT-005",
+            "enforcement": "rooted tensor-layout dataflow and narrow wave64 raw replay",
+            "caught": "The compiler follows the exact result root and rejects a consumer contract that disagrees with its producer."
           }
         ]
       },
       {
         "type": "callout",
-        "tone": "proof",
-        "title": "Stable pass diagnostic catalog",
-        "text": "Tensor and multidimensional execution diagnostics identify the failed semantic contract rather than a workload name. The first table summarizes important semantic categories. The second table records every stable code owned by bounded PLIRON identity, mutation-attempt preservation, report custody, the separate transforming-pass boundary, the eight policy stages, their progress, numerical and SIMT protocol analyses, the compiler-supplied target precondition, and the currently assigned parallel-relation codes through FE2O3-PARALLEL-031. Compiler-integrity and transformation rows diagnose compiler-owned invariants, not ordinary source mistakes and not semantic proof. The effect table records implemented Rejected or Incomplete outcomes. Direct production-pipeline errors also render a structured FE2O3-FIX repair with explicit applicability; source joins and later formula replay use precise compiler errors without inventing pass codes. Prerequisite and Incomplete results are terminal proof failures, not permission to continue lowering."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Semantic diagnostic category",
-          "Rejected condition",
-          "Incomplete condition"
-        ],
-        "rows": [
-          ["tensor instruction identity", "Operand role, instruction profile, element type, packing, wave width, or register distribution disagrees with the typed instruction.", "Target instruction/profile evidence is missing or unsupported."],
-          ["tensor operand/register map", "A, B, or accumulator lane/component coordinates, multiplicity, bounds, or coverage disagree with the instruction profile.", "A map is opaque or exceeds bounded analysis."],
-          ["tensor storage layout", "An operand uses an unsupported direct/LDS transform or the declared transform does not produce its required register map.", "Storage provenance or transform evidence is unresolved."],
-          ["tensor edge policy", "The exact-tile or authenticated zero-fill contract is inconsistent with the physical fragment.", "The frontend cannot establish one of the current profile's accepted edge policies."],
-          ["tensor convergence", "Participating lanes execute different tensor-instruction sites or orders.", "Control uniformity, active participants, or a cyclic trace cannot be resolved."],
-          ["tensor producer/consumer flow", "Two producers assign incompatible layouts to one root, or a later operand/accumulator consumer requires a different role, map, element, component count, or subgroup width.", "An external root has no local producer fact; production source authority must independently authenticate its checked load, initializer, or conversion."],
-          ["execution layout", "Global, workgroup, subgroup, or lane identities contradict one another; a per-axis partial workgroup violates a collective contract.", "A required dynamic extent or participant relation is unresolved."],
-          ["allocation provenance and alias", "Two may-alias views expose an incompatible concrete concurrent effect.", "Allocation origin or alias class is unknown where disjointness is required."],
-          ["synchronization scope", "An atomic or barrier scope is narrower than the participating conflict domain.", "Grid progress or cooperative-launch evidence is absent."],
-          ["SIMT collective protocol", "Subgroup lanes execute different collective phases, only part of a tensor collective, or contradict the claimed active mask.", "The executed trace or bounded protocol analysis cannot be completed."],
-          ["loop progress", "A reachable cycle has a concrete nontermination witness such as an unchanged induction variable.", "The loop is outside the supported positive-induction, nonwrapping ranking proof."],
-          ["numerical refinement", "No broader numerical rejection is inferred from a changed operator tree.", "The GPU and reference typed operator trees differ and no supported interval or error theorem is available."],
-          ["target and host contract", "A concrete launch, LDS budget, allocation size, alignment, or allocation-count limit is violated.", "A required geometry, extent, provenance, or host-allocation fact remains dynamic or absent."]
-        ]
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Diagnostic",
-          "Class",
-          "Exact condition reported"
-        ],
-        "rows": [
-          ["FE2O3-PRESERVE-000", "Prerequisite", "PLIRON structural verification failed before a canonical identity could be constructed; repair the malformed operation, type, attribute, region, or CFG."],
-          ["FE2O3-PRESERVE-001", "Incomplete", "The identity root or a nested operation is outside the closed verified production ranked-PLIRON subset; no partial snapshot is accepted."],
-          ["FE2O3-PRESERVE-002", "Incomplete", "A basic-block, operation, SSA-value, operand, successor, attribute, rendered-text, or canonical-byte identity limit was exceeded; no truncated snapshot is compared."],
-          ["FE2O3-PRESERVE-003", "Rejected", "An operand references a value outside the snapshotted function or a CFG successor leaves its region; the exact site and external reference are reported."],
-          ["FE2O3-PRESERVE-004", "Incomplete", "A registered type or attribute cannot be rendered deterministically for canonical identity; the entity and exact site are reported."],
-          ["FE2O3-PRESERVE-005", "Incomplete", "Bounded identity traversal panicked and was rejected instead of producing a snapshot."],
-          ["FE2O3-PRESERVE-010", "Rejected", "Two successfully constructed structural identities differ; the first changed operation, attribute, type, SSA wiring, successor, region, or function component is reported as nested detail."],
-          ["FE2O3-PRESERVE-020", "Compiler integrity", "A named analysis-only stage attempted context-owned PLIRON mutation; the before and after mutation epochs and stage are reported even when exact bytes were restored."],
-          ["FE2O3-PRESERVE-021", "Compiler integrity", "A stage received a stale mutation epoch relative to the sealed session; restart the fixed pipeline from a fresh structural snapshot."],
-          ["FE2O3-PRESERVE-022", "Rejected", "A production analysis stage ran outside the fixed eight-stage order; the expected and observed stages are reported."],
-          ["FE2O3-PRESERVE-023", "Compiler integrity", "The context mutation-attempt epoch is unavailable or exhausted, so the stage cannot certify a mutation-free interval."],
-          ["FE2O3-PRESERVE-024", "Rejected", "The sealed session ended before all eight required stages completed; the first omitted stage is reported."],
-          ["FE2O3-PRESERVE-025", "Rejected", "A named analysis stage left a persistent structural change, including a post-stage graph that cannot be snapshotted; nested detail reports the exact mismatch or snapshot failure."],
-          ["FE2O3-PRESERVE-026", "Rejected", "A defensive non-contiguous stage entry observes bytes different from the retained prior checkpoint; the named stage and nested mismatch are reported."],
-          ["FE2O3-PRESERVE-027", "Compiler integrity", "A named analysis stage panicked; the stage is reported and no report or later-stage authority is retained."],
-          ["FE2O3-PRESERVE-028", "Prerequisite", "The initial structural identity is unavailable because verification, closed admission, deterministic rendering, or a resource bound failed; the nested source code selects a source-side repair."],
-          ["FE2O3-PRESERVE-029", "Rejected", "The sealed session state is invalid, such as overlapping stages, completion without an active stage, execution after the fixed sequence, or a missing retained checkpoint."],
-          ["FE2O3-PRESERVE-031", "Compiler integrity", "A report seal was not issued by the exact preservation and report-custody session."],
-          ["FE2O3-PRESERVE-032", "Compiler integrity", "A submitted report belongs to another PLIRON context."],
-          ["FE2O3-PRESERVE-033", "Compiler integrity", "A submitted report belongs to another PLIRON function owner."],
-          ["FE2O3-PRESERVE-035", "Compiler integrity", "A report appears at the wrong fixed stage position; expected and observed stages are reported."],
-          ["FE2O3-PRESERVE-036", "Compiler integrity", "Exact checkpoint position, pass, or diagnostic identity metadata was modified after issue."],
-          ["FE2O3-PRESERVE-037", "Compiler integrity", "The sealed analysis implementation/version identity was modified."],
-          ["FE2O3-PRESERVE-038", "Compiler integrity", "The sealed runtime analysis configuration was modified."],
-          ["FE2O3-PRESERVE-039", "Compiler integrity", "Typed analysis facts or findings differ from the compiler-issued report payload."],
-          ["FE2O3-PRESERVE-040", "Compiler integrity", "A submitted report status differs from the status derived from its sealed payload."],
-          ["FE2O3-PRESERVE-041", "Compiler integrity", "The exact-preservation manifest does not describe the same fixed eight report stages."],
-          ["FE2O3-PRESERVE-043", "Compiler integrity", "A required report was omitted; its exact position and pass are reported."],
-          ["FE2O3-PRESERVE-044", "Compiler integrity", "A report issued for one stage position was replayed at another position."],
-          ["FE2O3-TRANSFORM-001", "Transformation boundary", "The exact before/after owner or canonical structural identity is unavailable, or one-shot session identity is exhausted."],
-          ["FE2O3-TRANSFORM-002", "Transformation boundary", "Before and after structures are exactly identical; the pass belongs at the analysis-only boundary rather than the rewriting boundary."],
-          ["FE2O3-TRANSFORM-003", "Transformation boundary", "The executed pass implementation or configuration differs from its sealed contract."],
-          ["FE2O3-TRANSFORM-004", "Transformation boundary", "The checker identity or a checker-issued exact owner, structure, pass, implementation, or configuration binding differs from the live session."],
-          ["FE2O3-TRANSFORM-005", "Transformation boundary", "A checker result was replayed from another one-shot session."],
-          ["FE2O3-TRANSFORM-006", "Transformation boundary", "The independent semantic checker rejected the named transformation."],
-          ["FE2O3-TRANSFORM-007", "Transformation boundary", "The independent semantic checker could not prove the named transformation."],
-          ["FE2O3-TRANSFORM-008", "Transformation boundary", "The transformation is unsupported; the production registry currently contains zero entries."],
-          ["FE2O3-TRANSFORM-009", "Transformation boundary", "The checker diagnostic is empty, oversized, contains NUL, or is outside the bounded canonical ASCII form."],
-          ["FE2O3-TENSOR-LAYOUT-001", "Rejected", "A tensor contract is malformed or disagrees with the instruction profile, including operand roles, width, packing, register maps, coordinate coverage, storage transform, tail policy, active lanes, or an exact divergent trace."],
-          ["FE2O3-TENSOR-LAYOUT-002", "Incomplete", "Tensor layout or convergence cannot be proved, including an opaque lane map or unresolved cyclic control flow."],
-          ["FE2O3-TENSOR-LAYOUT-003", "Incomplete", "Tensor verification exceeded an explicit operation, map, trace, finding, or work-unit limit."],
-          ["FE2O3-TENSOR-LAYOUT-004", "Rejected", "Incompatible producer layouts reach one exact compiler-derived tensor value root; both producer sites and layouts are reported."],
-          ["FE2O3-TENSOR-LAYOUT-005", "Rejected", "A rooted tensor result reaches an operand or accumulator consumer whose complete fragment ABI is incompatible; producer and consumer sites, profiles, layouts, and a repair are reported."],
-          ["FE2O3-BOUNDS-000", "Prerequisite", "PLIRON structural verification failed before ranked bounds analysis."],
-          ["FE2O3-BOUNDS-001", "Rejected", "A read, write, or atomic index is statically outside a ranked extent; the diagnostic names the view, dimension, index, and required index < extent relation."],
-          ["FE2O3-BOUNDS-002", "Incomplete", "The compiler cannot prove index < extent on every path; add a dominating guard or use an explicitly checked access."],
-          ["FE2O3-BOUNDS-003", "Incomplete", "Bounds analysis encountered an unreachable block, unsupported terminator or operation, sparse-index failure, or bounded resource limit."],
-          ["FE2O3-BOUNDS-004", "Rejected", "A finite affine access leaves its ranked extent; the diagnostic names the access and dimension, then gives the first invocation, computed index, failed bound, and a structured repair."],
-          ["FE2O3-BOUNDS-005", "Rejected", "Retained unsigned index add or constant-multiply arithmetic overflows on a concrete path; the operation, operands, invocation, and machine range are reported."],
-          ["FE2O3-BOUNDS-006", "Incomplete", "Index overflow safety depends on an unbounded runtime value, a non-entry path, or another relation the current machine-range proof cannot establish."],
-          ["FE2O3-ATOMIC-001", "Rejected", "An atomic access is malformed, lacks explicit ordering or scope, uses an ordering illegal for its kind, or names a scope illegal for its address space."],
-          ["FE2O3-ATOMIC-002", "Incomplete", "View provenance, target width/address-space/scope capability, or authenticated coherent-allocation evidence for system scope is unavailable."],
-          ["FE2O3-ATOMIC-003", "Incomplete", "Atomic legality exceeded its bounded operation or finding budget."],
-          ["FE2O3-RACE-000", "Prerequisite", "Ranked bounds verification failed before race analysis."],
-          ["FE2O3-RACE-001", "Rejected", "Two concrete concurrent invocations have incompatible effects at the same coordinate; the diagnostic names both invocation and operation witnesses."],
-          ["FE2O3-RACE-002", "Incomplete", "Race freedom cannot be proved because a launch, indexed coordinate, allocation/alias contract, or required happens-before relation is unresolved."],
-          ["FE2O3-RACE-003", "Incomplete", "Sparse-index analysis failed or the exact invocation, effect-instance, or finding bound was exceeded."],
-          ["FE2O3-RACE-004", "Rejected", "Overlapping atomic effects use scopes that do not cover the concrete concurrent invocations; cross-workgroup overlap requires compatible device-scope atomics."],
-          ["FE2O3-OWN-001", "Rejected", "An ownership contract is duplicated or is not unconditional entry-block metadata."],
-          ["FE2O3-OWN-002", "Incomplete", "The execution layout, dynamic extent, sparse coordinate, or exact guarded trace required for ownership cannot be resolved."],
-          ["FE2O3-OWN-003", "Incomplete", "The bounded ownership contract or exact domain limit was exceeded."],
-          ["FE2O3-OWN-004", "Rejected", "A concrete invocation owns a coordinate outside the contracted logical extent."],
-          ["FE2O3-OWN-005", "Rejected", "Two concrete hierarchy owners claim the same coordinate; the diagnostic names both invocations, workgroups, subgroups, lanes, and operations."],
-          ["FE2O3-OWN-006", "Rejected", "Exact grid coverage has a hole; the diagnostic names the first uncovered logical coordinate."],
-          ["FE2O3-OWN-007", "Rejected", "A requested dense subgroup or workgroup tile has a hole inside its bounding rectangle."],
-          ["FE2O3-OWN-008", "Rejected", "A total output coordinate is written again after its first observable write; the diagnostic names both invocation and operation witnesses."],
-          ["FE2O3-OWN-009", "Rejected", "An observable coordinate-level global write has no ownership contract."],
-          ["FE2O3-OWN-010", "Rejected", "A declared collective contribution is not an atomic write."],
-          ["FE2O3-OWN-011", "Rejected", "A required invocation has no collective contribution."],
-          ["FE2O3-OWN-012", "Rejected", "One invocation contributes twice to a collective output; both operations are reported."],
-          ["FE2O3-OWN-013", "Rejected", "A total output may alias another observable write because distinct nonzero noalias classes do not prove separation."],
-          ["FE2O3-OWN-014", "Rejected", "An invocation traps while proving total or collective coverage, so normal completion is false."],
-          ["FE2O3-OWN-015", "Rejected", "A whole-allocation global write has no coordinate-level ownership contract."],
-          ["FE2O3-BARRIER-000", "Prerequisite", "Bounds verification failed before barrier-convergence analysis."],
-          ["FE2O3-BARRIER-001", "Rejected", "Two participating invocations execute different collective barrier identities or orders."],
-          ["FE2O3-BARRIER-002", "Incomplete", "Barrier convergence cannot be proved because the launch, branch, terminator, CFG, or bounded trace is unresolved or unsupported."],
-          ["FE2O3-PROTOCOL-001", "Rejected", "Two active lanes in one subgroup execute different tensor/barrier phase identities or orders; both concrete invocation traces are reported."],
-          ["FE2O3-PROTOCOL-002", "Rejected", "Only a subset of the required physical subgroup reaches a tensor collective; the expected and actual active lanes are reported."],
-          ["FE2O3-PROTOCOL-003", "Rejected", "Compiler-retained collective participation metadata disagrees with the active lanes derived from executable CFG paths."],
-          ["FE2O3-PROTOCOL-004", "Incomplete", "SIMT protocol analysis exceeded its explicit bounded issue limit."],
-          ["FE2O3-WORKGROUP-000", "Prerequisite", "Bounds or barrier-convergence verification failed before workgroup-memory analysis."],
-          ["FE2O3-WORKGROUP-001", "Rejected", "An invocation reads a workgroup address without same-invocation initialization or a convergent acquire-release publication of a prior write."],
-          ["FE2O3-WORKGROUP-002", "Rejected", "Concurrent invocations perform incompatible workgroup-memory effects at the same address in one barrier epoch."],
-          ["FE2O3-WORKGROUP-003", "Incomplete", "Workgroup-memory safety cannot be proved because a trace or effect is unsupported or a finding/resource limit was reached."],
-          ["FE2O3-SEMANTIC-000", "Prerequisite", "Bounds verification failed before declared semantic refinement."],
-          ["FE2O3-SEMANTIC-001", "Rejected", "The actual expression is not equivalent to the explicitly declared required expression."],
-          ["FE2O3-SEMANTIC-002", "Incomplete", "A declared semantic expression cannot be resolved or the semantic-analysis resource limit was exceeded."],
-          ["FE2O3-SEMANTIC-003", "Incomplete", "A functional-reference obligation lacks exact status-Checked policy staging at the MIR boundary, or the staged identity or boundary is wrong. Staging alone grants no authority."],
-          ["FE2O3-SEMANTIC-004", "Rejected", "A functional-reference obligation or evidence record is duplicated, mismatched, malformed, wrong-property, or orphaned."],
-          ["FE2O3-SEMANTIC-005", "Incomplete", "A finite fold, recurrence, or permutation contract lacks a required structural witness or cannot be resolved within the bounded subset."],
-          ["FE2O3-SEMANTIC-006", "Rejected", "A finite collective contract is invalid, including a coverage, policy, type, order, or mapping mismatch."],
-          ["FE2O3-SEMANTIC-007", "Rejected", "A typed semantic-expression payload has invalid arity, types, operator policy, or commitment."],
-          ["FE2O3-PROGRESS-001", "Rejected", "A live control-flow cycle has a concrete nontermination witness, such as no exit or an induction variable unchanged on the backedge."],
-          ["FE2O3-PROGRESS-002", "Incomplete", "Termination cannot be proved by the supported positive constant-step induction form with a statically established nonwrapping update."],
-          ["FE2O3-PROGRESS-003", "Incomplete", "Progress analysis exceeded its explicit block, edge, or work limit."],
-          ["FE2O3-NUMERIC-001", "Incomplete", "The actual and reference live typed operator trees differ, so the current exact-zero absolute and relative error certificate does not apply."],
-          ["FE2O3-PARALLEL-001", "Rejected", "The parallel relation does not bind the exact compiler-verified MIR/PLIRON semantic contract."],
-          ["FE2O3-PARALLEL-002", "Incomplete", "The logical-output relation count does not equal the live total-output ownership proof count."],
-          ["FE2O3-PARALLEL-003", "Rejected", "An output relation does not match its compiler-derived domain, view, values, or ownership contract."],
-          ["FE2O3-PARALLEL-004", "Incomplete", "The compiler cannot derive nonempty ownership for a required GPU hierarchy level."],
-          ["FE2O3-PARALLEL-005", "Incomplete", "No retained policy-checked staging record has the required identity. Staging is a non-authoritative input to private formula execution."],
-          ["FE2O3-PARALLEL-006", "Incomplete", "A schedule relation lacks the compiler-derived facts required by its declared relation kind."],
-          ["FE2O3-PARALLEL-007", "Rejected", "The order claimed for a fold relation is not justified by the live schedule."],
-          ["FE2O3-PARALLEL-008", "Incomplete", "A dynamic bounded recurrence does not match the finite-bound identity of the live canonical loop."],
-          ["FE2O3-PARALLEL-009", "Rejected", "A relation's numerical policy is invalid for its live typed values or schedule."],
-          ["FE2O3-PARALLEL-010", "Incomplete", "A finite-error policy lacks its live typed witness or policy-checked staging record. Passing this join would still leave ErrorBounded formula replay separate."],
-          ["FE2O3-PARALLEL-013", "Incomplete", "The number of exact tensor result-component/output staging bindings does not cover all live tensor instruction sites. Passing this join would still leave tensor-component formula replay separate."],
-          ["FE2O3-PARALLEL-015", "Rejected", "A parallel relation count cannot be represented in the production report."],
-          ["FE2O3-PARALLEL-016", "Incomplete", "An output does not resolve to exactly one compiler-materialized ranked view identity."],
-          ["FE2O3-PARALLEL-017", "Rejected", "The workload-neutral parallel contract constructed from compiler-owned live evidence fails its independent contract validation."],
-          ["FE2O3-PARALLEL-018", "Rejected", "Two output bindings name the same ranked view; a product requires distinct outputs."],
-          ["FE2O3-PARALLEL-019", "Incomplete", "Distinct output allocation origins or distinct nonzero noalias classes do not prove separation."],
-          ["FE2O3-PARALLEL-020", "Incomplete", "An output lacks an exact output-specific TotalView ownership and complete hierarchy binding."],
-          ["FE2O3-PARALLEL-021", "Rejected", "The ordered output product differs from the compiler-derived bindings, frames, receipts, or schedules."],
-          ["FE2O3-PARALLEL-023", "Rejected", "A numerical refinement site does not match any logical output's actual and reference roots."],
-          ["FE2O3-PARALLEL-024", "Rejected", "A numerical refinement site ambiguously matches more than one logical output."],
-          ["FE2O3-PARALLEL-025", "Rejected", "One logical output has more than one numerical refinement site."],
-          ["FE2O3-PARALLEL-026", "Rejected", "A numerical refinement domain or precondition is not the canonical typed constant true over the complete logical output."],
-          ["FE2O3-PARALLEL-027", "Rejected", "A tensor refinement site does not match any logical output view and actual/reference roots."],
-          ["FE2O3-PARALLEL-028", "Rejected", "A tensor refinement site ambiguously matches more than one logical output."],
-          ["FE2O3-PARALLEL-029", "Rejected", "One logical output has more than one tensor refinement receipt."],
-          ["FE2O3-PARALLEL-030", "Rejected", "A tensor refinement receipt names a tensor instruction site that is not live."],
-          ["FE2O3-PARALLEL-031", "Rejected", "One live tensor instruction site has more than one tensor refinement receipt."],
-          ["FE2O3-TARGET-000", "Prerequisite", "Target feasibility was requested for a function that did not pass structural PLIRON verification."],
-          ["FE2O3-TARGET-001", "Incomplete", "The compiler-supplied target check has no retained execution layout."],
-          ["FE2O3-TARGET-002", "Rejected", "The kernel has more than one execution layout instead of one compiler-derived entry-block contract."],
-          ["FE2O3-TARGET-003", "Incomplete", "A dynamic grid axis cannot be compared statically with the selected target limit."],
-          ["FE2O3-TARGET-004", "Rejected", "A concrete grid-axis extent exceeds the selected target limit."],
-          ["FE2O3-TARGET-005", "Rejected", "A concrete workgroup-axis extent exceeds the selected target limit."],
-          ["FE2O3-TARGET-006", "Rejected", "The concrete workgroup invocation count exceeds the selected target limit."],
-          ["FE2O3-TARGET-007", "Rejected", "The kernel subgroup size is not supported by the selected target."],
-          ["FE2O3-RESOURCE-001", "Incomplete", "A dynamic workgroup-view extent prevents a static LDS byte calculation."],
-          ["FE2O3-RESOURCE-002", "Incomplete", "A workgroup view lacks the compiler-issued allocation origin required to deduplicate one physical allocation."],
-          ["FE2O3-RESOURCE-003", "Rejected", "Checked byte-size arithmetic for a workgroup allocation overflows."],
-          ["FE2O3-RESOURCE-004", "Rejected", "The deduplicated static workgroup-memory footprint exceeds the selected target's LDS limit."],
-          ["FE2O3-ABI-001", "Incomplete", "A global view lacks a compiler-issued allocation origin."],
-          ["FE2O3-ABI-002", "Incomplete", "No compiler/host allocation descriptor is bound to a global view's allocation origin."],
-          ["FE2O3-ABI-003", "Incomplete", "A dynamic global-view extent prevents static proof that the bound host allocation is large enough."],
-          ["FE2O3-ABI-004", "Rejected", "The origin-bound host allocation is smaller than the global view's checked static byte requirement."],
-          ["FE2O3-ABI-005", "Rejected", "The origin-bound host allocation guarantees less alignment than the global view requires."],
-          ["FE2O3-ABI-006", "Rejected", "The number of distinct live global allocation origins exceeds the selected target ABI limit."],
-          ["FE2O3-ABI-007", "Rejected", "Checked byte-size arithmetic for a global view overflows."]
-        ]
-      },
-      {
-        "type": "callout",
         "tone": "boundary",
-        "title": "Claim joins are not aggregate replay",
-        "text": "The compiler accepts at most 64 logical outputs and refinement sites, and each tensor receipt carries at most 64 typed component pairs. After these bounded joins, the per-compilation verifier still rejects ErrorBounded, tensor-component, fold, recurrence, permutation, and noncanonical-loop roles with UnsupportedFormulaReplayRole until their exact theorem replay exists. UnsupportedFormulaReplayRole is a later verifier error, not a FE2O3-PARALLEL pass code."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Effect diagnostic",
-          "Outcome",
-          "Exact condition reported"
-        ],
-        "rows": [
-          ["FE2O3-EFFECT-001", "Rejected", "GPU and sequential-reference domain, precondition, or value expressions differ; block and operation are always reported, and an ExactView bounded trace may add a hierarchy witness."],
-          ["FE2O3-EFFECT-002", "Incomplete", "The output view has no exact hierarchy-ownership contract."],
-          ["FE2O3-EFFECT-003", "Incomplete", "Under ExactView, dynamic ownership, guarded effect tracing, or a prerequisite ownership proof is unresolved; ExactEffectDomain deliberately checks only the modeled static write domain."],
-          ["FE2O3-EFFECT-004", "Rejected", "The hierarchy-ownership contract used by the effect statement is concretely invalid."],
-          ["FE2O3-EFFECT-005", "Rejected", "An effect contract is orphaned, matches multiple writes, or duplicates another contract for one write."],
-          ["FE2O3-EFFECT-006", "Incomplete", "A concrete GPU write has no modeled sequential-reference effect; a full hierarchy owner is included only when a bounded ExactView trace supplied one."],
-          ["FE2O3-EFFECT-007", "Rejected or Incomplete", "Effect refinement V1 requires status-Checked policy staging at the exact MIR boundary; invalid staging is rejected and unavailable staging is Incomplete. Staging alone grants no authority."],
-          ["FE2O3-EFFECT-008", "Incomplete", "A domain, precondition, or value expression is outside the bounded normalization subset."],
-          ["FE2O3-EFFECT-009", "Incomplete", "The function exceeds the explicit effect-contract resource limit."]
-        ]
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Other compile-time boundary",
-          "Representative failure",
-          "Diagnostic ownership"
-        ],
-        "rows": [
-          ["rustc and kernel macro", "Rust type, move, borrow, lifetime, visibility, attribute, signature, unsafe-body, or inline-assembly violation.", "rustc or source-admission diagnostic; not a PLIRON pass code."],
-          ["semantic MIR import", "Unsupported terminal, ownership mapping, effect, call, or control-flow projection.", "Frontend Rejected or Incomplete diagnostic before ranked PLIRON authority."],
-          ["dialect and structural verification", "Malformed operation, type, SSA use, dominance, region, terminator, capability, or execution-layout contract; Kernel IR also rejects an illegal cast kind, scalar category, signedness, or width as InvalidCast.", "Structural diagnostic at the owning IR boundary; this is not an invented eight-pass code."],
-          ["analysis-stage integrity", "The context mutation-attempt epoch changes, or a bounded canonical snapshot is malformed, unsupported, externally referenced, nondeterministically rendered, over budget, stale, or differs after a named analysis stage.", "Stage-attributed preservation diagnostics plus FE2O3-PRESERVE-000..005, 010, 022, 024..026, or 028..029. Epoch and checkpoint checks do not prove analysis correctness."],
-          ["analysis-report custody", "A sealed report is substituted, stale, reordered, replayed, omitted, or its checkpoint, implementation, configuration, payload, or status is modified.", "FE2O3-PRESERVE-031..033, 035..041, and 043..044 fail closed. Untampered custody still leaves every independent semantic witness Incomplete."],
-          ["transforming-pass refinement", "The before/after owner or structure, pass implementation/configuration, checker identity, one-shot session, or checker result is absent, mismatched, replayed, rejected, incomplete, or unsupported.", "FE2O3-TRANSFORM-001..009. Zero production transformations are currently supported."],
-          ["checked lowering and Kernel IR verification", "A verified PLIRON fact cannot be represented faithfully in canonical KIR V7, or canonical KIR semantic verification fails.", "Lowering or KIR verification diagnostic; no target artifact is emitted."],
-          ["formal memory admission", "A guarded non-private load does not bind data, length, selected index, and predicate to the same allocation, or its selected false address offset is not literal zero.", "Formal-memory rejection after KIR verification and before target lowering."],
-          ["target and production boundary", "Unsupported target operation or profile, compiler invocation or closure mismatch, finalization failure, or artifact contract mismatch.", "Owning target, invocation, worker, or finalizer diagnostic; never a fabricated safety-pass code."]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "info",
-        "title": "Static and dynamic shapes have different proof outcomes",
-        "text": "A static extent and static index can produce a concrete Rejected witness such as 64 < 64. A finite launch and affine or constant-modulus index map can also be decided exactly even when the index varies by invocation; this is where FE2O3-BOUNDS-004 and Presburger race proofs apply. For device memory safety, a dominating guard can make a dynamic GPU access provable. For a safe CPU slice read, the compiler matches the exact Rust assertion to the access, then independently proves the full-domain bound from an identical symbolic ranked extent or an overflow-checked bounded static affine interval. Empty domains are safe. An unbounded runtime extent, unrelated lengths, nonlinear terms, missing or unused assertions, unsafe intervals, and overflow fail closed; a host check or assertion alone does not supply the implication."
-      },
-      {
-        "type": "table",
-        "headers": [
-          "Kernel shape",
-          "Available fact",
-          "Strict compiler result"
-        ],
-        "rows": [
-          ["[T; 64] with index 64", "The extent and invalid index are static.", "Rejected with FE2O3-BOUNDS-001 and the failed 64 < 64 relation."],
-          ["Finite launch 8 with input[2 * tid + 1] and extent 12", "The index varies, but its domain and signed-affine map are exact and finite.", "Rejected with FE2O3-BOUNDS-004; invocation [6] computes 13 and violates 13 < 12."],
-          ["Finite launch with even writes and odd reads", "Both affine images are exact over the compiler-bounded launch domain.", "The race pass proves the relation intersection empty even above the exact-trace invocation cap."],
-          ["GPU &[T] access with a dominating index < len guard", "Every device path to the access carries the required dynamic bound.", "The GPU bounds pass can be Clean; this alone does not admit a dynamic CPU-reference read."],
-          ["Dynamic CPU-reference input[index]", "The exact Rust bounds condition and matching GPU load identity are retained.", "Incomplete until a compiler-owned extent implication proves the condition over the complete output domain."],
-          ["&[T] with an unresolved index", "The compiler cannot establish index < extent on every path.", "Incomplete with FE2O3-BOUNDS-002; no target lowering or runtime artifact."],
-          ["Dynamic checked-tile ownership", "An authenticated checked-tile witness preserves an exact zero-offset, unit coordinate embedding for every active launch axis.", "The generic race pass can prove injectivity without enumerating the runtime grid."],
-          ["Finite compiler-bounded affine or remainder write", "The launch domain, allocation identity, machine arithmetic, and coordinate relation are all authenticated.", "The generic race pass can prove relation disjointness or report FE2O3-RACE-001 with a concrete collision witness."],
-          ["Runtime-unbounded affine-looking write", "No finite compiler bound exists for the relation domain.", "FE2O3-RACE-002 Incomplete; syntax that merely looks affine is not accepted as a partition."],
-          ["Potentially overflowing affine map", "A multiply or add is not proved total over the admitted launch domain.", "Race proof is Incomplete even if the mathematical, unbounded-integer formula would be injective."],
-          ["Dynamic launch or alias relation", "Concurrency or disjointness cannot be resolved in the bounded model.", "The corresponding race or barrier pass reports Incomplete and compilation stops."]
-        ]
-      },
-      {
-        "type": "callout",
-        "tone": "proof",
-        "title": "A guarded load is a structural proof obligation",
-        "text": "For each non-private guarded load, formal-memory admission follows a bounded SSA def-use chain and requires one allocation throughout: slice data, slice length, the selected address, and the index in index < length must all agree. Its selected false offset is literal zero, and a false guard returns the fallback without a memory access. A similar-looking predicate over another slice, a detached length, a missing definition, a cycle, or an exhausted budget fails closed."
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Bounds do not erase aliasing",
-        "text": "A guard proves that one access is within one recorded allocation; it does not prove that two views are disjoint. Race analysis keeps allocation origin and alias class, and remains conservative when relative slice offsets or provenance cannot establish separation. Safe DisjointSlice mappings can discharge that obligation because the compiler authenticates their ownership identity and exact coordinate transform; an ordinary may-alias slice cannot acquire that fact from a bounds predicate."
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Cross-wave and cross-workgroup claims have explicit scope",
-        "text": "Within a workgroup, the verifier can relate multiple waves through LDS effects, initialization epochs, and convergent workgroup barriers. Across workgroups, it can prove disjoint global effects or compatible atomics from the execution layout and provenance. It does not assume simultaneous residency, forward progress, a grid-wide barrier, or coherent system allocation; those require separate authenticated launch and target contracts, otherwise compilation is Incomplete."
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "Ordinary Rust atomic terminals are explicitly unsupported",
-        "text": "The compiler authenticates and reserves the four DeviceGlobalMutPtr<T>::as_atomic() terminals for u32, i32, u64, and i64, but the ordinary Rust source route is rejected until core Atomic<T> operation terminals are modeled. Rust Ordering does not imply a GPU memory scope, so the compiler does not invent one. For semantic AtomicAccess already present in IR, projection preserves the exact operation kind, ordering, and scope. The generic atomic pass then reports FE2O3-ATOMIC-002 Incomplete when exact target width/address-space/scope capability or, for system scope, authenticated coherent-allocation evidence is absent. No non-clean report grants lowering, artifact, or launch authority."
+        "title": "Two completed witnesses are not universal correctness",
+        "text": "A Complete raw replay validates one sealed analysis result for one exact ranked function and checkpoint. It does not prove MIR projection, every analysis implementation, source-to-KIR refinement, LLVM or ISA lowering, numerical intent, artifact identity, launch admission, or hardware execution. Every unsupported witness remains explicitly Incomplete."
       }
     ]
   },
   "compiler-checks/production-path": {
     "sectionId": "compiler-checks-production-path",
-    "title": "How a rejection reaches the Rust user",
+    "title": "One production path, with explicit proof boundaries",
     "blocks": [
       {
         "type": "steps",
         "items": [
-          "rustc preserves supported semantic MIR, source spans, ranked extents, checked branches, and memory effects.",
-          "For reference = path, the collector resolves one local safe Rust function and the exact monomorphized kernel/reference Instances in the same session, then records compiler-derived identities and MIR body SHA-256 values; source cannot supply them. Leading usize reference arguments are logical point axes, followed by direct mutable scalar outputs.",
-          "ReferenceEffectIrV1 derives bounded typed outputs, logical points, guards, expressions, safe-slice bounds assertions, canonical unit-step loops, and local scalar-helper summaries from safe Rust MIR. Ranked GPU projection independently derives load/view/index/scalar/allocation-origin/stride evidence. Reference bounds V2 accepts identical symbolic ranked extents and overflow-checked bounded static affine intervals, including empty domains; unrelated extents, missing or unused assertions, unsafe intervals, and overflow fail closed. Other loop SCCs produce exact invariant/variant proof requests rather than assumed facts.",
-          "The ordinary-kernel source contract rejects unsafe signatures, unsafe bodies, inline assembly, and reachable unsafe device functions; only the separate unsafe_asm profile admits the low-level escape.",
-          "Every compiler-recognized device capability must match its exact diagnostic item and canonical DefPath, an authenticated reviewed provider identity, the compiled SourceFileHash under the reviewed source root, and the pinned provider source digest.",
-          "Supported safe ownership mappings retain their genuine marker identity and const parameters; malformed, substituted, or unsupported forms stop as Rejected or Incomplete before they can become memory effects.",
-          "The frontend constructs context-owned ranked PLIRON and runs dialect verification before any safety analysis.",
-          "The production preservation session compares PLIRON's context-wide mutation-attempt epoch around each of the eight named analysis stages, then constructs one bounded canonical identity before the sequence and one after every stage. Any mutation attempt is attributed to the active stage even if bytes are restored. Unsupported or over-budget snapshots report FE2O3-PRESERVE-028 with nested detail; retained changes report FE2O3-PRESERVE-025 and the first changed site. Exact bytes, not the diagnostic digest, are retained for later revalidation. These checks do not prove the stage report correct.",
-          "A separate compiler-owned custody session seals each actual report to the exact context, function, checkpoint, stage position, implementation, configuration, payload, and status. It rejects substitution, replay, reordering, omission, and tampering. All eight independent semantic-witness checks remain Incomplete, so Clean is diagnostic only and grants no proof, lowering, artifact, or launch authority.",
-          "One ephemeral analysis manager caches sparse facts, execution layout, and exact bounded traces for each run; reachable typed CFG edges are part of sparse propagation. Production revalidation creates a fresh manager, reruns the sequence, and compares the retained exact output bytes.",
-          "The eight mandatory workload-neutral passes consume those shared facts in fixed order: tensor layout, bounds, atomic legality, race freedom, hierarchical ownership, barrier convergence, workgroup memory, and semantic refinement. Effect refinement executes inside the final stage after hierarchy ownership. Every report returns Clean, Rejected, or Incomplete. Exact identity does not replace any report or add a ninth policy pass.",
-          "For each paired effect, the private compiler carries exact GPU and reference sites, memory indices, logical coordinates, domains, preconditions, typed formulas, and eligible ranked-read identities into the value-carrying recipe. Multiple separated point outputs retain one status-Checked policy-staging record each. PLIRON independently proves and reconciles noalias separation, TotalView, frames, schedules, and ordered-product identity; staging grants no authority.",
-          "The normalized obligation binds the full validated ranked CFG, every operation and terminator, execution layout, real value-carrying access, view and allocation, ownership contract, exact reference site, formulas, and same-session MIR subjects. Only request-to-require normalization is excluded from the digest.",
-          "When the exact fixed runtime closure is installed, the workload-neutral controller supervises pinned rust_verify, its retained internal verifier child, and Z3 as one bounded descendant tree. Executable mappings, inherited files, process topology, resources, timeout, and cleanup fail closed. Cached template/generated-fixture checks pass, but mi300x lacks the root-owned fixed /opt runtime, so no referenced production compilation has completed the formula gate.",
-          "Production derives and reconciles the compiler-owned semantic contract, derives and independently validates the strict compiler-owned parallel contract, then runs one generated workload-neutral Verus checker. Exact pointwise integer and compiler-side IEEE operator-DAG claims replay the compiler-derived coordinate, domain, precondition, and value formulas directly, without a generic relation premise. Candidate declarations are not evidence, and unsupported replay roles fail closed before KIR lowering.",
-          "The compiler retains Ed25519 V2 records only as status-Checked policy staging after the exact MIR, live PLIRON, relation, retained-effect, tool, execution, signer, and boundary identities match. Caller-selected policy does not establish proof execution or compiler authority. Private generated formula execution supplies its own report, and the move-only admission join requires that report plus the reconciled PLIRON structure at SafeReferenceMirToLivePliron.",
-          "A non-clean pass finding carries its assigned stable FE2O3 code, failed relation or witness, IR operation, and Rust source location when that projection exists. Source joins and later verifier replay failures remain precise without inventing pass codes.",
-          "One move-only compiler-owned ranked-verification input retains the eight ordered live reports through checked lowering; no caller can reconstruct it from booleans or diagnostics. The historical inert V4 evidence wire format still serializes its original seven reports and explicitly does not claim the new hierarchy report.",
-          "Protected production additionally admits a sealed V3 rustc-invocation descriptor against the live argv, cwd, complete environment, target, rustc image, backend image, and full compiler closure. Worker V3 inputs are preflighted before transaction consumption, and finalization binds the exact invocation, closure, transaction, link plan, measured worker response, raw HSACO, descriptor source, and finalized bytes.",
-          "The production transaction stops before target IR, finalization, or artifact publication on every Rejected or Incomplete result."
+          "The Rust frontend retains the supported MIR body, checked branches, source spans, and authenticated safe device capabilities.",
+          "Projection constructs one bounded ranked PLIRON CFG with typed SSA values, views, indices, effects, execution layout, tensor roots, and proof requests.",
+          "ProductionRankedKernelV1 performs the sealed checked constant fold. The independent validator permits only exact same-site constant rewrites and binds the one-shot session, implementation, configuration, and exact typed output.",
+          "PLIRON dialect verification runs before policy analysis. A context mutation-attempt epoch and exact structural checkpoints require all eight analysis stages to remain read-only.",
+          "The fixed stages run in order: tensor layout, bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, and semantic refinement.",
+          "The compiler seals each report and independently replays its witness. Static bounded bounds and the narrow canonical wave64 tensor fragment can be Complete; every other current independent stage witness remains Incomplete even when its policy report is Clean.",
+          "Only the normalized ranked recipe and admitted reports proceed to KIR. A diagnostic keeps the pass, failed relation, PLIRON site, Rust source location when available, and a repair suggestion."
+        ]
+      },
+      {
+        "type": "table",
+        "headers": ["Boundary", "What it catches", "What it does not prove"],
+        "rows": [
+          ["Mutation epoch and exact snapshots", "Direct mutation, mutate-then-restore, failed mutable-borrow attempts, and retained changes during an analysis-only stage.", "That the analysis report itself is semantically correct."],
+          ["Sealed report custody", "Omission, duplication, reordering, replay, stale checkpoints, and payload or status substitution.", "That a Clean payload follows from the live IR."],
+          ["Independent raw replay", "Exact supported bounds and tensor obligations reconstructed from live PLIRON rather than from report success bits.", "Unsupported passes or shapes; those remain Incomplete."],
+          ["Independent transform replay", "The exact checked IndexBinary to IndexConstant relation, value, position, result identity, CFG, types, effects, and proof sites.", "Any other optimization, algebraic equivalence, or semantic preservation theorem."],
+          ["KIR custody", "Downstream lowering receives the transformed ranked recipe rather than the stale pre-transform form.", "KIR-to-LLVM, LLVM-to-ISA, artifact, launch, or hardware correctness."]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The production contract places tensor-layout verification first, before bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and semantic refinement. A context-wide mutation-attempt epoch rejects mutable access during those analysis-only stages, including mutate-then-restore; one initial and eight post-stage exact identities locate retained changes and support revalidation. Sealed report custody binds the exact subject and payload, but every independent semantic-witness check remains Incomplete. Clean is therefore diagnostic and grants no proof, lowering, artifact, or launch authority. Intentional rewrites use a separate checker-bound transformation session, whose production registry is empty until an independent semantic checker exists. One generated Verus checker replays supported exact pointwise integer and compiler-side IEEE operator-DAG formulas. PLIRON separately proves and reconciles total coverage, allocation separation, frames, schedules, and ordered-product identity; status-Checked policy staging grants no authority, and the private move-only admission join requires both result classes. Canonical loops include an overflow-safe final latch. Dynamic safe-slice reads accept only identical symbolic ranked extents or overflow-checked bounded static affine intervals. Noncanonical SCC requests, typed tensor result-component/store claims, ErrorBounded sites, folds, recurrences, and permutations retain exact claim data but cannot compose with formula authority. mi300x lacks the required root-owned /opt runtime and there is no fallback. No compiler extraction/projection, analysis-result or transformation soundness, target IEEE, LLVM+, target arithmetic, artifact, launch, hardware, or performance authority is claimed."
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "What remains trusted",
-        "text": "Verus proves equality of the formulas generated for the paired effect. The PLIRON mutation-attempt epoch and exact checkpoints detect attempted and retained structural changes around each analysis stage, while sealed custody detects report substitution and tampering. They do not prove that a stage computed a correct report: all eight independent semantic witnesses remain Incomplete. Registered dialect operation classes, mutation instrumentation, and attribute/type encodings remain trusted inputs. The rustc MIR collector, safe-reference extractor, GPU projection, bounds-only control validator, effect bijection, ranked-recipe construction, transcript construction, analysis implementations, and transformation preservation remain in the compiler trusted computing base. No transforming PLIRON pass is admitted. This path does not prove rustc source-to-MIR correctness, compiler extraction or projection correctness, ranked-IR-to-ISA refinement, or hardware execution."
+        "text": "The compiler now has one checked transformation and two narrow Complete raw-replay witness fragments. All other independent stage witnesses remain Incomplete, so they cannot authorize KIR lowering merely because the policy report is Clean. Unsupported dynamic bounds, alias relations, tensor CFG shapes, progress topologies, and no-wrap obligations fail closed. This architecture makes specific compile-time guarantees without claiming that every accepted kernel is universally or numerically correct."
       }
     ]
   },
   "compiler-checks/v7-simulation": {
     "sectionId": "v7-simulation",
-    "title": "Debug exact V7 without upgrading observation into proof",
+    "title": "Keep simulator evidence historical",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The bounded deterministic CPU simulator consumes an exact VerifiedCanonicalKernelIrV7 owner. Its current subset executes integer and boolean scalar operations, structured control flow, internal calls, private and global buffers or views, ordinary or guarded scalar loads, and D1-D3 invocation identities. The standalone Linux boundary is fe2o3-kir-sim --kir-v7 kernel.kir --request request.json. Raw in-memory modules and older wire versions are not execution inputs."
+        "text": "The bounded V7 CPU simulator remains useful as historical observation tooling for an already verified KIR subset. It is not an alternate source compiler or a fallback around the Rust MIR to ranked PLIRON to KIR route. Historical fixtures retain their original commits and commands; this lesson does not present them as current production compilation."
       },
       {
         "type": "table",
-        "headers": [
-          "V7 observation surface",
-          "Current behavior",
-          "Boundary"
-        ],
+        "headers": ["Historical observation", "Useful for", "Never establishes"],
         "rows": [
-          ["Schedule", "Workgroups and local slots are created in canonical Z/Y/X order; live invocations advance cooperatively and yield at convergent workgroup barriers.", "This is deterministic CPU execution, not a GPU scheduler or progress model."],
-          ["Guarded scalar load", "A false predicate returns the fallback without validating the pointer, touching memory, or emitting a read event.", "The simulator observes already-verified KIR behavior; it does not establish source-to-KIR refinement."],
-          ["Memory conflicts", "The result contains a bounded byte-level cross-invocation global-memory conflict assessment.", "Clean is not a race-freedom proof; conflict and incomplete outcomes remain observations."],
-          ["Semantic trace V1", "A separate in-process adapter maps simulator events to bounded observation-only trace records.", "Trace KIR identity and site ordinals are untrusted claims until rebound to an independently owned exact V7 module."],
-          ["Workgroup cooperation", "Static scalar workgroup memory and convergent workgroup barriers model initialization, cross-lane publication, and one allocation per workgroup.", "Generic barriers, dynamic or non-scalar workgroup memory, and physical wave behavior are outside this profile."],
-          ["Unsupported operations", "Floating point, external calls, generic barriers, atomics, fences, dynamic or non-scalar workgroup memory, wave and matrix operations, memory intrinsics, and inline assembly are rejected.", "The current GEMM, softmax, attention, and MoE tutorial kernels cannot run in this simulator profile."]
+          ["Deterministic invocation schedule", "Reproducing supported scalar control flow and workgroup barrier behavior.", "GPU scheduling, progress, timing, or performance."],
+          ["Guarded memory events", "Inspecting whether the supported KIR path touches memory and which bounded conflicts were observed.", "Race freedom, source-to-KIR refinement, or complete memory safety."],
+          ["Semantic trace records", "Debugging an exact historical KIR identity with bounded event data.", "Proof discharge, artifact identity, load, or launch authority."],
+          ["Unsupported operation rejection", "Keeping the observation subset explicit.", "Permission to replace unsupported wave, tensor, atomic, floating-point, or memory behavior with an approximation."]
         ]
-      },
-      {
-        "type": "callout",
-        "tone": "boundary",
-        "title": "A debugger observation grants no execution authority",
-        "text": "Simulation results and semantic traces establish no race freedom, proof discharge, source-to-KIR or GPU equivalence, artifact identity, load or launch authority, timing, performance, or performance prediction. The CLI emits copied results and the conflict assessment. Semantic trace capture is a separate in-process adapter; the CLI does not silently promote a trace into verified evidence."
       }
     ]
   },
@@ -2919,24 +1821,33 @@ const narrativeRegistry = deepFreeze({
   },
   "compiler-checks/complete-correctness-catalog": {
     sectionId: "complete-correctness-catalog",
-    title: "What the joined compiler gate proves today",
+    title: "What is complete today",
     blocks: [
-      milestoneCallout(
-        "Every row is workload-neutral. Clean means the exact supported theorem replayed for this compilation. Rejected means the compiler found a contradiction. Incomplete means the compiler retained the missing obligation and emitted no lowering input.",
-      ),
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Complete is relation-specific",
+        text: "Complete below means that an independent checker replayed one documented relation for one exact PLIRON checkpoint. It is not a claim that the whole kernel, compiler, numerical result, artifact, or hardware execution is correct.",
+      },
       {
         type: "table",
-        headers: ["Relation", "Current behavior", "Why it stops"],
+        headers: ["Relation", "Current status", "Exact boundary"],
         rows: [
-          ["Exact point output", "Replays integer or compiler-side IEEE operator-DAG coordinate, domain, precondition, and value formulas", "Target IEEE values and LLVM or target arithmetic are outside the theorem"],
-          ["Separated point outputs", "PLIRON proves and reconciles separation, per-output TotalView, frames, schedules, and ordered-product identity; Verus replays each supported exact formula", "Checked staging grants no authority; aliasing, missing coverage, reordered products, or mismatched formula reports fail closed at the private join"],
-          ["Canonical finite loop", "Checks the exact transition, variant, step bound, and final-latch increment", "A possible final increment overflow is rejected"],
-          ["Dynamic slice read", "Matches the Rust assertion and proves an identical symbolic ranked extent or overflow-checked bounded static affine interval", "Unrelated extents, missing or unused assertions, unsafe intervals, and overflow fail closed"],
-          ["Noncanonical loop", "Emits an exact SCC invariant/variant request", "Imported proof answers do not yet compose with formula authority"],
-          ["Tensor/MFMA component", "Binds the typed result component to the exact store", "Tensor-component formula replay is not implemented"],
-          ["Fold, recurrence, permutation", "Validates structural domains, bounds, order, policy, roots, and coverage", "Final-value formula replay is unsupported and returns UnsupportedFormulaReplayRole"],
-          ["ErrorBounded", "Binds exact roots, formulas, finite bounds, graph, and MIR sites", "Finite-error formula replay is not implemented"],
+          ["Static bounded ranked access witness", "Complete for the admitted raw-replay fragment", "Finite authenticated launch dimensions, static ranked extents, supported constant or affine/remainder maps, checked u64 evaluation, and the replay resource cap."],
+          ["Canonical wave64 tensor-layout witness", "Complete for the admitted raw-replay fragment", "One linear block, rooted canonical gfx942 wave64 tensor sites, supported exact contracts, and backward producer-to-consumer result-root edges. Source projection and operational SSA correspondence are not proved."],
+          ["Bounds outside the raw fragment", "Incomplete", "Dynamic launch dimensions, unsupported maps, exhausted enumeration, malformed inventory, and any possible machine overflow fail closed."],
+          ["Race and ownership policy", "Clean is possible; independent witness remains Incomplete", "Checked tiled and row-striped dynamic mappings can prove injectivity in the policy pass. General witness authority has not been implemented, so this does not yet authorize KIR by itself."],
+          ["Loop progress policy", "Clean for the canonical committed form; independent witness remains Incomplete", "Only the canonical two-block positive constant induction loop is proved. Other SCC topology and unsupported no-wrap reasoning fail closed."],
+          ["Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses", "Incomplete", "Their reports can reject concrete errors, but a Clean report has no independent Complete replay yet."],
+          ["Checked index constant fold", "Applied or NotApplicable after exact typed replay", "Only exact preceding IndexConstant operands, checked Add or Multiply, and nonzero Divide or Remainder. Same CFG and positions are retained; all unrelated operations, values, types, effects, and proof sites must be identical."],
+          ["Any other transformation", "Unsupported", "No callback, pass name, digest match, or final structural equality can authorize another rewrite."]
         ],
+      },
+      {
+        type: "callout",
+        tone: "proof",
+        title: "Why the narrow result still matters",
+        text: "The architecture separates policy analysis, immutable-pass enforcement, report custody, independent witness replay, and checked transformation replay. That makes unsupported reasoning visible instead of converting it into a broad success claim, while allowing each workload-neutral relation to grow behind the same Rust MIR to ranked PLIRON to KIR path.",
       },
     ],
   },

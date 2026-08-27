@@ -28,9 +28,9 @@ export function ArchitecturePage() {
             ["rustc", "Enforces Rust moves, borrows, lifetimes, visibility, local typestate, and Result control flow."],
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
-            ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
-            ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. A context-wide mutation-attempt epoch rejects any attempted PLIRON mutation during an analysis-only stage, while exact checkpoints locate retained changes and support revalidation. Sealed report custody detects substitution and tampering, but all eight independent semantic-witness checks remain Incomplete."],
-            ["Transforming PLIRON passes", "Use a separate exact before/after owner, pass implementation/configuration, and checker-result boundary. Its production registry currently contains zero transformations because no independent semantic checker exists."],
+            ["Historical V7 simulator", "Retains bounded observation tooling for an already verified KIR subset; it is not a current source compiler, GPU execution, or proof."],
+            ["Compiler analyses", "Run the fixed eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. Static bounded bounds and a narrow rooted canonical wave64 tensor fragment have Complete independent raw replay; every other current stage witness remains Incomplete."],
+            ["Checked ranked transform", "Folds exact preceding index constants with checked u64 semantics before every downstream consumer. A separate exact typed structural replay admits only the same-site result; every other transformation is unsupported."],
             ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Status-Checked policy staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; the private move-only join is the admission authority and requires both structural and formula results."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
@@ -95,48 +95,25 @@ export function ArchitecturePage() {
           ))}
         </div>
         <p className="status-boundary">
-          The generic safety sequence is active and mandatory before lowering.
-          Fe2O3 does not contain a second Rust borrow checker: rustc owns local
-          language semantics, while sealed types and compiler passes cover GPU
-          facts that Rust alone cannot observe. The functional-correctness
-          catalog reflects the integrated production order: compiler-owned
-          semantic derivation, strict parallel derivation, then generated
-          per-compilation Verus composition before KIR lowering. Generic
-          exact pointwise formula replay, overflow-safe canonical loops, and
-          PLIRON structural multiple-output reconciliation are pinned for the
-          supported subset. Each separated point output gets one policy-checked
-          Checked staging record; staging grants no authority. The generated
-          checker replays formulas, while a private move-only join requires its
-          report and the PLIRON coverage, separation, and ordered-product
-          results. Dynamic safe-slice reads are complete only for an identical
-          symbolic ranked extent or an overflow-checked bounded static affine
-          interval; unrelated lengths, missing assertions, unsafe intervals,
-          and overflow fail closed. Noncanonical loops emit exact SCC
-          invariant/variant requests, but imported answers cannot yet grant
-          formula authority. Tensor/MFMA result components bind exact stores
-          at the claim boundary; tensor-component theorem replay still fails
-          closed. ErrorBounded formula replay is also incomplete.
-          A context-wide monotonic PLIRON mutation-attempt epoch now brackets
-          every analysis-only stage. It rejects mutable access attempts,
-          failed mutable borrows, and mutate-then-restore behavior and attributes
-          the failure to the active stage. Bounded exact structural checkpoints
-          still locate retained changes and participate in revalidation; digest
-          labels are diagnostic only. Each report is sealed to its exact context,
-          function, checkpoint, stage, implementation, configuration, payload,
-          and status. That custody detects substitution and tampering, but it
-          does not prove the report. All eight independent semantic-witness
-          checks remain Incomplete, so even a Clean policy report grants no
-          proof, lowering, artifact, or launch authority. Transforming passes
-          use a separate checker-bound refinement boundary; zero production
-          transformations are supported until an independent semantic checker
-          exists.
-          mi300x has no production proof-runtime fallback.
-          Partial capabilities at this baseline still grant no compiler extraction,
-          projection, analysis-result or transformation soundness, or
-          source-to-machine refinement,
-          LLVM or target arithmetic proof, protected launch authority, complete
-          persistent execution, universal functional or numerical correctness,
-          or automatic parity promotion.
+          One production route carries supported Rust MIR into ranked PLIRON,
+          runs the sealed checked index constant fold, verifies the fixed eight
+          workload-neutral stages, and only then constructs KIR lowering input.
+          Analysis-only stages are protected by a monotonic mutation-attempt
+          epoch, exact structural checkpoints, and sealed report custody. Those
+          mechanisms detect compiler mutation and report substitution; they do
+          not prove report semantics. Independent raw replay is Complete only
+          for the documented static bounded-access fragment and the narrow
+          rooted single-block canonical gfx942 wave64 tensor fragment. Dynamic
+          checked tiled and row-striped mappings can produce a Clean generic
+          race report, while the independent race witness remains Incomplete.
+          The committed progress checker covers only its canonical two-block
+          positive-induction form; unsupported CFG and no-wrap obligations fail
+          closed. The constant-fold validator uses exact typed custody and an
+          independent evaluator, so canonical hashes remain diagnostic labels
+          rather than acceptance authority. These specific guarantees do not
+          establish compiler extraction, source-to-KIR refinement, numerical
+          intent, LLVM or ISA correctness, artifact identity, launch admission,
+          persistent execution, performance, or universal kernel correctness.
         </p>
         <a
           className="source-button"

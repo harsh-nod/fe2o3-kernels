@@ -835,26 +835,34 @@ describe("curriculum integrity", () => {
         (capability) => capability.id === "cpu-semantic-simulation",
       )?.detail,
     ).toContain("not a current command");
-    expect(
-      currentState.capabilities.find(
-        (capability) => capability.id === "compiler-analysis",
-      )?.detail,
-    ).toContain("context-wide monotonic PLIRON mutation-attempt epoch");
     const compilerAnalysis = currentState.capabilities.find(
       (capability) => capability.id === "compiler-analysis",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "all eight independent semantic-witness checks remain Incomplete",
+      "context-wide mutation-attempt epoch",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "zero production transformations are supported",
+      "static bounded-access fragment",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "canonical gfx942 wave64 tensor-layout fragment",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "every other stage witness remains Incomplete",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "One production transformation is admitted",
     );
     expect(compilerAnalysis?.sourcePaths).toEqual(
       expect.arrayContaining([
         "crates/fe2o3-kernel-analysis/src/pliron_pass_contract.rs",
         "crates/fe2o3-kernel-analysis/src/pliron_report_validation.rs",
-        "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_analysis_witness.rs",
+        "crates/fe2o3-pliron/src/production/ranked/ranked_index_constant_fold_v1.rs",
       ]),
+    );
+    expect(compilerAnalysis?.sourcePaths).not.toContain(
+      "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
     );
     expect(
       currentState.capabilities.find(
@@ -1025,630 +1033,160 @@ describe("curriculum integrity", () => {
       expect(contract).toContain(code);
     }
 
-    const semanticFailures = narrativeEntry("compiler-checks/catalog");
-    const failures = JSON.stringify([
-      semanticFailures,
+    const catalog = narrativeEntry("compiler-checks/catalog");
+    const productionPath = narrativeEntry("compiler-checks/production-path");
+    const completeCatalog = narrativeEntry(
+      "compiler-checks/complete-correctness-catalog",
+    );
+    const compilerNarrative = JSON.stringify([
+      catalog,
+      productionPath,
       narrativeEntry("compiler-checks/v7-simulation"),
-      narrativeEntry("gemm-tiling/mutation-diagnostics"),
+      completeCatalog,
     ]);
-    expect(failures).toContain("Compile-time kernel diagnostics");
-    expect(failures).toContain("none recognizes GEMM names, tile sizes, or schedules");
-    expect(failures).toContain("Generic does not mean automatically provable");
-    expect(failures).toContain("strict pre-lowering route fails closed");
-    expect(failures).toContain("does not invent programmer intent");
-    expect(failures).toContain("Ordinary kernels are safe Rust");
-    expect(failures).toContain("One Rust type system, extended to GPU facts");
-    expect(failures).toContain("does not implement a second borrow checker");
-    expect(failures).toContain("What KernelResult means");
-    expect(failures).toContain("physical unit-return GPU entry wrapper");
-    expect(failures).toContain("Err is not a host-visible error payload");
-    expect(failures).toContain("lane-varying ?");
-    expect(failures).toContain("canonical Kernel IR V7");
-    expect(failures).toContain("Where Verus fits");
-    expect(failures).toContain("Layout follows values across tensor instructions");
-    expect(failures).toContain("The CPU reference closes semantics, not hardware layout");
-    expect(failures).toContain("Production errors include a repair contract");
-    expect(failures).toContain("FE2O3-FIX-LAYOUT");
-    expect(failures).toContain("Mutation epoch plus exact checkpoints");
-    expect(failures).toContain("mutate-then-restore cannot disappear behind equal final bytes");
-    expect(failures).toContain("A Clean report is diagnostic, not a proof");
-    expect(failures).toContain("all eight independent semantic-witness checks remain Incomplete");
-    expect(failures).toContain("Transforming passes use a different boundary");
-    expect(failures).toContain("production registry contains zero transforming passes");
-    expect(failures).toContain("private test fixture exercises custody only");
-    expect(failures).toContain("proof that trusted dialect encoders or printers are correct");
-    expect(failures).toContain("does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem");
-    expect(failures).toContain("unsafe_asm");
-    expect(failures).toContain("Kernel tabs are current safe source");
-    expect(failures).toContain("contains no unsafe block");
-    expect(failures).toContain("do not transfer authority");
-    for (const capability of [
-      "DisjointIndex",
-      "Shifted",
-      "GridExclusive",
-      "Blocked",
-      "DisjointBlock",
-      "current wave/collective/LDS/matrix capabilities",
-      "DeviceGlobalMutPtr<T>::as_atomic()",
-    ]) {
-      expect(failures).toContain(capability);
-    }
-    expect(failures).toContain("compiled SourceFileHash against the reviewed source root");
-    expect(failures).toContain("A crate name or same-named replacement is not sufficient");
-    expect(failures).toContain("Supported safe ownership mappings");
 
-    const rustSemanticsTable = semanticFailures.blocks.find(
-      (block) => block.type === "table" && block.headers[0] === "Rust form",
+    expect(compilerNarrative).toContain("From safe Rust to checked Kernel IR");
+    expect(compilerNarrative).toContain(
+      "No pass recognizes GEMM, softmax, attention, routing, or another workload name",
     );
-    expect(rustSemanticsTable?.type).toBe("table");
-    expect(JSON.stringify(rustSemanticsTable)).toContain("KernelResult and ?");
-    expect(JSON.stringify(rustSemanticsTable)).toContain("non-Copy, non-Clone capability");
-
-    const ownershipTable = semanticFailures.blocks.find(
-      (block) => block.type === "table" && block.headers[0] === "Safe ownership form",
+    expect(compilerNarrative).toContain(
+      "Static bounded ranked access witness",
     );
-    expect(ownershipTable?.type).toBe("table");
-    if (ownershipTable?.type !== "table") return;
-    expect(ownershipTable.rows.map(([mapping, state]) => [mapping, state])).toEqual([
-      ["thread::index_1d() with DisjointSlice::get_mut", "Supported"],
-      ["Shifted<Index1D, N>", "Supported for one shift layer"],
-      ["GridExclusive with a constant leader index", "Supported"],
-      ["Blocked<Index1D, 1, E> with DisjointBlock", "Supported for nonzero E and a constant component"],
-      ["Blocked<Index1D, L, E> where L > 1", "Incomplete"],
-      ["Malformed or substituted ownership mapping", "Rejected"],
-    ]);
-    expect(JSON.stringify(ownershipTable)).toContain("Nested Shifted<Shifted<...>> is rejected");
-    expect(JSON.stringify(ownershipTable)).toContain("dynamic or unresolved leader index is Incomplete");
-    expect(JSON.stringify(ownershipTable)).toContain("Wrong marker identity");
-    expect(failures).toContain(
-      "mandatory ranked-PLIRON order is tensor layout, ranked bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, then semantic refinement with effect refinement inside that final stage",
+    expect(compilerNarrative).toContain(
+      "Canonical wave64 tensor-layout witness",
     );
-    expect(failures).toContain("No lowering pass may run between these eight checks");
-    expect(failures).toContain("Stable pass diagnostic catalog");
-    expect(failures).toContain("FE2O3-RACE-004");
-    expect(failures).toContain("Other compile-time boundary");
-    expect(failures).toContain("fe2o3-kir-sim --kir-v7");
-    expect(failures).toContain("deterministic CPU execution, not a GPU scheduler");
-    expect(failures).toContain("Correct relative to explicit contracts, never universally correct");
-    expect(failures).toContain("Storage swizzling describes addresses before a load");
-    expect(failures).toContain("A and B need not use the same storage transform");
-    for (const fixture of [
-      "unguarded_a_tail_load",
-      "unguarded_b_tail_load",
-      "unguarded_c_tail_store",
-      "duplicate_lane_c_write",
-      "overlapping_workgroup_c_tile",
-      "duplicate_lds_write",
-      "lds_read_before_initialization",
-      "missing_publish_barrier",
-      "divergent_barrier",
-      "missing_reuse_barrier",
-      "expired_lds_epoch",
-      "staged_read_before_wait",
-      "accumulator_reset",
-      "incorrect_k_tail_zero_fill",
-      "incorrect_alpha_beta_epilogue",
-    ]) {
-      expect(failures).toContain(fixture);
-    }
-    expect(failures).toContain("Rust typestate UI");
-    expect(failures).toContain("Sealed-surface UI plus verifier");
-    expect(failures).toContain("Verifier-only; remains well-typed");
-    expect(failures).toContain("A rustc UI error is not a proof diagnostic");
-    expect(failures).toContain("All 15 are rejected as structured KIR");
-    expect(failures).toContain(
-      "not authenticated source derivation of all 15 graphs",
+    expect(compilerNarrative).toContain(
+      "every other current independent stage witness remains Incomplete",
     );
-    expect(failures).toContain("All 15 exact safe source mutations are diagnostic");
-    expect(failures).toContain("retains the valid_proof_sensitive root");
-    expect(failures).toContain("failed at compiler preflight");
-    expect(failures).toContain("empty artifact directory");
-    expect(failures).toContain("Executable direct-global MFMA source");
-    expect(failures).toContain("Cooperative-LDS positive source");
-    expect(failures).toContain("without issuing a positive receipt or frontend correspondence");
-    expect(failures).toContain("analysis fails closed");
-    expect(failures).toContain("safe-code root and reachable helper MIR");
-    expect(failures).toContain("Private final pair join");
-    expect(failures).toContain("stops before receipt, correspondence, configuration, and proof");
-    expect(failures).toContain("second downstream blocker");
-    expect(failures).toContain("never reaches configuration or proof execution");
-    expect(failures).toContain("Current MFMA qualification");
-    expect(failures).toContain("Historical LDS-family flags remain false");
-    expect(failures).toContain("TILED_SOURCE_TO_IR=false");
-    expect(failures).toContain("TILED_LOWERING=false");
-    expect(failures).toContain("TILED_PROTECTED_EXECUTION=false");
-
-    const outcomeTable = semanticFailures.blocks.find(
-      (block) => block.type === "table" && block.headers[0] === "Outcome",
+    expect(compilerNarrative).toContain(
+      "checked tiled and row-striped mappings",
     );
-    expect(outcomeTable?.type).toBe("table");
-    if (outcomeTable?.type !== "table") return;
-    expect(outcomeTable.rows.map(([outcome]) => outcome)).toEqual([
-      "Clean",
-      "Rejected",
-      "Incomplete",
-    ]);
-    expect(JSON.stringify(outcomeTable)).toContain(
-      "Incomplete does not claim that a concrete bug was proved",
+    expect(compilerNarrative).toContain(
+      "canonical two-block i < bound loop",
+    );
+    expect(compilerNarrative).toContain(
+      "final update lacks a static no-wrap proof",
+    );
+    expect(compilerNarrative).toContain(
+      "independent exact typed structural replay",
+    );
+    expect(compilerNarrative).toContain(
+      "Overflow and divide or remainder by zero stay unfurled",
+    );
+    expect(compilerNarrative).toContain(
+      "Canonical hashes are labels only",
+    );
+    expect(compilerNarrative).toContain(
+      "Keep simulator evidence historical",
+    );
+    expect(compilerNarrative).not.toContain(
+      "production registry contains zero transforming passes",
+    );
+    expect(compilerNarrative).not.toContain(
+      "all eight independent semantic-witness checks remain Incomplete",
     );
 
-    const pipelineTable = semanticFailures.blocks.find(
-      (block) => block.type === "table" && block.headers[0] === "Analysis ID",
-    );
-    expect(pipelineTable?.type).toBe("table");
-    if (pipelineTable?.type !== "table") return;
-    expect(pipelineTable.rows.map(([pass]) => pass)).toEqual([
-      "kernel-tensor-layout-v1",
-      "kernel-memory-bounds-v1",
-      "kernel-atomic-legality-v1",
-      "kernel-race-freedom-v1",
-      "kernel-hierarchy-ownership-v1",
-      "kernel-barrier-convergence-v1",
-      "kernel-workgroup-memory-v1",
-      "kernel-semantic-refinement-v1",
-      "pliron-sparse-index-v1 (shared analysis)",
-      "pliron-presburger (shared analysis)",
-      "pliron-provenance-alias (shared analysis)",
-      "pliron-memory-order (shared analysis)",
-      "pliron-simt-protocol (shared analysis)",
-      "kernel-progress (semantic-stage analysis)",
-      "kernel-target-contract (compiler-supplied precondition)",
-      "kernel-ir-interprocedural-effects (shared analysis)",
-      "pliron-ranked-structural-identity-v1 (shared preservation root)",
-      "pliron-analysis-report-validation-v1 (integrity boundary)",
-      "pliron-transform-refinement-v1 (separate transformation boundary)",
-      "bounded resources (cross-cutting)",
-    ]);
-    const prerequisiteTable = semanticFailures.blocks.find(
-      (block) =>
-        block.type === "table" &&
-        block.headers[0] === "Separate general Kernel IR check ID",
-    );
-    expect(prerequisiteTable?.type).toBe("table");
-    if (prerequisiteTable?.type !== "table") return;
-    expect(prerequisiteTable.rows.map(([check]) => check)).toEqual([
-      "kernel-structural-v1",
-      "kernel-control-flow-v1",
-    ]);
-    expect(JSON.stringify(prerequisiteTable)).toContain("irreducible control flow");
-    expect(JSON.stringify(pipelineTable)).toContain("compatible atomics");
-    expect(JSON.stringify(pipelineTable)).toContain("without inventing atomic read-from");
-
-    const diagnosticTable = semanticFailures.blocks.find(
-      (block) => block.type === "table" && block.headers[0] === "Diagnostic",
-    );
-    expect(diagnosticTable?.type).toBe("table");
-    if (diagnosticTable?.type !== "table") return;
-    expect(diagnosticTable.rows.map(([code]) => code)).toEqual([
-      "FE2O3-PRESERVE-000",
-      "FE2O3-PRESERVE-001",
-      "FE2O3-PRESERVE-002",
-      "FE2O3-PRESERVE-003",
-      "FE2O3-PRESERVE-004",
-      "FE2O3-PRESERVE-005",
-      "FE2O3-PRESERVE-010",
-      "FE2O3-PRESERVE-020",
-      "FE2O3-PRESERVE-021",
-      "FE2O3-PRESERVE-022",
-      "FE2O3-PRESERVE-023",
-      "FE2O3-PRESERVE-024",
-      "FE2O3-PRESERVE-025",
-      "FE2O3-PRESERVE-026",
-      "FE2O3-PRESERVE-027",
-      "FE2O3-PRESERVE-028",
-      "FE2O3-PRESERVE-029",
-      "FE2O3-PRESERVE-031",
-      "FE2O3-PRESERVE-032",
-      "FE2O3-PRESERVE-033",
-      "FE2O3-PRESERVE-035",
-      "FE2O3-PRESERVE-036",
-      "FE2O3-PRESERVE-037",
-      "FE2O3-PRESERVE-038",
-      "FE2O3-PRESERVE-039",
-      "FE2O3-PRESERVE-040",
-      "FE2O3-PRESERVE-041",
-      "FE2O3-PRESERVE-043",
-      "FE2O3-PRESERVE-044",
-      "FE2O3-TRANSFORM-001",
-      "FE2O3-TRANSFORM-002",
-      "FE2O3-TRANSFORM-003",
-      "FE2O3-TRANSFORM-004",
-      "FE2O3-TRANSFORM-005",
-      "FE2O3-TRANSFORM-006",
-      "FE2O3-TRANSFORM-007",
-      "FE2O3-TRANSFORM-008",
-      "FE2O3-TRANSFORM-009",
-      "FE2O3-TENSOR-LAYOUT-001",
-      "FE2O3-TENSOR-LAYOUT-002",
-      "FE2O3-TENSOR-LAYOUT-003",
-      "FE2O3-TENSOR-LAYOUT-004",
-      "FE2O3-TENSOR-LAYOUT-005",
-      "FE2O3-BOUNDS-000",
-      "FE2O3-BOUNDS-001",
-      "FE2O3-BOUNDS-002",
-      "FE2O3-BOUNDS-003",
-      "FE2O3-BOUNDS-004",
-      "FE2O3-BOUNDS-005",
-      "FE2O3-BOUNDS-006",
-      "FE2O3-ATOMIC-001",
-      "FE2O3-ATOMIC-002",
-      "FE2O3-ATOMIC-003",
-      "FE2O3-RACE-000",
-      "FE2O3-RACE-001",
-      "FE2O3-RACE-002",
-      "FE2O3-RACE-003",
-      "FE2O3-RACE-004",
-      "FE2O3-OWN-001",
-      "FE2O3-OWN-002",
-      "FE2O3-OWN-003",
-      "FE2O3-OWN-004",
-      "FE2O3-OWN-005",
-      "FE2O3-OWN-006",
-      "FE2O3-OWN-007",
-      "FE2O3-OWN-008",
-      "FE2O3-OWN-009",
-      "FE2O3-OWN-010",
-      "FE2O3-OWN-011",
-      "FE2O3-OWN-012",
-      "FE2O3-OWN-013",
-      "FE2O3-OWN-014",
-      "FE2O3-OWN-015",
-      "FE2O3-BARRIER-000",
-      "FE2O3-BARRIER-001",
-      "FE2O3-BARRIER-002",
-      "FE2O3-PROTOCOL-001",
-      "FE2O3-PROTOCOL-002",
-      "FE2O3-PROTOCOL-003",
-      "FE2O3-PROTOCOL-004",
-      "FE2O3-WORKGROUP-000",
-      "FE2O3-WORKGROUP-001",
-      "FE2O3-WORKGROUP-002",
-      "FE2O3-WORKGROUP-003",
-      "FE2O3-SEMANTIC-000",
-      "FE2O3-SEMANTIC-001",
-      "FE2O3-SEMANTIC-002",
-      "FE2O3-SEMANTIC-003",
-      "FE2O3-SEMANTIC-004",
-      "FE2O3-SEMANTIC-005",
-      "FE2O3-SEMANTIC-006",
-      "FE2O3-SEMANTIC-007",
-      "FE2O3-PROGRESS-001",
-      "FE2O3-PROGRESS-002",
-      "FE2O3-PROGRESS-003",
-      "FE2O3-NUMERIC-001",
-      "FE2O3-PARALLEL-001",
-      "FE2O3-PARALLEL-002",
-      "FE2O3-PARALLEL-003",
-      "FE2O3-PARALLEL-004",
-      "FE2O3-PARALLEL-005",
-      "FE2O3-PARALLEL-006",
-      "FE2O3-PARALLEL-007",
-      "FE2O3-PARALLEL-008",
-      "FE2O3-PARALLEL-009",
-      "FE2O3-PARALLEL-010",
-      "FE2O3-PARALLEL-013",
-      "FE2O3-PARALLEL-015",
-      "FE2O3-PARALLEL-016",
-      "FE2O3-PARALLEL-017",
-      "FE2O3-PARALLEL-018",
-      "FE2O3-PARALLEL-019",
-      "FE2O3-PARALLEL-020",
-      "FE2O3-PARALLEL-021",
-      "FE2O3-PARALLEL-023",
-      "FE2O3-PARALLEL-024",
-      "FE2O3-PARALLEL-025",
-      "FE2O3-PARALLEL-026",
-      "FE2O3-PARALLEL-027",
-      "FE2O3-PARALLEL-028",
-      "FE2O3-PARALLEL-029",
-      "FE2O3-PARALLEL-030",
-      "FE2O3-PARALLEL-031",
-      "FE2O3-TARGET-000",
-      "FE2O3-TARGET-001",
-      "FE2O3-TARGET-002",
-      "FE2O3-TARGET-003",
-      "FE2O3-TARGET-004",
-      "FE2O3-TARGET-005",
-      "FE2O3-TARGET-006",
-      "FE2O3-TARGET-007",
-      "FE2O3-RESOURCE-001",
-      "FE2O3-RESOURCE-002",
-      "FE2O3-RESOURCE-003",
-      "FE2O3-RESOURCE-004",
-      "FE2O3-ABI-001",
-      "FE2O3-ABI-002",
-      "FE2O3-ABI-003",
-      "FE2O3-ABI-004",
-      "FE2O3-ABI-005",
-      "FE2O3-ABI-006",
-      "FE2O3-ABI-007",
-    ]);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Rejected")).toHaveLength(68);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Incomplete")).toHaveLength(41);
-    expect(diagnosticTable.rows.filter(([, kind]) => kind === "Prerequisite")).toHaveLength(8);
-
-    const effectDiagnosticTable = semanticFailures.blocks.find(
-      (block) => block.type === "table" && block.headers[0] === "Effect diagnostic",
-    );
-    expect(effectDiagnosticTable?.type).toBe("table");
-    if (effectDiagnosticTable?.type !== "table") return;
-    expect(effectDiagnosticTable.rows.map(([code]) => code)).toEqual([
-      "FE2O3-EFFECT-001",
-      "FE2O3-EFFECT-002",
-      "FE2O3-EFFECT-003",
-      "FE2O3-EFFECT-004",
-      "FE2O3-EFFECT-005",
-      "FE2O3-EFFECT-006",
-      "FE2O3-EFFECT-007",
-      "FE2O3-EFFECT-008",
-      "FE2O3-EFFECT-009",
-    ]);
-    expect(JSON.stringify(effectDiagnosticTable)).toContain(
-      "block and operation are always reported",
-    );
-
-    const failureGallery = semanticFailures.blocks.find(
+    const failures = catalog.blocks.find(
       (block) => block.type === "compile-failures",
     );
-    expect(failureGallery?.type).toBe("compile-failures");
-    if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(42);
-    expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
-    expect(failureGallery.intro).toContain("tensor layout first");
-    expect(failureGallery.intro).toContain("users still write Rust");
-    expect(failureGallery.examples.map(({ id }) => id)).toEqual([
-      "mfma_operand_roles",
-      "tensor_wrong_b_map",
-      "tensor_accumulator_permutation",
-      "tensor_cross_instruction_layout",
-      "tensor_storage_transform",
-      "tensor_missing_tail_policy",
-      "tensor_divergent_collective",
-      "race_alias_views",
-      "race_multidimensional_constant_write",
-      "atomic_scope_too_narrow",
-      "barrier_partial_workgroup",
-      "workgroup_missing_publish",
-      "grid_barrier_unsupported",
-      "bounds_static_oob",
-      "bounds_affine_oob",
-      "atomic_invalid_ordering",
-      "race_duplicate_output",
-      "barrier_divergent",
-      "workgroup_uninitialized",
-      "semantic_mismatch",
-      "hierarchy_coverage_hole",
-      "reference_evidence_missing",
-      "reference_expression_mismatch",
-      "parallel_output_disjointness",
-      "parallel_tensor_arithmetic_binding",
-      "parallel_contract_construction",
-      "bounds_machine_overflow",
-      "protocol_phase_mismatch",
-      "protocol_active_mask_claim",
-      "workgroup_alias_signature",
-      "atomic_read_from_unresolved",
-      "progress_zero_step",
-      "progress_symbolic_tiled_loop",
-      "numerical_tree_mismatch",
-      "target_lds_budget",
-      "target_host_allocation_small",
-      "preserve_analysis_operator_mutation",
-      "preserve_unsupported_snapshot",
-      "preserve_snapshot_resource_limit",
-      "preserve_transient_mutation_attempt",
-      "preserve_report_payload_substitution",
-      "transform_without_semantic_checker",
+    expect(failures?.type).toBe("compile-failures");
+    if (failures?.type !== "compile-failures") return;
+    expect(failures.examples.map(({ code }) => code)).toEqual([
+      "FE2O3-BOUNDS-001",
+      "FE2O3-RACE-001",
+      "FE2O3-TENSOR-LAYOUT-005",
     ]);
-    for (const example of failureGallery.examples) {
-      expect(example.source).not.toContain("unsafe");
-      expect(example.source).not.toContain("KernelContext");
-      expect(example.diagnostic).toContain(example.code);
-      expect(example.diagnostic).toContain("error[");
-      expect(example.caught.length).toBeGreaterThan(80);
-    }
-    const example = (id: string) => failureGallery.examples.find((item) => item.id === id);
-    expect(example("mfma_operand_roles")?.diagnostic).toContain("error[E0308]");
-    expect(example("tensor_wrong_b_map")?.diagnostic).toContain("B lane/component mapping does not match");
-    expect(example("tensor_accumulator_permutation")?.diagnostic).toContain("Accumulator lane/component mapping does not match");
-    expect(example("tensor_cross_instruction_layout")?.diagnostic).toContain(
-      "help[FE2O3-FIX-LAYOUT] (HasPlaceholders)",
+    expect(JSON.stringify(failures)).toContain(
+      "compiler-authenticated injective ownership mapping",
     );
-    expect(example("tensor_cross_instruction_layout")?.caught).toContain(
-      "no workload-specific rule",
+
+    const relationTable = completeCatalog.blocks.find(
+      (block) => block.type === "table" && block.headers[0] === "Relation",
     );
-    expect(example("tensor_missing_tail_policy")?.diagnostic).toContain("tail-mask contract is incompatible");
-    expect(example("tensor_divergent_collective")?.diagnostic).toContain("divergent tensor-instruction trace");
-    expect(example("tensor_storage_transform")?.caught).toContain("direct B fragment may legally meet an XOR4-staged A fragment");
-    expect(example("race_alias_views")?.caught).toContain("allocation origin and alias class");
-    expect(example("race_multidimensional_constant_write")?.source).toContain("global = [2, 2, 1]");
-    expect(example("barrier_partial_workgroup")?.diagnostic).toContain("global extent 65 on axis 0");
-    expect(example("grid_barrier_unsupported")?.diagnostic).toContain("ordinary grid-wide barriers are unsupported");
-    expect(example("bounds_static_oob")?.diagnostic).toContain("required: 64 < 64");
-    expect(example("bounds_affine_oob")?.diagnostic).toContain(
-      "counterexample invocation [6] computes index 13",
-    );
-    expect(example("bounds_affine_oob")?.diagnostic).toContain(
-      "help[FE2O3-FIX-BOUNDS] (HasPlaceholders)",
-    );
-    expect(example("atomic_invalid_ordering")?.diagnostic).toContain("invalid Release ordering");
-    expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [0]");
-    expect(example("race_duplicate_output")?.diagnostic).toContain("invocation [1]");
-    expect(example("reference_evidence_missing")?.diagnostic).toContain(
-      "FE2O3-SEMANTIC-003",
-    );
-    expect(example("reference_expression_mismatch")?.diagnostic).toContain(
-      "FE2O3-EFFECT-001",
-    );
-    expect(example("parallel_output_disjointness")?.diagnostic).toContain(
-      "FE2O3-PARALLEL-019",
-    );
-    expect(example("parallel_tensor_arithmetic_binding")?.diagnostic).toContain(
-      "FE2O3-PARALLEL-013",
-    );
-    expect(example("parallel_contract_construction")?.diagnostic).toContain(
-      "FE2O3-PARALLEL-017",
-    );
-    expect(example("preserve_analysis_operator_mutation")?.diagnostic).toContain(
-      "analysis-only pass MemoryBounds",
-    );
-    expect(example("preserve_analysis_operator_mutation")?.diagnostic).toContain(
-      "changed at block 0 op 2",
-    );
-    expect(example("preserve_analysis_operator_mutation")?.caught).toContain(
-      "Any mutable access attempt is attributed to that stage",
-    );
-    expect(example("preserve_unsupported_snapshot")?.diagnostic).toContain(
-      "post-pass structural identity is unavailable",
-    );
-    expect(example("preserve_snapshot_resource_limit")?.diagnostic).toContain(
-      "basic blocks count 1025",
-    );
-    expect(example("preserve_transient_mutation_attempt")?.diagnostic).toContain(
-      "FE2O3-PRESERVE-020",
-    );
-    expect(example("preserve_transient_mutation_attempt")?.caught).toContain(
-      "cannot restore the epoch",
-    );
-    expect(example("preserve_report_payload_substitution")?.diagnostic).toContain(
-      "FE2O3-PRESERVE-039",
-    );
-    expect(example("preserve_report_payload_substitution")?.caught).toContain(
-      "does not prove that the original analysis was semantically sound",
-    );
-    expect(example("transform_without_semantic_checker")?.diagnostic).toContain(
-      "FE2O3-TRANSFORM-008",
-    );
-    expect(example("transform_without_semantic_checker")?.caught).toContain(
-      "Production supports zero transformations",
-    );
-    expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
-    expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
-    expect(failures).toContain("projection preserves the exact operation kind, ordering, and scope");
-    expect(failures).toContain("FE2O3-ATOMIC-002 Incomplete");
+    expect(relationTable?.type).toBe("table");
+    if (relationTable?.type !== "table") return;
+    expect(relationTable.rows.map(([relation]) => relation)).toEqual([
+      "Static bounded ranked access witness",
+      "Canonical wave64 tensor-layout witness",
+      "Bounds outside the raw fragment",
+      "Race and ownership policy",
+      "Loop progress policy",
+      "Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses",
+      "Checked index constant fold",
+      "Any other transformation",
+    ]);
   });
 
-  it("teaches the authenticated safe-Rust reference path without promoting runtime oracles", () => {
+  it("teaches the single ranked compiler path and its narrow replay boundary", () => {
     const lesson = lessons.find((entry) => entry.id === "compiler-checks");
     const bounds = lesson?.tabs.find((tab) => tab.kind === "kernel");
-    const boundKernel = lesson?.tabs.find((tab) => tab.kind === "comparison");
-    const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
-    const proof = lesson?.tabs.find((tab) => tab.kind === "verus");
-    const host = lesson?.tabs.find((tab) => tab.kind === "host");
+    const fold = lesson?.tabs.find((tab) => tab.kind === "comparison");
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
+    const host = lesson?.tabs.find((tab) => tab.kind === "host");
 
+    expect(lesson).toMatchObject({
+      title: "Compiler checks: one path, explicit boundaries",
+      duration: "18 min",
+    });
+    expect(lesson?.objectives).toHaveLength(6);
     expect(bounds).toMatchObject({
-      label: "Bounds fixture",
+      label: "Static bounds",
       explanatory: false,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
     });
     expect(bounds?.code).toContain("let selected = input[64]");
-    expect(result?.code).toContain("required: 64 < 64");
-
-    expect(boundKernel).toMatchObject({
-      label: "Reference-bound kernel",
-      explanatory: true,
-    });
-    expect(boundKernel?.code).toContain("reference = cpu_reference");
-    expect(boundKernel?.code).toContain("#![forbid(unsafe_code)]");
-    expect(reference?.code).toContain(
-      "fn cpu_reference(_point: usize, output: &mut u32)",
-    );
-    expect(reference?.code).not.toMatch(/\bunsafe\b/u);
-    expect(proof?.code).toContain("ValueAccess(kind=Write");
-    expect(proof?.code).toContain("gpu_write_site");
-    expect(proof?.code).toContain("reference_output_site");
-    expect(proof?.code).toContain("RequestEffectRefinement");
-    expect(proof?.code).toContain("proof.require_effect_refinement");
-    expect(proof?.code).toContain("SafeReferenceMirToLivePliron");
-    expect(proof?.code).toContain(
-      "requested_property = per_compilation_exact_formula_replay",
-    );
-    expect(proof?.code).toContain("output_product = [output0, output1]");
-    expect(proof?.code).toContain("exact_formula(output0)");
-    expect(proof?.code).toContain("exact_formula(output1)");
-    expect(proof?.code).toContain("pliron_structure = total_and_separated");
-    expect(proof?.code).toContain("private_move_only_join");
-    expect(proof?.code).toContain("staging_status = Checked");
-    expect(proof?.code).toContain("staging_authority = none");
-    expect(proof?.code).toContain("UnsupportedFormulaReplayRole");
-    expect(proof?.code).toContain(
-      "maximum_logical_outputs_and_refinement_sites = 64",
-    );
-    expect(proof?.code).toContain(
-      "maximum_tensor_component_pairs_per_receipt = 64",
-    );
-    expect(proof?.code).toContain("fixture_proof_admitted = false");
-    expect(proof?.code).toContain("proved_total_output_coverage = false");
-    expect(proof?.code).toContain("proved_source_to_isa = false");
-    expect(result?.code).toContain("RHS mismatch");
-    expect(result?.code).toContain("reference block 0, statement 0");
-    expect(result?.code).toContain("FE2O3-PARALLEL-027");
-    expect(result?.code).toContain("FE2O3-PARALLEL-031");
-    expect(result?.code).toContain("UnsupportedFormulaReplayRole");
+    expect(fold).toMatchObject({ label: "Checked fold", explanatory: true });
+    expect(fold?.code).toContain("kernel.index_binary Add");
+    expect(fold?.code).toContain("kernel.index_constant 12");
+    expect(fold?.notice).toContain("separate evaluator and structural replay");
     expect(result?.code).toContain(
-      "accepted: input_extent = %arg3, point_domain[0] = %arg3",
+      "static bounded ranked access raw replay",
     );
-    expect(result?.code).toContain("no exact ranked extent relation");
-    expect(result?.code).toContain("derived index range 1..=8");
-    expect(result?.code).toContain("index addition can overflow");
-    expect(result?.code).toContain("no exact retained bounds assertion");
-    expect(host?.code).toContain(
-      "--features qualification-oracles-test-only --test reference_binding_v1",
+    expect(result?.code).toContain(
+      "canonical gfx942 wave64 tensor-layout raw replay",
+    );
+    expect(result?.code).toContain(
+      "every other current independent stage witness",
+    );
+    expect(host?.code).toContain("production_ranked_constant_fold");
+    expect(host?.code).toContain("pliron_analysis_witness");
+    expect(host?.code).toContain("pliron_lit");
+    expect(host?.code).not.toContain("qualification");
+
+    const claim = lesson?.claims[0];
+    expect(claim?.detail).toContain("sealed checked constant fold");
+    expect(claim?.detail).toContain("all other current witnesses remain Incomplete");
+    expect(claim?.reference?.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-pliron/src/production/ranked/ranked_index_constant_fold_v1.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_analysis_witness.rs",
+      ]),
+    );
+    expect(claim?.reference?.sourcePaths).not.toContain(
+      "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
     );
 
     const narrative = JSON.stringify([
       narrativeEntry("compiler-checks/catalog"),
       narrativeEntry("compiler-checks/production-path"),
+      narrativeEntry("compiler-checks/complete-correctness-catalog"),
     ]);
     for (const boundary of [
-      "same session",
-      "Reference bounds V2 accepts",
-      "canonical finite unit-step loops",
-      "safe one-dimensional input[index]",
-      "RequestEffectRefinement",
-      "Ed25519 V2 records",
-      "SafeReferenceMirToLivePliron",
-      "compiler-owned semantic contract",
-      "strict compiler-owned parallel contract",
-      "generated workload-neutral Verus checker",
-      "without a generic relation premise",
-      "status-Checked policy-staging record each",
-      "overflow-safe final latch",
-      "identical symbolic ranked extents",
-      "exact invariant/variant proof requests",
-      "result-component/store claims",
-      "ErrorBounded sites",
-      "before KIR lowering",
-      "Candidate declarations are not evidence",
-      "root-owned fixed /opt runtime",
-      "one after every stage",
-      "Exact bytes, not the diagnostic digest",
-      "Any mutation attempt is attributed to the active stage",
-      "All eight independent semantic-witness checks remain Incomplete",
-      "Clean is diagnostic only",
+      "Rust MIR to ranked PLIRON to KIR",
+      "exact preceding index constants",
+      "mutation-attempt epoch",
+      "Static bounded ranked access witness",
+      "Canonical wave64 tensor-layout witness",
+      "checked tiled and row-striped mappings",
+      "canonical two-block positive constant induction loop",
+      "Any other transformation",
+      "not universal correctness",
     ]) {
       expect(narrative).toContain(boundary);
     }
-
-    for (const lessonId of [
-      "gemm-tiling",
-      "gemm-proof-plan",
-      "softmax-invariant",
-      "flash-attention",
-      "moe-expert-compute",
-    ]) {
-      const advanced = lessons.find((entry) => entry.id === lessonId);
-      const advancedReference = advanced?.tabs.find((tab) => tab.kind === "reference");
-      expect(advancedReference?.code).toContain("Vec");
-      expect(advancedReference?.notice).toMatch(
-        /runtime qualification oracle|runtime qualification/u,
-      );
-      expect(advancedReference?.notice).toMatch(
-        /not .*authenticated|not compiler-bound|outside .*reference-effect V1/iu,
-      );
-    }
+    expect(narrative).not.toContain("zero production transformations");
+    expect(narrative).not.toContain("all eight independent semantic-witness");
   });
 
   it("teaches row softmax from exact source while preserving evidence boundaries", () => {

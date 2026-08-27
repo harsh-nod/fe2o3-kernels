@@ -186,10 +186,10 @@ describe("search index", () => {
     for (const query of [
       "FE2O3-BOUNDS-001",
       "Cross-invocation write race",
-      "dynamic shapes",
-      "DisjointIndex",
-      "Blocked<Index1D, 1, E>",
-      "ordinary Rust atomic terminals",
+      "checked tiled and row-striped",
+      "canonical gfx942 wave64",
+      "exact typed custody",
+      "IndexBinary to IndexConstant",
     ]) {
       const results = searchCatalog(query, lessons, glossary);
       expect(results.some((result) =>
@@ -215,13 +215,13 @@ describe("lesson section rendering policy", () => {
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("renders the compile-time failure gallery with exact diagnostics", () => {
+  it("renders the concise compiler-check catalog and exact boundaries", () => {
     const lesson = lessons.find((candidate) => candidate.id === "compiler-checks")!;
     render(<LessonSections lessonId={lesson.id} sections={lesson.sections} />);
 
     expect(
       screen.getByRole("heading", {
-        name: "Forty-two representative compile-time failures",
+        name: "Three representative compile-time rejections",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -229,100 +229,44 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(42);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(3);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
-    expect(screen.getByText("Affine access exceeds a finite view")).toBeInTheDocument();
-    expect(screen.getByText("Swapped MFMA operand roles")).toBeInTheDocument();
-    expect(screen.getByText("B fragment uses the wrong transpose")).toBeInTheDocument();
-    expect(screen.getByText("Partial tile has no edge policy")).toBeInTheDocument();
-    expect(screen.getByText("Different views still alias one allocation")).toBeInTheDocument();
-    expect(screen.getByText("Rounded 2D launch creates a partial workgroup")).toBeInTheDocument();
-    expect(screen.getByText("Kernel asks for an unsupported grid barrier")).toBeInTheDocument();
-    expect(screen.getByText("Illegal atomic ordering")).toBeInTheDocument();
     expect(screen.getByText("Cross-invocation write race")).toBeInTheDocument();
-    expect(screen.getByText("Invocation-divergent barrier")).toBeInTheDocument();
-    expect(screen.getByText("Workgroup read before initialization")).toBeInTheDocument();
-    expect(screen.getByText("An intermediate index multiplication overflows")).toBeInTheDocument();
-    expect(screen.getByText("One wave executes different tensor phases")).toBeInTheDocument();
-    expect(screen.getByText("Tensor metadata claims the wrong active lanes")).toBeInTheDocument();
-    expect(screen.getByText("Aliasing LDS views disagree about shape")).toBeInTheDocument();
-    expect(screen.getByText("Atomic flags do not invent publication")).toBeInTheDocument();
-    expect(screen.getByText("A live loop never advances")).toBeInTheDocument();
-    expect(screen.getByText("A dynamic tiled loop can wrap")).toBeInTheDocument();
-    expect(screen.getByText("Reassociated floating-point math lacks an error proof")).toBeInTheDocument();
-    expect(screen.getByText("Static LDS usage exceeds the target")).toBeInTheDocument();
-    expect(screen.getByText("The host buffer is smaller than its kernel view")).toBeInTheDocument();
-    expect(screen.getByText("An analysis stage leaves a changed operator")).toBeInTheDocument();
-    expect(screen.getByText("An identity snapshot contains unsupported structure")).toBeInTheDocument();
-    expect(screen.getByText("An identity snapshot exceeds its bounded budget")).toBeInTheDocument();
-    expect(screen.getByText("Declared formula mismatch")).toBeInTheDocument();
-    expect(screen.getByText("The grid leaves one output coordinate unwritten")).toBeInTheDocument();
-    expect(screen.getByText("A CPU-reference effect has no policy-checked staging")).toBeInTheDocument();
-    expect(screen.getByText("The GPU write disagrees with the CPU reference")).toBeInTheDocument();
-    expect(screen.getByText("Multiple outputs lack noalias separation")).toBeInTheDocument();
     expect(
-      screen.getByText("A tensor result component lacks an exact output binding"),
+      screen.getByText("Incompatible tensor producer and consumer layouts"),
     ).toBeInTheDocument();
-    expect(screen.getByText("Compiler-derived parallel contract is invalid")).toBeInTheDocument();
-    expect(screen.getByText("Generic does not mean automatically provable")).toBeInTheDocument();
-    expect(screen.getByText("Supported safe ownership mappings")).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "Shifted<Index1D, N>" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "Blocked<Index1D, L, E> where L > 1" })).toBeInTheDocument();
-    expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
-    expect(screen.getByText("Stable pass diagnostic catalog")).toBeInTheDocument();
-    expect(screen.getByText("Mutation epoch plus exact checkpoints")).toBeInTheDocument();
-    expect(screen.getByText("A Clean report is diagnostic, not a proof")).toBeInTheDocument();
-    expect(screen.getByText("Transforming passes use a different boundary")).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "Tensor layout" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "Semantic refinement" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "pliron-analysis-report-validation-v1 (integrity boundary)" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "pliron-transform-refinement-v1 (separate transformation boundary)" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-RACE-004" })).toBeInTheDocument();
-    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(38);
-    expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "pliron-presburger (shared analysis)" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-002" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-004" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-BOUNDS-005" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PROTOCOL-001" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PROGRESS-001" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-NUMERIC-001" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-RESOURCE-004" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-ABI-004" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-ATOMIC-002" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-WORKGROUP-002" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-000" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-001" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-002" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-010" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-020" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-025" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-028" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-031" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-039" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-044" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-TRANSFORM-001" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-TRANSFORM-008" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-TRANSFORM-009" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-019" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-021" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-023" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-026" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-027" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-031" })).toBeInTheDocument();
-    expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-017" })).toBeInTheDocument();
+
+    for (const heading of [
+      "From safe Rust to checked Kernel IR",
+      "One production path, with explicit proof boundaries",
+      "Keep simulator evidence historical",
+      "What is complete today",
+    ]) {
+      expect(screen.getByRole("heading", { name: heading })).toBeInTheDocument();
+    }
+    for (const cell of [
+      "Static bounded ranked access witness",
+      "Canonical wave64 tensor-layout witness",
+      "Checked index constant fold",
+      "Any other transformation",
+    ]) {
+      expect(screen.getByRole("cell", { name: cell })).toBeInTheDocument();
+    }
+    expect(
+      screen.getByText("Two completed witnesses are not universal correctness"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Current end-to-end boundary")).toBeInTheDocument();
+    expect(screen.getByText(/error\[FE2O3-BOUNDS-001\]/)).toBeInTheDocument();
+    expect(screen.getByText(/error\[FE2O3-RACE-001\]/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/error\[FE2O3-TENSOR-LAYOUT-005\]/),
+    ).toBeInTheDocument();
     expect(
       document.querySelectorAll(".compile-failure-source code.language-rust"),
-    ).toHaveLength(4);
+    ).toHaveLength(1);
     expect(
       document.querySelectorAll(".compile-failure-source code.language-text"),
-    ).toHaveLength(38);
-    expect(
-      document.querySelector(".compile-failure-source .token.keyword"),
-    ).toBeInTheDocument();
+    ).toHaveLength(2);
   }, 20_000);
 
   it("rejects an unknown section kind without rendering attacker text", () => {
