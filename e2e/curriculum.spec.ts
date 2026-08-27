@@ -372,7 +372,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Twenty-six representative compile-time failures",
+      name: "Forty-two representative compile-time failures",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -400,6 +400,15 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     failureGallery.getByText("The GPU write disagrees with the CPU reference"),
   ).toBeVisible();
+  await expect(
+    failureGallery.getByText("An analysis stage leaves a changed operator"),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText("An identity snapshot contains unsupported structure"),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText("An identity snapshot exceeds its bounded budget"),
+  ).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-BOUNDS-001", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("E0308", { exact: true })).toBeVisible();
   await expect(failureGallery.getByText("FE2O3-TENSOR-LAYOUT-001", { exact: true }).first()).toBeVisible();
@@ -425,6 +434,11 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   ).toBeVisible();
   await expect(
     page.getByText("Generic does not mean automatically provable"),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Mutation epoch plus exact checkpoints", {
+      exact: true,
+    }),
   ).toBeVisible();
   await expect(
     page.getByText("One Rust type system, extended to GPU facts", {
@@ -456,6 +470,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByText("Stable pass diagnostic catalog"),
   ).toBeVisible();
+  await expect(page.getByText("Mutation epoch plus exact checkpoints")).toBeVisible();
+  await expect(page.getByText("A Clean report is diagnostic, not a proof")).toBeVisible();
+  await expect(page.getByText("Transforming passes use a different boundary")).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-structural-v1" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-TENSOR-LAYOUT-002", exact: true })).toBeVisible();
@@ -466,6 +483,16 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(page.getByRole("cell", { name: "FE2O3-OWN-006", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-BARRIER-002", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-WORKGROUP-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-000", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-001", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-002", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-010", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-020", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-025", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-028", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-039", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-PRESERVE-044", exact: true })).toBeVisible();
+  await expect(page.getByRole("cell", { name: "FE2O3-TRANSFORM-008", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-010", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-013", exact: true })).toBeVisible();
   await expect(page.getByRole("cell", { name: "FE2O3-PARALLEL-023", exact: true })).toBeVisible();
@@ -504,7 +531,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Twenty-six representative compile-time failures",
+      name: "Forty-two representative compile-time failures",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
@@ -588,7 +615,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d570d61d67fa5ae6fe3e2778f473b8ba5d5f9333/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -688,7 +715,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d570d61d67fa5ae6fe3e2778f473b8ba5d5f9333/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -706,7 +733,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/d570d61d67fa5ae6fe3e2778f473b8ba5d5f9333/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -956,7 +983,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at d570d61d67",
+      name: "Compiler baseline at 61222da06c",
     }),
   ).toBeVisible();
   await expect(

@@ -29,7 +29,8 @@ export function ArchitecturePage() {
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["V7 simulator", "Runs a bounded integer and boolean subset on a deterministic serial CPU schedule for debugging observations; it is not GPU execution or a proof."],
-            ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks; an ephemeral manager shares sparse-index, execution-layout, exact-trace, tensor-layout dataflow, and bounded Presburger results only within one validation."],
+            ["Compiler analyses", "Run the eight ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, workgroup-memory, and semantic checks. A context-wide mutation-attempt epoch rejects any attempted PLIRON mutation during an analysis-only stage, while exact checkpoints locate retained changes and support revalidation. Sealed report custody detects substitution and tampering, but all eight independent semantic-witness checks remain Incomplete."],
+            ["Transforming PLIRON passes", "Use a separate exact before/after owner, pass implementation/configuration, and checker-result boundary. Its production registry currently contains zero transformations because no independent semantic checker exists."],
             ["Verus", "After compiler-owned semantic and strict parallel derivation, one generated checker independently replays each supported exact pointwise integer or compiler-side IEEE operator-DAG formula. Status-Checked policy staging grants no authority. PLIRON separately proves structural coverage, separation, and ordered-product identity; the private move-only join is the admission authority and requires both structural and formula results."],
             ["LLVM / LLD", "Produces measured AMDGPU output through the direct-link worker."],
             ["HSACO inspection", "Binds target, symbols, descriptors, ABI, resources, and machine effects."],
@@ -115,9 +116,24 @@ export function ArchitecturePage() {
           formula authority. Tensor/MFMA result components bind exact stores
           at the claim boundary; tensor-component theorem replay still fails
           closed. ErrorBounded formula replay is also incomplete.
+          A context-wide monotonic PLIRON mutation-attempt epoch now brackets
+          every analysis-only stage. It rejects mutable access attempts,
+          failed mutable borrows, and mutate-then-restore behavior and attributes
+          the failure to the active stage. Bounded exact structural checkpoints
+          still locate retained changes and participate in revalidation; digest
+          labels are diagnostic only. Each report is sealed to its exact context,
+          function, checkpoint, stage, implementation, configuration, payload,
+          and status. That custody detects substitution and tampering, but it
+          does not prove the report. All eight independent semantic-witness
+          checks remain Incomplete, so even a Clean policy report grants no
+          proof, lowering, artifact, or launch authority. Transforming passes
+          use a separate checker-bound refinement boundary; zero production
+          transformations are supported until an independent semantic checker
+          exists.
           mi300x has no production proof-runtime fallback.
           Partial capabilities at this baseline still grant no compiler extraction,
-          projection, pass-soundness, or source-to-machine refinement,
+          projection, analysis-result or transformation soundness, or
+          source-to-machine refinement,
           LLVM or target arithmetic proof, protected launch authority, complete
           persistent execution, universal functional or numerical correctness,
           or automatic parity promotion.
