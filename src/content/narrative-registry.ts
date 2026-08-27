@@ -579,7 +579,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "fe2o3 keeps one workload-neutral route: rustc checks ordinary safe Rust and retains semantic MIR, the compiler projects a typed ranked PLIRON function, checked normalization and the fixed verifier sequence run there, and only the admitted result can become canonical Kernel IR. No pass recognizes GEMM, softmax, attention, routing, or another workload name."
+        "text": "fe2o3 keeps one workload-neutral route: rustc checks ordinary safe Rust and retains semantic MIR, the compiler projects a typed ranked PLIRON function, checked normalization and the fixed verifier sequence run there, and only the admitted result can become canonical Kernel IR. The retired standalone lowering and bridge packages are deleted rather than dormant. No pass recognizes GEMM, softmax, attention, routing, or another workload name."
       },
       {
         "type": "steps",
@@ -588,7 +588,7 @@ const narrativeRegistry = deepFreeze({
           "The frontend projects structured CFG, typed values, ranked views, allocation provenance, index expressions, memory effects, tensor contracts, and synchronization into ranked PLIRON.",
           "The ranked constructor folds only checked index Add, Multiply, Divide, and Remainder when both operands are exact preceding index constants. An independent exact typed structural replay accepts only the same-site IndexBinary to IndexConstant rewrite with the same result identity and checked u64 value.",
           "Dialect verification and the fixed eight analysis stages check tensor layout, bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and declared semantic refinement.",
-          "KIR lowering consumes the normalized ranked recipe and its checked reports. Rejected and Incomplete results stop before KIR; no alternate host or simulation route bypasses this sequence."
+          "KIR lowering consumes the normalized ranked recipe and its checked reports. Rejected and Incomplete results stop before KIR. The retired standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages are absent, so no alternate host, lowering, or simulation route bypasses this sequence."
         ]
       },
       {
@@ -610,7 +610,8 @@ const narrativeRegistry = deepFreeze({
           ["Dynamic race freedom", "Explicit affine maps can prove a total injective address map; bounded Presburger replay can prove that conflicting invocation images do not intersect.", "Raw checked tiled and row-striped markers carry no success/value authority and stop at FE2O3-RACE-002 until such a contract is implemented."],
           ["Tensor flow", "The policy pass can reject incompatible wave64 producer and consumer layouts.", "Every nonempty independent tensor replay is Incomplete until external roots have explicit operational-SSA provenance."],
           ["Loop progress", "The checker supports canonical single-entry multi-block forwarding SCCs with i < bound and one positive constant latch step.", "The exact source integer width and the ranked u64 update must both be nonwrapping; other SCC shapes remain Incomplete and concrete nontermination is Rejected."],
-          ["Constant folding", "5 + 7 and a later checked multiply can fold to exact constants in one forward fixed point before every verifier and proof digest.", "Overflow and zero divisors stay unfurled and fail existing verification; no reassociation, cross-block definition, or dynamic propagation is authorized."]
+          ["Constant folding", "5 + 7 and a later checked multiply can fold to exact constants in one forward fixed point before every verifier and proof digest.", "Overflow and zero divisors stay unfurled and fail existing verification; no reassociation, cross-block definition, or dynamic propagation is authorized."],
+          ["GFX950 collectives", "Semantic MIR V6 and Kernel IR V9 selection follows live collective and LDS-transpose operations. Under the exact gfx950:xnack- full-active Wave64 profile, FP32 reductions accept every nonzero power-of-two tile width through 64.", "Unsupported widths, targets, profiles, and dynamic broadcast source lanes fail closed. Successful target selection or lowering grants no source-to-KIR refinement, artifact, launch, or numerical authority."]
         ]
       },
       {

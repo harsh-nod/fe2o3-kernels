@@ -337,6 +337,18 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
+    const productionRoute = screen.getByText("Unified production route").closest(
+      ".architecture-row",
+    );
+    expect(productionRoute).toHaveTextContent(
+      "standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages have been deleted",
+    );
+    expect(productionRoute).toHaveTextContent(
+      "derived from live collective and LDS-transpose operations",
+    );
+    expect(productionRoute).toHaveTextContent(
+      "nonzero power-of-two tile width through 64",
+    );
     expect(screen.getByText("#109")).toBeInTheDocument();
     expect(screen.getByText("#109").closest("a")).toHaveTextContent("closed");
     expect(screen.getByText("#140").closest("a")).toHaveTextContent("open");

@@ -49,10 +49,22 @@ commits covered four GEMM cases, four softmax cases, two one-pass-online
 attention cases, and five MoE output widths on MI300X; those workload-selecting
 qualification routes were later deleted. Current production has one
 workload-neutral semantic MIR -> ranked PLIRON -> Kernel IR -> target pipeline
-and no workload selector or fallback. The published dynamic matrix currently
-stops at the generic FE2O3-RACE-002 proof boundary before Kernel IR, so the
-historical HSACO, hardware, and HIP measurements are not current launch claims
-or universal correctness proofs.
+and no workload selector or fallback. The standalone AMDGCN/PLIRON-to-LLVM and
+KIR/PLIRON bridge packages have been deleted rather than retained as alternate
+lowering paths. GFX950 Semantic MIR V6 and Kernel IR V9 are selected from the
+actual collective and LDS-transpose operations, never from an attention or
+other workload name. Under the exact `gfx950:xnack-` full-active Wave64
+profile, FP32 subgroup reduction accepts each nonzero power-of-two tile width
+through 64; unsupported widths, targets, profiles, and dynamic source lanes
+fail closed.
+
+The current device and trusted-item surfaces also remove the exact Slice 1 LDS
+pair and publish intrinsics. The current MoE source passes its already loaded
+typed MFMA fragments directly to the matrix operation. The historical Slice 1
+source and evidence below remain immutable at their original coordinates. The
+published dynamic matrix currently stops at the generic FE2O3-RACE-002 proof
+boundary before Kernel IR, so the historical HSACO, hardware, and HIP
+measurements are not current launch claims or universal correctness proofs.
 
 This descendant also contains
 the exact protected Slice 1

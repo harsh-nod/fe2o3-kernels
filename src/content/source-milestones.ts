@@ -246,7 +246,7 @@ const sourceMilestoneRecords = deepFreeze({
     authority: "source-tested-only",
     claimLabel: "Current safe host-scheduled MoE expert source",
     detail:
-      "Current public main contains ordinary safe attributed Rust for one exact 16x16x16 BF16/F32 expert GEMM and deterministic top-2 combine. Compiler-issued lane, LDS, matrix, barrier, math, and disjoint-output capabilities remove user unsafe. The host model and independent direct oracle retain their bounded source-tested authority; no compiler refinement, finalizer, runtime, protected GPU, numerical-refinement, or performance authority is granted.",
+      "Current public main contains ordinary safe attributed Rust for one exact 16x16x16 BF16/F32 expert GEMM and deterministic top-2 combine. Typed lane, matrix-fragment, matrix, math, and disjoint-output capabilities remove user unsafe; the loaded MFMA fragments feed the matrix operation directly, without the retired exact Slice 1 LDS pair. The host model and independent direct oracle retain their bounded source-tested authority; no compiler refinement, finalizer, runtime, protected GPU, numerical-refinement, or performance authority is granted.",
     commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
     tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
     commands: [
@@ -260,7 +260,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/moe_expert_v1/src/kernel.rs",
     primarySourceSha256:
-      "aabf48081ef9e027c0e5520300a435cdeb830df5081dafcf719dc7159e804c81",
+      "991b0ac1788c0a3bb9990a882214f53e94850ef4cc3769ac2c5cc4e950e66da6",
     target: "gfx942:xnack-",
   },
   "moe-expert-verus-v1": {

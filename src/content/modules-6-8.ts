@@ -35,9 +35,8 @@ import {
 
 const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
-const moeExpertSource = sourceMilestoneRecord("moe-expert-source-v1");
-const qualificationCommit = moeExpertSource.commit;
-const qualificationTree = moeExpertSource.tree;
+const qualificationCommit = "af0fd523e3b774377a9c5192cf0511e34fa19735";
+const qualificationTree = "37ec6083aba26f3057bb21f3a51c619c17bceb49";
 
 const moeRouting: Lesson = {
   id: "moe-routing",

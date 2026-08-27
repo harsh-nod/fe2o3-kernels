@@ -48,7 +48,14 @@ its explicit fail-closed unsupported cases. The aggregate status remains
    inertly. The private move-only join is the admission authority and requires
    matching structural and formula results before the kernel can proceed.
    Every workload enters this same unified, unversioned production pipeline;
-   no retired application-specific route supplies proof authority.
+   no retired application-specific route supplies proof authority. The
+   standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages are deleted,
+   so they cannot provide a second lowering path around ranked PLIRON.
+   GFX950 Semantic MIR V6 and Kernel IR V9 selection depends on live collective
+   and LDS-transpose operations rather than a workload or function name. Under
+   the exact `gfx950:xnack-` full-active Wave64 profile, FP32 reductions admit
+   nonzero power-of-two tile widths through 64; unsupported widths, targets,
+   profiles, and dynamic broadcast source lanes fail closed.
 7. Keep this site pinned to the final integrated compiler commit and tree.
    Publish every assigned stable `FE2O3-PARALLEL` diagnostic through
    `FE2O3-PARALLEL-031` without treating source declarations as evidence.
@@ -127,7 +134,12 @@ lesson-kernel receipt.
 The compiler contract vocabulary remains workload-neutral. Safe Rust names the
 sequential behavior; generic pointwise/permutation/fold/recurrence and
 hierarchy relations describe its parallel implementation. No pass recognizes
-GEMM, softmax, attention, routing, or MoE.
+GEMM, softmax, attention, routing, or MoE. Target selection follows the
+operations retained in semantic MIR: the GFX950 collective/LDS-transpose path
+is available to any kernel with those supported operations and exact target
+preconditions. This operation-driven selection and its bounded lowering tests
+do not establish source-to-KIR refinement, transformation soundness, artifact
+identity, launch admission, or numerical correctness.
 
 The current canonical dynamic-loop subset is a compiler-derived unit-step
 induction with exact finite-domain symbol, full u64 machine bound, transition,

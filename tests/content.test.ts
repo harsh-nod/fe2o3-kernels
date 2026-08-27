@@ -886,6 +886,41 @@ describe("curriculum integrity", () => {
     expect(compilerAnalysis?.sourcePaths).not.toContain(
       "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
     );
+    const productionRoute = currentState.capabilities.find(
+      (capability) => capability.id === "rust-production-route",
+    );
+    expect(productionRoute?.detail).toContain(
+      "standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages have been deleted",
+    );
+    expect(productionRoute?.detail).toContain(
+      "derived from live collective and LDS-transpose operations rather than a workload or function name",
+    );
+    expect(productionRoute?.detail).toContain(
+      "nonzero power-of-two tile width through 64",
+    );
+    expect(productionRoute?.detail).toContain(
+      "unsupported widths, targets, profiles, and dynamic source lanes fail closed",
+    );
+    expect(productionRoute?.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-mir-model/src/semantic_mir_v1.rs",
+        "crates/fe2o3-lower-mir-kernel/src/production_semantic_kir_v1.rs",
+        "crates/fe2o3-amdgcn-model/src/lowering.rs",
+        "crates/fe2o3-amdgcn-model/tests/gfx950_collectives_and_lds_transpose_v1.rs",
+      ]),
+    );
+    const compilerCatalog = JSON.stringify(
+      narrativeEntry("compiler-checks/catalog"),
+    );
+    expect(compilerCatalog).toContain(
+      "retired standalone lowering and bridge packages are deleted",
+    );
+    expect(compilerCatalog).toContain(
+      "Semantic MIR V6 and Kernel IR V9 selection follows live collective and LDS-transpose operations",
+    );
+    expect(compilerCatalog).toContain(
+      "Successful target selection or lowering grants no source-to-KIR refinement",
+    );
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "functional-reference",
@@ -1298,6 +1333,27 @@ describe("curriculum integrity", () => {
       "reference-refinement-v1",
     ]);
     expect(validateSourceMilestoneCatalog()).toEqual([]);
+
+    const moeExpertSource = sourceMilestoneRecord("moe-expert-source-v1");
+    const moeExpertKernel = readFileSync(
+      moeExpertSource.primarySourcePath,
+      "utf8",
+    );
+    expect(createHash("sha256").update(moeExpertKernel).digest("hex")).toBe(
+      moeExpertSource.primarySourceSha256,
+    );
+    expect(moeExpertSource.detail).toContain(
+      "loaded MFMA fragments feed the matrix operation directly",
+    );
+    expect(moeExpertKernel).toContain(
+      "activation_fragment,\n            weight_fragment,",
+    );
+    expect(moeExpertKernel).not.toContain(
+      "gfx942_lds_bf16_tile_pair_m16x16_v1",
+    );
+    expect(moeExpertKernel).not.toContain(
+      "gfx942_publish_lds_bf16_tile_pair_m16x16_v1",
+    );
 
     const profiles = [
       {
@@ -3005,6 +3061,11 @@ describe("implementation progress integrity", () => {
     expect(expertContent).toContain("MFMA is an operation, not a workload label");
     expect(expertContent).toContain("41 tokens, 4 experts, 82 routes");
     expect(expertContent).toContain("Host scheduling is still explicit");
+    expect(expertLesson?.claims[0].reference).toMatchObject({
+      scope: "historical-evidence",
+      commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
+    });
     expect(expertHost).toMatchObject({
       sourcePath: "examples/moe_grouped_expert_general_v1/src/main.rs",
       sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
