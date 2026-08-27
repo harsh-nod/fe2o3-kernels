@@ -63,12 +63,13 @@ function tutorialTabs(
   return [
     {
       kind: "kernel",
-      label: "Kernel",
+      label: "Rust kernel",
       language: "rust",
       code: rustFunctionExcerpt(lowPrecisionRustKernel, rustSymbol, true),
       sourcePath: rustKernelPath,
       sourceCommit: coreSourceCommit,
       sourceSha256: rustExcerptSha256,
+      sourceDigestScope: "displayed",
       explanatory: false,
       notice: `Exact published ordinary #[kernel(typed)] Rust excerpt for ${rustSymbol}, pinned to the core commit and displayed-byte SHA-256. GFX950_RUST_TO_HSACO_LOWERING_SUPPORTED_V1 remains false.`,
     },
@@ -80,6 +81,7 @@ function tutorialTabs(
       sourcePath: rustReferencePath,
       sourceCommit: coreSourceCommit,
       sourceSha256: referenceExcerptSha256,
+      sourceDigestScope: "displayed",
       explanatory: false,
       notice: `Exact published independent safe Rust ${referenceSymbol}, pinned to the core commit and displayed-byte SHA-256; it shares no device operation with the kernel.`,
     },

@@ -821,6 +821,35 @@ test("gfx950 lessons expose source, ISA, and external runtime evidence", async (
   ).toBe(false);
 });
 
+test("every gfx950 low-precision lesson opens its Rust kernel", async ({ page }) => {
+  const lessons = [
+    ["gfx950-fp4-gemm", "gfx950 FP4 GEMM", "gfx950_fp4_gemm_rust"],
+    ["gfx950-fp8-gemm", "gfx950 FP8 GEMM", "gfx950_fp8_gemm_rust"],
+    ["gfx950-fp4-attention", "gfx950 FP4 flash attention", "gfx950_fp4_attention_rust"],
+    ["gfx950-fp8-attention", "gfx950 FP8 flash attention", "gfx950_fp8_attention_rust"],
+  ] as const;
+
+  for (const [lessonId, title, symbol] of lessons) {
+    await page.goto(`./#/lesson/${lessonId}`);
+    await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({
+      timeout: 120_000,
+    });
+    await expect(page.getByRole("heading", { level: 1, name: title })).toBeVisible();
+    await expect(page.getByRole("tab", { name: "Rust kernel" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await expect(page.getByRole("tabpanel")).toContainText(symbol);
+    await expect(page.getByRole("tabpanel")).toContainText("rust");
+    await expect(
+      page.getByRole("link", { name: "Source", exact: true }),
+    ).toHaveAttribute(
+      "href",
+      /\/blob\/91e3cf2b4d8145d8c269ea3f783da53f90c568f4\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+    );
+  }
+});
+
 test("advanced gfx950 source-example lessons render on desktop and mobile", async ({
   page,
 }, testInfo) => {

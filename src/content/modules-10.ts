@@ -154,21 +154,25 @@ function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean
   throw new Error(`Unclosed Rust function ${symbol}`);
 }
 
-function rustFunctionExcerpts(source: string, symbols: string[], attributed: boolean): string {
-  return symbols.map((symbol) => rustFunctionExcerpt(source, symbol, attributed)).join("\n\n");
-}
-
 function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const bundle = sourceBundle(spec.bundle);
+  const rustFragments = spec.rustSymbols.map((symbol) =>
+    rustFunctionExcerpt(bundle.rustKernel, symbol, true),
+  );
+  const referenceFragments = spec.referenceSymbols.map((symbol) =>
+    rustFunctionExcerpt(bundle.rustReference, symbol, false),
+  );
   return [
     {
       kind: "kernel",
-      label: "Kernel",
+      label: "Rust kernel",
       language: "rust",
-      code: rustFunctionExcerpts(bundle.rustKernel, spec.rustSymbols, true),
+      code: rustFragments.join("\n\n"),
       sourcePath: bundle.rustKernelPath,
       sourceCommit: coreSourceCommit,
       sourceSha256: spec.rustExcerptSha256,
+      sourceDigestScope: "displayed",
+      sourceFragments: rustFragments,
       explanatory: false,
       notice: `Exact published ordinary attributed Rust for ${spec.rustSymbols.join(", ")}, pinned to the core commit and displayed-byte SHA-256. ${bundle.loweringConstant} remains false.`,
     },
@@ -176,10 +180,12 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       kind: "reference",
       label: "Safe CPU reference",
       language: "rust",
-      code: rustFunctionExcerpts(bundle.rustReference, spec.referenceSymbols, false),
+      code: referenceFragments.join("\n\n"),
       sourcePath: bundle.rustReferencePath,
       sourceCommit: coreSourceCommit,
       sourceSha256: spec.referenceExcerptSha256,
+      sourceDigestScope: "displayed",
+      sourceFragments: referenceFragments,
       explanatory: false,
       notice: `Exact published independent safe CPU reference functions, pinned to the core commit and displayed-byte SHA-256: ${spec.referenceSymbols.join(", ")}.`,
     },

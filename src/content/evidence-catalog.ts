@@ -17,7 +17,10 @@ export interface GitEvidenceSource {
   label: string;
   commit: string;
   sourcePath: string;
-  sha256?: string;
+  fileSha256?: string;
+  displayedSha256?: string;
+  displayedSource?: string;
+  displayedFragments?: string[];
 }
 
 const claims: GitEvidenceObject[] = lessons.flatMap((lesson) =>
@@ -40,7 +43,15 @@ const tabs: GitEvidenceSource[] = lessons.flatMap((lesson) =>
           label: `${lesson.id}: ${tab.label}`,
           commit: tab.sourceCommit,
           sourcePath: tab.sourcePath,
-          ...(tab.sourceSha256 ? { sha256: tab.sourceSha256 } : {}),
+          ...(tab.sourceSha256 && tab.sourceDigestScope === "displayed"
+            ? {
+                displayedSha256: tab.sourceSha256,
+                displayedSource: tab.code,
+                displayedFragments: tab.sourceFragments ?? [tab.code],
+              }
+            : tab.sourceSha256
+              ? { fileSha256: tab.sourceSha256 }
+              : {}),
         }]
       : [],
   ),
@@ -72,14 +83,14 @@ const semanticCorrectnessDigests: GitEvidenceSource[] = [
     label: "per-compilation Verus template",
     commit: semanticCorrectnessMilestone.compilerCommit!,
     sourcePath: semanticCorrectnessMilestone.perCompilationTemplatePath!,
-    sha256: semanticCorrectnessMilestone.perCompilationTemplateSha256!,
+    fileSha256: semanticCorrectnessMilestone.perCompilationTemplateSha256!,
   },
   {
     label: "generated single-output Verus fixture",
     commit: semanticCorrectnessMilestone.compilerCommit!,
     sourcePath:
       semanticCorrectnessMilestone.perCompilationGeneratedFixturePath!,
-    sha256:
+    fileSha256:
       semanticCorrectnessMilestone.perCompilationGeneratedFixtureSha256!,
   },
   {
@@ -87,7 +98,7 @@ const semanticCorrectnessDigests: GitEvidenceSource[] = [
     commit: semanticCorrectnessMilestone.compilerCommit!,
     sourcePath:
       semanticCorrectnessMilestone.perCompilationMultiOutputFixturePath!,
-    sha256:
+    fileSha256:
       semanticCorrectnessMilestone.perCompilationMultiOutputFixtureSha256!,
   },
   {
@@ -96,7 +107,7 @@ const semanticCorrectnessDigests: GitEvidenceSource[] = [
     sourcePath:
       semanticCorrectnessMilestone
         .perCompilationMultiOutputSubstitutionFixturePath!,
-    sha256:
+    fileSha256:
       semanticCorrectnessMilestone
         .perCompilationMultiOutputSubstitutionFixtureSha256!,
   },
@@ -116,7 +127,7 @@ const functionalRefinementDigests: GitEvidenceSource[] =
     label: source.label,
     commit: functionalRefinementPublication.compilerCommit,
     sourcePath: source.sourcePath,
-    sha256: source.sha256,
+    fileSha256: source.sha256,
   }));
 
 export const evidenceCatalog = {

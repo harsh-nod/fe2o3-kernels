@@ -194,6 +194,8 @@ export interface CodeTab {
   sourcePath?: string;
   sourceCommit?: string;
   sourceSha256?: string;
+  sourceDigestScope?: "file" | "displayed";
+  sourceFragments?: string[];
   evidenceId?: CodeTabEvidenceId;
   explanatory?: boolean;
   notice?: string;

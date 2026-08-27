@@ -334,6 +334,7 @@ describe("curriculum integrity", () => {
         "kernel", "reference", "comparison", "verus", "host", "result",
       ]);
       const kernel = lesson?.tabs[0];
+      expect(kernel?.label).toBe("Rust kernel");
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
       expect(kernel?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");

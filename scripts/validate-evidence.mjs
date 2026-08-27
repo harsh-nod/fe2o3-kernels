@@ -90,7 +90,7 @@ try {
   const catalog = module.evidenceCatalog;
   const commits = new Map();
   const paths = new Set();
-  const digests = new Map();
+  const sourceBytes = new Map();
 
   function observedTree(commit, label) {
     let tree = commits.get(commit);
@@ -108,6 +108,16 @@ try {
     paths.add(key);
   }
 
+  function pinnedSourceBytes(commit, sourcePath) {
+    const key = `${commit}:${sourcePath}`;
+    let bytes = sourceBytes.get(key);
+    if (!bytes) {
+      bytes = git(["show", key], null);
+      sourceBytes.set(key, bytes);
+    }
+    return bytes;
+  }
+
   for (const object of catalog.gitObjects) {
     const tree = observedTree(object.commit, object.label);
     if (object.tree && tree !== object.tree) {
@@ -123,18 +133,41 @@ try {
   for (const source of catalog.sources) {
     observedTree(source.commit, source.label);
     validatePath(source.commit, source.sourcePath, source.label);
-    if (source.sha256) {
-      const key = `${source.commit}:${source.sourcePath}`;
-      let observed = digests.get(key);
-      if (!observed) {
-        const bytes = git(["show", key], null);
-        observed = createHash("sha256").update(bytes).digest("hex");
-        digests.set(key, observed);
-      }
-      if (observed !== source.sha256) {
+    if (source.fileSha256) {
+      const observed = createHash("sha256")
+        .update(pinnedSourceBytes(source.commit, source.sourcePath))
+        .digest("hex");
+      if (observed !== source.fileSha256) {
         fail(
-          `${source.label} source digest is ${observed}, required ${source.sha256}`,
+          `${source.label} whole-file digest is ${observed}, required ${source.fileSha256}`,
         );
+      }
+    }
+    if (source.displayedSha256) {
+      if (typeof source.displayedSource !== "string") {
+        fail(`${source.label} has a displayed digest without displayed source`);
+      }
+      const displayedBytes = Buffer.from(source.displayedSource, "utf8");
+      const observed = createHash("sha256").update(displayedBytes).digest("hex");
+      if (observed !== source.displayedSha256) {
+        fail(
+          `${source.label} displayed excerpt digest is ${observed}, required ${source.displayedSha256}`,
+        );
+      }
+      const pinned = pinnedSourceBytes(source.commit, source.sourcePath);
+      if (!Array.isArray(source.displayedFragments) || source.displayedFragments.length === 0) {
+        fail(`${source.label} has no displayed source fragments`);
+      }
+      if (source.displayedFragments.join("\n\n") !== source.displayedSource) {
+        fail(`${source.label} displayed fragments do not reconstruct the displayed source`);
+      }
+      for (const fragment of source.displayedFragments) {
+        if (typeof fragment !== "string" || fragment.length === 0) {
+          fail(`${source.label} has an empty displayed source fragment`);
+        }
+        if (pinned.indexOf(Buffer.from(fragment, "utf8")) < 0) {
+          fail(`${source.label} displayed fragment is absent from the pinned source file`);
+        }
       }
     }
   }
