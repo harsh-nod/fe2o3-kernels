@@ -75,7 +75,7 @@ describe("application shell", () => {
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
   });
 
-  it("renders the gfx950 FP4 attention source and external runtime boundary", async () => {
+  it("renders the gfx950 FP4 attention production Rust evidence", async () => {
     const user = userEvent.setup();
     renderApp("/lesson/gfx950-fp4-attention");
     expect(
@@ -84,7 +84,7 @@ describe("application shell", () => {
         name: "gfx950 FP4 flash attention",
       }, { timeout: 15_000 }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Source example").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "gfx950_fp4_attention_rust",
     );
@@ -103,10 +103,16 @@ describe("application shell", () => {
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Rust gfx950 lowering supported: false",
+      "Portable namespace: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "FP4 attention max_error=2.38419e-07",
+      "Rust-produced HSACO SHA-256: 390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "Rust numerical result: max_absolute_error=2.235174179e-8",
+    );
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "SEPARATE COMPARISON-ONLY HIP LANE",
     );
   }, 30_000);
 
@@ -156,7 +162,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/73bc772f18816eeb83ba696ae655fa59ea946228/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/d4ea0866b2d7517e126db2a409985294e847044a/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     expect(
@@ -193,7 +199,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
-    expect(document.querySelector(".pin-summary")).toHaveTextContent("73bc772f18");
+    expect(document.querySelector(".pin-summary")).toHaveTextContent("d4ea0866b2");
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -203,7 +209,7 @@ describe("application shell", () => {
       "The ancestry, commit, and tree are all required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "996fceca501b3ac514099e2802a021ea6099ead9",
+      "8fd560893daac0d879ed12fd6bd7c6601ef436d2",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -327,7 +333,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler baseline at 73bc772f18",
+        name: "Compiler baseline at d4ea0866b2",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -339,7 +345,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open pinned compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/73bc772f18816eeb83ba696ae655fa59ea946228",
+      "https://github.com/harsh-nod/fe2o3/tree/d4ea0866b2d7517e126db2a409985294e847044a",
     );
   });
 });

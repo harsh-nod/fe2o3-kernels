@@ -67,10 +67,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "73bc772f18816eeb83ba696ae655fa59ea946228",
+      "d4ea0866b2d7517e126db2a409985294e847044a",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "996fceca501b3ac514099e2802a021ea6099ead9",
+      "8fd560893daac0d879ed12fd6bd7c6601ef436d2",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -314,22 +314,114 @@ describe("curriculum integrity", () => {
     ).toEqual(new Set(narrativeIds));
   });
 
-  it("publishes bounded gfx950 low-precision source and ISA lessons", () => {
+  it("publishes bounded production Rust gfx950 low-precision evidence", () => {
     const expected = [
-      ["gfx950-fp4-gemm", "gfx950_fp4_gemm_rust", "c8df66efc69ffcc731462d7600d7c307954fcd5bb5e311490fee1b253dafcab7", "gemm_reference", "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c", "gfx950_fp4_gemm", "cbsz:4 blgp:4"],
-      ["gfx950-fp8-gemm", "gfx950_fp8_gemm_rust", "07b51618ef69bda35e91e422ca948934a450e376dce68bb9ab62e0e8af1eedce", "gemm_reference", "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c", "gfx950_fp8_gemm", "v_mfma_f32_16x16x128_f8f6f4"],
-      ["gfx950-fp4-attention", "gfx950_fp4_attention_rust", "de73f75ba38cab5d88dd4889d0fe4cbc41295f49afec803774a6c9ace78f0062", "attention_reference", "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0", "gfx950_fp4_flash_attention", "ds_read_b64_tr_b4"],
-      ["gfx950-fp8-attention", "gfx950_fp8_attention_rust", "1bba502d11b4806e9bb14141049655e6f05ae7a2d2bfdad8fe3b22625feb6149", "attention_reference", "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0", "gfx950_fp8_flash_attention", "ds_read_b64_tr_b8"],
+      {
+        lessonId: "gfx950-fp4-gemm",
+        rustSymbol: "gfx950_fp4_gemm_rust",
+        rustSha256: "478da27352b8d9acae02dbc10b28b353fcd985440f51af73145c3217505012c8",
+        referenceSymbol: "gemm_reference",
+        referenceSha256: "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
+        hipSymbol: "gfx950_fp4_gemm",
+        runner: "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
+        namespace: "ff22ff3610dda0a94803a8011ced229b78c77400ca63c9b929d6ecba78ed6f01",
+        llvmSha256: "b92ceef45655bb2ae131c2b09645ff8fb588299a994e9cbf84b07b7868fca115",
+        hsacoSha256: "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d",
+        hostIsa: "cbsz:4 blgp:4",
+        requiredIsa: "cbsz:4 blgp:4",
+        numericalResult: "max_absolute_error=0",
+        tolerance: "absolute tolerance 1e-5",
+      },
+      {
+        lessonId: "gfx950-fp8-gemm",
+        rustSymbol: "gfx950_fp8_gemm_rust",
+        rustSha256: "d54dd98522394418dfa1835858b01be523de1ef6b9f493b866eb802d8c8b55bd",
+        referenceSymbol: "gemm_reference",
+        referenceSha256: "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
+        hipSymbol: "gfx950_fp8_gemm",
+        runner: "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
+        namespace: "d67f1755b38fbdac67cec83da3ebc359f874e3fbf90fcc036471455ec117dfea",
+        llvmSha256: "351dbfeecec00e673e3e15557b97dc1c53006839dfb9d1a0a7b03ac6c23ae6e3",
+        hsacoSha256: "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f",
+        hostIsa: "v_mfma_f32_16x16x128_f8f6f4",
+        requiredIsa: "E4M3 selectors (not cbsz:4 blgp:4)",
+        numericalResult: "max_absolute_error=0",
+        tolerance: "absolute tolerance 1e-5",
+      },
+      {
+        lessonId: "gfx950-fp4-attention",
+        rustSymbol: "gfx950_fp4_attention_rust",
+        rustSha256: "3d4ec672e3f10b86fe60df65adfb7a1116f53ea1b458ded39e72d177f034437b",
+        referenceSymbol: "attention_reference",
+        referenceSha256: "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
+        hipSymbol: "gfx950_fp4_flash_attention",
+        runner: "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
+        namespace: "a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
+        llvmSha256: "ea183b9dedc375a1e98278d1053b7a500e0e8f4efe618230479e19bc1b81ecaa",
+        hsacoSha256: "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+        hostIsa: "ds_read_b64_tr_b4",
+        requiredIsa: "two ds_read_b64_tr_b4",
+        numericalResult: "max_absolute_error=2.235174179e-8",
+        tolerance: "absolute tolerance 2e-3 plus relative tolerance 2e-3",
+      },
+      {
+        lessonId: "gfx950-fp8-attention",
+        rustSymbol: "gfx950_fp8_attention_rust",
+        rustSha256: "98c3eb5b1040116c6eff349dfacfaf141855ad9145993d345e296cca573095c3",
+        referenceSymbol: "attention_reference",
+        referenceSha256: "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
+        hipSymbol: "gfx950_fp8_flash_attention",
+        runner: "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
+        namespace: "0c9610e86137831ce25b08b9ad87073ec16f459aa11aeea6806733f788bbeec1",
+        llvmSha256: "2e6a2c79a57e0a8796fe95c806fbbf3a8406bae6c55646802beb235b01d88c2b",
+        hsacoSha256: "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221",
+        hostIsa: "ds_read_b64_tr_b8",
+        requiredIsa: "four ds_read_b64_tr_b8",
+        numericalResult: "max_absolute_error=5.960464478e-8",
+        tolerance: "absolute tolerance 2e-3 plus relative tolerance 2e-3",
+      },
     ] as const;
 
-    for (const [lessonId, rustSymbol, rustSha256, referenceSymbol, referenceSha256, hipSymbol, requiredIsa] of expected) {
+    for (const evidence of expected) {
+      const {
+        lessonId,
+        rustSymbol,
+        rustSha256,
+        referenceSymbol,
+        referenceSha256,
+        hipSymbol,
+        runner,
+        namespace,
+        llvmSha256,
+        hsacoSha256,
+        hostIsa,
+        requiredIsa,
+        numericalResult,
+        tolerance,
+      } = evidence;
       const lesson = lessons.find((candidate) => candidate.id === lessonId);
       expect(lesson, lessonId).toBeDefined();
       expect(lesson?.module).toBe(9);
       expect(lesson?.claims).toEqual([
-        expect.objectContaining({ kind: "source-example" }),
+        expect.objectContaining({ kind: "gpu-observed" }),
       ]);
-      expect(lesson?.claims[0].reference).toBeUndefined();
+      expect(lesson?.claims[0].reference).toMatchObject({
+        scope: "historical-evidence",
+        commit: "a710b6c67a908caa23d2409a5d3c4a275103cd60",
+        tree: "dfd5ec9a357d4cbd7879078c23f7b3114cdea641",
+        commands: [`bash ${runner}`],
+        target: "gfx950:xnack-",
+      });
+      expect(lesson?.claims[0].reference?.sourcePaths).toEqual(
+        expect.arrayContaining([
+          "examples/gfx950_low_precision/src/kernel.rs",
+          "examples/gfx950_low_precision/src/reference.rs",
+          "examples/gfx950_low_precision/src/lib.rs",
+          "examples/gfx950_low_precision/Cargo.toml",
+          "examples/gfx950_low_precision/README.md",
+          runner,
+        ]),
+      );
       expect(lesson?.tabs.map((tab) => tab.kind)).toEqual([
         "kernel", "reference", "comparison", "verus", "host", "result",
       ]);
@@ -337,7 +429,7 @@ describe("curriculum integrity", () => {
       expect(kernel?.label).toBe("Rust kernel");
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
-      expect(kernel?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(kernel?.sourceCommit).toBe("a710b6c67a908caa23d2409a5d3c4a275103cd60");
       expect(kernel?.sourcePath).toBe("examples/gfx950_low_precision/src/kernel.rs");
       expect(kernel?.code).toContain(rustSymbol);
       expect(kernel?.sourceSha256).toBe(rustSha256);
@@ -345,7 +437,7 @@ describe("curriculum integrity", () => {
       expect(reference?.kind).toBe("reference");
       expect(reference?.language).toBe("rust");
       expect(reference?.explanatory).toBe(false);
-      expect(reference?.sourceCommit).toBe("91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(reference?.sourceCommit).toBe("a710b6c67a908caa23d2409a5d3c4a275103cd60");
       expect(reference?.code).toContain(referenceSymbol);
       expect(reference?.sourceSha256).toBe(referenceSha256);
       const comparison = lesson?.tabs[2];
@@ -356,19 +448,27 @@ describe("curriculum integrity", () => {
       );
       expect(lesson?.tabs[3]?.kind).toBe("verus");
       const host = lesson?.tabs[4];
-      expect(host?.code).toContain(requiredIsa);
-      expect(host?.code).toContain("cargo test --offline");
-      expect(host?.code).toContain("pinned fe2o3 core checkout");
-      expect(host?.code).toContain("fe2o3-kernels site checkout");
-      expect(host?.code).toContain(
-        "--offload-arch=gfx950",
-      );
+      expect(host?.code).toContain(`bash ${runner}`);
+      expect(host?.code).toContain(hostIsa);
+      expect(host?.code).toContain("finalizes exact gfx950:xnack- COV6 HSACO");
+      expect(host?.code).toContain("Comparison only");
       const result = lesson?.tabs[5]?.code;
-      expect(result).toContain("Rust gfx950 lowering supported: false");
-      expect(result).toContain("Rust-produced HSACO: none");
-      expect(result).toContain("SEPARATE HIP COMPARISON LANE");
-      expect(result).toContain("MI350X gfx950");
-      expect(result).toContain("Core source commit: 91e3cf2b4d8145d8c269ea3f783da53f90c568f4");
+      expect(result).toContain("FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE");
+      expect(result).toContain("Core source commit: a710b6c67a908caa23d2409a5d3c4a275103cd60");
+      expect(result).toContain("Core source tree: dfd5ec9a357d4cbd7879078c23f7b3114cdea641");
+      expect(result).toContain(`Portable namespace: ${namespace}`);
+      expect(result).toContain(`Rust-produced LLVM SHA-256: ${llvmSha256}`);
+      expect(result).toContain(`Rust-produced HSACO SHA-256: ${hsacoSha256}`);
+      expect(result).toContain("Rust gfx950 lowering supported: true");
+      expect(result).toContain("Required Rust ISA:");
+      expect(result).toContain(requiredIsa);
+      expect(result).toContain(`Rust numerical result: ${numericalResult}`);
+      expect(result).toContain(`Acceptance tolerance: ${tolerance}`);
+      expect(result).toContain("ROCm 7.2.1 on MI350X gfx950, ssh host mi350");
+      expect(result).toContain("SEPARATE COMPARISON-ONLY HIP LANE");
+      expect(result).toContain("The HIP artifact is an independent comparison");
+      expect(result).not.toContain("Rust gfx950 lowering supported: false");
+      expect(result).not.toContain("Rust-produced HSACO: none");
     }
 
     const fp4Gemm = serializedLessonContent("gfx950-fp4-gemm");
@@ -379,7 +479,7 @@ describe("curriculum integrity", () => {
     ).toBe("5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a");
     expect(fp4Gemm).toContain("ab39293c0f251678496cb5da026b8fb6ebbb4f6c96989ad5a2962d3ad6018379");
     expect(fp4Gemm).toContain("one fixed K=128 phase");
-    expect(fp4Gemm).toContain("identity scale operands as constants");
+    expect(fp4Gemm).toContain("identity-scale operands encoded as constants");
     const fp4Attention = serializedLessonContent("gfx950-fp4-attention");
     expect(fp4Attention).toContain("ds_read_b64_tr_b4");
     expect(fp4Attention).toContain("scalar FP32 loop");
@@ -387,7 +487,7 @@ describe("curriculum integrity", () => {
     const fp8Attention = serializedLessonContent("gfx950-fp8-attention");
     expect(fp8Attention).toContain("ds_read_b64_tr_b8");
     expect(fp8Attention).toContain("attention max_error=2.38419e-07");
-    expect(fp8Attention).toContain("native CDNA 4 FP8 split packing");
+    expect(fp8Attention).toContain("four ds_read_b64_tr_b8");
   });
 
   it("publishes exact bounded advanced gfx950 source and evidence", () => {
@@ -483,11 +583,19 @@ describe("curriculum integrity", () => {
 
   it("pins byte-exact Rust mirrors for all gfx950 packages", () => {
     const mirrors = [
-      ["examples/gfx950_low_precision/README.md", "f3401cc5e0964cb2d3a71809e803edd83d52eec3537dd47aa5f81b5c2087d057"],
-      ["examples/gfx950_low_precision/Cargo.toml", "e208401265a5b0453846f98dce53d6b1d325d1aa1739f1a00ec86cbf7e476bb5"],
-      ["examples/gfx950_low_precision/src/kernel.rs", "1db40f7590af32b8b6781294ba184101a4e5cb7055a26e60bdf0aabec7145099"],
+      ["examples/gfx950_low_precision/README.md", "5dc64435d18dc371431dacddaae8cd6114358fe0fce5e6924e046d0d4e351a6f"],
+      ["examples/gfx950_low_precision/Cargo.toml", "79022908ab305eb2b608818e9338e8796e5515af43e590ed367acb222676e3c6"],
+      ["examples/gfx950_low_precision/src/kernel.rs", "cbfeef4eb919076dfdbf858d57bb89effa16e5c0754efba95778b410f067850a"],
       ["examples/gfx950_low_precision/src/reference.rs", "388ec3bf3fff9a5290456afc92b9bd24be8813d9ae914865f780affb7fb6e3e7"],
-      ["examples/gfx950_low_precision/src/lib.rs", "f0787e4d442e0ea31df61917f803f4b9732a99cf5ccc8e376de7c104bbc94ebd"],
+      ["examples/gfx950_low_precision/src/lib.rs", "ef673aa1c80c6268d8039a5f819cb2ceea1656ef6214217efc8daeabe1bf4e4f"],
+      ["examples/gfx950_low_precision/tests/kernel_source.rs", "fb0a57fca5151dc099151c0073c875cde274b6c6460458f01b6226160b334568"],
+      ["examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh", "a02d26d57716aff60099f98dbf76073a34bacd9a753bcb79d58d47c0ace603c7"],
+      ["examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh", "94734d16e766e6295b4311cbeb5b086566a25da21207e9ea2811339951ee65c5"],
+      ["examples/gfx950_low_precision/run-fp4-attention-gfx950.sh", "b4bf55787793b3aa3f9fc042521c2941e643d04a2b6bf7933b1847d891b53dd6"],
+      ["examples/gfx950_low_precision/run-fp8-attention-gfx950.sh", "73e3c73c37154ee0b6b5f9b9ec450cc1c11167335457100c29a576736279955d"],
+      ["examples/gfx950_low_precision/run-attention-gfx950.sh", "9253aa5c740671ff91d69c44917a75cb1dc7c69b6f596f6ed999ded9d6db93ff"],
+      ["examples/gfx950_low_precision/gfx950-ocml-closure.sh", "4acd64af08347456aa9b8e2c105e1af7ce2946167e95496c02c5dc88e2544c6a"],
+      ["examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest", "43b868ede4500d71ff0f81fe3db2b91cec5cf4c973befc1533adfac51d9accc6"],
       ["examples/gfx950_advanced_attention/README.md", "7657397fea609f7da6ff930aa23e60775f59822c9f2c2daec3898054abaf49a6"],
       ["examples/gfx950_advanced_attention/Cargo.toml", "15331511f974503b26131577ec321bd7283945360f31744c007ffba2c072acf8"],
       ["examples/gfx950_advanced_attention/src/kernel.rs", "7ca9927e875561ec1d7e753e72503a3426902af1fe38e7284331fefa8ccb75ba"],
@@ -709,10 +817,20 @@ describe("curriculum integrity", () => {
       target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
     });
     expect(reference?.note).toContain("No source-to-KIR association");
+    expect(reference?.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-kir-sim/src/resident.rs",
+        "crates/fe2o3-kir-sim-trace/src/lib.rs",
+        "crates/fe2o3-semantic-query/src/lib.rs",
+      ]),
+    );
     const content = serializedLessonContent("cpu-semantic-simulation");
     expect(content).toContain("accepts no Rust source");
     expect(content).toContain("Legacy V6");
     expect(content).toContain("private 0600 file");
+    expect(content).toContain("Current milestone: exact KIR V7 simulation");
+    expect(content).toContain("Wave32/Wave64");
+    expect(content).toContain("gfx950 LDS transpose");
     expect(content).toContain("no source-to-KIR refinement");
     expect(content).toContain("performance prediction");
 
@@ -741,7 +859,23 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "compiler-analysis",
       )?.detail,
-    ).toContain("Checkpoint equality does not detect transient mutate-then-restore behavior");
+    ).toContain("context-wide monotonic PLIRON mutation-attempt epoch");
+    const compilerAnalysis = currentState.capabilities.find(
+      (capability) => capability.id === "compiler-analysis",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "all eight independent semantic-witness checks remain Incomplete",
+    );
+    expect(compilerAnalysis?.detail).toContain(
+      "zero production transformations are supported",
+    );
+    expect(compilerAnalysis?.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-kernel-analysis/src/pliron_pass_contract.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_report_validation.rs",
+        "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
+      ]),
+    );
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "functional-reference",
@@ -778,7 +912,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
+      sourceCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -935,9 +1069,13 @@ describe("curriculum integrity", () => {
     expect(failures).toContain("The CPU reference closes semantics, not hardware layout");
     expect(failures).toContain("Production errors include a repair contract");
     expect(failures).toContain("FE2O3-FIX-LAYOUT");
-    expect(failures).toContain("Checkpoint equality is a narrow guarantee");
-    expect(failures).toContain("Matching checkpoints do not detect transient mutate-then-restore behavior");
-    expect(failures).toContain("A transforming pass needs a separately validated semantic-refinement relation");
+    expect(failures).toContain("Mutation epoch plus exact checkpoints");
+    expect(failures).toContain("mutate-then-restore cannot disappear behind equal final bytes");
+    expect(failures).toContain("A Clean report is diagnostic, not a proof");
+    expect(failures).toContain("all eight independent semantic-witness checks remain Incomplete");
+    expect(failures).toContain("Transforming passes use a different boundary");
+    expect(failures).toContain("production registry contains zero transforming passes");
+    expect(failures).toContain("private test fixture exercises custody only");
     expect(failures).toContain("proof that trusted dialect encoders or printers are correct");
     expect(failures).toContain("does not establish a general Rust-source-to-Kernel-IR-to-machine refinement theorem");
     expect(failures).toContain("unsafe_asm");
@@ -1077,6 +1215,8 @@ describe("curriculum integrity", () => {
       "kernel-target-contract (compiler-supplied precondition)",
       "kernel-ir-interprocedural-effects (shared analysis)",
       "pliron-ranked-structural-identity-v1 (shared preservation root)",
+      "pliron-analysis-report-validation-v1 (integrity boundary)",
+      "pliron-transform-refinement-v1 (separate transformation boundary)",
       "bounded resources (cross-cutting)",
     ]);
     const prerequisiteTable = semanticFailures.blocks.find(
@@ -1107,12 +1247,37 @@ describe("curriculum integrity", () => {
       "FE2O3-PRESERVE-004",
       "FE2O3-PRESERVE-005",
       "FE2O3-PRESERVE-010",
+      "FE2O3-PRESERVE-020",
+      "FE2O3-PRESERVE-021",
       "FE2O3-PRESERVE-022",
+      "FE2O3-PRESERVE-023",
       "FE2O3-PRESERVE-024",
       "FE2O3-PRESERVE-025",
       "FE2O3-PRESERVE-026",
+      "FE2O3-PRESERVE-027",
       "FE2O3-PRESERVE-028",
       "FE2O3-PRESERVE-029",
+      "FE2O3-PRESERVE-031",
+      "FE2O3-PRESERVE-032",
+      "FE2O3-PRESERVE-033",
+      "FE2O3-PRESERVE-035",
+      "FE2O3-PRESERVE-036",
+      "FE2O3-PRESERVE-037",
+      "FE2O3-PRESERVE-038",
+      "FE2O3-PRESERVE-039",
+      "FE2O3-PRESERVE-040",
+      "FE2O3-PRESERVE-041",
+      "FE2O3-PRESERVE-043",
+      "FE2O3-PRESERVE-044",
+      "FE2O3-TRANSFORM-001",
+      "FE2O3-TRANSFORM-002",
+      "FE2O3-TRANSFORM-003",
+      "FE2O3-TRANSFORM-004",
+      "FE2O3-TRANSFORM-005",
+      "FE2O3-TRANSFORM-006",
+      "FE2O3-TRANSFORM-007",
+      "FE2O3-TRANSFORM-008",
+      "FE2O3-TRANSFORM-009",
       "FE2O3-TENSOR-LAYOUT-001",
       "FE2O3-TENSOR-LAYOUT-002",
       "FE2O3-TENSOR-LAYOUT-003",
@@ -1247,7 +1412,7 @@ describe("curriculum integrity", () => {
     );
     expect(failureGallery?.type).toBe("compile-failures");
     if (failureGallery?.type !== "compile-failures") return;
-    expect(failureGallery.examples).toHaveLength(39);
+    expect(failureGallery.examples).toHaveLength(42);
     expect(failureGallery.intro).toContain("fixed workload-neutral PLIRON verifier sequence");
     expect(failureGallery.intro).toContain("tensor layout first");
     expect(failureGallery.intro).toContain("users still write Rust");
@@ -1291,6 +1456,9 @@ describe("curriculum integrity", () => {
       "preserve_analysis_operator_mutation",
       "preserve_unsupported_snapshot",
       "preserve_snapshot_resource_limit",
+      "preserve_transient_mutation_attempt",
+      "preserve_report_payload_substitution",
+      "transform_without_semantic_checker",
     ]);
     for (const example of failureGallery.examples) {
       expect(example.source).not.toContain("unsafe");
@@ -1348,13 +1516,31 @@ describe("curriculum integrity", () => {
       "changed at block 0 op 2",
     );
     expect(example("preserve_analysis_operator_mutation")?.caught).toContain(
-      "does not detect mutate-then-restore behavior",
+      "Any mutable access attempt is attributed to that stage",
     );
     expect(example("preserve_unsupported_snapshot")?.diagnostic).toContain(
       "post-pass structural identity is unavailable",
     );
     expect(example("preserve_snapshot_resource_limit")?.diagnostic).toContain(
       "basic blocks count 1025",
+    );
+    expect(example("preserve_transient_mutation_attempt")?.diagnostic).toContain(
+      "FE2O3-PRESERVE-020",
+    );
+    expect(example("preserve_transient_mutation_attempt")?.caught).toContain(
+      "cannot restore the epoch",
+    );
+    expect(example("preserve_report_payload_substitution")?.diagnostic).toContain(
+      "FE2O3-PRESERVE-039",
+    );
+    expect(example("preserve_report_payload_substitution")?.caught).toContain(
+      "does not prove that the original analysis was semantically sound",
+    );
+    expect(example("transform_without_semantic_checker")?.diagnostic).toContain(
+      "FE2O3-TRANSFORM-008",
+    );
+    expect(example("transform_without_semantic_checker")?.caught).toContain(
+      "Production supports zero transformations",
     );
     expect(failures).toContain("Ordinary Rust atomic terminals are explicitly unsupported");
     expect(failures).toContain("Rust Ordering does not imply a GPU memory scope");
@@ -1457,9 +1643,11 @@ describe("curriculum integrity", () => {
       "before KIR lowering",
       "Candidate declarations are not evidence",
       "root-owned fixed /opt runtime",
-      "one immediately after each of the eight named analysis stages",
+      "one after every stage",
       "Exact bytes, not the diagnostic digest",
-      "does not detect transient mutate-restore behavior or prove the stage report correct",
+      "Any mutation attempt is attributed to the active stage",
+      "All eight independent semantic-witness checks remain Incomplete",
+      "Clean is diagnostic only",
     ]) {
       expect(narrative).toContain(boundary);
     }
@@ -1488,7 +1676,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
+      sourceCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -2545,12 +2733,22 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("promotes only exact pinned sources among advanced lessons", () => {
+  it("keeps advanced runnable claims restricted while permitting Module 9 GPU observations", () => {
     for (const lesson of lessons.filter((entry) => entry.module >= 4)) {
       const runnable = lesson.claims.some(
         (claim) => claim.kind === "runnable-now",
       );
       expect(runnable).toBe(false);
+      if (lesson.module === 9) {
+        expect(lesson.claims.map((claim) => claim.kind)).toEqual([
+          "gpu-observed",
+        ]);
+      }
+      if (lesson.module === 10) {
+        expect(
+          lesson.claims.some((claim) => claim.kind === "gpu-observed"),
+        ).toBe(false);
+      }
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
         [
           "gemm-tiling",
@@ -2587,15 +2785,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-26",
+      reviewedOn: "2026-08-27",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
-      eventualPublicTree: "996fceca501b3ac514099e2802a021ea6099ead9",
+      eventualPublicCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
+      eventualPublicTree: "8fd560893daac0d879ed12fd6bd7c6601ef436d2",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "73bc772f18816eeb83ba696ae655fa59ea946228",
-        requiredTree: "996fceca501b3ac514099e2802a021ea6099ead9",
+        requiredCommit: "d4ea0866b2d7517e126db2a409985294e847044a",
+        requiredTree: "8fd560893daac0d879ed12fd6bd7c6601ef436d2",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -3226,7 +3424,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "73bc772f18816eeb83ba696ae655fa59ea946228",
+      "d4ea0866b2d7517e126db2a409985294e847044a",
     );
 
     const lesson = curriculum
@@ -3874,7 +4072,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"73bc772f18816eeb83ba696ae655fa59ea946228");
+    expect(mapping).toContain("sourceCommit\":\"d4ea0866b2d7517e126db2a409985294e847044a");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family flags remain false");

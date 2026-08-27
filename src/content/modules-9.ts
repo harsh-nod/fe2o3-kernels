@@ -1,22 +1,111 @@
 import lowPrecisionRustKernel from "../../examples/gfx950_low_precision/src/kernel.rs?raw";
 import lowPrecisionRustReference from "../../examples/gfx950_low_precision/src/reference.rs?raw";
-import lowPrecisionRustContract from "../../examples/gfx950_low_precision/src/lib.rs?raw";
 import lowPrecisionHipSource from "../../examples/gfx950_low_precision/gfx950_low_precision.hip?raw";
 import buildAndTest from "../../examples/gfx950_low_precision/build_and_test.sh?raw";
 import inspectIsa from "../../examples/gfx950_low_precision/check_isa.sh?raw";
 import { narrativeSection } from "./narrative-registry";
 import { resultText } from "./shared";
-import type { CodeTab, CurriculumModule, Lesson } from "./model";
+import {
+  historicalReference,
+  type Claim,
+  type CodeTab,
+  type CurriculumModule,
+  type Lesson,
+} from "./model";
 
 const rustKernelPath = "examples/gfx950_low_precision/src/kernel.rs";
 const rustReferencePath = "examples/gfx950_low_precision/src/reference.rs";
-const coreSourceCommit = "91e3cf2b4d8145d8c269ea3f783da53f90c568f4";
-const rustKernelFileSha256 = "1db40f7590af32b8b6781294ba184101a4e5cb7055a26e60bdf0aabec7145099";
+const rustContractPath = "examples/gfx950_low_precision/src/lib.rs";
+const rustReadmePath = "examples/gfx950_low_precision/README.md";
+const rustManifestPath = "examples/gfx950_low_precision/Cargo.toml";
+const coreSourceCommit = "a710b6c67a908caa23d2409a5d3c4a275103cd60";
+const coreSourceTree = "dfd5ec9a357d4cbd7879078c23f7b3114cdea641";
+const rustKernelFileSha256 = "cbfeef4eb919076dfdbf858d57bb89effa16e5c0754efba95778b410f067850a";
 const rustReferenceFileSha256 = "388ec3bf3fff9a5290456afc92b9bd24be8813d9ae914865f780affb7fb6e3e7";
 const hipSourcePath = "examples/gfx950_low_precision/gfx950_low_precision.hip";
 const hipSourceSha256 = "5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a";
 const hipHsacoSha256 = "ab39293c0f251678496cb5da026b8fb6ebbb4f6c96989ad5a2962d3ad6018379";
-const loweringBlocker = "the rustc semantic importer, Kernel IR schema, production target profile, and AMDGPU module lowering do not yet consume the gfx950 scaled-MFMA, LDS-transpose, subgroup, or DeviceMath exp_f32 terminals";
+const productionTarget = "gfx950:xnack-";
+const attentionRunnerPath = "examples/gfx950_low_precision/run-attention-gfx950.sh";
+const ocmlClosurePath = "examples/gfx950_low_precision/gfx950-ocml-closure.sh";
+const ocmlManifestPath = "examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest";
+
+interface ProductionRustEvidence {
+  label: string;
+  runnerPath: string;
+  namespace: string;
+  llvmSha256: string;
+  hsacoSha256: string;
+  requiredIsa: string[];
+  numericalResult: string;
+  tolerance: string;
+  hardwareTestPath: string;
+  additionalSourcePaths?: string[];
+}
+
+const fp4GemmEvidence: ProductionRustEvidence = {
+  label: "FP4 GEMM",
+  runnerPath: "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
+  namespace: "ff22ff3610dda0a94803a8011ced229b78c77400ca63c9b929d6ecba78ed6f01",
+  llvmSha256: "b92ceef45655bb2ae131c2b09645ff8fb588299a994e9cbf84b07b7868fca115",
+  hsacoSha256: "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d",
+  requiredIsa: [
+    "v_mfma_f32_16x16x128_f8f6f4",
+    "cbsz:4 blgp:4",
+  ],
+  numericalResult: "max_absolute_error=0",
+  tolerance: "absolute tolerance 1e-5",
+  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_fp4_gemm_hardware.rs",
+};
+
+const fp8GemmEvidence: ProductionRustEvidence = {
+  label: "FP8 GEMM",
+  runnerPath: "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
+  namespace: "d67f1755b38fbdac67cec83da3ebc359f874e3fbf90fcc036471455ec117dfea",
+  llvmSha256: "351dbfeecec00e673e3e15557b97dc1c53006839dfb9d1a0a7b03ac6c23ae6e3",
+  hsacoSha256: "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f",
+  requiredIsa: [
+    "v_mfma_f32_16x16x128_f8f6f4",
+    "E4M3 selectors (not cbsz:4 blgp:4)",
+  ],
+  numericalResult: "max_absolute_error=0",
+  tolerance: "absolute tolerance 1e-5",
+  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_fp8_gemm_hardware.rs",
+};
+
+const fp4AttentionEvidence: ProductionRustEvidence = {
+  label: "FP4 attention",
+  runnerPath: "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
+  namespace: "a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
+  llvmSha256: "ea183b9dedc375a1e98278d1053b7a500e0e8f4efe618230479e19bc1b81ecaa",
+  hsacoSha256: "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+  requiredIsa: [
+    "v_mfma_f32_16x16x128_f8f6f4",
+    "cbsz:4 blgp:4",
+    "two ds_read_b64_tr_b4",
+  ],
+  numericalResult: "max_absolute_error=2.235174179e-8",
+  tolerance: "absolute tolerance 2e-3 plus relative tolerance 2e-3",
+  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs",
+  additionalSourcePaths: [attentionRunnerPath, ocmlClosurePath, ocmlManifestPath],
+};
+
+const fp8AttentionEvidence: ProductionRustEvidence = {
+  label: "FP8 attention",
+  runnerPath: "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
+  namespace: "0c9610e86137831ce25b08b9ad87073ec16f459aa11aeea6806733f788bbeec1",
+  llvmSha256: "2e6a2c79a57e0a8796fe95c806fbbf3a8406bae6c55646802beb235b01d88c2b",
+  hsacoSha256: "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221",
+  requiredIsa: [
+    "v_mfma_f32_16x16x128_f8f6f4",
+    "E4M3 selectors (not cbsz:4 blgp:4)",
+    "four ds_read_b64_tr_b8",
+  ],
+  numericalResult: "max_absolute_error=5.960464478e-8",
+  tolerance: "absolute tolerance 2e-3 plus relative tolerance 2e-3",
+  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs",
+  additionalSourcePaths: [attentionRunnerPath, ocmlClosurePath, ocmlManifestPath],
+};
 
 function hipKernelExcerpt(symbol: string, nextSymbol: string): string {
   const helperStart = lowPrecisionHipSource.indexOf("using i32x2");
@@ -51,6 +140,34 @@ function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean
   throw new Error(`Unclosed Rust function ${symbol}`);
 }
 
+function productionRustClaim(evidence: ProductionRustEvidence): Claim {
+  return {
+    kind: "gpu-observed",
+    label: `Production Rust ${evidence.label} observed on MI350X`,
+    detail:
+      `At the exact pinned core commit, the ordinary #[kernel(typed)] Rust ${evidence.label} source passed its production extractor, ${productionTarget} LLVM and COV6 finalization checks, symbol-scoped ISA inspection, and digest-pinned HSA numerical test on the mi350 MI350X. The measured ${evidence.numericalResult} was within ${evidence.tolerance}. This bounded observation is not a formal source-to-machine proof, performance result, protected publication, or measured protected Worker V3 native build.`,
+    reference: historicalReference(
+      coreSourceCommit,
+      coreSourceTree,
+      [`bash ${evidence.runnerPath}`],
+      [
+        rustKernelPath,
+        rustReferencePath,
+        rustContractPath,
+        rustManifestPath,
+        rustReadmePath,
+        evidence.runnerPath,
+        evidence.hardwareTestPath,
+        ...(evidence.additionalSourcePaths ?? []),
+      ],
+      {
+        target: productionTarget,
+        note: "Historical exact production Rust GPU observation retained at its immutable core commit. The raw digest-pinned hardware harness grants no protected publication authority, and the reviewed protected Worker V3 provider still lacks a measured native build with matching LLVM/LLD development packages.",
+      },
+    ),
+  };
+}
+
 function tutorialTabs(
   rustSymbol: string,
   rustExcerptSha256: string,
@@ -58,7 +175,7 @@ function tutorialTabs(
   referenceExcerptSha256: string,
   hipSymbol: string,
   nextHipSymbol: string,
-  requiredIsa: string[],
+  evidence: ProductionRustEvidence,
 ): CodeTab[] {
   return [
     {
@@ -71,7 +188,7 @@ function tutorialTabs(
       sourceSha256: rustExcerptSha256,
       sourceDigestScope: "displayed",
       explanatory: false,
-      notice: `Exact published ordinary #[kernel(typed)] Rust excerpt for ${rustSymbol}, pinned to the core commit and displayed-byte SHA-256. GFX950_RUST_TO_HSACO_LOWERING_SUPPORTED_V1 remains false.`,
+      notice: `Exact ordinary #[kernel(typed)] Rust excerpt for ${rustSymbol}, pinned to the production core commit and displayed-byte SHA-256. Its portable namespace is ${evidence.namespace}; the evidence record binds the corresponding Rust-produced LLVM, HSACO, ISA, and MI350X run.`,
     },
     {
       kind: "reference",
@@ -93,7 +210,7 @@ function tutorialTabs(
       sourcePath: hipSourcePath,
       sourceSha256: hipSourceSha256,
       explanatory: true,
-      notice: `Comparison-only HIP fixture for ${hipSymbol}. Its required ${requiredIsa.join(" and ")} and MI350X results do not establish Rust lowering or execution.`,
+      notice: `Comparison-only HIP fixture for ${hipSymbol}. It is not the source of the Rust-produced LLVM or HSACO and grants no authority to the production Rust evidence.`,
     },
     {
       kind: "verus",
@@ -107,7 +224,7 @@ function tutorialTabs(
         "- packed FP4/FP8 decode and identity-scale correspondence",
         "- wave64 lane/component bijection and disjoint final stores",
         "- K-phase accumulator or attention recurrence invariant",
-        "- Rust source -> Kernel IR -> gfx950 ISA refinement",
+        "- formal Rust source -> Kernel IR -> gfx950 ISA refinement",
       ].join("\n"),
       explanatory: true,
       notice: "Obligation ledger only; no proof execution or compiler receipt is claimed.",
@@ -116,44 +233,53 @@ function tutorialTabs(
       kind: "host",
       label: "Run and inspect",
       language: "bash",
-      code: `# In the pinned fe2o3 core checkout: Rust source and CPU-reference checks only.\ncargo test --offline --manifest-path examples/gfx950_low_precision/Cargo.toml\n\n# In the fe2o3-kernels site checkout: separate HIP compiler/ISA/hardware validation.\nbash examples/gfx950_low_precision/build_and_test.sh\n\n# Exact mirrored HIP build script:\n${buildAndTest}\n\n# Exact symbol-scoped HIP ISA checker invoked by the script:\n${inspectIsa}`,
+      code: `# In the fe2o3 core checkout at ${coreSourceCommit}.\n# This production runner extracts the ordinary Rust kernel, validates LLVM,\n# finalizes exact ${productionTarget} COV6 HSACO, inspects symbol-scoped ISA,\n# and executes the digest-pinned HSA numerical test on a visible gfx950 GPU.\nbash ${evidence.runnerPath}\n\n# Comparison only: this separate HIP fixture is not used by the Rust runner.\nbash examples/gfx950_low_precision/build_and_test.sh\n\n# Exact mirrored comparison-only HIP build script:\n${buildAndTest}\n\n# Exact comparison-only HIP ISA checker invoked by that script:\n${inspectIsa}`,
       explanatory: true,
-      notice: "Run Cargo in the pinned fe2o3 core checkout, where the manifest's core-relative dependencies exist. It does not emit gfx950 HSACO. The site-local HIP script and checker validate only the companion HIP artifact.",
+      notice: `Run the Rust command in the exact pinned fe2o3 checkout. It is the authoritative path for this lesson's production Rust GPU observation. The separate HIP command remains comparison-only.`,
     },
     {
       kind: "result",
       label: "Evidence record",
       language: "text",
       code: resultText(
-        "source-example",
+        "gpu-observed",
         [
-          "FE2O3 RUST SOURCE LANE",
+          "FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE",
           `Kernel symbol: ${rustSymbol}`,
           `Kernel source: ${rustKernelPath}`,
           `Core source commit: ${coreSourceCommit}`,
+          `Core source tree: ${coreSourceTree}`,
           `Kernel file SHA-256: ${rustKernelFileSha256}`,
           `CPU reference: ${referenceSymbol} in ${rustReferencePath}`,
           `Reference file SHA-256: ${rustReferenceFileSha256}`,
-          "Rust gfx950 lowering supported: false",
-          `Exact blocker: ${loweringBlocker}`,
-          "Rust-produced HSACO: none",
-          "Rust gfx950 runtime observation: none",
+          `Production runner: bash ${evidence.runnerPath}`,
+          `Portable namespace: ${evidence.namespace}`,
+          `Rust-produced LLVM SHA-256: ${evidence.llvmSha256}`,
+          `Rust-produced HSACO SHA-256: ${evidence.hsacoSha256}`,
+          "Rust gfx950 lowering supported: true",
+          `Target: ${productionTarget}, Wave64, code object V6`,
+          `Required Rust ISA: ${evidence.requiredIsa.join(", ")}`,
+          "Rust observation: ROCm 7.2.1 on MI350X gfx950, ssh host mi350, 2026-08-26.",
+          `Rust numerical result: ${evidence.numericalResult}`,
+          `Acceptance tolerance: ${evidence.tolerance}`,
+          "The digest-pinned test checked all 256 outputs, immutable inputs, output canaries, exact target metadata, and symbol-scoped ISA.",
+          "Formal source-to-machine proof: not claimed.",
+          "Performance result: not claimed.",
+          "Protected publication authority: not claimed.",
+          "Protected Worker V3 boundary: the provider and admission policy are reviewed, but a measured native build still requires matching LLVM/LLD development packages.",
           "",
-          "SEPARATE HIP COMPARISON LANE",
+          "SEPARATE COMPARISON-ONLY HIP LANE",
           `HIP symbol: ${hipSymbol}`,
           `HIP source SHA-256: ${hipSourceSha256}`,
           `HIP HSACO SHA-256: ${hipHsacoSha256}`,
-          `HIP required ISA: ${requiredIsa.join(", ")}`,
+          `HIP required ISA: ${evidence.requiredIsa.join(", ")}`,
           "HIP observation: ROCm 7.2.1 on MI350X gfx950, ssh host mi350, 2026-08-26.",
           "HIP oracle: FP4 GEMM max_error=0; FP8 GEMM max_error=0; FP4 attention max_error=2.38419e-07; FP8 attention max_error=2.38419e-07.",
-          "The HIP artifact and run do not bind to, lower, or execute the Rust source.",
-          "Performance result: not claimed.",
-          "",
-          `Contract mirror contains false boundary: ${lowPrecisionRustContract.includes("GFX950_RUST_TO_HSACO_LOWERING_SUPPORTED_V1: bool = false")}.`,
+          "The HIP artifact is an independent comparison and does not produce, bind, or authorize the Rust artifact.",
         ].join("\n"),
       ),
       explanatory: true,
-      notice: "Rust source/CPU-reference evidence and HIP ISA/runtime evidence remain separate authority lanes.",
+      notice: "The pinned production Rust artifact and MI350X run are authoritative for this bounded GPU-observed claim. HIP remains a separate comparison; proof, performance, and protected publication are not promoted.",
     },
   ];
 }
@@ -177,22 +303,20 @@ const fp4Gemm: Lesson = {
     "Assign four FP32 accumulator components to every wave64 lane.",
     "Inspect the exact gfx950 MFMA mnemonic while keeping source, ISA, and runtime evidence distinct.",
   ],
-  claims: [
-    {
-      kind: "source-example",
-      label: "Rust kernel and CPU reference published",
-      detail:
-        "The tutorial defaults to exact ordinary attributed Rust and an independent safe CPU reference. Rust-to-gfx950 lowering is explicitly unsupported; the HIP fixture and MI350X run remain comparison-only evidence.",
-    },
-  ],
+  claims: [productionRustClaim(fp4GemmEvidence)],
   sections: [
     narrativeSection("gfx950-fp4-gemm/prerequisites"),
     narrativeSection("gfx950-fp4-gemm/tile-accumulator"),
   ],
-  tabs: tutorialTabs("gfx950_fp4_gemm_rust", "c8df66efc69ffcc731462d7600d7c307954fcd5bb5e311490fee1b253dafcab7", "gemm_reference", "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c", "gfx950_fp4_gemm", "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp8_gemm", [
-    "v_mfma_f32_16x16x128_f8f6f4",
-    "cbsz:4 blgp:4",
-  ]),
+  tabs: tutorialTabs(
+    "gfx950_fp4_gemm_rust",
+    "478da27352b8d9acae02dbc10b28b353fcd985440f51af73145c3217505012c8",
+    "gemm_reference",
+    "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
+    "gfx950_fp4_gemm",
+    "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp8_gemm",
+    fp4GemmEvidence,
+  ),
   diagram: "gemm",
   exercises: [
     {
@@ -223,22 +347,20 @@ const fp8Gemm: Lesson = {
     "Relate four packed FP8 values per dword to the 16 x 16 x 128 tile.",
     "State a K-phase invariant for the lane-local FP32 fragment.",
   ],
-  claims: [
-    {
-      kind: "source-example",
-      label: "Rust kernel and CPU reference published",
-      detail:
-        "The exact Rust source and independent E4M3 CPU reference are published with a false lowering flag. The non-gfx950 guard and MI350X observation belong only to the equivalent HIP fixture.",
-    },
-  ],
+  claims: [productionRustClaim(fp8GemmEvidence)],
   sections: [
     narrativeSection("gfx950-fp8-gemm/format-layout"),
     narrativeSection("gfx950-fp8-gemm/tile-accumulator"),
   ],
-  tabs: tutorialTabs("gfx950_fp8_gemm_rust", "07b51618ef69bda35e91e422ca948934a450e376dce68bb9ab62e0e8af1eedce", "gemm_reference", "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c", "gfx950_fp8_gemm", "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp4_flash_attention", [
-    "v_mfma_f32_16x16x128_f8f6f4",
-    "E4M3 selectors (not cbsz:4 blgp:4)",
-  ]),
+  tabs: tutorialTabs(
+    "gfx950_fp8_gemm_rust",
+    "d54dd98522394418dfa1835858b01be523de1ef6b9f493b866eb802d8c8b55bd",
+    "gemm_reference",
+    "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
+    "gfx950_fp8_gemm",
+    "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp4_flash_attention",
+    fp8GemmEvidence,
+  ),
   diagram: "gemm",
   exercises: [
     {
@@ -270,22 +392,20 @@ const fp4Attention: Lesson = {
     "Keep the one-tile QK accumulator, maximum, denominator, and scalar PV numerator in FP32.",
     "Inspect transpose-load and MFMA mnemonics within the attention symbol.",
   ],
-  claims: [
-    {
-      kind: "source-example",
-      label: "Rust attention source and CPU reference published",
-      detail:
-        "The Rust source expresses the typed gfx950 transpose/MFMA pipeline and scalar FP32 PV loop, with an independent CPU reference. Those device terminals are not yet lowered; B4 ISA and runtime results belong to HIP only.",
-    },
-  ],
+  claims: [productionRustClaim(fp4AttentionEvidence)],
   sections: [
     narrativeSection("gfx950-fp4-attention/transpose-pipeline"),
     narrativeSection("gfx950-fp4-attention/online-softmax"),
   ],
-  tabs: tutorialTabs("gfx950_fp4_attention_rust", "de73f75ba38cab5d88dd4889d0fe4cbc41295f49afec803774a6c9ace78f0062", "attention_reference", "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0", "gfx950_fp4_flash_attention", "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp8_flash_attention", [
-    "ds_read_b64_tr_b4",
-    "v_mfma_f32_16x16x128_f8f6f4",
-  ]),
+  tabs: tutorialTabs(
+    "gfx950_fp4_attention_rust",
+    "3d4ec672e3f10b86fe60df65adfb7a1116f53ea1b458ded39e72d177f034437b",
+    "attention_reference",
+    "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
+    "gfx950_fp4_flash_attention",
+    "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp8_flash_attention",
+    fp4AttentionEvidence,
+  ),
   diagram: "attention",
   exercises: [
     {
@@ -316,22 +436,20 @@ const fp8Attention: Lesson = {
     "Trace E4M3 Q/K fragments into one FP32 score tile and scalar decoded-FP32 PV loop.",
     "Record source, code object, ISA, and hardware fields without evidence promotion.",
   ],
-  claims: [
-    {
-      kind: "source-example",
-      label: "Rust attention source and CPU reference published",
-      detail:
-        "The exact attributed Rust and independent CPU reference are present with lowering explicitly unsupported. The B8/MFMA disassembly, device guard, and MI350X result describe only the equivalent HIP fixture.",
-    },
-  ],
+  claims: [productionRustClaim(fp8AttentionEvidence)],
   sections: [
     narrativeSection("gfx950-fp8-attention/transpose-pipeline"),
     narrativeSection("gfx950-fp8-attention/evidence-boundary"),
   ],
-  tabs: tutorialTabs("gfx950_fp8_attention_rust", "1bba502d11b4806e9bb14141049655e6f05ae7a2d2bfdad8fe3b22625feb6149", "attention_reference", "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0", "gfx950_fp8_flash_attention", "int main()", [
-    "ds_read_b64_tr_b8",
-    "v_mfma_f32_16x16x128_f8f6f4",
-  ]),
+  tabs: tutorialTabs(
+    "gfx950_fp8_attention_rust",
+    "98c3eb5b1040116c6eff349dfacfaf141855ad9145993d345e296cca573095c3",
+    "attention_reference",
+    "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
+    "gfx950_fp8_flash_attention",
+    "int main()",
+    fp8AttentionEvidence,
+  ),
   diagram: "attention",
   exercises: [
     {

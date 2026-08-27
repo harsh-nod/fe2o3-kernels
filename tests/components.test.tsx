@@ -221,7 +221,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Thirty-nine representative compile-time failures",
+        name: "Forty-two representative compile-time failures",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -229,7 +229,7 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(39);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(42);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
     expect(screen.getByText("Affine access exceeds a finite view")).toBeInTheDocument();
     expect(screen.getByText("Swapped MFMA operand roles")).toBeInTheDocument();
@@ -270,8 +270,15 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "Blocked<Index1D, L, E> where L > 1" })).toBeInTheDocument();
     expect(screen.getByText("Ordinary Rust atomic terminals are explicitly unsupported")).toBeInTheDocument();
     expect(screen.getByText("Stable pass diagnostic catalog")).toBeInTheDocument();
+    expect(screen.getByText("Mutation epoch plus exact checkpoints")).toBeInTheDocument();
+    expect(screen.getByText("A Clean report is diagnostic, not a proof")).toBeInTheDocument();
+    expect(screen.getByText("Transforming passes use a different boundary")).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Tensor layout" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "Semantic refinement" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "pliron-analysis-report-validation-v1 (integrity boundary)" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "pliron-transform-refinement-v1 (separate transformation boundary)" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-RACE-004" })).toBeInTheDocument();
-    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(35);
+    expect(screen.getAllByText("Schematic semantic IR")).toHaveLength(38);
     expect(screen.getByRole("cell", { name: "kernel-structural-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "kernel-tensor-layout-v1" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "pliron-presburger (shared analysis)" })).toBeInTheDocument();
@@ -290,8 +297,15 @@ describe("lesson section rendering policy", () => {
     expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-001" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-010" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-020" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-025" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-028" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-031" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-039" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-PRESERVE-044" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-TRANSFORM-001" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-TRANSFORM-008" })).toBeInTheDocument();
+    expect(screen.getByRole("cell", { name: "FE2O3-TRANSFORM-009" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-SEMANTIC-002" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-019" })).toBeInTheDocument();
     expect(screen.getByRole("cell", { name: "FE2O3-PARALLEL-021" })).toBeInTheDocument();
@@ -305,7 +319,7 @@ describe("lesson section rendering policy", () => {
     ).toHaveLength(4);
     expect(
       document.querySelectorAll(".compile-failure-source code.language-text"),
-    ).toHaveLength(35);
+    ).toHaveLength(38);
     expect(
       document.querySelector(".compile-failure-source .token.keyword"),
     ).toBeInTheDocument();

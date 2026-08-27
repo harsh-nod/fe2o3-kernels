@@ -427,6 +427,9 @@ const cpuSimulation: Lesson = {
           "crates/fe2o3-kir-sim-cli/src/linux.rs",
           "crates/fe2o3-kir-sim/src/preflight.rs",
           "crates/fe2o3-kir-sim/src/execute.rs",
+          "crates/fe2o3-kir-sim/src/resident.rs",
+          "crates/fe2o3-kir-sim-trace/src/lib.rs",
+          "crates/fe2o3-semantic-query/src/lib.rs",
         ],
         {
           target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
@@ -640,7 +643,7 @@ const compilerChecks: Lesson = {
   order: 2,
   title: "Compiler checks: reject invalid kernels",
   summary:
-    "See the complete workload-neutral error catalog, then bind safe Rust CPU semantics to one real GPU write and reject an incorrect result before lowering.",
+    "See the complete workload-neutral error catalog, learn what analysis integrity does and does not prove, then bind safe Rust CPU semantics to one real GPU write.",
   duration: "42 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
@@ -660,6 +663,8 @@ const compilerChecks: Lesson = {
     "Separate Rust borrowing from compiler-issued cross-invocation GPU capabilities.",
     "Use KernelResult, Option adapters, checked arithmetic, and ? without changing the physical kernel ABI.",
     "Identify which Shifted, GridExclusive, Blocked, and atomic source forms are supported or fail closed.",
+    "Separate mutation-attempt detection, exact structural checkpoints, sealed report custody, and independent semantic witness checking.",
+    "Explain why transforming PLIRON passes require an independent checker and why none is admitted in production today.",
   ],
   claims: [
     {
@@ -682,6 +687,9 @@ const compilerChecks: Lesson = {
           "crates/fe2o3-kernel-analysis/src/pliron_barrier.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_workgroup_memory.rs",
           "crates/fe2o3-kernel-analysis/src/pliron_semantic_refinement.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_pass_contract.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_report_validation.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_transform_refinement.rs",
         ],
         { target: "gfx942" },
       ),
@@ -815,6 +823,9 @@ const compilerChecks: Lesson = {
     "Incomplete",
     "compiler-issued capability",
     "compiler safety pass",
+    "mutation-attempt epoch",
+    "semantic witness",
+    "transformation refinement",
   ],
 };
 

@@ -1269,6 +1269,7 @@ p {
   flex: 0 0 auto;
   align-items: center;
   gap: 10px;
+  padding-right: 3px;
   color: var(--muted);
   font-size: 0.7rem;
   font-weight: 700;
