@@ -717,21 +717,33 @@ const narrativeRegistry = deepFreeze({
   },
   "compiler-checks/v7-simulation": {
     "sectionId": "v7-simulation",
-    "title": "Keep simulator evidence historical",
+    "title": "Debug exact V7 without upgrading observation into proof",
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The bounded V7 CPU simulator remains useful as historical observation tooling for an already verified KIR subset. It is not an alternate source compiler or a fallback around the Rust MIR to ranked PLIRON to KIR route. Historical fixtures retain their original commits and commands; this lesson does not present them as current production compilation."
+        "text": "The bounded deterministic CPU simulator consumes an exact VerifiedCanonicalKernelIrV7 owner. Its current subset executes integer and boolean scalar operations, structured control flow, internal calls, private and global buffers or views, ordinary or guarded scalar loads, and D1-D3 invocation identities. The standalone Linux boundary is fe2o3-kir-sim --kir-v7 kernel.kir --request request.json. Raw in-memory modules and older wire versions are not execution inputs."
       },
       {
         "type": "table",
-        "headers": ["Historical observation", "Useful for", "Never establishes"],
+        "headers": [
+          "V7 observation surface",
+          "Current behavior",
+          "Boundary"
+        ],
         "rows": [
-          ["Deterministic invocation schedule", "Reproducing supported scalar control flow and workgroup barrier behavior.", "GPU scheduling, progress, timing, or performance."],
-          ["Guarded memory events", "Inspecting whether the supported KIR path touches memory and which bounded conflicts were observed.", "Race freedom, source-to-KIR refinement, or complete memory safety."],
-          ["Semantic trace records", "Debugging an exact historical KIR identity with bounded event data.", "Proof discharge, artifact identity, load, or launch authority."],
-          ["Unsupported operation rejection", "Keeping the observation subset explicit.", "Permission to replace unsupported wave, tensor, atomic, floating-point, or memory behavior with an approximation."]
+          ["Schedule", "Workgroups and local slots are created in canonical Z/Y/X order; live invocations advance cooperatively and yield at convergent workgroup barriers.", "This is deterministic CPU execution, not a GPU scheduler or progress model."],
+          ["Guarded scalar load", "A false predicate returns the fallback without validating the pointer, touching memory, or emitting a read event.", "The simulator observes already-verified KIR behavior; it does not establish source-to-KIR refinement."],
+          ["Memory conflicts", "The result contains a bounded byte-level cross-invocation global-memory conflict assessment.", "Clean is not a race-freedom proof; conflict and incomplete outcomes remain observations."],
+          ["Semantic trace V1", "A separate in-process adapter maps simulator events to bounded observation-only trace records.", "Trace KIR identity and site ordinals are untrusted claims until rebound to an independently owned exact V7 module."],
+          ["Workgroup cooperation", "Static scalar workgroup memory and convergent workgroup barriers model initialization, cross-lane publication, and one allocation per workgroup.", "Generic barriers, dynamic or non-scalar workgroup memory, and physical wave behavior are outside this profile."],
+          ["Unsupported operations", "Floating point, external calls, generic barriers, atomics, fences, dynamic or non-scalar workgroup memory, wave and matrix operations, memory intrinsics, and inline assembly are rejected.", "The current GEMM, softmax, attention, and MoE tutorial kernels cannot run in this simulator profile."]
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "A debugger observation grants no execution authority",
+        "text": "Simulation results and semantic traces establish no race freedom, proof discharge, source-to-KIR or GPU equivalence, artifact identity, load or launch authority, timing, performance, or performance prediction. The CLI emits copied results and the conflict assessment. Semantic trace capture is a separate in-process adapter; the CLI does not silently promote a trace into verified evidence."
       }
     ]
   },

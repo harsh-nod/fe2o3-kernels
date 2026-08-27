@@ -288,7 +288,7 @@ export const narrativeFingerprints = deepFreeze({
   "memory-race-proof/dynamic-join": "105fe75c7294f57013c1f2c1403a985908580947f9aa2b96095de318ea0cc392",
   "compiler-checks/catalog": "8b467ebd1f20b6c540648593ac65f9aa240f6bfd18e4ec34dd3793a64a29412b",
   "compiler-checks/production-path": "ccf4f71ffb04dca025e6d67d7548914b16c77fce0ba069862a1d25fced8928fa",
-  "compiler-checks/v7-simulation": "135c2345c09eb57e6e1005c651d714b1552eb9ddcf000aba978358ab0e928727",
+  "compiler-checks/v7-simulation": "898a468386559cbe68838e52818e018378e26d0211fd568a946c298507b3d251",
   "reductions-scans/scope": "5a38b3d1c24f74c6ffe39078b8e8b26d2fc1d12547e452fa420355bc5dd25152",
   "reductions-scans/scan": "60963f040ac2f5145bc906991ff12bbd2af10cdfc83bc74bce24f5b0c66ba4a8",
   "lds-barriers-atomics/epochs": "79bc337dc6efcb64d133f32f91c37d07fa7d67f4d122395fe85c038d4c3ad441",
