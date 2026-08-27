@@ -6,8 +6,9 @@ import compilerReferenceDiagnostics from "../../examples/compiler_reference_v2/d
 import compilerReferenceEffect from "../../examples/compiler_reference_v2/effect-and-receipt.txt?raw";
 import compilerReferenceKernel from "../../examples/compiler_reference_v2/kernel.rs?raw";
 import compilerReferenceSource from "../../examples/compiler_reference_v2/reference.rs?raw";
-import cpuSimulationKernel from "../../examples/cpu_simulation_kernel.rs?raw";
+import cpuSimulationKir from "../../examples/cpu_simulation_kir_v7.txt?raw";
 import cpuSimulationRequest from "../../examples/cpu_simulation_request.json?raw";
+import cpuSimulationResult from "../../examples/cpu_simulation_result.json?raw";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
@@ -38,14 +39,12 @@ const vecaddRunCommand =
   "FE2O3_TARGET=gfx942:xnack- cargo +nightly-2026-04-03 run --locked -p cargo-fe2o3 -- run -p fe2o3-vecadd";
 const verusCommand =
   "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
-const historicalSimulationCommit =
-  "df63236de13f7572bad2c5e25e90d5b1bc4927c1";
-const historicalSimulationTree =
-  "d1068313b6bab22b5bb071fc8b39113e76cfb0a3";
+const cpuSimulationBuildCommand =
+  "cargo build --locked -p fe2o3-kir-sim-cli --bin fe2o3-kir-sim";
 const cpuSimulationCommand =
-  "cargo fe2o3 simulate --request request.json --output result.json -- --package my-kernel";
-const cpuSimulationFixtureCommand =
-  "cargo fe2o3 simulate --request crates/cargo-fe2o3/tests/fixtures/simulate-fill-request-v1.json --output result.json -- --locked --manifest-path crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/Cargo.toml";
+  "./target/debug/fe2o3-kir-sim --kir-v7 crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir --request crates/fe2o3-kir-sim-cli/tutorial/fill-v1/request.json";
+const cpuSimulationTestCommand =
+  "cargo test --locked -p fe2o3-kir-sim-cli --test tutorial_fixture";
 
 const orientation: Lesson = {
   id: "read-the-evidence",
@@ -397,37 +396,46 @@ const cpuSimulation: Lesson = {
   id: "cpu-semantic-simulation",
   module: 1,
   order: 2,
-  title: "Review the retired CPU simulator",
+  title: "Execute exact KIR without a GPU",
   summary:
-    "Study the bounded CPU semantic experiment without treating it as a second production compiler pipeline.",
+    "Run a pinned canonical Kernel IR V7 fixture through the standalone bounded CPU semantic executor.",
   duration: "24 min",
-  prerequisites: ["Typed vecadd", "JSON request files"],
+  prerequisites: ["Kernel IR evidence boundaries", "JSON request files"],
   objectives: [
-    "Trace the historical source-to-MIR-to-KIR V7-to-formal-memory simulation boundary.",
-    "Explain why the alternate Cargo simulation route was removed from current main.",
-    "Read the archived observation separately from current production, hardware validation, and performance evidence.",
+    "Run fe2o3-kir-sim on an exact canonical KIR V7 file without a GPU runtime.",
+    "Trace secure file admission, KIR verification, preflight, formal memory, and deterministic execution.",
+    "Separate a simulated observation from source refinement, hardware validation, and performance evidence.",
   ],
   claims: [
     {
-      kind: "compiler-checked",
-      label: "Historical CPU semantic execution",
+      kind: "runnable-now",
+      label: "Standalone exact-KIR CPU execution",
       detail:
-        "At the pinned historical commit, the command compiled ordinary typed source through semantic MIR, verified canonical KIR V7, and formal-memory admission, then executed that exact KIR in the bounded deterministic CPU simulator. Current main removed this alternate Cargo route so production has one compiler architecture. The archived no-hardware result remains bounded evidence, not a current command or GPU-performance claim.",
-      reference: {
-        scope: "historical-evidence",
-        commit: historicalSimulationCommit,
-        tree: historicalSimulationTree,
-        commands: [cpuSimulationCommand, cpuSimulationFixtureCommand],
-        sourcePaths: [
-          "crates/cargo-fe2o3/src/main.rs",
-          "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
-          "crates/cargo-fe2o3/tests/fixtures/simulate-fill-request-v1.json",
-          "crates/cargo-fe2o3/tests/simulation_source_e2e.rs",
-          "crates/fe2o3-kir-sim-cli/src/linux.rs",
+        "The Linux-only fe2o3-kir-sim command securely admits an exact verified canonical KIR V7 file and strict request, then executes the supported program in bounded deterministic CPU semantics. The versioned fill fixture pins a 245-byte KIR identity and complete result. This path accepts no Rust source and grants no source-refinement, proof, GPU-equivalence, timing, performance, or performance-prediction authority.",
+      reference: currentImplementationReference(
+        [
+          cpuSimulationBuildCommand,
+          cpuSimulationCommand,
+          cpuSimulationTestCommand,
         ],
-        target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
-        note: "Historical observation-only CPU semantics. The alternate Cargo route is absent from current main and grants no production, GPU, device-runtime, hardware-validation, or performance-prediction authority.",
-      },
+        [
+          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir",
+          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/request.json",
+          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/expected-result.json",
+          "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/README.md",
+          "crates/fe2o3-kir-sim-cli/tests/tutorial_fixture.rs",
+          "crates/fe2o3-kir-sim-cli/src/linux.rs",
+          "crates/fe2o3-kir-sim/src/preflight.rs",
+          "crates/fe2o3-kir-sim/src/execute.rs",
+          "crates/fe2o3-kir-sim/src/resident.rs",
+          "crates/fe2o3-kir-sim-trace/src/lib.rs",
+          "crates/fe2o3-semantic-query/src/lib.rs",
+        ],
+        {
+          target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
+          note: "Observation-only execution of an exact KIR V7 input. No source-to-KIR association, GPU/device-runtime use, hardware validation, timing, or performance prediction is claimed.",
+        },
+      ),
     },
   ],
   sections: [
@@ -437,14 +445,13 @@ const cpuSimulation: Lesson = {
   ],
   tabs: completeReferenceTabs(
     {
-      language: "rust",
-      code: cpuSimulationKernel,
-      sourcePath:
-        "crates/cargo-fe2o3/tests/fixtures/simulation-source-fill/src/lib.rs",
-      sourceCommit: historicalSimulationCommit,
-      sourceSha256:
-        "19854910d7488530033bbf4c15ed6b32283e56f4f8b6ed64f7775d68597a46dd",
-      explanatory: false,
+      language: "text",
+      code: cpuSimulationKir,
+      sourcePath: "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir",
+      sourceCommit: currentState.compilerCommit,
+      explanatory: true,
+      notice:
+        "Exact binary KIR V7 input. The manifest is readable metadata; the standalone command consumes the pinned 245-byte file linked above.",
     },
     {
       language: "rust",
@@ -455,7 +462,7 @@ const cpuSimulation: Lesson = {
         "5fd27aaa8e84786e83438ac7c0800a599c41704286131599dab2bb8a21b8c989",
       explanatory: false,
       notice:
-        "The simulator's fill program is compared with the same safe sequential fill reference.",
+        "This independent fill reference illustrates the repeated-value oracle shape. It is not associated with the exact KIR fixture and establishes no source refinement.",
     },
     {
       language: "rust",
@@ -466,44 +473,31 @@ const cpuSimulation: Lesson = {
         "55095841f5616c4af7c10bf57b8ea9178082f3bc4b130d9f8221e6e692c6761b",
       explanatory: false,
       notice:
-        "This source-model theorem proves composition of semantic equality and exact ownership. It is not a generated production receipt and does not upgrade observation-only CPU simulation into GPU hardware evidence.",
+        "This reusable source-model theorem records a later proof obligation. It is not applied to the fixture and grants no source-to-KIR, compiler, or GPU refinement authority.",
     },
     {
       language: "bash",
-      code: `# Historical interface at compiler ${historicalSimulationCommit}.
-# This command is not present on current main.
+      code: `# Build the standalone Linux CLI. This is not cargo fe2o3 simulate.
+${cpuSimulationBuildCommand}
 
-# Exact request used by the source fixture:
+# Inspect the strict request paired with the exact KIR V7 fixture.
 REQUEST='${cpuSimulationRequest.trim()}'
-printf '%s\\n' "$REQUEST" > request.json
+printf '%s\\n' "$REQUEST"
 
-# General source-first interface:
+# Execute the exact fixture and emit result JSON on stdout.
 ${cpuSimulationCommand}`,
     },
     {
       language: "text",
-      code: resultText(
-        "compiler-checked",
-        `schema: fe2o3-simulation-result-v1
-status: ok
-availability: retired_from_current_main
-authority: observation_only
-simulated: true
-hardware_observed: false
-hardware_validation: false
-performance_prediction: false
-target_profile.identity: amdgpu_64_little_endian_v1
-kir.sha256: 64 lowercase hexadecimal digits (profile-specific)
-kir.canonical_bytes: positive bounded byte length
-counts.invocations_executed: 4
-counts.workgroups_visited: 1
-counts.scheduled_slots_visited: 64
-schedule.identity: workgroup_major_local_zyx_cooperative_v1
-arguments[0].value.bytes: 0x11000000110000001100000011000000
-
-The complete JSON also binds the exact canonical KIR SHA-256 and byte length,
-the deterministic scheduler identity, typed argument state, and bounded counts.`,
-      ),
+      code: cpuSimulationResult,
+      sourcePath:
+        "crates/fe2o3-kir-sim-cli/tutorial/fill-v1/expected-result.json",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "bd1acc8327b3c47f15ed0de69e990c5177c75bff54e958e458ec1789baf8f2a8",
+      explanatory: false,
+      notice:
+        "Complete deterministic stdout for the exact versioned fixture; all negative authority fields are part of the result schema.",
     },
   ),
   diagram: "simulation",

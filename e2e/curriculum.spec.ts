@@ -68,49 +68,51 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
-test("retired CPU semantic simulation keeps its evidence boundary visible", async ({
+test("standalone CPU semantic simulation keeps its evidence boundary visible", async ({
   page,
 }, testInfo) => {
   await page.goto("./#/lesson/cpu-semantic-simulation");
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "Review the retired CPU simulator",
+      name: "Execute exact KIR without a GPU",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Why the alternate simulator was retired",
+      name: "Execute an exact semantic input",
     }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Read the archived result as an observation",
+      name: "Read the result as an exact observation",
     }),
   ).toBeVisible();
   await expect(page.getByText("performance_prediction: false")).toBeVisible();
-  await expect(page.getByText(/Current main removed that alternate Cargo simulation route/u)).toBeVisible();
   await expect(
-    page.getByText(/trusted, unsandboxed host code/u),
+    page.getByText(/begins at an exact canonical Kernel IR V7 file/u),
   ).toBeVisible();
   await expect(
-    page.getByText(/does not attest arbitrary build-script behavior/u),
+    page.getByText(/not Rust source or Cargo compiler orchestration/u),
   ).toBeVisible();
   await expect(
-    page.getByText(/fresh ephemeral generation/u),
+    page.getByText(/The fixture's Rust KIR owner can reconstruct/u),
   ).toBeVisible();
   await expect(
-    page.getByLabel("CPU semantic simulation of one authenticated WG64"),
+    page.getByLabel("Standalone CPU semantic simulation of one exact KIR V7 WG64"),
   ).toContainText("60 inactive slots");
-  await expect(page.getByRole("tabpanel")).toContainText("pub fn fill");
-  await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
+  await expect(page.getByRole("tabpanel")).toContainText("canonical bytes: 245");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384",
+  );
+  await expect(page.getByText(/Exact binary KIR V7 input/u)).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    /crates\/cargo-fe2o3\/tests\/fixtures\/simulation-source-fill\/src\/lib\.rs$/u,
+    /crates\/fe2o3-kir-sim-cli\/tutorial\/fill-v1\/kernel\.kir$/u,
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -118,23 +120,23 @@ test("retired CPU semantic simulation keeps its evidence boundary visible", asyn
     "fe2o3-simulation-request-v1",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "cargo fe2o3 simulate",
+    "./target/debug/fe2o3-kir-sim --kir-v7",
   );
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "availability: retired_from_current_main",
+    '"canonical_bytes":245',
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "hardware_observed: false",
+    '"hardware_observed":false',
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "0x11000000110000001100000011000000",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "counts.workgroups_visited: 1",
+    '"workgroups_visited":1',
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "counts.scheduled_slots_visited: 64",
+    '"scheduled_slots_visited":64',
   );
 
   const screenshot = testInfo.outputPath("cpu-semantic-simulation.png");
@@ -615,7 +617,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/d4ea0866b2d7517e126db2a409985294e847044a/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -715,7 +717,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/d4ea0866b2d7517e126db2a409985294e847044a/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -733,7 +735,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/61222da06c5a4bd75485f2a4bcb375cd4087d3a9/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/d4ea0866b2d7517e126db2a409985294e847044a/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -986,7 +988,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at 61222da06c",
+      name: "Compiler baseline at d4ea0866b2",
     }),
   ).toBeVisible();
   await expect(

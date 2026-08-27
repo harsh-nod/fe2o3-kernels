@@ -1,0 +1,12 @@
+Exact verified canonical Kernel IR V7 input
+
+path: crates/fe2o3-kir-sim-cli/tutorial/fill-v1/kernel.kir
+target profile: amdgpu_64_little_endian_v1
+KIR identity: e8f2c794a5dd4aeac63f5c820f9d5785b40b5aaff357e3f6726164fa4425f384
+canonical bytes: 245
+kernel: fill
+grid: [4, 1, 1]
+workgroup: [64, 1, 1]
+
+The command consumes the exact binary file named above. This manifest is not
+kernel source and establishes no Rust-source-to-KIR association or refinement.
