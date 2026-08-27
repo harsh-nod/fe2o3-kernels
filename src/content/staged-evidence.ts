@@ -43,6 +43,9 @@ export interface CompletedIssue94IncrementRecord {
   assertions: readonly StagedEvidenceAssertion[];
 }
 
+export const RETIRED_EXACT_ROUTE_NOTICE =
+  "Historical archive only: commands and source paths are reproduced at the record's exact commit. The workload-specific selectors, exact-profile finalizers, generated workload host adapters, Worker V2 ownership APIs, and workload-specific HSA tests were later removed from the unified production tree; they are not current replay commands or alternate production authority.";
+
 export const stagedEvidenceOrder = deepFreeze([
   "tiled-source-bridge-v1",
   "tiled-cargo-metadata-v1",
@@ -1000,7 +1003,7 @@ const completedIssue94IncrementRecords = deepFreeze({
       },
       {
         id: "measured-result",
-        text: "The protected hardware test compared all 256 output bit patterns with the CPU reference, required A and B to remain unchanged, checked every A/B/C guard canary, and passed 1/1 in 14.36 seconds. FakeAdapter tests in crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs still cover identity and contract substitutions, cleanup, and process-terminal paths, but they are no longer the only #100 evidence.",
+        text: "At the pinned historical commit, the protected hardware test compared all 256 output bit patterns with the CPU reference, required A and B to remain unchanged, checked every A/B/C guard canary, and passed 1/1 in 14.36 seconds. FakeAdapter tests in crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs covered identity and contract substitutions, cleanup, and process-terminal paths. That workload-specific lifecycle and test were later removed from the unified production tree.",
       },
       {
         id: "lifecycle-evidence-boundary",
@@ -1069,9 +1072,10 @@ export function stagedEvidenceDetail(
   ids: readonly StagedEvidenceId[],
 ): string {
   const detail = stagedEvidenceRecordDetail(ids);
-  return ids.includes("tiled-lds-sealed-profile-registry-v1")
+  const historicalDetail = ids.includes("tiled-lds-sealed-profile-registry-v1")
     ? `${detail} ${completedIssue94IncrementDetail()}`
     : detail;
+  return `${historicalDetail} ${RETIRED_EXACT_ROUTE_NOTICE}`;
 }
 
 export function stagedEvidenceRows(
@@ -1079,7 +1083,11 @@ export function stagedEvidenceRows(
 ): string[][] {
   const rows = ids.map((id) => {
     const record = stagedEvidenceRecord(id);
-    return [record.stageLabel, stagedEvidenceRecordDetail([id]), record.authority];
+    return [
+      record.stageLabel,
+      `${stagedEvidenceRecordDetail([id])} ${RETIRED_EXACT_ROUTE_NOTICE}`,
+      record.authority,
+    ];
   });
   if (ids.includes("tiled-lds-sealed-profile-registry-v1")) {
     rows.push(
@@ -1087,7 +1095,7 @@ export function stagedEvidenceRows(
         const record = completedIssue94IncrementRecord(id);
         return [
           record.stageLabel,
-          record.assertions.map((assertion) => assertion.text).join(" "),
+          `${record.assertions.map((assertion) => assertion.text).join(" ")} ${RETIRED_EXACT_ROUTE_NOTICE}`,
           record.authority,
         ];
       }),

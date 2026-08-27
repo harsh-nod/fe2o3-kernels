@@ -48,7 +48,7 @@ const sourceMilestoneRecords = deepFreeze({
     lessonId: "gemm-tiling",
     claim: "source-tested",
     authority: "source-tested-only",
-    claimLabel: "Executable dynamic GEMM source",
+    claimLabel: "Historical executable dynamic GEMM source",
     detail:
       "The pinned historical commit contains an ordinary safe attributed Rust wave64 kernel with runtime M, N, K, lda, ldb, ldc, alpha, and beta; a dynamic K loop; checked 16x16 tiled ownership; BF16/F32 matrix fragments; edge zero fill; and a full epilogue. It returns KernelResult, uses ? for checked capability construction, and names the target-neutral Matrix capability. At that commit, the workload-neutral qualification route lowered the exact source through semantic MIR, ranked PLIRON verification, canonical Kernel IR V7 with guarded edge loads and tensor contracts, formal memory admission, gfx942 LLVM, and HSACO. Four MI300X cases passed at zero error, the disassembly contained V_MFMA_F32_16X16X16_BF16, and the repository included a matched direct HIP benchmark. Current main retains the source and unified compiler analyses but has retired the alternate qualification host route. This is historical qualification execution, not protected artifact publication or a claim that Fe2O3 is faster than HIP.",
     commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
@@ -76,9 +76,9 @@ const sourceMilestoneRecords = deepFreeze({
     lessonId: "gemm-proof-plan",
     claim: "source-tested",
     authority: "source-tested-only",
-    claimLabel: "Current safe tiled GEMM source",
+    claimLabel: "Historical safe tiled GEMM source",
     detail:
-      "Current public main contains the ordinary attributed 16x16x16 BF16/F32 tiled GEMM source with compiler-issued lane, LDS, matrix, barrier, and disjoint-output capabilities. The kernel and its reachable helpers contain no unsafe block. Source-boundary and ranked-pipeline tests cover this safe source shape, but historical proof, HSACO, and GPU observations remain pinned separately and do not transfer to this descendant source.",
+      "The pinned historical commit contains the ordinary attributed 16x16x16 BF16/F32 tiled GEMM source with compiler-issued lane, LDS, matrix, barrier, and disjoint-output capabilities. The kernel and its reachable helpers contain no unsafe block. Its exact collected-source selector and workload-specific production route were later deleted. The source remains a tutorial example; its historical proof, HSACO, and GPU observations do not transfer to the current unified transaction.",
     commit: "61222da06c5a4bd75485f2a4bcb375cd4087d3a9",
     tree: "572828c0b3b454dc93518f20b306b0549a5ae839",
     commands: [

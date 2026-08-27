@@ -91,11 +91,12 @@ function validateFunctionalRefinementPublication(): void {
     referenceCommands.length < 2 ||
     referenceCommands.some(
       (command) =>
-        !command.includes("--features qualification-oracles-test-only"),
+        !command.includes("--test reference_binding_v1") ||
+        command.includes("--features qualification-oracles-test-only"),
     )
   ) {
     throw new Error(
-      "reference_binding_v1 publication commands require the qualification oracle feature",
+      "reference_binding_v1 publication commands must use the unified production test without the retired qualification feature",
     );
   }
 }

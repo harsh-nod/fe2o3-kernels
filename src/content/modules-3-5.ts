@@ -91,9 +91,9 @@ Boundary: this is functional exact bounded Slice 1, not generalized GEMM, compil
 );
 
 const dynamicGemmResult = resultText(
-  "runnable-now",
+  "gpu-observed",
   [
-    "Safe dynamic BF16/F32 MFMA GEMM on MI300X (gfx942)",
+    "Historical safe dynamic BF16/F32 MFMA GEMM on MI300X (gfx942)",
     "",
     "Rust -> semantic MIR -> ranked PLIRON -> Kernel IR -> formal/ranked memory",
     "-> gfx942 LLVM -> HSACO -> fe2o3-host",
@@ -114,32 +114,34 @@ const dynamicGemmResult = resultText(
     "",
     "This is a like-for-like MFMA kernel and host-launch comparison, not rocBLAS.",
     "Fe2O3 is safer and more expressive here; it is not faster than HIP yet.",
+    "This result came from the retired nonpublishing qualification route.",
+    "Current production compilation stops at an unresolved generic race proof before KIR.",
     "Protected release publication and complete source-to-machine refinement remain separate.",
   ].join("\n"),
 );
 
 const rowSoftmaxResult = resultText(
   "gpu-observed",
-  `Dynamic row softmax qualification on MI300X/gfx942
+  `Historical dynamic row softmax qualification on MI300X/gfx942
 
 PASS single-column      rows=3 columns=1 stride=7 max_error=0
 PASS wave-tail          rows=5 columns=63 stride=71 max_error=1.4901161e-8
 PASS multi-iteration    rows=7 columns=257 stride=269 max_error=5.5879354e-9
 PASS maximum-width      rows=2 columns=4096 stride=4103 max_error=6.0535967e-9
 
-The explicit row-softmax qualification oracle collected two semantic functions and 58 correspondence blocks, admitted three formal-memory boundaries, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 21,941-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. This nonpublishing route cannot complete the production transaction. Disassembly contained lane shuffles and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
+The retired row-softmax qualification oracle collected two semantic functions and 58 correspondence blocks, admitted three formal-memory boundaries, discharged four ranked dynamic-index obligations, lowered subgroup max/sum through lane shuffles, emitted a 21,941-byte LLVM module, finalized HSACO, and launched it through fe2o3-host at the pinned historical commit. That workload-selecting route is not present in the current compiler and cannot complete the production transaction. Disassembly contained lane shuffles and no MFMA, which is intentional: softmax is a reduction workload, not a matrix contraction.
 
 The logical column count and independent input/output strides are dynamic. Checked fallback loads supply negative infinity outside the logical row, row-striped ownership suppresses inactive stores, and output padding remains untouched. These qualification results establish the listed cases against an independent CPU oracle; they are not a proof for every input or a performance claim.`,
 );
 
 const flashAttentionResult = resultText(
   "gpu-observed",
-  `Dynamic fused attention qualification on MI300X/gfx942
+  `Historical dynamic fused attention qualification on MI300X/gfx942
 
 PASS tails-and-strides        heads=1 queries=16/16 keys=13/16 depth=18 value_dim=7 max_error=4.4703484e-8
 PASS multi-head-multi-tile   heads=2 queries=17/32 keys=19/32 depth=33 value_dim=16 max_error=5.9604645e-8
 
-The explicit FlashAttention qualification oracle collected two semantic functions and 219 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 162,782-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. This nonpublishing route cannot complete the production transaction. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and subgroup shuffles. One key-tile pass advances the stable online maximum, denominator, and V numerator; scores are never materialized in global memory.
+The retired FlashAttention qualification oracle collected two semantic functions and 219 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 162,782-byte LLVM module, finalized HSACO, and launched it through fe2o3-host at the pinned historical commit. That workload-selecting route is not present in the current compiler and cannot complete the production transaction. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and subgroup shuffles. One key-tile pass advances the stable online maximum, denominator, and V numerator; scores are never materialized in global memory.
 
 The kernel accepts runtime head count, padded query/key lengths, depth up to 1,024, keys up to 4,096, value width up to 16, independent legal strides, scale, and an additive mask for causal, padding, or application masks. Q and K are BF16; V, mask, accumulation, and output are FP32. The current PV contraction is scalar/reduction based, so this is correctness evidence rather than a claim of parity with a tuned production FlashAttention library.`,
 );
@@ -220,7 +222,7 @@ function exactGemmHostTab() {
       "13be2ab972a35d97dcdb36b45f3c07ab81c697d1d4c28461abffbbacd761ee36",
     explanatory: true,
     notice:
-      "This tab is a replay command for the exact pinned hardware test, not a copy of the linked Rust file.",
+      "Historical archive only: this replay command and linked workload-specific HSA test exist at the pinned evidence commit. The exact Worker V2 route and test were deleted from the current unified production tree.",
   };
 }
 
@@ -438,7 +440,7 @@ const gemmMapping: Lesson = {
   order: 0,
   title: "Dynamic GEMM end to end",
   summary:
-    "Build and run a safe wave64 MFMA kernel with dynamic shapes, strides, tails, multiple workgroups, and an alpha/beta epilogue.",
+    "Study a safe wave64 MFMA kernel and its pinned historical run while tracking the current generic production boundary.",
   duration: "24 min",
   prerequisites: ["Typed indexing and ownership", "Matrix multiplication"],
   objectives: [
@@ -544,7 +546,7 @@ const gemmProof: Lesson = {
   proofDetailsInitiallyOpen: true,
   title: "Proving and extending the MFMA kernel",
   summary:
-    "Separate the working direct-global MFMA kernel from the additional proof needed for cooperative LDS staging.",
+    "Separate the pinned historical direct-global result from the current generic proof gap and the additional proof needed for cooperative LDS staging.",
   duration: "38 min",
   prerequisites: ["Dynamic GEMM end to end"],
   objectives: [
@@ -610,7 +612,7 @@ const softmax: Lesson = {
   order: 0,
   title: "Dynamic row softmax",
   summary:
-    "Use safe Rust, dynamic row dimensions, and subgroup reductions to compile and run row softmax through an explicit qualification oracle.",
+    "Use safe Rust, dynamic row dimensions, and subgroup reductions, with a pinned historical qualification result and an explicit current boundary.",
   duration: "35 min",
   prerequisites: ["Reductions", "Floating-point error basics"],
   objectives: [
@@ -812,7 +814,7 @@ const flash: Lesson = {
       code: flashAttentionResult,
       explanatory: true,
       notice:
-        "Evidence boundary: these are direct qualification launches and numerical comparisons for two cases. They do not establish a universal proof, complete numerical refinement, or tuned-library performance.",
+        "Evidence boundary: these are historical direct qualification launches and numerical comparisons for two cases. The workload-selecting route is retired; the record does not establish a current launch path, universal proof, complete numerical refinement, or tuned-library performance.",
     },
   ),
   diagram: "attention",

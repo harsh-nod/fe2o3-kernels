@@ -114,7 +114,7 @@ cargo test -p fe2o3-hsa-runtime \\
       sourceCommit: "b1302940e9f7bc1cdcd58709a5d716bc2404df97",
       explanatory: true,
       notice:
-        "The pinned logical memory/effect proof verifies 16 obligations and rejects eight mutations. The exact eight-buffer adapter and linear lifecycle are source-tested. The independent CPU oracle passes; the protected gate refuses artifact-path or raw-byte fallback and fails before HSA load pending W0 authenticated HostLinkClosureV1, W1 broker cargo-fe2o3 executable identity, and subsequent receipt injection.",
+        "Historical archive only: the pinned logical memory/effect proof verifies 16 obligations and rejects eight mutations. The linked workload-specific HSA test and protected route were later deleted; current production has no workload-selecting fallback or equivalent launch command.",
     },
     {
       language: "text",
@@ -237,7 +237,7 @@ const expertCompute: Lesson = {
       language: "text",
       code: resultText(
         "gpu-observed",
-        "PASS top2-routed-moe tokens=41 experts=4 K=35 N=1 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=15 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=16 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=17 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=33 routes=82 max_error=0\n\nThe explicit grouped-expert qualification oracle collected two semantic functions and 104 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 53,080-byte LLVM module, finalized HSACO, and launched it through fe2o3-host. This nonpublishing route cannot complete the production transaction. Disassembly contained V_MFMA_F32_16X16X16_BF16. The kernel accepts runtime padded rows, output columns, reduction depth, independent strides, expert ID and expert count; safe edge predicates cover partial K and N tiles. The host fixture exercises four experts and top-2 routing, verifies active and padded edge rows plus untouched output padding, and compares the combined result with an independent CPU oracle. The compiler sees only generic typed fragments, arithmetic, dynamic indices, disjoint output capabilities, and control flow. It has no GEMM, attention, routing, or MoE recognizer. This is correctness evidence for the listed cases, not a routing proof, persistent scheduling implementation, or performance result.",
+        "HISTORICAL QUALIFICATION RESULT\n\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=1 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=15 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=16 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=17 routes=82 max_error=0\nPASS top2-routed-moe tokens=41 experts=4 K=35 N=33 routes=82 max_error=0\n\nThe retired grouped-expert qualification oracle collected two semantic functions and 104 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 53,080-byte LLVM module, finalized HSACO, and launched it through fe2o3-host at the pinned historical commit. The workload-selecting route is not present in the current compiler and cannot complete the production transaction. Disassembly contained V_MFMA_F32_16X16X16_BF16. The kernel accepts runtime padded rows, output columns, reduction depth, independent strides, expert ID and expert count; safe edge predicates cover partial K and N tiles. The host fixture exercises four experts and top-2 routing, verifies active and padded edge rows plus untouched output padding, and compares the combined result with an independent CPU oracle. Current production analysis remains workload-neutral and has no GEMM, attention, routing, or MoE recognizer. This is historical correctness evidence for the listed cases, not a current launch path, routing proof, persistent scheduling implementation, or performance result.",
       ),
       explanatory: true,
       notice:
@@ -272,9 +272,9 @@ const pipeline: Lesson = {
   claims: [
     {
       kind: "compiler-hsaco-observed",
-      label: "Direct-link Worker V2 mechanics",
+      label: "Direct-link Worker V3 mechanics",
       detail:
-        "The repository contains a measured out-of-process LLVM/LLD worker, deterministic two-run comparison, HSACO inspection, and durable publication foundations. These outputs remain inert until downstream authentication.",
+        "The sole current Worker V3 path uses the workload-neutral out-of-process LLVM/LLD worker, deterministic comparison, bounded HSACO inspection, and durable publication foundations. Worker Protocol V2 survives only as a private frozen wire codec; it grants no retired V2 production authority.",
       reference: pinnedReference(
         ["ctest --test-dir /absolute/path/to/llvm-link-worker-build --output-on-failure"],
         [

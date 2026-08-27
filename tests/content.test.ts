@@ -158,16 +158,16 @@ describe("curriculum integrity", () => {
       compilerCommit: semanticCorrectnessMilestone.compilerCommit,
       compilerTree: semanticCorrectnessMilestone.compilerTree,
     });
-    expect(functionalRefinementPublication.referenceCompilerCommand).toContain(
-      "--features qualification-oracles-test-only",
+    expect(functionalRefinementPublication.referenceCompilerCommand).not.toContain(
+      "qualification-oracles-test-only",
     );
     expect(
       functionalRefinementPublication.validationCommands.filter((command) =>
         command.includes("--test reference_binding_v1"),
       ),
     ).toSatisfy((commands: readonly string[]) =>
-      commands.every((command) =>
-        command.includes("--features qualification-oracles-test-only"),
+      commands.every(
+        (command) => !command.includes("qualification-oracles-test-only"),
       ),
     );
     const evidence = evidenceCatalog.gitObjects.find(
@@ -1013,11 +1013,10 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("declared semantic refinement");
     expect(contract).toContain("bounded sparse affine index dataflow");
     expect(contract).toContain("contains no GEMM names, tile-size tests, or schedule recognizers");
-    expect(contract).toContain("ThreadIndex/DisjointSlice dynamic access");
-    expect(contract).toContain("Tiled2D ownership");
-    expect(contract).toContain("matrix terminals");
-    expect(contract).toContain("connected from ordinary safe Rust through LLVM and qualification launch");
-    expect(contract).toContain("Unsupported effects and ownership forms still fail closed");
+    expect(contract).toContain("FE2O3-RACE-002");
+    expect(contract).toContain("checked structured ownership marker");
+    expect(contract).toContain("No KIR, LLVM, HSACO, or launch authority");
+    expect(contract).toContain("fail closed as Incomplete");
     expect(contract).toContain("current kernel already uses BF16/F32 MFMA");
     expect(contract).toContain("remaining schedule optimization is cooperative LDS staging");
     expect(contract).toContain("ceil_div(K,16)");
@@ -1266,7 +1265,8 @@ describe("curriculum integrity", () => {
     expect(host?.code).toContain("wrote output padding");
 
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    expect(result).toContain("Dynamic row softmax qualification on MI300X/gfx942");
+    expect(result).toContain("Historical dynamic row softmax qualification on MI300X/gfx942");
+    expect(result).toContain("workload-selecting route is not present");
     expect(result).toContain("PASS single-column");
     expect(result).toContain("PASS maximum-width");
     expect(result).toContain("four ranked dynamic-index obligations");
@@ -2877,7 +2877,8 @@ describe("implementation progress integrity", () => {
     expect(host?.code).toContain("multi-head-multi-tile");
     expect(host?.code).toContain("wrote output padding");
     expect(result?.explanatory).toBe(true);
-    expect(result?.code).toContain("Dynamic fused attention qualification");
+    expect(result?.code).toContain("Historical dynamic fused attention qualification");
+    expect(result?.code).toContain("workload-selecting route is not present");
     expect(result?.code).toContain("V_MFMA_F32_16X16X16_BF16");
     expect(result?.code).toContain("17 ranked dynamic-index obligations");
     expect(result?.code).toContain(
@@ -3625,7 +3626,9 @@ describe("implementation progress integrity", () => {
     expect(mapping).toContain("sourceCommit\":\"61222da06c5a4bd75485f2a4bcb375cd4087d3a9");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
-    expect(proofPlan).toContain("Historical LDS-family flags remain false");
+    expect(proofPlan).toContain("Historical LDS-family routes are retired");
+    expect(proofPlan).toContain("FE2O3-RACE-002");
+    expect(proofPlan).toContain("collected-source selector");
     expect(proofPlan).toContain("authenticates the exact attributed source");
     expect(proofPlan).toContain("stops before descriptor construction and Worker V2");
     expect(proofPlan).toContain("six cases checked 1,536 outputs");
@@ -3663,11 +3666,13 @@ describe("implementation progress integrity", () => {
       expect(proofPlan).toContain(issue);
     }
     expect(proofPlan).toContain("fe2o3-kernels #2");
-    expect(proofPlan).toContain("the sealed authority-free exact-profile registry (#96) are complete");
+    expect(proofPlan).toContain("the sealed authority-free exact-profile registry (#96)");
+    expect(proofPlan).toContain("were later deleted from the unified production tree");
+    expect(renderedStaged).toContain("Historical archive only");
     expect(proofPlan).toContain("96 verified and 0 errors");
     expect(proofPlan).toContain("76 debug tests, 76 release tests");
     expect(proofPlan).toContain("Production certificate consumption is tracked in #91");
-    expect(proofPlan).toContain("No production source execution is claimed");
+    expect(proofPlan).toContain("current generic compiler does not inherit");
     for (const issue of [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 96, 97, 99, 100]) {
       expect(proofPlan).toContain(
         `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,

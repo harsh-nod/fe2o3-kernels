@@ -905,7 +905,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "The #100 terminal policy cancels a prepared dispatch and releases its queue and kernarg before executable unload when failure occurs before packet publication. Failures after proven quiescence and Loaded or Completed drop perform one checked unload. Adapter unwind, unload error, or ambiguous unload observation aborts. A post-submit queue error or completion deadline is process-terminal and retains submitted resources because GPU quiescence is unknown. FakeAdapter coverage for substitutions, cleanup, and process-terminal paths now lives in crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs."
+        "text": "At the pinned #100 checkpoint, the terminal policy canceled a prepared dispatch and released its queue and kernarg before executable unload when failure occurred before packet publication. Failures after proven quiescence and Loaded or Completed drop performed one checked unload. Adapter unwind, unload error, or ambiguous unload observation aborted. A post-submit queue error or completion deadline was process-terminal and retained submitted resources because GPU quiescence was unknown. Its FakeAdapter coverage lived in crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs at that historical commit; the workload-specific host lifecycle and test were later removed and are not current source paths."
       },
       {
         "type": "paragraph",
@@ -926,8 +926,8 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Bounded execution is not production authority",
-        "text": "Exact Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), and the sealed authority-free exact-profile registry (#96) are complete. Exact direct LLVM/LLD API finalization (#97), exact generated host preparation (#99), and the one-shot Joined -> Loaded -> Completed -> Unloaded implementation (#100) are also complete. #100 now has both fake-adapter adversarial coverage and one exact protected mi300x measurement. Production certificate consumption (#91), K-phase/grid/edge proof extension (#92), semantic MIR-to-Kernel-IR refinement (#106), and Kernel-IR-to-LLVM/ISA safety correspondence (#107) remain open; protected Slice 3 and Slice 4 execution remains open in #88 and #89; and generalized dimensions, strides, tails, and coefficients remain open in #90 and #101 through #104. Evidence-site synchronization is tracked in fe2o3-kernels #2. Neither the protected Slice 1 measurement nor the separate IR-derived observation proves compiler origin, general illegal-access safety, race freedom, or source-to-machine refinement. The shared IEEE BF16/F32 numerical contract and oracle were completed in #109; authenticated compiler, proof, and machine refinement remain separate open obligations. No production source execution is claimed. No production source-to-HSACO or Verus authority is claimed."
+        "title": "Historical bounded execution is not current production authority",
+        "text": "Within the pinned historical exact route, Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), the sealed authority-free exact-profile registry (#96), direct LLVM/LLD finalization (#97), generated host preparation (#99), and the one-shot lifecycle (#100) were recorded complete. That workload-specific selector, registry, finalizer, host lifecycle, and Worker V2 ownership API were later deleted from the unified production tree. Their exact commit remains bounded historical evidence only. The current generic compiler does not inherit compiler origin, illegal-access safety, race freedom, source-to-machine refinement, launch authority, or Verus authority from it; the dynamic matrix lesson currently stops at FE2O3-RACE-002 before KIR."
       },
       {
         "type": "links",
@@ -953,13 +953,13 @@ const narrativeRegistry = deepFreeze({
   },
   "gemm-tiling/general-contract": {
     "sectionId": "general-contract",
-    "title": "Optimizing the executable baseline",
+    "title": "Historical executable baseline and current gate",
     "blocks": [
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Generic PLIRON safety passes are mandatory before lowering",
-        "text": "The executable MFMA kernel constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: tensor-layout and collective-participation verification, memory bounds, atomic legality, global race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. ThreadIndex/DisjointSlice dynamic access, runtime slice bounds, loops, branches, Tiled2D ownership, and matrix terminals are connected from ordinary safe Rust through LLVM and qualification launch. Unsupported effects and ownership forms still fail closed."
+        "text": "The current production transaction constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: tensor-layout and collective-participation verification, memory bounds, atomic legality, global race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. The dynamic MFMA example currently stops with FE2O3-RACE-002 because the checked structured ownership marker lacks an independently validated success/value contract. No KIR, LLVM, HSACO, or launch authority follows from this source in the current tree; unsupported effects and ownership forms fail closed as Incomplete."
       },
       {
         "type": "paragraph",
@@ -1116,18 +1116,18 @@ const narrativeRegistry = deepFreeze({
           "Authority boundary"
         ],
         "rows": [
-          ["Executable direct-global MFMA source", "Compiles through ranked PLIRON, Kernel IR, gfx942 LLVM, HSACO, and qualification launch", "Four MI300X correctness cases pass and a matched HIP result is published; protected publication and complete refinement remain separate."],
-          ["Cooperative-LDS positive source", "Runs canonical optimized-MIR structural analysis without issuing a positive receipt or frontend correspondence", "The historical selector exists for the proposed LDS schedule, but analysis fails closed until a closed verifier covers that safe-code root and reachable helper MIR."],
-          ["Private final pair join", "Compiles and checks the source owner against verifier and post-link machine owners for the ordered reference and vectorized schedules", "It is unreachable because positive analysis stops before receipt, correspondence, configuration, and proof; public identities cannot reconstruct it."],
-          ["Verus runtime closure", "Implements exact pinning and retention for the reviewed root-owned closure across the qualification boundaries", "It remains a second downstream blocker, but the current positive route never reaches configuration or proof execution."],
-          ["Current MFMA qualification", "The safe direct-global MFMA kernel builds and passes four MI300X numerical cases", "This grants qualification evidence only; protected publication and cooperative LDS execution remain separate."]
+          ["Historical direct-global MFMA route", "At its pinned commit, compiled through ranked PLIRON, Kernel IR, gfx942 LLVM, HSACO, and qualification launch", "The selector and alternate host route are retired; four MI300X cases and the HIP comparison remain historical observations only."],
+          ["Historical cooperative-LDS route", "Retains archived source, structural diagnostics, and exact evidence records", "Its collected-source selector, exact profile registry, and workload finalizer were deleted from current production."],
+          ["Current generic production transaction", "Runs the fixed workload-neutral ranked analysis sequence", "The published dynamic matrix stops at FE2O3-RACE-002 before KIR because checked structured marker success/value semantics are not independently proven."],
+          ["Current Worker V3 path", "Retains generic target finalization and publication mechanics", "No workload selector or Worker V2 ownership API can bypass the incomplete generic proof."],
+          ["Tutorial workload sources", "Remain readable safe Rust examples with pinned historical results", "They are not current launch commands, production proof receipts, or source-to-machine authority."]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Historical LDS-family flags remain false",
-        "text": "TILED_SOURCE_TO_IR=false, TILED_LOWERING=false, and TILED_PROTECTED_EXECUTION=false describe the historical cooperative-LDS source family in this mutation archive. They do not describe the current direct-global MFMA kernel, which compiles and runs. The mutation oracle remains useful negative evidence but does not transfer protected publication or LDS execution authority."
+        "title": "Historical LDS-family routes are retired",
+        "text": "TILED_SOURCE_TO_IR=false, TILED_LOWERING=false, and TILED_PROTECTED_EXECUTION=false describe the historical cooperative-LDS source family in this mutation archive. The exact selector, profile registry, and finalizer were later deleted. The direct-global MFMA hardware results are also pinned historical qualification observations; current production reaches the generic race analysis and stops Incomplete before KIR."
       },
       {
         "type": "paragraph",
@@ -1175,7 +1175,7 @@ const narrativeRegistry = deepFreeze({
           [
             "Mutable C region",
             "Tiled2D witness",
-            "generic race analysis proves disjoint physical addresses"
+            "intended ownership mapping; the current checked marker remains Incomplete until its success and produced value are independently validated"
           ]
         ]
       }
@@ -1200,7 +1200,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "proof",
         "title": "The mandatory safety pipeline does not recognize GEMM",
-        "text": "The eight production ranked passes reason about tensor layout, bounds, atomics, race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory epochs, and declared semantic refinement. One ephemeral manager shares sparse results, execution layout, bounded traces, tensor-layout dataflow, and exact resource-bounded Presburger relations across that ordered sequence. The same machinery analyzes softmax, attention, MoE, reductions, and any kernel expressible in the supported target-neutral operation and effect subset; unsupported or unresolved forms stop as Incomplete. Historical fixtures and qualification oracles may still describe specific workloads, but they grant no production safety authority. Matrix lowering only selects the target instruction after the generic obligations pass."
+        "text": "The eight production ranked passes reason about tensor layout, bounds, atomics, race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory epochs, and declared semantic refinement. One ephemeral manager shares sparse results, execution layout, bounded traces, tensor-layout dataflow, and exact resource-bounded Presburger relations across that ordered sequence. The same machinery analyzes softmax, attention, MoE, reductions, and any kernel expressible in the supported target-neutral operation and effect subset; unsupported or unresolved forms stop as Incomplete. This site's pinned historical workload records remain useful examples, but their compiler selectors and qualification oracles were deleted and grant no current production safety authority. Matrix lowering can select a target instruction only after every generic obligation passes."
       },
       {
         "type": "callout",
@@ -1425,7 +1425,7 @@ const narrativeRegistry = deepFreeze({
         "type": "bullets",
         "items": [
           "Two cases cover key and query tails, multi-head and multi-tile launch geometry, non-multiple-of-16 depth, runtime strides, causal masks, and value widths 7 and 16.",
-          "An explicitly selected FlashAttention qualification oracle performs source collection, generic PLIRON safety verification, Kernel IR lowering, gfx942 LLVM emission, HSACO finalization, host launch, and CPU-oracle comparison; its capability cannot complete or publish the production transaction.",
+            "At the pinned historical commit, an explicitly selected FlashAttention qualification oracle performed source collection, generic PLIRON safety verification, Kernel IR lowering, gfx942 LLVM emission, HSACO finalization, host launch, and CPU-oracle comparison. That selector is retired and cannot complete or publish the current production transaction.",
           "Disassembly confirms MFMA score contractions and subgroup shuffle reductions; no global score matrix is allocated.",
           "The result does not establish complete IEEE/OCML refinement, every legal shape, all-masked-row behavior, or performance parity with tuned FlashAttention libraries."
         ]
@@ -1495,7 +1495,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The kernel computes gate * (projection + expert_bias) for every routed row. The host retains the route-to-token mapping, reads each expert result, and accumulates the two weighted routes into one token output in deterministic route order. Qualification uses 41 tokens, 4 experts, 82 routes, K=35, and N in {1, 15, 16, 17, 33}, covering partial and exact output tiles on both sides of the 16-column boundary."
+        "text": "The kernel computes gate * (projection + expert_bias) for every routed row. The host retains the route-to-token mapping, reads each expert result, and accumulates the two weighted routes into one token output in deterministic route order. The pinned historical qualification used 41 tokens, 4 experts, 82 routes, K=35, and N in {1, 15, 16, 17, 33}, covering partial and exact output tiles on both sides of the 16-column boundary."
       },
       {
         "type": "table",
@@ -1535,7 +1535,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The explicitly selected, nonpublishing grouped-expert qualification oracle collected the dynamic expert kernel, discharged 17 ranked index obligations, emitted gfx942 LLVM and HSACO, and executed the top-2 case on MI300X. Its capability cannot complete the production transaction. Every combined output matched an independent BF16-input/FP32-accumulation CPU oracle exactly, and output stride padding retained its sentinel."
+        "text": "At the pinned historical commit, the explicitly selected nonpublishing grouped-expert qualification oracle collected the dynamic expert kernel, discharged 17 ranked index obligations, emitted gfx942 LLVM and HSACO, and executed the top-2 case on MI300X. That workload selector is retired and cannot complete the current production transaction. Every combined output matched an independent BF16-input/FP32-accumulation CPU oracle exactly, and output stride padding retained its sentinel."
       },
       {
         "type": "callout",

@@ -15,13 +15,13 @@
   "authorityNegativeFixtureSha256": "1489cb6c801c2af44c5e4d1c07a3d16338dd8e4ad0b12afc5008619bd3c5c834",
   "dynamicBoundsSourcePath": "crates/rustc-codegen-fe2o3/src/production_reference_bounds_v2.rs",
   "dynamicBoundsSourceSha256": "ae6c84a7c161b7d4e6ae8aee89962b67bcfd12c583149dde590633c87cd9b818",
-  "referenceCompilerCommand": "cargo test --locked -p rustc-codegen-fe2o3 --features qualification-oracles-test-only --test reference_binding_v1 annotated_reference_reaches_the_proof_runtime_boundary_and_mutation_is_rejected -- --ignored --exact",
+  "referenceCompilerCommand": "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 annotated_reference_reaches_the_proof_runtime_boundary_and_mutation_is_rejected -- --ignored --exact",
   "validationCommands": [
     "cargo test --locked -p fe2o3-verifier --tests",
     "cargo test --locked -p fe2o3-kernel-analysis --test pliron_effect_refinement --test pliron_hierarchical_ownership --test pliron_race --test pliron_semantic_refinement --test pliron_collective_semantics --test pliron_lit",
     "cargo test --locked -p fe2o3-pliron --test production_ranked_pipeline --test production_collective_semantics --test production_middle_end_evidence_v4",
     "VERUS=/absolute/path/to/pinned/verus scripts/test-mir-pliron-per-compilation-verus.sh",
     "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 -- --ignored --exact ordinary_rust_bounds_and_production_pliron_pipeline_fail_closed",
-    "cargo test --locked -p rustc-codegen-fe2o3 --features qualification-oracles-test-only --test reference_binding_v1 annotated_reference_reaches_the_proof_runtime_boundary_and_mutation_is_rejected -- --ignored --exact"
+    "cargo test --locked -p rustc-codegen-fe2o3 --test reference_binding_v1 annotated_reference_reaches_the_proof_runtime_boundary_and_mutation_is_rejected -- --ignored --exact"
   ]
 }

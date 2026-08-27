@@ -43,18 +43,16 @@ The checked-in publication gate is pinned to public-main implementation commit
 `powderluv/fe2o3@refs/heads/main` to resolve to that exact commit and tree. Until
 both refs match, the live publication gate fails closed.
 
-This snapshot contains executable safe Rust dynamic GEMM, row-softmax,
-attention, and grouped-expert MoE kernels. Runtime dimensions, strides, edge
-handling, multiple workgroups, target-neutral matrix and subgroup operations,
-and workload epilogues all lower through one semantic MIR, ranked PLIRON,
-Kernel IR, formal-memory, gfx942 LLVM, HSACO, and fe2o3-host route. Current
-MI300X qualification covers four GEMM cases, four softmax cases, two
-one-pass-online attention cases, and five MoE output widths. Matrix
-contractions contain BF16/F32 MFMA; reductions contain subgroup shuffles. The
-matched direct HIP benchmark is checked in and shows that Fe2O3 is currently
-slower, reaching 94.6% of the HIP kernel's throughput at 1024. These
-qualification artifacts are not protected release authority or universal
-correctness proofs.
+This snapshot contains safe Rust dynamic GEMM, row-softmax, attention, and
+grouped-expert MoE tutorial kernels. Their pinned historical qualification
+commits covered four GEMM cases, four softmax cases, two one-pass-online
+attention cases, and five MoE output widths on MI300X; those workload-selecting
+qualification routes were later deleted. Current production has one
+workload-neutral semantic MIR -> ranked PLIRON -> Kernel IR -> target pipeline
+and no workload selector or fallback. The published dynamic matrix currently
+stops at the generic FE2O3-RACE-002 proof boundary before Kernel IR, so the
+historical HSACO, hardware, and HIP measurements are not current launch claims
+or universal correctness proofs.
 
 This descendant also contains
 the exact protected Slice 1
@@ -428,8 +426,9 @@ discovery, and one checked gfx942 identity admission passed. The concrete
 observation is not sealed runtime authority, does not detect a GPU reset, and
 does not provide production queues, persistent execution, or a replacement for
 HIP/HSA. The ancestor generic-core and gfx942 ROCm compile gates also passed;
-the full workspace strict-Clippy run still has pre-existing fixture and
-`kernel_ir_lowering.rs` lint debt.
+at that checkpoint, the full workspace strict-Clippy run still had
+pre-existing fixture and `kernel_ir_lowering.rs` lint debt. That legacy
+lowering file was later removed from the unified production tree.
 
 Issues #134, #135, and #140 remain open. This checkpoint changes no kernel
 functionality, performance, evidence, tutorial run/verify/evidence gate,
@@ -581,17 +580,18 @@ A/B/C views remain owned through the single synchronous dispatch; only a
 validated completion releases those borrows, leaving `Completed` with terminal
 unload authority and `Unloaded` as an inert identity receipt.
 
-On failure before packet publication, the production adapter cancels the
-prepared dispatch and releases its queue and kernarg before the selected kernel
-is released and the executable is unloaded. Failures after proven quiescence
-and dropping `Loaded` or `Completed` also perform one checked unload. Adapter
-unwind, unload failure, or ambiguous unload observation aborts. A post-submit
-queue error or
-completion deadline is process-terminal: submitted resources are retained
-because GPU quiescence is unknown, and the process aborts instead of returning
-or attempting an ordinary unload. Fake-adapter tests, now in
-`crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs`, continue to cover
-substitution, cleanup, and terminal paths.
+At the pinned historical #100 checkpoint, failure before packet publication
+made the production adapter cancel the prepared dispatch and release its queue
+and kernarg before the selected kernel was released and the executable was
+unloaded. Failures after proven quiescence and dropping `Loaded` or `Completed`
+also performed one checked unload. Adapter unwind, unload failure, or ambiguous
+unload observation aborted. A post-submit queue error or completion deadline
+was process-terminal: submitted resources were retained because GPU quiescence
+was unknown, and the process aborted instead of returning
+or attempting an ordinary unload. Fake-adapter tests in
+`crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs` covered
+substitution, cleanup, and terminal paths at that commit. The workload-specific
+host lifecycle and test were later removed from the unified production tree.
 
 The actual public protected route passed 1/1 in 14.36 seconds on mi300x gfx942
 with `HSA_XNACK=0`. It used Worker ID
@@ -640,20 +640,17 @@ managed MI300X builds authenticate each file through optimized MIR and reject it
 at compiler preflight with the expected property, stage, `0x464701xx` code, root
 symbol, source and terminal spans, reachable call chain, and no artifact.
 
-Those compile-time failures are bounded mutation-oracle source-to-diagnostic
-evidence for the proposed optimized schedule. The scalar qualification kernel
-already lowers and runs. The exact `collected-general-gemm-v1` selector for the
-LDS/MFMA path exists, but canonical positive structural analysis fails closed
-because a closed verifier for that safe-code root and its reachable helper MIR
-is not yet implemented. The
-failure occurs before any positive receipt, frontend correspondence,
-configuration admission, proof execution, Worker V2 handoff, private final pair
-join, durable publication, or protected launch. The authenticated proof runtime
-closure remains an independent second downstream blocker for that historical
-LDS family. Its
+Those compile-time failures are historical bounded
+mutation-oracle source-to-diagnostic evidence for the proposed optimized
+schedule. The exact `collected-general-gemm-v1` selector, workload-specific
+final pair, and qualification host route were later deleted. Current production
+admits no alternate workload route: the dynamic matrix reaches the generic
+ranked analysis transaction and stops Incomplete at FE2O3-RACE-002 before KIR
+because the checked ownership marker has no independently validated
+success/value contract. The historical
 `TILED_SOURCE_TO_IR=false`, `TILED_LOWERING=false`, and
-`TILED_PROTECTED_EXECUTION=false` flags do not describe the current direct-global
-MFMA qualification route.
+`TILED_PROTECTED_EXECUTION=false` flags remain archive metadata, not current
+compiler switches.
 
 Separately, the production semantic-MIR route runs a fixed target-neutral
 ranked-PLIRON safety pipeline before Kernel IR lowering: tensor layout and
@@ -820,14 +817,20 @@ evidence and advanced lessons that claim runnable status.
 
 At the audited pin:
 
+The workload-specific compiler selectors, exact-profile registries/finalizers,
+generated workload host adapters, Worker V2 ownership APIs, and workload HSA
+tests described by older pinned evidence below are retired. Their exact
+commands and paths remain historical provenance at their recorded commits, not
+current replay instructions.
+
 - Scalar fill is runnable, with a legacy raw launch boundary called out in the
   lesson.
 - Typed vector addition is the strongest current single-source runnable path.
-- Dynamic strided GEMM now runs through the current semantic-MIR, ranked
-  PLIRON, Kernel IR, gfx942 LLVM, HSACO, and fe2o3-host qualification path.
-  Packed, strided-tail, multi-workgroup dynamic-K, and zero-K epilogue cases
-  pass on MI300X. It is a scalar correctness baseline without a performance or
-  protected-publication claim.
+- Dynamic strided GEMM remains a safe Rust tutorial source. Four packed,
+  strided-tail, multi-workgroup dynamic-K, and zero-K epilogue cases passed
+  through the retired qualification route at its pinned commit. Current
+  production stops at FE2O3-RACE-002 before KIR and makes no current launch,
+  performance, or protected-publication claim.
 - The associated Verus models cover bounds, initialization, overflow
   obligations, and injective ownership arguments at the modeled source level.
 - Exact ordinary attributed Rust sources now exist for one masked Wave64
@@ -835,32 +838,25 @@ At the audited pin:
   Their CPU oracles, mutation suites, and Verus models are public. The atomic
   source carries global address-space identity through `DeviceGlobalMutPtr`,
   generated host admission uses an exclusive `GlobalMut`, and LDS scratch
-  consumes an exact linear `DynamicLds` capability. Exact compiler profiles and
-  opaque direct upstream LLVM/LLD finalization now cover the fixed LDS-reduction
-  and scoped-atomic forms. Typed profile-bound host/runtime lifecycle mechanics,
-  exact dynamic-LDS dispatch binding, and protected harness vectors are public.
-  Both exact kernels subsequently passed the normal pin-gated MI300X lifecycle
-  in debug and release after canonical target-machine layout binding replaced
-  the stale spelling. Source/compiler/machine refinement, generalized memory
-  safety, and generalized race freedom remain open for synchronization.
-  Wave64 has subsequently
-  reached an exact source-derived compiler profile, direct upstream LLVM/LLD
-  finalizer, typed one-shot runtime lifecycle, and a four-mask protected gfx942
-  observation. It still lacks compiler and Verus-to-machine refinement joins.
-- The tiled-GEMM checkpoint now has source-authenticated selection of the
+  consumes an exact linear `DynamicLds` capability. Historical exact-profile
+  and protected MI300X records remain pinned separately, but their
+  workload-specific compiler/finalizer/runtime routes are not current
+  production. Source/compiler/machine refinement, generalized memory safety,
+  and generalized race freedom remain open for synchronization.
+- The historical tiled-GEMM checkpoint had source-authenticated selection of the
   canonical direct-global one-tile Kernel IR, a guarded gfx942 hardware harness
   for separately supplied bytes, and structural Worker V2 artifact admission.
   One exact externally supplied 6,672-byte artifact has now passed the guarded
   MI300X run, bitwise oracle, A/B/C unchanged-value comparison, adjacent
   canaries, and unload checks. The observation is non-authoritative and does not
   join the Rust source to those bytes.
-- LDS Slice 1 now has canonical Kernel IR and V5 matrix wire bytes, a separate
+- The historical LDS Slice 1 archive has canonical Kernel IR and V5 matrix wire bytes, a separate
   Verus source model, authenticated attributed Rust source-to-IR correspondence,
   bounded identity-bound source/model proof, an exact compiler-owned descriptor,
   a single-use Worker V2 handoff, exact direct LLVM/LLD API finalization, an
   inert generated host adapter, a one-shot `Joined -> Loaded -> Completed ->
   Unloaded` lifecycle implementation, LLVM lowering, and final-HSACO
-  machine-shape evidence. The exact production route also has one bounded
+  machine-shape evidence. That retired exact route also has one bounded
   protected mi300x run over 256 outputs with unchanged A/B values, A/B/C guard
   canaries, bitwise CPU-reference agreement, and terminal unload identity.
   An independent six-case MI300X run observed the IR-derived HSACO over 1,536
