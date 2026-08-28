@@ -405,12 +405,15 @@ const cpuSimulation: Lesson = {
   order: 2,
   title: "Export and debug Rust without a GPU",
   summary:
-    "Export an ordinary attributed Rust kernel once, then simulate, replay, and source-debug its authority-free bundle on a CPU.",
-  duration: "34 min",
+    "Export an ordinary attributed Rust kernel, explore bounded CPU schedules, replay semantic witnesses, and correlate truth-labeled profiler evidence.",
+  duration: "46 min",
   prerequisites: ["Kernel IR evidence boundaries", "JSON and JSONL request files"],
   objectives: [
     "Export an ordinary #[kernel] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
+    "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
+    "Inspect exact full-active logical Wave32/Wave64 collectives and fixed-width structured failure masks.",
+    "Query imported Counter Capture V2 and stochastic PC Sample Capture V3 evidence without inventing source, ISA, ATT, clock, loss, or per-lane instruction facts.",
     "Resolve source, stop at a source breakpoint, inspect a captured call stack, and step by source through the agent JSONL protocol.",
     "Separate bundle-bound source association from protected compiler authentication, hardware validation, and performance evidence.",
   ],

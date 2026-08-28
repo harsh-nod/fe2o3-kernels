@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { CodeTabs } from "../src/components/CodeTabs";
 import { DebuggerWorkbench } from "../src/components/DebuggerWorkbench";
+import { DebugSimMilestone } from "../src/components/DebugSimMilestone";
 import { FunctionalCorrectnessPanel } from "../src/components/FunctionalCorrectnessPanel";
 import { LessonSections } from "../src/components/LessonSections";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
@@ -12,6 +13,50 @@ import { narrativeEntry } from "../src/content/narrative-registry";
 import { stagedEvidenceRecord } from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
 import { searchCatalog } from "../src/lib/search";
+
+describe("debugger and simulator evidence workbench", () => {
+  it("switches exact exploration, wave, and PC-sample evidence without upgrading truth", async () => {
+    const user = userEvent.setup();
+    render(<DebugSimMilestone />);
+
+    expect(
+      screen.getByRole("heading", { name: "Explore, retain, and replay a CPU counterexample" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("observation only")).toBeInTheDocument();
+    expect(screen.getByText("race-freedom proof")).toBeInTheDocument();
+    expect(screen.getByText("Inspect exact V2 source variables on CPU")).toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Source Map V2 variables" })).toBeInTheDocument();
+    expect(screen.getByText("0x3f800000")).toBeInTheDocument();
+    expect(screen.getAllByText("alloc#1 +0").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("not represented").length).toBeGreaterThan(0);
+    expect(screen.getByText(/Bundle-bound source is not protected compiler authentication/u)).toBeInTheDocument();
+    expect(screen.getByText("Exact production exporter receipt")).toBeInTheDocument();
+    expect(screen.getByText("41..43")).toBeInTheDocument();
+
+    const raceTabs = screen.getByRole("tablist", { name: "Race evidence outcome" });
+    await user.click(within(raceTabs).getByRole("tab", { name: "No race observed" }));
+    expect(screen.getByText(/Other schedules were not exhausted/u)).toBeInTheDocument();
+    await user.click(within(raceTabs).getByRole("tab", { name: "Assessment incomplete" }));
+    expect(screen.getByText(/Fence or atomic happens-before effects/u)).toBeInTheDocument();
+
+    const waveTabs = screen.getByRole("tablist", { name: "Logical wave width" });
+    await user.click(within(waveTabs).getByRole("tab", { name: "Wave64" }));
+    expect(screen.getAllByText("0xffffffffffffffff")).toHaveLength(2);
+    expect(screen.getByText("0x0000000000000001")).toBeInTheDocument();
+    expect(screen.getByText("execution_incomplete_wave")).toBeInTheDocument();
+
+    expect(screen.getByText("Counter Capture V2 importer regression")).toBeInTheDocument();
+    expect(screen.getByText("0x3ff8000000000000")).toBeInTheDocument();
+
+    const pcTabs = screen.getByRole("tablist", { name: "PC sample evidence" });
+    await user.click(within(pcTabs).getByRole("tab", { name: "Samples" }));
+    expect(screen.getByText("5380230786023534")).toBeInTheDocument();
+    expect(screen.getAllByText("0xffffffffffffffff").length).toBeGreaterThan(0);
+    await user.click(within(pcTabs).getByRole("tab", { name: "Hotspots" }));
+    expect(screen.getByText(/Hotspots infer counts of stochastic records/u)).toBeInTheDocument();
+    expect(screen.getAllByText("inferred")).toHaveLength(4);
+  });
+});
 
 describe("semantic debugger workbench", () => {
   it("links hierarchy, timeline, semantic state, and replay controls", async () => {

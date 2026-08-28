@@ -2,6 +2,7 @@
 
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createServer } from "vite";
 
@@ -172,9 +173,46 @@ try {
     }
   }
 
+  const debugSim = await vite.ssrLoadModule("/src/content/debug-sim-milestone.ts");
+  const debugSimArtifacts = [
+    ["counter_capture_v2.json", "counterCapture"],
+    ["debug_scalar_v2.fe2sim", "sourceBundle"],
+    ["debug_scalar_export_receipt_v2.txt", "sourceExportReceipt"],
+    ["debug_scalar_request_v1.json", "sourceRequest"],
+    ["debug_scalar_source_map_v2.json", "sourceMap"],
+    ["debug_scalar_source_variables_v2.jsonl", "sourceVariables"],
+    ["exploration_incomplete_v1.json", "explorationIncomplete"],
+    ["exploration_no_race_v1.json", "explorationNoRace"],
+    ["exploration_race_v1.json", "explorationRace"],
+    ["partial_wave32_error_v1.json", "partialWave32Error"],
+    ["partial_wave64_error_v1.json", "partialWave64Error"],
+    ["pc_capabilities_v3.json", "pcCapabilities"],
+    ["pc_hotspots_v3.json", "pcHotspots"],
+    ["pc_sample_capture_v3.json", "pcSampleCapture"],
+    ["pc_sample_open_v3.json", "pcSampleOpen"],
+    ["pc_sample_page_v3.json", "pcSamplePage"],
+    ["race_replay_result_v1.json", "replayResult"],
+    ["race_replay_schedule_v1.json", "replaySchedule"],
+    ["wave32_collectives_result_v1.json", "wave32Result"],
+    ["wave64_collectives_result_v1.json", "wave64Result"],
+  ];
+  for (const [file, key] of debugSimArtifacts) {
+    const observed = createHash("sha256")
+      .update(readFileSync(resolve("examples/debug_sim_milestone_v1", file)))
+      .digest("hex");
+    const required = debugSim.DEBUG_SIM_ARTIFACT_SHA256[key];
+    if (observed !== required) {
+      fail(`debug/simulator artifact ${file} is ${observed}, required ${required}`);
+    }
+  }
+  const debugSimIssues = debugSim.validateDebugSimMilestone();
+  if (debugSimIssues.length > 0) {
+    fail(`debug/simulator projection rejected: ${debugSimIssues.join("; ")}`);
+  }
+
   if (checkIssues) await validateIssues(catalog.issues);
   process.stdout.write(
-    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
+    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, ${debugSimArtifacts.length} debug/simulator artifacts, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
   );
 } finally {
   await vite.close();

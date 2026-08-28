@@ -14,6 +14,7 @@ import { LessonDiagram } from "../diagrams/LessonDiagram";
 import { ClaimList } from "./ClaimList";
 import { CodeTabs } from "./CodeTabs";
 import { DebuggerWorkbench } from "./DebuggerWorkbench";
+import { DebugSimMilestone } from "./DebugSimMilestone";
 import { EvidenceBadge } from "./EvidenceBadge";
 import { FunctionalCorrectnessPanel } from "./FunctionalCorrectnessPanel";
 import { LessonSections } from "./LessonSections";
@@ -86,7 +87,10 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
       {lesson.diagram && <LessonDiagram kind={lesson.diagram} />}
       <ClaimList claims={lesson.claims} />
       {lesson.id === "cpu-semantic-simulation" && (
-        <DebuggerWorkbench fixture={debuggerWorkbenchFixture} />
+        <>
+          <DebugSimMilestone />
+          <DebuggerWorkbench fixture={debuggerWorkbenchFixture} />
+        </>
       )}
       <LessonSections lessonId={lesson.id} sections={lesson.sections} />
       <FunctionalCorrectnessPanel lessonId={lesson.id} />

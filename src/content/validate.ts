@@ -1,4 +1,5 @@
 import { currentState } from "./current-state";
+import { validateDebugSimMilestone } from "./debug-sim-milestone";
 import {
   debuggerProtocolRequests,
   debuggerWorkbenchProjection,
@@ -84,6 +85,10 @@ export function validateCurriculum(
   debuggerFixture: unknown = debuggerWorkbenchProjection,
 ): ValidationIssue[] {
   const issues: ValidationIssue[] = [
+    ...validateDebugSimMilestone().map((message) => ({
+      path: "debugSimMilestone",
+      message,
+    })),
     ...validateDebuggerWorkbenchFixture(debuggerFixture).map((message) => ({
       path: "debuggerWorkbenchFixture",
       message,

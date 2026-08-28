@@ -161,6 +161,64 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText('"barrier_releases":1');
   await expect(codePanel).toContainText('"record_sha256"');
 
+  const semanticEvidence = page.getByRole("region", {
+    name: "Explore, retain, and replay a CPU counterexample",
+  });
+  await expect(semanticEvidence).toBeVisible();
+  await expect(
+    semanticEvidence.getByRole("heading", { name: "Inspect exact V2 source variables on CPU" }),
+  ).toBeVisible();
+  const sourceVariables = semanticEvidence.getByRole("table", {
+    name: "Source Map V2 variables",
+  });
+  await expect(sourceVariables.getByText("0x3f800000")).toBeVisible();
+  await expect(sourceVariables.getByText("simulated observation").first()).toBeVisible();
+  await expect(sourceVariables.getByText("not represented").first()).toBeVisible();
+  const raceTabs = semanticEvidence.getByRole("tablist", {
+    name: "Race evidence outcome",
+  });
+  await expect(semanticEvidence.getByText("alloc#1 +0").last()).toBeVisible();
+  await raceTabs.getByRole("tab", { name: "No race observed" }).click();
+  await expect(semanticEvidence.getByText(/Other schedules were not exhausted/u)).toBeVisible();
+  await raceTabs.getByRole("tab", { name: "Assessment incomplete" }).click();
+  await expect(semanticEvidence.getByText(/stays typed incomplete/u)).toBeVisible();
+
+  const waveTabs = semanticEvidence.getByRole("tablist", {
+    name: "Logical wave width",
+  });
+  await waveTabs.getByRole("tab", { name: "Wave64" }).click();
+  await expect(semanticEvidence.getByText("0x0000000000000001")).toBeVisible();
+  await expect(semanticEvidence.getByText("execution_incomplete_wave")).toBeVisible();
+
+  await expect(semanticEvidence.getByText("Counter Capture V2 importer regression")).toBeVisible();
+  const pcTabs = semanticEvidence.getByRole("tablist", {
+    name: "PC sample evidence",
+  });
+  await pcTabs.getByRole("tab", { name: "Samples" }).click();
+  await expect(
+    semanticEvidence.locator("dd").getByText("5380230786023534", { exact: true }),
+  ).toBeVisible();
+  await pcTabs.getByRole("tab", { name: "Hotspots" }).click();
+  await expect(semanticEvidence.getByText(/not instruction counts/u)).toBeVisible();
+
+  await semanticEvidence.screenshot({
+    path: testInfo.outputPath("semantic-evidence-workbench.png"),
+    animations: "disabled",
+  });
+  const semanticBounds = await semanticEvidence.evaluate((element) => ({
+    width: element.clientWidth,
+    scrollWidth: element.scrollWidth,
+    clippedText: Array.from(element.querySelectorAll<HTMLElement>("h2, h3, p, code, strong, small"))
+      .filter((candidate) => candidate.offsetParent !== null)
+      .some(
+        (candidate) =>
+          candidate.scrollWidth > candidate.clientWidth + 1 &&
+          getComputedStyle(candidate).overflowX === "visible",
+      ),
+  }));
+  expect(semanticBounds.scrollWidth).toBeLessThanOrEqual(semanticBounds.width);
+  expect(semanticBounds.clippedText).toBe(false);
+
   const workbench = page.getByRole("region", {
     name: "Inspect one deterministic semantic trace",
   });
@@ -278,10 +336,17 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
       document.querySelector(".debugger-tutorial")?.scrollWidth ?? 0,
     workbenchViewport:
       document.querySelector(".debugger-tutorial")?.clientWidth ?? 0,
+    semanticWidth:
+      document.querySelector(".semantic-evidence-workbench")?.scrollWidth ?? 0,
+    semanticViewport:
+      document.querySelector(".semantic-evidence-workbench")?.clientWidth ?? 0,
   }));
   expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
   expect(dimensions.workbenchWidth).toBeLessThanOrEqual(
     dimensions.workbenchViewport,
+  );
+  expect(dimensions.semanticWidth).toBeLessThanOrEqual(
+    dimensions.semanticViewport,
   );
 });
 

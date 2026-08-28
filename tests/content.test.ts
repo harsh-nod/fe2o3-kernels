@@ -4,6 +4,15 @@ import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
 import {
+  DEBUG_SIM_ARTIFACT_SHA256,
+  DEBUG_SIM_COMPILER_PIN,
+  debugSimCounterFixture,
+  debugSimMilestoneProjection,
+  debugSimPcSampleFixture,
+  debugSimSourceVariableFixture,
+  validateDebugSimMilestone,
+} from "../src/content/debug-sim-milestone";
+import {
   DEBUGGER_RESPONSES_SHA256,
   DEBUGGER_WORKBENCH_PROJECTION_SHA256,
   debuggerComparisonLinks,
@@ -173,6 +182,117 @@ describe("debugger workbench content", () => {
     expect(comparison).toContain("LLDB does not support Mojo GPU debugging");
     expect(comparison).toContain("complements");
     expect(comparison).not.toMatch(/better than|replaces ROCgdb|replaces rocprof/iu);
+  });
+});
+
+describe("debugger and simulator milestone content", () => {
+  it("admits exact bounded exploration, wave, counter, and PC-sample fixtures", () => {
+    expect(validateDebugSimMilestone()).toEqual([]);
+    const files: Array<[string, keyof typeof DEBUG_SIM_ARTIFACT_SHA256]> = [
+      ["counter_capture_v2.json", "counterCapture"],
+      ["debug_scalar_v2.fe2sim", "sourceBundle"],
+      ["debug_scalar_export_receipt_v2.txt", "sourceExportReceipt"],
+      ["debug_scalar_request_v1.json", "sourceRequest"],
+      ["debug_scalar_source_map_v2.json", "sourceMap"],
+      ["debug_scalar_source_variables_v2.jsonl", "sourceVariables"],
+      ["exploration_incomplete_v1.json", "explorationIncomplete"],
+      ["exploration_no_race_v1.json", "explorationNoRace"],
+      ["exploration_race_v1.json", "explorationRace"],
+      ["partial_wave32_error_v1.json", "partialWave32Error"],
+      ["partial_wave64_error_v1.json", "partialWave64Error"],
+      ["pc_capabilities_v3.json", "pcCapabilities"],
+      ["pc_hotspots_v3.json", "pcHotspots"],
+      ["pc_sample_capture_v3.json", "pcSampleCapture"],
+      ["pc_sample_open_v3.json", "pcSampleOpen"],
+      ["pc_sample_page_v3.json", "pcSamplePage"],
+      ["race_replay_result_v1.json", "replayResult"],
+      ["race_replay_schedule_v1.json", "replaySchedule"],
+      ["wave32_collectives_result_v1.json", "wave32Result"],
+      ["wave64_collectives_result_v1.json", "wave64Result"],
+    ];
+    for (const [file, digest] of files) {
+      expect(
+        createHash("sha256")
+          .update(readFileSync(`examples/debug_sim_milestone_v1/${file}`))
+          .digest("hex"),
+      ).toBe(DEBUG_SIM_ARTIFACT_SHA256[digest]);
+    }
+    expect(debugSimMilestoneProjection.explorations.race).toMatchObject({
+      authority: "observation_only",
+      schedule_space_exhausted: false,
+      exploration: {
+        requested_schedules: 3,
+        requested_seed_budget_consumed: true,
+      },
+    });
+    expect(debugSimMilestoneProjection.explorations.incomplete).toMatchObject({
+      witnesses: {
+        first_incomplete: {
+          assessment: {
+            status: "incomplete",
+            atomic_or_fence_happens_before_unmodeled: true,
+          },
+        },
+      },
+    });
+    expect(debugSimCounterFixture).toMatchObject({
+      sourceKind: "rocprofv3_dispatch_counter_json",
+      loss: "unknown",
+      dimensionCorrelation: "unavailable_record_has_no_instance_identity",
+    });
+    expect(DEBUG_SIM_COMPILER_PIN).toEqual({
+      commit: "db36030a9605465082c696210ccb71b1195a6b5f",
+      tree: "4c8228139562148b34531439b658a2805028066f",
+    });
+    expect(debugSimSourceVariableFixture.variables).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          name: "value",
+          generation: 1,
+          fallback: "not_in_scope",
+          status: "captured",
+          displayValue: "0x3f800000",
+          provenance: "simulated_observation",
+        }),
+        expect.objectContaining({
+          name: "input",
+          generation: 1,
+          fallback: "not_in_scope",
+          status: "captured",
+          displayValue: "alloc#1 +0",
+          encoding: "allocation_relative_pointer",
+        }),
+        expect.objectContaining({
+          name: "output",
+          generation: 0,
+          fallback: "unrepresented",
+          status: "unavailable",
+          reason: "not_represented",
+        }),
+        expect.objectContaining({
+          name: "element",
+          fallback: "unrepresented",
+          reason: "not_represented",
+        }),
+      ]),
+    );
+    expect(debugSimSourceVariableFixture.raw.exportReceipt).toContain(
+      "authenticates_compiler_execution=false",
+    );
+    expect(debugSimSourceVariableFixture.raw.response).not.toContain("native_address");
+    expect(debugSimPcSampleFixture).toMatchObject({
+      open: {
+        samples: 5,
+        unavailableRelativePc: 1,
+        loss: "unknown",
+      },
+    });
+    expect(debugSimPcSampleFixture.samples[0].execMask).toBe("0xffffffffffffffff");
+    expect(debugSimPcSampleFixture.hotspots).toHaveLength(4);
+    expect(debugSimPcSampleFixture.hotspots.every((item) => item.origin === "inferred")).toBe(true);
+    expect(JSON.stringify(debugSimMilestoneProjection)).not.toMatch(
+      /performance_prediction":true|hardware_observed":true/iu,
+    );
   });
 });
 

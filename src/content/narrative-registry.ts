@@ -489,8 +489,8 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Agent contract",
-            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses.",
-            "Counter, PC-sample and ATT ingestion, capture comparison, automated diagnosis and profiler UI remain open work."
+            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. Seeded exploration retains canonical replay schedules and byte-level race, no-race, or incomplete evidence. Counter Capture V2 and PC Sample Capture V3 add bounded read-only profiler queries with cursor bindings.",
+            "ATT decoding, authenticated source/ISA correlation, complete hardware timelines, automated diagnosis and the integrated profiler UI remain open work."
           ]
         ]
       },
@@ -515,7 +515,7 @@ const narrativeRegistry = deepFreeze({
           [
             "rocprofv3 and compute viewer",
             "Measured runtime traces, counters, PC samples, ATT/thread trace, ISA correlation, and performance timelines.",
-            "Those tools remain the profiling substrate. fe2o3's planned contribution is semantic attribution and agent queries; counter, PC-sample, and ATT ingestion are not implemented yet."
+            "Those tools remain the profiling substrate. fe2o3 now strictly imports bounded dispatch counters and stochastic PC samples, preserving observed, declared, inferred, and unavailable origins. It does not yet authenticate source/ISA correlation or decode ATT timelines."
           ],
           [
             "Native HIP or Mojo workflow",
@@ -527,14 +527,14 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "info",
-        "title": "Current milestone: source, schedules, atomics, and exact scalar bits",
-        "text": "The simulator covers bounded structured scalar control flow and internal calls; booleans and fixed-width integers; D1-D3 launch queries; private, typed global, and static scalar workgroup memory; cooperative barriers; admitted integer atomic kinds, legal orderings and scopes; and explicit fence order points. F16, BF16, F32, and F64 constants, memory, arithmetic, comparisons, selects, casts, integer conversions, fused multiply-add, rounding, and BF16x2 use pinned software floating-point semantics and preserve exact bits rather than host floating arithmetic."
+        "title": "Current milestone: replayable interleavings, logical waves, and exact scalar bits",
+        "text": "The simulator covers bounded structured scalar control flow and internal calls; booleans and fixed-width integers; D1-D3 launch queries; private, typed global, and static scalar workgroup memory; cooperative barriers; admitted integer atomic kinds, legal orderings and scopes; and explicit fence order points. Seeded exploration sweeps an explicit schedule budget and retains at most one canonical replay witness for race, no-race, and incomplete outcomes without claiming schedule-space exhaustion. Full-active logical Wave32/Wave64 lane ID, ballot, any, all, and integer shuffle-index collectives are exact; partial or divergent participation fails with structured masks and KIR sites. F16, BF16, F32, and F64 constants, memory, arithmetic, comparisons, selects, casts, integer conversions, fused multiply-add, rounding, and BF16x2 use pinned software floating-point semantics and preserve exact bits rather than host floating arithmetic."
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Unsupported semantics fail closed",
-        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, wave and matrix operations, dynamic or non-scalar workgroup memory, gfx950 LDS transpose, unresolved external calls, memory intrinsics, and inline assembly remain typed unsupported. Source-variable inspection is also typed unavailable because V1 maps sites rather than variable-to-SSA identity. V1 emits the final rustc call site rather than a macro expansion stack; synthetic KIR has no fabricated source; helper or multi-body maps fail until correspondence carries exact KIR function identity. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
+        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, wave reductions/scans and matrix operations, dynamic or non-scalar workgroup memory, gfx950 LDS transpose, unresolved external calls, memory intrinsics, and inline assembly remain typed unsupported. Explicit Source Map V2 export retains exact unchanged KIR parameters; moved, mutated, dropped, storage-reset, mutably aliased, projected, local, and composite values stay typed unrepresented. Default and explicit V1 remain byte-compatible and do not inspect V2 metadata. V1 emits the final rustc call site rather than a macro expansion stack; synthetic KIR has no fabricated source; helper or multi-body maps fail until correspondence carries exact KIR function identity. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
       }
     ]
   },
@@ -789,9 +789,9 @@ const narrativeRegistry = deepFreeze({
           ["Schedule and replay", "Canonical or seeded execution records every runnable local selection, binds the exact request, bundle or KIR custody, limits and target, then checks each decision during replay.", "This is deterministic CPU execution, not a GPU scheduler, timing model or performance prediction."],
           ["Guarded scalar load", "A false predicate returns the fallback without validating the pointer, touching memory, or emitting a read event.", "The simulator observes already-verified KIR behavior; it does not establish source-to-KIR refinement."],
           ["Memory conflicts", "The result contains a bounded byte-level cross-invocation global-memory conflict assessment.", "Clean is not a race-freedom proof; conflict and incomplete outcomes remain observations."],
-          ["Source debugger", "A compiler-bound V1 map resolves KIR sites to source spans, breakpoints and captured frames; source and KIR stepping share the same deterministic session.", "Bundle-bound is not compiler-execution-authenticated, source files are not reopened, and source-variable inspection remains typed unavailable."],
+          ["Source debugger", "A compiler-bound map resolves KIR sites to source spans, breakpoints and captured frames; source and KIR stepping share the same deterministic session. Explicit V2 export also binds exact unchanged parameters to KIR values.", "Bundle-bound is not compiler-execution-authenticated, source files are not reopened, and moved, mutated, projected, aliased, storage-reset, local, or composite variables remain typed unrepresented. Default and explicit V1 remain byte-compatible."],
           ["Workgroup cooperation", "Static scalar workgroup memory and convergent workgroup barriers model initialization, cross-lane publication, and one allocation per workgroup.", "Generic barriers, dynamic or non-scalar workgroup memory, and physical wave behavior are outside this profile."],
-          ["Scalar semantics", "Booleans, fixed-width integers, legal integer atomics and fences, and exact software F16, BF16, F32 and F64 bits execute without host floating arithmetic.", "Unsupported scalar math, float atomics, wave and matrix operations, dynamic or non-scalar workgroup memory, unresolved external calls, memory intrinsics and inline assembly fail closed."]
+          ["Scalar and logical-wave semantics", "Booleans, fixed-width integers, legal integer atomics and fences, exact software F16, BF16, F32 and F64 bits, and full-active logical Wave32/Wave64 lane ID, ballot, any, all, and integer shuffle-index execute without host floating arithmetic.", "Unsupported scalar math, float atomics, partial or divergent wave collectives, wave reductions and scans, matrix operations, dynamic or non-scalar workgroup memory, unresolved external calls, memory intrinsics and inline assembly fail closed."]
         ]
       },
       {
