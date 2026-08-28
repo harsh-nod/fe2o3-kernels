@@ -29,6 +29,7 @@ export interface SourceMilestoneRecord {
 }
 
 export const sourceMilestoneOrder = deepFreeze([
+  "workgroup-pipeline-source-v1",
   "dynamic-gemm-executable-source-v1",
   "tiled-gemm-safe-source-v1",
   "wave64-collectives-source-v1",
@@ -43,6 +44,34 @@ export const sourceMilestoneOrder = deepFreeze([
 ] satisfies SourceMilestoneId[]);
 
 const sourceMilestoneRecords = deepFreeze({
+  "workgroup-pipeline-source-v1": {
+    id: "workgroup-pipeline-source-v1",
+    lessonId: "gemm-tiling",
+    claim: "source-tested",
+    authority: "source-tested-only",
+    claimLabel: "Current safe workgroup-pipeline source",
+    detail:
+      "The exact current commit contains ordinary safe Rust GEMM and attention kernels that use the same compiler-owned double-buffered workgroup pipeline API. Locked source tests pass, and AMD-target production extraction preserves their dynamic loops, typed MFMA payloads, ranked workgroup accesses, and pipeline events through the workload-neutral PLIRON protocol pass. Both sources stop at FE2O3-RACE-002 before KIR; this record grants no LLVM, artifact, launch, GPU-result, or performance authority.",
+    commit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+    tree: "2156423b9350d66cfaa8207133768e323111b507",
+    commands: [
+      "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
+      "cargo test --locked --manifest-path examples/flash_attention_general_v1/Cargo.toml",
+      "cargo test -p fe2o3-kernel-analysis --test pliron_pipeline_protocol --test pliron_lit --test pliron_workgroup_memory",
+      "cargo test -p rustc-codegen-fe2o3 --test production_general_matrix_driver_v1 -- --ignored --nocapture",
+    ],
+    sourcePaths: [
+      "examples/tiled_gemm_general_v1/src/kernel.rs",
+      "examples/flash_attention_general_v1/src/kernel.rs",
+      "crates/fe2o3-device/src/lds.rs",
+      "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+      "crates/fe2o3-kernel-analysis/src/pliron_pipeline_protocol.rs",
+    ],
+    primarySourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
+    primarySourceSha256:
+      "25f23fd58916dc034171a6adcbec26f6fe756bb2b8255c710b3bfe1ad569e4c9",
+    target: "gfx942:xnack-",
+  },
   "dynamic-gemm-executable-source-v1": {
     id: "dynamic-gemm-executable-source-v1",
     lessonId: "gemm-tiling",

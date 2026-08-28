@@ -21,6 +21,7 @@ import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/contrac
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
+  currentImplementationReference,
   historicalReference,
   pinnedReference,
   type CurriculumModule,
@@ -48,6 +49,9 @@ const gemmSafeSource = sourceMilestoneRecord(
 );
 const dynamicGemmSource = sourceMilestoneRecord(
   "dynamic-gemm-executable-source-v1",
+);
+const workgroupPipelineSource = sourceMilestoneRecord(
+  "workgroup-pipeline-source-v1",
 );
 const qualificationCommit = dynamicGemmSource.commit;
 const qualificationTree = dynamicGemmSource.tree;
@@ -150,11 +154,13 @@ function exactDynamicGemmKernelTab() {
   return {
     language: "rust" as const,
     code: dynamicGemmKernel,
-    sourcePath: dynamicGemmSource.primarySourcePath,
-    sourceCommit: dynamicGemmSource.commit,
-    sourceSha256: dynamicGemmSource.primarySourceSha256,
-    evidenceId: dynamicGemmSource.id,
+    sourcePath: workgroupPipelineSource.primarySourcePath,
+    sourceCommit: workgroupPipelineSource.commit,
+    sourceSha256: workgroupPipelineSource.primarySourceSha256,
+    evidenceId: workgroupPipelineSource.id,
     explanatory: false,
+    notice:
+      "Current safe Rust source with compiler-owned double-buffered workgroup staging. It reaches semantic MIR and ranked PLIRON pipeline verification, then stops at the existing dynamic-launch race proof before KIR or LLVM. The historical GPU and HIP results in this lesson belong to the separately pinned pre-pipeline source.",
   };
 }
 
@@ -446,13 +452,38 @@ const gemmMapping: Lesson = {
   objectives: [
     "Map one wave64 workgroup to a 16x16 output tile and one lane to four outputs.",
     "Follow the dynamic K loop through target-neutral matrix fragments to a gfx942 MFMA.",
+    "Trace compiler-owned double buffering through stage, commit, wait, consume, and release epochs.",
     "See how a loop-carried accumulator keeps its MFMA contract and current-wave provenance on every CFG edge.",
     "Separate compiler-verified canonical-loop and total-output staging facts from aggregate replay authority and the workload-specific GEMM recurrence obligation.",
     "Use KernelResult and ? for fallible view and ownership construction, then consume zero-filled typed fragment loads directly.",
     "Compare the exact safe Rust kernel and host path with an equivalent HIP implementation.",
   ],
   claims: [
+    sourceMilestoneClaim("workgroup-pipeline-source-v1"),
     sourceMilestoneClaim("dynamic-gemm-executable-source-v1"),
+    {
+      kind: "compiler-checked",
+      label: "Current dynamic workgroup pipeline reaches ranked PLIRON",
+      detail:
+        "The safe Rust GEMM uses two compiler-owned workgroup rings for typed MFMA operands. AMD-target extraction retains the dynamic K loop, proves the staged access lifecycle and epoch-slot relation, and reaches the existing FE2O3-RACE-002 output-ownership boundary before KIR or LLVM emission.",
+      reference: currentImplementationReference(
+        [
+          "cargo test -p fe2o3-kernel-analysis --test pliron_pipeline_protocol --test pliron_lit --test pliron_workgroup_memory",
+          "cargo test -p rustc-codegen-fe2o3 --test production_general_matrix_driver_v1 -- --ignored --nocapture",
+          "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
+        ],
+        [
+          "examples/tiled_gemm_general_v1/src/kernel.rs",
+          "crates/fe2o3-device/src/lds.rs",
+          "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_pipeline_protocol.rs",
+        ],
+        {
+          target: FE2O3_PIN.target,
+          note: "MIR/PLIRON compiler milestone only; no KIR, LLVM, artifact, launch, GPU correctness, or performance claim.",
+        },
+      ),
+    },
     {
       kind: "gpu-observed",
       label: "Pinned MI300X qualification run",
@@ -727,10 +758,32 @@ const flash: Lesson = {
   objectives: [
     "Trace BF16 QK fragments through target-neutral matrix types and gfx942 MFMA.",
     "Use an additive mask and subgroup reductions for dynamic key tails.",
+    "Reuse the same compiler-owned double-buffer protocol inside the nested dynamic score loop.",
     "Identify the current value-width and numerical limits without turning them into compiler assumptions.",
     "Separate the online rescaling recurrence from generic finite-loop and ownership facts, inert total-output staging, and aggregate replay authority.",
   ],
   claims: [
+    {
+      kind: "compiler-checked",
+      label: "Nested dynamic attention pipeline reaches ranked PLIRON",
+      detail:
+        "The current safe Rust attention source stages role-typed Q and K fragments through two workgroup rings. The workload-neutral projector preserves the nested dynamic key/depth loops and the generic pipeline pass validates their prologue, steady state, and drain before the existing output race-proof boundary stops lowering.",
+      reference: currentImplementationReference(
+        [
+          "cargo test -p rustc-codegen-fe2o3 --test production_general_matrix_driver_v1 -- --ignored --nocapture",
+          "cargo test --locked --manifest-path examples/flash_attention_general_v1/Cargo.toml",
+        ],
+        [
+          "examples/flash_attention_general_v1/src/kernel.rs",
+          "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+          "crates/fe2o3-kernel-analysis/src/pliron_pipeline_protocol.rs",
+        ],
+        {
+          target: FE2O3_PIN.target,
+          note: "MIR/PLIRON compiler milestone only; current source does not lower to KIR or execute on the GPU.",
+        },
+      ),
+    },
     {
       kind: "gpu-observed",
       label: "Pinned dynamic fused attention on MI300X",
@@ -766,8 +819,10 @@ const flash: Lesson = {
       sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "0e46343e7634185a7944c8d97d05aafd5353bd942b472b964217e96b315a951c",
+        "a2db15246def01acf1ad0e725012f6d76d5bc88b6fa77746b46cf8cd90ecdf8f",
       explanatory: false,
+      notice:
+        "Current safe Rust source with nested dynamic workgroup double buffering. It reaches ranked PLIRON pipeline verification and then fails closed at the existing dynamic-launch race boundary before KIR or target lowering.",
     },
     {
       language: "rust",

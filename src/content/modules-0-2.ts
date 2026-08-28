@@ -706,7 +706,7 @@ const compilerChecks: Lesson = {
       kind: "compiler-checked",
       label: "Fixed ranked verification with checked normalization",
       detail:
-        "The single production ranked route runs bounded target preflight, a sealed checked constant fold, and the fixed eight analysis stages. V5 is the sole live middle-end evidence producer; V4 is decoder-only archival data and the V1 declarative refinement API is removed. Independent raw replay is Complete only for the documented static bounded-access fragment; nonempty tensor flow and all other current witnesses remain Incomplete and grant no KIR authority.",
+        "The single production ranked route runs bounded target preflight, a sealed checked constant fold, and the fixed nine analysis stages, including pipeline protocol between barrier and workgroup-memory verification. V5 is the sole live middle-end evidence producer; V4 is decoder-only archival data and the V1 declarative refinement API is removed. Independent raw replay is Complete only for the documented static bounded-access fragment; nonempty tensor flow and all other current witnesses remain Incomplete and grant no KIR authority.",
       reference: currentImplementationReference(
         [
           "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold",
@@ -753,7 +753,7 @@ const compilerChecks: Lesson = {
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "b50e80f620ec69e18a4e623ccefa3b19a6c858c259c1417a195fae65eb853606",
+        "c2b9490bcdf82f6e6f03b04270466829ffb5abbb08a8bec7398b9d5272a58afa",
       explanatory: false,
       notice:
         "The one-past-end array read is Rejected before KIR. A supported finite safe case can additionally receive a Complete raw bounds replay.",

@@ -84,6 +84,7 @@ export type CompletedIssue94IncrementId =
   | "tiled-lds-protected-lifecycle-v1";
 
 export type SourceMilestoneId =
+  | "workgroup-pipeline-source-v1"
   | "dynamic-gemm-executable-source-v1"
   | "tiled-gemm-safe-source-v1"
   | "wave64-collectives-source-v1"

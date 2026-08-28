@@ -460,7 +460,13 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
   await expect(page.getByRole("tabpanel")).toContainText("-> KernelResult");
   await expect(page.getByRole("tabpanel")).toContainText(
-    ".ok_or(KernelError::OutOfBounds)?",
+    "Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)?",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "WorkgroupPipeline::<Bf16MfmaAFragment",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "lhs_pipeline.discard(phase_count)",
   );
   await expect(
     page.getByRole("tabpanel").locator(".token.keyword").first(),
@@ -473,7 +479,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -596,7 +602,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", {
       level: 3,
-      name: "Three representative compile-time rejections",
+      name: "Representative compile-time rejections",
     }),
   ).toBeVisible();
   const failureGallery = page.locator(".compile-failure-gallery");
@@ -616,6 +622,13 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   ).toBeVisible();
   await expect(
     failureGallery.getByText("FE2O3-TENSOR-LAYOUT-005", { exact: true }),
+  ).toBeVisible();
+  await expect(failureGallery.getByText("Pipeline read before consume")).toBeVisible();
+  await expect(
+    failureGallery.getByText("Dynamic pipeline loop without a drain"),
+  ).toBeVisible();
+  await expect(
+    failureGallery.getByText("Workgroup pipeline with a divergent trip count"),
   ).toBeVisible();
   await expect(
     failureGallery.getByText("FE2O3-RACE-001", { exact: true }),
@@ -670,7 +683,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await page
     .getByRole("heading", {
       level: 3,
-      name: "Three representative compile-time rejections",
+      name: "Representative compile-time rejections",
     })
     .scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, -72));
@@ -740,7 +753,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/2bee84b2201c5d51a0096ae192e269fa675d9c94/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -836,7 +849,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/2bee84b2201c5d51a0096ae192e269fa675d9c94/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -856,7 +869,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/2bee84b2201c5d51a0096ae192e269fa675d9c94/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -1186,11 +1199,11 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at 2bee84b220",
+      name: "Compiler baseline at ecf7b17f81",
     }),
   ).toBeVisible();
   await expect(
-    page.getByText(/fixed eight-pass workload-neutral pre-lowering sequence/u),
+    page.getByText(/fixed nine-pass workload-neutral pre-lowering sequence/u),
   ).toBeVisible();
   await expect(
     page.getByText(/rustc remains the only Rust borrow checker/u),
@@ -1225,7 +1238,7 @@ test("correctness catalog and advanced lessons stay visually coherent", async ({
       id: "correctness-catalog",
       lesson: "compiler-checks",
       title: "Compiler checks: one path, explicit boundaries",
-      target: "Three representative compile-time rejections",
+      target: "Representative compile-time rejections",
     },
     {
       id: "gemm",

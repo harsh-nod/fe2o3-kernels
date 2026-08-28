@@ -300,10 +300,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "2bee84b2201c5d51a0096ae192e269fa675d9c94",
+      "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "666de49cbbcf4690894368defd2f3f3617f69e6c",
+      "2156423b9350d66cfaa8207133768e323111b507",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -1330,7 +1330,7 @@ describe("curriculum integrity", () => {
       (capability) => capability.id === "middle-end-custody",
     );
     expect(middleEndCustody?.detail).toContain(
-      "one fixed eight-pass sequence and one live evidence producer",
+      "one fixed nine-pass sequence and one live evidence producer",
     );
     expect(middleEndCustody?.detail).toContain(
       "V4 decoder is strict and archival-only",
@@ -1434,19 +1434,24 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
       sourceSha256:
-        "1f76284197d14acb79ace32c5b78ef2914cf845418cb785a6fca86285db8ab5a",
-      evidenceId: "dynamic-gemm-executable-source-v1",
+        "25f23fd58916dc034171a6adcbec26f6fe756bb2b8255c710b3bfe1ad569e4c9",
+      evidenceId: "workgroup-pipeline-source-v1",
       explanatory: false,
     });
-    expect(kernel?.code).toContain("while phase < k as usize");
+    expect(kernel?.code).toContain("while phase_index < phase_count");
+    expect(kernel?.code).toContain("WorkgroupPipeline::<Bf16MfmaAFragment");
+    expect(kernel?.code).toContain("lhs_pipeline.stage(future_epoch)");
+    expect(kernel?.code).toContain("lhs_pipeline.wait(phase_index)");
+    expect(kernel?.code).toContain("lhs_pipeline.discard(phase_count)");
     expect(kernel?.code).toContain("matrix.multiply_accumulate(lhs, rhs, accumulator)");
     expect(kernel?.code).toContain("-> KernelResult");
-    expect(kernel?.code).toContain(".ok_or(KernelError::OutOfBounds)?");
-    expect(kernel?.code).toContain("let a_matrix = Bf16MfmaAMatrix::row_major");
     expect(kernel?.code).toContain(
-      "let lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, phase);",
+      "let a_matrix = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)?;",
+    );
+    expect(kernel?.code).toContain(
+      "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, next_phase);",
     );
     expect(kernel?.code).not.toMatch(/load_(?:m16k16|k16n16)\([^;]+\)\?/u);
     expect(kernel?.code).toContain("let matrix = Matrix::current()");
@@ -1458,7 +1463,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
+      sourceCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -1652,6 +1657,9 @@ describe("curriculum integrity", () => {
       "FE2O3-BOUNDS-001",
       "FE2O3-RACE-001",
       "FE2O3-TENSOR-LAYOUT-005",
+      "FE2O3-PIPELINE-001",
+      "FE2O3-PIPELINE-001",
+      "FE2O3-PIPELINE-001",
     ]);
     expect(JSON.stringify(failures)).toContain(
       "compiler-authenticated injective ownership mapping",
@@ -1777,7 +1785,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
+      sourceCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -1844,6 +1852,7 @@ describe("curriculum integrity", () => {
 
   it("pins exact source-only kernel snapshots", () => {
     expect(sourceMilestoneOrder).toEqual([
+      "workgroup-pipeline-source-v1",
       "dynamic-gemm-executable-source-v1",
       "tiled-gemm-safe-source-v1",
       "wave64-collectives-source-v1",
@@ -2915,15 +2924,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-27",
+      reviewedOn: "2026-08-28",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
-      eventualPublicTree: "666de49cbbcf4690894368defd2f3f3617f69e6c",
+      eventualPublicCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      eventualPublicTree: "2156423b9350d66cfaa8207133768e323111b507",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "2bee84b2201c5d51a0096ae192e269fa675d9c94",
-        requiredTree: "666de49cbbcf4690894368defd2f3f3617f69e6c",
+        requiredCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+        requiredTree: "2156423b9350d66cfaa8207133768e323111b507",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -3559,7 +3568,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "2bee84b2201c5d51a0096ae192e269fa675d9c94",
+      "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
     );
 
     const lesson = curriculum
@@ -4214,7 +4223,7 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"2bee84b2201c5d51a0096ae192e269fa675d9c94");
+    expect(mapping).toContain("sourceCommit\":\"ecf7b17f819021708d9c59ebe39a4daf9eb2562c");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family routes are retired");

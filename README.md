@@ -37,8 +37,8 @@ for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
 The checked-in publication gate is pinned to immutable implementation-evidence
-commit `2bee84b2201c5d51a0096ae192e269fa675d9c94`, tree
-`666de49cbbcf4690894368defd2f3f3617f69e6c`. Deployment requires
+commit `ecf7b17f819021708d9c59ebe39a4daf9eb2562c`, tree
+`2156423b9350d66cfaa8207133768e323111b507`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
 commit object to resolve to the exact pinned tree. Either ref may advance to a
@@ -60,7 +60,7 @@ profile, FP32 subgroup reduction accepts each nonzero power-of-two tile width
 through 64; unsupported widths, targets, profiles, and dynamic source lanes
 fail closed.
 
-The middle end has one fixed eight-pass analysis sequence and one live evidence
+The middle end has one fixed nine-pass analysis sequence and one live evidence
 producer: `ProductionMiddleEndEvidenceV5`. The strict V4 decoder is retained
 only so immutable historical bytes remain inspectable; it cannot produce live
 evidence or grant refinement, lowering, artifact, or launch authority. The
@@ -72,6 +72,11 @@ unsupported, nested, or over-limit input fails closed as `FE2O3-TARGET-000`.
 The investigated source/ranked diagnostic sidecar was rejected and discarded;
 same-`TyCtxt` descriptor identity hardens substitution checks but does not
 supply source-semantic custody or close `FE2O3-RACE-002`.
+
+The workload-neutral `PipelineProtocol` stage runs after barrier convergence
+and before workgroup-memory verification. It validates compiler-owned staged
+storage, epoch lifecycle, release-before-reuse, modulo ring slots, uniform
+dynamic bounds, and summarized prologue, steady-state, and drain regions.
 
 The current device and trusted-item surfaces also remove the exact Slice 1 LDS
 pair and publish intrinsics. The current MoE source passes its already loaded

@@ -230,7 +230,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit 2bee84b2201c5d51a0096ae192e269fa675d9c94 and tree 666de49cbbcf4690894368defd2f3f3617f69e6c. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit ecf7b17f819021708d9c59ebe39a4daf9eb2562c and tree 2156423b9350d66cfaa8207133768e323111b507. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -634,7 +634,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "fe2o3 keeps one workload-neutral route: rustc checks ordinary safe Rust and retains semantic MIR, the compiler projects a typed ranked PLIRON function, checked normalization and the fixed eight-pass verifier sequence run there, and only the admitted result can become canonical Kernel IR. ProductionMiddleEndEvidenceV5 is the sole live middle-end evidence producer. The retired standalone lowering and bridge packages are deleted rather than dormant. No pass recognizes GEMM, softmax, attention, routing, or another workload name."
+        "text": "fe2o3 keeps one workload-neutral route: rustc checks ordinary safe Rust and retains semantic MIR, the compiler projects a typed ranked PLIRON function, checked normalization and the fixed nine-pass verifier sequence run there, and only the admitted result can become canonical Kernel IR. ProductionMiddleEndEvidenceV5 is the sole live middle-end evidence producer. The retired standalone lowering and bridge packages are deleted rather than dormant. No pass recognizes GEMM, softmax, attention, routing, or another workload name."
       },
       {
         "type": "steps",
@@ -643,7 +643,7 @@ const narrativeRegistry = deepFreeze({
           "The frontend projects structured CFG, typed values, ranked views, allocation provenance, index expressions, memory effects, tensor contracts, and synchronization into ranked PLIRON.",
           "Target-aware validation first performs a bounded structural preflight. It accounts the closed ranked function before recursive PLIRON verification, contains verifier failures, and reports malformed, nested, or resource-exhausting input as FE2O3-TARGET-000 before scanning launch-contract facts.",
           "The ranked constructor folds only checked index Add, Multiply, Divide, and Remainder when both operands are exact preceding index constants. An independent exact typed structural replay accepts only the same-site IndexBinary to IndexConstant rewrite with the same result identity and checked u64 value.",
-          "After structural and target preconditions, the fixed eight analysis stages check tensor layout, bounds, atomics, races, hierarchy ownership, barriers, workgroup memory, and declared semantic refinement.",
+          "After structural and target preconditions, the fixed nine analysis stages check tensor layout, bounds, atomics, races, hierarchy ownership, barriers, staged pipeline protocol, workgroup memory, and declared semantic refinement.",
           "KIR lowering consumes the normalized ranked recipe and its checked reports. Rejected and Incomplete results stop before KIR. The retired standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages are absent, so no alternate host, lowering, or simulation route bypasses this sequence."
         ]
       },
@@ -651,7 +651,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "One live evidence version",
-        "text": "V5 is the sole live middle-end evidence producer and records the fixed eight-pass result. The V4 decoder is archival-only: it can validate the canonical shape of historical bytes but cannot create live evidence or grant refinement, lowering, artifact, or launch authority. The caller-declared ProductionReferenceProofV1 and RequireReferenceEquivalent API has been removed; a declaration can no longer masquerade as an authenticated refinement result."
+        "text": "V5 is the sole live middle-end evidence producer and records the fixed nine-pass result. The pipeline-protocol report is ordered after barrier convergence and before workgroup-memory verification. The V4 decoder is archival-only: it can validate the canonical shape of historical bytes but cannot create live evidence or grant refinement, lowering, artifact, or launch authority. The caller-declared ProductionReferenceProofV1 and RequireReferenceEquivalent API has been removed; a declaration can no longer masquerade as an authenticated refinement result."
       },
       {
         "type": "paragraph",
@@ -676,14 +676,15 @@ const narrativeRegistry = deepFreeze({
           ["Dynamic race freedom", "Explicit affine maps can prove a total injective address map; bounded Presburger replay can prove that conflicting invocation images do not intersect. Checked tiled and row-striped recipes also carry a structural index, checked-success capability, and destination physical extent.", "Typed live validation checks pairing, shape, substitution resistance, and use discipline, but the carrier is not source-semantic authority. Raw, textual, and public recipes stop at FE2O3-RACE-002."],
           ["Tensor flow", "The policy pass can reject incompatible wave64 producer and consumer layouts.", "Every nonempty independent tensor replay is Incomplete until external roots have explicit operational-SSA provenance."],
           ["Loop progress", "The checker supports canonical single-entry multi-block forwarding SCCs with i < bound and one positive constant latch step.", "The exact source integer width and the ranked u64 update must both be nonwrapping; other SCC shapes remain Incomplete and concrete nontermination is Rejected."],
+          ["Staged workgroup pipelines", "A generic epoch summary proves stage, commit, wait, consume or discard, release, modulo ring-slot selection, and release-before-reuse across dynamic prologue, steady-state, and drain regions.", "Unknown aliases, nonuniform bounds, crossing loops, wrong epochs or slots, early reads, late writes, and incomplete drains are Rejected or fail closed as Incomplete."],
           ["Constant folding", "5 + 7 and a later checked multiply can fold to exact constants in one forward fixed point before every verifier and proof digest.", "Overflow and zero divisors stay unfurled and fail existing verification; no reassociation, cross-block definition, or dynamic propagation is authorized."],
           ["GFX950 collectives", "Semantic MIR V6 and Kernel IR V9 selection follows live collective and LDS-transpose operations. Under the exact gfx950:xnack- full-active Wave64 profile, FP32 reductions accept every nonzero power-of-two tile width through 64.", "Unsupported widths, targets, profiles, and dynamic broadcast source lanes fail closed. Successful target selection or lowering grants no source-to-KIR refinement, artifact, launch, or numerical authority."]
         ]
       },
       {
         "type": "compile-failures",
-        "heading": "Three representative compile-time rejections",
-        "intro": "Each example is workload-neutral and stops before KIR. The repair is a source change, never an automatic semantic rewrite.",
+        "heading": "Representative compile-time rejections",
+        "intro": "Each example is workload-neutral and stops before KIR. The repair is a source change, never an automatic semantic rewrite. Pipeline diagnostics use the same safe Rust API in GEMM, attention, or any other staged kernel.",
         "examples": [
           {
             "id": "static_oob",
@@ -720,6 +721,42 @@ const narrativeRegistry = deepFreeze({
             "code": "FE2O3-TENSOR-LAYOUT-005",
             "enforcement": "rooted tensor-layout policy dataflow; independent nonempty replay remains Incomplete",
             "caught": "The compiler follows the exact result root and rejects a consumer contract that disagrees with its producer."
+          },
+          {
+            "id": "pipeline_read_before_consume",
+            "title": "Pipeline read before consume",
+            "language": "rust",
+            "source": "pipeline.stage(epoch);\npipeline.write(epoch, lane, value);\npipeline.commit(epoch);\npipeline.wait(epoch);\nlet value = pipeline.read(epoch, lane); // missing consume(epoch)",
+            "diagnostic": "error[FE2O3-PIPELINE-001]: Read access occurs while the epoch is Ready; help: call consume(epoch) after wait(epoch) and before reading",
+            "property": "PipelineProtocol",
+            "stage": "kernel-pipeline-protocol-v1",
+            "code": "FE2O3-PIPELINE-001",
+            "enforcement": "generic pipeline lifecycle and ranked-access correlation",
+            "caught": "The pass correlates each workgroup-memory read with its owning pipeline and requires the epoch to be in its consuming window."
+          },
+          {
+            "id": "pipeline_missing_drain",
+            "title": "Dynamic pipeline loop without a drain",
+            "language": "rust",
+            "source": "pipeline.stage(0);\npipeline.write(0, lane, first);\npipeline.commit(0);\nfor epoch in 0..tiles {\n    pipeline.stage(epoch + 1);\n    pipeline.write(epoch + 1, lane, next);\n    pipeline.commit(epoch + 1);\n    // consume and release epoch\n}\n// missing wait/discard/release for the speculative final epoch",
+            "diagnostic": "error[FE2O3-PIPELINE-001]: dynamic schedule is missing its required drain events; help: wait, discard, and release every speculative epoch after the loop",
+            "property": "PipelineProtocol",
+            "stage": "kernel-pipeline-protocol-v1",
+            "code": "FE2O3-PIPELINE-001",
+            "enforcement": "epoch-aware canonical-loop summary across prologue, steady-state, and drain blocks",
+            "caught": "The compiler summarizes the dynamic loop instead of unrolling it, then proves that every primed or prefetched epoch reaches exactly one terminal release."
+          },
+          {
+            "id": "pipeline_nonuniform_bound",
+            "title": "Workgroup pipeline with a divergent trip count",
+            "language": "rust",
+            "source": "let tiles = thread::index_1d().get();\nfor epoch in 0..tiles {\n    // workgroup-wide stage, commit, wait, consume, release\n}",
+            "diagnostic": "error[FE2O3-PIPELINE-001]: runtime loop bound is not proved workgroup-uniform; help: derive the trip count from a uniform kernel argument or move lane-varying work outside the collective pipeline",
+            "property": "PipelineProtocol",
+            "stage": "kernel-pipeline-protocol-v1",
+            "code": "FE2O3-PIPELINE-001",
+            "enforcement": "uniformity dataflow joined with the epoch-aware loop summary",
+            "caught": "A workgroup pipeline is collective. Different lanes cannot execute different epoch counts, so the shared uniformity analysis rejects a lane-derived bound."
           }
         ]
       },
@@ -742,8 +779,8 @@ const narrativeRegistry = deepFreeze({
           "Projection constructs one bounded ranked PLIRON CFG with typed SSA values, views, indices, effects, execution layout, tensor roots, and proof requests. Checked tiled and row-striped recipes include a produced index, checked-success capability, and destination physical extent. After authenticating and replaying an exact unsigned MIR range and recurrence, projection may emit a value-producing kernel.index_unsigned_cast whose conversion is value-preserving over that range.",
           "ProductionRankedKernelV1 performs the sealed checked constant fold. The independent validator compares the exact typed input and output, permits only same-site constant rewrites, and moves the accepted output through a private receipt.",
           "For each target-aware entry point, a bounded structural preflight accounts blocks, operations, values, operands, successors, attributes, and nesting before invoking recursive PLIRON verification. Unsupported nesting, malformed operations, verifier failure, and exhausted limits stop as FE2O3-TARGET-000 before target facts are scanned.",
-          "After those structural and target preconditions, a context mutation-attempt epoch and exact structural checkpoints require all eight analysis stages to remain read-only.",
-          "The fixed stages run in order: tensor layout, bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, workgroup memory, and semantic refinement.",
+          "After those structural and target preconditions, a context mutation-attempt epoch and exact structural checkpoints require all nine analysis stages to remain read-only.",
+          "The fixed stages run in order: tensor layout, bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, pipeline protocol, workgroup memory, and semantic refinement.",
           "The compiler seals each report and independently replays its witness. Only the admitted static bounded-access fragment can be Complete; nonempty tensor and every other current independent stage witness remain Incomplete even when a policy report is Clean.",
           "ProductionMiddleEndEvidenceV5 is the only live producer for that ordered result. The strict V4 decoder remains only for immutable historical bytes, and the removed V1 declarative refinement API cannot be used as an alternate admission route.",
           "Only the normalized ranked recipe and admitted reports can proceed to KIR. Typed live validation checks the checked-access carrier pairing, shape, substitution resistance, exactly one predicated use, and no unpaired index use. Raw, textual, and public recipes still stop at FE2O3-RACE-002 because owner-custodied semantic MIR correspondence, exact receiver/fat-pointer extent, the two relevant Option::Some paths, allowed-use and CFG-dominance proof, source provenance/noalias, and retained KIR replay are missing. No Clean race result, KIR, functional-domain, lowering, launch, or hardware authority follows."
@@ -755,7 +792,7 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           ["Mutation epoch and exact snapshots", "Direct mutation, mutate-then-restore, failed mutable-borrow attempts, and retained changes during an analysis-only stage.", "That the analysis report itself is semantically correct."],
           ["Bounded target preflight", "Malformed or unsupported ranked structure, nested regions, verifier failure, and exact resource-limit exhaustion before launch-contract scanning.", "Target feasibility, source-to-IR refinement, launch admission, or hardware execution."],
-          ["V5 evidence custody", "The exact fixed eight-pass order and its retained live production record; V4 bytes decode only as inert historical data.", "That a Clean report is independently correct, or that an archived V4 record is fresh or authoritative."],
+          ["V5 evidence custody", "The exact fixed nine-pass order and its retained live production record; V4 bytes decode only as inert historical data.", "That a Clean report is independently correct, or that an archived V4 record is fresh or authoritative."],
           ["Sealed report custody", "Omission, duplication, reordering, replay, stale checkpoints, and payload or status substitution.", "That a Clean payload follows from the live IR."],
           ["Independent raw replay", "Exact supported static bounds reconstructed from live PLIRON rather than from report success bits.", "Nonempty tensor flow and every other pass or shape; those remain Incomplete."],
           ["Independent transform replay", "The exact checked IndexBinary to IndexConstant relation, value, position, result identity, CFG, types, effects, and proof sites.", "Any other optimization, algebraic equivalence, or semantic preservation theorem."],
@@ -1273,11 +1310,23 @@ const narrativeRegistry = deepFreeze({
         "items": [
           "Validate lda, ldb, ldc and the maximum addressed extent, then construct fallible row-major A and B views.",
           "Derive the workgroup tile; each role-typed view and the wave-lane capability determine the lane's four fragment coordinates.",
-          "For each 16-wide K phase, directly receive A and B fragments whose guarded in-range reads supply BF16 values and whose false edges supply zero.",
-          "Call the Matrix capability's multiply_accumulate method uniformly across the wave; the loop backedge carries typed FP32 components while a compiler-owned descriptor retains the exact instruction contract and current-wave provenance.",
-          "Advance the phase by 16 until every dynamic K element is covered.",
+          "Prime epoch 0 by loading zero-filled A and B fragments, opening each compiler-owned workgroup ring with stage, writing the lane-owned element, and publishing it with commit.",
+          "For each dynamic K phase, stage and commit epoch i + 1 before waiting for epoch i; then consume and read the current typed fragments, execute multiply_accumulate uniformly across the wave, and release both ring slots.",
+          "After the loop, wait for the speculative final epoch, discard it, and release both slots. This explicit drain makes every dynamic trip count follow the same finite lifecycle.",
           "Apply alpha * accumulator + beta * C through each runtime-checked Tiled2D output path; compiler admission remains a separate obligation."
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "The pipeline is safe Rust and compiler-owned",
+        "text": "WorkgroupPipeline<T, 2, 64, 1> exposes no LDS pointer or reference. Rust keeps the scope, typed MFMA payload, lifetime brand, and non-Send/non-Sync ownership local. During source projection, the compiler creates a disjoint ranked Workgroup view, derives slot = epoch % 2, and emits workload-neutral pipeline events and ranked reads/writes. The protocol pass checks order, initialization coordinates, alias provenance, release-before-reuse, uniform dynamic bounds, and the complete prologue/steady-state/drain schedule without unrolling the runtime loop."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Current lowering boundary",
+        "text": "The current GEMM source reaches semantic MIR and ranked PLIRON with typed MFMA values preserved through workgroup storage. It then stops at FE2O3-RACE-002 for dynamic output ownership before KIR. WorkgroupPipeline terminals therefore have no production KIR or LLVM lowering yet, and this lesson makes no executable or performance claim for the new staged source."
       },
       {
         "type": "callout",
@@ -1439,7 +1488,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The safe Rust source intends each wave to produce a 16-query tile. Target-neutral BF16 fragments express Q contracted with transposed K in 16-key tiles. An admitted target operation can lower to V_MFMA_F32_16X16X16_BF16, but this current public recipe stops at FE2O3-RACE-002 before KIR and target lowering. The source algorithm applies the additive mask and advances the stable online maximum, denominator, and V-weighted numerator without materializing the score matrix."
+        "text": "The safe Rust source intends each wave to produce a 16-query tile. Target-neutral BF16 fragments express Q contracted with transposed K in 16-key tiles, and two compiler-owned workgroup rings double-buffer those role-typed fragments across the dynamic depth loop. An admitted target operation can lower to V_MFMA_F32_16X16X16_BF16, but this current public recipe stops at FE2O3-RACE-002 before KIR and target lowering. The source algorithm applies the additive mask and advances the stable online maximum, denominator, and V-weighted numerator without materializing the score matrix."
       },
       {
         "type": "callout",
@@ -1463,8 +1512,8 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           [
             "QK tile",
-            "BF16 fragments and MFMA accumulators",
-            "dynamic depth tails contribute zero"
+            "two BF16 WorkgroupPipeline rings and MFMA accumulators",
+            "dynamic depth tails contribute zero; every staged epoch is committed, consumed or discarded, and released"
           ],
           [
             "Mask",
@@ -1487,6 +1536,18 @@ const narrativeRegistry = deepFreeze({
             "source-level ownership intent with runtime checked stores; current compiler proof remains Incomplete at FE2O3-RACE-002"
           ]
         ]
+      },
+      {
+        "type": "callout",
+        "tone": "proof",
+        "title": "Nested loops use the same generic protocol",
+        "text": "The attention source reuses the same WorkgroupPipeline API as GEMM inside an outer dynamic key-tile loop. The compiler does not identify attention: it follows pipeline ownership through Rust aliases, preserves the MFMA A/B payload contracts across writes and reads, selects the innermost canonical dynamic loop, and summarizes its linear prologue and drain even when those regions span multiple basic blocks. Invalid slots, early reads, late writes, missing drains, nonuniform bounds, and overlapping pipeline storage are compile-time errors with source repair guidance."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Verified through PLIRON, not executable yet",
+        "text": "AMD-target extraction confirms that the current nested attention source reaches ranked PLIRON pipeline verification and then stops at FE2O3-RACE-002 before KIR or LLVM. Historical attention runs in the result tab belong to an older direct-fragment source and do not establish execution or speed for this double-buffered version."
       },
       {
         "type": "paragraph",

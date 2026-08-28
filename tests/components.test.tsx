@@ -393,7 +393,7 @@ describe("lesson section rendering policy", () => {
 
     expect(
       screen.getByRole("heading", {
-        name: "Three representative compile-time rejections",
+        name: "Representative compile-time rejections",
       }),
     ).toBeInTheDocument();
     const rejectionPath = screen.getByLabelText("Compile-time rejection path");
@@ -401,11 +401,18 @@ describe("lesson section rendering policy", () => {
     expect(rejectionPath).toHaveTextContent("PLIRON dialect verification");
     expect(rejectionPath).toHaveTextContent("Fixed generic safety passes");
     expect(rejectionPath).toHaveTextContent("No lowering or artifact");
-    expect(screen.getAllByText("Compilation stopped")).toHaveLength(3);
+    expect(screen.getAllByText("Compilation stopped")).toHaveLength(6);
     expect(screen.getByText("Static out-of-bounds access")).toBeInTheDocument();
     expect(screen.getByText("Cross-invocation write race")).toBeInTheDocument();
     expect(
       screen.getByText("Incompatible tensor producer and consumer layouts"),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Pipeline read before consume")).toBeInTheDocument();
+    expect(
+      screen.getByText("Dynamic pipeline loop without a drain"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Workgroup pipeline with a divergent trip count"),
     ).toBeInTheDocument();
 
     for (const heading of [
@@ -435,7 +442,7 @@ describe("lesson section rendering policy", () => {
     ).toBeInTheDocument();
     expect(
       document.querySelectorAll(".compile-failure-source code.language-rust"),
-    ).toHaveLength(1);
+    ).toHaveLength(4);
     expect(
       document.querySelectorAll(".compile-failure-source code.language-text"),
     ).toHaveLength(2);

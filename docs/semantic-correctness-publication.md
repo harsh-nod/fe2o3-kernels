@@ -21,7 +21,8 @@ its explicit fail-closed unsupported cases. The aggregate status remains
    `Checked` staging, and the private move-only join at
    `SafeReferenceMirToLivePliron`.
    `ProductionMiddleEndEvidenceV5` is the sole live producer for the fixed
-   eight-pass sequence. The strict V4 decoder is archival-only and grants no
+   nine-pass sequence, including pipeline protocol between barrier and
+   workgroup-memory verification. The strict V4 decoder is archival-only and grants no
    producer authentication or authority. The caller-declared
    `ProductionReferenceProofV1` and `RequireReferenceEquivalent` API is removed;
    only authenticated current obligations can enter the live route.
