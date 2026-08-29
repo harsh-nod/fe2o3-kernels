@@ -517,7 +517,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -570,30 +570,27 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
 
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "multi-workgroup-dynamic-k",
+    "grid_dim: (tile_rows * tile_columns, 1, 1)",
   );
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "81 correspondence blocks",
+    "110 correspondence blocks",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "PASS strided-all-tails",
+    "PASS tiled_gemm_general_v1: 19x21x23",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "PASS multi-workgroup-dynamic-k",
+    "4 x s_barrier",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "PASS zero-k-epilogue",
-  );
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "not faster than HIP yet",
+    "functional qualification, not a performance claim",
   );
   await expect(
     page.getByRole("heading", {
