@@ -64,9 +64,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "a542213a28265ec5b4f512c3edea84326a098eae";
+export const advancedCoreSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
 export const advancedCoreSourceTree: string | null =
-  "2e9d7a4cd4686321eb7683aa15038c6ee369af16";
+  "42385e6464ca40318fc70ae104845d3997844140";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -446,6 +446,8 @@ function lesson(spec: AdvancedLessonSpec): Lesson {
 const gptOssKernelSymbol = "gfx950_gpt_oss_120b_decode_megakernel_v1";
 const gptOssKernelExcerpt = rustFunctionExcerpt(gptOssRustKernel, gptOssKernelSymbol, true);
 const gptOssReferenceExcerpt = rustFunctionExcerpt(gptOssRustReference, "reference", false);
+const gptOssSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
+const gptOssSourceTree = "42385e6464ca40318fc70ae104845d3997844140";
 const gptOssPerformance = advancedPerformanceTabFor("gfx950-gpt-oss-120b-megakernel");
 if (!gptOssPerformance) throw new Error("Missing GPT-OSS performance evidence");
 
@@ -471,12 +473,12 @@ const gptOssMegakernelLesson: Lesson = {
   claims: [
     {
       kind: "gpu-observed",
-      label: "Historical MI350X execution for the byte-identical final kernel and oracle",
+      label: "Final integrated MI350X execution for the pinned kernel and oracle",
       detail:
-        "The ordinary Rust kernel and independent CPU oracle displayed from final commit " + advancedCoreSourceCommit + " are byte-identical to their files in campaign commit 109e1966d36d4188c43cafe5cb455c1ac3dd0767. That retained campaign produced gfx950 LLVM and COV6 HSACO, passed the bounded HSA oracle, and measured fused 1.068124 ms versus exact unfused 0.780683 ms. The fused kernel was 1.3682x slower. The full final crate wrapper has not been rerun successfully, so this is historical file-scoped evidence and no fastest or state-of-the-art claim is made.",
+        "At the exact pinned c1383e97 core commit, the ordinary Rust kernel produced gfx950 LLVM and COV6 HSACO, passed the bounded HSA oracle against the independent CPU reference, and measured fused 1.064644 ms versus exact unfused 0.780362 ms. The fused kernel was 1.3643x slower. This fixed layer-tile result is final integrated evidence for the admitted artifacts, not a fastest or state-of-the-art claim.",
       reference: historicalReference(
-        "109e1966d36d4188c43cafe5cb455c1ac3dd0767",
-        "cb6622e401e3edd2a84b40d4a69406d9dcf7fcd6",
+        gptOssSourceCommit,
+        gptOssSourceTree,
         [
           "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
           "bash examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh",
@@ -496,7 +498,7 @@ const gptOssMegakernelLesson: Lesson = {
         ],
         {
           target: advancedProductionTarget,
-          note: "Historical file-scoped MI350X evidence. The final displayed kernel and oracle have identical git blobs; a successful final-commit wrapper rerun is still required before refreshing crate-level artifact provenance.",
+          note: "Archived final integrated MI350X evidence at the exact pinned source commit. It covers one fixed Wave64 layer tile and its exact three-dispatch comparator, not a complete layer, whole model, fastest result, or state of the art.",
         },
       ),
     },
@@ -512,13 +514,13 @@ const gptOssMegakernelLesson: Lesson = {
       language: "rust",
       code: gptOssKernelExcerpt,
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
-      sourceCommit: advancedCoreSourceCommit,
+      sourceCommit: gptOssSourceCommit,
       sourceSha256: "4808651a5fecabc26b0598eb4827772af4b95ca34978872524bec536f2a3392b",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssKernelExcerpt],
       explanatory: false,
       notice:
-        "Exact ordinary attributed Rust from the final core commit. Its file SHA-256 is 62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4; the kernel git blob matches the retained performance campaign.",
+        "Exact ordinary attributed Rust from the final integrated c1383e97 campaign. Its file SHA-256 is 62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4.",
     },
     {
       kind: "reference",
@@ -526,7 +528,7 @@ const gptOssMegakernelLesson: Lesson = {
       language: "rust",
       code: gptOssReferenceExcerpt,
       sourcePath: "examples/gfx950_gpt_oss_decode/src/reference.rs",
-      sourceCommit: advancedCoreSourceCommit,
+      sourceCommit: gptOssSourceCommit,
       sourceSha256: "f4f361e44d8cf56348d1189aa012ebeb2a83efc1833eaa110ea4f095ce22bd84",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssReferenceExcerpt],
@@ -540,7 +542,7 @@ const gptOssMegakernelLesson: Lesson = {
       language: "cpp",
       code: gptOssUnfusedHip,
       sourcePath: "examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip",
-      sourceCommit: advancedCoreSourceCommit,
+      sourceCommit: gptOssSourceCommit,
       sourceSha256: "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b",
       explanatory: true,
       notice:
@@ -588,7 +590,7 @@ const gptOssMegakernelLesson: Lesson = {
       ].join("\n"),
       explanatory: true,
       notice:
-        "Run on ssh mi350 with the documented ROCR_VISIBLE_DEVICES setting. The retained numbers came from campaign commit 109e1966; the final a542 crate wrapper rerun remains outstanding.",
+        "Run on ssh mi350 with the documented ROCR_VISIBLE_DEVICES setting. The retained numbers and final integrated artifact provenance come from the exact c1383e97 campaign.",
     },
     {
       kind: "result",
@@ -600,25 +602,26 @@ const gptOssMegakernelLesson: Lesson = {
           "GPT-OSS-120B BATCH-1 LAYER-TILE MEGAKERNEL",
           "Scope: one fixed Wave64 layer tile; not a complete layer or whole-model kernel",
           "Kernel symbol: " + gptOssKernelSymbol,
-          "Displayed source commit: " + advancedCoreSourceCommit,
-          "Displayed source tree: " + advancedCoreSourceTree,
+          "Displayed source commit: " + gptOssSourceCommit,
+          "Displayed source tree: " + gptOssSourceTree,
           "Kernel file SHA-256: 62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4",
           "Reference file SHA-256: 1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05",
-          "Historical campaign commit: 109e1966d36d4188c43cafe5cb455c1ac3dd0767",
-          "Historical campaign tree: cb6622e401e3edd2a84b40d4a69406d9dcf7fcd6",
-          "Kernel git blob in both commits: 052edd331117f2710029061958eada0efb5fa0d1",
-          "Reference git blob in both commits: 427d236f2052764137625920d6619e92d9f99ca1",
+          "Campaign commit: " + gptOssSourceCommit,
+          "Campaign tree: " + gptOssSourceTree,
           "Portable namespace: af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
-          "Rust-produced LLVM SHA-256: 28cd79e8d79c6bddc79a72aba64bff84ea2fc5f5fd7b7ad851bdcb64f14f20ba",
-          "Rust-produced HSACO SHA-256: 1e7d249dc0c11c412d2bf2d5c4755cc16e145fedea72046b26dc09a3d1656ad2",
-          "Symbol-scoped ISA SHA-256: 68e4dca5b2803a7bcc4e38da8e35c508d12bd1293ef0647129122e671f95fc5c",
+          "Rust-produced LLVM SHA-256: 7d28da46358c29ce8f3c12fecce42f491cef490f098fdb1602923ffdfc7947b3",
+          "Rust-produced HSACO SHA-256: 066056a1fb2228c9043474d1746a7555ac31c0ca559d678844dc9e89d601f212",
+          "Symbol-scoped ISA SHA-256: 216f41669a7243a6d34c1b1b80d31f75871e5ba4a38d6484a74bf81a47db9a75",
           "ABI: kernarg=208 bytes; workgroup=64x1x1; static LDS=0 bytes",
           "ISA: exactly four v_mfma_f32_16x16x16_bf16 and four FP4 v_mfma_f32_16x16x128_f8f6f4; no transpose instructions",
           "Numerical result: attention max_absolute_error=8.940696716e-8; expert exact; packed top-4 exact",
-          "Final integrated wrapper: not yet successfully rerun at a542; crate-level artifact refresh is outstanding",
-          "Fused median: 1.068124 ms [1.067445, 1.068925] ms",
-          "Exact unfused median: 0.780683 ms [0.780563, 0.780844] ms",
-          "Outcome: fused is 1.3682x slower",
+          "Final integrated wrapper: passed at c1383e97 on MI350X gfx950",
+          "Fused median: 1.064644 ms [1.064483, 1.064844] ms",
+          "Fused p5/p95: 1.059803 / 1.069283 ms",
+          "Exact unfused median: 0.780362 ms [0.780243, 0.780482] ms",
+          "Exact unfused p5/p95: 0.778162 / 0.783123 ms",
+          "Exact unfused/fused ratio: 0.732979",
+          "Outcome: fused is 1.3643x slower",
           "Fastest claim: not claimed",
           "State-of-the-art claim: not claimed",
           "Formal source-to-machine proof: not claimed",
@@ -627,7 +630,7 @@ const gptOssMegakernelLesson: Lesson = {
       ),
       explanatory: true,
       notice:
-        "The retained MI350X result applies to the byte-identical kernel and oracle files at the historical campaign commit. It does not establish final-crate execution, whole-model performance, fastest status, or state of the art.",
+        "The final integrated MI350X result applies to the exact c1383e97 kernel, oracle, artifacts, and fixed layer-tile protocol. It does not establish whole-model performance, fastest status, or state of the art.",
     },
     gptOssPerformance,
   ],
@@ -637,7 +640,7 @@ const gptOssMegakernelLesson: Lesson = {
       prompt: "Explain why the fused batch-1 tile loses to the exact three-dispatch comparator despite removing two dispatches.",
       hint: "Use the 352-to-308 VGPR ablation, the 1.5 MB router stream, one-workgroup occupancy, and the serial dependency chain.",
       acceptance:
-        "The answer cites the measured 1.3682x slowdown, separates the 14.1268% within-fused gain from the fused/unfused comparison, and makes no fastest or state-of-the-art claim.",
+        "The answer cites the measured 1.3643x slowdown, separates the 14.1268% within-fused gain from the fused/unfused comparison, and makes no fastest or state-of-the-art claim.",
     },
   ],
   glossary: ["gfx950", "GPT-OSS-120B", "megakernel", "mixture of experts", "resource floor"],

@@ -553,14 +553,14 @@ describe("curriculum integrity", () => {
       {
         lessonId: "gfx950-fp4-gemm",
         rustSymbol: "gfx950_fp4_gemm_rust",
-        rustSha256: "478da27352b8d9acae02dbc10b28b353fcd985440f51af73145c3217505012c8",
+        rustSha256: "0a4a3d325d588ddad15697aa58f0e354cd9af20ae83f441432bd1489965fecad",
         referenceSymbol: "gemm_reference",
         referenceSha256: "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
         hipSymbol: "gfx950_fp4_gemm",
         runner: "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
         namespace: "ff22ff3610dda0a94803a8011ced229b78c77400ca63c9b929d6ecba78ed6f01",
-        llvmSha256: "b92ceef45655bb2ae131c2b09645ff8fb588299a994e9cbf84b07b7868fca115",
-        hsacoSha256: "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d",
+        llvmSha256: "2eae91d0c3c4181684589ce9c6dc3fe05a78b1d37bf6748f7c67726c119a3e4e",
+        hsacoSha256: "1308d41a97d523d2e77ad15e16a3292e9d5a75e2f4eedf53f9e1008c481ca750",
         hostIsa: "cbsz:4 blgp:4",
         requiredIsa: "cbsz:4 blgp:4",
         numericalResult: "max_absolute_error=0",
@@ -569,14 +569,14 @@ describe("curriculum integrity", () => {
       {
         lessonId: "gfx950-fp8-gemm",
         rustSymbol: "gfx950_fp8_gemm_rust",
-        rustSha256: "d54dd98522394418dfa1835858b01be523de1ef6b9f493b866eb802d8c8b55bd",
+        rustSha256: "004ad607c55169f7f3291ea4cd74afc63e937877ec84efacf5b731f99248b9fd",
         referenceSymbol: "gemm_reference",
         referenceSha256: "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
         hipSymbol: "gfx950_fp8_gemm",
         runner: "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
         namespace: "d67f1755b38fbdac67cec83da3ebc359f874e3fbf90fcc036471455ec117dfea",
-        llvmSha256: "351dbfeecec00e673e3e15557b97dc1c53006839dfb9d1a0a7b03ac6c23ae6e3",
-        hsacoSha256: "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f",
+        llvmSha256: "9081a38065e977df077cc0fd142b77fb008fdd88a54e3f6915c704fdc5349d16",
+        hsacoSha256: "701a0a4ef137173ba9563dfe8b3b1f916d3d57dca0063d393d8e81c671e4dd2b",
         hostIsa: "v_mfma_f32_16x16x128_f8f6f4",
         requiredIsa: "E4M3 selectors (not cbsz:4 blgp:4)",
         numericalResult: "max_absolute_error=0",
@@ -585,14 +585,14 @@ describe("curriculum integrity", () => {
       {
         lessonId: "gfx950-fp4-attention",
         rustSymbol: "gfx950_fp4_attention_rust",
-        rustSha256: "3d4ec672e3f10b86fe60df65adfb7a1116f53ea1b458ded39e72d177f034437b",
+        rustSha256: "2e5adea75d61f9524f1f9ee9d0f00fa9c8e4a0fac3d1ebc2d8c49401b1797a96",
         referenceSymbol: "attention_reference",
         referenceSha256: "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
         hipSymbol: "gfx950_fp4_flash_attention",
         runner: "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
         namespace: "a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
-        llvmSha256: "ea183b9dedc375a1e98278d1053b7a500e0e8f4efe618230479e19bc1b81ecaa",
-        hsacoSha256: "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+        llvmSha256: "0914282d013f8bf6da47e2e807b569e7ca47beb908f30616211e8ff25529e508",
+        hsacoSha256: "90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
         hostIsa: "ds_read_b64_tr_b4",
         requiredIsa: "two ds_read_b64_tr_b4",
         numericalResult: "max_absolute_error=2.235174179e-8",
@@ -601,14 +601,14 @@ describe("curriculum integrity", () => {
       {
         lessonId: "gfx950-fp8-attention",
         rustSymbol: "gfx950_fp8_attention_rust",
-        rustSha256: "98c3eb5b1040116c6eff349dfacfaf141855ad9145993d345e296cca573095c3",
+        rustSha256: "c926d59ea1746895f406b72d3e343c38d2b240faec4c0654675dec6e8e05b738",
         referenceSymbol: "attention_reference",
         referenceSha256: "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
         hipSymbol: "gfx950_fp8_flash_attention",
         runner: "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
         namespace: "0c9610e86137831ce25b08b9ad87073ec16f459aa11aeea6806733f788bbeec1",
-        llvmSha256: "2e6a2c79a57e0a8796fe95c806fbbf3a8406bae6c55646802beb235b01d88c2b",
-        hsacoSha256: "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221",
+        llvmSha256: "32d869f2c4512717548913f693978773e91112f7f67158418cfb155106ef0d58",
+        hsacoSha256: "9208b439a4fbd1a987ea3cca19c01cac79e69e00b021ccb54f09f440d11f6294",
         hostIsa: "ds_read_b64_tr_b8",
         requiredIsa: "four ds_read_b64_tr_b8",
         numericalResult: "max_absolute_error=5.960464478e-8",
@@ -641,8 +641,8 @@ describe("curriculum integrity", () => {
       ]);
       expect(lesson?.claims[0].reference).toMatchObject({
         scope: "historical-evidence",
-        commit: "a710b6c67a908caa23d2409a5d3c4a275103cd60",
-        tree: "dfd5ec9a357d4cbd7879078c23f7b3114cdea641",
+        commit: "c1383e97db732f9f1ff8105f10d5c2b5971143e1",
+        tree: "42385e6464ca40318fc70ae104845d3997844140",
         commands: [`bash ${runner}`],
         target: "gfx950:xnack-",
       });
@@ -652,10 +652,14 @@ describe("curriculum integrity", () => {
           "examples/gfx950_low_precision/src/reference.rs",
           "examples/gfx950_low_precision/src/lib.rs",
           "examples/gfx950_low_precision/Cargo.toml",
+          "examples/gfx950_low_precision/Cargo.lock",
           "examples/gfx950_low_precision/README.md",
           runner,
         ]),
       );
+      expect(lesson?.claims[0].reference?.sourcePaths.some((path) =>
+        path.startsWith("crates/fe2o3-hsa-runtime/tests/gfx950_"),
+      )).toBe(true);
       expect(lesson?.tabs.map((tab) => tab.kind)).toEqual([
         "kernel", "reference", "comparison", "verus", "host", "result",
       ]);
@@ -663,15 +667,26 @@ describe("curriculum integrity", () => {
       expect(kernel?.label).toBe("Rust kernel");
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
-      expect(kernel?.sourceCommit).toBe("a710b6c67a908caa23d2409a5d3c4a275103cd60");
+      expect(kernel?.sourceCommit).toBe("c1383e97db732f9f1ff8105f10d5c2b5971143e1");
       expect(kernel?.sourcePath).toBe("examples/gfx950_low_precision/src/kernel.rs");
       expect(kernel?.code).toContain(rustSymbol);
       expect(kernel?.sourceSha256).toBe(rustSha256);
+      expect(kernel?.code).toContain("Blocked<Index1D, 16, 4>");
+      expect(kernel?.code).toContain("checked_block::<16, 4>()");
+      expect(kernel?.code).not.toContain("Tiled2D");
+      if (rustSymbol.includes("attention")) {
+        expect(kernel?.code).toContain("let Ok(query_matrix)");
+        expect(kernel?.code).toContain("fe2o3_device::trap()");
+        expect(kernel?.code).not.toContain("-> KernelResult");
+      } else {
+        expect(kernel?.code).toContain("let Ok(lhs_matrix)");
+        expect(kernel?.code).toContain("let Ok(rhs_matrix)");
+      }
       const reference = lesson?.tabs[1];
       expect(reference?.kind).toBe("reference");
       expect(reference?.language).toBe("rust");
       expect(reference?.explanatory).toBe(false);
-      expect(reference?.sourceCommit).toBe("a710b6c67a908caa23d2409a5d3c4a275103cd60");
+      expect(reference?.sourceCommit).toBe("c1383e97db732f9f1ff8105f10d5c2b5971143e1");
       expect(reference?.code).toContain(referenceSymbol);
       expect(reference?.sourceSha256).toBe(referenceSha256);
       const comparison = lesson?.tabs[2];
@@ -688,8 +703,8 @@ describe("curriculum integrity", () => {
       expect(host?.code).toContain("Comparison only");
       const result = lesson?.tabs[5]?.code;
       expect(result).toContain("FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE");
-      expect(result).toContain("Core source commit: a710b6c67a908caa23d2409a5d3c4a275103cd60");
-      expect(result).toContain("Core source tree: dfd5ec9a357d4cbd7879078c23f7b3114cdea641");
+      expect(result).toContain("Core source commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
+      expect(result).toContain("Core source tree: 42385e6464ca40318fc70ae104845d3997844140");
       expect(result).toContain(`Portable namespace: ${namespace}`);
       expect(result).toContain(`Rust-produced LLVM SHA-256: ${llvmSha256}`);
       expect(result).toContain(`Rust-produced HSACO SHA-256: ${hsacoSha256}`);
@@ -903,7 +918,7 @@ describe("curriculum integrity", () => {
   });
 
 
-  it("publishes the real GPT-OSS Rust layer-tile tutorial with historical evidence boundaries", () => {
+  it("publishes the real GPT-OSS Rust layer-tile tutorial with final integrated evidence boundaries", () => {
     const lesson = lessons.find(
       (candidate) => candidate.id === "gfx950-gpt-oss-120b-megakernel",
     );
@@ -950,9 +965,11 @@ describe("curriculum integrity", () => {
     );
     expect(host).toContain("bash perf-evidence/run-gpt-oss-performance.sh");
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
-    expect(result).toContain("Historical campaign commit: 109e1966");
-    expect(result).toContain("Final integrated wrapper: not yet successfully rerun at a542");
-    expect(result).toContain("Outcome: fused is 1.3682x slower");
+    expect(result).toContain("Campaign commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
+    expect(result).toContain("Final integrated wrapper: passed at c1383e97 on MI350X gfx950");
+    expect(result).toContain("Fused p5/p95: 1.059803 / 1.069283 ms");
+    expect(result).toContain("Exact unfused/fused ratio: 0.732979");
+    expect(result).toContain("Outcome: fused is 1.3643x slower");
     expect(result).toContain("State-of-the-art claim: not claimed");
     expect(serializedLessonContent(lesson!.id)).not.toContain(
       "LESSON SHELL ONLY",
@@ -1009,6 +1026,35 @@ describe("curriculum integrity", () => {
       expect(performanceText, symbol).toContain(`KERNEL: ${symbol}`);
     }
 
+    const finalAdvanced = JSON.parse(
+      readFileSync("perf-evidence/gfx950-advanced-evidence-v1.json", "utf8"),
+    );
+    expect(finalAdvanced.protocol).toMatchObject({
+      processes_per_variant: 1,
+      initial_warmups: 1000,
+      blocks: 30,
+      samples_per_block: 100,
+      block_rewarm: 20,
+      kernel_source_commit: "c1383e97db732f9f1ff8105f10d5c2b5971143e1",
+    });
+    expect(finalAdvanced.results).toHaveLength(16);
+    const advancedSymbols = Object.keys(advancedRustEvidence).filter(
+      (symbol) => symbol !== "gfx950_gpt_oss_120b_decode_megakernel_v1",
+    );
+    expect(new Set(finalAdvanced.results.map((result: { kernel_export: string }) => result.kernel_export))).toEqual(
+      new Set(advancedSymbols),
+    );
+    for (const result of finalAdvanced.results as Array<{
+      kernel_export: string;
+      hsaco_sha256: string;
+      median_ns: number;
+    }>) {
+      expect(performanceText, result.kernel_export).toContain(result.hsaco_sha256);
+      expect(performanceText, result.kernel_export).toContain(
+        (result.median_ns / 1000).toFixed(3),
+      );
+    }
+
     const mhcRecord = JSON.parse(
       readFileSync(
         "examples/gfx950_advanced_attention/performance-mhc-sinkhorn-v1.json",
@@ -1028,7 +1074,7 @@ describe("curriculum integrity", () => {
       "Only the combined rewrite was timed",
     );
     expect(mhc).toContain(
-      "AttnRes and four-branch residual were not included",
+      "The final candidate-only campaign measured AttnRes",
     );
 
     const systemsRecord = JSON.parse(
@@ -1047,7 +1093,7 @@ describe("curriculum integrity", () => {
     expect(speculativeTab).toContain(
       `saving ${(speculative.median_ns_saved / 1000).toFixed(2)} us`,
     );
-    expect(speculativeTab).toContain("publishable fastest-kernel claim=false");
+    expect(speculativeTab).toContain("no new baseline, speedup, fastest-kernel, or state-of-the-art conclusion");
   });
 
   it("keeps the advanced production evidence matrix exhaustive and fail-closed", () => {
@@ -1091,7 +1137,7 @@ describe("curriculum integrity", () => {
     }
 
     expect(advancedRustEvidence.gfx950_moe_route_fp4_t16_e4_k2_v1.workgroupSize).toBe(256);
-    expect(advancedRustEvidence.gfx950_moe_expert_rank_fp4_fp8_v1.workgroupSize).toBe(256);
+    expect(advancedRustEvidence.gfx950_moe_expert_rank_fp4_fp8_v1.workgroupSize).toBe(64);
 
     expect(() =>
       observedAdvancedEvidence(
@@ -1141,10 +1187,14 @@ describe("curriculum integrity", () => {
     const mirrors = [
       ["examples/gfx950_low_precision/README.md", "5dc64435d18dc371431dacddaae8cd6114358fe0fce5e6924e046d0d4e351a6f"],
       ["examples/gfx950_low_precision/Cargo.toml", "79022908ab305eb2b608818e9338e8796e5515af43e590ed367acb222676e3c6"],
-      ["examples/gfx950_low_precision/src/kernel.rs", "cbfeef4eb919076dfdbf858d57bb89effa16e5c0754efba95778b410f067850a"],
+      ["examples/gfx950_low_precision/Cargo.lock", "0b9188ed6e3b51caab75b152e7ae142ae39410e4a3e8c96c47b4f691a4f5b9a1"],
+      ["examples/gfx950_low_precision/src/kernel.rs", "7b8e9810ff23a84fae69ae87e52d88a5512f1afd2c176de3d72edb116a003dca"],
       ["examples/gfx950_low_precision/src/reference.rs", "388ec3bf3fff9a5290456afc92b9bd24be8813d9ae914865f780affb7fb6e3e7"],
       ["examples/gfx950_low_precision/src/lib.rs", "ef673aa1c80c6268d8039a5f819cb2ceea1656ef6214217efc8daeabe1bf4e4f"],
-      ["examples/gfx950_low_precision/tests/kernel_source.rs", "fb0a57fca5151dc099151c0073c875cde274b6c6460458f01b6226160b334568"],
+      ["examples/gfx950_low_precision/tests/kernel_source.rs", "addf296e35be54c66e51fc63393ce04bdc9dff2ce706171e8de20e0eb0fdb960"],
+      ["crates/fe2o3-hsa-runtime/tests/gfx950_fp4_gemm_hardware.rs", "77e320d7175613ac7c9ef31571cdbd0b87940145963b66fe1e7bc1b1b5f8d3bc"],
+      ["crates/fe2o3-hsa-runtime/tests/gfx950_fp8_gemm_hardware.rs", "d37a381d66bf79f4f9f01fa1c32c9c24076e4450cc691e4f4ce3479197371870"],
+      ["crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs", "d8b619377275a297cc7c7c3b8ae77563523897cddb060cc3bf5a78234aadf42e"],
       ["examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh", "a02d26d57716aff60099f98dbf76073a34bacd9a753bcb79d58d47c0ace603c7"],
       ["examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh", "94734d16e766e6295b4311cbeb5b086566a25da21207e9ea2811339951ee65c5"],
       ["examples/gfx950_low_precision/run-fp4-attention-gfx950.sh", "b4bf55787793b3aa3f9fc042521c2941e643d04a2b6bf7933b1847d891b53dd6"],
@@ -1203,7 +1253,8 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_gpt_oss_decode/src/reference.rs", "1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05"],
       ["examples/gfx950_gpt_oss_decode/tests/reference.rs", "60156d4d1c2d932e00c792b3cb65b63784131b1919f3a97cd83d29b4e8ec0e94"],
       ["examples/gfx950_gpt_oss_decode/tests/source.rs", "3c856f586ccdcb36644a805e5c795b72385ee4bc5d93e627ac9892406d0a2f22"],
-      ["perf-evidence/gpt-oss-layer-tile-evidence-v1.json", "9f1d7b33bf6bfbe0e7f333d7878baff66e8ce44d67b9abb52558b594384e19f7"],
+      ["perf-evidence/gpt-oss-layer-tile-evidence-v1.json", "359f65a3d702e2ad433f443967f448d3d6611599ddfa052560bd88e9c8a47983"],
+      ["perf-evidence/gfx950-advanced-evidence-v1.json", "550b290ec4e8dbf43fa338f31fda88199c6f8d86ae55f9570789bac7b968fd6a"],
       ["perf-evidence/run-gpt-oss-performance.sh", "e4ab1ba9b2f7ce2489bf163922d9cdb4bbf01591643cc9aef0d4b30db175f28f"],
       ["crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs", "d47167b820db9023621489a35db3609f87e7a0eaf6395a87034d2ca7f0c99e09"],
     ] as const;

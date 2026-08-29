@@ -106,7 +106,7 @@ describe("application shell", () => {
       "Portable namespace: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Rust-produced HSACO SHA-256: 390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+      "Rust-produced HSACO SHA-256: 90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "Rust numerical result: max_absolute_error=2.235174179e-8",
@@ -151,7 +151,7 @@ describe("application shell", () => {
       "output max_absolute_error=7.450580597e-9",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "four shard launches; output outputs=16 max_absolute_error=0.000000000e0",
+      "two shard launches; output outputs=16 max_absolute_error=0.000000000e0",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "Performance result: not claimed",

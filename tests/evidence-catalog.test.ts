@@ -5,10 +5,10 @@ import { evidenceCatalog } from "../src/content/evidence-catalog";
 describe("evidence source digest scopes", () => {
   it("classifies displayed tab excerpts separately from whole files", () => {
     const expected = [
-      ["gfx950-fp4-gemm: Rust kernel", "gfx950_fp4_gemm_rust", "478da27352b8d9acae02dbc10b28b353fcd985440f51af73145c3217505012c8"],
-      ["gfx950-fp8-gemm: Rust kernel", "gfx950_fp8_gemm_rust", "d54dd98522394418dfa1835858b01be523de1ef6b9f493b866eb802d8c8b55bd"],
-      ["gfx950-fp4-attention: Rust kernel", "gfx950_fp4_attention_rust", "3d4ec672e3f10b86fe60df65adfb7a1116f53ea1b458ded39e72d177f034437b"],
-      ["gfx950-fp8-attention: Rust kernel", "gfx950_fp8_attention_rust", "98c3eb5b1040116c6eff349dfacfaf141855ad9145993d345e296cca573095c3"],
+      ["gfx950-fp4-gemm: Rust kernel", "gfx950_fp4_gemm_rust", "0a4a3d325d588ddad15697aa58f0e354cd9af20ae83f441432bd1489965fecad"],
+      ["gfx950-fp8-gemm: Rust kernel", "gfx950_fp8_gemm_rust", "004ad607c55169f7f3291ea4cd74afc63e937877ec84efacf5b731f99248b9fd"],
+      ["gfx950-fp4-attention: Rust kernel", "gfx950_fp4_attention_rust", "2e5adea75d61f9524f1f9ee9d0f00fa9c8e4a0fac3d1ebc2d8c49401b1797a96"],
+      ["gfx950-fp8-attention: Rust kernel", "gfx950_fp8_attention_rust", "c926d59ea1746895f406b72d3e343c38d2b240faec4c0654675dec6e8e05b738"],
     ] as const;
 
     for (const [label, symbol, displayedSha256] of expected) {
@@ -16,7 +16,7 @@ describe("evidence source digest scopes", () => {
         (candidate) => candidate.label === label,
       );
 
-      expect(source?.commit).toBe("a710b6c67a908caa23d2409a5d3c4a275103cd60");
+      expect(source?.commit).toBe("c1383e97db732f9f1ff8105f10d5c2b5971143e1");
       expect(source?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
       );

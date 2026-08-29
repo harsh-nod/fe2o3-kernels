@@ -18,9 +18,10 @@ const rustReferencePath = "examples/gfx950_low_precision/src/reference.rs";
 const rustContractPath = "examples/gfx950_low_precision/src/lib.rs";
 const rustReadmePath = "examples/gfx950_low_precision/README.md";
 const rustManifestPath = "examples/gfx950_low_precision/Cargo.toml";
-const coreSourceCommit = "a710b6c67a908caa23d2409a5d3c4a275103cd60";
-const coreSourceTree = "dfd5ec9a357d4cbd7879078c23f7b3114cdea641";
-const rustKernelFileSha256 = "cbfeef4eb919076dfdbf858d57bb89effa16e5c0754efba95778b410f067850a";
+const rustLockPath = "examples/gfx950_low_precision/Cargo.lock";
+const coreSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
+const coreSourceTree = "42385e6464ca40318fc70ae104845d3997844140";
+const rustKernelFileSha256 = "7b8e9810ff23a84fae69ae87e52d88a5512f1afd2c176de3d72edb116a003dca";
 const rustReferenceFileSha256 = "388ec3bf3fff9a5290456afc92b9bd24be8813d9ae914865f780affb7fb6e3e7";
 const hipSourcePath = "examples/gfx950_low_precision/gfx950_low_precision.hip";
 const hipSourceSha256 = "5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a";
@@ -47,8 +48,8 @@ const fp4GemmEvidence: ProductionRustEvidence = {
   label: "FP4 GEMM",
   runnerPath: "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
   namespace: "ff22ff3610dda0a94803a8011ced229b78c77400ca63c9b929d6ecba78ed6f01",
-  llvmSha256: "b92ceef45655bb2ae131c2b09645ff8fb588299a994e9cbf84b07b7868fca115",
-  hsacoSha256: "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d",
+  llvmSha256: "2eae91d0c3c4181684589ce9c6dc3fe05a78b1d37bf6748f7c67726c119a3e4e",
+  hsacoSha256: "1308d41a97d523d2e77ad15e16a3292e9d5a75e2f4eedf53f9e1008c481ca750",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "cbsz:4 blgp:4",
@@ -62,8 +63,8 @@ const fp8GemmEvidence: ProductionRustEvidence = {
   label: "FP8 GEMM",
   runnerPath: "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
   namespace: "d67f1755b38fbdac67cec83da3ebc359f874e3fbf90fcc036471455ec117dfea",
-  llvmSha256: "351dbfeecec00e673e3e15557b97dc1c53006839dfb9d1a0a7b03ac6c23ae6e3",
-  hsacoSha256: "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f",
+  llvmSha256: "9081a38065e977df077cc0fd142b77fb008fdd88a54e3f6915c704fdc5349d16",
+  hsacoSha256: "701a0a4ef137173ba9563dfe8b3b1f916d3d57dca0063d393d8e81c671e4dd2b",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "E4M3 selectors (not cbsz:4 blgp:4)",
@@ -77,8 +78,8 @@ const fp4AttentionEvidence: ProductionRustEvidence = {
   label: "FP4 attention",
   runnerPath: "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
   namespace: "a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
-  llvmSha256: "ea183b9dedc375a1e98278d1053b7a500e0e8f4efe618230479e19bc1b81ecaa",
-  hsacoSha256: "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+  llvmSha256: "0914282d013f8bf6da47e2e807b569e7ca47beb908f30616211e8ff25529e508",
+  hsacoSha256: "90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "cbsz:4 blgp:4",
@@ -94,8 +95,8 @@ const fp8AttentionEvidence: ProductionRustEvidence = {
   label: "FP8 attention",
   runnerPath: "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
   namespace: "0c9610e86137831ce25b08b9ad87073ec16f459aa11aeea6806733f788bbeec1",
-  llvmSha256: "2e6a2c79a57e0a8796fe95c806fbbf3a8406bae6c55646802beb235b01d88c2b",
-  hsacoSha256: "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221",
+  llvmSha256: "32d869f2c4512717548913f693978773e91112f7f67158418cfb155106ef0d58",
+  hsacoSha256: "9208b439a4fbd1a987ea3cca19c01cac79e69e00b021ccb54f09f440d11f6294",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "E4M3 selectors (not cbsz:4 blgp:4)",
@@ -155,6 +156,7 @@ function productionRustClaim(evidence: ProductionRustEvidence): Claim {
         rustReferencePath,
         rustContractPath,
         rustManifestPath,
+        rustLockPath,
         rustReadmePath,
         evidence.runnerPath,
         evidence.hardwareTestPath,
@@ -259,7 +261,7 @@ function tutorialTabs(
           "Rust gfx950 lowering supported: true",
           `Target: ${productionTarget}, Wave64, code object V6`,
           `Required Rust ISA: ${evidence.requiredIsa.join(", ")}`,
-          "Rust observation: ROCm 7.2.1 on MI350X gfx950, ssh host mi350, 2026-08-26.",
+          "Rust observation: ROCm 7.2.1 on MI350X gfx950, ssh host mi350, 2026-08-29.",
           `Rust numerical result: ${evidence.numericalResult}`,
           `Acceptance tolerance: ${evidence.tolerance}`,
           "The digest-pinned test checked all 256 outputs, immutable inputs, output canaries, exact target metadata, and symbol-scoped ISA.",
@@ -310,7 +312,7 @@ const fp4Gemm: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp4_gemm_rust",
-    "478da27352b8d9acae02dbc10b28b353fcd985440f51af73145c3217505012c8",
+    "0a4a3d325d588ddad15697aa58f0e354cd9af20ae83f441432bd1489965fecad",
     "gemm_reference",
     "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
     "gfx950_fp4_gemm",
@@ -354,7 +356,7 @@ const fp8Gemm: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp8_gemm_rust",
-    "d54dd98522394418dfa1835858b01be523de1ef6b9f493b866eb802d8c8b55bd",
+    "004ad607c55169f7f3291ea4cd74afc63e937877ec84efacf5b731f99248b9fd",
     "gemm_reference",
     "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
     "gfx950_fp8_gemm",
@@ -399,7 +401,7 @@ const fp4Attention: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp4_attention_rust",
-    "3d4ec672e3f10b86fe60df65adfb7a1116f53ea1b458ded39e72d177f034437b",
+    "2e5adea75d61f9524f1f9ee9d0f00fa9c8e4a0fac3d1ebc2d8c49401b1797a96",
     "attention_reference",
     "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
     "gfx950_fp4_flash_attention",
@@ -443,7 +445,7 @@ const fp8Attention: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp8_attention_rust",
-    "98c3eb5b1040116c6eff349dfacfaf141855ad9145993d345e296cca573095c3",
+    "c926d59ea1746895f406b72d3e343c38d2b240faec4c0654675dec6e8e05b738",
     "attention_reference",
     "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
     "gfx950_fp8_flash_attention",

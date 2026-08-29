@@ -966,7 +966,7 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
     "Portable namespace: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO SHA-256: 390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+    "Rust-produced HSACO SHA-256: 90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "Rust numerical result: max_absolute_error=2.235174179e-8",
@@ -1003,28 +1003,28 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950-fp4-gemm",
       "gfx950 FP4 GEMM",
       "gfx950_fp4_gemm_rust",
-      "f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d",
+      "1308d41a97d523d2e77ad15e16a3292e9d5a75e2f4eedf53f9e1008c481ca750",
       "max_absolute_error=0",
     ],
     [
       "gfx950-fp8-gemm",
       "gfx950 FP8 GEMM",
       "gfx950_fp8_gemm_rust",
-      "4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f",
+      "701a0a4ef137173ba9563dfe8b3b1f916d3d57dca0063d393d8e81c671e4dd2b",
       "max_absolute_error=0",
     ],
     [
       "gfx950-fp4-attention",
       "gfx950 FP4 flash attention",
       "gfx950_fp4_attention_rust",
-      "390b8cd9d8493ddbfb953e53c4a17cfb0cdab5074365b77b7c14bf64b6f64008",
+      "90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
       "max_absolute_error=2.235174179e-8",
     ],
     [
       "gfx950-fp8-attention",
       "gfx950 FP8 flash attention",
       "gfx950_fp8_attention_rust",
-      "5511819cf16a7119f846c6fe01de703257fd9c217b8fa7f32438bf47635c9221",
+      "9208b439a4fbd1a987ea3cca19c01cac79e69e00b021ccb54f09f440d11f6294",
       "max_absolute_error=5.960464478e-8",
     ],
   ] as const;
@@ -1057,7 +1057,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       page.getByRole("link", { name: "Source", exact: true }),
     ).toHaveAttribute(
       "href",
-      /\/blob\/a710b6c67a908caa23d2409a5d3c4a275103cd60\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+      /\/blob\/c1383e97db732f9f1ff8105f10d5c2b5971143e1\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
     );
     await page.getByRole("tab", { name: "Evidence record" }).click();
     await expect(page.getByRole("tabpanel")).toContainText(
@@ -1195,17 +1195,17 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/a542213a28265ec5b4f512c3edea84326a098eae/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/c1383e97db732f9f1ff8105f10d5c2b5971143e1/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Production Rust fused: median 1.068124 ms",
+    "Production Rust fused: median 1.064644 ms",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Exact unfused HIP router + attention + expert: median 0.780683 ms",
+    "Exact unfused HIP router + attention + expert: median 0.780362 ms",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "fused is 1.3682x slower",
+    "fused is 1.3643x slower",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "State-of-the-art claim: not claimed",
@@ -1219,7 +1219,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     "reduced norm max_error=0 with norm=0.614919",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO SHA-256: e36673b4eeb8eea0563a3b7141eee99da52843e53f967c53db56a8987e6f1a31",
+    "Rust-produced HSACO SHA-256: bb6e61181e05244a71b6475bcc34a6a0c62d94147bbe27304287f71d8181fe5d",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "Evidence status: observed",
