@@ -247,8 +247,11 @@ export function GpuDebugProfilerWorkbench() {
         <section className="gpu-agent-record" aria-labelledby="gpu-agent-record-heading">
           <header>
             <Braces size={16} aria-hidden="true" />
-            <h3 id="gpu-agent-record-heading">Sanitized agent record</h3>
+            <h3 id="gpu-agent-record-heading">Illustrative evidence summary</h3>
           </header>
+          <p>
+            Tutorial projection only. This JSON is not a protocol wire record.
+          </p>
           <pre data-testid="gpu-workbench-record">
             <code>{`${JSON.stringify(backend.record, null, 2)}\n`}</code>
           </pre>

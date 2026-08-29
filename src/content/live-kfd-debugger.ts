@@ -1,20 +1,6 @@
 import milestoneData from "../../config/live-kfd-debugger-milestone.json";
 import { deepFreeze } from "./registry";
 
-export type LiveKfdOperationId =
-  | "binding"
-  | "queues"
-  | "suspend"
-  | "semantics";
-
-export interface LiveKfdOperationExample {
-  id: LiveKfdOperationId;
-  label: string;
-  summary: string;
-  request: Record<string, unknown>;
-  response: Record<string, unknown>;
-}
-
 export interface LiveKfdComparisonRow {
   surface: string;
   fe2o3: string;
@@ -118,8 +104,6 @@ export function liveKfdSourceUrl(path: string): string {
 }
 
 const identity = (byte: string) => byte.repeat(64 / byte.length);
-const bindingIdentity = identity("11");
-const codeObjectIdentity = identity("22");
 const declarationIdentity = identity("33");
 const stoppedCheckpointIdentity = identity("a1");
 const admittedMiIdentity = identity("b2");
@@ -134,12 +118,12 @@ function laneCells(
 export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
   {
     id: "direct-kfd",
-    label: "Direct KFD checkpoint",
+    label: "Direct KFD queue envelope",
     shortLabel: "Direct KFD",
-    status: "MI300X header envelopes observed",
+    status: "MI300X stopped-queue envelope observed",
     scope: "gfx942 · KFD 1.18 · session-owned suspension",
     summary:
-      "The session owns the stopped checkpoint and validates device, queue, save-area, and eight XCC header envelopes. Linux KFD does not publish the inner gfx942 wave/register record layout.",
+      "The session retains queue suspension and validates the device, queue, save area, and eight sequential XCC header reads. They are not one atomic hardware checkpoint, and Linux KFD does not publish the inner gfx942 wave/register record layout.",
     evidenceId: stoppedCheckpointIdentity,
     origin: "observed",
     matrixLabel: "Direct KFD unavailable inner wave and lane records",
@@ -181,16 +165,16 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
     ],
     capabilities: [
       {
-        label: "Checkpoint ownership",
+        label: "Suspension ownership",
         state: "available",
         origin: "observed",
-        detail: "session-owned suspension with queue/device snapshots before and after",
+        detail: "session-retained suspension with exact queue/device binding checks",
       },
       {
         label: "XCC topology",
         state: "available",
         origin: "observed",
-        detail: "8 × 40-byte CPU-visible context header envelopes",
+        detail: "8 sequential 40-byte CPU-visible headers; non-atomic across XCCs",
       },
       {
         label: "Wave + lane records",
@@ -206,19 +190,31 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       },
     ],
     record: {
-      backend: "direct_kfd",
-      result: "stopped_checkpoint",
-      validation_scope: "mi300x_live_header_envelopes",
-      checkpoint_identity: stoppedCheckpointIdentity,
-      device: { generation: 1, ordinal: 1 },
-      queue: { generation: 1, ordinal: 1 },
-      target: 90402,
-      xcc_count: 8,
-      context_header_bytes_per_xcc: 40,
-      context_save_area_bytes_per_xcc: 0x1621000,
-      allocation_bytes: 0xb167000,
-      debug_region_bytes: 0x5f000,
-      inner_records: {
+      projection_schema: "fe2o3-tutorial-evidence-summary-v1",
+      protocol_wire_record: false,
+      backend_surface: "direct_kfd_stopped_queue_envelope",
+      validated_evidence_scope: "mi300x_live_header_envelopes",
+      session_state: "running_with_suspension_retained",
+      observed_outer_envelope: {
+        envelope_identity: stoppedCheckpointIdentity,
+        device: { generation: 1, ordinal: 1 },
+        queue: { generation: 1, ordinal: 1 },
+        gfx_target_version: 90402,
+        xcc_count: 8,
+        ownership: "session_retained_suspension",
+        resume_required: true,
+        context_save: {
+          availability: "available",
+          context_bytes_per_xcc: 0x1621000,
+          total_allocation_bytes: 0xb167000,
+          headers: Array.from({ length: 8 }, (_, xccOrdinal) => ({
+            xcc_ordinal: xccOrdinal,
+            header_bytes: 40,
+            observation: "sequential_non_atomic_cpu_shadow",
+          })),
+        },
+      },
+      unavailable_inner_records: {
         wave: { status: "unavailable", reason: "WaveRecordLayoutNotInKfdUapi" },
         lane: { status: "unavailable", reason: "LaneStateRequiresWaveRecords" },
         registers: {
@@ -234,87 +230,69 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
   },
   {
     id: "rocgdb-mi",
-    label: "ROCgdb / MI admission",
+    label: "ROCgdb / MI thread admission",
     shortLabel: "ROCgdb / MI",
-    status: "Deterministic transcript admitted",
-    scope: "fake-MI tests + installed capability discovery; live GPU stop unvalidated",
+    status: "Generic MI thread admitted",
+    scope: "fake-MI tests + installed ROCgdb; GPU classification unavailable",
     summary:
-      "A strict parser admits one caller-selected GPU thread from structured -thread-info, then sanitizes stopped wave, logical lanes, relative PC, registers, values, memory, and control audit records.",
+      "A strict parser admits one caller-selected generic thread from structured -thread-info. Host, missing, and GPU-looking target text cannot establish a hardware wave; authorized breakpoint, continue, pause, and step control remain available.",
     evidenceId: admittedMiIdentity,
     origin: "observed",
-    matrixLabel: "Admitted ROCgdb transcript waves by logical lanes",
+    matrixLabel: "ROCgdb GPU wave and lane classification availability",
     matrixNote:
-      "These cells reproduce a deterministic fake-MI fixture. Active lanes require the token-correlated exec register mask; this is not evidence of a validated live GPU stop.",
+      "The deterministic fixture authenticates a generic MI thread record only. Every GPU lane remains unavailable until a separate trusted source correlates that thread to a hardware wave.",
     waveRows: [
       {
-        id: "wave-3",
-        label: "wave 3 · SIMD 1",
-        cells: laneCells((lane) => ({
-          lane,
-          state: lane < 8 ? "active" : "inactive",
-          origin: "observed",
-          evidenceId: admittedMiIdentity,
-          detail:
-            lane < 8
-              ? "active in admitted exec mask 0x00000000000000ff"
-              : "inactive in admitted exec mask 0x00000000000000ff",
-        })),
-      },
-      {
-        id: "wave-9",
-        label: "wave 9 · mask absent",
+        id: "gpu-classification",
+        label: "GPU wave unavailable",
         cells: laneCells((lane) => ({
           lane,
           state: "unavailable",
           origin: "unavailable",
-          detail: "not_captured: token-correlated exec register unavailable",
+          detail: "gpu_classification_unavailable",
         })),
       },
     ],
     panels: [
       {
         label: "Source",
-        value: "admitted span · file identity 7c…e1 · bytes 420–438",
-        origin: "observed",
-        evidenceId: admittedMiIdentity,
+        value: "GPU source site unsupported without authenticated thread correlation",
+        origin: "unavailable",
       },
       {
         label: "Kernel IR",
-        value: "caller-bound fn 0 · bb 3 · op 12",
-        origin: "declared",
-        evidenceId: declarationIdentity,
+        value: "No KIR site is inferred from a generic MI thread",
+        origin: "unavailable",
       },
       {
         label: "ISA / PC",
-        value: "code object + 0x1f18 · instruction text unavailable",
-        origin: "observed",
-        evidenceId: admittedMiIdentity,
+        value: "Relative GPU PC unsupported",
+        origin: "unavailable",
       },
       {
         label: "Allocation",
-        value: "allocation 1:g0 + 32 · 4 bytes",
-        origin: "observed",
-        evidenceId: admittedMiIdentity,
+        value: "Allocation-relative GPU memory unsupported",
+        origin: "unavailable",
       },
     ],
     capabilities: [
       {
-        label: "Stopped wave + logical lanes",
+        label: "Structured generic threads",
         state: "available",
         origin: "observed",
-        detail: "available in admitted structured transcript only",
+        detail: "caller-selected -thread-info tuple with sanitized logical identity",
       },
       {
-        label: "Relative PC + registers",
-        state: "available",
-        origin: "observed",
-        detail: "native addresses are sanitized before admission",
+        label: "GPU wave + lane state",
+        state: "unavailable",
+        origin: "unavailable",
+        detail: "target-id text is not trusted GPU classification evidence",
       },
       {
-        label: "Allocation-relative memory",
-        state: "available",
-        origin: "observed",
-        detail: "bounded exact fixture; no native address returned",
+        label: "GPU registers + PC + memory",
+        state: "unavailable",
+        origin: "unavailable",
+        detail: "unsupported until a trusted GPU thread correlation exists",
       },
       {
         label: "Pause / continue / step",
@@ -324,18 +302,20 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       },
     ],
     record: {
-      backend: "rocgdb_mi",
-      result: "stopped_wave",
-      validation_scope: "deterministic_fake_mi_fixture",
+      projection_schema: "fe2o3-tutorial-evidence-summary-v1",
+      protocol_wire_record: false,
+      backend_surface: "rocgdb_mi_generic_thread_admission",
+      validated_evidence_scope: "deterministic_fake_mi_fixture",
       live_gpu_stop_validated: false,
-      selected_thread: { source: "structured_thread_info", ordinal: 3 },
-      wave: { identity: identity("b4"), logical_lanes: 64 },
-      exec: { value: "0x00000000000000ff", origin: "observed" },
-      pc: {
-        encoding: "code_object_relative",
-        code_object: codeObjectIdentity,
-        byte_offset: 7960,
+      admission: {
+        source: "structured_thread_info",
+        thread_ordinal: 3,
+        thread_identity: admittedMiIdentity,
+        classification: "generic_mi_thread",
       },
+      gpu_classification: { status: "unavailable", reason: "unsupported" },
+      stopped_wave: { status: "unavailable", reason: "unsupported" },
+      registers: { status: "unavailable", reason: "unsupported" },
       control: {
         authorization_identity: identity("b5"),
         expected_revision: 4,
@@ -351,7 +331,7 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
     status: "Canonical fixture queried",
     scope: "rocprofv3 structured metadata + ATT references; external decoder retained",
     summary:
-      "Bundle V4 answers bounded dispatch, hotspot, comparison, and next-capture queries. Numeric duration and counter deltas require exact environment, tool, configuration, stable-device, dispatch sequence/device/launch, KIR, and artifact identities; arguments and input content remain unrepresented.",
+      "Bundle V4 answers bounded dispatch, hotspot, comparison, and next-capture queries. Its only numeric cross-bundle delta is total dispatch duration in opaque collector ticks; that requires exact caller-declared environment, tool, configuration, stable-device, KIR, artifact, and dispatch workload identities. Counter Capture V2 is a separate raw-counter path with no stable environment identity or environment-controlled performance conclusion.",
     evidenceId: profilerBundleIdentity,
     origin: "inferred",
     matrixLabel: "Profiler ATT wave and lane event availability",
@@ -405,7 +385,14 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
         state: "available",
         origin: "declared",
         detail:
-          "exact environment/tool/config/device and dispatch/KIR/artifact identity equality",
+          "Bundle V4 identity equality gates its dispatch-duration delta only",
+      },
+      {
+        label: "Counter Capture V2",
+        state: "available",
+        origin: "inferred",
+        detail:
+          "separate raw-value deltas; stable environment and performance conclusion unavailable",
       },
       {
         label: "Next-capture plan",
@@ -421,10 +408,21 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       },
     ],
     record: {
-      backend: "semantic_profiler_bundle_v4",
+      projection_schema: "fe2o3-tutorial-evidence-summary-v1",
+      protocol_wire_record: false,
+      backend_surface: "semantic_profiler_bundle_v4",
       bundle_identity: profilerBundleIdentity,
-      comparison: {
-        status: "comparable_for_duration_and_raw_counters",
+      device_binding: {
+        strategy: "absolute_agent_id_to_kfd_node",
+        csv_agent_id: "Agent <canonical decimal KFD node ID>",
+        positional_binding: false,
+        missing_binding: "reject",
+        authorization_binds: ["kfd_node", "stable_device_identity"],
+        topology_revalidation: ["before_collection", "after_collection"],
+      },
+      att_agent_binding: "explicit_required",
+      bundle_v4_duration_comparison: {
+        status: "comparable_for_dispatch_duration",
         exact: [
           "environment",
           "tool",
@@ -434,11 +432,27 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
           "kir",
           "artifact",
         ],
+        artifact_identity: "separately_supplied_fixture_claim_available_and_exact",
+        ordinary_profile_recipe_artifact_identity: "unavailable",
         unrepresented: ["arguments", "input_content"],
+        numeric_dimension: "dispatch_total_duration_ticks",
+        clock: "opaque_collector_ticks",
         pc_delta: {
           status: "unavailable",
           reason: "capture_local_code_object_identity",
         },
+      },
+      counter_capture_v2_comparison: {
+        capture_schema: "fe2o3-semantic-counter-capture-v2",
+        separate_from_bundle_v4: true,
+        status: "raw_counter_deltas_when_dimensions_match",
+        requires: [
+          "exact_counter_definitions",
+          "matching_dispatch_declarations",
+        ],
+        stable_environment: "unavailable",
+        performance_conclusion: "unavailable",
+        missing_dimensions: "unavailable_not_zero",
       },
       query: "plan_next_capture",
       goal: "explain_waits",
@@ -458,23 +472,6 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
   },
 ];
 
-const session = (revision: number, commandsProcessed: number) => ({
-  backend: "direct_kfd",
-  state: "running",
-  revision,
-  commands_processed: commandsProcessed,
-  observation_sequence: 2,
-  identity_generation: 1,
-  runtime_enabled: true,
-  binding_identity: bindingIdentity,
-});
-
-const unavailableTruth = { origin: "unavailable", evidence: [] };
-const declarationTruth = {
-  origin: "declared",
-  evidence: [{ kind: "declaration", identity: declarationIdentity }],
-};
-
 export const liveKfdCommand = [
   "fe2o3-debug live-kfd \\",
   "  --bundle-v2 kernel.fe2sim \\",
@@ -484,189 +481,10 @@ export const liveKfdCommand = [
   "  -- ./target-app",
 ].join("\n");
 
-export const liveKfdOperations: LiveKfdOperationExample[] = [
-  {
-    id: "binding",
-    label: "Exact binding",
-    summary:
-      "The debugger distinguishes admitted bytes, a matching target declaration, and the still-unobserved execution identity.",
-    request: {
-      schema: "fe2o3-live-gpu-debug-request-v3",
-      operation: "get_session_binding",
-      request_id: 1,
-      expected_revision: 0,
-    },
-    response: {
-      status: "ok",
-      schema: "fe2o3-live-gpu-debug-response-v3",
-      request_id: 1,
-      operation: "get_session_binding",
-      session: session(0, 1),
-      result: {
-        result: "session_binding",
-        binding: {
-          binding_identity: bindingIdentity,
-          code_object_version: 6,
-          declared_code_object: {
-            digest: codeObjectIdentity,
-            canonical_bytes: 512,
-          },
-          declaration: declarationTruth,
-          target_declared_code_object: {
-            status: "available",
-            value: {
-              digest: codeObjectIdentity,
-              canonical_bytes: 512,
-            },
-            truth: declarationTruth,
-          },
-          target_telemetry: {
-            status: "available",
-            value: {
-              records: 3,
-              artifact_records: 2,
-              dispatch_records: 0,
-              allocation_records: 0,
-              diagnostic_records: 0,
-              session_ended: false,
-            },
-            truth: declarationTruth,
-          },
-          execution_code_object: {
-            status: "unavailable",
-            reason: "not_observed",
-            truth: unavailableTruth,
-          },
-          kernel_ir_v7: {
-            digest: identity("44"),
-            canonical_bytes: 320,
-          },
-          source_map_v2: {
-            digest: identity("55"),
-            canonical_bytes: 1040,
-          },
-          cpu_reference: {
-            bundle_identity: identity("66"),
-            request_identity: identity("77"),
-            configuration_identity: identity("88"),
-            deterministic_evidence: {
-              status: "unavailable",
-              reason: "not_captured",
-            },
-          },
-        },
-      },
-    },
-  },
-  {
-    id: "queues",
-    label: "Live queues",
-    summary:
-      "KFD supplies a generation-scoped logical queue identity without exposing the native queue ID, PID, descriptor, or GPU address.",
-    request: {
-      schema: "fe2o3-live-gpu-debug-request-v3",
-      operation: "inspect_hardware_queues",
-      request_id: 2,
-      expected_revision: 0,
-      page: { expected_generation: 0, start: 0, limit: 16 },
-    },
-    response: {
-      status: "ok",
-      schema: "fe2o3-live-gpu-debug-response-v3",
-      request_id: 2,
-      operation: "inspect_hardware_queues",
-      session: session(0, 2),
-      result: {
-        result: "hardware",
-        hardware: {
-          result: "queues",
-          generation: 1,
-          items: [
-            {
-              id: { generation: 1, ordinal: 1 },
-              device: { generation: 1, ordinal: 1 },
-              ring_bytes: 4096,
-              queue_type: 0,
-              context_save_area_bytes: 185036800,
-              suspended_by_session: false,
-            },
-          ],
-          next_start: 0,
-        },
-      },
-    },
-  },
-  {
-    id: "suspend",
-    label: "Queue control",
-    summary:
-      "A committed KFD mutation advances the control revision; partial or indeterminate effects use distinct result classes.",
-    request: {
-      schema: "fe2o3-live-gpu-debug-request-v3",
-      operation: "suspend_queues",
-      request_id: 3,
-      expected_revision: 0,
-      queues: [{ generation: 1, ordinal: 1 }],
-      grace_period: 0,
-    },
-    response: {
-      status: "ok",
-      schema: "fe2o3-live-gpu-debug-response-v3",
-      request_id: 3,
-      operation: "suspend_queues",
-      session: session(1, 3),
-      result: {
-        result: "hardware",
-        hardware: {
-          result: "queue_control",
-          outcomes: [
-            {
-              queue: { generation: 1, ordinal: 1 },
-              state: "complete",
-            },
-          ],
-          effect: "committed",
-        },
-      },
-    },
-  },
-  {
-    id: "semantics",
-    label: "Honest absence",
-    summary:
-      "The live backend does not fabricate a stopped wave, PC, register file, or source site from a queue snapshot or CPU replay.",
-    request: {
-      schema: "fe2o3-live-gpu-debug-request-v3",
-      operation: "inspect_stopped_scopes",
-      request_id: 4,
-      expected_revision: 0,
-      binding_identity: bindingIdentity,
-      stop_identity: identity("99"),
-      scope: {
-        level: "dispatch",
-        dispatch: { domain: "runtime_model", identity: identity("aa") },
-      },
-      page: {
-        snapshot_identity: identity("bb"),
-        start: 0,
-        limit: 16,
-      },
-    },
-    response: {
-      status: "unavailable",
-      schema: "fe2o3-live-gpu-debug-response-v3",
-      request_id: 4,
-      operation: "inspect_stopped_scopes",
-      session: session(0, 4),
-      reason: "unsupported",
-    },
-  },
-];
-
 export const liveKfdMilestone = [
   {
-    label: "KFD checkpoint headers",
-    state: "observed on MI300X",
+    label: "KFD stopped queue envelope",
+    state: "sequential headers observed on MI300X",
     truth: "observed",
   },
   {
@@ -675,8 +493,8 @@ export const liveKfdMilestone = [
     truth: "unavailable",
   },
   {
-    label: "ROCgdb / MI state",
-    state: "observed in deterministic fixture",
+    label: "ROCgdb / MI generic thread",
+    state: "admitted; GPU classification unavailable",
     truth: "observed",
   },
   {
@@ -687,8 +505,9 @@ export const liveKfdMilestone = [
 ] as const;
 
 export const liveKfdUnsupported = [
+  "Atomic cross-XCC KFD checkpoint capture; the eight CPU-shadow headers are read sequentially",
   "Direct KFD inner gfx942 wave, lane, register, and PC records",
-  "Live-GPU validation of the ROCgdb/MI stopped-state substrate",
+  "ROCgdb/MI GPU-thread classification and live GPU wave state",
   "Decoded ATT events, waits, and full-grid wave coverage",
   "Authenticated source/KIR/ISA correlation across every backend",
   "Performance prediction or automated causal diagnosis",
@@ -709,7 +528,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Live hardware depth",
     fe2o3:
-      "Direct KFD owns suspension and validates stopped header topology, but inner wave/register records remain unavailable. ROCgdb/MI stopped-state support is structurally tested, not live-stop validated.",
+      "Direct KFD owns suspension and validates a sequential stopped-queue header envelope, but inner wave/register records remain unavailable. ROCgdb/MI admits generic threads and control; it does not yet authenticate GPU thread or wave state.",
     rocgdb:
       "Ahead today: hardware wavefront threads, lanes, GPU register groups, breakpoints, stepping, and source-oriented live debugging.",
     rocprof:
@@ -720,7 +539,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Agent interaction",
     fe2o3:
-      "Strict bounded records join logical IDs, exact evidence links, revisions, typed unavailable results, control effects, profiler queries, comparisons, and next-capture plans.",
+      "Strict bounded records join logical IDs, exact evidence links, revisions, typed unavailable results, control effects, profiler queries, comparisons, and next-capture plans. GPU-looking MI text cannot upgrade a generic thread into wave truth.",
     rocgdb:
       "GDB/MI is scriptable and mature, but its generic debugger model does not encode fe2o3 semantic evidence or exact CPU-reference correlation.",
     rocprof:
@@ -742,7 +561,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Performance evidence",
     fe2o3:
-      "Imports strict rocprofv3 metadata and ATT references into a content-addressed bundle. Duration and raw-counter deltas require exact environment/tool/configuration/stable-device plus dispatch sequence/device/launch, KIR, and artifact identities. Arguments and input content are unrepresented; cross-run PC deltas and decoded waits remain unavailable.",
+      "Profiler Bundle V4 imports strict rocprofv3 metadata and ATT references, joins absolute agent IDs to stable KFD node identities by key, and compares only total dispatch duration when its caller-declared environment/tool/configuration/device/workload/KIR/artifact identities are exact. Counter Capture V2 separately computes raw-value deltas for exact counter definitions and matching dispatch declarations; its stable environment is unavailable, so the result is not an environment-controlled performance conclusion. Cross-run PC deltas and decoded waits remain unavailable.",
     rocgdb:
       "Interactive debugger state is its focus; it does not replace rocprof's counter and ATT collection workflows.",
     rocprof:
@@ -780,6 +599,34 @@ export const liveKfdSources = [
     label: "Target telemetry transport",
     path: "crates/fe2o3-kfd/src/target_debug_telemetry_v1.rs",
   },
+  {
+    label: "Stopped queue producer",
+    path: "crates/fe2o3-kfd/src/stopped_state_v1.rs",
+  },
+  {
+    label: "ROCgdb MI protocol",
+    path: "crates/fe2o3-debug-protocol/src/rocgdb_mi_v3.rs",
+  },
+  {
+    label: "ROCgdb MI live backend",
+    path: "crates/fe2o3-debug-cli/src/rocgdb_mi_v3.rs",
+  },
+  {
+    label: "ROCgdb JSONL coordinator",
+    path: "crates/fe2o3-debug-cli/src/live_rocgdb_v3.rs",
+  },
+  {
+    label: "rocprofv3 orchestrator",
+    path: "crates/cargo-fe2o3/src/profile_command.rs",
+  },
+  {
+    label: "Profiler V4 importer",
+    path: "crates/fe2o3-semantic-import/src/profiler_bundle.rs",
+  },
+  {
+    label: "Profiler V4 queries",
+    path: "crates/fe2o3-semantic-query/src/profiler_query.rs",
+  },
 ] as const;
 
 export const liveKfdCurrentImplementationPaths = [
@@ -787,6 +634,8 @@ export const liveKfdCurrentImplementationPaths = [
   "crates/fe2o3-debug-protocol/src/rocgdb_mi_v3.rs",
   "crates/fe2o3-debug-cli/src/rocgdb_mi_parser_v3.rs",
   "crates/fe2o3-debug-cli/src/rocgdb_mi_v3.rs",
+  "crates/fe2o3-debug-cli/src/live_rocgdb_v3.rs",
+  "crates/cargo-fe2o3/src/profile_command.rs",
   "crates/fe2o3-semantic-import/src/profiler_bundle.rs",
   "crates/fe2o3-semantic-query/src/profiler_query.rs",
 ] as const;

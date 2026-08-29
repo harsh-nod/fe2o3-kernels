@@ -195,7 +195,7 @@ describe("live KFD debugger tutorial", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Scopes are separate")).toBeInTheDocument();
     expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
-      "stopped_checkpoint",
+      "stopped_queue_envelope",
     );
     expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
       "WaveRecordLayoutNotInKfdUapi",
@@ -211,7 +211,7 @@ describe("live KFD debugger tutorial", () => {
     );
     await user.click(
       screen.getByRole("gridcell", {
-        name: /wave 3 · SIMD 1, lane 1, active/u,
+        name: /GPU wave unavailable, lane 1, unavailable/u,
       }),
     );
     expect(screen.getByText(/lane 1/u)).toBeInTheDocument();

@@ -371,7 +371,9 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
     '"live_gpu_stop_validated": false',
   );
   await expect(
-    page.getByRole("gridcell", { name: /wave 3 · SIMD 1, lane 0, active/u }),
+    page.getByRole("gridcell", {
+      name: /GPU wave unavailable, lane 0, unavailable/u,
+    }),
   ).toBeVisible();
   await page.screenshot({
     path: testInfo.outputPath("rocgdb-mi-workbench.png"),

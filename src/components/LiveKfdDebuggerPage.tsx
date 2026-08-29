@@ -39,7 +39,7 @@ export function LiveKfdDebuggerPage() {
           <div>
             <h1>GPU debugger + profiler workbench</h1>
             <p className="lesson-summary">
-              Inspect direct-KFD checkpoint ownership, admitted ROCgdb/MI state,
+              Inspect direct-KFD queue-suspension evidence, generic ROCgdb/MI threads,
               and content-addressed rocprof evidence without merging their
               distinct authority or validation scopes.
             </p>
@@ -52,10 +52,10 @@ export function LiveKfdDebuggerPage() {
           <Radio size={17} aria-hidden="true" />
           <span>
             <strong>Scopes are separate</strong>
-            Direct-KFD checkpoint headers are MI300X-observed. ROCgdb stopped
-            state is admitted from deterministic MI fixtures, and Profiler V4
-            is queried from canonical fixtures; neither claims a validated live
-            GPU wave stop.
+            Direct-KFD stopped-queue headers are sequentially MI300X-observed,
+            not one atomic checkpoint. ROCgdb fixtures admit generic MI threads,
+            and Profiler V4 is queried from canonical fixtures; none claims a
+            validated live GPU wave stop.
           </span>
         </div>
       </header>
@@ -69,7 +69,7 @@ export function LiveKfdDebuggerPage() {
           <h2 id="live-kfd-truth-heading">Truth stays attached to its source</h2>
           <p>
             Matching identities enable composition. They do not upgrade a
-            declared compiler binding, admitted MI transcript, or ATT reference
+            declared compiler binding, admitted generic MI thread, or ATT reference
             into an independently observed live-machine fact.
           </p>
         </header>
@@ -214,10 +214,10 @@ export function LiveKfdDebuggerPage() {
           ))}
         </div>
         <aside className="live-kfd-current-paths">
-          <strong>Current implementation paths, outside the pinned milestone</strong>
+          <strong>Owning implementation paths</strong>
           <p>
-            These paths are listed for review and are intentionally not linked
-            to the older publication commit below.
+            The milestone pins these debugger and profiler boundaries to the
+            same compiler tree as the source links above.
           </p>
           <div>
             {liveKfdCurrentImplementationPaths.map((path) => (

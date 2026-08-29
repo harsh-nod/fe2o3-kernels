@@ -4998,6 +4998,16 @@ tr:last-child td {
   line-height: 1.55;
 }
 
+.gpu-agent-record > p {
+  padding: 9px 11px;
+  margin: 0;
+  color: var(--muted);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  font-size: 0.62rem;
+  line-height: 1.5;
+}
+
 .live-kfd-current-paths {
   padding: 14px;
   margin-top: 14px;

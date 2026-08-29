@@ -198,9 +198,9 @@ describe("live KFD debugger milestone", () => {
     expect(liveKfdPublication).toMatchObject({
       schema: "fe2o3-live-kfd-debugger-tutorial-milestone-v1",
       status: "observed-partial",
-      reviewedOn: "2026-08-28",
-      compilerCommit: "f8b123a4ec4e049ecc7c20efec56283732785b38",
-      compilerTree: "e17b0281d196b0bee568d526ab2ab1d245befe1c",
+      reviewedOn: "2026-08-29",
+      compilerCommit: "ba0efc7f958e3afdf72eceeef1c37c2994fe2402",
+      compilerTree: "3a595c10a3af6f28223ed89b6029ba444c16a2af",
       target: "gfx942:xnack-",
       mirrors: [
         "harsh-nod/fe2o3@refs/heads/main",
@@ -210,10 +210,25 @@ describe("live KFD debugger milestone", () => {
     expect(liveKfdPublication.validationCommand).toContain(
       "mi300x_live_kfd_v3_binds_observes_controls_and_terminates",
     );
-    expect(liveKfdSources).toHaveLength(4);
-    expect(liveKfdSourceUrl(liveKfdSources[2].path)).toBe(
-      "https://github.com/harsh-nod/fe2o3/blob/f8b123a4ec4e049ecc7c20efec56283732785b38/crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
-    );
+    const sourcePaths = [
+      "crates/fe2o3-debug-cli/README.md",
+      "crates/fe2o3-debug-protocol/src/live_gpu_v3.rs",
+      "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
+      "crates/fe2o3-kfd/src/target_debug_telemetry_v1.rs",
+      "crates/fe2o3-kfd/src/stopped_state_v1.rs",
+      "crates/fe2o3-debug-protocol/src/rocgdb_mi_v3.rs",
+      "crates/fe2o3-debug-cli/src/rocgdb_mi_v3.rs",
+      "crates/fe2o3-debug-cli/src/live_rocgdb_v3.rs",
+      "crates/cargo-fe2o3/src/profile_command.rs",
+      "crates/fe2o3-semantic-import/src/profiler_bundle.rs",
+      "crates/fe2o3-semantic-query/src/profiler_query.rs",
+    ];
+    expect(liveKfdSources.map((source) => source.path)).toEqual(sourcePaths);
+    for (const path of sourcePaths) {
+      expect(liveKfdSourceUrl(path)).toBe(
+        `https://github.com/harsh-nod/fe2o3/blob/ba0efc7f958e3afdf72eceeef1c37c2994fe2402/${path}`,
+      );
+    }
     expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
     );
@@ -227,9 +242,18 @@ describe("live KFD debugger milestone", () => {
     ]);
     const directKfd = liveWorkbenchBackends[0];
     expect(directKfd.record).toMatchObject({
-      validation_scope: "mi300x_live_header_envelopes",
-      xcc_count: 8,
+      projection_schema: "fe2o3-tutorial-evidence-summary-v1",
+      protocol_wire_record: false,
+      validated_evidence_scope: "mi300x_live_header_envelopes",
+      observed_outer_envelope: {
+        xcc_count: 8,
+        ownership: "session_retained_suspension",
+        resume_required: true,
+      },
     });
+    expect(JSON.stringify(directKfd.record)).toContain(
+      "sequential_non_atomic_cpu_shadow",
+    );
     expect(JSON.stringify(directKfd)).toContain("WaveRecordLayoutNotInKfdUapi");
     expect(directKfd.waveRows[0].cells).toHaveLength(64);
     expect(directKfd.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
@@ -237,18 +261,31 @@ describe("live KFD debugger milestone", () => {
 
     const rocgdb = liveWorkbenchBackends[1];
     expect(rocgdb.record).toMatchObject({
-      validation_scope: "deterministic_fake_mi_fixture",
+      projection_schema: "fe2o3-tutorial-evidence-summary-v1",
+      protocol_wire_record: false,
+      validated_evidence_scope: "deterministic_fake_mi_fixture",
       live_gpu_stop_validated: false,
     });
-    expect(rocgdb.waveRows[0].cells.filter((cell) => cell.state === "active"))
-      .toHaveLength(8);
-    expect(rocgdb.scope).toContain("live GPU stop unvalidated");
+    expect(rocgdb.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
+      .toBe(true);
+    expect(JSON.stringify(rocgdb.record)).toContain("generic_mi_thread");
+    expect(JSON.stringify(rocgdb.record)).toContain("gpu_classification");
+    expect(rocgdb.scope).toContain("GPU classification unavailable");
 
     const profiler = liveWorkbenchBackends[2];
     expect(JSON.stringify(profiler.record)).toContain("wait_events");
     expect(profiler.record).toMatchObject({
-      comparison: {
-        status: "comparable_for_duration_and_raw_counters",
+      device_binding: {
+        strategy: "absolute_agent_id_to_kfd_node",
+        csv_agent_id: "Agent <canonical decimal KFD node ID>",
+        positional_binding: false,
+        missing_binding: "reject",
+        authorization_binds: ["kfd_node", "stable_device_identity"],
+        topology_revalidation: ["before_collection", "after_collection"],
+      },
+      att_agent_binding: "explicit_required",
+      bundle_v4_duration_comparison: {
+        status: "comparable_for_dispatch_duration",
         exact: [
           "environment",
           "tool",
@@ -259,10 +296,24 @@ describe("live KFD debugger milestone", () => {
           "artifact",
         ],
         unrepresented: ["arguments", "input_content"],
+        artifact_identity: "separately_supplied_fixture_claim_available_and_exact",
+        ordinary_profile_recipe_artifact_identity: "unavailable",
+        numeric_dimension: "dispatch_total_duration_ticks",
         pc_delta: {
           status: "unavailable",
           reason: "capture_local_code_object_identity",
         },
+      },
+      counter_capture_v2_comparison: {
+        separate_from_bundle_v4: true,
+        status: "raw_counter_deltas_when_dimensions_match",
+        requires: [
+          "exact_counter_definitions",
+          "matching_dispatch_declarations",
+        ],
+        stable_environment: "unavailable",
+        performance_conclusion: "unavailable",
+        missing_dimensions: "unavailable_not_zero",
       },
     });
     expect(
@@ -1611,7 +1662,7 @@ describe("curriculum integrity", () => {
     expect(content).toContain("Persist the schedule, then replay it");
     expect(content).toContain("source breakpoints");
     expect(content).toContain("captured stacks");
-    expect(content).toContain("Pure-KFD hardware V2");
+    expect(content).toContain("Direct-KFD hardware V3");
     expect(content).toContain("Wave32/Wave64");
     expect(content).toContain("gfx950 LDS transpose");
     expect(content).toContain("no source-to-KIR refinement");

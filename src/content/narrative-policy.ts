@@ -287,7 +287,7 @@ export const narrativeFingerprints = deepFreeze({
   "typed-vecadd/same-body": "f13736ba4fb9726a65f1637d6658ce4ef5cdf9676ceeec1ebdea5a8728b629f8",
   "typed-vecadd/typed-host": "4533c94d3bacd2f8e2adcd64f6d534d594564ab81a4b8f6b6f628d2d22dbbe70",
   "cpu-semantic-simulation/pipeline": "74e50738e39425d3542c9461ad3ecc8001d506ce9bc6367ccac50a8b7d6c65c0",
-  "cpu-semantic-simulation/evidence-boundary": "2a46f08e978451fb3ab110141d9a5911c773c4ad13577c2dd9ab80c6b1e69b80",
+  "cpu-semantic-simulation/evidence-boundary": "cbe29579d8d1b0f67e4292b3f82a88c75734d5bbd512f4594e8e8ba66273641c",
   "verus-contracts/contract-shape": "6f0bce0ee5e7ee41dc19f9f0ed3b59e2c2238562ceac22380381454002d86ad1",
   "verus-contracts/negative": "38875c71f6dd93237a558f59db083e9eb48b93d9407fa23f210d3dfd14c379ca",
   "memory-race-proof/regions": "e197e757e5e41a147309534e0659e257209745bcef5c6e11fa89d61947111835",

@@ -483,14 +483,14 @@ const narrativeRegistry = deepFreeze({
             "Logical waves are visual partitions, not decoded hardware wavefronts. Raw-KIR sessions correctly report source as unavailable."
           ],
           [
-            "Pure-KFD hardware V2",
-            "ptrace/pidfd target ownership, redacted generation-aware device and queue snapshots, bounded runtime/exception events, suspend, resume and terminate over the existing linear KFD queue lifecycle.",
-            "Hardware wave/lane state, native registers, CWSR decoding, target memory, source/KIR stepping and hardware replay remain unavailable."
+            "Direct-KFD hardware V3",
+            "ptrace/pidfd target ownership, redacted generation-aware device and queue snapshots, bounded runtime/exception events, suspend, address-free stopped-queue envelope capture, resume and terminate. The MI300X path observes eight sequential gfx942 XCC CPU-shadow headers while retaining suspension.",
+            "The headers are not one atomic checkpoint. Inner hardware wave/lane state, native registers, CWSR record decoding, target memory, source/KIR stepping and hardware replay remain unavailable."
           ],
           [
             "Agent contract",
-            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. Seeded exploration retains canonical replay schedules and byte-level race, no-race, or incomplete evidence. Counter Capture V2 and PC Sample Capture V3 add bounded read-only profiler queries with cursor bindings.",
-            "ATT decoding, authenticated source/ISA correlation, complete hardware timelines, automated diagnosis and the integrated profiler UI remain open work."
+            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. The composite workbench keeps direct-KFD, generic ROCgdb/MI and Profiler Bundle V4 evidence separate. Seeded simulation retains canonical replay schedules and byte-level race, no-race, or incomplete evidence.",
+            "Authenticated GPU wave identity, ATT decoding, source/ISA correlation, complete hardware timelines and automated causal diagnosis remain open work."
           ]
         ]
       },
@@ -505,17 +505,17 @@ const narrativeRegistry = deepFreeze({
           [
             "fe2o3 semantic debugger",
             "Deterministic no-GPU execution, exact schedule replay, logical thread/wave/workgroup hierarchy, compiler-bundle-bound source/KIR sites, allocation-relative state, and bounded evidence-linked JSONL.",
-            "The distinctive value is retained compiler semantics and agent-readable counterexamples. It has no native wave/register state or hardware performance evidence yet."
+            "The distinctive value is retained compiler semantics and agent-readable counterexamples. Direct KFD now adds bounded outer stopped-queue evidence, but authenticated native wave/register state remains unavailable."
           ],
           [
             "ROCgdb",
             "Stopped physical GPU state, native wavefronts, registers, memory, source breakpoints, and target execution control where supported.",
-            "ROCgdb remains the hardware-debugging substrate. fe2o3 does not replace or infer its missing machine observations; future correlation should preserve both evidence origins."
+            "ROCgdb remains the hardware-debugging substrate. The current strict MI integration admits generic threads and process control without treating target text as GPU-wave proof; future trusted correlation must preserve both evidence origins."
           ],
           [
             "rocprofv3 and compute viewer",
             "Measured runtime traces, counters, PC samples, ATT/thread trace, ISA correlation, and performance timelines.",
-            "Those tools remain the profiling substrate. fe2o3 now strictly imports bounded dispatch counters and stochastic PC samples, preserving observed, declared, inferred, and unavailable origins. It does not yet authenticate source/ISA correlation or decode ATT timelines."
+            "Those tools remain the profiling substrate. fe2o3 now orchestrates bounded authorized rocprofv3 capture and strictly imports dispatch metadata plus ATT references into Profiler Bundle V4, preserving observed, declared, inferred, and unavailable origins. It does not yet authenticate source/ISA correlation or decode ATT timelines."
           ],
           [
             "Native HIP or Mojo workflow",
