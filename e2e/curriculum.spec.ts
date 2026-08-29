@@ -350,6 +350,44 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   );
 });
 
+test("live KFD debugger keeps observed and unavailable hardware state distinct", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#/debugger/live-kfd");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Live KFD debugger" }),
+  ).toBeVisible();
+  await expect(page.getByText("Observed on MI300X")).toBeVisible();
+  await expect(page.getByText("not observed")).toBeVisible();
+
+  const operations = page.getByRole("tablist", { name: "Live KFD operation" });
+  await operations.getByRole("tab", { name: "Queue control" }).click();
+  await expect(page.getByTestId("live-kfd-request")).toContainText("suspend_queues");
+  await expect(page.getByTestId("live-kfd-response")).toContainText("committed");
+  await operations.getByRole("tab", { name: "Honest absence" }).click();
+  await expect(page.getByTestId("live-kfd-response")).toContainText("unsupported");
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Better evidence composition, not yet deeper machine control",
+    }),
+  ).toBeVisible();
+
+  await page.screenshot({
+    path: testInfo.outputPath("live-kfd-debugger.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+    consoleWidth: document.querySelector(".live-kfd-console")?.scrollWidth ?? 0,
+    consoleViewport: document.querySelector(".live-kfd-console")?.clientWidth ?? 0,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  expect(dimensions.consoleWidth).toBeLessThanOrEqual(dimensions.consoleViewport);
+});
+
 test("search traps focus and restores its trigger", async ({ page }) => {
   await page.goto("./#/");
   await expect(

@@ -6,8 +6,10 @@ import { DebuggerWorkbench } from "../src/components/DebuggerWorkbench";
 import { DebugSimMilestone } from "../src/components/DebugSimMilestone";
 import { FunctionalCorrectnessPanel } from "../src/components/FunctionalCorrectnessPanel";
 import { LessonSections } from "../src/components/LessonSections";
+import { LiveKfdDebuggerPage } from "../src/components/LiveKfdDebuggerPage";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
+import { liveKfdOperations } from "../src/content/live-kfd-debugger";
 import type { LessonSection } from "../src/content/model";
 import { narrativeEntry } from "../src/content/narrative-registry";
 import { stagedEvidenceRecord } from "../src/content/staged-evidence";
@@ -180,6 +182,37 @@ describe("semantic debugger workbench", () => {
       },
     });
     expect(response).toEqual(debuggerWorkbenchFixture.agent_pairs.events.response);
+  });
+});
+
+describe("live KFD debugger tutorial", () => {
+  it("keeps exact binding, live control, and unsupported semantics distinct", async () => {
+    const user = userEvent.setup();
+    render(<LiveKfdDebuggerPage />);
+
+    expect(screen.getByRole("heading", { name: "Live KFD debugger" })).toBeInTheDocument();
+    expect(screen.getByText("Observed on MI300X")).toBeInTheDocument();
+    expect(screen.getByText("not observed")).toBeInTheDocument();
+    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent(
+      "execution_code_object",
+    );
+    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent(
+      "not_observed",
+    );
+
+    const operations = screen.getByRole("tablist", { name: "Live KFD operation" });
+    await user.click(within(operations).getByRole("tab", { name: "Queue control" }));
+    expect(screen.getByTestId("live-kfd-request")).toHaveTextContent("suspend_queues");
+    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent("committed");
+
+    await user.click(within(operations).getByRole("tab", { name: "Honest absence" }));
+    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent("unsupported");
+    expect(liveKfdOperations).toHaveLength(4);
+    expect(
+      screen.getByRole("heading", {
+        name: "Better evidence composition, not yet deeper machine control",
+      }),
+    ).toBeInTheDocument();
   });
 });
 

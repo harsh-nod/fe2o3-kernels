@@ -23,6 +23,11 @@ import {
   validateDebuggerProtocolRequests,
   validateDebuggerWorkbenchFixture,
 } from "../src/content/debugger-workbench";
+import {
+  liveKfdPublication,
+  liveKfdSourceUrl,
+  liveKfdSources,
+} from "../src/content/live-kfd-debugger";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
 import { functionalRefinementPublication } from "../src/content/functional-refinement-publication";
 import {
@@ -182,6 +187,33 @@ describe("debugger workbench content", () => {
     expect(comparison).toContain("LLDB does not support Mojo GPU debugging");
     expect(comparison).toContain("complements");
     expect(comparison).not.toMatch(/better than|replaces ROCgdb|replaces rocprof/iu);
+  });
+});
+
+describe("live KFD debugger milestone", () => {
+  it("pins the observed hardware tutorial separately from proof publication", () => {
+    expect(liveKfdPublication).toMatchObject({
+      schema: "fe2o3-live-kfd-debugger-tutorial-milestone-v1",
+      status: "observed-partial",
+      reviewedOn: "2026-08-28",
+      compilerCommit: "f8b123a4ec4e049ecc7c20efec56283732785b38",
+      compilerTree: "e17b0281d196b0bee568d526ab2ab1d245befe1c",
+      target: "gfx942:xnack-",
+      mirrors: [
+        "harsh-nod/fe2o3@refs/heads/main",
+        "powderluv/fe2o3@refs/heads/main",
+      ],
+    });
+    expect(liveKfdPublication.validationCommand).toContain(
+      "mi300x_live_kfd_v3_binds_observes_controls_and_terminates",
+    );
+    expect(liveKfdSources).toHaveLength(4);
+    expect(liveKfdSourceUrl(liveKfdSources[2].path)).toBe(
+      "https://github.com/harsh-nod/fe2o3/blob/f8b123a4ec4e049ecc7c20efec56283732785b38/crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
+    );
+    expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
+      "repository-relative",
+    );
   });
 });
 

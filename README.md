@@ -36,6 +36,14 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
+The **Live KFD debugger** reference at `#/debugger/live-kfd` is independently
+pinned to compiler commit `f8b123a4ec4e049ecc7c20efec56283732785b38`, tree
+`e17b0281d196b0bee568d526ab2ab1d245befe1c`. It documents the exact-bound V3
+agent protocol and the direct-KFD MI300X acceptance result while keeping the
+still-unavailable live wave, lane, PC, register, memory, breakpoint, and step
+surfaces explicit. That milestone does not repin the broader functional-proof
+publication record.
+
 The checked-in publication gate is pinned to immutable implementation-evidence
 commit `ecf7b17f819021708d9c59ebe39a4daf9eb2562c`, tree
 `2156423b9350d66cfaa8207133768e323111b507`. Deployment requires

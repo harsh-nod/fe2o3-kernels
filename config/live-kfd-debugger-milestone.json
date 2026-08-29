@@ -1,0 +1,13 @@
+{
+  "schema": "fe2o3-live-kfd-debugger-tutorial-milestone-v1",
+  "status": "observed-partial",
+  "reviewedOn": "2026-08-28",
+  "compilerCommit": "f8b123a4ec4e049ecc7c20efec56283732785b38",
+  "compilerTree": "e17b0281d196b0bee568d526ab2ab1d245befe1c",
+  "target": "gfx942:xnack-",
+  "mirrors": [
+    "harsh-nod/fe2o3@refs/heads/main",
+    "powderluv/fe2o3@refs/heads/main"
+  ],
+  "validationCommand": "cargo test --locked -p fe2o3-debug-cli --features live-validation --test live_kfd_v3_live -- --exact mi300x_live_kfd_v3_binds_observes_controls_and_terminates --nocapture --test-threads=1"
+}

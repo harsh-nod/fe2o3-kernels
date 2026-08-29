@@ -27,6 +27,11 @@ const LessonPage = lazy(() =>
     default: module.LessonPage,
   })),
 );
+const LiveKfdDebuggerPage = lazy(() =>
+  import("./components/LiveKfdDebuggerPage").then((module) => ({
+    default: module.LiveKfdDebuggerPage,
+  })),
+);
 const OverviewPage = lazy(() =>
   import("./components/OverviewPage").then((module) => ({
     default: module.OverviewPage,
@@ -86,6 +91,7 @@ function pageTitle(pathname: string): string {
   if (pathname === "/architecture") return "Architecture | fe2o3 kernels";
   if (pathname === "/status") return "Implementation status | fe2o3 kernels";
   if (pathname === "/glossary") return "Glossary | fe2o3 kernels";
+  if (pathname === "/debugger/live-kfd") return "Live KFD debugger | fe2o3 kernels";
   return "Lesson | fe2o3 kernels";
 }
 
@@ -166,6 +172,7 @@ export function App() {
             <Route path="/architecture" element={<ArchitecturePage />} />
             <Route path="/status" element={<ProgressPage />} />
             <Route path="/glossary" element={<GlossaryPage />} />
+            <Route path="/debugger/live-kfd" element={<LiveKfdDebuggerPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

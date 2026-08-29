@@ -2,6 +2,7 @@ import {
   Activity,
   BookOpen,
   Braces,
+  Bug,
   Check,
   GitBranch,
   History,
@@ -102,6 +103,9 @@ export function Sidebar({
         </NavLink>
         <NavLink onClick={onNavigate} to="/lesson/evidence-archive">
           <History size={16} /> Evidence archive
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/debugger/live-kfd">
+          <Bug size={16} /> Live KFD debugger
         </NavLink>
         <NavLink onClick={onNavigate} to="/status">
           <Activity size={16} /> Implementation status
