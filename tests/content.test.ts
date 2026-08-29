@@ -535,7 +535,7 @@ describe("curriculum integrity", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     ]);
-    expect(lessons).toHaveLength(33);
+    expect(lessons).toHaveLength(34);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
       new Set(
@@ -905,10 +905,14 @@ describe("curriculum integrity", () => {
   it("publishes bounded MI350X performance evidence without widening comparator claims", () => {
     expect(advancedPerformanceLessonIds).toEqual([
       "gfx950-advanced-moe",
+      "gfx950-kda-gdn-linear-attention",
+      "gfx950-indexed-sparse-attention",
+      "gfx950-compressed-hybrid-attention",
       "gfx950-attnres-gr-mhc",
       "gfx950-speculative-mtp-verification",
       "gfx950-ngram-embedding-gather",
       "gfx950-muon-optimizer",
+      "gfx950-gpt-oss-120b-megakernel",
     ]);
 
     const module10 = lessons.filter((lesson) => lesson.module === 10);
@@ -923,9 +927,12 @@ describe("curriculum integrity", () => {
         language: "text",
         explanatory: true,
       });
-      expect(performance?.code).toContain("MI350X PROTOCOL");
-      expect(performance?.code).toContain("THEORETICAL RESOURCE FLOOR");
-      expect(performance?.code).toContain("ADMITTED COMPARATOR RESULT");
+      expect(performance?.code).toMatch(
+        /(?:THEORETICAL RESOURCE FLOOR|Theoretical bound)/u,
+      );
+      expect(performance?.code).toMatch(
+        /(?:ADMITTED COMPARATOR RESULT|STATE-OF-THE-ART STATUS)/u,
+      );
       expect(performance?.code).toContain(
         "not universal state-of-the-art claims",
       );
@@ -935,6 +942,15 @@ describe("curriculum integrity", () => {
       expect(performance?.notice).toContain(
         "no universal state-of-the-art claim is made",
       );
+    }
+
+    const performanceText = module10
+      .flatMap((lesson) => lesson.tabs)
+      .filter((tab) => tab.kind === "performance")
+      .map((tab) => tab.code)
+      .join("\n");
+    for (const symbol of Object.keys(advancedRustEvidence)) {
+      expect(performanceText, symbol).toContain(`KERNEL: ${symbol}`);
     }
 
     const mhcRecord = JSON.parse(
@@ -2966,7 +2982,9 @@ describe("curriculum integrity", () => {
       }
       if (lesson.module === 10) {
         expect(lesson.claims.map((claim) => claim.kind)).toEqual([
-          "gpu-observed",
+          lesson.id === "gfx950-gpt-oss-120b-megakernel"
+            ? "design-only"
+            : "gpu-observed",
         ]);
       }
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(

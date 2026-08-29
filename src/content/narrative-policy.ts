@@ -95,7 +95,9 @@ export const narrativeIds = deepFreeze([
   "gfx950-ngram-embedding-gather/gather-contract",
   "gfx950-ngram-embedding-gather/scope-evidence",
   "gfx950-muon-optimizer/update-contract",
-  "gfx950-muon-optimizer/scope-evidence"
+  "gfx950-muon-optimizer/scope-evidence",
+  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract",
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary"
 ] as const);
 
 export type NarrativeId = (typeof narrativeIds)[number];
@@ -260,6 +262,10 @@ export const narrativeOrderByLesson = deepFreeze({
   "gfx950-muon-optimizer": [
     "gfx950-muon-optimizer/update-contract",
     "gfx950-muon-optimizer/scope-evidence"
+  ],
+  "gfx950-gpt-oss-120b-megakernel": [
+    "gfx950-gpt-oss-120b-megakernel/layer-tile-contract",
+    "gfx950-gpt-oss-120b-megakernel/performance-boundary"
   ]
 } satisfies Record<string, readonly NarrativeId[]>);
 
@@ -362,5 +368,7 @@ export const narrativeFingerprints = deepFreeze({
   "gfx950-ngram-embedding-gather/gather-contract": "db4a533e14d8a8f5c22faa4fc90498f803da170da3547d6ec0ff9b4c5532e23e",
   "gfx950-ngram-embedding-gather/scope-evidence": "64f27a3c2f0bf4c060931545a3fcd01458beb9e6ae4fc3b12a577cba273355ad",
   "gfx950-muon-optimizer/update-contract": "3f3750b43448b83ccfdad8e5f556a414bb090056828f433cf5c39231d50e1a57",
-  "gfx950-muon-optimizer/scope-evidence": "4884650fa5f043d3ffaa3edc9c23fc2787547aae4f1e429ae4ccb7b26f6a27df"
+  "gfx950-muon-optimizer/scope-evidence": "4884650fa5f043d3ffaa3edc9c23fc2787547aae4f1e429ae4ccb7b26f6a27df",
+  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": "3df6755267562339d3891d6744b58df7bc5b10f086722b3fbd232bf275f46743",
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary": "8e88671c247ee2ae1a3c5388462cc267fa54684a7bbf8743b4613007707d7e56"
 } satisfies Record<NarrativeId, string>);

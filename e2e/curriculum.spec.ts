@@ -1113,14 +1113,13 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       "gfx950 Muon polar update",
       "gfx950_muon_update_4x4_v1",
     ],
+    [
+      "gfx950-gpt-oss-120b-megakernel",
+      "GPT-OSS-120B batch-1 layer-tile megakernel",
+      "GPT-OSS-120B batch-1 layer tile",
+    ],
   ] as const;
-  const performanceLessonIds = new Set([
-    "gfx950-advanced-moe",
-    "gfx950-attnres-gr-mhc",
-    "gfx950-speculative-mtp-verification",
-    "gfx950-ngram-embedding-gather",
-    "gfx950-muon-optimizer",
-  ]);
+  const performanceLessonIds = new Set(routes.map(([lessonId]) => lessonId));
 
   expect(["desktop", "mobile"]).toContain(testInfo.project.name);
   for (const [lessonId, title, symbol] of routes) {
@@ -1134,10 +1133,11 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       page.getByRole("heading", { level: 1, name: title }),
     ).toBeVisible();
     await expect(
-      page.getByText(/^(?:Source example|GPU observed)$/u).first(),
+      page.getByText(/^(?:Source example|GPU observed|Design only)$/u).first(),
     ).toBeVisible();
     await expect(page.getByRole("tabpanel")).toContainText(symbol);
     const performanceTab = page.getByRole("tab", { name: "Performance" });
+    expect(performanceLessonIds.has(lessonId)).toBe(true);
     if (performanceLessonIds.has(lessonId)) {
       await performanceTab.click();
       await expect(page.getByRole("tabpanel")).toContainText(
@@ -1145,6 +1145,12 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       );
       await expect(page.getByRole("tabpanel")).toContainText(
         "not universal state-of-the-art claims",
+      );
+      await expect(page.getByRole("tabpanel")).toContainText(
+        /(?:Contribution breakdown|CONTRIBUTION BREAKDOWN|OPTIMIZATION STACK AND CONTRIBUTION)/u,
+      );
+      await expect(page.getByRole("tabpanel")).toContainText(
+        /(?:Theoretical bound|THEORETICAL RESOURCE FLOOR)/u,
       );
       const tabLayout = await page.locator(".code-tabs").evaluate((element) => ({
         clientWidth: element.clientWidth,
@@ -1173,6 +1179,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     ).toBe(false);
   }
 
+  await page.goto("./#/lesson/gfx950-muon-optimizer");
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "eight visible AMD Instinct MI350X devices",
@@ -1201,7 +1208,7 @@ test("every internal curriculum route resolves without page overflow", async ({
     timeout: 120_000,
   });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(33);
+  await expect(routeLinks).toHaveCount(34);
   const routes = await routeLinks.evaluateAll((links) =>
     links.map((link) => ({
       href: (link as HTMLAnchorElement).href,

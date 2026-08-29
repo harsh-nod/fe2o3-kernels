@@ -437,6 +437,147 @@ function lesson(spec: AdvancedLessonSpec): Lesson {
   };
 }
 
+const gptOssPerformance = advancedPerformanceTabFor(
+  "gfx950-gpt-oss-120b-megakernel",
+);
+if (!gptOssPerformance) {
+  throw new Error("Missing GPT-OSS-120B performance shell");
+}
+
+const gptOssMegakernelLesson: Lesson = {
+  id: "gfx950-gpt-oss-120b-megakernel",
+  module: 10,
+  order: 8,
+  title: "GPT-OSS-120B batch-1 layer-tile megakernel",
+  summary:
+    "Prepare one evidence-bounded lesson for a fused router, attention, and expert layer tile without presenting it as a whole-model kernel or an unmeasured performance winner.",
+  duration: "55 min",
+  prerequisites: [
+    "gfx950 advanced MoE pipeline",
+    "gfx950 flash attention",
+    "Exact artifact provenance",
+    "Paired latency experiments",
+  ],
+  objectives: [
+    "Define the exact batch-1 layer-tile boundary and the intermediate values retained by fusion.",
+    "Require the fused and unfused Rust artifacts to share inputs, semantics, oracle coverage, and timing protocol.",
+    "Keep fastest and state-of-the-art labels disabled until a final admitted comparison supports them.",
+  ],
+  claims: [
+    {
+      kind: "design-only",
+      label: "Lesson shell awaiting final Rust artifact and comparison",
+      detail:
+        "The tutorial structure and evidence requirements are present. No final Rust source mirror, namespace, LLVM or HSACO digest, MI350X result, performance comparison, theoretical bound, whole-model result, or state-of-the-art claim is admitted by this shell.",
+    },
+  ],
+  sections: [
+    narrativeSection("gfx950-gpt-oss-120b-megakernel/layer-tile-contract"),
+    narrativeSection("gfx950-gpt-oss-120b-megakernel/performance-boundary"),
+  ],
+  tabs: [
+    {
+      kind: "kernel",
+      label: "Rust kernel status",
+      language: "rust",
+      code: [
+        "// LESSON SHELL ONLY: no executable Rust source is published here yet.",
+        "// Expected final scope: one GPT-OSS-120B batch-1 layer tile.",
+        "// Expected fused stages: router, attention, and expert compute.",
+        "// Replace this status with the exact attributed Rust excerpt only after",
+        "// its source commit, displayed-byte digest, namespace, and artifacts are final.",
+      ].join("\n"),
+      explanatory: true,
+      notice:
+        "Status text, not a kernel implementation. The final ordinary attributed Rust source must be mirrored and pinned before this tab becomes execution evidence.",
+    },
+    {
+      kind: "reference",
+      label: "CPU reference status",
+      language: "rust",
+      code: [
+        "// PENDING FINAL INDEPENDENT CPU REFERENCE.",
+        "// It must check router choices, attention output, expert output,",
+        "// final packed output, exceptional values, immutable inputs, and canaries.",
+      ].join("\n"),
+      explanatory: true,
+      notice:
+        "Reference requirements only. No oracle result is claimed until the exact independent implementation and fixture are published.",
+    },
+    {
+      kind: "verus",
+      label: "Proof obligations",
+      language: "text",
+      code: [
+        "NO VERUS RESULT IS CLAIMED FOR THIS LESSON SHELL.",
+        "",
+        "- prove all fused intermediate views remain in bounds",
+        "- prove one final owner for every output and route-metadata slot",
+        "- prove fusion preserves the exact unfused stage composition",
+        "- bind Rust source, Kernel IR, LLVM, ISA, artifact, and launch identity",
+        "- keep full-model equivalence outside the fixed layer-tile claim",
+      ].join("\n"),
+      explanatory: true,
+      notice: "Obligation ledger only; no proof execution or compiler-refinement receipt is claimed.",
+    },
+    {
+      kind: "host",
+      label: "Run protocol",
+      language: "bash",
+      code: [
+        "# PENDING: run only after these paths exist in the final pinned core commit.",
+        "# bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+        "# bash examples/gfx950_gpt_oss_decode/run-exact-unfused-gfx950.sh",
+        "# bash examples/gfx950_gpt_oss_decode/run-performance-gfx950.sh",
+        "",
+        "# Required timing design: five fresh processes per variant, alternating",
+        "# AB/BA order, fixed warmups, exact digests, CPU oracle, and canaries.",
+      ].join("\n"),
+      explanatory: true,
+      notice:
+        "Protocol shell only. Commented commands grant no evidence until the final paths, artifacts, and retained logs are published.",
+    },
+    {
+      kind: "result",
+      label: "Evidence status",
+      language: "text",
+      code: resultText(
+        "design-only",
+        [
+          "GPT-OSS-120B BATCH-1 LAYER-TILE MEGAKERNEL",
+          "Scope: one fixed layer tile; not a whole-model kernel",
+          "Final Rust source: pending",
+          "Independent CPU reference: pending",
+          "Production namespace: pending",
+          "LLVM SHA-256: pending",
+          "HSACO SHA-256: pending",
+          "Symbol-scoped gfx950 ISA: pending",
+          "MI350X numerical result: pending",
+          "Exact unfused comparator: pending",
+          "Optimization ablations: pending",
+          "Theoretical bound and derivation: pending",
+          "Fastest claim: not claimed",
+          "State-of-the-art claim: not claimed",
+        ].join("\n"),
+      ),
+      explanatory: true,
+      notice:
+        "Fail-closed status record. Pending fields must be replaced by exact retained evidence, not projections.",
+    },
+    gptOssPerformance,
+  ],
+  diagram: "moe",
+  exercises: [
+    {
+      prompt: "Design the exact fused-versus-unfused admission table.",
+      hint: "Start with shared inputs and per-stage CPU-oracle outputs, then bind each artifact and timing process independently.",
+      acceptance:
+        "The table names every source, artifact, correctness, ISA, timing, and theoretical-bound field required before any fastest label can appear.",
+    },
+  ],
+  glossary: ["gfx950", "mixture of experts", "model equivalence", "acceptance contract"],
+};
+
 const advancedLessons = [
   lesson({
     id: "gfx950-advanced-moe",
@@ -817,6 +958,7 @@ const advancedLessons = [
     },
     glossary: ["gfx950", "Muon", "polar iteration", "gradient shard", "optimizer update"],
   }),
+  gptOssMegakernelLesson,
 ];
 
 export const modules10: CurriculumModule[] = [
@@ -824,7 +966,7 @@ export const modules10: CurriculumModule[] = [
     number: 10,
     title: "gfx950 advanced operator kernels",
     summary:
-      "Fixed-shape teaching contracts for advanced attention, routing, residual, decoding, N-gram lookup, and optimizer operators, with source and evidence integration kept fail-closed.",
+      "Fixed-shape teaching contracts for advanced attention, routing, residual, decoding, N-gram lookup, optimizer, and GPT-OSS layer-tile operators, with source and evidence integration kept fail-closed.",
     lessons: advancedLessons,
   },
 ];

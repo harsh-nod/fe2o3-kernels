@@ -2624,7 +2624,51 @@ const narrativeRegistry = deepFreeze({
     "Stop at one local fixed-shape update",
     "examples/gfx950_advanced_systems/src/kernel.rs",
     "It does not apply parameters or momentum and does not include a device collective, parameter sharding, master-weight management, checkpointing, loss scaling, or optimizer convergence.",
-  )
+  ),
+  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": {
+    sectionId: "gpt-oss-layer-tile-contract",
+    title: "Define the layer tile before judging fusion",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Boundary", "Required fixed contract", "Not implied"],
+        rows: [
+          ["Model scope", "One GPT-OSS-120B batch-1 layer tile with explicit router, attention, and expert extents.", "Whole-model inference or multi-layer cache behavior."],
+          ["Fusion", "One dispatch may retain declared intermediates across the three local stages.", "That fusion is faster than exact separate dispatches."],
+          ["Numerics", "Each output and selected route must match an independent CPU oracle within its declared policy.", "Model-quality or training equivalence."],
+          ["Artifact", "The final Rust source, namespace, LLVM, HSACO, ABI, ISA, and launch must share one recorded identity.", "Proof or performance from source shape alone."],
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Megakernel names a fused fixed layer tile, not a complete GPT-OSS-120B executable. The final lesson must expose the ordinary attributed Rust source and the exact unfused comparator before it can promote execution or performance evidence.",
+      },
+    ],
+  },
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary": {
+    sectionId: "gpt-oss-performance-boundary",
+    title: "Require evidence before using a fastest label",
+    blocks: [
+      {
+        type: "steps",
+        items: [
+          "Freeze one deterministic batch-1 fixture and an independent CPU oracle for router choices, attention output, expert output, and final packed output.",
+          "Bind fused and exact unfused Rust artifacts to their source commits, namespaces, LLVM and HSACO digests, ABI metadata, and symbol-scoped ISA.",
+          "Run five fresh processes per variant in alternating AB/BA order after fixed warmup, with canaries and immutable-input checks on every correctness gate.",
+          "Report median latency, bootstrap confidence intervals, the exact comparator set, optimization ablations, and a reviewed theoretical-resource ledger.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "No state-of-the-art claim in the shell",
+        text: "Until the final fused artifact beats every exact admitted comparator under the stated MI350X protocol, the tutorial reports no fastest or state-of-the-art result. A slower fused result must remain visible rather than being replaced by a projection.",
+      },
+      milestoneCallout(
+        "This design-only shell adds no source-to-machine proof, execution, performance, or publication authority.",
+      ),
+    ],
+  }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
 // The policy manifest is the single reviewed source for canonical fingerprints.
