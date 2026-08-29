@@ -304,7 +304,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "fe2o3-gfx950-advanced-systems"
+name = "fe2o3-gfx950-gpt-oss-decode"
 version = "0.1.0"
 dependencies = [
  "fe2o3-device",

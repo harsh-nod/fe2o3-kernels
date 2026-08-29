@@ -369,6 +369,6 @@ export const narrativeFingerprints = deepFreeze({
   "gfx950-ngram-embedding-gather/scope-evidence": "64f27a3c2f0bf4c060931545a3fcd01458beb9e6ae4fc3b12a577cba273355ad",
   "gfx950-muon-optimizer/update-contract": "3f3750b43448b83ccfdad8e5f556a414bb090056828f433cf5c39231d50e1a57",
   "gfx950-muon-optimizer/scope-evidence": "4884650fa5f043d3ffaa3edc9c23fc2787547aae4f1e429ae4ccb7b26f6a27df",
-  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": "3df6755267562339d3891d6744b58df7bc5b10f086722b3fbd232bf275f46743",
-  "gfx950-gpt-oss-120b-megakernel/performance-boundary": "8e88671c247ee2ae1a3c5388462cc267fa54684a7bbf8743b4613007707d7e56"
+  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": "3aeee0cd79f2f9c6594a9592982a4aa6b7797d15e378cc3ae44b33ca54de8a76",
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary": "1a9bf6794584d5bbb65f0a5562aeaaadb313ba9648305ab78b1ae99841027090"
 } satisfies Record<NarrativeId, string>);

@@ -1115,8 +1115,8 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     ],
     [
       "gfx950-gpt-oss-120b-megakernel",
-      "GPT-OSS-120B batch-1 layer-tile megakernel",
-      "GPT-OSS-120B batch-1 layer tile",
+      "gpt-oss-120b batch-1 layer-tile megakernel",
+      "gfx950_gpt_oss_120b_decode_megakernel_v1",
     ],
   ] as const;
   const performanceLessonIds = new Set(routes.map(([lessonId]) => lessonId));
@@ -1179,6 +1179,37 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     ).toBe(false);
   }
 
+
+  await page.goto("./#/lesson/gfx950-gpt-oss-120b-megakernel");
+  await expect(page.getByText("GPU observed", { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Design only", { exact: true })).toHaveCount(0);
+  await page.getByRole("tab", { name: "Rust kernel" }).click();
+  await expect(page.getByRole("tab", { name: "Rust kernel" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
+  );
+  await expect(
+    page.getByRole("link", { name: "Source", exact: true }),
+  ).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/a542213a28265ec5b4f512c3edea84326a098eae/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+  );
+  await page.getByRole("tab", { name: "Performance" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Production Rust fused: median 1.068124 ms",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Exact unfused HIP router + attention + expert: median 0.780683 ms",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "fused is 1.3682x slower",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "State-of-the-art claim: not claimed",
+  );
   await page.goto("./#/lesson/gfx950-muon-optimizer");
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(

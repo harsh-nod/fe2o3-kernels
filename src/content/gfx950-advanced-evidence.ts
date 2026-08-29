@@ -50,7 +50,7 @@ function checkedContract(
   const ldsBytes = contract.ldsBytes ?? 0;
   if (
     !contract.symbol.startsWith("gfx950_") ||
-    !contract.runnerPath.startsWith("examples/gfx950_advanced_") ||
+    !contract.runnerPath.startsWith("examples/gfx950_") ||
     !contract.runnerPath.endsWith("-gfx950.sh") ||
     !contract.hardwareTest.endsWith("_rust_cov6_matches_cpu_reference") ||
     contract.requiredIsa.length === 0 ||
@@ -253,12 +253,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "0c00c566c0a9487644fd52739a8ffe3a447048d77114666223b99fa8cfd6a9cf",
-      llvmSha256: "b4fc48a20aa278688245721419b998b7dd334f33fedc1f9f7149c39c9c90b403",
-      hsacoSha256: "0a42de9c2304b3c5679486cf053a006614580d0372b269a82e481bd0755ce605",
-      numericalResult: "output max_absolute_error=4.470348358e-8",
+      namespace: "f93558928ce6e41a2fe8d78cfb28aa199dae54059fc9b7599a4348f4ad73c966",
+      llvmSha256: "17dcdc08dca1508a16001caa32d56f0b956c14c9a9a280807ca86925263ca569",
+      hsacoSha256: "f463b05e53db65c4e9ea73a0d33ce1398c85bcc8b5aab64788fdeb7858c9fdcc",
+      numericalResult: "output max_absolute_error=5.960464478e-8",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
-      runtimeObservation: finalMi350Runtime,
+      runtimeObservation: "historical optimized-candidate campaign observed 2026-08-29 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6; ROCm 7.2.1; gfx950:xnack-; the displayed final mHC function is byte-identical",
     },
   ),
   gfx950_moe_route_fp4_t16_e4_k2_v1: observedAdvancedEvidence(
@@ -400,6 +400,29 @@ export const advancedRustEvidence = Object.freeze({
       numericalResult: "output max_absolute_error=7.450580597e-9; output_norm max_absolute_error=0.000000000e0",
       tolerance: "absolute tolerance 2.0e-6 for update and norm; finite values required",
       runtimeObservation: finalMi350Runtime,
+    },
+  ),
+  gfx950_gpt_oss_120b_decode_megakernel_v1: observedAdvancedEvidence(
+    {
+      label: "gpt-oss-120b batch-1 layer-tile megakernel",
+      symbol: "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      runnerPath: "examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+      hardwareTest: "gfx950_gpt_oss_layer_tile_rust_cov6_matches_cpu_reference",
+      requiredIsa: [
+        "exactly four v_mfma_f32_16x16x16_bf16",
+        "exactly four v_mfma_f32_16x16x128_f8f6f4 with FP4 selectors",
+        "no transpose instructions",
+      ],
+      kernargBytes: 208,
+      workgroupSize: 64,
+    },
+    {
+      namespace: "af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
+      llvmSha256: "28cd79e8d79c6bddc79a72aba64bff84ea2fc5f5fd7b7ad851bdcb64f14f20ba",
+      hsacoSha256: "1e7d249dc0c11c412d2bf2d5c4755cc16e145fedea72046b26dc09a3d1656ad2",
+      numericalResult: "attention max_absolute_error=8.940696716e-8; expert exact; packed top-4 exact",
+      tolerance: "attention absolute tolerance 3.0e-3 with finite values; expert and packed top-4 exact",
+      runtimeObservation: "historical campaign observed 2026-08-29 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6; ROCm 7.2.1; gfx950:xnack-; byte-identical final kernel and oracle; final a542 full-crate wrapper has not completed",
     },
   ),
 } satisfies Record<string, AdvancedRustEvidence>);

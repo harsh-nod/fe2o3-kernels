@@ -2626,48 +2626,83 @@ const narrativeRegistry = deepFreeze({
     "It does not apply parameters or momentum and does not include a device collective, parameter sharding, master-weight management, checkpointing, loss scaling, or optimizer convergence.",
   ),
   "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": {
-    sectionId: "gpt-oss-layer-tile-contract",
-    title: "Define the layer tile before judging fusion",
-    blocks: [
+    "sectionId": "gpt-oss-layer-tile-contract",
+    "title": "Trace the fused layer tile",
+    "blocks": [
       {
-        type: "table",
-        headers: ["Boundary", "Required fixed contract", "Not implied"],
-        rows: [
-          ["Model scope", "One GPT-OSS-120B batch-1 layer tile with explicit router, attention, and expert extents.", "Whole-model inference or multi-layer cache behavior."],
-          ["Fusion", "One dispatch may retain declared intermediates across the three local stages.", "That fusion is faster than exact separate dispatches."],
-          ["Numerics", "Each output and selected route must match an independent CPU oracle within its declared policy.", "Model-quality or training equivalence."],
-          ["Artifact", "The final Rust source, namespace, LLVM, HSACO, ABI, ISA, and launch must share one recorded identity.", "Proof or performance from source shape alone."],
+        "type": "table",
+        "headers": [
+          "Boundary",
+          "Implemented fixed contract",
+          "Not implied"
         ],
+        "rows": [
+          [
+            "Model scope",
+            "One gpt-oss-120b batch-1 Wave64 tile: full 128-expert routing, one eight-head by 16-token attention tile, and one selected 16-column expert tile.",
+            "A complete transformer layer, all GQA groups, all expert outputs, or whole-model inference."
+          ],
+          [
+            "Fusion",
+            "The Rust kernel retains route state, BF16 attention fragments, and sequential MXFP4 expert fragments within one dispatch.",
+            "That one dispatch is faster than exact separate dispatches."
+          ],
+          [
+            "Native ISA",
+            "The retained artifact has four BF16 MFMAs and four FP4 MFMAs. Its depth-major K input requires no transpose instruction.",
+            "A transpose claim for this fixed interface or peak device utilization from one Wave64."
+          ],
+          [
+            "Evidence identity",
+            "The final displayed kernel and oracle have the same git blobs as the successful historical campaign; the campaign pins namespace, LLVM, HSACO, ABI, ISA, and numerical output.",
+            "A successful final-commit full-crate wrapper rerun, source-to-machine proof, or state-of-the-art result."
+          ]
+        ]
       },
       {
-        type: "paragraph",
-        text: "Megakernel names a fused fixed layer tile, not a complete GPT-OSS-120B executable. The final lesson must expose the ordinary attributed Rust source and the exact unfused comparator before it can promote execution or performance evidence.",
+        "type": "paragraph",
+        "text": "The ordinary safe Rust computes two router logits per lane, merges all 128 candidates into a stable lower-ID-first top-4, forms sink-softmax attention with four BF16 MFMAs, and consumes four scaled MXFP4 expert fragments sequentially before disjoint final stores. The safe CPU oracle independently reconstructs every admitted output."
       },
-    ],
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "A layer tile is not the model",
+        "text": "QKV projection, RoPE, RMSNorm, the remaining GQA groups and value columns, four complete routed experts, SwiGLU, MLP2, residuals, cache management, and every other layer remain outside this tutorial."
+      }
+    ]
   },
   "gfx950-gpt-oss-120b-megakernel/performance-boundary": {
-    sectionId: "gpt-oss-performance-boundary",
-    title: "Require evidence before using a fastest label",
-    blocks: [
+    "sectionId": "gpt-oss-performance-boundary",
+    "title": "Read the loss and the bound together",
+    "blocks": [
       {
-        type: "steps",
-        items: [
-          "Freeze one deterministic batch-1 fixture and an independent CPU oracle for router choices, attention output, expert output, and final packed output.",
-          "Bind fused and exact unfused Rust artifacts to their source commits, namespaces, LLVM and HSACO digests, ABI metadata, and symbol-scoped ISA.",
-          "Run five fresh processes per variant in alternating AB/BA order after fixed warmup, with canaries and immutable-input checks on every correctness gate.",
-          "Report median latency, bootstrap confidence intervals, the exact comparator set, optimization ablations, and a reviewed theoretical-resource ledger.",
-        ],
+        "type": "steps",
+        "items": [
+          "Run examples/gfx950_gpt_oss_decode/run-gfx950.sh to build the ordinary Rust source through gfx950 COV6 HSACO, inspect its symbol-scoped ISA, and execute the independent HSA oracle.",
+          "Run examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh for the exact three-dispatch HIP router, attention, and expert comparator using the same deterministic fixture.",
+          "Run perf-evidence/run-gpt-oss-performance.sh for five fresh processes per variant in alternating AB/BA order and retain all artifact and raw-record digests.",
+          "Compare the 1.068124 ms fused median with the 0.780683 ms exact unfused median, then derive the 188.7465 ns resource floor from 1,509,972 compulsory bytes and the audited operation ledger."
+        ]
       },
       {
-        type: "callout",
-        tone: "boundary",
-        title: "No state-of-the-art claim in the shell",
-        text: "Until the final fused artifact beats every exact admitted comparator under the stated MI350X protocol, the tutorial reports no fastest or state-of-the-art result. A slower fused result must remain visible rather than being replaced by a projection.",
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Fusion lost for this admitted tile",
+        "text": "The fused kernel is 1.3682x slower than the exact unfused comparator. Sequential MXFP4 fragment consumption still improves the fused implementation by 14.1268% and removes 44 VGPRs, but that ablation does not reverse the comparator result. No fastest or state-of-the-art claim is made."
       },
-      milestoneCallout(
-        "This design-only shell adds no source-to-machine proof, execution, performance, or publication authority.",
-      ),
-    ],
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Historical artifact, final displayed bytes",
+        "text": "The successful MI350X campaign used commit 109e1966d36d4188c43cafe5cb455c1ac3dd0767. Its kernel and oracle git blobs are byte-identical to final displayed commit a542213a28265ec5b4f512c3edea84326a098eae, but a successful final-commit full-crate wrapper rerun is still required before refreshing crate-level artifact provenance."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Semantic-correctness milestone",
+        "text": "Milestone status: partial-current at compiler ecf7b17f819021708d9c59ebe39a4daf9eb2562c. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
+      }
+    ]
   }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
