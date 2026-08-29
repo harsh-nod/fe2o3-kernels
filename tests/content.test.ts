@@ -107,6 +107,101 @@ function checkpointDetail(
   return checkpoint ? developmentCheckpointDetail(checkpoint) : "";
 }
 
+function expectAdvancedPerformanceContract(
+  lessonId: string,
+  code: string,
+  notice: string | undefined,
+): void {
+  expect(code, `${lessonId}: optimization-stack heading`).toContain(
+    "OPTIMIZATION STACK",
+  );
+
+  const optimizations = [
+    ...code.matchAll(
+      /^OPTIMIZATION \[([a-z0-9][a-z0-9._-]*)\]:\s+(.+)$/gimu,
+    ),
+  ];
+  const impacts = [
+    ...code.matchAll(
+      /^IMPACT \[([a-z0-9][a-z0-9._-]*)\]:\s+(.+)$/gimu,
+    ),
+  ];
+  expect(
+    optimizations.length,
+    `${lessonId}: explicit optimization entries`,
+  ).toBeGreaterThan(0);
+
+  const optimizationIds = optimizations.map((entry) => entry[1]);
+  const impactIds = impacts.map((entry) => entry[1]);
+  expect(
+    new Set(optimizationIds).size,
+    `${lessonId}: unique optimization IDs`,
+  ).toBe(optimizationIds.length);
+  expect(
+    new Set(impactIds).size,
+    `${lessonId}: unique impact IDs`,
+  ).toBe(impactIds.length);
+  expect(
+    [...impactIds].sort(),
+    `${lessonId}: one impact for every optimization`,
+  ).toEqual([...optimizationIds].sort());
+
+  const measuredImpact =
+    /(?:\b(?:median|speedup|latency|instructions?|VGPRs?|SGPRs?|AGPRs?|HSACO|byte-identical|compiler-equivalent)\b|-?\d+(?:\.\d+)?\s*(?:ns|us|ms|%|x)\b)/iu;
+  const nonResultStatus =
+    /\b(?:unavailable|rejected|inapplicable|not applicable)\b/iu;
+  const nonResultReason =
+    /\b(?:because|due to|requires?|compiler|shape|dependency|recurrence|single[- ](?:wave|tile)|no (?:exact|independent|admitted)|not supported|cannot)\b/iu;
+  for (const [, optimizationId, impact] of impacts) {
+    expect(
+      measuredImpact.test(impact) ||
+        (nonResultStatus.test(impact) && nonResultReason.test(impact)),
+      `${lessonId}: impact ${optimizationId} must be measured or explain why it is unavailable/rejected`,
+    ).toBe(true);
+  }
+
+  const requiredAssessments = [
+    "SOFTWARE PIPELINE ASSESSMENT",
+    "LDS MULTI-BUFFER ASSESSMENT",
+    "TILE SHAPE ASSESSMENT",
+  ];
+  for (const heading of requiredAssessments) {
+    const assessment = code.match(new RegExp(`^${heading}:\\s+(.+)$`, "imu"));
+    expect(assessment, `${lessonId}: ${heading.toLowerCase()}`).not.toBeNull();
+    expect(
+      assessment?.[1],
+      `${lessonId}: ${heading.toLowerCase()} outcome`,
+    ).toMatch(
+      /\b(?:used|enabled|measured|retained|compiler-equivalent|unavailable|rejected|inapplicable|not applicable)\b/iu,
+    );
+  }
+
+  expect(code, `${lessonId}: theoretical/resource floor heading`).toMatch(
+    /THEORETICAL (?:RESOURCE )?FLOORS?/u,
+  );
+  expect(
+    code,
+    `${lessonId}: floor derivation or precise unavailable result`,
+  ).toMatch(
+    /(?:\bmax\s*\(|\b\d[\d,]*(?:\.\d+)?\s*B\s*\/\s*\d+(?:\.\d+)?\s*TB\/s|\bfloor\b[^\n]*(?:unavailable|not admitted)[^\n]*(?:because|needs?|requires?))/iu,
+  );
+  expect(code, `${lessonId}: comparator boundary heading`).toContain(
+    "CLAIM BOUNDARY",
+  );
+  expect(code, `${lessonId}: exact-artifact comparator boundary`).toContain(
+    "exact admitted artifacts",
+  );
+  expect(code, `${lessonId}: shape comparator boundary`).toContain(
+    "differently shaped implementations are not comparable",
+  );
+  expect(code, `${lessonId}: no universal SOTA claim`).toContain(
+    "not universal state-of-the-art claims",
+  );
+  expect(notice, `${lessonId}: visible SOTA disclaimer`).toContain(
+    "no universal state-of-the-art claim is made",
+  );
+}
+
 describe("debugger workbench content", () => {
   it("keeps the committed fixture closed, simulated, and allocation-relative", () => {
     const rawFixture = JSON.parse(
@@ -1139,20 +1234,13 @@ describe("curriculum integrity", () => {
         language: "text",
         explanatory: true,
       });
-      expect(performance?.code).toMatch(
-        /(?:THEORETICAL RESOURCE FLOOR|Theoretical bound)/u,
+      expectAdvancedPerformanceContract(
+        lesson.id,
+        performance!.code,
+        performance!.notice,
       );
       expect(performance?.code).toMatch(
         /(?:ADMITTED COMPARATOR RESULT|STATE-OF-THE-ART STATUS)/u,
-      );
-      expect(performance?.code).toContain(
-        "not universal state-of-the-art claims",
-      );
-      expect(performance?.code).toContain(
-        "differently shaped implementations are not comparable",
-      );
-      expect(performance?.notice).toContain(
-        "no universal state-of-the-art claim is made",
       );
     }
 
