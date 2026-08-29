@@ -438,6 +438,13 @@ function validateLesson(
           message: "historical claim reuses the current compiler pin",
         });
       }
+    } else if (reference.scope === "qualification-evidence") {
+      if (!reference.note?.match(/\bqualification\b/iu)) {
+        issues.push({
+          path: claimPath,
+          message: "qualification claim does not state its qualification boundary",
+        });
+      }
     } else if (reference.scope === "source-milestone") {
       if (!isSourceMilestoneId(reference.evidenceId)) {
         issues.push({

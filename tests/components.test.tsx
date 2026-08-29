@@ -250,7 +250,7 @@ describe("code tabs", () => {
 
     await user.click(screen.getByRole("tab", { name: "MI300X result" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "PASS multi-workgroup-dynamic-k",
+      "PASS tiled_gemm_general_v1: 19x21x23",
     );
 
     rerender(<CodeTabs tabs={fiveTabs} />);

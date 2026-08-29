@@ -1375,10 +1375,10 @@ describe("curriculum integrity", () => {
     );
     expect(middleEndCustody?.detail).toContain("FE2O3-TARGET-000");
     expect(middleEndCustody?.detail).toContain(
-      "rejected source/ranked diagnostic sidecar is not present",
+      "Authenticated production projection now carries checked tiled and row-striped indices",
     );
     expect(middleEndCustody?.detail).toContain(
-      "same-TyCtxt descriptor identity hardens substitution without closing FE2O3-RACE-002",
+      "retained KIR lowering for the supported dynamic fragment",
     );
     expect(middleEndCustody?.sourcePaths).toContain(
       "crates/fe2o3-pliron/tests/production_middle_end_evidence_v5.rs",
@@ -1390,16 +1390,16 @@ describe("curriculum integrity", () => {
       "static bounded-access fragment",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "Nonempty tensor-layout replay remains Incomplete",
+      "nonempty tensor-layout replay remains Incomplete",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "Checked tiled and row-striped recipes now carry a structural index",
+      "Checked tiled and row-striped recipes carry an exact index",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "owner-custodied semantic MIR correspondence",
+      "proves supported active store maps injective",
     );
     expect(compilerAnalysis?.detail).toContain(
-      "no Clean race, KIR, functional-domain, lowering, launch, or hardware claim",
+      "contain no GEMM, attention, routing, or other workload selector",
     );
     expect(compilerAnalysis?.detail).toContain(
       "One production transformation folds",
@@ -1432,7 +1432,7 @@ describe("curriculum integrity", () => {
       "nonzero power-of-two tile width through 64",
     );
     expect(productionRoute?.detail).toContain(
-      "unsupported widths, targets, profiles, and dynamic source lanes fail closed",
+      "Unsupported widths, targets, profiles, and dynamic source lanes fail closed",
     );
     expect(productionRoute?.sourcePaths).toEqual(
       expect.arrayContaining([
@@ -1466,9 +1466,9 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      sourceCommit: "1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e",
       sourceSha256:
-        "25f23fd58916dc034171a6adcbec26f6fe756bb2b8255c710b3bfe1ad569e4c9",
+        "414213d07b324628d56d51f1f5ed364d3829d7116b387a03752b15beee79580d",
       evidenceId: "workgroup-pipeline-source-v1",
       explanatory: false,
     });
@@ -1495,7 +1495,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      sourceCommit: "1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -1527,21 +1527,21 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e",
       sourceSha256:
-        "6a67bb4fbf8a097389ce184764db2734a4b88037ef65ac607c12effede331a05",
+        "fdd4efbeff66aeb7f423abe11ec3ee1330918adde21558525241ca58ce27e64b",
+      evidenceId: "workgroup-pipeline-source-v1",
       explanatory: false,
     });
-    expect(host?.code).toContain("multi-workgroup-dynamic-k");
-    expect(host?.code).toContain("grid_dim: (workgroups, 1, 1)");
+    expect(host?.code).toContain("rows: 19");
+    expect(host?.code).toContain("grid_dim: (tile_rows * tile_columns, 1, 1)");
 
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    expect(result).toContain("81 correspondence blocks");
+    expect(result).toContain("110 correspondence blocks");
     expect(result).toContain("v_mfma_f32_16x16x16_bf16");
-    expect(result).toContain("PASS strided-all-tails");
-    expect(result).toContain("PASS multi-workgroup-dynamic-k");
-    expect(result).toContain("PASS zero-k-epilogue");
-    expect(result).toContain("Fe2O3 is safer and more expressive here; it is not faster than HIP yet");
+    expect(result).toContain("PASS tiled_gemm_general_v1: 19x21x23");
+    expect(result).toContain("4 x s_barrier");
+    expect(result).toContain("functional qualification, not a performance claim");
     expect(result).toContain("138.005 us");
     expect(result).toContain("130.514 us");
 
@@ -1582,16 +1582,15 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("atomic legality");
     expect(contract).toContain("global race freedom");
     expect(contract).toContain("barrier convergence");
-    expect(contract).toContain("workgroup-memory must-initialization/publication by epoch");
+    expect(contract).toContain("workgroup-memory initialization/publication");
     expect(contract).toContain("declared semantic refinement");
-    expect(contract).toContain("bounded sparse affine index dataflow");
+    expect(contract).toContain("sparse affine index dataflow");
     expect(contract).toContain("contains no GEMM names, tile-size tests, or schedule recognizers");
-    expect(contract).toContain("FE2O3-RACE-002");
-    expect(contract).toContain("structural index, checked-success capability, and physical extent");
-    expect(contract).toContain("No Clean race result, KIR, LLVM, HSACO");
-    expect(contract).toContain("fail closed as Incomplete");
-    expect(contract).toContain("current kernel already uses BF16/F32 MFMA");
-    expect(contract).toContain("remaining schedule optimization is cooperative LDS staging");
+    expect(contract).toContain("checked index, success path, extent, dominance, provenance");
+    expect(contract).toContain("KIR, LLVM, HSACO, and qualification launch");
+    expect(contract).toContain("Remaining work is protected publication");
+    expect(contract).toContain("current kernel uses BF16/F32 MFMA");
+    expect(contract).toContain("compiler-owned double-buffered LDS staging");
     expect(contract).toContain("ceil_div(K,16)");
     expect(contract).toContain("defined BF16 +0");
     expect(contract).toContain("unconditional publish barrier");
@@ -1790,23 +1789,20 @@ describe("curriculum integrity", () => {
       "ProductionReferenceProofV1 and RequireReferenceEquivalent API has been removed",
       "bounded structural preflight accounts blocks, operations, values, operands, successors, attributes, and nesting",
       "FE2O3-TARGET-000",
-      "source/ranked diagnostic sidecar was rejected and discarded",
+      "Authenticated checked tiled and row-striped mappings",
       "Same-TyCtxt descriptor identity hardens substitution checks",
       "Any other transformation",
       "kernel.index_unsigned_cast",
-      "Raw, textual, and public recipes still stop at FE2O3-RACE-002",
+      "Supported authenticated tiled and row-striped maps proceed to retained KIR",
       "not universal correctness",
     ]) {
       expect(narrative).toContain(boundary);
     }
     expect(narrative).toContain(
-      "Raw, textual, and public recipes still stop at FE2O3-RACE-002",
+      "Raw or textual carriers without those facts",
     );
     expect(narrative).toContain(
-      "owner-custodied semantic MIR correspondence",
-    );
-    expect(narrative).toContain(
-      "does not establish source-semantic custody or close the current FE2O3-RACE-002 boundary",
+      "active stores injective",
     );
     expect(narrative).not.toContain("zero production transformations");
     expect(narrative).not.toContain("all eight independent semantic-witness");
@@ -1873,12 +1869,14 @@ describe("curriculum integrity", () => {
     expect(JSON.stringify(proofNarrative)).toContain(
       "never matches a softmax name or loop pattern",
     );
-    expect(JSON.stringify(proofNarrative)).toContain("FE2O3-RACE-002");
+    expect(JSON.stringify(proofNarrative)).toContain(
+      "has not been rerun through the 1dd61a01 end-to-end qualification",
+    );
     expect(JSON.stringify(proofNarrative)).toContain(
       "runtime checked stripe construction",
     );
     expect(JSON.stringify(proofNarrative)).toContain(
-      "no current KIR or gfx942 lowering",
+      "no current KIR or gfx942 result",
     );
   });
 
@@ -3489,25 +3487,24 @@ describe("implementation progress integrity", () => {
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
+      sourceCommit: "1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e",
       sourceSha256:
-        "d119e41e3a15e0eb3e7866a439c23203b0e4983b3bd53d3fdc585e3bde2a4a25",
+        "afb79e75ca9e0f5f5f20ed3a9db15d05a05ba776c1e16ebf03ee6caf55f9c0a1",
       explanatory: false,
     });
-    expect(host?.code).toContain("tails-and-strides");
-    expect(host?.code).toContain("multi-head-multi-tile");
-    expect(host?.code).toContain("wrote output padding");
+    expect(host?.code).toContain("batch_heads: 2");
+    expect(host?.code).toContain("queries: 19");
+    expect(host?.code).toContain("attention modified output padding");
     expect(result?.explanatory).toBe(true);
     const attentionContent = serializedLessonContent("flash-attention");
-    expect(attentionContent).toContain("FE2O3-RACE-002");
-    expect(attentionContent).toContain("runtime checked stores");
-    expect(attentionContent).toContain("do not establish a Clean race result");
-    expect(result?.code).toContain("Historical dynamic fused attention qualification");
-    expect(result?.code).toContain("workload-selecting route is not present");
+    expect(attentionContent).toContain("checked tiled output ownership");
+    expect(attentionContent).toContain("active workgroup/lane/component store map");
+    expect(result?.code).toContain("Executable dynamic fused attention qualification");
+    expect(result?.code).toContain("PASS flash_attention_general_v1");
     expect(result?.code).toContain("V_MFMA_F32_16X16X16_BF16");
-    expect(result?.code).toContain("17 ranked dynamic-index obligations");
+    expect(result?.code).toContain("25 ranked dynamic-index discharges");
     expect(result?.code).toContain(
-      "claim of parity with a tuned production FlashAttention library",
+      "tuned-library performance claim",
     );
   });
 
@@ -3628,8 +3625,8 @@ describe("implementation progress integrity", () => {
     const expertContent = serializedLessonContent("moe-expert-compute");
     expect(expertContent).toContain("runtime padded rows");
     expect(expertContent).toContain("MFMA is an operation, not a workload label");
-    expect(expertContent).toContain("FE2O3-RACE-002");
-    expect(expertContent).toContain("safe Rust type intent do not authorize KIR");
+    expect(expertContent).toContain("has not been requalified at compiler commit 1dd61a01");
+    expect(expertContent).toContain("no KIR, MFMA lowering, launch, or hardware result is claimed");
     expect(expertContent).toContain("41 tokens, 4 experts, 82 routes");
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertLesson?.claims[0].reference).toMatchObject({
@@ -4255,11 +4252,11 @@ describe("implementation progress integrity", () => {
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
     expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"ecf7b17f819021708d9c59ebe39a4daf9eb2562c");
+    expect(mapping).toContain("sourceCommit\":\"1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e");
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family routes are retired");
-    expect(proofPlan).toContain("FE2O3-RACE-002");
+    expect(proofPlan).toContain("Protected Worker V3 publication remains separate");
     expect(proofPlan).toContain("collected-source selector");
     expect(proofPlan).toContain("authenticates the exact attributed source");
     expect(proofPlan).toContain("stops before descriptor construction and Worker V2");
@@ -4299,12 +4296,14 @@ describe("implementation progress integrity", () => {
     }
     expect(proofPlan).toContain("fe2o3-kernels #2");
     expect(proofPlan).toContain("the sealed authority-free exact-profile registry (#96)");
-    expect(proofPlan).toContain("were later deleted from the unified production tree");
+    expect(proofPlan).toContain("were later deleted from the unified compiler tree");
     expect(renderedStaged).toContain("Historical archive only");
     expect(proofPlan).toContain("96 verified and 0 errors");
     expect(proofPlan).toContain("76 debug tests, 76 release tests");
     expect(proofPlan).toContain("Production certificate consumption is tracked in #91");
-    expect(proofPlan).toContain("current generic compiler does not inherit");
+    expect(proofPlan).toContain(
+      "new dynamic WorkgroupPipeline route reaches KIR, LLVM, HSACO, and MI300X qualification",
+    );
     for (const issue of [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 96, 97, 99, 100]) {
       expect(proofPlan).toContain(
         `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,

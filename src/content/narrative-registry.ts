@@ -655,7 +655,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "The investigated source/ranked diagnostic sidecar was rejected and discarded rather than admitted as evidence. Same-TyCtxt descriptor identity hardens substitution checks, but it does not establish source-semantic custody or close the current FE2O3-RACE-002 boundary."
+        "text": "Same-TyCtxt descriptor identity hardens substitution checks. For authenticated production projection, checked tiled and row-striped operations now retain their source-derived index, success path, receiver extent, dominance, provenance, and launch-coordinate relation into live race analysis and KIR lowering. Hand-authored raw or textual carriers without that custody still fail closed."
       },
       {
         "type": "table",
@@ -673,7 +673,7 @@ const narrativeRegistry = deepFreeze({
         "headers": ["Example", "Current compiler reasoning", "Fail-closed edge"],
         "rows": [
           ["Static bounds", "A single-block finite launch replays every supported index from its unique invocation dimensions and checks any retained execution layout against that complete inventory.", "Dynamic or duplicate dimensions, layout mismatch, missing active axes, unsupported arithmetic, machine overflow, or an exhausted replay cap is Incomplete."],
-          ["Dynamic race freedom", "Explicit affine maps can prove a total injective address map; bounded Presburger replay can prove that conflicting invocation images do not intersect. Checked tiled and row-striped recipes also carry a structural index, checked-success capability, and destination physical extent.", "Typed live validation checks pairing, shape, substitution resistance, and use discipline, but the carrier is not source-semantic authority. Raw, textual, and public recipes stop at FE2O3-RACE-002."],
+          ["Dynamic race freedom", "Explicit affine maps and bounded Presburger replay prove nonintersection. Authenticated checked tiled and row-striped recipes additionally bind the index, success path, physical extent, provenance, dominance, and launch coordinates needed to prove active stores injective.", "Unknown aliases, unsupported maps, missing custody, malformed pairing, or exhausted resource bounds fail closed before KIR."],
           ["Tensor flow", "The policy pass can reject incompatible wave64 producer and consumer layouts.", "Every nonempty independent tensor replay is Incomplete until external roots have explicit operational-SSA provenance."],
           ["Loop progress", "The checker supports canonical single-entry multi-block forwarding SCCs with i < bound and one positive constant latch step.", "The exact source integer width and the ranked u64 update must both be nonwrapping; other SCC shapes remain Incomplete and concrete nontermination is Rejected."],
           ["Staged workgroup pipelines", "A generic epoch summary proves stage, commit, wait, consume or discard, release, modulo ring-slot selection, and release-before-reuse across dynamic prologue, steady-state, and drain regions.", "Unknown aliases, nonuniform bounds, crossing loops, wrong epochs or slots, early reads, late writes, and incomplete drains are Rejected or fail closed as Incomplete."],
@@ -708,7 +708,7 @@ const narrativeRegistry = deepFreeze({
             "stage": "kernel-race-freedom-v1",
             "code": "FE2O3-RACE-001",
             "enforcement": "generic Presburger relation and bounded counterexample replay",
-            "caught": "The race pass reconstructs the conflicting invocation pair. An explicit affine or bounded Presburger map can prove injectivity. A checked tiled or row-striped carrier can pass structural validation while remaining unresolved at FE2O3-RACE-002 without semantic custody."
+            "caught": "The race pass reconstructs the conflicting invocation pair. An explicit affine or bounded Presburger map can prove injectivity; authenticated checked tiled and row-striped maps use the same generic relation with source-derived success, extent, provenance, and launch facts."
           },
           {
             "id": "tensor_layout_flow",
@@ -764,7 +764,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "One completed witness is not universal correctness",
-        "text": "The Complete static-bounds replay validates one sealed analysis result for one exact ranked function and checkpoint. It does not prove MIR projection, tensor flow, race freedom, source-to-KIR refinement, LLVM or ISA lowering, numerical intent, artifact identity, launch admission, or hardware execution. Every unsupported witness remains explicitly Incomplete."
+        "text": "Each completed analysis validates one exact ranked function and checkpoint. It does not by itself prove arbitrary MIR projection, numerical intent, LLVM or ISA semantics, protected artifact identity, or universal hardware behavior. The qualified GEMM and attention results compose the supported compiler checks with one actual code-object build, launch, and CPU-oracle comparison; unsupported witnesses remain explicitly Incomplete."
       }
     ]
   },
@@ -783,7 +783,7 @@ const narrativeRegistry = deepFreeze({
           "The fixed stages run in order: tensor layout, bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, pipeline protocol, workgroup memory, and semantic refinement.",
           "The compiler seals each report and independently replays its witness. Only the admitted static bounded-access fragment can be Complete; nonempty tensor and every other current independent stage witness remain Incomplete even when a policy report is Clean.",
           "ProductionMiddleEndEvidenceV5 is the only live producer for that ordered result. The strict V4 decoder remains only for immutable historical bytes, and the removed V1 declarative refinement API cannot be used as an alternate admission route.",
-          "Only the normalized ranked recipe and admitted reports can proceed to KIR. Typed live validation checks the checked-access carrier pairing, shape, substitution resistance, exactly one predicated use, and no unpaired index use. Raw, textual, and public recipes still stop at FE2O3-RACE-002 because owner-custodied semantic MIR correspondence, exact receiver/fat-pointer extent, the two relevant Option::Some paths, allowed-use and CFG-dominance proof, source provenance/noalias, and retained KIR replay are missing. No Clean race result, KIR, functional-domain, lowering, launch, or hardware authority follows."
+          "Only the normalized ranked recipe and admitted reports can proceed to KIR. Typed live validation checks pairing, shape, substitution resistance, predicated use, and source-derived index, extent, dominance, provenance, and launch-coordinate relations. Supported authenticated tiled and row-striped maps proceed to retained KIR; raw or textual recipes missing that custody fail closed. KIR admission still does not grant protected publication, general LLVM/ISA refinement, or universal functional correctness."
         ]
       },
       {
@@ -803,7 +803,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The compiler has one checked transformation and one narrow Complete raw-replay fragment for static bounds. Checked tiled and row-striped carriers receive deterministic structural validation, but raw, textual, and public recipes remain Incomplete at FE2O3-RACE-002. Nonempty tensor flow and every other independent stage witness also remain Incomplete. Explicit affine or bounded Presburger ownership can separately produce a Clean race policy result. Unsupported dynamic bounds, semantic-custody gaps, alias relations, SCC shapes, and source-width or u64 no-wrap obligations fail closed."
+        "text": "The compiler has one checked transformation and relation-specific replay for supported bounds and ownership forms. Authenticated checked tiled and row-striped mappings can now produce a Clean dynamic race result and retained KIR when their source-derived success, extent, dominance, provenance, and launch facts are complete. Raw or textual carriers without those facts, unknown aliases, unsupported maps, malformed SCCs, and source-width or u64 no-wrap gaps fail closed."
       }
     ]
   },
@@ -1047,7 +1047,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Historical bounded execution is not current production authority",
-        "text": "Within the pinned historical exact route, Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), the sealed authority-free exact-profile registry (#96), direct LLVM/LLD finalization (#97), generated host preparation (#99), and the one-shot lifecycle (#100) were recorded complete. That workload-specific selector, registry, finalizer, host lifecycle, and Worker V2 ownership API were later deleted from the unified production tree. Their exact commit remains bounded historical evidence only. The current generic compiler does not inherit compiler origin, illegal-access safety, race freedom, source-to-machine refinement, launch authority, or Verus authority from it. The dynamic matrix lesson structurally validates its checked-access carrier, then stops at FE2O3-RACE-002 before KIR."
+        "text": "Within the pinned historical exact route, Slice 4 upstream LLVM/COV6 inspection (#86), canonical matrix Kernel IR V5 (#93), the attributed Slice 1 source-to-exact-descriptor/Worker-V2 boundary (#85), the sealed authority-free exact-profile registry (#96), direct LLVM/LLD finalization (#97), generated host preparation (#99), and the one-shot lifecycle (#100) were recorded complete. That workload-specific selector, registry, finalizer, host lifecycle, and Worker V2 ownership API were later deleted from the unified compiler tree. Their exact commit remains bounded historical evidence only. The new dynamic WorkgroupPipeline route reaches KIR, LLVM, HSACO, and MI300X qualification through generic operations and analyses; it does not inherit protected publication or general refinement authority from the retired route."
       },
       {
         "type": "links",
@@ -1079,11 +1079,11 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Generic PLIRON safety passes are mandatory before lowering",
-        "text": "The current production transaction constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: tensor-layout and collective-participation verification, memory bounds, atomic legality, global race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory must-initialization/publication by epoch, and declared semantic refinement. The implementation uses dialect operations, bounded sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. The dynamic MFMA example now carries a structural index, checked-success capability, and physical extent through deterministic typed live validation. It still stops with FE2O3-RACE-002 because the carrier is not owner-custodied proof of the source success paths, receiver extent, dominance, provenance/noalias, or retained KIR relation. No Clean race result, KIR, LLVM, HSACO, functional-domain, or launch authority follows from this source in the current tree; unsupported effects and ownership forms fail closed as Incomplete."
+        "text": "The compiler constructs target-neutral ranked PLIRON and runs the mandatory workload-neutral safety sequence before Kernel IR lowering: tensor layout, memory bounds, atomic legality, global race freedom, complete hierarchy ownership, barrier convergence, pipeline protocol, workgroup-memory initialization/publication, and declared semantic refinement. The implementation uses dialect operations, sparse affine index dataflow, CFG traces, and memory effects; it contains no GEMM names, tile-size tests, or schedule recognizers. For the displayed dynamic MFMA source, authenticated projection retains the checked index, success path, extent, dominance, provenance, launch mapping, and pipeline events needed to pass those generic checks and proceed through KIR, LLVM, HSACO, and qualification launch."
       },
       {
         "type": "paragraph",
-        "text": "The current kernel already uses BF16/F32 MFMA with dynamic M/N/K, checked lda/ldb/ldc, runtime alpha/beta, multiple workgroups, a K loop, and edge handling. The remaining schedule optimization is cooperative LDS staging. Its compiler support must remain workload-neutral: generic effects, ownership, convergence, initialization, and bounds facts must justify LDS publication and reuse without recognizing matrix multiplication."
+        "text": "The current kernel uses BF16/F32 MFMA with dynamic M/N/K, checked lda/ldb/ldc, runtime alpha/beta, multiple workgroups, a K loop, edge handling, and compiler-owned double-buffered LDS staging. Generic effects, ownership, convergence, initialization, epoch, and bounds facts justify publication and reuse without recognizing matrix multiplication. Remaining work is protected publication, broader refinement, and measured schedule tuning rather than a missing executable lowering."
       },
       {
         "type": "table",
@@ -1238,7 +1238,7 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           ["Historical direct-global MFMA route", "At its pinned commit, compiled through ranked PLIRON, Kernel IR, gfx942 LLVM, HSACO, and qualification launch", "The selector and alternate host route are retired; four MI300X cases and the HIP comparison remain historical observations only."],
           ["Historical cooperative-LDS route", "Retains archived source, structural diagnostics, and exact evidence records", "Its collected-source selector, exact profile registry, and workload finalizer were deleted from current production."],
-          ["Current generic production transaction", "Runs the fixed workload-neutral ranked analysis sequence and structurally validates the checked-access carrier", "The published dynamic matrix stops at FE2O3-RACE-002 before KIR because source-semantic custody, receiver extent, control-flow use, provenance/noalias, and retained KIR replay are not proven."],
+          ["Current generic compiler transaction", "Proves the supported checked tiled mapping, dynamic loop, tensor, barrier, epoch, initialization, and reuse obligations, then lowers the exact qualified sources through KIR and gfx942 LLVM", "The qualification runner can execute the resulting HSACO, but protected Worker V3 publication and general source-to-machine refinement remain separate."],
           ["Current Worker V3 path", "Retains generic target finalization and publication mechanics", "No workload selector or Worker V2 ownership API can bypass the incomplete generic proof."],
           ["Tutorial workload sources", "Remain readable safe Rust examples with pinned historical results", "They are not current launch commands, production proof receipts, or source-to-machine authority."]
         ]
@@ -1247,11 +1247,11 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Historical LDS-family routes are retired",
-        "text": "TILED_SOURCE_TO_IR=false, TILED_LOWERING=false, and TILED_PROTECTED_EXECUTION=false describe the historical cooperative-LDS source family in this mutation archive. The exact selector, profile registry, and finalizer were later deleted. The direct-global MFMA hardware results are also pinned historical qualification observations; current production reaches the generic race analysis and stops Incomplete before KIR."
+        "text": "TILED_SOURCE_TO_IR=false, TILED_LOWERING=false, and TILED_PROTECTED_EXECUTION=false describe the retired fixed Slice 1 source family in this mutation archive. They do not describe the dynamic WorkgroupPipeline kernel displayed in the preceding lesson. At compiler commit 1dd61a01, that exact safe source passes the generic checks, lowers through KIR and gfx942 LLVM, emits HSACO, and executes under the qualification runner. Protected Worker V3 publication remains separate."
       },
       {
         "type": "paragraph",
-        "text": "Dynamic values are not static compile-time facts. The current safe Rust MFMA kernel checks strides and extents before access, zero-fills edge fragments, and uses Option-controlled stores to suppress out-of-range writes. Those are runtime behavior and typed source intent, not compiler proof. The structural carrier records an index, success capability, and physical extent, but current public compilation still stops at FE2O3-RACE-002; a protected host adapter would remain a separate launch boundary."
+        "text": "Dynamic values are not static compile-time facts. The safe Rust MFMA kernel checks strides and extents before access, zero-fills edge fragments, and uses Option-controlled stores to suppress out-of-range writes. The compiler proves that every memory operation is dominated by the matching checked-success path and that the tiled address map is injective over active workgroups, lanes, and components. The actual sizes remain runtime inputs; violating the kernel precondition traps rather than becoming an unchecked access."
       }
     ]
   },
@@ -1261,13 +1261,13 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The source intends each 64-thread workgroup to own one 16x16 C tile. Lane l receives four BF16 A values and four BF16 B values from role-typed matrix views, then selects output rows 4*(l/16)+component at column l%16. Tiled2D expresses that mapping in safe Rust, and the checked-access carrier records its index, success capability, and physical extent; neither fact alone proves cross-invocation ownership."
+        "text": "Each 64-thread workgroup owns one 16x16 C tile. Lane l receives four BF16 A values and four BF16 B values from role-typed matrix views, then selects output rows 4*(l/16)+component at column l%16. Tiled2D expresses that mapping in safe Rust. The generic race pass combines its checked index, success capability, physical extent, launch geometry, and invocation coordinates to prove the active store map is injective."
       },
       {
         "type": "callout",
         "tone": "proof",
         "title": "Fallible views, total edge loads",
-        "text": "Bf16MfmaAMatrix::row_major and Bf16MfmaBMatrix::row_major return Result because invalid offsets, extents, or strides cannot form a matrix view; ordinary kernel code propagates that runtime boundary with ?. Once the view exists, load_m16k16 and load_k16n16 return role-typed fragments directly. A logical out-of-bounds coordinate or checked coordinate/address overflow contributes defined BF16 zero, so absence is data rather than an Option control-flow path. At its pinned historical checkpoint, Kernel IR V7 emitted four exact guarded loads per fragment and formal-memory admission checked each selected edge. The current public dynamic recipe stops at FE2O3-RACE-002 before KIR; safe fallback behavior does not transfer the historical KIR proof."
+        "text": "Bf16MfmaAMatrix::row_major and Bf16MfmaBMatrix::row_major return Result because invalid offsets, extents, or strides cannot form a matrix view; ordinary kernel code propagates that runtime boundary with ?. Once the view exists, load_m16k16 and load_k16n16 return role-typed fragments directly. A logical out-of-bounds coordinate or checked coordinate/address overflow contributes defined BF16 zero. In the qualified compilation, KIR retains those predicated reads and formal-memory admission checks every selected edge before LLVM emission."
       },
       {
         "type": "table",
@@ -1295,7 +1295,7 @@ const narrativeRegistry = deepFreeze({
           [
             "Mutable C region",
             "Tiled2D witness",
-            "intended ownership mapping; the current carrier is structurally validated but remains Incomplete until its source success paths, extent, uses, dominance, provenance/noalias, and KIR replay are independently bound"
+            "the authenticated projection binds source success paths, extent, uses, dominance, provenance, and the injective invocation map before KIR lowering"
           ]
         ]
       }
@@ -1313,7 +1313,7 @@ const narrativeRegistry = deepFreeze({
           "Prime epoch 0 by loading zero-filled A and B fragments, opening each compiler-owned workgroup ring with stage, writing the lane-owned element, and publishing it with commit.",
           "For each dynamic K phase, stage and commit epoch i + 1 before waiting for epoch i; then consume and read the current typed fragments, execute multiply_accumulate uniformly across the wave, and release both ring slots.",
           "After the loop, wait for the speculative final epoch, discard it, and release both slots. This explicit drain makes every dynamic trip count follow the same finite lifecycle.",
-          "Apply alpha * accumulator + beta * C through each runtime-checked Tiled2D output path; compiler admission remains a separate obligation."
+          "Apply alpha * accumulator + beta * C through each runtime-checked Tiled2D output path; the compiler proves the active store map before lowering."
         ]
       },
       {
@@ -1325,20 +1325,20 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "Current lowering boundary",
-        "text": "The current GEMM source reaches semantic MIR and ranked PLIRON with typed MFMA values preserved through workgroup storage. It then stops at FE2O3-RACE-002 for dynamic output ownership before KIR. WorkgroupPipeline terminals therefore have no production KIR or LLVM lowering yet, and this lesson makes no executable or performance claim for the new staged source."
+        "title": "The staged source executes end to end",
+        "text": "At compiler commit 1dd61a01, the exact displayed source reaches semantic MIR and ranked PLIRON with typed MFMA values preserved through workgroup storage. Checked tiled ownership and the double-buffer protocol pass, KIR allocates the two 1,024-byte workgroup rings, gfx942 LLVM lowers the MFMA and barriers, and the resulting HSACO matches the CPU oracle on MI300X."
       },
       {
         "type": "callout",
         "tone": "proof",
         "title": "The mandatory safety pipeline does not recognize GEMM",
-        "text": "The eight production ranked passes reason about tensor layout, bounds, atomics, race freedom, complete hierarchy ownership, barrier convergence, workgroup-memory epochs, and declared semantic refinement. One ephemeral manager shares sparse results, execution layout, bounded traces, tensor-layout dataflow, and exact resource-bounded Presburger relations across that ordered sequence. The same machinery analyzes softmax, attention, MoE, reductions, and any kernel expressible in the supported target-neutral operation and effect subset; unsupported or unresolved forms stop as Incomplete. This site's pinned historical workload records remain useful examples, but their compiler selectors and qualification oracles were deleted and grant no current production safety authority. Matrix lowering can select a target instruction only after every generic obligation passes."
+        "text": "The nine production ranked passes reason about tensor layout, bounds, atomics, race freedom, complete hierarchy ownership, barrier convergence, pipeline epochs, workgroup-memory initialization, and declared semantic refinement. One analysis manager shares sparse results, execution layout, bounded traces, tensor-layout dataflow, and resource-bounded Presburger relations across that sequence. The same machinery analyzes any kernel expressible in the supported target-neutral operation and effect subset; there is no GEMM or attention selector. Unsupported or unresolved forms stop as Incomplete before matrix lowering."
       },
       {
         "type": "callout",
         "tone": "boundary",
-        "title": "What the dynamic tile still needs",
-        "text": "Tiled2D is workload-neutral type intent, not a GEMM hint or a proof exception. Its obligation carrier structurally ties the produced index and checked-success capability to the destination physical extent, and typed live validation rejects substitution, malformed shape, unpaired index use, or repeated predication. Current compilation still stops at FE2O3-RACE-002 until owner-custodied source semantics, exact receiver extent, both relevant Option::Some paths, allowed-use and CFG dominance, allocation provenance/noalias, and retained KIR replay are independently established. Runtime checked access does not grant a Clean race result."
+        "title": "What the dynamic tile proof establishes",
+        "text": "Tiled2D is workload-neutral type intent, not a GEMM hint or proof exception. Its obligation carrier ties the produced index and checked-success capability to the destination physical extent. Authenticated projection and live validation bind the receiver extent, success paths, allowed uses, CFG dominance, allocation provenance, and injective workgroup/lane/component map. Substitution, malformed shape, unpaired index use, repeated predication, or a colliding map is a compile-time error."
       },
       {
         "type": "callout",
@@ -1434,7 +1434,7 @@ const narrativeRegistry = deepFreeze({
         "type": "bullets",
         "items": [
           "The generic gfx942 target lowering maps admitted subgroup_reduce_max_f32 and subgroup_reduce_sum_f32 operations to lane shuffles. The current public softmax recipe stops before target lowering; its algorithm contains no matrix contraction or MFMA.",
-          "RowStriped2D removes unsafe from the source and expresses row-striped ownership intent. Its structural carrier binds index, success, and physical extent, but current public compilation still stops at FE2O3-RACE-002.",
+          "RowStriped2D removes unsafe from the source and expresses a mapping supported by the generic checked row-striped race proof. This softmax source has not been requalified at compiler commit 1dd61a01, so the lesson retains no current end-to-end execution claim.",
           "DeviceMath::exp_f32 has target-neutral collection and lowering support for admitted recipes; the current softmax recipe does not reach that stage.",
           "The current contract rejects empty rows and requires at least one finite active input; full NaN, infinity, subnormal, and all-masked semantics remain explicit numerical-policy work."
         ]
@@ -1458,11 +1458,11 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "PLIRON verification",
-            "typed live validation checks the structural index, success, physical-extent, shape, substitution, and use obligations; the dynamic race result remains Incomplete at FE2O3-RACE-002"
+            "the generic compiler supports authenticated checked row-striped ownership, but this exact softmax source has not been rerun through the 1dd61a01 end-to-end qualification"
           ],
           [
             "Lowering",
-            "no current KIR or gfx942 lowering is issued for this public recipe because the race obligation fails closed before KIR"
+            "no current KIR or gfx942 result is claimed for this exact source until it is rerun through the same end-to-end qualification"
           ],
           [
             "Qualification host",
@@ -1470,7 +1470,7 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Remaining boundary",
-            "owner-custodied semantic MIR correspondence, exact receiver/fat-pointer extent, both Option::Some paths, allowed uses and CFG dominance, source provenance/noalias, and retained KIR replay remain missing; the historical observations add no current functional-domain or hardware authority"
+            "the historical observations do not transfer to compiler commit 1dd61a01; a fresh source-to-HSACO run and CPU-oracle comparison are required before promotion"
           ]
         ]
       },
@@ -1488,7 +1488,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The safe Rust source intends each wave to produce a 16-query tile. Target-neutral BF16 fragments express Q contracted with transposed K in 16-key tiles, and two compiler-owned workgroup rings double-buffer those role-typed fragments across the dynamic depth loop. An admitted target operation can lower to V_MFMA_F32_16X16X16_BF16, but this current public recipe stops at FE2O3-RACE-002 before KIR and target lowering. The source algorithm applies the additive mask and advances the stable online maximum, denominator, and V-weighted numerator without materializing the score matrix."
+        "text": "Each wave produces a 16-query tile. Target-neutral BF16 fragments express Q contracted with transposed K in 16-key tiles, and two compiler-owned workgroup rings double-buffer those role-typed fragments across the dynamic depth loop. The admitted target operation lowers to V_MFMA_F32_16X16X16_BF16. The source then applies the additive mask and advances the stable online maximum, denominator, and V-weighted numerator without materializing the score matrix."
       },
       {
         "type": "callout",
@@ -1533,7 +1533,7 @@ const narrativeRegistry = deepFreeze({
           [
             "Output",
             "Tiled2D output capability",
-            "source-level ownership intent with runtime checked stores; current compiler proof remains Incomplete at FE2O3-RACE-002"
+            "checked tiled ownership; the active workgroup/lane/component store map is proved injective before lowering"
           ]
         ]
       },
@@ -1545,13 +1545,13 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "callout",
-        "tone": "boundary",
-        "title": "Verified through PLIRON, not executable yet",
-        "text": "AMD-target extraction confirms that the current nested attention source reaches ranked PLIRON pipeline verification and then stops at FE2O3-RACE-002 before KIR or LLVM. Historical attention runs in the result tab belong to an older direct-fragment source and do not establish execution or speed for this double-buffered version."
+        "tone": "proof",
+        "title": "The nested pipeline executes end to end",
+        "text": "At compiler commit 1dd61a01, the exact displayed nested attention source passes ranked PLIRON, lowers through KIR and a 210,815-byte gfx942 LLVM module, emits HSACO, and executes four workgroups on MI300X. The result tab records the exact shape, zero-error CPU comparison, LDS size, barriers, memory instructions, and MFMA instruction."
       },
       {
         "type": "paragraph",
-        "text": "Batch-head count, padded query and key lengths, depth, strides, scale, and additive mask are runtime values. The checked-access carrier validates structural index, success, and physical-extent use without recognizing attention, but current public recipes stop at FE2O3-RACE-002 before KIR because semantic source custody is missing. Runtime checks and typed Tiled2D intent do not establish a Clean race result. Grouped-query layouts, dropout, backward propagation, wider V tiles, and a matrix-accelerated PV contraction remain separate algorithm work."
+        "text": "Batch-head count, padded query and key lengths, depth, strides, scale, and additive mask are runtime values. The checked-access proof validates the index, success path, physical extent, and injective store map without recognizing attention. Grouped-query layouts, dropout, backward propagation, wider V tiles, and a matrix-accelerated PV contraction remain separate end-to-end implementation work."
       },
       {
         "type": "callout",
@@ -1568,10 +1568,10 @@ const narrativeRegistry = deepFreeze({
       {
         "type": "bullets",
         "items": [
-          "Two cases cover key and query tails, multi-head and multi-tile launch geometry, non-multiple-of-16 depth, runtime strides, causal masks, and value widths 7 and 16.",
-            "At the pinned historical commit, an explicitly selected FlashAttention qualification oracle performed source collection, generic PLIRON safety verification, Kernel IR lowering, gfx942 LLVM emission, HSACO finalization, host launch, and CPU-oracle comparison. That selector is retired and cannot complete or publish the current production transaction.",
-          "Disassembly confirms MFMA score contractions and subgroup shuffle reductions; no global score matrix is allocated.",
-          "The result does not establish complete IEEE/OCML refinement, every legal shape, all-masked-row behavior, or performance parity with tuned FlashAttention libraries."
+          "One adversarial case covers two heads, query and key tails, multi-workgroup launch geometry, non-multiple-of-16 depth, runtime strides, finite and negative-infinity additive masks, one fully masked row, value-width tails, and untouched output padding.",
+          "The exact safe Rust source passed source collection, generic PLIRON safety verification, Kernel IR lowering, gfx942 LLVM emission, HSACO finalization, host launch, and CPU-oracle comparison at compiler commit 1dd61a01.",
+          "Disassembly confirms one MFMA score contraction, four barriers, and LDS reads and writes; no global score matrix is allocated.",
+          "The result does not establish protected publication, complete IEEE/OCML refinement, every legal shape, universal functional correctness, or performance parity with tuned FlashAttention libraries."
         ]
       }
     ]
@@ -1623,13 +1623,13 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The tutorial host packs each expert group into a 16-row-padded matrix, and the pinned retired qualification route launched the same safe Rust kernel for every nonempty group. Runtime arguments supply padded rows, reduction depth, output columns, all matrix strides, expert ID, and expert count. The expert ID selects a strided weight and bias region; it does not select a compiler path. Current public compilation stops at FE2O3-RACE-002 before KIR and does not launch this source."
+        "text": "The tutorial host packs each expert group into a 16-row-padded matrix, and the pinned retired qualification route launched the same safe Rust kernel for every nonempty group. Runtime arguments supply padded rows, reduction depth, output columns, all matrix strides, expert ID, and expert count. The expert ID selects a strided weight and bias region; it does not select a compiler path. This exact MoE source has not been requalified at compiler commit 1dd61a01, so it retains historical evidence only."
       },
       {
         "type": "callout",
         "tone": "warning",
         "title": "MFMA is an operation, not a workload label",
-        "text": "Target-neutral matrix fragments express the token-by-weight contraction without a GEMM or MoE recognizer. The checked-access carrier structurally ties the dynamic output index and success capability to its physical extent, but current public compilation stops at FE2O3-RACE-002 before KIR. Runtime edge checks and safe Rust type intent do not authorize KIR, MFMA lowering, functional-domain correctness, launch, or hardware execution."
+        "text": "Target-neutral matrix fragments express the token-by-weight contraction without a GEMM or MoE recognizer. The generic compiler can prove supported checked tiled mappings, but no KIR, MFMA lowering, launch, or hardware result is claimed for this exact MoE source until it passes a fresh end-to-end qualification."
       }
     ]
   },
@@ -1992,7 +1992,7 @@ const narrativeRegistry = deepFreeze({
           ["Static bounded ranked access witness", "Complete for the admitted raw-replay fragment", "One block, finite unique invocation dimensions, at most one well-formed execution layout with exact active-axis agreement, static ranked extents, supported index producers, checked u64 evaluation, and the replay resource cap."],
           ["Nonempty tensor-layout witness", "Incomplete", "Policy diagnostics can reject incompatible layouts, but external roots are not yet bound to operational SSA provenance. No nonempty tensor inventory receives Complete replay."],
           ["Bounds outside the raw fragment", "Incomplete", "Dynamic launch dimensions, unsupported maps, exhausted enumeration, malformed inventory, and any possible machine overflow fail closed."],
-          ["Race and ownership policy", "Clean only for supported explicit relations; independent witness remains Incomplete", "Injective affine maps and bounded Presburger noncollision can be Clean. Checked tiled and row-striped carriers receive structural pairing, shape, substitution, and use validation, but raw, textual, and public recipes return FE2O3-RACE-002 until source-semantic custody and retained KIR replay exist."],
+          ["Race and ownership policy", "Clean for supported authenticated relations", "Injective affine maps and bounded Presburger noncollision can be Clean. Authenticated checked tiled and row-striped maps additionally bind success, extent, dominance, provenance, and launch coordinates; raw or textual carriers without that custody fail closed."],
           ["Loop progress policy", "Clean for the canonical committed form; independent witness remains Incomplete", "Canonical single-entry multi-block forwarding SCCs need i < bound, one positive constant latch step, and both source-width and ranked u64 no-wrap proofs."],
           ["Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses", "Incomplete", "Their reports can reject concrete errors, but a Clean report has no independent Complete replay yet."],
           ["Checked index constant fold", "Applied or NotApplicable after exact typed replay", "Only exact preceding same-block IndexConstant operands, checked Add or Multiply, and nonzero Divide or Remainder. One input clone is replayed against the moved receipt-owned output; unrelated CFG, values, types, effects, and proof sites remain identical."],

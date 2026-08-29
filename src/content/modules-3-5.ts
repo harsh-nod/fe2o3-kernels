@@ -21,9 +21,9 @@ import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/contrac
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
-  currentImplementationReference,
   historicalReference,
   pinnedReference,
+  qualificationReference,
   type CurriculumModule,
   type Lesson,
 } from "./model";
@@ -53,8 +53,8 @@ const dynamicGemmSource = sourceMilestoneRecord(
 const workgroupPipelineSource = sourceMilestoneRecord(
   "workgroup-pipeline-source-v1",
 );
-const qualificationCommit = dynamicGemmSource.commit;
-const qualificationTree = dynamicGemmSource.tree;
+const qualificationCommit = workgroupPipelineSource.commit;
+const qualificationTree = workgroupPipelineSource.tree;
 const gemmProofEvidence = stagedEvidenceRecord(
   "tiled-lds-source-model-correspondence-v1",
 );
@@ -97,30 +97,26 @@ Boundary: this is functional exact bounded Slice 1, not generalized GEMM, compil
 const dynamicGemmResult = resultText(
   "gpu-observed",
   [
-    "Historical safe dynamic BF16/F32 MFMA GEMM on MI300X (gfx942)",
+    "Executable safe dynamic BF16/F32 MFMA GEMM on MI300X (gfx942)",
     "",
     "Rust -> semantic MIR -> ranked PLIRON -> Kernel IR -> formal/ranked memory",
     "-> gfx942 LLVM -> HSACO -> fe2o3-host",
-    "2 semantic functions, 81 correspondence blocks, 8 formal-memory admissions,",
-    "12 ranked dynamic-index discharges, workgroup [64, 1, 1], 38,286 LLVM bytes",
+    "2 semantic functions, 110 correspondence blocks, 16 formal accesses,",
+    "20 ranked dynamic-index discharges, workgroup [64, 1, 1], 66,915 LLVM bytes",
     "",
-    "PASS packed                       M=16 N=16 K=16 groups=1 max_error=0",
-    "PASS strided-all-tails            M=17 N=19 K=18 groups=4 max_error=0",
-    "PASS multi-workgroup-dynamic-k    M=33 N=35 K=33 groups=9 max_error=0",
-    "PASS zero-k-epilogue              M=17 N=19 K=0 groups=4 max_error=0",
-    "ISA: v_mfma_f32_16x16x16_bf16",
+    "PASS tiled_gemm_general_v1: 19x21x23, 4 workgroups, max_abs_error=0.000000",
+    "ISA: 1 x v_mfma_f32_16x16x16_bf16, 4 x s_barrier,",
+    "     2 x ds_read_b64, 2 x ds_write2st64_b64; static LDS: 2,048 bytes",
     "",
-    "Matched direct-kernel benchmark, 2026-08-24, 15 event-timed samples:",
+    "Earlier like-for-like direct-kernel benchmark, 2026-08-24, 15 samples:",
     "size    Fe2O3 median   HIP median   Fe2O3/HIP   Fe2O3 throughput",
     "256       13.620 us      9.138 us      1.490x      2,463.56 GFLOP/s",
     "512       28.038 us     25.262 us      1.110x      9,574.09 GFLOP/s",
     "1024     138.005 us    130.514 us      1.057x     15,560.87 GFLOP/s",
     "",
-    "This is a like-for-like MFMA kernel and host-launch comparison, not rocBLAS.",
-    "Fe2O3 is safer and more expressive here; it is not faster than HIP yet.",
-    "This result came from the retired nonpublishing qualification route.",
-    "Current production compilation stops at an unresolved generic race proof before KIR.",
-    "Protected release publication and complete source-to-machine refinement remain separate.",
+    "The benchmark belongs to the earlier direct-fragment source, not this staged kernel.",
+    "The current result is functional qualification, not a performance claim.",
+    "Protected Worker V3 publication and complete source-to-machine refinement remain separate.",
   ].join("\n"),
 );
 
@@ -140,14 +136,26 @@ The logical column count and independent input/output strides are dynamic. Check
 
 const flashAttentionResult = resultText(
   "gpu-observed",
-  `Historical dynamic fused attention qualification on MI300X/gfx942
+  `Executable dynamic fused attention qualification on MI300X/gfx942
 
-PASS tails-and-strides        heads=1 queries=16/16 keys=13/16 depth=18 value_dim=7 max_error=4.4703484e-8
-PASS multi-head-multi-tile   heads=2 queries=17/32 keys=19/32 depth=33 value_dim=16 max_error=5.9604645e-8
+Rust -> semantic MIR -> ranked PLIRON -> Kernel IR -> formal/ranked memory
+-> gfx942 LLVM -> HSACO -> fe2o3-host
+2 semantic functions, 249 correspondence blocks, 21 formal accesses,
+25 ranked dynamic-index discharges, workgroup [64, 1, 1], 210,815 LLVM bytes
 
-The retired FlashAttention qualification oracle collected two semantic functions and 219 correspondence blocks, admitted 13 formal-memory boundaries, discharged 17 ranked dynamic-index obligations, emitted a 162,782-byte LLVM module, finalized HSACO, and launched it through fe2o3-host at the pinned historical commit. That workload-selecting route is not present in the current compiler and cannot complete the production transaction. Disassembly contained V_MFMA_F32_16X16X16_BF16 for QK score tiles and subgroup shuffles. One key-tile pass advances the stable online maximum, denominator, and V numerator; scores are never materialized in global memory.
+PASS flash_attention_general_v1: 2 heads, 19x21 logical attention,
+depth 23, value dimension 13, 4 workgroups, max_abs_error=0.000000
 
-The kernel accepts runtime head count, padded query/key lengths, depth up to 1,024, keys up to 4,096, value width up to 16, independent legal strides, scale, and an additive mask for causal, padding, or application masks. Q and K are BF16; V, mask, accumulation, and output are FP32. The current PV contraction is scalar/reduction based, so this is correctness evidence rather than a claim of parity with a tuned production FlashAttention library.`,
+Disassembly: 1 x V_MFMA_F32_16X16X16_BF16, 4 x S_BARRIER,
+2 x DS_READ_B64, 1 x DS_WRITE2ST64_B64, 2 x DS_WRITE_B64.
+Static LDS: 2,048 bytes.
+
+The exact displayed safe Rust source uses runtime head count, query/key dimensions,
+depth, value width, independent strides, scale, additive masks, edge handling,
+and compiler-owned double buffering. The CPU oracle includes finite additive masks,
+fully masked rows, output padding, and the same BF16-input/FP32 recurrence.
+This is end-to-end functional qualification, not protected Worker V3 publication,
+complete source-to-machine refinement, or a tuned-library performance claim.`,
 );
 
 function exactDynamicGemmKernelTab() {
@@ -160,7 +168,7 @@ function exactDynamicGemmKernelTab() {
     evidenceId: workgroupPipelineSource.id,
     explanatory: false,
     notice:
-      "Current safe Rust source with compiler-owned double-buffered workgroup staging. It reaches semantic MIR and ranked PLIRON pipeline verification, then stops at the existing dynamic-launch race proof before KIR or LLVM. The historical GPU and HIP results in this lesson belong to the separately pinned pre-pipeline source.",
+      "Exact safe Rust source executed at compiler commit 1dd61a01. The workload-neutral compiler carries its dynamic loops, checked tiled ownership, typed MFMA payloads, and double-buffer epochs through PLIRON, KIR, gfx942 LLVM, HSACO, and MI300X launch.",
   };
 }
 
@@ -182,10 +190,10 @@ function exactDynamicGemmHostTab() {
     language: "rust" as const,
     code: dynamicGemmHost,
     sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-    sourceCommit: dynamicGemmSource.commit,
+    sourceCommit: qualificationCommit,
     sourceSha256:
-      "6a67bb4fbf8a097389ce184764db2734a4b88037ef65ac607c12effede331a05",
-    evidenceId: dynamicGemmSource.id,
+      "fdd4efbeff66aeb7f423abe11ec3ee1330918adde21558525241ca58ce27e64b",
+    evidenceId: workgroupPipelineSource.id,
     explanatory: false,
   };
 }
@@ -446,7 +454,7 @@ const gemmMapping: Lesson = {
   order: 0,
   title: "Dynamic GEMM end to end",
   summary:
-    "Study a safe wave64 MFMA kernel and its pinned historical run while tracking the current generic production boundary.",
+    "Follow one safe wave64 MFMA kernel from Rust through the generic compiler to a checked MI300X result.",
   duration: "24 min",
   prerequisites: ["Typed indexing and ownership", "Matrix multiplication"],
   objectives: [
@@ -460,16 +468,17 @@ const gemmMapping: Lesson = {
   ],
   claims: [
     sourceMilestoneClaim("workgroup-pipeline-source-v1"),
-    sourceMilestoneClaim("dynamic-gemm-executable-source-v1"),
     {
       kind: "compiler-checked",
-      label: "Current dynamic workgroup pipeline reaches ranked PLIRON",
+      label: "Dynamic workgroup pipeline lowers to gfx942 LLVM",
       detail:
-        "The safe Rust GEMM uses two compiler-owned workgroup rings for typed MFMA operands. AMD-target extraction retains the dynamic K loop, proves the staged access lifecycle and epoch-slot relation, and reaches the existing FE2O3-RACE-002 output-ownership boundary before KIR or LLVM emission.",
-      reference: currentImplementationReference(
+        "At compiler commit 1dd61a01, the workload-neutral route retains the dynamic K loop and checked tiled ownership, proves the double-buffer lifecycle and epoch-slot relation, then lowers the admitted ranked PLIRON through Kernel IR and formal memory to gfx942 LLVM.",
+      reference: qualificationReference(
+        qualificationCommit,
+        qualificationTree,
         [
           "cargo test -p fe2o3-kernel-analysis --test pliron_pipeline_protocol --test pliron_lit --test pliron_workgroup_memory",
-          "cargo test -p rustc-codegen-fe2o3 --test production_general_matrix_driver_v1 -- --ignored --nocapture",
+          "cargo test -p rustc-codegen-fe2o3 --test production_general_matrix_driver_v1 --locked",
           "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
         ],
         [
@@ -480,16 +489,16 @@ const gemmMapping: Lesson = {
         ],
         {
           target: FE2O3_PIN.target,
-          note: "MIR/PLIRON compiler milestone only; no KIR, LLVM, artifact, launch, GPU correctness, or performance claim.",
+          note: "Qualification compiler-lowering evidence for the exact source; protected artifact publication remains separate.",
         },
       ),
     },
     {
       kind: "gpu-observed",
-      label: "Pinned MI300X qualification run",
+      label: "End-to-end MI300X qualification",
       detail:
-        "At the pinned historical compiler commit, the exact safe Rust source compiled and launched through an explicit nonpublishing qualification oracle. Four dynamic correctness cases passed at zero error, the HSACO contained V_MFMA_F32_16X16X16_BF16, and a matched HIP comparison was recorded. Current main has retired this alternate qualification host route.",
-      reference: historicalReference(
+        "The exact displayed safe Rust source compiled to HSACO, launched as four workgroups for M=19, N=21, K=23 with independent strides and alpha/beta epilogue, and matched the safe CPU oracle at zero maximum absolute error. Disassembly confirmed MFMA, LDS traffic, and four barriers.",
+      reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
         [
@@ -502,7 +511,7 @@ const gemmMapping: Lesson = {
         ],
         {
           target: FE2O3_PIN.target,
-          note: "Historical GPU observation. Current main retains the kernel and unified compiler machinery but not this alternate qualification host route.",
+          note: "Actual functional qualification on gfx942. The feature-gated raw host ABI does not grant protected Worker V3 publication or general source-to-machine refinement.",
         },
       ),
     },
@@ -520,12 +529,12 @@ const gemmMapping: Lesson = {
       language: "rust",
       code: dynamicGemmReference,
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: qualificationCommit,
       sourceSha256:
         "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
       explanatory: false,
       notice:
-        "This host-allocating Vec reference is the runtime qualification oracle for MI300X. The complete oracle is not compiler-bound. The compiler can prove a one-dimensional input[index] over an identical symbolic ranked extent or an overflow-checked bounded static affine interval. This reference instead uses independent lengths, Vec allocation/return, multidimensional affine reads, nested reduction, and richer recurrence outside the admitted subset. Canonical unit-step loops are supported.",
+        "This safe sequential Rust reference is the independent numerical oracle used by the displayed MI300X host. The qualification compares active outputs within tolerance and requires output padding to remain bitwise unchanged; it is a test oracle, not a universal functional-equivalence proof.",
     },
     {
       kind: "spec",
@@ -564,7 +573,7 @@ const gemmMapping: Lesson = {
     {
       prompt: "Explain why two lanes or workgroups cannot write the same C element.",
       hint: "Follow the Tiled2D source intent and structural carrier through workgroup tile, lane, fragment component, success, and physical extent.",
-      acceptance: "The source-level argument identifies a unique workgroup, lane, and component for every store and distinguishes that reasoning from the currently Incomplete compiler carrier.",
+      acceptance: "The explanation identifies a unique workgroup, lane, and component for every store and connects that injective mapping to the generic checked tiled race proof.",
     },
   ],
   glossary: ["GEMM", "stride", "epilogue", "DisjointSlice", "qualification"],
@@ -659,8 +668,8 @@ const softmax: Lesson = {
       detail:
         "Four dynamic-shape and strided cases compiled through the explicit nonpublishing row-softmax qualification oracle and matched an independent CPU oracle on gfx942.",
       reference: historicalReference(
-        qualificationCommit,
-        qualificationTree,
+        dynamicGemmSource.commit,
+        dynamicGemmSource.tree,
         ["examples/row_softmax_general_v1/run-gfx942.sh"],
         [
           "examples/row_softmax_general_v1/src/kernel.rs",
@@ -722,7 +731,7 @@ const softmax: Lesson = {
       language: "rust",
       code: rowSoftmaxHost,
       sourcePath: "examples/row_softmax_general_v1/src/main.rs",
-      sourceCommit: qualificationCommit,
+      sourceCommit: dynamicGemmSource.commit,
       sourceSha256:
         "8df056afb9e91aa3e42b4372860431612a77ef71b0abb7ebdd088c7210a5a1bd",
       explanatory: false,
@@ -765,12 +774,14 @@ const flash: Lesson = {
   claims: [
     {
       kind: "compiler-checked",
-      label: "Nested dynamic attention pipeline reaches ranked PLIRON",
+      label: "Nested dynamic attention pipeline lowers to gfx942 LLVM",
       detail:
-        "The current safe Rust attention source stages role-typed Q and K fragments through two workgroup rings. The workload-neutral projector preserves the nested dynamic key/depth loops and the generic pipeline pass validates their prologue, steady state, and drain before the existing output race-proof boundary stops lowering.",
-      reference: currentImplementationReference(
+        "At compiler commit 1dd61a01, the workload-neutral projector preserves the nested dynamic key/depth loops, checked tiled output ownership, and two role-typed workgroup rings. The generic passes prove their loop progress, race, barrier, epoch, slot, initialization, and reuse obligations before KIR and gfx942 LLVM lowering.",
+      reference: qualificationReference(
+        qualificationCommit,
+        qualificationTree,
         [
-          "cargo test -p rustc-codegen-fe2o3 --test production_general_matrix_driver_v1 -- --ignored --nocapture",
+          "cargo test -p rustc-codegen-fe2o3 --test production_general_matrix_driver_v1 --locked",
           "cargo test --locked --manifest-path examples/flash_attention_general_v1/Cargo.toml",
         ],
         [
@@ -780,16 +791,16 @@ const flash: Lesson = {
         ],
         {
           target: FE2O3_PIN.target,
-          note: "MIR/PLIRON compiler milestone only; current source does not lower to KIR or execute on the GPU.",
+          note: "Qualification compiler-lowering evidence for the exact source; protected artifact publication remains separate.",
         },
       ),
     },
     {
       kind: "gpu-observed",
-      label: "Pinned dynamic fused attention on MI300X",
+      label: "End-to-end fused attention on MI300X",
       detail:
-        "Two tail, stride, depth, and multi-head cases compiled through the explicit nonpublishing FlashAttention qualification oracle and matched an independent CPU oracle on gfx942.",
-      reference: historicalReference(
+        "The exact displayed source compiled to HSACO and launched four workgroups for two heads, 19 queries, 21 keys, depth 23, and value width 13. It exercised independent strides, finite and negative-infinity additive masks, a fully masked row, and output padding, then matched the safe CPU oracle at zero maximum absolute error.",
+      reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
         ["examples/flash_attention_general_v1/run-gfx942.sh"],
@@ -800,7 +811,7 @@ const flash: Lesson = {
         ],
         {
           target: "gfx942:xnack-",
-          note: "Historical qualification ran at compiler commit af0fd523e3b774377a9c5192cf0511e34fa19735; no tuned-library performance claim is made.",
+          note: "Actual functional qualification at compiler commit 1dd61a01; no protected Worker V3 or tuned-library performance claim is made.",
         },
       ),
     },
@@ -817,23 +828,23 @@ const flash: Lesson = {
       language: "rust",
       code: flashAttentionKernel,
       sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: qualificationCommit,
       sourceSha256:
-        "a2db15246def01acf1ad0e725012f6d76d5bc88b6fa77746b46cf8cd90ecdf8f",
+        "943ff29a75653510992e7c2cbfa48fd81286abcf876c540d7c7f8442dcf92f02",
       explanatory: false,
       notice:
-        "Current safe Rust source with nested dynamic workgroup double buffering. It reaches ranked PLIRON pipeline verification and then fails closed at the existing dynamic-launch race boundary before KIR or target lowering.",
+        "Exact safe Rust source executed at compiler commit 1dd61a01. The same workload-neutral compiler path handles its nested dynamic loops, checked tiled ownership, MFMA fragments, and double-buffer protocol without recognizing attention.",
     },
     {
       language: "rust",
       code: flashAttentionReference,
       sourcePath: "examples/flash_attention_general_v1/src/reference.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: qualificationCommit,
       sourceSha256:
-        "f14413bd3662973a8803cdfdd23e6c6b23facc9d4c627e4e91d7a1e63ee7f203",
+        "a9009840032e64243f47f730ba77d973ddf62289bd87b8a11ed7d119067de5f2",
       explanatory: false,
       notice:
-        "Safe sequential Rust defines dynamic heads, strides, masks, fully-masked rows, and padding for runtime qualification; the complete oracle is not compiler-bound. Exact point formulas and canonical loops are generic, and PLIRON structurally reconciles separated point outputs. Independent extents and this oracle's Vec score allocation, multidimensional accesses, nested recurrence, and transcendentals exceed that subset. Tensor-component and numerical-error replay plus the retained runtime remain Incomplete.",
+        "This safe sequential Rust reference is the independent runtime oracle for dynamic heads, strides, finite additive masks, fully masked rows, and output padding. It validates the executed case; it is not a universal proof of attention semantics or floating-point error.",
     },
     {
       language: "rust",
@@ -859,17 +870,17 @@ const flash: Lesson = {
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
       sourceCommit: qualificationCommit,
       sourceSha256:
-        "d119e41e3a15e0eb3e7866a439c23203b0e4983b3bd53d3fdc585e3bde2a4a25",
+        "afb79e75ca9e0f5f5f20ed3a9db15d05a05ba776c1e16ebf03ee6caf55f9c0a1",
       explanatory: false,
       notice:
-        "The host builds causal and padding masks, launches the generated ABI, compares every active output with an independent reference, and checks output padding. Unsafe is confined to the host code-object and launch FFI boundary.",
+        "The host builds finite and negative-infinity masks, loads the generated HSACO, launches the exact ABI, compares every active output with the independent reference, and checks output padding. Unsafe is confined to the host code-object and launch FFI boundary.",
     },
     {
       language: "text",
       code: flashAttentionResult,
       explanatory: true,
       notice:
-        "Evidence boundary: these are historical direct qualification launches and numerical comparisons for two cases. The workload-selecting route is retired; the record does not establish a current launch path, universal proof, complete numerical refinement, or tuned-library performance.",
+        "Evidence boundary: this is one actual source-to-HSACO MI300X qualification and numerical comparison. It does not establish protected publication, a universal functional proof, complete numerical refinement, or tuned-library performance.",
     },
   ),
   diagram: "attention",

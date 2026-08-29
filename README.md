@@ -77,9 +77,10 @@ API has been removed rather than retained as a dormant proof route.
 Target-aware validation first performs a bounded structural inventory before
 recursive PLIRON verification or launch-contract scanning. Malformed,
 unsupported, nested, or over-limit input fails closed as `FE2O3-TARGET-000`.
-The investigated source/ranked diagnostic sidecar was rejected and discarded;
-same-`TyCtxt` descriptor identity hardens substitution checks but does not
-supply source-semantic custody or close `FE2O3-RACE-002`.
+Same-`TyCtxt` descriptor identity hardens substitution checks. Authenticated
+production projection now carries the checked index, success path, receiver
+extent, dominance, provenance, and launch mapping needed by the generic tiled
+and row-striped race proof into retained Kernel IR.
 
 The workload-neutral `PipelineProtocol` stage runs after barrier convergence
 and before workgroup-memory verification. It validates compiler-owned staged
@@ -90,13 +91,11 @@ The current device and trusted-item surfaces also remove the exact Slice 1 LDS
 pair and publish intrinsics. The current MoE source passes its already loaded
 typed MFMA fragments directly to the matrix operation. The historical Slice 1
 source and evidence below remain immutable at their original coordinates.
-Checked tiled and row-striped recipes now carry a structural index, checked
-success capability, and destination physical extent. The typed live recipe
-validates their pairing, shape, substitution resistance, and allowed uses, but
-that carrier is not source-semantics proof. Raw, textual, and current public
-recipes still stop at FE2O3-RACE-002 before Kernel IR, so the historical HSACO,
-hardware, and HIP measurements are not current launch claims or universal
-correctness proofs.
+Checked tiled and row-striped recipes carry a structural index, checked success
+capability, destination physical extent, source provenance, and launch
+coordinates. Typed live validation proves supported active store maps
+injective across workgroups, lanes, and components. Raw or textual carriers
+without authenticated source custody still fail closed.
 
 This descendant also contains
 the exact protected Slice 1
@@ -686,20 +685,16 @@ symbol, source and terminal spans, reachable call chain, and no artifact.
 
 Those compile-time failures are historical bounded
 mutation-oracle source-to-diagnostic evidence for the proposed optimized
-schedule. The exact `collected-general-gemm-v1` selector, workload-specific
-final pair, and qualification host route were later deleted. Current production
-admits no alternate workload route. The dynamic matrix reaches the generic
-ranked analysis transaction with a checked-access obligation carrier that ties
-the produced index and success capability to the destination physical extent.
-Deterministic typed live verification checks the pair, shape, substitution,
-exactly one predicated use, and absence of an unpaired index use. It still stops
-Incomplete at FE2O3-RACE-002 before KIR because owner-custodied semantic MIR
-correspondence, the exact receiver/fat-pointer extent, the two relevant
-`Option::Some` paths, allowed-use and CFG-dominance proof, source
-provenance/noalias, and retained KIR replay are not implemented. The historical
+schedule. The exact `collected-general-gemm-v1` selector and workload-specific
+final pair remain retired. At compiler commit
+`1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e`, the dynamic GEMM and attention
+sources pass the generic ranked analysis transaction, lower through Kernel IR
+and gfx942 LLVM, emit HSACO, and execute on MI300X against safe Rust CPU
+oracles. Their checked-access and WorkgroupPipeline relations are retained
+through KIR without a workload selector. The historical
 `TILED_SOURCE_TO_IR=false`, `TILED_LOWERING=false`, and
 `TILED_PROTECTED_EXECUTION=false` flags remain archive metadata, not current
-compiler switches.
+compiler switches. Protected Worker V3 publication remains a separate boundary.
 
 Separately, the production semantic-MIR route runs a fixed target-neutral
 ranked-PLIRON safety pipeline before Kernel IR lowering: tensor layout and
@@ -876,12 +871,12 @@ current replay instructions.
 - Scalar fill is runnable, with a legacy raw launch boundary called out in the
   lesson.
 - Typed vector addition is the strongest current single-source runnable path.
-- Dynamic strided GEMM remains a safe Rust tutorial source. Four packed,
-  strided-tail, multi-workgroup dynamic-K, and zero-K epilogue cases passed
-  through the retired qualification route at its pinned commit. Current
-  production structurally validates its checked-access carrier, then stops at
-  FE2O3-RACE-002 before KIR. It makes no current compiler-proof, launch,
-  performance, or protected-publication claim.
+- Dynamic strided GEMM is an executable safe Rust tutorial source. At compiler
+  commit `1dd61a01`, its dynamic dimensions, strides, K loop, edge handling,
+  alpha/beta epilogue, MFMA, and double-buffered LDS staging compiled through
+  PLIRON, KIR, gfx942 LLVM, and HSACO; a four-workgroup MI300X run matched the
+  CPU oracle at zero maximum absolute error. This is qualification execution,
+  not protected publication or a performance claim.
 - The associated Verus models cover bounds, initialization, overflow
   obligations, and injective ownership arguments at the modeled source level.
 - Exact ordinary attributed Rust sources now exist for one masked Wave64

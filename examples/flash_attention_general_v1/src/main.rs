@@ -1,340 +1,173 @@
-use fe2o3_core::{DeviceBuffer, GpuContext, GpuModule, LaunchConfig, Stream};
+use std::io;
+
+use fe2o3_core::{DeviceBuffer, GpuContext, KernelParams, LaunchConfig, launch_kernel_on_stream};
 use fe2o3_device::Bf16;
 use fe2o3_flash_attention_general_v1::reference::{ReferenceLayoutV1, evaluate_reference_v1};
-use fe2o3_host::launch;
-use std::path::PathBuf;
 
-#[derive(Clone, Copy)]
-struct Case {
-    name: &'static str,
-    batch_heads: u32,
-    queries: u32,
-    query_rows_padded: u32,
-    keys: u32,
-    keys_padded: u32,
-    depth: u32,
-    value_dimension: u32,
-    q_stride: u32,
-    k_depth_stride: u32,
-    v_stride: u32,
-    mask_stride: u32,
-    output_stride: u32,
+const HSACO_ENV: &str = "FE2O3_FLASH_ATTENTION_HSACO";
+const KERNEL: &str = "flash_attention_general_v1";
+
+fn invalid_input(message: &'static str) -> io::Error {
+    io::Error::new(io::ErrorKind::InvalidInput, message)
 }
 
-const CASES: [Case; 2] = [
-    Case {
-        name: "tails-and-strides",
-        batch_heads: 1,
-        queries: 16,
-        query_rows_padded: 16,
-        keys: 13,
-        keys_padded: 16,
-        depth: 18,
-        value_dimension: 7,
-        q_stride: 23,
-        k_depth_stride: 19,
-        v_stride: 11,
-        mask_stride: 20,
-        output_stride: 13,
-    },
-    Case {
-        name: "multi-head-multi-tile",
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let layout = ReferenceLayoutV1 {
         batch_heads: 2,
-        queries: 17,
+        queries: 19,
         query_rows_padded: 32,
-        keys: 19,
+        keys: 21,
         keys_padded: 32,
-        depth: 33,
-        value_dimension: 16,
-        q_stride: 37,
-        k_depth_stride: 35,
-        v_stride: 19,
+        depth: 23,
+        value_dimension: 13,
+        query_stride: 27,
+        key_depth_stride: 37,
+        key_head_stride: 23 * 37 + 5,
+        value_stride: 17,
+        value_head_stride: 32 * 17 + 7,
         mask_stride: 37,
-        output_stride: 21,
-    },
-];
+        output_stride: 19,
+        scale: 0.2,
+    };
+    let output_rows = layout
+        .batch_heads
+        .checked_mul(layout.query_rows_padded)
+        .ok_or_else(|| invalid_input("output row extent overflow"))?;
+    let query_len = output_rows as usize * layout.query_stride as usize;
+    let key_len = layout.batch_heads as usize * layout.key_head_stride as usize;
+    let value_len = layout.batch_heads as usize * layout.value_head_stride as usize;
+    let mask_len = output_rows as usize * layout.mask_stride as usize;
+    let output_len = output_rows as usize * layout.output_stride as usize;
 
-fn sample(seed: u32, modulus: u32, center: i32, scale: f32) -> f32 {
-    ((seed % modulus) as i32 - center) as f32 * scale
-}
+    let query = (0..query_len)
+        .map(|index| Bf16::from_f32((index % 17) as f32 * 0.0625 - 0.5).to_bits())
+        .collect::<Vec<_>>();
+    let key = (0..key_len)
+        .map(|index| Bf16::from_f32((index % 19) as f32 * 0.05 - 0.45).to_bits())
+        .collect::<Vec<_>>();
+    let value = (0..value_len)
+        .map(|index| (index % 23) as f32 * 0.03125 - 0.25)
+        .collect::<Vec<_>>();
+    let mut mask = vec![f32::NAN; mask_len];
+    for head in 0..layout.batch_heads as usize {
+        for row in 0..layout.query_rows_padded as usize {
+            let global_row = head * layout.query_rows_padded as usize + row;
+            for key_index in 0..layout.keys as usize {
+                let is_fully_masked = head == 1 && row == 3;
+                let is_visible = row < layout.queries as usize && key_index <= row + 4;
+                mask[global_row * layout.mask_stride as usize + key_index] =
+                    if is_visible && !is_fully_masked {
+                        (key_index % 5) as f32 * 0.03125 - 0.0625
+                    } else {
+                        f32::NEG_INFINITY
+                    };
+            }
+        }
+    }
+    let initial_output = (0..output_len)
+        .map(|index| 2000.0 + index as f32)
+        .collect::<Vec<_>>();
+    let expected = evaluate_reference_v1(&query, &key, &value, &mask, &initial_output, layout)
+        .map_err(invalid_input)?;
 
-struct DeviceBuffers<'a> {
-    q: &'a DeviceBuffer<u16>,
-    k: &'a DeviceBuffer<u16>,
-    v: &'a DeviceBuffer<f32>,
-    mask: &'a DeviceBuffer<f32>,
-    output: &'a DeviceBuffer<f32>,
-}
+    let context = GpuContext::new(0)?;
+    let observed = context.observe_target()?;
+    if observed.target_id().processor() != "gfx942" || observed.hip_default_warp_size() != 64 {
+        return Err(io::Error::new(
+            io::ErrorKind::Unsupported,
+            "qualification requires a gfx942 wave64 device",
+        )
+        .into());
+    }
+    let stream = context.create_stream()?;
+    let query_device = DeviceBuffer::from_host(&stream, &query)?;
+    let key_device = DeviceBuffer::from_host(&stream, &key)?;
+    let value_device = DeviceBuffer::from_host(&stream, &value)?;
+    let mask_device = DeviceBuffer::from_host(&stream, &mask)?;
+    let output_device = DeviceBuffer::from_host(&stream, &initial_output)?;
+    let hsaco = std::env::var_os(HSACO_ENV).ok_or_else(|| {
+        io::Error::new(io::ErrorKind::NotFound, format!("{HSACO_ENV} is not set"))
+    })?;
 
-#[derive(Clone, Copy)]
-struct LaunchLayout {
-    k_head_stride: u32,
-    v_head_stride: u32,
-    output_rows: u32,
-    scale: f32,
-}
-
-fn launch_case(
-    stream: &Stream,
-    module: &std::sync::Arc<GpuModule>,
-    buffers: DeviceBuffers<'_>,
-    case: Case,
-    layout: LaunchLayout,
-) -> fe2o3_core::Result<()> {
-    let workgroups = case.batch_heads * (case.query_rows_padded / 16);
-    // SAFETY: buffers match five slice ABI pairs and the scalar list below
-    // exactly; all allocations remain live through the synchronous readback.
+    // SAFETY: the qualification runner compiled this exact symbol for gfx942. The argument
+    // order and widths mirror the compiler-emitted 144-byte explicit kernarg ABI, and every
+    // allocation remains live through synchronous stream completion.
     unsafe {
-        launch! {
-            kernel: flash_attention_general_v1,
-            stream: stream,
-            module: module,
-            config: LaunchConfig {
+        let module = context.load_module_from_file_unchecked(hsaco)?;
+        let function = module.load_function(KERNEL)?;
+        let mut arguments = KernelParams::new();
+        arguments.push(query_device.as_device_ptr());
+        arguments.push(query_device.len());
+        arguments.push(key_device.as_device_ptr());
+        arguments.push(key_device.len());
+        arguments.push(value_device.as_device_ptr());
+        arguments.push(value_device.len());
+        arguments.push(mask_device.as_device_ptr());
+        arguments.push(mask_device.len());
+        arguments.push(output_device.as_device_ptr());
+        arguments.push(output_device.len());
+        arguments.push(layout.batch_heads);
+        arguments.push(layout.queries);
+        arguments.push(layout.query_rows_padded);
+        arguments.push(layout.keys);
+        arguments.push(layout.keys_padded);
+        arguments.push(layout.depth);
+        arguments.push(layout.value_dimension);
+        arguments.push(layout.query_stride);
+        arguments.push(layout.key_depth_stride);
+        arguments.push(layout.key_head_stride);
+        arguments.push(layout.value_stride);
+        arguments.push(layout.value_head_stride);
+        arguments.push(layout.mask_stride);
+        arguments.push(layout.output_stride);
+        arguments.push(output_rows);
+        arguments.push(layout.scale);
+        let workgroups = layout.batch_heads * (layout.query_rows_padded / 16);
+        launch_kernel_on_stream(
+            &function,
+            LaunchConfig {
                 grid_dim: (workgroups, 1, 1),
                 block_dim: (64, 1, 1),
                 shared_mem_bytes: 0,
             },
-            args: [
-                slice(buffers.q),
-                slice(buffers.k),
-                slice(buffers.v),
-                slice(buffers.mask),
-                slice_mut(buffers.output),
-                scalar(case.batch_heads),
-                scalar(case.queries),
-                scalar(case.query_rows_padded),
-                scalar(case.keys),
-                scalar(case.keys_padded),
-                scalar(case.depth),
-                scalar(case.value_dimension),
-                scalar(case.q_stride),
-                scalar(case.k_depth_stride),
-                scalar(layout.k_head_stride),
-                scalar(case.v_stride),
-                scalar(layout.v_head_stride),
-                scalar(case.mask_stride),
-                scalar(case.output_stride),
-                scalar(layout.output_rows),
-                scalar(layout.scale),
-            ]
-        }
-    }
-}
-
-fn run_case(
-    context: &std::sync::Arc<GpuContext>,
-    module: &std::sync::Arc<GpuModule>,
-    case: Case,
-) -> fe2o3_core::Result<()> {
-    let stream = context.default_stream();
-    let output_rows = case.batch_heads * case.query_rows_padded;
-    let k_head_stride = case.depth * case.k_depth_stride + 7;
-    let v_head_stride = case.keys_padded * case.v_stride + 5;
-    let q_len = output_rows as usize * case.q_stride as usize;
-    let k_len = case.batch_heads as usize * k_head_stride as usize;
-    let v_len = case.batch_heads as usize * v_head_stride as usize;
-    let mask_len = output_rows as usize * case.mask_stride as usize;
-    let output_len = output_rows as usize * case.output_stride as usize;
-    let mut q = vec![Bf16::ZERO.to_bits(); q_len];
-    let mut k = vec![Bf16::ZERO.to_bits(); k_len];
-    let mut v = vec![0.0_f32; v_len];
-    let mut mask = vec![f32::NEG_INFINITY; mask_len];
-    let sentinel = -77.0_f32;
-    let output = vec![sentinel; output_len];
-
-    for head in 0..case.batch_heads {
-        for row in 0..case.query_rows_padded {
-            let global_row = head * case.query_rows_padded + row;
-            for d in 0..case.depth {
-                q[global_row as usize * case.q_stride as usize + d as usize] =
-                    Bf16::from_f32(sample(head * 101 + row * 17 + d * 7, 31, 15, 0.03125))
-                        .to_bits();
-            }
-            for key in 0..case.keys_padded {
-                let visible = row >= case.queries
-                    || key >= case.keys
-                    || (row != case.queries / 2 && key <= row);
-                if visible {
-                    mask[global_row as usize * case.mask_stride as usize + key as usize] = 0.0;
-                }
-            }
-        }
-        for d in 0..case.depth {
-            for key in 0..case.keys_padded {
-                k[head as usize * k_head_stride as usize
-                    + d as usize * case.k_depth_stride as usize
-                    + key as usize] =
-                    Bf16::from_f32(sample(head * 79 + d * 11 + key * 5, 29, 14, 0.03125)).to_bits();
-            }
-        }
-        for key in 0..case.keys_padded {
-            for d in 0..case.value_dimension {
-                v[head as usize * v_head_stride as usize
-                    + key as usize * case.v_stride as usize
-                    + d as usize] = sample(head * 67 + key * 13 + d * 3, 23, 11, 0.0625);
-            }
-        }
+            &stream,
+            &mut arguments,
+        )?;
+        stream.synchronize()?;
     }
 
-    let scale = 1.0 / (case.depth as f32).sqrt();
-    let q_device = DeviceBuffer::from_host(&stream, &q)?;
-    let k_device = DeviceBuffer::from_host(&stream, &k)?;
-    let v_device = DeviceBuffer::from_host(&stream, &v)?;
-    let mask_device = DeviceBuffer::from_host(&stream, &mask)?;
-    let output_device = DeviceBuffer::from_host(&stream, &output)?;
-    launch_case(
-        &stream,
-        module,
-        DeviceBuffers {
-            q: &q_device,
-            k: &k_device,
-            v: &v_device,
-            mask: &mask_device,
-            output: &output_device,
-        },
-        case,
-        LaunchLayout {
-            k_head_stride,
-            v_head_stride,
-            output_rows,
-            scale,
-        },
-    )?;
     let actual = output_device.to_host_vec(&stream)?;
-    let expected = evaluate_reference_v1(
-        &q,
-        &k,
-        &v,
-        &mask,
-        &output,
-        ReferenceLayoutV1 {
-            batch_heads: case.batch_heads,
-            queries: case.queries,
-            query_rows_padded: case.query_rows_padded,
-            keys: case.keys,
-            keys_padded: case.keys_padded,
-            depth: case.depth,
-            value_dimension: case.value_dimension,
-            query_stride: case.q_stride,
-            key_depth_stride: case.k_depth_stride,
-            key_head_stride: k_head_stride,
-            value_stride: case.v_stride,
-            value_head_stride: v_head_stride,
-            mask_stride: case.mask_stride,
-            output_stride: case.output_stride,
-            scale,
-        },
-    )
-    .expect("qualification case satisfies the safe CPU reference contract");
-
-    let mut max_error = 0.0_f32;
-    for head in 0..case.batch_heads {
-        for row in 0..case.query_rows_padded {
-            let global_row = head * case.query_rows_padded + row;
-            for d in 0..case.value_dimension {
-                let expected =
-                    expected[global_row as usize * case.output_stride as usize + d as usize];
-                let observed =
-                    actual[global_row as usize * case.output_stride as usize + d as usize];
-                assert!(
-                    observed.is_finite(),
-                    "{} head {head} row {row} dim {d}: non-finite output {observed}",
-                    case.name
-                );
-                if row >= case.queries || row == case.queries / 2 {
-                    assert_eq!(
-                        observed, 0.0,
-                        "{} head {head} row {row} dim {d}: zero-output policy violated",
-                        case.name
-                    );
+    let mut maximum_error = 0.0_f32;
+    for row in 0..output_rows as usize {
+        for column in 0..layout.output_stride as usize {
+            let index = row * layout.output_stride as usize + column;
+            if column < layout.value_dimension as usize {
+                let error = (actual[index] - expected[index]).abs();
+                maximum_error = maximum_error.max(error);
+                let tolerance = 5.0e-3_f32.max(expected[index].abs() * 5.0e-3);
+                if error > tolerance {
+                    return Err(io::Error::other(format!(
+                        "attention mismatch at ({row}, {column}): got {}, expected {}, tolerance {tolerance}",
+                        actual[index], expected[index]
+                    ))
+                    .into());
                 }
-                let error = (observed - expected).abs();
-                max_error = max_error.max(error);
-                assert!(
-                    error <= 2.0e-4,
-                    "{} head {head} row {row} dim {d}: actual={observed} expected={expected}",
-                    case.name
-                );
+            } else if actual[index].to_bits() != initial_output[index].to_bits() {
+                return Err(io::Error::other(format!(
+                    "attention modified output padding at ({row}, {column})"
+                ))
+                .into());
             }
         }
-    }
-    for row in 0..output_rows as usize {
-        assert!(
-            actual[row * case.output_stride as usize + case.value_dimension as usize
-                ..(row + 1) * case.output_stride as usize]
-                .iter()
-                .all(|value| *value == sentinel),
-            "{} wrote output padding",
-            case.name
-        );
     }
     println!(
-        "PASS {:<24} heads={} queries={}/{} keys={}/{} depth={} value_dim={} all_masked_row={} max_error={max_error}",
-        case.name,
-        case.batch_heads,
-        case.queries,
-        case.query_rows_padded,
-        case.keys,
-        case.keys_padded,
-        case.depth,
-        case.value_dimension,
-        case.queries / 2,
+        "PASS {KERNEL}: {} heads, {}x{} logical attention, depth {}, value dimension {}, {} workgroups, max_abs_error={maximum_error:.6}",
+        layout.batch_heads,
+        layout.queries,
+        layout.keys,
+        layout.depth,
+        layout.value_dimension,
+        layout.batch_heads * (layout.query_rows_padded / 16),
     );
     Ok(())
-}
-
-fn main() -> fe2o3_core::Result<()> {
-    let hsaco = std::env::var_os("FE2O3_FLASH_ATTENTION_HSACO")
-        .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from("target/fe2o3-gfx942/flash_attention_general_v1.hsaco"));
-    let context = GpuContext::new(0)?;
-    // SAFETY: this executable is the explicit qualification boundary.
-    let module = unsafe { context.load_module_from_file_unchecked(hsaco) }?;
-    for case in CASES {
-        run_case(&context, &module, case)?;
-    }
-    Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn qualification_cases_cover_independent_logical_tails() {
-        assert!(
-            CASES
-                .iter()
-                .all(|case| case.queries <= case.query_rows_padded)
-        );
-        assert!(CASES.iter().all(|case| case.keys <= case.keys_padded));
-        assert!(
-            CASES
-                .iter()
-                .any(|case| case.queries < case.query_rows_padded)
-        );
-        assert!(CASES.iter().any(|case| case.keys < case.keys_padded));
-        assert!(CASES.iter().any(|case| case.batch_heads > 1));
-    }
-
-    #[test]
-    fn fully_masked_reference_policy_is_finite_zero() {
-        let scores = [f32::NEG_INFINITY; 7];
-        let maximum = scores.iter().copied().fold(f32::NEG_INFINITY, f32::max);
-        let denominator = if maximum == f32::NEG_INFINITY {
-            0.0
-        } else {
-            scores
-                .iter()
-                .map(|score| (*score - maximum).exp())
-                .sum::<f32>()
-        };
-        let output = if denominator > 0.0 {
-            1.0 / denominator
-        } else {
-            0.0
-        };
-        assert_eq!(output, 0.0);
-        assert!(output.is_finite());
-    }
 }

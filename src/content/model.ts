@@ -42,6 +42,10 @@ export interface HistoricalEvidenceReference extends EvidenceReferenceBase {
   scope: "historical-evidence";
 }
 
+export interface QualificationEvidenceReference extends EvidenceReferenceBase {
+  scope: "qualification-evidence";
+}
+
 export type StagedEvidenceAuthority =
   | "source-admission-only"
   | "harness-only"
@@ -120,6 +124,7 @@ export interface SourceMilestoneEvidenceReference
 export type EvidenceReference =
   | LessonEvidenceReference
   | CurrentImplementationEvidenceReference
+  | QualificationEvidenceReference
   | HistoricalEvidenceReference
   | StagedEvidenceReference
   | SourceMilestoneEvidenceReference;
@@ -350,6 +355,23 @@ export function historicalReference(
 ): HistoricalEvidenceReference {
   return {
     scope: "historical-evidence",
+    commit,
+    tree,
+    commands,
+    sourcePaths,
+    ...options,
+  };
+}
+
+export function qualificationReference(
+  commit: string,
+  tree: string,
+  commands: string[],
+  sourcePaths: string[],
+  options: Pick<QualificationEvidenceReference, "target" | "note"> = {},
+): QualificationEvidenceReference {
+  return {
+    scope: "qualification-evidence",
     commit,
     tree,
     commands,
