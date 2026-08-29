@@ -19,7 +19,7 @@ case "$SUITE:$FEATURE" in
         SYMBOL=gfx950_kda_gdn_decode; KERNARG=96; WG=64; LDS=0; OCML=1
         TEST=gfx950_kda_gdn_decode_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     attention:kernel-kda-prefill)
-        SYMBOL=gfx950_kda_gdn_prefill; KERNARG=96; WG=64; LDS=0; OCML=1
+        SYMBOL=gfx950_kda_gdn_prefill; KERNARG=112; WG=64; LDS=0; OCML=1
         TEST=gfx950_kda_gdn_prefill_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     attention:kernel-content-sparse-attention)
         SYMBOL=gfx950_content_sparse_attention; KERNARG=96; WG=64; LDS=2048; OCML=1
@@ -40,7 +40,7 @@ case "$SUITE:$FEATURE" in
         SYMBOL=gfx950_moe_route_fp4_t16_e4_k2_v1; KERNARG=96; WG=256; LDS=0; OCML=1
         TEST=gfx950_moe_route_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     systems:kernel-moe-expert-rank)
-        SYMBOL=gfx950_moe_expert_rank_fp4_fp8_v1; KERNARG=88; WG=256; LDS=0; OCML=1
+        SYMBOL=gfx950_moe_expert_rank_fp4_fp8_v1; KERNARG=88; WG=64; LDS=0; OCML=1
         TEST=gfx950_moe_expert_rank_rust_cov6_matches_cpu_reference; ISA=mixed_expert ;;
     systems:kernel-combine-expert-ranks)
         SYMBOL=gfx950_combine_expert_ranks_v1; KERNARG=48; WG=256; LDS=0; OCML=0
@@ -57,6 +57,9 @@ case "$SUITE:$FEATURE" in
     systems:kernel-muon-update)
         SYMBOL=gfx950_muon_update_4x4_v1; KERNARG=48; WG=64; LDS=0; OCML=0
         TEST=gfx950_muon_update_rust_cov6_matches_cpu_reference; ISA=scalar ;;
+    gpt_oss:kernel-gpt-oss-decode)
+        SYMBOL=gfx950_gpt_oss_120b_decode_megakernel_v1; KERNARG=208; WG=64; LDS=0; OCML=1
+        TEST=gfx950_gpt_oss_layer_tile_rust_cov6_matches_cpu_reference; ISA=gpt_oss ;;
     *)
         printf 'unsupported %s kernel feature: %s\n' "$SUITE" "$FEATURE" >&2
         exit 2 ;;
@@ -64,8 +67,10 @@ esac
 
 if [[ $SUITE == attention ]]; then
     CRATE=fe2o3_gfx950_advanced_attention
-else
+elif [[ $SUITE == systems ]]; then
     CRATE=fe2o3_gfx950_advanced_systems
+else
+    CRATE=fe2o3_gfx950_gpt_oss_decode
 fi
 
 REPO_ROOT=${FE2O3_REPO_ROOT:-$(cd -- "$COMMON_DIR/../.." && pwd -P)}
@@ -80,6 +85,7 @@ LD_LLD=${LD_LLD:-$ROCM_PATH/llvm/bin/ld.lld}
 OBJDUMP=${OBJDUMP:-$ROCM_PATH/llvm/bin/llvm-objdump}
 READOBJ=${READOBJ:-$ROCM_PATH/llvm/bin/llvm-readobj}
 SHA256SUM=${SHA256SUM:-sha256sum}
+GIT=${GIT:-git}
 
 if ! command -v -- "$RUSTUP" >/dev/null 2>&1 && [[ -x $HOME/.cargo/bin/rustup ]]; then
     RUSTUP=$HOME/.cargo/bin/rustup
@@ -87,7 +93,7 @@ fi
 if ! command -v -- "$CARGO_BIN" >/dev/null 2>&1 && [[ -x $HOME/.cargo/bin/cargo ]]; then
     CARGO_BIN=$HOME/.cargo/bin/cargo
 fi
-for executable in "$RUSTUP" "$CARGO_BIN" "$CLANG" "$LD_LLD" "$OBJDUMP" "$READOBJ" "$SHA256SUM"; do
+for executable in "$RUSTUP" "$CARGO_BIN" "$CLANG" "$LD_LLD" "$OBJDUMP" "$READOBJ" "$SHA256SUM" "$GIT"; do
     if [[ ! -x $executable ]] && ! command -v -- "$executable" >/dev/null 2>&1; then
         printf 'required executable is unavailable: %s\n' "$executable" >&2
         exit 1
@@ -188,7 +194,12 @@ require_count "$LLVM_IR" "define amdgpu_kernel void @$SYMBOL(" 1 "$SYMBOL defini
 require_count "$LLVM_IR" '"target-cpu"="gfx950"' 1 'gfx950 function target binding'
 require_count "$LLVM_IR" '"target-features"="-wavefrontsize32,+wavefrontsize64,-xnack"' 1 'Wave64/xnack- target binding'
 require_count "$LLVM_IR" '@llvm.experimental.constrained.sqrt.f32' 0 'gfx950-incompatible constrained sqrt references'
-if [[ $ISA == fp8_attention ]]; then
+if [[ $ISA == gpt_oss ]]; then
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.f32.16x16x16bf16.1k(' 4 'BF16 MFMA calls'
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.scale.f32.16x16x128.f8f6f4.v8i32.v8i32(' 4 'FP4 MFMA calls'
+    require_count "$LLVM_IR" 'i32 4, i32 4, i32 0, i32 0, i32 0, i32 0)' 4 'FP4 selectors and disabled scaling controls'
+    require_count "$LLVM_IR" '@llvm.amdgcn.ds.read.tr' 0 'unexpected transpose references with pretransposed KV cache'
+elif [[ $ISA == fp8_attention ]]; then
     require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.scale.f32.16x16x128.f8f6f4.v8i32.v8i32(' 1 'FP8 MFMA call'
     require_count "$LLVM_IR" 'i32 0, i32 0, i32 0, i32 0, i32 0, i32 0)' 1 'FP8 selectors and disabled scaling controls'
     require_count "$LLVM_IR" 'i32 4, i32 0, i32 0, i32 0, i32 0, i32 0)' 0 'mixed FP4/FP8 selectors in FP8 attention'
@@ -262,7 +273,13 @@ if [[ -z $KERNEL_ISA ]]; then
     printf 'ISA validation failed: %s is absent\n' "$SYMBOL" >&2
     exit 1
 fi
-if [[ $ISA == fp8_attention ]]; then
+if [[ $ISA == gpt_oss ]]; then
+    [[ $(grep -Fc -- 'v_mfma_f32_16x16x16_bf16' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four BF16 MFMAs\n' >&2; exit 1; }
+    [[ $(grep -Fc -- 'v_mfma_f32_16x16x128_f8f6f4' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four FP4 MFMAs\n' >&2; exit 1; }
+    [[ $(grep -c -- 'v_mfma_' <<< "$KERNEL_ISA" || true) -eq 8 ]] || { printf 'ISA validation failed: unexpected additional MFMA\n' >&2; exit 1; }
+    [[ $(grep -Fc -- 'cbsz:4' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected cbsz:4 on all FP4 MFMAs\n' >&2; exit 1; }
+    ! grep -Eq -- 'ds_read_b64_tr_b[[:digit:]]+' <<< "$KERNEL_ISA" || { printf 'ISA validation failed: pretransposed KV path emitted a transpose instruction\n' >&2; exit 1; }
+elif [[ $ISA == fp8_attention ]]; then
     [[ $(grep -Fc -- 'ds_read_b64_tr_b8' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four B8 transpose instructions\n' >&2; exit 1; }
     [[ $(grep -Ec -- 'ds_read_b64_tr_b[[:digit:]]+' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four total transpose instructions\n' >&2; exit 1; }
     [[ $(grep -Fc -- 'v_mfma_f32_16x16x128_f8f6f4' <<< "$KERNEL_ISA" || true) -eq 1 ]] || { printf 'ISA validation failed: expected exactly one FP8 scaled MFMA\n' >&2; exit 1; }
@@ -285,11 +302,20 @@ done
 
 HSACO=$(cd -- "$(dirname -- "$HSACO")" && pwd -P)/$(basename -- "$HSACO")
 HSACO_SHA256=$("$SHA256SUM" -- "$HSACO" | awk '{ print $1 }')
+LLVM_SHA256=$("$SHA256SUM" -- "$LLVM_IR" | awk '{ print $1 }')
+ISA_SHA256=$("$SHA256SUM" -- "$DISASSEMBLY" | awk '{ print $1 }')
+SOURCE_COMMIT=$("$GIT" -C "$REPO_ROOT" rev-parse --verify 'HEAD^{commit}')
+SOURCE_TREE=$("$GIT" -C "$REPO_ROOT" rev-parse --verify 'HEAD^{tree}')
 (
     cd -- "$REPO_ROOT"
     FE2O3_RUN_GFX950_ADVANCED_HARDWARE=1 \
     FE2O3_GFX950_ADVANCED_HSACO=$HSACO \
     FE2O3_GFX950_ADVANCED_SHA256=$HSACO_SHA256 \
+    FE2O3_GFX950_ADVANCED_LLVM_SHA256=$LLVM_SHA256 \
+    FE2O3_GFX950_ADVANCED_ISA_SHA256=$ISA_SHA256 \
+    FE2O3_GFX950_ADVANCED_CRATE_BINDING=$CRATE_BINDING \
+    FE2O3_GFX950_ADVANCED_SOURCE_COMMIT=$SOURCE_COMMIT \
+    FE2O3_GFX950_ADVANCED_SOURCE_TREE=$SOURCE_TREE \
     CARGO_TARGET_DIR=$ROOT_TARGET_DIR \
         "$RUSTUP" run "$TOOLCHAIN" "$CARGO_BIN" test --locked \
         -p fe2o3-hsa-runtime --features hardware-test-hooks \

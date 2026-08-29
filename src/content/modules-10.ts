@@ -10,6 +10,12 @@ import advancedSystemsRustReference from "../../examples/gfx950_advanced_systems
 import advancedSystemsRustContract from "../../examples/gfx950_advanced_systems/src/lib.rs?raw";
 import advancedSystemsBuild from "../../examples/gfx950_advanced_systems/build_and_test.sh?raw";
 import advancedSystemsIsa from "../../examples/gfx950_advanced_systems/check_isa.sh?raw";
+import gptOssRustKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel.rs?raw";
+import gptOssRustReference from "../../examples/gfx950_gpt_oss_decode/src/reference.rs?raw";
+import gptOssUnfusedHip from "../../examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip?raw";
+import gptOssRunFused from "../../examples/gfx950_gpt_oss_decode/run-gfx950.sh?raw";
+import gptOssRunUnfused from "../../examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh?raw";
+import gptOssPerformanceRunner from "../../perf-evidence/run-gpt-oss-performance.sh?raw";
 import {
   advancedEvidenceFor,
   advancedHarnessPath,
@@ -18,6 +24,7 @@ import {
   type AdvancedRustEvidence,
   type ObservedAdvancedRustEvidence,
 } from "./gfx950-advanced-evidence";
+import { advancedPerformanceTabFor } from "./gfx950-advanced-performance";
 import { narrativeSection } from "./narrative-registry";
 import { resultText } from "./shared";
 import {
@@ -57,9 +64,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "63c5a5988b00b02bef07bdddcfa79039b1b0554e";
+export const advancedCoreSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
 export const advancedCoreSourceTree: string | null =
-  "771c00636db1437809fd7e6dec0de2d88bf6e0ff";
+  "42385e6464ca40318fc70ae104845d3997844140";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -70,7 +77,7 @@ const attentionBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
-  rustKernelFileSha256: "3b0f6962ce41da008542fa7685633ab7f4bcabf5540af35b3c327c7802a77faa",
+  rustKernelFileSha256: "6a413c9bd08ef1b6d1721383598a3aa681aaac83d0daec0ce2ee8a99ee044cd8",
   rustReferenceFileSha256: "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
@@ -104,7 +111,7 @@ const systemsBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_systems/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_systems/README.md",
   rustLockPath: "examples/gfx950_advanced_systems/Cargo.lock",
-  rustKernelFileSha256: "06423d7bfd24be5a80da70e2835b40bd066aeb404f9bad887d9e7707d52c076b",
+  rustKernelFileSha256: "db6a575fa3a472a4a2927671f9a9e1a13df89e627f6eccfba56e860a6193241c",
   rustReferenceFileSha256: "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd",
   loweringConstant: "GFX950_ADVANCED_SYSTEMS_SOURCE_LOWERING_SUPPORTED",
   manifestPath: "examples/gfx950_advanced_systems/Cargo.toml",
@@ -296,7 +303,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const referenceFragments = spec.referenceSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustReference, symbol, false),
   );
-  return [
+  const tabs: CodeTab[] = [
     {
       kind: "kernel",
       label: "Rust kernel",
@@ -409,6 +416,9 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
           : "Production evidence is intentionally pending until every displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane.",
     },
   ];
+  const performance = advancedPerformanceTabFor(spec.id);
+  if (performance) tabs.push(performance);
+  return tabs;
 }
 
 function lesson(spec: AdvancedLessonSpec): Lesson {
@@ -433,6 +443,208 @@ function lesson(spec: AdvancedLessonSpec): Lesson {
   };
 }
 
+const gptOssKernelSymbol = "gfx950_gpt_oss_120b_decode_megakernel_v1";
+const gptOssKernelExcerpt = rustFunctionExcerpt(gptOssRustKernel, gptOssKernelSymbol, true);
+const gptOssReferenceExcerpt = rustFunctionExcerpt(gptOssRustReference, "reference", false);
+const gptOssSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
+const gptOssSourceTree = "42385e6464ca40318fc70ae104845d3997844140";
+const gptOssPerformance = advancedPerformanceTabFor("gfx950-gpt-oss-120b-megakernel");
+if (!gptOssPerformance) throw new Error("Missing GPT-OSS performance evidence");
+
+const gptOssMegakernelLesson: Lesson = {
+  id: "gfx950-gpt-oss-120b-megakernel",
+  module: 10,
+  order: 8,
+  title: "gpt-oss-120b batch-1 layer-tile megakernel",
+  summary:
+    "Inspect a real safe-Rust gfx950 layer tile that fuses 128-way routing, one sink-softmax GQA tile, and one dynamically selected MXFP4 expert projection, together with its exact unfused comparator.",
+  duration: "60 min",
+  prerequisites: [
+    "gfx950 advanced MoE pipeline",
+    "gfx950 flash attention",
+    "BF16 and MXFP4 MFMA fragments",
+    "Paired latency experiments",
+  ],
+  objectives: [
+    "Trace stable top-4 routing, sink-softmax attention, and selected-expert MXFP4 work through one Wave64 dispatch.",
+    "Relate sequential MXFP4 fragment consumption to the measured VGPR and latency reduction.",
+    "Compare the fused kernel with the exact three-dispatch comparator without widening the result to a whole model or state-of-the-art claim.",
+  ],
+  claims: [
+    {
+      kind: "gpu-observed",
+      label: "Final integrated MI350X execution for the pinned kernel and oracle",
+      detail:
+        "At the exact pinned c1383e97 core commit, the ordinary Rust kernel produced gfx950 LLVM and COV6 HSACO, passed the bounded HSA oracle against the independent CPU reference, and measured fused 1.064644 ms versus exact unfused 0.780362 ms. The fused kernel was 1.3643x slower. This fixed layer-tile result is final integrated evidence for the admitted artifacts, not a fastest or state-of-the-art claim.",
+      reference: historicalReference(
+        gptOssSourceCommit,
+        gptOssSourceTree,
+        [
+          "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+          "bash examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh",
+          "bash perf-evidence/run-gpt-oss-performance.sh",
+        ],
+        [
+          "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+          "examples/gfx950_gpt_oss_decode/src/reference.rs",
+          "examples/gfx950_gpt_oss_decode/src/lib.rs",
+          "examples/gfx950_gpt_oss_decode/README.md",
+          "examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+          "examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh",
+          "examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip",
+          "perf-evidence/run-gpt-oss-performance.sh",
+          "perf-evidence/gpt-oss-layer-tile-evidence-v1.json",
+          advancedHarnessPath,
+        ],
+        {
+          target: advancedProductionTarget,
+          note: "Archived final integrated MI350X evidence at the exact pinned source commit. It covers one fixed Wave64 layer tile and its exact three-dispatch comparator, not a complete layer, whole model, fastest result, or state of the art.",
+        },
+      ),
+    },
+  ],
+  sections: [
+    narrativeSection("gfx950-gpt-oss-120b-megakernel/layer-tile-contract"),
+    narrativeSection("gfx950-gpt-oss-120b-megakernel/performance-boundary"),
+  ],
+  tabs: [
+    {
+      kind: "kernel",
+      label: "Rust kernel",
+      language: "rust",
+      code: gptOssKernelExcerpt,
+      sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+      sourceCommit: gptOssSourceCommit,
+      sourceSha256: "4808651a5fecabc26b0598eb4827772af4b95ca34978872524bec536f2a3392b",
+      sourceDigestScope: "displayed",
+      sourceFragments: [gptOssKernelExcerpt],
+      explanatory: false,
+      notice:
+        "Exact ordinary attributed Rust from the final integrated c1383e97 campaign. Its file SHA-256 is 62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4.",
+    },
+    {
+      kind: "reference",
+      label: "Safe CPU reference",
+      language: "rust",
+      code: gptOssReferenceExcerpt,
+      sourcePath: "examples/gfx950_gpt_oss_decode/src/reference.rs",
+      sourceCommit: gptOssSourceCommit,
+      sourceSha256: "f4f361e44d8cf56348d1189aa012ebeb2a83efc1833eaa110ea4f095ce22bd84",
+      sourceDigestScope: "displayed",
+      sourceFragments: [gptOssReferenceExcerpt],
+      explanatory: false,
+      notice:
+        "Exact independent CPU oracle from the final core commit. Its file SHA-256 is 1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05.",
+    },
+    {
+      kind: "comparison",
+      label: "Exact unfused HIP",
+      language: "cpp",
+      code: gptOssUnfusedHip,
+      sourcePath: "examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip",
+      sourceCommit: gptOssSourceCommit,
+      sourceSha256: "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b",
+      explanatory: true,
+      notice:
+        "Independent three-dispatch router, attention, and expert comparator with the same fixed inputs and output oracle. It is not a framework or whole-model baseline.",
+    },
+    {
+      kind: "verus",
+      label: "Proof obligations",
+      language: "text",
+      code: [
+        "NO VERUS RESULT IS CLAIMED FOR THIS RUST SOURCE.",
+        "",
+        "- prove the stable lower-expert-ID top-4 tie rule over all 128 router logits",
+        "- prove sink-softmax bounds and canonical padding-row semantics",
+        "- prove the selected expert offset and all four MXFP4 block offsets stay in range",
+        "- prove disjoint ownership of 256 attention, 256 expert, and one packed-ID output",
+        "- bind source, Kernel IR, LLVM, ISA, artifact, ABI, and launch identity",
+        "- keep whole-layer and whole-model equivalence outside this fixed tile",
+      ].join("\n"),
+      explanatory: true,
+      notice: "Obligation ledger only; no source-to-machine proof is claimed.",
+    },
+    {
+      kind: "host",
+      label: "Build, compare, and measure",
+      language: "bash",
+      code: [
+        "# Production Rust extraction, gfx950 COV6 finalization, ISA checks, and HSA oracle",
+        "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+        "",
+        "# Exact three-dispatch comparator",
+        "bash examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh",
+        "",
+        "# Five-process alternating AB/BA performance campaign",
+        "bash perf-evidence/run-gpt-oss-performance.sh",
+        "",
+        "# Exact mirrored production runner",
+        gptOssRunFused,
+        "",
+        "# Exact mirrored comparator runner",
+        gptOssRunUnfused,
+        "",
+        "# Exact mirrored performance orchestrator",
+        gptOssPerformanceRunner,
+      ].join("\n"),
+      explanatory: true,
+      notice:
+        "Run on ssh mi350 with the documented ROCR_VISIBLE_DEVICES setting. The retained numbers and final integrated artifact provenance come from the exact c1383e97 campaign.",
+    },
+    {
+      kind: "result",
+      label: "Evidence record",
+      language: "text",
+      code: resultText(
+        "gpu-observed",
+        [
+          "GPT-OSS-120B BATCH-1 LAYER-TILE MEGAKERNEL",
+          "Scope: one fixed Wave64 layer tile; not a complete layer or whole-model kernel",
+          "Kernel symbol: " + gptOssKernelSymbol,
+          "Displayed source commit: " + gptOssSourceCommit,
+          "Displayed source tree: " + gptOssSourceTree,
+          "Kernel file SHA-256: 62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4",
+          "Reference file SHA-256: 1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05",
+          "Campaign commit: " + gptOssSourceCommit,
+          "Campaign tree: " + gptOssSourceTree,
+          "Portable namespace: af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
+          "Rust-produced LLVM SHA-256: 7d28da46358c29ce8f3c12fecce42f491cef490f098fdb1602923ffdfc7947b3",
+          "Rust-produced HSACO SHA-256: 066056a1fb2228c9043474d1746a7555ac31c0ca559d678844dc9e89d601f212",
+          "Symbol-scoped ISA SHA-256: 216f41669a7243a6d34c1b1b80d31f75871e5ba4a38d6484a74bf81a47db9a75",
+          "ABI: kernarg=208 bytes; workgroup=64x1x1; static LDS=0 bytes",
+          "ISA: exactly four v_mfma_f32_16x16x16_bf16 and four FP4 v_mfma_f32_16x16x128_f8f6f4; no transpose instructions",
+          "Numerical result: attention max_absolute_error=8.940696716e-8; expert exact; packed top-4 exact",
+          "Final integrated wrapper: passed at c1383e97 on MI350X gfx950",
+          "Fused median: 1.064644 ms [1.064483, 1.064844] ms",
+          "Fused p5/p95: 1.059803 / 1.069283 ms",
+          "Exact unfused median: 0.780362 ms [0.780243, 0.780482] ms",
+          "Exact unfused p5/p95: 0.778162 / 0.783123 ms",
+          "Exact unfused/fused ratio: 0.732979",
+          "Outcome: fused is 1.3643x slower",
+          "Fastest claim: not claimed",
+          "State-of-the-art claim: not claimed",
+          "Formal source-to-machine proof: not claimed",
+          "Whole-model equivalence: not claimed",
+        ].join("\n"),
+      ),
+      explanatory: true,
+      notice:
+        "The final integrated MI350X result applies to the exact c1383e97 kernel, oracle, artifacts, and fixed layer-tile protocol. It does not establish whole-model performance, fastest status, or state of the art.",
+    },
+    gptOssPerformance,
+  ],
+  diagram: "moe",
+  exercises: [
+    {
+      prompt: "Explain why the fused batch-1 tile loses to the exact three-dispatch comparator despite removing two dispatches.",
+      hint: "Use the 352-to-308 VGPR ablation, the 1.5 MB router stream, one-workgroup occupancy, and the serial dependency chain.",
+      acceptance:
+        "The answer cites the measured 1.3643x slowdown, separates the 14.1268% within-fused gain from the fused/unfused comparison, and makes no fastest or state-of-the-art claim.",
+    },
+  ],
+  glossary: ["gfx950", "GPT-OSS-120B", "megakernel", "mixture of experts", "resource floor"],
+};
 const advancedLessons = [
   lesson({
     id: "gfx950-advanced-moe",
@@ -448,7 +660,7 @@ const advancedLessons = [
       "gfx950_moe_expert_rank_fp4_fp8_v1",
       "gfx950_combine_expert_ranks_v1",
     ],
-    rustExcerptSha256: "3d9561b2c86f94b0029a13cc8e0de78c1179dbd01ea0f860627bdccc2ae1095d",
+    rustExcerptSha256: "8725f0f7e6f819bb748214e1b295f7d3aa354ee0ba930bce1dbe330c0ad5d3e6",
     referenceSymbols: ["moe_routing_reference", "moe_rank_reference"],
     referenceExcerptSha256: "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e",
     hipSymbols: ["gfx950_fused_fp4_fp8_moe", "gfx950_expert_parallel_rank", "gfx950_combine_expert_ranks"],
@@ -499,7 +711,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "KDA/GDN recurrent state-update and output teaching kernels",
     rustSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
-    rustExcerptSha256: "e77e20f00c6fc8d3fb28c445f64a54df979732fc9545d4d88f8342d719dc5b90",
+    rustExcerptSha256: "a4c5dffee6d7589ae55ecf3ea591998abd374e632bb2a40bc1619c1b6497121a",
     referenceSymbols: ["kda_gdn_decode_reference_v1", "kda_gdn_prefill_reference_v1"],
     referenceExcerptSha256: "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d",
     hipSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
@@ -546,7 +758,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "content-indexed sparse QK, softmax, and PV teaching kernel",
     rustSymbols: ["gfx950_content_sparse_attention"],
-    rustExcerptSha256: "ec8250abcb0b9efa2cbd28f62764c45840f901db3824d3669a9e61209c13dba8",
+    rustExcerptSha256: "0e1419fead85c0b797131f2f93242cd91ebb7fbcdcaba332c9634f473bc710b3",
     referenceSymbols: ["content_sparse_attention_reference_v1"],
     referenceExcerptSha256: "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
     hipSymbols: ["gfx950_content_sparse_attention"],
@@ -590,7 +802,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "compressed-state, direct-attention, and hybrid fusion teaching kernels",
     rustSymbols: ["gfx950_compressed_hybrid_attention"],
-    rustExcerptSha256: "4de136e59115bb9ffdad9c836fd3be5a482002d1f5367fa65c0312ebc6a3bf38",
+    rustExcerptSha256: "593682a256f267d5e0ef85b0b2c1cbf094bafc0e6031daa7e49ddb27b93987be",
     referenceSymbols: ["compressed_hybrid_attention_reference_v1"],
     referenceExcerptSha256: "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
     hipSymbols: ["gfx950_compressed_hybrid_attention"],
@@ -637,7 +849,7 @@ const advancedLessons = [
       "gfx950_four_branch_residual",
       "gfx950_mhc_sinkhorn_mix",
     ],
-    rustExcerptSha256: "e5795670dff8822a51c0e5afbaea3054635d067e4dd51d6d8d9d8293cf2e4ea1",
+    rustExcerptSha256: "bed64c7bf9e38e6887a8fc26d3fe9d0671009c75c305736933e134b2cdf2d468",
     referenceSymbols: ["attnres_aggregate_reference_v1", "four_branch_residual_reference_v1", "mhc_sinkhorn_mix_reference_v1"],
     referenceExcerptSha256: "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
     hipSymbols: ["gfx950_attnres_aggregate", "gfx950_four_branch_residual", "gfx950_mhc_sinkhorn_mix"],
@@ -684,7 +896,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "speculative-decoding and multi-token-prediction verification teaching kernels",
     rustSymbols: ["gfx950_speculative_transaction_v1"],
-    rustExcerptSha256: "829d1dd1b863202342a822ec48a61610f275eec943cbafab897c814300203df0",
+    rustExcerptSha256: "ca76aa4c4033586d49d3536c1caa08830c1013eb0edc2da21845b071c82d2688",
     referenceSymbols: ["speculative_reference"],
     referenceExcerptSha256: "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc",
     hipSymbols: ["gfx950_speculative_transaction"],
@@ -776,7 +988,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "Muon gradient staging, shard reduction, polar iteration, and update teaching kernels",
     rustSymbols: ["gfx950_stage_gradient_shard_v1", "gfx950_muon_update_4x4_v1"],
-    rustExcerptSha256: "d63a9d04e2ce3efb41837357fd50d7321fcea6c6d42eb017359723d6b2073e8b",
+    rustExcerptSha256: "0f1147889c09a29fac3797bc558507354ba19d76c0b3c4b6cf7bf1c2d300952c",
     referenceSymbols: ["muon_reference"],
     referenceExcerptSha256: "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af",
     hipSymbols: ["gfx950_stage_gradient_shard", "gfx950_muon_update"],
@@ -813,6 +1025,7 @@ const advancedLessons = [
     },
     glossary: ["gfx950", "Muon", "polar iteration", "gradient shard", "optimizer update"],
   }),
+  gptOssMegakernelLesson,
 ];
 
 export const modules10: CurriculumModule[] = [
@@ -820,7 +1033,7 @@ export const modules10: CurriculumModule[] = [
     number: 10,
     title: "gfx950 advanced operator kernels",
     summary:
-      "Fixed-shape teaching contracts for advanced attention, routing, residual, decoding, N-gram lookup, and optimizer operators, with source and evidence integration kept fail-closed.",
+      "Fixed-shape teaching contracts for advanced attention, routing, residual, decoding, N-gram lookup, optimizer, and GPT-OSS layer-tile operators, with source and evidence integration kept fail-closed.",
     lessons: advancedLessons,
   },
 ];

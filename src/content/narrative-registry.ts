@@ -2236,7 +2236,7 @@ const narrativeRegistry = deepFreeze({
         type: "callout",
         tone: "proof",
         title: "Exact Rust artifacts reached the recorded hardware",
-        text: "At fe2o3 core commit a710b6c67a908caa23d2409a5d3c4a275103cd60 with tree dfd5ec9a357d4cbd7879078c23f7b3114cdea641, the four exact Rust low-precision kernels lowered to gfx950 HSACO. On 2026-08-26, those Rust-origin artifacts were numerically observed on ssh host mi350 with GEMM max_error=0 and attention max_error=2.38419e-07 under ROCm 7.2.1.",
+        text: "At fe2o3 core commit c1383e97db732f9f1ff8105f10d5c2b5971143e1 with tree 42385e6464ca40318fc70ae104845d3997844140, the four exact Rust low-precision kernels lowered to gfx950 HSACO. On 2026-08-29, those Rust-origin artifacts were numerically observed on ssh host mi350 with GEMM max_absolute_error=0, FP4 attention max_absolute_error=2.235174179e-8, and FP8 attention max_absolute_error=5.960464478e-8 under ROCm 7.2.1.",
       },
       milestoneCallout(
         "The recorded lowering and mi350 cases establish exact artifact and bounded execution observations, not a source-to-machine proof, universal numerical theorem, or performance result. The protected Worker V3 native-build route and its measured provider/finalizer transcript remain a separate boundary.",
@@ -2332,7 +2332,7 @@ const narrativeRegistry = deepFreeze({
         ],
       },
       milestoneCallout(
-        "The exact Rust-origin HSACO using tr4 plus MFMA reported attention max_error=2.38419e-07 on mi350. The opcodes and recorded case remain target-machine and bounded execution facts only: they do not prove the Q/K layout, online-softmax recurrence, numerical policy, final O stores, performance, or the protected Worker V3 native-build route.",
+        "The exact Rust-origin HSACO using tr4 plus MFMA reported attention max_absolute_error=2.235174179e-8 on mi350. The opcodes and recorded case remain target-machine and bounded execution facts only: they do not prove the Q/K layout, online-softmax recurrence, numerical policy, final O stores, performance, or the protected Worker V3 native-build route.",
       ),
     ],
   },
@@ -2342,7 +2342,7 @@ const narrativeRegistry = deepFreeze({
     blocks: [
       {
         type: "paragraph",
-        text: "Packed Q, K, and V reduce bandwidth, but the score accumulator, row maximum, denominator, and scalar PV numerator remain FP32. The exact Rust kernel lowers to gfx950 HSACO and its mi350 comparison reported max_error=2.38419e-07 for the current fixed, unmasked 16-key tile. It computes the maximum and denominator, then decodes V and accumulates PV in a scalar FP32 loop. Multi-tile online rescaling, causal masks, and tail keys are extensions.",
+        text: "Packed Q, K, and V reduce bandwidth, but the score accumulator, row maximum, denominator, and scalar PV numerator remain FP32. The exact Rust kernel lowers to gfx950 HSACO and its mi350 comparison reported max_absolute_error=2.235174179e-8 for the current fixed, unmasked 16-key tile. It computes the maximum and denominator, then decodes V and accumulates PV in a scalar FP32 loop. Multi-tile online rescaling, causal masks, and tail keys are extensions.",
       },
       {
         type: "callout",
@@ -2380,7 +2380,7 @@ const narrativeRegistry = deepFreeze({
         ],
       },
       milestoneCallout(
-        "The exact Rust kernel lowered to gfx950 HSACO with tr8 only on K, MFMA for QK, and scalar PV from V; its mi350 comparison reported max_error=2.38419e-07. This is a bounded execution observation, not a proof, performance label, or completed protected Worker V3 native build.",
+        "The exact Rust kernel lowered to gfx950 HSACO with tr8 only on K, MFMA for QK, and scalar PV from V; its mi350 comparison reported max_absolute_error=5.960464478e-8. This is a bounded execution observation, not a proof, performance label, or completed protected Worker V3 native build.",
       ),
     ],
   },
@@ -2392,7 +2392,7 @@ const narrativeRegistry = deepFreeze({
         type: "table",
         headers: ["Evidence field", "Required record", "Claim limit"],
         rows: [
-          ["Source", "Core commit a710b6c67a908caa23d2409a5d3c4a275103cd60, tree dfd5ec9a357d4cbd7879078c23f7b3114cdea641, source SHA-256, compiler command", "Identifies the exact Rust inputs; does not prove semantic refinement."],
+          ["Source", "Core commit c1383e97db732f9f1ff8105f10d5c2b5971143e1, tree 42385e6464ca40318fc70ae104845d3997844140, source SHA-256, compiler command", "Identifies the exact Rust inputs; does not prove semantic refinement."],
           ["Code object", "Rust-origin gfx950 HSACO SHA-256, target ID, symbol and metadata inspection", "Establishes lowering and object identity/ABI facts only; protected Worker V3 native-build evidence remains separate."],
           ["ISA", "Saved llvm-objdump output containing QK MFMA and the format-specific K transpose mnemonic", "Establishes instruction presence; V remains a load/decode plus scalar PV path in FP8 attention."],
           ["Execution", "mi350 gfx950 identity, exact Rust-artifact launch command, oracle cases, tolerances, output and canaries", "Establishes only the recorded cases on the recorded device, not proof or performance."],
@@ -2402,7 +2402,7 @@ const narrativeRegistry = deepFreeze({
         type: "callout",
         tone: "boundary",
         title: "Keep external observations distinct",
-        text: "The 2026-08-26 mi350 run records an MI350X gfx950 identity for the exact Rust-origin HSACOs, with GEMM max_error=0 and attention max_error=2.38419e-07. Keep the pinned Rust source, lowering transcript, final artifact hashes, runtime observation, still-pending performance field, proof obligations, and protected Worker V3 native-build/provider transcript as separate evidence layers; do not promote a broader claim from the numerical cases alone.",
+        text: "The 2026-08-29 mi350 run records an MI350X gfx950 identity for the exact Rust-origin HSACOs, with GEMM max_absolute_error=0, FP4 attention max_absolute_error=2.235174179e-8, and FP8 attention max_absolute_error=5.960464478e-8. Keep the pinned Rust source, lowering transcript, final artifact hashes, runtime observation, still-pending performance field, proof obligations, and protected Worker V3 native-build/provider transcript as separate evidence layers; do not promote a broader claim from the numerical cases alone.",
       },
     ],
   },
@@ -2624,7 +2624,86 @@ const narrativeRegistry = deepFreeze({
     "Stop at one local fixed-shape update",
     "examples/gfx950_advanced_systems/src/kernel.rs",
     "It does not apply parameters or momentum and does not include a device collective, parameter sharding, master-weight management, checkpointing, loss scaling, or optimizer convergence.",
-  )
+  ),
+  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": {
+    "sectionId": "gpt-oss-layer-tile-contract",
+    "title": "Trace the fused layer tile",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "Boundary",
+          "Implemented fixed contract",
+          "Not implied"
+        ],
+        "rows": [
+          [
+            "Model scope",
+            "One gpt-oss-120b batch-1 Wave64 tile: full 128-expert routing, one eight-head by 16-token attention tile, and one selected 16-column expert tile.",
+            "A complete transformer layer, all GQA groups, all expert outputs, or whole-model inference."
+          ],
+          [
+            "Fusion",
+            "The Rust kernel retains route state, BF16 attention fragments, and sequential MXFP4 expert fragments within one dispatch.",
+            "That one dispatch is faster than exact separate dispatches."
+          ],
+          [
+            "Native ISA",
+            "The retained artifact has four BF16 MFMAs and four FP4 MFMAs. Its depth-major K input requires no transpose instruction.",
+            "A transpose claim for this fixed interface or peak device utilization from one Wave64."
+          ],
+          [
+            "Evidence identity",
+            "The exact c1383e97 campaign pins the displayed kernel and oracle together with namespace, LLVM, HSACO, ABI, ISA, and numerical output.",
+            "A complete-layer or whole-model result, source-to-machine proof, fastest claim, or state-of-the-art result."
+          ]
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "The ordinary safe Rust computes two router logits per lane, merges all 128 candidates into a stable lower-ID-first top-4, forms sink-softmax attention with four BF16 MFMAs, and consumes four scaled MXFP4 expert fragments sequentially before disjoint final stores. The safe CPU oracle independently reconstructs every admitted output."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "A layer tile is not the model",
+        "text": "QKV projection, RoPE, RMSNorm, the remaining GQA groups and value columns, four complete routed experts, SwiGLU, MLP2, residuals, cache management, and every other layer remain outside this tutorial."
+      }
+    ]
+  },
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary": {
+    "sectionId": "gpt-oss-performance-boundary",
+    "title": "Read the loss and the bound together",
+    "blocks": [
+      {
+        "type": "steps",
+        "items": [
+          "Run examples/gfx950_gpt_oss_decode/run-gfx950.sh to build the ordinary Rust source through gfx950 COV6 HSACO, inspect its symbol-scoped ISA, and execute the independent HSA oracle.",
+          "Run examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh for the exact three-dispatch HIP router, attention, and expert comparator using the same deterministic fixture.",
+          "Run perf-evidence/run-gpt-oss-performance.sh for five fresh processes per variant in alternating AB/BA order and retain all artifact and raw-record digests.",
+          "Compare the 1.064644 ms fused median with the 0.780362 ms exact unfused median, then derive the 188.7465 ns resource floor from 1,509,972 compulsory bytes and the audited operation ledger."
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Fusion lost for this admitted tile",
+        "text": "The fused kernel is 1.3643x slower than the exact unfused comparator. Sequential MXFP4 fragment consumption still improves the fused implementation by 14.1268% and removes 44 VGPRs, but that ablation does not reverse the comparator result. No fastest or state-of-the-art claim is made."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Final integrated artifact",
+        "text": "The successful MI350X campaign used the exact displayed source at commit c1383e97db732f9f1ff8105f10d5c2b5971143e1 and tree 42385e6464ca40318fc70ae104845d3997844140. The campaign binds namespace, LLVM, HSACO, ISA, ABI, correctness, and dispatch timing for this fixed tile; it does not widen the result to a complete layer, whole model, fastest claim, or state of the art."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Semantic-correctness milestone",
+        "text": "Milestone status: partial-current at compiler ecf7b17f819021708d9c59ebe39a4daf9eb2562c. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
+      }
+    ]
+  }
 } satisfies Record<NarrativeId, NarrativeRegistryEntry>);
 
 // The policy manifest is the single reviewed source for canonical fingerprints.

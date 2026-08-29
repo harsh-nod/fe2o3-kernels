@@ -190,7 +190,8 @@ export type CodeTabKind =
   | "verus"
   | "comparison"
   | "host"
-  | "result";
+  | "result"
+  | "performance";
 
 export interface CodeTab {
   kind: CodeTabKind;

@@ -95,7 +95,9 @@ export const narrativeIds = deepFreeze([
   "gfx950-ngram-embedding-gather/gather-contract",
   "gfx950-ngram-embedding-gather/scope-evidence",
   "gfx950-muon-optimizer/update-contract",
-  "gfx950-muon-optimizer/scope-evidence"
+  "gfx950-muon-optimizer/scope-evidence",
+  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract",
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary"
 ] as const);
 
 export type NarrativeId = (typeof narrativeIds)[number];
@@ -260,6 +262,10 @@ export const narrativeOrderByLesson = deepFreeze({
   "gfx950-muon-optimizer": [
     "gfx950-muon-optimizer/update-contract",
     "gfx950-muon-optimizer/scope-evidence"
+  ],
+  "gfx950-gpt-oss-120b-megakernel": [
+    "gfx950-gpt-oss-120b-megakernel/layer-tile-contract",
+    "gfx950-gpt-oss-120b-megakernel/performance-boundary"
   ]
 } satisfies Record<string, readonly NarrativeId[]>);
 
@@ -339,14 +345,14 @@ export const narrativeFingerprints = deepFreeze({
   "evidence-archive/non-retroactive-milestone": "b9b17e242bb4f81c06b9a00727bcf54e7c259a0404e83326ab1c047bf9ba94fb",
   "exercise-ladder/semantic-correctness": "06568b9b320d82cc0e1ac163f39f6ed2053002cc7ddbc43edcdb91bc6acbc4b6",
   "contributing-kernel/semantic-contract-checklist": "695aa11e7143617f82be69ac9e8cabdda3ac99d21bf6ff0a7a4b298a63c4902a",
-  "gfx950-fp4-gemm/prerequisites": "de786321f40c858bb811418a141d035b8d1f2f8850ae527a2ad3175db7a544ae",
+  "gfx950-fp4-gemm/prerequisites": "be3fc5a0fe83da692d8fd82df83fd016b2f8cc40afb83fe7b05908ddb65e571e",
   "gfx950-fp4-gemm/tile-accumulator": "8917b56e48bf58d33aa5fcbf03185874d5c0820a67a27cd49f4e7edbf010510a",
   "gfx950-fp8-gemm/format-layout": "76e3ed1d5daef0887c3799da1d80393e7243c049751134f7c08e503f2fc8c30c",
   "gfx950-fp8-gemm/tile-accumulator": "170e86a95052ec6c9c426c00435efad97c6c094b3c7ca88710de6e690da6eee4",
-  "gfx950-fp4-attention/transpose-pipeline": "27a43a10e114430f333c2d9e73258e5364a051dfcc7fbd014781e659b027d2e5",
-  "gfx950-fp4-attention/online-softmax": "69a4f4b885d0730a563eb5e6f0cdcfb095b655811637eec01f36714d8a344a52",
-  "gfx950-fp8-attention/transpose-pipeline": "2270c6b8ad497e8540970947d56370ea50ef05bb9d7d27344809be8567e6f4bb",
-  "gfx950-fp8-attention/evidence-boundary": "b5da3cf78d18ab26f29efb81f8a04aac3944299bdeeec76d63b1b73f856d7f01",
+  "gfx950-fp4-attention/transpose-pipeline": "9d75b04854274f4033d4228db4aa70da093188912ea0188c582276a3f6d2e224",
+  "gfx950-fp4-attention/online-softmax": "2bdb7d2911231e2f84aff1f430e57cbd04457218edc686adcac375790bd4ab72",
+  "gfx950-fp8-attention/transpose-pipeline": "4e22ebec870315fafa7f09116ec6642b71116a833463c651386ce6ef521b97f3",
+  "gfx950-fp8-attention/evidence-boundary": "e4727cade386fa749cb74e305b5ccc136dc378f13cdc93f26892149a19b29bdb",
   "gfx950-advanced-moe/fixed-pipeline": "c08b49657eb3b23e1fa420296180049c975114ee7da03cb19b817d11003d71bb",
   "gfx950-advanced-moe/scope-evidence": "9b4c6a5bb69e6b3c2a8c6a15d93ff1630a14e6a3e573eb28b6b2839f428e3672",
   "gfx950-kda-gdn-linear-attention/recurrence": "40770fe318b15ba2549dac18e7b5c57fb9fc3c6b8baf87b0d222b8ae5898ad47",
@@ -362,5 +368,7 @@ export const narrativeFingerprints = deepFreeze({
   "gfx950-ngram-embedding-gather/gather-contract": "db4a533e14d8a8f5c22faa4fc90498f803da170da3547d6ec0ff9b4c5532e23e",
   "gfx950-ngram-embedding-gather/scope-evidence": "64f27a3c2f0bf4c060931545a3fcd01458beb9e6ae4fc3b12a577cba273355ad",
   "gfx950-muon-optimizer/update-contract": "3f3750b43448b83ccfdad8e5f556a414bb090056828f433cf5c39231d50e1a57",
-  "gfx950-muon-optimizer/scope-evidence": "4884650fa5f043d3ffaa3edc9c23fc2787547aae4f1e429ae4ccb7b26f6a27df"
+  "gfx950-muon-optimizer/scope-evidence": "4884650fa5f043d3ffaa3edc9c23fc2787547aae4f1e429ae4ccb7b26f6a27df",
+  "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": "7657de384b9861955c299f6c3292dd85ab71258932eb974054c0b2b1cdd082a0",
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary": "17965ccf013606f9a842c692187768e6ef41da87ee0c593b0eed1991b59f857f"
 } satisfies Record<NarrativeId, string>);

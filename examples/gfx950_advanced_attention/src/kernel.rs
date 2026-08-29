@@ -6,8 +6,8 @@ use fe2o3_device::{DeviceMath, DisjointSlice, thread};
 #[cfg(target_arch = "amdgpu")]
 use fe2o3_device::{
     Gfx950F32AccumulatorFragment, Gfx950Fp8E4M3, Gfx950Fp8MfmaAMatrix, Gfx950LdsTransposeTile,
-    Gfx950Matrix, Gfx950Subgroup, Gfx950TransposeUninitialized, Index1D, KernelError, KernelResult,
-    RowStriped2D, StridedReadView2D, Wave64, WaveLane, kernel,
+    Gfx950Matrix, Gfx950Subgroup, Gfx950TransposeUninitialized, Index1D,
+    KernelError, KernelResult, StridedReadView2D, Wave64, WaveLane, kernel,
 };
 #[cfg(not(target_arch = "amdgpu"))]
 use fe2o3_device::{GridExclusive, GridLeader};
@@ -155,7 +155,6 @@ fn write_f32_v1(
 ) {
     let Some(slot) = output.get_mut_exclusive(leader, index) else {
         fe2o3_device::trap();
-        return;
     };
     *slot = value;
 }
@@ -169,7 +168,6 @@ fn write_u32_v1(
 ) {
     let Some(slot) = output.get_mut_exclusive(leader, index) else {
         fe2o3_device::trap();
-        return;
     };
     *slot = value;
 }
@@ -218,7 +216,7 @@ fn kda_update_v1(
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-kda-decode"))]
 #[kernel(
     typed,
-    namespace = "e2036047357df97405feba4d64aa7e95868109636c92a6f6853119580fd72fe4",
+    namespace = "e889654ad32a788ce48bde79cfdaea178a36ea3a152838739f4cb3b68fa0ac74",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
 )]
 pub fn gfx950_kda_gdn_decode(
@@ -293,7 +291,6 @@ pub fn gfx950_kda_gdn_decode(
         || normalized_output.len() != CHANNELS_V1
     {
         fe2o3_device::trap();
-        return;
     }
     let mut initial = [0.0_f32; CHANNELS_V1];
     initial.copy_from_slice(state);
@@ -302,7 +299,6 @@ pub fn gfx950_kda_gdn_decode(
         kda_update_v1(&math, history, gate_input, &initial, convolution_weights)
     else {
         fe2o3_device::trap();
-        return;
     };
     let mut channel = 0;
     while channel < CHANNELS_V1 {
@@ -321,7 +317,7 @@ pub fn gfx950_kda_gdn_decode(
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-kda-prefill"))]
 #[kernel(
     typed,
-    namespace = "5348fe56c1135474870729b49de57ae9150bdd6ecfb682da5c8ed03b73ccb98e",
+    namespace = "cd3e02ed84a8aa33b86dbff7f78b04ca4f454df507d15d78a2ff86de83e72706",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
 )]
 pub fn gfx950_kda_gdn_prefill(
@@ -330,14 +326,16 @@ pub fn gfx950_kda_gdn_prefill(
     initial_state: &[f32],
     convolution_weights: &[f32],
     mut final_state: DisjointSlice<f32, Index1D>,
-    mut normalized_output: DisjointSlice<f32, RowStriped2D<Index1D, 16, 8>>,
+    mut normalized_output_first: DisjointSlice<f32, Index1D>,
+    mut normalized_output_second: DisjointSlice<f32, Index1D>,
 ) {
     if input.len() != PREFILL_TOKENS_V1 * CHANNELS_V1
         || gate_input.len() != PREFILL_TOKENS_V1 * CHANNELS_V1
         || initial_state.len() != CHANNELS_V1
         || convolution_weights.len() != KDA_TAPS_V1
         || final_state.len() != CHANNELS_V1
-        || normalized_output.len() != PREFILL_TOKENS_V1 * CHANNELS_V1
+        || normalized_output_first.len() != 4 * CHANNELS_V1
+        || normalized_output_second.len() != 4 * CHANNELS_V1
     {
         return;
     }
@@ -357,9 +355,6 @@ pub fn gfx950_kda_gdn_prefill(
     let index = thread::index_1d();
     let linear = index.get();
     let channel = linear % CHANNELS_V1;
-    let Some(stripe) = index.checked_row_striped_2d::<16, 8>() else {
-        return;
-    };
     let math = DeviceMath::current();
     let subgroup = Gfx950Subgroup::current();
     let mut state = initial_state.load_or(0, channel, 0.0);
@@ -432,29 +427,29 @@ pub fn gfx950_kda_gdn_prefill(
     let square_sum7 = subgroup.reduce_sum_f32::<16>(state * state);
     let normalized7 = state / math.sqrt_f32(square_sum7 / 16.0 + RMS_EPSILON_V1);
 
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 0, 1, 128, 128) {
-        *slot = normalized0;
+    let first_normalized = if linear < CHANNELS_V1 {
+        normalized0
+    } else if linear < 2 * CHANNELS_V1 {
+        normalized1
+    } else if linear < 3 * CHANNELS_V1 {
+        normalized2
+    } else {
+        normalized3
+    };
+    let second_normalized = if linear < CHANNELS_V1 {
+        normalized4
+    } else if linear < 2 * CHANNELS_V1 {
+        normalized5
+    } else if linear < 3 * CHANNELS_V1 {
+        normalized6
+    } else {
+        normalized7
+    };
+    if let Some(slot) = normalized_output_first.get_mut(thread::index_1d()) {
+        *slot = first_normalized;
     }
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 1, 1, 128, 128) {
-        *slot = normalized1;
-    }
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 2, 1, 128, 128) {
-        *slot = normalized2;
-    }
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 3, 1, 128, 128) {
-        *slot = normalized3;
-    }
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 4, 1, 128, 128) {
-        *slot = normalized4;
-    }
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 5, 1, 128, 128) {
-        *slot = normalized5;
-    }
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 6, 1, 128, 128) {
-        *slot = normalized6;
-    }
-    if let Some(slot) = normalized_output.get_row_striped_2d_mut(&stripe, 7, 1, 128, 128) {
-        *slot = normalized7;
+    if let Some(slot) = normalized_output_second.get_mut(thread::index_1d()) {
+        *slot = second_normalized;
     }
     if linear < CHANNELS_V1 {
         if let Some(slot) = final_state.get_mut(thread::index_1d()) {
@@ -483,7 +478,6 @@ pub fn gfx950_kda_gdn_prefill(
         || normalized_output.len() != PREFILL_TOKENS_V1 * CHANNELS_V1
     {
         fe2o3_device::trap();
-        return;
     }
     let math = DeviceMath::current();
     let mut state = [0.0_f32; CHANNELS_V1];
@@ -512,7 +506,6 @@ pub fn gfx950_kda_gdn_prefill(
                 kda_update_v1(&math, &history, gates, &state, convolution_weights)
             else {
                 fe2o3_device::trap();
-                return;
             };
             state = next;
             let mut channel = 0;
@@ -613,7 +606,7 @@ fn attention_score_v1(q: &[u8], k: &[u8], token: usize) -> Option<f32> {
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-content-sparse-attention"))]
 #[kernel(
     typed,
-    namespace = "4eb73f6d2e84dc00a2f62f794f44dc346ec7f413e975999a7bb1eda506a601e5",
+    namespace = "1ad77b6d88884cb5768cc3b9f3527c5b83fe5f1c04e3fc2823f2f8c0167e058a",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
 )]
 pub fn gfx950_content_sparse_attention(
@@ -624,14 +617,14 @@ pub fn gfx950_content_sparse_attention(
     mut output: DisjointSlice<f32, Index1D>,
     mut selected_output: DisjointSlice<u32, Index1D>,
 ) {
-    if q.len() != ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
-        || k.len() != ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
-        || v.len() != ATTENTION_TOKENS_V1 * CHANNELS_V1
-        || content_scores.len() != ATTENTION_TOKENS_V1
-        || output.len() != CHANNELS_V1
-        || selected_output.len() != SELECTED_TOKENS_V1
+    if q.len() < ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
+        || k.len() < ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
+        || v.len() < ATTENTION_TOKENS_V1 * CHANNELS_V1
+        || content_scores.len() < ATTENTION_TOKENS_V1
+        || output.len() < CHANNELS_V1
+        || selected_output.len() < SELECTED_TOKENS_V1
     {
-        return;
+        fe2o3_device::trap();
     }
     let index = thread::index_1d();
     let column = index.get() % ATTENTION_TOKENS_V1;
@@ -643,7 +636,7 @@ pub fn gfx950_content_sparse_attention(
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
-        return;
+        fe2o3_device::trap();
     };
     let query = query.load_m16k128(&lane, 0, 0);
     let Ok(key) = Gfx950Fp8MfmaAMatrix::row_major(
@@ -653,7 +646,7 @@ pub fn gfx950_content_sparse_attention(
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
-        return;
+        fe2o3_device::trap();
     };
     let key = Gfx950LdsTransposeTile::<Gfx950Fp8E4M3, Gfx950TransposeUninitialized>::current(&lane)
         .stage_k_transposed(&key, 0, 0)
@@ -670,7 +663,7 @@ pub fn gfx950_content_sparse_attention(
         ATTENTION_TOKENS_V1,
         ATTENTION_TOKENS_V1,
     ) else {
-        return;
+        fe2o3_device::trap();
     };
 
     let subgroup = Gfx950Subgroup::current();
@@ -1049,7 +1042,7 @@ pub fn gfx950_content_sparse_attention(
     let Ok(value) =
         StridedReadView2D::from_shared_slice(v, 0, ATTENTION_TOKENS_V1, CHANNELS_V1, CHANNELS_V1)
     else {
-        return;
+        fe2o3_device::trap();
     };
     let mut maximum = selected0_attention;
     if selected1_attention > maximum {
@@ -1093,7 +1086,6 @@ pub fn gfx950_content_sparse_attention(
         || selected_output.len() != SELECTED_TOKENS_V1
     {
         fe2o3_device::trap();
-        return;
     }
     let selected = select_sparse_tokens_v1(content_scores);
     let mut rank = 0;
@@ -1108,7 +1100,6 @@ pub fn gfx950_content_sparse_attention(
         let token = selected[rank];
         let Some(dot) = attention_score_v1(q, k, token) else {
             fe2o3_device::trap();
-            return;
         };
         scores[rank] = dot + 0.75 * content_scores[token];
         if scores[rank] > maximum {
@@ -1127,11 +1118,9 @@ pub fn gfx950_content_sparse_attention(
     }
     let Some(output_gate) = sigmoid_v1(&math, maximum * 0.01) else {
         fe2o3_device::trap();
-        return;
     };
     if !denominator.is_finite() || denominator <= 0.0 {
         fe2o3_device::trap();
-        return;
     }
     let mut channel = 0;
     while channel < CHANNELS_V1 {
@@ -1152,7 +1141,7 @@ pub fn gfx950_content_sparse_attention(
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-compressed-hybrid-attention"))]
 #[kernel(
     typed,
-    namespace = "385748dbb7bdd90c5273ed179062a78b392e297bbeff9833a4df11b446088b44",
+    namespace = "8fa973d4231e28e54ecbd607f539aaba65a895db610f15d56a698336b119f65a",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
 )]
 pub fn gfx950_compressed_hybrid_attention(
@@ -1168,7 +1157,7 @@ pub fn gfx950_compressed_hybrid_attention(
         || token_bias.len() != ATTENTION_TOKENS_V1
         || output.len() != CHANNELS_V1
     {
-        return;
+        fe2o3_device::trap();
     }
     let index = thread::index_1d();
     let column = index.get() % ATTENTION_TOKENS_V1;
@@ -1180,7 +1169,7 @@ pub fn gfx950_compressed_hybrid_attention(
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
-        return;
+        fe2o3_device::trap();
     };
     let query = query.load_m16k128(&lane, 0, 0);
     let Ok(key) = Gfx950Fp8MfmaAMatrix::row_major(
@@ -1190,7 +1179,7 @@ pub fn gfx950_compressed_hybrid_attention(
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
-        return;
+        fe2o3_device::trap();
     };
     let key = Gfx950LdsTransposeTile::<Gfx950Fp8E4M3, Gfx950TransposeUninitialized>::current(&lane)
         .stage_k_transposed(&key, 0, 0)
@@ -1203,10 +1192,10 @@ pub fn gfx950_compressed_hybrid_attention(
     let Ok(value) =
         StridedReadView2D::from_shared_slice(v, 0, ATTENTION_TOKENS_V1, CHANNELS_V1, CHANNELS_V1)
     else {
-        return;
+        fe2o3_device::trap();
     };
     let Ok(bias) = StridedReadView2D::from_shared_slice(token_bias, 0, 1, 16, 16) else {
-        return;
+        fe2o3_device::trap();
     };
     let subgroup = Gfx950Subgroup::current();
     let math = DeviceMath::current();
@@ -1294,14 +1283,12 @@ pub fn gfx950_compressed_hybrid_attention(
         || output.len() != CHANNELS_V1
     {
         fe2o3_device::trap();
-        return;
     }
     let mut scores = [0.0_f32; ATTENTION_TOKENS_V1];
     let mut token = 0;
     while token < ATTENTION_TOKENS_V1 {
         let Some(dot) = attention_score_v1(q, k, token) else {
             fe2o3_device::trap();
-            return;
         };
         scores[token] = dot + token_bias[token];
         token += 1;
@@ -1341,11 +1328,9 @@ pub fn gfx950_compressed_hybrid_attention(
     }
     let Some(mix) = sigmoid_v1(&math, scores[0] * 0.01) else {
         fe2o3_device::trap();
-        return;
     };
     if local_sum <= 0.0 || global_sum <= 0.0 || !local_sum.is_finite() || !global_sum.is_finite() {
         fe2o3_device::trap();
-        return;
     }
     let mut channel = 0;
     while channel < CHANNELS_V1 {
@@ -1384,7 +1369,7 @@ pub fn gfx950_compressed_hybrid_attention(
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-attnres-aggregate"))]
 #[kernel(
     typed,
-    namespace = "a65038e3cb567081a97476ed759abecdcf789e1607626117c929491ce0edffe7",
+    namespace = "e71b4250d8eb3fd5371802ed2141e5a0fb880b6a79c48d7b928a8cde0ae0e0de",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
     control_flow(loop_bounds(4, 4))
 )]
@@ -1445,7 +1430,6 @@ pub fn gfx950_attnres_aggregate(
         || output.len() != CHANNELS_V1
     {
         fe2o3_device::trap();
-        return;
     }
     let math = DeviceMath::current();
     let mut channel = 0;
@@ -1470,7 +1454,6 @@ pub fn gfx950_attnres_aggregate(
         }
         if denominator <= 0.0 || !denominator.is_finite() || !value.is_finite() {
             fe2o3_device::trap();
-            return;
         }
         write_f32_v1(&mut output, &leader, channel, value / denominator);
         channel += 1;
@@ -1481,7 +1464,7 @@ pub fn gfx950_attnres_aggregate(
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-four-branch-residual"))]
 #[kernel(
     typed,
-    namespace = "632e4eb1a578d4a75b833c6bececaa239cb7f754e8999cb3513690a4b0badc12",
+    namespace = "a6d721410f3856c46249fb8b78604d6a1f0caf5b050dd6f3a160ab8c40e51583",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
     control_flow(loop_bounds(4))
 )]
@@ -1530,7 +1513,6 @@ pub fn gfx950_four_branch_residual(
         || output.len() != CHANNELS_V1
     {
         fe2o3_device::trap();
-        return;
     }
     let math = DeviceMath::current();
     let mut channel = 0;
@@ -1540,14 +1522,12 @@ pub fn gfx950_four_branch_residual(
         while branch < MIXING_STREAMS_V1 {
             let Some(gate) = sigmoid_v1(&math, gate_logits[branch * CHANNELS_V1 + channel]) else {
                 fe2o3_device::trap();
-                return;
             };
             value += 0.25 * gate * branches[branch * CHANNELS_V1 + channel];
             branch += 1;
         }
         if !value.is_finite() {
             fe2o3_device::trap();
-            return;
         }
         write_f32_v1(&mut output, &leader, channel, value);
         channel += 1;
@@ -1558,7 +1538,7 @@ pub fn gfx950_four_branch_residual(
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-mhc-sinkhorn-mix"))]
 #[kernel(
     typed,
-    namespace = "0c00c566c0a9487644fd52739a8ffe3a447048d77114666223b99fa8cfd6a9cf",
+    namespace = "f93558928ce6e41a2fe8d78cfb28aa199dae54059fc9b7599a4348f4ad73c966",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
     control_flow(loop_bounds(3))
 )]
@@ -1575,98 +1555,38 @@ pub fn gfx950_mhc_sinkhorn_mix(
     }
     let index = thread::index_1d();
     let linear = index.get();
-    if linear >= MIXING_STREAMS_V1 * CHANNELS_V1 {
-        return Ok(());
-    }
     let math = DeviceMath::current();
+    let subgroup = Gfx950Subgroup::current();
     let Ok(logits) = StridedReadView2D::from_shared_slice(mixing_logits, 0, 1, 16, 16) else {
         return Err(KernelError::InvalidArgument);
     };
     let Ok(streams) = StridedReadView2D::from_shared_slice(streams, 0, 4, 16, 16) else {
         return Err(KernelError::InvalidArgument);
     };
-    let mut m00 = math.exp_f32(logits.load_or(0, 0, 0.0));
-    let mut m01 = math.exp_f32(logits.load_or(0, 1, 0.0));
-    let mut m02 = math.exp_f32(logits.load_or(0, 2, 0.0));
-    let mut m03 = math.exp_f32(logits.load_or(0, 3, 0.0));
-    let mut m10 = math.exp_f32(logits.load_or(0, 4, 0.0));
-    let mut m11 = math.exp_f32(logits.load_or(0, 5, 0.0));
-    let mut m12 = math.exp_f32(logits.load_or(0, 6, 0.0));
-    let mut m13 = math.exp_f32(logits.load_or(0, 7, 0.0));
-    let mut m20 = math.exp_f32(logits.load_or(0, 8, 0.0));
-    let mut m21 = math.exp_f32(logits.load_or(0, 9, 0.0));
-    let mut m22 = math.exp_f32(logits.load_or(0, 10, 0.0));
-    let mut m23 = math.exp_f32(logits.load_or(0, 11, 0.0));
-    let mut m30 = math.exp_f32(logits.load_or(0, 12, 0.0));
-    let mut m31 = math.exp_f32(logits.load_or(0, 13, 0.0));
-    let mut m32 = math.exp_f32(logits.load_or(0, 14, 0.0));
-    let mut m33 = math.exp_f32(logits.load_or(0, 15, 0.0));
-    for _iteration in 0..3 {
-        let row0 = m00 + m01 + m02 + m03;
-        m00 /= row0;
-        m01 /= row0;
-        m02 /= row0;
-        m03 /= row0;
-        let row1 = m10 + m11 + m12 + m13;
-        m10 /= row1;
-        m11 /= row1;
-        m12 /= row1;
-        m13 /= row1;
-        let row2 = m20 + m21 + m22 + m23;
-        m20 /= row2;
-        m21 /= row2;
-        m22 /= row2;
-        m23 /= row2;
-        let row3 = m30 + m31 + m32 + m33;
-        m30 /= row3;
-        m31 /= row3;
-        m32 /= row3;
-        m33 /= row3;
-
-        let column0 = m00 + m10 + m20 + m30;
-        m00 /= column0;
-        m10 /= column0;
-        m20 /= column0;
-        m30 /= column0;
-        let column1 = m01 + m11 + m21 + m31;
-        m01 /= column1;
-        m11 /= column1;
-        m21 /= column1;
-        m31 /= column1;
-        let column2 = m02 + m12 + m22 + m32;
-        m02 /= column2;
-        m12 /= column2;
-        m22 /= column2;
-        m32 /= column2;
-        let column3 = m03 + m13 + m23 + m33;
-        m03 /= column3;
-        m13 /= column3;
-        m23 /= column3;
-        m33 /= column3;
-    }
     let row = linear / CHANNELS_V1;
-    let channel = linear % CHANNELS_V1;
-    let value = if row == 0 {
-        m00 * streams.load_or(0, channel, 0.0)
-            + m01 * streams.load_or(1, channel, 0.0)
-            + m02 * streams.load_or(2, channel, 0.0)
-            + m03 * streams.load_or(3, channel, 0.0)
-    } else if row == 1 {
-        m10 * streams.load_or(0, channel, 0.0)
-            + m11 * streams.load_or(1, channel, 0.0)
-            + m12 * streams.load_or(2, channel, 0.0)
-            + m13 * streams.load_or(3, channel, 0.0)
-    } else if row == 2 {
-        m20 * streams.load_or(0, channel, 0.0)
-            + m21 * streams.load_or(1, channel, 0.0)
-            + m22 * streams.load_or(2, channel, 0.0)
-            + m23 * streams.load_or(3, channel, 0.0)
-    } else {
-        m30 * streams.load_or(0, channel, 0.0)
-            + m31 * streams.load_or(1, channel, 0.0)
-            + m32 * streams.load_or(2, channel, 0.0)
-            + m33 * streams.load_or(3, channel, 0.0)
-    };
+    let local_lane = linear % CHANNELS_V1;
+    let matrix_index =
+        (local_lane + row * MIXING_STREAMS_V1) % (MIXING_STREAMS_V1 * MIXING_STREAMS_V1);
+    let mut matrix = math.exp_f32(logits.load_or(0, matrix_index, 0.0));
+    for _iteration in 0..3 {
+        let row_reciprocal = 1.0 / subgroup.reduce_sum_f32::<4>(matrix);
+        matrix *= row_reciprocal;
+
+        let column = (local_lane as u32) & 3;
+        let column_sum = subgroup.broadcast_f32::<16>(matrix, column)
+            + subgroup.broadcast_f32::<16>(matrix, (column + 4) & 15)
+            + subgroup.broadcast_f32::<16>(matrix, (column + 8) & 15)
+            + subgroup.broadcast_f32::<16>(matrix, (column + 12) & 15);
+        matrix *= 1.0 / column_sum;
+    }
+    let weight0 = subgroup.broadcast_f32::<16>(matrix, 0);
+    let weight1 = subgroup.broadcast_f32::<16>(matrix, 1);
+    let weight2 = subgroup.broadcast_f32::<16>(matrix, 2);
+    let weight3 = subgroup.broadcast_f32::<16>(matrix, 3);
+    let value = weight0 * streams.load_or(0, local_lane, 0.0)
+        + weight1 * streams.load_or(1, local_lane, 0.0)
+        + weight2 * streams.load_or(2, local_lane, 0.0)
+        + weight3 * streams.load_or(3, local_lane, 0.0);
     if let Some(slot) = output.get_mut(index) {
         *slot = value;
     }
@@ -1687,7 +1607,6 @@ pub fn gfx950_mhc_sinkhorn_mix(
         || output.len() != MIXING_STREAMS_V1 * CHANNELS_V1
     {
         fe2o3_device::trap();
-        return;
     }
     let math = DeviceMath::current();
     let mut matrix = [0.0_f32; MIXING_STREAMS_V1 * MIXING_STREAMS_V1];
@@ -1696,7 +1615,6 @@ pub fn gfx950_mhc_sinkhorn_mix(
         matrix[index] = math.exp_f32(mixing_logits[index]);
         if !matrix[index].is_finite() {
             fe2o3_device::trap();
-            return;
         }
         index += 1;
     }
@@ -1712,7 +1630,6 @@ pub fn gfx950_mhc_sinkhorn_mix(
             }
             if sum <= 0.0 || !sum.is_finite() {
                 fe2o3_device::trap();
-                return;
             }
             column = 0;
             while column < MIXING_STREAMS_V1 {
@@ -1731,7 +1648,6 @@ pub fn gfx950_mhc_sinkhorn_mix(
             }
             if sum <= 0.0 || !sum.is_finite() {
                 fe2o3_device::trap();
-                return;
             }
             row = 0;
             while row < MIXING_STREAMS_V1 {
