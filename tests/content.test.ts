@@ -30,6 +30,7 @@ import {
   observedAdvancedEvidence,
   type AdvancedRustEvidence,
 } from "../src/content/gfx950-advanced-evidence";
+import { advancedPerformanceLessonIds } from "../src/content/gfx950-advanced-performance";
 import {
   advancedCoreSourceCommit,
   advancedCoreSourceTree,
@@ -811,14 +812,18 @@ describe("curriculum integrity", () => {
           kind: advancedCoreSourceTree === null ? "source-example" : "gpu-observed",
         }),
       ]);
-      expect(advanced?.tabs.map((tab) => tab.kind)).toEqual([
+      const expectedTabKinds = [
         "kernel",
         "reference",
         "comparison",
         "verus",
         "host",
         "result",
-      ]);
+      ];
+      if (advancedPerformanceLessonIds.includes(lessonId)) {
+        expectedTabKinds.push("performance");
+      }
+      expect(advanced?.tabs.map((tab) => tab.kind)).toEqual(expectedTabKinds);
 
       const kernel = advanced?.tabs.find((tab) => tab.kind === "kernel");
       expect(kernel?.sourcePath).toBe(sourcePath);
@@ -895,6 +900,82 @@ describe("curriculum integrity", () => {
       expect(serialized).toContain("full distributed collective");
       expect(serialized).toContain("full-model-equivalence claim");
     }
+  });
+
+  it("publishes bounded MI350X performance evidence without widening comparator claims", () => {
+    expect(advancedPerformanceLessonIds).toEqual([
+      "gfx950-advanced-moe",
+      "gfx950-attnres-gr-mhc",
+      "gfx950-speculative-mtp-verification",
+      "gfx950-ngram-embedding-gather",
+      "gfx950-muon-optimizer",
+    ]);
+
+    const module10 = lessons.filter((lesson) => lesson.module === 10);
+    for (const lesson of module10) {
+      const performance = lesson.tabs.find((tab) => tab.kind === "performance");
+      if (!advancedPerformanceLessonIds.includes(lesson.id)) {
+        expect(performance, lesson.id).toBeUndefined();
+        continue;
+      }
+      expect(performance, lesson.id).toMatchObject({
+        label: "Performance",
+        language: "text",
+        explanatory: true,
+      });
+      expect(performance?.code).toContain("MI350X PROTOCOL");
+      expect(performance?.code).toContain("THEORETICAL RESOURCE FLOOR");
+      expect(performance?.code).toContain("ADMITTED COMPARATOR RESULT");
+      expect(performance?.code).toContain(
+        "not universal state-of-the-art claims",
+      );
+      expect(performance?.code).toContain(
+        "differently shaped implementations are not comparable",
+      );
+      expect(performance?.notice).toContain(
+        "no universal state-of-the-art claim is made",
+      );
+    }
+
+    const mhcRecord = JSON.parse(
+      readFileSync(
+        "examples/gfx950_advanced_attention/performance-mhc-sinkhorn-v1.json",
+        "utf8",
+      ),
+    );
+    const mhc = module10
+      .find((lesson) => lesson.id === "gfx950-attnres-gr-mhc")
+      ?.tabs.find((tab) => tab.kind === "performance")?.code;
+    expect(mhc).toContain(
+      `Paired median speedup ${mhcRecord.measurement.median_paired_speedup}x`,
+    );
+    expect(mhc).toContain(
+      `Candidate/resource floor = 5,040 ns / ${mhcRecord.theoretical_bound.strict_global_resource_floor_ns} ns = 70,000x`,
+    );
+    expect(mhc).toContain(
+      "Only the combined rewrite was timed",
+    );
+    expect(mhc).toContain(
+      "AttnRes and four-branch residual were not included",
+    );
+
+    const systemsRecord = JSON.parse(
+      readFileSync(
+        "examples/gfx950_advanced_systems/optimization-evidence-v1.json",
+        "utf8",
+      ),
+    );
+    const speculative = systemsRecord.kernels.find(
+      (kernel: { kernel: string }) =>
+        kernel.kernel === "gfx950_speculative_transaction_v1",
+    );
+    const speculativeTab = module10
+      .find((lesson) => lesson.id === "gfx950-speculative-mtp-verification")
+      ?.tabs.find((tab) => tab.kind === "performance")?.code;
+    expect(speculativeTab).toContain(
+      `saving ${(speculative.median_ns_saved / 1000).toFixed(2)} us`,
+    );
+    expect(speculativeTab).toContain("publishable fastest-kernel claim=false");
   });
 
   it("keeps the advanced production evidence matrix exhaustive and fail-closed", () => {

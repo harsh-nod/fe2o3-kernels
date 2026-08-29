@@ -1114,6 +1114,13 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       "gfx950_muon_update_4x4_v1",
     ],
   ] as const;
+  const performanceLessonIds = new Set([
+    "gfx950-advanced-moe",
+    "gfx950-attnres-gr-mhc",
+    "gfx950-speculative-mtp-verification",
+    "gfx950-ngram-embedding-gather",
+    "gfx950-muon-optimizer",
+  ]);
 
   expect(["desktop", "mobile"]).toContain(testInfo.project.name);
   for (const [lessonId, title, symbol] of routes) {
@@ -1130,6 +1137,32 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       page.getByText(/^(?:Source example|GPU observed)$/u).first(),
     ).toBeVisible();
     await expect(page.getByRole("tabpanel")).toContainText(symbol);
+    const performanceTab = page.getByRole("tab", { name: "Performance" });
+    if (performanceLessonIds.has(lessonId)) {
+      await performanceTab.click();
+      await expect(page.getByRole("tabpanel")).toContainText(
+        "FE2O3 GFX950 BOUNDED PERFORMANCE EVIDENCE",
+      );
+      await expect(page.getByRole("tabpanel")).toContainText(
+        "not universal state-of-the-art claims",
+      );
+      const tabLayout = await page.locator(".code-tabs").evaluate((element) => ({
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+        height: element.clientHeight,
+      }));
+      expect(tabLayout.clientWidth).toBeGreaterThan(0);
+      expect(tabLayout.scrollWidth).toBeGreaterThanOrEqual(
+        tabLayout.clientWidth,
+      );
+      expect(tabLayout.height).toBeGreaterThanOrEqual(42);
+      await page.locator(".code-tool").screenshot({
+        path: testInfo.outputPath(`${lessonId}-performance.png`),
+        animations: "disabled",
+      });
+    } else {
+      await expect(performanceTab).toHaveCount(0);
+    }
     expect(
       await page.evaluate(
         () =>

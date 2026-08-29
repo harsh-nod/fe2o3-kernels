@@ -18,6 +18,7 @@ import {
   type AdvancedRustEvidence,
   type ObservedAdvancedRustEvidence,
 } from "./gfx950-advanced-evidence";
+import { advancedPerformanceTabFor } from "./gfx950-advanced-performance";
 import { narrativeSection } from "./narrative-registry";
 import { resultText } from "./shared";
 import {
@@ -296,7 +297,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const referenceFragments = spec.referenceSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustReference, symbol, false),
   );
-  return [
+  const tabs: CodeTab[] = [
     {
       kind: "kernel",
       label: "Rust kernel",
@@ -409,6 +410,9 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
           : "Production evidence is intentionally pending until every displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane.",
     },
   ];
+  const performance = advancedPerformanceTabFor(spec.id);
+  if (performance) tabs.push(performance);
+  return tabs;
 }
 
 function lesson(spec: AdvancedLessonSpec): Lesson {
