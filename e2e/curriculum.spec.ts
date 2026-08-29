@@ -350,26 +350,45 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   );
 });
 
-test("live KFD debugger keeps observed and unavailable hardware state distinct", async ({
+test("GPU debugger profiler workbench keeps backend authority distinct", async ({
   page,
 }, testInfo) => {
   await page.goto("./#/debugger/live-kfd");
   await expect(
-    page.getByRole("heading", { level: 1, name: "Live KFD debugger" }),
+    page.getByRole("heading", {
+      level: 1,
+      name: "GPU debugger + profiler workbench",
+    }),
   ).toBeVisible();
-  await expect(page.getByText("Observed on MI300X")).toBeVisible();
-  await expect(page.getByText("not observed")).toBeVisible();
+  await expect(page.getByText("Scopes are separate")).toBeVisible();
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    "WaveRecordLayoutNotInKfdUapi",
+  );
 
-  const operations = page.getByRole("tablist", { name: "Live KFD operation" });
-  await operations.getByRole("tab", { name: "Queue control" }).click();
-  await expect(page.getByTestId("live-kfd-request")).toContainText("suspend_queues");
-  await expect(page.getByTestId("live-kfd-response")).toContainText("committed");
-  await operations.getByRole("tab", { name: "Honest absence" }).click();
-  await expect(page.getByTestId("live-kfd-response")).toContainText("unsupported");
+  const backends = page.getByRole("tablist", { name: "Evidence backend" });
+  await backends.getByRole("tab", { name: "ROCgdb / MI" }).click();
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    '"live_gpu_stop_validated": false',
+  );
+  await expect(
+    page.getByRole("gridcell", { name: /wave 3 · SIMD 1, lane 0, active/u }),
+  ).toBeVisible();
+  await page.screenshot({
+    path: testInfo.outputPath("rocgdb-mi-workbench.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+  await backends.getByRole("tab", { name: "Profiler V4" }).click();
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    "plan_next_capture",
+  );
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    "wait_events",
+  );
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Better evidence composition, not yet deeper machine control",
+      name: "Semantic evidence composition across complementary tools",
     }),
   ).toBeVisible();
 
@@ -381,8 +400,8 @@ test("live KFD debugger keeps observed and unavailable hardware state distinct",
   const dimensions = await page.evaluate(() => ({
     width: document.documentElement.scrollWidth,
     viewport: window.innerWidth,
-    consoleWidth: document.querySelector(".live-kfd-console")?.scrollWidth ?? 0,
-    consoleViewport: document.querySelector(".live-kfd-console")?.clientWidth ?? 0,
+    consoleWidth: document.querySelector(".gpu-workbench")?.scrollWidth ?? 0,
+    consoleViewport: document.querySelector(".gpu-workbench")?.clientWidth ?? 0,
   }));
   expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
   expect(dimensions.consoleWidth).toBeLessThanOrEqual(dimensions.consoleViewport);

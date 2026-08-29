@@ -24,9 +24,11 @@ import {
   validateDebuggerWorkbenchFixture,
 } from "../src/content/debugger-workbench";
 import {
+  liveKfdCurrentImplementationPaths,
   liveKfdPublication,
   liveKfdSourceUrl,
   liveKfdSources,
+  liveWorkbenchBackends,
 } from "../src/content/live-kfd-debugger";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
 import { functionalRefinementPublication } from "../src/content/functional-refinement-publication";
@@ -214,6 +216,60 @@ describe("live KFD debugger milestone", () => {
     );
     expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
+    );
+  });
+
+  it("keeps each composite workbench backend within its evidence scope", () => {
+    expect(liveWorkbenchBackends.map((backend) => backend.id)).toEqual([
+      "direct-kfd",
+      "rocgdb-mi",
+      "profiler-v4",
+    ]);
+    const directKfd = liveWorkbenchBackends[0];
+    expect(directKfd.record).toMatchObject({
+      validation_scope: "mi300x_live_header_envelopes",
+      xcc_count: 8,
+    });
+    expect(JSON.stringify(directKfd)).toContain("WaveRecordLayoutNotInKfdUapi");
+    expect(directKfd.waveRows[0].cells).toHaveLength(64);
+    expect(directKfd.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
+      .toBe(true);
+
+    const rocgdb = liveWorkbenchBackends[1];
+    expect(rocgdb.record).toMatchObject({
+      validation_scope: "deterministic_fake_mi_fixture",
+      live_gpu_stop_validated: false,
+    });
+    expect(rocgdb.waveRows[0].cells.filter((cell) => cell.state === "active"))
+      .toHaveLength(8);
+    expect(rocgdb.scope).toContain("live GPU stop unvalidated");
+
+    const profiler = liveWorkbenchBackends[2];
+    expect(JSON.stringify(profiler.record)).toContain("wait_events");
+    expect(profiler.record).toMatchObject({
+      comparison: {
+        status: "comparable_for_duration_and_raw_counters",
+        exact: [
+          "environment",
+          "tool",
+          "configuration",
+          "stable_device",
+          "dispatch_sequence_device_launch",
+          "kir",
+          "artifact",
+        ],
+        unrepresented: ["arguments", "input_content"],
+        pc_delta: {
+          status: "unavailable",
+          reason: "capture_local_code_object_identity",
+        },
+      },
+    });
+    expect(
+      profiler.capabilities.find((capability) => capability.label === "Wait analysis"),
+    ).toMatchObject({ state: "unavailable", origin: "unavailable" });
+    expect(liveKfdCurrentImplementationPaths).toContain(
+      "crates/fe2o3-semantic-query/src/profiler_query.rs",
     );
   });
 });

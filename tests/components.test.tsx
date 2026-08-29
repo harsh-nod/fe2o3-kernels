@@ -9,7 +9,7 @@ import { LessonSections } from "../src/components/LessonSections";
 import { LiveKfdDebuggerPage } from "../src/components/LiveKfdDebuggerPage";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
-import { liveKfdOperations } from "../src/content/live-kfd-debugger";
+import { liveWorkbenchBackends } from "../src/content/live-kfd-debugger";
 import type { LessonSection } from "../src/content/model";
 import { narrativeEntry } from "../src/content/narrative-registry";
 import { stagedEvidenceRecord } from "../src/content/staged-evidence";
@@ -186,31 +186,47 @@ describe("semantic debugger workbench", () => {
 });
 
 describe("live KFD debugger tutorial", () => {
-  it("keeps exact binding, live control, and unsupported semantics distinct", async () => {
+  it("keeps direct KFD, admitted ROCgdb, and profiler evidence distinct", async () => {
     const user = userEvent.setup();
     render(<LiveKfdDebuggerPage />);
 
-    expect(screen.getByRole("heading", { name: "Live KFD debugger" })).toBeInTheDocument();
-    expect(screen.getByText("Observed on MI300X")).toBeInTheDocument();
-    expect(screen.getByText("not observed")).toBeInTheDocument();
-    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent(
-      "execution_code_object",
+    expect(
+      screen.getByRole("heading", { name: "GPU debugger + profiler workbench" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Scopes are separate")).toBeInTheDocument();
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      "stopped_checkpoint",
     );
-    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent(
-      "not_observed",
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      "WaveRecordLayoutNotInKfdUapi",
     );
 
-    const operations = screen.getByRole("tablist", { name: "Live KFD operation" });
-    await user.click(within(operations).getByRole("tab", { name: "Queue control" }));
-    expect(screen.getByTestId("live-kfd-request")).toHaveTextContent("suspend_queues");
-    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent("committed");
+    const backends = screen.getByRole("tablist", { name: "Evidence backend" });
+    const directKfdTab = within(backends).getByRole("tab", { name: "Direct KFD" });
+    directKfdTab.focus();
+    await user.keyboard("{ArrowRight}");
+    expect(within(backends).getByRole("tab", { name: "ROCgdb / MI" })).toHaveFocus();
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      '"live_gpu_stop_validated": false',
+    );
+    await user.click(
+      screen.getByRole("gridcell", {
+        name: /wave 3 · SIMD 1, lane 1, active/u,
+      }),
+    );
+    expect(screen.getByText(/lane 1/u)).toBeInTheDocument();
 
-    await user.click(within(operations).getByRole("tab", { name: "Honest absence" }));
-    expect(screen.getByTestId("live-kfd-response")).toHaveTextContent("unsupported");
-    expect(liveKfdOperations).toHaveLength(4);
+    await user.click(within(backends).getByRole("tab", { name: "Profiler V4" }));
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      "plan_next_capture",
+    );
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      "wait_events",
+    );
+    expect(liveWorkbenchBackends).toHaveLength(3);
     expect(
       screen.getByRole("heading", {
-        name: "Better evidence composition, not yet deeper machine control",
+        name: "Semantic evidence composition across complementary tools",
       }),
     ).toBeInTheDocument();
   });

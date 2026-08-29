@@ -1,0 +1,259 @@
+import {
+  Activity,
+  Braces,
+  Check,
+  CircleOff,
+  Database,
+  Gauge,
+  Radio,
+} from "lucide-react";
+import { useRef, useState, type KeyboardEvent } from "react";
+import {
+  liveWorkbenchBackends,
+  type LiveWorkbenchBackendId,
+  type LiveWorkbenchCell,
+  type LiveWorkbenchTruthOrigin,
+} from "../content/live-kfd-debugger";
+
+const backendIcons = {
+  "direct-kfd": Radio,
+  "rocgdb-mi": Activity,
+  "profiler-v4": Gauge,
+} as const;
+
+function shortIdentity(identity?: string): string {
+  return identity ? `${identity.slice(0, 8)}…${identity.slice(-6)}` : "none";
+}
+
+function Origin({ value }: { value: LiveWorkbenchTruthOrigin }) {
+  return <span className={`workbench-origin ${value}`}>{value}</span>;
+}
+
+export function GpuDebugProfilerWorkbench() {
+  const [backendId, setBackendId] =
+    useState<LiveWorkbenchBackendId>("direct-kfd");
+  const [selection, setSelection] = useState({ row: 0, lane: 0 });
+  const backendTabs = useRef<Array<HTMLButtonElement | null>>([]);
+  const backend = liveWorkbenchBackends.find((item) => item.id === backendId)!;
+  const selectedCell: LiveWorkbenchCell =
+    backend.waveRows[selection.row]?.cells[selection.lane] ??
+    backend.waveRows[0].cells[0];
+
+  const selectBackend = (id: LiveWorkbenchBackendId) => {
+    setBackendId(id);
+    setSelection({ row: 0, lane: 0 });
+  };
+
+  const selectAdjacentBackend = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) => {
+    const lastIndex = liveWorkbenchBackends.length - 1;
+    const nextIndex =
+      event.key === "ArrowRight"
+        ? index === lastIndex
+          ? 0
+          : index + 1
+        : event.key === "ArrowLeft"
+          ? index === 0
+            ? lastIndex
+            : index - 1
+          : event.key === "Home"
+            ? 0
+            : event.key === "End"
+              ? lastIndex
+              : null;
+    if (nextIndex === null) return;
+    event.preventDefault();
+    selectBackend(liveWorkbenchBackends[nextIndex].id);
+    backendTabs.current[nextIndex]?.focus();
+  };
+
+  return (
+    <section
+      className="gpu-workbench"
+      aria-labelledby="gpu-workbench-heading"
+    >
+      <header className="gpu-workbench-header">
+        <div>
+          <p className="section-kicker">Composite evidence workbench</p>
+          <h2 id="gpu-workbench-heading">One view, three authority boundaries</h2>
+          <p>
+            Select a backend to inspect exactly what its admitted evidence can
+            establish. Cells and panels keep unavailable facts visible.
+          </p>
+        </div>
+        <div
+          className="gpu-backend-tabs"
+          role="tablist"
+          aria-label="Evidence backend"
+        >
+          {liveWorkbenchBackends.map((item, index) => {
+            const Icon = backendIcons[item.id];
+            return (
+              <button
+                aria-controls="gpu-workbench-panel"
+                aria-selected={item.id === backendId}
+                className={item.id === backendId ? "active" : ""}
+                key={item.id}
+                onClick={() => selectBackend(item.id)}
+                onKeyDown={(event) => selectAdjacentBackend(event, index)}
+                ref={(element) => {
+                  backendTabs.current[index] = element;
+                }}
+                role="tab"
+                tabIndex={item.id === backendId ? 0 : -1}
+                type="button"
+              >
+                <Icon size={15} aria-hidden="true" />
+                {item.shortLabel}
+              </button>
+            );
+          })}
+        </div>
+      </header>
+
+      <div
+        aria-live="polite"
+        className="gpu-workbench-status"
+        id="gpu-workbench-panel"
+        role="tabpanel"
+      >
+        <div>
+          <Origin value={backend.origin} />
+          <strong>{backend.status}</strong>
+          <span>{backend.scope}</span>
+        </div>
+        <code title={backend.evidenceId}>
+          evidence {shortIdentity(backend.evidenceId)}
+        </code>
+      </div>
+      <p className="gpu-workbench-summary">{backend.summary}</p>
+
+      <div className="gpu-matrix-shell">
+        <header>
+          <div>
+            <h3>Waves × lanes</h3>
+            <p>{backend.matrixNote}</p>
+          </div>
+          <div className="gpu-matrix-legend" aria-label="Lane state legend">
+            <span><i className="active" />active</span>
+            <span><i className="inactive" />inactive</span>
+            <span><i className="unavailable" />unavailable</span>
+          </div>
+        </header>
+        <div className="gpu-matrix-scroll">
+          <div
+            className="gpu-lane-matrix"
+            role="grid"
+            aria-label={backend.matrixLabel}
+          >
+            <div className="gpu-lane-axis" aria-hidden="true">
+              <span />
+              {Array.from({ length: 8 }, (_, group) => (
+                <b key={group}>{group * 8}</b>
+              ))}
+            </div>
+            {backend.waveRows.map((row, rowIndex) => (
+              <div className="gpu-wave-row" role="row" key={row.id}>
+                <span role="rowheader">{row.label}</span>
+                <div>
+                  {row.cells.map((cell) => {
+                    const selected =
+                      selection.row === rowIndex && selection.lane === cell.lane;
+                    return (
+                      <button
+                        aria-label={`${row.label}, lane ${cell.lane}, ${cell.state}, ${cell.detail}`}
+                        aria-selected={selected}
+                        className={`${cell.state}${selected ? " selected" : ""}`}
+                        key={cell.lane}
+                        onClick={() =>
+                          setSelection({ row: rowIndex, lane: cell.lane })
+                        }
+                        role="gridcell"
+                        title={`lane ${cell.lane}: ${cell.detail}`}
+                        type="button"
+                      >
+                        {cell.lane}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="gpu-cell-inspector" aria-live="polite">
+          <div>
+            {selectedCell.state === "active" ? (
+              <Check size={16} aria-hidden="true" />
+            ) : (
+              <CircleOff size={16} aria-hidden="true" />
+            )}
+            <span>
+              <small>selected cell</small>
+              <strong>
+                {backend.waveRows[selection.row]?.label ?? backend.waveRows[0].label}
+                {" · lane "}{selectedCell.lane}
+              </strong>
+            </span>
+          </div>
+          <Origin value={selectedCell.origin} />
+          <p>{selectedCell.detail}</p>
+          <code title={selectedCell.evidenceId}>
+            {selectedCell.evidenceId
+              ? `evidence ${shortIdentity(selectedCell.evidenceId)}`
+              : "evidence unavailable"}
+          </code>
+        </div>
+      </div>
+
+      <div className="gpu-detail-grid" aria-label="Source IR ISA and allocation correlation">
+        {backend.panels.map((panel) => (
+          <section key={panel.label}>
+            <header>
+              <span>{panel.label}</span>
+              <Origin value={panel.origin} />
+            </header>
+            <p>{panel.value}</p>
+            <code title={panel.evidenceId}>
+              {panel.evidenceId
+                ? shortIdentity(panel.evidenceId)
+                : "no evidence identity"}
+            </code>
+          </section>
+        ))}
+      </div>
+
+      <div className="gpu-workbench-lower">
+        <section className="gpu-capabilities" aria-labelledby="gpu-capabilities-heading">
+          <header>
+            <Database size={16} aria-hidden="true" />
+            <h3 id="gpu-capabilities-heading">Capability ledger</h3>
+          </header>
+          <ul>
+            {backend.capabilities.map((capability) => (
+              <li key={capability.label}>
+                <span className={capability.state}>{capability.state}</span>
+                <div>
+                  <strong>{capability.label}</strong>
+                  <p>{capability.detail}</p>
+                </div>
+                <Origin value={capability.origin} />
+              </li>
+            ))}
+          </ul>
+        </section>
+        <section className="gpu-agent-record" aria-labelledby="gpu-agent-record-heading">
+          <header>
+            <Braces size={16} aria-hidden="true" />
+            <h3 id="gpu-agent-record-heading">Sanitized agent record</h3>
+          </header>
+          <pre data-testid="gpu-workbench-record">
+            <code>{`${JSON.stringify(backend.record, null, 2)}\n`}</code>
+          </pre>
+        </section>
+      </div>
+    </section>
+  );
+}

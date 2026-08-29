@@ -91,7 +91,9 @@ function pageTitle(pathname: string): string {
   if (pathname === "/architecture") return "Architecture | fe2o3 kernels";
   if (pathname === "/status") return "Implementation status | fe2o3 kernels";
   if (pathname === "/glossary") return "Glossary | fe2o3 kernels";
-  if (pathname === "/debugger/live-kfd") return "Live KFD debugger | fe2o3 kernels";
+  if (pathname === "/debugger/live-kfd") {
+    return "GPU debugger + profiler workbench | fe2o3 kernels";
+  }
   return "Lesson | fe2o3 kernels";
 }
 
