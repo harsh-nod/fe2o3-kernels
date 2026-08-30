@@ -17,9 +17,9 @@
       "all listed device resources are available to this workload",
       "peak rates and bandwidth are sustainable for the workload",
       "operation classes do not add when their execution overlaps",
-      "compulsory bytes exclude cache hits unless the stated cache regime proves them"
+      "logical payload bytes are normalized as cold HBM traffic; cache hits and the measured campaign's warmed-cache regime are not modeled"
     ],
-    "interpretation": "An optimistic whole-device resource lower bound, not a single-workgroup latency prediction."
+    "interpretation": "An optimistic cold-HBM whole-device roofline normalization, not a lower bound for the warmed single-workgroup measurements and not a single-workgroup latency prediction."
   },
   "practical_dispatch_floor": {
     "value": null,
@@ -39,6 +39,17 @@
   },
   "provenance": {
     "constants_supplied_for_project_protocol": "2026-08-28",
-    "verification_required_before_publication": true
+    "verified_against_official_amd_sources": "2026-08-30",
+    "verification_required_before_publication": false,
+    "sources": [
+      {
+        "title": "AMD Instinct MI350X Platform",
+        "url": "https://www.amd.com/en/products/accelerators/instinct/mi350/mi350x.html"
+      },
+      {
+        "title": "AMD CDNA 4 Architecture Whitepaper",
+        "url": "https://www.amd.com/content/dam/amd/en/documents/instinct-tech-docs/white-papers/amd-cdna-4-architecture-whitepaper.pdf"
+      }
+    ]
   }
 }

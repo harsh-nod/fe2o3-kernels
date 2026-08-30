@@ -1251,14 +1251,14 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/872a2de752cdc1f2af2e7ae4a25a3e4a103bd364/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/c766ca761c492c4cd188047a497664f6b2ade278/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "optimized full kernel 1.065004 ms",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "exact Rust component sum 1.251325 ms -> fused 1.065004 ms",
+    "component-materialization ablation measured component sum 1.251325 ms -> fused 1.065004 ms",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "14.8899% reduction",

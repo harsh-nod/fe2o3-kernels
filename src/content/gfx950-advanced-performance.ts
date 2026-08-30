@@ -12,14 +12,18 @@ const boundedClaim = [
   "State-of-the-art claim: not claimed; fastest statements are limited to admitted variants.",
   "A fastest statement applies only to the exact admitted artifacts and protocol named below.",
   "Framework, full-model, multi-workgroup, and differently shaped implementations are not comparable here.",
+  "The resource floor is an optimistic cold-HBM logical-payload roofline normalization, not a lower bound for the warmed-cache timing campaign.",
+  "It grants the single workgroup all whole-device bandwidth and peak compute across 256 CUs, and excludes dispatch, cache, occupancy, issue, and dependency-chain limits.",
 ];
 
 const evidence = "perf-evidence/gfx950-advanced-ablation-evidence-v1.json";
+const compatibility = "perf-evidence/gfx950-integrated-compatibility-v1.json";
+const boundInputs = "perf-evidence/mi350x-bound-inputs-v1.json";
 
 const protocol = [
   "FINAL ABLATION PROTOCOL",
   "Host: smci350-rck-g03-b19-03; physical GPU 6; gfx950:xnack-; HIP_VISIBLE_DEVICES unset",
-  "Measured source: da6c108d162bac8afd79e789ccf9b36ef8eb97a4; promoted production source: 4f9b2bf09db41e6ef38db1bb926c2fa7989d8e1f",
+  "Measured source: da6c108d162bac8afd79e789ccf9b36ef8eb97a4; promoted production source: c766ca761c492c4cd188047a497664f6b2ade278",
   "One process per variant; 1,000 warmups; 30 blocks x 100 samples; 20 block-rewarm dispatches",
   "Timer: ROCr HSA dispatch timestamps; hierarchical bootstrap with 10,000 repetitions and seed 950",
   "Correctness: independent CPU reference, immutable-input checks, guard canaries, preflight dispatch, and post-block validation",
@@ -29,7 +33,7 @@ const protocol = [
 const records: AdvancedPerformanceRecord[] = [
   {
     lessonId: "gfx950-advanced-moe",
-    evidencePath: `${evidence}; examples/gfx950_advanced_systems/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_systems/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [route-packed-reuse]: Compute each route once, broadcast stable top-2 choices, and reuse the packed route map.",
@@ -49,7 +53,9 @@ const records: AdvancedPerformanceRecord[] = [
       "TILE SHAPE ASSESSMENT: Retained Wave64 m16n16k128 expert work and exact 256-thread route/combine ownership; rejected maps did not pass the proof gate.",
       ...protocol,
       "THEORETICAL RESOURCE FLOORS",
-      "Derivation: max(compulsory bytes / 8 TB/s, counted FP32 ops / 144.2 TFLOP/s, mixed ops / 4.6 PFLOP/s).",
+      "Route derivation: max(4,880 B / 8 TB/s, 16,384 FP32 routing-dot ops / 144.2 TFLOP/s) = 0.610 ns.",
+      "Expert derivation: max(9,472 B / 8 TB/s, 196,608 mixed FP4/FP8 MFMA ops / 4.6 PFLOP/s) = 1.184 ns.",
+      "Combine derivation: max(3,072 B / 8 TB/s, 256 FP32 adds / 144.2 TFLOP/s) = 0.384 ns.",
       "Route floor 0.610 ns and measured/floor 32,131x; expert floor 1.184 ns and rank-0 measured/floor 32,129x; combine floor 0.384 ns and measured/floor 13,125x.",
       "ADMITTED COMPARATOR RESULT",
       "Eager expert scheduling is fastest among its two exact schedules. Route and combine expose the retained artifact plus documented compiler rejections.",
@@ -58,7 +64,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-kda-gdn-linear-attention",
-    evidencePath: `${evidence}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [decode-wave16-groups]: Replicate the 16-channel decode map over four wave16 groups.",
@@ -84,7 +90,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-indexed-sparse-attention",
-    evidencePath: `${evidence}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [sparse-native-mfma]: Stage one E4M3 key tile in 2,048 B LDS, issue four B8 transpose reads, then one m16n16k128 FP8 MFMA.",
@@ -110,7 +116,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-compressed-hybrid-attention",
-    evidencePath: `${evidence}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [hybrid-reciprocal]: Reuse one reciprocal across four local weights and one across three compressed-global weights.",
@@ -136,7 +142,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-attnres-gr-mhc",
-    evidencePath: `${evidence}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_attention/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [attnres-explicit]: Replace the four-depth loop with explicit logits and weights.",
@@ -158,7 +164,9 @@ const records: AdvancedPerformanceRecord[] = [
       "TILE SHAPE ASSESSMENT: Retained one Wave64 over exact 4x16 and 4x4 shapes.",
       ...protocol,
       "THEORETICAL RESOURCE FLOORS",
-      "AttnRes: max(576 B / 8 TB/s, 288 / 144.2 TFLOP/s) = 0.072 ns and measured/floor 69,444x; four-branch: 0.080 ns and 62,500x; mHC: 0.072 ns and 69,444x.",
+      "AttnRes derivation: max(576 B / 8 TB/s, 288 counted FP32 algebraic ops / 144.2 TFLOP/s) = 0.072 ns; 64 logical exponentials are outside the published peak term; measured/floor 69,444x.",
+      "Four-branch derivation: max(640 B / 8 TB/s, 320 counted FP32 algebraic ops / 144.2 TFLOP/s) = 0.080 ns; 64 logical exponentials are outside the published peak term; measured/floor 62,500x.",
+      "mHC derivation: max(576 B / 8 TB/s, 616 counted FP32 algebraic ops / 144.2 TFLOP/s) = 0.072 ns; 16 logical exponentials are outside the published peak term; measured/floor 69,444x.",
       "ADMITTED COMPARATOR RESULT",
       "Distributed mHC is fastest among two exact artifacts; AttnRes explicit is indistinguishable and four-branch explicit ties.",
       ...boundedClaim,
@@ -166,7 +174,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-speculative-mtp-verification",
-    evidencePath: `${evidence}; examples/gfx950_advanced_systems/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_systems/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [prefix-broadcast]: Compute each accepted prefix once and broadcast it to eight state elements.",
@@ -190,7 +198,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-ngram-embedding-gather",
-    evidencePath: `${evidence}; examples/gfx950_advanced_systems/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_systems/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [ascending-probe]: Probe all 16 slots in ascending order, using a final-probe specialization while preserving exact priority and lower-slot tie resolution.",
@@ -214,7 +222,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-muon-optimizer",
-    evidencePath: `${evidence}; examples/gfx950_advanced_systems/ablation-variants-v1.json; examples/gfx950_advanced_systems/optimization-evidence-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_advanced_systems/ablation-variants-v1.json; examples/gfx950_advanced_systems/optimization-evidence-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [stage-wave64]: Copy each exact 4x4 gradient shard with one Wave64 map.",
@@ -241,7 +249,7 @@ const records: AdvancedPerformanceRecord[] = [
   },
   {
     lessonId: "gfx950-gpt-oss-120b-megakernel",
-    evidencePath: `${evidence}; examples/gfx950_gpt_oss_decode/ablation-variants-v1.json`,
+    evidencePath: `${evidence}; ${compatibility}; ${boundInputs}; examples/gfx950_gpt_oss_decode/ablation-variants-v1.json`,
     lines: [
       "OPTIMIZATION STACK AND CONTRIBUTION BREAKDOWN",
       "OPTIMIZATION [parallel-router]: Assign two of 128 logits per Wave64 lane and merge stable top-4 choices.",
