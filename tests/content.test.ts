@@ -197,6 +197,15 @@ function expectAdvancedPerformanceContract(
   expect(code, `${lessonId}: no universal SOTA claim`).toContain(
     "not universal state-of-the-art claims",
   );
+  expect(code, `${lessonId}: official bound-input evidence`).toContain(
+    "perf-evidence/mi350x-bound-inputs-v1.json",
+  );
+  expect(code, `${lessonId}: cold-HBM bound boundary`).toContain(
+    "cold-HBM logical-payload roofline normalization",
+  );
+  expect(code, `${lessonId}: whole-device bound boundary`).toContain(
+    "across 256 CUs",
+  );
   expect(notice, `${lessonId}: visible SOTA disclaimer`).toContain(
     "no universal state-of-the-art claim is made",
   );
@@ -975,25 +984,25 @@ describe("curriculum integrity", () => {
 
   it("publishes exact bounded advanced gfx950 source and fail-closed production runners", () => {
     const expected = [
-      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
-      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
-      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
-      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
-      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
-      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
-      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
-      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
+      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
+      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
+      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
+      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
+      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
+      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
+      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
+      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
     ] as const;
 
     const excerptHashes = {
-      "gfx950-advanced-moe": ["0e73616a5460d1ba9b45510e87607d63f4bc0c33aa039bb0df89fd148957153d", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
-      "gfx950-kda-gdn-linear-attention": ["9e089bec41e2ef305e7fd7f023948ccffddfa2bec812fd5f23f42d25f07b0067", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
-      "gfx950-indexed-sparse-attention": ["503014732c2a8951ba0e8c53506aa3f076dc74fb416c27d4bcf469fca4320ea2", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
+      "gfx950-advanced-moe": ["a774500131396c95a4768d2ff174b48fe1823e389b36debcf77dd4e35bc9a676", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
+      "gfx950-kda-gdn-linear-attention": ["39c862ab23dc4f600d990987a6bd04d26282d3517fed0540bd98f8b7ff0b3d96", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
+      "gfx950-indexed-sparse-attention": ["8684d952e10438c4dd0bd4a6748010d04e38a7a911a69627ed388621a368b779", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
       "gfx950-compressed-hybrid-attention": ["4b905913f30edfb7e6e0b0a20893c14bd7ca1b656a3e99c6794efe1a2175df03", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
-      "gfx950-attnres-gr-mhc": ["fdeed2afcea1bd02c7970c5c3e3421ad1713350aa91c68ee8ccdbe81075659bb", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
-      "gfx950-speculative-mtp-verification": ["11d5c1e7a1099ac0838e01e8960b8947aee6f38d41ed3cf8481fcaa3172d15e4", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
-      "gfx950-ngram-embedding-gather": ["8878de47686ac3ad6f2bcfb0b0544fc95e71f6699374ec3f7d8e3debae19fb83", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
-      "gfx950-muon-optimizer": ["e6a0a9121377d2024da51817fcc4fa42487c14a159146c41929548bcf3c3b217", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
+      "gfx950-attnres-gr-mhc": ["5e9761447dfc694c713afe92f905867382a0c7f0069fe413806927d69c3863db", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
+      "gfx950-speculative-mtp-verification": ["7af417d630bff4724837b23cfc901045d1b059d352f85ea28391258c7c99d3ff", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
+      "gfx950-ngram-embedding-gather": ["1ef0490edaf92a38ea77417654c187988b53d0281446f8e42e7dcdb2a1c3621d", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
+      "gfx950-muon-optimizer": ["58e17e63a3a539c143c30e56997bfdd811d7c9dd8a3ae643c71976b194c64b43", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
     } as const;
 
     const productionRecords = {
@@ -1061,8 +1070,14 @@ describe("curriculum integrity", () => {
           kind: advancedCoreSourceTree === null ? "source-example" : "gpu-observed",
         }),
       ]);
+      const variantSourceCount =
+        lessonId === "gfx950-kda-gdn-linear-attention" ||
+        lessonId === "gfx950-attnres-gr-mhc"
+          ? 1
+          : 0;
       const expectedTabKinds = [
         "kernel",
+        ...Array.from({ length: variantSourceCount }, () => "kernel"),
         "reference",
         "comparison",
         "verus",
@@ -1089,7 +1104,7 @@ describe("curriculum integrity", () => {
         sourceFileSha256,
       );
 
-      const reference = advanced?.tabs[1];
+      const reference = advanced?.tabs.find((tab) => tab.kind === "reference");
       expect(reference?.kind).toBe("reference");
       expect(reference?.language).toBe("rust");
       expect(reference?.sourcePath).toBe(sourcePath.replace("kernel.rs", "reference.rs"));
@@ -1100,11 +1115,11 @@ describe("curriculum integrity", () => {
         expect(reference?.code).toContain(`pub fn ${exactReference}(`);
       }
       expect(reference?.code).toContain(referenceSymbol);
-      const comparison = advanced?.tabs[2];
+      const comparison = advanced?.tabs.find((tab) => tab.kind === "comparison");
       expect(comparison?.label).toBe("Equivalent HIP");
       expect(comparison?.code).toContain(hipSymbol);
-      expect(advanced?.tabs[3]?.kind).toBe("verus");
-      const host = advanced?.tabs[4];
+      expect(advanced?.tabs.some((tab) => tab.kind === "verus")).toBe(true);
+      const host = advanced?.tabs.find((tab) => tab.kind === "host");
       expect(host?.code).toContain(isa);
       expect(host?.code).toContain("cargo test --offline");
       expect(host?.code).toContain("pinned fe2o3 core checkout");
@@ -1143,6 +1158,7 @@ describe("curriculum integrity", () => {
         expect(evidence).toContain(`Portable namespace: ${record.namespace}`);
         expect(evidence).toContain(`Rust-produced LLVM SHA-256: ${record.llvmSha256}`);
         expect(evidence).toContain(`Rust-produced HSACO SHA-256: ${record.hsacoSha256}`);
+        expect(evidence).toContain(`Symbol-scoped ISA SHA-256: ${record.isaSha256}`);
         expect(evidence).toContain(`Rust numerical result: ${record.numericalResult}`);
         expect(evidence).toContain(`Acceptance tolerance: ${record.tolerance}`);
         expect(evidence).not.toContain("pending mi350 end-to-end execution");
@@ -1153,6 +1169,44 @@ describe("curriculum integrity", () => {
       expect(serialized).toContain("no production serving");
       expect(serialized).toContain("full distributed collective");
       expect(serialized).toContain("full-model-equivalence claim");
+    }
+  });
+
+  it("publishes exact status-labeled attention ablation Rust", () => {
+    const expected = [
+      [
+        "gfx950-kda-gdn-linear-attention",
+        "Wave16 decode ablation [FINAL-COMPATIBILITY]",
+        ["gfx950_kda_gdn_decode"],
+      ],
+      [
+        "gfx950-attnres-gr-mhc",
+        "Mixing ablations [FINAL-COMPATIBILITY]",
+        [
+          "gfx950_attnres_aggregate",
+          "gfx950_four_branch_residual",
+          "gfx950_mhc_sinkhorn_mix",
+        ],
+      ],
+    ] as const;
+    for (const [lessonId, label, symbols] of expected) {
+      const variant = lessons
+        .find((lesson) => lesson.id === lessonId)
+        ?.tabs.find((tab) => tab.label === label);
+      expect(variant).toMatchObject({
+        kind: "kernel",
+        language: "rust",
+        sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
+        sourceCommit: advancedCoreSourceCommit,
+        sourceSha256:
+          "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+        sourceDigestScope: "file",
+        explanatory: false,
+      });
+      expect(variant?.notice).toContain("Exact final-compatibility Rust ablation source");
+      for (const symbol of symbols) {
+        expect(variant?.code).toContain(`pub fn ${symbol}(`);
+      }
     }
   });
 
@@ -1167,6 +1221,12 @@ describe("curriculum integrity", () => {
     expect(lesson?.claims.map((claim) => claim.kind)).toEqual(["gpu-observed"]);
     expect(lesson?.tabs.map((tab) => tab.kind)).toEqual([
       "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
       "reference",
       "comparison",
       "verus",
@@ -1175,19 +1235,21 @@ describe("curriculum integrity", () => {
       "performance",
     ]);
 
-    const kernel = lesson?.tabs[0];
+    const kernel = lesson?.tabs.find(
+      (tab) => tab.sourcePath === "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    );
     expect(kernel).toMatchObject({
       label: "Rust kernel",
       language: "rust",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
       sourceCommit: advancedCoreSourceCommit,
-      sourceSha256: "61467901200208136e5ab71d8eb50d9c735b1fa41fbaa924f813d138f6d34aed",
+      sourceSha256: "6c10867e6dcb8b016e9f654f0ed1b357b128b4d466d896663ae365c837f0f0b0",
       explanatory: false,
     });
     expect(kernel?.code).toContain(
       "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
     );
-    const reference = lesson?.tabs[1];
+    const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/reference.rs",
@@ -1195,7 +1257,36 @@ describe("curriculum integrity", () => {
       explanatory: false,
     });
     expect(reference?.code).toContain("pub fn reference(");
-    expect(lesson?.tabs[2]?.code).toContain("gpt_oss_unfused_router");
+    const comparison = lesson?.tabs.find((tab) => tab.kind === "comparison");
+    expect(comparison?.label).toBe("Archived c138 unfused HIP");
+    expect(comparison?.code).toContain("gpt_oss_unfused_router");
+
+    const expectedVariants = [
+      ["Serial router ablation [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs", "060c5600b8522bea3f6245794809a15fbc468bee008f7b497e5c7f06740af841", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Held-fragment ablation [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs", "a2cc65e6e9c74f4523786706d994193d0d68d708386f9b29163b13bcd98e12d2", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Interleaved-store ablation [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs", "a31af40117e11ed6779ecb9d54cc597805449bbb04db47af7a005ca3da55d72e", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Materialized components [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_components.rs", "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1", "pub fn gfx950_gpt_oss_120b_router_v1("],
+      ["BF16 LDS pipeline [COMPILER-REJECTED]", "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs", "96e2e4c1ea1019aa30ed8ce5674671d0674687131b529ae15220965e2dcc7c79", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Scalar attention [COMPILER-REJECTED]", "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs", "0755e02ef766b8ae88ca876ba8cf16d0cdc8da1cebc05a0aa354b766fac57b49", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+    ] as const;
+    for (const [label, sourcePath, sourceSha256, symbol] of expectedVariants) {
+      const variant = lesson?.tabs.find((tab) => tab.label === label);
+      expect(variant).toMatchObject({
+        kind: "kernel",
+        language: "rust",
+        sourcePath,
+        sourceCommit: advancedCoreSourceCommit,
+        sourceSha256,
+        sourceDigestScope: "file",
+        explanatory: false,
+      });
+      expect(variant?.code).toContain(symbol);
+      expect(variant?.notice).toContain(
+        label.includes("COMPILER-REJECTED")
+          ? "compiler-rejected"
+          : "final-compatibility",
+      );
+    }
 
     const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code;
     expect(host).toContain("bash examples/gfx950_gpt_oss_decode/run-gfx950.sh");
@@ -1205,9 +1296,13 @@ describe("curriculum integrity", () => {
     expect(host).toContain("bash perf-evidence/run-gpt-oss-performance.sh");
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
     expect(result).toContain("Historical campaign commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
-    expect(result).toContain("Final integrated wrapper: passed at c1383e97 on MI350X gfx950");
+    expect(result).toContain("Final promoted-source wrapper: passed at c766ca761 on MI350X gfx950");
+    expect(result).toContain("Historical performance wrapper: passed at c1383e97 on MI350X gfx950");
+    expect(result).toContain("Final compatibility matrix: perf-evidence/gfx950-integrated-compatibility-v1.json; 32/32 cases passed");
     expect(result).toContain("Fused p5/p95: 1.059803 / 1.069283 ms");
-    expect(result).toContain("Exact unfused/fused ratio: 0.732979");
+    expect(result).toContain(
+      "Archived c138 HIP three-dispatch/fused ratio: 0.732979",
+    );
     expect(result).toContain("Outcome: fused is 1.3643x slower");
     expect(result).toContain("State-of-the-art claim: not claimed");
     expect(serializedLessonContent(lesson!.id)).not.toContain(
@@ -1257,6 +1352,53 @@ describe("curriculum integrity", () => {
     for (const symbol of Object.keys(advancedRustEvidence)) {
       expect(performanceText, symbol).toContain(`KERNEL: ${symbol}`);
     }
+    expect(performanceText).not.toContain("canonical early exit");
+    expect(performanceText).not.toContain("hidden 512");
+    expect(performanceText).not.toContain("0.1465%");
+
+    const performanceFor = (lessonId: string) =>
+      module10
+        .find((lesson) => lesson.id === lessonId)
+        ?.tabs.find((tab) => tab.kind === "performance")?.code ?? "";
+    expect(performanceFor("gfx950-advanced-moe")).toContain(
+      "No repeated software pipeline is used or implemented",
+    );
+    expect(performanceFor("gfx950-ngram-embedding-gather")).toContain(
+      "Probe all 16 slots in ascending order",
+    );
+    const muonPerformance = performanceFor("gfx950-muon-optimizer");
+    expect(muonPerformance).toContain(
+      "examples/gfx950_advanced_systems/optimization-evidence-v1.json",
+    );
+    expect(muonPerformance).toContain("publishable_claim=false");
+    expect(muonPerformance).toContain("historical and exploratory");
+    const gptPerformance = performanceFor("gfx950-gpt-oss-120b-megakernel");
+    expect(gptPerformance).toContain("hidden 2,880");
+    expect(gptPerformance).toContain("a 0.0375% median reduction");
+    expect(gptPerformance).toContain("da6 exact Rust component-materialization");
+
+    for (const candidateId of [
+      "prefill-ping-pong",
+      "sparse-lds-pingpong",
+      "sparse-tile-tuning",
+      "hybrid-lds-pingpong",
+      "mixing-lds-stage",
+      "transaction-prefetch",
+      "table-lds-stage",
+      "muon-iteration-pipeline",
+      "fp4-lds-pipeline",
+      "gpt-tile-tuning",
+    ]) {
+      expect(performanceText, candidateId).toMatch(
+        new RegExp(`OPTIMIZATION \\[${candidateId}\\]: [^\\n]*NOT IMPLEMENTED`, "u"),
+      );
+    }
+    expect(gptPerformance).toContain(
+      "OPTIMIZATION [bf16-lds-pipeline]: IMPLEMENTED; COMPILER-REJECTED",
+    );
+    const gptContent = serializedLessonContent("gfx950-gpt-oss-120b-megakernel");
+    expect(gptContent).toContain("archived c138 HIP three-dispatch comparator");
+    expect(gptContent).toContain("da6 exact Rust component-materialization ablation");
 
     const finalAdvanced = JSON.parse(
       readFileSync(
@@ -1293,7 +1435,7 @@ describe("curriculum integrity", () => {
       .find((lesson) => lesson.id === "gfx950-attnres-gr-mhc")
       ?.tabs.find((tab) => tab.kind === "performance")?.code;
     expect(mhc).toContain("a 1.448x speedup and 30.9392% reduction");
-    expect(mhc).toContain("mHC: 0.072 ns and 69,444x");
+    expect(mhc).toContain("mHC derivation: max(576 B / 8 TB/s, 616 counted FP32 algebraic ops / 144.2 TFLOP/s) = 0.072 ns");
     expect(mhc).toContain("independent latency is unavailable");
 
     const speculativeTab = module10
@@ -1340,6 +1482,7 @@ describe("curriculum integrity", () => {
       expect(evidence.sourceTree).toMatch(/^[0-9a-f]{40}$/u);
       expect(evidence.llvmSha256).toMatch(/^[0-9a-f]{64}$/u);
       expect(evidence.hsacoSha256).toMatch(/^[0-9a-f]{64}$/u);
+      expect(evidence.isaSha256).toMatch(/^[0-9a-f]{64}$/u);
       expect(evidence.numericalResult).not.toMatch(/\bpending\b/iu);
       expect(evidence.tolerance).not.toMatch(/\bpending\b/iu);
       expect(evidence.runtimeObservation).not.toMatch(/\bpending\b/iu);
@@ -1366,12 +1509,126 @@ describe("curriculum integrity", () => {
           namespace: "not-a-digest",
           llvmSha256: "0".repeat(64),
           hsacoSha256: "1".repeat(64),
+          isaSha256: "2".repeat(64),
           numericalResult: "max_error=0",
           tolerance: "absolute tolerance 1e-5",
           runtimeObservation: "mi350 fixture",
         },
       ),
     ).toThrow("noncanonical namespace");
+  });
+
+  it("pins the timing-free final gfx950 compatibility matrix to the promoted evidence", () => {
+    const matrix = JSON.parse(
+      readFileSync(
+        "perf-evidence/gfx950-integrated-compatibility-v1.json",
+        "utf8",
+      ),
+    );
+    expect(matrix).toMatchObject({
+      schema: "fe2o3.gfx950.integrated-compatibility-matrix.v1",
+      campaign: {
+        id: "gfx950-final-compatibility-c766ca761-gpu6",
+        source_commit: advancedCoreSourceCommit,
+        source_tree: advancedCoreSourceTree,
+        physical_gpu: 6,
+        rocr_visible_devices: "6",
+        hip_visible_devices: null,
+      },
+      summary: { cases: 32, passed: 32, rejected_candidates: 2 },
+    });
+    expect(matrix.claim_boundary.performance_measurements_included).toBe(false);
+    expect(matrix.cases).toHaveLength(32);
+    expect(matrix.cases.map((entry: { ordinal: number }) => entry.ordinal)).toEqual(
+      Array.from({ length: 32 }, (_, index) => index + 1),
+    );
+    for (const entry of matrix.cases) {
+      expect(entry.result).toBe("pass");
+      expect(entry.artifact).toMatchObject({
+        target: "gfx950:xnack-",
+        code_object_version: 6,
+        wavefront_size: 64,
+      });
+      for (const digest of [
+        entry.source_sha256,
+        entry.run_log.sha256,
+        entry.artifact.crate_binding_sha256,
+        entry.artifact.llvm_sha256,
+        entry.artifact.hsaco_sha256,
+        entry.artifact.isa_sha256,
+      ]) {
+        expect(digest).toMatch(/^[0-9a-f]{64}$/u);
+      }
+      expect(entry.source_blob).toMatch(/^[0-9a-f]{40}$/u);
+      expect(entry.source_path).toMatch(/^examples\/gfx950_/u);
+      expect(entry.run_log.file).toMatch(/^case\d{2}-.+\.log$/u);
+      expect(entry.numerical_results.length).toBeGreaterThan(0);
+      expect(entry.workloads.length).toBeGreaterThan(0);
+      for (const workload of entry.workloads) {
+        expect(workload.input_sha256).toMatch(/^[0-9a-f]{64}$/u);
+        expect(workload.buffers.length).toBeGreaterThan(0);
+        expect(
+          workload.buffers.some(
+            (buffer: { oracle: { kind: string } }) =>
+              buffer.oracle.kind.startsWith("cpu-reference-"),
+          ),
+        ).toBe(true);
+      }
+      expect(Object.values(entry.gates).every((gate) => gate === "pass")).toBe(true);
+    }
+
+    const canonicalOrdinals = new Map([
+      ["gfx950_kda_gdn_decode", 1],
+      ["gfx950_kda_gdn_prefill", 3],
+      ["gfx950_content_sparse_attention", 5],
+      ["gfx950_compressed_hybrid_attention", 8],
+      ["gfx950_attnres_aggregate", 9],
+      ["gfx950_four_branch_residual", 11],
+      ["gfx950_mhc_sinkhorn_mix", 14],
+      ["gfx950_moe_route_fp4_t16_e4_k2_v1", 15],
+      ["gfx950_moe_expert_rank_fp4_fp8_v1", 16],
+      ["gfx950_combine_expert_ranks_v1", 18],
+      ["gfx950_speculative_transaction_v1", 19],
+      ["gfx950_qwen_ngram_gather_v1", 21],
+      ["gfx950_stage_gradient_shard_v1", 23],
+      ["gfx950_muon_update_4x4_v1", 24],
+      ["gfx950_gpt_oss_120b_decode_megakernel_v1", 26],
+    ]);
+    for (const [symbol, evidence] of Object.entries(advancedRustEvidence)) {
+      const compatibility = matrix.cases.find(
+        (entry: { ordinal: number }) =>
+          entry.ordinal === canonicalOrdinals.get(symbol),
+      );
+      expect(compatibility.kernel_export).toBe(symbol);
+      expect(compatibility.artifact).toMatchObject({
+        crate_binding_sha256: evidence.namespace,
+        llvm_sha256: evidence.llvmSha256,
+        hsaco_sha256: evidence.hsacoSha256,
+        isa_sha256: evidence.isaSha256,
+      });
+    }
+
+    const prohibitedKeys: string[] = [];
+    const visit = (value: unknown): void => {
+      if (Array.isArray(value)) return value.forEach(visit);
+      if (!value || typeof value !== "object") return;
+      for (const [key, child] of Object.entries(value)) {
+        if (/timer|duration|latency|throughput/iu.test(key)) prohibitedKeys.push(key);
+        visit(child);
+      }
+    };
+    visit(matrix);
+    expect(prohibitedKeys).toEqual([]);
+    expect(matrix.rejected_candidates.map((entry: { variant: string }) => entry.variant)).toEqual([
+      "scalar-attention",
+      "pipelined-attention",
+    ]);
+    for (const rejection of matrix.rejected_candidates) {
+      expect(rejection.source_blob).toMatch(/^[0-9a-f]{40}$/u);
+      expect(rejection.source_sha256).toMatch(/^[0-9a-f]{64}$/u);
+      expect(rejection.rejection_log.sha256).toMatch(/^[0-9a-f]{64}$/u);
+      expect(rejection.diagnostic).toMatch(/call terminator|pipeline scalar/u);
+    }
   });
 
 
@@ -1413,10 +1670,10 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_low_precision/run-attention-gfx950.sh", "9253aa5c740671ff91d69c44917a75cb1dc7c69b6f596f6ed999ded9d6db93ff"],
       ["examples/gfx950_low_precision/gfx950-ocml-closure.sh", "4acd64af08347456aa9b8e2c105e1af7ce2946167e95496c02c5dc88e2544c6a"],
       ["examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest", "43b868ede4500d71ff0f81fe3db2b91cec5cf4c973befc1533adfac51d9accc6"],
-      ["examples/gfx950_advanced_attention/Cargo.lock", "71183e1227390ecbafc3a29534cc019eee8b84d8e3ddfee8b37c0d7b4175b050"],
+      ["examples/gfx950_advanced_attention/Cargo.lock", "b116346a8df0ed7013535122007e73c3b2f16e66a1fd7fe468dfd447e8bff4d1"],
       ["examples/gfx950_advanced_attention/Cargo.toml", "322cfc99028eb79da0796d45cb2f9590fb9b138d94087f1673abf6d1ebdb4d56"],
       ["examples/gfx950_advanced_attention/ablation-variants-v1.json", "1e20890c52965c2c0140d40175f8b23a09795c6123a398bfcc7aaa0603ede4d7"],
-      ["examples/gfx950_advanced_attention/README.md", "ef9b2fa2b92a17cc9d200b4510c802a9d8314349521a11ef3af6d4e22d3b26b4"],
+      ["examples/gfx950_advanced_attention/README.md", "ec7cc3f4180ee24a93c43b58fa547a9a4faf31fb83ed1b1a9f65109cb91363db"],
       ["examples/gfx950_advanced_attention/build_and_test.sh", "edfb9d27b52a1493c6f9371ed0944d6bdbca230971cf0efcff35133c5b59e17d"],
       ["examples/gfx950_advanced_attention/check_isa.sh", "2e9e76a93e2d66f13c489c68217bb1857a8b326861608c7cb04ca13fba081e45"],
       ["examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh", "978e7f09899298c92bf44802b268e02480b9e00d6d93bf9720528ef649552985"],
@@ -1425,21 +1682,22 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh", "6709edbd2da0424fbfbaeb02d4b612e4a78ca8e941929dc9ecc2ecd3ecaef779"],
       ["examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh", "972e38c13f18c85fa087a3649d3f7ea4f5c7ebb7b97709b131386f4d0adc830c"],
       ["examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh", "9c4a4c2fceee19680e6f6a844966f591ef12feb1093b0300750a4448f22d7bf5"],
-      ["examples/gfx950_advanced_attention/run-gfx950.sh", "d9bd19e9d7b69673b631220930b154122648c3cafaab93d4ef4716567485edc4"],
+      ["examples/gfx950_advanced_attention/run-gfx950.sh", "7620da286b83e41bc4b5accd276fe0d38a429e9e7cb6cbb23a5cdd3e6b53972a"],
       ["examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh", "b52f355e42d920435f12f46c4727bafdcbb89460ffe7ade9a66170d14123fd07"],
       ["examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh", "0546e3565717c05a5680420f5c87e1ee34b89ccce0d25f153bd3740cea6c3788"],
       ["examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh", "5e17ad7d3e87b67342b49eba0615f106051827d664eea228780b80a05ef81b26"],
-      ["examples/gfx950_advanced_attention/src/ablation.rs", "b5b1fc74088adf33ef56a341339faf0378280d51938632597366eb5eed2a6337"],
-      ["examples/gfx950_advanced_attention/src/kernel.rs", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24"],
+      ["examples/gfx950_advanced_attention/src/ablation.rs", "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a"],
+      ["examples/gfx950_advanced_attention/src/kernel.rs", "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e"],
       ["examples/gfx950_advanced_attention/src/reference.rs", "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9"],
       ["examples/gfx950_advanced_attention/src/lib.rs", "2109db5e66df005313850143c1a936987bcae73665e35bf8c9b84c6ceebfd664"],
       ["examples/gfx950_advanced_attention/test-extractor-runtime.sh", "47f0fa7b258d7b59dae1da26377a8b5acfe992ddf62511f96cf24d7ab4549363"],
-      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "45031d4633805a3282609afa5beec14864e198ab6dbd2f2b5a874b74ad5ecc3b"],
+      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "9442098d9579d697e896355f47a70916dfa96abc858315b19f70c8984e7546b0"],
       ["examples/gfx950_advanced_attention/tests/reference.rs", "fd2b801e20d8d53fbc53446ebf14866d7855ec9c10b1970251b020af8c74a1f8"],
-      ["examples/gfx950_advanced_systems/Cargo.lock", "34002f1e32b90e21f19d2ab9283b0f92b60d4c59367ad18fad0ece4ebfa8b525"],
+      ["examples/gfx950_advanced_systems/Cargo.lock", "223572e69b42b6e54f55935c3e1e1cf54b152466ed0d61acdb97010d647ebf1c"],
       ["examples/gfx950_advanced_systems/Cargo.toml", "4bb727180242b4f1a55693ecf2abcd87026e324cbd208d9c6a6970a45ae681e7"],
-      ["examples/gfx950_advanced_systems/ablation-variants-v1.json", "6ad96f11a17cea5e40332616464d44fcb14ff9107f4b4618ebe68df20fe83bf8"],
-      ["examples/gfx950_advanced_systems/README.md", "f9eb2e727dbe6661ef69a882c684f2968797eeefb1133730d2560b9c3cb2315b"],
+      ["examples/gfx950_advanced_systems/ablation-variants-v1.json", "e222f3bef1be96cd946b1847a8ac9b5341b8c67c8aeb0b6d4fd9d5a5268b3bba"],
+      ["examples/gfx950_advanced_systems/optimization-evidence-v1.json", "b39ef177352261c3d33a6ea1c6804707ad8fb52de1641175308808ce09c72956"],
+      ["examples/gfx950_advanced_systems/README.md", "2888360c965442ab0b4f5999bbe81d59eb4bb8fae66773408d730ff050444f25"],
       ["examples/gfx950_advanced_systems/build_and_test.sh", "20f05e523e56aa1fff05f5d766960ab0539dfcc2d1dd2d33405a15725c715d54"],
       ["examples/gfx950_advanced_systems/check_isa.sh", "7a115cbdabc14575f597b35f8443a6d9db36261fbd8d31551447c55a02196b53"],
       ["examples/gfx950_advanced_systems/gfx950_advanced_systems.hip", "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5"],
@@ -1452,32 +1710,36 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "d25726c4015a35e05ab31c8fa7f7f8f04cc10686727f982adb86eeda36d10da1"],
       ["examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "a85a7c2317f10077dcf97c1df9e2d95326a843e6a325dce3062ae4d06e8629fd"],
       ["examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh", "7f2bcc17211dcfc2b8234e0e1842a7f4b6166f8d31672636ee89f9604092f3c5"],
-      ["examples/gfx950_advanced_systems/src/kernel.rs", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d"],
+      ["examples/gfx950_advanced_systems/src/kernel.rs", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6"],
       ["examples/gfx950_advanced_systems/src/reference.rs", "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd"],
       ["examples/gfx950_advanced_systems/src/lib.rs", "3ae59a0e6d0c36afccc1518d3bd418452a83297bcc59b71f5172fdd38c932f95"],
       ["examples/gfx950_advanced_systems/tests/references.rs", "dd16aa4d15c630a8756b5d96a0d505c8cbfd6cd7a4aa77692891304da219f5dd"],
-      ["examples/gfx950_advanced_systems/tests/source.rs", "0e2dba16c1c1870e9e65813c126b676d8c70ab875d7a7d3c4ba98562d334e919"],
-      ["examples/gfx950_gpt_oss_decode/Cargo.lock", "221120c138c21bc740778c195c73d28fa0487b05095bf4e024bb9d30e30d43ec"],
+      ["examples/gfx950_advanced_systems/tests/source.rs", "04535fabdb54d7d0f10c8b9f913d774d33506c92b51c39420a0329e3b84749f1"],
+      ["examples/gfx950_gpt_oss_decode/Cargo.lock", "da37f44ba68cd16107506e418830e63a11099de15d9f8235daeccc9522c0f09b"],
       ["examples/gfx950_gpt_oss_decode/Cargo.toml", "ccae3bc056ca2487a47f04a840b89247e24e7ff3b648674dbadbbc9ce60de299"],
       ["examples/gfx950_gpt_oss_decode/README.md", "17c37981f54857f21d51edb045de965b8d007736d0cb1954c52251bae6fd8861"],
-      ["examples/gfx950_gpt_oss_decode/ablation-variants-v1.json", "85b79828ba101ccfa5c64646dc4472457c2743a3739a1a0da5f9c94469a23094"],
+      ["examples/gfx950_gpt_oss_decode/ablation-variants-v1.json", "716f7f39909268834e353fc296185fa01dd436a54d9c06b52445a71f1c36bd04"],
       ["examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip", "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b"],
       ["examples/gfx950_gpt_oss_decode/run-gfx950.sh", "b88b02df8b6c7b3ef7de9d839d4be742eb25f3e56a59b634b559408fe7e206a3"],
       ["examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "413b4d43426e3227a3166c9703dd5704a9a4b798722a85fb36442e6ed250b787"],
       ["examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh", "bd6df83ce6a9b6b2db11c5d18e6ee6fff283c7ef122481b44fffc90d47b532da"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel.rs", "4a07238304a727c5a5227f58fac4a05ac10e905ac802400977968af177c32361"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_components.rs", "fd2b8000c664d4d6464bbc745c2d6878652e4e2a65c02872a210023b5df1ce38"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs", "081ee76498d682fd5c2f82ada424daa5c21ef915cbffffcfa7e6b089e3220abb"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs", "41e8ce236f7e506becfe0ec8f6ead54b09ef21736e7f86dfe692e8d8570a6503"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs", "ab528db753b62f91c2ed5129dbd35b5d9ed7a04ace1b669c4e073997b5062dbb"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs", "3f9fe7050757ab450bba837de73d574f4423a2f5752646f11d388eeac87311db"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs", "37314605a50b7c3a1060c1afa72919476ba630ed5d3997324e4976116c972359"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel.rs", "b84b16ed5797fdcf5bdf05f603823f47bfa9839f017921d92bd0bcfbd73aecb6"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_components.rs", "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs", "a2cc65e6e9c74f4523786706d994193d0d68d708386f9b29163b13bcd98e12d2"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs", "a31af40117e11ed6779ecb9d54cc597805449bbb04db47af7a005ca3da55d72e"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs", "96e2e4c1ea1019aa30ed8ce5674671d0674687131b529ae15220965e2dcc7c79"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs", "060c5600b8522bea3f6245794809a15fbc468bee008f7b497e5c7f06740af841"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs", "0755e02ef766b8ae88ca876ba8cf16d0cdc8da1cebc05a0aa354b766fac57b49"],
       ["examples/gfx950_gpt_oss_decode/src/lib.rs", "a0d8a54c855c2bf9a0b1c20dab682f9ece1370e479d9ea9b85882a7586ad6949"],
       ["examples/gfx950_gpt_oss_decode/src/reference.rs", "1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05"],
       ["examples/gfx950_gpt_oss_decode/tests/reference.rs", "60156d4d1c2d932e00c792b3cb65b63784131b1919f3a97cd83d29b4e8ec0e94"],
-      ["examples/gfx950_gpt_oss_decode/tests/source.rs", "da25cd80e48123248b44d002c80efa19c182c0fe43351afa472d8f368df28630"],
+      ["examples/gfx950_gpt_oss_decode/tests/source.rs", "f6f36b7082eb9376c5985f5b6ba85a9cae2ab91adebf0fae3f7a3318ccc37227"],
       ["perf-evidence/gpt-oss-layer-tile-evidence-v1.json", "65ae89cdba30261d4dc3dc92a295f392e95b7bcded67f721c48defd8de17635a"],
       ["perf-evidence/gfx950-advanced-ablation-evidence-v1.json", "da0bf8e61151ca1ae15dbaf57743a840e2099556c3d20eebfe0c43d4ec792ec5"],
+      ["perf-evidence/gfx950-integrated-compatibility-v1.json", "803835efa3e9bd973a40791184e50cfcbefa60d22af7fb02c9d45e9f6c191a59"],
+      ["perf-evidence/mi350x-bound-inputs-v1.json", "79057257dcba07cec6adeed2341c8cb7e8ccdcef231a7c7b9687cb562f49ab49"],
+      ["perf-evidence/gfx950-rejection-logs/scalar-attention.log", "033c71aa06489832eff24ef48abcd451924b1950959546f8f29acb39ac022c14"],
+      ["perf-evidence/gfx950-rejection-logs/pipelined-attention.log", "ddea01325d7723ab42cec98c7c90e48edd681d38c5fbe97a6f35e1045e6e3066"],
       ["perf-evidence/gfx950-advanced-evidence-v1.json", "550b290ec4e8dbf43fa338f31fda88199c6f8d86ae55f9570789bac7b968fd6a"],
       ["perf-evidence/run-gpt-oss-performance.sh", "e4ab1ba9b2f7ce2489bf163922d9cdb4bbf01591643cc9aef0d4b30db175f28f"],
       ["perf-evidence/run-gfx950-advanced-ablation.sh", "adb6ec6814935a8023eb9f0b65cedb110768e2a795aa8907968650fc044629ab"],

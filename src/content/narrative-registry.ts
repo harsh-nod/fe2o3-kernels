@@ -2679,16 +2679,16 @@ const narrativeRegistry = deepFreeze({
         "type": "steps",
         "items": [
           "Run examples/gfx950_gpt_oss_decode/run-gfx950.sh to build the ordinary Rust source through gfx950 COV6 HSACO, inspect its symbol-scoped ISA, and execute the independent HSA oracle.",
-          "Run examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh for the exact three-dispatch HIP router, attention, and expert comparator using the same deterministic fixture.",
+          "Run examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh for the archived c138 HIP three-dispatch router, attention, and expert comparator using the same deterministic fixture.",
           "Run perf-evidence/run-gpt-oss-performance.sh for five fresh processes per variant in alternating AB/BA order and retain all artifact and raw-record digests.",
-          "Compare the 1.064644 ms fused median with the 0.780362 ms exact unfused median, then derive the 188.7465 ns resource floor from 1,509,972 compulsory bytes and the audited operation ledger."
+          "Compare the archived c138 fused median of 1.064644 ms with its HIP three-dispatch median of 0.780362 ms, then derive the 188.7465 ns resource floor from 1,509,972 compulsory bytes and the audited operation ledger."
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Fusion lost for this admitted tile",
-        "text": "The fused kernel is 1.3643x slower than the exact unfused comparator. Sequential MXFP4 fragment consumption still improves the fused implementation by 14.1268% and removes 44 VGPRs, but that ablation does not reverse the comparator result. No fastest or state-of-the-art claim is made."
+        "text": "In the archived c138 HIP comparison, the fused kernel is 1.3643x slower than the three-dispatch comparator. Sequential MXFP4 fragment consumption still improves that fused implementation by 14.1268% and removes 44 VGPRs, but that ablation does not reverse the archived comparator result. The newer da6 exact Rust component-materialization ablation is a separate campaign. No fastest or state-of-the-art claim is made."
       },
       {
         "type": "callout",

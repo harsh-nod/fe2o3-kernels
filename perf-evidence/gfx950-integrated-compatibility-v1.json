@@ -1,0 +1,4286 @@
+{
+  "schema": "fe2o3.gfx950.integrated-compatibility-matrix.v1",
+  "claim_boundary": {
+    "scope": "exact fixed-shape production Rust artifacts and ablation variants",
+    "performance_measurements_included": false,
+    "universal_state_of_the_art_claim": false,
+    "whole_model_claim": false,
+    "note": "This timing-free matrix records compilation, ISA, ABI, workload identity, and numerical compatibility. Historical performance evidence remains a separate artifact."
+  },
+  "campaign": {
+    "id": "gfx950-final-compatibility-c766ca761-gpu6",
+    "observed_date": "2026-08-30",
+    "source_commit": "c766ca761c492c4cd188047a497664f6b2ade278",
+    "source_tree": "cbda6eba10b34acb3eec93c6e504462fca3c8705",
+    "source_registry_path": "examples/gfx950_gpt_oss_decode/ablation-variants-v1.json",
+    "source_registry_blob": "5e7b1b77b13f780e8195ef3dff93215d1e0f9082",
+    "source_registry_sha256": "716f7f39909268834e353fc296185fa01dd436a54d9c06b52445a71f1c36bd04",
+    "host": "smci350-rck-g03-b19-03",
+    "ssh_alias": "mi350",
+    "physical_gpu": 6,
+    "gpu_unique_id": "0x92050148915dd40c",
+    "rocr_visible_devices": "6",
+    "hip_visible_devices": null,
+    "rocm_version": "7.2.1",
+    "rust_toolchain": "nightly-2026-04-03",
+    "environment_sha256": "62748e0523c0f515579af697b433d6d08442f1347a3cb92328454450e5f067a7",
+    "results_tsv_sha256": "ad8c60e2aff6d18861d0bb5021439f971e49978def9ec27740fac57018bdf8f9",
+    "campaign_checksums_sha256": "f0d832651357d94f880f6370774cb8cf60d305fe51f6a75c2c4f91af2e8b09e4",
+    "input_identity_jsonl_sha256": "27255006658df45e6fda35184fbe8c0f53c83d9432e34370a2fd6005888a320f",
+    "input_identity_checksum_file_sha256": "fd5678cc9f29f613b56882f7fda406a5fe65bdb81bed7bffda4b7bbddf34b46a",
+    "retained_remote_root": "/home/harmenon/perf-runs/gfx950-final-compatibility-c766ca761-gpu6"
+  },
+  "summary": {
+    "cases": 32,
+    "passed": 32,
+    "rejected_candidates": 2
+  },
+  "cases": [
+    {
+      "ordinal": 1,
+      "suite": "attention",
+      "feature": "kernel-kda-decode",
+      "variant": "baseline",
+      "kernel_export": "gfx950_kda_gdn_decode",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "1bb95ea1c1a6dba00f16cefba570323638c550b4df1192d82c45817088520f10",
+        "llvm_sha256": "294b07e5a4757d3eaba389b6269ce9b886bf41bbe437bfd4f21bfb6f9c91f65c",
+        "hsaco_sha256": "5a16d32486c6a424c680ec200a8fcc6941115f3a2953ec6a7fad0e383ce4a6d5",
+        "isa_sha256": "d1733f05e64ff6edfa7964fd7e6bbb7aabe100542510b3e4e84dea33842ef694",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case01-attention-kernel-kda-decode-baseline.log",
+        "sha256": "e692bafa0358ca86c022a75ff4a1dac3c25977e5e1b36b414d86b31bff877742"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 192,
+              "elements": 48,
+              "immutable": true,
+              "initial_sha256": "47f16737755a107d403415b933f19b76a22d3913005e2107ce1dd8e320963304",
+              "name": "history",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "613a865ec6d548bc825600b3e99690a8450f032c64e85a4a9feae617af9bbf57",
+              "name": "gate_input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "b0603de59a43266009a4918a3ae58c7d8afdc204b21912ae7814075c3216da3d",
+              "name": "state",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 12,
+              "elements": 3,
+              "immutable": true,
+              "initial_sha256": "e107318e465b0f341c132ada778340731fe9e82b7ba382bad45460f8c4ed5187",
+              "name": "convolution_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "state_output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "normalized_output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 KDA/GDN decode",
+          "input_sha256": "21db0b4adee7db415bc80d44147919c20b7de84fcb501cb1d8e4971334a86a2d"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "state_output outputs=16 max_absolute_error=7.450580597e-8",
+        "normalized_output outputs=16 max_absolute_error=4.172325134e-7"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 2,
+      "suite": "attention",
+      "feature": "kernel-kda-decode-wave-tiled-v1",
+      "variant": "wave-tiled",
+      "kernel_export": "gfx950_kda_gdn_decode",
+      "source_path": "examples/gfx950_advanced_attention/src/ablation.rs",
+      "source_blob": "e0f7119c5214250527f417185ea6957bb4b98016",
+      "source_sha256": "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+      "artifact": {
+        "crate_binding_sha256": "8694f5eade82ca24253b385db2193a3828e5be457049e9ebfd6cc05e300abf00",
+        "llvm_sha256": "289e4b121ed1f1153932145bc41e01887779bf5f6757f1e7813d79192966c253",
+        "hsaco_sha256": "d36850cfcacaa630b1367e4f91f0b1e51b9045d1c7b884acf2fe1048201054b9",
+        "isa_sha256": "c0db1226a3c2bffdbe27aa43c147e65b5ab5f6d2805f0cddbf4b932838a99c6a",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case02-attention-kernel-kda-decode-wave-tiled-v1-wave-tiled.log",
+        "sha256": "91203634d83bf0bc462b6a255aa16988db303ad4ba479977d37ca9598741c5a9"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 192,
+              "elements": 48,
+              "immutable": true,
+              "initial_sha256": "47f16737755a107d403415b933f19b76a22d3913005e2107ce1dd8e320963304",
+              "name": "history",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "613a865ec6d548bc825600b3e99690a8450f032c64e85a4a9feae617af9bbf57",
+              "name": "gate_input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "b0603de59a43266009a4918a3ae58c7d8afdc204b21912ae7814075c3216da3d",
+              "name": "state",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 12,
+              "elements": 3,
+              "immutable": true,
+              "initial_sha256": "e107318e465b0f341c132ada778340731fe9e82b7ba382bad45460f8c4ed5187",
+              "name": "convolution_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "state_output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "normalized_output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 KDA/GDN decode",
+          "input_sha256": "21db0b4adee7db415bc80d44147919c20b7de84fcb501cb1d8e4971334a86a2d"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "state_output outputs=16 max_absolute_error=7.450580597e-8",
+        "normalized_output outputs=16 max_absolute_error=4.172325134e-7"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 3,
+      "suite": "attention",
+      "feature": "kernel-kda-prefill",
+      "variant": "baseline",
+      "kernel_export": "gfx950_kda_gdn_prefill",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "65c813046838ac237dbc845ddb78d0b61db8c031914908a6a0a1304a338e68c0",
+        "llvm_sha256": "b610622936ed2c4a25cb55504c1d9ce8d570ba1f816d62c6dad4aa6f3c6b9dfc",
+        "hsaco_sha256": "58536eb9abf290821b3d85d39c262ed5b49ac8d835ee959b2c36fa9446998bfa",
+        "isa_sha256": "cdad91e4be1e01c091f5c9342ea17e8a9ef80c7b356eda9f014c62bf283f674a",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case03-attention-kernel-kda-prefill-baseline.log",
+        "sha256": "3261c66f20738508ab53231713b86889d310cf69c779924017b101711e0d0f36"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 512,
+              "elements": 128,
+              "immutable": true,
+              "initial_sha256": "0d78a5eefbf8d203d7f8e2347226150ce2f2870f0e4d6abdf58fd1ac7bc92065",
+              "name": "input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 512,
+              "elements": 128,
+              "immutable": true,
+              "initial_sha256": "cef8bf7edd9e93d8733f81430cf295008a1020d0a363ae28ee2ebf0ab4a0fe27",
+              "name": "gate_input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "b0603de59a43266009a4918a3ae58c7d8afdc204b21912ae7814075c3216da3d",
+              "name": "initial_state",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 12,
+              "elements": 3,
+              "immutable": true,
+              "initial_sha256": "e107318e465b0f341c132ada778340731fe9e82b7ba382bad45460f8c4ed5187",
+              "name": "convolution_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "final_state",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "normalized_output_first",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "normalized_output_second",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 KDA/GDN prefill",
+          "input_sha256": "28714e7a41d1fa13a6c2b57da7037df881ede851fcb6c2d1346c337d68a19b72"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "final_state outputs=16 max_absolute_error=7.450580597e-8",
+        "normalized_output_first outputs=64 max_absolute_error=8.642673492e-7",
+        "normalized_output_second outputs=64 max_absolute_error=1.072883606e-6"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 4,
+      "suite": "attention",
+      "feature": "kernel-kda-prefill-channel-mask-v1",
+      "variant": "channel-mask",
+      "kernel_export": "gfx950_kda_gdn_prefill",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "a615c0a65c792796355f0c284c3964ec7f3a5485546a907d5b6e1876ec240a9f",
+        "llvm_sha256": "362226a3566444279cc1f971b7ba5973c6109aced18cdae07b0cb62f11efc360",
+        "hsaco_sha256": "58536eb9abf290821b3d85d39c262ed5b49ac8d835ee959b2c36fa9446998bfa",
+        "isa_sha256": "0ad46b5a18251dc89b8b214ca1153ef97ccab88cdc7199047f20189e32f03b3c",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case04-attention-kernel-kda-prefill-channel-mask-v1-channel-mask.log",
+        "sha256": "02eff32b5d8aebb408a661492b54a8a87c2389989266fb853c956f245181c232"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 512,
+              "elements": 128,
+              "immutable": true,
+              "initial_sha256": "0d78a5eefbf8d203d7f8e2347226150ce2f2870f0e4d6abdf58fd1ac7bc92065",
+              "name": "input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 512,
+              "elements": 128,
+              "immutable": true,
+              "initial_sha256": "cef8bf7edd9e93d8733f81430cf295008a1020d0a363ae28ee2ebf0ab4a0fe27",
+              "name": "gate_input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "b0603de59a43266009a4918a3ae58c7d8afdc204b21912ae7814075c3216da3d",
+              "name": "initial_state",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 12,
+              "elements": 3,
+              "immutable": true,
+              "initial_sha256": "e107318e465b0f341c132ada778340731fe9e82b7ba382bad45460f8c4ed5187",
+              "name": "convolution_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "final_state",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "normalized_output_first",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "normalized_output_second",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 KDA/GDN prefill",
+          "input_sha256": "28714e7a41d1fa13a6c2b57da7037df881ede851fcb6c2d1346c337d68a19b72"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "final_state outputs=16 max_absolute_error=7.450580597e-8",
+        "normalized_output_first outputs=64 max_absolute_error=8.642673492e-7",
+        "normalized_output_second outputs=64 max_absolute_error=1.072883606e-6"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 5,
+      "suite": "attention",
+      "feature": "kernel-content-sparse-attention",
+      "variant": "baseline",
+      "kernel_export": "gfx950_content_sparse_attention",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "8e4b6794b9080758a96900d9f3bedc81f043b9c733ce0348fd3d56ab46e4ccf7",
+        "llvm_sha256": "2ff295eec904f464d0379dc7c5ba1a0223c32689fc9699745cab969c3f4f89e7",
+        "hsaco_sha256": "be4eb0216b5f0a8d431e4b07a61f7ab0e99dadfbaf7eca60c067088a54110a24",
+        "isa_sha256": "af1d6c6c51d5c68d4efd50a81776e2d9a706b49485b18009bb46423c8f14c6a7",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case05-attention-kernel-content-sparse-attention-baseline.log",
+        "sha256": "267537d9606205679473391ad9e7aed988cf1b70415020876111d4a322eac058"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "758764b983b1e830bc80bf0b5c55d49499613d6930a36f06691c2f3ef40559f9",
+              "name": "q",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "1020785a576172513527d21e8b03930be82e9c03ec74564c5cf7431aa8bf159a",
+              "name": "k",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "69026cdcd631d2c37f12e3b0c57578a4fe50a588b3577e9ebcb35f3fc91c4b1a",
+              "name": "v",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "24703a170e09e2095f05b9a3b701f08685e2181fe6ccd6efd5f96c87100d5dec",
+              "name": "content_scores",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.005",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 44,
+              "elements": 3,
+              "immutable": false,
+              "initial_sha256": "de5ffb8fc94e01ce5e344e420e05a8da93a080ecbd2c2c86af8a025c9781dd4d",
+              "name": "selected_output",
+              "oracle": {
+                "elements": 3,
+                "kind": "cpu-reference-u32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 content sparse attention",
+          "input_sha256": "4f9a7fdb27b3a8a8d9e43181a699f7a7e27174b5b8a6165f2fb0886245a97fa3"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=0.000000000e0",
+        "selected_output exact_u32_outputs=3"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 6,
+      "suite": "attention",
+      "feature": "kernel-content-sparse-attention-reciprocal-reuse-v1",
+      "variant": "reciprocal-reuse",
+      "kernel_export": "gfx950_content_sparse_attention",
+      "source_path": "examples/gfx950_advanced_attention/src/ablation.rs",
+      "source_blob": "e0f7119c5214250527f417185ea6957bb4b98016",
+      "source_sha256": "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+      "artifact": {
+        "crate_binding_sha256": "f218efb0354f7130940595fdb01023c6a5ec4dfd290be3858934c069d0db78b7",
+        "llvm_sha256": "d03164e265774144ccad4948629940f6b43987fd0768ffd6f996743fbaf9b987",
+        "hsaco_sha256": "a1511008987ffe58e25355b96ce5ccc865d843296ba85bf24f93e30e859009c3",
+        "isa_sha256": "078a91a05890ddd4130505c3c8a425e375e9ca090161c22926e45f02bb812baa",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case06-attention-kernel-content-sparse-attention-reciprocal-reuse-v1-reciprocal-reuse.log",
+        "sha256": "e8f93edcbf0a482f990a3eaea249839a4390f56647766331ff68804d2bbd11c4"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "758764b983b1e830bc80bf0b5c55d49499613d6930a36f06691c2f3ef40559f9",
+              "name": "q",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "1020785a576172513527d21e8b03930be82e9c03ec74564c5cf7431aa8bf159a",
+              "name": "k",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "69026cdcd631d2c37f12e3b0c57578a4fe50a588b3577e9ebcb35f3fc91c4b1a",
+              "name": "v",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "24703a170e09e2095f05b9a3b701f08685e2181fe6ccd6efd5f96c87100d5dec",
+              "name": "content_scores",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.005",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 44,
+              "elements": 3,
+              "immutable": false,
+              "initial_sha256": "de5ffb8fc94e01ce5e344e420e05a8da93a080ecbd2c2c86af8a025c9781dd4d",
+              "name": "selected_output",
+              "oracle": {
+                "elements": 3,
+                "kind": "cpu-reference-u32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 content sparse attention",
+          "input_sha256": "4f9a7fdb27b3a8a8d9e43181a699f7a7e27174b5b8a6165f2fb0886245a97fa3"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=5.960464478e-8",
+        "selected_output exact_u32_outputs=3"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 7,
+      "suite": "attention",
+      "feature": "kernel-compressed-hybrid-attention-division-baseline-v1",
+      "variant": "division-baseline",
+      "kernel_export": "gfx950_compressed_hybrid_attention",
+      "source_path": "examples/gfx950_advanced_attention/src/ablation.rs",
+      "source_blob": "e0f7119c5214250527f417185ea6957bb4b98016",
+      "source_sha256": "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+      "artifact": {
+        "crate_binding_sha256": "df561e677c408c086c041faff22c05436c173edc2e4f9deda3eeaca93dc2a32b",
+        "llvm_sha256": "e1aa55d93e840317f23213164879457ef74c911129ad83776821379f7317d2a8",
+        "hsaco_sha256": "55c7c310fcd3a471a04770972b14821e1d9c7dc9b35020c5e1f45d9b1ea4c0da",
+        "isa_sha256": "2a4d5f1795a3db31764164c5a5f0b641c556946de463d4d2681fb05a0a7209ca",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case07-attention-kernel-compressed-hybrid-attention-division-baseline-v1-division-baseline.log",
+        "sha256": "ebf6943f9522b809ea2e1fe1108e3e5315873c1bf82e940008945101683e034f"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "758764b983b1e830bc80bf0b5c55d49499613d6930a36f06691c2f3ef40559f9",
+              "name": "q",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "1020785a576172513527d21e8b03930be82e9c03ec74564c5cf7431aa8bf159a",
+              "name": "k",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "69026cdcd631d2c37f12e3b0c57578a4fe50a588b3577e9ebcb35f3fc91c4b1a",
+              "name": "v",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "4065bdcc88fca8f6080ab7206c78194d12a87b4b056ec6dbe112205526b863ae",
+              "name": "token_bias",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.005",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 compressed hybrid attention",
+          "input_sha256": "d7d2373d744328b5b5204abd092363fdfde1005ec45fe9c0f5b265f6efcd82d0"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 8,
+      "suite": "attention",
+      "feature": "kernel-compressed-hybrid-attention",
+      "variant": "reciprocal-reuse",
+      "kernel_export": "gfx950_compressed_hybrid_attention",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "c8cf1919826911b62fad830db644250616be68fd3aa252db280fb6cbf9157d3b",
+        "llvm_sha256": "1b37ee1c28c98fa0e74c6712cf8f70eea5d39edc55ac4c97595fc2218e93aa30",
+        "hsaco_sha256": "86cf8a4b14d4d40a241c22a0cf4488c5ce8684ecea1a4dd3ca4d70f53cc15e1a",
+        "isa_sha256": "c671acf65d5893189a084e2bf4b0a016bee658dd380f727055c730eee79f5d56",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case08-attention-kernel-compressed-hybrid-attention-reciprocal-reuse.log",
+        "sha256": "3b58350c0f6bdba8171b581e4f16e30c3369a73907034d1d2f452c828da2e18b"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "758764b983b1e830bc80bf0b5c55d49499613d6930a36f06691c2f3ef40559f9",
+              "name": "q",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "1020785a576172513527d21e8b03930be82e9c03ec74564c5cf7431aa8bf159a",
+              "name": "k",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "69026cdcd631d2c37f12e3b0c57578a4fe50a588b3577e9ebcb35f3fc91c4b1a",
+              "name": "v",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "4065bdcc88fca8f6080ab7206c78194d12a87b4b056ec6dbe112205526b863ae",
+              "name": "token_bias",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.005",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 compressed hybrid attention",
+          "input_sha256": "d7d2373d744328b5b5204abd092363fdfde1005ec45fe9c0f5b265f6efcd82d0"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=5.960464478e-8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 9,
+      "suite": "attention",
+      "feature": "kernel-attnres-aggregate",
+      "variant": "baseline",
+      "kernel_export": "gfx950_attnres_aggregate",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "0f1b91664465bf059b47aa1fda8168a1cb4901cbfb81fd4dc770184520fca412",
+        "llvm_sha256": "7752d78ffeb52c737ce52b46ab0c2d457fc66dfa642f2d7916465b21cbf32249",
+        "hsaco_sha256": "f3ab4ebd7b8f2310918eada0d8b90efd57c281914bbac91499040417f5c4a2e6",
+        "isa_sha256": "c135a286829e0513f6b10815b63616e6770d89dadf6b16bf0864f2cf8bcda6b6",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case09-attention-kernel-attnres-aggregate-baseline.log",
+        "sha256": "36769245fc5b9ba51b438e5e6845fc8f3b3e07fee382a2e441074183170d67bd"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "0f2c9b9344115266ac675ec022ff05ef5bece9a0f6b0891c891e4a956d540d7a",
+              "name": "depth_values",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "d41dd14d02081aa9c8391252bee28884f0d3ff888bf96dc20e38b8002378f5f4",
+              "name": "depth_logits",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 AttnRes aggregation",
+          "input_sha256": "a92761cc7551b003a73588bc6a34767a5c20dbba32d5025928a322b3b4cdd36f"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 10,
+      "suite": "attention",
+      "feature": "kernel-attnres-aggregate-explicit-reuse-v1",
+      "variant": "explicit-reuse",
+      "kernel_export": "gfx950_attnres_aggregate",
+      "source_path": "examples/gfx950_advanced_attention/src/ablation.rs",
+      "source_blob": "e0f7119c5214250527f417185ea6957bb4b98016",
+      "source_sha256": "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+      "artifact": {
+        "crate_binding_sha256": "fe6d11c689feb27ace6afe63785978ffefe8668f0b93fa0e33b50e5185b6fb43",
+        "llvm_sha256": "f149ccf541ead3475c5562613cb4707184e9ce278aae2040ad6fa4937702a5c0",
+        "hsaco_sha256": "c45d5af59a181033aa4e7eb6c1ebd5945cbd82b04a8250f00b5ae2bf0a207b3f",
+        "isa_sha256": "f38b03f355ed0fe381a5d2148227a8e1fe6b7a7ed6bbcc8c79c9fb8adfaf7e55",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case10-attention-kernel-attnres-aggregate-explicit-reuse-v1-explicit-reuse.log",
+        "sha256": "06c6b8fe16658bb6d40a3eb0c84aba0ca49c022d26fab9234bcad4fb3a97602c"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "0f2c9b9344115266ac675ec022ff05ef5bece9a0f6b0891c891e4a956d540d7a",
+              "name": "depth_values",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "d41dd14d02081aa9c8391252bee28884f0d3ff888bf96dc20e38b8002378f5f4",
+              "name": "depth_logits",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 AttnRes aggregation",
+          "input_sha256": "a92761cc7551b003a73588bc6a34767a5c20dbba32d5025928a322b3b4cdd36f"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 11,
+      "suite": "attention",
+      "feature": "kernel-four-branch-residual",
+      "variant": "baseline",
+      "kernel_export": "gfx950_four_branch_residual",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "5a21124887ab5e89f2893f9a688ddc75efe2cf1c40dfda56be36acb530d69326",
+        "llvm_sha256": "aa9fc3a4fb302c7e8f9f2ec00fb122f98216357957ed2bf914a51b1ee15d8ec7",
+        "hsaco_sha256": "190ce48f1172f15b3827b1220ad6ee190087ad4be52892946eff26cfea168ec0",
+        "isa_sha256": "d3641b00c44748decbb0d53a83018b9f4f2e1c88b89b23adf644dc6ce972a431",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case11-attention-kernel-four-branch-residual-baseline.log",
+        "sha256": "c0464c81ac482d608de020b1e02e7d1a83e9bd0df432b93f3aae759a64774ed3"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "10705fc0f52ecb54d8e5f6cdc9f1e3c65ecf6e238356fe3fffce22fbdc8e2d4d",
+              "name": "residual",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "f3b8ff0d070fe45ad0286fa5b1312224c8bf75685ff6842e5dc77df5ba253a8d",
+              "name": "branches",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "ad087859db963549429a7d5ecbf1707ae59f43c85b1bc675459d5957c24abdcb",
+              "name": "gate_logits",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 four-branch residual",
+          "input_sha256": "60f35f5337805b8aab5672f13b5fd05d5bcb6c5c96b4ec6f5e924964919d9a2f"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 12,
+      "suite": "attention",
+      "feature": "kernel-four-branch-residual-explicit-v1",
+      "variant": "explicit-reuse",
+      "kernel_export": "gfx950_four_branch_residual",
+      "source_path": "examples/gfx950_advanced_attention/src/ablation.rs",
+      "source_blob": "e0f7119c5214250527f417185ea6957bb4b98016",
+      "source_sha256": "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+      "artifact": {
+        "crate_binding_sha256": "5972789e1c05e3508b65dd3ce977460423b63b30b306e0a5d82ff4003d8b4d67",
+        "llvm_sha256": "1414b46b9a2c68e85d49ae4855d6bdc201addb59f95d88ef1449830bbf600eec",
+        "hsaco_sha256": "d14f5cb24162d32666876907eb9c9cbe86c8fdda1ae9f71033e27fd643b74665",
+        "isa_sha256": "73b1f7a54c0731cae563a43f7cd1141a9bb7b89b99b2fefca2927cf9eedf96b3",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case12-attention-kernel-four-branch-residual-explicit-v1-explicit-reuse.log",
+        "sha256": "c99c3d6ca194af69a4b8012e9aeeeda261f267a91e6c5113c247492c01950a93"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "10705fc0f52ecb54d8e5f6cdc9f1e3c65ecf6e238356fe3fffce22fbdc8e2d4d",
+              "name": "residual",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "f3b8ff0d070fe45ad0286fa5b1312224c8bf75685ff6842e5dc77df5ba253a8d",
+              "name": "branches",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "ad087859db963549429a7d5ecbf1707ae59f43c85b1bc675459d5957c24abdcb",
+              "name": "gate_logits",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 four-branch residual",
+          "input_sha256": "60f35f5337805b8aab5672f13b5fd05d5bcb6c5c96b4ec6f5e924964919d9a2f"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 13,
+      "suite": "attention",
+      "feature": "kernel-mhc-sinkhorn-mix-scalar-v1",
+      "variant": "scalar",
+      "kernel_export": "gfx950_mhc_sinkhorn_mix",
+      "source_path": "examples/gfx950_advanced_attention/src/ablation.rs",
+      "source_blob": "e0f7119c5214250527f417185ea6957bb4b98016",
+      "source_sha256": "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+      "artifact": {
+        "crate_binding_sha256": "0e2a561e71ced26b05bcaf0287320b4e1969b9909709417dfafb4299ecc6eb92",
+        "llvm_sha256": "d04091ad67cbfc3ef893df964ad5700725107c33abe941330620666676781c0a",
+        "hsaco_sha256": "0a42de9c2304b3c5679486cf053a006614580d0372b269a82e481bd0755ce605",
+        "isa_sha256": "28c8430bafc6945d3b976dd12d47526583edeb670f0cbec905fff7c6972ef8a0",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case13-attention-kernel-mhc-sinkhorn-mix-scalar-v1-scalar.log",
+        "sha256": "303df4f193d1cfd8eba9ed218bd8209e5727fbf0390ec4171626be95b3ae5864"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "a67512ce1ea8eae14c746ef21e28f0a14989be6ba18d4d5502349079e361e51a",
+              "name": "streams",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "8ba3357919241029eaa103691d41740a14b93f4e66aafe57983ad5c863a0fd3f",
+              "name": "mixing_logits",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 mHC Sinkhorn mix",
+          "input_sha256": "9d6ac8e4461131c3b04c66a8327ed6520e9f40aed164b752f73fd750480ff752"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=64 max_absolute_error=4.470348358e-8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 14,
+      "suite": "attention",
+      "feature": "kernel-mhc-sinkhorn-mix",
+      "variant": "distributed-wave16",
+      "kernel_export": "gfx950_mhc_sinkhorn_mix",
+      "source_path": "examples/gfx950_advanced_attention/src/kernel.rs",
+      "source_blob": "e22ba9367a80d04c46567b163def9f5644f908b1",
+      "source_sha256": "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
+      "artifact": {
+        "crate_binding_sha256": "e2bce999a5fa1929fa89c847d6dade5511566efd3cffca3003a77d00e870fdbf",
+        "llvm_sha256": "7a9095ce73e881ca4199f5b95bfdb55feb64845664435716343b26af11682cdb",
+        "hsaco_sha256": "f463b05e53db65c4e9ea73a0d33ce1398c85bcc8b5aab64788fdeb7858c9fdcc",
+        "isa_sha256": "c063e5fba4347499a02c9c3197fee427beaea07e910bf39e698f51a53e6da236",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case14-attention-kernel-mhc-sinkhorn-mix-distributed-wave16.log",
+        "sha256": "181f202a4f64410436c2b16420b0bbfeacbd28dbc9537c85b119d4bf4d84f986"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 256,
+              "elements": 64,
+              "immutable": true,
+              "initial_sha256": "a67512ce1ea8eae14c746ef21e28f0a14989be6ba18d4d5502349079e361e51a",
+              "name": "streams",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "8ba3357919241029eaa103691d41740a14b93f4e66aafe57983ad5c863a0fd3f",
+              "name": "mixing_logits",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 mHC Sinkhorn mix",
+          "input_sha256": "9d6ac8e4461131c3b04c66a8327ed6520e9f40aed164b752f73fd750480ff752"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=64 max_absolute_error=5.960464478e-8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 15,
+      "suite": "systems",
+      "feature": "kernel-moe-route",
+      "variant": "canonical",
+      "kernel_export": "gfx950_moe_route_fp4_t16_e4_k2_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "bb933fcd1e3f8124227991b6743de97b6fa108551cc44c617d9450933ad98170",
+        "llvm_sha256": "236742e3c269b84917ef8538f2a2364e391a718404bf18affbabd337127cd3da",
+        "hsaco_sha256": "6d766905e6a7acbd7587a9b0c1bdf120db7e0ae7c765c567f4be9c4deedef0fe",
+        "isa_sha256": "1713fc61f132a45a580973476fa864197ed355466a3a5b3ff94bd119c4ba22a3",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case15-systems-kernel-moe-route-canonical.log",
+        "sha256": "fd960d1b26d8c25eb848efacb8f52582bb25f14b19d33536476bcce958a919d9"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 512,
+              "immutable": true,
+              "initial_sha256": "feac888095af77be722857b1d9ff7020d62e887eb04caf612461bc271e97e2c7",
+              "name": "router_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 160,
+              "elements": 32,
+              "immutable": false,
+              "initial_sha256": "e8c395956102b742e82d64167c887ba6af51b4f508de463d194d985ccf5585ff",
+              "name": "top_experts",
+              "oracle": {
+                "elements": 32,
+                "kind": "cpu-reference-u32-exact"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 160,
+              "elements": 32,
+              "immutable": false,
+              "initial_sha256": "0f3459f22f53f89e04eedfe4a3cbef46623f7f42af6a0ed60339a492433a4a3f",
+              "name": "top_weights",
+              "oracle": {
+                "absolute_tolerance": "0.000002",
+                "bitwise_exact_elements": 0,
+                "elements": 32,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 48,
+              "elements": 4,
+              "immutable": false,
+              "initial_sha256": "d38573889f1f138f4a8c9432537738034def196fa3526bbef11e15879fc25a2c",
+              "name": "expert_counts",
+              "oracle": {
+                "elements": 4,
+                "kind": "cpu-reference-u32-exact"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 544,
+              "elements": 128,
+              "immutable": false,
+              "initial_sha256": "b45109495b477d51c53bf1900d53881c5cd12ef0e0f6814ea3279f1b61d5c9d0",
+              "name": "dispatch",
+              "oracle": {
+                "elements": 128,
+                "kind": "cpu-reference-i32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE route",
+          "input_sha256": "bd8b1b1b535b496f1343a0db9a8b27e605ea666b25241b8c740f5223e20187a0"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "top_experts exact_u32_outputs=32",
+        "top_weights outputs=32 max_absolute_error=0.000000000e0",
+        "expert_counts exact_u32_outputs=4",
+        "dispatch exact_i32_outputs=128"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 16,
+      "suite": "systems",
+      "feature": "kernel-moe-expert-rank",
+      "variant": "canonical",
+      "kernel_export": "gfx950_moe_expert_rank_fp4_fp8_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "dad4ffb4c5c270c853b36fbb21ecc1095dcf33cf74d9585029fdce96e90d38e2",
+        "llvm_sha256": "25546d6c8107e1d554146247bc38612d74c2eb15918c7b4ec79c89485320584f",
+        "hsaco_sha256": "9e875ff1940dbac2839270faf219c8781e168559f6520071f7ec6f9714fea1ca",
+        "isa_sha256": "b9860d8a74f01f7490381c715719e17ae6e742295bf19dd9ccf946708cb41bd9",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case16-systems-kernel-moe-expert-rank-canonical.log",
+        "sha256": "f02b6d3445e5fdeb0ac17ca2f95fe55a0be2d8dd87311b3bd0e6ef9333876330"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank rank 0",
+          "input_sha256": "f3b7ddcfd667b7fc8e2b72b34aedb04d34e13b0583a98d621050003b964074c6"
+        },
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank rank 1",
+          "input_sha256": "f3b7ddcfd667b7fc8e2b72b34aedb04d34e13b0583a98d621050003b964074c6"
+        },
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "b3eaa19f6c19a289c3c6d3e5f0b2e4f896960e86f127d54a2afce89921254aa1",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank invalid first_expert 3",
+          "input_sha256": "975520dc13c2cc3d439be15ac05bbf1f6ee93dd0c84d6bf4fd72653ffb5012a5"
+        },
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "b3eaa19f6c19a289c3c6d3e5f0b2e4f896960e86f127d54a2afce89921254aa1",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank invalid first_expert 4294967295",
+          "input_sha256": "975520dc13c2cc3d439be15ac05bbf1f6ee93dd0c84d6bf4fd72653ffb5012a5"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=256 max_absolute_error=1.490116119e-8",
+        "output outputs=256 max_absolute_error=4.768371582e-7",
+        "output outputs=256 max_absolute_error=0.000000000e0",
+        "output outputs=256 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 17,
+      "suite": "systems",
+      "feature": "kernel-moe-expert-rank",
+      "variant": "expert-serial",
+      "kernel_export": "gfx950_moe_expert_rank_fp4_fp8_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "6de3151d7e205de375cd16a46b09c84211346b063664d0da16cd9f9b698efe2f",
+        "llvm_sha256": "8c35815f14bd7de42def65c65130120c9b821a744539230387dcd34740c2394d",
+        "hsaco_sha256": "717685c801789d3e4c6e9328d47bfbbdc34de6f9608630b760e50e3515195575",
+        "isa_sha256": "e9d860523cfab402c8f6f9b9855db2ed146242d35b2e068f9ffa52796116874f",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case17-systems-kernel-moe-expert-rank-expert-serial.log",
+        "sha256": "1aec82ce284fe60ef59370137a47466d270aac36f50fe01f5a3d211df19452f1"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank rank 0",
+          "input_sha256": "f3b7ddcfd667b7fc8e2b72b34aedb04d34e13b0583a98d621050003b964074c6"
+        },
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank rank 1",
+          "input_sha256": "f3b7ddcfd667b7fc8e2b72b34aedb04d34e13b0583a98d621050003b964074c6"
+        },
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "b3eaa19f6c19a289c3c6d3e5f0b2e4f896960e86f127d54a2afce89921254aa1",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank invalid first_expert 3",
+          "input_sha256": "975520dc13c2cc3d439be15ac05bbf1f6ee93dd0c84d6bf4fd72653ffb5012a5"
+        },
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 2048,
+              "immutable": true,
+              "initial_sha256": "4f400a2f3d82a340cd39c7e09498e1932a3f67f2612625520cdfa0796627c582",
+              "name": "activations",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 10240,
+              "elements": 10240,
+              "immutable": true,
+              "initial_sha256": "82cdfef49bee128c045c1eec1856d3194f8ce793dbafd28487a808715f97b12f",
+              "name": "expert_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "7ef63a9e40636097a9dd412861e87ca4c1bd0a1740184e4546941f4e38e176ee",
+              "name": "top_experts",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "94a6c14766a222b79ce51309c41cec4dd72e9481f061afadafc010ab674fc6cf",
+              "name": "top_weights",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "b3eaa19f6c19a289c3c6d3e5f0b2e4f896960e86f127d54a2afce89921254aa1",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 MoE expert rank invalid first_expert 4294967295",
+          "input_sha256": "975520dc13c2cc3d439be15ac05bbf1f6ee93dd0c84d6bf4fd72653ffb5012a5"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=256 max_absolute_error=1.490116119e-8",
+        "output outputs=256 max_absolute_error=4.768371582e-7",
+        "output outputs=256 max_absolute_error=0.000000000e0",
+        "output outputs=256 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 18,
+      "suite": "systems",
+      "feature": "kernel-combine-expert-ranks",
+      "variant": "canonical",
+      "kernel_export": "gfx950_combine_expert_ranks_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "75b93b89a635855d620e2974e64c7ad6299d75329410616cdceaaabe02db89ae",
+        "llvm_sha256": "4e33fea0a38b028bc1e3804f8abb7d54ccd125fd6b539c6d74633a07f90763ca",
+        "hsaco_sha256": "fdd9cc5f181800f7e68ca05ddb93031a851a567955a35909daee72fbe99a64f5",
+        "isa_sha256": "c5f1c6260a1515294413ad53d44b795ece43ad362d96a1c74f3a0a168aaf4f1a",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case18-systems-kernel-combine-expert-ranks-canonical.log",
+        "sha256": "049b2bddec574fc1566353ca021d6c56168f605eb8fc07f51b9e4325441a4f65"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "abc20df71cf941a5bddb9efd0c46f2aa867d91455e639636bc819b50120ba10f",
+              "name": "rank0",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "b1c32ca1c9639965ff3eb9f96e88cb95877211ba43d18111063ef6adf6844f91",
+              "name": "rank1",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.003",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 expert rank combine",
+          "input_sha256": "c1bdd37e43096dcdcf157e07793eea3c9a5e08336ec0dfdf71b6038611dfcad9"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=256 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 19,
+      "suite": "systems",
+      "feature": "kernel-speculative-transaction",
+      "variant": "canonical",
+      "kernel_export": "gfx950_speculative_transaction_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "712bf821d681a74855c892c7f02fb02b2c64fe36617092999f673a1531777f8b",
+        "llvm_sha256": "0cad13668a48fdae5b06c3fb7ad222651b8625955c1f8af3b764b5b9a7f8e9bb",
+        "hsaco_sha256": "5074044f3b46e0b04d24b066cfc23877df312d093dec151c75e3d126d36bbfde",
+        "isa_sha256": "40fb5eff8d22c9f34f7ef9354e35b7392900c3b81871f11795eebf0f989a9da3",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case19-systems-kernel-speculative-transaction-canonical.log",
+        "sha256": "d0927e3de627435a8016e7b68c251f6007de261d2f36fb1f5ba78cd3d66685fc"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "e170a225ff8562959f1080a120c9d0eecc463f23e0c7cb5fe7224caa16ed13dd",
+              "name": "draft_tokens",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "f67c5ff154ee4961a5f9223699a9f82f6e06cb3c064efbf28119e8a43639ed97",
+              "name": "target_tokens",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "91742b124faeb95d80703e2d26cfed49628beb168231e25cf12dfea834fd0e6a",
+              "name": "draft_scores",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "d9c59b00bb1e96b9b96b6587d8f473c2c42d7940eeb9e7e4d9f272620608546b",
+              "name": "thresholds",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 32,
+              "elements": 8,
+              "immutable": true,
+              "initial_sha256": "9baba27374189962d9ecd8b5c4b0161f3df816d988fe04b137f68d3dd61fa1a5",
+              "name": "base_state",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "65d90f5287da4b37130f668bc576e203523ff74284b86ac8e611b33ddda2ab9e",
+              "name": "proposed_deltas",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 64,
+              "elements": 8,
+              "immutable": false,
+              "initial_sha256": "a226d9ea7ab69d317ef2773495868e6d5ae4da6a5c5d83939bb8583121a4465f",
+              "name": "accepted_steps",
+              "oracle": {
+                "elements": 8,
+                "kind": "cpu-reference-u32-exact"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 64,
+              "elements": 8,
+              "immutable": false,
+              "initial_sha256": "02019b5bec03e9f5b28f1a6d243a759010ed14e5ec98d404a6f15399c8c7f25e",
+              "name": "committed",
+              "oracle": {
+                "elements": 8,
+                "kind": "cpu-reference-u32-exact"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "output_state",
+              "oracle": {
+                "absolute_tolerance": "0.0000001",
+                "bitwise_exact_elements": 48,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 speculative transaction",
+          "input_sha256": "a639a0f770af082c7dd9e17fc2dc5008226f4a32357c8f9d55f8e94f49d3c95f"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "accepted_steps exact_u32_outputs=8",
+        "committed exact_u32_outputs=8",
+        "output_state outputs=64 max_absolute_error=2.980232239e-8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 20,
+      "suite": "systems",
+      "feature": "kernel-speculative-transaction",
+      "variant": "speculative-recompute-prefix",
+      "kernel_export": "gfx950_speculative_transaction_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "bdec264337e1f6c31dec20bfe6cabbebb62ad36d413a66e8876279753c46ee26",
+        "llvm_sha256": "9353cbc623a4014938945e64fca5b9353cfe1ec22cebefb8f73f24033f95414d",
+        "hsaco_sha256": "e2685156424c6e8de477e1762c099204632cc7d297c377c92fc1ffeb6d5c8314",
+        "isa_sha256": "31dcebc31500fe947bd08456cae0560442b4820cb3d19c79014fc90bd1c50b76",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case20-systems-kernel-speculative-transaction-speculative-recompute-prefix.log",
+        "sha256": "c787cb63d7fbcc7bc8d8f3f80e57b2045b508c8487252b88d996bf8cf2c873fa"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "e170a225ff8562959f1080a120c9d0eecc463f23e0c7cb5fe7224caa16ed13dd",
+              "name": "draft_tokens",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "f67c5ff154ee4961a5f9223699a9f82f6e06cb3c064efbf28119e8a43639ed97",
+              "name": "target_tokens",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "91742b124faeb95d80703e2d26cfed49628beb168231e25cf12dfea834fd0e6a",
+              "name": "draft_scores",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "d9c59b00bb1e96b9b96b6587d8f473c2c42d7940eeb9e7e4d9f272620608546b",
+              "name": "thresholds",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 32,
+              "elements": 8,
+              "immutable": true,
+              "initial_sha256": "9baba27374189962d9ecd8b5c4b0161f3df816d988fe04b137f68d3dd61fa1a5",
+              "name": "base_state",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "65d90f5287da4b37130f668bc576e203523ff74284b86ac8e611b33ddda2ab9e",
+              "name": "proposed_deltas",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 64,
+              "elements": 8,
+              "immutable": false,
+              "initial_sha256": "a226d9ea7ab69d317ef2773495868e6d5ae4da6a5c5d83939bb8583121a4465f",
+              "name": "accepted_steps",
+              "oracle": {
+                "elements": 8,
+                "kind": "cpu-reference-u32-exact"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 64,
+              "elements": 8,
+              "immutable": false,
+              "initial_sha256": "02019b5bec03e9f5b28f1a6d243a759010ed14e5ec98d404a6f15399c8c7f25e",
+              "name": "committed",
+              "oracle": {
+                "elements": 8,
+                "kind": "cpu-reference-u32-exact"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 288,
+              "elements": 64,
+              "immutable": false,
+              "initial_sha256": "39fd976c3401588df9326d74f1f3df6b1ccbea875cdd777828cf16e8fd9f700a",
+              "name": "output_state",
+              "oracle": {
+                "absolute_tolerance": "0.0000001",
+                "bitwise_exact_elements": 48,
+                "elements": 64,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 speculative transaction",
+          "input_sha256": "a639a0f770af082c7dd9e17fc2dc5008226f4a32357c8f9d55f8e94f49d3c95f"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "accepted_steps exact_u32_outputs=8",
+        "committed exact_u32_outputs=8",
+        "output_state outputs=64 max_absolute_error=2.980232239e-8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 21,
+      "suite": "systems",
+      "feature": "kernel-qwen-ngram-gather",
+      "variant": "canonical",
+      "kernel_export": "gfx950_qwen_ngram_gather_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "a9bf254981d5af7855538f611e59b2a273ed274201689cd16443b7279c327175",
+        "llvm_sha256": "892ce3aec5a1c825b9857411e9380e6f86af22c53a13ed14e131a451f67d7441",
+        "hsaco_sha256": "98c846c2fdf20cdc935d955f5b14253e878e1c4b1ee1ef1c2bf772470a13a8c4",
+        "isa_sha256": "3a2812cbd9f684d28adcf0a09cb15ad98b423ca8df43afccdd7da0e2ddb530fd",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case21-systems-kernel-qwen-ngram-gather-canonical.log",
+        "sha256": "0d1fc7d7581a21de48618531bec1249d2cb43fbde766567b6d87e6d45a3966b3"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 96,
+              "elements": 24,
+              "immutable": true,
+              "initial_sha256": "39394f6e0bb60abdf0aa7278fb434e393977cd3099d1292034c5841b03f0008c",
+              "name": "queries",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "3d7c53d02a7ce7b15f0f58c4c9b5f28d939dcc1d0a14a0293c2306ca285c3cc1",
+              "name": "table_hashes",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 192,
+              "elements": 48,
+              "immutable": true,
+              "initial_sha256": "62907d3e4ca320c0e7e170e25980a1054b9317b13bbbe7a3e810df6c7d792b6f",
+              "name": "table_grams",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "e37409d6e85b78eaa9fc106857accaad4bc16341c335f6a12899662bd936b7e8",
+              "name": "table_values",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "0fd8c1965f4f4eb0cf1393e7f45f1d7d246175c9be67560eac9c369ed94caa1c",
+              "name": "priorities",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 64,
+              "elements": 8,
+              "immutable": false,
+              "initial_sha256": "7cd01bad418562ce66eb7676b85c90242f976beb7bcf93c2c7338c75231a0e21",
+              "name": "output",
+              "oracle": {
+                "elements": 8,
+                "kind": "cpu-reference-i32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 Qwen N-gram gather",
+          "input_sha256": "627eb492b903f06c34c72ef1ec36e706a2f103cd92201d7ea628ac3141219bce"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output exact_i32_outputs=8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 22,
+      "suite": "systems",
+      "feature": "kernel-qwen-ngram-gather",
+      "variant": "ngram-reverse-probe",
+      "kernel_export": "gfx950_qwen_ngram_gather_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "a62bfd564c731058a0a6b9f3b1b710180c36b311241a8db5e3e4be664e5cf449",
+        "llvm_sha256": "7e70f7cbd5757576e69f52d0314c2e9e48d14d34f05b7d3d29bc2032556a8f05",
+        "hsaco_sha256": "73d2824b76f43a4927d26f7046a5338ebf521413572b101abafaa26ce615465e",
+        "isa_sha256": "c62f75e39da25e4c9350dbf202c02ea47865b1d18393dc36963c95273b4eb7dd",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case22-systems-kernel-qwen-ngram-gather-ngram-reverse-probe.log",
+        "sha256": "7a161464dcc205f971fe810ac2a4524d44e8907338c8faedd9aa27ca731ff3fa"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 96,
+              "elements": 24,
+              "immutable": true,
+              "initial_sha256": "39394f6e0bb60abdf0aa7278fb434e393977cd3099d1292034c5841b03f0008c",
+              "name": "queries",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "3d7c53d02a7ce7b15f0f58c4c9b5f28d939dcc1d0a14a0293c2306ca285c3cc1",
+              "name": "table_hashes",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 192,
+              "elements": 48,
+              "immutable": true,
+              "initial_sha256": "62907d3e4ca320c0e7e170e25980a1054b9317b13bbbe7a3e810df6c7d792b6f",
+              "name": "table_grams",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "e37409d6e85b78eaa9fc106857accaad4bc16341c335f6a12899662bd936b7e8",
+              "name": "table_values",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "0fd8c1965f4f4eb0cf1393e7f45f1d7d246175c9be67560eac9c369ed94caa1c",
+              "name": "priorities",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 64,
+              "elements": 8,
+              "immutable": false,
+              "initial_sha256": "7cd01bad418562ce66eb7676b85c90242f976beb7bcf93c2c7338c75231a0e21",
+              "name": "output",
+              "oracle": {
+                "elements": 8,
+                "kind": "cpu-reference-i32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 Qwen N-gram gather",
+          "input_sha256": "627eb492b903f06c34c72ef1ec36e706a2f103cd92201d7ea628ac3141219bce"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output exact_i32_outputs=8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 23,
+      "suite": "systems",
+      "feature": "kernel-stage-gradient-shard",
+      "variant": "canonical",
+      "kernel_export": "gfx950_stage_gradient_shard_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "487472b4b767bb11afc7a2d5bb85795b2b538c040432da4c0d5755900dd4867e",
+        "llvm_sha256": "13f588dd88d76ea8053aaf9848e7ad073264233b471c735f1a31268c0ef16b63",
+        "hsaco_sha256": "ac52b38973af23d63dbb05f6edd0ceea5caa92f1f331318d95fe7d62d5b251ce",
+        "isa_sha256": "cd61a1115bcba6e465bd77ab9ce291fe2e5a157c7e4567f4ae617ba2161e85f0",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case23-systems-kernel-stage-gradient-shard-canonical.log",
+        "sha256": "9c845ad7601815a5459bdfba0bdcab7fa1f0f86192e8c779fdc27b514918c382"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "76ad760cc59d8b90207a9dc1bb92a496c9423b3fe78c81658b8c8595cc80ae26",
+              "name": "input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0",
+                "bitwise_exact_elements": 16,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 gradient shard stage 0",
+          "input_sha256": "19c0df6dd1ded2c0d2f78903d565b7bfa8c2e22a3e594a926029bd8919587360"
+        },
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "cab227dd7278ec66558d10d54cc1535e8ea870c8fa897edadf633ed0b863ed97",
+              "name": "input",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0",
+                "bitwise_exact_elements": 16,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 gradient shard stage 1",
+          "input_sha256": "992d71e2d0c05525466c21637ae0ec14deb77504afbd28c834db9a357a3a5aec"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=0.000000000e0",
+        "output outputs=16 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 24,
+      "suite": "systems",
+      "feature": "kernel-muon-update",
+      "variant": "canonical",
+      "kernel_export": "gfx950_muon_update_4x4_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "9640ccf630920dc28c840f4d796dab11ddd9cebf804b0315b877e0c048eb7829",
+        "llvm_sha256": "eaa43985cf60aa4f220f86d2f762364a02185a9b544e6d1e6dec77f8a024da91",
+        "hsaco_sha256": "bb6e61181e05244a71b6475bcc34a6a0c62d94147bbe27304287f71d8181fe5d",
+        "isa_sha256": "a37e7395089d1c94a884506af9fd388fa0566ee516f681af9f85eb78c01338da",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case24-systems-kernel-muon-update-canonical.log",
+        "sha256": "91f783c8a8dfa4dc06881d24ae0cf1ea2251454ccf48e8fd5ceebba206b6858d"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "38b44de126e6ca70441981aac675749ee48de7fb135460514b5fc6967b367a17",
+              "name": "shards",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.000002",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": false,
+              "initial_sha256": "3af1695dd6179555609177c9c5ec34213dd951c91b209bab0ce4f2ceb66dd8de",
+              "name": "output_norm",
+              "oracle": {
+                "absolute_tolerance": "0.000002",
+                "bitwise_exact_elements": 0,
+                "elements": 1,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 Muon update",
+          "input_sha256": "47dfc1c7fec17cc9cdc7d568f025178b179709839f8964284ae0c68b84937c68"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=7.450580597e-9",
+        "output_norm outputs=1 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 25,
+      "suite": "systems",
+      "feature": "kernel-muon-update",
+      "variant": "muon-broadcast16",
+      "kernel_export": "gfx950_muon_update_4x4_v1",
+      "source_path": "examples/gfx950_advanced_systems/src/kernel.rs",
+      "source_blob": "b527202983c0a21518653f1d470c149f5d69fd11",
+      "source_sha256": "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
+      "artifact": {
+        "crate_binding_sha256": "6de7921154ed6a9f640c8cb2ca93cfc312b36de60ead0f02bf1157c1765ee2a9",
+        "llvm_sha256": "c4598885c3293c77bf93977fe43da90519943cb49be7d6120490fdcbaa0f6a26",
+        "hsaco_sha256": "11588bdb784a90104702e6526c43fa4f1465f5bfac6393bbec9e675fb1f167f7",
+        "isa_sha256": "7f33f50d7953b93f2d991df6c3e469f9522d1fd3877c92a2156519ba32eae40b",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case25-systems-kernel-muon-update-muon-broadcast16.log",
+        "sha256": "5f9c9e601f47b7c7a8cb8ef74695471b05b81ad747787cf4198b1fee1633edec"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 128,
+              "elements": 32,
+              "immutable": true,
+              "initial_sha256": "38b44de126e6ca70441981aac675749ee48de7fb135460514b5fc6967b367a17",
+              "name": "shards",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 96,
+              "elements": 16,
+              "immutable": false,
+              "initial_sha256": "3531be925fea0e4ebc0ef6baad8e18ab3d4368c424043b700b91be4b4664b523",
+              "name": "output",
+              "oracle": {
+                "absolute_tolerance": "0.000002",
+                "bitwise_exact_elements": 0,
+                "elements": 16,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": false,
+              "initial_sha256": "3af1695dd6179555609177c9c5ec34213dd951c91b209bab0ce4f2ceb66dd8de",
+              "name": "output_norm",
+              "oracle": {
+                "absolute_tolerance": "0.000002",
+                "bitwise_exact_elements": 0,
+                "elements": 1,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 Muon update",
+          "input_sha256": "47dfc1c7fec17cc9cdc7d568f025178b179709839f8964284ae0c68b84937c68"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "output outputs=16 max_absolute_error=7.450580597e-9",
+        "output_norm outputs=1 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 26,
+      "suite": "gpt_oss",
+      "feature": "kernel-gpt-oss-decode",
+      "variant": "optimized",
+      "kernel_export": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+      "source_blob": "bb21d620fbbf9d92ebc2f0645ccd0f8cfeb3dde0",
+      "source_sha256": "b84b16ed5797fdcf5bdf05f603823f47bfa9839f017921d92bd0bcfbd73aecb6",
+      "artifact": {
+        "crate_binding_sha256": "0739c8414cc87e4bd943b2d563152bbb25abc619847f75f405c6dadb154858d9",
+        "llvm_sha256": "827dd2a5e614efccd5fd9c75a3a51dcd380ad3b2315a2852ce90c3d9e8e5ce79",
+        "hsaco_sha256": "b021635066f0a41c62e81da95225d245e5ba9d0f87b5c49d376d880c506f90bc",
+        "isa_sha256": "c166782bcef26c424822b97ea3feae707a0b629d4ee2488e7b24671e81275b55",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case26-gpt_oss-kernel-gpt-oss-decode-optimized.log",
+        "sha256": "e12ab7e0f339776f0f36fe5b2af520694f116c119f174aada11efcf31d7461ec"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 11520,
+              "elements": 2880,
+              "immutable": true,
+              "initial_sha256": "993c9ff5f8fbffc146fe2f8e09f044b47368d5da652d1d066b2da51d24a2eccf",
+              "name": "hidden_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1474560,
+              "elements": 368640,
+              "immutable": true,
+              "initial_sha256": "6be4caf9482e5636d0ac9df1cbc8354301bc8b8c6e7d061c083e072503aa3a7b",
+              "name": "router_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "a27b69dafd451aa531fed8fd80820c050fadf004093fed8cca2286c0c853695a",
+              "name": "query_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "ca8845f54e6783c4b9d58b3714e58ccc052c2527f9c5aed32a1fa36b733a49aa",
+              "name": "key_transposed_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "87da6a23d09ef6f924b5b1279283505e931e81fae45245b1dded8c5469601110",
+              "name": "value_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "e72738f6c382da0bf3d952e77ea5e1d0aab6ecbc631722d273c26ba395bc34db",
+              "name": "sinks_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 8192,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "fe56b9af991dfdda7a8392918b06c80d009a1549a1f5898c1fae8eda1a4f5525",
+              "name": "expert_activation_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1048576,
+              "elements": 1048576,
+              "immutable": true,
+              "initial_sha256": "e8a14764ef78a613edfc87bec16cb6561f2f58d3ab6b104c434da662eabca2ec",
+              "name": "expert_weight_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "fb3c44495f3722a69752208793765fd059c944dcd880c4b7a0b6fd40c083d8bc",
+              "name": "activation_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 32768,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "2c998a43784e86b15c8aec399b457c741566aff12577b88154716234ab310b83",
+              "name": "expert_weight_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "attention_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "expert_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": false,
+              "initial_sha256": "dce01e19784aaa760397f09bd4bb63db0bd8b0201f6faebbc3c50192f69bd3f0",
+              "name": "packed_top4",
+              "oracle": {
+                "elements": 1,
+                "kind": "cpu-reference-u32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 GPT-OSS-120B batch-1 layer-tile megakernel",
+          "input_sha256": "2e650b4de45c12faa4d513911f47fe83ad623d95d9ca81b7a5fb68fb71caab6e"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "attention_output outputs=256 max_absolute_error=8.940696716e-8",
+        "expert_output outputs=256 max_absolute_error=0.000000000e0",
+        "packed_top4 exact_u32_outputs=1"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 27,
+      "suite": "gpt_oss",
+      "feature": "kernel-gpt-oss-decode-router-serial",
+      "variant": "serial-router",
+      "kernel_export": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
+      "source_blob": "dcb163bab4bd71b05672ee505bbedb9b9bc23d4c",
+      "source_sha256": "060c5600b8522bea3f6245794809a15fbc468bee008f7b497e5c7f06740af841",
+      "artifact": {
+        "crate_binding_sha256": "39eaa839d327564ce8ea4ba0e28cac0be8dfa374a979571b4cc0e53473768e28",
+        "llvm_sha256": "5c38a40798e580ffd05c6edef1b9894c519d089f97cac38b12198910c4126a3b",
+        "hsaco_sha256": "707a874dd9582201c08de72491bc51ee65357ab01de3826973f722876e7be2f0",
+        "isa_sha256": "3492fec2d5ddbe0d9c7a2d1aa1d2683eb17e3a2505a2bc2a6012eeae64c8d5cc",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case27-gpt_oss-kernel-gpt-oss-decode-router-serial-serial-router.log",
+        "sha256": "f4fb9c92e4cf0288c23c0463917f7e52220447d962d3dacebde7006c3ba9cded"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 11520,
+              "elements": 2880,
+              "immutable": true,
+              "initial_sha256": "993c9ff5f8fbffc146fe2f8e09f044b47368d5da652d1d066b2da51d24a2eccf",
+              "name": "hidden_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1474560,
+              "elements": 368640,
+              "immutable": true,
+              "initial_sha256": "6be4caf9482e5636d0ac9df1cbc8354301bc8b8c6e7d061c083e072503aa3a7b",
+              "name": "router_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "a27b69dafd451aa531fed8fd80820c050fadf004093fed8cca2286c0c853695a",
+              "name": "query_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "ca8845f54e6783c4b9d58b3714e58ccc052c2527f9c5aed32a1fa36b733a49aa",
+              "name": "key_transposed_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "87da6a23d09ef6f924b5b1279283505e931e81fae45245b1dded8c5469601110",
+              "name": "value_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "e72738f6c382da0bf3d952e77ea5e1d0aab6ecbc631722d273c26ba395bc34db",
+              "name": "sinks_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 8192,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "fe56b9af991dfdda7a8392918b06c80d009a1549a1f5898c1fae8eda1a4f5525",
+              "name": "expert_activation_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1048576,
+              "elements": 1048576,
+              "immutable": true,
+              "initial_sha256": "e8a14764ef78a613edfc87bec16cb6561f2f58d3ab6b104c434da662eabca2ec",
+              "name": "expert_weight_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "fb3c44495f3722a69752208793765fd059c944dcd880c4b7a0b6fd40c083d8bc",
+              "name": "activation_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 32768,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "2c998a43784e86b15c8aec399b457c741566aff12577b88154716234ab310b83",
+              "name": "expert_weight_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "attention_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "expert_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": false,
+              "initial_sha256": "dce01e19784aaa760397f09bd4bb63db0bd8b0201f6faebbc3c50192f69bd3f0",
+              "name": "packed_top4",
+              "oracle": {
+                "elements": 1,
+                "kind": "cpu-reference-u32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 GPT-OSS-120B batch-1 layer-tile megakernel",
+          "input_sha256": "2e650b4de45c12faa4d513911f47fe83ad623d95d9ca81b7a5fb68fb71caab6e"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "attention_output outputs=256 max_absolute_error=8.940696716e-8",
+        "expert_output outputs=256 max_absolute_error=0.000000000e0",
+        "packed_top4 exact_u32_outputs=1"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 28,
+      "suite": "gpt_oss",
+      "feature": "kernel-gpt-oss-decode-held-fragments",
+      "variant": "held-fragments",
+      "kernel_export": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
+      "source_blob": "b06271c21f8867ab1b146388e7f9a13bf44559d6",
+      "source_sha256": "a2cc65e6e9c74f4523786706d994193d0d68d708386f9b29163b13bcd98e12d2",
+      "artifact": {
+        "crate_binding_sha256": "a8d3182189365c136bf3a683bf06bc49274f07bcc3622dd5e9f6cd56e6940ca6",
+        "llvm_sha256": "8e15ecbf7859f83a9c9ee64f42f4a83ac3856291004d1d71f0e16d231509755b",
+        "hsaco_sha256": "9f172bdda5a3cb2059dee024007385bf2fbd9955ed5e1ca0d8b4452b10e0bd22",
+        "isa_sha256": "e0075f35f9a534e8160fbd3de24641d9124ebaee3473509fa06176e7e05154a3",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case28-gpt_oss-kernel-gpt-oss-decode-held-fragments-held-fragments.log",
+        "sha256": "cb66ff58212d63192801aad291143e9d23bfa7019a5ff6f4a6dc8043ab2999b6"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 11520,
+              "elements": 2880,
+              "immutable": true,
+              "initial_sha256": "993c9ff5f8fbffc146fe2f8e09f044b47368d5da652d1d066b2da51d24a2eccf",
+              "name": "hidden_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1474560,
+              "elements": 368640,
+              "immutable": true,
+              "initial_sha256": "6be4caf9482e5636d0ac9df1cbc8354301bc8b8c6e7d061c083e072503aa3a7b",
+              "name": "router_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "a27b69dafd451aa531fed8fd80820c050fadf004093fed8cca2286c0c853695a",
+              "name": "query_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "ca8845f54e6783c4b9d58b3714e58ccc052c2527f9c5aed32a1fa36b733a49aa",
+              "name": "key_transposed_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "87da6a23d09ef6f924b5b1279283505e931e81fae45245b1dded8c5469601110",
+              "name": "value_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "e72738f6c382da0bf3d952e77ea5e1d0aab6ecbc631722d273c26ba395bc34db",
+              "name": "sinks_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 8192,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "fe56b9af991dfdda7a8392918b06c80d009a1549a1f5898c1fae8eda1a4f5525",
+              "name": "expert_activation_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1048576,
+              "elements": 1048576,
+              "immutable": true,
+              "initial_sha256": "e8a14764ef78a613edfc87bec16cb6561f2f58d3ab6b104c434da662eabca2ec",
+              "name": "expert_weight_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "fb3c44495f3722a69752208793765fd059c944dcd880c4b7a0b6fd40c083d8bc",
+              "name": "activation_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 32768,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "2c998a43784e86b15c8aec399b457c741566aff12577b88154716234ab310b83",
+              "name": "expert_weight_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "attention_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "expert_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": false,
+              "initial_sha256": "dce01e19784aaa760397f09bd4bb63db0bd8b0201f6faebbc3c50192f69bd3f0",
+              "name": "packed_top4",
+              "oracle": {
+                "elements": 1,
+                "kind": "cpu-reference-u32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 GPT-OSS-120B batch-1 layer-tile megakernel",
+          "input_sha256": "2e650b4de45c12faa4d513911f47fe83ad623d95d9ca81b7a5fb68fb71caab6e"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "attention_output outputs=256 max_absolute_error=8.940696716e-8",
+        "expert_output outputs=256 max_absolute_error=0.000000000e0",
+        "packed_top4 exact_u32_outputs=1"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 29,
+      "suite": "gpt_oss",
+      "feature": "kernel-gpt-oss-decode-interleaved-stores",
+      "variant": "interleaved-stores",
+      "kernel_export": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
+      "source_blob": "9edd748105ecf20eb73c169d1f94365dea41f395",
+      "source_sha256": "a31af40117e11ed6779ecb9d54cc597805449bbb04db47af7a005ca3da55d72e",
+      "artifact": {
+        "crate_binding_sha256": "443005e172c02bb88714b06835d6b3ba915be1271fb335a10a71441e3774d069",
+        "llvm_sha256": "00583ae4bcf48c0af557771e1bc8d052b994866eca6d52b1ab4c09688a19dd38",
+        "hsaco_sha256": "c801e5b2cf20e10c65bf27b075574b8e43d1278b81be62a2973fa2aa8d4c4260",
+        "isa_sha256": "c399182cbac441bf9c4c10c20d36a477f8e7fbf7b926f4c0995d60bade2b8391",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case29-gpt_oss-kernel-gpt-oss-decode-interleaved-stores-interleaved-stores.log",
+        "sha256": "870979ae43a52551992b52429349905030089c192a0e812285b0e7348e21834a"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 11520,
+              "elements": 2880,
+              "immutable": true,
+              "initial_sha256": "993c9ff5f8fbffc146fe2f8e09f044b47368d5da652d1d066b2da51d24a2eccf",
+              "name": "hidden_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1474560,
+              "elements": 368640,
+              "immutable": true,
+              "initial_sha256": "6be4caf9482e5636d0ac9df1cbc8354301bc8b8c6e7d061c083e072503aa3a7b",
+              "name": "router_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "a27b69dafd451aa531fed8fd80820c050fadf004093fed8cca2286c0c853695a",
+              "name": "query_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "ca8845f54e6783c4b9d58b3714e58ccc052c2527f9c5aed32a1fa36b733a49aa",
+              "name": "key_transposed_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "87da6a23d09ef6f924b5b1279283505e931e81fae45245b1dded8c5469601110",
+              "name": "value_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "e72738f6c382da0bf3d952e77ea5e1d0aab6ecbc631722d273c26ba395bc34db",
+              "name": "sinks_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 8192,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "fe56b9af991dfdda7a8392918b06c80d009a1549a1f5898c1fae8eda1a4f5525",
+              "name": "expert_activation_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1048576,
+              "elements": 1048576,
+              "immutable": true,
+              "initial_sha256": "e8a14764ef78a613edfc87bec16cb6561f2f58d3ab6b104c434da662eabca2ec",
+              "name": "expert_weight_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "fb3c44495f3722a69752208793765fd059c944dcd880c4b7a0b6fd40c083d8bc",
+              "name": "activation_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 32768,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "2c998a43784e86b15c8aec399b457c741566aff12577b88154716234ab310b83",
+              "name": "expert_weight_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "attention_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "expert_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": false,
+              "initial_sha256": "dce01e19784aaa760397f09bd4bb63db0bd8b0201f6faebbc3c50192f69bd3f0",
+              "name": "packed_top4",
+              "oracle": {
+                "elements": 1,
+                "kind": "cpu-reference-u32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 GPT-OSS-120B batch-1 layer-tile megakernel",
+          "input_sha256": "2e650b4de45c12faa4d513911f47fe83ad623d95d9ca81b7a5fb68fb71caab6e"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "attention_output outputs=256 max_absolute_error=8.940696716e-8",
+        "expert_output outputs=256 max_absolute_error=0.000000000e0",
+        "packed_top4 exact_u32_outputs=1"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 30,
+      "suite": "gpt_oss",
+      "feature": "kernel-gpt-oss-router-component",
+      "variant": "materialized-router",
+      "kernel_export": "gfx950_gpt_oss_120b_router_v1",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+      "source_blob": "dfc19b571215c9fdd2406fc1c1bbc89b3ffc63a3",
+      "source_sha256": "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1",
+      "artifact": {
+        "crate_binding_sha256": "8ea858c2d33346948501917b2a613d3e4844622372e15b43fb2e2d092e3f336d",
+        "llvm_sha256": "94ca74fac5b42fc84375f51369b1efeb1d6c3e33be119beb277b6b5d911864d1",
+        "hsaco_sha256": "c7d492625001b9cf64893d0fdc411103e6182da2a75ce679b6bc3fb21aa5bc80",
+        "isa_sha256": "2b49c1daf45591b63a8e876d4601d7d3058eb95073f228dec9a2ff8869a853c6",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case30-gpt_oss-kernel-gpt-oss-router-component-materialized-router.log",
+        "sha256": "363196354b9f5778cababc3aedea5a818e9b76d2ee8ce02ff1228c601d6ba3c8"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 11520,
+              "elements": 2880,
+              "immutable": true,
+              "initial_sha256": "993c9ff5f8fbffc146fe2f8e09f044b47368d5da652d1d066b2da51d24a2eccf",
+              "name": "hidden_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1474560,
+              "elements": 368640,
+              "immutable": true,
+              "initial_sha256": "6be4caf9482e5636d0ac9df1cbc8354301bc8b8c6e7d061c083e072503aa3a7b",
+              "name": "router_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": false,
+              "initial_sha256": "dce01e19784aaa760397f09bd4bb63db0bd8b0201f6faebbc3c50192f69bd3f0",
+              "name": "packed_top4",
+              "oracle": {
+                "elements": 1,
+                "kind": "cpu-reference-u32-exact"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 GPT-OSS-120B materialized Rust router",
+          "input_sha256": "5e924dc33538d0d33389b6ca951b0520771b9f13e03e4cb831a007a7cee4be64"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "packed_top4 exact_u32_outputs=1"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 31,
+      "suite": "gpt_oss",
+      "feature": "kernel-gpt-oss-attention-component",
+      "variant": "materialized-attention",
+      "kernel_export": "gfx950_gpt_oss_120b_attention_v1",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+      "source_blob": "dfc19b571215c9fdd2406fc1c1bbc89b3ffc63a3",
+      "source_sha256": "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1",
+      "artifact": {
+        "crate_binding_sha256": "35a1574b42e18b024498807f2e7dd4bde031da33b5b588652fc699cdebb7bb6a",
+        "llvm_sha256": "94ba7c8bb874f1feaf57387dc5aa5684a7a194268cc04347a6763032b91f1dea",
+        "hsaco_sha256": "438e3d57efb179aca8263a8490dd5cc1a524985926db5a7e9b80cd10cddfb6b0",
+        "isa_sha256": "eab7d3eb7d1ec7e15fedaf8dfae363c7ff0854b88f7b54615fd22ff2d41fd042",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case31-gpt_oss-kernel-gpt-oss-attention-component-materialized-attention.log",
+        "sha256": "0382badfd8da0c8e66074f3d3d7b301a933ffd31a4e1811e0c1dbad85b535cc5"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "a27b69dafd451aa531fed8fd80820c050fadf004093fed8cca2286c0c853695a",
+              "name": "query_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 2048,
+              "elements": 1024,
+              "immutable": true,
+              "initial_sha256": "ca8845f54e6783c4b9d58b3714e58ccc052c2527f9c5aed32a1fa36b733a49aa",
+              "name": "key_transposed_bf16",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1024,
+              "elements": 256,
+              "immutable": true,
+              "initial_sha256": "87da6a23d09ef6f924b5b1279283505e931e81fae45245b1dded8c5469601110",
+              "name": "value_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 64,
+              "elements": 16,
+              "immutable": true,
+              "initial_sha256": "e72738f6c382da0bf3d952e77ea5e1d0aab6ecbc631722d273c26ba395bc34db",
+              "name": "sinks_f32",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "attention_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 GPT-OSS-120B materialized Rust attention",
+          "input_sha256": "a04e5af64a808abc11c162ad7556a68f84a0585c7f2b21eeb7389bbdac9b7b0e"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "attention_output outputs=256 max_absolute_error=8.940696716e-8"
+      ],
+      "result": "pass"
+    },
+    {
+      "ordinal": 32,
+      "suite": "gpt_oss",
+      "feature": "kernel-gpt-oss-expert-component",
+      "variant": "materialized-expert",
+      "kernel_export": "gfx950_gpt_oss_120b_expert_v1",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+      "source_blob": "dfc19b571215c9fdd2406fc1c1bbc89b3ffc63a3",
+      "source_sha256": "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1",
+      "artifact": {
+        "crate_binding_sha256": "d3675e464d34094297c8b0033dc08d278cc17baf15ed6fd5f53bd382421f8c99",
+        "llvm_sha256": "e7d9efa48f0124bed520435c265b1d246ea62b1f6ee4b650b209f6e9258fe339",
+        "hsaco_sha256": "94c59d8d89c93718a684af03c803dd082f745bf3358cf79f74e6583535f5c0c0",
+        "isa_sha256": "92ef84533bc0c1ac819c72e579b729c6be2c53a67087191ddd988f01ed61f83e",
+        "target": "gfx950:xnack-",
+        "code_object_version": 6,
+        "wavefront_size": 64
+      },
+      "run_log": {
+        "file": "case32-gpt_oss-kernel-gpt-oss-expert-component-materialized-expert.log",
+        "sha256": "f746df32a08f1507dba8150303f5f168e90ec545052eb80e5bd9e64168533c5b"
+      },
+      "workloads": [
+        {
+          "buffers": [
+            {
+              "body_offset": 0,
+              "byte_len": 8192,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "fe56b9af991dfdda7a8392918b06c80d009a1549a1f5898c1fae8eda1a4f5525",
+              "name": "expert_activation_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 1048576,
+              "elements": 1048576,
+              "immutable": true,
+              "initial_sha256": "e8a14764ef78a613edfc87bec16cb6561f2f58d3ab6b104c434da662eabca2ec",
+              "name": "expert_weight_blocks_fp4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 16,
+              "elements": 4,
+              "immutable": true,
+              "initial_sha256": "fb3c44495f3722a69752208793765fd059c944dcd880c4b7a0b6fd40c083d8bc",
+              "name": "activation_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 0,
+              "byte_len": 32768,
+              "elements": 8192,
+              "immutable": true,
+              "initial_sha256": "2c998a43784e86b15c8aec399b457c741566aff12577b88154716234ab310b83",
+              "name": "expert_weight_scales",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 36,
+              "elements": 1,
+              "immutable": true,
+              "initial_sha256": "fd6d859ae3ad816bc3f05105189c5a06be1165307ad7c96c064c72a9b7dd1a14",
+              "name": "packed_top4",
+              "oracle": {
+                "kind": "immutable-input"
+              }
+            },
+            {
+              "body_offset": 16,
+              "byte_len": 1056,
+              "elements": 256,
+              "immutable": false,
+              "initial_sha256": "74cd356d6a53de9248efe1e269668a02f082c7560c178c1e0ac6ddd9be51728a",
+              "name": "expert_output",
+              "oracle": {
+                "absolute_tolerance": "0.008",
+                "bitwise_exact_elements": 0,
+                "elements": 256,
+                "kind": "cpu-reference-f32",
+                "relative_tolerance": "0"
+              }
+            }
+          ],
+          "cache_regime": "persistent-allocation-repeated-single-workgroup",
+          "id": "gfx950 GPT-OSS-120B materialized Rust expert",
+          "input_sha256": "c00fe690713b67518c9232dea1de5afe8647e0b34ad0743f3456b92088fe87aa"
+        }
+      ],
+      "gates": {
+        "production_rust_extraction": "pass",
+        "exact_target_and_abi_metadata": "pass",
+        "symbol_scoped_isa": "pass",
+        "digest_pinned_hsa_launch": "pass",
+        "independent_cpu_reference": "pass",
+        "output_canaries": "pass",
+        "immutable_inputs": "pass",
+        "finite_output_policy": "pass"
+      },
+      "numerical_results": [
+        "expert_output outputs=256 max_absolute_error=0.000000000e0"
+      ],
+      "result": "pass"
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "variant": "scalar-attention",
+      "feature": "kernel-gpt-oss-decode-scalar-attention",
+      "status": "compiler-rejected",
+      "reason": "the arithmetic-safe scalar helper reaches a call terminator before exact callable memory-effect summaries are available",
+      "retained_conclusion": "no HSACO, numerical result, or latency contribution is claimed",
+      "diagnostic": "a call terminator before exact callable memory-effect summaries are available",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+      "source_blob": "0ded2ffc0d4ab3fb86fd95d08c673ff7011780b6",
+      "source_sha256": "0755e02ef766b8ae88ca876ba8cf16d0cdc8da1cebc05a0aa354b766fac57b49",
+      "rejection_log": {
+        "file": "scalar-attention.log",
+        "sha256": "033c71aa06489832eff24ef48abcd451924b1950959546f8f29acb39ac022c14"
+      }
+    },
+    {
+      "variant": "pipelined-attention",
+      "feature": "kernel-gpt-oss-decode-pipelined-attention",
+      "status": "compiler-rejected",
+      "reason": "the ranked projection rejects a pipeline scalar because it is not an exact unsigned index expression after the exact prime, loop, and drain lifecycle is constructed",
+      "retained_conclusion": "this is a production-lowering feasibility rejection, not a measured slowdown",
+      "diagnostic": "a pipeline scalar is not an exact unsigned index expression",
+      "source_path": "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
+      "source_blob": "21592f5d8f07ad0ee9f56809f9eeeac31204ccc9",
+      "source_sha256": "96e2e4c1ea1019aa30ed8ce5674671d0674687131b529ae15220965e2dcc7c79",
+      "rejection_log": {
+        "file": "pipelined-attention.log",
+        "sha256": "ddea01325d7723ab42cec98c7c90e48edd681d38c5fbe97a6f35e1045e6e3066"
+      }
+    }
+  ]
+}

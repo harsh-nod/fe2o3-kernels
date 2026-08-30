@@ -370,5 +370,5 @@ export const narrativeFingerprints = deepFreeze({
   "gfx950-muon-optimizer/update-contract": "3f3750b43448b83ccfdad8e5f556a414bb090056828f433cf5c39231d50e1a57",
   "gfx950-muon-optimizer/scope-evidence": "4884650fa5f043d3ffaa3edc9c23fc2787547aae4f1e429ae4ccb7b26f6a27df",
   "gfx950-gpt-oss-120b-megakernel/layer-tile-contract": "7657de384b9861955c299f6c3292dd85ab71258932eb974054c0b2b1cdd082a0",
-  "gfx950-gpt-oss-120b-megakernel/performance-boundary": "17965ccf013606f9a842c692187768e6ef41da87ee0c593b0eed1991b59f857f"
+  "gfx950-gpt-oss-120b-megakernel/performance-boundary": "8dc179ec227ea86c53cf7754f89ce275262f500ff60911d462ad3d8a8d8508b5"
 } satisfies Record<NarrativeId, string>);
