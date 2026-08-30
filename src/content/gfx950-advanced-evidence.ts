@@ -21,6 +21,8 @@ export interface PendingAdvancedRustEvidence extends AdvancedKernelContract {
 export interface ObservedAdvancedRustEvidence extends AdvancedKernelContract {
   status: "observed";
   ldsBytes: number;
+  sourceCommit: string;
+  sourceTree: string;
   namespace: string;
   llvmSha256: string;
   hsacoSha256: string;
@@ -34,6 +36,8 @@ export type AdvancedRustEvidence =
   | ObservedAdvancedRustEvidence;
 
 export interface AdvancedMeasurement {
+  sourceCommit: string;
+  sourceTree: string;
   namespace: string;
   llvmSha256: string;
   hsacoSha256: string;
@@ -43,6 +47,7 @@ export interface AdvancedMeasurement {
 }
 
 const canonicalDigest = /^[0-9a-f]{64}$/u;
+const canonicalGitObject = /^[0-9a-f]{40}$/u;
 
 function checkedContract(
   contract: AdvancedKernelContract,
@@ -86,6 +91,14 @@ export function observedAdvancedEvidence(
   measurement: AdvancedMeasurement,
 ): ObservedAdvancedRustEvidence {
   for (const [field, value] of [
+    ["source commit", measurement.sourceCommit],
+    ["source tree", measurement.sourceTree],
+  ] as const) {
+    if (!canonicalGitObject.test(value)) {
+      throw new Error(`${contract.symbol} has a noncanonical ${field}`);
+    }
+  }
+  for (const [field, value] of [
     ["namespace", measurement.namespace],
     ["LLVM SHA-256", measurement.llvmSha256],
     ["HSACO SHA-256", measurement.hsacoSha256],
@@ -116,8 +129,19 @@ export function isObservedAdvancedEvidence(
   return evidence.status === "observed";
 }
 
-const finalMi350Runtime =
-  "observed 2026-08-29 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; fe2o3 compiler commit c1383e97db732f9f1ff8105f10d5c2b5971143e1 tree 42385e6464ca40318fc70ae104845d3997844140; digest-pinned COV6 HSA harness PASS";
+const finalMi350Campaign = Object.freeze({
+  sourceCommit: "da6c108d162bac8afd79e789ccf9b36ef8eb97a4",
+  sourceTree: "745526b462feb2fcc7a45716382c7db86480cb2d",
+  runtimeObservation:
+    "observed 2026-08-29 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; advanced-ablation-final-da6c108d-gpu6 digest-pinned COV6 HSA harness PASS",
+});
+
+const compressedHybridPromotionCampaign = Object.freeze({
+  sourceCommit: "4f9b2bf09db41e6ef38db1bb926c2fa7989d8e1f",
+  sourceTree: "7b1d5209142d1fe8dfbf39158337cad0df734f1b",
+  runtimeObservation:
+    "observed 2026-08-29 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; compressed-hybrid-promotion-4f9b2bf0-gpu6 digest-pinned COV6 HSA harness PASS",
+});
 
 export const advancedRustEvidence = Object.freeze({
   gfx950_kda_gdn_decode: observedAdvancedEvidence(
@@ -131,12 +155,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "e889654ad32a788ce48bde79cfdaea178a36ea3a152838739f4cb3b68fa0ac74",
-      llvmSha256: "32731b06f2908b8092dc626cbdf7b91891eec30478e5fef7bd916196e4582100",
+      ...finalMi350Campaign,
+      namespace: "32d98826b8e7144ccd84186aef763064c4d6f7fca5631c29314047ad462fd257",
+      llvmSha256: "37efa347c1e135787dcf526bae0aa08c6f7cba6f0ed5462161aad3464603f591",
       hsacoSha256: "5a16d32486c6a424c680ec200a8fcc6941115f3a2953ec6a7fad0e383ce4a6d5",
       numericalResult: "state_output max_absolute_error=7.450580597e-8; normalized_output max_absolute_error=4.172325134e-7",
       tolerance: "absolute tolerance 3.0e-3 for both FP32 outputs; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_kda_gdn_prefill: observedAdvancedEvidence(
@@ -150,12 +174,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "cd3e02ed84a8aa33b86dbff7f78b04ca4f454df507d15d78a2ff86de83e72706",
-      llvmSha256: "fa025f5990902219221f4390818c9632bd900002540dafe84ef29431c7662194",
+      ...finalMi350Campaign,
+      namespace: "aaa9f9d6d19739146cfa7a4c759dfc76f8b0930b9bfd4a6dbbb3ee367d6baa30",
+      llvmSha256: "2a326a372023d6b30f02553dad8f70338c73ecf552d94ebf0d14e0a12da53c09",
       hsacoSha256: "58536eb9abf290821b3d85d39c262ed5b49ac8d835ee959b2c36fa9446998bfa",
       numericalResult: "final_state max_absolute_error=7.450580597e-8; normalized_output_first max_absolute_error=8.642673492e-7; normalized_output_second max_absolute_error=1.072883606e-6",
       tolerance: "absolute tolerance 3.0e-3 for all three FP32 outputs; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_content_sparse_attention: observedAdvancedEvidence(
@@ -173,12 +197,12 @@ export const advancedRustEvidence = Object.freeze({
       ldsBytes: 2048,
     },
     {
-      namespace: "1ad77b6d88884cb5768cc3b9f3527c5b83fe5f1c04e3fc2823f2f8c0167e058a",
-      llvmSha256: "9034334afb83a2f073d2572443e3ddea10ffe2edeccf1bad106564a8d6ad3124",
-      hsacoSha256: "6ed1c00a4509c0ed7d277e78dcc81c1bfd831da7dfc09f3091d9363ce520cd54",
+      ...finalMi350Campaign,
+      namespace: "9173ef11ab9a528cd764e5d7c8aea5347f72eb3b8d84aec7e9cbca5510ed8b49",
+      llvmSha256: "cb9d81661add21f299c4d596b76bd27f5acff8b1faad17ed6b6c75d8d7aedb75",
+      hsacoSha256: "7142719bf138b739e6ce00ecba664068a7074642eba307bfd9ee54b83a4cdc49",
       numericalResult: "output max_absolute_error=0.000000000e0; selected_output exact_u32_outputs=3",
       tolerance: "output absolute tolerance 5.0e-3 with finite values; selected IDs exact",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_compressed_hybrid_attention: observedAdvancedEvidence(
@@ -196,12 +220,12 @@ export const advancedRustEvidence = Object.freeze({
       ldsBytes: 2048,
     },
     {
-      namespace: "8fa973d4231e28e54ecbd607f539aaba65a895db610f15d56a698336b119f65a",
-      llvmSha256: "33775e207659202573cdf9915660b02e26bdaa3955103ed091b351ef12f783ee",
-      hsacoSha256: "6c6addf04c745ad6560e45d2896725adbb8d87952cd49c6f710fde6e5011d823",
+      ...compressedHybridPromotionCampaign,
+      namespace: "c8cf1919826911b62fad830db644250616be68fd3aa252db280fb6cbf9157d3b",
+      llvmSha256: "2c3dc19fb71c4f2915b142d57333e8928c08fedcb3cba5b8fc6c329ebf275990",
+      hsacoSha256: "3cf9a73d1c684fc1f9f93c556eaa4772be0c250bd4d6d1f1b3241adbd5c5ef03",
       numericalResult: "output max_absolute_error=0.000000000e0",
       tolerance: "absolute tolerance 5.0e-3; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_attnres_aggregate: observedAdvancedEvidence(
@@ -215,12 +239,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "e71b4250d8eb3fd5371802ed2141e5a0fb880b6a79c48d7b928a8cde0ae0e0de",
-      llvmSha256: "ec09f9a9843f3790cebadbb32012138d09efda5cfd229270c6dabd1e01d8533c",
+      ...finalMi350Campaign,
+      namespace: "8ce6f447416acb25d3708e21b8f1b1ac79e9d3a40350d54c07492e082df0230c",
+      llvmSha256: "e3682835d7ed66754c58182830e810952f9b7f9c6e86d6c70392ab1a854bfaa6",
       hsacoSha256: "f3ab4ebd7b8f2310918eada0d8b90efd57c281914bbac91499040417f5c4a2e6",
       numericalResult: "output max_absolute_error=0.000000000e0",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_four_branch_residual: observedAdvancedEvidence(
@@ -234,12 +258,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "a6d721410f3856c46249fb8b78604d6a1f0caf5b050dd6f3a160ab8c40e51583",
-      llvmSha256: "0fea6c0aea1dc4346dcfbd1258088ee54ec96e68692462c9ee03d8752a6e4211",
+      ...finalMi350Campaign,
+      namespace: "d6335f62afe3df03ec2466b441ea5dd82b55a87b6899f9c95722fb86b5907cd8",
+      llvmSha256: "3e144f4cca2860778a7d6dfe6f536a7a800114b6213a03c7b928bd2134a49cdb",
       hsacoSha256: "190ce48f1172f15b3827b1220ad6ee190087ad4be52892946eff26cfea168ec0",
       numericalResult: "output max_absolute_error=0.000000000e0",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_mhc_sinkhorn_mix: observedAdvancedEvidence(
@@ -253,12 +277,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "f93558928ce6e41a2fe8d78cfb28aa199dae54059fc9b7599a4348f4ad73c966",
-      llvmSha256: "fd54ec9287f330300e3beaa1493142354003523256e9033c6ac6d67df27b7990",
+      ...finalMi350Campaign,
+      namespace: "febc97fab4675a82add36de7ba400c3aef06fe5c788fc6083712033260b9c10c",
+      llvmSha256: "f46689bb42eab2e0995a0190390ca72006556ba2be3d93c634b942ac46a2141b",
       hsacoSha256: "f463b05e53db65c4e9ea73a0d33ce1398c85bcc8b5aab64788fdeb7858c9fdcc",
       numericalResult: "output max_absolute_error=5.960464478e-8",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_moe_route_fp4_t16_e4_k2_v1: observedAdvancedEvidence(
@@ -272,12 +296,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 256,
     },
     {
-      namespace: "5f88dd0eb7d763b42a77dce26f06a50c315730e6a77414e64480fd94f7e9e690",
-      llvmSha256: "8f600f96024522f5f85893b1f3a4bfb3f786cd36b7f2bd55e8f92727e2a0a9c3",
-      hsacoSha256: "31f1f76bda88c340bcb9dcbba4323a3ea5a996ceba27d5fe9e6f2f43da826deb",
+      ...finalMi350Campaign,
+      namespace: "bb933fcd1e3f8124227991b6743de97b6fa108551cc44c617d9450933ad98170",
+      llvmSha256: "ebd55425a148533449bb4ca896d0ea9f0a7223dadc3a812e2810639e64ba48dc",
+      hsacoSha256: "c58e8782753fa049617d082376bc915e4c68ace2f00dcd232dfda110ce9db273",
       numericalResult: "top_experts exact_u32_outputs=32; top_weights max_absolute_error=0.000000000e0; expert_counts exact_u32_outputs=4; dispatch exact_i32_outputs=128",
       tolerance: "top_weights absolute tolerance 2.0e-6; route IDs, counts, and dispatch exact",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_moe_expert_rank_fp4_fp8_v1: observedAdvancedEvidence(
@@ -295,12 +319,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "95964e6517ecad06b1b825cf64c29fb20fe9ec054dd551dfdc55f2e73c261dfc",
-      llvmSha256: "5903f6fe753a7155fca13512ff952dcab7538fa8f98c0b4c612bd5307513890a",
-      hsacoSha256: "7e8e1cb59473e52949ded2e6d5e737d3b7e4cc27a834052da01d4e41cddeb504",
+      ...finalMi350Campaign,
+      namespace: "dad4ffb4c5c270c853b36fbb21ecc1095dcf33cf74d9585029fdce96e90d38e2",
+      llvmSha256: "95a9e9183455b947f5f7792d5d7ba8e07b97a7c8ca030ecf375091a05e864e3e",
+      hsacoSha256: "5ae3155e21e8b7b1789507fb1c2948b814fe71edf3c250fe4988ad327bd27eb0",
       numericalResult: "rank 0 output max_absolute_error=1.490116119e-8; rank 1 output max_absolute_error=4.768371582e-7",
       tolerance: "absolute tolerance 3.0e-3 for both rank outputs; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_combine_expert_ranks_v1: observedAdvancedEvidence(
@@ -314,12 +338,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 256,
     },
     {
-      namespace: "a27beaf1c7c14d2129a2efc9bd9802fba895073515686b9a81495afe4b65047b",
-      llvmSha256: "d981ec0cbda322a74691c681ac93bd629d2fae612317c1026835a42e12cc4676",
-      hsacoSha256: "aa5aa7fa613ae8f439dcf8b626ce18b7560f9705453bd3b9f0ddbc936501166e",
+      ...finalMi350Campaign,
+      namespace: "75b93b89a635855d620e2974e64c7ad6299d75329410616cdceaaabe02db89ae",
+      llvmSha256: "5f1704cddb239b2aaba7ce81cb1e59eb35972a71dbb21de8984eb21863338fb5",
+      hsacoSha256: "fdd9cc5f181800f7e68ca05ddb93031a851a567955a35909daee72fbe99a64f5",
       numericalResult: "output max_absolute_error=0.000000000e0",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_speculative_transaction_v1: observedAdvancedEvidence(
@@ -333,12 +357,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "56cb0ca1edf995cb22811650289af395e5932a3dcb3eaeadd64139781ad8e1fa",
-      llvmSha256: "665eded9144ce80080613325c3ab9503d97513c7820cfaf2608439829c7fce0e",
+      ...finalMi350Campaign,
+      namespace: "712bf821d681a74855c892c7f02fb02b2c64fe36617092999f673a1531777f8b",
+      llvmSha256: "a08e6bb039985ed95b80bc23fd926864c2ee6ad16c744f523efd6fe75255125a",
       hsacoSha256: "5074044f3b46e0b04d24b066cfc23877df312d093dec151c75e3d126d36bbfde",
       numericalResult: "accepted_steps exact_u32_outputs=8; committed exact_u32_outputs=8; output_state max_absolute_error=2.980232239e-8",
       tolerance: "output state absolute tolerance 1.0e-7; 48 rollback lanes bitwise exact; metadata exact",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_qwen_ngram_gather_v1: observedAdvancedEvidence(
@@ -352,12 +376,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "759fc11ede4636245a173107a33f25014d4f8f0f29f1710bf9b9396aeda69ee9",
-      llvmSha256: "8ddcd27e580629472d698c6f4081aba9996b0bac999563eeb78b1a164c9cbff2",
+      ...finalMi350Campaign,
+      namespace: "a9bf254981d5af7855538f611e59b2a273ed274201689cd16443b7279c327175",
+      llvmSha256: "7cb0b517c74fe4dc2eda1568905be7bdbe2bc9c84b56138a5835612085a9c376",
       hsacoSha256: "870afb85c86525288e1695d9764fd84180b62d20388c2678ef96ab318987699b",
       numericalResult: "output exact_i32_outputs=8",
       tolerance: "all eight gathered values exact",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_stage_gradient_shard_v1: observedAdvancedEvidence(
@@ -371,12 +395,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "eecf6b35ad78d15ed59c50e42bb156b24bc9977508e57b67c71c449c6486a336",
-      llvmSha256: "41c5e9ebc965455b1d0e42b5d69f450af7428ce939b16c7a9e5af597b83b4513",
+      ...finalMi350Campaign,
+      namespace: "487472b4b767bb11afc7a2d5bb85795b2b538c040432da4c0d5755900dd4867e",
+      llvmSha256: "3684a2523050984025cdaff77af04176c8b3e751f57644bed325ae92260d182c",
       hsacoSha256: "ac52b38973af23d63dbb05f6edd0ceea5caa92f1f331318d95fe7d62d5b251ce",
       numericalResult: "two shard launches; output outputs=16 max_absolute_error=0.000000000e0 for each launch",
       tolerance: "all 32 staged FP32 elements bitwise exact",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_muon_update_4x4_v1: observedAdvancedEvidence(
@@ -394,12 +418,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "62b82262b6a906c5c4bc76bdf41008abdb45f2c4d9830734cd05ae65520150e2",
-      llvmSha256: "980b871e55312eec64161e554ae28f6357d23df921de26eb5657e1c45c01f713",
+      ...finalMi350Campaign,
+      namespace: "9640ccf630920dc28c840f4d796dab11ddd9cebf804b0315b877e0c048eb7829",
+      llvmSha256: "610e682295d73dd9791b5320cff6cd121b1abc7e654b794c7f510ad722d1f78e",
       hsacoSha256: "bb6e61181e05244a71b6475bcc34a6a0c62d94147bbe27304287f71d8181fe5d",
       numericalResult: "output max_absolute_error=7.450580597e-9; output_norm max_absolute_error=0.000000000e0",
       tolerance: "absolute tolerance 2.0e-6 for update and norm; finite values required",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
   gfx950_gpt_oss_120b_decode_megakernel_v1: observedAdvancedEvidence(
@@ -417,12 +441,12 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 64,
     },
     {
-      namespace: "af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
-      llvmSha256: "7d28da46358c29ce8f3c12fecce42f491cef490f098fdb1602923ffdfc7947b3",
-      hsacoSha256: "066056a1fb2228c9043474d1746a7555ac31c0ca559d678844dc9e89d601f212",
+      ...finalMi350Campaign,
+      namespace: "0739c8414cc87e4bd943b2d563152bbb25abc619847f75f405c6dadb154858d9",
+      llvmSha256: "b5e3ad3e6b0d638cfa45a3bb1a1f28b479dd20a2313aefde7a4607c6f750cb59",
+      hsacoSha256: "016d57b87e0655f0b04e67a9fe43be5af884d7324e5d74354d151b5f095071d2",
       numericalResult: "attention max_absolute_error=8.940696716e-8; expert exact; packed top-4 exact",
       tolerance: "attention absolute tolerance 3.0e-3 with finite values; expert and packed top-4 exact",
-      runtimeObservation: finalMi350Runtime,
     },
   ),
 } satisfies Record<string, AdvancedRustEvidence>);

@@ -975,25 +975,25 @@ describe("curriculum integrity", () => {
 
   it("publishes exact bounded advanced gfx950 source and fail-closed production runners", () => {
     const expected = [
-      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "db6a575fa3a472a4a2927671f9a9e1a13df89e627f6eccfba56e860a6193241c", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
-      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "6a413c9bd08ef1b6d1721383598a3aa681aaac83d0daec0ce2ee8a99ee044cd8", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
-      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "6a413c9bd08ef1b6d1721383598a3aa681aaac83d0daec0ce2ee8a99ee044cd8", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
-      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "6a413c9bd08ef1b6d1721383598a3aa681aaac83d0daec0ce2ee8a99ee044cd8", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
-      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "6a413c9bd08ef1b6d1721383598a3aa681aaac83d0daec0ce2ee8a99ee044cd8", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
-      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "db6a575fa3a472a4a2927671f9a9e1a13df89e627f6eccfba56e860a6193241c", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
-      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "db6a575fa3a472a4a2927671f9a9e1a13df89e627f6eccfba56e860a6193241c", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
-      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "db6a575fa3a472a4a2927671f9a9e1a13df89e627f6eccfba56e860a6193241c", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
+      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
+      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
+      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
+      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
+      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
+      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
+      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
+      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
     ] as const;
 
     const excerptHashes = {
-      "gfx950-advanced-moe": ["8725f0f7e6f819bb748214e1b295f7d3aa354ee0ba930bce1dbe330c0ad5d3e6", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
-      "gfx950-kda-gdn-linear-attention": ["a4c5dffee6d7589ae55ecf3ea591998abd374e632bb2a40bc1619c1b6497121a", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
-      "gfx950-indexed-sparse-attention": ["0e1419fead85c0b797131f2f93242cd91ebb7fbcdcaba332c9634f473bc710b3", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
-      "gfx950-compressed-hybrid-attention": ["593682a256f267d5e0ef85b0b2c1cbf094bafc0e6031daa7e49ddb27b93987be", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
-      "gfx950-attnres-gr-mhc": ["bed64c7bf9e38e6887a8fc26d3fe9d0671009c75c305736933e134b2cdf2d468", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
-      "gfx950-speculative-mtp-verification": ["ca76aa4c4033586d49d3536c1caa08830c1013eb0edc2da21845b071c82d2688", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
-      "gfx950-ngram-embedding-gather": ["bc99f70c6776d5b882e9f02dfea8de1a371ac4bb55145e54df800d72f1819bd2", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
-      "gfx950-muon-optimizer": ["0f1147889c09a29fac3797bc558507354ba19d76c0b3c4b6cf7bf1c2d300952c", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
+      "gfx950-advanced-moe": ["0e73616a5460d1ba9b45510e87607d63f4bc0c33aa039bb0df89fd148957153d", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
+      "gfx950-kda-gdn-linear-attention": ["9e089bec41e2ef305e7fd7f023948ccffddfa2bec812fd5f23f42d25f07b0067", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
+      "gfx950-indexed-sparse-attention": ["503014732c2a8951ba0e8c53506aa3f076dc74fb416c27d4bcf469fca4320ea2", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
+      "gfx950-compressed-hybrid-attention": ["4b905913f30edfb7e6e0b0a20893c14bd7ca1b656a3e99c6794efe1a2175df03", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
+      "gfx950-attnres-gr-mhc": ["fdeed2afcea1bd02c7970c5c3e3421ad1713350aa91c68ee8ccdbe81075659bb", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
+      "gfx950-speculative-mtp-verification": ["11d5c1e7a1099ac0838e01e8960b8947aee6f38d41ed3cf8481fcaa3172d15e4", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
+      "gfx950-ngram-embedding-gather": ["8878de47686ac3ad6f2bcfb0b0544fc95e71f6699374ec3f7d8e3debae19fb83", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
+      "gfx950-muon-optimizer": ["e6a0a9121377d2024da51817fcc4fa42487c14a159146c41929548bcf3c3b217", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
     } as const;
 
     const productionRecords = {
@@ -1082,6 +1082,9 @@ describe("curriculum integrity", () => {
       expect(kernel?.sourceSha256).toBe(rustExcerptSha256);
       expect(kernel?.code).toContain(rustSymbol);
       expect(kernel?.code).not.toContain("SOURCE MIRROR PENDING");
+      expect(kernel?.code.match(/pub fn gfx950_/gu) ?? []).toHaveLength(
+        productionRecords[lessonId].length,
+      );
       expect(createHash("sha256").update(readFileSync(sourcePath)).digest("hex")).toBe(
         sourceFileSha256,
       );
@@ -1135,6 +1138,8 @@ describe("curriculum integrity", () => {
         expect(evidence).toContain(runner);
         expect(evidence).toContain(hardwareTest);
         expect(evidence).toContain("Evidence status: observed");
+        expect(evidence).toContain(`Artifact source commit: ${record.sourceCommit}`);
+        expect(evidence).toContain(`Artifact source tree: ${record.sourceTree}`);
         expect(evidence).toContain(`Portable namespace: ${record.namespace}`);
         expect(evidence).toContain(`Rust-produced LLVM SHA-256: ${record.llvmSha256}`);
         expect(evidence).toContain(`Rust-produced HSACO SHA-256: ${record.hsacoSha256}`);
@@ -1176,7 +1181,7 @@ describe("curriculum integrity", () => {
       language: "rust",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
       sourceCommit: advancedCoreSourceCommit,
-      sourceSha256: "4808651a5fecabc26b0598eb4827772af4b95ca34978872524bec536f2a3392b",
+      sourceSha256: "61467901200208136e5ab71d8eb50d9c735b1fa41fbaa924f813d138f6d34aed",
       explanatory: false,
     });
     expect(kernel?.code).toContain(
@@ -1199,7 +1204,7 @@ describe("curriculum integrity", () => {
     );
     expect(host).toContain("bash perf-evidence/run-gpt-oss-performance.sh");
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
-    expect(result).toContain("Campaign commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
+    expect(result).toContain("Historical campaign commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
     expect(result).toContain("Final integrated wrapper: passed at c1383e97 on MI350X gfx950");
     expect(result).toContain("Fused p5/p95: 1.059803 / 1.069283 ms");
     expect(result).toContain("Exact unfused/fused ratio: 0.732979");
@@ -1254,7 +1259,10 @@ describe("curriculum integrity", () => {
     }
 
     const finalAdvanced = JSON.parse(
-      readFileSync("perf-evidence/gfx950-advanced-evidence-v1.json", "utf8"),
+      readFileSync(
+        "perf-evidence/gfx950-advanced-ablation-evidence-v1.json",
+        "utf8",
+      ),
     );
     expect(finalAdvanced.protocol).toMatchObject({
       processes_per_variant: 1,
@@ -1262,65 +1270,37 @@ describe("curriculum integrity", () => {
       blocks: 30,
       samples_per_block: 100,
       block_rewarm: 20,
-      kernel_source_commit: "c1383e97db732f9f1ff8105f10d5c2b5971143e1",
+      source_commit: "da6c108d162bac8afd79e789ccf9b36ef8eb97a4",
     });
-    expect(finalAdvanced.results).toHaveLength(16);
-    const advancedSymbols = Object.keys(advancedRustEvidence).filter(
-      (symbol) => symbol !== "gfx950_gpt_oss_120b_decode_megakernel_v1",
-    );
-    expect(new Set(finalAdvanced.results.map((result: { kernel_export: string }) => result.kernel_export))).toEqual(
-      new Set(advancedSymbols),
-    );
-    for (const result of finalAdvanced.results as Array<{
-      kernel_export: string;
-      hsaco_sha256: string;
-      median_ns: number;
-    }>) {
-      expect(performanceText, result.kernel_export).toContain(result.hsaco_sha256);
-      expect(performanceText, result.kernel_export).toContain(
-        (result.median_ns / 1000).toFixed(3),
-      );
-    }
+    expect(finalAdvanced.artifacts).toMatchObject({
+      raw_samples: 105000,
+      series: 35,
+      hsaco_files: 32,
+      leaked_amdgpu_target_directories: 0,
+    });
+    expect(finalAdvanced.comparisons).toHaveLength(14);
+    expect(finalAdvanced.promotion_verification).toMatchObject({
+      source_commit: "4f9b2bf09db41e6ef38db1bb926c2fa7989d8e1f",
+      production_hsaco_sha256:
+        "3cf9a73d1c684fc1f9f93c556eaa4772be0c250bd4d6d1f1b3241adbd5c5ef03",
+      division_baseline_hsaco_sha256:
+        "6c6addf04c745ad6560e45d2896725adbb8d87952cd49c6f710fde6e5011d823",
+    });
+    expect(performanceText).toContain("105,000 dispatch samples");
+    expect(performanceText).toContain("paired 1.005300x");
 
-    const mhcRecord = JSON.parse(
-      readFileSync(
-        "examples/gfx950_advanced_attention/performance-mhc-sinkhorn-v1.json",
-        "utf8",
-      ),
-    );
     const mhc = module10
       .find((lesson) => lesson.id === "gfx950-attnres-gr-mhc")
       ?.tabs.find((tab) => tab.kind === "performance")?.code;
-    expect(mhc).toContain(
-      `Paired median speedup ${mhcRecord.measurement.median_paired_speedup}x`,
-    );
-    expect(mhc).toContain(
-      `Candidate/resource floor = 5,040 ns / ${mhcRecord.theoretical_bound.strict_global_resource_floor_ns} ns = 70,000x`,
-    );
-    expect(mhc).toContain(
-      "Only the combined rewrite was timed",
-    );
-    expect(mhc).toContain(
-      "The final candidate-only campaign measured AttnRes",
-    );
+    expect(mhc).toContain("a 1.448x speedup and 30.9392% reduction");
+    expect(mhc).toContain("mHC: 0.072 ns and 69,444x");
+    expect(mhc).toContain("independent latency is unavailable");
 
-    const systemsRecord = JSON.parse(
-      readFileSync(
-        "examples/gfx950_advanced_systems/optimization-evidence-v1.json",
-        "utf8",
-      ),
-    );
-    const speculative = systemsRecord.kernels.find(
-      (kernel: { kernel: string }) =>
-        kernel.kernel === "gfx950_speculative_transaction_v1",
-    );
     const speculativeTab = module10
       .find((lesson) => lesson.id === "gfx950-speculative-mtp-verification")
       ?.tabs.find((tab) => tab.kind === "performance")?.code;
-    expect(speculativeTab).toContain(
-      `saving ${(speculative.median_ns_saved / 1000).toFixed(2)} us`,
-    );
-    expect(speculativeTab).toContain("no new baseline, speedup, fastest-kernel, or state-of-the-art conclusion");
+    expect(speculativeTab).toContain("5,800 -> broadcast 5,760 ns");
+    expect(speculativeTab).toContain("a 1.006944x speedup");
   });
 
   it("keeps the advanced production evidence matrix exhaustive and fail-closed", () => {
@@ -1356,6 +1336,8 @@ describe("curriculum integrity", () => {
         throw new Error(`${symbol} must not regress to pending evidence`);
       }
       expect(evidence.namespace).toMatch(/^[0-9a-f]{64}$/u);
+      expect(evidence.sourceCommit).toMatch(/^[0-9a-f]{40}$/u);
+      expect(evidence.sourceTree).toMatch(/^[0-9a-f]{40}$/u);
       expect(evidence.llvmSha256).toMatch(/^[0-9a-f]{64}$/u);
       expect(evidence.hsacoSha256).toMatch(/^[0-9a-f]{64}$/u);
       expect(evidence.numericalResult).not.toMatch(/\bpending\b/iu);
@@ -1379,6 +1361,8 @@ describe("curriculum integrity", () => {
           workgroupSize: 64,
         },
         {
+          sourceCommit: "0".repeat(40),
+          sourceTree: "1".repeat(40),
           namespace: "not-a-digest",
           llvmSha256: "0".repeat(64),
           hsacoSha256: "1".repeat(64),
@@ -1430,7 +1414,8 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_low_precision/gfx950-ocml-closure.sh", "4acd64af08347456aa9b8e2c105e1af7ce2946167e95496c02c5dc88e2544c6a"],
       ["examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest", "43b868ede4500d71ff0f81fe3db2b91cec5cf4c973befc1533adfac51d9accc6"],
       ["examples/gfx950_advanced_attention/Cargo.lock", "71183e1227390ecbafc3a29534cc019eee8b84d8e3ddfee8b37c0d7b4175b050"],
-      ["examples/gfx950_advanced_attention/Cargo.toml", "9ec3cdc575a2ece34e7b63c603964e5d7f8b3954259eb75c1de6879683bafe1e"],
+      ["examples/gfx950_advanced_attention/Cargo.toml", "322cfc99028eb79da0796d45cb2f9590fb9b138d94087f1673abf6d1ebdb4d56"],
+      ["examples/gfx950_advanced_attention/ablation-variants-v1.json", "1e20890c52965c2c0140d40175f8b23a09795c6123a398bfcc7aaa0603ede4d7"],
       ["examples/gfx950_advanced_attention/README.md", "ef9b2fa2b92a17cc9d200b4510c802a9d8314349521a11ef3af6d4e22d3b26b4"],
       ["examples/gfx950_advanced_attention/build_and_test.sh", "edfb9d27b52a1493c6f9371ed0944d6bdbca230971cf0efcff35133c5b59e17d"],
       ["examples/gfx950_advanced_attention/check_isa.sh", "2e9e76a93e2d66f13c489c68217bb1857a8b326861608c7cb04ca13fba081e45"],
@@ -1440,50 +1425,63 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh", "6709edbd2da0424fbfbaeb02d4b612e4a78ca8e941929dc9ecc2ecd3ecaef779"],
       ["examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh", "972e38c13f18c85fa087a3649d3f7ea4f5c7ebb7b97709b131386f4d0adc830c"],
       ["examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh", "9c4a4c2fceee19680e6f6a844966f591ef12feb1093b0300750a4448f22d7bf5"],
-      ["examples/gfx950_advanced_attention/run-gfx950.sh", "054e3ceb822315955c2dd66cdf4052a67addf256b3079773b45c6682d2344452"],
+      ["examples/gfx950_advanced_attention/run-gfx950.sh", "d9bd19e9d7b69673b631220930b154122648c3cafaab93d4ef4716567485edc4"],
       ["examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh", "b52f355e42d920435f12f46c4727bafdcbb89460ffe7ade9a66170d14123fd07"],
       ["examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh", "0546e3565717c05a5680420f5c87e1ee34b89ccce0d25f153bd3740cea6c3788"],
       ["examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh", "5e17ad7d3e87b67342b49eba0615f106051827d664eea228780b80a05ef81b26"],
-      ["examples/gfx950_advanced_attention/src/kernel.rs", "6a413c9bd08ef1b6d1721383598a3aa681aaac83d0daec0ce2ee8a99ee044cd8"],
+      ["examples/gfx950_advanced_attention/src/ablation.rs", "b5b1fc74088adf33ef56a341339faf0378280d51938632597366eb5eed2a6337"],
+      ["examples/gfx950_advanced_attention/src/kernel.rs", "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24"],
       ["examples/gfx950_advanced_attention/src/reference.rs", "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9"],
-      ["examples/gfx950_advanced_attention/src/lib.rs", "78a0532d2fb981ca27f0a1943e92e277868a86dcf7ee2c37acc42eef819b6e4b"],
+      ["examples/gfx950_advanced_attention/src/lib.rs", "2109db5e66df005313850143c1a936987bcae73665e35bf8c9b84c6ceebfd664"],
       ["examples/gfx950_advanced_attention/test-extractor-runtime.sh", "47f0fa7b258d7b59dae1da26377a8b5acfe992ddf62511f96cf24d7ab4549363"],
-      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "11a91a97b354e1ed0087b9b79c5a3985eb1038b844853d87b5a0b8299d8997a7"],
+      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "45031d4633805a3282609afa5beec14864e198ab6dbd2f2b5a874b74ad5ecc3b"],
       ["examples/gfx950_advanced_attention/tests/reference.rs", "fd2b801e20d8d53fbc53446ebf14866d7855ec9c10b1970251b020af8c74a1f8"],
       ["examples/gfx950_advanced_systems/Cargo.lock", "34002f1e32b90e21f19d2ab9283b0f92b60d4c59367ad18fad0ece4ebfa8b525"],
-      ["examples/gfx950_advanced_systems/Cargo.toml", "b6a1e49bf5d0405470045f9768a07d8063b2303eb1dd6ca693f30adccda24d97"],
+      ["examples/gfx950_advanced_systems/Cargo.toml", "4bb727180242b4f1a55693ecf2abcd87026e324cbd208d9c6a6970a45ae681e7"],
+      ["examples/gfx950_advanced_systems/ablation-variants-v1.json", "6ad96f11a17cea5e40332616464d44fcb14ff9107f4b4618ebe68df20fe83bf8"],
       ["examples/gfx950_advanced_systems/README.md", "f9eb2e727dbe6661ef69a882c684f2968797eeefb1133730d2560b9c3cb2315b"],
       ["examples/gfx950_advanced_systems/build_and_test.sh", "20f05e523e56aa1fff05f5d766960ab0539dfcc2d1dd2d33405a15725c715d54"],
       ["examples/gfx950_advanced_systems/check_isa.sh", "7a115cbdabc14575f597b35f8443a6d9db36261fbd8d31551447c55a02196b53"],
       ["examples/gfx950_advanced_systems/gfx950_advanced_systems.hip", "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5"],
       ["examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh", "d586548c5529ab771b8795132ed375e1ea79d5ccb22d36ce3783a30151e36071"],
       ["examples/gfx950_advanced_systems/run-gfx950.sh", "bfc9dbc79e84a90f9a7b73a265b4c6f7bc5be938ec732e140f72e4615c37c922"],
+      ["examples/gfx950_advanced_systems/run-ablation-gfx950.sh", "190a5193ba1bfdee841842b09f7b35615790c31af15458119bbe0a853f71e846"],
       ["examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh", "3f117cf3c2cb585dcabcf7b7e8d19f4c1f8c0b37d4c45faa957bcf736c65bb98"],
       ["examples/gfx950_advanced_systems/run-moe-route-gfx950.sh", "176766f056546afff1b854cd0525b7475c36ea57371106a819bd367506832489"],
       ["examples/gfx950_advanced_systems/run-muon-update-gfx950.sh", "d4bbf39e0e5fc38f7f767fffcae81bd1749911a2fdfcd250b0f79b0394cfbe3d"],
       ["examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "d25726c4015a35e05ab31c8fa7f7f8f04cc10686727f982adb86eeda36d10da1"],
       ["examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "a85a7c2317f10077dcf97c1df9e2d95326a843e6a325dce3062ae4d06e8629fd"],
       ["examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh", "7f2bcc17211dcfc2b8234e0e1842a7f4b6166f8d31672636ee89f9604092f3c5"],
-      ["examples/gfx950_advanced_systems/src/kernel.rs", "db6a575fa3a472a4a2927671f9a9e1a13df89e627f6eccfba56e860a6193241c"],
+      ["examples/gfx950_advanced_systems/src/kernel.rs", "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d"],
       ["examples/gfx950_advanced_systems/src/reference.rs", "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd"],
-      ["examples/gfx950_advanced_systems/src/lib.rs", "1792a7e6290becd3bcc9743c44378e52ebaff4c0f2750e13835e4b8b6bc3f976"],
+      ["examples/gfx950_advanced_systems/src/lib.rs", "3ae59a0e6d0c36afccc1518d3bd418452a83297bcc59b71f5172fdd38c932f95"],
       ["examples/gfx950_advanced_systems/tests/references.rs", "dd16aa4d15c630a8756b5d96a0d505c8cbfd6cd7a4aa77692891304da219f5dd"],
-      ["examples/gfx950_advanced_systems/tests/source.rs", "d076047f939b49d10ca8b438b99cb1ba415d231a34fe471d5b9a028a48513fa4"],
+      ["examples/gfx950_advanced_systems/tests/source.rs", "0e2dba16c1c1870e9e65813c126b676d8c70ab875d7a7d3c4ba98562d334e919"],
       ["examples/gfx950_gpt_oss_decode/Cargo.lock", "221120c138c21bc740778c195c73d28fa0487b05095bf4e024bb9d30e30d43ec"],
-      ["examples/gfx950_gpt_oss_decode/Cargo.toml", "02e83db9c79b934d208fa9e381471af8c098752f868fa5dd9b3af90111c51f64"],
-      ["examples/gfx950_gpt_oss_decode/README.md", "2a73b1ecf562b8d9c94659642e44bc2c4d0ea862d065e07d3d946c2a810abbfa"],
+      ["examples/gfx950_gpt_oss_decode/Cargo.toml", "ccae3bc056ca2487a47f04a840b89247e24e7ff3b648674dbadbbc9ce60de299"],
+      ["examples/gfx950_gpt_oss_decode/README.md", "17c37981f54857f21d51edb045de965b8d007736d0cb1954c52251bae6fd8861"],
+      ["examples/gfx950_gpt_oss_decode/ablation-variants-v1.json", "85b79828ba101ccfa5c64646dc4472457c2743a3739a1a0da5f9c94469a23094"],
       ["examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip", "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b"],
       ["examples/gfx950_gpt_oss_decode/run-gfx950.sh", "b88b02df8b6c7b3ef7de9d839d4be742eb25f3e56a59b634b559408fe7e206a3"],
+      ["examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "413b4d43426e3227a3166c9703dd5704a9a4b798722a85fb36442e6ed250b787"],
       ["examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh", "bd6df83ce6a9b6b2db11c5d18e6ee6fff283c7ef122481b44fffc90d47b532da"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel.rs", "62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4"],
-      ["examples/gfx950_gpt_oss_decode/src/lib.rs", "f03b140bbe9b0c0e866e3c1fa68d0730427e7c98bc3305b13429573ea298e2ed"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel.rs", "4a07238304a727c5a5227f58fac4a05ac10e905ac802400977968af177c32361"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_components.rs", "fd2b8000c664d4d6464bbc745c2d6878652e4e2a65c02872a210023b5df1ce38"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs", "081ee76498d682fd5c2f82ada424daa5c21ef915cbffffcfa7e6b089e3220abb"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs", "41e8ce236f7e506becfe0ec8f6ead54b09ef21736e7f86dfe692e8d8570a6503"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs", "ab528db753b62f91c2ed5129dbd35b5d9ed7a04ace1b669c4e073997b5062dbb"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs", "3f9fe7050757ab450bba837de73d574f4423a2f5752646f11d388eeac87311db"],
+      ["examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs", "37314605a50b7c3a1060c1afa72919476ba630ed5d3997324e4976116c972359"],
+      ["examples/gfx950_gpt_oss_decode/src/lib.rs", "a0d8a54c855c2bf9a0b1c20dab682f9ece1370e479d9ea9b85882a7586ad6949"],
       ["examples/gfx950_gpt_oss_decode/src/reference.rs", "1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05"],
       ["examples/gfx950_gpt_oss_decode/tests/reference.rs", "60156d4d1c2d932e00c792b3cb65b63784131b1919f3a97cd83d29b4e8ec0e94"],
-      ["examples/gfx950_gpt_oss_decode/tests/source.rs", "3c856f586ccdcb36644a805e5c795b72385ee4bc5d93e627ac9892406d0a2f22"],
-      ["perf-evidence/gpt-oss-layer-tile-evidence-v1.json", "359f65a3d702e2ad433f443967f448d3d6611599ddfa052560bd88e9c8a47983"],
+      ["examples/gfx950_gpt_oss_decode/tests/source.rs", "da25cd80e48123248b44d002c80efa19c182c0fe43351afa472d8f368df28630"],
+      ["perf-evidence/gpt-oss-layer-tile-evidence-v1.json", "65ae89cdba30261d4dc3dc92a295f392e95b7bcded67f721c48defd8de17635a"],
+      ["perf-evidence/gfx950-advanced-ablation-evidence-v1.json", "da0bf8e61151ca1ae15dbaf57743a840e2099556c3d20eebfe0c43d4ec792ec5"],
       ["perf-evidence/gfx950-advanced-evidence-v1.json", "550b290ec4e8dbf43fa338f31fda88199c6f8d86ae55f9570789bac7b968fd6a"],
       ["perf-evidence/run-gpt-oss-performance.sh", "e4ab1ba9b2f7ce2489bf163922d9cdb4bbf01591643cc9aef0d4b30db175f28f"],
-      ["crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs", "d47167b820db9023621489a35db3609f87e7a0eaf6395a87034d2ca7f0c99e09"],
+      ["perf-evidence/run-gfx950-advanced-ablation.sh", "adb6ec6814935a8023eb9f0b65cedb110768e2a795aa8907968650fc044629ab"],
+      ["crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs", "06e5608c318bbb6257377ea808ea6b72bad48de56707f7276b4bfea51d2f5c36"],
     ] as const;
     for (const [path, digest] of mirrors) {
       expect(createHash("sha256").update(readFileSync(path)).digest("hex"), path).toBe(digest);
