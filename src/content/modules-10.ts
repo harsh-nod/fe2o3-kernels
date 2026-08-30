@@ -1,4 +1,5 @@
 import advancedAttentionSource from "../../examples/gfx950_advanced_attention/gfx950_advanced_attention.hip?raw";
+import advancedAttentionAblation from "../../examples/gfx950_advanced_attention/src/ablation.rs?raw";
 import advancedAttentionRustKernel from "../../examples/gfx950_advanced_attention/src/kernel.rs?raw";
 import advancedAttentionRustReference from "../../examples/gfx950_advanced_attention/src/reference.rs?raw";
 import advancedAttentionRustContract from "../../examples/gfx950_advanced_attention/src/lib.rs?raw";
@@ -11,6 +12,12 @@ import advancedSystemsRustContract from "../../examples/gfx950_advanced_systems/
 import advancedSystemsBuild from "../../examples/gfx950_advanced_systems/build_and_test.sh?raw";
 import advancedSystemsIsa from "../../examples/gfx950_advanced_systems/check_isa.sh?raw";
 import gptOssRustKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel.rs?raw";
+import gptOssComponents from "../../examples/gfx950_gpt_oss_decode/src/kernel_components.rs?raw";
+import gptOssHeldFragments from "../../examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs?raw";
+import gptOssInterleavedStores from "../../examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs?raw";
+import gptOssPipelinedAttention from "../../examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs?raw";
+import gptOssRouterSerial from "../../examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs?raw";
+import gptOssScalarAttention from "../../examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs?raw";
 import gptOssRustReference from "../../examples/gfx950_gpt_oss_decode/src/reference.rs?raw";
 import gptOssUnfusedHip from "../../examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip?raw";
 import gptOssRunFused from "../../examples/gfx950_gpt_oss_decode/run-gfx950.sh?raw";
@@ -164,6 +171,16 @@ interface AdvancedLessonSpec {
     acceptance: string;
   };
   glossary: string[];
+  variantSources?: VariantSourceSpec[];
+}
+
+interface VariantSourceSpec {
+  label: string;
+  status: "timed" | "compiler-rejected";
+  code: string;
+  sourcePath: string;
+  sourceSha256: string;
+  detail: string;
 }
 
 function sourceBundle(bundle: BundleId): SourceBundle {
@@ -205,6 +222,22 @@ function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean
     if (depth === 0) return source.slice(start, index + 1);
   }
   throw new Error(`Unclosed Rust function ${symbol}`);
+}
+
+function variantSourceTab(source: VariantSourceSpec): CodeTab {
+  const status = source.status === "timed" ? "TIMED" : "COMPILER-REJECTED";
+  return {
+    kind: "kernel",
+    label: `${source.label} [${status}]`,
+    language: "rust",
+    code: source.code,
+    sourcePath: source.sourcePath,
+    sourceCommit: advancedCoreSourceCommit,
+    sourceSha256: source.sourceSha256,
+    sourceDigestScope: "file",
+    explanatory: false,
+    notice: `Exact retained ${status.toLowerCase()} Rust ablation source, pinned to the core commit and full-file SHA-256. ${source.detail}`,
+  };
 }
 
 function loweringSupported(bundle: SourceBundle): boolean {
@@ -319,6 +352,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const referenceFragments = spec.referenceSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustReference, symbol, false),
   );
+  const variantTabs = (spec.variantSources ?? []).map(variantSourceTab);
   const tabs: CodeTab[] = [
     {
       kind: "kernel",
@@ -333,6 +367,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       explanatory: false,
       notice: `Exact published ordinary attributed Rust for ${spec.rustSymbols.join(", ")}, pinned to the core commit and displayed-byte SHA-256. The production evidence area lists one Rust-to-HSACO runner and one HSA harness test per kernel.`,
     },
+    ...variantTabs,
     {
       kind: "reference",
       label: "Safe CPU reference",
@@ -466,6 +501,56 @@ const gptOssSourceCommit = advancedCoreSourceCommit;
 const gptOssSourceTree = advancedCoreSourceTree;
 const gptOssHistoricalCampaignCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
 const gptOssHistoricalCampaignTree = "42385e6464ca40318fc70ae104845d3997844140";
+const gptOssVariantSources: VariantSourceSpec[] = [
+  {
+    label: "Serial router ablation",
+    status: "timed",
+    code: gptOssRouterSerial,
+    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
+    sourceSha256: "3f9fe7050757ab450bba837de73d574f4423a2f5752646f11d388eeac87311db",
+    detail: "This exact source isolates the serial-router baseline used by the da6 ablation campaign.",
+  },
+  {
+    label: "Held-fragment ablation",
+    status: "timed",
+    code: gptOssHeldFragments,
+    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
+    sourceSha256: "081ee76498d682fd5c2f82ada424daa5c21ef915cbffffcfa7e6b089e3220abb",
+    detail: "This exact source keeps all MXFP4 accumulator fragments live for the timed register-pressure comparison.",
+  },
+  {
+    label: "Interleaved-store ablation",
+    status: "timed",
+    code: gptOssInterleavedStores,
+    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
+    sourceSha256: "41e8ce236f7e506becfe0ec8f6ead54b09ef21736e7f86dfe692e8d8570a6503",
+    detail: "This exact source supplies the timed store-ordering candidate; its aggregate and paired orderings disagreed.",
+  },
+  {
+    label: "Materialized components",
+    status: "timed",
+    code: gptOssComponents,
+    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+    sourceSha256: "fd2b8000c664d4d6464bbc745c2d6878652e4e2a65c02872a210023b5df1ce38",
+    detail: "This file contains the three exact Rust component exports summed by the da6 dispatch-fusion ablation.",
+  },
+  {
+    label: "BF16 LDS pipeline",
+    status: "compiler-rejected",
+    code: gptOssPipelinedAttention,
+    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
+    sourceSha256: "ab528db753b62f91c2ed5129dbd35b5d9ed7a04ace1b669c4e073997b5062dbb",
+    detail: "The exact two-stage implementation reached ranked projection and was compiler-rejected; it has no latency result.",
+  },
+  {
+    label: "Scalar attention",
+    status: "compiler-rejected",
+    code: gptOssScalarAttention,
+    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+    sourceSha256: "37314605a50b7c3a1060c1afa72919476ba630ed5d3997324e4976116c972359",
+    detail: "This exact scalar-attention candidate was compiler-rejected and has no latency result.",
+  },
+];
 const gptOssPerformance = advancedPerformanceTabFor("gfx950-gpt-oss-120b-megakernel");
 if (!gptOssPerformance) throw new Error("Missing GPT-OSS performance evidence");
 
@@ -475,7 +560,7 @@ const gptOssMegakernelLesson: Lesson = {
   order: 8,
   title: "gpt-oss-120b batch-1 layer-tile megakernel",
   summary:
-    "Inspect a real safe-Rust gfx950 layer tile that fuses 128-way routing, one sink-softmax GQA tile, and one dynamically selected MXFP4 expert projection, together with its exact unfused comparator.",
+    "Inspect a real safe-Rust gfx950 layer tile that fuses 128-way routing, one sink-softmax GQA tile, and one dynamically selected MXFP4 expert projection, together with its archived c138 HIP three-dispatch comparator.",
   duration: "60 min",
   prerequisites: [
     "gfx950 advanced MoE pipeline",
@@ -486,14 +571,14 @@ const gptOssMegakernelLesson: Lesson = {
   objectives: [
     "Trace stable top-4 routing, sink-softmax attention, and selected-expert MXFP4 work through one Wave64 dispatch.",
     "Relate sequential MXFP4 fragment consumption to the measured VGPR and latency reduction.",
-    "Compare the fused kernel with the exact three-dispatch comparator without widening the result to a whole model or state-of-the-art claim.",
+    "Compare the fused kernel with the archived c138 HIP three-dispatch comparator without widening the result to a whole model or state-of-the-art claim.",
   ],
   claims: [
     {
       kind: "gpu-observed",
       label: "Final integrated MI350X execution for the pinned kernel and oracle",
       detail:
-        "At the exact pinned c1383e97 core commit, the ordinary Rust kernel produced gfx950 LLVM and COV6 HSACO, passed the bounded HSA oracle against the independent CPU reference, and measured fused 1.064644 ms versus exact unfused 0.780362 ms. The fused kernel was 1.3643x slower. This fixed layer-tile result is final integrated evidence for the admitted artifacts, not a fastest or state-of-the-art claim.",
+        "At the exact pinned c1383e97 core commit, the ordinary Rust kernel produced gfx950 LLVM and COV6 HSACO, passed the bounded HSA oracle against the independent CPU reference, and measured fused 1.064644 ms versus its archived c138 HIP three-dispatch comparator at 0.780362 ms. The fused kernel was 1.3643x slower. This fixed layer-tile result is final integrated evidence for those admitted historical artifacts, not a fastest or state-of-the-art claim.",
       reference: historicalReference(
         gptOssHistoricalCampaignCommit,
         gptOssHistoricalCampaignTree,
@@ -516,7 +601,7 @@ const gptOssMegakernelLesson: Lesson = {
         ],
         {
           target: advancedProductionTarget,
-          note: "Archived final integrated MI350X evidence at the exact pinned source commit. It covers one fixed Wave64 layer tile and its exact three-dispatch comparator, not a complete layer, whole model, fastest result, or state of the art.",
+          note: "Archived final integrated MI350X evidence at the exact pinned source commit. It covers one fixed Wave64 layer tile and its archived c138 HIP three-dispatch comparator, not a complete layer, whole model, fastest result, or state of the art.",
         },
       ),
     },
@@ -540,6 +625,7 @@ const gptOssMegakernelLesson: Lesson = {
       notice:
         "Exact ordinary attributed Rust from the current promoted core source. Its file SHA-256 is 4a07238304a727c5a5227f58fac4a05ac10e905ac802400977968af177c32361.",
     },
+    ...gptOssVariantSources.map(variantSourceTab),
     {
       kind: "reference",
       label: "Safe CPU reference",
@@ -556,7 +642,7 @@ const gptOssMegakernelLesson: Lesson = {
     },
     {
       kind: "comparison",
-      label: "Exact unfused HIP",
+      label: "Archived c138 unfused HIP",
       language: "cpp",
       code: gptOssUnfusedHip,
       sourcePath: "examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip",
@@ -564,7 +650,7 @@ const gptOssMegakernelLesson: Lesson = {
       sourceSha256: "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b",
       explanatory: true,
       notice:
-        "Independent three-dispatch router, attention, and expert comparator with the same fixed inputs and output oracle. It is not a framework or whole-model baseline.",
+        "Archived c138 HIP three-dispatch router, attention, and expert comparator with the same fixed inputs and output oracle. It is distinct from the da6 exact Rust component-materialization ablation and is not a framework or whole-model baseline.",
     },
     {
       kind: "verus",
@@ -591,7 +677,7 @@ const gptOssMegakernelLesson: Lesson = {
         "# Production Rust extraction, gfx950 COV6 finalization, ISA checks, and HSA oracle",
         "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
         "",
-        "# Exact three-dispatch comparator",
+        "# Archived c138 HIP three-dispatch comparator",
         "bash examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh",
         "",
         "# Five-process alternating AB/BA performance campaign",
@@ -636,9 +722,9 @@ const gptOssMegakernelLesson: Lesson = {
           "Final integrated wrapper: passed at c1383e97 on MI350X gfx950",
           "Fused median: 1.064644 ms [1.064483, 1.064844] ms",
           "Fused p5/p95: 1.059803 / 1.069283 ms",
-          "Exact unfused median: 0.780362 ms [0.780243, 0.780482] ms",
-          "Exact unfused p5/p95: 0.778162 / 0.783123 ms",
-          "Exact unfused/fused ratio: 0.732979",
+          "Archived c138 HIP three-dispatch median: 0.780362 ms [0.780243, 0.780482] ms",
+          "Archived c138 HIP three-dispatch p5/p95: 0.778162 / 0.783123 ms",
+          "Archived c138 HIP three-dispatch/fused ratio: 0.732979",
           "Outcome: fused is 1.3643x slower",
           "Fastest claim: not claimed",
           "State-of-the-art claim: not claimed",
@@ -655,7 +741,7 @@ const gptOssMegakernelLesson: Lesson = {
   diagram: "moe",
   exercises: [
     {
-      prompt: "Explain why the fused batch-1 tile loses to the exact three-dispatch comparator despite removing two dispatches.",
+      prompt: "Explain why the fused batch-1 tile loses to the archived c138 HIP three-dispatch comparator despite removing two dispatches.",
       hint: "Use the 352-to-308 VGPR ablation, the 1.5 MB router stream, one-workgroup occupancy, and the serial dependency chain.",
       acceptance:
         "The answer cites the measured 1.3643x slowdown, separates the 14.1268% within-fused gain from the fused/unfused comparison, and makes no fastest or state-of-the-art claim.",
@@ -765,6 +851,16 @@ const advancedLessons = [
       acceptance: "The trace names the initial state and both ordered updates without claiming equivalence to a full model layer.",
     },
     glossary: ["gfx950", "KDA", "GDN", "linear attention", "recurrent state"],
+    variantSources: [
+      {
+        label: "Wave16 decode ablation",
+        status: "timed",
+        code: advancedAttentionAblation,
+        sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
+        sourceSha256: "b5b1fc74088adf33ef56a341339faf0378280d51938632597366eb5eed2a6337",
+        detail: "The `gfx950_kda_gdn_decode` feature variant was timed and rejected after a 32.9787% regression.",
+      },
+    ],
   }),
   lesson({
     id: "gfx950-indexed-sparse-attention",
@@ -903,6 +999,16 @@ const advancedLessons = [
       acceptance: "The host rejects the alias or the kernel stages all required inputs before the first clobbering store.",
     },
     glossary: ["gfx950", "AttnRes", "GR", "mHC", "residual mixing"],
+    variantSources: [
+      {
+        label: "Mixing ablations",
+        status: "timed",
+        code: advancedAttentionAblation,
+        sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
+        sourceSha256: "b5b1fc74088adf33ef56a341339faf0378280d51938632597366eb5eed2a6337",
+        detail: "The file contains the exact timed AttnRes explicit-reuse, four-branch explicit, and scalar mHC baselines.",
+      },
+    ],
   }),
   lesson({
     id: "gfx950-speculative-mtp-verification",

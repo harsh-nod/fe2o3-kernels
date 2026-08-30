@@ -1061,8 +1061,14 @@ describe("curriculum integrity", () => {
           kind: advancedCoreSourceTree === null ? "source-example" : "gpu-observed",
         }),
       ]);
+      const variantSourceCount =
+        lessonId === "gfx950-kda-gdn-linear-attention" ||
+        lessonId === "gfx950-attnres-gr-mhc"
+          ? 1
+          : 0;
       const expectedTabKinds = [
         "kernel",
+        ...Array.from({ length: variantSourceCount }, () => "kernel"),
         "reference",
         "comparison",
         "verus",
@@ -1089,7 +1095,7 @@ describe("curriculum integrity", () => {
         sourceFileSha256,
       );
 
-      const reference = advanced?.tabs[1];
+      const reference = advanced?.tabs.find((tab) => tab.kind === "reference");
       expect(reference?.kind).toBe("reference");
       expect(reference?.language).toBe("rust");
       expect(reference?.sourcePath).toBe(sourcePath.replace("kernel.rs", "reference.rs"));
@@ -1100,11 +1106,11 @@ describe("curriculum integrity", () => {
         expect(reference?.code).toContain(`pub fn ${exactReference}(`);
       }
       expect(reference?.code).toContain(referenceSymbol);
-      const comparison = advanced?.tabs[2];
+      const comparison = advanced?.tabs.find((tab) => tab.kind === "comparison");
       expect(comparison?.label).toBe("Equivalent HIP");
       expect(comparison?.code).toContain(hipSymbol);
-      expect(advanced?.tabs[3]?.kind).toBe("verus");
-      const host = advanced?.tabs[4];
+      expect(advanced?.tabs.some((tab) => tab.kind === "verus")).toBe(true);
+      const host = advanced?.tabs.find((tab) => tab.kind === "host");
       expect(host?.code).toContain(isa);
       expect(host?.code).toContain("cargo test --offline");
       expect(host?.code).toContain("pinned fe2o3 core checkout");
@@ -1156,6 +1162,44 @@ describe("curriculum integrity", () => {
     }
   });
 
+  it("publishes exact status-labeled attention ablation Rust", () => {
+    const expected = [
+      [
+        "gfx950-kda-gdn-linear-attention",
+        "Wave16 decode ablation [TIMED]",
+        ["gfx950_kda_gdn_decode"],
+      ],
+      [
+        "gfx950-attnres-gr-mhc",
+        "Mixing ablations [TIMED]",
+        [
+          "gfx950_attnres_aggregate",
+          "gfx950_four_branch_residual",
+          "gfx950_mhc_sinkhorn_mix",
+        ],
+      ],
+    ] as const;
+    for (const [lessonId, label, symbols] of expected) {
+      const variant = lessons
+        .find((lesson) => lesson.id === lessonId)
+        ?.tabs.find((tab) => tab.label === label);
+      expect(variant).toMatchObject({
+        kind: "kernel",
+        language: "rust",
+        sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
+        sourceCommit: advancedCoreSourceCommit,
+        sourceSha256:
+          "b5b1fc74088adf33ef56a341339faf0378280d51938632597366eb5eed2a6337",
+        sourceDigestScope: "file",
+        explanatory: false,
+      });
+      expect(variant?.notice).toContain("Exact retained timed Rust ablation source");
+      for (const symbol of symbols) {
+        expect(variant?.code).toContain(`pub fn ${symbol}(`);
+      }
+    }
+  });
+
 
   it("publishes the real GPT-OSS Rust layer-tile tutorial with final integrated evidence boundaries", () => {
     const lesson = lessons.find(
@@ -1167,6 +1211,12 @@ describe("curriculum integrity", () => {
     expect(lesson?.claims.map((claim) => claim.kind)).toEqual(["gpu-observed"]);
     expect(lesson?.tabs.map((tab) => tab.kind)).toEqual([
       "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
+      "kernel",
       "reference",
       "comparison",
       "verus",
@@ -1175,7 +1225,9 @@ describe("curriculum integrity", () => {
       "performance",
     ]);
 
-    const kernel = lesson?.tabs[0];
+    const kernel = lesson?.tabs.find(
+      (tab) => tab.sourcePath === "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    );
     expect(kernel).toMatchObject({
       label: "Rust kernel",
       language: "rust",
@@ -1187,7 +1239,7 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain(
       "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
     );
-    const reference = lesson?.tabs[1];
+    const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/reference.rs",
@@ -1195,7 +1247,36 @@ describe("curriculum integrity", () => {
       explanatory: false,
     });
     expect(reference?.code).toContain("pub fn reference(");
-    expect(lesson?.tabs[2]?.code).toContain("gpt_oss_unfused_router");
+    const comparison = lesson?.tabs.find((tab) => tab.kind === "comparison");
+    expect(comparison?.label).toBe("Archived c138 unfused HIP");
+    expect(comparison?.code).toContain("gpt_oss_unfused_router");
+
+    const expectedVariants = [
+      ["Serial router ablation [TIMED]", "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs", "3f9fe7050757ab450bba837de73d574f4423a2f5752646f11d388eeac87311db", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Held-fragment ablation [TIMED]", "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs", "081ee76498d682fd5c2f82ada424daa5c21ef915cbffffcfa7e6b089e3220abb", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Interleaved-store ablation [TIMED]", "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs", "41e8ce236f7e506becfe0ec8f6ead54b09ef21736e7f86dfe692e8d8570a6503", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Materialized components [TIMED]", "examples/gfx950_gpt_oss_decode/src/kernel_components.rs", "fd2b8000c664d4d6464bbc745c2d6878652e4e2a65c02872a210023b5df1ce38", "pub fn gfx950_gpt_oss_120b_router_v1("],
+      ["BF16 LDS pipeline [COMPILER-REJECTED]", "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs", "ab528db753b62f91c2ed5129dbd35b5d9ed7a04ace1b669c4e073997b5062dbb", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      ["Scalar attention [COMPILER-REJECTED]", "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs", "37314605a50b7c3a1060c1afa72919476ba630ed5d3997324e4976116c972359", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+    ] as const;
+    for (const [label, sourcePath, sourceSha256, symbol] of expectedVariants) {
+      const variant = lesson?.tabs.find((tab) => tab.label === label);
+      expect(variant).toMatchObject({
+        kind: "kernel",
+        language: "rust",
+        sourcePath,
+        sourceCommit: advancedCoreSourceCommit,
+        sourceSha256,
+        sourceDigestScope: "file",
+        explanatory: false,
+      });
+      expect(variant?.code).toContain(symbol);
+      expect(variant?.notice).toContain(
+        label.includes("COMPILER-REJECTED")
+          ? "compiler-rejected"
+          : "timed",
+      );
+    }
 
     const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code;
     expect(host).toContain("bash examples/gfx950_gpt_oss_decode/run-gfx950.sh");
@@ -1207,7 +1288,9 @@ describe("curriculum integrity", () => {
     expect(result).toContain("Historical campaign commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
     expect(result).toContain("Final integrated wrapper: passed at c1383e97 on MI350X gfx950");
     expect(result).toContain("Fused p5/p95: 1.059803 / 1.069283 ms");
-    expect(result).toContain("Exact unfused/fused ratio: 0.732979");
+    expect(result).toContain(
+      "Archived c138 HIP three-dispatch/fused ratio: 0.732979",
+    );
     expect(result).toContain("Outcome: fused is 1.3643x slower");
     expect(result).toContain("State-of-the-art claim: not claimed");
     expect(serializedLessonContent(lesson!.id)).not.toContain(
@@ -1257,6 +1340,53 @@ describe("curriculum integrity", () => {
     for (const symbol of Object.keys(advancedRustEvidence)) {
       expect(performanceText, symbol).toContain(`KERNEL: ${symbol}`);
     }
+    expect(performanceText).not.toContain("canonical early exit");
+    expect(performanceText).not.toContain("hidden 512");
+    expect(performanceText).not.toContain("0.1465%");
+
+    const performanceFor = (lessonId: string) =>
+      module10
+        .find((lesson) => lesson.id === lessonId)
+        ?.tabs.find((tab) => tab.kind === "performance")?.code ?? "";
+    expect(performanceFor("gfx950-advanced-moe")).toContain(
+      "No repeated software pipeline is used or implemented",
+    );
+    expect(performanceFor("gfx950-ngram-embedding-gather")).toContain(
+      "Probe all 16 slots in ascending order",
+    );
+    const muonPerformance = performanceFor("gfx950-muon-optimizer");
+    expect(muonPerformance).toContain(
+      "examples/gfx950_advanced_systems/optimization-evidence-v1.json",
+    );
+    expect(muonPerformance).toContain("publishable_claim=false");
+    expect(muonPerformance).toContain("historical and exploratory");
+    const gptPerformance = performanceFor("gfx950-gpt-oss-120b-megakernel");
+    expect(gptPerformance).toContain("hidden 2,880");
+    expect(gptPerformance).toContain("a 0.0375% median reduction");
+    expect(gptPerformance).toContain("da6 exact Rust component-materialization");
+
+    for (const candidateId of [
+      "prefill-ping-pong",
+      "sparse-lds-pingpong",
+      "sparse-tile-tuning",
+      "hybrid-lds-pingpong",
+      "mixing-lds-stage",
+      "transaction-prefetch",
+      "table-lds-stage",
+      "muon-iteration-pipeline",
+      "fp4-lds-pipeline",
+      "gpt-tile-tuning",
+    ]) {
+      expect(performanceText, candidateId).toMatch(
+        new RegExp(`OPTIMIZATION \\[${candidateId}\\]: [^\\n]*NOT IMPLEMENTED`, "u"),
+      );
+    }
+    expect(gptPerformance).toContain(
+      "OPTIMIZATION [bf16-lds-pipeline]: IMPLEMENTED; COMPILER-REJECTED",
+    );
+    const gptContent = serializedLessonContent("gfx950-gpt-oss-120b-megakernel");
+    expect(gptContent).toContain("archived c138 HIP three-dispatch comparator");
+    expect(gptContent).toContain("da6 exact Rust component-materialization ablation");
 
     const finalAdvanced = JSON.parse(
       readFileSync(
@@ -1439,6 +1569,7 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_advanced_systems/Cargo.lock", "34002f1e32b90e21f19d2ab9283b0f92b60d4c59367ad18fad0ece4ebfa8b525"],
       ["examples/gfx950_advanced_systems/Cargo.toml", "4bb727180242b4f1a55693ecf2abcd87026e324cbd208d9c6a6970a45ae681e7"],
       ["examples/gfx950_advanced_systems/ablation-variants-v1.json", "6ad96f11a17cea5e40332616464d44fcb14ff9107f4b4618ebe68df20fe83bf8"],
+      ["examples/gfx950_advanced_systems/optimization-evidence-v1.json", "b39ef177352261c3d33a6ea1c6804707ad8fb52de1641175308808ce09c72956"],
       ["examples/gfx950_advanced_systems/README.md", "f9eb2e727dbe6661ef69a882c684f2968797eeefb1133730d2560b9c3cb2315b"],
       ["examples/gfx950_advanced_systems/build_and_test.sh", "20f05e523e56aa1fff05f5d766960ab0539dfcc2d1dd2d33405a15725c715d54"],
       ["examples/gfx950_advanced_systems/check_isa.sh", "7a115cbdabc14575f597b35f8443a6d9db36261fbd8d31551447c55a02196b53"],

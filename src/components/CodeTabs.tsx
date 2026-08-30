@@ -89,7 +89,7 @@ export function CodeTabs({
             tabIndex={currentEntry.sourceIndex === sourceIndex ? 0 : -1}
             className={currentEntry.sourceIndex === sourceIndex ? "active" : ""}
             onClick={() => setActive(sourceIndex)}
-            key={tab.kind}
+            key={`${tab.kind}:${tab.label}:${sourceIndex}`}
           >
             {tab.label}
           </button>
