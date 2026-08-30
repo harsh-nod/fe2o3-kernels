@@ -1251,17 +1251,17 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c1383e97db732f9f1ff8105f10d5c2b5971143e1/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/872a2de752cdc1f2af2e7ae4a25a3e4a103bd364/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Production Rust fused: median 1.064644 ms",
+    "optimized full kernel 1.065004 ms",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Exact unfused HIP router + attention + expert: median 0.780362 ms",
+    "exact Rust component sum 1.251325 ms -> fused 1.065004 ms",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "fused is 1.3643x slower",
+    "14.8899% reduction",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "State-of-the-art claim: not claimed",

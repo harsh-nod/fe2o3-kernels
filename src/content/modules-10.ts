@@ -64,9 +64,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
+export const advancedCoreSourceCommit = "872a2de752cdc1f2af2e7ae4a25a3e4a103bd364";
 export const advancedCoreSourceTree: string | null =
-  "42385e6464ca40318fc70ae104845d3997844140";
+  "472849d429396010ab5cde479ddbebbd9c65b990";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -77,7 +77,7 @@ const attentionBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
-  rustKernelFileSha256: "6a413c9bd08ef1b6d1721383598a3aa681aaac83d0daec0ce2ee8a99ee044cd8",
+  rustKernelFileSha256: "d6f5498967973c44b9495b5fa3cea97514fca1343fa4213b8b13d7da935e2b24",
   rustReferenceFileSha256: "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
@@ -111,7 +111,7 @@ const systemsBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_systems/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_systems/README.md",
   rustLockPath: "examples/gfx950_advanced_systems/Cargo.lock",
-  rustKernelFileSha256: "db6a575fa3a472a4a2927671f9a9e1a13df89e627f6eccfba56e860a6193241c",
+  rustKernelFileSha256: "a3bf1d0672228b37bf9800465f0f7469a10177079008b864187074d0e68de97d",
   rustReferenceFileSha256: "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd",
   loweringConstant: "GFX950_ADVANCED_SYSTEMS_SOURCE_LOWERING_SUPPORTED",
   manifestPath: "examples/gfx950_advanced_systems/Cargo.toml",
@@ -191,7 +191,10 @@ function exactHipKernelExcerpts(
 function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean): string {
   const position = source.indexOf(`pub fn ${symbol}(`);
   const start = attributed
-    ? source.lastIndexOf("#[kernel(", position)
+    ? Math.max(
+        source.lastIndexOf("///", position),
+        source.lastIndexOf("#[kernel(", position),
+      )
     : Math.max(0, source.lastIndexOf("///", position));
   const open = source.indexOf("{", position);
   if (position < 0 || start < 0 || open < 0) throw new Error(`Missing Rust function ${symbol}`);
@@ -239,6 +242,8 @@ function evidenceLines(evidence: AdvancedRustEvidence): string[] {
   return [
     ...common,
     "Evidence status: observed",
+    `Artifact source commit: ${evidence.sourceCommit}`,
+    `Artifact source tree: ${evidence.sourceTree}`,
     `Portable namespace: ${evidence.namespace}`,
     `Rust-produced LLVM SHA-256: ${evidence.llvmSha256}`,
     `Rust-produced HSACO SHA-256: ${evidence.hsacoSha256}`,
@@ -256,14 +261,25 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
     evidence.every(isObservedAdvancedEvidence)
   ) {
     const observed = evidence as ObservedAdvancedRustEvidence[];
+    const campaign = observed[0];
+    if (
+      campaign === undefined ||
+      !observed.every(
+        (entry) =>
+          entry.sourceCommit === campaign.sourceCommit &&
+          entry.sourceTree === campaign.sourceTree,
+      )
+    ) {
+      throw new Error(`Mixed advanced evidence campaigns for ${spec.id}`);
+    }
     return {
       kind: "gpu-observed",
       label: `Production Rust ${spec.sourceRole} observed on MI350X`,
       detail:
-        `At the exact pinned core commit, every ordinary attributed Rust kernel in this lesson passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and its digest-pinned HSA numerical comparison on mi350. ${observed.map((entry) => `${entry.label}: ${entry.numericalResult}`).join("; ")}. This bounded observation is not a formal source-to-machine proof, performance result, protected publication, or full-model result.`,
+        `At retained campaign commit ${campaign.sourceCommit}, every ordinary attributed Rust kernel in this lesson passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and its digest-pinned HSA numerical comparison on mi350. The code tab separately pins the current promoted source at ${advancedCoreSourceCommit}. ${observed.map((entry) => `${entry.label}: ${entry.numericalResult}`).join("; ")}. This bounded observation is not a formal source-to-machine proof, protected publication, or full-model result.`,
       reference: historicalReference(
-        advancedCoreSourceCommit,
-        advancedCoreSourceTree,
+        campaign.sourceCommit,
+        campaign.sourceTree,
         observed.map((entry) => `bash ${entry.runnerPath}`),
         [
           sourceBundle(spec.bundle).rustKernelPath,
@@ -278,7 +294,7 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
         ],
         {
           target: advancedProductionTarget,
-          note: "Historical bounded raw-HSA MI350X observations only. Formal refinement, performance, protected publication authority, and protected Worker V3 native-build evidence remain separate.",
+          note: `Historical bounded raw-HSA MI350X observations at ${campaign.sourceCommit}. The displayed promoted source is pinned independently. Formal refinement, protected publication authority, and protected Worker V3 native-build evidence remain separate.`,
         },
       ),
     };
@@ -446,8 +462,10 @@ function lesson(spec: AdvancedLessonSpec): Lesson {
 const gptOssKernelSymbol = "gfx950_gpt_oss_120b_decode_megakernel_v1";
 const gptOssKernelExcerpt = rustFunctionExcerpt(gptOssRustKernel, gptOssKernelSymbol, true);
 const gptOssReferenceExcerpt = rustFunctionExcerpt(gptOssRustReference, "reference", false);
-const gptOssSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
-const gptOssSourceTree = "42385e6464ca40318fc70ae104845d3997844140";
+const gptOssSourceCommit = advancedCoreSourceCommit;
+const gptOssSourceTree = advancedCoreSourceTree;
+const gptOssHistoricalCampaignCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
+const gptOssHistoricalCampaignTree = "42385e6464ca40318fc70ae104845d3997844140";
 const gptOssPerformance = advancedPerformanceTabFor("gfx950-gpt-oss-120b-megakernel");
 if (!gptOssPerformance) throw new Error("Missing GPT-OSS performance evidence");
 
@@ -477,8 +495,8 @@ const gptOssMegakernelLesson: Lesson = {
       detail:
         "At the exact pinned c1383e97 core commit, the ordinary Rust kernel produced gfx950 LLVM and COV6 HSACO, passed the bounded HSA oracle against the independent CPU reference, and measured fused 1.064644 ms versus exact unfused 0.780362 ms. The fused kernel was 1.3643x slower. This fixed layer-tile result is final integrated evidence for the admitted artifacts, not a fastest or state-of-the-art claim.",
       reference: historicalReference(
-        gptOssSourceCommit,
-        gptOssSourceTree,
+        gptOssHistoricalCampaignCommit,
+        gptOssHistoricalCampaignTree,
         [
           "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
           "bash examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh",
@@ -515,12 +533,12 @@ const gptOssMegakernelLesson: Lesson = {
       code: gptOssKernelExcerpt,
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
       sourceCommit: gptOssSourceCommit,
-      sourceSha256: "4808651a5fecabc26b0598eb4827772af4b95ca34978872524bec536f2a3392b",
+      sourceSha256: "61467901200208136e5ab71d8eb50d9c735b1fa41fbaa924f813d138f6d34aed",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssKernelExcerpt],
       explanatory: false,
       notice:
-        "Exact ordinary attributed Rust from the final integrated c1383e97 campaign. Its file SHA-256 is 62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4.",
+        "Exact ordinary attributed Rust from the current promoted core source. Its file SHA-256 is 4a07238304a727c5a5227f58fac4a05ac10e905ac802400977968af177c32361.",
     },
     {
       kind: "reference",
@@ -604,10 +622,10 @@ const gptOssMegakernelLesson: Lesson = {
           "Kernel symbol: " + gptOssKernelSymbol,
           "Displayed source commit: " + gptOssSourceCommit,
           "Displayed source tree: " + gptOssSourceTree,
-          "Kernel file SHA-256: 62c8e630519ed4f9179547660d4bbae3dbbc9f3c2a72bac320e6defa404463d4",
+          "Kernel file SHA-256: 4a07238304a727c5a5227f58fac4a05ac10e905ac802400977968af177c32361",
           "Reference file SHA-256: 1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05",
-          "Campaign commit: " + gptOssSourceCommit,
-          "Campaign tree: " + gptOssSourceTree,
+          "Historical campaign commit: " + gptOssHistoricalCampaignCommit,
+          "Historical campaign tree: " + gptOssHistoricalCampaignTree,
           "Portable namespace: af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
           "Rust-produced LLVM SHA-256: 7d28da46358c29ce8f3c12fecce42f491cef490f098fdb1602923ffdfc7947b3",
           "Rust-produced HSACO SHA-256: 066056a1fb2228c9043474d1746a7555ac31c0ca559d678844dc9e89d601f212",
@@ -660,7 +678,7 @@ const advancedLessons = [
       "gfx950_moe_expert_rank_fp4_fp8_v1",
       "gfx950_combine_expert_ranks_v1",
     ],
-    rustExcerptSha256: "8725f0f7e6f819bb748214e1b295f7d3aa354ee0ba930bce1dbe330c0ad5d3e6",
+    rustExcerptSha256: "0e73616a5460d1ba9b45510e87607d63f4bc0c33aa039bb0df89fd148957153d",
     referenceSymbols: ["moe_routing_reference", "moe_rank_reference"],
     referenceExcerptSha256: "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e",
     hipSymbols: ["gfx950_fused_fp4_fp8_moe", "gfx950_expert_parallel_rank", "gfx950_combine_expert_ranks"],
@@ -711,7 +729,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "KDA/GDN recurrent state-update and output teaching kernels",
     rustSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
-    rustExcerptSha256: "a4c5dffee6d7589ae55ecf3ea591998abd374e632bb2a40bc1619c1b6497121a",
+    rustExcerptSha256: "9e089bec41e2ef305e7fd7f023948ccffddfa2bec812fd5f23f42d25f07b0067",
     referenceSymbols: ["kda_gdn_decode_reference_v1", "kda_gdn_prefill_reference_v1"],
     referenceExcerptSha256: "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d",
     hipSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
@@ -758,7 +776,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "content-indexed sparse QK, softmax, and PV teaching kernel",
     rustSymbols: ["gfx950_content_sparse_attention"],
-    rustExcerptSha256: "0e1419fead85c0b797131f2f93242cd91ebb7fbcdcaba332c9634f473bc710b3",
+    rustExcerptSha256: "503014732c2a8951ba0e8c53506aa3f076dc74fb416c27d4bcf469fca4320ea2",
     referenceSymbols: ["content_sparse_attention_reference_v1"],
     referenceExcerptSha256: "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
     hipSymbols: ["gfx950_content_sparse_attention"],
@@ -802,7 +820,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "compressed-state, direct-attention, and hybrid fusion teaching kernels",
     rustSymbols: ["gfx950_compressed_hybrid_attention"],
-    rustExcerptSha256: "593682a256f267d5e0ef85b0b2c1cbf094bafc0e6031daa7e49ddb27b93987be",
+    rustExcerptSha256: "4b905913f30edfb7e6e0b0a20893c14bd7ca1b656a3e99c6794efe1a2175df03",
     referenceSymbols: ["compressed_hybrid_attention_reference_v1"],
     referenceExcerptSha256: "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
     hipSymbols: ["gfx950_compressed_hybrid_attention"],
@@ -849,7 +867,7 @@ const advancedLessons = [
       "gfx950_four_branch_residual",
       "gfx950_mhc_sinkhorn_mix",
     ],
-    rustExcerptSha256: "bed64c7bf9e38e6887a8fc26d3fe9d0671009c75c305736933e134b2cdf2d468",
+    rustExcerptSha256: "fdeed2afcea1bd02c7970c5c3e3421ad1713350aa91c68ee8ccdbe81075659bb",
     referenceSymbols: ["attnres_aggregate_reference_v1", "four_branch_residual_reference_v1", "mhc_sinkhorn_mix_reference_v1"],
     referenceExcerptSha256: "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
     hipSymbols: ["gfx950_attnres_aggregate", "gfx950_four_branch_residual", "gfx950_mhc_sinkhorn_mix"],
@@ -896,7 +914,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "speculative-decoding and multi-token-prediction verification teaching kernels",
     rustSymbols: ["gfx950_speculative_transaction_v1"],
-    rustExcerptSha256: "ca76aa4c4033586d49d3536c1caa08830c1013eb0edc2da21845b071c82d2688",
+    rustExcerptSha256: "11d5c1e7a1099ac0838e01e8960b8947aee6f38d41ed3cf8481fcaa3172d15e4",
     referenceSymbols: ["speculative_reference"],
     referenceExcerptSha256: "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc",
     hipSymbols: ["gfx950_speculative_transaction"],
@@ -942,7 +960,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "N-gram hash-table lookup and integer-value gather teaching kernel",
     rustSymbols: ["gfx950_qwen_ngram_gather_v1"],
-    rustExcerptSha256: "bc99f70c6776d5b882e9f02dfea8de1a371ac4bb55145e54df800d72f1819bd2",
+    rustExcerptSha256: "8878de47686ac3ad6f2bcfb0b0544fc95e71f6699374ec3f7d8e3debae19fb83",
     referenceSymbols: ["ngram_reference"],
     referenceExcerptSha256: "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1",
     hipSymbols: ["gfx950_qwen_ngram_gather"],
@@ -988,7 +1006,7 @@ const advancedLessons = [
     bundle: "systems",
     sourceRole: "Muon gradient staging, shard reduction, polar iteration, and update teaching kernels",
     rustSymbols: ["gfx950_stage_gradient_shard_v1", "gfx950_muon_update_4x4_v1"],
-    rustExcerptSha256: "0f1147889c09a29fac3797bc558507354ba19d76c0b3c4b6cf7bf1c2d300952c",
+    rustExcerptSha256: "e6a0a9121377d2024da51817fcc4fa42487c14a159146c41929548bcf3c3b217",
     referenceSymbols: ["muon_reference"],
     referenceExcerptSha256: "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af",
     hipSymbols: ["gfx950_stage_gradient_shard", "gfx950_muon_update"],

@@ -14,26 +14,72 @@ SUITE=${FE2O3_ADVANCED_SUITE:-attention}
 COMMON_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 SCRIPT_DIR=${FE2O3_ADVANCED_SCRIPT_DIR:-$COMMON_DIR}
 
+SYSTEMS_ABLATION=${FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT:-canonical}
+EXTRA_FEATURE=
+if [[ $SUITE == systems ]]; then
+    case "$FEATURE:$SYSTEMS_ABLATION" in
+        kernel-moe-route:canonical|kernel-moe-expert-rank:canonical|\
+        kernel-combine-expert-ranks:canonical|kernel-speculative-transaction:canonical|\
+        kernel-qwen-ngram-gather:canonical|kernel-stage-gradient-shard:canonical|\
+        kernel-muon-update:canonical) ;;
+        kernel-moe-expert-rank:expert-serial) EXTRA_FEATURE=ablation-expert-serial ;;
+        kernel-combine-expert-ranks:combine-transposed)
+            EXTRA_FEATURE=ablation-combine-transposed ;;
+        kernel-speculative-transaction:speculative-recompute-prefix)
+            EXTRA_FEATURE=ablation-speculative-recompute-prefix ;;
+        kernel-qwen-ngram-gather:ngram-reverse-probe)
+            EXTRA_FEATURE=ablation-ngram-reverse-probe ;;
+        kernel-stage-gradient-shard:stage-tile4) EXTRA_FEATURE=ablation-stage-tile4 ;;
+        kernel-muon-update:muon-broadcast16) EXTRA_FEATURE=ablation-muon-broadcast16 ;;
+        *)
+            printf 'unsupported systems ablation pairing: %s:%s\n' \
+                "$FEATURE" "$SYSTEMS_ABLATION" >&2
+            exit 2 ;;
+    esac
+fi
+BUILD_FEATURES=$FEATURE${EXTRA_FEATURE:+,$EXTRA_FEATURE}
+
 case "$SUITE:$FEATURE" in
     attention:kernel-kda-decode)
+        SYMBOL=gfx950_kda_gdn_decode; KERNARG=96; WG=64; LDS=0; OCML=1
+        TEST=gfx950_kda_gdn_decode_rust_cov6_matches_cpu_reference; ISA=scalar ;;
+    attention:kernel-kda-decode-wave-tiled-v1)
         SYMBOL=gfx950_kda_gdn_decode; KERNARG=96; WG=64; LDS=0; OCML=1
         TEST=gfx950_kda_gdn_decode_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     attention:kernel-kda-prefill)
         SYMBOL=gfx950_kda_gdn_prefill; KERNARG=112; WG=64; LDS=0; OCML=1
         TEST=gfx950_kda_gdn_prefill_rust_cov6_matches_cpu_reference; ISA=scalar ;;
+    attention:kernel-kda-prefill-channel-mask-v1)
+        SYMBOL=gfx950_kda_gdn_prefill; KERNARG=112; WG=64; LDS=0; OCML=1
+        TEST=gfx950_kda_gdn_prefill_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     attention:kernel-content-sparse-attention)
+        SYMBOL=gfx950_content_sparse_attention; KERNARG=96; WG=64; LDS=2048; OCML=1
+        TEST=gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference; ISA=fp8_attention ;;
+    attention:kernel-content-sparse-attention-reciprocal-reuse-v1)
         SYMBOL=gfx950_content_sparse_attention; KERNARG=96; WG=64; LDS=2048; OCML=1
         TEST=gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference; ISA=fp8_attention ;;
     attention:kernel-compressed-hybrid-attention)
         SYMBOL=gfx950_compressed_hybrid_attention; KERNARG=80; WG=64; LDS=2048; OCML=1
         TEST=gfx950_compressed_hybrid_attention_rust_cov6_matches_cpu_reference; ISA=fp8_attention ;;
+    attention:kernel-compressed-hybrid-attention-division-baseline-v1)
+        SYMBOL=gfx950_compressed_hybrid_attention; KERNARG=80; WG=64; LDS=2048; OCML=1
+        TEST=gfx950_compressed_hybrid_attention_rust_cov6_matches_cpu_reference; ISA=fp8_attention ;;
     attention:kernel-attnres-aggregate)
+        SYMBOL=gfx950_attnres_aggregate; KERNARG=48; WG=64; LDS=0; OCML=1
+        TEST=gfx950_attnres_aggregate_rust_cov6_matches_cpu_reference; ISA=scalar ;;
+    attention:kernel-attnres-aggregate-explicit-reuse-v1)
         SYMBOL=gfx950_attnres_aggregate; KERNARG=48; WG=64; LDS=0; OCML=1
         TEST=gfx950_attnres_aggregate_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     attention:kernel-four-branch-residual)
         SYMBOL=gfx950_four_branch_residual; KERNARG=64; WG=64; LDS=0; OCML=1
         TEST=gfx950_four_branch_residual_rust_cov6_matches_cpu_reference; ISA=scalar ;;
+    attention:kernel-four-branch-residual-explicit-v1)
+        SYMBOL=gfx950_four_branch_residual; KERNARG=64; WG=64; LDS=0; OCML=1
+        TEST=gfx950_four_branch_residual_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     attention:kernel-mhc-sinkhorn-mix)
+        SYMBOL=gfx950_mhc_sinkhorn_mix; KERNARG=48; WG=64; LDS=0; OCML=1
+        TEST=gfx950_mhc_sinkhorn_mix_rust_cov6_matches_cpu_reference; ISA=scalar ;;
+    attention:kernel-mhc-sinkhorn-mix-scalar-v1)
         SYMBOL=gfx950_mhc_sinkhorn_mix; KERNARG=48; WG=64; LDS=0; OCML=1
         TEST=gfx950_mhc_sinkhorn_mix_rust_cov6_matches_cpu_reference; ISA=scalar ;;
     systems:kernel-moe-route)
@@ -57,9 +103,24 @@ case "$SUITE:$FEATURE" in
     systems:kernel-muon-update)
         SYMBOL=gfx950_muon_update_4x4_v1; KERNARG=48; WG=64; LDS=0; OCML=0
         TEST=gfx950_muon_update_rust_cov6_matches_cpu_reference; ISA=scalar ;;
-    gpt_oss:kernel-gpt-oss-decode)
+    gpt_oss:kernel-gpt-oss-decode|gpt_oss:kernel-gpt-oss-decode-router-serial|gpt_oss:kernel-gpt-oss-decode-held-fragments|gpt_oss:kernel-gpt-oss-decode-interleaved-stores)
         SYMBOL=gfx950_gpt_oss_120b_decode_megakernel_v1; KERNARG=208; WG=64; LDS=0; OCML=1
         TEST=gfx950_gpt_oss_layer_tile_rust_cov6_matches_cpu_reference; ISA=gpt_oss ;;
+    gpt_oss:kernel-gpt-oss-decode-scalar-attention)
+        SYMBOL=gfx950_gpt_oss_120b_decode_megakernel_v1; KERNARG=208; WG=64; LDS=0; OCML=1
+        TEST=gfx950_gpt_oss_layer_tile_rust_cov6_matches_cpu_reference; ISA=gpt_oss_scalar_attention ;;
+    gpt_oss:kernel-gpt-oss-decode-pipelined-attention)
+        SYMBOL=gfx950_gpt_oss_120b_decode_megakernel_v1; KERNARG=208; WG=64; LDS=2048; OCML=1
+        TEST=gfx950_gpt_oss_pipelined_attention_rust_cov6_matches_cpu_reference; ISA=gpt_oss ;;
+    gpt_oss:kernel-gpt-oss-router-component)
+        SYMBOL=gfx950_gpt_oss_120b_router_v1; KERNARG=48; WG=64; LDS=0; OCML=0
+        TEST=gfx950_gpt_oss_router_component_rust_cov6_matches_cpu_reference; ISA=scalar ;;
+    gpt_oss:kernel-gpt-oss-attention-component)
+        SYMBOL=gfx950_gpt_oss_120b_attention_v1; KERNARG=80; WG=64; LDS=0; OCML=1
+        TEST=gfx950_gpt_oss_attention_component_rust_cov6_matches_cpu_reference; ISA=gpt_oss_attention ;;
+    gpt_oss:kernel-gpt-oss-expert-component)
+        SYMBOL=gfx950_gpt_oss_120b_expert_v1; KERNARG=96; WG=64; LDS=0; OCML=0
+        TEST=gfx950_gpt_oss_expert_component_rust_cov6_matches_cpu_reference; ISA=gpt_oss_expert ;;
     *)
         printf 'unsupported %s kernel feature: %s\n' "$SUITE" "$FEATURE" >&2
         exit 2 ;;
@@ -76,7 +137,11 @@ fi
 REPO_ROOT=${FE2O3_REPO_ROOT:-$(cd -- "$COMMON_DIR/../.." && pwd -P)}
 TOOLCHAIN=${FE2O3_RUST_TOOLCHAIN:-nightly-2026-04-03}
 ROOT_TARGET_DIR=${FE2O3_ROOT_TARGET_DIR:-$REPO_ROOT/target}
-OUTPUT_ROOT=${FE2O3_GFX950_ADVANCED_OUTPUT_DIR:-$SCRIPT_DIR/target/fe2o3-$FEATURE}
+OUTPUT_SUFFIX=$FEATURE
+if [[ $SUITE == systems && $SYSTEMS_ABLATION != canonical ]]; then
+    OUTPUT_SUFFIX=$FEATURE-$SYSTEMS_ABLATION
+fi
+OUTPUT_ROOT=${FE2O3_GFX950_ADVANCED_OUTPUT_DIR:-$SCRIPT_DIR/target/fe2o3-$OUTPUT_SUFFIX}
 ROCM_PATH=${ROCM_PATH:-/opt/rocm}
 RUSTUP=${RUSTUP:-rustup}
 CARGO_BIN=${CARGO:-cargo}
@@ -133,6 +198,13 @@ DISASSEMBLY=$ATTEMPT_DIR/$FEATURE.isa
 BINDING_PATH=$ATTEMPT_DIR/crate-binding-v1
 AMD_TARGET_DIR=$ATTEMPT_DIR/amdgpu-target
 
+cleanup_amdgpu_target() {
+    if [[ ${FE2O3_GFX950_PRUNE_AMDGPU_TARGET:-0} == 1 ]]; then
+        rm -rf -- "$AMD_TARGET_DIR"
+    fi
+}
+trap cleanup_amdgpu_target EXIT
+
 if [[ -n ${FE2O3_RUSTC_EXTRACTOR:-} ]]; then
     EXTRACTOR=$FE2O3_RUSTC_EXTRACTOR
 else
@@ -156,7 +228,7 @@ SYSROOT=$("$RUSTUP" run "$TOOLCHAIN" rustc --print sysroot)
     LD_LIBRARY_PATH="$EXTRACTOR_RUNTIME_DIR:$EXTRACTOR_DEPS_DIR:$SYSROOT/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" \
         "$RUSTUP" run "$TOOLCHAIN" "$CARGO_BIN" check --release --locked \
         -Zbuild-std=core --target amdgcn-amd-amdhsa --target-dir "$AMD_TARGET_DIR" \
-        --no-default-features --features "$FEATURE" --lib
+        --no-default-features --features "$BUILD_FEATURES" --lib
 )
 
 if [[ ! -f $BINDING_PATH || -L $BINDING_PATH ]] ||
@@ -199,6 +271,20 @@ if [[ $ISA == gpt_oss ]]; then
     require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.scale.f32.16x16x128.f8f6f4.v8i32.v8i32(' 4 'FP4 MFMA calls'
     require_count "$LLVM_IR" 'i32 4, i32 4, i32 0, i32 0, i32 0, i32 0)' 4 'FP4 selectors and disabled scaling controls'
     require_count "$LLVM_IR" '@llvm.amdgcn.ds.read.tr' 0 'unexpected transpose references with pretransposed KV cache'
+elif [[ $ISA == gpt_oss_scalar_attention ]]; then
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.f32.16x16x16bf16.1k(' 0 'unexpected BF16 MFMA calls'
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.scale.f32.16x16x128.f8f6f4.v8i32.v8i32(' 4 'FP4 MFMA calls'
+    require_count "$LLVM_IR" 'i32 4, i32 4, i32 0, i32 0, i32 0, i32 0)' 4 'FP4 selectors and disabled scaling controls'
+    require_count "$LLVM_IR" '@llvm.amdgcn.ds.read.tr' 0 'unexpected transpose references'
+elif [[ $ISA == gpt_oss_attention ]]; then
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.f32.16x16x16bf16.1k(' 4 'BF16 MFMA calls'
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.scale.f32.16x16x128.f8f6f4.v8i32.v8i32(' 0 'unexpected FP4 MFMA calls'
+    require_count "$LLVM_IR" '@llvm.amdgcn.ds.read.tr' 0 'unexpected transpose references'
+elif [[ $ISA == gpt_oss_expert ]]; then
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.f32.16x16x16bf16.1k(' 0 'unexpected BF16 MFMA calls'
+    require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.scale.f32.16x16x128.f8f6f4.v8i32.v8i32(' 4 'FP4 MFMA calls'
+    require_count "$LLVM_IR" 'i32 4, i32 4, i32 0, i32 0, i32 0, i32 0)' 4 'FP4 selectors and disabled scaling controls'
+    require_count "$LLVM_IR" '@llvm.amdgcn.ds.read.tr' 0 'unexpected transpose references'
 elif [[ $ISA == fp8_attention ]]; then
     require_count "$LLVM_IR" 'call <4 x float> @llvm.amdgcn.mfma.scale.f32.16x16x128.f8f6f4.v8i32.v8i32(' 1 'FP8 MFMA call'
     require_count "$LLVM_IR" 'i32 0, i32 0, i32 0, i32 0, i32 0, i32 0)' 1 'FP8 selectors and disabled scaling controls'
@@ -279,6 +365,27 @@ if [[ $ISA == gpt_oss ]]; then
     [[ $(grep -c -- 'v_mfma_' <<< "$KERNEL_ISA" || true) -eq 8 ]] || { printf 'ISA validation failed: unexpected additional MFMA\n' >&2; exit 1; }
     [[ $(grep -Fc -- 'cbsz:4' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected cbsz:4 on all FP4 MFMAs\n' >&2; exit 1; }
     ! grep -Eq -- 'ds_read_b64_tr_b[[:digit:]]+' <<< "$KERNEL_ISA" || { printf 'ISA validation failed: pretransposed KV path emitted a transpose instruction\n' >&2; exit 1; }
+elif [[ $ISA == gpt_oss_scalar_attention ]]; then
+    [[ $(grep -Fc -- 'v_mfma_f32_16x16x16_bf16' <<< "$KERNEL_ISA" || true) -eq 0 ]] || { printf 'ISA validation failed: scalar attention emitted BF16 MFMA
+' >&2; exit 1; }
+    [[ $(grep -Fc -- 'v_mfma_f32_16x16x128_f8f6f4' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four FP4 MFMAs
+' >&2; exit 1; }
+    [[ $(grep -c -- 'v_mfma_' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: unexpected additional MFMA
+' >&2; exit 1; }
+    [[ $(grep -Fc -- 'cbsz:4' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected cbsz:4 on all FP4 MFMAs
+' >&2; exit 1; }
+elif [[ $ISA == gpt_oss_attention ]]; then
+    [[ $(grep -Fc -- 'v_mfma_f32_16x16x16_bf16' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four BF16 MFMAs
+' >&2; exit 1; }
+    [[ $(grep -c -- 'v_mfma_' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: unexpected additional MFMA
+' >&2; exit 1; }
+elif [[ $ISA == gpt_oss_expert ]]; then
+    [[ $(grep -Fc -- 'v_mfma_f32_16x16x128_f8f6f4' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four FP4 MFMAs
+' >&2; exit 1; }
+    [[ $(grep -c -- 'v_mfma_' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: unexpected additional MFMA
+' >&2; exit 1; }
+    [[ $(grep -Fc -- 'cbsz:4' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected cbsz:4 on all FP4 MFMAs
+' >&2; exit 1; }
 elif [[ $ISA == fp8_attention ]]; then
     [[ $(grep -Fc -- 'ds_read_b64_tr_b8' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four B8 transpose instructions\n' >&2; exit 1; }
     [[ $(grep -Ec -- 'ds_read_b64_tr_b[[:digit:]]+' <<< "$KERNEL_ISA" || true) -eq 4 ]] || { printf 'ISA validation failed: expected exactly four total transpose instructions\n' >&2; exit 1; }

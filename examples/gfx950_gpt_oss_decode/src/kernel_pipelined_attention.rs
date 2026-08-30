@@ -3,10 +3,11 @@
 #![allow(missing_docs)]
 
 use fe2o3_device::{
-    Bf16MfmaAMatrix, Bf16MfmaBMatrix, Blocked, DeviceMatrix, DisjointSlice, F32AccumulatorFragment,
-    Gfx950F32AccumulatorFragment, Gfx950Fp4E2M1, Gfx950Fp4MfmaAMatrix, Gfx950Fp4MfmaBMatrix,
-    Gfx950Matrix, Gfx950Subgroup, Index1D, KernelError, KernelResult, Math, StridedReadView2D,
-    Wave64, WaveLane, kernel, thread,
+    Bf16MfmaAFragment, Bf16MfmaAMatrix, Bf16MfmaBFragment, Bf16MfmaBMatrix, Blocked,
+    DeviceMatrix, DisjointSlice, F32AccumulatorFragment, Gfx950F32AccumulatorFragment,
+    Gfx950Fp4E2M1, Gfx950Fp4MfmaAMatrix, Gfx950Fp4MfmaBMatrix, Gfx950Matrix, Gfx950Subgroup,
+    Index1D, KernelError, KernelResult, Math, StridedReadView2D, Wave64, WaveLane,
+    WorkgroupLdsScope, WorkgroupPipeline, kernel, thread,
 };
 
 use crate::{
@@ -17,12 +18,15 @@ use crate::{
 const ATTENTION_SCALE: f32 = 0.125;
 const ROUTER_FLOOR: f32 = -1.0e30;
 
-#[cfg(any(not(target_arch = "amdgpu"), feature = "kernel-gpt-oss-decode"))]
+#[cfg(any(
+    not(target_arch = "amdgpu"),
+    feature = "kernel-gpt-oss-decode-pipelined-attention"
+))]
 #[kernel(
     typed,
-    namespace = "0739c8414cc87e4bd943b2d563152bbb25abc619847f75f405c6dadb154858d9",
+    namespace = "fdac2bfe29c5e088f817374ab8ebec27e0574d46b1d2601704a4d1108d2524ed",
     launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
-    control_flow(loop_bounds(2880, 64, 16))
+    control_flow(loop_bounds(2880, 64, 4, 16))
 )]
 #[allow(clippy::too_many_arguments, clippy::many_single_char_names)]
 pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
@@ -59,6 +63,7 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
 
     let index = thread::index_1d();
     let lane_index = index.get();
+    let pipeline_lane = lane_index % 64;
     let lane = WaveLane::<Wave64>::current();
     let subgroup = Gfx950Subgroup::current();
 
@@ -204,29 +209,53 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
         return Err(KernelError::InvalidArgument);
     };
     let matrix = DeviceMatrix::current();
-    let scores = F32AccumulatorFragment::zero(&lane);
-    let scores = matrix.multiply_accumulate(
-        query.load_m16k16(&lane, 0, 0),
-        key.load_k16n16(&lane, 0, 0),
-        scores,
-    );
-    let scores = matrix.multiply_accumulate(
-        query.load_m16k16(&lane, 0, 16),
-        key.load_k16n16(&lane, 16, 0),
-        scores,
-    );
-    let scores = matrix.multiply_accumulate(
-        query.load_m16k16(&lane, 0, 32),
-        key.load_k16n16(&lane, 32, 0),
-        scores,
-    );
-    let scores = matrix
-        .multiply_accumulate(
-            query.load_m16k16(&lane, 0, 48),
-            key.load_k16n16(&lane, 48, 0),
-            scores,
-        )
-        .into_values();
+    let mut pipeline_scope = WorkgroupLdsScope::current();
+    let mut query_pipeline =
+        WorkgroupPipeline::<Bf16MfmaAFragment<'_>, 2, 64, 1>::current(&mut pipeline_scope);
+    let mut key_pipeline =
+        WorkgroupPipeline::<Bf16MfmaBFragment<'_>, 2, 64, 1>::current(&mut pipeline_scope);
+
+    query_pipeline.stage(0);
+    query_pipeline.write(0, pipeline_lane, query.load_m16k16(&lane, 0, 0));
+    query_pipeline.commit(0);
+    key_pipeline.stage(0);
+    key_pipeline.write(0, pipeline_lane, key.load_k16n16(&lane, 0, 0));
+    key_pipeline.commit(0);
+
+    let mut scores = F32AccumulatorFragment::zero(&lane);
+    let mut phase_index = 0_usize;
+    while phase_index < 4 {
+        let future_epoch = phase_index + 1;
+        let next_phase = future_epoch * 16;
+        let next_query = query.load_m16k16(&lane, 0, next_phase);
+        let next_key = key.load_k16n16(&lane, next_phase, 0);
+
+        query_pipeline.stage(future_epoch);
+        query_pipeline.write(future_epoch, pipeline_lane, next_query);
+        query_pipeline.commit(future_epoch);
+        key_pipeline.stage(future_epoch);
+        key_pipeline.write(future_epoch, pipeline_lane, next_key);
+        key_pipeline.commit(future_epoch);
+
+        query_pipeline.wait(phase_index);
+        query_pipeline.consume(phase_index);
+        let query_fragment = query_pipeline.read(phase_index, pipeline_lane);
+        key_pipeline.wait(phase_index);
+        key_pipeline.consume(phase_index);
+        let key_fragment = key_pipeline.read(phase_index, pipeline_lane);
+        scores = matrix.multiply_accumulate(query_fragment, key_fragment, scores);
+        query_pipeline.release(phase_index);
+        key_pipeline.release(phase_index);
+        phase_index += 1;
+    }
+
+    query_pipeline.wait(phase_index);
+    query_pipeline.discard(phase_index);
+    query_pipeline.release(phase_index);
+    key_pipeline.wait(phase_index);
+    key_pipeline.discard(phase_index);
+    key_pipeline.release(phase_index);
+    let scores = scores.into_values();
 
     let Ok(values) =
         StridedReadView2D::from_shared_slice(value_f32, 0, CONTEXT_TOKENS, VALUE_TILE, VALUE_TILE)

@@ -20,8 +20,7 @@
     "block_rewarm": 20,
     "timer": "ROCr HSA dispatch timestamps",
     "source_commit": "c1383e97db732f9f1ff8105f10d5c2b5971143e1",
-    "source_tree": "42385e6464ca40318fc70ae104845d3997844140",
-    "campaign_id": "gpt-oss-20260829T121606Z"
+    "source_tree": "42385e6464ca40318fc70ae104845d3997844140"
   },
   "artifacts": {
     "fused_hsaco_sha256": "066056a1fb2228c9043474d1746a7555ac31c0ca559d678844dc9e89d601f212",
@@ -29,9 +28,7 @@
     "raw_samples_sha256": "4d014ce1c77ba57df82a6e2cdb432b1703e4a66ddd7fd0870ddbb548ebe21499",
     "series_summary_sha256": "0df3ee53dc3e06e8d5c75c62edcde41c594e9aa4503ce09e44ec42cf7c868a28",
     "comparison_summary_sha256": "6bb28b1b74605659bac86ddb302e98e2ebf7be8b472d1d3996e7bbeda11aec69",
-    "campaign_checksums_sha256": "2bad03dbc4831d74330197fd70b6de68315fc8b10c06b111aec6f77e32d85336",
-    "fused_llvm_sha256": "7d28da46358c29ce8f3c12fecce42f491cef490f098fdb1602923ffdfc7947b3",
-    "fused_isa_sha256": "216f41669a7243a6d34c1b1b80d31f75871e5ba4a38d6484a74bf81a47db9a75"
+    "campaign_checksums_sha256": "2bad03dbc4831d74330197fd70b6de68315fc8b10c06b111aec6f77e32d85336"
   },
   "results_ns": {
     "fused": {
