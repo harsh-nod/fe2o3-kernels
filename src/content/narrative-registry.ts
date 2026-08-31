@@ -2529,6 +2529,48 @@ const narrativeRegistry = deepFreeze({
     "examples/gfx950_advanced_attention/src/kernel.rs",
     "It does not provide caller-supplied indices, dynamic sparse widths, a paged KV cache, block scheduling, cross-device KV exchange, or arbitrary mask support.",
   ),
+  "gfx950-deepseek-sparse-attention/selected-domain": {
+    sectionId: "deepseek-sparse-selected-domain",
+    title: "The Lightning Indexer and sparse attention are separate operators",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Stage", "Fixed Rust implementation", "Correctness and optimization consequence"],
+        rows: [
+          ["Selection boundary", "The caller supplies four scalar token IDs produced upstream; any value outside 0..16 is an invalid sentinel.", "The kernel does not pretend to implement or validate the learned Lightning Indexer."],
+          ["Sparse QK", "Each Wave16 lane reads eight query/key depths for each valid token and reduces 128 products only across that subgroup.", "Twelve unselected KV rows perform no QK arithmetic; structured 2D views make every dynamic token/depth access explicit to the compiler."],
+          ["Stable softmax", "The four selected scores share one maximum; invalid slots receive zero weight after max subtraction.", "The selected domain alone determines the maximum and normalizer, avoiding dense-mask work and preserving numerical stability."],
+          ["Sparse PV", "The first 16 workitems accumulate one value channel from only the valid selected rows.", "Subgroup 0 owns the 16 output stores; workitem 0 alone emits the maximum and normalizer."],
+        ],
+      },
+      {
+        type: "steps",
+        items: [
+          "Pass the four top-k IDs as scalar kernargs so the current semantic importer sees a bounded ABI instead of an opaque dynamically indexed slice.",
+          "Map each Wave16 lane to one value channel and eight depth positions, explicitly unrolling the 128-wide dot product to expose a fixed schedule.",
+          "Use Wave16 subgroup reductions for the four selected dot products, then compute one max-subtracted selected-domain softmax.",
+          "Reuse the validated token IDs for value gathers and give subgroup 0 exclusive output ownership.",
+          "Return both softmax maximum and normalizer; log-sum-exp is maximum + ln(normalizer) when a caller needs it.",
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Why this sparse profile does not use dense MFMA or transpose loads",
+        text: "A 16-row dense MFMA tile would compute all token scores and then mask twelve of them, defeating this top-4 profile's selected-only arithmetic contract. The emitted scalar/vector path therefore intentionally contains no MFMA or LDS transpose instruction. All four Wave16 subgroups currently repeat the selected score calculation so no cross-subgroup synchronization or LDS exchange is required; only subgroup 0 commits outputs. That redundancy is an explicit fixed-profile limitation, not a performance claim.",
+      },
+      {
+        type: "paragraph",
+        text: "The operator boundary follows the public DeepSeek-V3.2-Exp and FlashMLA sparse-attention split: learned index generation is upstream, while sparse attention consumes explicit indices and ignores invalid entries. This lesson narrows that interface to one deterministic FP32 query, 16 KV rows, top-k 4, and 16 value channels so the complete Rust-to-HSACO and numerical path remains inspectable.",
+      },
+    ],
+  },
+  "gfx950-deepseek-sparse-attention/scope-evidence": advancedScope(
+    "deepseek-sparse-scope-evidence",
+    "Keep the DeepSeek operator boundary exact",
+    "examples/gfx950_advanced_attention/src/kernel.rs",
+    "It consumes top-k token IDs but does not implement the learned Lightning Indexer, dynamic top-k, causal or paged-cache scheduling, production FP8/BF16 KV layouts, multiple heads, variable sequence lengths, or a complete DeepSeek model layer.",
+  ),
   "gfx950-compressed-hybrid-attention/fusion-contract": {
     sectionId: "compressed-hybrid-fusion-contract",
     title: "Verify each branch before the hybrid fusion",

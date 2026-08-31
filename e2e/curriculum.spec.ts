@@ -1188,6 +1188,11 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       "gfx950_content_sparse_attention",
     ],
     [
+      "gfx950-deepseek-sparse-attention",
+      "gfx950 DeepSeek sparse attention",
+      "gfx950_deepseek_sparse_attention",
+    ],
+    [
       "gfx950-compressed-hybrid-attention",
       "gfx950 compressed hybrid attention",
       "gfx950_compressed_hybrid_attention",
@@ -1218,7 +1223,11 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       "gfx950_gpt_oss_120b_decode_megakernel_v1",
     ],
   ] as const;
-  const performanceLessonIds = new Set(routes.map(([lessonId]) => lessonId));
+  const performanceLessonIds = new Set(
+    routes
+      .map(([lessonId]) => lessonId)
+      .filter((lessonId) => lessonId !== "gfx950-deepseek-sparse-attention"),
+  );
 
   expect(["desktop", "mobile"]).toContain(testInfo.project.name);
   for (const [lessonId, title, symbol] of routes) {
@@ -1236,7 +1245,6 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     ).toBeVisible();
     await expect(page.getByRole("tabpanel")).toContainText(symbol);
     const performanceTab = page.getByRole("tab", { name: "Performance" });
-    expect(performanceLessonIds.has(lessonId)).toBe(true);
     if (performanceLessonIds.has(lessonId)) {
       await performanceTab.click();
       await expect(page.getByRole("tabpanel")).toContainText(
@@ -1278,6 +1286,20 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     ).toBe(false);
   }
 
+  await page.goto("./#/lesson/gfx950-deepseek-sparse-attention");
+  await page.getByRole("tab", { name: "Rust kernel" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn gfx950_deepseek_sparse_attention(",
+  );
+  await expect(page.getByRole("tab", { name: "Equivalent HIP" })).toHaveCount(0);
+  await page.getByRole("tab", { name: "Evidence record" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "NO COMPARISON-ONLY HIP LANE",
+  );
+  await page.screenshot({
+    path: testInfo.outputPath("gfx950-deepseek-sparse-attention-evidence.png"),
+    animations: "disabled",
+  });
 
   await page.goto("./#/lesson/gfx950-gpt-oss-120b-megakernel");
   await expect(page.getByText("GPU observed", { exact: true }).first()).toBeVisible();
@@ -1294,7 +1316,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c766ca761c492c4cd188047a497664f6b2ade278/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/f7f13a0a687d58039d0573abc3e2eed792bff5f0/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -1338,7 +1360,7 @@ test("every internal curriculum route resolves without page overflow", async ({
     timeout: 120_000,
   });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(34);
+  await expect(routeLinks).toHaveCount(35);
   const routes = await routeLinks.evaluateAll((links) =>
     links.map((link) => ({
       href: (link as HTMLAnchorElement).href,
