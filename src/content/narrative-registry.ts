@@ -2009,14 +2009,57 @@ const narrativeRegistry = deepFreeze({
   },
   "reductions-scans/contribution-domain": {
     sectionId: "contribution-domain",
-    title: "Separate participation from reduction meaning",
+    title: "Inspect the generated WG64 schedule",
     blocks: [
+      {
+        type: "paragraph",
+        text: "At compiler commit d4a87f9d38b2b373929847e0eb149cb505b0cd6f, one target-neutral NeutralWorkgroupReduceSum consuming exact DynamicLds authority produces a stable generated-effect stream. For a 64-invocation workgroup, 4 + 5 x log2(64) gives exactly 34 effects: 20 LDS memory effects and 14 workgroup acquire-release barriers.",
+      },
+      {
+        type: "table",
+        headers: ["Effect ordinal", "Reduction phase", "Exact generated effects"],
+        rows: [
+          ["0", "Publish", "LDS write: scratch[local X invocation index] = input"],
+          ["1", "Publish", "Acquire-release workgroup barrier over LDS"],
+          ["2-6", "Offset 32", "LDS read self; LDS read safe partner; barrier; LDS write selected sum; barrier"],
+          ["7-11", "Offset 16", "LDS read self; LDS read safe partner; barrier; LDS write selected sum; barrier"],
+          ["12-16", "Offset 8", "LDS read self; LDS read safe partner; barrier; LDS write selected sum; barrier"],
+          ["17-21", "Offset 4", "LDS read self; LDS read safe partner; barrier; LDS write selected sum; barrier"],
+          ["22-26", "Offset 2", "LDS read self; LDS read safe partner; barrier; LDS write selected sum; barrier"],
+          ["27-31", "Offset 1", "LDS read self; LDS read safe partner; barrier; LDS write selected sum; barrier"],
+          ["32", "Result", "LDS read: scratch[0]"],
+          ["33", "Release", "Final acquire-release workgroup barrier before scratch reuse"],
+        ],
+      },
+      {
+        type: "table",
+        headers: ["Debugger field", "What the compiler retains", "What it means"],
+        rows: [
+          ["Semantic origin", "GeneratedFromSemanticTerminator plus the exact consumer semantic block", "The NeutralWorkgroupReduceSum terminator is parent provenance for the generated stream."],
+          ["Effect ordinal", "One stable value from 0 through 33", "A mismatch reports the first changed, deleted, duplicated, reordered, or trailing executable effect."],
+          ["Ranked location", "The exact (ranked block, ranked operation) pair for every effect", "The 34 pairs must form one ordered contiguous interval in the consumer's ranked block and must name an LDS effect or barrier of the expected kind."],
+          ["Recipe identity", "One nonzero domain-separated SHA-256 shared by the stream", "It binds recipe-v1, function identity, producer and consumer blocks, DynamicLds and element types, element count, and scalar kind."],
+          ["Direct source span", "Deliberately absent", "The semantic terminator span is parent provenance only. The compiler does not fabricate a direct Rust span for an LDS access or barrier introduced by lowering."],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "proof",
+        title: "Why this is useful to a debugger",
+        text: "An agent can name the failing semantic block and effect ordinal, recover the exact ranked operation, compare the recipe identity, and explain the enclosing reduction phase without pretending that a compiler-generated barrier was written at a Rust source location. Exact KIR replay rejects substituted types, allocation identity, address space, alignment, volatility, barrier scope or ordering, operands, result custody, and schedule shape.",
+      },
       milestoneCallout(
         "A generic contribution pass can prove that every declared participant contributes exactly once through a legal operation. The user specification must still name the operator, identity, order policy, and sequential fold it is meant to refine.",
       ),
       {
         type: "paragraph",
         text: "For associative exact arithmetic, a multiset contract may permit tree reordering. For floating point, order changes values, so the numeric contract must either retain the exact reduction tree or prove an explicit error bound. Atomic legality alone proves neither coverage nor the final reduced value.",
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Compiler schedule, not an execution result",
+        text: "This milestone is compiler-checked semantic-to-ranked and exact-KIR correlation only. It is not GPU execution, a numerical result, a hardware thread or wave trace, profiling or timing, protected source-to-HSACO publication, source-to-machine refinement, or proof that every reduction kernel uses this recipe.",
       },
     ],
   },

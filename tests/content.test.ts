@@ -1762,6 +1762,58 @@ describe("curriculum integrity", () => {
     expect(evidenceLabels["source-example"].short).toBe("Source example");
   });
 
+  it("pins the exact compiler-generated WG64 debugger schedule", () => {
+    const lesson = lessons.find((entry) => entry.id === "reductions-scans");
+    const claim = lesson?.claims.find(
+      (entry) => entry.label === "Exact target-neutral WG64 generated-effect schedule",
+    );
+    expect(claim).toMatchObject({
+      kind: "compiler-checked",
+      reference: {
+        scope: "qualification-evidence",
+        commit: "d4a87f9d38b2b373929847e0eb149cb505b0cd6f",
+        tree: "6ffbe16ebb828dc2a4edcf30f5dfe3bf54213ca4",
+      },
+    });
+    expect(claim?.detail).toContain("34 ordered effects");
+    expect(claim?.detail).toContain("20 workgroup-memory accesses");
+    expect(claim?.detail).toContain("14 acquire-release workgroup barriers");
+
+    const narrative = narrativeEntry("reductions-scans/contribution-domain");
+    const schedule = narrative?.blocks.find(
+      (block) =>
+        block.type === "table" && block.headers[0] === "Effect ordinal",
+    );
+    expect(schedule).toMatchObject({
+      type: "table",
+      rows: [
+        ["0", "Publish", expect.stringContaining("LDS write")],
+        ["1", "Publish", expect.stringContaining("barrier")],
+        ["2-6", "Offset 32", expect.stringContaining("LDS read self")],
+        ["7-11", "Offset 16", expect.any(String)],
+        ["12-16", "Offset 8", expect.any(String)],
+        ["17-21", "Offset 4", expect.any(String)],
+        ["22-26", "Offset 2", expect.any(String)],
+        ["27-31", "Offset 1", expect.any(String)],
+        ["32", "Result", expect.stringContaining("scratch[0]")],
+        ["33", "Release", expect.stringContaining("scratch reuse")],
+      ],
+    });
+
+    const serialized = serializedLessonContent("reductions-scans");
+    for (const exactBoundary of [
+      "GeneratedFromSemanticTerminator",
+      "ranked block, ranked operation",
+      "domain-separated SHA-256",
+      "Deliberately absent",
+      "does not fabricate a direct Rust span",
+      "not GPU execution",
+      "protected source-to-HSACO publication",
+    ]) {
+      expect(serialized).toContain(exactBoundary);
+    }
+  });
+
   it("pins every evidenced claim to exact source and commands", () => {
     for (const lesson of lessons) {
       for (const claim of lesson.claims) {

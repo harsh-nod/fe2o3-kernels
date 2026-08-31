@@ -66,6 +66,10 @@ const gemmProtectedCommand = gemmProtectedEvidence.commands.at(-1)!;
 const collectivesSource = sourceMilestoneRecord(
   "wave64-collectives-source-v1",
 );
+const collectiveDebuggerCompilerCommit =
+  "d4a87f9d38b2b373929847e0eb149cb505b0cd6f";
+const collectiveDebuggerCompilerTree =
+  "6ffbe16ebb828dc2a4edcf30f5dfe3bf54213ca4";
 const synchronizationSource = sourceMilestoneRecord(
   "workgroup-sync-source-v1",
 );
@@ -252,10 +256,33 @@ const collectives: Lesson = {
   objectives: [
     "Distinguish wave and workgroup collectives.",
     "State how inactive lanes affect a reduction or scan.",
-    "Separate bounded API/lowering profiles from general source integration.",
+    "Read stable generated-effect ordinals, ranked coordinates, and recipe identity without inventing source spans.",
+    "Separate compiler schedule evidence from GPU execution and numerical correctness.",
   ],
   claims: [
     sourceMilestoneClaim("wave64-collectives-source-v1"),
+    {
+      kind: "compiler-checked",
+      label: "Exact target-neutral WG64 generated-effect schedule",
+      detail:
+        "The compiler independently replays the target-neutral DynamicLds plus NeutralWorkgroupReduceSum recipe against exact Kernel IR and its ranked graph. For WG64, the retained relation contains 34 ordered effects: 20 workgroup-memory accesses and 14 acquire-release workgroup barriers.",
+      reference: qualificationReference(
+        collectiveDebuggerCompilerCommit,
+        collectiveDebuggerCompilerTree,
+        [
+          "cargo test --locked -p dialect-kernel -p fe2o3-device -p fe2o3-mir-model -p fe2o3-lower-mir-kernel -p fe2o3-kernel-analysis -p fe2o3-amdgcn-model -p rustc-codegen-fe2o3 --all-targets -- --test-threads=1",
+        ],
+        [
+          "crates/fe2o3-mir-model/src/semantic_mir_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+          "crates/fe2o3-lower-mir-kernel/src/production_semantic_kir_v1.rs",
+          "crates/dialect-kernel/src/ranked_memory.rs",
+        ],
+        {
+          note: "Compiler-only qualification at the exact pinned commit; it grants no HSACO, launch, GPU-execution, profiling, timing, or numerical-correctness authority.",
+        },
+      ),
+    },
     {
       kind: "compiler-hsaco-observed",
       label: "Bounded collective foundations",

@@ -837,8 +837,51 @@ test("row softmax shows dynamic source and GPU qualification", async ({
 
 test("Wave 2 lessons expose exact source and bounded latest status", async ({
   page,
-}) => {
+}, testInfo) => {
   await page.goto("./#/lesson/reductions-scans");
+  const scheduleHeading = page.getByRole("heading", {
+    level: 2,
+    name: "Inspect the generated WG64 schedule",
+  });
+  await expect(scheduleHeading).toBeVisible();
+  await expect(
+    page.getByRole("cell", { name: "2-6", exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("cell", { name: "27-31", exact: true }),
+  ).toBeVisible();
+  await expect(page.getByRole("cell", { name: "33", exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Deliberately absent", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Compiler schedule, not an execution result", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText(/not GPU execution/u)).toBeVisible();
+  await expect(
+    page.getByText(/protected source-to-HSACO publication/u),
+  ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () =>
+        document.documentElement.scrollWidth <=
+        document.documentElement.clientWidth,
+    ),
+  ).toBe(true);
+  await page.locator(".topbar, .skip-link").evaluateAll((elements) => {
+    for (const element of elements) {
+      (element as HTMLElement).style.visibility = "hidden";
+    }
+  });
+  await scheduleHeading.locator("..").screenshot({
+    path: testInfo.outputPath("wg64-generated-effect-schedule.png"),
+    animations: "disabled",
+  });
+  await page.locator(".topbar, .skip-link").evaluateAll((elements) => {
+    for (const element of elements) {
+      (element as HTMLElement).style.visibility = "";
+    }
+  });
   await expect(page.getByRole("tabpanel")).toContainText(
     "pub fn wave64_collectives_v1",
   );

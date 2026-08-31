@@ -332,7 +332,7 @@ export const narrativeFingerprints = deepFreeze({
   "verus-contracts/compositional-reference": "fd49f2f7c2adad3da6fedcb43c0491ebf2daafd1f9bc0151d69e368fc56157c9",
   "memory-race-proof/finality-and-frame": "3c2eb4beca8fac4e37c17fe69cdf0581bb500c7c9173bf6685310b9f4bea5718",
   "compiler-checks/complete-correctness-catalog": "d25e7e7b83bc040cfc2d2896b70af90a1fe1c10063b9cd2da3727a301eeaa466",
-  "reductions-scans/contribution-domain": "16f36dd98e3987b11962cf31a08b59c7a8ddf5b867b98be974b3c80f07dfae4d",
+  "reductions-scans/contribution-domain": "75c4a8d66ef359adaada0924cc4e91cf66878491cc61163c4a4075a81cd19bcd",
   "lds-barriers-atomics/final-observable-effect": "d458245bb4491cb38932cd28da35546275805cce6e7a52c80506a83a3bd406b3",
   "gemm-tiling/composed-reference": "3b0b28f85d48c5e2c33e2a39a6cad745f16eb6e17f66278c8c0980c410669e34",
   "gemm-proof-plan/total-correctness-boundary": "141e9eb05a6fd6cdbfb5522bf8ed5ca7bb8d7bbfd3aed950f19c8d5a9f06dc52",
