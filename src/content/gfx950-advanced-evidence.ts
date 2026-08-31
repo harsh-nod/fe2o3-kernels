@@ -208,6 +208,31 @@ export const advancedRustEvidence = Object.freeze({
       tolerance: "output absolute tolerance 5.0e-3 with finite values; selected IDs exact",
     },
   ),
+  gfx950_deepseek_sparse_attention: observedAdvancedEvidence(
+    {
+      label: "DeepSeek sparse attention",
+      symbol: "gfx950_deepseek_sparse_attention",
+      runnerPath:
+        "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+      hardwareTest:
+        "gfx950_deepseek_sparse_attention_rust_cov6_matches_cpu_reference",
+      requiredIsa: ["no MFMA or transpose instructions"],
+      kernargBytes: 112,
+      workgroupSize: 64,
+      ldsBytes: 0,
+    },
+    {
+      sourceCommit: "6157061b827ed98db96722cb2fca988016fbb2ee",
+      sourceTree: "32a26b37092af3cbde6552011b61df409df4c830",
+      namespace: "62a1ee5804a9926ebb929061195f2229630ebdaf5a13a19d17ce7ddb4fcbbbe3",
+      llvmSha256: "0767554b7997f42b4e2fb85271779ca29182ec241b07cc162cb9185cac41362c",
+      hsacoSha256: "c5f5465c405306d6df944df4f02066f75b94295b7e91b8c8cf73bc16482ed930",
+      isaSha256: "fa54e785c34d2ec26e94dad04a8f63ef2a68485ad9190a0ca747999216d5237a",
+      numericalResult: "output max_absolute_error=2.980232239e-8; softmax_maximum max_absolute_error=2.980232239e-8; softmax_normalizer max_absolute_error=2.384185791e-7",
+      tolerance: "absolute tolerance 5.0e-3 for output, maximum, and normalizer; finite values required; valid selected IDs unique and all-invalid domains rejected",
+      runtimeObservation: "observed 2026-08-31 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; production COV6 HSA wrapper PASS",
+    },
+  ),
   gfx950_compressed_hybrid_attention: observedAdvancedEvidence(
     {
       label: "compressed hybrid attention",

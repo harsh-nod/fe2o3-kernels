@@ -86,6 +86,8 @@ export const narrativeIds = deepFreeze([
   "gfx950-kda-gdn-linear-attention/scope-evidence",
   "gfx950-indexed-sparse-attention/index-contract",
   "gfx950-indexed-sparse-attention/scope-evidence",
+  "gfx950-deepseek-sparse-attention/selected-domain",
+  "gfx950-deepseek-sparse-attention/scope-evidence",
   "gfx950-compressed-hybrid-attention/fusion-contract",
   "gfx950-compressed-hybrid-attention/scope-evidence",
   "gfx950-attnres-gr-mhc/mixing-contract",
@@ -243,6 +245,10 @@ export const narrativeOrderByLesson = deepFreeze({
     "gfx950-indexed-sparse-attention/index-contract",
     "gfx950-indexed-sparse-attention/scope-evidence"
   ],
+  "gfx950-deepseek-sparse-attention": [
+    "gfx950-deepseek-sparse-attention/selected-domain",
+    "gfx950-deepseek-sparse-attention/scope-evidence"
+  ],
   "gfx950-compressed-hybrid-attention": [
     "gfx950-compressed-hybrid-attention/fusion-contract",
     "gfx950-compressed-hybrid-attention/scope-evidence"
@@ -359,6 +365,8 @@ export const narrativeFingerprints = deepFreeze({
   "gfx950-kda-gdn-linear-attention/scope-evidence": "2898cc6ce2261d891abb2c4a9d6bbfa64466ab9b32c784440a78c02796122236",
   "gfx950-indexed-sparse-attention/index-contract": "dea1a54cde93fbec18cfe7482ae18e391f0d74064c5f7c81bc3f169644eb6afd",
   "gfx950-indexed-sparse-attention/scope-evidence": "02c0b0dda5e73b7ea093b9e1d49263164b5cbda69eef38b818ada3c2f8feb94b",
+  "gfx950-deepseek-sparse-attention/selected-domain": "f4c08bc1072e7d1fff38a3e25a86bae7f26dc0405d3185bd463c3303ad0f569d",
+  "gfx950-deepseek-sparse-attention/scope-evidence": "d95267306dba7c688a472a1643083f2a8c246c2959ff30d9c3248dd09f1e6488",
   "gfx950-compressed-hybrid-attention/fusion-contract": "ef840e4a3e22aa5d13916c95de62f1b8f348c0b1dc723457180bbaa5e6350b1f",
   "gfx950-compressed-hybrid-attention/scope-evidence": "c7e6d85cb9ce2facfc9a26265b3f60b538b476316f82d8313f75c4bca4e6faeb",
   "gfx950-attnres-gr-mhc/mixing-contract": "256492d391ed3e36f51e986e76d3a159f3be4c87c82adbadef4bc09a15f3c7c1",

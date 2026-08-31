@@ -71,9 +71,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "c766ca761c492c4cd188047a497664f6b2ade278";
+export const advancedCoreSourceCommit = "6157061b827ed98db96722cb2fca988016fbb2ee";
 export const advancedCoreSourceTree: string | null =
-  "cbda6eba10b34acb3eec93c6e504462fca3c8705";
+  "32a26b37092af3cbde6552011b61df409df4c830";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -84,8 +84,8 @@ const attentionBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
-  rustKernelFileSha256: "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
-  rustReferenceFileSha256: "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9",
+  rustKernelFileSha256: "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b",
+  rustReferenceFileSha256: "e81d3a617566ee10e776c3d2f18bff90b764c8dcf6e37072fab49ce98ac0c1af",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
   productionSupportPaths: [
@@ -156,7 +156,7 @@ interface AdvancedLessonSpec {
   rustExcerptSha256: string;
   referenceSymbols: string[];
   referenceExcerptSha256: string;
-  hipSymbols: string[];
+  hipSymbols?: string[];
   fixedShape: string;
   isaRequirements: string[];
   observedResults: string[];
@@ -250,6 +250,7 @@ function loweringSupported(bundle: SourceBundle): boolean {
 function productionRunCommand(evidence: AdvancedRustEvidence): string {
   return [
     `# ${evidence.label}: ordinary Rust -> LLVM -> COV6 HSACO -> HSA numerical check`,
+    `# Required symbol ISA: ${evidence.requiredIsa.join("; ")}`,
     `bash ${evidence.runnerPath}`,
   ].join("\n");
 }
@@ -346,6 +347,7 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
 
 function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const bundle = sourceBundle(spec.bundle);
+  const hipSymbols = spec.hipSymbols ?? [];
   const productionEvidence = advancedEvidenceFor(spec.rustSymbols);
   const allObserved =
     loweringSupported(bundle) &&
@@ -385,16 +387,18 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       explanatory: false,
       notice: `Exact published independent safe CPU reference functions, pinned to the core commit and displayed-byte SHA-256: ${spec.referenceSymbols.join(", ")}.`,
     },
-    {
-      kind: "comparison",
-      label: "Equivalent HIP",
-      language: "cpp",
-      code: exactHipKernelExcerpts(bundle.hipSource, bundle.hipSourcePath, spec.hipSymbols),
-      sourcePath: bundle.hipSourcePath,
-      sourceSha256: bundle.hipSourceSha256,
-      explanatory: true,
-      notice: `Comparison-only HIP fixture. Its ${spec.isaRequirements.join("; ")} and historical runtime are independent of the Rust-produced LLVM, HSACO, and HSA run records.`,
-    },
+    ...(hipSymbols.length > 0
+      ? [{
+          kind: "comparison" as const,
+          label: "Equivalent HIP",
+          language: "cpp" as const,
+          code: exactHipKernelExcerpts(bundle.hipSource, bundle.hipSourcePath, hipSymbols),
+          sourcePath: bundle.hipSourcePath,
+          sourceSha256: bundle.hipSourceSha256,
+          explanatory: true,
+          notice: `Comparison-only HIP fixture. Its ${spec.isaRequirements.join("; ")} and historical runtime are independent of the Rust-produced LLVM, HSACO, and HSA run records.`,
+        }]
+      : []),
     {
       kind: "verus",
       label: "Proof obligations",
@@ -412,7 +416,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       kind: "host",
       label: "Run and inspect",
       language: "bash",
-      code: `# In the pinned fe2o3 core checkout at ${advancedCoreSourceCommit}.\n# Each command extracts one ordinary Rust kernel, checks its compiler binding,\n# emits ${advancedProductionTarget} LLVM, finalizes COV6 HSACO, inspects symbol-scoped\n# ISA, and launches the digest-pinned CPU-oracle comparison on a gfx950 GPU.\n${productionEvidence.map(productionRunCommand).join("\n\n")}\n\n# Package-wide host source and CPU-reference tests.\ncargo test --offline --manifest-path ${bundle.manifestPath}\n\n# Comparison only: the separate HIP suite is not used by any Rust runner.\nbash ${bundle.manifestPath.replace("/Cargo.toml", "/build_and_test.sh")}\n\n# Exact mirrored comparison-only HIP build script:\n${bundle.build}\n\n# Exact comparison-only HIP ISA checker:\n${bundle.isa}`,
+      code: `# In the pinned fe2o3 core checkout at ${advancedCoreSourceCommit}.\n# Each command extracts one ordinary Rust kernel, checks its compiler binding,\n# emits ${advancedProductionTarget} LLVM, finalizes COV6 HSACO, inspects symbol-scoped\n# ISA, and launches the digest-pinned CPU-oracle comparison on a gfx950 GPU.\n${productionEvidence.map(productionRunCommand).join("\n\n")}\n\n# Package-wide host source and CPU-reference tests.\ncargo test --offline --manifest-path ${bundle.manifestPath}${hipSymbols.length > 0 ? `\n\n# Comparison only: the separate HIP suite is not used by any Rust runner.\nbash ${bundle.manifestPath.replace("/Cargo.toml", "/build_and_test.sh")}\n\n# Exact mirrored comparison-only HIP build script:\n${bundle.build}\n\n# Exact comparison-only HIP ISA checker:\n${bundle.isa}` : "\n\n# No equivalent HIP fixture is published for this Rust kernel."}`,
       explanatory: true,
       notice:
         "Run the production commands in the exact pinned fe2o3 checkout. Each Rust runner owns its LLVM, HSACO, ISA, and numerical evidence. The separate site-local HIP command remains comparison-only.",
@@ -451,24 +455,35 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
           "Protected Worker V3 native-build evidence: not claimed",
           "Full-model equivalence: not claimed",
           "",
-          "SEPARATE COMPARISON-ONLY HIP LANE",
-          `HIP source: ${bundle.hipSourcePath}`,
-          `HIP symbols: ${spec.hipSymbols.join(", ")}`,
-          `HIP source SHA-256: ${bundle.hipSourceSha256}`,
-          `HIP code-object SHA-256: ${bundle.hipHsacoSha256}`,
-          `HIP compiler observation: ${bundle.compiler}; ./build_and_test.sh.`,
-          `HIP runtime observation: ${bundle.runtime}.`,
-          `HIP ISA observation: ${spec.isaRequirements.join("; ")}.`,
-          `HIP CPU-oracle observation: ${spec.observedResults.join("; ")}.`,
-          `Input/error policy: ${bundle.inputPolicy}.`,
-          "The HIP artifact is an independent comparison. It does not produce, bind, or authorize any Rust artifact.",
+          ...(hipSymbols.length > 0
+            ? [
+                "SEPARATE COMPARISON-ONLY HIP LANE",
+                `HIP source: ${bundle.hipSourcePath}`,
+                `HIP symbols: ${hipSymbols.join(", ")}`,
+                `HIP source SHA-256: ${bundle.hipSourceSha256}`,
+                `HIP code-object SHA-256: ${bundle.hipHsacoSha256}`,
+                `HIP compiler observation: ${bundle.compiler}; ./build_and_test.sh.`,
+                `HIP runtime observation: ${bundle.runtime}.`,
+                `HIP ISA observation: ${spec.isaRequirements.join("; ")}.`,
+                `HIP CPU-oracle observation: ${spec.observedResults.join("; ")}.`,
+                `Input/error policy: ${bundle.inputPolicy}.`,
+                "The HIP artifact is an independent comparison. It does not produce, bind, or authorize any Rust artifact.",
+              ]
+            : [
+                "NO COMPARISON-ONLY HIP LANE",
+                "No equivalent HIP fixture is published for this Rust kernel; the displayed Rust source, produced artifacts, and independent CPU oracle are the only implementation evidence.",
+              ]),
         ].join("\n"),
       ),
       explanatory: true,
       notice:
         allObserved
-          ? "The pinned production Rust artifacts and MI350X runs support only these bounded GPU-observed claims. HIP remains a separate comparison; proof, performance, protected publication, and full-model claims are not promoted."
-          : "Production evidence is intentionally pending until every displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane.",
+          ? hipSymbols.length > 0
+            ? "The pinned production Rust artifacts and MI350X runs support only these bounded GPU-observed claims. HIP remains a separate comparison; proof, performance, protected publication, and full-model claims are not promoted."
+            : "The pinned production Rust artifacts and MI350X run support only this bounded GPU-observed claim. No equivalent HIP fixture is published; proof, performance, protected publication, and full-model claims are not promoted."
+          : hipSymbols.length > 0
+            ? "Production evidence is intentionally pending until every displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane."
+            : "Production evidence is intentionally pending until the displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. No equivalent HIP fixture is published.",
     },
   ];
   const performance = advancedPerformanceTabFor(spec.id);
@@ -570,7 +585,7 @@ if (!gptOssPerformance) throw new Error("Missing GPT-OSS performance evidence");
 const gptOssMegakernelLesson: Lesson = {
   id: "gfx950-gpt-oss-120b-megakernel",
   module: 10,
-  order: 8,
+  order: 9,
   title: "gpt-oss-120b batch-1 layer-tile megakernel",
   summary:
     "Inspect a real safe-Rust gfx950 layer tile that fuses 128-way routing, one sink-softmax GQA tile, and one dynamically selected MXFP4 expert projection, together with its archived c138 HIP three-dispatch comparator.",
@@ -926,8 +941,67 @@ const advancedLessons = [
     glossary: ["gfx950", "indexed sparse attention", "gather contract", "duplicate semantics", "masking"],
   }),
   lesson({
-    id: "gfx950-compressed-hybrid-attention",
+    id: "gfx950-deepseek-sparse-attention",
     order: 3,
+    title: "gfx950 DeepSeek sparse attention",
+    summary:
+      "Consume Lightning Indexer top-k token IDs, evaluate only the selected KV rows, and expose stable softmax state through a production Rust-to-gfx950 path.",
+    duration: "50 min",
+    bundle: "attention",
+    sourceRole: "DeepSeek sparse selected-QK, stable softmax, and selected-PV teaching kernel",
+    rustSymbols: ["gfx950_deepseek_sparse_attention"],
+    rustExcerptSha256: "0608190331ac2a480ddbc947b754aebd80a60ecdf541998d4aae27b5706df17a",
+    referenceSymbols: ["deepseek_sparse_attention_reference_v1"],
+    referenceExcerptSha256: "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
+    fixedShape:
+      "one FP32 query with head dimension 128, 16 FP32 KV rows, 16 FP32 value channels, and four scalar top-k index slots",
+    isaRequirements: [
+      "gfx950_deepseek_sparse_attention contains no MFMA or transpose instructions because it evaluates only the admitted sparse rows",
+    ],
+    observedResults: [],
+    prerequisites: [
+      "gfx950 flash attention",
+      "DeepSeek Lightning Indexer",
+      "Caller-provided sparse indices",
+      "Stable softmax",
+      "Wave16 reductions",
+    ],
+    objectives: [
+      "Separate learned Lightning Indexer selection from the sparse-attention kernel that consumes its top-k token IDs.",
+      "Trace invalid sentinels, duplicate rejection, selected-only QK scores, stable softmax, and selected-only PV accumulation.",
+      "Explain the lane mapping, explicit depth unroll, structured views, subgroup reductions, and single-subgroup output ownership used by the gfx950 lowering.",
+      "Reconstruct log-sum-exp from the emitted softmax maximum and normalizer without widening the fixed teaching profile.",
+    ],
+    narratives: [
+      "gfx950-deepseek-sparse-attention/selected-domain",
+      "gfx950-deepseek-sparse-attention/scope-evidence",
+    ],
+    obligations: [
+      "at least one of the four scalar index slots names a token in 0..16",
+      "valid token IDs are unique; out-of-range values are invalid sentinels and never address K or V",
+      "only selected rows contribute to the score maximum, softmax normalizer, and value numerator",
+      "the FP32 output, softmax maximum, and softmax normalizer each have one final in-range owner",
+      "the independent CPU oracle applies the same stable selected-domain softmax and finite-value policy",
+    ],
+    diagram: "attention",
+    exercise: {
+      prompt: "Extend the oracle matrix with every invalid-slot position and a permuted valid top-k order.",
+      hint: "The output is invariant to valid-index order, but duplicate valid IDs and an all-invalid list must still be rejected.",
+      acceptance:
+        "Each case pins output, maximum, and normalizer behavior and distinguishes invalid sentinels from forbidden duplicate valid tokens.",
+    },
+    glossary: [
+      "gfx950",
+      "DeepSeek Sparse Attention",
+      "Lightning Indexer",
+      "top-k gather",
+      "selected softmax",
+      "log-sum-exp state",
+    ],
+  }),
+  lesson({
+    id: "gfx950-compressed-hybrid-attention",
+    order: 4,
     title: "gfx950 compressed hybrid attention",
     summary:
       "Combine one bounded compressed-state branch with one bounded direct-attention branch under an explicit fusion rule.",
@@ -970,7 +1044,7 @@ const advancedLessons = [
   }),
   lesson({
     id: "gfx950-attnres-gr-mhc",
-    order: 4,
+    order: 5,
     title: "gfx950 AttnRes, GR, and mHC mixing",
     summary:
       "Express bounded residual-stream selection, gating, and mixing as explicit tensor transforms with alias-safe stores.",
@@ -1031,7 +1105,7 @@ const advancedLessons = [
   }),
   lesson({
     id: "gfx950-speculative-mtp-verification",
-    order: 5,
+    order: 6,
     title: "gfx950 speculative and MTP verification",
     summary:
       "Verify one fixed-width candidate block and compute a deterministic accepted prefix without claiming a serving scheduler or sampler.",
@@ -1077,7 +1151,7 @@ const advancedLessons = [
   }),
   lesson({
     id: "gfx950-ngram-embedding-gather",
-    order: 6,
+    order: 7,
     title: "gfx950 N-gram hash-table gather",
     summary:
       "Resolve fixed-order N-gram identifiers through a bounded priority table and return one integer table value per query.",
@@ -1123,7 +1197,7 @@ const advancedLessons = [
   }),
   lesson({
     id: "gfx950-muon-optimizer",
-    order: 7,
+    order: 8,
     title: "gfx950 Muon polar update",
     summary:
       "Reduce two fixed gradient shards, normalize one 4 x 4 matrix, run five polar iterations, and emit a scaled update.",
