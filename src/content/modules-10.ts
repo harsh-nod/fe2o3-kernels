@@ -90,7 +90,6 @@ const attentionBundle: SourceBundle = {
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
   productionSupportPaths: [
     "examples/gfx950_advanced_attention/run-gfx950.sh",
-    "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
     "examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh",
     "examples/gfx950_advanced_attention/test-extractor-runtime.sh",
     "examples/gfx950_advanced_attention/tests/kernel_source.rs",
