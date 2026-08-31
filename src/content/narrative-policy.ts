@@ -84,6 +84,8 @@ export const narrativeIds = deepFreeze([
   "gfx950-advanced-moe/scope-evidence",
   "gfx950-kda-gdn-linear-attention/recurrence",
   "gfx950-kda-gdn-linear-attention/scope-evidence",
+  "gfx950-kimi-k3-kda-decode/k3-contract",
+  "gfx950-kimi-k3-kda-decode/scope-evidence",
   "gfx950-indexed-sparse-attention/index-contract",
   "gfx950-indexed-sparse-attention/scope-evidence",
   "gfx950-compressed-hybrid-attention/fusion-contract",
@@ -239,6 +241,10 @@ export const narrativeOrderByLesson = deepFreeze({
     "gfx950-kda-gdn-linear-attention/recurrence",
     "gfx950-kda-gdn-linear-attention/scope-evidence"
   ],
+  "gfx950-kimi-k3-kda-decode": [
+    "gfx950-kimi-k3-kda-decode/k3-contract",
+    "gfx950-kimi-k3-kda-decode/scope-evidence"
+  ],
   "gfx950-indexed-sparse-attention": [
     "gfx950-indexed-sparse-attention/index-contract",
     "gfx950-indexed-sparse-attention/scope-evidence"
@@ -357,6 +363,8 @@ export const narrativeFingerprints = deepFreeze({
   "gfx950-advanced-moe/scope-evidence": "9b4c6a5bb69e6b3c2a8c6a15d93ff1630a14e6a3e573eb28b6b2839f428e3672",
   "gfx950-kda-gdn-linear-attention/recurrence": "40770fe318b15ba2549dac18e7b5c57fb9fc3c6b8baf87b0d222b8ae5898ad47",
   "gfx950-kda-gdn-linear-attention/scope-evidence": "2898cc6ce2261d891abb2c4a9d6bbfa64466ab9b32c784440a78c02796122236",
+  "gfx950-kimi-k3-kda-decode/k3-contract": "df393ebcb74b1ca3b848fb358fff170e7347859f8ee498190f2eb055e9876ad2",
+  "gfx950-kimi-k3-kda-decode/scope-evidence": "a68a4f57a9107b24391469762befce2edbf9b4fd0da2f2b41a5a80ab3380f403",
   "gfx950-indexed-sparse-attention/index-contract": "dea1a54cde93fbec18cfe7482ae18e391f0d74064c5f7c81bc3f169644eb6afd",
   "gfx950-indexed-sparse-attention/scope-evidence": "02c0b0dda5e73b7ea093b9e1d49263164b5cbda69eef38b818ada3c2f8feb94b",
   "gfx950-compressed-hybrid-attention/fusion-contract": "ef840e4a3e22aa5d13916c95de62f1b8f348c0b1dc723457180bbaa5e6350b1f",

@@ -5,6 +5,7 @@ import advancedAttentionRustReference from "../../examples/gfx950_advanced_atten
 import advancedAttentionRustContract from "../../examples/gfx950_advanced_attention/src/lib.rs?raw";
 import advancedAttentionBuild from "../../examples/gfx950_advanced_attention/build_and_test.sh?raw";
 import advancedAttentionIsa from "../../examples/gfx950_advanced_attention/check_isa.sh?raw";
+import kimiK3KdaDecodeRunner from "../../examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh?raw";
 import advancedSystemsSource from "../../examples/gfx950_advanced_systems/gfx950_advanced_systems.hip?raw";
 import advancedSystemsRustKernel from "../../examples/gfx950_advanced_systems/src/kernel.rs?raw";
 import advancedSystemsRustReference from "../../examples/gfx950_advanced_systems/src/reference.rs?raw";
@@ -84,8 +85,8 @@ const attentionBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
-  rustKernelFileSha256: "4bc0e04cbd0545e0f73cbd48d320873805a7fa0396afce260d53aebd75054f2e",
-  rustReferenceFileSha256: "36b12a88115884fb52c175da0372e2a1197d05ad8b790992c05cf7a671246af9",
+  rustKernelFileSha256: "d90678350ddd91ff78e2365bd6f2bbe7b0a0f252badc039eff6b4bc06573a817",
+  rustReferenceFileSha256: "d68f69429b226c9e3f3de82267dd5e9b9a042e2981855579c01fe3d7b79236d4",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
   productionSupportPaths: [
@@ -566,6 +567,216 @@ const gptOssVariantSources: VariantSourceSpec[] = [
 ];
 const gptOssPerformance = advancedPerformanceTabFor("gfx950-gpt-oss-120b-megakernel");
 if (!gptOssPerformance) throw new Error("Missing GPT-OSS performance evidence");
+
+const kimiK3KdaKernelSymbol = "gfx950_kimi_k3_kda_decode_v1";
+const kimiK3KdaReferenceSymbol = "kimi_k3_kda_decode_reference_v1";
+const kimiK3KdaSourceCommit = "a89e593e11e70f5d7604c08b94ef3fd153ede556";
+const kimiK3KdaSourceTree = "67f8a956044c2bf1af0161c78c23d543a13eb401";
+const kimiK3KdaKernelExcerpt = rustFunctionExcerpt(
+  advancedAttentionRustKernel,
+  kimiK3KdaKernelSymbol,
+  true,
+);
+const kimiK3KdaReferenceExcerpt = rustFunctionExcerpt(
+  advancedAttentionRustReference,
+  kimiK3KdaReferenceSymbol,
+  false,
+);
+const kimiK3KdaKernelExcerptSha256 =
+  "2a3aab46e4e02f60cb66eadfd749df39304516c918b3624ae356f75c4b13d57e";
+const kimiK3KdaReferenceExcerptSha256 =
+  "41f22b63cd0ebdbee404eee85e4a2682c2b3aa4c5e469853ec14fcb693d4ef44";
+const kimiK3KdaKernelFileSha256 =
+  "d90678350ddd91ff78e2365bd6f2bbe7b0a0f252badc039eff6b4bc06573a817";
+const kimiK3KdaReferenceFileSha256 =
+  "d68f69429b226c9e3f3de82267dd5e9b9a042e2981855579c01fe3d7b79236d4";
+const kimiK3KdaContractFileSha256 =
+  "2cbeceb7be5f115be8ae05e2f584bc161a6faa1de40d6eec4fb9ca70d43bfb83";
+const kimiK3KdaRunnerPath =
+  "examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh";
+const kimiK3KdaHardwareTest =
+  "gfx950_kimi_k3_kda_decode_rust_cov6_matches_cpu_reference";
+const kimiK3KdaSourcePaths = [
+  attentionBundle.rustKernelPath,
+  attentionBundle.rustReferencePath,
+  attentionBundle.rustContractPath,
+  attentionBundle.rustReadmePath,
+  attentionBundle.manifestPath,
+  "examples/gfx950_advanced_attention/run-gfx950.sh",
+  kimiK3KdaRunnerPath,
+  "examples/gfx950_advanced_attention/tests/kernel_source.rs",
+  "examples/gfx950_advanced_attention/tests/reference.rs",
+  advancedHarnessPath,
+];
+const kimiK3KdaQualificationCommands = [
+  "cargo fmt --all",
+  "git diff --check",
+  "cargo test --locked --manifest-path examples/gfx950_advanced_attention/Cargo.toml",
+  "cargo test --locked -p fe2o3-hsa-runtime --features hardware-test-hooks --test gfx950_advanced_hardware --no-run",
+];
+
+const kimiK3KdaDecodeLesson: Lesson = {
+  id: "gfx950-kimi-k3-kda-decode",
+  module: 10,
+  order: 9,
+  title: "gfx950 Kimi K3 KDA decode core",
+  summary:
+    "Inspect the first Kimi K3-shaped fused-recurrent KDA decode slice: one head, K=V=128, safe-gate decay, beta sigmoid, V-first state update, and bounded source evidence.",
+  duration: "44 min",
+  prerequisites: [
+    "gfx950 KDA/GDN linear attention",
+    "Kimi Delta Attention recurrence",
+    "Wave64 reductions",
+    "Decode cache state layout",
+  ],
+  objectives: [
+    "Map Kimi K3's fused_recurrent_kda decode contract onto the current safe-Rust gfx950 root.",
+    "Separate the implemented single-head f32 core from full 96-head serving, BF16/MX formats, convolution fusion, RMS output gating, and KDA-aware cache management.",
+    "Read the exact MI350 observation for the bounded decode-core slice without extending it to chunk prefill, full-model serving, or performance.",
+  ],
+  claims: [
+    {
+      kind: "gpu-observed",
+      label: "Kimi K3 KDA decode-core slice observed on MI350X",
+      detail:
+        `At branch commit ${kimiK3KdaSourceCommit}, the K3 root passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and HSA CPU-reference comparison on mi350 / smci350-rck-g03-b19-03. output_first64 max_error=9.313225746e-10; output_second64 max_error=9.313225746e-10; state_row0_first64 max_error=4.656612873e-10. This bounded observation is not a performance result, formal source-to-machine proof, protected publication authority, or full Kimi K3 serving/equivalence claim.`,
+      reference: historicalReference(
+        kimiK3KdaSourceCommit,
+        kimiK3KdaSourceTree,
+        [
+          ...kimiK3KdaQualificationCommands,
+          `bash ${kimiK3KdaRunnerPath}`,
+        ],
+        kimiK3KdaSourcePaths,
+        {
+          target: advancedProductionTarget,
+          note: "Historical bounded raw-HSA MI350X observation for one Kimi K3 fused-recurrent KDA decode-core slice. It does not claim chunk prefill, all-head serving, KDA-aware cache plumbing, performance, protected publication authority, formal source-to-machine proof, or full Kimi K3 model equivalence.",
+        },
+      ),
+    },
+  ],
+  sections: [
+    narrativeSection("gfx950-kimi-k3-kda-decode/k3-contract"),
+    narrativeSection("gfx950-kimi-k3-kda-decode/scope-evidence"),
+  ],
+  tabs: [
+    {
+      kind: "kernel",
+      label: "Rust kernel",
+      language: "rust",
+      code: kimiK3KdaKernelExcerpt,
+      sourcePath: attentionBundle.rustKernelPath,
+      sourceCommit: kimiK3KdaSourceCommit,
+      sourceSha256: kimiK3KdaKernelExcerptSha256,
+      sourceDigestScope: "displayed",
+      sourceFragments: [kimiK3KdaKernelExcerpt],
+      explanatory: false,
+      notice:
+        "Exact ordinary attributed Rust for the Kimi K3-shaped decode-core slice. It is not the complete Kimi K3 attention layer or serving backend.",
+    },
+    {
+      kind: "reference",
+      label: "Safe CPU reference",
+      language: "rust",
+      code: kimiK3KdaReferenceExcerpt,
+      sourcePath: attentionBundle.rustReferencePath,
+      sourceCommit: kimiK3KdaSourceCommit,
+      sourceSha256: kimiK3KdaReferenceExcerptSha256,
+      sourceDigestScope: "displayed",
+      sourceFragments: [kimiK3KdaReferenceExcerpt],
+      explanatory: false,
+      notice:
+        "Exact independent safe CPU oracle for one Kimi K3 fused-recurrent KDA core decode step.",
+    },
+    {
+      kind: "verus",
+      label: "Proof obligations",
+      language: "text",
+      code: [
+        "NO VERUS RESULT IS CLAIMED FOR THIS RUST SOURCE.",
+        "",
+        "- prove q/k L2 normalization and finite-denominator preconditions",
+        "- prove safe-gate log-decay bounds for lower_bound=-5 and finite A_log, gate, and dt_bias",
+        "- prove the V-first [128][128] recurrent-state index map and the 64-column state-row publication tile",
+        "- prove each output value is owned by exactly one Wave64 lane/component pair",
+        "- bind the source, Kernel IR, LLVM, ISA, HSACO, ABI, launch, and CPU-reference comparison",
+        "- keep full 96-head batching, BF16/MX formats, convolution fusion, output RMS gating, prefill chunking, cache management, and full-model Kimi K3 equivalence outside this slice",
+      ].join("\n"),
+      explanatory: true,
+      notice: "Obligation ledger only; no source-to-machine proof is claimed.",
+    },
+    {
+      kind: "host",
+      label: "Run and inspect",
+      language: "bash",
+      code: [
+        `# In the fe2o3 checkout at ${kimiK3KdaSourceCommit}.`,
+        ...kimiK3KdaQualificationCommands,
+        "",
+        "# MI350 GPU run for the Kimi K3 decode-core slice.",
+        `bash ${kimiK3KdaRunnerPath}`,
+        "",
+        "# Exact mirrored production runner.",
+        kimiK3KdaDecodeRunner,
+      ].join("\n"),
+      explanatory: true,
+      notice:
+        "The local qualification commands check source and harness behavior. The MI350 runner is the bounded GPU observation recorded in the evidence tab.",
+    },
+    {
+      kind: "result",
+      label: "Evidence record",
+      language: "text",
+      code: resultText(
+        "gpu-observed",
+        [
+          "KIMI K3 KDA DECODE-CORE STATUS",
+          "Status: gpu-observed on MI350X for one bounded fused-recurrent decode-core slice",
+          `Kernel symbol: ${kimiK3KdaKernelSymbol}`,
+          `Reference symbol: ${kimiK3KdaReferenceSymbol}`,
+          `Core source commit: ${kimiK3KdaSourceCommit}`,
+          `Core source tree: ${kimiK3KdaSourceTree}`,
+          `Kernel file SHA-256: ${kimiK3KdaKernelFileSha256}`,
+          `Kernel excerpt SHA-256: ${kimiK3KdaKernelExcerptSha256}`,
+          `Reference file SHA-256: ${kimiK3KdaReferenceFileSha256}`,
+          `Reference excerpt SHA-256: ${kimiK3KdaReferenceExcerptSha256}`,
+          `Contract file SHA-256: ${kimiK3KdaContractFileSha256}`,
+          `Production runner: bash ${kimiK3KdaRunnerPath}`,
+          `Hardware harness: ${advancedHarnessPath}::${kimiK3KdaHardwareTest}`,
+          `Target: ${advancedProductionTarget}, Wave64, code object V6`,
+          "ABI: kernarg=176 bytes; workgroup=64x1x1; static LDS=0 bytes",
+          "Portable namespace: dae392bc52815e05989ef1981969b6f601468612bbde93861b4a058c61df6b84",
+          "Rust-produced LLVM SHA-256: 7005f19bff260b4cfb070067cf456a67807eca563f425cac0d0007c532536e39",
+          "Rust-produced HSACO SHA-256: 806f51130025dece6bdf2933b62a44be8002a3031e985ec2fe26c1bcd33b5b1f",
+          "Symbol-scoped ISA SHA-256: d17d2c756e22ef44aadf6894b7482630bf5d7865988e7fd90c42e9fd48005208",
+          "Rust runtime observation: ROCm 7.2.1 on MI350X gfx950, ssh host mi350 / smci350-rck-g03-b19-03",
+          "Rust numerical result: output_first64 max_error=9.313225746e-10; output_second64 max_error=9.313225746e-10; state_row0_first64 max_error=4.656612873e-10",
+          "Acceptance tolerance: 4.0e-3 per f32 output tile",
+          "Model-derived shape: 96 KDA heads, K=128, V=128, four-token short convolution, safe-gate lower_bound=-5, 69 KDA layers, 24 gated-MLA layers, 1,048,576-token published context",
+          "Implemented slice: one single-head f32 fused-recurrent KDA core decode step with q/k L2 normalization, beta sigmoid, safe-gate decay, V-first state read, 128-value output split into two 64-value tiles, and first-row state tile publication",
+          `Local checks: ${kimiK3KdaQualificationCommands.join("; ")}`,
+          "Performance result: not claimed",
+          "Formal source-to-machine proof: not claimed",
+          "Protected publication authority: not claimed",
+          "Full-model Kimi K3 equivalence: not claimed",
+        ].join("\n"),
+      ),
+      explanatory: true,
+      notice:
+        "This is a bounded GPU-observed record for the Kimi K3 decode core. Prefill, all-head serving, cache management, performance, and full-model equivalence remain unclaimed.",
+    },
+  ],
+  diagram: "attention",
+  exercises: [
+    {
+      prompt: "Trace one output row through the Kimi K3 KDA decode-core update.",
+      hint: "Normalize q and k first, compute the decayed state projection onto k, apply beta to the residual value, update the V-first state row, then dot the updated row with scaled q.",
+      acceptance:
+        "The trace names retention, projection, beta-scaled correction, updated state, and output accumulation without claiming chunk prefill or full-model equivalence.",
+    },
+  ],
+  glossary: ["gfx950", "Kimi K3", "KDA", "fused recurrent decode", "linear attention"],
+};
 
 const gptOssMegakernelLesson: Lesson = {
   id: "gfx950-gpt-oss-120b-megakernel",
@@ -1169,6 +1380,7 @@ const advancedLessons = [
     glossary: ["gfx950", "Muon", "polar iteration", "gradient shard", "optimizer update"],
   }),
   gptOssMegakernelLesson,
+  kimiK3KdaDecodeLesson,
 ];
 
 export const modules10: CurriculumModule[] = [
@@ -1176,7 +1388,7 @@ export const modules10: CurriculumModule[] = [
     number: 10,
     title: "gfx950 advanced operator kernels",
     summary:
-      "Fixed-shape teaching contracts for advanced attention, routing, residual, decoding, N-gram lookup, optimizer, and GPT-OSS layer-tile operators, with source and evidence integration kept fail-closed.",
+      "Fixed-shape teaching contracts for advanced attention, Kimi K3 KDA decode, routing, residual, decoding, N-gram lookup, optimizer, and GPT-OSS layer-tile operators, with source and evidence integration kept fail-closed.",
     lessons: advancedLessons,
   },
 ];

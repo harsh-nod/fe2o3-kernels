@@ -2503,6 +2503,35 @@ const narrativeRegistry = deepFreeze({
     "examples/gfx950_advanced_attention/src/kernel.rs",
     "It does not cover dynamic sequence lengths, persistent state across requests, KV-cache management, or equivalence to a named KDA/GDN model layer.",
   ),
+  "gfx950-kimi-k3-kda-decode/k3-contract": {
+    sectionId: "kimi-k3-kda-contract",
+    title: "Map Kimi K3 decode to one recurrent KDA step",
+    blocks: [
+      {
+        type: "table",
+        headers: ["Stage", "Kimi K3 decode-core contract", "Current source boundary"],
+        rows: [
+          ["Shape", "One sequence position, one KDA head, query/key dimension 128, value dimension 128, and V-first recurrent state [128][128].", "The source does not yet batch all 96 KDA heads or all model layers."],
+          ["Normalization", "Normalize q and k with the FLA-style L2 norm epsilon, then scale q by 1 / sqrt(128).", "The current root uses f32 buffers for reviewable arithmetic."],
+          ["Gate", "Compute log_decay = lower_bound * sigmoid(exp(A_log) * (gate + dt_bias)) with lower_bound = -5, then retention = exp(log_decay).", "BF16/MX activation packing and fused short-convolution inputs remain outside this slice."],
+          ["State", "For each value row, project the decayed state onto k, apply sigmoid(beta) to the residual value, and add the k outer product correction.", "The kernel emits all 128 output values and the first 64 columns of state row zero for bounded validation."],
+          ["Output", "Dot the updated V-first state row with scaled q to produce the core KDA decode output.", "The model's output RMS gate and output projection are separate serving-layer work."],
+        ],
+      },
+      {
+        type: "callout",
+        tone: "boundary",
+        title: "Kimi K3 support starts at the recurrent core",
+        text: "This source targets the fused_recurrent_kda decode core needed for cached generation. chunk_kda prefill, convolution fusion, all-head cache layout, MLA interleave, KDA-aware prefix cache metadata, BF16/MX formats, and full-model Kimi K3 integration remain separate tasks.",
+      },
+    ],
+  },
+  "gfx950-kimi-k3-kda-decode/scope-evidence": advancedScope(
+    "kimi-k3-kda-scope-evidence",
+    "Keep Kimi K3 evidence fail-closed",
+    "examples/gfx950_advanced_attention/src/kernel.rs",
+    "It covers one single-head f32 fused-recurrent KDA core decode step. It does not cover chunk prefill, dynamic batch or sequence shapes, all-head serving, KDA-aware cache management, full-state publication, output projection, model quality, performance, or full Kimi K3 equivalence.",
+  ),
   "gfx950-indexed-sparse-attention/index-contract": {
     sectionId: "indexed-sparse-index-contract",
     title: "An index table changes the attention domain",
