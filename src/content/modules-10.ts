@@ -71,9 +71,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "f7f13a0a687d58039d0573abc3e2eed792bff5f0";
+export const advancedCoreSourceCommit = "6157061b827ed98db96722cb2fca988016fbb2ee";
 export const advancedCoreSourceTree: string | null =
-  "3c4f0ebd0b970615ee0d4fb84970347c7bc16f5c";
+  "32a26b37092af3cbde6552011b61df409df4c830";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,

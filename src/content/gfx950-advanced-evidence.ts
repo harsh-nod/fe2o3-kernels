@@ -222,8 +222,8 @@ export const advancedRustEvidence = Object.freeze({
       ldsBytes: 0,
     },
     {
-      sourceCommit: "f7f13a0a687d58039d0573abc3e2eed792bff5f0",
-      sourceTree: "3c4f0ebd0b970615ee0d4fb84970347c7bc16f5c",
+      sourceCommit: "6157061b827ed98db96722cb2fca988016fbb2ee",
+      sourceTree: "32a26b37092af3cbde6552011b61df409df4c830",
       namespace: "62a1ee5804a9926ebb929061195f2229630ebdaf5a13a19d17ce7ddb4fcbbbe3",
       llvmSha256: "0767554b7997f42b4e2fb85271779ca29182ec241b07cc162cb9185cac41362c",
       hsacoSha256: "c5f5465c405306d6df944df4f02066f75b94295b7e91b8c8cf73bc16482ed930",
