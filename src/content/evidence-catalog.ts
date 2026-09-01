@@ -5,6 +5,10 @@ import {
   functionalRefinementPublicationSources,
 } from "./functional-refinement-publication";
 import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
+import {
+  sourceIsaAgentMilestone,
+  sourceIsaAgentSources,
+} from "./source-isa-agent";
 
 export interface GitEvidenceObject {
   label: string;
@@ -130,12 +134,20 @@ const functionalRefinementDigests: GitEvidenceSource[] =
     fileSha256: source.sha256,
   }));
 
+const sourceIsaAgentEvidence: GitEvidenceObject = {
+  label: "agent-native source/ISA inspection milestone",
+  commit: sourceIsaAgentMilestone.compilerCommit,
+  tree: sourceIsaAgentMilestone.compilerTree,
+  sourcePaths: sourceIsaAgentSources.map((source) => source.path),
+};
+
 export const evidenceCatalog = {
   gitObjects: [
     ...claims,
     currentSources,
     semanticCorrectnessSources,
     functionalRefinementSources,
+    sourceIsaAgentEvidence,
   ],
   sources: [
     ...tabs,

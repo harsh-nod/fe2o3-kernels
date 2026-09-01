@@ -43,6 +43,21 @@ describe("application shell", () => {
     expect(screen.getByRole("tab", { name: "Kernel" })).toBeInTheDocument();
   });
 
+  it("routes to the agent-native source/ISA inspection reference", async () => {
+    renderApp("/debugger/source-isa-agent");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Agent-native source/ISA inspection",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Synthetic canonical fixture")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Capability" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+  });
+
   it("persists completed lesson progress", async () => {
     const user = userEvent.setup();
     renderApp();

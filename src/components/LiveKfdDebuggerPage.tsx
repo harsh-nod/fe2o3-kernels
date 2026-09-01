@@ -1,4 +1,5 @@
 import {
+  ArrowRight,
   Braces,
   Cpu,
   ExternalLink,
@@ -149,6 +150,10 @@ export function LiveKfdDebuggerPage() {
           Neither debug backend nor Profiler V4 presents simulator facts as live
           GPU wave state.
         </p>
+        <a className="source-isa-agent-live-link" href="#/debugger/source-isa-agent">
+          Inspect compile-time source/ISA observations as typed JSONL
+          <ArrowRight size={15} aria-hidden="true" />
+        </a>
       </section>
 
       <section className="debug-comparison live-kfd-comparison" aria-labelledby="live-kfd-comparison-heading">

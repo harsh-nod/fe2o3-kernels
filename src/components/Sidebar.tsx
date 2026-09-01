@@ -1,5 +1,6 @@
 import {
   Activity,
+  Bot,
   BookOpen,
   Braces,
   Bug,
@@ -106,6 +107,9 @@ export function Sidebar({
         </NavLink>
         <NavLink onClick={onNavigate} to="/debugger/live-kfd">
           <Bug size={16} /> Live KFD debugger
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/debugger/source-isa-agent">
+          <Bot size={16} /> Agent source/ISA
         </NavLink>
         <NavLink onClick={onNavigate} to="/status">
           <Activity size={16} /> Implementation status

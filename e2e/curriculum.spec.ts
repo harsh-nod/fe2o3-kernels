@@ -94,6 +94,42 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
+test("agent source/ISA protocol stays bounded, truthful, and responsive", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#/debugger/source-isa-agent");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Agent-native source/ISA inspection",
+    }),
+  ).toBeVisible();
+  await expect(page.getByText("Synthetic canonical fixture")).toBeVisible();
+  await expect(page.getByRole("tabpanel")).toContainText("observation_only");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "hardware_execution_observed",
+  );
+
+  await page.getByRole("tab", { name: "Collection" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("missing_selected_units");
+  await expect(page.getByRole("tabpanel")).toContainText('"page_exhausted": true');
+
+  await page.getByRole("tab", { name: "Failure" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("invalid_collection");
+  await expect(page.getByRole("tabpanel")).toContainText('"terminal": false');
+
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  await page.screenshot({
+    path: testInfo.outputPath("source-isa-agent.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+});
+
 test("source-to-bundle CPU simulation keeps its evidence boundary visible", async ({
   page,
 }, testInfo) => {

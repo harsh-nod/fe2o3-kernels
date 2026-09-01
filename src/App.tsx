@@ -32,6 +32,11 @@ const LiveKfdDebuggerPage = lazy(() =>
     default: module.LiveKfdDebuggerPage,
   })),
 );
+const SourceIsaAgentPage = lazy(() =>
+  import("./components/SourceIsaAgentPage").then((module) => ({
+    default: module.SourceIsaAgentPage,
+  })),
+);
 const OverviewPage = lazy(() =>
   import("./components/OverviewPage").then((module) => ({
     default: module.OverviewPage,
@@ -93,6 +98,9 @@ function pageTitle(pathname: string): string {
   if (pathname === "/glossary") return "Glossary | fe2o3 kernels";
   if (pathname === "/debugger/live-kfd") {
     return "GPU debugger + profiler workbench | fe2o3 kernels";
+  }
+  if (pathname === "/debugger/source-isa-agent") {
+    return "Agent-native source/ISA inspection | fe2o3 kernels";
   }
   return "Lesson | fe2o3 kernels";
 }
@@ -175,6 +183,7 @@ export function App() {
             <Route path="/status" element={<ProgressPage />} />
             <Route path="/glossary" element={<GlossaryPage />} />
             <Route path="/debugger/live-kfd" element={<LiveKfdDebuggerPage />} />
+            <Route path="/debugger/source-isa-agent" element={<SourceIsaAgentPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

@@ -54,6 +54,13 @@ import {
   validateSourceDebuggerMilestone,
 } from "../src/content/source-debugger-milestone";
 import {
+  sourceIsaAgentCollectionHex,
+  sourceIsaAgentMilestone,
+  sourceIsaAgentRequests,
+  sourceIsaAgentResponses,
+  sourceIsaAgentSources,
+} from "../src/content/source-isa-agent";
+import {
   developmentCheckpointIds,
   developmentCheckpoints,
   developmentCheckpointDetail,
@@ -88,6 +95,61 @@ import {
   validateSourceMilestoneCatalog,
 } from "../src/content/source-milestones";
 import { validateCurriculum } from "../src/content/validate";
+
+describe("agent-native source/ISA inspection milestone", () => {
+  it("pins the exact observation-only transcript and open qualification boundary", () => {
+    expect(sourceIsaAgentMilestone).toMatchObject({
+      compilerCommit: "8dc1ac8ec3e20801d8ec7054176fc031ce05ca25",
+      compilerTree: "50846a969869b4fe858025d8a365dbaa1df743bd",
+      issue: 215,
+      issueState: "open",
+      protectedMatrixRun: false,
+      fixtureCanonicalBytes: 144,
+    });
+    expect(
+      createHash("sha256")
+        .update(Buffer.from(sourceIsaAgentCollectionHex, "hex"))
+        .digest("hex"),
+    ).toBe(sourceIsaAgentMilestone.fixtureSha256);
+    expect(sourceIsaAgentRequests).toHaveLength(3);
+    expect(sourceIsaAgentResponses.map((response) => response.response_revision)).toEqual([
+      1,
+      2,
+      3,
+    ]);
+    expect(sourceIsaAgentResponses[1]).toMatchObject({
+      status: "ok",
+      result: {
+        authority: {
+          observation_only: true,
+          compiler_authority: false,
+          runtime_authority: false,
+          hardware_execution_observed: false,
+          semantic_refinement_proved: false,
+        },
+        collection: {
+          completeness: { state: "incomplete", missing_unit_count: 1 },
+        },
+        page: { page_exhausted: true },
+      },
+    });
+    expect(sourceIsaAgentResponses[2]).toMatchObject({
+      status: "error",
+      error: "invalid_collection",
+      terminal: false,
+    });
+    expect(sourceIsaAgentSources).toHaveLength(5);
+    expect(
+      evidenceCatalog.gitObjects.find(
+        (object) => object.label === "agent-native source/ISA inspection milestone",
+      ),
+    ).toMatchObject({
+      commit: sourceIsaAgentMilestone.compilerCommit,
+      tree: sourceIsaAgentMilestone.compilerTree,
+      sourcePaths: sourceIsaAgentSources.map((source) => source.path),
+    });
+  });
+});
 
 function serializedLessonContent(lessonId: string): string {
   const lesson = lessons.find((candidate) => candidate.id === lessonId);

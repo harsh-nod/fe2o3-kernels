@@ -1,0 +1,20 @@
+{
+  "schema": "fe2o3-source-isa-agent-tutorial-milestone-v1",
+  "status": "implemented-synthetic-fixture",
+  "reviewedOn": "2026-08-31",
+  "compilerCommit": "8dc1ac8ec3e20801d8ec7054176fc031ce05ca25",
+  "compilerTree": "50846a969869b4fe858025d8a365dbaa1df743bd",
+  "issue": 215,
+  "issueState": "open",
+  "requestSchema": "fe2o3-agent-source-isa-request-v1",
+  "responseSchema": "fe2o3-agent-source-isa-response-v1",
+  "fixtureKind": "synthetic-canonical-missing-unit",
+  "fixtureCanonicalBytes": 144,
+  "fixtureSha256": "8697dc4b97f3828cf3b6d0ac787df36fd188536161d761c46cbf95e1f678b8bf",
+  "collectionEvidenceDigest": "b238c03fb7fb002e60944e2feb27588f4335bd71baf1231659522316d961c942",
+  "protectedMatrixRun": false,
+  "mirrors": [
+    "harsh-nod/fe2o3@refs/heads/main",
+    "powderluv/fe2o3@refs/heads/main"
+  ]
+}

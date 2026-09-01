@@ -44,6 +44,15 @@ still-unavailable live wave, lane, PC, register, memory, breakpoint, and step
 surfaces explicit. That milestone does not repin the broader functional-proof
 publication record.
 
+The **Agent-native source/ISA inspection** reference at
+`#/debugger/source-isa-agent` is independently pinned to compiler commit
+`8dc1ac8ec3e20801d8ec7054176fc031ce05ca25`, tree
+`50846a969869b4fe858025d8a365dbaa1df743bd`. It demonstrates the bounded typed
+JSONL protocol with a synthetic canonical missing-unit fixture. It grants no
+compiler, artifact, runtime, hardware-execution, complete-machine-coverage, or
+semantic-refinement authority. The protected 3x2 source/ISA matrix has not run,
+and issue #215 remains open.
+
 The checked-in publication gate is pinned to immutable implementation-evidence
 commit `ecf7b17f819021708d9c59ebe39a4daf9eb2562c`, tree
 `2156423b9350d66cfaa8207133768e323111b507`. Deployment requires

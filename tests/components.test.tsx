@@ -7,6 +7,7 @@ import { DebugSimMilestone } from "../src/components/DebugSimMilestone";
 import { FunctionalCorrectnessPanel } from "../src/components/FunctionalCorrectnessPanel";
 import { LessonSections } from "../src/components/LessonSections";
 import { LiveKfdDebuggerPage } from "../src/components/LiveKfdDebuggerPage";
+import { SourceIsaAgentPage } from "../src/components/SourceIsaAgentPage";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
 import { liveWorkbenchBackends } from "../src/content/live-kfd-debugger";
@@ -229,6 +230,33 @@ describe("live KFD debugger tutorial", () => {
         name: "Semantic evidence composition across complementary tools",
       }),
     ).toBeInTheDocument();
+  });
+});
+
+describe("agent-native source/ISA tutorial", () => {
+  it("switches correlated capability, collection, and failure records", async () => {
+    const user = userEvent.setup();
+    render(<SourceIsaAgentPage />);
+
+    expect(
+      screen.getByRole("heading", { name: "Agent-native source/ISA inspection" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Synthetic canonical fixture")).toBeInTheDocument();
+    expect(screen.getByText("available")).toBeInTheDocument();
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("discover_capabilities");
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("observation_only");
+
+    await user.click(screen.getByRole("tab", { name: "Collection" }));
+    expect(screen.getByText("incomplete")).toBeInTheDocument();
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("missing_selected_units");
+    expect(screen.getByRole("tabpanel")).toHaveTextContent('"page_exhausted": true');
+
+    await user.click(screen.getByRole("tab", { name: "Failure" }));
+    expect(screen.getByText("invalid_collection")).toBeInTheDocument();
+    expect(screen.getByRole("tabpanel")).toHaveTextContent('"terminal": false');
+    expect(
+      screen.getByRole("link", { name: /live KFD, ROCgdb, and profiler/u }),
+    ).toHaveAttribute("href", "#/debugger/live-kfd");
   });
 });
 
