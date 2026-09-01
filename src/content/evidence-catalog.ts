@@ -6,6 +6,8 @@ import {
 } from "./functional-refinement-publication";
 import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
 import {
+  sourceIsaCharacteristicMilestone,
+  sourceIsaCharacteristicSources,
   sourceIsaAgentMilestone,
   sourceIsaAgentSources,
 } from "./source-isa-agent";
@@ -141,6 +143,13 @@ const sourceIsaAgentEvidence: GitEvidenceObject = {
   sourcePaths: sourceIsaAgentSources.map((source) => source.path),
 };
 
+const sourceIsaCharacteristicEvidence: GitEvidenceObject = {
+  label: "source/ISA characteristic tutorial fixture",
+  commit: sourceIsaCharacteristicMilestone.compilerCommit!,
+  tree: sourceIsaCharacteristicMilestone.compilerTree!,
+  sourcePaths: sourceIsaCharacteristicSources.map((source) => source.path),
+};
+
 export const evidenceCatalog = {
   gitObjects: [
     ...claims,
@@ -148,6 +157,7 @@ export const evidenceCatalog = {
     semanticCorrectnessSources,
     functionalRefinementSources,
     sourceIsaAgentEvidence,
+    sourceIsaCharacteristicEvidence,
   ],
   sources: [
     ...tabs,

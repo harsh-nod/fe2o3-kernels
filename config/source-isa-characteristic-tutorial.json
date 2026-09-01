@@ -1,0 +1,20 @@
+{
+  "schema": "fe2o3-source-isa-characteristic-tutorial-milestone-v1",
+  "status": "implemented-exact-fixture",
+  "reviewedOn": "2026-08-31",
+  "compilerCommit": "861e8a9027bffa4dc5bf61d149eb2277dbefe692",
+  "compilerTree": "0233d541ffb8c2a573444eda76683bc4adca2cb9",
+  "issue": 215,
+  "issueState": "open",
+  "requestSchema": "fe2o3-agent-source-isa-characteristic-request-v1",
+  "responseSchema": "fe2o3-agent-source-isa-characteristic-response-v1",
+  "fixtureKind": "synthetic-canonical-self-claimed-characteristic-archive",
+  "fixtureCanonicalBytes": 1424,
+  "fixtureSha256": "ad395666f9a036a259ce6a8f6e47a568693dbfe1c923c3eb6bd062492627b3b4",
+  "collectionIdentity": "5595821cf85ebc8cb5018f68a7ac07e938af0b4ed424e9f4039201581db23a7c",
+  "synthetic": true,
+  "hardwareExecuted": false,
+  "archiveAuthenticated": false,
+  "protectedMatrixRun": false,
+  "expectedPlaneCount": 4
+}

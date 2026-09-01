@@ -94,7 +94,7 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   expect(dimensions.diagrams).toBeGreaterThan(0);
 });
 
-test("agent source/ISA protocol stays bounded, truthful, and responsive", async ({
+test("agent source/ISA characteristic workbench stays truthful and responsive", async ({
   page,
 }, testInfo) => {
   await page.goto("./#/debugger/source-isa-agent");
@@ -104,19 +104,37 @@ test("agent source/ISA protocol stays bounded, truthful, and responsive", async 
       name: "Agent-native source/ISA inspection",
     }),
   ).toBeVisible();
-  await expect(page.getByText("Synthetic canonical fixture")).toBeVisible();
-  await expect(page.getByRole("tabpanel")).toContainText("observation_only");
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "hardware_execution_observed",
-  );
+  await expect(page.getByText("Exact authority-free archive")).toBeVisible();
+  await expect(page.getByRole("tabpanel")).toContainText("discover_capabilities");
+  await expect(page.getByRole("tabpanel")).toContainText("canonical_self_claimed_archive");
 
-  await page.getByRole("tab", { name: "Collection" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("missing_selected_units");
-  await expect(page.getByRole("tabpanel")).toContainText('"page_exhausted": true');
+  await page.getByRole("tab", { name: "Targets" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("query_targets");
+  await expect(page.getByLabel("Targets contract")).toContainText("Exact kind and memory form");
 
-  await page.getByRole("tab", { name: "Failure" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText("invalid_collection");
-  await expect(page.getByRole("tabpanel")).toContainText('"terminal": false');
+  await page.getByRole("tab", { name: "Facts" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("query_facts");
+  await expect(page.getByLabel("Source to sparse ISA lineage")).toContainText("LLVM handoff");
+
+  await page.getByRole("tab", { name: "Intervals" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("query_intervals");
+  await expect(page.getByText("Structural-only target")).toBeVisible();
+  await expect(page.getByText("Duplicate occurrences")).toBeVisible();
+  await expect(page.getByText("d000c249aa03...bb57c0")).toBeVisible();
+  await expect(page.getByText("23a201c5966c...38b3f6")).toBeVisible();
+  await expect(page.getByText("2 interval records on this page")).toBeVisible();
+  await expect(page.getByText("synthetic / self-claimed")).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "ROCgdb" })).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "rocprofv3 / ATT" })).toBeVisible();
+
+  const codeColors = await page.locator(
+    ".source-isa-agent-run pre, .source-isa-agent-json pre",
+  ).evaluateAll((panels) => panels.map((panel) => {
+    const style = getComputedStyle(panel);
+    return { foreground: style.color, background: style.backgroundColor };
+  }));
+  expect(codeColors).toHaveLength(3);
+  expect(codeColors.every(({ foreground, background }) => foreground !== background)).toBe(true);
 
   const dimensions = await page.evaluate(() => ({
     width: document.documentElement.scrollWidth,

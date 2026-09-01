@@ -210,9 +210,45 @@ try {
     fail(`debug/simulator projection rejected: ${debugSimIssues.join("; ")}`);
   }
 
+  const sourceIsa = await vite.ssrLoadModule("/src/content/source-isa-agent.ts");
+  const characteristicMilestone = sourceIsa.sourceIsaCharacteristicMilestone;
+  const characteristicFixtureFiles = ["collection.hex", "requests.jsonl", "responses.jsonl"];
+  const characteristicFixtureRoot = "examples/source_isa_characteristic_v1";
+  const compilerFixtureRoot =
+    "crates/cargo-fe2o3/tests/fixtures/source_isa_characteristic_cli_v1";
+  const characteristicHex = readFileSync(
+    resolve(characteristicFixtureRoot, "collection.hex"),
+    "utf8",
+  ).trimEnd();
+  if (!/^[0-9a-f]+$/u.test(characteristicHex) || characteristicHex.length % 2 !== 0) {
+    fail("source/ISA characteristic collection.hex is not lowercase canonical hex");
+  }
+  const characteristicBytes = Buffer.from(characteristicHex, "hex");
+  const characteristicDigest = createHash("sha256")
+    .update(characteristicBytes)
+    .digest("hex");
+  if (
+    characteristicBytes.length !== characteristicMilestone.fixtureCanonicalBytes ||
+    characteristicDigest !== characteristicMilestone.fixtureSha256
+  ) {
+    fail(
+      `source/ISA characteristic raw archive is ${characteristicBytes.length} bytes/${characteristicDigest}`,
+    );
+  }
+  for (const file of characteristicFixtureFiles) {
+    const websiteBytes = readFileSync(resolve(characteristicFixtureRoot, file));
+    const compilerBytes = pinnedSourceBytes(
+      characteristicMilestone.compilerCommit,
+      `${compilerFixtureRoot}/${file}`,
+    );
+    if (!websiteBytes.equals(compilerBytes)) {
+      fail(`source/ISA characteristic fixture ${file} differs from the pinned compiler copy`);
+    }
+  }
+
   if (checkIssues) await validateIssues(catalog.issues);
   process.stdout.write(
-    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, ${debugSimArtifacts.length} debug/simulator artifacts, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
+    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, ${debugSimArtifacts.length} debug/simulator artifacts, ${characteristicFixtureFiles.length} source/ISA characteristic artifacts, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
   );
 } finally {
   await vite.close();

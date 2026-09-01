@@ -54,6 +54,18 @@ import {
   validateSourceDebuggerMilestone,
 } from "../src/content/source-debugger-milestone";
 import {
+  sourceIsaCharacteristicDuplicateFacts,
+  sourceIsaCharacteristicCollectionHex,
+  sourceIsaCharacteristicFixtureReady,
+  sourceIsaCharacteristicIntervals,
+  sourceIsaCharacteristicLineage,
+  sourceIsaCharacteristicMemoryTarget,
+  sourceIsaCharacteristicMilestone,
+  sourceIsaCharacteristicPlanes,
+  sourceIsaCharacteristicRequests,
+  sourceIsaCharacteristicResponses,
+  sourceIsaCharacteristicSources,
+  sourceIsaCharacteristicStructuralTarget,
   sourceIsaAgentCollectionHex,
   sourceIsaAgentMilestone,
   sourceIsaAgentRequests,
@@ -147,6 +159,91 @@ describe("agent-native source/ISA inspection milestone", () => {
       commit: sourceIsaAgentMilestone.compilerCommit,
       tree: sourceIsaAgentMilestone.compilerTree,
       sourcePaths: sourceIsaAgentSources.map((source) => source.path),
+    });
+  });
+
+  it("pins the exact synthetic four-plane characteristic transcript without elevating it", () => {
+    expect(sourceIsaCharacteristicMilestone).toMatchObject({
+      status: "implemented-exact-fixture",
+      compilerCommit: "861e8a9027bffa4dc5bf61d149eb2277dbefe692",
+      compilerTree: "0233d541ffb8c2a573444eda76683bc4adca2cb9",
+      fixtureKind: "synthetic-canonical-self-claimed-characteristic-archive",
+      fixtureCanonicalBytes: 1424,
+      fixtureSha256: "ad395666f9a036a259ce6a8f6e47a568693dbfe1c923c3eb6bd062492627b3b4",
+      collectionIdentity: "5595821cf85ebc8cb5018f68a7ac07e938af0b4ed424e9f4039201581db23a7c",
+      synthetic: true,
+      hardwareExecuted: false,
+      archiveAuthenticated: false,
+      issue: 215,
+      issueState: "open",
+      protectedMatrixRun: false,
+      expectedPlaneCount: 4,
+    });
+    expect(sourceIsaCharacteristicFixtureReady).toBe(true);
+    expect(Buffer.from(sourceIsaCharacteristicCollectionHex, "hex")).toHaveLength(1424);
+    expect(
+      createHash("sha256")
+        .update(Buffer.from(sourceIsaCharacteristicCollectionHex, "hex"))
+        .digest("hex"),
+    ).toBe(sourceIsaCharacteristicMilestone.fixtureSha256);
+    expect(sourceIsaCharacteristicRequests).toHaveLength(4);
+    expect(sourceIsaCharacteristicResponses).toHaveLength(4);
+    expect(sourceIsaCharacteristicPlanes.map((plane) => plane.label)).toEqual([
+      "Capability",
+      "Targets",
+      "Facts",
+      "Intervals",
+    ]);
+    expect(sourceIsaCharacteristicPlanes.every((plane) =>
+      plane.state === "available" && plane.request !== null && plane.response !== null
+    )).toBe(true);
+    expect(sourceIsaCharacteristicLineage.map((stage) => stage.label)).toEqual([
+      "Source",
+      "MIR",
+      "Neutral KIR",
+      "Target KIR",
+      "Semantic op",
+      "LLVM handoff",
+      "Sparse ISA",
+    ]);
+    expect(sourceIsaCharacteristicLineage.every((stage) =>
+      stage.status === "present" && stage.value !== null
+    )).toBe(true);
+    expect(sourceIsaCharacteristicMemoryTarget).toMatchObject({
+      kind: { label: "global_store", memory_form: { label: "plain" } },
+      correlation_count: 2,
+    });
+    expect(sourceIsaCharacteristicStructuralTarget).toMatchObject({
+      kind: { label: "global_store", memory_form: { label: "guarded" } },
+      correlation_count: 0,
+    });
+    expect(sourceIsaCharacteristicDuplicateFacts).not.toBeNull();
+    expect(sourceIsaCharacteristicDuplicateFacts?.map((fact) => fact.occurrence_identity)).toEqual([
+      "d000c249aa034c3b7e13d51e7f63e52d12c6510329c8ee916426e19d89bb57c0",
+      "23a201c5966c0b2d7338d26439356cbe14c08834ad4b0094f28b45f20038b3f6",
+    ]);
+    expect(sourceIsaCharacteristicIntervals).toHaveLength(2);
+    expect(sourceIsaCharacteristicIntervals[0]?.interval).toEqual(
+      sourceIsaCharacteristicIntervals[1]?.interval,
+    );
+    expect(sourceIsaCharacteristicIntervals[0]?.identity).not.toBe(
+      sourceIsaCharacteristicIntervals[1]?.identity,
+    );
+    expect(sourceIsaCharacteristicResponses.every((response) => {
+      const result = response.result as { authority?: Record<string, unknown> };
+      return result.authority?.service_provenance === "canonical_self_claimed_archive" &&
+        result.authority.archive_authenticity_proved === false &&
+        result.authority.producer_evidence_authenticated === false &&
+        result.authority.hardware_observation_authority === false;
+    })).toBe(true);
+    expect(
+      evidenceCatalog.gitObjects.find(
+        (object) => object.label === "source/ISA characteristic tutorial fixture",
+      ),
+    ).toMatchObject({
+      commit: sourceIsaCharacteristicMilestone.compilerCommit,
+      tree: sourceIsaCharacteristicMilestone.compilerTree,
+      sourcePaths: sourceIsaCharacteristicSources.map((source) => source.path),
     });
   });
 });

@@ -234,26 +234,41 @@ describe("live KFD debugger tutorial", () => {
 });
 
 describe("agent-native source/ISA tutorial", () => {
-  it("switches correlated capability, collection, and failure records", async () => {
+  it("switches the exact synthetic characteristic planes without elevating authority", async () => {
     const user = userEvent.setup();
     render(<SourceIsaAgentPage />);
 
     expect(
       screen.getByRole("heading", { name: "Agent-native source/ISA inspection" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Synthetic canonical fixture")).toBeInTheDocument();
+    expect(screen.getByText("Exact authority-free archive")).toBeInTheDocument();
     expect(screen.getByText("available")).toBeInTheDocument();
     expect(screen.getByRole("tabpanel")).toHaveTextContent("discover_capabilities");
-    expect(screen.getByRole("tabpanel")).toHaveTextContent("observation_only");
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("canonical_self_claimed_archive");
+    expect(screen.getByRole("tabpanel")).toHaveTextContent('"archive_authenticity_proved": false');
 
-    await user.click(screen.getByRole("tab", { name: "Collection" }));
-    expect(screen.getByText("incomplete")).toBeInTheDocument();
-    expect(screen.getByRole("tabpanel")).toHaveTextContent("missing_selected_units");
-    expect(screen.getByRole("tabpanel")).toHaveTextContent('"page_exhausted": true');
+    await user.click(screen.getByRole("tab", { name: "Targets" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("query_targets");
+    expect(screen.getByLabelText("Targets contract")).toHaveTextContent("Exact kind and memory form");
 
-    await user.click(screen.getByRole("tab", { name: "Failure" }));
-    expect(screen.getByText("invalid_collection")).toBeInTheDocument();
-    expect(screen.getByRole("tabpanel")).toHaveTextContent('"terminal": false');
+    await user.click(screen.getByRole("tab", { name: "Facts" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("query_facts");
+    expect(screen.getByLabelText("Facts contract")).toHaveTextContent("LLVM ordinal and semantic op");
+
+    await user.click(screen.getByRole("tab", { name: "Intervals" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("query_intervals");
+    expect(screen.getByLabelText("Intervals contract")).toHaveTextContent("Fact-bound cursor");
+
+    expect(screen.getByLabelText("Source to sparse ISA lineage")).toHaveTextContent("Neutral KIR");
+    expect(screen.getByLabelText("Source to sparse ISA lineage")).toHaveTextContent("2 intervals");
+    expect(screen.getByText("Structural-only target")).toBeInTheDocument();
+    expect(screen.getByText("Duplicate occurrences")).toBeInTheDocument();
+    expect(screen.getByText("d000c249aa03...bb57c0")).toBeInTheDocument();
+    expect(screen.getByText("23a201c5966c...38b3f6")).toBeInTheDocument();
+    expect(screen.getByText("2 interval records on this page")).toBeInTheDocument();
+    expect(screen.getByText("synthetic / self-claimed")).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "ROCgdb" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "rocprofv3 / ATT" })).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /live KFD, ROCgdb, and profiler/u }),
     ).toHaveAttribute("href", "#/debugger/live-kfd");

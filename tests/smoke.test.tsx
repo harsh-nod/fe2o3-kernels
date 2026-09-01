@@ -51,11 +51,12 @@ describe("application shell", () => {
         name: "Agent-native source/ISA inspection",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Synthetic canonical fixture")).toBeInTheDocument();
+    expect(screen.getByText("Exact authority-free archive")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Capability" })).toHaveAttribute(
       "aria-selected",
       "true",
     );
+    expect(screen.getByRole("tab", { name: "Intervals" })).toBeInTheDocument();
   });
 
   it("persists completed lesson progress", async () => {
