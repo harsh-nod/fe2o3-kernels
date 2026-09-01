@@ -71,9 +71,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "6157061b827ed98db96722cb2fca988016fbb2ee";
+export const advancedCoreSourceCommit = "c17b33fa7555048bd31e16d417e10f3800fa5f27";
 export const advancedCoreSourceTree: string | null =
-  "32a26b37092af3cbde6552011b61df409df4c830";
+  "a055ee9847dbe04bed5c81295a4da6021c14c831";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -84,8 +84,8 @@ const attentionBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
-  rustKernelFileSha256: "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b",
-  rustReferenceFileSha256: "e81d3a617566ee10e776c3d2f18bff90b764c8dcf6e37072fab49ce98ac0c1af",
+  rustKernelFileSha256: "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9",
+  rustReferenceFileSha256: "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
   productionSupportPaths: [
@@ -224,6 +224,34 @@ function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean
   throw new Error(`Unclosed Rust function ${symbol}`);
 }
 
+function rustPrivateFunctionExcerpt(source: string, symbol: string): string {
+  const position = source.indexOf(`fn ${symbol}(`);
+  const start = source.lastIndexOf("\n", position) + 1;
+  const open = source.indexOf("{", position);
+  if (position < 0 || open < 0) throw new Error(`Missing Rust function ${symbol}`);
+  let depth = 0;
+  for (let index = open; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start, index + 1);
+  }
+  throw new Error(`Unclosed Rust function ${symbol}`);
+}
+
+function rustMacroExcerpt(source: string, symbol: string): string {
+  const position = source.indexOf(`macro_rules! ${symbol}`);
+  const start = Math.max(0, source.lastIndexOf("#[cfg(", position));
+  const open = source.indexOf("{", position);
+  if (position < 0 || open < 0) throw new Error(`Missing Rust macro ${symbol}`);
+  let depth = 0;
+  for (let index = open; index < source.length; index += 1) {
+    if (source[index] === "{") depth += 1;
+    if (source[index] === "}") depth -= 1;
+    if (depth === 0) return source.slice(start, index + 1);
+  }
+  throw new Error(`Unclosed Rust macro ${symbol}`);
+}
+
 function variantSourceTab(source: VariantSourceSpec): CodeTab {
   const status =
     source.status === "compatibility-validated"
@@ -355,9 +383,17 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const rustFragments = spec.rustSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustKernel, symbol, true),
   );
+  if (spec.id === "gfx950-kda-gdn-linear-attention") {
+    rustFragments.unshift(rustMacroExcerpt(bundle.rustKernel, "kda_chunk_wy_v3"));
+  }
   const referenceFragments = spec.referenceSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustReference, symbol, false),
   );
+  if (spec.id === "gfx950-kda-gdn-linear-attention") {
+    referenceFragments.unshift(
+      rustPrivateFunctionExcerpt(bundle.rustReference, "kda_matrix_step_f64_v2"),
+    );
+  }
   const variantTabs = (spec.variantSources ?? []).map(variantSourceTab);
   const tabs: CodeTab[] = [
     {
@@ -842,59 +878,51 @@ const advancedLessons = [
   lesson({
     id: "gfx950-kda-gdn-linear-attention",
     order: 1,
-    title: "gfx950 KDA/GDN linear attention",
+    title: "gfx950 Kimi Delta Attention decode and chunkwise prefill",
     summary:
-      "Study a fixed head and sequence recurrence for gated linear attention while keeping state-update order and numeric policy explicit.",
-    duration: "46 min",
+      "Implement exact matrix-state KDA decode and a two-chunk WY/UT prefill, then validate both against an independent sequential f64 recurrence on MI350X.",
+    duration: "58 min",
     bundle: "attention",
-    sourceRole: "KDA/GDN recurrent state-update and output teaching kernels",
-    rustSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
-    rustExcerptSha256: "39c862ab23dc4f600d990987a6bd04d26282d3517fed0540bd98f8b7ff0b3d96",
-    referenceSymbols: ["kda_gdn_decode_reference_v1", "kda_gdn_prefill_reference_v1"],
-    referenceExcerptSha256: "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d",
-    hipSymbols: ["gfx950_kda_gdn_decode", "gfx950_kda_gdn_prefill"],
+    sourceRole: "exact matrix-state KDA decode and WY/UT chunkwise-prefill teaching kernels",
+    rustSymbols: ["gfx950_kda_decode", "gfx950_kda_chunkwise_prefill"],
+    rustExcerptSha256: "8d61f4d2c20464696bbec9c9a3396c5b513d90cce6f0d3344f4cd2a7ad8900b1",
+    referenceSymbols: ["kda_decode_reference_v2", "kda_prefill_reference_v2"],
+    referenceExcerptSha256: "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
     fixedShape:
-      "16 channels; three-tap decode; eight-token prefill in two ordered four-token chunks",
+      "one head; K=16; V=16; FP32 16x16 matrix state; decode T=1; prefill T=8 as two ordered C=4 WY/UT chunks",
     isaRequirements: [
-      "gfx950_kda_gdn_decode contains v_rsq_f32",
-      "gfx950_kda_gdn_prefill contains v_rsq_f32",
+      "gfx950_kda_decode contains ds_bpermute_b32 Wave16 reductions and no MFMA or transpose instructions",
+      "gfx950_kda_chunkwise_prefill contains ds_bpermute_b32 Wave16 reductions and no MFMA or transpose instructions",
     ],
     observedResults: [
-      "decode state max_error=2.98023e-08",
-      "decode normalization max_error=4.76837e-07",
-      "prefill state max_error=1.49012e-08",
-      "prefill normalization max_error=3.57628e-07",
+      "decode final_state max_absolute_error=1.490116119e-8",
+      "decode replicated output max_absolute_error=3.725290298e-9",
+      "prefill final_state max_absolute_error=2.980232239e-8",
+      "prefill chunk outputs max_absolute_error=7.450580597e-9",
     ],
-    prerequisites: ["Online recurrences", "Gated linear attention", "FP32 accumulator state", "Wave64 reductions"],
+    prerequisites: ["Linear attention", "Delta-rule updates", "Lower-triangular solves", "Wave16 reductions"],
     objectives: [
-      "Write the exact three-tap convolution, proposal, gate, state, and RMS-normalization transition.",
-      "Track history, gate, state, normalized output, and carried prefill state layouts independently.",
-      "Identify which recurrence dependencies prevent unconstrained parallel reordering.",
+      "Derive the exact decayed matrix, prediction error, rank-one update, and scaled query projection for decode.",
+      "Expand the four-token WY/UT lower-triangular solve and carry its resulting matrix state into a second chunk.",
+      "Reconcile logical S[K,V], physical H[V,K], and the replicated output layout required by checked Index1D ownership.",
+      "Use the sequential f64 matrix recurrence as an oracle independent of the GPU chunk transform.",
     ],
     narratives: ["gfx950-kda-gdn-linear-attention/recurrence", "gfx950-kda-gdn-linear-attention/scope-evidence"],
     obligations: [
-      "the initial state, token order, three-tap causal history, gate transform, and normalized output are fully specified",
-      "each state element has one owner or a stated synchronization/reduction policy",
-      "the numeric oracle uses the same recurrence order, 1e-5 RMS epsilon, and declared tolerance",
+      "q and k are L2-normalized, alpha and beta are already activated, and q is scaled by 1/sqrt(16) inside the kernel",
+      "the logical S[K,V] recurrence and physical H[V,K] state layout are related by an explicit transpose",
+      "the prefill source implements the C=4 WY/UT equations rather than merely grouping a sequential token loop",
+      "the f64 CPU oracle executes eight independent scalar recurrence steps and records the state after token three",
+      "every replicated logical output, state element, immutable input, poison value, and guard canary is checked",
       "input/output/state aliases are excluded unless the source explicitly supports them",
     ],
     diagram: "attention",
     exercise: {
-      prompt: "Write a two-step recurrence trace for one state element.",
-      hint: "Keep the three-tap convolution, proposal, gate, state update, and RMS normalization in source order.",
-      acceptance: "The trace names the initial state and both ordered updates without claiming equivalence to a full model layer.",
+      prompt: "Trace a two-token KDA update for one value column, then identify the C=4 WY terms that generalize it.",
+      hint: "Start from D_t=diag(alpha_t)S_{t-1}, e_t=v_t-k_t^T D_t, and S_t=D_t+beta_t k_t e_t^T.",
+      acceptance: "The trace preserves matrix orientation, applies q/sqrt(16) after the update, and distinguishes the sequential oracle from the chunk transform.",
     },
-    glossary: ["gfx950", "KDA", "GDN", "linear attention", "recurrent state"],
-    variantSources: [
-      {
-        label: "Wave16 decode ablation",
-        status: "compatibility-validated",
-        code: advancedAttentionAblation,
-        sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
-        sourceSha256: "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
-        detail: "The `gfx950_kda_gdn_decode` feature variant was timed and rejected after a 32.9787% regression.",
-      },
-    ],
+    glossary: ["gfx950", "Kimi Delta Attention", "matrix state", "WY representation", "UT transform", "Wave16"],
   }),
   lesson({
     id: "gfx950-indexed-sparse-attention",
@@ -1098,7 +1126,7 @@ const advancedLessons = [
         status: "compatibility-validated",
         code: advancedAttentionAblation,
         sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
-        sourceSha256: "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+        sourceSha256: "c34bd3b07e47446d79ad9cdf5328c8e207f81b02a591bca5eb22f25a00087b2e",
         detail: "The current file is final-compatibility validated. The da6 timing record used the archived b5b1fc... file, so its timing is not attributed to these current bytes.",
       },
     ],

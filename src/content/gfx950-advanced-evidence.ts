@@ -143,45 +143,60 @@ const compressedHybridPromotionCampaign = Object.freeze({
   ...finalMi350Campaign,
 });
 
+const kdaMi350Campaign = Object.freeze({
+  sourceCommit: "c17b33fa7555048bd31e16d417e10f3800fa5f27",
+  sourceTree: "a055ee9847dbe04bed5c81295a4da6021c14c831",
+  runtimeObservation:
+    "observed 2026-09-01 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; committed-source production COV6 HSA wrapper PASS",
+});
+
 export const advancedRustEvidence = Object.freeze({
-  gfx950_kda_gdn_decode: observedAdvancedEvidence(
+  gfx950_kda_decode: observedAdvancedEvidence(
     {
-      label: "KDA/GDN decode",
-      symbol: "gfx950_kda_gdn_decode",
+      label: "Kimi Delta Attention matrix-state decode",
+      symbol: "gfx950_kda_decode",
       runnerPath: "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
-      hardwareTest: "gfx950_kda_gdn_decode_rust_cov6_matches_cpu_reference",
-      requiredIsa: ["no MFMA or transpose instructions"],
-      kernargBytes: 96,
-      workgroupSize: 64,
+      hardwareTest: "gfx950_kda_decode_rust_cov6_matches_cpu_reference",
+      requiredIsa: [
+        "ds_bpermute_b32 Wave16 reductions",
+        "no MFMA or transpose instructions",
+      ],
+      kernargBytes: 128,
+      workgroupSize: 256,
     },
     {
-      ...finalMi350Campaign,
-      namespace: "1bb95ea1c1a6dba00f16cefba570323638c550b4df1192d82c45817088520f10",
-      llvmSha256: "294b07e5a4757d3eaba389b6269ce9b886bf41bbe437bfd4f21bfb6f9c91f65c",
-      hsacoSha256: "5a16d32486c6a424c680ec200a8fcc6941115f3a2953ec6a7fad0e383ce4a6d5",
-      isaSha256: "d1733f05e64ff6edfa7964fd7e6bbb7aabe100542510b3e4e84dea33842ef694",
-      numericalResult: "state_output max_absolute_error=7.450580597e-8; normalized_output max_absolute_error=4.172325134e-7",
-      tolerance: "absolute tolerance 3.0e-3 for both FP32 outputs; finite values required",
+      ...kdaMi350Campaign,
+      namespace: "d1782f1adc5ab27a123e99a81db150a6062c28f6404804282ed7210b350c8498",
+      llvmSha256: "a1d364a790b3fb8f7bb34b20b0fee237779d40ef4fce96b36c18685e5dc74b67",
+      hsacoSha256: "5c67a10f5f4ad82fa99c31dd4179c7758c691dd147750e28e27f1ddfa9ce2ee7",
+      isaSha256: "d147fad6526fd92c9c89e331f6f4dcc4f252ff1550745150f15addb54e08c9e1",
+      numericalResult: "final_state_value_major max_absolute_error=1.490116119e-8; output_replicated max_absolute_error=3.725290298e-9",
+      tolerance: "absolute tolerance 2.0e-5 for all 256 state elements and all 256 output replicas; finite values required; immutable inputs and guard canaries exact",
     },
   ),
-  gfx950_kda_gdn_prefill: observedAdvancedEvidence(
+  gfx950_kda_chunkwise_prefill: observedAdvancedEvidence(
     {
-      label: "KDA/GDN prefill",
-      symbol: "gfx950_kda_gdn_prefill",
-      runnerPath: "examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh",
-      hardwareTest: "gfx950_kda_gdn_prefill_rust_cov6_matches_cpu_reference",
-      requiredIsa: ["no MFMA or transpose instructions"],
-      kernargBytes: 112,
-      workgroupSize: 64,
+      label: "Kimi Delta Attention WY/UT chunkwise prefill",
+      symbol: "gfx950_kda_chunkwise_prefill",
+      runnerPath:
+        "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
+      hardwareTest:
+        "gfx950_kda_chunkwise_prefill_rust_cov6_matches_cpu_reference",
+      requiredIsa: [
+        "ds_bpermute_b32 Wave16 reductions",
+        "no MFMA or transpose instructions",
+      ],
+      kernargBytes: 144,
+      workgroupSize: 256,
     },
     {
-      ...finalMi350Campaign,
-      namespace: "65c813046838ac237dbc845ddb78d0b61db8c031914908a6a0a1304a338e68c0",
-      llvmSha256: "b610622936ed2c4a25cb55504c1d9ce8d570ba1f816d62c6dad4aa6f3c6b9dfc",
-      hsacoSha256: "58536eb9abf290821b3d85d39c262ed5b49ac8d835ee959b2c36fa9446998bfa",
-      isaSha256: "cdad91e4be1e01c091f5c9342ea17e8a9ef80c7b356eda9f014c62bf283f674a",
-      numericalResult: "final_state max_absolute_error=7.450580597e-8; normalized_output_first max_absolute_error=8.642673492e-7; normalized_output_second max_absolute_error=1.072883606e-6",
-      tolerance: "absolute tolerance 3.0e-3 for all three FP32 outputs; finite values required",
+      ...kdaMi350Campaign,
+      namespace: "4888a0b175bcc5b2897ba0594f0641acd700468c5302376a24463ba56eb49a56",
+      llvmSha256: "7db53eedb191a5e8d23ae8a6829d9544a53ae81d2c8e5471addb89c28e66639d",
+      hsacoSha256: "608d9758e1ed9470356b7e9f8b08eb2494b43a19293878277bf7740af43ff711",
+      isaSha256: "9991efdf3b25819e6bc4e594f7292629a53fdebc0b7501f40b1485e75244cc44",
+      numericalResult: "final_state_value_major max_absolute_error=2.980232239e-8; output_chunk0_replicated max_absolute_error=7.450580597e-9; output_chunk1_replicated max_absolute_error=7.450580597e-9",
+      tolerance: "absolute tolerance 2.0e-4 for all 256 state elements and both 256-element output-replica buffers; finite values required; immutable inputs and guard canaries exact",
     },
   ),
   gfx950_content_sparse_attention: observedAdvancedEvidence(

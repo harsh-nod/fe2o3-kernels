@@ -1296,14 +1296,51 @@ describe("curriculum integrity", () => {
     expect(fp8Attention).toContain("four ds_read_b64_tr_b8");
   });
 
+  it("keeps the exact KDA decode, chunkwise prefill, and independent oracle contract", () => {
+    const lesson = lessons.find(
+      (candidate) => candidate.id === "gfx950-kda-gdn-linear-attention",
+    );
+    expect(lesson?.title).toBe(
+      "gfx950 Kimi Delta Attention decode and chunkwise prefill",
+    );
+    expect(lesson?.tabs.map((tab) => tab.kind)).not.toContain("comparison");
+    expect(lesson?.tabs.map((tab) => tab.kind)).not.toContain("performance");
+    expect(lesson?.tabs.map((tab) => tab.kind)).not.toContain("ablation");
+
+    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel")?.code ?? "";
+    expect(kernel).toContain("macro_rules! kda_chunk_wy_v3");
+    expect(kernel).toContain("pub fn gfx950_kda_decode");
+    expect(kernel).toContain("pub fn gfx950_kda_chunkwise_prefill");
+
+    const reference =
+      lesson?.tabs.find((tab) => tab.kind === "reference")?.code ?? "";
+    expect(reference).toContain("fn kda_matrix_step_f64_v2");
+    expect(reference).toContain("pub fn kda_decode_reference_v2");
+    expect(reference).toContain("pub fn kda_prefill_reference_v2");
+
+    const content = serializedLessonContent("gfx950-kda-gdn-linear-attention");
+    expect(content).toContain("D_t = diag(alpha_t) S_(t-1)");
+    expect(content).toContain("C=4 WY/UT equations");
+    expect(content).toContain("L2-normalized q and k");
+    expect(content).toContain("output_replicated max_absolute_error=3.725290298e-9");
+    expect(content).toContain("output_chunk0_replicated max_absolute_error=7.450580597e-9");
+    expect(content).toContain("https://arxiv.org/abs/2510.26692");
+    expect(content).toContain(
+      "d1782f1adc5ab27a123e99a81db150a6062c28f6404804282ed7210b350c8498",
+    );
+    expect(content).toContain(
+      "4888a0b175bcc5b2897ba0594f0641acd700468c5302376a24463ba56eb49a56",
+    );
+  });
+
   it("publishes exact bounded advanced gfx950 source and fail-closed production runners", () => {
     const expected = [
       ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
-      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_gdn_decode", "kda_gdn_decode_reference_v1", "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b", "gfx950_kda_gdn_decode", "decode normalization max_error=4.76837e-07", "v_rsq_f32"],
-      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
-      ["gfx950-deepseek-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_deepseek_sparse_attention", "deepseek_sparse_attention_reference_v1", "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b", null, "DeepSeek sparse attention", "no MFMA or transpose instructions"],
-      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
-      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
+      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_decode", "kda_decode_reference_v2", "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9", null, "final_state_value_major max_absolute_error=1.490116119e-8", "ds_bpermute_b32"],
+      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
+      ["gfx950-deepseek-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_deepseek_sparse_attention", "deepseek_sparse_attention_reference_v1", "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9", null, "DeepSeek sparse attention", "no MFMA or transpose instructions"],
+      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
+      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
       ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
       ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
       ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
@@ -1311,7 +1348,7 @@ describe("curriculum integrity", () => {
 
     const excerptHashes = {
       "gfx950-advanced-moe": ["a774500131396c95a4768d2ff174b48fe1823e389b36debcf77dd4e35bc9a676", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
-      "gfx950-kda-gdn-linear-attention": ["39c862ab23dc4f600d990987a6bd04d26282d3517fed0540bd98f8b7ff0b3d96", "7912b95e74b9f9f210bff098b356150ac9dda21aad9b132765b93b3eaaee7b7d"],
+      "gfx950-kda-gdn-linear-attention": ["8d61f4d2c20464696bbec9c9a3396c5b513d90cce6f0d3344f4cd2a7ad8900b1", "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d"],
       "gfx950-indexed-sparse-attention": ["8684d952e10438c4dd0bd4a6748010d04e38a7a911a69627ed388621a368b779", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
       "gfx950-deepseek-sparse-attention": ["0608190331ac2a480ddbc947b754aebd80a60ecdf541998d4aae27b5706df17a", "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f"],
       "gfx950-compressed-hybrid-attention": ["4b905913f30edfb7e6e0b0a20893c14bd7ca1b656a3e99c6794efe1a2175df03", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
@@ -1328,8 +1365,8 @@ describe("curriculum integrity", () => {
         ["gfx950_combine_expert_ranks_v1", "run-combine-expert-ranks-gfx950.sh", "gfx950_combine_expert_ranks_rust_cov6_matches_cpu_reference"],
       ],
       "gfx950-kda-gdn-linear-attention": [
-        ["gfx950_kda_gdn_decode", "run-kda-decode-gfx950.sh", "gfx950_kda_gdn_decode_rust_cov6_matches_cpu_reference"],
-        ["gfx950_kda_gdn_prefill", "run-kda-prefill-gfx950.sh", "gfx950_kda_gdn_prefill_rust_cov6_matches_cpu_reference"],
+        ["gfx950_kda_decode", "run-kda-decode-gfx950.sh", "gfx950_kda_decode_rust_cov6_matches_cpu_reference"],
+        ["gfx950_kda_chunkwise_prefill", "run-kda-chunkwise-prefill-gfx950.sh", "gfx950_kda_chunkwise_prefill_rust_cov6_matches_cpu_reference"],
       ],
       "gfx950-indexed-sparse-attention": [
         ["gfx950_content_sparse_attention", "run-content-sparse-attention-gfx950.sh", "gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference"],
@@ -1360,8 +1397,8 @@ describe("curriculum integrity", () => {
     const referenceRecords = {
       "gfx950-advanced-moe": ["moe_routing_reference", "moe_rank_reference"],
       "gfx950-kda-gdn-linear-attention": [
-        "kda_gdn_decode_reference_v1",
-        "kda_gdn_prefill_reference_v1",
+        "kda_decode_reference_v2",
+        "kda_prefill_reference_v2",
       ],
       "gfx950-indexed-sparse-attention": [
         "content_sparse_attention_reference_v1",
@@ -1392,11 +1429,7 @@ describe("curriculum integrity", () => {
           kind: advancedCoreSourceTree === null ? "source-example" : "gpu-observed",
         }),
       ]);
-      const variantSourceCount =
-        lessonId === "gfx950-kda-gdn-linear-attention" ||
-        lessonId === "gfx950-attnres-gr-mhc"
-          ? 1
-          : 0;
+      const variantSourceCount = lessonId === "gfx950-attnres-gr-mhc" ? 1 : 0;
       const expectedTabKinds = [
         "kernel",
         ...Array.from({ length: variantSourceCount }, () => "kernel"),
@@ -1507,11 +1540,6 @@ describe("curriculum integrity", () => {
   it("publishes exact status-labeled attention ablation Rust", () => {
     const expected = [
       [
-        "gfx950-kda-gdn-linear-attention",
-        "Wave16 decode ablation [FINAL-COMPATIBILITY]",
-        ["gfx950_kda_gdn_decode"],
-      ],
-      [
         "gfx950-attnres-gr-mhc",
         "Mixing ablations [FINAL-COMPATIBILITY]",
         [
@@ -1531,7 +1559,7 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
         sourceCommit: advancedCoreSourceCommit,
         sourceSha256:
-          "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a",
+          "c34bd3b07e47446d79ad9cdf5328c8e207f81b02a591bca5eb22f25a00087b2e",
         sourceDigestScope: "file",
         explanatory: false,
       });
@@ -1644,7 +1672,6 @@ describe("curriculum integrity", () => {
   it("publishes bounded MI350X performance evidence without widening comparator claims", () => {
     expect(advancedPerformanceLessonIds).toEqual([
       "gfx950-advanced-moe",
-      "gfx950-kda-gdn-linear-attention",
       "gfx950-indexed-sparse-attention",
       "gfx950-compressed-hybrid-attention",
       "gfx950-attnres-gr-mhc",
@@ -1682,7 +1709,11 @@ describe("curriculum integrity", () => {
       .map((tab) => tab.code)
       .join("\n");
     for (const symbol of Object.keys(advancedRustEvidence)) {
-      if (symbol === "gfx950_deepseek_sparse_attention") continue;
+      if (
+        symbol === "gfx950_deepseek_sparse_attention" ||
+        symbol === "gfx950_kda_decode" ||
+        symbol === "gfx950_kda_chunkwise_prefill"
+      ) continue;
       expect(performanceText, symbol).toContain(`KERNEL: ${symbol}`);
     }
     expect(performanceText).not.toContain("canonical early exit");
@@ -1711,7 +1742,6 @@ describe("curriculum integrity", () => {
     expect(gptPerformance).toContain("da6 exact Rust component-materialization");
 
     for (const candidateId of [
-      "prefill-ping-pong",
       "sparse-lds-pingpong",
       "sparse-tile-tuning",
       "hybrid-lds-pingpong",
@@ -1780,8 +1810,8 @@ describe("curriculum integrity", () => {
 
   it("keeps the advanced production evidence matrix exhaustive and fail-closed", () => {
     expect(Object.keys(advancedRustEvidence)).toEqual([
-      "gfx950_kda_gdn_decode",
-      "gfx950_kda_gdn_prefill",
+      "gfx950_kda_decode",
+      "gfx950_kda_chunkwise_prefill",
       "gfx950_content_sparse_attention",
       "gfx950_deepseek_sparse_attention",
       "gfx950_compressed_hybrid_attention",
@@ -1912,8 +1942,6 @@ describe("curriculum integrity", () => {
     }
 
     const canonicalOrdinals = new Map([
-      ["gfx950_kda_gdn_decode", 1],
-      ["gfx950_kda_gdn_prefill", 3],
       ["gfx950_content_sparse_attention", 5],
       ["gfx950_compressed_hybrid_attention", 8],
       ["gfx950_attnres_aggregate", 9],
@@ -1929,9 +1957,18 @@ describe("curriculum integrity", () => {
       ["gfx950_gpt_oss_120b_decode_megakernel_v1", 26],
     ]);
     for (const [symbol, evidence] of Object.entries(advancedRustEvidence)) {
-      if (symbol === "gfx950_deepseek_sparse_attention") {
+      if (
+        symbol === "gfx950_deepseek_sparse_attention" ||
+        symbol === "gfx950_kda_decode" ||
+        symbol === "gfx950_kda_chunkwise_prefill"
+      ) {
+        expect(evidence.sourceCommit).toMatch(/^[0-9a-f]{40}$/u);
         expect(evidence.runnerPath).toBe(
-          "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+          symbol === "gfx950_deepseek_sparse_attention"
+            ? "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh"
+            : symbol === "gfx950_kda_decode"
+              ? "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh"
+              : "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
         );
         continue;
       }
@@ -2014,11 +2051,11 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_low_precision/gfx950-ocml-closure.sh", "4acd64af08347456aa9b8e2c105e1af7ce2946167e95496c02c5dc88e2544c6a"],
       ["examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest", "43b868ede4500d71ff0f81fe3db2b91cec5cf4c973befc1533adfac51d9accc6"],
       ["examples/gfx950_advanced_attention/Cargo.lock", "b116346a8df0ed7013535122007e73c3b2f16e66a1fd7fe468dfd447e8bff4d1"],
-      ["examples/gfx950_advanced_attention/Cargo.toml", "fdb727bef51c80a351d417411f76bc3aa6a56d3d4b949f0a9a591cc5b14c530b"],
-      ["examples/gfx950_advanced_attention/ablation-variants-v1.json", "1e20890c52965c2c0140d40175f8b23a09795c6123a398bfcc7aaa0603ede4d7"],
-      ["examples/gfx950_advanced_attention/README.md", "d79fc0d4a4064c6e81dca24c0e488fb381964d387b1185a03878f634abbed8ae"],
+      ["examples/gfx950_advanced_attention/Cargo.toml", "3b1a43534a9a46b4ce352d6eb1e727e599746c9241d7efc9fd8099f25d5dfb21"],
+      ["examples/gfx950_advanced_attention/ablation-variants-v1.json", "ad890dee0ec1d5f98d4fe9929964fffaa57c4d7de7620e3f2fd002ff4a308bc5"],
+      ["examples/gfx950_advanced_attention/README.md", "6794db859180f63f78b80716d697fa7c5c277adead2bc1283b8d7a7ffea5c7fc"],
       ["examples/gfx950_advanced_attention/build_and_test.sh", "edfb9d27b52a1493c6f9371ed0944d6bdbca230971cf0efcff35133c5b59e17d"],
-      ["examples/gfx950_advanced_attention/check_isa.sh", "2e9e76a93e2d66f13c489c68217bb1857a8b326861608c7cb04ca13fba081e45"],
+      ["examples/gfx950_advanced_attention/check_isa.sh", "66781023b3d9706973cd14693d7ae2b018c662cde9cbd230a98ff1bd6a845615"],
       ["examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh", "978e7f09899298c92bf44802b268e02480b9e00d6d93bf9720528ef649552985"],
       ["examples/gfx950_advanced_attention/gfx950_advanced_attention.hip", "c44b4227c0ec525a367359bdc16aff69c3086676aa61def1b653266604d1ed1d"],
       ["examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh", "b869214fcab25ac6768856cd5402ef098838a50f2a9626f90ee107f9d3be51b6"],
@@ -2026,17 +2063,18 @@ describe("curriculum integrity", () => {
       ["examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh", "972e38c13f18c85fa087a3649d3f7ea4f5c7ebb7b97709b131386f4d0adc830c"],
       ["examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh", "cf9739d455303269357d742bef85aeb4675a5652073e0d9a701ebd6c87691094"],
       ["examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh", "9c4a4c2fceee19680e6f6a844966f591ef12feb1093b0300750a4448f22d7bf5"],
-      ["examples/gfx950_advanced_attention/run-gfx950.sh", "3a49ff2ece98e4f1d339e086c3aea127f8d979172b7f117bff07c170d3837659"],
+      ["examples/gfx950_advanced_attention/run-gfx950.sh", "b979c0a6976b98831deafa265d11a15a42a6233813e849fae0c7a0ffa1b3bcf5"],
+      ["examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh", "47dc9c7f29f709f1fbe8ad4ff07099ecaf0431dafcc3f28763f15edc32c6a58c"],
       ["examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh", "b52f355e42d920435f12f46c4727bafdcbb89460ffe7ade9a66170d14123fd07"],
       ["examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh", "0546e3565717c05a5680420f5c87e1ee34b89ccce0d25f153bd3740cea6c3788"],
       ["examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh", "5e17ad7d3e87b67342b49eba0615f106051827d664eea228780b80a05ef81b26"],
-      ["examples/gfx950_advanced_attention/src/ablation.rs", "de8b8fef6a1ed736493f5e288d90701d5ac9344464f9c87ae8a821b4c9ed883a"],
-      ["examples/gfx950_advanced_attention/src/kernel.rs", "e46a3498840b54205498e13c3325de020e5db022637c9a1dbb58a5e6735cd03b"],
-      ["examples/gfx950_advanced_attention/src/reference.rs", "e81d3a617566ee10e776c3d2f18bff90b764c8dcf6e37072fab49ce98ac0c1af"],
-      ["examples/gfx950_advanced_attention/src/lib.rs", "b630682742fca752d4a51e07046f4e1eff52dadbf86d39395c9e6a8200104f47"],
+      ["examples/gfx950_advanced_attention/src/ablation.rs", "c34bd3b07e47446d79ad9cdf5328c8e207f81b02a591bca5eb22f25a00087b2e"],
+      ["examples/gfx950_advanced_attention/src/kernel.rs", "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9"],
+      ["examples/gfx950_advanced_attention/src/reference.rs", "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53"],
+      ["examples/gfx950_advanced_attention/src/lib.rs", "33d565721e383f6881da4a84c47eb817ab3fbb9ddc820afd794563dd93bfbe7d"],
       ["examples/gfx950_advanced_attention/test-extractor-runtime.sh", "47f0fa7b258d7b59dae1da26377a8b5acfe992ddf62511f96cf24d7ab4549363"],
-      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "7b40c78549d282d7ff60bf368bc4a92d02eb2c6cedc54bc01974c55e6fa9ab83"],
-      ["examples/gfx950_advanced_attention/tests/reference.rs", "3309df464b5288ac8b2f659250b0cb9cb35d5d9f174da06f048ba431529f223f"],
+      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "0622feba696514592077c482bfb9d4550dec68fd7b5ea4e3fc043b38e265eab6"],
+      ["examples/gfx950_advanced_attention/tests/reference.rs", "6adcdf2128ea36e13dfcc14bb0cb6cf197f7ae5381a932f1f0754d12bf5d9a08"],
       ["examples/gfx950_advanced_systems/Cargo.lock", "223572e69b42b6e54f55935c3e1e1cf54b152466ed0d61acdb97010d647ebf1c"],
       ["examples/gfx950_advanced_systems/Cargo.toml", "4bb727180242b4f1a55693ecf2abcd87026e324cbd208d9c6a6970a45ae681e7"],
       ["examples/gfx950_advanced_systems/ablation-variants-v1.json", "e222f3bef1be96cd946b1847a8ac9b5341b8c67c8aeb0b6d4fd9d5a5268b3bba"],
@@ -2087,7 +2125,7 @@ describe("curriculum integrity", () => {
       ["perf-evidence/gfx950-advanced-evidence-v1.json", "550b290ec4e8dbf43fa338f31fda88199c6f8d86ae55f9570789bac7b968fd6a"],
       ["perf-evidence/run-gpt-oss-performance.sh", "e4ab1ba9b2f7ce2489bf163922d9cdb4bbf01591643cc9aef0d4b30db175f28f"],
       ["perf-evidence/run-gfx950-advanced-ablation.sh", "adb6ec6814935a8023eb9f0b65cedb110768e2a795aa8907968650fc044629ab"],
-      ["crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs", "06e5608c318bbb6257377ea808ea6b72bad48de56707f7276b4bfea51d2f5c36"],
+      ["crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs", "339c5f86265f1f3cda56719da4d9a9ad6eb2474586b27c11e5e22aa24d09de1e"],
     ] as const;
     for (const [path, digest] of mirrors) {
       expect(createHash("sha256").update(readFileSync(path)).digest("hex"), path).toBe(digest);

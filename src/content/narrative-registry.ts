@@ -2477,31 +2477,45 @@ const narrativeRegistry = deepFreeze({
   ),
   "gfx950-kda-gdn-linear-attention/recurrence": {
     sectionId: "kda-gdn-recurrence",
-    title: "Make recurrent state order reviewable",
+    title: "Relate exact decode to the WY/UT chunk transform",
     blocks: [
+      {
+        type: "table",
+        headers: ["Stage", "Exact one-token equation", "Fixed gfx950 mapping"],
+        rows: [
+          ["Decay", "D_t = diag(alpha_t) S_(t-1)", "Lane (v,k) owns H[v,k] = S[k,v] and multiplies by alpha_t[k]."],
+          ["Delta error", "e_t = v_t - k_t^T D_t", "Each Wave16 group reduces the 16 key products for one value column."],
+          ["Rank-one update", "S_t = D_t + beta_t k_t e_t^T", "Each lane updates one matrix element; no atomic or cross-value exchange is needed."],
+          ["Output", "o_t = S_t^T (q_t / sqrt(16))", "A second Wave16 reduction produces one logical value output, replicated over its 16 key lanes by the checked output policy."],
+        ],
+      },
       {
         type: "steps",
         items: [
-          "Identify the source-declared initial state, fixed head shape, sequence extent, and working precision.",
-          "For each admitted token position, form a three-tap causal convolution and proposal tanh(convolution + 0.25 * state).",
-          "Compute sigmoid(gate_input), then update state = gate * state + (1 - gate) * proposal.",
-          "Reduce the 16 state squares and emit state * rsqrt(mean_square + 1e-5).",
-          "Carry the resulting state to the next position without parallelizing across a true recurrence dependency.",
+          "Within each four-token chunk, form cumulative per-key decay products so every token is expressed relative to the state entering the chunk.",
+          "Build the strictly lower-triangular interaction coefficients L_ji = beta_j * k_j^T diag(product_(r=i+1..j) alpha_r) k_i for i < j.",
+          "Solve the unit-lower system by forward substitution: z_0=b_0, z_1=b_1-L_10 z_0, z_2=b_2-L_20 z_0-L_21 z_1, and z_3=b_3-L_30 z_0-L_31 z_1-L_32 z_2.",
+          "Use the solved z vectors in the matching query interactions to emit all four outputs, then apply the four decays and four rank-one terms once to produce the chunk state.",
+          "Carry that exact state into the second C=4 invocation. The CPU oracle does not use these equations; it executes eight scalar f64 recurrence steps and captures the token-three state independently.",
         ],
+      },
+      {
+        type: "paragraph",
+        text: "The equations follow Kimi Linear, arXiv:2510.26692, equations 1 and 6-9 (https://arxiv.org/abs/2510.26692). Flash Linear Attention's KDA layer and fused recurrent implementation provide an independent implementation reference (https://github.com/fla-org/flash-linear-attention/blob/main/fla/layers/kda.py and https://github.com/fla-org/flash-linear-attention/blob/main/fla/ops/kda/fused_recurrent.py). The tutorial's numerical oracle is still the locally published scalar f64 code, not either external implementation.",
       },
       {
         type: "callout",
         tone: "boundary",
-        title: "Family names are not a specification",
-        text: "KDA and GDN identify operator families, not one universal equation. This source is a bounded KDA/GDN-style teaching recurrence, not a complete Q/K/V linear-attention layer. Decode consumes one three-tap history; prefill carries 16 state values through eight tokens in two ordered four-token chunks.",
+        title: "The kernel boundary starts after model-side transforms",
+        text: "The inputs are post-projection, L2-normalized q and k plus already activated alpha in (0,1] and beta in [0,1]. The fixed kernel applies q/sqrt(16). It deliberately excludes learned projections, the surrounding width-four convolution, alpha/beta parameterization, RMS/output gating, and output projection. Logical state is S[K,V]; production memory stores H[V,K].",
       },
     ],
   },
   "gfx950-kda-gdn-linear-attention/scope-evidence": advancedScope(
     "kda-gdn-scope-evidence",
-    "Bound the recurrence and its evidence",
+    "Bound the matrix recurrence and its evidence",
     "examples/gfx950_advanced_attention/src/kernel.rs",
-    "It does not cover dynamic sequence lengths, persistent state across requests, KV-cache management, or equivalence to a named KDA/GDN model layer.",
+    "It does not cover dynamic dimensions, multiple heads, persistent state across requests, learned projection or convolution stages, output gating, or equivalence to a complete Kimi Linear model layer. Physical outputs are replicated to satisfy the current checked Index1D ownership surface; the runtime validates every replica.",
   ),
   "gfx950-indexed-sparse-attention/index-contract": {
     sectionId: "indexed-sparse-index-contract",

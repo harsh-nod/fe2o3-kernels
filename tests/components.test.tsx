@@ -497,7 +497,7 @@ describe("search index", () => {
   it("indexes every advanced gfx950 operator family", () => {
     const expected = [
       ["advanced MoE", "gfx950-advanced-moe"],
-      ["KDA GDN", "gfx950-kda-gdn-linear-attention"],
+      ["Kimi Delta Attention", "gfx950-kda-gdn-linear-attention"],
       ["indexed sparse attention", "gfx950-indexed-sparse-attention"],
       ["compressed hybrid attention", "gfx950-compressed-hybrid-attention"],
       ["AttnRes GR mHC", "gfx950-attnres-gr-mhc"],
