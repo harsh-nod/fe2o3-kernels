@@ -69,8 +69,8 @@ describe("evidence source digest scopes", () => {
       (object) => object.label === "in-process profiler dispatch import milestone",
     );
     expect(compilerEvidence).toMatchObject({
-      commit: "4ec8ff8e52abb3bde637f254d933dd250d45ab28",
-      tree: "3d786284028798b591bf24ca5179898b99ba8139",
+      commit: "a5438d82203eeb223b4ff8aa25ea6581b1f1af81",
+      tree: "3a319954541af34b3d77366498e73fe4663f2044",
     });
     expect(compilerEvidence?.sourcePaths).toEqual(
       expect.arrayContaining([

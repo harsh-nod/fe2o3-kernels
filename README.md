@@ -67,8 +67,8 @@ collector-adapter mappings. The GPU-gated CLI suite covers KFD target identity,
 installed rocprof planning/import policy, and fake collector records; it did not
 run a real GPU-dispatch rocprofv3-to-import roundtrip. The exact bound
 compiler checkpoint is commit
-`4ec8ff8e52abb3bde637f254d933dd250d45ab28`, tree
-`3d786284028798b591bf24ca5179898b99ba8139`, as recorded in
+`a5438d82203eeb223b4ff8aa25ea6581b1f1af81`, tree
+`3a319954541af34b3d77366498e73fe4663f2044`, as recorded in
 `config/profiler-dispatch-import-tutorial.json`. This qualifies only the bounded
 importer/sealed-loader checkpoint, not the T3 profiler track. ATT remains
 unavailable because its decoder requires a mutable directory namespace for

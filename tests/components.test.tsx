@@ -246,7 +246,7 @@ describe("in-process profiler import tutorial", () => {
     expect(screen.getByRole("table", { name: "Process-local profiler agent mapping" }))
       .toHaveTextContent("7001");
     expect(screen.getByText("MI300X bounded importer checkpoint qualified")).toBeInTheDocument();
-    expect(screen.getByText(/bounded checkpoint is qualified at 4ec8ff8e52/u)).toBeInTheDocument();
+    expect(screen.getByText(/bounded checkpoint is qualified at a5438d8220/u)).toBeInTheDocument();
     expect(screen.getAllByText(/did not directly observe interpreter/u)).not.toHaveLength(0);
     expect(
       screen.getByRole("heading", { name: "Explore typed absence without a service claim" }),
@@ -257,7 +257,7 @@ describe("in-process profiler import tutorial", () => {
     await user.click(screen.getByText("Read the exact bounded qualification results"));
     expect(screen.getByText("cargo test -p fe2o3-semantic-import --all-targets"))
       .toBeInTheDocument();
-    expect(screen.getByText(/cargo-fe2o3: 339 passed; 1 ignored/u)).toBeInTheDocument();
+    expect(screen.getByText(/cargo-fe2o3: 340 passed; 1 ignored/u)).toBeInTheDocument();
 
     const dialects = screen.getByRole("tablist", { name: "rocprof source dialect" });
     const installed = within(dialects).getByRole("tab", { name: "Installed JSON" });

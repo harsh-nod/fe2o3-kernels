@@ -474,7 +474,7 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
   await expect(page.getByRole("table", { name: "Process-local profiler agent mapping" }))
     .toContainText("7001");
   await expect(page.getByText("MI300X bounded importer checkpoint qualified")).toBeVisible();
-  await expect(page.getByText(/bounded checkpoint is qualified at 4ec8ff8e52/u)).toBeVisible();
+  await expect(page.getByText(/bounded checkpoint is qualified at a5438d8220/u)).toBeVisible();
   await expect(page.getByText(/did not directly observe interpreter/u).first()).toBeVisible();
   await expect(page.getByText(/deterministic non-wire, non-authoritative examples/u)).toBeVisible();
   await expect(page.getByText(/not a production protocol or service endpoint/u)).toBeVisible();

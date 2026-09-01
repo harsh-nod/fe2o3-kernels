@@ -4,14 +4,14 @@
   "reviewedOn": "2026-09-01",
   "issue": 215,
   "issueState": "open",
-  "compilerRevision": "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+  "compilerRevision": "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
   "target": "gfx942:xnack-unobserved",
   "fixtureKind": "synthetic-deterministic-schematic-unexecuted",
   "liveValidation": {
     "host": "mi300x",
     "machine": "MI300X",
     "state": "bounded-importer-sealed-loader-qualified",
-    "checkpointRevision": "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+    "checkpointRevision": "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
     "test": "installed_collector_executes_sealed_entry_images_without_role_env_leakage",
     "observed": [
       "sealed-route-validation",
@@ -49,7 +49,7 @@
       },
       {
         "command": "cargo test -p cargo-fe2o3 --bin cargo-fe2o3 profile_command",
-        "result": "28 passed"
+        "result": "29 passed"
       },
       {
         "command": "FE2O3_REQUIRE_GFX942_PROFILE_TEST=1 cargo test -p cargo-fe2o3 --test profile_cli",
@@ -73,7 +73,7 @@
       "result": "passed",
       "softNofile": 1024,
       "summaries": [
-        "cargo-fe2o3: 339 passed; 1 ignored",
+        "cargo-fe2o3: 340 passed; 1 ignored",
         "profile_cli: 19/19 passed",
         "Worker V3: 50 passed; 1 ignored",
         "broad CPU, doctest, backend, UI, policy, rustc-codegen, and S09 partitions passed"

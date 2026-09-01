@@ -13,7 +13,7 @@ type JsonRecord = Record<string, unknown>;
 const digestPattern = /^[0-9a-f]{64}$/u;
 const objectPairPattern = /^[0-9a-f]{40}:[0-9a-f]{40}$/u;
 const boundCompilerRevision =
-  "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139";
+  "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044";
 const milestoneKeys = [
   "compilerRevision",
   "fixtureKind",
@@ -80,7 +80,7 @@ const focusedQualificationResults = [
   ["cargo fmt --all -- --check", "passed"],
   ["cargo check -p cargo-fe2o3 --all-targets", "passed"],
   ["cargo test -p fe2o3-semantic-import --all-targets", "72 passed"],
-  ["cargo test -p cargo-fe2o3 --bin cargo-fe2o3 profile_command", "28 passed"],
+  ["cargo test -p cargo-fe2o3 --bin cargo-fe2o3 profile_command", "29 passed"],
   [
     "FE2O3_REQUIRE_GFX942_PROFILE_TEST=1 cargo test -p cargo-fe2o3 --test profile_cli",
     "19 passed",
@@ -90,7 +90,7 @@ const focusedQualificationResults = [
   ["bash scripts/tests/hosted-parity-ci.sh", "passed"],
 ] as const;
 const genericCoreSummaries = [
-  "cargo-fe2o3: 339 passed; 1 ignored",
+  "cargo-fe2o3: 340 passed; 1 ignored",
   "profile_cli: 19/19 passed",
   "Worker V3: 50 passed; 1 ignored",
   "broad CPU, doctest, backend, UI, policy, rustc-codegen, and S09 partitions passed",

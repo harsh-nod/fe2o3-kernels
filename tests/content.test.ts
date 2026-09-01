@@ -609,13 +609,13 @@ describe("in-process profiler dispatch import milestone", () => {
       status: "implemented-qualified-bounded-checkpoint",
       issue: 215,
       issueState: "open",
-      compilerRevision: "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+      compilerRevision: "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
       fixtureKind: "synthetic-deterministic-schematic-unexecuted",
       liveValidation: {
         host: "mi300x",
         machine: "MI300X",
         state: "bounded-importer-sealed-loader-qualified",
-        checkpointRevision: "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+        checkpointRevision: "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
         observed: [
           "sealed-route-validation",
           "target-mapping",
@@ -725,7 +725,7 @@ describe("in-process profiler dispatch import milestone", () => {
       reason: "att_decoder_requires_mutable_directory_namespace_without_sealed_route",
     });
     expect(profilerImportSourceUrl("crates/cargo-fe2o3/src/profile_command.rs")).toBe(
-      "https://github.com/harsh-nod/fe2o3/blob/4ec8ff8e52abb3bde637f254d933dd250d45ab28/crates/cargo-fe2o3/src/profile_command.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/a5438d82203eeb223b4ff8aa25ea6581b1f1af81/crates/cargo-fe2o3/src/profile_command.rs",
     );
     expect(profilerImportSources.map((source) => source.path)).toEqual(
       expect.arrayContaining([
