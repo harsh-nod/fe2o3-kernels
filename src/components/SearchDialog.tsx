@@ -3,6 +3,7 @@ import {
   Braces,
   FileText,
   Search,
+  Rows3,
   TextSelect,
   X,
 } from "lucide-react";
@@ -18,6 +19,8 @@ interface SearchDialogProps {
 }
 
 const resultIcons = {
+  page: FileText,
+  operator: Rows3,
   lesson: FileText,
   section: TextSelect,
   diagnostic: Braces,
@@ -47,9 +50,7 @@ export function SearchDialog({ open, onClose }: SearchDialogProps) {
   if (!open) return null;
 
   const select = (result: SearchResult) => {
-    navigate(
-      `/lesson/${result.lessonId}${result.hash ? `#${result.hash}` : ""}`,
-    );
+    navigate(result.href);
     setQuery("");
     onClose();
   };

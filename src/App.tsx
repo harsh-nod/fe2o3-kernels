@@ -37,6 +37,11 @@ const OverviewPage = lazy(() =>
     default: module.OverviewPage,
   })),
 );
+const OperatorCookbookPage = lazy(() =>
+  import("./components/OperatorCookbookPage").then((module) => ({
+    default: module.OperatorCookbookPage,
+  })),
+);
 const ProgressPage = lazy(() =>
   import("./components/ProgressPage").then((module) => ({
     default: module.ProgressPage,
@@ -70,7 +75,7 @@ function Drawer({ completed, onClose, onPrune }: DrawerProps) {
         className="drawer-panel"
         role="dialog"
         aria-modal="true"
-        aria-label="Curriculum navigation"
+        aria-label="Start and curriculum navigation"
         tabIndex={-1}
         onMouseDown={(event) => event.stopPropagation()}
       >
@@ -88,6 +93,8 @@ function Drawer({ completed, onClose, onPrune }: DrawerProps) {
 
 function pageTitle(pathname: string): string {
   if (pathname === "/") return "Overview | fe2o3 kernels";
+  if (pathname === "/start") return "Start here | fe2o3 kernels";
+  if (pathname === "/operators") return "Operator cookbook | fe2o3 kernels";
   if (pathname === "/architecture") return "Architecture | fe2o3 kernels";
   if (pathname === "/status") return "Implementation status | fe2o3 kernels";
   if (pathname === "/glossary") return "Glossary | fe2o3 kernels";
@@ -165,6 +172,8 @@ export function App() {
         <Suspense fallback={<p className="route-loading" role="status">Loading content...</p>}>
           <Routes>
             <Route path="/" element={<OverviewPage />} />
+            <Route path="/start" element={<OverviewPage />} />
+            <Route path="/operators" element={<OperatorCookbookPage />} />
             <Route
               path="/lesson/:lessonId"
               element={

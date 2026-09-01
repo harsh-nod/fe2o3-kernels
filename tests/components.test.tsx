@@ -402,6 +402,25 @@ describe("search index", () => {
       ).toBe(true);
     }
   });
+
+  it("indexes the launch hub and operator cookbook", () => {
+    const start = searchCatalog("run today hardware smoke", lessons, glossary);
+    expect(start.some((result) =>
+      result.kind === "page" &&
+      result.title === "Start here" &&
+      result.href === "/"
+    )).toBe(true);
+
+    const k3 = searchCatalog("Kimi K3 KDA decode core", lessons, glossary);
+    expect(k3.some((result) =>
+      result.kind === "operator" &&
+      result.title === "Kimi K3 KDA Decode Core" &&
+      result.href === "/operators#kimi-k3-kda"
+    )).toBe(true);
+    expect(k3.some((result) =>
+      result.lessonId === "gfx950-kimi-k3-kda-decode"
+    )).toBe(true);
+  });
 });
   it("indexes diagnostics and deep-links to the compiler-check catalog", () => {
     for (const query of [

@@ -3,13 +3,21 @@ import type {
   Lesson,
   LessonBlock,
 } from "../content/model";
+import {
+  contributorWorkflow,
+  learningTracks,
+  runTodayMatrix,
+  setupPaths,
+} from "../content/learning-hub";
 import { narrativeEntry } from "../content/narrative-registry";
+import { operatorCookbook } from "../content/operator-cookbook";
 
 export interface SearchResult {
   id: string;
-  kind: "lesson" | "section" | "diagnostic" | "glossary";
+  kind: "page" | "operator" | "lesson" | "section" | "diagnostic" | "glossary";
   title: string;
   context: string;
+  href: string;
   lessonId: string;
   hash?: string;
 }
@@ -83,11 +91,106 @@ export function searchCatalog(
         kind: "lesson",
         title: lesson.title,
         context: `Module ${lesson.module} | ${lesson.summary}`,
+        href: `/lesson/${lesson.id}`,
         lessonId: lesson.id,
       }));
   }
 
   const results: Array<SearchResult & { score: number }> = [];
+  const launchPageBody = [
+    "start here run today hardware smoke learning tracks setup paths contribution workflow",
+    ...learningTracks.flatMap((track) => [
+      track.title,
+      track.audience,
+      track.summary,
+      ...track.steps.flatMap((step) => [step.label, step.outcome]),
+    ]),
+    ...setupPaths.flatMap((path) => [
+      path.title,
+      path.environment,
+      path.command,
+      path.expected,
+      path.boundary,
+    ]),
+    ...runTodayMatrix.flatMap((row) => [
+      row.operator,
+      row.environment,
+      row.command,
+      row.expected,
+      row.boundary,
+    ]),
+    ...contributorWorkflow.flatMap((step) => [
+      step.label,
+      step.detail,
+      step.check,
+    ]),
+  ].join(" ");
+  const launchScore = matchScore(terms, "Start here", launchPageBody);
+  if (launchScore !== null) {
+    results.push({
+      id: "page-start-here",
+      kind: "page",
+      title: "Start here",
+      context: "Learning tracks, setup paths, runnable commands, and contribution workflow",
+      href: "/",
+      lessonId: "read-the-evidence",
+      score: launchScore + 2,
+    });
+  }
+
+  const cookbookBody = operatorCookbook.flatMap((entry) => [
+    entry.title,
+    entry.category,
+    entry.computes,
+    entry.implementedShape,
+    entry.runner,
+    entry.expected,
+    ...entry.sourcePaths,
+    ...entry.referencePaths,
+    ...entry.nonClaims,
+  ]).join(" ");
+  const cookbookScore = matchScore(terms, "Operator cookbook", cookbookBody);
+  if (cookbookScore !== null) {
+    results.push({
+      id: "page-operator-cookbook",
+      kind: "page",
+      title: "Operator cookbook",
+      context: "Compute contracts, source paths, runners, expected results, and non-claims",
+      href: "/operators",
+      lessonId: "read-the-evidence",
+      score: cookbookScore + 2,
+    });
+  }
+
+  for (const entry of operatorCookbook) {
+    const operatorScore = matchScore(
+      terms,
+      entry.title,
+      [
+        entry.category,
+        entry.computes,
+        entry.implementedShape,
+        entry.runner,
+        entry.expected,
+        ...entry.sourcePaths,
+        ...entry.referencePaths,
+        ...entry.nonClaims,
+      ].join(" "),
+    );
+    if (operatorScore !== null) {
+      results.push({
+        id: `operator-${entry.id}`,
+        kind: "operator",
+        title: entry.title,
+        context: `${entry.implementedShape} | ${entry.runner}`,
+        href: `/operators#${entry.id}`,
+        lessonId: entry.lessonId,
+        hash: entry.id,
+        score: operatorScore + 1,
+      });
+    }
+  }
+
   for (const lesson of lessons) {
     const claimText = lesson.claims.flatMap((claim) => [
       claim.label,
@@ -112,6 +215,7 @@ export function searchCatalog(
         kind: "lesson",
         title: lesson.title,
         context: `Module ${lesson.module} | ${lesson.summary}`,
+        href: `/lesson/${lesson.id}`,
         lessonId: lesson.id,
         score: lessonScore + 2,
       });
@@ -130,6 +234,7 @@ export function searchCatalog(
           kind: "section",
           title: entry.title,
           context: lesson.title,
+          href: `/lesson/${lesson.id}#${entry.sectionId}`,
           lessonId: lesson.id,
           hash: entry.sectionId,
           score: sectionScore + 1,
@@ -155,6 +260,7 @@ export function searchCatalog(
               kind: "diagnostic",
               title: `${example.id}: ${example.title}`,
               context: `${lesson.title} | ${example.property}`,
+              href: `/lesson/${lesson.id}#${entry.sectionId}`,
               lessonId: lesson.id,
               hash: entry.sectionId,
               score: diagnosticScore + 3,
@@ -173,6 +279,7 @@ export function searchCatalog(
         kind: "glossary",
         title: entry.term,
         context: entry.definition,
+        href: `/lesson/${entry.lessonId}`,
         lessonId: entry.lessonId,
         score,
       });
@@ -189,6 +296,7 @@ export function searchCatalog(
       kind: result.kind,
       title: result.title,
       context: result.context,
+      href: result.href,
       lessonId: result.lessonId,
       ...(result.hash ? { hash: result.hash } : {}),
     }));

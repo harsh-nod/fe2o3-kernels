@@ -4,28 +4,23 @@ import {
   BookOpen,
   BookOpenCheck,
   Braces,
+  CircuitBoard,
+  Cpu,
+  GitPullRequest,
+  ListChecks,
   Network,
+  Rows3,
+  TerminalSquare,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { currentState } from "../content/current-state";
-
-const paths = [
-  {
-    label: "Write your first kernel",
-    detail: "Set up gfx942, run Fill, then extend the typed Vecadd kernel.",
-    to: "/lesson/gfx942-setup",
-  },
-  {
-    label: "Study compiler checks",
-    detail: "Trace static and dynamic bounds, races, barriers, LDS publication, and fail-closed diagnostics.",
-    to: "/lesson/compiler-checks",
-  },
-  {
-    label: "Explore formal verification",
-    detail: "Read the Verus model and compiler refinement only when you need the proof layer.",
-    to: "/lesson/verus-contracts",
-  },
-] as const;
+import {
+  contributorWorkflow,
+  learningTracks,
+  runTodayMatrix,
+  setupPaths,
+} from "../content/learning-hub";
+import { EvidenceBadge } from "./EvidenceBadge";
 
 export function OverviewPage() {
   const active = currentState.capabilities.filter(
@@ -35,11 +30,12 @@ export function OverviewPage() {
   return (
     <article className="overview-page">
       <header className="overview-header">
-        <p className="lesson-breadcrumb">Current field guide</p>
+        <p className="lesson-breadcrumb">Community launch guide</p>
         <h1>fe2o3 kernels</h1>
         <p>
-          Write safe Rust kernels, compile them for gfx942, and see what fe2o3
-          checks before code reaches the GPU.
+          The authoritative learning path for fe2o3: write safe Rust GPU
+          kernels, run the current examples, and inspect the evidence behind
+          every claim.
         </p>
         <div className="overview-snapshot" aria-label="Current compiler snapshot">
           <div>
@@ -63,19 +59,19 @@ export function OverviewPage() {
           <span><strong>Start tutorial</strong><small>Setup and first kernel</small></span>
           <ArrowRight size={17} aria-hidden="true" />
         </Link>
+        <a href="#run-today">
+          <TerminalSquare size={19} aria-hidden="true" />
+          <span><strong>Run today</strong><small>Commands with boundaries</small></span>
+          <ArrowRight size={17} aria-hidden="true" />
+        </a>
+        <Link to="/operators">
+          <Rows3 size={19} aria-hidden="true" />
+          <span><strong>Operator cookbook</strong><small>Contracts and sources</small></span>
+          <ArrowRight size={17} aria-hidden="true" />
+        </Link>
         <Link to="/lesson/compiler-checks">
           <Braces size={19} aria-hidden="true" />
           <span><strong>Compiler checks</strong><small>Complete diagnostic catalog</small></span>
-          <ArrowRight size={17} aria-hidden="true" />
-        </Link>
-        <Link to="/status">
-          <Activity size={19} aria-hidden="true" />
-          <span><strong>Implementation status</strong><small>Kernel and delivery gates</small></span>
-          <ArrowRight size={17} aria-hidden="true" />
-        </Link>
-        <Link to="/architecture">
-          <Network size={19} aria-hidden="true" />
-          <span><strong>Architecture</strong><small>Current authority boundaries</small></span>
           <ArrowRight size={17} aria-hidden="true" />
         </Link>
       </nav>
@@ -83,15 +79,94 @@ export function OverviewPage() {
       <section className="overview-section">
         <div>
           <p className="section-kicker">Choose a path</p>
-          <h2>Learn in layers</h2>
+          <h2>Start from your job</h2>
         </div>
-        <div className="overview-paths">
-          {paths.map((path, index) => (
-            <Link to={path.to} key={path.to}>
+        <div className="launch-track-grid">
+          {learningTracks.map((path, index) => (
+            <Link to={path.startHref} key={path.id}>
               <span>{String(index + 1).padStart(2, "0")}</span>
-              <div><strong>{path.label}</strong><p>{path.detail}</p></div>
+              <div>
+                <strong>{path.title}</strong>
+                <small>{path.audience}</small>
+                <p>{path.summary}</p>
+              </div>
               <ArrowRight size={17} aria-hidden="true" />
             </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="overview-section" id="run-today">
+        <div>
+          <p className="section-kicker">Run today</p>
+          <h2>Commands with exact boundaries</h2>
+          <Link className="overview-inline-link" to="/operators">
+            Compare operator contracts <ArrowRight size={14} />
+          </Link>
+        </div>
+        <div className="run-matrix" role="table" aria-label="What can I run today">
+          <div className="run-matrix-head" role="row">
+            <span role="columnheader">Operator</span>
+            <span role="columnheader">Environment</span>
+            <span role="columnheader">Status</span>
+          </div>
+          {runTodayMatrix.map((row) => (
+            <article role="row" key={row.id}>
+              <div className="run-matrix-main" role="cell">
+                <Link to={row.href}>{row.operator}</Link>
+                <code>{row.command}</code>
+                <p>{row.expected}</p>
+                <small>{row.boundary}</small>
+              </div>
+              <span role="cell">{row.environment}</span>
+              <span role="cell"><EvidenceBadge kind={row.status} /></span>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="overview-section">
+        <div>
+          <p className="section-kicker">Setup</p>
+          <h2>Pick the narrowest environment</h2>
+        </div>
+        <div className="setup-paths">
+          {setupPaths.map((path) => {
+            const Icon = path.id === "cpu" ? Cpu : CircuitBoard;
+            return (
+              <article key={path.id}>
+                <Icon size={18} aria-hidden="true" />
+                <div>
+                  <strong>{path.title}</strong>
+                  <small>{path.environment}</small>
+                  <code>{path.command}</code>
+                  <p>{path.expected}</p>
+                  <p>{path.boundary}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="overview-section">
+        <div>
+          <p className="section-kicker">Contribute</p>
+          <h2>Evidence-first PR shape</h2>
+          <Link className="overview-inline-link" to="/lesson/contributing-kernel">
+            Open contributor lesson <ArrowRight size={14} />
+          </Link>
+        </div>
+        <div className="contributor-checklist">
+          {contributorWorkflow.map((step, index) => (
+            <article key={step.label}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <div>
+                <strong>{step.label}</strong>
+                <p>{step.detail}</p>
+                <small><ListChecks size={13} aria-hidden="true" /> {step.check}</small>
+              </div>
+            </article>
           ))}
         </div>
       </section>
@@ -124,6 +199,15 @@ export function OverviewPage() {
           status is sourced from the reviewed manifest and never inferred from
           historical tutorial results.
         </p>
+        <Link className="overview-inline-link" to="/status">
+          <Activity size={14} /> Implementation status
+        </Link>
+        <Link className="overview-inline-link" to="/architecture">
+          <Network size={14} /> Architecture
+        </Link>
+        <Link className="overview-inline-link" to="/lesson/contributing-kernel">
+          <GitPullRequest size={14} /> Contribute
+        </Link>
       </footer>
     </article>
   );

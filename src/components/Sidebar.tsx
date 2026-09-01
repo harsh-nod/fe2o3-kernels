@@ -7,6 +7,7 @@ import {
   GitBranch,
   History,
   House,
+  Rows3,
   Network,
   X,
 } from "lucide-react";
@@ -44,7 +45,7 @@ export function Sidebar({
     >
       {mobile && (
         <div className="sidebar-mobile-head">
-          <span>Curriculum</span>
+          <span>Start / Curriculum</span>
           <button
             className="icon-button"
             type="button"
@@ -96,7 +97,10 @@ export function Sidebar({
 
       <nav className="reference-nav" aria-label="Reference">
         <NavLink onClick={onNavigate} to="/" end>
-          <House size={16} /> Overview
+          <House size={16} /> Start here
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/operators">
+          <Rows3 size={16} /> Operator cookbook
         </NavLink>
         <NavLink onClick={onNavigate} to="/lesson/compiler-checks">
           <Braces size={16} /> Compiler checks
