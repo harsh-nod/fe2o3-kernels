@@ -69,8 +69,9 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   if (isMobile) {
     await page.getByRole("button", { name: "Open curriculum" }).click();
     await expect(
-      page.getByRole("dialog", { name: "Curriculum navigation" }),
+      page.getByRole("dialog", { name: "Start and curriculum navigation" }),
     ).toBeVisible();
+    await expect(page.getByText("Start / Curriculum")).toBeVisible();
     await page.screenshot({
       path: testInfo.outputPath("mobile-drawer.png"),
       animations: "disabled",
@@ -146,6 +147,47 @@ test("agent source/ISA characteristic workbench stays truthful and responsive", 
     animations: "disabled",
     fullPage: true,
   });
+});
+
+test("launch hub and operator cookbook are discoverable", async ({ page }, testInfo) => {
+  await page.goto("./#/");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "fe2o3 kernels" }),
+  ).toBeVisible();
+  await expect(page.getByText("Community launch guide")).toBeVisible();
+  await expect(
+    page.getByRole("table", { name: "What can I run today" }),
+  ).toBeVisible();
+  await expect(
+    page.locator("#run-today").getByRole("link", {
+      name: "Kimi K3 KDA decode core",
+      exact: true,
+    }),
+  ).toHaveAttribute("href", /gfx950-kimi-k3-kda-decode/u);
+  await page.locator("#run-today").screenshot({
+    path: testInfo.outputPath("run-today.png"),
+    animations: "disabled",
+  });
+
+  await page.goto("./#/operators");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Operator cookbook" }),
+  ).toBeVisible();
+  await expect(page.locator("#kimi-k3-kda")).toContainText(
+    "Single-head f32 Kimi K3-shaped core",
+  );
+  await expect(page.locator("#kimi-k3-kda")).toContainText(
+    "No chunk_kda prefill implementation",
+  );
+  await expect(page.locator("#gpt-oss-layer-tile")).toContainText(
+    "No complete GPT-OSS layer",
+  );
+
+  const bounds = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(bounds.width).toBeLessThanOrEqual(bounds.viewport);
 });
 
 test("source-to-bundle CPU simulation keeps its evidence boundary visible", async ({

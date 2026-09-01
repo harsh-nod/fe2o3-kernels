@@ -1,15 +1,36 @@
-# fe2o3 kernels curriculum
+# fe2o3 kernels
 
-A technical tutorial workbench for writing Rust GPU kernels with
-[fe2o3](https://github.com/harsh-nod/fe2o3) and reasoning about their source
-models with Verus. The curriculum starts with scalar fill and vector addition,
-then develops the contracts needed for collectives, tiled GEMM, online softmax,
-flash attention, and mixture-of-experts routing.
+The authoritative learning workbench for
+[fe2o3](https://github.com/harsh-nod/fe2o3): write safe Rust GPU kernels, run
+the current examples, and inspect the exact evidence behind each claim. The
+curriculum starts with scalar fill and vector addition, then develops the
+contracts needed for collectives, tiled GEMM, online softmax, FlashAttention,
+MoE routing, low-precision gfx950 kernels, KDA/GDN attention, Kimi K3 KDA, and
+GPT-OSS-style layer-tile work.
 
 This site is evidence-led. It distinguishes what the current stack runs from
 what it verifies, what it observes in compiler or hardware tests, and what is
 still a design. It does not present advanced tutorial pseudocode as a working
 kernel.
+
+## Start here
+
+Community users should begin in the deployed workbench, not by reading this
+entire README. The home page now exposes four launch tracks:
+
+- **Run something first**: CPU semantic simulation, gfx942 setup gates, and
+  typed Vecadd.
+- **Write a kernel**: Fill, Vecadd, softmax, GEMM, and model operators.
+- **Understand the guarantees**: evidence labels, compiler checks, architecture,
+  Verus, artifact identity, and hardware observations.
+- **Contribute a bounded kernel**: the source/reference/runner/evidence shape
+  expected for a PR.
+
+The home page also includes a **What can I run today?** matrix with exact
+commands, expected results, environments, and boundaries. The
+`#/operators` route provides an operator cookbook for Fill, Vecadd, row
+softmax, GEMM, FlashAttention, MoE routing, KDA/GDN, Kimi K3 KDA decode, and the
+GPT-OSS layer-tile megakernel.
 
 ## Audited lesson baseline
 
@@ -1058,7 +1079,7 @@ other GPU languages are inherently unverifiable.
 
 ## Curriculum
 
-The documentation app contains 21 lessons across nine modules:
+The documentation app contains 35 lessons across eleven modules:
 
 0. Evidence orientation and an MI300X/gfx942 setup.
 1. Fill, typed vector addition, indexing, `DisjointSlice`, launch shape, and
@@ -1076,10 +1097,16 @@ The documentation app contains 21 lessons across nine modules:
 7. Rust-to-HSACO evidence, machine-effect checks, protected evidence, and the
    Verus trust boundary.
 8. Exercises and the contribution evidence packet for a new kernel.
+9. gfx950 FP4/FP8 GEMM and FlashAttention production Rust examples.
+10. gfx950 advanced operator kernels, including MoE, KDA/GDN, sparse and hybrid
+    attention, residual mixing, speculative/MTP verification, N-gram gather,
+    Muon update, GPT-OSS layer-tile work, and Kimi K3 KDA decode.
 
-The first screen is the tutorial workbench: desktop curriculum tree or mobile
-drawer, lesson progress, evidence labels, code and exact-protocol tabs,
-exercises, glossary, search, architecture view, and light/dark themes.
+The first screen is the launch hub: role-based learning tracks, exact runnable
+commands, setup paths, contribution checklist, compiler snapshot, and links
+into the curriculum tree. The workbench also includes lesson progress, evidence
+labels, code and exact-protocol tabs, exercises, glossary, search, architecture
+view, implementation status, operator cookbook, and light/dark themes.
 
 ## Local development
 

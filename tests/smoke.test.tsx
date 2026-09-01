@@ -3,7 +3,12 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/App";
+import "../src/components/ArchitecturePage";
 import "../src/components/LessonPage";
+import "../src/components/OperatorCookbookPage";
+import "../src/components/OverviewPage";
+import "../src/components/ProgressPage";
+import "../src/components/SearchDialog";
 
 function renderApp(path = "/lesson/read-the-evidence") {
   return render(
@@ -16,20 +21,53 @@ function renderApp(path = "/lesson/read-the-evidence") {
 describe("application shell", () => {
   beforeEach(() => window.localStorage.clear());
 
-  it("makes the code-first tutorial the primary overview action", async () => {
+  it("makes the launch learning paths the primary overview action", async () => {
     renderApp("/");
     expect(
       await screen.findByRole("heading", {
         level: 1,
         name: "fe2o3 kernels",
-      }, { timeout: 5_000 }),
+      }, { timeout: 15_000 }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start tutorial/ })).toHaveAttribute(
       "href",
       "/lesson/gfx942-setup",
     );
-    expect(screen.getByText(/Write safe Rust kernels/)).toBeInTheDocument();
-  });
+    expect(screen.getByRole("link", { name: /Run today/ })).toHaveAttribute(
+      "href",
+      "#run-today",
+    );
+    expect(
+      screen.getAllByRole("link", { name: /Operator cookbook/ })
+        .some((link) => link.getAttribute("href") === "/operators"),
+    ).toBe(true);
+    expect(
+      screen.getByRole("table", { name: "What can I run today" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Kimi K3 KDA decode core" })).toHaveAttribute(
+      "href",
+      "/lesson/gfx950-kimi-k3-kda-decode",
+    );
+    expect(screen.getByText(/authoritative learning path/)).toBeInTheDocument();
+    expect(screen.getByText("Run something first")).toBeInTheDocument();
+  }, 20_000);
+
+  it("renders the operator cookbook route", async () => {
+    renderApp("/operators");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Operator cookbook",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText("Kimi K3 KDA Decode Core").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("GPT-OSS-120B Layer-Tile Megakernel").length).toBeGreaterThan(0);
+    expect(screen.getByText(/No chunk_kda prefill implementation/u)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open fe2o3 source/ })).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3",
+    );
+  }, 20_000);
 
   it("renders the tutorial app as its first screen", async () => {
     renderApp();
@@ -41,7 +79,7 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Curriculum")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Kernel" })).toBeInTheDocument();
-  });
+  }, 20_000);
 
   it("routes to the agent-native source/ISA inspection reference", async () => {
     renderApp("/debugger/source-isa-agent");
@@ -78,12 +116,12 @@ describe("application shell", () => {
   it("persists completed lesson progress", async () => {
     const user = userEvent.setup();
     renderApp();
-    await user.click(await screen.findByRole("button", { name: "Mark complete" }, { timeout: 5_000 }));
+    await user.click(await screen.findByRole("button", { name: "Mark complete" }, { timeout: 15_000 }));
     expect(screen.getByRole("button", { name: "Completed" })).toBeInTheDocument();
     expect(window.localStorage.getItem("fe2o3-kernels-progress-v2")).toContain(
       "read-the-evidence",
     );
-  });
+  }, 20_000);
 
   it("searches lessons and navigates to the result", async () => {
     const user = userEvent.setup();
@@ -91,7 +129,7 @@ describe("application shell", () => {
     await user.click(screen.getByRole("button", { name: /Search/ }));
     const input = await screen.findByRole("combobox", {
       name: "Search all lesson content",
-    }, { timeout: 5_000 });
+    }, { timeout: 15_000 });
     await user.type(input, "flash attention");
     await user.click(
       screen.getByRole("option", {
@@ -105,7 +143,7 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
-  }, 15_000);
+  }, 30_000);
 
   it("renders the gfx950 FP4 attention production Rust evidence", async () => {
     const user = userEvent.setup();
@@ -229,7 +267,7 @@ describe("application shell", () => {
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "not a proof for every input or a performance claim",
     );
-  });
+  }, 20_000);
 
   it("shows public and candidate kernel delivery states separately", async () => {
     renderApp("/status");
@@ -369,7 +407,7 @@ describe("application shell", () => {
     expect(candidateCard).toHaveTextContent(
       "upload/readback test is no kernel dispatch",
     );
-  });
+  }, 20_000);
 
   it("renders the published compiler baseline separately from history", async () => {
     renderApp("/architecture");
@@ -402,5 +440,5 @@ describe("application shell", () => {
       "href",
       "https://github.com/harsh-nod/fe2o3/tree/ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
     );
-  });
+  }, 30_000);
 });

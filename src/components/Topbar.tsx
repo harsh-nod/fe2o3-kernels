@@ -33,7 +33,7 @@ export function Topbar({ theme, onMenu, onSearch, onTheme }: TopbarProps) {
       <div className="pin-summary" title={`Tree ${currentState.compilerTree}`}>
         <span className="pin-dot" aria-hidden="true" />
         <span>compiler main {currentState.compilerShortCommit}</span>
-        <span className="pin-target">gfx942</span>
+        <span className="pin-target">gfx942 / gfx950</span>
       </div>
       <div className="topbar-actions">
         <button
