@@ -173,6 +173,22 @@ try {
     }
   }
 
+  for (const artifact of catalog.localArtifacts) {
+    if (
+      artifact.path.startsWith("/") ||
+      artifact.path.split("/").includes("..") ||
+      !/^[0-9a-f]{64}$/u.test(artifact.sha256)
+    ) {
+      fail(`${artifact.label} has an invalid local evidence record`);
+    }
+    const observed = createHash("sha256")
+      .update(readFileSync(resolve(artifact.path)))
+      .digest("hex");
+    if (observed !== artifact.sha256) {
+      fail(`${artifact.label} is ${observed}, required ${artifact.sha256}`);
+    }
+  }
+
   const debugSim = await vite.ssrLoadModule("/src/content/debug-sim-milestone.ts");
   const debugSimArtifacts = [
     ["counter_capture_v2.json", "counterCapture"],
@@ -246,9 +262,17 @@ try {
     }
   }
 
+  const profilerImport = await vite.ssrLoadModule(
+    "/src/content/profiler-dispatch-import.ts",
+  );
+  const profilerImportIssues = profilerImport.validateProfilerImportTutorial();
+  if (profilerImportIssues.length > 0) {
+    fail(`profiler import projection rejected: ${profilerImportIssues.join("; ")}`);
+  }
+
   if (checkIssues) await validateIssues(catalog.issues);
   process.stdout.write(
-    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, ${debugSimArtifacts.length} debug/simulator artifacts, ${characteristicFixtureFiles.length} source/ISA characteristic artifacts, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
+    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, ${catalog.localArtifacts.length} local artifacts, ${debugSimArtifacts.length} debug/simulator artifacts, ${characteristicFixtureFiles.length} source/ISA characteristic artifacts, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
   );
 } finally {
   await vite.close();

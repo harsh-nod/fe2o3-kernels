@@ -1,0 +1,78 @@
+{
+  "projection_schema": "fe2o3-profiler-import-dialect-tutorial-v1",
+  "protocol_wire_record": false,
+  "fixture_kind": "synthetic-deterministic-schematic-unexecuted",
+  "dialects": [
+    {
+      "id": "rocprofv3_json_installed1_1_97f5574",
+      "format": "json",
+      "serializer_revision": "97f5574fe2fdc7bef44fb01545347912ee9f1779",
+      "contract": "exact installed ROCprofiler SDK 1.1 object shape"
+    },
+    {
+      "id": "rocprofv3_json_forward_848868d",
+      "format": "json",
+      "serializer_revision": "848868dc7b195d569afe6be615fd4954c87ab8cb",
+      "contract": "exact reviewed forward object shape; extra record families remain bounded and opaque"
+    },
+    {
+      "id": "rocprofv3_csv_current22_column_stream_id",
+      "format": "csv",
+      "headers": [
+        "Kind",
+        "Agent_Id",
+        "Queue_Id",
+        "Stream_Id",
+        "Thread_Id",
+        "Dispatch_Id",
+        "Kernel_Id",
+        "Kernel_Name",
+        "Correlation_Id",
+        "Start_Timestamp",
+        "End_Timestamp",
+        "LDS_Block_Size",
+        "Scratch_Size",
+        "VGPR_Count",
+        "Accum_VGPR_Count",
+        "SGPR_Count",
+        "Workgroup_Size_X",
+        "Workgroup_Size_Y",
+        "Workgroup_Size_Z",
+        "Grid_Size_X",
+        "Grid_Size_Y",
+        "Grid_Size_Z"
+      ],
+      "agent_cell": "Agent <canonical decimal KFD node ID>"
+    }
+  ],
+  "json_process_local_bindings": [
+    {
+      "process_index": 0,
+      "source_process_id": 4100,
+      "opaque_agent_handle": 7001,
+      "direct_kfd_node": 1,
+      "family": "gfx942",
+      "wave_width": 64
+    },
+    {
+      "process_index": 1,
+      "source_process_id": 4200,
+      "opaque_agent_handle": 7001,
+      "direct_kfd_node": 2,
+      "family": "gfx942",
+      "wave_width": 64
+    }
+  ],
+  "kir_v7_admission": {
+    "source": "absolute retained file",
+    "canonical_bytes": "required",
+    "verified_module": "required",
+    "target_family": "gfx942",
+    "wave_width": 64,
+    "exact_xnack": {
+      "status": "unavailable",
+      "reason": "not_represented_by_direct_kfd_topology"
+    },
+    "legacy_scalar_declaration_authorizes_import": false
+  }
+}

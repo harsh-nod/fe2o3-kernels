@@ -46,4 +46,40 @@ describe("evidence source digest scopes", () => {
       ),
     ).toBe(true);
   });
+
+  it("catalogs every deterministic profiler import projection", () => {
+    const profilerArtifacts = evidenceCatalog.localArtifacts.filter((artifact) =>
+      artifact.path.startsWith("examples/profiler_dispatch_import_v1/"),
+    );
+
+    expect(profilerArtifacts).toHaveLength(7);
+    expect(profilerArtifacts.map((artifact) => artifact.path)).toEqual([
+      "examples/profiler_dispatch_import_v1/dialects.json",
+      "examples/profiler_dispatch_import_v1/capture-projection.json",
+      "examples/profiler_dispatch_import_v1/bundle-v4-projection.json",
+      "examples/profiler_dispatch_import_v1/receipt-v1-projection.json",
+      "examples/profiler_dispatch_import_v1/publication-manifest.txt",
+      "examples/profiler_dispatch_import_v1/agent-requests.jsonl",
+      "examples/profiler_dispatch_import_v1/agent-responses.jsonl",
+    ]);
+    expect(profilerArtifacts.every((artifact) => /^[0-9a-f]{64}$/u.test(artifact.sha256)))
+      .toBe(true);
+
+    const compilerEvidence = evidenceCatalog.gitObjects.find(
+      (object) => object.label === "in-process profiler dispatch import milestone",
+    );
+    expect(compilerEvidence).toMatchObject({
+      commit: "4ec8ff8e52abb3bde637f254d933dd250d45ab28",
+      tree: "3d786284028798b591bf24ca5179898b99ba8139",
+    });
+    expect(compilerEvidence?.sourcePaths).toEqual(
+      expect.arrayContaining([
+        "crates/cargo-fe2o3/src/profile_command.rs",
+        "crates/fe2o3-semantic-import/src/lib.rs",
+        "crates/fe2o3-semantic-import/src/raw_source_relation.rs",
+        "crates/fe2o3-semantic-import/src/bin/fe2o3-profiler-import.rs",
+        "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-current-schema-fixture-v1.txt",
+      ]),
+    );
+  });
 });

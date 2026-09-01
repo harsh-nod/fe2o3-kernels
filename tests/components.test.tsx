@@ -7,6 +7,7 @@ import { DebugSimMilestone } from "../src/components/DebugSimMilestone";
 import { FunctionalCorrectnessPanel } from "../src/components/FunctionalCorrectnessPanel";
 import { LessonSections } from "../src/components/LessonSections";
 import { LiveKfdDebuggerPage } from "../src/components/LiveKfdDebuggerPage";
+import { ProfilerDispatchImportPage } from "../src/components/ProfilerDispatchImportPage";
 import { SourceIsaAgentPage } from "../src/components/SourceIsaAgentPage";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
@@ -230,6 +231,74 @@ describe("live KFD debugger tutorial", () => {
         name: "Semantic evidence composition across complementary tools",
       }),
     ).toBeInTheDocument();
+  });
+});
+
+describe("in-process profiler import tutorial", () => {
+  it("keeps synthetic import, sealed-loader observation, and typed absence distinct", async () => {
+    const user = userEvent.setup();
+    render(<ProfilerDispatchImportPage />);
+
+    expect(
+      screen.getByRole("heading", { name: "In-process profiler import" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Synthetic import, bounded checkpoint qualified")).toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Process-local profiler agent mapping" }))
+      .toHaveTextContent("7001");
+    expect(screen.getByText("MI300X bounded importer checkpoint qualified")).toBeInTheDocument();
+    expect(screen.getByText(/bounded checkpoint is qualified at 4ec8ff8e52/u)).toBeInTheDocument();
+    expect(screen.getAllByText(/did not directly observe interpreter/u)).not.toHaveLength(0);
+    expect(
+      screen.getByRole("heading", { name: "Explore typed absence without a service claim" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/deterministic non-wire, non-authoritative examples/u))
+      .toBeInTheDocument();
+    expect(screen.getByText(/not a production protocol or service endpoint/u)).toBeInTheDocument();
+    await user.click(screen.getByText("Read the exact bounded qualification results"));
+    expect(screen.getByText("cargo test -p fe2o3-semantic-import --all-targets"))
+      .toBeInTheDocument();
+    expect(screen.getByText(/cargo-fe2o3: 339 passed; 1 ignored/u)).toBeInTheDocument();
+
+    const dialects = screen.getByRole("tablist", { name: "rocprof source dialect" });
+    const installed = within(dialects).getByRole("tab", { name: "Installed JSON" });
+    installed.focus();
+    await user.keyboard("{ArrowRight}");
+    expect(within(dialects).getByRole("tab", { name: "Forward JSON" })).toHaveFocus();
+    expect(within(dialects).getByRole("tab", { name: "Forward JSON" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    await user.click(within(dialects).getByRole("tab", { name: "Current CSV" }));
+    expect(screen.getByRole("tabpanel", { name: "Current CSV" }))
+      .toHaveTextContent("Stream_Id");
+
+    const queries = screen.getByRole("tablist", {
+      name: "Illustrative profiler query exercise",
+    });
+    await user.click(within(queries).getByRole("tab", { name: "query capability" }));
+    const queryPanel = screen.getByRole("tabpanel", { name: "query capability" });
+    expect(queryPanel).toHaveTextContent('"status": "unavailable"');
+    expect(queryPanel).toHaveTextContent('"production_service_available": false');
+    expect(queryPanel).toHaveTextContent(
+      "att_decoder_requires_mutable_directory_namespace_without_sealed_route",
+    );
+    expect(
+      screen.getByRole("link", { name: /Return to the composite GPU debugger workbench/u }),
+    ).toHaveAttribute("href", "#/debugger/live-kfd");
+    expect(
+      screen.getByRole("table", { name: "Profiler import truth and nonclaims" }),
+    ).toHaveTextContent("Real GPU rocprof roundtrip");
+    expect(
+      screen.getByRole("table", { name: "Profiler import truth and nonclaims" }),
+    ).toHaveTextContent("blocked on #182");
+    expect(
+      screen.getByRole("table", { name: "Profiler import truth and nonclaims" }),
+    ).toHaveTextContent("Protected source/ISA 3x2 matrix");
+    expect(screen.getByText(/generic-core qualify only the bounded importer/u))
+      .toHaveTextContent("T3 remains open");
+    expect(screen.getByText(/grants no compiler, runtime, artifact/u)).toHaveTextContent(
+      "GPU-execution authority",
+    );
   });
 });
 

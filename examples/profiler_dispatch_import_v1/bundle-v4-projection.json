@@ -1,0 +1,31 @@
+{
+  "projection_schema": "fe2o3-profiler-import-bundle-tutorial-v1",
+  "protocol_wire_record": false,
+  "identity_semantics": "schematic_labels_not_content_identities",
+  "production_schema_described": "fe2o3-semantic-profiler-bundle-v4",
+  "bundle_identity": "schematic:bundle",
+  "run_identity": "schematic:run",
+  "capture": {
+    "embedded": true,
+    "identity": "schematic:capture",
+    "source_identity": "schematic:source",
+    "binding_identity": "schematic:binding"
+  },
+  "coverage": {
+    "runs": 2,
+    "devices": 2,
+    "imported_dispatches": 2
+  },
+  "authority": {
+    "compiler": false,
+    "runtime": false,
+    "artifact": false,
+    "source_map": false,
+    "kernel_symbol": false,
+    "source_isa": false,
+    "att": false,
+    "performance": false,
+    "gpu_execution": false,
+    "producer_attestation": false
+  }
+}

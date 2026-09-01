@@ -30,6 +30,19 @@ import {
   liveKfdSources,
   liveWorkbenchBackends,
 } from "../src/content/live-kfd-debugger";
+import {
+  profilerImportBundleProjection,
+  profilerImportCaptureProjection,
+  profilerImportDialectProjection,
+  profilerImportManifest,
+  profilerImportMilestone,
+  profilerImportReceiptProjection,
+  profilerImportRequests,
+  profilerImportResponses,
+  profilerImportSources,
+  profilerImportSourceUrl,
+  validateProfilerImportTutorial,
+} from "../src/content/profiler-dispatch-import";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
 import { functionalRefinementPublication } from "../src/content/functional-refinement-publication";
 import {
@@ -585,6 +598,148 @@ describe("live KFD debugger milestone", () => {
     expect(liveKfdCurrentImplementationPaths).toContain(
       "crates/fe2o3-semantic-query/src/profiler_query.rs",
     );
+  });
+});
+
+describe("in-process profiler dispatch import milestone", () => {
+  it("admits exact tutorial projections without elevating their authority", () => {
+    expect(validateProfilerImportTutorial()).toEqual([]);
+    expect(profilerImportMilestone).toMatchObject({
+      schema: "fe2o3-profiler-dispatch-import-tutorial-milestone-v1",
+      status: "implemented-qualified-bounded-checkpoint",
+      issue: 215,
+      issueState: "open",
+      compilerRevision: "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+      fixtureKind: "synthetic-deterministic-schematic-unexecuted",
+      liveValidation: {
+        host: "mi300x",
+        machine: "MI300X",
+        state: "bounded-importer-sealed-loader-qualified",
+        checkpointRevision: "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+        observed: [
+          "sealed-route-validation",
+          "target-mapping",
+          "sdk-core-mapping",
+          "sdk-tool-mapping",
+          "no-internal-role-variable-leakage",
+        ],
+        notObserved: [
+          "interpreter-mapping",
+          "bootstrap-or-adapter-mapping",
+          "real-gpu-dispatch-rocprofv3-to-import-roundtrip",
+          "att-decode",
+          "performance",
+        ],
+        gpuDispatchObserved: false,
+      },
+      qualification: {
+        scope: "bounded-in-process-importer-and-sealed-loader-checkpoint",
+        state: "qualified",
+        genericCore: {
+          command: "bash scripts/ci-local.sh generic-core",
+          result: "passed",
+          softNofile: 1024,
+        },
+      },
+      remainingBoundaries: [
+        "no-real-gpu-dispatch-rocprofv3-to-import-roundtrip",
+        "att-decoder-unavailable-without-mutation-proof-sealed-route",
+        "protected-source-isa-3x2-matrix-not-run",
+        "t3-profiler-track-not-closed",
+        "t5-distributed-overlap-blocked-on-issue-182-producer",
+      ],
+    });
+
+    const dialects = profilerImportDialectProjection.dialects as Array<Record<string, unknown>>;
+    expect(dialects.map((dialect) => dialect.id)).toEqual([
+      "rocprofv3_json_installed1_1_97f5574",
+      "rocprofv3_json_forward_848868d",
+      "rocprofv3_csv_current22_column_stream_id",
+    ]);
+    const csvHeaders = dialects[2].headers as string[];
+    expect(csvHeaders).toHaveLength(22);
+    expect(csvHeaders[3]).toBe("Stream_Id");
+    expect(csvHeaders[5]).toBe("Dispatch_Id");
+
+    const bindings = profilerImportDialectProjection.json_process_local_bindings as Array<Record<string, unknown>>;
+    expect(bindings.map((binding) => binding.opaque_agent_handle)).toEqual([7001, 7001]);
+    expect(bindings.map((binding) => binding.direct_kfd_node)).toEqual([1, 2]);
+    expect(bindings.map((binding) => binding.process_index)).toEqual([0, 1]);
+
+    expect(profilerImportCaptureProjection).toMatchObject({
+      protocol_wire_record: false,
+      identity_semantics: "schematic_labels_not_content_identities",
+      capture_identity: "schematic:capture",
+      publication_shape: "embedded_in_bundle_not_a_separate_file",
+      truth: {
+        source_records: "synthetic",
+        gpu_execution: "unavailable",
+        performance_conclusion: "unavailable",
+        authority_evidence: false,
+      },
+    });
+    const completeFalseAuthority = {
+      compiler: false,
+      runtime: false,
+      artifact: false,
+      source_map: false,
+      kernel_symbol: false,
+      source_isa: false,
+      att: false,
+      performance: false,
+      gpu_execution: false,
+      producer_attestation: false,
+    };
+    expect(profilerImportBundleProjection).toMatchObject({
+      protocol_wire_record: false,
+      identity_semantics: "schematic_labels_not_content_identities",
+      bundle_identity: "schematic:bundle",
+      capture: { embedded: true },
+      authority: completeFalseAuthority,
+    });
+    expect(profilerImportReceiptProjection).toMatchObject({
+      protocol_wire_record: false,
+      identity_semantics: "schematic_labels_not_content_identities",
+      receipt_identity: "schematic:receipt",
+      authority: completeFalseAuthority,
+    });
+    expect(profilerImportManifest).toContain("manifest-publication: last");
+    expect(profilerImportManifest).toContain("identity-labels: schematic-not-content-identities");
+    expect(profilerImportRequests).toHaveLength(3);
+    expect(
+      profilerImportRequests.every((request) =>
+        request.schema === "fe2o3-profiler-import-query-exercise-request-v1" &&
+        request.protocol_wire_record === false &&
+        request.production_service_available === false &&
+        request.exercise_kind === "deterministic_illustrative_non_wire"
+      ),
+    ).toBe(true);
+    expect(profilerImportResponses[0]).toMatchObject({
+      status: "illustrative_result",
+      production_service_available: false,
+    });
+    expect(profilerImportResponses[2]).toMatchObject({
+      status: "unavailable",
+      truth_origin: "unavailable",
+      production_service_available: false,
+      reason: "att_decoder_requires_mutable_directory_namespace_without_sealed_route",
+    });
+    expect(profilerImportSourceUrl("crates/cargo-fe2o3/src/profile_command.rs")).toBe(
+      "https://github.com/harsh-nod/fe2o3/blob/4ec8ff8e52abb3bde637f254d933dd250d45ab28/crates/cargo-fe2o3/src/profile_command.rs",
+    );
+    expect(profilerImportSources.map((source) => source.path)).toEqual(
+      expect.arrayContaining([
+        "crates/fe2o3-semantic-import/src/lib.rs",
+        "crates/fe2o3-semantic-import/src/raw_source_relation.rs",
+        "crates/fe2o3-semantic-import/src/bin/fe2o3-profiler-import.rs",
+        "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-installed-97f5574-kernel-dispatch-schema.json",
+        "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-forward-848868-kernel-dispatch-schema.json",
+        "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-current-kernel-dispatch.csv",
+        "docs/source-isa-characteristic-acceptance-v2.md",
+        "crates/fe2o3-semantic-query/src/distributed_overlap_v1.rs",
+      ]),
+    );
+    expect(() => profilerImportSourceUrl("../Cargo.toml")).toThrow("repository-relative");
   });
 });
 

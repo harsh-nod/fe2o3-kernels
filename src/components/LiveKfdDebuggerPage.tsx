@@ -154,6 +154,10 @@ export function LiveKfdDebuggerPage() {
           Inspect compile-time source/ISA observations as typed JSONL
           <ArrowRight size={15} aria-hidden="true" />
         </a>
+        <a className="source-isa-agent-live-link" href="#/debugger/profiler-import">
+          Follow strict rocprof import through durable publication
+          <ArrowRight size={15} aria-hidden="true" />
+        </a>
       </section>
 
       <section className="debug-comparison live-kfd-comparison" aria-labelledby="live-kfd-comparison-heading">

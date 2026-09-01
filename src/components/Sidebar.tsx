@@ -9,6 +9,7 @@ import {
   History,
   House,
   Network,
+  ScanLine,
   X,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -107,6 +108,9 @@ export function Sidebar({
         </NavLink>
         <NavLink onClick={onNavigate} to="/debugger/live-kfd">
           <Bug size={16} /> Live KFD debugger
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/debugger/profiler-import">
+          <ScanLine size={16} /> Profiler import
         </NavLink>
         <NavLink onClick={onNavigate} to="/debugger/source-isa-agent">
           <Bot size={16} /> Agent source/ISA

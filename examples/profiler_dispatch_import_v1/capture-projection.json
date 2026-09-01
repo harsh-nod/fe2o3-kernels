@@ -1,0 +1,46 @@
+{
+  "projection_schema": "fe2o3-profiler-import-capture-tutorial-v1",
+  "protocol_wire_record": false,
+  "identity_semantics": "schematic_labels_not_content_identities",
+  "publication_shape": "embedded_in_bundle_not_a_separate_file",
+  "capture_identity": "schematic:capture",
+  "source_identity": "schematic:source",
+  "source_dialect": "rocprofv3_json_installed1_1_97f5574",
+  "runs": [
+    {
+      "process_index": 0,
+      "source_process_id": 4100,
+      "dispatches": [
+        {
+          "dispatch_id": 1,
+          "opaque_agent_handle": 7001,
+          "kfd_node": 1,
+          "kernel_name": "tutorial_a",
+          "start_timestamp": 100,
+          "end_timestamp": 180
+        }
+      ]
+    },
+    {
+      "process_index": 1,
+      "source_process_id": 4200,
+      "dispatches": [
+        {
+          "dispatch_id": 1,
+          "opaque_agent_handle": 7001,
+          "kfd_node": 2,
+          "kernel_name": "tutorial_b",
+          "start_timestamp": 240,
+          "end_timestamp": 330
+        }
+      ]
+    }
+  ],
+  "truth": {
+    "source_records": "synthetic",
+    "gpu_execution": "unavailable",
+    "duration_unit": "opaque_collector_ticks",
+    "performance_conclusion": "unavailable",
+    "authority_evidence": false
+  }
+}

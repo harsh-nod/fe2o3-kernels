@@ -1,0 +1,101 @@
+{
+  "schema": "fe2o3-profiler-dispatch-import-tutorial-milestone-v1",
+  "status": "implemented-qualified-bounded-checkpoint",
+  "reviewedOn": "2026-09-01",
+  "issue": 215,
+  "issueState": "open",
+  "compilerRevision": "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+  "target": "gfx942:xnack-unobserved",
+  "fixtureKind": "synthetic-deterministic-schematic-unexecuted",
+  "liveValidation": {
+    "host": "mi300x",
+    "machine": "MI300X",
+    "state": "bounded-importer-sealed-loader-qualified",
+    "checkpointRevision": "4ec8ff8e52abb3bde637f254d933dd250d45ab28:3d786284028798b591bf24ca5179898b99ba8139",
+    "test": "installed_collector_executes_sealed_entry_images_without_role_env_leakage",
+    "observed": [
+      "sealed-route-validation",
+      "target-mapping",
+      "sdk-core-mapping",
+      "sdk-tool-mapping",
+      "no-internal-role-variable-leakage"
+    ],
+    "notObserved": [
+      "interpreter-mapping",
+      "bootstrap-or-adapter-mapping",
+      "real-gpu-dispatch-rocprofv3-to-import-roundtrip",
+      "att-decode",
+      "performance"
+    ],
+    "gpuDispatchObserved": false
+  },
+  "mirrors": [
+    "harsh-nod/fe2o3@refs/heads/main",
+    "powderluv/fe2o3@refs/heads/main"
+  ],
+  "qualification": {
+    "focusedResults": [
+      {
+        "command": "cargo fmt --all -- --check",
+        "result": "passed"
+      },
+      {
+        "command": "cargo check -p cargo-fe2o3 --all-targets",
+        "result": "passed"
+      },
+      {
+        "command": "cargo test -p fe2o3-semantic-import --all-targets",
+        "result": "72 passed"
+      },
+      {
+        "command": "cargo test -p cargo-fe2o3 --bin cargo-fe2o3 profile_command",
+        "result": "28 passed"
+      },
+      {
+        "command": "FE2O3_REQUIRE_GFX942_PROFILE_TEST=1 cargo test -p cargo-fe2o3 --test profile_cli",
+        "result": "19 passed"
+      },
+      {
+        "command": "cargo test -p fe2o3-semantic-query --all-targets",
+        "result": "99 passed"
+      },
+      {
+        "command": "cargo test -p fe2o3-debug-cli --test agent_reference_client_v1",
+        "result": "4 passed"
+      },
+      {
+        "command": "bash scripts/tests/hosted-parity-ci.sh",
+        "result": "passed"
+      }
+    ],
+    "genericCore": {
+      "command": "bash scripts/ci-local.sh generic-core",
+      "result": "passed",
+      "softNofile": 1024,
+      "summaries": [
+        "cargo-fe2o3: 339 passed; 1 ignored",
+        "profile_cli: 19/19 passed",
+        "Worker V3: 50 passed; 1 ignored",
+        "broad CPU, doctest, backend, UI, policy, rustc-codegen, and S09 partitions passed"
+      ]
+    },
+    "scope": "bounded-in-process-importer-and-sealed-loader-checkpoint",
+    "state": "qualified"
+  },
+  "remainingBoundaries": [
+    "no-real-gpu-dispatch-rocprofv3-to-import-roundtrip",
+    "att-decoder-unavailable-without-mutation-proof-sealed-route",
+    "protected-source-isa-3x2-matrix-not-run",
+    "t3-profiler-track-not-closed",
+    "t5-distributed-overlap-blocked-on-issue-182-producer"
+  ],
+  "fixtureSha256": {
+    "dialects": "5eb5494f0f5669dfc22f06cf4fda34add2d7902123f3e3f283accf6cabdf8c18",
+    "capture": "577e3c524f471aeb2c17e365bd0934fd46d50b6ee5dede0103e0ee9708367d94",
+    "bundle": "b79de67ee2bf93b213ec021598e04ecb70bc9f28f192e43d0f352a09b7fc5456",
+    "receipt": "86b3680e3ae8b0104cf17dbc17e1a44542e1b319fd997a4105e58ec4c5fc4c66",
+    "manifest": "8e763aa3116531c20023a6ab95005fff3728c78ca9abbbfd2feeebe3595d16d5",
+    "requests": "86b2e11aa143e65b31694b27b9b65afc4469b9eaa99fbe8205d534c509bb27e8",
+    "responses": "6094724839e781c875b786e9a224b6b72e08b6149328821122086e70919dc503"
+  }
+}

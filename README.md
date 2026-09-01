@@ -53,6 +53,31 @@ compiler, artifact, runtime, hardware-execution, complete-machine-coverage, or
 semantic-refinement authority. The protected 3x2 source/ISA matrix has not run,
 and issue #215 remains open.
 
+The **In-process profiler import** reference at
+`#/debugger/profiler-import` teaches the plan-bound rocprof collection and
+strict installed/forward JSON plus current 22-column CSV import contract. Its
+checked-in records are deterministic tutorial projections: two synthetic,
+unexecuted process records intentionally reuse one opaque agent handle while
+mapping to different synthetic KFD nodes. A separate bounded MI300X checkpoint
+passed the exact focused checks and frozen `generic-core` route at soft
+`nofile=1024`. It validated the sealed route with a Python target and directly
+observed sealed target, SDK core, and SDK tool mappings with no internal
+role-variable leakage. It did not directly observe interpreter, bootstrap, or
+collector-adapter mappings. The GPU-gated CLI suite covers KFD target identity,
+installed rocprof planning/import policy, and fake collector records; it did not
+run a real GPU-dispatch rocprofv3-to-import roundtrip. The exact bound
+compiler checkpoint is commit
+`4ec8ff8e52abb3bde637f254d933dd250d45ab28`, tree
+`3d786284028798b591bf24ca5179898b99ba8139`, as recorded in
+`config/profiler-dispatch-import-tutorial.json`. This qualifies only the bounded
+importer/sealed-loader checkpoint, not the T3 profiler track. ATT remains
+unavailable because its decoder requires a mutable directory namespace for
+which no mutation-proof sealed route exists. The
+protected 3x2 source/ISA matrix has not run, and T5 distributed overlap remains
+blocked on the issue #182 typed producer. The query JSONL on the page is a
+deterministic illustrative non-wire, non-authoritative exercise, not a
+production protocol, service endpoint, or operation-availability claim.
+
 The checked-in publication gate is pinned to immutable implementation-evidence
 commit `ecf7b17f819021708d9c59ebe39a4daf9eb2562c`, tree
 `2156423b9350d66cfaa8207133768e323111b507`. Deployment requires

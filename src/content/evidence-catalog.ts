@@ -6,6 +6,11 @@ import {
 } from "./functional-refinement-publication";
 import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
 import {
+  profilerImportFixtureDirectory,
+  profilerImportMilestone,
+  profilerImportSources,
+} from "./profiler-dispatch-import";
+import {
   sourceIsaCharacteristicMilestone,
   sourceIsaCharacteristicSources,
   sourceIsaAgentMilestone,
@@ -27,6 +32,12 @@ export interface GitEvidenceSource {
   displayedSha256?: string;
   displayedSource?: string;
   displayedFragments?: string[];
+}
+
+export interface LocalEvidenceArtifact {
+  label: string;
+  path: string;
+  sha256: string;
 }
 
 const claims: GitEvidenceObject[] = lessons.flatMap((lesson) =>
@@ -150,6 +161,31 @@ const sourceIsaCharacteristicEvidence: GitEvidenceObject = {
   sourcePaths: sourceIsaCharacteristicSources.map((source) => source.path),
 };
 
+const profilerRevision = profilerImportMilestone.compilerRevision.split(":");
+const profilerImportEvidence: GitEvidenceObject[] =
+  profilerRevision.length === 2 && profilerRevision.every((part) => /^[0-9a-f]{40}$/u.test(part))
+    ? [{
+        label: "in-process profiler dispatch import milestone",
+        commit: profilerRevision[0],
+        tree: profilerRevision[1],
+        sourcePaths: profilerImportSources.map((source) => source.path),
+      }]
+    : [];
+
+const profilerImportLocalArtifacts: LocalEvidenceArtifact[] = [
+  ["profiler dialect projection", "dialects.json", profilerImportMilestone.fixtureSha256.dialects],
+  ["embedded Capture projection", "capture-projection.json", profilerImportMilestone.fixtureSha256.capture],
+  ["Profiler Bundle V4 projection", "bundle-v4-projection.json", profilerImportMilestone.fixtureSha256.bundle],
+  ["dispatch import receipt projection", "receipt-v1-projection.json", profilerImportMilestone.fixtureSha256.receipt],
+  ["manifest-last projection", "publication-manifest.txt", profilerImportMilestone.fixtureSha256.manifest],
+  ["illustrative profiler query requests", "agent-requests.jsonl", profilerImportMilestone.fixtureSha256.requests],
+  ["illustrative profiler query responses", "agent-responses.jsonl", profilerImportMilestone.fixtureSha256.responses],
+].map(([label, file, sha256]) => ({
+  label,
+  path: `${profilerImportFixtureDirectory}/${file}`,
+  sha256,
+}));
+
 export const evidenceCatalog = {
   gitObjects: [
     ...claims,
@@ -158,7 +194,9 @@ export const evidenceCatalog = {
     functionalRefinementSources,
     sourceIsaAgentEvidence,
     sourceIsaCharacteristicEvidence,
+    ...profilerImportEvidence,
   ],
+  localArtifacts: profilerImportLocalArtifacts,
   sources: [
     ...tabs,
     ...semanticCorrectnessDigests,

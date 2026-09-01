@@ -59,6 +59,22 @@ describe("application shell", () => {
     expect(screen.getByRole("tab", { name: "Intervals" })).toBeInTheDocument();
   });
 
+  it("routes to the in-process profiler import reference", async () => {
+    renderApp("/debugger/profiler-import");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "In-process profiler import",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Synthetic import, bounded checkpoint qualified")).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: "Installed JSON" })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(screen.getByRole("tab", { name: "query capability" })).toBeInTheDocument();
+  });
+
   it("persists completed lesson progress", async () => {
     const user = userEvent.setup();
     renderApp();

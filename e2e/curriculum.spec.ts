@@ -463,6 +463,61 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
   expect(dimensions.consoleWidth).toBeLessThanOrEqual(dimensions.consoleViewport);
 });
 
+test("profiler import tutorial preserves sealed execution and evidence boundaries", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#/debugger/profiler-import");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "In-process profiler import" }),
+  ).toBeVisible();
+  await expect(page.getByText("Synthetic import, bounded checkpoint qualified")).toBeVisible();
+  await expect(page.getByRole("table", { name: "Process-local profiler agent mapping" }))
+    .toContainText("7001");
+  await expect(page.getByText("MI300X bounded importer checkpoint qualified")).toBeVisible();
+  await expect(page.getByText(/bounded checkpoint is qualified at 4ec8ff8e52/u)).toBeVisible();
+  await expect(page.getByText(/did not directly observe interpreter/u).first()).toBeVisible();
+  await expect(page.getByText(/deterministic non-wire, non-authoritative examples/u)).toBeVisible();
+  await expect(page.getByText(/not a production protocol or service endpoint/u)).toBeVisible();
+  await expect(page.getByText("ATT decoder")).toBeVisible();
+  await expect(page.getByText("requires mutable namespace; no sealed route")).toBeVisible();
+
+  const installedDialect = page.getByRole("tab", { name: "Installed JSON" });
+  await installedDialect.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.getByRole("tab", { name: "Forward JSON" })).toBeFocused();
+  await expect(page.getByRole("tab", { name: "Forward JSON" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await page.getByRole("tab", { name: "Current CSV" }).click();
+  await expect(page.getByRole("tabpanel", { name: "Current CSV" }))
+    .toContainText("Stream_Id");
+  await page.getByRole("tab", { name: "query capability" }).click();
+  await expect(page.getByRole("tabpanel", { name: "query capability" }))
+    .toContainText("att_decoder_requires_mutable_directory_namespace_without_sealed_route");
+  await expect(page.getByRole("tabpanel", { name: "query capability" }))
+    .toContainText('"production_service_available": false');
+  await expect(page.getByRole("table", { name: "Profiler import truth and nonclaims" }))
+    .toContainText("Real GPU rocprof roundtrip");
+  await expect(page.getByRole("table", { name: "Profiler import truth and nonclaims" }))
+    .toContainText("blocked on #182");
+  await expect(page.getByRole("table", { name: "Profiler import truth and nonclaims" }))
+    .toContainText("Protected source/ISA 3x2 matrix");
+  await expect(page.locator(".profiler-import-nonclaims"))
+    .toContainText("GPU-execution authority");
+
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  await page.screenshot({
+    path: testInfo.outputPath("profiler-import.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+});
+
 test("search traps focus and restores its trigger", async ({ page }) => {
   await page.goto("./#/");
   await expect(

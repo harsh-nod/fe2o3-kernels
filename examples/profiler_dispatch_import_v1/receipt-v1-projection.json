@@ -1,0 +1,44 @@
+{
+  "projection_schema": "fe2o3-profiler-import-receipt-tutorial-v1",
+  "protocol_wire_record": false,
+  "identity_semantics": "schematic_labels_not_content_identities",
+  "production_schema_described": "fe2o3-profile-dispatch-import-receipt-v1",
+  "receipt_identity": "schematic:receipt",
+  "bundle_identity": "schematic:bundle",
+  "capture_identity": "schematic:capture",
+  "source_identity": "schematic:source",
+  "binding_identity": "schematic:binding",
+  "source_agent_mappings": [
+    {
+      "process_index": 0,
+      "source_process_id": 4100,
+      "opaque_agent_handle": 7001,
+      "kfd_node": 1
+    },
+    {
+      "process_index": 1,
+      "source_process_id": 4200,
+      "opaque_agent_handle": 7001,
+      "kfd_node": 2
+    }
+  ],
+  "readmission": {
+    "regenerate_source": "exact_compare",
+    "regenerate_binding": "exact_compare",
+    "regenerate_capture": "exact_compare",
+    "regenerate_bundle": "exact_compare",
+    "regenerate_receipt": "exact_compare"
+  },
+  "authority": {
+    "compiler": false,
+    "runtime": false,
+    "artifact": false,
+    "source_map": false,
+    "kernel_symbol": false,
+    "source_isa": false,
+    "att": false,
+    "performance": false,
+    "gpu_execution": false,
+    "producer_attestation": false
+  }
+}
