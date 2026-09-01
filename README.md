@@ -123,8 +123,8 @@ deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
 
 The checked-in publication gate is pinned to immutable implementation-evidence
-commit `ecf7b17f819021708d9c59ebe39a4daf9eb2562c`, tree
-`2156423b9350d66cfaa8207133768e323111b507`. Deployment requires
+commit `081fc345a07bf8a1eaf162f32b6a46daf177fa33`, tree
+`94e265ba1fb835a24a764d822e55b6c1432d73ec`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
 commit object to resolve to the exact pinned tree. Either ref may advance to a

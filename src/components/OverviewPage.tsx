@@ -33,9 +33,8 @@ export function OverviewPage() {
         <p className="lesson-breadcrumb">Community launch guide</p>
         <h1>fe2o3 kernels</h1>
         <p>
-          The authoritative learning path for fe2o3: write safe Rust GPU
-          kernels, run the current examples, and inspect the evidence behind
-          every claim.
+          Write safe Rust GPU kernels, run the current CPU-first workflows, and
+          inspect the evidence behind every claim before hardware execution.
         </p>
         <div className="overview-snapshot" aria-label="Current compiler snapshot">
           <div>
@@ -54,9 +53,9 @@ export function OverviewPage() {
       </header>
 
       <nav className="overview-actions" aria-label="Primary destinations">
-        <Link to="/lesson/gfx942-setup">
+        <Link to="/getting-started">
           <BookOpen size={19} aria-hidden="true" />
-          <span><strong>Start tutorial</strong><small>Setup and first kernel</small></span>
+          <span><strong>Start tutorial</strong><small>Rust source to CPU replay</small></span>
           <ArrowRight size={17} aria-hidden="true" />
         </Link>
         <a href="#run-today">

@@ -1,0 +1,65 @@
+{
+  "schema": "fe2o3-getting-started-validation-projection-v1",
+  "fixture_kind": "expected_projection_not_execution_capture",
+  "source": {
+    "crate": "fe2o3_fill",
+    "path": "examples/fill/src/lib.rs",
+    "kernel": "fill",
+    "target": "gfx942"
+  },
+  "request": {
+    "grid": [4, 1, 1],
+    "workgroup": [64, 1, 1],
+    "argument": {
+      "ordinal": 0,
+      "element": "f32",
+      "access": "read_write",
+      "alignment": 4,
+      "input_bytes": "0x00000000000000000000000000000000"
+    }
+  },
+  "expected_result": {
+    "schema": "fe2o3-simulation-result-v1",
+    "status": "ok",
+    "authority": "observation_only",
+    "simulated": true,
+    "hardware_observed": false,
+    "hardware_validation": false,
+    "performance_prediction": false,
+    "output": {
+      "value": "42.5f32",
+      "element_little_endian_bytes": "00002a42",
+      "buffer_bytes": "0x00002a4200002a4200002a4200002a42",
+      "elements": 4
+    },
+    "counts": {
+      "invocations_executed": 4,
+      "workgroups_visited": 1,
+      "scheduled_slots_visited": 64
+    }
+  },
+  "debugger_projection": {
+    "provenance": "compiler_bundle_bound",
+    "provenance_scope": "exact local map and KIR content association, not protected compiler authentication",
+    "dispatch": "fill",
+    "workgroup": [0, 0, 0],
+    "logical_wave": {
+      "ordinal": 0,
+      "width": 64,
+      "active_mask": "0x000000000000000f"
+    },
+    "selected_work_item": [2, 0, 0],
+    "selected_memory": {
+      "allocation_ordinal": 1,
+      "generation": 0,
+      "offset": 8,
+      "bytes": "0x00002a42"
+    }
+  },
+  "non_claims": [
+    "No HSACO is published.",
+    "No GPU is opened, loaded, or dispatched.",
+    "No CPU/GPU equivalence is established.",
+    "No performance prediction is made."
+  ]
+}

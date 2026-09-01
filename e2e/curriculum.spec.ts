@@ -26,6 +26,50 @@ const exactDebuggerRequests = readFileSync(
   .split("\n")
   .map((line) => JSON.parse(line) as Record<string, unknown>);
 
+test("community quick start is truthful and responsive", async ({ page }, testInfo) => {
+  await page.goto("./#/getting-started");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Run a Rust kernel without a GPU" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("No-GPU quick start commands")).toContainText(
+    "bash scripts/quickstart.sh no-gpu",
+  );
+  await expect(page.getByLabel("Typed simulation result")).toContainText(
+    "observation_only",
+  );
+  await expect(page.getByLabel("Debugger hierarchy and semantic state")).toContainText(
+    "logical only",
+  );
+  await expect(page.getByLabel("Work-item activity")).toContainText("4..63");
+  await expect(page.getByRole("table", { name: "Semantic debugger differentiators" }))
+    .toContainText("Versioned JSONL queries");
+  await expect(
+    page.getByRole("heading", { name: "A diagnostic, not a GPU quick start" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("No-GPU workflow non-claims")).toContainText(
+    "No performance prediction is made.",
+  );
+  await expect(page.getByText("Bash + GNU realpath")).toBeVisible();
+  await expect(page.getByText("Rust compiler workspace build space")).toBeVisible();
+  const doctor = page.locator(".getting-started-doctor");
+  await expect(doctor).toContainText("bash scripts/quickstart.sh doctor");
+  await expect(doctor).toContainText("Schematic output shape");
+  await expect(doctor).toContainText("optional-present-unvalidated");
+  await expect(page.getByText("not an execution capture", { exact: false }))
+    .toBeVisible();
+
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  await page.screenshot({
+    path: testInfo.outputPath("community-getting-started.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+});
+
 test("curriculum is responsive, navigable, and visually nonempty", async ({
   page,
 }, testInfo) => {

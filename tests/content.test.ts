@@ -4,6 +4,15 @@ import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
 import {
+  gettingStartedBoundaries,
+  gettingStartedBinding,
+  gettingStartedCommands,
+  gettingStartedFixture,
+  gettingStartedHierarchy,
+  gettingStartedResult,
+  validateGettingStartedTutorial,
+} from "../src/content/getting-started";
+import {
   DEBUG_SIM_ARTIFACT_SHA256,
   DEBUG_SIM_COMPILER_PIN,
   debugSimCounterFixture,
@@ -124,6 +133,78 @@ import {
   validateSourceMilestoneCatalog,
 } from "../src/content/source-milestones";
 import { validateCurriculum } from "../src/content/validate";
+
+describe("community getting started tutorial", () => {
+  it("pins the source-to-CPU command and its non-authoritative result", () => {
+    expect(validateGettingStartedTutorial()).toEqual([]);
+    expect(gettingStartedCommands).toMatchObject({
+      noGpu: "bash scripts/quickstart.sh no-gpu",
+      doctor: "bash scripts/quickstart.sh doctor",
+      gfx942Preflight: "bash scripts/quickstart.sh gfx942-preflight",
+    });
+    expect(gettingStartedResult).toMatchObject({
+      schema: "fe2o3-simulation-result-v1",
+      status: "ok",
+      authority: "observation_only",
+      simulated: true,
+      hardware_observed: false,
+      hardware_validation: false,
+      performance_prediction: false,
+      value: "42.5f32",
+      littleEndianBytes: "00002a42",
+    });
+    expect(gettingStartedHierarchy.map((level) => level.level)).toEqual([
+      "Dispatch",
+      "Workgroup",
+      "Logical wave",
+    ]);
+    expect(gettingStartedBoundaries).toEqual([
+      "No HSACO is published.",
+      "No GPU is opened, loaded, or dispatched.",
+      "No CPU/GPU equivalence is established.",
+      "No performance prediction is made.",
+    ]);
+    expect(gettingStartedBinding).toMatchObject({
+      schema: "fe2o3-getting-started-tutorial-binding-v1",
+      reviewedOn: "2026-09-01",
+      compilerCommitAuthority: "config/publication-gate.json#requiredCommit",
+      fixture: {
+        path: "examples/getting_started_v1/expected-projection.json",
+        sha256: "b23169971701a37a9cf0a1f06eb41f3a461f334e3114c6915c119f5e579b5940",
+      },
+      cargoChildEnvironment: {
+        FE2O3_HIP_SYS_DISABLE: "1",
+        FE2O3_HSA_RUNTIME_DISABLE: "1",
+      },
+    });
+    expect(gettingStartedBinding.compilerSourceBindings.map(({ path }) => path))
+      .toEqual([
+        "scripts/quickstart.sh",
+        "scripts/tests/quickstart.sh",
+        "scripts/quickstart/fill-request.json",
+        "examples/fill/src/lib.rs",
+        "crates/cargo-fe2o3/src/doctor.rs",
+        "crates/fe2o3-debug-cli/README.md",
+      ]);
+    expect(gettingStartedFixture).toMatchObject({
+      fixture_kind: "expected_projection_not_execution_capture",
+      debugger_projection: {
+        provenance: "compiler_bundle_bound",
+        logical_wave: { active_mask: "0x000000000000000f" },
+        selected_memory: { offset: 8, bytes: "0x00002a42" },
+      },
+    });
+    const fixtureBytes = readFileSync(
+      new URL(
+        `../${gettingStartedBinding.fixture.path}`,
+        import.meta.url,
+      ),
+    );
+    expect(createHash("sha256").update(fixtureBytes).digest("hex")).toBe(
+      gettingStartedBinding.fixture.sha256,
+    );
+  });
+});
 
 describe("agent-native source/ISA inspection milestone", () => {
   it("pins the exact observation-only transcript and open qualification boundary", () => {
@@ -2498,7 +2579,12 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
       )?.detail,
-    ).toContain("profiler UI remain open");
+    ).toContain("Semantic Profiler Bundle V4");
+    expect(
+      currentState.capabilities.find(
+        (capability) => capability.id === "semantic-debug-profile",
+      )?.detail,
+    ).toContain("real application-dispatch rocprofv3-to-import round trip");
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "cpu-semantic-simulation",
@@ -4112,15 +4198,15 @@ describe("implementation progress integrity", () => {
     );
     expect(progressSnapshot.auditedCommit).toBe(FE2O3_PIN.commit);
     expect(progressSnapshot).toMatchObject({
-      reviewedOn: "2026-08-28",
+      reviewedOn: "2026-09-01",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
-      eventualPublicTree: "2156423b9350d66cfaa8207133768e323111b507",
+      eventualPublicCommit: "081fc345a07bf8a1eaf162f32b6a46daf177fa33",
+      eventualPublicTree: "94e265ba1fb835a24a764d822e55b6c1432d73ec",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
-        requiredTree: "2156423b9350d66cfaa8207133768e323111b507",
+        requiredCommit: "081fc345a07bf8a1eaf162f32b6a46daf177fa33",
+        requiredTree: "94e265ba1fb835a24a764d822e55b6c1432d73ec",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -4755,7 +4841,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      "081fc345a07bf8a1eaf162f32b6a46daf177fa33",
     );
 
     const lesson = curriculum

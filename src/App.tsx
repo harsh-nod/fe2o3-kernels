@@ -22,6 +22,11 @@ const GlossaryPage = lazy(() =>
     default: module.GlossaryPage,
   })),
 );
+const GettingStartedPage = lazy(() =>
+  import("./components/GettingStartedPage").then((module) => ({
+    default: module.GettingStartedPage,
+  })),
+);
 const LessonPage = lazy(() =>
   import("./components/LessonPage").then((module) => ({
     default: module.LessonPage,
@@ -108,6 +113,9 @@ function pageTitle(pathname: string): string {
   if (pathname === "/architecture") return "Architecture | fe2o3 kernels";
   if (pathname === "/status") return "Implementation status | fe2o3 kernels";
   if (pathname === "/glossary") return "Glossary | fe2o3 kernels";
+  if (pathname === "/getting-started") {
+    return "Getting started | fe2o3 kernels";
+  }
   if (pathname === "/debugger/live-kfd") {
     return "GPU debugger + profiler workbench | fe2o3 kernels";
   }
@@ -190,6 +198,7 @@ export function App() {
             <Route path="/" element={<OverviewPage />} />
             <Route path="/start" element={<OverviewPage />} />
             <Route path="/operators" element={<OperatorCookbookPage />} />
+            <Route path="/getting-started" element={<GettingStartedPage />} />
             <Route
               path="/lesson/:lessonId"
               element={

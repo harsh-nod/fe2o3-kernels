@@ -10,6 +10,7 @@ import moeMilestoneSpec from "../../examples/semantic_reference_vnext/moe_verus.
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
   FE2O3_PIN,
+  currentImplementationReference,
   historicalReference,
   pinnedReference,
   type CurriculumModule,
@@ -519,16 +520,16 @@ const contributing: Lesson = {
       kind: "compiler-hsaco-observed",
       label: "Repository contribution gates",
       detail:
-        "The pinned fe2o3 testing guide separates generic, proof, ROCm compile, hardware, and signed parity evidence lanes.",
-      reference: pinnedReference(
+        "The current fe2o3 testing guide separates generic, proof, ROCm compile, hardware, and signed parity evidence lanes.",
+      reference: currentImplementationReference(
         [
           "scripts/ci-local.sh generic",
           "VERUS=/absolute/path/to/verus scripts/ci-local.sh verus",
-          "FE2O3_TARGET=gfx942:xnack- scripts/ci-local.sh rocm-compile",
-          "FE2O3_TARGET=gfx942:xnack- FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke",
+          "FE2O3_TARGET=gfx942 scripts/ci-local.sh rocm-compile",
+          "FE2O3_TARGET=gfx942 FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke",
         ],
         ["docs/testing.md", "scripts/ci-local.sh"],
-        { target: FE2O3_PIN.target },
+        { target: "gfx942" },
       ),
     },
   ],
@@ -542,7 +543,7 @@ const contributing: Lesson = {
     { language: "rust", code: noProof, explanatory: true },
     {
       language: "bash",
-      code: `scripts/ci-local.sh generic\nVERUS=/absolute/path/to/verus scripts/ci-local.sh verus\nFE2O3_TARGET=gfx942:xnack- scripts/ci-local.sh rocm-compile\nFE2O3_TARGET=gfx942:xnack- FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke`,
+      code: `scripts/ci-local.sh generic\nVERUS=/absolute/path/to/verus scripts/ci-local.sh verus\nFE2O3_TARGET=gfx942 scripts/ci-local.sh rocm-compile\nFE2O3_TARGET=gfx942 FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke`,
     },
     {
       language: "text",

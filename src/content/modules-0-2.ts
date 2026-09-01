@@ -10,11 +10,12 @@ import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import safeCpuReferences from "../../examples/verus_vecadd/src/reference.rs?raw";
-import vecaddHost from "../../examples/vecadd_host.rs?raw";
+import vecaddApplicationBoundary from "../../examples/vecadd_application_boundary.rs?raw";
 import vecaddKernel from "../../examples/vecadd_kernel.rs?raw";
 import {
   FE2O3_PIN,
   currentImplementationReference,
+  historicalReference,
   pinnedReference,
   type CurriculumModule,
   type Lesson,
@@ -33,11 +34,12 @@ import {
 
 const genericCommand = "scripts/ci-local.sh generic";
 const rocmCompileCommand =
-  "FE2O3_TARGET=gfx942:xnack- scripts/ci-local.sh rocm-compile";
+  "FE2O3_TARGET=gfx942 scripts/ci-local.sh rocm-compile";
 const hardwareCommand =
-  "FE2O3_TARGET=gfx942:xnack- FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke";
-const vecaddRunCommand =
-  "FE2O3_TARGET=gfx942:xnack- cargo +nightly-2026-04-03 run --locked -p cargo-fe2o3 -- run -p fe2o3-vecadd";
+  "FE2O3_TARGET=gfx942 FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke";
+const noGpuQuickstartCommand = "bash scripts/quickstart.sh no-gpu";
+const vecaddSourceCheckCommand =
+  "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml";
 const verusCommand =
   "VERUS=/absolute/path/to/verus examples/verus_vecadd/run-verus.sh --require";
 const cpuSimulationBuildCommand =
@@ -116,13 +118,18 @@ const setup: Lesson = {
   order: 1,
   title: "Set up gfx942 and run the gates",
   summary:
-    "Pin rustc, detect ROCm, compile the current examples, and opt in explicitly before touching MI300X hardware.",
+    "Pin rustc, inspect direct KFD, compile selected artifacts, and opt in explicitly before KFD-only MI300X smoke tests.",
   duration: "25 min",
-  prerequisites: ["Linux", "ROCm with /dev/kfd access", "Rustup"],
+  prerequisites: [
+    "Linux",
+    "Rustup",
+    "AMDGPU compiler tools for the compile lane",
+    "/dev/kfd access for the hardware lane",
+  ],
   objectives: [
     "Use the repository-pinned nightly rather than ambient stable Rust.",
     "Run generic, ROCm compile, and hardware lanes independently.",
-    "Recognize the explicit GPU opt-in and target identity requirements.",
+    "Recognize that hardware smoke exercises bounded KFD foundations, not application dispatch.",
   ],
   claims: [
     {
@@ -130,21 +137,21 @@ const setup: Lesson = {
       label: "Compile campaign",
       detail:
         "The repository exposes a gfx942-compatible ROCm compile lane that builds and inspects every manifest-selected GPU example.",
-      reference: pinnedReference(
+      reference: currentImplementationReference(
         [rocmCompileCommand],
         ["scripts/ci-local.sh", "examples/regression-manifest-v1.txt"],
-        { target: FE2O3_PIN.target },
+        { target: "gfx942" },
       ),
     },
     {
       kind: "gpu-observed",
       label: "Explicit hardware lane",
       detail:
-        "Hardware smoke refuses to start without the opt-in, an explicit target, and writable GPU access.",
-      reference: pinnedReference(
+        "Hardware smoke refuses to start without the opt-in, an explicit target, and writable KFD access; it exercises KFD identity, memory, queues, and debug controls without source-to-GPU application dispatch.",
+      reference: currentImplementationReference(
         [hardwareCommand],
         ["scripts/ci-local.sh", "docs/testing.md"],
-        { target: FE2O3_PIN.target },
+        { target: "gfx942" },
       ),
     },
   ],
@@ -162,7 +169,7 @@ const setup: Lesson = {
     },
     {
       language: "text",
-      code: "Generic: source/test gates only\nROCm compile: AMDGPU LLVM and HSACO mechanics\nHardware smoke: output checked against CPU expectations on the selected GPU",
+      code: "Generic: source/test gates only\nROCm compile: AMDGPU LLVM and HSACO mechanics\nHardware smoke: direct-KFD identity, memory, queue, and debug-control checks; no application dispatch or CPU/GPU comparison",
     },
   ),
   diagram: "evidence",
@@ -188,18 +195,28 @@ const fill: Lesson = {
   objectives: [
     "Map one logical thread identity to one output element.",
     "Explain how DisjointSlice::get_mut couples bounds and write partitioning.",
-    "Identify the unsafe boundary in the legacy host launch example.",
+    "Run the ordinary source through the authority-free CPU simulation bundle path.",
   ],
   claims: [
     {
       kind: "runnable-now",
-      label: "Legacy fill runs",
+      label: "Source-to-CPU fill",
       detail:
-        "The manifest-selected fill example compiles to HSACO and is included in GPU smoke, but its host launch is an explicit unsafe compatibility path.",
-      reference: pinnedReference(
-        [hardwareCommand],
-        ["examples/fill/src/main.rs", "examples/regression-manifest-v1.txt"],
-        { target: FE2O3_PIN.target },
+        "The no-GPU quickstart exports the ordinary #[kernel] fill source through the production source/MIR/PLIRON/KIR transaction and executes its temporary authority-free bundle on the CPU.",
+      reference: currentImplementationReference(
+        [noGpuQuickstartCommand],
+        [
+          "scripts/quickstart.sh",
+          "scripts/quickstart/fill-request.json",
+          "examples/fill/src/lib.rs",
+          "examples/fill/src/main.rs",
+          "crates/rustc-codegen-fe2o3/src/bin/fe2o3-export-sim.rs",
+          "crates/fe2o3-kir-sim-cli/src/linux.rs",
+        ],
+        {
+          target: "gfx942",
+          note: "Simulation observation only: no artifact publication, GPU dispatch, equivalence, or performance prediction.",
+        },
       ),
     },
     {
@@ -222,7 +239,13 @@ const fill: Lesson = {
     {
       language: "rust",
       code: fillKernel,
-      sourcePath: "examples/fill/src/main.rs",
+      sourcePath: "examples/fill/src/lib.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "e763df1ad98cafe247454bd3e6a40f39d8e0ea557f5d3080f56290476ca53766",
+      explanatory: false,
+      notice:
+        "The current no_std library target is the source exported by the no-GPU quickstart; this tab shows the guarded kernel body.",
     },
     {
       language: "rust",
@@ -242,13 +265,13 @@ const fill: Lesson = {
     },
     {
       language: "bash",
-      code: `FE2O3_TARGET=gfx942:xnack- cargo +${FE2O3_PIN.rustToolchain} run --locked -p cargo-fe2o3 -- run -p fe2o3-fill`,
+      code: noGpuQuickstartCommand,
     },
     {
       language: "text",
       code: resultText(
         "runnable-now",
-        "fill passed for 1024 elements\nThe CPU check expects every value to equal 42.5 within 1e-5.",
+        "CPU simulation returns four f32 elements with exact little-endian bytes 00002a42 (42.5f32).\nAuthority: observation_only. Hardware observed: false. Performance prediction: false.",
       ),
     },
   ),
@@ -276,24 +299,26 @@ const vecadd: Lesson = {
   order: 1,
   title: "Vecadd: the current typed vertical slice",
   summary:
-    "Follow the strongest current path from one shared Rust body to a generated typed host API.",
+    "Follow the shared Rust body into the generated typed binding, while the application execution boundary remains fail closed.",
   duration: "30 min",
   prerequisites: ["Fill: one witness, one write", "Rust borrowing"],
   objectives: [
     "Read the single shared index/read/write body used by Rust and Verus.",
-    "Use Kernel::load, prepare, and launch without manual argument packing.",
+    "Typecheck the generated Worker V3 Arguments binding without claiming application launch.",
     "Separate f32 memory-safety proofs from unproved IEEE arithmetic semantics.",
   ],
   claims: [
     {
-      kind: "runnable-now",
-      label: "Typed vecadd",
+      kind: "compiler-checked",
+      label: "Typed vecadd binding",
       detail:
-        "The exact three-slice f32 profile generates Kernel and Prepared types and runs through the safe example-facing API.",
-      reference: pinnedReference(
-        [vecaddRunCommand],
+        "The exact three-slice f32 profile generates a lifetime-bound Arguments type and the source-check lane typechecks it. The example main returns Unsupported because the production Worker V3 application verifier is not wired.",
+      reference: currentImplementationReference(
+        [vecaddSourceCheckCommand],
         ["examples/vecadd/src/main.rs", "examples/vecadd/src/vecadd_body.rs"],
-        { target: FE2O3_PIN.target },
+        {
+          note: "Binding and host-test evidence only; no artifact publication, GPU load, or dispatch.",
+        },
       ),
     },
     {
@@ -312,17 +337,22 @@ const vecadd: Lesson = {
     },
     {
       kind: "gpu-observed",
-      label: "MI300X correctness and HIP comparison",
+      label: "Historical MI300X correctness and HIP comparison",
       detail:
-        "The production Fe2O3 kernel validated all 16,777,216 outputs. Its 42.52 us kernel average was at parity with the equivalent HIP kernel at 45.42 us; the current synchronous safe host path measured 67.38 us versus HIP at 47.34 us.",
-      reference: currentImplementationReference(
+        "At the retained ecf7b17 benchmark revision, the then-runnable Fe2O3 path validated all 16,777,216 outputs. Its 42.52 us kernel average compared with HIP at 45.42 us; this archive does not make the current Worker V3 application path runnable.",
+      reference: historicalReference(
+        "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+        "2156423b9350d66cfaa8207133768e323111b507",
         ["benchmarks/vecadd_hip/profile-mi300x.sh"],
         [
           "benchmarks/vecadd_hip/README.md",
           "benchmarks/vecadd_hip/vecadd.hip",
           "benchmarks/vecadd_hip/profile-mi300x.sh",
         ],
-        { target: FE2O3_PIN.target },
+        {
+          target: FE2O3_PIN.target,
+          note: "Historical benchmark evidence only; the current application route intentionally fails closed.",
+        },
       ),
     },
   ],
@@ -361,23 +391,28 @@ const vecadd: Lesson = {
     },
     {
       language: "rust",
-      code: vecaddHost,
+      code: vecaddApplicationBoundary,
       sourcePath: "examples/vecadd/src/main.rs",
+      sourceCommit: currentState.compilerCommit,
+      sourceSha256:
+        "c768ec56e0805fdc909fea6097ec19321c3835865ed55b9927163bf9b0197e8d",
+      explanatory: false,
+      notice:
+        "The current application entry point is intentionally unavailable until the production Worker V3 verifier is wired. The generated Arguments binding is typechecked in the same source file's tests.",
     },
     {
       language: "text",
       code: resultText(
         "gpu-observed",
-        `MI300X, 16,777,216 f32 elements
+        `Historical record at ecf7b17, MI300X, 16,777,216 f32 elements
 
 Correctness: every output matched the CPU reference.
 Kernel only (105 launches): Fe2O3 42.52 us, HIP 45.42 us.
 Host event interval (30 x 100 launches): Fe2O3 67.38 us, HIP 47.34 us.
 
-Interpretation: GPU execution is at parity within run-to-run noise. The current
-safe Fe2O3 launch waits for completion before releasing borrowed buffers, while
-HIP queues the launch batch asynchronously. The 1.42x host-path gap is dispatch
-policy overhead, not evidence that the generated kernel is slower.`,
+Interpretation at that retained revision: GPU execution was at parity within
+run-to-run noise. These values do not describe the current fail-closed Worker V3
+application path and do not grant present-day GPU run authority.`,
       ),
     },
   ),
@@ -664,7 +699,7 @@ const memoryProofs: Lesson = {
   tabs: completeTabs(
     { language: "rust", code: vecaddKernel },
     { language: "rust", code: injectiveProof },
-    { language: "rust", code: vecaddHost },
+    { language: "rust", code: vecaddApplicationBoundary },
     {
       language: "text",
       code: resultText(
@@ -753,7 +788,7 @@ const compilerChecks: Lesson = {
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "c2b9490bcdf82f6e6f03b04270466829ffb5abbb08a8bec7398b9d5272a58afa",
+        "f8b6953d15b055390114de343e756628f878299c05307cbd27319cce57d0d058",
       explanatory: false,
       notice:
         "The one-past-end array read is Rejected before KIR. A supported finite safe case can additionally receive a Complete raw bounds replay.",

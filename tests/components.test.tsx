@@ -1,10 +1,12 @@
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 import { CodeTabs } from "../src/components/CodeTabs";
 import { DebuggerWorkbench } from "../src/components/DebuggerWorkbench";
 import { DebugSimMilestone } from "../src/components/DebugSimMilestone";
 import { FunctionalCorrectnessPanel } from "../src/components/FunctionalCorrectnessPanel";
+import { GettingStartedPage } from "../src/components/GettingStartedPage";
 import { LessonSections } from "../src/components/LessonSections";
 import { LiveKfdDebuggerPage } from "../src/components/LiveKfdDebuggerPage";
 import { ProfilerDispatchImportPage } from "../src/components/ProfilerDispatchImportPage";
@@ -17,6 +19,46 @@ import { narrativeEntry } from "../src/content/narrative-registry";
 import { stagedEvidenceRecord } from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
 import { searchCatalog } from "../src/lib/search";
+
+describe("community getting started tutorial", () => {
+  it("shows the executable CPU path, semantic hierarchy, and fail-closed GPU boundary", () => {
+    render(
+      <MemoryRouter>
+        <GettingStartedPage />
+      </MemoryRouter>,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Run a Rust kernel without a GPU" }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("No-GPU quick start commands")).toHaveTextContent(
+      "bash scripts/quickstart.sh no-gpu",
+    );
+    expect(screen.getByRole("term", { name: "authority" })).toBeInTheDocument();
+    expect(screen.getByText("observation_only")).toBeInTheDocument();
+    expect(screen.getByLabelText("Work-item activity")).toHaveTextContent("4..63");
+    expect(screen.getByText("out + 8")).toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Semantic debugger differentiators" }))
+      .toHaveTextContent("Versioned JSONL queries");
+    expect(screen.getByText("runtime: direct-kfd", { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Bash + GNU realpath")).toBeInTheDocument();
+    expect(screen.getByText("Rust compiler workspace build space")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Inspect KFD before attempting hardware work" })
+        .closest("section"),
+    ).toHaveTextContent(
+      "Schematic output shape; host-specific states are alternatives",
+    );
+    expect(screen.getByText("debugger-rocgdb: optional-present-unvalidated", {
+      exact: false,
+    })).toBeInTheDocument();
+    expect(screen.getByText(/not an execution capture/u)).toBeInTheDocument();
+    expect(screen.getByText(/FE2O3_HIP_SYS_DISABLE=1/u)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "A diagnostic, not a GPU quick start" }))
+      .toBeInTheDocument();
+    expect(screen.getByText("No performance prediction is made.")).toBeInTheDocument();
+  });
+});
 
 describe("debugger and simulator evidence workbench", () => {
   it("switches exact exploration, wave, and PC-sample evidence without upgrading truth", async () => {

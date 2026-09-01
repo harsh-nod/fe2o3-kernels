@@ -10,6 +10,7 @@ import {
   House,
   Rows3,
   Network,
+  PlayCircle,
   ScanLine,
   X,
 } from "lucide-react";
@@ -103,6 +104,9 @@ export function Sidebar({
         </NavLink>
         <NavLink onClick={onNavigate} to="/operators">
           <Rows3 size={16} /> Operator cookbook
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/getting-started">
+          <PlayCircle size={16} /> Getting started
         </NavLink>
         <NavLink onClick={onNavigate} to="/lesson/compiler-checks">
           <Braces size={16} /> Compiler checks

@@ -31,7 +31,7 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start tutorial/ })).toHaveAttribute(
       "href",
-      "/lesson/gfx942-setup",
+      "/getting-started",
     );
     expect(screen.getByRole("link", { name: /Run today/ })).toHaveAttribute(
       "href",
@@ -83,6 +83,22 @@ describe("application shell", () => {
       "https://github.com/harsh-nod/fe2o3",
     );
   }, 20_000);
+
+  it("routes to the no-GPU community quick start", async () => {
+    renderApp("/getting-started");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Run a Rust kernel without a GPU",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("bash scripts/quickstart.sh no-gpu", { exact: false }))
+      .toBeInTheDocument();
+    expect(screen.getByLabelText("Debugger hierarchy and semantic state"))
+      .toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open the interactive simulator debugger/ }))
+      .toHaveAttribute("href", "/lesson/cpu-semantic-simulation");
+  });
 
   it("renders the tutorial app as its first screen", async () => {
     renderApp();
@@ -295,7 +311,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
-    expect(document.querySelector(".pin-summary")).toHaveTextContent("ecf7b17f81");
+    expect(document.querySelector(".pin-summary")).toHaveTextContent("081fc345a0");
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -305,7 +321,7 @@ describe("application shell", () => {
       "The ancestry, commit, and tree are all required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "2156423b9350d66cfaa8207133768e323111b507",
+      "94e265ba1fb835a24a764d822e55b6c1432d73ec",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -453,7 +469,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open pinned compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      "https://github.com/harsh-nod/fe2o3/tree/081fc345a07bf8a1eaf162f32b6a46daf177fa33",
     );
   }, 30_000);
 });
