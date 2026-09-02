@@ -230,7 +230,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit ecf7b17f819021708d9c59ebe39a4daf9eb2562c and tree 2156423b9350d66cfaa8207133768e323111b507. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit 308d8fa00fa41e098b2a1a47bbfea1bc29735464 and tree aee01674fefa733731db35eae1a1705b3286179e. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -291,7 +291,7 @@ const narrativeRegistry = deepFreeze({
           "Rust channel: nightly-2026-04-03.",
           "Tutorial lesson evidence baseline: acb3d2752e4e50e4f4a99ebfc4b180eb79160930.",
           "Primary target: gfx942:xnack-; do not infer feature state from the processor name alone.",
-          "ROCm tools must be discoverable by cargo-fe2o3 doctor."
+          "The KFD-first quickstart doctor reports direct-KFD topology; AMDGPU compiler tools and ROCgdb/rocprofv3 are separate optional facts."
         ]
       },
       {
@@ -310,9 +310,9 @@ const narrativeRegistry = deepFreeze({
         "type": "steps",
         "items": [
           "Run generic validation without ROCm to check the repository and evidence policy.",
-          "Run cargo-fe2o3 doctor and the ROCm compile lane with an explicit target.",
-          "Inspect the generated HSACO before dispatch.",
-          "Opt into hardware smoke only on the intended device host."
+          "Run bash scripts/quickstart.sh doctor, then run the ROCm compile lane with FE2O3_TARGET=gfx942.",
+          "Inspect generated HSACO independently; artifact inspection is not application dispatch.",
+          "Opt into hardware smoke only on the intended device host; this lane observes bounded KFD foundations and does not dispatch an application kernel."
         ]
       }
     ]
@@ -347,7 +347,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "The current fill example also loads a path-selected HSACO and packs its argument through an unsafe launch macro. It is runnable evidence, not a safe generated launch authority."
+        "text": "The current fill kernel is an ordinary no_std #[kernel] library target. The no-GPU quickstart exports it to an authority-free simulation bundle and executes that bundle on the CPU; the separate application stub fails closed before Worker V3 load or dispatch."
       }
     ]
   },
@@ -373,7 +373,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "Kernel::load binds the embedded artifact profile. prepare checks equal nonempty f32 buffers, context, geometry, and aliases while retaining borrows. Prepared::launch keeps resources alive through synchronous dispatch. This profile is exact and narrow; arbitrary signatures do not receive this authority."
+        "text": "The typed macro generates one lifetime-bound direct-KFD Arguments profile for the three f32 slices. The example test constructs GeneratedKfdReadSlice and GeneratedKfdReadWriteSlice capabilities from retained host borrows; the default fe2o3-host closure excludes fe2o3-core, HIP, HSA, and Worker V2 dependencies, while the deprecated HIP-buffer and HSA-lifecycle surface is qualification-only behind qualification-legacy-hip-hsa. The application entry point returns Unsupported because the production Worker V3 verifier is not wired; this binding evidence grants no artifact, load, or dispatch authority."
       },
       {
         "type": "callout",
@@ -1830,7 +1830,8 @@ const narrativeRegistry = deepFreeze({
           "Add positive Verus properties and one targeted expected-negative fixture per property.",
           "Reject unsupported source shapes and remove stale outputs transactionally.",
           "Inspect LLVM/HSACO target, symbols, descriptors, kernarg layout, resources, and relevant instructions.",
-          "Run gfx942 with independent expected results, boundary sizes, aliases, and canary memory.",
+          "Run the opt-in gfx942 hardware lane only for its documented KFD identity, memory, queue, and debug-control scope.",
+          "Do not record application GPU output unless a separate exact qualification route actually dispatches it and checks an independent oracle.",
           "Record exact commit, tree, tools, command, target, artifact digests, logs, and limitations."
         ]
       }
@@ -2799,7 +2800,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Semantic-correctness milestone",
-        "text": "Milestone status: partial-current at compiler ecf7b17f819021708d9c59ebe39a4daf9eb2562c. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
+        "text": "Milestone status: partial-current at compiler 308d8fa00fa41e098b2a1a47bbfea1bc29735464. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
       }
     ]
   }

@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Topbar } from "./components/Topbar";
 import { useModalDialog } from "./hooks/useModalDialog";
 import { useProgress } from "./hooks/useProgress";
@@ -20,6 +20,11 @@ const ArchitecturePage = lazy(() =>
 const GlossaryPage = lazy(() =>
   import("./components/GlossaryPage").then((module) => ({
     default: module.GlossaryPage,
+  })),
+);
+const GettingStartedPage = lazy(() =>
+  import("./components/GettingStartedPage").then((module) => ({
+    default: module.GettingStartedPage,
   })),
 );
 const LessonPage = lazy(() =>
@@ -116,6 +121,9 @@ function pageTitle(pathname: string): string {
   if (pathname === "/architecture") return "Architecture | fe2o3 kernels";
   if (pathname === "/status") return "Implementation status | fe2o3 kernels";
   if (pathname === "/glossary") return "Glossary | fe2o3 kernels";
+  if (pathname === "/getting-started") {
+    return "Getting started | fe2o3 kernels";
+  }
   if (pathname === "/debugger/live-kfd") {
     return "GPU debugger + profiler workbench | fe2o3 kernels";
   }
@@ -148,7 +156,7 @@ export function App() {
         const target = document.getElementById(location.hash.slice(1));
         if (target) {
           target.tabIndex = -1;
-          target.scrollIntoView({ block: "start" });
+          target.scrollIntoView?.({ block: "start" });
           target.focus({ preventScroll: true });
           return;
         }
@@ -173,7 +181,16 @@ export function App() {
 
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main-content">Skip to content</a>
+      <Link
+        className="skip-link"
+        to={{
+          pathname: location.pathname,
+          search: location.search,
+          hash: "#main-content",
+        }}
+      >
+        Skip to content
+      </Link>
       <span className="sr-only" role="status" aria-live="polite">
         {routeAnnouncement}
       </span>
@@ -199,6 +216,7 @@ export function App() {
             <Route path="/start" element={<OverviewPage />} />
             <Route path="/operators" element={<OperatorCookbookPage />} />
             <Route path="/semantic-equivalence" element={<SemanticEquivalencePage />} />
+            <Route path="/getting-started" element={<GettingStartedPage />} />
             <Route
               path="/lesson/:lessonId"
               element={

@@ -1,6 +1,13 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 
+const publicationGate = JSON.parse(
+  readFileSync(
+    new URL("../config/publication-gate.json", import.meta.url),
+    "utf8",
+  ),
+) as { requiredCommit: string };
+
 interface ExactDebuggerResponse {
   request_id: number;
   session: { cursor: { event_sequence: number } };
@@ -25,6 +32,86 @@ const exactDebuggerRequests = readFileSync(
   .trimEnd()
   .split("\n")
   .map((line) => JSON.parse(line) as Record<string, unknown>);
+
+test("community quick start is truthful and responsive", async ({ page }, testInfo) => {
+  await page.goto("./#/getting-started");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Run a Rust kernel without a GPU" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("No-GPU quick start commands")).toContainText(
+    "bash scripts/quickstart.sh no-gpu",
+  );
+  await expect(page.getByLabel("No-GPU quick start commands")).toContainText(
+    `git checkout --detach ${publicationGate.requiredCommit}`,
+  );
+  await expect(page.getByText(/default host dependency closure are direct-KFD/u))
+    .toBeVisible();
+  await expect(page.getByLabel("Typed simulation result")).toContainText(
+    "observation_only",
+  );
+  await expect(page.getByLabel("Debugger hierarchy and semantic state")).toContainText(
+    "logical only",
+  );
+  await expect(page.getByLabel("Work-item activity")).toContainText("4..63");
+  await expect(page.getByRole("table", { name: "Semantic debugger differentiators" }))
+    .toContainText("Versioned JSONL queries");
+  await expect(
+    page.getByRole("heading", { name: "A diagnostic, not a GPU quick start" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("No-GPU workflow non-claims")).toContainText(
+    "No performance prediction is made.",
+  );
+  await expect(page.getByText("Bash + GNU realpath")).toBeVisible();
+  await expect(page.getByText("Rust compiler workspace build space")).toBeVisible();
+  const doctor = page.locator(".getting-started-doctor");
+  await expect(doctor).toContainText("bash scripts/quickstart.sh doctor");
+  await expect(doctor).toContainText("Schematic output shape");
+  await expect(doctor).toContainText("optional-present-unvalidated");
+  await expect(page.getByText("not an execution capture", { exact: false }))
+    .toBeVisible();
+  await expect(page.getByRole("link", { name: /Debugger protocol reference/u }))
+    .toHaveAttribute(
+      "href",
+      `https://github.com/harsh-nod/fe2o3/blob/${publicationGate.requiredCommit}/crates/fe2o3-debug-cli/README.md`,
+    );
+
+  const labelContrast = await page.locator(".getting-started-hierarchy small").first()
+    .evaluate((element) => {
+      const parse = (value: string) =>
+        value.match(/\d+(?:\.\d+)?/gu)!.slice(0, 3).map(Number);
+      const luminance = (value: string) => {
+        const channels = parse(value).map((channel) => {
+          const normalized = channel / 255;
+          return normalized <= 0.04045
+            ? normalized / 12.92
+            : ((normalized + 0.055) / 1.055) ** 2.4;
+        });
+        return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+      };
+      const foreground = luminance(getComputedStyle(element).color);
+      const background = luminance(
+        getComputedStyle(element.closest(".getting-started-hierarchy")!).backgroundColor,
+      );
+      return {
+        contrast: (Math.max(foreground, background) + 0.05) /
+          (Math.min(foreground, background) + 0.05),
+        fontSize: Number.parseFloat(getComputedStyle(element).fontSize),
+      };
+    });
+  expect(labelContrast.contrast).toBeGreaterThanOrEqual(4.5);
+  expect(labelContrast.fontSize).toBeGreaterThanOrEqual(10);
+
+  const dimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  await page.screenshot({
+    path: testInfo.outputPath("community-getting-started.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+});
 
 test("curriculum is responsive, navigable, and visually nonempty", async ({
   page,
@@ -499,6 +586,12 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
     }),
   ).toBeVisible();
   await expect(page.getByText("Scopes are separate")).toBeVisible();
+  await expect(page.getByText(/CPU simulator debugging is a separate/u)).toContainText(
+    "CPU performance prediction",
+  );
+  await expect(page.getByText(/V3 cleanup finishes KFD state/u)).toContainText(
+    "leader-only PTRACE_O_EXITKILL",
+  );
   await expect(page.getByTestId("gpu-workbench-record")).toContainText(
     "WaveRecordLayoutNotInKfdUapi",
   );
@@ -1002,7 +1095,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -1141,7 +1234,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -1161,7 +1254,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -1614,7 +1707,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at ecf7b17f81",
+      name: "Compiler baseline at 308d8fa00f",
     }),
   ).toBeVisible();
   await expect(

@@ -494,7 +494,7 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
               <div
                 className="debug-lane-grid"
                 style={{
-                  gridTemplateColumns: `repeat(${Math.min(8, fixture.launch.logical_wave_size)}, minmax(24px, 1fr))`,
+                  gridTemplateColumns: `repeat(${Math.min(8, fixture.launch.logical_wave_size)}, minmax(var(--debug-lane-cell-size), 1fr))`,
                 }}
               >
                 {Array.from({ length: fixture.launch.logical_wave_size }, (_, laneInWave) => {

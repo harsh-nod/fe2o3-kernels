@@ -55,6 +55,24 @@ softmax, GEMM, FlashAttention, MoE routing, Kimi Delta Attention,
 sparse/hybrid attention, residual mixing, speculative verification, N-gram
 gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
+## Start without a GPU
+
+Open the [Getting Started tutorial](https://harsh-nod.github.io/fe2o3-kernels/#/getting-started)
+for the typed result and semantic-debugger walkthrough. The executable path is
+an authority-free CPU simulation of the supported Kernel IR semantics. It does
+not load or dispatch a GPU, establish CPU/GPU equivalence, or predict
+performance.
+
+```bash
+git clone https://github.com/harsh-nod/fe2o3.git
+cd fe2o3
+git checkout --detach 308d8fa00fa41e098b2a1a47bbfea1bc29735464
+bash scripts/quickstart.sh no-gpu
+```
+
+The detached checkout is the exact compiler evidence pin recorded in
+`config/publication-gate.json`; update the command whenever that gate advances.
+
 ## Audited lesson baseline
 
 Lesson evidence claims are based on one immutable fe2o3 snapshot. This pin does
@@ -80,13 +98,15 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The **Live KFD debugger** reference at `#/debugger/live-kfd` is independently
-pinned to compiler commit `f8b123a4ec4e049ecc7c20efec56283732785b38`, tree
-`e17b0281d196b0bee568d526ab2ab1d245befe1c`. It documents the exact-bound V3
+The **Live KFD debugger** reference at `#/debugger/live-kfd` retains an
+independent historical milestone at compiler commit
+`ba0efc7f958e3afdf72eceeef1c37c2994fe2402`, tree
+`3a595c10a3af6f28223ed89b6029ba444c16a2af`. It documents the exact-bound V3
 agent protocol and the direct-KFD MI300X acceptance result while keeping the
 still-unavailable live wave, lane, PC, register, memory, breakpoint, and step
-surfaces explicit. That milestone does not repin the broader functional-proof
-publication record.
+surfaces explicit. Current implementation links use the publication pin and
+state the narrower leader-only forced-teardown boundary. The historical
+milestone does not repin the broader functional-proof publication record.
 
 The **Agent-native source/ISA inspection** reference at
 `#/debugger/source-isa-agent` is independently pinned to compiler commit
@@ -123,8 +143,8 @@ deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
 
 The checked-in publication gate is pinned to immutable implementation-evidence
-commit `ecf7b17f819021708d9c59ebe39a4daf9eb2562c`, tree
-`2156423b9350d66cfaa8207133768e323111b507`. Deployment requires
+commit `308d8fa00fa41e098b2a1a47bbfea1bc29735464`, tree
+`aee01674fefa733731db35eae1a1705b3286179e`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
 commit object to resolve to the exact pinned tree. Either ref may advance to a

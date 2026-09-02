@@ -13,7 +13,7 @@ import {
   Rows3,
   TerminalSquare,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { currentState } from "../content/current-state";
 import {
   contributorWorkflow,
@@ -24,6 +24,7 @@ import {
 import { EvidenceBadge } from "./EvidenceBadge";
 
 export function OverviewPage() {
+  const location = useLocation();
   const active = currentState.capabilities.filter(
     (capability) => capability.status === "active",
   ).length;
@@ -34,13 +35,12 @@ export function OverviewPage() {
         <p className="lesson-breadcrumb">Community launch guide</p>
         <h1>fe2o3 kernels</h1>
         <p>
-          The authoritative learning path for fe2o3: write safe Rust GPU
-          kernels, run the current examples, and inspect the evidence behind
-          every claim.
+          Write safe Rust GPU kernels, run the current CPU-first workflows, and
+          inspect the evidence behind every claim before hardware execution.
         </p>
         <div className="overview-snapshot" aria-label="Current compiler snapshot">
           <div>
-            <span>Compiler main</span>
+            <span>Compiler baseline</span>
             <code>{currentState.compilerShortCommit}</code>
           </div>
           <div>
@@ -55,16 +55,22 @@ export function OverviewPage() {
       </header>
 
       <nav className="overview-actions" aria-label="Primary destinations">
-        <Link to="/lesson/gfx942-setup">
+        <Link to="/getting-started">
           <BookOpen size={19} aria-hidden="true" />
-          <span><strong>Start tutorial</strong><small>Setup and first kernel</small></span>
+          <span><strong>Start tutorial</strong><small>Rust source to CPU replay</small></span>
           <ArrowRight size={17} aria-hidden="true" />
         </Link>
-        <a href="#run-today">
+        <Link
+          to={{
+            pathname: location.pathname,
+            search: location.search,
+            hash: "#run-today",
+          }}
+        >
           <TerminalSquare size={19} aria-hidden="true" />
           <span><strong>Run today</strong><small>Commands with boundaries</small></span>
           <ArrowRight size={17} aria-hidden="true" />
-        </a>
+        </Link>
         <Link to="/operators">
           <Rows3 size={19} aria-hidden="true" />
           <span><strong>Operator cookbook</strong><small>Contracts and sources</small></span>
@@ -179,8 +185,8 @@ export function OverviewPage() {
 
       <section className="overview-section">
         <div>
-          <p className="section-kicker">Current compiler</p>
-          <h2>What production main enforces</h2>
+          <p className="section-kicker">Compiler baseline</p>
+          <h2>What the evidence pin enforces</h2>
           <Link className="overview-inline-link" to="/architecture">
             Inspect sources and tracked issues <ArrowRight size={14} />
           </Link>
@@ -201,7 +207,7 @@ export function OverviewPage() {
       <footer className="overview-footer">
         <BookOpenCheck size={18} aria-hidden="true" />
         <p>
-          Lesson claims retain their own exact evidence pins. Current compiler
+          Lesson claims retain their own exact evidence pins. Compiler baseline
           status is sourced from the reviewed manifest and never inferred from
           historical tutorial results.
         </p>

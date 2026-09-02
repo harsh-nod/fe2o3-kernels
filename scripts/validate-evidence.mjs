@@ -189,6 +189,47 @@ try {
     }
   }
 
+  const gettingStarted = await vite.ssrLoadModule(
+    "/src/content/getting-started.ts",
+  );
+  const gettingStartedIssues = gettingStarted.validateGettingStartedTutorial();
+  if (gettingStartedIssues.length > 0) {
+    fail(`getting-started projection rejected: ${gettingStartedIssues.join("; ")}`);
+  }
+  const gettingStartedBinding = gettingStarted.gettingStartedBinding;
+  const fixturePath = gettingStartedBinding.fixture.path;
+  if (
+    fixturePath.startsWith("/") ||
+    fixturePath.split("/").includes("..") ||
+    fixturePath.trim().length === 0
+  ) {
+    fail("getting-started fixture contains an invalid local path");
+  }
+  const fixtureDigest = createHash("sha256")
+    .update(readFileSync(resolve(fixturePath)))
+    .digest("hex");
+  if (fixtureDigest !== gettingStartedBinding.fixture.sha256) {
+    fail(
+      `getting-started fixture is ${fixtureDigest}, required ${gettingStartedBinding.fixture.sha256}`,
+    );
+  }
+  const currentStateModule = await vite.ssrLoadModule(
+    "/src/content/current-state.ts",
+  );
+  const launchCommit = currentStateModule.currentState.compilerCommit;
+  observedTree(launchCommit, "getting-started compiler launch");
+  for (const binding of gettingStartedBinding.compilerSourceBindings) {
+    validatePath(launchCommit, binding.path, "getting-started compiler launch");
+    const observed = createHash("sha256")
+      .update(pinnedSourceBytes(launchCommit, binding.path))
+      .digest("hex");
+    if (observed !== binding.sha256) {
+      fail(
+        `getting-started source ${binding.path} is ${observed}, required ${binding.sha256}`,
+      );
+    }
+  }
+
   const debugSim = await vite.ssrLoadModule("/src/content/debug-sim-milestone.ts");
   const debugSimArtifacts = [
     ["counter_capture_v2.json", "counterCapture"],
@@ -272,7 +313,7 @@ try {
 
   if (checkIssues) await validateIssues(catalog.issues);
   process.stdout.write(
-    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, ${catalog.localArtifacts.length} local artifacts, ${debugSimArtifacts.length} debug/simulator artifacts, ${characteristicFixtureFiles.length} source/ISA characteristic artifacts, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
+    `evidence validation: ${commits.size} commits, ${catalog.gitObjects.length} records, ${catalog.sources.length} source tabs, ${catalog.localArtifacts.length} local artifacts, ${gettingStartedBinding.compilerSourceBindings.length} getting-started source bindings, ${debugSimArtifacts.length} debug/simulator artifacts, ${characteristicFixtureFiles.length} source/ISA characteristic artifacts, and ${checkIssues ? catalog.issues.length : 0} issue states passed\n`,
   );
 } finally {
   await vite.close();

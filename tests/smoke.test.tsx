@@ -1,8 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { HashRouter, MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/App";
+import { currentSourceUrl, currentState } from "../src/content/current-state";
 import "../src/components/ArchitecturePage";
 import "../src/components/LessonPage";
 import "../src/components/OperatorCookbookPage";
@@ -19,6 +20,15 @@ function renderApp(path = "/lesson/read-the-evidence") {
   );
 }
 
+function renderHashApp(hash: string) {
+  window.location.hash = hash;
+  return render(
+    <HashRouter>
+      <App />
+    </HashRouter>,
+  );
+}
+
 describe("application shell", () => {
   beforeEach(() => window.localStorage.clear());
 
@@ -32,11 +42,11 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Start tutorial/ })).toHaveAttribute(
       "href",
-      "/lesson/gfx942-setup",
+      "/getting-started",
     );
     expect(screen.getByRole("link", { name: /Run today/ })).toHaveAttribute(
       "href",
-      "#run-today",
+      "/#run-today",
     );
     expect(
       screen.getAllByRole("link", { name: /Operator cookbook/ })
@@ -57,8 +67,114 @@ describe("application shell", () => {
       "href",
       "/lesson/gfx950-kda-gdn-linear-attention",
     );
-    expect(screen.getByText(/authoritative learning path/)).toBeInTheDocument();
+    expect(screen.getByText(/current CPU-first workflows/)).toBeInTheDocument();
+    expect(screen.getAllByText("Compiler baseline")).toHaveLength(2);
+    expect(
+      screen.getByRole("heading", { name: "What the evidence pin enforces" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(`evidence pin ${currentState.compilerShortCommit}`))
+      .toBeInTheDocument();
+    expect(screen.queryByText(/compiler main/u)).not.toBeInTheDocument();
     expect(screen.getByText("Run something first")).toBeInTheDocument();
+  }, 20_000);
+
+  it("keeps the current HashRouter lesson when the skip link receives keyboard focus", async () => {
+    const user = userEvent.setup();
+    renderHashApp("#/lesson/read-the-evidence?view=source");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "How to read this guide",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+
+    const main = document.getElementById("main-content");
+    expect(main).not.toBeNull();
+    await waitFor(() => expect(main).toHaveFocus());
+    const skipLink = screen.getByRole("link", { name: "Skip to content" });
+    expect(skipLink).toHaveAttribute(
+      "href",
+      "#/lesson/read-the-evidence?view=source#main-content",
+    );
+
+    skipLink.focus();
+    expect(skipLink).toHaveFocus();
+    await user.keyboard("{Enter}");
+
+    await waitFor(() => {
+      expect(window.location.hash).toBe(
+        "#/lesson/read-the-evidence?view=source#main-content",
+      );
+      expect(main).toHaveFocus();
+    });
+    expect(
+      screen.getByRole("heading", { level: 1, name: "How to read this guide" }),
+    ).toBeInTheDocument();
+  }, 20_000);
+
+  it("preserves the overview route while focusing the run-today section", async () => {
+    const user = userEvent.setup();
+    renderHashApp("#/start?audience=operator");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "fe2o3 kernels",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+
+    const runTodayLink = screen.getByRole("link", { name: /Run today/ });
+    expect(runTodayLink).toHaveAttribute(
+      "href",
+      "#/start?audience=operator#run-today",
+    );
+    runTodayLink.focus();
+    expect(runTodayLink).toHaveFocus();
+    await user.click(runTodayLink);
+
+    const runToday = document.getElementById("run-today");
+    expect(runToday).not.toBeNull();
+    await waitFor(() => {
+      expect(window.location.hash).toBe(
+        "#/start?audience=operator#run-today",
+      );
+      expect(runToday).toHaveFocus();
+    });
+    expect(
+      screen.getByRole("heading", { level: 1, name: "fe2o3 kernels" }),
+    ).toBeInTheDocument();
+  }, 20_000);
+
+  it("preserves the cookbook route while focusing an indexed operator", async () => {
+    const user = userEvent.setup();
+    renderHashApp("#/operators?status=current");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Operator cookbook",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+
+    const index = document.querySelector(".operator-index");
+    expect(index).not.toBeNull();
+    const fillLink = within(index as HTMLElement).getByRole("link", {
+      name: /^Fill/u,
+    });
+    expect(fillLink).toHaveAttribute(
+      "href",
+      "#/operators?status=current#fill",
+    );
+    fillLink.focus();
+    await user.keyboard("{Enter}");
+
+    const fill = document.getElementById("fill");
+    expect(fill).not.toBeNull();
+    await waitFor(() => {
+      expect(window.location.hash).toBe("#/operators?status=current#fill");
+      expect(fill).toHaveFocus();
+    });
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Operator cookbook" }),
+    ).toBeInTheDocument();
   }, 20_000);
 
   it("renders the operator cookbook route", async () => {
@@ -83,11 +199,49 @@ describe("application shell", () => {
       screen.getAllByText(/safe CPU reference fails the MI350X runner/u).length,
     ).toBeGreaterThan(0);
     expect(screen.getByText(/No full Kimi K3 layer/u)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open fe2o3 source/ })).toHaveAttribute(
+    const fill = screen
+      .getByRole("heading", { level: 3, name: "Fill" })
+      .closest("article");
+    expect(fill).not.toBeNull();
+    expect(within(fill!).getByRole("link", { name: "examples/fill/src/lib.rs" }))
+      .toHaveAttribute("href", currentSourceUrl("examples/fill/src/lib.rs"));
+    expect(within(fill!).getByText("bash scripts/quickstart.sh no-gpu"))
+      .toBeInTheDocument();
+
+    const vecadd = screen
+      .getByRole("heading", { level: 3, name: "Vecadd" })
+      .closest("article");
+    expect(vecadd).not.toBeNull();
+    expect(within(vecadd!).getByText(
+      "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
+    )).toBeInTheDocument();
+    expect(within(vecadd!).getByText(/remains fail closed/u)).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("link", { name: /Open compiler evidence pin/ }),
+    ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3",
+      `https://github.com/harsh-nod/fe2o3/tree/${currentState.compilerCommit}`,
     );
   }, 20_000);
+
+  it("routes to the no-GPU community quick start", async () => {
+    renderApp("/getting-started");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Run a Rust kernel without a GPU",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("bash scripts/quickstart.sh no-gpu", { exact: false }))
+      .toBeInTheDocument();
+    expect(screen.getByText("git checkout --detach", { exact: false }))
+      .toBeInTheDocument();
+    expect(screen.getByLabelText("Debugger hierarchy and semantic state"))
+      .toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open the interactive simulator debugger/ }))
+      .toHaveAttribute("href", "/lesson/cpu-semantic-simulation");
+  });
 
   it("renders the tutorial app as its first screen", async () => {
     renderApp();
@@ -286,7 +440,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     expect(
@@ -323,7 +477,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
-    expect(document.querySelector(".pin-summary")).toHaveTextContent("ecf7b17f81");
+    expect(document.querySelector(".pin-summary")).toHaveTextContent("308d8fa00f");
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -333,7 +487,7 @@ describe("application shell", () => {
       "The ancestry, commit, and tree are all required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "2156423b9350d66cfaa8207133768e323111b507",
+      "aee01674fefa733731db35eae1a1705b3286179e",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -457,7 +611,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler baseline at ecf7b17f81",
+        name: "Compiler baseline at 308d8fa00f",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -481,7 +635,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open pinned compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      "https://github.com/harsh-nod/fe2o3/tree/308d8fa00fa41e098b2a1a47bbfea1bc29735464",
     );
   }, 30_000);
 });

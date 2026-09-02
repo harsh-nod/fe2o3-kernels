@@ -1,4 +1,6 @@
 import { advancedProductionTarget } from "./gfx950-advanced-evidence";
+import { currentState } from "./current-state";
+import { gettingStartedCommands } from "./getting-started";
 import { FE2O3_PIN, type EvidenceKind } from "./model";
 import { deepFreeze, type DeepReadonly } from "./registry";
 
@@ -146,14 +148,21 @@ export interface ContributorWorkflowCard {
 }
 
 const checkoutPinnedFe2o3 = {
-  label: "Checkout the lesson baseline",
+  label: "Checkout the historical lesson baseline",
   command: [
     `git clone ${FE2O3_PIN.repository}`,
     "cd fe2o3",
-    `git checkout ${FE2O3_PIN.commit}`,
+    `git checkout --detach ${FE2O3_PIN.commit}`,
   ].join("\n"),
   expected:
-    "The checkout is pinned to the lesson baseline before any command is interpreted as lesson evidence.",
+    "The detached checkout preserves the lesson's historical evidence identity; it is not the current operational baseline.",
+} satisfies LaunchCommand;
+
+const checkoutCurrentFe2o3 = {
+  label: "Checkout the current evidence pin",
+  command: gettingStartedCommands.clone.join("\n"),
+  expected:
+    `The detached checkout is the publication-gated compiler baseline ${currentState.compilerShortCommit}.`,
 } satisfies LaunchCommand;
 
 const genericGate = {
@@ -165,7 +174,7 @@ const genericGate = {
 
 const rocmCompileGate = {
   label: "Compile the gfx942 lane",
-  command: "FE2O3_TARGET=gfx942:xnack- scripts/ci-local.sh rocm-compile",
+  command: "FE2O3_TARGET=gfx942 scripts/ci-local.sh rocm-compile",
   expected:
     "The selected examples exercise ROCm compilation and code-object mechanics for gfx942 without implying a dispatch result.",
 } satisfies LaunchCommand;
@@ -173,34 +182,24 @@ const rocmCompileGate = {
 const gfx942HardwareGate = {
   label: "Run the opt-in gfx942 hardware smoke",
   command:
-    "FE2O3_TARGET=gfx942:xnack- FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke",
+    "FE2O3_TARGET=gfx942 FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke",
   expected:
-    "The smoke lane dispatches selected examples only when the user opts in to a concrete gfx942 device.",
+    "The opt-in smoke validates gfx942 KFD identity, memory, queue lifecycle, and debugger controls without submitting a packet or launching an application kernel.",
 } satisfies LaunchCommand;
 
-const cpuSimulationCommands = [
-  {
-    label: "Build the simulator tools",
-    command:
-      "cargo build --locked -p rustc-codegen-fe2o3 --bin fe2o3-export-sim --bin fe2o3-rustc-extract -p fe2o3-kir-sim-cli --bin fe2o3-kir-sim -p fe2o3-debug-cli --bin fe2o3-debug",
-    expected:
-      "The source export, KIR simulator, and debugger CLIs are available locally.",
-  },
-  {
-    label: "Export a simulation bundle",
-    command:
-      './target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output "$PWD/barrier-before-access.fe2sim" --target gfx942 --target-dir target/tutorial-sim-export -- --package fe2o3-production-ranked-bounds-fixture --features barrier_before_access --lib',
-    expected:
-      "One authority-free .fe2sim bundle is produced from the production source-to-KIR transaction.",
-  },
-  {
-    label: "Run and record the schedule",
-    command:
-      './target/debug/fe2o3-kir-sim --bundle "$PWD/barrier-before-access.fe2sim" --request "$PWD/barrier-before-access-request.json" --record-canonical-schedule "$PWD/barrier-before-access-schedule.json"',
-    expected:
-      "The CPU simulator executes exact bundled KIR and records a deterministic replay schedule.",
-  },
-] as const satisfies readonly LaunchCommand[];
+const noGpuQuickstart = {
+  label: "Run Fill from Rust source on the CPU",
+  command: gettingStartedCommands.noGpu,
+  expected:
+    "The source exporter and CPU simulator return four typed f32 values equal to 42.5, plus debugger-ready semantic state; no GPU is loaded or dispatched.",
+} satisfies LaunchCommand;
+
+const vecaddSourceCheck = {
+  label: "Check the typed Vecadd source boundary",
+  command: "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
+  expected:
+    "The compiler checks the typed Vecadd source and generated direct-KFD Arguments binding; the application entry remains intentionally fail closed.",
+} satisfies LaunchCommand;
 
 const rawLearningHub = {
   reviewedOn: "2026-09-01",
@@ -208,8 +207,8 @@ const rawLearningHub = {
   purpose:
     "Make fe2o3-kernels the launch entry point for learning fe2o3: start with one runnable path, then move from kernels to verification and evidence without hiding unsupported claims.",
   defaultRepository: FE2O3_PIN.repository,
-  defaultCommit: FE2O3_PIN.commit,
-  defaultTree: FE2O3_PIN.tree,
+  defaultCommit: currentState.compilerCommit,
+  defaultTree: currentState.compilerTree,
   launchAudit: [
     {
       id: "evidence-first-home",
@@ -255,7 +254,7 @@ const rawLearningHub = {
       audience: "first-time-user",
       outcome:
         "Reach a passing local check and a CPU simulator run before deciding whether to use ROCm hardware.",
-      firstCommands: [checkoutPinnedFe2o3, genericGate, ...cpuSimulationCommands],
+      firstCommands: [checkoutCurrentFe2o3, genericGate, noGpuQuickstart],
       setupPathIds: ["cpu-only"],
       lessonIds: ["read-the-evidence", "cpu-semantic-simulation"],
       nextStep:
@@ -270,21 +269,15 @@ const rawLearningHub = {
       outcome:
         "Understand how a small Rust kernel turns thread identity into a checked output write.",
       firstCommands: [
-        checkoutPinnedFe2o3,
-        {
-          label: "Run Vecadd through the typed lane",
-          command:
-            "FE2O3_TARGET=gfx942:xnack- cargo +nightly-2026-04-03 run --locked -p cargo-fe2o3 -- run -p fe2o3-vecadd",
-          expected:
-            "The typed Vecadd vertical slice builds and checks its output on the selected gfx942 path.",
-        },
+        checkoutCurrentFe2o3,
+        vecaddSourceCheck,
       ],
       setupPathIds: ["cpu-only", "mi300x-gfx942"],
       lessonIds: ["first-fill", "typed-vecadd", "memory-race-proof"],
       nextStep:
         "Extend the elementwise pattern only after the write partition and output coverage obligations are explicit.",
       boundary:
-        "Runnable elementwise examples do not imply general memory safety, compiler correctness, or optimized performance.",
+        "The source check is not an application launch, GPU result, general memory-safety proof, or performance result.",
     },
     {
       id: "verify-the-boundary",
@@ -345,11 +338,11 @@ const rawLearningHub = {
       purpose:
         "Let any Linux user learn the compiler boundary, simulator, debugger, and evidence labels without ROCm.",
       prerequisites: [
-        "Linux shell",
-        `Rust ${FE2O3_PIN.rustToolchain} with rust-src and rustc-dev where the fe2o3 checkout requires it`,
+        "Linux host with Bash and GNU realpath",
+        "The repository-pinned Rust toolchain with rust-src and rustc-dev",
         "No /dev/kfd or GPU access required",
       ],
-      commands: [checkoutPinnedFe2o3, genericGate, ...cpuSimulationCommands],
+      commands: [checkoutCurrentFe2o3, genericGate, noGpuQuickstart],
       validates: [
         "content and generic source checks",
         "authority-free .fe2sim export",
@@ -368,24 +361,24 @@ const rawLearningHub = {
       id: "mi300x-gfx942",
       label: "MI300X / gfx942 path",
       purpose:
-        "Run the launch-baseline gfx942 compile and hardware gates for the older public tutorial stack.",
+        "Run the current evidence pin's gfx942 compile and fail-closed KFD hardware diagnostics.",
       prerequisites: [
         "ROCm installation with /dev/kfd access",
         "A selected MI300X-class gfx942 device",
-        "Explicit FE2O3_TARGET=gfx942:xnack- target identity",
+        "Explicit FE2O3_TARGET=gfx942 target identity",
       ],
       commands: [
-        checkoutPinnedFe2o3,
+        checkoutCurrentFe2o3,
         genericGate,
         rocmCompileGate,
         gfx942HardwareGate,
       ],
       validates: [
         "ROCm compile lane for selected tutorial examples",
-        "explicit opt-in hardware smoke on gfx942",
-        "CPU-oracle comparison only where the lesson records that observation",
+        "explicit opt-in KFD device, memory, queue, and debugger smoke on gfx942",
       ],
       doesNotProve: [
+        "application packet submission or kernel dispatch",
         "full compiler correctness",
         "generalized race freedom beyond stated contracts",
         "gfx950 behavior",
@@ -494,7 +487,7 @@ const rawLearningHub = {
       setupPathId: "cpu-only",
       hardware: "Linux CPU host",
       status: "compiler-checked",
-      commands: [checkoutPinnedFe2o3, genericGate],
+      commands: [checkoutCurrentFe2o3, genericGate],
       expectedOutput:
         "Generic checks pass without claiming ROCm, HSACO, hardware dispatch, or performance.",
       sourcePaths: ["scripts/ci-local.sh", "docs/testing.md"],
@@ -511,73 +504,58 @@ const rawLearningHub = {
       setupPathId: "cpu-only",
       hardware: "Linux CPU host",
       status: "runnable-now",
-      commands: [checkoutPinnedFe2o3, ...cpuSimulationCommands],
+      commands: [checkoutCurrentFe2o3, noGpuQuickstart],
       expectedOutput:
-        "A .fe2sim bundle runs under the CPU KIR simulator and can be replayed with the recorded schedule.",
+        "The ordinary Fill #[kernel] Rust source produces four typed f32 values equal to 42.5 and debugger-ready semantic state on the CPU.",
       sourcePaths: [
-        "examples/cpu_simulation_source.rs",
-        "examples/source_simulation_request.json",
-        "examples/source_simulation_result.json",
+        "scripts/quickstart.sh",
+        "scripts/quickstart/fill-request.json",
+        "examples/fill/src/lib.rs",
       ],
       limitations: [
-        "Simulation begins at verified KIR and is not a GPU hardware observation.",
-        "The bundle does not authenticate protected compiler execution.",
+        "The source-to-KIR bundle executes semantically on the CPU and is not a GPU hardware observation.",
+        "It establishes neither CPU performance prediction nor CPU/GPU equivalence.",
       ],
     },
     {
-      id: "fill-gfx942",
-      operator: "Fill",
+      id: "fill-source-to-cpu",
+      operator: "Fill source-to-CPU quickstart",
       category: "elementwise",
       primaryLessonId: "first-fill",
-      setupPathId: "mi300x-gfx942",
-      hardware: "MI300X / gfx942",
+      setupPathId: "cpu-only",
+      hardware: "Linux CPU host",
       status: "runnable-now",
-      commands: [
-        checkoutPinnedFe2o3,
-        {
-          label: "Run Fill",
-          command:
-            "FE2O3_TARGET=gfx942:xnack- cargo +nightly-2026-04-03 run --locked -p cargo-fe2o3 -- run -p fe2o3-fill",
-          expected:
-            "The manifest-selected Fill example launches through the compatibility path and checks its output.",
-        },
-      ],
+      commands: [checkoutCurrentFe2o3, noGpuQuickstart],
       expectedOutput:
-        "Every active logical element is filled; rounded-tail lanes perform no access.",
-      sourcePaths: ["examples/fill_kernel.rs"],
+        "The typed result contains four f32 elements, each equal to 42.5; inactive semantic lanes perform no access.",
+      sourcePaths: [
+        "examples/fill/src/lib.rs",
+        "scripts/quickstart/fill-request.json",
+      ],
       limitations: [
-        "The lesson records an unsafe compatibility host boundary.",
-        "This does not prove broad memory safety or compiler correctness.",
+        "No GPU module is loaded and no GPU kernel is dispatched.",
+        "This does not prove CPU/GPU equivalence, performance, broad memory safety, or compiler correctness.",
       ],
     },
     {
-      id: "vecadd-gfx942",
-      operator: "Vecadd",
+      id: "vecadd-source-check",
+      operator: "Vecadd typed source check",
       category: "elementwise",
       primaryLessonId: "typed-vecadd",
-      setupPathId: "mi300x-gfx942",
-      hardware: "MI300X / gfx942",
-      status: "runnable-now",
-      commands: [
-        checkoutPinnedFe2o3,
-        {
-          label: "Run Vecadd",
-          command:
-            "FE2O3_TARGET=gfx942:xnack- cargo +nightly-2026-04-03 run --locked -p cargo-fe2o3 -- run -p fe2o3-vecadd",
-          expected:
-            "The typed Vecadd vertical slice runs with checked output ownership.",
-        },
-      ],
+      setupPathId: "cpu-only",
+      hardware: "Linux CPU build host",
+      status: "compiler-checked",
+      commands: [checkoutCurrentFe2o3, vecaddSourceCheck],
       expectedOutput:
-        "The output vector matches the independent CPU expectation for the lesson fixture.",
+        "The compiler accepts the typed source and direct-KFD argument binding; the application entry reports Unsupported at the unwired Worker V3 verifier boundary.",
       sourcePaths: [
-        "examples/vecadd_kernel.rs",
-        "examples/vecadd_host.rs",
+        "examples/vecadd/src/main.rs",
+        "examples/vecadd/src/vecadd_body.rs",
         "examples/verus_vecadd/src/reference.rs",
       ],
       limitations: [
         "The proof covers the stated source model and ownership shape, not arbitrary kernels.",
-        "No performance claim is attached to this beginner operator.",
+        "No current application launch, GPU result, or performance claim is attached to this source check.",
       ],
     },
     {

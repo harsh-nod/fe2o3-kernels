@@ -4,6 +4,7 @@ import {
   runtimeCpuOracleGate,
   type FunctionalReferenceGate,
 } from "./functional-gates";
+import { gettingStartedCommands } from "./getting-started";
 import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
 
 export type OperatorCookbookId =
@@ -75,7 +76,6 @@ export interface OperatorCookbookEntry extends OperatorCookbookRecord {
   referencePaths: readonly string[];
 }
 
-const rustToolchain = "nightly-2026-04-03";
 const gfx942 = "gfx942:xnack-";
 const gfx950 = "gfx950:xnack-";
 
@@ -90,37 +90,36 @@ const entries = [
     computeContract:
       "Map each in-range logical thread to one output element and write the same scalar value. The output guard dominates the write, so rounded tail lanes do not touch memory.",
     implementedShape:
-      "1024 f32 outputs in the introductory runner; CPU check expects every value to equal 42.5 within 1e-5.",
+      "Four f32 outputs in the source-to-CPU quickstart; the typed result expects every value to equal 42.5.",
     run: {
-      label: "Run the typed fill example",
+      label: "Run Fill from Rust source on the CPU",
       evidenceKind: "runnable-now",
-      target: gfx942,
-      command: `FE2O3_TARGET=${gfx942} cargo +${rustToolchain} run --locked -p cargo-fe2o3 -- run -p fe2o3-fill`,
+      target: "Linux CPU (semantic simulation)",
+      command: gettingStartedCommands.noGpu,
       status:
-        "Runnable tutorial path; also tied to the source-model fill proof in examples/verus_vecadd.",
+        "Runnable authority-free source-to-KIR-to-CPU path with typed output and debugger-ready semantic state.",
     },
     functionalGate: proofTimeSourceModelGate({
       command:
         "VERUS=/absolute/path/to/pinned/verus examples/verus_vecadd/run-verus.sh --require",
       mismatchBehavior:
-        "A modeled fill mismatch in value, coverage, bounds, or frame behavior is rejected by Verus before the runnable GPU path is promoted.",
+        "A modeled fill mismatch in value, coverage, bounds, or frame behavior is rejected by Verus before proof-time source-model status is promoted.",
       supportedSubset:
         "Safe CPU reference/model for scalar fill, guarded one-dimensional output writes, and explicit frame obligations.",
     }),
     paths: {
-      source: ["examples/fill/src/main.rs"],
+      source: ["examples/fill/src/lib.rs"],
       reference: ["examples/verus_vecadd/src/reference.rs"],
       runner: [
-        "examples/fill/src/main.rs",
-        "examples/regression-manifest-v1.txt",
-        "scripts/ci-local.sh",
+        "scripts/quickstart.sh",
+        "scripts/quickstart/fill-request.json",
       ],
       evidence: ["examples/verus_vecadd/verus/fill.rs"],
     },
     nonClaims: [
       "No general scatter or aliasing support is claimed.",
       "No performance result is claimed.",
-      "The legacy host launch is a compatibility path, not the final protected evidence pipeline.",
+      "The CPU result is not a GPU load, dispatch, observation, or CPU/GPU equivalence result.",
     ],
   },
   {
@@ -128,19 +127,20 @@ const entries = [
     title: "Vecadd",
     family: "starter",
     lessonIds: ["typed-vecadd"],
-    evidenceKind: "gpu-observed",
+    evidenceKind: "compiler-checked",
     learningLevel: "first-kernel",
     computeContract:
       "Read two f32 input slices at the guarded output index, add the values, and write one f32 result through the typed kernel API.",
     implementedShape:
-      "Three-slice f32 profile. The tutorial run uses the generated Kernel and Prepared host types; the MI300X observation validated 16,777,216 outputs.",
+      "Three-slice f32 source profile with generated direct-KFD Arguments binding. A distinct historical MI300X observation validated 16,777,216 outputs.",
     run: {
-      label: "Run the typed vecadd example",
-      evidenceKind: "runnable-now",
-      target: gfx942,
-      command: `FE2O3_TARGET=${gfx942} cargo +${rustToolchain} run --locked -p cargo-fe2o3 -- run -p fe2o3-vecadd`,
+      label: "Check the typed Vecadd source boundary",
+      evidenceKind: "compiler-checked",
+      target: "Linux CPU build host",
+      command:
+        "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
       status:
-        "Runnable typed vertical slice; separate MI300X benchmark evidence reports GPU correctness and HIP comparison.",
+        "The current compiler checks the typed source and direct-KFD argument binding; the application entry remains fail closed at the unwired Worker V3 verifier boundary.",
     },
     functionalGate: proofTimeSourceModelGate({
       command:
@@ -165,8 +165,8 @@ const entries = [
     },
     nonClaims: [
       "The source-model proof covers memory, bounds, and frame facts; it does not prove IEEE f32 arithmetic semantics.",
-      "The host-path benchmark includes synchronous safe launch policy overhead.",
-      "The HIP comparison is not a general performance claim for all vecadd sizes or hosts.",
+      "No current application launch or GPU result is claimed; the MI300X benchmark path is retained only as historical evidence.",
+      "The historical HIP comparison is not a general performance claim for all vecadd sizes or hosts.",
     ],
   },
   {
@@ -326,7 +326,6 @@ const entries = [
     paths: {
       source: [
         "examples/tiled_gemm_general_v1/src/kernel.rs",
-        "examples/tiled_gemm_v1/src/kernel.rs",
         "examples/gfx950_low_precision/src/kernel.rs",
       ],
       reference: [
@@ -342,6 +341,7 @@ const entries = [
       ],
       evidence: [
         "examples/semantic_reference_vnext/gemm_verus.rs",
+        "examples/tiled_gemm_v1/src/kernel.rs",
         "examples/tiled_gemm_v1/verus/lds_tiled_slice1_source_refinement.rs",
         "crates/fe2o3-hsa-runtime/tests/tiled_gemm_lds_slice1_worker_v2_hardware.rs",
         "crates/fe2o3-hsa-runtime/tests/gfx950_fp4_gemm_hardware.rs",

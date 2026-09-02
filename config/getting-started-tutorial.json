@@ -1,0 +1,76 @@
+{
+  "schema": "fe2o3-getting-started-tutorial-binding-v1",
+  "reviewedOn": "2026-09-01",
+  "compilerCommitAuthority": "config/publication-gate.json#requiredCommit",
+  "commands": {
+    "noGpu": "bash scripts/quickstart.sh no-gpu",
+    "doctor": "bash scripts/quickstart.sh doctor",
+    "gfx942Preflight": "bash scripts/quickstart.sh gfx942-preflight"
+  },
+  "cargoChildEnvironment": {
+    "FE2O3_HIP_SYS_DISABLE": "1",
+    "FE2O3_HSA_RUNTIME_DISABLE": "1"
+  },
+  "fixture": {
+    "path": "examples/getting_started_v1/expected-projection.json",
+    "sha256": "b23169971701a37a9cf0a1f06eb41f3a461f334e3114c6915c119f5e579b5940"
+  },
+  "compilerSourceBindings": [
+    {
+      "path": "scripts/quickstart.sh",
+      "sha256": "0ae0f545a07fa1b75538d4061d66e06c5dcd201c66c7a61d9cafefe425149330"
+    },
+    {
+      "path": "scripts/tests/quickstart.sh",
+      "sha256": "23540346331a7a4f4c273523be97d5d1508b78129f25412a68d784c0047e49b0"
+    },
+    {
+      "path": "scripts/quickstart/fill-request.json",
+      "sha256": "96e73033fe03d03a58ec92111ed84b0a75b0bc6421c86b6226ef37fd0fc9f659"
+    },
+    {
+      "path": "examples/fill/src/lib.rs",
+      "sha256": "e763df1ad98cafe247454bd3e6a40f39d8e0ea557f5d3080f56290476ca53766"
+    },
+    {
+      "path": "crates/cargo-fe2o3/src/doctor.rs",
+      "sha256": "dfae08e94f38882bbb8c8f8ada78b3086fafca374723107c814028d5e3853ae4"
+    },
+    {
+      "path": "crates/fe2o3-debug-cli/README.md",
+      "sha256": "38be7a8be69f084bf4e4058f41f4ecd1bb642ed0818b19e2940fb24a3dc4f815"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "fd4bf8a7721859cdae2da1367460588f87a552c0690670e6da17fb3b501fd25e"
+    },
+    {
+      "path": "crates/cargo-fe2o3/tests/production_dependency_closure.rs",
+      "sha256": "78fb50307f54777806203689ead1cece8569a5636cac57953171bb177c320c61"
+    },
+    {
+      "path": "crates/fe2o3-host/Cargo.toml",
+      "sha256": "171cfd6459db064e52ad66e2f74756d8fd102558ba160e3f586dfb290aeb3bd8"
+    },
+    {
+      "path": "crates/fe2o3-host/src/lib.rs",
+      "sha256": "aa89926064bc47f00f87dbcf0b67746a164ee5de35a0333204fc28a1348c1c54"
+    },
+    {
+      "path": "crates/fe2o3-host/src/generated_kfd_arguments.rs",
+      "sha256": "ecbfd5b15a3284e3a5e09a6c8c4362fe023bc8c4e7e81a8c46f0425b0dbf6cee"
+    },
+    {
+      "path": "crates/fe2o3-host/src/production_application.rs",
+      "sha256": "56c2ce548b0b45a17c1a68bab2fbf3411bef7b5d61f8cbd9ba9ed55660c8233b"
+    },
+    {
+      "path": "crates/fe2o3-macros/src/lib.rs",
+      "sha256": "43f8a94ebe8a30691a60114c05cdaf44f671e9dc8d6187c0ceedeb33d100f05a"
+    },
+    {
+      "path": "examples/vecadd/src/main.rs",
+      "sha256": "f97d7b6c1d51072a78bae7392a16ca0dd23ebdc2d3219e29334e557f7e47d246"
+    }
+  ]
+}
