@@ -243,6 +243,49 @@ describe("semantic debugger workbench", () => {
 });
 
 describe("live KFD debugger tutorial", () => {
+  it("keeps exactly one lane gridcell in the tab order", async () => {
+    const user = userEvent.setup();
+    render(<LiveKfdDebuggerPage />);
+
+    const grid = screen.getByRole("grid", {
+      name: "Direct KFD unavailable inner wave and lane records",
+    });
+    const cells = within(grid).getAllByRole("gridcell");
+    const activeTabStops = () =>
+      cells.filter((cell) => cell.getAttribute("tabindex") === "0");
+
+    expect(activeTabStops()).toEqual([cells[0]]);
+    await user.click(cells[7]);
+    expect(activeTabStops()).toEqual([cells[7]]);
+  });
+
+  it("moves lane grid focus with bounded arrow keys", async () => {
+    const user = userEvent.setup();
+    render(<LiveKfdDebuggerPage />);
+
+    const grid = screen.getByRole("grid", {
+      name: "Direct KFD unavailable inner wave and lane records",
+    });
+    const cells = within(grid).getAllByRole("gridcell");
+    cells[0].focus();
+
+    await user.keyboard("{ArrowLeft}");
+    expect(cells[0]).toHaveFocus();
+
+    await user.keyboard("{ArrowRight}");
+    expect(cells[1]).toHaveFocus();
+    expect(cells[1]).toHaveAttribute("aria-selected", "true");
+
+    await user.keyboard("{ArrowDown}");
+    expect(cells[1]).toHaveFocus();
+
+    await user.keyboard("{ArrowUp}");
+    expect(cells[1]).toHaveFocus();
+
+    await user.keyboard("{ArrowLeft}");
+    expect(cells[0]).toHaveFocus();
+  });
+
   it("keeps direct KFD, admitted ROCgdb, and profiler evidence distinct", async () => {
     const user = userEvent.setup();
     render(<LiveKfdDebuggerPage />);

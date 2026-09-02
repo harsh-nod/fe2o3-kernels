@@ -330,13 +330,13 @@
 .getting-started-lanes b {
   display: grid;
   place-items: center;
-  min-width: 25px;
-  height: 24px;
+  min-width: 30px;
+  height: 30px;
   padding: 0 5px;
   border: 1px solid var(--border-strong);
   border-radius: 3px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.56rem;
+  font-size: 0.64rem;
 }
 
 .getting-started-lanes .active {
@@ -6336,20 +6336,20 @@ tr:last-child td {
 }
 
 .gpu-lane-matrix {
-  width: 1664px;
+  width: 2184px;
 }
 
 .gpu-lane-axis,
 .gpu-wave-row {
   display: grid;
-  grid-template-columns: 128px 1536px;
+  grid-template-columns: 136px 2048px;
 }
 
 .gpu-lane-axis {
-  grid-template-columns: 128px repeat(8, 192px);
+  grid-template-columns: 136px repeat(8, 256px);
   color: var(--faint);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.52rem;
+  font-size: 0.6rem;
 }
 
 .gpu-lane-axis b {
@@ -6359,28 +6359,28 @@ tr:last-child td {
 
 .gpu-wave-row {
   align-items: center;
-  min-height: 29px;
+  min-height: 36px;
 }
 
 .gpu-wave-row > span {
   padding-right: 10px;
   color: var(--faint);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.58rem;
+  font-size: 0.66rem;
   overflow-wrap: anywhere;
 }
 
 .gpu-wave-row > div {
   display: grid;
-  grid-template-columns: repeat(64, 22px);
+  grid-template-columns: repeat(64, 30px);
   gap: 2px;
 }
 
 .gpu-wave-row button {
   display: grid;
   place-items: center;
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   overflow: hidden;
   color: var(--faint);
@@ -6388,7 +6388,7 @@ tr:last-child td {
   border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
   border-radius: 2px;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.44rem;
+  font-size: 0.62rem;
   cursor: pointer;
 }
 
@@ -7653,6 +7653,8 @@ tr:last-child td {
 }
 
 .debug-lane-grid {
+  --debug-lane-cell-size: 30px;
+
   display: grid;
   gap: 4px;
 }
@@ -7660,8 +7662,8 @@ tr:last-child td {
 .debug-lane-grid button {
   display: grid;
   place-items: center;
-  min-width: 24px;
-  height: 26px;
+  min-width: var(--debug-lane-cell-size);
+  height: 30px;
   padding: 0;
   color: var(--accent-strong);
   background: var(--accent-soft);
@@ -7669,7 +7671,7 @@ tr:last-child td {
   border-radius: 3px;
   cursor: pointer;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.58rem;
+  font-size: 0.64rem;
 }
 
 .debug-lane-grid button.inactive {
@@ -8204,6 +8206,12 @@ tr:last-child td {
   .debug-wave > header {
     align-items: flex-start;
     flex-wrap: wrap;
+  }
+
+  .debug-lane-grid {
+    --debug-lane-cell-size: 28px;
+
+    gap: 3px;
   }
 
   .debug-site-strip,

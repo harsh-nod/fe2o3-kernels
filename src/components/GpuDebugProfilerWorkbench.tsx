@@ -34,6 +34,7 @@ export function GpuDebugProfilerWorkbench() {
     useState<LiveWorkbenchBackendId>("direct-kfd");
   const [selection, setSelection] = useState({ row: 0, lane: 0 });
   const backendTabs = useRef<Array<HTMLButtonElement | null>>([]);
+  const laneCells = useRef<Array<Array<HTMLButtonElement | null>>>([]);
   const backend = liveWorkbenchBackends.find((item) => item.id === backendId)!;
   const selectedCell: LiveWorkbenchCell =
     backend.waveRows[selection.row]?.cells[selection.lane] ??
@@ -67,6 +68,36 @@ export function GpuDebugProfilerWorkbench() {
     event.preventDefault();
     selectBackend(liveWorkbenchBackends[nextIndex].id);
     backendTabs.current[nextIndex]?.focus();
+  };
+
+  const selectAdjacentLane = (
+    event: KeyboardEvent<HTMLButtonElement>,
+    rowIndex: number,
+    cellIndex: number,
+  ) => {
+    const lastRow = backend.waveRows.length - 1;
+    const lastCell = backend.waveRows[rowIndex].cells.length - 1;
+    let nextRow = rowIndex;
+    let nextCell = cellIndex;
+
+    if (event.key === "ArrowRight") {
+      nextCell = Math.min(cellIndex + 1, lastCell);
+    } else if (event.key === "ArrowLeft") {
+      nextCell = Math.max(cellIndex - 1, 0);
+    } else if (event.key === "ArrowDown") {
+      nextRow = Math.min(rowIndex + 1, lastRow);
+      nextCell = Math.min(cellIndex, backend.waveRows[nextRow].cells.length - 1);
+    } else if (event.key === "ArrowUp") {
+      nextRow = Math.max(rowIndex - 1, 0);
+      nextCell = Math.min(cellIndex, backend.waveRows[nextRow].cells.length - 1);
+    } else {
+      return;
+    }
+
+    event.preventDefault();
+    const next = backend.waveRows[nextRow].cells[nextCell];
+    setSelection({ row: nextRow, lane: next.lane });
+    laneCells.current[nextRow]?.[nextCell]?.focus();
   };
 
   return (
@@ -158,7 +189,7 @@ export function GpuDebugProfilerWorkbench() {
               <div className="gpu-wave-row" role="row" key={row.id}>
                 <span role="rowheader">{row.label}</span>
                 <div>
-                  {row.cells.map((cell) => {
+                  {row.cells.map((cell, cellIndex) => {
                     const selected =
                       selection.row === rowIndex && selection.lane === cell.lane;
                     return (
@@ -170,7 +201,15 @@ export function GpuDebugProfilerWorkbench() {
                         onClick={() =>
                           setSelection({ row: rowIndex, lane: cell.lane })
                         }
+                        onKeyDown={(event) =>
+                          selectAdjacentLane(event, rowIndex, cellIndex)
+                        }
+                        ref={(element) => {
+                          laneCells.current[rowIndex] ??= [];
+                          laneCells.current[rowIndex][cellIndex] = element;
+                        }}
                         role="gridcell"
+                        tabIndex={selected ? 0 : -1}
                         title={`lane ${cell.lane}: ${cell.detail}`}
                         type="button"
                       >
