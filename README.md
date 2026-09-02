@@ -66,7 +66,7 @@ performance.
 ```bash
 git clone https://github.com/harsh-nod/fe2o3.git
 cd fe2o3
-git checkout --detach f1f346ef78f4c315cf946d1cf19ff4bd51ecdc35
+git checkout --detach 6c987f34a95e1f892f4c4b4048b8d42d2d68569c
 bash scripts/quickstart.sh no-gpu
 ```
 
@@ -141,8 +141,8 @@ deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
 
 The checked-in publication gate is pinned to immutable implementation-evidence
-commit `f1f346ef78f4c315cf946d1cf19ff4bd51ecdc35`, tree
-`3358018bbdd4e718ecb00b440c534459df34df2f`. Deployment requires
+commit `6c987f34a95e1f892f4c4b4048b8d42d2d68569c`, tree
+`5d348b3e43e5e110c5e117afd31626725bbf69cd`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
 commit object to resolve to the exact pinned tree. Either ref may advance to a

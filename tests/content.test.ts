@@ -971,10 +971,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "f1f346ef78f4c315cf946d1cf19ff4bd51ecdc35",
+      "6c987f34a95e1f892f4c4b4048b8d42d2d68569c",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "3358018bbdd4e718ecb00b440c534459df34df2f",
+      "5d348b3e43e5e110c5e117afd31626725bbf69cd",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -3105,7 +3105,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "f1f346ef78f4c315cf946d1cf19ff4bd51ecdc35",
+      sourceCommit: "6c987f34a95e1f892f4c4b4048b8d42d2d68569c",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -4251,12 +4251,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-09-01",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "f1f346ef78f4c315cf946d1cf19ff4bd51ecdc35",
-      eventualPublicTree: "3358018bbdd4e718ecb00b440c534459df34df2f",
+      eventualPublicCommit: "6c987f34a95e1f892f4c4b4048b8d42d2d68569c",
+      eventualPublicTree: "5d348b3e43e5e110c5e117afd31626725bbf69cd",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "f1f346ef78f4c315cf946d1cf19ff4bd51ecdc35",
-        requiredTree: "3358018bbdd4e718ecb00b440c534459df34df2f",
+        requiredCommit: "6c987f34a95e1f892f4c4b4048b8d42d2d68569c",
+        requiredTree: "5d348b3e43e5e110c5e117afd31626725bbf69cd",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -4891,7 +4891,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "f1f346ef78f4c315cf946d1cf19ff4bd51ecdc35",
+      "6c987f34a95e1f892f4c4b4048b8d42d2d68569c",
     );
 
     const lesson = curriculum
