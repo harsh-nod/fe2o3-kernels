@@ -144,10 +144,10 @@ const compressedHybridPromotionCampaign = Object.freeze({
 });
 
 const kdaMi350Campaign = Object.freeze({
-  sourceCommit: "c17b33fa7555048bd31e16d417e10f3800fa5f27",
-  sourceTree: "a055ee9847dbe04bed5c81295a4da6021c14c831",
+  sourceCommit: "cf8a766fe11a53b7bfa6d5678c903e877bb95d75",
+  sourceTree: "b9c09ca3ae2807cecd967d89ec3e4c4ca56ee633",
   runtimeObservation:
-    "observed 2026-09-01 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; committed-source production COV6 HSA wrapper PASS",
+    "observed 2026-09-02 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; five-process production COV6 HSA correctness and timing campaign PASS",
 });
 
 export const advancedRustEvidence = Object.freeze({
@@ -166,10 +166,10 @@ export const advancedRustEvidence = Object.freeze({
     },
     {
       ...kdaMi350Campaign,
-      namespace: "d1782f1adc5ab27a123e99a81db150a6062c28f6404804282ed7210b350c8498",
-      llvmSha256: "a1d364a790b3fb8f7bb34b20b0fee237779d40ef4fce96b36c18685e5dc74b67",
-      hsacoSha256: "5c67a10f5f4ad82fa99c31dd4179c7758c691dd147750e28e27f1ddfa9ce2ee7",
-      isaSha256: "d147fad6526fd92c9c89e331f6f4dcc4f252ff1550745150f15addb54e08c9e1",
+      namespace: "e249ff03f475aa75595229ee6a68e816a2a9ad395940c495ad874c54c0e9b0ad",
+      llvmSha256: "6bb6dade12e55652f188a9596a594d54f74e6504d976a4ef4072d107137b1fa2",
+      hsacoSha256: "9f65a1407247cafa26eebaa574a92037cadc4bd1f11da1c81535927fc9cafde4",
+      isaSha256: "873fbcfafc9bb04e612a8a803ef2848c52c7744b0fd308ba7eed93f56dd1de86",
       numericalResult: "final_state_value_major max_absolute_error=1.490116119e-8; output_replicated max_absolute_error=3.725290298e-9",
       tolerance: "absolute tolerance 2.0e-5 for all 256 state elements and all 256 output replicas; finite values required; immutable inputs and guard canaries exact",
     },
@@ -191,10 +191,10 @@ export const advancedRustEvidence = Object.freeze({
     },
     {
       ...kdaMi350Campaign,
-      namespace: "4888a0b175bcc5b2897ba0594f0641acd700468c5302376a24463ba56eb49a56",
-      llvmSha256: "7db53eedb191a5e8d23ae8a6829d9544a53ae81d2c8e5471addb89c28e66639d",
-      hsacoSha256: "608d9758e1ed9470356b7e9f8b08eb2494b43a19293878277bf7740af43ff711",
-      isaSha256: "9991efdf3b25819e6bc4e594f7292629a53fdebc0b7501f40b1485e75244cc44",
+      namespace: "673210266e41c1a545820dbc0baec859659b5c1cf4d5e3e8ac6b5e542b4028d3",
+      llvmSha256: "f176ad770713545ca2652fc01bc3a676d638f5702bcb5d7a54d856ea5ea6724e",
+      hsacoSha256: "af4b48c379010aca3b5d64761eb92058823d042a0e95b5a7ded0cc81c0ea7791",
+      isaSha256: "4ae116f20e3f2e38fe9e279c0eb9329c763eec451d2a2b4fa4d7f217e52f2c62",
       numericalResult: "final_state_value_major max_absolute_error=2.980232239e-8; output_chunk0_replicated max_absolute_error=7.450580597e-9; output_chunk1_replicated max_absolute_error=7.450580597e-9",
       tolerance: "absolute tolerance 2.0e-4 for all 256 state elements and both 256-element output-replica buffers; finite values required; immutable inputs and guard canaries exact",
     },

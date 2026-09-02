@@ -1382,7 +1382,6 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
       .map(([lessonId]) => lessonId)
       .filter(
         (lessonId) =>
-          lessonId !== "gfx950-kda-gdn-linear-attention" &&
           lessonId !== "gfx950-deepseek-sparse-attention",
       ),
   );
@@ -1447,7 +1446,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
   await page.goto("./#/lesson/gfx950-kda-gdn-linear-attention");
   await page.getByRole("tab", { name: "Rust kernel" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "macro_rules! kda_chunk_wy_v3",
+    "macro_rules! kda_chunk_wy_v1",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "pub fn gfx950_kda_decode(",
@@ -1501,7 +1500,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/c17b33fa7555048bd31e16d417e10f3800fa5f27/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/f88432e7fe5d0b462b5598b9d84a8596fce13b3e/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(

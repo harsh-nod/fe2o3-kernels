@@ -71,9 +71,9 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "c17b33fa7555048bd31e16d417e10f3800fa5f27";
+export const advancedCoreSourceCommit = "f88432e7fe5d0b462b5598b9d84a8596fce13b3e";
 export const advancedCoreSourceTree: string | null =
-  "a055ee9847dbe04bed5c81295a4da6021c14c831";
+  "a4858ac0b07005a178883508fc3ada6f10630f93";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -84,7 +84,7 @@ const attentionBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
-  rustKernelFileSha256: "48b7dc1f1cbfbac0b62ba00d6df0383cdc477ab827cc9f40e2843d1309f07ed9",
+  rustKernelFileSha256: "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6",
   rustReferenceFileSha256: "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
@@ -384,7 +384,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
     rustFunctionExcerpt(bundle.rustKernel, symbol, true),
   );
   if (spec.id === "gfx950-kda-gdn-linear-attention") {
-    rustFragments.unshift(rustMacroExcerpt(bundle.rustKernel, "kda_chunk_wy_v3"));
+    rustFragments.unshift(rustMacroExcerpt(bundle.rustKernel, "kda_chunk_wy_v1"));
   }
   const referenceFragments = spec.referenceSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustReference, symbol, false),
@@ -885,7 +885,7 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "exact matrix-state KDA decode and WY/UT chunkwise-prefill teaching kernels",
     rustSymbols: ["gfx950_kda_decode", "gfx950_kda_chunkwise_prefill"],
-    rustExcerptSha256: "8d61f4d2c20464696bbec9c9a3396c5b513d90cce6f0d3344f4cd2a7ad8900b1",
+    rustExcerptSha256: "0525fc3f4c6a71c04a5d67a58a3c5fc9b29e91aea05115613cdef6359e97b33b",
     referenceSymbols: ["kda_decode_reference_v2", "kda_prefill_reference_v2"],
     referenceExcerptSha256: "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
     fixedShape:
