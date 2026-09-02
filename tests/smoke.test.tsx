@@ -62,6 +62,13 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getAllByText("Kimi K3 KDA Decode Core").length).toBeGreaterThan(0);
     expect(screen.getAllByText("GPT-OSS-120B Layer-Tile Megakernel").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Functional reference gate").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Runtime CPU oracle").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Runner paths").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("Evidence paths").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText(/safe CPU reference fails the MI350X runner/u).length,
+    ).toBeGreaterThan(0);
     expect(screen.getByText(/No chunk_kda prefill implementation/u)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Open fe2o3 source/ })).toHaveAttribute(
       "href",

@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { lessons } from "../src/content/curriculum";
 import { learningHub, validateLearningHub } from "../src/content/learning-hub";
+import {
+  functionalGateModeLabels,
+  validateFunctionalReferenceGate,
+} from "../src/content/functional-gates";
 import { evidenceLabels } from "../src/content/model";
 import {
   operatorCategories,
@@ -154,16 +158,32 @@ describe("learning hub launch model", () => {
       expect(entry.computes.length, entry.id).toBeGreaterThan(40);
       expect(entry.implementedShape.length, entry.id).toBeGreaterThan(30);
       expect(entry.runner.length, entry.id).toBeGreaterThan(10);
+      expect(functionalGateModeLabels[entry.functionalGate.mode], entry.id).toBeDefined();
+      expect(validateFunctionalReferenceGate(entry.functionalGate), entry.id).toEqual([]);
+      expect(entry.functionalGate.mismatchBehavior, entry.id).toMatch(
+        /mismatch/iu,
+      );
+      expect(entry.functionalGate.compileTimePromotion, entry.id).toMatch(
+        /SafeReferenceMirToLivePliron.*before KIR|fail closed.*before KIR/iu,
+      );
       expect(entry.sourcePaths.length, entry.id).toBeGreaterThan(0);
       expect(entry.referencePaths.length, entry.id).toBeGreaterThan(0);
+      expect(entry.paths.runner.length, entry.id).toBeGreaterThan(0);
+      expect(entry.paths.evidence.length, entry.id).toBeGreaterThan(0);
       expect(entry.nonClaims.length, entry.id).toBeGreaterThan(0);
       expect(entry.sourcePaths.join(" "), entry.id).not.toContain("..");
       expect(entry.referencePaths.join(" "), entry.id).not.toContain("..");
+      expect(entry.paths.runner.join(" "), entry.id).not.toContain("..");
+      expect(entry.paths.evidence.join(" "), entry.id).not.toContain("..");
     }
 
     const k3 = operatorCookbook.find((entry) => entry.id === "kimi-k3-kda");
     expect(k3?.runner).toBe(
       "bash examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh",
+    );
+    expect(k3?.functionalGate.mode).toBe("runtime-cpu-oracle");
+    expect(k3?.functionalGate.mismatchBehavior).toContain(
+      "safe CPU reference",
     );
     expect(k3?.implementedShape).toContain("Single-head f32");
     expect(k3?.nonClaims.join(" ")).toContain("chunk_kda prefill");
