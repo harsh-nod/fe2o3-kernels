@@ -4285,6 +4285,49 @@ tr:last-child td {
   line-height: 1.55;
 }
 
+.operator-variants {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.operator-variants strong {
+  color: var(--text-strong);
+  font-size: 0.72rem;
+}
+
+.operator-variants ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.operator-variants li {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+
+.operator-variants a {
+  color: var(--accent-strong);
+  font-size: 0.76rem;
+  font-weight: 750;
+}
+
+.operator-variants span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.operator-variants code {
+  overflow-wrap: anywhere;
+}
+
 .operator-paths {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

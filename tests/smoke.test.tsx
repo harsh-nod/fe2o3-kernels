@@ -41,12 +41,16 @@ describe("application shell", () => {
       screen.getAllByRole("link", { name: /Operator cookbook/ })
         .some((link) => link.getAttribute("href") === "/operators"),
     ).toBe(true);
-    expect(
-      screen.getByRole("table", { name: "What can I run today" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Kimi K3 KDA decode core" })).toHaveAttribute(
+    const runTodayTable = screen.getByRole("table", {
+      name: "What can I run today",
+    });
+    expect(runTodayTable).toBeInTheDocument();
+    const kdaRunLink = screen.getAllByRole("link", {
+        name: "gfx950 Kimi Delta Attention decode and chunkwise prefill",
+      }).find((link) => runTodayTable.contains(link));
+    expect(kdaRunLink).toHaveAttribute(
       "href",
-      "/lesson/gfx950-kimi-k3-kda-decode",
+      "/lesson/gfx950-kda-gdn-linear-attention",
     );
     expect(screen.getByText(/authoritative learning path/)).toBeInTheDocument();
     expect(screen.getByText("Run something first")).toBeInTheDocument();
@@ -60,7 +64,11 @@ describe("application shell", () => {
         name: "Operator cookbook",
       }, { timeout: 15_000 }),
     ).toBeInTheDocument();
-    expect(screen.getAllByText("Kimi K3 KDA Decode Core").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("Kimi Delta Attention Decode/Prefill").length,
+    ).toBeGreaterThan(0);
+    expect(screen.getAllByText("Sparse Attention").length).toBeGreaterThan(0);
+    expect(screen.getAllByText("DeepSeek sparse attention").length).toBeGreaterThan(0);
     expect(screen.getAllByText("GPT-OSS-120B Layer-Tile Megakernel").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Functional reference gate").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Runtime CPU oracle").length).toBeGreaterThan(0);
@@ -69,7 +77,7 @@ describe("application shell", () => {
     expect(
       screen.getAllByText(/safe CPU reference fails the MI350X runner/u).length,
     ).toBeGreaterThan(0);
-    expect(screen.getByText(/No chunk_kda prefill implementation/u)).toBeInTheDocument();
+    expect(screen.getByText(/No full Kimi K3 layer/u)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Open fe2o3 source/ })).toHaveAttribute(
       "href",
       "https://github.com/harsh-nod/fe2o3",

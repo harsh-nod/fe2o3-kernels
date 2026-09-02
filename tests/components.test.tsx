@@ -527,14 +527,14 @@ describe("search index", () => {
       result.href === "/"
     )).toBe(true);
 
-    const k3 = searchCatalog("Kimi K3 KDA decode core", lessons, glossary);
-    expect(k3.some((result) =>
+    const kda = searchCatalog("Kimi Delta Attention decode", lessons, glossary);
+    expect(kda.some((result) =>
       result.kind === "operator" &&
-      result.title === "Kimi K3 KDA Decode Core" &&
-      result.href === "/operators#kimi-k3-kda"
+      result.title === "Kimi Delta Attention Decode/Prefill" &&
+      result.href === "/operators#kda-gdn"
     )).toBe(true);
-    expect(k3.some((result) =>
-      result.lessonId === "gfx950-kimi-k3-kda-decode"
+    expect(kda.some((result) =>
+      result.lessonId === "gfx950-kda-gdn-linear-attention"
     )).toBe(true);
   });
 });

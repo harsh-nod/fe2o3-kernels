@@ -67,7 +67,7 @@ describe("learning hub launch model", () => {
       (path) => path.id === "mi350-gfx950",
     );
     expect(gfx950?.commands.map((command) => command.command).join("\n")).toContain(
-      "run-kimi-k3-kda-decode-gfx950.sh",
+      "run-kda-decode-gfx950.sh",
     );
     expect(gfx950?.doesNotProve).toContain("whole-model equivalence");
   });
@@ -84,21 +84,35 @@ describe("learning hub launch model", () => {
       ).toMatch(/\b(?:not|without|does not|bounded|historical|fixed)\b/iu);
     }
 
-    const k3 = learningHub.runMatrix.find(
-      (row) => row.id === "gfx950-kimi-k3-kda-decode-core",
+    const kda = learningHub.runMatrix.find(
+      (row) => row.id === "gfx950-kda-gdn",
     );
-    expect(k3).toMatchObject({
-      operator: "Kimi K3 KDA decode core",
-      primaryLessonId: "gfx950-kimi-k3-kda-decode",
+    expect(kda).toMatchObject({
+      operator: "gfx950 Kimi Delta Attention decode and chunkwise prefill",
+      primaryLessonId: "gfx950-kda-gdn-linear-attention",
       setupPathId: "mi350-gfx950",
       status: "gpu-observed",
     });
-    expect(k3?.commands.map((command) => command.command)).toContain(
-      "bash examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh",
+    expect(kda?.commands.map((command) => command.command)).toContain(
+      "bash examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
     );
-    expect(k3?.expectedOutput).toContain("output_first64");
-    expect(k3?.limitations.join(" ")).toContain("Not full Kimi K3 serving");
-    expect(k3?.limitations.join(" ")).toContain("performance");
+    expect(kda?.expectedOutput).toContain("Decode final_state");
+    expect(kda?.limitations.join(" ")).toContain("No full Kimi K3 layer");
+    expect(kda?.limitations.join(" ")).toContain("performance");
+
+    expect(
+      learningHub.runMatrix.map((row) => row.primaryLessonId),
+    ).toEqual(
+      expect.arrayContaining([
+        "gfx950-indexed-sparse-attention",
+        "gfx950-deepseek-sparse-attention",
+        "gfx950-compressed-hybrid-attention",
+        "gfx950-attnres-gr-mhc",
+        "gfx950-speculative-mtp-verification",
+        "gfx950-ngram-embedding-gather",
+        "gfx950-muon-optimizer",
+      ]),
+    );
   });
 
   it("turns contribution policy into a launch checklist", () => {
@@ -147,7 +161,12 @@ describe("learning hub launch model", () => {
       "gemm",
       "moe",
       "kda-gdn",
-      "kimi-k3-kda",
+      "sparse-attention",
+      "compressed-hybrid-attention",
+      "residual-mixing",
+      "speculative-mtp",
+      "ngram-gather",
+      "muon-update",
       "gpt-oss-layer-tile",
     ]);
 
@@ -177,17 +196,24 @@ describe("learning hub launch model", () => {
       expect(entry.paths.evidence.join(" "), entry.id).not.toContain("..");
     }
 
-    const k3 = operatorCookbook.find((entry) => entry.id === "kimi-k3-kda");
-    expect(k3?.runner).toBe(
-      "bash examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh",
+    const kda = operatorCookbook.find((entry) => entry.id === "kda-gdn");
+    expect(kda?.runner).toBe(
+      "bash examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
     );
-    expect(k3?.functionalGate.mode).toBe("runtime-cpu-oracle");
-    expect(k3?.functionalGate.mismatchBehavior).toContain(
+    expect(kda?.functionalGate.mode).toBe("runtime-cpu-oracle");
+    expect(kda?.functionalGate.mismatchBehavior).toContain(
       "safe CPU reference",
     );
-    expect(k3?.implementedShape).toContain("Single-head f32");
-    expect(k3?.nonClaims.join(" ")).toContain("chunk_kda prefill");
-    expect(k3?.nonClaims.join(" ")).toContain("full Kimi K3 serving");
+    expect(kda?.implementedShape).toContain("K=16");
+    expect(kda?.nonClaims.join(" ")).toContain("No full Kimi K3 layer");
+
+    const sparse = operatorCookbook.find(
+      (entry) => entry.id === "sparse-attention",
+    );
+    expect(sparse?.lessonIds).toEqual([
+      "gfx950-indexed-sparse-attention",
+      "gfx950-deepseek-sparse-attention",
+    ]);
   });
 
   it("keeps rich cookbook records available behind the flattened UI shape", () => {
@@ -197,6 +223,14 @@ describe("learning hub launch model", () => {
     expect(flash?.variants?.map((variant) => variant.lessonId)).toEqual([
       "gfx950-fp4-attention",
       "gfx950-fp8-attention",
+    ]);
+
+    const sparse = operatorCookbookEntries.find(
+      (entry) => entry.id === "sparse-attention",
+    );
+    expect(sparse?.variants?.map((variant) => variant.lessonId)).toEqual([
+      "gfx950-indexed-sparse-attention",
+      "gfx950-deepseek-sparse-attention",
     ]);
 
     const gptOss = operatorCookbookEntries.find(

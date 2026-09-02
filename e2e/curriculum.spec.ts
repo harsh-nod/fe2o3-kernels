@@ -160,10 +160,10 @@ test("launch hub and operator cookbook are discoverable", async ({ page }, testI
   ).toBeVisible();
   await expect(
     page.locator("#run-today").getByRole("link", {
-      name: "Kimi K3 KDA decode core",
+      name: "gfx950 Kimi Delta Attention decode and chunkwise prefill",
       exact: true,
     }),
-  ).toHaveAttribute("href", /gfx950-kimi-k3-kda-decode/u);
+  ).toHaveAttribute("href", /gfx950-kda-gdn-linear-attention/u);
   await page.locator("#run-today").screenshot({
     path: testInfo.outputPath("run-today.png"),
     animations: "disabled",
@@ -173,11 +173,14 @@ test("launch hub and operator cookbook are discoverable", async ({ page }, testI
   await expect(
     page.getByRole("heading", { level: 1, name: "Operator cookbook" }),
   ).toBeVisible();
-  await expect(page.locator("#kimi-k3-kda")).toContainText(
-    "Single-head f32 Kimi K3-shaped core",
+  await expect(page.locator("#kda-gdn")).toContainText(
+    "One head with K=16",
   );
-  await expect(page.locator("#kimi-k3-kda")).toContainText(
-    "No chunk_kda prefill implementation",
+  await expect(page.locator("#kda-gdn")).toContainText(
+    "No full Kimi K3 layer",
+  );
+  await expect(page.locator("#sparse-attention")).toContainText(
+    "DeepSeek sparse attention",
   );
   await expect(page.locator("#gpt-oss-layer-tile")).toContainText(
     "No complete GPT-OSS layer",

@@ -98,6 +98,23 @@ export function OperatorCookbookPage() {
                   <small>{entry.functionalGate.compileTimePromotion}</small>
                 </div>
 
+                {entry.variants ? (
+                  <div className="operator-variants">
+                    <strong>Variants</strong>
+                    <ul>
+                      {entry.variants.map((variant) => (
+                        <li key={`${entry.id}-${variant.label}`}>
+                          <Link to={`/lesson/${variant.lessonId}`}>
+                            {variant.label}
+                          </Link>
+                          <span>{variant.implementedShape}</span>
+                          <code>{variant.commandOrStatus}</code>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
                 <div className="operator-paths">
                   <div>
                     <strong>Source paths</strong>

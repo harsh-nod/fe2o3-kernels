@@ -414,9 +414,9 @@ const rawLearningHub = {
         {
           label: "Run one advanced attention slice",
           command:
-            "bash examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh",
+            "bash examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
           expected:
-            "The Kimi K3 KDA decode-core runner produces the bounded MI350X observation recorded by that lesson when run at its cited commit.",
+            "The Kimi Delta Attention decode runner produces the bounded MI350X observation recorded by that lesson when run at its cited commit.",
         },
         {
           label: "Run the gpt-oss layer tile",
@@ -439,7 +439,7 @@ const rawLearningHub = {
       firstLessonIds: [
         "gfx950-fp4-gemm",
         "gfx950-fp8-attention",
-        "gfx950-kimi-k3-kda-decode",
+        "gfx950-kda-gdn-linear-attention",
       ],
     },
     {
@@ -755,7 +755,7 @@ const rawLearningHub = {
     },
     {
       id: "gfx950-kda-gdn",
-      operator: "gfx950 KDA/GDN decode and prefill",
+      operator: "gfx950 Kimi Delta Attention decode and chunkwise prefill",
       category: "linear attention",
       primaryLessonId: "gfx950-kda-gdn-linear-attention",
       setupPathId: "mi350-gfx950",
@@ -763,58 +763,256 @@ const rawLearningHub = {
       status: "gpu-observed",
       commands: [
         {
-          label: "Run KDA/GDN decode",
+          label: "Run KDA decode",
           command: "bash examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
           expected:
-            "The decode teaching slice updates recurrent state and checks output against the CPU reference.",
+            "The matrix-state decode teaching slice checks state and replicated output against the CPU reference.",
         },
         {
-          label: "Run KDA/GDN prefill",
-          command: "bash examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh",
+          label: "Run KDA chunkwise prefill",
+          command: "bash examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
           expected:
-            "The prefill teaching slice checks final state and selected outputs against the CPU reference.",
+            "The WY/UT chunkwise prefill teaching slice checks final state and chunk outputs against the CPU reference.",
         },
       ],
       expectedOutput:
-        "The recorded decode and prefill max-error values stay within the lesson tolerance.",
+        "Decode final_state max_error=1.490116119e-8 and output max_error=3.725290298e-9; prefill final_state max_error=2.980232239e-8 and chunk outputs max_error=7.450580597e-9.",
       sourcePaths: [
         "examples/gfx950_advanced_attention/src/kernel.rs",
         "examples/gfx950_advanced_attention/src/reference.rs",
         "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
-        "examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh",
+        "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
       ],
       limitations: [
-        "The lesson covers bounded teaching variants, not every KDA or GDN formulation.",
-        "No full model or serving-cache integration is claimed.",
+        "The lesson covers one bounded matrix-state KDA teaching shape, not every KDA or GDN formulation.",
+        "No full Kimi K3 layer, serving-cache integration, model quality, or performance claim is made.",
       ],
     },
     {
-      id: "gfx950-kimi-k3-kda-decode-core",
-      operator: "Kimi K3 KDA decode core",
-      category: "model-shaped linear attention",
-      primaryLessonId: "gfx950-kimi-k3-kda-decode",
+      id: "gfx950-indexed-sparse-attention",
+      operator: "gfx950 indexed sparse attention",
+      category: "sparse attention",
+      primaryLessonId: "gfx950-indexed-sparse-attention",
       setupPathId: "mi350-gfx950",
       hardware: "MI350 or MI355X / gfx950",
       status: "gpu-observed",
       commands: [
         {
-          label: "Run Kimi K3 KDA decode-core",
+          label: "Run content sparse attention",
           command:
-            "bash examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh",
+            "bash examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
           expected:
-            "The single-head K=V=128 fused-recurrent decode-core slice builds, inspects, launches, and matches the CPU reference.",
+            "The selected IDs and bounded attention output are checked against the CPU reference.",
         },
       ],
       expectedOutput:
-        "output_first64 and output_second64 max_error=9.313225746e-10; state_row0_first64 max_error=4.656612873e-10.",
+        "Selected IDs are exact and sparse attention output stays within the lesson tolerance for the fixed fixture.",
       sourcePaths: [
         "examples/gfx950_advanced_attention/src/kernel.rs",
         "examples/gfx950_advanced_attention/src/reference.rs",
-        "examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh",
+        "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
       ],
       limitations: [
-        "Not full Kimi K3 serving or full-model equivalence.",
-        "Does not claim chunk prefill, all 96 KDA heads, BF16/MX formats, convolution fusion, RMS output gating, cache plumbing, or performance.",
+        "The selected sparse domain is fixed-shape teaching code, not a full sparse-attention backend.",
+        "The result is a bounded CPU-reference comparison, not compile-time functional equivalence or performance evidence.",
+      ],
+    },
+    {
+      id: "gfx950-deepseek-sparse-attention",
+      operator: "gfx950 DeepSeek sparse attention",
+      category: "sparse attention",
+      primaryLessonId: "gfx950-deepseek-sparse-attention",
+      setupPathId: "mi350-gfx950",
+      hardware: "MI350 or MI355X / gfx950",
+      status: "gpu-observed",
+      commands: [
+        {
+          label: "Run DeepSeek sparse attention",
+          command:
+            "bash examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+          expected:
+            "The selected-domain output, maximum, and normalizer are checked against the CPU reference.",
+        },
+      ],
+      expectedOutput:
+        "Output and softmax state max-error values stay within the fixed sparse-attention tolerance.",
+      sourcePaths: [
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "examples/gfx950_advanced_attention/src/reference.rs",
+        "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+      ],
+      limitations: [
+        "The Lightning Indexer selection is caller-provided and not learned or proved by this kernel.",
+        "No full DeepSeek serving path, arbitrary sparse policy, or performance claim is made.",
+      ],
+    },
+    {
+      id: "gfx950-compressed-hybrid-attention",
+      operator: "gfx950 compressed hybrid attention",
+      category: "hybrid attention",
+      primaryLessonId: "gfx950-compressed-hybrid-attention",
+      setupPathId: "mi350-gfx950",
+      hardware: "MI350 or MI355X / gfx950",
+      status: "gpu-observed",
+      commands: [
+        {
+          label: "Run compressed hybrid attention",
+          command:
+            "bash examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
+          expected:
+            "The compressed branch, direct branch, and fused output are checked against the CPU reference.",
+        },
+      ],
+      expectedOutput:
+        "The fixed hybrid attention output stays within the lesson tolerance.",
+      sourcePaths: [
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "examples/gfx950_advanced_attention/src/reference.rs",
+        "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
+      ],
+      limitations: [
+        "The branch domains and fusion rule are fixed teaching contracts, not an end-to-end hybrid-model equivalence result.",
+        "No performance claim or generalized sparse/compressed policy is made.",
+      ],
+    },
+    {
+      id: "gfx950-residual-mixing",
+      operator: "gfx950 AttnRes, GR, and mHC mixing",
+      category: "residual mixing",
+      primaryLessonId: "gfx950-attnres-gr-mhc",
+      setupPathId: "mi350-gfx950",
+      hardware: "MI350 or MI355X / gfx950",
+      status: "gpu-observed",
+      commands: [
+        {
+          label: "Run AttnRes aggregate",
+          command:
+            "bash examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
+          expected:
+            "The residual aggregate output is checked against its CPU reference.",
+        },
+        {
+          label: "Run four-branch residual",
+          command:
+            "bash examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
+          expected:
+            "The gated residual output is checked against its CPU reference.",
+        },
+        {
+          label: "Run mHC Sinkhorn mix",
+          command:
+            "bash examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+          expected:
+            "The Sinkhorn mixing output is checked against its CPU reference.",
+        },
+      ],
+      expectedOutput:
+        "AttnRes, four-branch residual, and mHC/Sinkhorn outputs stay within their fixed tolerances.",
+      sourcePaths: [
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "examples/gfx950_advanced_attention/src/reference.rs",
+        "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
+        "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
+        "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+      ],
+      limitations: [
+        "These are three bounded residual-mixing contracts, not a general residual-stream optimizer.",
+        "In-place aliasing and full model integration remain outside the launch claim unless stated by the lesson.",
+      ],
+    },
+    {
+      id: "gfx950-speculative-mtp",
+      operator: "gfx950 speculative and MTP verification",
+      category: "decode verification",
+      primaryLessonId: "gfx950-speculative-mtp-verification",
+      setupPathId: "mi350-gfx950",
+      hardware: "MI350 or MI355X / gfx950",
+      status: "gpu-observed",
+      commands: [
+        {
+          label: "Run speculative transaction",
+          command:
+            "bash examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+          expected:
+            "The accepted prefix, commit metadata, rollback lanes, and output state are checked against the CPU reference.",
+        },
+      ],
+      expectedOutput:
+        "Accepted-step metadata is exact and committed output state stays within the fixed tolerance.",
+      sourcePaths: [
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "examples/gfx950_advanced_systems/src/reference.rs",
+        "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+      ],
+      limitations: [
+        "This is a fixed verification kernel, not a serving scheduler, sampler, or complete decoder.",
+        "It does not prove model quality or compile-time equivalence for arbitrary token policies.",
+      ],
+    },
+    {
+      id: "gfx950-ngram-gather",
+      operator: "gfx950 N-gram hash-table gather",
+      category: "indexed gather",
+      primaryLessonId: "gfx950-ngram-embedding-gather",
+      setupPathId: "mi350-gfx950",
+      hardware: "MI350 or MI355X / gfx950",
+      status: "gpu-observed",
+      commands: [
+        {
+          label: "Run N-gram gather",
+          command:
+            "bash examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+          expected:
+            "The exact integer lookup outputs are checked against the CPU reference.",
+        },
+      ],
+      expectedOutput:
+        "Hits, misses, and duplicate-key tie behavior produce exact integer outputs.",
+      sourcePaths: [
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "examples/gfx950_advanced_systems/src/reference.rs",
+        "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+      ],
+      limitations: [
+        "The current output is an integer table value, not a full embedding-vector gather.",
+        "Hash-table policy, table size, and N-gram width are fixed for the teaching fixture.",
+      ],
+    },
+    {
+      id: "gfx950-muon-optimizer",
+      operator: "gfx950 Muon polar update",
+      category: "optimizer kernel",
+      primaryLessonId: "gfx950-muon-optimizer",
+      setupPathId: "mi350-gfx950",
+      hardware: "MI350 or MI355X / gfx950",
+      status: "gpu-observed",
+      commands: [
+        {
+          label: "Run gradient shard staging",
+          command:
+            "bash examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
+          expected:
+            "The staged shard values are checked exactly against the CPU reference.",
+        },
+        {
+          label: "Run Muon update",
+          command:
+            "bash examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
+          expected:
+            "The 4x4 polar update and reduced norm are checked against the CPU reference.",
+        },
+      ],
+      expectedOutput:
+        "Staged shard values are exact and Muon update/norm outputs stay within the fixed tolerance.",
+      sourcePaths: [
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "examples/gfx950_advanced_systems/src/reference.rs",
+        "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
+        "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
+      ],
+      limitations: [
+        "The lesson covers one fixed optimizer step, not convergence, training quality, or general matrix sizes.",
+        "The two-shard host staging path is not a distributed optimizer runtime.",
       ],
     },
     {

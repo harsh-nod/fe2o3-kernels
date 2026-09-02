@@ -5,8 +5,8 @@ The authoritative learning workbench for
 the current examples, and inspect the exact evidence behind each claim. The
 curriculum starts with scalar fill and vector addition, then develops the
 contracts needed for collectives, tiled GEMM, online softmax, FlashAttention,
-MoE routing, low-precision gfx950 kernels, KDA/GDN attention, Kimi K3 KDA, and
-GPT-OSS-style layer-tile work.
+MoE routing, low-precision gfx950 kernels, Kimi Delta Attention, sparse and
+hybrid attention, and GPT-OSS-style layer-tile work.
 
 This site is evidence-led. It distinguishes what the current stack runs from
 what it verifies, what it observes in compiler or hardware tests, and what is
@@ -51,8 +51,9 @@ entire README. The home page now exposes four launch tracks:
 The home page also includes a **What can I run today?** matrix with exact
 commands, expected results, environments, and boundaries. The
 `#/operators` route provides an operator cookbook for Fill, Vecadd, row
-softmax, GEMM, FlashAttention, MoE routing, KDA/GDN, Kimi K3 KDA decode, and the
-GPT-OSS layer-tile megakernel.
+softmax, GEMM, FlashAttention, MoE routing, Kimi Delta Attention,
+sparse/hybrid attention, residual mixing, speculative verification, N-gram
+gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
 ## Audited lesson baseline
 
@@ -1120,9 +1121,10 @@ The documentation app contains 35 lessons across eleven modules:
    Verus trust boundary.
 8. Exercises and the contribution evidence packet for a new kernel.
 9. gfx950 FP4/FP8 GEMM and FlashAttention production Rust examples.
-10. gfx950 advanced operator kernels, including MoE, KDA/GDN, sparse and hybrid
-    attention, residual mixing, speculative/MTP verification, N-gram gather,
-    Muon update, GPT-OSS layer-tile work, and Kimi K3 KDA decode.
+10. gfx950 advanced operator kernels, including MoE, Kimi Delta Attention
+    decode/chunkwise prefill, sparse and hybrid attention, residual mixing,
+    speculative/MTP verification, N-gram gather, Muon update, and GPT-OSS
+    layer-tile work.
 
 The first screen is the launch hub: role-based learning tracks, exact runnable
 commands, setup paths, contribution checklist, compiler snapshot, and links
