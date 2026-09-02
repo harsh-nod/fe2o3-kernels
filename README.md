@@ -66,7 +66,7 @@ performance.
 ```bash
 git clone https://github.com/harsh-nod/fe2o3.git
 cd fe2o3
-git checkout --detach 31825eb9ec15f69608a7c37f34046ed643826bd4
+git checkout --detach a23617d2e748f6b806b6bf2fd7253bdbccc525ef
 bash scripts/quickstart.sh no-gpu
 ```
 
@@ -98,13 +98,15 @@ publication-gated snapshot, known blockers, and separate run/verify/evidence gat
 for every kernel in the curriculum. That progress view does not silently repin
 or upgrade lesson claims.
 
-The **Live KFD debugger** reference at `#/debugger/live-kfd` is independently
-pinned to compiler commit `f8b123a4ec4e049ecc7c20efec56283732785b38`, tree
-`e17b0281d196b0bee568d526ab2ab1d245befe1c`. It documents the exact-bound V3
+The **Live KFD debugger** reference at `#/debugger/live-kfd` retains an
+independent historical milestone at compiler commit
+`ba0efc7f958e3afdf72eceeef1c37c2994fe2402`, tree
+`3a595c10a3af6f28223ed89b6029ba444c16a2af`. It documents the exact-bound V3
 agent protocol and the direct-KFD MI300X acceptance result while keeping the
 still-unavailable live wave, lane, PC, register, memory, breakpoint, and step
-surfaces explicit. That milestone does not repin the broader functional-proof
-publication record.
+surfaces explicit. Current implementation links use the publication pin and
+state the narrower leader-only forced-teardown boundary. The historical
+milestone does not repin the broader functional-proof publication record.
 
 The **Agent-native source/ISA inspection** reference at
 `#/debugger/source-isa-agent` is independently pinned to compiler commit
@@ -141,8 +143,8 @@ deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
 
 The checked-in publication gate is pinned to immutable implementation-evidence
-commit `31825eb9ec15f69608a7c37f34046ed643826bd4`, tree
-`f7881be788317d61904e532eb7da998d38dcfe64`. Deployment requires
+commit `a23617d2e748f6b806b6bf2fd7253bdbccc525ef`, tree
+`9f5ad569b233e923d5d6b029ed74185dacadef26`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
 commit object to resolve to the exact pinned tree. Either ref may advance to a

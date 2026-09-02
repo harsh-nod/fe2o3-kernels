@@ -510,7 +510,9 @@ export const liveKfdUnsupported = [
   "ROCgdb/MI GPU-thread classification and live GPU wave state",
   "Decoded ATT events, waits, and full-grid wave coverage",
   "Authenticated source/KIR/ISA correlation across every backend",
-  "Performance prediction or automated causal diagnosis",
+  "Descendant containment: the pidfd and PTRACE_O_EXITKILL protection cover only the directly launched process leader",
+  "Graceful V3 target shutdown: cleanup finishes KFD state, then sends SIGKILL to and boundedly reaps only that leader",
+  "CPU or GPU performance prediction, or automated causal diagnosis",
 ] as const;
 
 export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
@@ -539,7 +541,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Agent interaction",
     fe2o3:
-      "Strict bounded records join logical IDs, exact evidence links, revisions, typed unavailable results, control effects, profiler queries, comparisons, and next-capture plans. GPU-looking MI text cannot upgrade a generic thread into wave truth.",
+      "Agent-native structured records join logical IDs, exact evidence links, revisions, typed unavailable results, control effects, profiler queries, comparisons, and bounded next-capture plans. GPU-looking MI text cannot upgrade a generic thread into wave truth.",
     rocgdb:
       "GDB/MI is scriptable and mature, but its generic debugger model does not encode fe2o3 semantic evidence or exact CPU-reference correlation.",
     rocprof:
@@ -630,7 +632,10 @@ export const liveKfdSources = [
 ] as const;
 
 export const liveKfdCurrentImplementationPaths = [
+  "crates/fe2o3-debug-cli/src/hardware_linux_v2.rs",
   "crates/fe2o3-kfd/src/stopped_state_v1.rs",
+  "crates/fe2o3-kfd/src/queue_completion.rs",
+  "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
   "crates/fe2o3-debug-protocol/src/rocgdb_mi_v3.rs",
   "crates/fe2o3-debug-cli/src/rocgdb_mi_parser_v3.rs",
   "crates/fe2o3-debug-cli/src/rocgdb_mi_v3.rs",

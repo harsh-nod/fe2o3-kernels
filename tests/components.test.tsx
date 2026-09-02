@@ -294,6 +294,18 @@ describe("live KFD debugger tutorial", () => {
       screen.getByRole("heading", { name: "GPU debugger + profiler workbench" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Scopes are separate")).toBeInTheDocument();
+    expect(screen.getByText(/CPU simulator debugging is a separate/u)).toHaveTextContent(
+      "CPU performance prediction",
+    );
+    expect(screen.getByText(/V3 cleanup finishes KFD state/u)).toHaveTextContent(
+      "leader-only PTRACE_O_EXITKILL",
+    );
+    expect(
+      screen.getByRole("link", { name: /hardware_linux_v2.rs/u }),
+    ).toHaveAttribute(
+      "href",
+      currentSourceUrl("crates/fe2o3-debug-cli/src/hardware_linux_v2.rs"),
+    );
     expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
       "stopped_queue_envelope",
     );

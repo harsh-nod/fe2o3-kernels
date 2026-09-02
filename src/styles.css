@@ -6617,6 +6617,24 @@ tr:last-child td {
   overflow-wrap: anywhere;
 }
 
+.live-kfd-current-paths a {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 4px;
+  color: var(--text);
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 2px;
+}
+
+.live-kfd-current-paths a:hover {
+  color: var(--accent);
+}
+
+.live-kfd-current-paths a > svg {
+  flex: 0 0 auto;
+}
+
 @media (max-width: 900px) {
   .live-kfd-truth-grid,
   .live-kfd-flow {

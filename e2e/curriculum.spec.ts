@@ -547,6 +547,12 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
     }),
   ).toBeVisible();
   await expect(page.getByText("Scopes are separate")).toBeVisible();
+  await expect(page.getByText(/CPU simulator debugging is a separate/u)).toContainText(
+    "CPU performance prediction",
+  );
+  await expect(page.getByText(/V3 cleanup finishes KFD state/u)).toContainText(
+    "leader-only PTRACE_O_EXITKILL",
+  );
   await expect(page.getByTestId("gpu-workbench-record")).toContainText(
     "WaveRecordLayoutNotInKfdUapi",
   );
@@ -1050,7 +1056,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/31825eb9ec15f69608a7c37f34046ed643826bd4/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/a23617d2e748f6b806b6bf2fd7253bdbccc525ef/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -1189,7 +1195,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/31825eb9ec15f69608a7c37f34046ed643826bd4/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/a23617d2e748f6b806b6bf2fd7253bdbccc525ef/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -1209,7 +1215,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/31825eb9ec15f69608a7c37f34046ed643826bd4/examples/verus_vecadd/verus/reference_refinement_v1.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/a23617d2e748f6b806b6bf2fd7253bdbccc525ef/examples/verus_vecadd/verus/reference_refinement_v1.rs",
   );
 
   await page.getByRole("tab", { name: "Host" }).click();
@@ -1662,7 +1668,7 @@ test("every internal curriculum route resolves without page overflow", async ({
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Compiler baseline at 31825eb9ec",
+      name: "Compiler baseline at a23617d2e7",
     }),
   ).toBeVisible();
   await expect(

@@ -34,10 +34,12 @@ import {
   validateDebuggerWorkbenchFixture,
 } from "../src/content/debugger-workbench";
 import {
+  liveKfdComparisonRows,
   liveKfdCurrentImplementationPaths,
   liveKfdPublication,
   liveKfdSourceUrl,
   liveKfdSources,
+  liveKfdUnsupported,
   liveWorkbenchBackends,
 } from "../src/content/live-kfd-debugger";
 import {
@@ -711,6 +713,16 @@ describe("live KFD debugger milestone", () => {
     expect(liveKfdCurrentImplementationPaths).toContain(
       "crates/fe2o3-semantic-query/src/profiler_query.rs",
     );
+    expect(liveKfdCurrentImplementationPaths).toContain(
+      "crates/fe2o3-debug-cli/src/hardware_linux_v2.rs",
+    );
+    expect(liveKfdCurrentImplementationPaths).toContain(
+      "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
+    );
+    expect(liveKfdUnsupported.join(" ")).toContain("directly launched process leader");
+    expect(liveKfdUnsupported.join(" ")).toContain("CPU or GPU performance prediction");
+    expect(liveKfdComparisonRows.find((row) => row.surface === "Agent interaction")?.fe2o3)
+      .toContain("Agent-native structured records");
   });
 });
 
@@ -971,10 +983,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "31825eb9ec15f69608a7c37f34046ed643826bd4",
+      "a23617d2e748f6b806b6bf2fd7253bdbccc525ef",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "f7881be788317d61904e532eb7da998d38dcfe64",
+      "9f5ad569b233e923d5d6b029ed74185dacadef26",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -3105,7 +3117,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "31825eb9ec15f69608a7c37f34046ed643826bd4",
+      sourceCommit: "a23617d2e748f6b806b6bf2fd7253bdbccc525ef",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -4251,12 +4263,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-09-01",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "31825eb9ec15f69608a7c37f34046ed643826bd4",
-      eventualPublicTree: "f7881be788317d61904e532eb7da998d38dcfe64",
+      eventualPublicCommit: "a23617d2e748f6b806b6bf2fd7253bdbccc525ef",
+      eventualPublicTree: "9f5ad569b233e923d5d6b029ed74185dacadef26",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "31825eb9ec15f69608a7c37f34046ed643826bd4",
-        requiredTree: "f7881be788317d61904e532eb7da998d38dcfe64",
+        requiredCommit: "a23617d2e748f6b806b6bf2fd7253bdbccc525ef",
+        requiredTree: "9f5ad569b233e923d5d6b029ed74185dacadef26",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -4891,7 +4903,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "31825eb9ec15f69608a7c37f34046ed643826bd4",
+      "a23617d2e748f6b806b6bf2fd7253bdbccc525ef",
     );
 
     const lesson = curriculum

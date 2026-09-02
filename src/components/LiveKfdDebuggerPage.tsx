@@ -20,6 +20,7 @@ import {
   liveKfdSources,
   liveKfdUnsupported,
 } from "../content/live-kfd-debugger";
+import { currentSourceUrl, currentState } from "../content/current-state";
 import { GpuDebugProfilerWorkbench } from "./GpuDebugProfilerWorkbench";
 
 const truthIcons = {
@@ -145,10 +146,12 @@ export function LiveKfdDebuggerPage() {
           {liveKfdUnsupported.map((item) => <li key={item}>{item}</li>)}
         </ul>
         <p>
-          A CPU semantic replay can still provide deterministic thread,
+          CPU simulator debugging is a separate deterministic semantic replay
+          over supported KIR. It can provide thread,
           logical-wave, workgroup, KIR, SSA, and allocation-relative state.
-          Neither debug backend nor Profiler V4 presents simulator facts as live
-          GPU wave state.
+          Neither live debug backend nor Profiler V4 presents those simulator
+          facts as live GPU wave state, GPU equivalence, timing, or CPU
+          performance prediction.
         </p>
         <a className="source-isa-agent-live-link" href="#/debugger/source-isa-agent">
           Inspect compile-time source/ISA observations as typed JSONL
@@ -225,12 +228,18 @@ export function LiveKfdDebuggerPage() {
         <aside className="live-kfd-current-paths">
           <strong>Owning implementation paths</strong>
           <p>
-            The milestone pins these debugger and profiler boundaries to the
-            same compiler tree as the source links above.
+            Current implementation links are pinned to publication evidence
+            commit {currentState.compilerShortCommit}. V3 cleanup finishes KFD
+            state before forcibly terminating and boundedly reaping the direct
+            leader; pidfd and leader-only PTRACE_O_EXITKILL do not contain
+            descendants or provide graceful target queue/runtime shutdown.
           </p>
           <div>
             {liveKfdCurrentImplementationPaths.map((path) => (
-              <code key={path}>{path}</code>
+              <a href={currentSourceUrl(path)} key={path} rel="noreferrer" target="_blank">
+                <code>{path}</code>
+                <ExternalLink size={12} aria-hidden="true" />
+              </a>
             ))}
           </div>
         </aside>
