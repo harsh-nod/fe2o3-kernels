@@ -1,11 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { lessons } from "../src/content/curriculum";
+import { currentState } from "../src/content/current-state";
 import { learningHub, validateLearningHub } from "../src/content/learning-hub";
 import {
   functionalGateModeLabels,
   validateFunctionalReferenceGate,
 } from "../src/content/functional-gates";
-import { evidenceLabels } from "../src/content/model";
+import { evidenceLabels, FE2O3_PIN } from "../src/content/model";
 import {
   operatorCategories,
   operatorCookbook,
@@ -15,6 +16,8 @@ import {
 describe("learning hub launch model", () => {
   it("is internally valid", () => {
     expect(validateLearningHub(learningHub)).toEqual([]);
+    expect(learningHub.defaultCommit).toBe(currentState.compilerCommit);
+    expect(learningHub.defaultTree).toBe(currentState.compilerTree);
   });
 
   it("links launch tracks, setup paths, and run matrix rows to existing lessons", () => {
@@ -48,19 +51,29 @@ describe("learning hub launch model", () => {
     ]);
 
     const cpu = learningHub.setupPaths.find((path) => path.id === "cpu-only");
-    expect(cpu?.commands.map((command) => command.command).join("\n")).toContain(
-      "fe2o3-kir-sim",
+    const cpuCommands = cpu?.commands
+      .map((command) => command.command)
+      .join("\n");
+    expect(cpuCommands).toContain(
+      `git checkout --detach ${currentState.compilerCommit}`,
     );
+    expect(cpuCommands).toContain("bash scripts/quickstart.sh no-gpu");
     expect(cpu?.doesNotProve).toContain("GPU execution");
 
     const gfx942 = learningHub.setupPaths.find(
       (path) => path.id === "mi300x-gfx942",
     );
     expect(gfx942?.commands.map((command) => command.command)).toContain(
-      "FE2O3_TARGET=gfx942:xnack- scripts/ci-local.sh rocm-compile",
+      "FE2O3_TARGET=gfx942 scripts/ci-local.sh rocm-compile",
     );
     expect(gfx942?.commands.map((command) => command.command)).toContain(
-      "FE2O3_TARGET=gfx942:xnack- FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke",
+      "FE2O3_TARGET=gfx942 FE2O3_ALLOW_GPU_SMOKE=1 scripts/ci-local.sh hardware-smoke",
+    );
+    expect(gfx942?.doesNotProve).toContain(
+      "application packet submission or kernel dispatch",
+    );
+    expect(gfx942?.commands.at(-1)?.expected).toContain(
+      "without submitting a packet",
     );
 
     const gfx950 = learningHub.setupPaths.find(
@@ -99,6 +112,56 @@ describe("learning hub launch model", () => {
     expect(kda?.expectedOutput).toContain("Decode final_state");
     expect(kda?.limitations.join(" ")).toContain("No full Kimi K3 layer");
     expect(kda?.limitations.join(" ")).toContain("performance");
+
+    const fill = learningHub.runMatrix.find(
+      (row) => row.id === "fill-source-to-cpu",
+    );
+    expect(fill).toMatchObject({
+      hardware: "Linux CPU host",
+      setupPathId: "cpu-only",
+      status: "runnable-now",
+    });
+    expect(fill?.commands.map((command) => command.command).join("\n"))
+      .toContain("bash scripts/quickstart.sh no-gpu");
+    expect(fill?.sourcePaths).toContain("examples/fill/src/lib.rs");
+    expect(fill?.limitations.join(" ")).toContain("No GPU module");
+
+    const vecadd = learningHub.runMatrix.find(
+      (row) => row.id === "vecadd-source-check",
+    );
+    expect(vecadd).toMatchObject({
+      hardware: "Linux CPU build host",
+      setupPathId: "cpu-only",
+      status: "compiler-checked",
+    });
+    expect(vecadd?.commands.map((command) => command.command).join("\n"))
+      .toContain(
+        "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
+      );
+    expect(vecadd?.expectedOutput).toContain("Unsupported");
+
+    const currentOnboarding = learningHub.runMatrix
+      .filter((row) => [
+        "generic-ci-gate",
+        "cpu-semantic-simulation",
+        "fill-source-to-cpu",
+        "vecadd-source-check",
+      ].includes(row.id))
+      .flatMap((row) => row.commands.map((command) => command.command))
+      .join("\n");
+    expect(currentOnboarding).toContain(
+      `git checkout --detach ${currentState.compilerCommit}`,
+    );
+    expect(currentOnboarding).not.toMatch(
+      /cargo .* run -p fe2o3-(?:fill|vecadd)/u,
+    );
+
+    const historicalGemm = learningHub.runMatrix.find(
+      (row) => row.id === "dynamic-gemm-gfx942",
+    );
+    expect(
+      historicalGemm?.commands.map((command) => command.command).join("\n"),
+    ).toContain(`git checkout --detach ${FE2O3_PIN.commit}`);
 
     expect(
       learningHub.runMatrix.map((row) => row.primaryLessonId),
@@ -206,6 +269,25 @@ describe("learning hub launch model", () => {
     );
     expect(kda?.implementedShape).toContain("K=16");
     expect(kda?.nonClaims.join(" ")).toContain("No full Kimi K3 layer");
+
+    const fill = operatorCookbook.find((entry) => entry.id === "fill");
+    expect(fill).toMatchObject({
+      status: "runnable-now",
+      runner: "bash scripts/quickstart.sh no-gpu",
+    });
+    expect(fill?.sourcePaths).toEqual(["examples/fill/src/lib.rs"]);
+    expect(fill?.run.target).toBe("Linux CPU (semantic simulation)");
+    expect(fill?.nonClaims.join(" ")).toContain("not a GPU load");
+
+    const vecadd = operatorCookbook.find((entry) => entry.id === "vecadd");
+    expect(vecadd).toMatchObject({
+      status: "compiler-checked",
+      runner:
+        "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
+    });
+    expect(vecadd?.run.status).toContain("fail closed");
+    expect(vecadd?.nonClaims.join(" ")).toContain("historical evidence");
+    expect(vecadd?.paths.evidence).toContain("benchmarks/vecadd_hip/README.md");
 
     const sparse = operatorCookbook.find(
       (entry) => entry.id === "sparse-attention",

@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { HashRouter, MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/App";
+import { currentSourceUrl, currentState } from "../src/content/current-state";
 import "../src/components/ArchitecturePage";
 import "../src/components/LessonPage";
 import "../src/components/OperatorCookbookPage";
@@ -63,6 +64,12 @@ describe("application shell", () => {
     );
     expect(screen.getByText(/current CPU-first workflows/)).toBeInTheDocument();
     expect(screen.getByText("Compiler baseline")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "What the evidence pin enforces" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText(`evidence pin ${currentState.compilerShortCommit}`))
+      .toBeInTheDocument();
+    expect(screen.queryByText(/compiler main/u)).not.toBeInTheDocument();
     expect(screen.getByText("Run something first")).toBeInTheDocument();
   }, 20_000);
 
@@ -186,9 +193,29 @@ describe("application shell", () => {
       screen.getAllByText(/safe CPU reference fails the MI350X runner/u).length,
     ).toBeGreaterThan(0);
     expect(screen.getByText(/No full Kimi K3 layer/u)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open fe2o3 source/ })).toHaveAttribute(
+    const fill = screen
+      .getByRole("heading", { level: 3, name: "Fill" })
+      .closest("article");
+    expect(fill).not.toBeNull();
+    expect(within(fill!).getByRole("link", { name: "examples/fill/src/lib.rs" }))
+      .toHaveAttribute("href", currentSourceUrl("examples/fill/src/lib.rs"));
+    expect(within(fill!).getByText("bash scripts/quickstart.sh no-gpu"))
+      .toBeInTheDocument();
+
+    const vecadd = screen
+      .getByRole("heading", { level: 3, name: "Vecadd" })
+      .closest("article");
+    expect(vecadd).not.toBeNull();
+    expect(within(vecadd!).getByText(
+      "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
+    )).toBeInTheDocument();
+    expect(within(vecadd!).getByText(/remains fail closed/u)).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("link", { name: /Open compiler evidence pin/ }),
+    ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3",
+      `https://github.com/harsh-nod/fe2o3/tree/${currentState.compilerCommit}`,
     );
   }, 20_000);
 

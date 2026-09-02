@@ -7,6 +7,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { currentSourceUrl, currentState } from "../content/current-state";
 import { functionalGateModeLabels } from "../content/functional-gates";
 import {
   operatorCategories,
@@ -128,7 +129,14 @@ export function OperatorCookbookPage() {
                   <div>
                     <strong>Source paths</strong>
                     {entry.sourcePaths.map((path) => (
-                      <code key={path}>{path}</code>
+                      <a
+                        href={currentSourceUrl(path)}
+                        key={path}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <code>{path}</code>
+                      </a>
                     ))}
                   </div>
                   <div>
@@ -169,17 +177,19 @@ export function OperatorCookbookPage() {
         <p className="section-kicker">Source</p>
         <h2>Authoritative code remains in fe2o3</h2>
         <p>
-          The cookbook is a navigation layer over pinned lesson evidence. Source
-          links and commands point back to the exact fe2o3 paths named by each
-          lesson.
+          Source links resolve against the current evidence pin {" "}
+          <code>{currentState.compilerShortCommit}</code>. Runner, reference,
+          and evidence paths remain provenance labels; lessons name their exact
+          historical identities where those differ from the current pin.
         </p>
         <a
           className="source-button"
-          href="https://github.com/harsh-nod/fe2o3"
+          href={`https://github.com/harsh-nod/fe2o3/tree/${currentState.compilerCommit}`}
           target="_blank"
           rel="noreferrer"
         >
-          Open fe2o3 source <ExternalLink size={14} aria-hidden="true" />
+          Open compiler evidence pin {" "}
+          <ExternalLink size={14} aria-hidden="true" />
         </a>
       </section>
     </article>

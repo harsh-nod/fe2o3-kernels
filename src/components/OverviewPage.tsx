@@ -179,8 +179,8 @@ export function OverviewPage() {
 
       <section className="overview-section">
         <div>
-          <p className="section-kicker">Current compiler</p>
-          <h2>What production main enforces</h2>
+          <p className="section-kicker">Compiler baseline</p>
+          <h2>What the evidence pin enforces</h2>
           <Link className="overview-inline-link" to="/architecture">
             Inspect sources and tracked issues <ArrowRight size={14} />
           </Link>
@@ -201,7 +201,7 @@ export function OverviewPage() {
       <footer className="overview-footer">
         <BookOpenCheck size={18} aria-hidden="true" />
         <p>
-          Lesson claims retain their own exact evidence pins. Current compiler
+          Lesson claims retain their own exact evidence pins. Compiler baseline
           status is sourced from the reviewed manifest and never inferred from
           historical tutorial results.
         </p>
