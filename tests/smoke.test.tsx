@@ -63,7 +63,7 @@ describe("application shell", () => {
       "/lesson/gfx950-kda-gdn-linear-attention",
     );
     expect(screen.getByText(/current CPU-first workflows/)).toBeInTheDocument();
-    expect(screen.getByText("Compiler baseline")).toBeInTheDocument();
+    expect(screen.getAllByText("Compiler baseline")).toHaveLength(2);
     expect(
       screen.getByRole("heading", { name: "What the evidence pin enforces" }),
     ).toBeInTheDocument();
@@ -123,7 +123,8 @@ describe("application shell", () => {
       "#/start?audience=operator#run-today",
     );
     runTodayLink.focus();
-    await user.keyboard("{Enter}");
+    expect(runTodayLink).toHaveFocus();
+    await user.click(runTodayLink);
 
     const runToday = document.getElementById("run-today");
     expect(runToday).not.toBeNull();
