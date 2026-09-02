@@ -78,7 +78,7 @@ export function GpuDebugProfilerWorkbench() {
     const lastRow = backend.waveRows.length - 1;
     const lastCell = backend.waveRows[rowIndex].cells.length - 1;
     let nextRow = rowIndex;
-    let nextCell = cellIndex;
+    let nextCell: number;
 
     if (event.key === "ArrowRight") {
       nextCell = Math.min(cellIndex + 1, lastCell);
