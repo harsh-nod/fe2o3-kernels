@@ -1,6 +1,6 @@
 {
-  "requiredCommit": "af2ec22c549ad9e770d6beb540baade1a0c30fe9",
-  "requiredTree": "48edf48dc22389e026e8ae8af1bfce684a41f350",
+  "requiredCommit": "fa2c53637039c81f671e2fb20ffb0b729ff1cd96",
+  "requiredTree": "b3f8e8fa12a42c3bfa7fd9789660abb4e471db96",
   "requiredRefRelationship": "contains-required-commit",
   "requiredRefs": [
     {

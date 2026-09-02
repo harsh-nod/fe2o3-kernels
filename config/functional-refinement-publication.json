@@ -1,8 +1,8 @@
 {
   "schema": "fe2o3-functional-refinement-tutorial-publication-v1",
   "status": "published-current",
-  "compilerCommit": "af2ec22c549ad9e770d6beb540baade1a0c30fe9",
-  "compilerTree": "48edf48dc22389e026e8ae8af1bfce684a41f350",
+  "compilerCommit": "fa2c53637039c81f671e2fb20ffb0b729ff1cd96",
+  "compilerTree": "b3f8e8fa12a42c3bfa7fd9789660abb4e471db96",
   "fixtureSourcePath": "crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
   "fixtureSourceSha256": "86fa2c639607213f476a3c17ea0d1926fd4e4941e8226c084bf70eb77f3f3839",
   "receiptFixturePath": "crates/fe2o3-verifier/src/functional_refinement_receipt_v2.rs",
