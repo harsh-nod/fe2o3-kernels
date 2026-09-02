@@ -1,4 +1,9 @@
 import type { EvidenceKind } from "./model";
+import {
+  proofTimeSourceModelGate,
+  runtimeCpuOracleGate,
+  type FunctionalReferenceGate,
+} from "./functional-gates";
 import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
 
 export type OperatorCookbookId =
@@ -48,6 +53,7 @@ export interface OperatorCookbookRecord {
   computeContract: string;
   implementedShape: string;
   run: OperatorCookbookRun;
+  functionalGate: FunctionalReferenceGate;
   paths: OperatorCookbookPaths;
   variants?: readonly OperatorCookbookVariant[];
   nonClaims: readonly string[];
@@ -88,6 +94,14 @@ const entries = [
       status:
         "Runnable tutorial path; also tied to the source-model fill proof in examples/verus_vecadd.",
     },
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/verus_vecadd/run-verus.sh --require",
+      mismatchBehavior:
+        "A modeled fill mismatch in value, coverage, bounds, or frame behavior is rejected by Verus before the runnable GPU path is promoted.",
+      supportedSubset:
+        "Safe CPU reference/model for scalar fill, guarded one-dimensional output writes, and explicit frame obligations.",
+    }),
     paths: {
       source: ["examples/fill/src/main.rs"],
       reference: ["examples/verus_vecadd/src/reference.rs"],
@@ -123,6 +137,14 @@ const entries = [
       status:
         "Runnable typed vertical slice; separate MI300X benchmark evidence reports GPU correctness and HIP comparison.",
     },
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/verus_vecadd/run-verus.sh --require",
+      mismatchBehavior:
+        "A modeled vecadd mismatch in the output equation, ownership, bounds, or unchanged-input frame is rejected by the Verus refinement fixtures before hardware evidence is trusted.",
+      supportedSubset:
+        "Safe CPU reference/model for one-dimensional pointwise vecadd and checked slice reads.",
+    }),
     paths: {
       source: ["examples/vecadd/src/vecadd_body.rs"],
       reference: ["examples/verus_vecadd/src/reference.rs"],
@@ -161,6 +183,13 @@ const entries = [
       status:
         "Historical qualification path; the retired workload-selecting route is not the current production transaction.",
     },
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/row_softmax_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded row-softmax output or padding mismatch against the safe CPU reference fails the qualification runner; exp and numerical-refinement authority are not compile-time claims yet.",
+      supportedSubset:
+        "Safe CPU reference/oracle for dynamic rows, columns, strides, finite active columns, tails, and padding.",
+    }),
     paths: {
       source: ["examples/row_softmax_general_v1/src/kernel.rs"],
       reference: ["examples/row_softmax_general_v1/src/reference.rs"],
@@ -203,6 +232,13 @@ const entries = [
       status:
         "Historical dynamic GPU qualification plus current source/model coverage for the smaller causal teaching operator.",
     },
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/flash_attention_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded attention-output mismatch against the safe CPU oracle fails the GPU runner; the smaller causal model also rejects source-model mutations, but full recurrence and exp semantics are not compile-time authority yet.",
+      supportedSubset:
+        "Safe CPU reference/oracle for bounded FlashAttention fixtures plus a separate proof-facing causal source model.",
+    }),
     paths: {
       source: [
         "examples/flash_attention_general_v1/src/kernel.rs",
@@ -275,6 +311,13 @@ const entries = [
       status:
         "GPU-observed functional qualification; protected Worker V3 publication and complete source-to-machine refinement remain separate.",
     },
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/tiled_gemm_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded GEMM output, edge, or padding mismatch against the safe CPU reference fails the GPU qualification run; nested reductions, MFMA tensor components, and finite-error replay remain fail-closed for compile-time authority.",
+      supportedSubset:
+        "Safe CPU reference/oracle for dynamic M/N/K, independent strides, ordered K reduction, alpha/beta epilogue, edges, and padding.",
+    }),
     paths: {
       source: [
         "examples/tiled_gemm_general_v1/src/kernel.rs",
@@ -346,6 +389,13 @@ const entries = [
       status:
         "Historical grouped-expert GPU qualification; current deterministic top-2 routing is source/model evidence, and gfx950 advanced MoE has bounded MI350X observations.",
     },
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/moe_grouped_expert_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded routed-expert output, padding, or combine mismatch against the safe CPU reference fails the GPU runner; top-2 routing mutations are separately rejected by the source-model proof.",
+      supportedSubset:
+        "Safe CPU reference/oracle for routing metadata, expert selection, dynamic expert GEMM, weighted combine, and bounded output padding.",
+    }),
     paths: {
       source: [
         "examples/moe_top2_v1/src/kernel.rs",
@@ -428,6 +478,14 @@ const entries = [
       status:
         "MI350X-observed production Rust decode and prefill teaching kernels; prefill has its own runner.",
     },
+    functionalGate: runtimeCpuOracleGate({
+      command:
+        "bash examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
+      mismatchBehavior:
+        "A bounded decode output/state mismatch against the safe CPU reference fails the MI350X runner; the recurrent proof obligation is not yet a compile-time refinement receipt.",
+      supportedSubset:
+        "Safe CPU reference/oracle for the bounded KDA/GDN decode and prefill teaching shapes, recurrent state, gates, and selected outputs.",
+    }),
     paths: {
       source: ["examples/gfx950_advanced_attention/src/kernel.rs"],
       reference: ["examples/gfx950_advanced_attention/src/reference.rs"],
@@ -480,6 +538,14 @@ const entries = [
       status:
         "Observed on mi350 / smci350-rck-g03-b19-03 at commit a89e593e11e70f5d7604c08b94ef3fd153ede556.",
     },
+    functionalGate: runtimeCpuOracleGate({
+      command:
+        "bash examples/gfx950_advanced_attention/run-kimi-k3-kda-decode-gfx950.sh",
+      mismatchBehavior:
+        "A bounded Kimi K3 decode-core output or first-row state mismatch against the safe CPU reference fails the MI350X runner; chunk prefill and all-head cache semantics are not compile-time claims.",
+      supportedSubset:
+        "Safe CPU reference/oracle for one single-head f32 fused-recurrent KDA decode step with K=128, V=128, beta gate, safe decay, updated state, and output accumulation.",
+    }),
     paths: {
       source: [
         "examples/gfx950_advanced_attention/src/kernel.rs",
@@ -521,6 +587,13 @@ const entries = [
       status:
         "Final promoted-source compatibility passed as one case in the 32/32 MI350X matrix; separate c138 performance archive measured this fused artifact slower than the HIP three-dispatch comparator.",
     },
+    functionalGate: runtimeCpuOracleGate({
+      command: "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+      mismatchBehavior:
+        "A bounded layer-tile output, router, attention, or expert mismatch against the independent safe CPU reference fails the compatibility runner; whole-layer and whole-model equivalence are not compile-time claims.",
+      supportedSubset:
+        "Safe CPU reference/oracle for one fixed Wave64 GPT-OSS-style layer tile with router logits, sink-softmax attention tile, selected MXFP4 expert projection, and packed outputs.",
+    }),
     paths: {
       source: [
         "examples/gfx950_gpt_oss_decode/src/kernel.rs",

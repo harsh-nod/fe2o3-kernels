@@ -1,4 +1,10 @@
 import { deepFreeze, hasOwn, type DeepReadonly } from "./registry";
+import {
+  proofTimeSourceModelGate,
+  runtimeCpuOracleGate,
+  validateFunctionalReferenceGate,
+  type FunctionalReferenceGate,
+} from "./functional-gates";
 import { semanticCorrectnessMilestone } from "./semantic-correctness-milestone";
 
 export type FunctionalRelation =
@@ -23,6 +29,7 @@ export interface FunctionalCorrectnessCatalogEntry {
   numericalPolicy: string;
   cooperativeTensor?: string;
   hierarchyCoverage: string;
+  functionalGate: FunctionalReferenceGate;
   productionPipeline: string;
   perCompilationVerus: string;
   disposition: FunctionalCorrectnessDisposition;
@@ -65,6 +72,14 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "Exact copied f32 bit pattern; no floating-point arithmetic theorem is needed.",
     hierarchyCoverage:
       "The required relation is a grid-to-output bijection through workgroup and invocation coordinates. The lesson's separate ownership model is not a per-compilation functional receipt.",
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/verus_vecadd/run-verus.sh --require",
+      mismatchBehavior:
+        "A modeled mismatch in fill value, owner coverage, bounds, disjoint writes, or frame facts is rejected by Verus before any GPU run; source extraction and launch mismatches remain outside this lesson's current compiler claim.",
+      supportedSubset:
+        "Safe CPU reference/model for scalar fill, one-dimensional output ownership, guarded writes, and frame obligations.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "model-only",
@@ -85,6 +100,14 @@ export const functionalCorrectnessCatalog = deepFreeze([
       numericalRefinementGate,
     hierarchyCoverage:
       "The intended proof maps each grid invocation to exactly one final coordinate; no cross-wave communication is required.",
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/verus_vecadd/run-verus.sh --require",
+      mismatchBehavior:
+        "A modeled mismatch in the vecadd value equation, duplicate ownership, missing coverage, bounds, or frame behavior is rejected by the Verus negative fixtures before the GPU path is treated as evidence.",
+      supportedSubset:
+        "Safe CPU reference/model for one-dimensional pointwise vecadd, checked index reads, one owner per output, and unchanged inputs.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -105,6 +128,14 @@ export const functionalCorrectnessCatalog = deepFreeze([
       "The observed f32 store is represented by exact software bits. This finite simulation does not prove target IEEE values or compiler arithmetic refinement.",
     hierarchyCoverage:
       "The exact bounded runnable-invocation schedule is persisted and replayed. GPU wave, workgroup, queue, compute-unit, and machine schedules are not established or predicted.",
+    functionalGate: runtimeCpuOracleGate({
+      command:
+        './target/debug/fe2o3-kir-sim --bundle "$PWD/barrier-before-access.fe2sim" --request "$PWD/barrier-before-access-request.json"',
+      mismatchBehavior:
+        "A bounded replay mismatch is reported by the CPU simulator against the exported KIR bundle; this does not authenticate source-to-GPU refinement or hardware behavior.",
+      supportedSubset:
+        "Authority-free CPU simulation over compiler-exported KIR with a safe CPU reference/oracle shape for the bounded schedule.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "observation-only",
@@ -126,6 +157,14 @@ export const functionalCorrectnessCatalog = deepFreeze([
     hierarchyCoverage:
       "The relation spans lane and Wave64 participation. Workgroup composition, multiple waves, and grid coverage need separate live hierarchy facts. " +
       multiOutputGate,
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/wave64_collectives_v1/run-verus.sh",
+      mismatchBehavior:
+        "A modeled mismatch in the active mask, reduction tree, scan order, inactive-lane output, or mutation corpus is rejected by the Verus runner; the generated compiler reference/effect join is still absent for this lesson.",
+      supportedSubset:
+        "Safe CPU oracle/model for a bounded Wave64 collective with fixed masks, exact integer values, and explicit output relations.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -146,6 +185,14 @@ export const functionalCorrectnessCatalog = deepFreeze([
     hierarchyCoverage:
       "Lane-to-workgroup ownership and epoch convergence are required. Device/system atomic visibility and finalization remain distinct obligations. " +
       multiOutputGate,
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/workgroup_sync_v1/run-verus.sh",
+      mismatchBehavior:
+        "A modeled mismatch in barrier epochs, LDS publication, final-owner selection, or atomic contribution policy is rejected by the Verus runner; the full reduction value theorem is not promoted to the compiler gate.",
+      supportedSubset:
+        "Safe CPU reference/contract model for bounded workgroup synchronization, lane epochs, checked finalization, and no-overflow integer contributions.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -167,6 +214,13 @@ export const functionalCorrectnessCatalog = deepFreeze([
     cooperativeTensor: cooperativeTensorGate,
     hierarchyCoverage:
       "Invocation fragments must cover each wave tile, waves each workgroup tile, and workgroups the dynamic output grid exactly once, including edges.",
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/tiled_gemm_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded output mismatch against the safe CPU reference fails the GPU qualification run; compiler-time formula authority still fails closed for nested reductions, tensor components, and finite-error replay.",
+      supportedSubset:
+        "Safe CPU reference/oracle for dynamic GEMM shapes, strides, ordered K reduction, alpha/beta epilogue, edges, and padding.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -188,6 +242,14 @@ export const functionalCorrectnessCatalog = deepFreeze([
     cooperativeTensor: cooperativeTensorGate,
     hierarchyCoverage:
       "The plan requires fragment-to-wave, wave-to-workgroup, and workgroup-to-grid coverage plus final observable-frame facts.",
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/scalar_gemm_v1/run-verus.sh",
+      mismatchBehavior:
+        "A modeled mismatch in the scalar GEMM equation, loop-carried accumulator, or bounded memory relation is rejected in the proof-facing runner; this is the proof plan input, not a generated per-compilation receipt.",
+      supportedSubset:
+        "Safe CPU reference/model for the bounded GEMM proof decomposition over explicit loops, ownership, and reduction obligations.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -208,6 +270,13 @@ export const functionalCorrectnessCatalog = deepFreeze([
       numericalRefinementGate,
     hierarchyCoverage:
       "Each output row needs complete column contributions, a legal reduction schedule within its wave/workgroup, and total grid coverage.",
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/row_softmax_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded softmax output or padding mismatch against the safe CPU reference fails the historical GPU qualification run; exp semantics, numerical bounds, and reference-MIR replay remain fail-closed for compile-time authority.",
+      supportedSubset:
+        "Safe CPU reference/oracle for dynamic rows, columns, strides, stable max subtraction, denominator, normalization, tails, and padding.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -230,6 +299,13 @@ export const functionalCorrectnessCatalog = deepFreeze([
     hierarchyCoverage:
       "Fragment ownership must compose through wave and workgroup tiles to every head/query/output coordinate; masked key phases form the recurrence domain. " +
       multiOutputGate,
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/flash_attention_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded attention output mismatch against the safe CPU reference fails the GPU qualification run; recurrence, tensor-component replay, exp semantics, and finite-error authority still fail closed at compile time.",
+      supportedSubset:
+        "Safe CPU reference/oracle for dynamic heads, sequence domains, masks, score contraction, online softmax state, value accumulation, tails, and padding.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -250,6 +326,14 @@ export const functionalCorrectnessCatalog = deepFreeze([
     hierarchyCoverage:
       "Token/expert contributions must compose from invocations through workgroups to one grid-wide stable permutation and inverse. " +
       multiOutputGate,
+    functionalGate: proofTimeSourceModelGate({
+      command:
+        "VERUS=/absolute/path/to/pinned/verus examples/moe_top2_v1/run-verus.sh",
+      mismatchBehavior:
+        "A modeled mismatch in top-2 choice, tie breaking, capacity, counts, compact slots, inverse permutation, or sentinel behavior is rejected by the source-model fixtures before promotion.",
+      supportedSubset:
+        "Safe CPU oracle/model for bounded deterministic top-2 routing, finite logits, capacity, stable permutation, and inverse mapping.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -272,6 +356,13 @@ export const functionalCorrectnessCatalog = deepFreeze([
     hierarchyCoverage:
       "Route permutation and inverse span the grid; each expert contraction composes fragment, wave, workgroup, and grid ownership before deterministic combine. " +
       multiOutputGate,
+    functionalGate: runtimeCpuOracleGate({
+      command: "examples/moe_grouped_expert_general_v1/run-gfx942.sh",
+      mismatchBehavior:
+        "A bounded routed-expert output, padding, or combine mismatch against the safe CPU reference fails the GPU qualification run; routed composition and numerical replay remain fail-closed for compiler-time authority.",
+      supportedSubset:
+        "Safe CPU reference/oracle for routed rows, expert selection, dynamic K/N, strides, contraction, bias, gate, weighted combine, edges, and padding.",
+    }),
     productionPipeline: productionGate,
     perCompilationVerus: noCompilationReceipt,
     disposition: "incomplete",
@@ -307,6 +398,11 @@ function validateCatalog(): void {
       entry.admittedMirSubset,
       entry.numericalPolicy,
       entry.hierarchyCoverage,
+      entry.functionalGate.label,
+      entry.functionalGate.command,
+      entry.functionalGate.mismatchBehavior,
+      entry.functionalGate.supportedSubset,
+      entry.functionalGate.compileTimePromotion,
       entry.productionPipeline,
       entry.perCompilationVerus,
       entry.boundary,
@@ -320,7 +416,8 @@ function validateCatalog(): void {
       entry.scheduleRelations.length === 0 ||
       [...entry.outputRelations, ...entry.scheduleRelations].some(
         (relation) => !allowedRelations.has(relation),
-      )
+      ) ||
+      validateFunctionalReferenceGate(entry.functionalGate).length > 0
     ) {
       throw new Error("functional-correctness catalog entry is malformed");
     }

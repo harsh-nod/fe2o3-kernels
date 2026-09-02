@@ -3590,6 +3590,45 @@ tr:last-child td {
   margin-top: 8px;
 }
 
+.operator-gate {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.operator-gate strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-strong);
+  font-size: 0.72rem;
+}
+
+.operator-gate strong svg {
+  color: var(--accent);
+}
+
+.operator-gate code {
+  width: fit-content;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.operator-gate p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.operator-gate small {
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
 .operator-paths {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

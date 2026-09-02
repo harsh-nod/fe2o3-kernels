@@ -333,6 +333,10 @@ describe("functional-correctness catalog", () => {
     expect(screen.getByText("Numerical policy")).toBeInTheDocument();
     expect(screen.getByText("Cooperative tensor")).toBeInTheDocument();
     expect(screen.getByText("GPU hierarchy")).toBeInTheDocument();
+    expect(screen.getByText("Functional gate today")).toBeInTheDocument();
+    expect(screen.getByText("Runtime CPU oracle")).toBeInTheDocument();
+    expect(screen.getByText("Mismatch behavior")).toBeInTheDocument();
+    expect(screen.getByText("Compile-time promotion")).toBeInTheDocument();
     expect(screen.getByText("Production gate")).toBeInTheDocument();
     expect(screen.getByText("Per-compilation Verus")).toBeInTheDocument();
     expect(screen.getByText("Incomplete / trusted boundary")).toBeInTheDocument();
@@ -343,7 +347,7 @@ describe("functional-correctness catalog", () => {
     ).toBeInTheDocument();
     expect(
       screen.getAllByText(/tensor-component.*replay/iu),
-    ).toHaveLength(2);
+    ).toHaveLength(3);
   });
 
   it("does not render a functional claim for a non-kernel lesson", () => {

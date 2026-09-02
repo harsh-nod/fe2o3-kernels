@@ -3,6 +3,7 @@ import {
   functionalCorrectnessEntry,
   type FunctionalCorrectnessDisposition,
 } from "../content/functional-correctness-catalog";
+import { functionalGateModeLabels } from "../content/functional-gates";
 
 const dispositionLabels = {
   incomplete: "Incomplete",
@@ -57,8 +58,9 @@ export function FunctionalCorrectnessPanel({
         <div className="functional-correctness-body">
           <p className="functional-correctness-intro">
             The safe CPU reference defines the intended behavior. This catalog
-            records which parts this exact GPU compilation proves and which
-            parts remain outside the claim.
+            records how mismatches are caught today, which parts this exact GPU
+            compilation proves, and what must be promoted into the compile-time
+            refinement gate.
           </p>
 
           <dl className="functional-contract-rows">
@@ -94,6 +96,22 @@ export function FunctionalCorrectnessPanel({
             <div>
               <dt>GPU hierarchy</dt>
               <dd>{entry.hierarchyCoverage}</dd>
+            </div>
+            <div>
+              <dt>Functional gate today</dt>
+              <dd>
+                <code>{functionalGateModeLabels[entry.functionalGate.mode]}</code>
+                <span>{entry.functionalGate.label}</span>
+                <span>{entry.functionalGate.command}</span>
+              </dd>
+            </div>
+            <div>
+              <dt>Mismatch behavior</dt>
+              <dd>{entry.functionalGate.mismatchBehavior}</dd>
+            </div>
+            <div>
+              <dt>Compile-time promotion</dt>
+              <dd>{entry.functionalGate.compileTimePromotion}</dd>
             </div>
             <div>
               <dt>Production gate</dt>

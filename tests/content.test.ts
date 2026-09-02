@@ -44,6 +44,10 @@ import {
 } from "../src/content/modules-10";
 import { FE2O3_PIN, evidenceLabels } from "../src/content/model";
 import { functionalCorrectnessCatalog } from "../src/content/functional-correctness-catalog";
+import {
+  functionalGateModeLabels,
+  validateFunctionalReferenceGate,
+} from "../src/content/functional-gates";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
 import {
@@ -678,6 +682,20 @@ describe("curriculum integrity", () => {
       );
       expect(entry.outputRelations.length, entry.lessonId).toBeGreaterThan(0);
       expect(entry.scheduleRelations.length, entry.lessonId).toBeGreaterThan(0);
+      expect(
+        functionalGateModeLabels[entry.functionalGate.mode],
+        entry.lessonId,
+      ).toBeDefined();
+      expect(
+        validateFunctionalReferenceGate(entry.functionalGate),
+        entry.lessonId,
+      ).toEqual([]);
+      expect(entry.functionalGate.mismatchBehavior, entry.lessonId).toMatch(
+        /mismatch/iu,
+      );
+      expect(entry.functionalGate.compileTimePromotion, entry.lessonId).toMatch(
+        /SafeReferenceMirToLivePliron.*before KIR|fail closed.*before KIR/iu,
+      );
       expect(entry.perCompilationVerus, entry.lessonId).toContain(
         "exact compilation",
       );

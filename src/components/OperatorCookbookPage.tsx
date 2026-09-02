@@ -4,8 +4,10 @@ import {
   FileCode2,
   Play,
   ShieldAlert,
+  ShieldCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { functionalGateModeLabels } from "../content/functional-gates";
 import {
   operatorCategories,
   operatorCookbook,
@@ -33,8 +35,8 @@ export function OperatorCookbookPage() {
         <p>
           A launch index for the kernels and model slices in this guide. Each
           entry names the compute contract, current implementation shape,
-          source and reference paths, exact runner, expected result, and
-          non-claims.
+          functional-reference gate, source and reference paths, exact runner,
+          expected result, and non-claims.
         </p>
       </header>
 
@@ -84,6 +86,18 @@ export function OperatorCookbookPage() {
                   </div>
                 </div>
 
+                <div className="operator-gate">
+                  <strong>
+                    <ShieldCheck size={14} aria-hidden="true" />
+                    Functional reference gate
+                  </strong>
+                  <code>
+                    {functionalGateModeLabels[entry.functionalGate.mode]}
+                  </code>
+                  <p>{entry.functionalGate.mismatchBehavior}</p>
+                  <small>{entry.functionalGate.compileTimePromotion}</small>
+                </div>
+
                 <div className="operator-paths">
                   <div>
                     <strong>Source paths</strong>
@@ -94,6 +108,18 @@ export function OperatorCookbookPage() {
                   <div>
                     <strong>Reference paths</strong>
                     {entry.referencePaths.map((path) => (
+                      <code key={path}>{path}</code>
+                    ))}
+                  </div>
+                  <div>
+                    <strong>Runner paths</strong>
+                    {entry.paths.runner.map((path) => (
+                      <code key={path}>{path}</code>
+                    ))}
+                  </div>
+                  <div>
+                    <strong>Evidence paths</strong>
+                    {entry.paths.evidence.map((path) => (
                       <code key={path}>{path}</code>
                     ))}
                   </div>

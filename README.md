@@ -13,6 +13,28 @@ what it verifies, what it observes in compiler or hardware tests, and what is
 still a design. It does not present advanced tutorial pseudocode as a working
 kernel.
 
+## Functional reference gates
+
+Every tutorial kernel is organized around a safe Rust CPU reference or oracle.
+That is the learning spine of fe2o3: write the intended behavior once in safe
+host Rust, then track exactly how the GPU kernel is checked against it.
+
+The current workbench labels each kernel's gate explicitly:
+
+- **Proof-time source model**: Verus checks the source/model relation and
+  rejects negative fixtures before the kernel is promoted.
+- **Runtime CPU oracle**: the bounded GPU runner compares outputs, state, or
+  metadata with the safe CPU reference and fails on a mismatch.
+- **Compile-time refinement target**: promotion requires the compiler-owned
+  `SafeReferenceMirToLivePliron` join, generated per-compilation Verus replay,
+  and PLIRON structural reconciliation before KIR lowering.
+
+This is deliberately bounded. fe2o3 does not yet prove that arbitrary Rust CPU
+references and arbitrary GPU kernels are functionally equivalent at compile
+time. Unsupported reference MIR, tensor-component replay, finite numerical
+error replay, full model integration, LLVM/ISA behavior, launch, hardware, and
+performance remain outside the claim unless a lesson states otherwise.
+
 ## Start here
 
 Community users should begin in the deployed workbench, not by reading this
