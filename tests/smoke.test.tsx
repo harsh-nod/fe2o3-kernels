@@ -129,7 +129,7 @@ describe("application shell", () => {
     expect(screen.getByText("Runtime oracles today")).toBeInTheDocument();
     expect(screen.getByRole("table")).toHaveTextContent("Bounded Recurrence");
     expect(screen.getByRole("table")).toHaveTextContent("Wave16 Collectives");
-    expect(screen.getByText(/compile-time recurrence receipt lands/u)).toBeInTheDocument();
+    expect(screen.getByText(/KDA recurrence receipt is implemented and published/u)).toBeInTheDocument();
     expect(screen.getByText(/Advanced gfx950 tutorials are runtime CPU-oracle checked today/u)).toBeInTheDocument();
     expect(screen.getByText(/Unsupported loops, effects, barriers, or numerical operations/u)).toBeInTheDocument();
     expect(

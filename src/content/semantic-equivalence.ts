@@ -258,7 +258,7 @@ export const semanticEquivalencePage = deepFreeze({
       "No arbitrary Rust loop, iterator, Vec, or dynamic scheduling equivalence is admitted.",
       "No universal floating-point equality is claimed; the numerical policy is part of the contract.",
       "No source-to-ISA or hardware semantic authority is created by this page.",
-      "Today the advanced KDA tutorial remains runtime CPU-oracle checked until the compile-time recurrence receipt lands.",
+      "Today the advanced KDA tutorial remains runtime CPU-oracle checked until compiler support for a KDA recurrence receipt is implemented and published.",
     ],
   },
 } as const satisfies SemanticEquivalencePageContent);
