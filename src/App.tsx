@@ -62,6 +62,11 @@ const SearchDialog = lazy(() =>
     default: module.SearchDialog,
   })),
 );
+const SemanticEquivalencePage = lazy(() =>
+  import("./components/SemanticEquivalencePage").then((module) => ({
+    default: module.SemanticEquivalencePage,
+  })),
+);
 const Sidebar = lazy(() =>
   import("./components/Sidebar").then((module) => ({
     default: module.Sidebar,
@@ -105,6 +110,9 @@ function pageTitle(pathname: string): string {
   if (pathname === "/") return "Overview | fe2o3 kernels";
   if (pathname === "/start") return "Start here | fe2o3 kernels";
   if (pathname === "/operators") return "Operator cookbook | fe2o3 kernels";
+  if (pathname === "/semantic-equivalence") {
+    return "Semantic equivalence | fe2o3 kernels";
+  }
   if (pathname === "/architecture") return "Architecture | fe2o3 kernels";
   if (pathname === "/status") return "Implementation status | fe2o3 kernels";
   if (pathname === "/glossary") return "Glossary | fe2o3 kernels";
@@ -190,6 +198,7 @@ export function App() {
             <Route path="/" element={<OverviewPage />} />
             <Route path="/start" element={<OverviewPage />} />
             <Route path="/operators" element={<OperatorCookbookPage />} />
+            <Route path="/semantic-equivalence" element={<SemanticEquivalencePage />} />
             <Route
               path="/lesson/:lessonId"
               element={

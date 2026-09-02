@@ -193,6 +193,45 @@ test("launch hub and operator cookbook are discoverable", async ({ page }, testI
   expect(bounds.width).toBeLessThanOrEqual(bounds.viewport);
 });
 
+test("semantic equivalence KDA worked example is discoverable and responsive", async ({
+  page,
+}, testInfo) => {
+  await page.goto("./#/semantic-equivalence");
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "CPU reference to GPU kernel equivalence",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Worked example: Kimi Delta Attention decode and prefill",
+    }),
+  ).toBeVisible();
+  await expect(page.getByLabel("KDA evidence facts")).toContainText(
+    "Kimi Delta Attention Decode/Prefill",
+  );
+  await expect(page.getByRole("table", { name: "KDA promotion invariants" })).toContainText(
+    "Bounded Recurrence",
+  );
+  await expect(page.getByRole("table", { name: "KDA promotion invariants" })).toContainText(
+    "Wave16 Collectives",
+  );
+  await expect(page.getByText("Runtime oracles today")).toBeVisible();
+
+  const bounds = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+  }));
+  expect(bounds.width).toBeLessThanOrEqual(bounds.viewport);
+  await page.screenshot({
+    path: testInfo.outputPath("semantic-equivalence-kda.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+});
+
 test("source-to-bundle CPU simulation keeps its evidence boundary visible", async ({
   page,
 }, testInfo) => {

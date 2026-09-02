@@ -6,6 +6,7 @@ import {
   Braces,
   CircuitBoard,
   Cpu,
+  GitCompareArrows,
   GitPullRequest,
   ListChecks,
   Network,
@@ -67,6 +68,11 @@ export function OverviewPage() {
         <Link to="/operators">
           <Rows3 size={19} aria-hidden="true" />
           <span><strong>Operator cookbook</strong><small>Contracts and sources</small></span>
+          <ArrowRight size={17} aria-hidden="true" />
+        </Link>
+        <Link to="/semantic-equivalence">
+          <GitCompareArrows size={19} aria-hidden="true" />
+          <span><strong>Semantic equivalence</strong><small>CPU reference to GPU proof</small></span>
           <ArrowRight size={17} aria-hidden="true" />
         </Link>
         <Link to="/lesson/compiler-checks">

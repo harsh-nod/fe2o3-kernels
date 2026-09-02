@@ -63,6 +63,7 @@ import {
 } from "../src/content/functional-gates";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
 import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
+import { semanticEquivalencePage } from "../src/content/semantic-equivalence";
 import {
   SOURCE_DEBUGGER_REQUESTS_SHA256,
   SOURCE_DEBUGGER_RESPONSES_SHA256,
@@ -4101,6 +4102,64 @@ describe("curriculum integrity", () => {
           : true,
       );
     }
+  });
+});
+
+describe("semantic equivalence reference page", () => {
+  it("keeps the KDA worked example truthful about current and target authority", () => {
+    expect(semanticEquivalencePage.status.today).toContain(
+      "runtime CPU-oracle checked today",
+    );
+    expect(semanticEquivalencePage.status.target).toContain(
+      "full compile-time equivalence",
+    );
+    expect(semanticEquivalencePage.status.boundary).toContain("fail closed");
+
+    expect(semanticEquivalencePage.stages.map((stage) => stage.id)).toEqual([
+      "reference-ir",
+      "gpu-effects",
+      "effect-bijection",
+      "parallel-invariants",
+      "formula-proof",
+      "lowering-gate",
+    ]);
+    for (const stage of semanticEquivalencePage.stages) {
+      expect(stage.sourcePaths.length).toBeGreaterThan(0);
+      expect(stage.sourcePaths.every((path) =>
+        !path.startsWith("/") &&
+        !path.split("/").includes("..") &&
+        path.length > 0
+      )).toBe(true);
+      expect(stage.compileTimeFailure).toMatch(/reject|stop|prevent|cannot/u);
+    }
+
+    expect(semanticEquivalencePage.workedExample).toMatchObject({
+      operatorId: "kda-gdn",
+      lessonId: "gfx950-kda-gdn-linear-attention",
+      title: "Worked example: Kimi Delta Attention decode and prefill",
+    });
+    expect(semanticEquivalencePage.workedExample.snippets.map((snippet) => snippet.label)).toEqual([
+      "Safe CPU reference",
+      "fe2o3 kernel core",
+      "Runtime oracles today",
+    ]);
+    expect(semanticEquivalencePage.workedExample.invariants.map((invariant) => invariant.label)).toEqual([
+      "Domain and Layout",
+      "Bounded Recurrence",
+      "Chunk Order",
+      "Wave16 Collectives",
+      "Observable Outputs",
+      "Numerical Policy",
+    ]);
+    expect(semanticEquivalencePage.workedExample.promotionSteps.join(" ")).toContain(
+      "BoundedRecurrence",
+    );
+    expect(semanticEquivalencePage.workedExample.promotionSteps.join(" ")).toContain(
+      "LinearProbeLookup",
+    );
+    expect(semanticEquivalencePage.workedExample.nonClaims.join(" ")).toContain(
+      "runtime CPU-oracle checked",
+    );
   });
 });
 

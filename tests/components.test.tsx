@@ -536,6 +536,14 @@ describe("search index", () => {
     expect(kda.some((result) =>
       result.lessonId === "gfx950-kda-gdn-linear-attention"
     )).toBe(true);
+
+    const semantic = searchCatalog("KDA recurrence Wave16 equivalence", lessons, glossary);
+    expect(semantic.some((result) =>
+      result.kind === "page" &&
+      result.title === "Semantic equivalence" &&
+      result.href === "/semantic-equivalence" &&
+      result.lessonId === "gfx950-kda-gdn-linear-attention"
+    )).toBe(true);
   });
 });
   it("indexes diagnostics and deep-links to the compiler-check catalog", () => {

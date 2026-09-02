@@ -9,6 +9,7 @@ import "../src/components/OperatorCookbookPage";
 import "../src/components/OverviewPage";
 import "../src/components/ProgressPage";
 import "../src/components/SearchDialog";
+import "../src/components/SemanticEquivalencePage";
 
 function renderApp(path = "/lesson/read-the-evidence") {
   return render(
@@ -40,6 +41,10 @@ describe("application shell", () => {
     expect(
       screen.getAllByRole("link", { name: /Operator cookbook/ })
         .some((link) => link.getAttribute("href") === "/operators"),
+    ).toBe(true);
+    expect(
+      screen.getAllByRole("link", { name: /Semantic equivalence/ })
+        .some((link) => link.getAttribute("href") === "/semantic-equivalence"),
     ).toBe(true);
     const runTodayTable = screen.getByRole("table", {
       name: "What can I run today",
@@ -111,6 +116,29 @@ describe("application shell", () => {
     );
     expect(screen.getByRole("tab", { name: "Intervals" })).toBeInTheDocument();
   });
+
+  it("renders the semantic-equivalence worked example", async () => {
+    renderApp("/semantic-equivalence");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "CPU reference to GPU kernel equivalence",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Worked example: Kimi Delta Attention decode and prefill")).toBeInTheDocument();
+    expect(screen.getByText("Runtime oracles today")).toBeInTheDocument();
+    expect(screen.getByRole("table")).toHaveTextContent("Bounded Recurrence");
+    expect(screen.getByRole("table")).toHaveTextContent("Wave16 Collectives");
+    expect(screen.getByText(/compile-time recurrence receipt lands/u)).toBeInTheDocument();
+    expect(screen.getByText(/Advanced gfx950 tutorials are runtime CPU-oracle checked today/u)).toBeInTheDocument();
+    expect(screen.getByText(/Unsupported loops, effects, barriers, or numerical operations/u)).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /Open tutorial/ }),
+    ).toHaveAttribute("href", "/lesson/gfx950-kda-gdn-linear-attention");
+    expect(
+      screen.getByRole("link", { name: /Open operator contract/ }),
+    ).toHaveAttribute("href", "/operators#kda-gdn");
+  }, 20_000);
 
   it("routes to the in-process profiler import reference", async () => {
     renderApp("/debugger/profiler-import");

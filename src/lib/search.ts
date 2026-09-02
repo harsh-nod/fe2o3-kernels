@@ -11,6 +11,7 @@ import {
 } from "../content/learning-hub";
 import { narrativeEntry } from "../content/narrative-registry";
 import { operatorCookbook } from "../content/operator-cookbook";
+import { semanticEquivalencePage } from "../content/semantic-equivalence";
 
 export interface SearchResult {
   id: string;
@@ -165,6 +166,49 @@ export function searchCatalog(
       href: "/operators",
       lessonId: "read-the-evidence",
       score: cookbookScore + 2,
+    });
+  }
+
+  const equivalenceBody = [
+    "semantic equivalence CPU reference GPU kernel compile-time refinement functional reference proof Verus Kimi Delta Attention KDA GDN recurrence Wave16 WY UT chunkwise prefill N-gram gather",
+    semanticEquivalencePage.status.today,
+    semanticEquivalencePage.status.target,
+    semanticEquivalencePage.status.boundary,
+    ...semanticEquivalencePage.stages.flatMap((stage) => [
+      stage.label,
+      stage.summary,
+      stage.currentImplementation,
+      stage.compileTimeFailure,
+      ...stage.sourcePaths,
+    ]),
+    semanticEquivalencePage.workedExample.title,
+    semanticEquivalencePage.workedExample.summary,
+    semanticEquivalencePage.workedExample.whyThisFirst,
+    ...semanticEquivalencePage.workedExample.shape,
+    ...semanticEquivalencePage.workedExample.invariants.flatMap((invariant) => [
+      invariant.label,
+      invariant.obligation,
+      invariant.application,
+      invariant.failureMode,
+    ]),
+    ...semanticEquivalencePage.workedExample.promotionSteps,
+    ...semanticEquivalencePage.workedExample.nonClaims,
+  ].join(" ");
+  const equivalenceScore = matchScore(
+    terms,
+    "Semantic equivalence",
+    equivalenceBody,
+  );
+  if (equivalenceScore !== null) {
+    results.push({
+      id: "page-semantic-equivalence",
+      kind: "page",
+      title: "Semantic equivalence",
+      context:
+        "CPU reference to GPU proof pipeline with a KDA recurrence worked example",
+      href: "/semantic-equivalence",
+      lessonId: semanticEquivalencePage.workedExample.lessonId,
+      score: equivalenceScore + 3,
     });
   }
 
