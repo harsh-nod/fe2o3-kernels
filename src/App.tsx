@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { Link, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Topbar } from "./components/Topbar";
 import { useModalDialog } from "./hooks/useModalDialog";
 import { useProgress } from "./hooks/useProgress";
@@ -148,7 +148,7 @@ export function App() {
         const target = document.getElementById(location.hash.slice(1));
         if (target) {
           target.tabIndex = -1;
-          target.scrollIntoView({ block: "start" });
+          target.scrollIntoView?.({ block: "start" });
           target.focus({ preventScroll: true });
           return;
         }
@@ -173,7 +173,16 @@ export function App() {
 
   return (
     <div className="app-shell">
-      <a className="skip-link" href="#main-content">Skip to content</a>
+      <Link
+        className="skip-link"
+        to={{
+          pathname: location.pathname,
+          search: location.search,
+          hash: "#main-content",
+        }}
+      >
+        Skip to content
+      </Link>
       <span className="sr-only" role="status" aria-live="polite">
         {routeAnnouncement}
       </span>

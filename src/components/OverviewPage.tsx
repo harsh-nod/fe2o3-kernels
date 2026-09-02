@@ -12,7 +12,7 @@ import {
   Rows3,
   TerminalSquare,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { currentState } from "../content/current-state";
 import {
   contributorWorkflow,
@@ -23,6 +23,7 @@ import {
 import { EvidenceBadge } from "./EvidenceBadge";
 
 export function OverviewPage() {
+  const location = useLocation();
   const active = currentState.capabilities.filter(
     (capability) => capability.status === "active",
   ).length;
@@ -58,11 +59,17 @@ export function OverviewPage() {
           <span><strong>Start tutorial</strong><small>Rust source to CPU replay</small></span>
           <ArrowRight size={17} aria-hidden="true" />
         </Link>
-        <a href="#run-today">
+        <Link
+          to={{
+            pathname: location.pathname,
+            search: location.search,
+            hash: "#run-today",
+          }}
+        >
           <TerminalSquare size={19} aria-hidden="true" />
           <span><strong>Run today</strong><small>Commands with boundaries</small></span>
           <ArrowRight size={17} aria-hidden="true" />
-        </a>
+        </Link>
         <Link to="/operators">
           <Rows3 size={19} aria-hidden="true" />
           <span><strong>Operator cookbook</strong><small>Contracts and sources</small></span>

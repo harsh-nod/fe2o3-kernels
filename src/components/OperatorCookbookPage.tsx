@@ -6,7 +6,7 @@ import {
   ShieldAlert,
   ShieldCheck,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { functionalGateModeLabels } from "../content/functional-gates";
 import {
   operatorCategories,
@@ -27,6 +27,8 @@ function groupedOperators(): Array<[
 }
 
 export function OperatorCookbookPage() {
+  const location = useLocation();
+
   return (
     <article className="reference-page operator-page">
       <header className="reference-header">
@@ -45,10 +47,17 @@ export function OperatorCookbookPage() {
         <h2>Find an implemented slice</h2>
         <div className="operator-index">
           {operatorCookbook.map((entry) => (
-            <a href={`#${entry.id}`} key={entry.id}>
+            <Link
+              to={{
+                pathname: location.pathname,
+                search: location.search,
+                hash: `#${entry.id}`,
+              }}
+              key={entry.id}
+            >
               <span>{entry.title}</span>
               <EvidenceBadge kind={entry.status} />
-            </a>
+            </Link>
           ))}
         </div>
       </section>

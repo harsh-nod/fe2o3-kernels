@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter } from "react-router-dom";
+import { HashRouter, MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import { App } from "../src/App";
 import "../src/components/ArchitecturePage";
@@ -15,6 +15,15 @@ function renderApp(path = "/lesson/read-the-evidence") {
     <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
+  );
+}
+
+function renderHashApp(hash: string) {
+  window.location.hash = hash;
+  return render(
+    <HashRouter>
+      <App />
+    </HashRouter>,
   );
 }
 
@@ -35,7 +44,7 @@ describe("application shell", () => {
     );
     expect(screen.getByRole("link", { name: /Run today/ })).toHaveAttribute(
       "href",
-      "#run-today",
+      "/#run-today",
     );
     expect(
       screen.getAllByRole("link", { name: /Operator cookbook/ })
@@ -55,6 +64,104 @@ describe("application shell", () => {
     expect(screen.getByText(/current CPU-first workflows/)).toBeInTheDocument();
     expect(screen.getByText("Compiler baseline")).toBeInTheDocument();
     expect(screen.getByText("Run something first")).toBeInTheDocument();
+  }, 20_000);
+
+  it("keeps the current HashRouter lesson when the skip link receives keyboard focus", async () => {
+    const user = userEvent.setup();
+    renderHashApp("#/lesson/read-the-evidence?view=source");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "How to read this guide",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+
+    const main = document.getElementById("main-content");
+    expect(main).not.toBeNull();
+    await waitFor(() => expect(main).toHaveFocus());
+    const skipLink = screen.getByRole("link", { name: "Skip to content" });
+    expect(skipLink).toHaveAttribute(
+      "href",
+      "#/lesson/read-the-evidence?view=source#main-content",
+    );
+
+    skipLink.focus();
+    expect(skipLink).toHaveFocus();
+    await user.keyboard("{Enter}");
+
+    await waitFor(() => {
+      expect(window.location.hash).toBe(
+        "#/lesson/read-the-evidence?view=source#main-content",
+      );
+      expect(main).toHaveFocus();
+    });
+    expect(
+      screen.getByRole("heading", { level: 1, name: "How to read this guide" }),
+    ).toBeInTheDocument();
+  }, 20_000);
+
+  it("preserves the overview route while focusing the run-today section", async () => {
+    const user = userEvent.setup();
+    renderHashApp("#/start?audience=operator");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "fe2o3 kernels",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+
+    const runTodayLink = screen.getByRole("link", { name: /Run today/ });
+    expect(runTodayLink).toHaveAttribute(
+      "href",
+      "#/start?audience=operator#run-today",
+    );
+    runTodayLink.focus();
+    await user.keyboard("{Enter}");
+
+    const runToday = document.getElementById("run-today");
+    expect(runToday).not.toBeNull();
+    await waitFor(() => {
+      expect(window.location.hash).toBe(
+        "#/start?audience=operator#run-today",
+      );
+      expect(runToday).toHaveFocus();
+    });
+    expect(
+      screen.getByRole("heading", { level: 1, name: "fe2o3 kernels" }),
+    ).toBeInTheDocument();
+  }, 20_000);
+
+  it("preserves the cookbook route while focusing an indexed operator", async () => {
+    const user = userEvent.setup();
+    renderHashApp("#/operators?status=current");
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Operator cookbook",
+      }, { timeout: 15_000 }),
+    ).toBeInTheDocument();
+
+    const index = document.querySelector(".operator-index");
+    expect(index).not.toBeNull();
+    const fillLink = within(index as HTMLElement).getByRole("link", {
+      name: /^Fill/u,
+    });
+    expect(fillLink).toHaveAttribute(
+      "href",
+      "#/operators?status=current#fill",
+    );
+    fillLink.focus();
+    await user.keyboard("{Enter}");
+
+    const fill = document.getElementById("fill");
+    expect(fill).not.toBeNull();
+    await waitFor(() => {
+      expect(window.location.hash).toBe("#/operators?status=current#fill");
+      expect(fill).toHaveFocus();
+    });
+    expect(
+      screen.getByRole("heading", { level: 1, name: "Operator cookbook" }),
+    ).toBeInTheDocument();
   }, 20_000);
 
   it("renders the operator cookbook route", async () => {
