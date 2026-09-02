@@ -17,8 +17,8 @@ const pagesProductionContext =
 describe("Pages publication policy", () => {
   it("pins one exact compiler object contained by both public refs", () => {
     expect(publicationGate).toEqual({
-      requiredCommit: "6c987f34a95e1f892f4c4b4048b8d42d2d68569c",
-      requiredTree: "5d348b3e43e5e110c5e117afd31626725bbf69cd",
+      requiredCommit: "31825eb9ec15f69608a7c37f34046ed643826bd4",
+      requiredTree: "f7881be788317d61904e532eb7da998d38dcfe64",
       requiredRefRelationship: "contains-required-commit",
       requiredRefs: [
         { repository: "harsh-nod/fe2o3", ref: "refs/heads/main" },
