@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { currentState } from "../src/content/current-state";
@@ -71,7 +72,10 @@ import {
   validateFunctionalReferenceGate,
 } from "../src/content/functional-gates";
 import { narrativeFingerprint } from "../src/content/narrative-fingerprint";
-import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
+import {
+  semanticCorrectnessMilestone,
+  semanticMilestoneBoundary,
+} from "../src/content/semantic-correctness-milestone";
 import {
   SOURCE_DEBUGGER_REQUESTS_SHA256,
   SOURCE_DEBUGGER_RESPONSES_SHA256,
@@ -142,6 +146,11 @@ describe("community getting started tutorial", () => {
       doctor: "bash scripts/quickstart.sh doctor",
       gfx942Preflight: "bash scripts/quickstart.sh gfx942-preflight",
     });
+    expect(gettingStartedCommands.clone).toEqual([
+      "git clone https://github.com/harsh-nod/fe2o3.git",
+      "cd fe2o3",
+      `git checkout --detach ${currentState.compilerCommit}`,
+    ]);
     expect(gettingStartedResult).toMatchObject({
       schema: "fe2o3-simulation-result-v1",
       status: "ok",
@@ -185,7 +194,26 @@ describe("community getting started tutorial", () => {
         "examples/fill/src/lib.rs",
         "crates/cargo-fe2o3/src/doctor.rs",
         "crates/fe2o3-debug-cli/README.md",
+        "Cargo.toml",
+        "crates/cargo-fe2o3/tests/production_dependency_closure.rs",
+        "crates/fe2o3-host/Cargo.toml",
+        "crates/fe2o3-host/src/lib.rs",
+        "crates/fe2o3-host/src/generated_kfd_arguments.rs",
+        "crates/fe2o3-host/src/production_application.rs",
+        "crates/fe2o3-macros/src/lib.rs",
+        "examples/vecadd/src/main.rs",
       ]);
+    const vecaddBinding = gettingStartedBinding.compilerSourceBindings.find(
+      ({ path }) => path === "examples/vecadd/src/main.rs",
+    );
+    expect(vecaddBinding?.sha256).toBe(
+      "f97d7b6c1d51072a78bae7392a16ca0dd23ebdc2d3219e29334e557f7e47d246",
+    );
+    expect(
+      createHash("sha256")
+        .update(readFileSync("examples/vecadd_application_boundary.rs"))
+        .digest("hex"),
+    ).toBe(vecaddBinding?.sha256);
     expect(gettingStartedFixture).toMatchObject({
       fixture_kind: "expected_projection_not_execution_capture",
       debugger_projection: {
@@ -194,11 +222,11 @@ describe("community getting started tutorial", () => {
         selected_memory: { offset: 8, bytes: "0x00002a42" },
       },
     });
+    expect(gettingStartedBinding.fixture.path).toBe(
+      "examples/getting_started_v1/expected-projection.json",
+    );
     const fixtureBytes = readFileSync(
-      new URL(
-        `../${gettingStartedBinding.fixture.path}`,
-        import.meta.url,
-      ),
+      resolve("examples/getting_started_v1/expected-projection.json"),
     );
     expect(createHash("sha256").update(fixtureBytes).digest("hex")).toBe(
       gettingStartedBinding.fixture.sha256,
@@ -943,10 +971,10 @@ describe("curriculum integrity", () => {
   it("keeps the semantic-correctness milestone explicit in every lesson", () => {
     expect(semanticCorrectnessMilestone.status).toBe("partial-current");
     expect(semanticCorrectnessMilestone.compilerCommit).toBe(
-      "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      "ba83570a4f07cf160f612e748e4217efc8646e95",
     );
     expect(semanticCorrectnessMilestone.compilerTree).toBe(
-      "2156423b9350d66cfaa8207133768e323111b507",
+      "741cb258f0affee1e0e9bae546144f9b92abfeb3",
     );
     expect(semanticCorrectnessMilestone).toMatchObject({
       perCompilationTemplatePath:
@@ -2574,7 +2602,7 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
       )?.detail,
-    ).toContain("exact ordinary-Rust bundle transcript");
+    ).toContain("Compiler-bundle binding authenticates exact local map/KIR content");
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
@@ -2696,11 +2724,33 @@ describe("curriculum integrity", () => {
     expect(compilerCatalog).toContain(
       "Successful target selection or lowering grants no source-to-KIR refinement",
     );
+    const functionalReference = currentState.capabilities.find(
+      (capability) => capability.id === "functional-reference",
+    );
+    expect(functionalReference?.detail).not.toContain("transition records");
+    expect(functionalReference?.detail).toContain(
+      "Maintainers report that, on mi300x",
+    );
+    expect(functionalReference?.detail).toContain(
+      "retains no immutable command transcript or run record",
+    );
+    expect(functionalReference?.detail).not.toContain(
+      "On mi300x, every listed functional-refinement",
+    );
+    expect(semanticMilestoneBoundary).toContain(
+      "Maintainers report that, on mi300x",
+    );
+    expect(semanticMilestoneBoundary).toContain(
+      "not independently verifiable publication evidence",
+    );
+    expect(semanticMilestoneBoundary).not.toContain(
+      "On mi300x, every listed functional-refinement",
+    );
     expect(
-      currentState.capabilities.find(
-        (capability) => capability.id === "functional-reference",
-      )?.detail,
-    ).not.toContain("transition records");
+      functionalCorrectnessCatalog.map(({ perCompilationVerus }) =>
+        perCompilationVerus
+      ).join("\n"),
+    ).toContain("retains no immutable transcript or run record");
   });
 
   it("pins the executable dynamic GEMM and historical tiled evidence separately", () => {
@@ -3055,7 +3105,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "ecf7b17f819021708d9c59ebe39a4daf9eb2562c",
+      sourceCommit: "ba83570a4f07cf160f612e748e4217efc8646e95",
       sourceSha256:
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
@@ -4201,12 +4251,12 @@ describe("implementation progress integrity", () => {
       reviewedOn: "2026-09-01",
       lastAuditedPublicCommit: "96b9890c3ad33ad8c6b4239a9b567728a176d65f",
       lastAuditedPublicTree: "f911f0c693238830ad6070b2674fb863857bfec1",
-      eventualPublicCommit: "081fc345a07bf8a1eaf162f32b6a46daf177fa33",
-      eventualPublicTree: "94e265ba1fb835a24a764d822e55b6c1432d73ec",
+      eventualPublicCommit: "ba83570a4f07cf160f612e748e4217efc8646e95",
+      eventualPublicTree: "741cb258f0affee1e0e9bae546144f9b92abfeb3",
       publicationGate: {
         state: "deployment-gated-contained-object",
-        requiredCommit: "081fc345a07bf8a1eaf162f32b6a46daf177fa33",
-        requiredTree: "94e265ba1fb835a24a764d822e55b6c1432d73ec",
+        requiredCommit: "ba83570a4f07cf160f612e748e4217efc8646e95",
+        requiredTree: "741cb258f0affee1e0e9bae546144f9b92abfeb3",
         requiredRefRelationship: "contains-required-commit",
         requiredRefs: [
           "harsh-nod/fe2o3@refs/heads/main",
@@ -4841,7 +4891,7 @@ describe("implementation progress integrity", () => {
       "no router or expert GPU execution",
     );
     expect(progressSnapshot.eventualPublicCommit).toBe(
-      "081fc345a07bf8a1eaf162f32b6a46daf177fa33",
+      "ba83570a4f07cf160f612e748e4217efc8646e95",
     );
 
     const lesson = curriculum

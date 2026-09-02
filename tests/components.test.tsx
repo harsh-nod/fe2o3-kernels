@@ -13,6 +13,7 @@ import { ProfilerDispatchImportPage } from "../src/components/ProfilerDispatchIm
 import { SourceIsaAgentPage } from "../src/components/SourceIsaAgentPage";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
+import { currentSourceUrl, currentState } from "../src/content/current-state";
 import { liveWorkbenchBackends } from "../src/content/live-kfd-debugger";
 import type { LessonSection } from "../src/content/model";
 import { narrativeEntry } from "../src/content/narrative-registry";
@@ -34,8 +35,14 @@ describe("community getting started tutorial", () => {
     expect(screen.getByLabelText("No-GPU quick start commands")).toHaveTextContent(
       "bash scripts/quickstart.sh no-gpu",
     );
-    expect(screen.getByRole("term", { name: "authority" })).toBeInTheDocument();
-    expect(screen.getByText("observation_only")).toBeInTheDocument();
+    expect(screen.getByLabelText("No-GPU quick start commands")).toHaveTextContent(
+      `git checkout --detach ${currentState.compilerCommit}`,
+    );
+    expect(screen.getByText(/default host dependency closure are direct-KFD/u))
+      .toBeInTheDocument();
+    const typedResult = screen.getByLabelText("Typed simulation result");
+    expect(within(typedResult).getByText("authority").closest("div"))
+      .toHaveTextContent("observation_only");
     expect(screen.getByLabelText("Work-item activity")).toHaveTextContent("4..63");
     expect(screen.getByText("out + 8")).toBeInTheDocument();
     expect(screen.getByRole("table", { name: "Semantic debugger differentiators" }))
@@ -54,6 +61,12 @@ describe("community getting started tutorial", () => {
     })).toBeInTheDocument();
     expect(screen.getByText(/not an execution capture/u)).toBeInTheDocument();
     expect(screen.getByText(/FE2O3_HIP_SYS_DISABLE=1/u)).toBeInTheDocument();
+    expect(screen.getByText(/qualification-legacy-hip-hsa/u)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Debugger protocol reference/u }))
+      .toHaveAttribute(
+        "href",
+        currentSourceUrl("crates/fe2o3-debug-cli/README.md"),
+      );
     expect(screen.getByRole("heading", { name: "A diagnostic, not a GPU quick start" }))
       .toBeInTheDocument();
     expect(screen.getByText("No performance prediction is made.")).toBeInTheDocument();

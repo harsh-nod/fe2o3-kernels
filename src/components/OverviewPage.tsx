@@ -38,7 +38,7 @@ export function OverviewPage() {
         </p>
         <div className="overview-snapshot" aria-label="Current compiler snapshot">
           <div>
-            <span>Compiler main</span>
+            <span>Compiler baseline</span>
             <code>{currentState.compilerShortCommit}</code>
           </div>
           <div>

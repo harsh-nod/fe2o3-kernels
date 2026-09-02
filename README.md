@@ -55,6 +55,24 @@ softmax, GEMM, FlashAttention, MoE routing, Kimi Delta Attention,
 sparse/hybrid attention, residual mixing, speculative verification, N-gram
 gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
+## Start without a GPU
+
+Open the [Getting Started tutorial](https://harsh-nod.github.io/fe2o3-kernels/#/getting-started)
+for the typed result and semantic-debugger walkthrough. The executable path is
+an authority-free CPU simulation of the supported Kernel IR semantics. It does
+not load or dispatch a GPU, establish CPU/GPU equivalence, or predict
+performance.
+
+```bash
+git clone https://github.com/harsh-nod/fe2o3.git
+cd fe2o3
+git checkout --detach ba83570a4f07cf160f612e748e4217efc8646e95
+bash scripts/quickstart.sh no-gpu
+```
+
+The detached checkout is the exact compiler evidence pin recorded in
+`config/publication-gate.json`; update the command whenever that gate advances.
+
 ## Audited lesson baseline
 
 Lesson evidence claims are based on one immutable fe2o3 snapshot. This pin does
@@ -123,8 +141,8 @@ deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
 
 The checked-in publication gate is pinned to immutable implementation-evidence
-commit `081fc345a07bf8a1eaf162f32b6a46daf177fa33`, tree
-`94e265ba1fb835a24a764d822e55b6c1432d73ec`. Deployment requires
+commit `ba83570a4f07cf160f612e748e4217efc8646e95`, tree
+`741cb258f0affee1e0e9bae546144f9b92abfeb3`. Deployment requires
 `harsh-nod/fe2o3@refs/heads/main` and
 `powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
 commit object to resolve to the exact pinned tree. Either ref may advance to a

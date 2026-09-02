@@ -419,7 +419,7 @@ function validateLesson(
       ) {
         issues.push({
           path: claimPath,
-          message: "current claim is not pinned to current compiler main",
+          message: "current claim is not pinned to the current compiler baseline",
         });
       }
     } else if (reference.scope === "historical-evidence") {

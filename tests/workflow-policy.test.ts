@@ -11,12 +11,14 @@ const ciWorkflow = readFileSync(
   ".github/workflows/ci.yml",
   "utf8",
 );
+const pagesProductionContext =
+  "if: github.repository == 'harsh-nod/fe2o3-kernels' && github.ref == 'refs/heads/main'";
 
 describe("Pages publication policy", () => {
   it("pins one exact compiler object contained by both public refs", () => {
     expect(publicationGate).toEqual({
-      requiredCommit: "081fc345a07bf8a1eaf162f32b6a46daf177fa33",
-      requiredTree: "94e265ba1fb835a24a764d822e55b6c1432d73ec",
+      requiredCommit: "ba83570a4f07cf160f612e748e4217efc8646e95",
+      requiredTree: "741cb258f0affee1e0e9bae546144f9b92abfeb3",
       requiredRefRelationship: "contains-required-commit",
       requiredRefs: [
         { repository: "harsh-nod/fe2o3", ref: "refs/heads/main" },
@@ -66,6 +68,39 @@ describe("Pages publication policy", () => {
     expect(readFileSync("scripts/enforce-publication-gate.mjs", "utf8")).toContain(
       "/compare/${requiredCommit}...${observedHead}",
     );
+  });
+
+  it("fails closed outside the canonical repository main ref", () => {
+    expect(pagesWorkflow.split(pagesProductionContext)).toHaveLength(3);
+
+    const buildJob = pagesWorkflow.indexOf("  build:");
+    const buildGuard = pagesWorkflow.indexOf(pagesProductionContext, buildJob);
+    const deployJob = pagesWorkflow.indexOf("  deploy:");
+    const deployGuard = pagesWorkflow.indexOf(pagesProductionContext, deployJob);
+
+    expect(buildGuard).toBeGreaterThan(buildJob);
+    expect(buildGuard).toBeLessThan(deployJob);
+    expect(deployGuard).toBeGreaterThan(deployJob);
+  });
+
+  it("runs browser tests for the build checkout before publishing it", () => {
+    const checkout = pagesWorkflow.indexOf("name: Check out repository");
+    const build = pagesWorkflow.indexOf("name: Validate and build");
+    const installBrowser = pagesWorkflow.indexOf("name: Install Chromium");
+    const browserTests = pagesWorkflow.indexOf("name: Run browser tests");
+    const configure = pagesWorkflow.indexOf("name: Configure Pages");
+    const upload = pagesWorkflow.indexOf("name: Upload Pages artifact");
+
+    expect(checkout).toBeGreaterThan(0);
+    expect(pagesWorkflow.match(/name: Check out repository/gu)).toHaveLength(1);
+    expect(installBrowser).toBeGreaterThan(build);
+    expect(browserTests).toBeGreaterThan(installBrowser);
+    expect(browserTests).toBeLessThan(configure);
+    expect(browserTests).toBeLessThan(upload);
+    expect(pagesWorkflow).toContain(
+      "run: npx playwright install --with-deps chromium",
+    );
+    expect(pagesWorkflow).toContain("run: npm run test:e2e");
   });
 
   it("uses only commit-pinned actions and keeps pull requests non-deploying", () => {

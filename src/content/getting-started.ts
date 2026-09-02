@@ -1,5 +1,6 @@
 import tutorialBindingData from "../../config/getting-started-tutorial.json";
 import tutorialFixtureData from "../../examples/getting_started_v1/expected-projection.json";
+import { currentState } from "./current-state";
 import { deepFreeze } from "./registry";
 
 export const gettingStartedBinding = deepFreeze(tutorialBindingData);
@@ -9,6 +10,7 @@ export const gettingStartedCommands = deepFreeze({
   clone: [
     "git clone https://github.com/harsh-nod/fe2o3.git",
     "cd fe2o3",
+    `git checkout --detach ${currentState.compilerCommit}`,
   ],
   ...tutorialBindingData.commands,
 });
@@ -154,6 +156,14 @@ export function validateGettingStartedTutorial(): string[] {
     "examples/fill/src/lib.rs",
     "crates/cargo-fe2o3/src/doctor.rs",
     "crates/fe2o3-debug-cli/README.md",
+    "Cargo.toml",
+    "crates/cargo-fe2o3/tests/production_dependency_closure.rs",
+    "crates/fe2o3-host/Cargo.toml",
+    "crates/fe2o3-host/src/lib.rs",
+    "crates/fe2o3-host/src/generated_kfd_arguments.rs",
+    "crates/fe2o3-host/src/production_application.rs",
+    "crates/fe2o3-macros/src/lib.rs",
+    "examples/vecadd/src/main.rs",
   ]);
   if (
     gettingStartedBinding.compilerSourceBindings.length !==

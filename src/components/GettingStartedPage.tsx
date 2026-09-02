@@ -23,6 +23,7 @@ import {
   gettingStartedResult,
   gettingStartedTimeline,
 } from "../content/getting-started";
+import { currentSourceUrl } from "../content/current-state";
 
 const resultRows = [
   ["schema", gettingStartedResult.schema],
@@ -92,12 +93,15 @@ export function GettingStartedPage() {
       <section className="getting-started-run" aria-labelledby="getting-started-run-heading">
         <div>
           <p className="section-kicker">First execution</p>
-          <h2 id="getting-started-run-heading">One command from a clean checkout</h2>
+          <h2 id="getting-started-run-heading">Clone, pin, then run one script</h2>
           <p>
-            The script builds the pinned workspace tools, exports
+            The checkout is detached at this site&apos;s exact evidence pin. The
+            script builds those workspace tools, exports
             <code> examples/fill</code>, runs the resulting bundle, and removes
-            its private temporary directory on success or failure. Every Cargo
-            child explicitly disables the legacy HIP and HSA runtime features.
+            its private temporary directory on success or failure. Generated
+            host bindings and the default host dependency closure are direct-KFD;
+            legacy HIP/HSA host qualification is opt-in only. Every quickstart
+            Cargo child additionally sets both legacy-runtime disable switches.
           </p>
           <div className="getting-started-requirements" aria-label="Quick start requirements">
             <span><CheckCircle2 size={15} aria-hidden="true" /> Linux x86-64</span>
@@ -219,7 +223,7 @@ export function GettingStartedPage() {
             Open the interactive simulator debugger <ArrowRight size={15} aria-hidden="true" />
           </Link>
           <a
-            href="https://github.com/harsh-nod/fe2o3/blob/main/crates/fe2o3-debug-cli/README.md"
+            href={currentSourceUrl("crates/fe2o3-debug-cli/README.md")}
             rel="noreferrer"
             target="_blank"
           >
@@ -263,10 +267,13 @@ export function GettingStartedPage() {
             Use <code>{gettingStartedCommands.doctor}</code> so the same wrapper
             sets <code> FE2O3_HIP_SYS_DISABLE={gettingStartedBinding.cargoChildEnvironment.FE2O3_HIP_SYS_DISABLE}</code>
             and <code> FE2O3_HSA_RUNTIME_DISABLE={gettingStartedBinding.cargoChildEnvironment.FE2O3_HSA_RUNTIME_DISABLE}</code>
-            for its Cargo child. The report starts with the direct-KFD interface
-            and topology. ROCgdb and rocprofv3 remain optional tools; HIP and HSA
-            runtime libraries are not linked or loaded. The console block is a
-            schematic output shape; actual availability states are host-specific.
+            for its Cargo child. Direct KFD is also the default generated host
+            surface; the deprecated HIP-buffer and HSA-lifecycle surface requires
+            the explicit <code> qualification-legacy-hip-hsa</code> feature. The
+            report starts with the direct-KFD interface and topology. ROCgdb and
+            rocprofv3 remain optional tools; HIP and HSA runtime libraries are not
+            linked or loaded. The console block is a schematic output shape;
+            actual availability states are host-specific.
           </p>
         </div>
         <pre><code>{doctorOutput}</code></pre>

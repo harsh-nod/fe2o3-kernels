@@ -106,7 +106,7 @@ export function Sidebar({
           <Rows3 size={16} /> Operator cookbook
         </NavLink>
         <NavLink onClick={onNavigate} to="/getting-started">
-          <PlayCircle size={16} /> Getting started
+          <PlayCircle size={16} /> No-GPU quick start
         </NavLink>
         <NavLink onClick={onNavigate} to="/lesson/compiler-checks">
           <Braces size={16} /> Compiler checks

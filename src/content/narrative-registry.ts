@@ -230,7 +230,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit 081fc345a07bf8a1eaf162f32b6a46daf177fa33 and tree 94e265ba1fb835a24a764d822e55b6c1432d73ec. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit ba83570a4f07cf160f612e748e4217efc8646e95 and tree 741cb258f0affee1e0e9bae546144f9b92abfeb3. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -373,7 +373,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The typed macro generates a lifetime-bound Arguments profile for the three f32 slices, and the example test typechecks construction from context-bound device views. The application entry point returns Unsupported because the production Worker V3 verifier is not wired; this binding evidence grants no artifact, load, or dispatch authority."
+        "text": "The typed macro generates one lifetime-bound direct-KFD Arguments profile for the three f32 slices. The example test constructs GeneratedKfdReadSlice and GeneratedKfdReadWriteSlice capabilities from retained host borrows; the default fe2o3-host closure excludes fe2o3-core, HIP, HSA, and Worker V2 dependencies, while the deprecated HIP-buffer and HSA-lifecycle surface is qualification-only behind qualification-legacy-hip-hsa. The application entry point returns Unsupported because the production Worker V3 verifier is not wired; this binding evidence grants no artifact, load, or dispatch authority."
       },
       {
         "type": "callout",
@@ -2800,7 +2800,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Semantic-correctness milestone",
-        "text": "Milestone status: partial-current at compiler ecf7b17f819021708d9c59ebe39a4daf9eb2562c. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
+        "text": "Milestone status: partial-current at compiler ba83570a4f07cf160f612e748e4217efc8646e95. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
       }
     ]
   }

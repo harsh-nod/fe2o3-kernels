@@ -401,7 +401,7 @@ const evidenceArchive: Lesson = {
   order: 2,
   title: "Historical evidence archive",
   summary:
-    "Inspect the exact staged compiler, tiled GEMM, and bounded MoE records without confusing them with current compiler main.",
+    "Inspect the exact staged compiler, tiled GEMM, and bounded MoE records without confusing them with the current compiler baseline.",
   duration: "Reference",
   prerequisites: ["From rustc to signed evidence"],
   objectives: [

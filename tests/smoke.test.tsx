@@ -52,7 +52,8 @@ describe("application shell", () => {
       "href",
       "/lesson/gfx950-kda-gdn-linear-attention",
     );
-    expect(screen.getByText(/authoritative learning path/)).toBeInTheDocument();
+    expect(screen.getByText(/current CPU-first workflows/)).toBeInTheDocument();
+    expect(screen.getByText("Compiler baseline")).toBeInTheDocument();
     expect(screen.getByText("Run something first")).toBeInTheDocument();
   }, 20_000);
 
@@ -93,6 +94,8 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("bash scripts/quickstart.sh no-gpu", { exact: false }))
+      .toBeInTheDocument();
+    expect(screen.getByText("git checkout --detach", { exact: false }))
       .toBeInTheDocument();
     expect(screen.getByLabelText("Debugger hierarchy and semantic state"))
       .toBeInTheDocument();
@@ -274,7 +277,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/ecf7b17f819021708d9c59ebe39a4daf9eb2562c/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/ba83570a4f07cf160f612e748e4217efc8646e95/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     expect(
@@ -311,7 +314,7 @@ describe("application shell", () => {
     expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
-    expect(document.querySelector(".pin-summary")).toHaveTextContent("081fc345a0");
+    expect(document.querySelector(".pin-summary")).toHaveTextContent("ba83570a4f");
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
@@ -321,7 +324,7 @@ describe("application shell", () => {
       "The ancestry, commit, and tree are all required",
     );
     expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "94e265ba1fb835a24a764d822e55b6c1432d73ec",
+      "741cb258f0affee1e0e9bae546144f9b92abfeb3",
     );
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
@@ -445,7 +448,7 @@ describe("application shell", () => {
     expect(
       await screen.findByRole("heading", {
         level: 2,
-        name: "Compiler baseline at ecf7b17f81",
+        name: "Compiler baseline at ba83570a4f",
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
@@ -469,7 +472,7 @@ describe("application shell", () => {
       screen.getByRole("link", { name: /Open pinned compiler source/ }),
     ).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/tree/081fc345a07bf8a1eaf162f32b6a46daf177fa33",
+      "https://github.com/harsh-nod/fe2o3/tree/ba83570a4f07cf160f612e748e4217efc8646e95",
     );
   }, 30_000);
 });

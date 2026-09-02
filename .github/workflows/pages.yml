@@ -11,6 +11,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.repository == 'harsh-nod/fe2o3-kernels' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     permissions:
@@ -49,6 +50,12 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run validate:evidence -- --repository .evidence/fe2o3 --check-issues
 
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser tests
+        run: npm run test:e2e
+
       - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
@@ -58,6 +65,7 @@ jobs:
           path: dist
 
   deploy:
+    if: github.repository == 'harsh-nod/fe2o3-kernels' && github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10

@@ -1,13 +1,28 @@
 #![no_std]
 
+#[cfg(feature = "device_math_sqrt")]
+use fe2o3_device::DeviceMath;
 #[cfg(any(
     feature = "grid_exclusive",
+    feature = "write_only_grid_exclusive",
     feature = "barrier_divergent",
     feature = "barrier_early_return"
 ))]
 use fe2o3_device::GridExclusive;
+#[cfg(feature = "write_only_row_striped")]
+use fe2o3_device::RowStriped2D;
 #[cfg(feature = "shifted")]
 use fe2o3_device::Shifted;
+#[cfg(feature = "write_only_tiled")]
+use fe2o3_device::Tiled2D;
+#[cfg(any(
+    feature = "write_only_grid_exclusive",
+    feature = "write_only_blocked",
+    feature = "write_only_blocked_dynamic_grid",
+    feature = "write_only_tiled",
+    feature = "write_only_row_striped"
+))]
+use fe2o3_device::WriteOnlyDisjointSlice;
 #[cfg(any(
     feature = "barrier_after_access",
     feature = "barrier_before_access",
@@ -20,6 +35,13 @@ use fe2o3_device::sync::syncthreads;
 #[cfg(any(
     feature = "shifted",
     feature = "blocked",
+    feature = "blocked_multi_lane",
+    feature = "blocked_multi_block",
+    feature = "blocked_multi_lane_dynamic_grid",
+    feature = "write_only_blocked",
+    feature = "write_only_blocked_dynamic_grid",
+    feature = "write_only_tiled",
+    feature = "write_only_row_striped",
     feature = "barrier_after_access",
     feature = "barrier_before_access",
     feature = "barrier_loop",
@@ -40,18 +62,40 @@ use fe2o3_device::{DisjointSlice, kernel, thread};
     feature = "shifted",
     feature = "grid_exclusive",
     feature = "blocked",
+    feature = "blocked_multi_lane",
+    feature = "blocked_multi_block",
+    feature = "blocked_multi_lane_dynamic_grid",
+    feature = "write_only_grid_exclusive",
+    feature = "write_only_blocked",
+    feature = "write_only_blocked_dynamic_grid",
+    feature = "write_only_tiled",
+    feature = "write_only_row_striped",
     feature = "barrier_after_access",
     feature = "barrier_before_access",
     feature = "barrier_divergent",
     feature = "barrier_early_return",
     feature = "barrier_loop",
-    feature = "barrier_helper"
+    feature = "barrier_helper",
+    feature = "device_math_sqrt"
 )))]
 pub fn copy_static(value: f32, mut output: DisjointSlice<f32>) {
     let input = [value; 64];
     let selected = input[63];
     if let Some(element) = output.get_mut(thread::index_1d()) {
         *element = selected;
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1]),
+)]
+#[cfg(feature = "device_math_sqrt")]
+pub fn device_math_sqrt(value: f32, mut output: DisjointSlice<f32>) {
+    let math = DeviceMath::current();
+    let root = math.sqrt_f32(value);
+    if let Some(element) = output.get_mut(thread::index_1d()) {
+        *element = root;
     }
 }
 
@@ -134,6 +178,45 @@ pub fn grid_exclusive(mut output: DisjointSlice<f32, GridExclusive>) {
 
 #[kernel(
     typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+)]
+#[cfg(feature = "blocked_multi_lane")]
+pub fn blocked_multi_lane(mut output: DisjointSlice<f32, Blocked<Index1D, 64, 4>>) {
+    if let Some(block) = thread::index_1d().checked_block::<64, 4>() {
+        if let Some(element) = output.get_block_mut(&block, 3) {
+            *element = 1.0;
+        }
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+)]
+#[cfg(feature = "blocked_multi_block")]
+pub fn blocked_multi_block(mut output: DisjointSlice<f32, Blocked<Index1D, 16, 4>>) {
+    if let Some(block) = thread::index_1d().checked_block::<16, 4>() {
+        if let Some(element) = output.get_block_mut(&block, 3) {
+            *element = 1.0;
+        }
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1]),
+)]
+#[cfg(feature = "blocked_multi_lane_dynamic_grid")]
+pub fn blocked_multi_lane_dynamic_grid(mut output: DisjointSlice<f32, Blocked<Index1D, 64, 4>>) {
+    if let Some(block) = thread::index_1d().checked_block::<64, 4>() {
+        if let Some(element) = output.get_block_mut(&block, 3) {
+            *element = 1.0;
+        }
+    }
+}
+
+#[kernel(
+    typed,
     launch(required = [64, 1, 1], max = [64, 1, 1]),
 )]
 #[cfg(feature = "blocked")]
@@ -142,6 +225,65 @@ pub fn blocked(mut output: DisjointSlice<f32, Blocked<Index1D, 1, 2>>) {
         if let Some(element) = output.get_block_mut(&block, 1) {
             *element = 1.0;
         }
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1]),
+)]
+#[cfg(feature = "write_only_grid_exclusive")]
+pub fn write_only_grid_exclusive(mut output: WriteOnlyDisjointSlice<f32, GridExclusive>) {
+    if let Some(leader) = thread::grid_leader() {
+        let _ = output.write_exclusive(&leader, 7, 1.0);
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+)]
+#[cfg(feature = "write_only_blocked")]
+pub fn write_only_blocked(mut output: WriteOnlyDisjointSlice<f32, Blocked<Index1D, 64, 4>>) {
+    if let Some(block) = thread::index_1d().checked_block::<64, 4>() {
+        let _ = output.write_block(&block, 3, 1.0);
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1]),
+)]
+#[cfg(feature = "write_only_blocked_dynamic_grid")]
+pub fn write_only_blocked_dynamic_grid(
+    mut output: WriteOnlyDisjointSlice<f32, Blocked<Index1D, 64, 4>>,
+) {
+    if let Some(block) = thread::index_1d().checked_block::<64, 4>() {
+        let _ = output.write_block(&block, 3, 1.0);
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+)]
+#[cfg(feature = "write_only_tiled")]
+pub fn write_only_tiled(mut output: WriteOnlyDisjointSlice<f32, Tiled2D<Index1D, 64, 16, 16, 4>>) {
+    if let Some(tile) = thread::index_1d().checked_tiled_2d::<64, 16, 16, 4>() {
+        let _ = output.write_tiled_2d(&tile, 3, 16, 16, 16, 1.0);
+    }
+}
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+)]
+#[cfg(feature = "write_only_row_striped")]
+pub fn write_only_row_striped(
+    mut output: WriteOnlyDisjointSlice<f32, RowStriped2D<Index1D, 16, 4>>,
+) {
+    if let Some(stripe) = thread::index_1d().checked_row_striped_2d::<16, 4>() {
+        let _ = output.write_row_striped_2d(&stripe, 3, 4, 64, 64, 1.0);
     }
 }
 

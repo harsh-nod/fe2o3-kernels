@@ -7,7 +7,7 @@
   --text: #172126;
   --text-strong: #0c1417;
   --muted: #5c686d;
-  --faint: #7c878b;
+  --faint: #59676b;
   --border: #d6dee0;
   --border-strong: #b9c5c8;
   --accent: #146f61;
@@ -291,7 +291,7 @@
 .getting-started-inspector small,
 .getting-started-memory small {
   color: var(--faint);
-  font-size: 0.58rem;
+  font-size: 0.68rem;
   font-style: normal;
   font-weight: 750;
   text-transform: uppercase;
@@ -314,7 +314,7 @@
 .getting-started-inspector li em {
   color: var(--blue);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 0.56rem;
+  font-size: 0.66rem;
   font-style: normal;
   font-weight: 750;
   white-space: nowrap;

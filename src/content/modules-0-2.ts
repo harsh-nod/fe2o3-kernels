@@ -304,7 +304,7 @@ const vecadd: Lesson = {
   prerequisites: ["Fill: one witness, one write", "Rust borrowing"],
   objectives: [
     "Read the single shared index/read/write body used by Rust and Verus.",
-    "Typecheck the generated Worker V3 Arguments binding without claiming application launch.",
+    "Typecheck the generated direct-KFD Arguments binding without claiming application launch.",
     "Separate f32 memory-safety proofs from unproved IEEE arithmetic semantics.",
   ],
   claims: [
@@ -312,7 +312,7 @@ const vecadd: Lesson = {
       kind: "compiler-checked",
       label: "Typed vecadd binding",
       detail:
-        "The exact three-slice f32 profile generates a lifetime-bound Arguments type and the source-check lane typechecks it. The example main returns Unsupported because the production Worker V3 application verifier is not wired.",
+        "The exact three-slice f32 profile generates a lifetime-bound direct-KFD Arguments type. The source-check lane constructs its read and read-write capabilities from borrowed host slices and typechecks without the legacy HIP/HSA qualification feature. The example main returns Unsupported because the production Worker V3 application verifier is not wired.",
       reference: currentImplementationReference(
         [vecaddSourceCheckCommand],
         ["examples/vecadd/src/main.rs", "examples/vecadd/src/vecadd_body.rs"],
@@ -395,10 +395,10 @@ const vecadd: Lesson = {
       sourcePath: "examples/vecadd/src/main.rs",
       sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "c768ec56e0805fdc909fea6097ec19321c3835865ed55b9927163bf9b0197e8d",
+        "f97d7b6c1d51072a78bae7392a16ca0dd23ebdc2d3219e29334e557f7e47d246",
       explanatory: false,
       notice:
-        "The current application entry point is intentionally unavailable until the production Worker V3 verifier is wired. The generated Arguments binding is typechecked in the same source file's tests.",
+        "The default generated Arguments binding uses direct-KFD read and read-write capabilities over retained host borrows. The application entry point remains unavailable until the production Worker V3 verifier is wired; this test grants no artifact, load, or dispatch authority.",
     },
     {
       language: "text",

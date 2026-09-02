@@ -39,6 +39,38 @@
     {
       "path": "crates/fe2o3-debug-cli/README.md",
       "sha256": "40875dbf16c887a7b6bf985d00e8c367d268b847fddc69b09db66332a7b03f73"
+    },
+    {
+      "path": "Cargo.toml",
+      "sha256": "fd4bf8a7721859cdae2da1367460588f87a552c0690670e6da17fb3b501fd25e"
+    },
+    {
+      "path": "crates/cargo-fe2o3/tests/production_dependency_closure.rs",
+      "sha256": "78fb50307f54777806203689ead1cece8569a5636cac57953171bb177c320c61"
+    },
+    {
+      "path": "crates/fe2o3-host/Cargo.toml",
+      "sha256": "171cfd6459db064e52ad66e2f74756d8fd102558ba160e3f586dfb290aeb3bd8"
+    },
+    {
+      "path": "crates/fe2o3-host/src/lib.rs",
+      "sha256": "aa89926064bc47f00f87dbcf0b67746a164ee5de35a0333204fc28a1348c1c54"
+    },
+    {
+      "path": "crates/fe2o3-host/src/generated_kfd_arguments.rs",
+      "sha256": "ecbfd5b15a3284e3a5e09a6c8c4362fe023bc8c4e7e81a8c46f0425b0dbf6cee"
+    },
+    {
+      "path": "crates/fe2o3-host/src/production_application.rs",
+      "sha256": "56c2ce548b0b45a17c1a68bab2fbf3411bef7b5d61f8cbd9ba9ed55660c8233b"
+    },
+    {
+      "path": "crates/fe2o3-macros/src/lib.rs",
+      "sha256": "43f8a94ebe8a30691a60114c05cdaf44f671e9dc8d6187c0ceedeb33d100f05a"
+    },
+    {
+      "path": "examples/vecadd/src/main.rs",
+      "sha256": "f97d7b6c1d51072a78bae7392a16ca0dd23ebdc2d3219e29334e557f7e47d246"
     }
   ]
 }
