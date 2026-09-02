@@ -230,7 +230,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Published semantic-correctness baseline",
-        "text": "The checked-in publication gate pins compiler commit ba83570a4f07cf160f612e748e4217efc8646e95 and tree 741cb258f0affee1e0e9bae546144f9b92abfeb3. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
+        "text": "The checked-in publication gate pins compiler commit af2ec22c549ad9e770d6beb540baade1a0c30fe9 and tree 48edf48dc22389e026e8ae8af1bfce684a41f350. Both public main refs must contain that exact commit, and the commit must resolve to that exact tree; deleted, rewritten, or divergent histories fail closed. Historical proof, compiler, finalizer, runtime, and MI300X records remain pinned to their own immutable commits and do not transfer authority to this gate. For its admitted finite subset, PLIRON proves and reconciles non-vacuous total coverage, separation, frames, schedules, and ordered-product identity; one generated Verus run separately replays each supported exact formula, and the private move-only join binds both to the exact MIR subjects and complete live PLIRON graph. It does not prove arbitrary source extraction or reference programs, unsupported loop forms, target IEEE values, LLVM-or-later refinement, artifact publication, launch behavior, hardware execution, or universal kernel correctness."
       },
       {
         "type": "callout",
@@ -2800,7 +2800,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Semantic-correctness milestone",
-        "text": "Milestone status: partial-current at compiler ba83570a4f07cf160f612e748e4217efc8646e95. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
+        "text": "Milestone status: partial-current at compiler af2ec22c549ad9e770d6beb540baade1a0c30fe9. Read the capability below together with its explicit fail-closed boundary. This lesson adds no formal compiler-refinement receipt, protected publication authority, whole-model equivalence, or universal performance result."
       }
     ]
   }
