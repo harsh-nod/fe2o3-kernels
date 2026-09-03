@@ -363,11 +363,11 @@ describe("in-process profiler import tutorial", () => {
     expect(screen.getByText("Synthetic import, bounded checkpoint qualified")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "Replay exact profiler owners in a fresh process",
+        name: "Compare complete profiler catalogs in a fresh process",
       }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Profiler Variant V3 identity join"))
-      .toHaveTextContent("positive co-observation");
+      .toHaveTextContent("exact multiset delta");
     expect(screen.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
       .toHaveTextContent("open_structural_archive");
     expect(screen.getByRole("table", { name: "Process-local profiler agent mapping" }))

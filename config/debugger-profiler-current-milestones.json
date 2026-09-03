@@ -115,8 +115,8 @@
     "multiRootCustody": "typed_unavailable"
   },
   "profilerVariantV3": {
-    "commit": "100bb83524a43c8bf898ecb69bf72bd534fa3257",
-    "tree": "335a9d5831472d5464087a3615ed1cecfa20c06a",
+    "commit": "9a20c93871a652d1d50eba2f63ef92242c58b826",
+    "tree": "9ed4ed14b263bb0c74369d92d364e6f8959fea2e",
     "bundleKirVersion": 7,
     "catalogKirVersion": 8,
     "uniqueCatalogJoin": true,
@@ -125,6 +125,11 @@
     "maximumOpenArchives": 2,
     "maximumRequests": 64,
     "completeFinalizerReplay": true,
+    "completeStructuralComparisonVersion": 1,
+    "maximumStructuralDeltas": 4096,
+    "maximumStructuralOccurrences": 4096,
+    "maximumStructuralResultBytes": 16777216,
+    "sampledAbsence": "excluded",
     "externalProvenance": "not_authenticated",
     "scheduleExecution": "typed_unavailable",
     "causality": "typed_unavailable"

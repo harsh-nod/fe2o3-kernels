@@ -233,14 +233,15 @@ export function ProfilerDispatchImportPage() {
       <section className="profiler-import-v3" aria-labelledby="profiler-v3-heading">
         <header>
           <p className="section-kicker">Restartable structural evidence</p>
-          <h2 id="profiler-v3-heading">Replay exact profiler owners in a fresh process</h2>
+          <h2 id="profiler-v3-heading">Compare complete profiler catalogs in a fresh process</h2>
           <p>
             Archive V{profilerVariantV3Milestone.archiveVersion} carries every bounded
             input needed to rerun the Worker V3 finalizer checks and reconstruct
             the production bridge, catalog, and Characteristic owners. Variant V3
             accepts a profiler occurrence only when it resolves to one unique
-            catalog record; names, ordinal proximity, and partial-capture absence
-            cannot create a match.
+            catalog record. Two complete scans in the same stable source/MIR
+            universe can report exact added or removed multiplicities; names,
+            ordinal proximity, and sampled or lossy absence cannot create a delta.
           </p>
         </header>
         <div className="profiler-import-v3-flow" aria-label="Profiler Variant V3 identity join">
@@ -263,9 +264,9 @@ export function ProfilerDispatchImportPage() {
           </div>
           <ArrowRight size={18} aria-hidden="true" />
           <div>
-            <small>comparison result</small>
-            <strong>positive co-observation</strong>
-            <code>causality unavailable</code>
+            <small>complete comparison</small>
+            <strong>exact multiset delta</strong>
+            <code>duplicates retained</code>
           </div>
         </div>
         <aside>
@@ -275,13 +276,15 @@ export function ProfilerDispatchImportPage() {
             Commit {profilerVariantV3Milestone.commit.slice(0, 10)} serves at most{" "}
             {profilerVariantV3Milestone.maximumOpenArchives} archive owners and{" "}
             {profilerVariantV3Milestone.maximumRequests} requests per process.
-            Complete finalizer replay authenticates internal derivation, not the
-            external producer. Observed schedule execution and causality remain
-            typed unavailable.
+            A result retains at most {profilerVariantV3Milestone.maximumStructuralDeltas}
+            {" "}changed keys and {profilerVariantV3Milestone.maximumStructuralOccurrences}
+            {" "}side occurrences; overflow returns no partial delta. Complete
+            finalizer replay authenticates internal derivation, not the external
+            producer. Observed schedule execution and causality remain typed unavailable.
           </span>
         </aside>
         <pre><code>{`fe2o3-profiler-service variant-v3-jsonl
-discover_capabilities -> open_structural_archive -> compare_variants`}</code></pre>
+discover_capabilities -> open_structural_archive -> compare_complete_structural_catalogs`}</code></pre>
       </section>
 
       <section className="profiler-import-sealed" aria-labelledby="profiler-sealed-heading">

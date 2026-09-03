@@ -907,12 +907,13 @@ describe("in-process profiler dispatch import milestone", () => {
         "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
         "crates/fe2o3-hsaco-finalize/src/production_profiler_kir_archive_v1.rs",
         "crates/fe2o3-semantic-query/src/agent_variant_service_v3.rs",
+        "crates/fe2o3-semantic-query/src/profiler_complete_structural_v1.rs",
         "docs/profiler-variant-v3.md",
         "docs/production-profiler-kir-archive-v1.md",
       ]),
     );
     expect(profilerVariantV3Milestone).toMatchObject({
-      commit: "100bb83524a43c8bf898ecb69bf72bd534fa3257",
+      commit: "9a20c93871a652d1d50eba2f63ef92242c58b826",
       bundleKirVersion: 7,
       catalogKirVersion: 8,
       uniqueCatalogJoin: true,
@@ -921,6 +922,11 @@ describe("in-process profiler dispatch import milestone", () => {
       maximumOpenArchives: 2,
       maximumRequests: 64,
       completeFinalizerReplay: true,
+      completeStructuralComparisonVersion: 1,
+      maximumStructuralDeltas: 4096,
+      maximumStructuralOccurrences: 4096,
+      maximumStructuralResultBytes: 16777216,
+      sampledAbsence: "excluded",
       externalProvenance: "not_authenticated",
     });
     expect(
@@ -928,7 +934,7 @@ describe("in-process profiler dispatch import milestone", () => {
         "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
       ),
     ).toBe(
-      "https://github.com/harsh-nod/fe2o3/blob/100bb83524a43c8bf898ecb69bf72bd534fa3257/crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/9a20c93871a652d1d50eba2f63ef92242c58b826/crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
     );
     expect(() => profilerImportSourceUrl("../Cargo.toml")).toThrow("repository-relative");
   });

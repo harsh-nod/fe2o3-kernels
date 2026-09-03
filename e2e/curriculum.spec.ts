@@ -671,7 +671,7 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Replay exact profiler owners in a fresh process",
+      name: "Compare complete profiler catalogs in a fresh process",
     }),
   ).toBeVisible();
   await expect(page.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
