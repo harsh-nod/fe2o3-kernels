@@ -5397,6 +5397,7 @@ tr:last-child td {
 
 .semantic-exploration-body,
 .semantic-source-body,
+.semantic-reduction-body,
 .semantic-wave-body,
 .semantic-counter-body,
 .semantic-pc-body {
@@ -5501,6 +5502,81 @@ tr:last-child td {
 }
 
 .semantic-source-body > .semantic-boundary-note {
+  margin: 12px;
+}
+
+.semantic-reduction-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  gap: 1px;
+}
+
+.semantic-reduction-grid > section {
+  min-width: 0;
+  padding: 14px;
+  background: var(--surface);
+}
+
+.semantic-reduction-grid h4 {
+  margin: 3px 0 12px;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+}
+
+.semantic-reduction-grid pre {
+  max-height: 238px;
+  padding: 11px;
+  margin: 0;
+  overflow: auto;
+  color: var(--code-text);
+  background: var(--code-bg);
+  border: 1px solid color-mix(in srgb, var(--border) 35%, transparent);
+  border-radius: 4px;
+  font-size: 0.61rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+
+.semantic-reduction-results > div {
+  display: grid;
+  grid-template-columns: 0.55fr 0.75fr 1fr 1.2fr;
+  gap: 8px;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-reduction-results > div:first-child {
+  min-height: 32px;
+  color: var(--faint);
+  background: var(--surface-2);
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.semantic-reduction-results strong,
+.semantic-reduction-results code,
+.semantic-reduction-results span {
+  min-width: 0;
+  color: var(--text-strong);
+  font-size: 0.63rem;
+  overflow-wrap: anywhere;
+}
+
+.semantic-reduction-differentiators {
+  border-top: 1px solid var(--border);
+}
+
+.semantic-reduction-differentiators svg {
+  flex: 0 0 auto;
+  color: var(--accent);
+}
+
+.semantic-reduction-body > .semantic-boundary-note {
   margin: 12px;
 }
 
@@ -6062,6 +6138,7 @@ tr:last-child td {
   .semantic-evidence-metrics,
   .semantic-source-lineage,
   .semantic-source-raw,
+  .semantic-reduction-grid,
   .semantic-witness-grid,
   .semantic-wave-summary,
   .semantic-counter-dispatches,
@@ -6079,6 +6156,14 @@ tr:last-child td {
 
   .semantic-source-variables > div {
     min-width: 690px;
+  }
+
+  .semantic-reduction-results {
+    overflow-x: auto;
+  }
+
+  .semantic-reduction-results > div {
+    min-width: 470px;
   }
 
   .semantic-wave-operations {

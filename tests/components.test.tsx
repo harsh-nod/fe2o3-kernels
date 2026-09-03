@@ -91,6 +91,23 @@ describe("debugger and simulator evidence workbench", () => {
     expect(screen.getByText(/Bundle-bound source is not protected compiler authentication/u)).toBeInTheDocument();
     expect(screen.getByText("Exact production exporter receipt")).toBeInTheDocument();
     expect(screen.getByText("41..43")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Debug a portable workgroup reduction end to end",
+      }),
+    ).toBeInTheDocument();
+    const reductionResults = screen.getByRole("table", {
+      name: "Portable workgroup reduction results",
+    });
+    expect(within(reductionResults).getByText("0x00000080")).toBeInTheDocument();
+    expect(within(reductionResults).getByText("0xffffff40")).toBeInTheDocument();
+    expect(within(reductionResults).getByText("0x42c00000")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Workgroup reduction debugger queries"),
+    ).toHaveTextContent('"operation":"inspect_scope"');
+    expect(screen.getByText("One owner for each source and KIR site")).toBeInTheDocument();
+    expect(screen.getByText("The schedule cannot drift to another bundle")).toBeInTheDocument();
+    expect(screen.getByText(/A 32-lane launch is a typed workgroup mismatch/u)).toBeInTheDocument();
 
     const raceTabs = screen.getByRole("tablist", { name: "Race evidence outcome" });
     await user.click(within(raceTabs).getByRole("tab", { name: "No race observed" }));

@@ -77,15 +77,26 @@ const v5SimulationTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_v9_wave_collective_exports_v5_and_runs_in_public_debugger -- --ignored --exact";
 const dynamicLdsSimulationTestCommand =
   "cargo test --locked -p fe2o3-kir-sim explicitly_sized_dynamic_lds -- --nocapture";
+const workgroupReductionExportCommand =
+  "./target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output \"$PWD/workgroup-reduce-u32-v5.fe2sim\" --target gfx942 --bundle-version 5 --target-dir target/tutorial-workgroup-reduce-export -- --package fe2o3-production-ranked-bounds-fixture --features workgroup_reduce_u32 --lib";
+const workgroupReductionDebuggerCommand =
+  "./target/debug/fe2o3-debug sim --bundle-v5 \"$PWD/workgroup-reduce-u32-v5.fe2sim\" --request \"$PWD/workgroup-reduce-u32-request.json\" --protocol jsonl --wave-width 64";
+const workgroupReductionTestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_workgroup_reductions_export_v5_and_execute_every_cpu_path -- --ignored --exact";
 const cpuSimulationSourceMarker =
   "#[cfg(feature = \"aggregate_pair_struct\")]\n#[repr(C)]\npub struct AggregatePairStruct";
 const cpuSimulationZstMarker =
   "#[cfg(feature = \"aggregate_zst\")]\npub struct AggregateZst;";
 const cpuSimulationWaveMarker =
   "#[kernel(\n    typed,\n    launch(required = [64, 1, 1], max = [64, 1, 1]),\n)]\n#[cfg(feature = \"wave_reduce_f32\")]\npub fn wave_reduce_f32";
+const cpuSimulationWorkgroupMarker =
+  "#[kernel(\n    typed,\n    launch(\n        required = [64, 1, 1],\n        max = [64, 1, 1],\n        static_shared_memory_bytes = 256\n    ),\n)]\n#[cfg(feature = \"workgroup_reduce_u32\")]\npub fn workgroup_reduce_u32";
 const cpuSimulationSourceMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationSourceMarker);
 const cpuSimulationZstMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationZstMarker);
 const cpuSimulationWaveMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationWaveMarker);
+const cpuSimulationWorkgroupMarkerOffset = cpuSimulationSource.indexOf(
+  cpuSimulationWorkgroupMarker,
+);
 if (
   cpuSimulationSourceMarkerOffset <= 0 ||
   cpuSimulationSource.lastIndexOf(cpuSimulationSourceMarker) !== cpuSimulationSourceMarkerOffset
@@ -104,6 +115,15 @@ if (
 ) {
   throw new Error("CPU simulation source has a missing, duplicate, or reordered wave fragment");
 }
+if (
+  cpuSimulationWorkgroupMarkerOffset <= cpuSimulationWaveMarkerOffset ||
+  cpuSimulationSource.lastIndexOf(cpuSimulationWorkgroupMarker) !==
+    cpuSimulationWorkgroupMarkerOffset
+) {
+  throw new Error(
+    "CPU simulation source has a missing, duplicate, or reordered workgroup fragment",
+  );
+}
 const cpuSimulationSourceFragments = [
   cpuSimulationSource.slice(0, cpuSimulationSourceMarkerOffset).trimEnd(),
   cpuSimulationSource.slice(
@@ -111,7 +131,11 @@ const cpuSimulationSourceFragments = [
     cpuSimulationZstMarkerOffset,
   ).trimEnd(),
   cpuSimulationSource.slice(cpuSimulationZstMarkerOffset, cpuSimulationWaveMarkerOffset).trimEnd(),
-  cpuSimulationSource.slice(cpuSimulationWaveMarkerOffset),
+  cpuSimulationSource.slice(
+    cpuSimulationWaveMarkerOffset,
+    cpuSimulationWorkgroupMarkerOffset,
+  ).trimEnd(),
+  cpuSimulationSource.slice(cpuSimulationWorkgroupMarkerOffset),
 ];
 
 const orientation: Lesson = {
@@ -507,11 +531,13 @@ const cpuSimulation: Lesson = {
     "Recognize the bounded recursive Unit, array, tuple, and struct scalar-leaf ABI subset and its typed unavailable boundaries.",
     "Run an ordinary gfx950 f32 wave reduction from its exact production V9 identity through a same-module KIR V10 Bundle V5.",
     "Run generated integer, exact float-bit, layout, bounds, and switch cases through the production Bundle V5 boundary.",
+    "Export ordinary u32, i32, and f32 portable workgroup reductions and inspect workgroup, wave, memory, and operation views through one JSONL debugger session.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
     "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
     "Inspect exact full-active logical Wave32/Wave64 collectives and fixed-width structured failure masks.",
     "Query imported Counter Capture V2 and stochastic PC Sample Capture V3 evidence without inventing source, ISA, ATT, clock, loss, or per-lane instruction facts.",
     "Resolve source, stop at a source breakpoint, inspect a captured call stack, and step by source through the agent JSONL protocol.",
+    "Explain how function-qualified disjoint multi-root correspondence and Bundle V5 schedule custody prevent cross-wired source sites and stale replay.",
     "Separate bundle-bound source association from protected compiler authentication, hardware validation, and performance evidence.",
   ],
   claims: [
@@ -519,10 +545,10 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 645750c12, the production conformance boundary runs 32 generated finite-width integer cases, 18 exact float-bit corner cases, scalar/buffer layout, checked bounds, and ordinary u32 switch lowering from strict Bundle V5 custody through KIR V10. The earlier recursive ABI milestone remains executable through the public CPU debugger and SimRuntimeBackendV1. Every result is simulated, non-hardware, and non-performance evidence.",
+        "At compiler 9176b9c27, ordinary u32, i32, and f32 portable workgroup reductions execute through strict Bundle V5/KIR V10 custody in the public CPU debugger and SimRuntimeBackendV1. The same regression inspects workgroup, wave, memory, and operation views, replays canonical and seeded schedules, and rejects a stale bundle or 32-lane roster. The earlier generated semantic conformance and recursive ABI milestones remain covered. Every result is simulated, non-hardware, and non-performance evidence.",
       reference: qualificationReference(
-        currentMilestones.productionSemanticConformanceV3.commit,
-        currentMilestones.productionSemanticConformanceV3.tree,
+        currentMilestones.workgroupReductionV5.commit,
+        currentMilestones.workgroupReductionV5.tree,
         [
           cpuSimulationBuildCommand,
           cpuSimulationExportCommand,
@@ -540,6 +566,9 @@ const cpuSimulation: Lesson = {
           v5DebuggerCommand,
           v5SimulationTestCommand,
           dynamicLdsSimulationTestCommand,
+          workgroupReductionExportCommand,
+          workgroupReductionDebuggerCommand,
+          workgroupReductionTestCommand,
         ],
         [
           "docs/simulation-bundle-v1.md",
@@ -561,6 +590,7 @@ const cpuSimulation: Lesson = {
           "crates/rustc-codegen-fe2o3/tests/production_semantic_conformance_v3.rs",
           "crates/rustc-codegen-fe2o3/tests/fixtures/production-semantic-conformance-device/src/lib.rs",
           "docs/simulator-production-conformance-v3.md",
+          "docs/production-multifunction-semantic-debug-v1.md",
         ],
         {
           target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
@@ -582,14 +612,14 @@ const cpuSimulation: Lesson = {
       code: cpuSimulationSource,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
-      sourceCommit: currentMilestones.recursiveAggregateV2.commit,
+      sourceCommit: currentMilestones.workgroupReductionV5.commit,
       sourceSha256:
-        "2d27de2319a4f776fcd44c5686a0759c9176503fb6b7e2092c210974ca9d606a",
+        "ed4273d0b9eda1e04e916773886f2442e0404d7ba489b25ddf94d2e7d5fc61d1",
       sourceDigestScope: "displayed",
       sourceFragments: cpuSimulationSourceFragments,
       explanatory: false,
       notice:
-        "Exact barrier, struct, tuple, array, ZST, nested aggregate, rejected enum/pointer/drop, and gfx950 f32 wave-reduction excerpts from the ordinary attributed Rust crate used by the pinned simulator regressions.",
+        "Exact barrier, struct, tuple, array, ZST, nested aggregate, rejected enum/pointer/drop, gfx950 wave reduction, and gfx942 u32/i32/f32 portable workgroup-reduction excerpts from the ordinary attributed Rust crate used by the pinned simulator regressions.",
     },
     {
       kind: "reference",
@@ -651,7 +681,18 @@ ${v5SimulationExportCommand}
 printf '%s\\n' '{"schema":"fe2o3-simulation-request-v1","kernel":"wave_reduce_f32","grid":[64,1,1],"workgroup":[64,1,1],"arguments":[{"kind":"scalar","type":"f32","bits":"0x3f800000"},{"kind":"buffer","element":"f32","access":"read_write","alignment":4,"bytes":"0x${"00".repeat(64 * 4)}"}]}' > wave-reduce-f32-v5-request.json
 printf '%s\\n' '{"operation":"continue","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"max_events":1000000}' | ${v5DebuggerCommand}
 
-# Dynamic LDS remains a separate exact direct-KIR-V10 surface.
+# Export an ordinary portable workgroup reduction and query its hierarchy and events.
+${workgroupReductionExportCommand}
+printf '%s\\n' '{"schema":"fe2o3-simulation-request-v1","kernel":"workgroup_reduce_u32","grid":[64,1,1],"workgroup":[64,1,1],"arguments":[{"kind":"scalar","type":"u32","bits":"0x00000002"},{"kind":"buffer","element":"u32","access":"read_write","alignment":4,"bytes":"0x${"00".repeat(64 * 4)}"}]}' > workgroup-reduce-u32-request.json
+printf '%s\\n' \\
+  '{"operation":"continue","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"max_events":1000000}' \\
+  '{"operation":"inspect_scope","schema":"fe2o3-debug-request-v1","request_id":2,"expected_revision":1,"scope":{"level":"workgroup","workgroup":[0,0,0]},"include_children":true,"page":{"limit":128}}' \\
+  '{"operation":"query_events","schema":"fe2o3-debug-request-v1","request_id":3,"expected_revision":1,"filter":{"scope":{"level":"workgroup","workgroup":[0,0,0]},"category":"memory"},"page":{"limit":128}}' \\
+  '{"operation":"query_events","schema":"fe2o3-debug-request-v1","request_id":4,"expected_revision":1,"filter":{"scope":{"level":"workgroup","workgroup":[0,0,0]},"category":"operation"},"page":{"limit":128}}' \\
+  '{"operation":"inspect_scope","schema":"fe2o3-debug-request-v1","request_id":5,"expected_revision":1,"scope":{"level":"wave","workgroup":[0,0,0],"wave":0},"include_children":true,"page":{"limit":128}}' \\
+  | ${workgroupReductionDebuggerCommand}
+
+${workgroupReductionTestCommand}
 ${dynamicLdsSimulationTestCommand}`,
     },
     {
@@ -700,7 +741,15 @@ Bundle V5 exactness boundary
   source map: exact bundle-bound V2 identity
   compiler bounds trap: admitted; terminal only if dynamically reached
   other external diagnostics: typed unavailable
-  authority: observation only; no compiler, load, launch, or hardware authority`,
+  authority: observation only; no compiler, load, launch, or hardware authority
+
+Multi-root semantic debug custody at e55a0117d
+  exact scope: singleton and disjoint root closures
+  identity key: correspondence owner + semantic function
+  KIR identity: absolute ordinal + role + symbol
+  custody: Source Map V2, semantic map, protected lineage, finalizer replay
+  rejects: duplicate/reordered roots, substituted identities, overlapping spans
+  shared semantic helper across roots: typed unavailable`,
       explanatory: true,
       notice:
         "The JSONL prefix is the exact checked-in source-debug transcript. The appended recursive ABI and V5 boundaries come from separately pinned production regressions; admission follows compiler ABI/layout and KIR identity evidence, not Rust surface spelling.",
@@ -763,7 +812,22 @@ Bundle V5 debugger at 4c1cf6d9c
   stop reason: completed
   session.simulated: true
   session.hardware_observed: false
-  session.performance_prediction: false`,
+  session.performance_prediction: false
+
+Portable workgroup reductions at 9176b9c27
+  ordinary Rust scalars: u32, i32, f32
+  workgroup: [64, 1, 1]
+  static LDS: 256 bytes
+  exact AcquireRelease workgroup barriers: 14
+  u32 input 2 -> 128 in all 64 output lanes
+  i32 input -3 -> -192 in all 64 output lanes
+  f32 input 1.5 -> 96.0 (0x42c00000) in all 64 output lanes
+  debugger views: workgroup, logical wave, memory events, operation events
+  schedules: canonical, seeded, exact persisted Bundle V5 replay
+  runtime adapter: SimRuntimeBackendV1
+  wrong [32, 1, 1] roster: typed workgroup mismatch
+  hardware_observed: false
+  performance_prediction: false`,
       explanatory: true,
       notice:
         "These are assertions from the pinned production integration and qualification contracts, not a retained live hardware capture.",

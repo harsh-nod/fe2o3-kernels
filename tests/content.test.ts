@@ -20,6 +20,7 @@ import {
   debugSimMilestoneProjection,
   debugSimPcSampleFixture,
   debugSimSourceVariableFixture,
+  debugSimWorkgroupReductionFixture,
   validateDebugSimMilestone,
 } from "../src/content/debug-sim-milestone";
 import {
@@ -650,10 +651,13 @@ describe("live KFD debugger milestone", () => {
       physicalGpuStopObserved: false,
     });
     expect(multiFunctionSemanticDebugV5Milestone).toMatchObject({
-      commit: "1b58e886d5351f9b8690275cc4d9c5fa781cc8c9",
+      commit: "e55a0117d76866b66f8ca5d157c9e03e0c69bbb6",
       correspondenceVersion: 5,
+      multiRootCorrespondencePayloadVersion: 2,
       simulatorStackFrames: 2,
-      multiRootCustody: "typed_unavailable",
+      independentFinalizerReplay: true,
+      multiRootCustody: "exact_disjoint_root_closures",
+      sharedHelperInstances: "typed_unavailable",
     });
     expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
@@ -964,6 +968,7 @@ describe("debugger and simulator milestone content", () => {
       ["race_replay_schedule_v1.json", "replaySchedule"],
       ["wave32_collectives_result_v1.json", "wave32Result"],
       ["wave64_collectives_result_v1.json", "wave64Result"],
+      ["workgroup_reduce_queries_v1.jsonl", "workgroupReduceQueries"],
     ];
     for (const [file, digest] of files) {
       expect(
@@ -1045,6 +1050,39 @@ describe("debugger and simulator milestone content", () => {
     expect(debugSimPcSampleFixture.samples[0].execMask).toBe("0xffffffffffffffff");
     expect(debugSimPcSampleFixture.hotspots).toHaveLength(4);
     expect(debugSimPcSampleFixture.hotspots.every((item) => item.origin === "inferred")).toBe(true);
+    expect(debugSimWorkgroupReductionFixture).toMatchObject({
+      compiler: {
+        commit: "9176b9c27696ac3c86814dea60ef9ecc12f10539",
+        tree: "780acf707a4d83658a2a94a575c18e707e5a7214",
+        workgroup: [64, 1, 1],
+        staticSharedMemoryBytes: 256,
+        workgroupBarriers: 14,
+        scheduleArtifact: "simulation_bundle_v5",
+        runtimeBackend: "SimRuntimeBackendV1",
+        hardwareObserved: false,
+        performancePrediction: false,
+      },
+      correspondence: {
+        commit: "e55a0117d76866b66f8ca5d157c9e03e0c69bbb6",
+        multiRootCustody: "exact_disjoint_root_closures",
+        sharedHelperInstances: "typed_unavailable",
+      },
+      cases: [
+        { scalar: "u32", expected: "128", exactBits: "0x00000080" },
+        { scalar: "i32", expected: "-192", exactBits: "0xffffff40" },
+        { scalar: "f32", expected: "96.0", exactBits: "0x42c00000" },
+      ],
+      outputLanes: 64,
+    });
+    expect(
+      debugSimWorkgroupReductionFixture.queries.map((query) => query.operation),
+    ).toEqual([
+      "continue",
+      "inspect_scope",
+      "query_events",
+      "query_events",
+      "inspect_scope",
+    ]);
     expect(JSON.stringify(debugSimMilestoneProjection)).not.toMatch(
       /performance_prediction":true|hardware_observed":true/iu,
     );
@@ -2560,7 +2598,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       explanatory: false,
-      sourceCommit: recursiveAggregateV2Milestone.commit,
+      sourceCommit: debugSimWorkgroupReductionFixture.compiler.commit,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceDigestScope: "displayed",
@@ -2577,6 +2615,10 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain("pub fn barrier_before_access");
     expect(kernel?.code).toContain("pub fn wave_reduce_f32");
     expect(kernel?.code).toContain("reduce_sum_f32::<64>");
+    expect(kernel?.code).toContain("pub fn workgroup_reduce_u32");
+    expect(kernel?.code).toContain("pub fn workgroup_reduce_i32");
+    expect(kernel?.code).toContain("pub fn workgroup_reduce_f32");
+    expect(kernel?.code).toContain("reduce_sum_portable");
     expect(kernel?.code).toContain("syncthreads();");
     const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code ?? "";
     expect(host).toContain(
@@ -2597,6 +2639,14 @@ describe("curriculum integrity", () => {
     expect(host).toContain("ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed");
     expect(host).toContain("ordinary_recursive_aggregates_export_and_execute_bundle_v5");
     expect(host).toContain("--test production_semantic_conformance_v3");
+    expect(host).toContain("--features workgroup_reduce_u32");
+    expect(host).toContain(
+      "ordinary_rust_workgroup_reductions_export_v5_and_execute_every_cpu_path",
+    );
+    expect(host).toContain('"level":"workgroup"');
+    expect(host).toContain('"category":"memory"');
+    expect(host).toContain('"category":"operation"');
+    expect(host).toContain('"level":"wave"');
     expect(host).toContain("explicitly_sized_dynamic_lds");
     expect(host).not.toContain("--kir-v7");
     const sourceDebug =
@@ -2607,6 +2657,9 @@ describe("curriculum integrity", () => {
     expect(sourceDebug).toContain("Physical Indirect carrier pointers and aggregate padding are never read");
     expect(sourceDebug).toContain("Bundle V5 exactness boundary");
     expect(sourceDebug).toContain("production identity: canonical KIR V9");
+    expect(sourceDebug).toContain("Multi-root semantic debug custody at e55a0117d");
+    expect(sourceDebug).toContain("absolute ordinal + role + symbol");
+    expect(sourceDebug).toContain("shared semantic helper across roots: typed unavailable");
     expect(sourceDebug).toContain(
       readFileSync("examples/source_debugger_requests_v1.jsonl", "utf8").trim(),
     );
@@ -2637,6 +2690,10 @@ describe("curriculum integrity", () => {
     expect(result).toContain("generated integer cases: 32");
     expect(result).toContain("ordinary u32 switch: agreement");
     expect(result).toContain("initialization state: exact");
+    expect(result).toContain("Portable workgroup reductions at 9176b9c27");
+    expect(result).toContain("u32 input 2 -> 128 in all 64 output lanes");
+    expect(result).toContain("f32 input 1.5 -> 96.0 (0x42c00000)");
+    expect(result).toContain("wrong [32, 1, 1] roster: typed workgroup mismatch");
     expect(result).toContain(
       readFileSync("examples/source_simulation_result.json", "utf8").trim(),
     );
@@ -2672,15 +2729,15 @@ describe("curriculum integrity", () => {
       kind: "runnable-now",
       reference: {
         scope: "qualification-evidence",
-        commit: productionSemanticConformanceV3Milestone.commit,
-        tree: productionSemanticConformanceV3Milestone.tree,
+        commit: debugSimWorkgroupReductionFixture.compiler.commit,
+        tree: debugSimWorkgroupReductionFixture.compiler.tree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
       scope: "qualification-evidence",
-      commit: productionSemanticConformanceV3Milestone.commit,
-      tree: productionSemanticConformanceV3Milestone.tree,
+      commit: debugSimWorkgroupReductionFixture.compiler.commit,
+      tree: debugSimWorkgroupReductionFixture.compiler.tree,
       target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
     });
     expect(reference?.note).toContain("not protected compiler-execution authentication");
@@ -2716,6 +2773,8 @@ describe("curriculum integrity", () => {
     expect(content).toContain(liveDirectKfdRocprofMilestone.commit.slice(0, 9));
     expect(content).toContain(recursiveAggregateV2Milestone.commit.slice(0, 9));
     expect(content).toContain(productionSemanticConformanceV3Milestone.commit.slice(0, 9));
+    expect(content).toContain(debugSimWorkgroupReductionFixture.compiler.commit.slice(0, 9));
+    expect(content).toContain(debugSimWorkgroupReductionFixture.correspondence.commit.slice(0, 9));
     expect(content).toContain(rocprofWrapperOverheadMilestone.commit.slice(0, 9));
     expect(content).toContain(agentVariantV2Milestone.commit.slice(0, 9));
     expect(content).toContain(transformationMapV2Milestone.commit.slice(0, 9));

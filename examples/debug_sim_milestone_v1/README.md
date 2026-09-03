@@ -14,6 +14,19 @@ exercised in `crates/fe2o3-kir-sim-cli/tests/command.rs` and
 association. `no_race.kir` and its request are the checked-in `fill-v1` CLI
 fixture. These inputs are not evidence that ordinary Rust produced the bytes.
 
+The additive portable workgroup-reduction walkthrough is pinned separately to
+compiler commit `9176b9c27696ac3c86814dea60ef9ecc12f10539`, tree
+`780acf707a4d83658a2a94a575c18e707e5a7214`. Its exact multi-root semantic
+custody comes from the preceding commit
+`e55a0117d76866b66f8ca5d157c9e03e0c69bbb6`, tree
+`6be940b7574ba5f9a0ab49ea9d866b5c26fe2d3c`. The production regression exports
+ordinary attributed Rust `u32`, `i32`, and `f32` reductions into Bundle V5,
+executes their same-module KIR V10 bodies through both `fe2o3-debug` and
+`SimRuntimeBackendV1`, and checks all 64 output lanes. The checked-in
+`workgroup_reduce_queries_v1.jsonl` is the exact bounded five-request sequence
+used to inspect the completed workgroup, logical wave, memory events, and
+operation events. It is an input fixture, not a retained debugger response.
+
 `debug_scalar_v2.fe2sim` is different: it is the exact binary produced by the
 production ordinary Rust -> semantic MIR -> ranked PLIRON -> KIR exporter with
 `--bundle-version 2`. `debug_scalar_source_map_v2.json` is the verified embedded
@@ -92,6 +105,34 @@ printf '%s\n%s\n' \
   < pc_sample_capture_v3.json > pc_capabilities_v3.json
 ```
 
+From the newer workgroup-reduction compiler checkout, run the complete
+ordinary-source production regression:
+
+```bash
+cargo +nightly-2026-04-03 test --locked \
+  -p rustc-codegen-fe2o3 \
+  --test production_ranked_bounds_driver_v1 \
+  ordinary_rust_workgroup_reductions_export_v5_and_execute_every_cpu_path \
+  -- --ignored --exact
+```
+
+That regression checks the exact results `u32(2) -> 128`, `i32(-3) -> -192`,
+and `f32(1.5) -> 96.0` (`0x42c00000`) in every lane, plus canonical and seeded
+schedules, persisted Bundle V5 replay, the normal virtual runtime adapter, and
+typed rejection of a substituted bundle or `[32, 1, 1]` roster. The tutorial's
+five JSONL requests can then be piped into `fe2o3-debug sim --bundle-v5` for the
+exported `workgroup_reduce_u32` bundle.
+
+This is differentiated from a text log by exact, machine-queryable custody:
+each retained site is qualified by correspondence owner, semantic function,
+role, symbol, and absolute KIR ordinal; disjoint root closures carry those
+identities through Source Map V2 and independent finalizer replay. A persisted
+schedule binds the Bundle V5 subject and body as well as request, target,
+limits, context, transcript, and runnable decisions, so an agent gets a typed
+binding error rather than silently replaying against different code. Shared
+helpers reused across roots remain typed unavailable because the current wire
+cannot distinguish their instances.
+
 The repeated `01` KIR digest is a declared test binding, not authenticated
 source, ISA, or hardware correlation. Counter and PC inputs are exact structured
 rocprofv3 regression fixtures, not live tutorial measurements. PC timestamps
@@ -105,6 +146,12 @@ FP32 bits and `input` as an allocation-relative pointer; `output`, `element`,
 and `_input_extent` remain typed `not_represented`. It does not expose native
 addresses or claim source-to-KIR refinement, compiler authentication, hardware
 replay, performance prediction, or CPU support for every kernel.
+
+The workgroup milestone is also CPU semantic evidence only. It does not observe
+GPU workgroups, waves, timing, or performance; it does not add performance
+prediction. New wave-scan or explicit active-mask operations and unsupported
+pointer, enum, needs-drop, adjusted, and complex-cast shapes remain typed
+unavailable.
 
 | Artifact | SHA-256 |
 | --- | --- |
@@ -128,3 +175,4 @@ replay, performance prediction, or CPU support for every kernel.
 | `pc_sample_page_v3.json` | `30ac9350588adba6a6a02982233d1ac392c93548a53ed803b0b662b2000c6e09` |
 | `pc_hotspots_v3.json` | `113d6df2e0e9a5d74a2f3a3dcbbf7f7aac3ab23aeee04e9c02aad6e5323a512c` |
 | `pc_capabilities_v3.json` | `a1a4b3819815b4879c2fc1b8eccf1c28f967d83784356131ba40ff93739736ed` |
+| `workgroup_reduce_queries_v1.jsonl` | `3426bc52547f2989d5b9476552dda58759800cb5364075a3a967a88e730f4410` |

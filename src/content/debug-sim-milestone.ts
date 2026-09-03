@@ -24,6 +24,8 @@ import wave32Error from "../../examples/debug_sim_milestone_v1/partial_wave32_er
 import wave64Error from "../../examples/debug_sim_milestone_v1/partial_wave64_error_v1.json";
 import wave32Result from "../../examples/debug_sim_milestone_v1/wave32_collectives_result_v1.json";
 import wave64Result from "../../examples/debug_sim_milestone_v1/wave64_collectives_result_v1.json";
+import workgroupReduceQueriesRaw from "../../examples/debug_sim_milestone_v1/workgroup_reduce_queries_v1.jsonl?raw";
+import currentMilestones from "../../config/debugger-profiler-current-milestones.json";
 
 type JsonObject = Record<string, unknown>;
 export type ExplorationEvidenceId = "race" | "no-race" | "incomplete";
@@ -55,6 +57,7 @@ export const DEBUG_SIM_ARTIFACT_SHA256 = {
   replaySchedule: "28f9d9776509701316cfcd5d5e751f5ce7f8885cb49c4294b29f1d126eae313d",
   wave32Result: "ec856159689ad4aa2672587be7005965fa76216f7e3adf140a50e54f01c00334",
   wave64Result: "8cd9fcddf8835683093f5bd6e39bfbd7a2b2871665f069f635634841adc56305",
+  workgroupReduceQueries: "3426bc52547f2989d5b9476552dda58759800cb5364075a3a967a88e730f4410",
 } as const;
 
 const explorationTopKeys = [
@@ -552,6 +555,88 @@ function validatePcSampleMilestone(): string[] {
   return issues;
 }
 
+const workgroupReduceQueries = workgroupReduceQueriesRaw
+  .trimEnd()
+  .split("\n")
+  .map((line) => JSON.parse(line) as JsonObject);
+
+function validateWorkgroupReductionMilestone(): string[] {
+  const milestone = currentMilestones.workgroupReductionV5;
+  const multiRoot = currentMilestones.multiFunctionSemanticDebugV5;
+  if (
+    !exactKeys(milestone, [
+      "bundleVersion",
+      "commit",
+      "debuggerCommand",
+      "hardwareObserved",
+      "performancePrediction",
+      "productionKirVersion",
+      "runtimeBackend",
+      "scalarTypes",
+      "scheduleArtifact",
+      "scheduleModes",
+      "simulationKirVersion",
+      "staticSharedMemoryBytes",
+      "target",
+      "tree",
+      "workgroup",
+      "workgroupBarriers",
+      "wrongRoster",
+    ]) ||
+    !/^[0-9a-f]{40}$/u.test(milestone.commit) ||
+    !/^[0-9a-f]{40}$/u.test(milestone.tree) ||
+    milestone.target !== "gfx942:xnack-" ||
+    JSON.stringify(milestone.scalarTypes) !== '["u32","i32","f32"]' ||
+    JSON.stringify(milestone.workgroup) !== "[64,1,1]" ||
+    milestone.staticSharedMemoryBytes !== 256 ||
+    milestone.workgroupBarriers !== 14 ||
+    milestone.bundleVersion !== 5 ||
+    milestone.productionKirVersion !== 8 ||
+    milestone.simulationKirVersion !== 10 ||
+    JSON.stringify(milestone.scheduleModes) !==
+      '["canonical","seeded","persisted_replay"]' ||
+    milestone.scheduleArtifact !== "simulation_bundle_v5" ||
+    milestone.runtimeBackend !== "SimRuntimeBackendV1" ||
+    milestone.debuggerCommand !== "fe2o3-debug sim --bundle-v5" ||
+    milestone.wrongRoster !== "typed_workgroup_mismatch" ||
+    milestone.hardwareObserved !== false ||
+    milestone.performancePrediction !== false
+  ) {
+    return ["workgroup reduction milestone has an invalid closed envelope"];
+  }
+  if (
+    !/^[0-9a-f]{40}$/u.test(multiRoot.commit) ||
+    !/^[0-9a-f]{40}$/u.test(multiRoot.tree) ||
+    multiRoot.correspondenceVersion !== 5 ||
+    multiRoot.multiRootCorrespondencePayloadVersion !== 2 ||
+    multiRoot.absoluteKirOrdinals !== true ||
+    multiRoot.functionQualifiedSyntheticSpans !== true ||
+    multiRoot.independentFinalizerReplay !== true ||
+    multiRoot.multiRootCustody !== "exact_disjoint_root_closures" ||
+    multiRoot.sharedHelperInstances !== "typed_unavailable"
+  ) {
+    return ["multi-root semantic debug milestone lost exact custody or its typed boundary"];
+  }
+  if (
+    workgroupReduceQueries.length !== 5 ||
+    workgroupReduceQueries.some(
+      (query, index) =>
+        query.schema !== "fe2o3-debug-request-v1" ||
+        query.request_id !== index + 1 ||
+        query.expected_revision !== (index === 0 ? 0 : 1),
+    ) ||
+    JSON.stringify(workgroupReduceQueries.map((query) => query.operation)) !==
+      '["continue","inspect_scope","query_events","query_events","inspect_scope"]' ||
+    field(field(workgroupReduceQueries[1], "scope"), "level") !== "workgroup" ||
+    field(field(workgroupReduceQueries[2], "filter"), "category") !== "memory" ||
+    field(field(workgroupReduceQueries[3], "filter"), "category") !== "operation" ||
+    field(field(workgroupReduceQueries[4], "scope"), "level") !== "wave"
+  ) {
+    return ["workgroup reduction queries lost their exact bounded debugger sequence"];
+  }
+  return [];
+}
+
 export const debugSimMilestoneProjection = {
   compiler: DEBUG_SIM_COMPILER_PIN,
   sourceVariables: {
@@ -580,7 +665,22 @@ export const debugSimMilestoneProjection = {
     page: pcSamplePage,
     hotspots: pcHotspots,
   },
+  workgroupReduction: currentMilestones.workgroupReductionV5,
+  multiRootSemanticDebug: currentMilestones.multiFunctionSemanticDebugV5,
 };
+
+export const debugSimWorkgroupReductionFixture = {
+  compiler: currentMilestones.workgroupReductionV5,
+  correspondence: currentMilestones.multiFunctionSemanticDebugV5,
+  cases: [
+    { scalar: "u32", input: "2", expected: "128", exactBits: "0x00000080" },
+    { scalar: "i32", input: "-3", expected: "-192", exactBits: "0xffffff40" },
+    { scalar: "f32", input: "1.5", expected: "96.0", exactBits: "0x42c00000" },
+  ],
+  outputLanes: 64,
+  queries: workgroupReduceQueries,
+  queriesRaw: workgroupReduceQueriesRaw,
+} as const;
 
 const mappedSourceVariables = sourceMap.variables as JsonObject[];
 const queriedSourceVariables = field(sourceVariableResponse, "values") as JsonObject[];
@@ -763,6 +863,7 @@ export function validateDebugSimMilestone(): string[] {
     ...validateSourceVariableMilestone(),
     ...validateCounterCapture(counterCapture),
     ...validatePcSampleMilestone(),
+    ...validateWorkgroupReductionMilestone(),
   ];
   const raceWitness = field(field(explorationRace, "witnesses"), "first_race");
   if (

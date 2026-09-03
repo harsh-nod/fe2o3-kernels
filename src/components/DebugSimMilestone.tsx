@@ -18,6 +18,7 @@ import {
   debugSimPcSampleFixture,
   debugSimSourceVariableFixture,
   debugSimWaveFixtures,
+  debugSimWorkgroupReductionFixture,
   type ExplorationEvidenceId,
   type LogicalWaveWidth,
 } from "../content/debug-sim-milestone";
@@ -144,6 +145,138 @@ function SourceVariablePanel() {
           <pre data-testid="source-variables-v2-jsonl">{fixture.raw.response}</pre>
         </details>
       </div>
+    </div>
+  );
+}
+
+function WorkgroupReductionPanel() {
+  const fixture = debugSimWorkgroupReductionFixture;
+  return (
+    <div className="semantic-reduction-body">
+      <div className="semantic-source-lineage">
+        <span>
+          <GitCommitHorizontal size={15} aria-hidden="true" /> reduction compiler
+          <a
+            href={`https://github.com/harsh-nod/fe2o3/commit/${fixture.compiler.commit}`}
+            rel="noreferrer"
+            target="_blank"
+            title={fixture.compiler.commit}
+          >
+            <code>{shortIdentity(fixture.compiler.commit)}</code>
+          </a>
+        </span>
+        <span>
+          multi-root custody
+          <a
+            href={`https://github.com/harsh-nod/fe2o3/commit/${fixture.correspondence.commit}`}
+            rel="noreferrer"
+            target="_blank"
+            title={fixture.correspondence.commit}
+          >
+            <code>{shortIdentity(fixture.correspondence.commit)}</code>
+          </a>
+        </span>
+        <span>
+          exact executable body
+          <code>Bundle V5 / KIR V10</code>
+        </span>
+        <span>
+          persisted custody
+          <code>{fixture.compiler.scheduleArtifact}</code>
+        </span>
+      </div>
+
+      <div className="semantic-evidence-metrics" aria-label="Workgroup reduction contract">
+        <TruthCell label="logical lanes" value={String(fixture.outputLanes)} />
+        <TruthCell
+          label="workgroup"
+          value={`[${fixture.compiler.workgroup.join(", ")}]`}
+        />
+        <TruthCell
+          label="static LDS"
+          value={`${fixture.compiler.staticSharedMemoryBytes} bytes`}
+        />
+        <TruthCell label="barriers" value={String(fixture.compiler.workgroupBarriers)} />
+        <TruthCell label="runtime adapter" value={fixture.compiler.runtimeBackend} />
+      </div>
+
+      <div className="semantic-reduction-grid">
+        <section aria-labelledby="semantic-reduction-results-heading">
+          <p className="debug-label">Exact output bytes</p>
+          <h4 id="semantic-reduction-results-heading">Every lane receives the workgroup sum</h4>
+          <div
+            className="semantic-reduction-results"
+            role="table"
+            aria-label="Portable workgroup reduction results"
+          >
+            <div role="row">
+              <span role="columnheader">type</span>
+              <span role="columnheader">lane input</span>
+              <span role="columnheader">64-lane result</span>
+              <span role="columnheader">exact bits</span>
+            </div>
+            {fixture.cases.map((testCase) => (
+              <div key={testCase.scalar} role="row">
+                <strong role="cell">{testCase.scalar}</strong>
+                <code role="cell">{testCase.input}</code>
+                <code role="cell">{testCase.expected}</code>
+                <code role="cell">{testCase.exactBits}</code>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section aria-labelledby="semantic-reduction-query-heading">
+          <p className="debug-label">Agent-native JSONL</p>
+          <h4 id="semantic-reduction-query-heading">Ask for hierarchy and events, not logs</h4>
+          <pre aria-label="Workgroup reduction debugger queries">
+            {fixture.queriesRaw}
+          </pre>
+        </section>
+      </div>
+
+      <div className="semantic-witness-grid semantic-reduction-differentiators">
+        <section>
+          <header>
+            <div>
+              <p className="debug-label">Exact correspondence</p>
+              <h3>One owner for each source and KIR site</h3>
+            </div>
+            <Network size={17} aria-hidden="true" />
+          </header>
+          <p>
+            Entry and helper bodies use the exact correspondence owner, semantic function, role,
+            symbol, and absolute KIR ordinal. Disjoint multi-root closures survive Source Map V2,
+            protected lineage, and independent finalizer replay; duplicate, reordered,
+            overlapping, or substituted records fail closed.
+          </p>
+        </section>
+        <section>
+          <header>
+            <div>
+              <p className="debug-label">Replay for agents</p>
+              <h3>The schedule cannot drift to another bundle</h3>
+            </div>
+            <RotateCcw size={17} aria-hidden="true" />
+          </header>
+          <p>
+            Canonical and seeded runs persist Bundle V5 subject and body identities with the
+            request, target, limits, context, transcript, and runnable decisions. A debugger or
+            agent can replay the same semantic observation and gets a typed binding mismatch for
+            a substituted bundle.
+          </p>
+        </section>
+      </div>
+
+      <p className="semantic-boundary-note">
+        <ShieldAlert size={15} aria-hidden="true" />
+        <span>
+          This is bounded CPU semantics for the admitted production KIR, not GPU execution,
+          timing, or performance prediction. A 32-lane launch is a typed workgroup mismatch.
+          Shared semantic helpers reused across roots, new wave scans or explicit active-mask
+          operations, and unsupported pointer, enum, needs-drop, adjusted, or complex-cast shapes
+          remain unavailable.
+        </span>
+      </p>
     </div>
   );
 }
@@ -552,6 +685,21 @@ export function DebugSimMilestone() {
           </span>
         </header>
         <SourceVariablePanel />
+      </section>
+
+      <section className="semantic-evidence-band" aria-labelledby="workgroup-reduction-heading">
+        <header>
+          <div>
+            <p className="debug-label">Ordinary Rust, Bundle V5</p>
+            <h3 id="workgroup-reduction-heading">
+              Debug a portable workgroup reduction end to end
+            </h3>
+          </div>
+          <span className="debug-schema">
+            <MapPinned size={15} /> exact correspondence + replay
+          </span>
+        </header>
+        <WorkgroupReductionPanel />
       </section>
 
       <section className="semantic-evidence-band" aria-labelledby="exploration-heading">

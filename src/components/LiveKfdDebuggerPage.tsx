@@ -144,7 +144,8 @@ export function LiveKfdDebuggerPage() {
             <strong>Identity-bound, not name-matched</strong>
             Commit {multiFunctionSemanticDebugV5Milestone.commit.slice(0, 10)} rejects
             duplicate, reordered, sparse, renamed, and substituted rosters.
-            Multi-root custody remains {multiFunctionSemanticDebugV5Milestone.multiRootCustody.replaceAll("_", " ")}.
+            Disjoint multi-root custody is {multiFunctionSemanticDebugV5Milestone.multiRootCustody.replaceAll("_", " ")};
+            shared helper instances remain {multiFunctionSemanticDebugV5Milestone.sharedHelperInstances.replaceAll("_", " ")}.
           </span>
         </aside>
       </section>

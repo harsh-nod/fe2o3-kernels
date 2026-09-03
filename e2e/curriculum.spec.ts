@@ -365,6 +365,8 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   const codePanel = page.locator("#lesson-code-panel");
   await expect(codePanel).toContainText("pub fn barrier_before_access");
   await expect(codePanel).toContainText("syncthreads");
+  await expect(codePanel).toContainText("pub fn workgroup_reduce_u32");
+  await expect(codePanel).toContainText("reduce_sum_portable");
   await expect(
     page.getByText(
       /Exact barrier, struct, tuple, array, ZST, nested aggregate, rejected enum\/pointer\/drop/u,
@@ -387,12 +389,17 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("fe2o3-debug sim --bundle");
   await expect(codePanel).toContainText("--bundle-version 4");
   await expect(codePanel).toContainText("fe2o3-debug sim --bundle-v4");
+  await expect(codePanel).toContainText("--features workgroup_reduce_u32");
+  await expect(codePanel).toContainText('"category":"memory"');
+  await expect(codePanel).toContainText('"category":"operation"');
 
   await page.getByRole("tab", { name: "Source debug and ABI boundary" }).click();
   await expect(codePanel).toContainText('"operation":"resolve_source"');
   await expect(codePanel).toContainText('"provenance":"compiler_bundle_bound"');
   await expect(codePanel).toContainText('"result":"stack"');
   await expect(codePanel).toContainText('"values":{"status":"captured"');
+  await expect(codePanel).toContainText("Multi-root semantic debug custody at e55a0117d");
+  await expect(codePanel).toContainText("shared semantic helper across roots: typed unavailable");
 
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(codePanel).toContainText('"canonical_bytes":1187');
@@ -400,6 +407,8 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText('"performance_prediction":false');
   await expect(codePanel).toContainText('"barrier_releases":1');
   await expect(codePanel).toContainText('"record_sha256"');
+  await expect(codePanel).toContainText("Portable workgroup reductions at 9176b9c27");
+  await expect(codePanel).toContainText("f32 input 1.5 -> 96.0 (0x42c00000)");
 
   const semanticEvidence = page.getByRole("region", {
     name: "Explore, retain, and replay a CPU counterexample",
@@ -408,6 +417,22 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(
     semanticEvidence.getByRole("heading", { name: "Inspect exact V2 source variables on CPU" }),
   ).toBeVisible();
+  await expect(
+    semanticEvidence.getByRole("heading", {
+      name: "Debug a portable workgroup reduction end to end",
+    }),
+  ).toBeVisible();
+  const reductionResults = semanticEvidence.getByRole("table", {
+    name: "Portable workgroup reduction results",
+  });
+  await expect(reductionResults).toContainText("0x00000080");
+  await expect(reductionResults).toContainText("0xffffff40");
+  await expect(reductionResults).toContainText("0x42c00000");
+  await expect(
+    semanticEvidence.getByLabel("Workgroup reduction debugger queries"),
+  ).toContainText('"operation":"query_events"');
+  await expect(semanticEvidence.getByText("One owner for each source and KIR site")).toBeVisible();
+  await expect(semanticEvidence.getByText("The schedule cannot drift to another bundle")).toBeVisible();
   const sourceVariables = semanticEvidence.getByRole("table", {
     name: "Source Map V2 variables",
   });

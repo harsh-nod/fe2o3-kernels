@@ -102,10 +102,15 @@ if (
   !exactObject.test(currentMilestonesData.multiFunctionSemanticDebugV5.commit) ||
   !exactObject.test(currentMilestonesData.multiFunctionSemanticDebugV5.tree) ||
   currentMilestonesData.multiFunctionSemanticDebugV5.correspondenceVersion !== 5 ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.multiRootCorrespondencePayloadVersion !== 2 ||
   currentMilestonesData.multiFunctionSemanticDebugV5.ordinaryHelperExported !== true ||
   currentMilestonesData.multiFunctionSemanticDebugV5.simulatorStackFrames !== 2 ||
   currentMilestonesData.multiFunctionSemanticDebugV5.absoluteKirOrdinals !== true ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.functionQualifiedSyntheticSpans !== true ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.independentFinalizerReplay !== true ||
   currentMilestonesData.multiFunctionSemanticDebugV5.multiRootCustody !==
+    "exact_disjoint_root_closures" ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.sharedHelperInstances !==
     "typed_unavailable"
 ) {
   throw new Error("current live debugger milestones are malformed");

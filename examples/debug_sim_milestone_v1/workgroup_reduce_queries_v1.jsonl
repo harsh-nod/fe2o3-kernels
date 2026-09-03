@@ -1,0 +1,5 @@
+{"operation":"continue","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"max_events":1000000}
+{"operation":"inspect_scope","schema":"fe2o3-debug-request-v1","request_id":2,"expected_revision":1,"scope":{"level":"workgroup","workgroup":[0,0,0]},"include_children":true,"page":{"limit":128}}
+{"operation":"query_events","schema":"fe2o3-debug-request-v1","request_id":3,"expected_revision":1,"filter":{"scope":{"level":"workgroup","workgroup":[0,0,0]},"category":"memory"},"page":{"limit":128}}
+{"operation":"query_events","schema":"fe2o3-debug-request-v1","request_id":4,"expected_revision":1,"filter":{"scope":{"level":"workgroup","workgroup":[0,0,0]},"category":"operation"},"page":{"limit":128}}
+{"operation":"inspect_scope","schema":"fe2o3-debug-request-v1","request_id":5,"expected_revision":1,"scope":{"level":"wave","workgroup":[0,0,0],"wave":0},"include_children":true,"page":{"limit":128}}
