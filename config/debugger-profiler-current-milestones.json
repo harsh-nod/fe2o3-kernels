@@ -26,6 +26,18 @@
     "physicalIndirectCarrierRead": false,
     "hardwareObserved": false
   },
+  "productionSemanticConformanceV3": {
+    "commit": "645750c1226877144679e1864d4f38eff881be21",
+    "tree": "12504e7870726ccf6d897b24b0c6266f4fe2105c",
+    "bundleVersion": 5,
+    "kirVersion": 10,
+    "generatedIntegerCases": 32,
+    "floatCornerCases": 18,
+    "integerSwitch": "exact",
+    "comparesInitialization": true,
+    "hardwareObserved": false,
+    "performancePrediction": false
+  },
   "exactBundleV5": {
     "commit": "4c1cf6d9c005541785a246b96f77d613baa65dc0",
     "tree": "ce2c14b6738827f07ffdcd2ea01b147a3bbb20fd",
@@ -103,12 +115,17 @@
     "multiRootCustody": "typed_unavailable"
   },
   "profilerVariantV3": {
-    "commit": "96cfcf66f6bf825d4503e8319fd92d2d0fd6fe47",
-    "tree": "3539564ec4ac8f5095ef0d7ccf194436a30dae16",
+    "commit": "100bb83524a43c8bf898ecb69bf72bd534fa3257",
+    "tree": "335a9d5831472d5464087a3615ed1cecfa20c06a",
     "bundleKirVersion": 7,
     "catalogKirVersion": 8,
     "uniqueCatalogJoin": true,
-    "agentTransport": "typed_unavailable",
+    "archiveVersion": 1,
+    "agentTransport": "restartable_jsonl",
+    "maximumOpenArchives": 2,
+    "maximumRequests": 64,
+    "completeFinalizerReplay": true,
+    "externalProvenance": "not_authenticated",
     "scheduleExecution": "typed_unavailable",
     "causality": "typed_unavailable"
   },

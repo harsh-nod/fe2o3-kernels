@@ -363,18 +363,20 @@ describe("in-process profiler import tutorial", () => {
     expect(screen.getByText("Synthetic import, bounded checkpoint qualified")).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "Resolve each positive profiler site through exact KIR versions",
+        name: "Replay exact profiler owners in a fresh process",
       }),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Profiler Variant V3 identity join"))
       .toHaveTextContent("positive co-observation");
+    expect(screen.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
+      .toHaveTextContent("open_structural_archive");
     expect(screen.getByRole("table", { name: "Process-local profiler agent mapping" }))
       .toHaveTextContent("7001");
     expect(screen.getByText("MI300X bounded importer checkpoint qualified")).toBeInTheDocument();
     expect(screen.getByText(/bounded checkpoint is qualified at a5438d8220/u)).toBeInTheDocument();
     expect(screen.getAllByText(/did not directly observe interpreter/u)).not.toHaveLength(0);
     expect(
-      screen.getByRole("heading", { name: "Explore typed absence without a service claim" }),
+      screen.getByRole("heading", { name: "Keep illustrative import queries separate" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/deterministic non-wire, non-authoritative examples/u))
       .toBeInTheDocument();

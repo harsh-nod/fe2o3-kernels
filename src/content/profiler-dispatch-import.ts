@@ -50,7 +50,12 @@ if (
   currentMilestonesData.profilerVariantV3.bundleKirVersion !== 7 ||
   currentMilestonesData.profilerVariantV3.catalogKirVersion !== 8 ||
   currentMilestonesData.profilerVariantV3.uniqueCatalogJoin !== true ||
-  currentMilestonesData.profilerVariantV3.agentTransport !== "typed_unavailable" ||
+  currentMilestonesData.profilerVariantV3.archiveVersion !== 1 ||
+  currentMilestonesData.profilerVariantV3.agentTransport !== "restartable_jsonl" ||
+  currentMilestonesData.profilerVariantV3.maximumOpenArchives !== 2 ||
+  currentMilestonesData.profilerVariantV3.maximumRequests !== 64 ||
+  currentMilestonesData.profilerVariantV3.completeFinalizerReplay !== true ||
+  currentMilestonesData.profilerVariantV3.externalProvenance !== "not_authenticated" ||
   currentMilestonesData.profilerVariantV3.scheduleExecution !== "typed_unavailable" ||
   currentMilestonesData.profilerVariantV3.causality !== "typed_unavailable"
 ) {
@@ -469,7 +474,7 @@ export const profilerImportTruthRows = deepFreeze([
   ["Real GPU rocprof roundtrip", "unavailable", "A pure direct-KFD target ran under the installed ROCProfiler SDK 1.1.0 wrapper, but the collector emitted no dispatch artifact, so no GPU dispatch flowed from rocprofv3 through import."],
   ["Wrapper process wall time", "+31.35% observed", "Five warmup and thirty measured alternating pairs compare raw and wrapped processes for one exact MI300X target. Empty artifact inventories make actual kernel-capture overhead unavailable, not zero."],
   ["Exact KIR V7", "declared + admitted", "Canonical verified bytes constrain target family and Wave64 compatibility; they do not prove execution."],
-  ["Profiler Variant V3 bridge", "available in process", "An already-admitted production V7-to-V8 bridge and exact catalog projection resolve each positive profiler occurrence to one unique catalog record. Self-contained agent transport remains unavailable."],
+  ["Profiler Variant V3 archive", "restartable JSONL", "A self-contained Archive V1 replays the complete Worker V3 finalizer derivation, reconstructs the exact V7-to-V8 bridge and catalog owners, and serves bounded Variant V3 comparisons in a fresh process. External producer provenance remains unauthenticated."],
   ["ATT", "unavailable", "Sealed collection rejects the decoder's mutable-directory requirement."],
   ["Protected source/ISA 3x2 matrix", "not run", "The protected family-by-target acceptance remains unavailable and is not covered by this checkpoint."],
   ["T5 distributed overlap", "blocked on #182", "No issue #182 typed producer supplies admitted operation, transfer, collective, and clock-correlation identities."],
@@ -496,7 +501,10 @@ export const profilerImportSources = deepFreeze([
   { label: "Protected source/ISA 3x2 boundary", path: "docs/source-isa-characteristic-acceptance-v2.md" },
   { label: "T5 issue #182 dependency contract", path: "crates/fe2o3-semantic-query/src/distributed_overlap_v1.rs" },
   { label: "Profiler Variant V3 production bridge", path: "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
+  { label: "Production profiler KIR Archive V1", path: "crates/fe2o3-hsaco-finalize/src/production_profiler_kir_archive_v1.rs", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
+  { label: "Restartable Variant V3 JSONL service", path: "crates/fe2o3-semantic-query/src/agent_variant_service_v3.rs", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
   { label: "Profiler Variant V3 contract", path: "docs/profiler-variant-v3.md", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
+  { label: "Production profiler archive contract", path: "docs/production-profiler-kir-archive-v1.md", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
 ]);
 
 export function profilerImportSourceUrl(path: string): string | null {

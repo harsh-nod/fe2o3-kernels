@@ -97,6 +97,7 @@ import {
   dynamicLdsMilestone,
   exactBundleV5Milestone,
   liveDirectKfdRocprofMilestone,
+  productionSemanticConformanceV3Milestone,
   recursiveAggregateV2Milestone,
   rocprofWrapperOverheadMilestone,
   agentVariantV2Milestone,
@@ -904,22 +905,30 @@ describe("in-process profiler dispatch import milestone", () => {
         "docs/source-isa-characteristic-acceptance-v2.md",
         "crates/fe2o3-semantic-query/src/distributed_overlap_v1.rs",
         "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
+        "crates/fe2o3-hsaco-finalize/src/production_profiler_kir_archive_v1.rs",
+        "crates/fe2o3-semantic-query/src/agent_variant_service_v3.rs",
         "docs/profiler-variant-v3.md",
+        "docs/production-profiler-kir-archive-v1.md",
       ]),
     );
     expect(profilerVariantV3Milestone).toMatchObject({
-      commit: "96cfcf66f6bf825d4503e8319fd92d2d0fd6fe47",
+      commit: "100bb83524a43c8bf898ecb69bf72bd534fa3257",
       bundleKirVersion: 7,
       catalogKirVersion: 8,
       uniqueCatalogJoin: true,
-      agentTransport: "typed_unavailable",
+      archiveVersion: 1,
+      agentTransport: "restartable_jsonl",
+      maximumOpenArchives: 2,
+      maximumRequests: 64,
+      completeFinalizerReplay: true,
+      externalProvenance: "not_authenticated",
     });
     expect(
       profilerImportSourceUrl(
         "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
       ),
     ).toBe(
-      "https://github.com/harsh-nod/fe2o3/blob/96cfcf66f6bf825d4503e8319fd92d2d0fd6fe47/crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/100bb83524a43c8bf898ecb69bf72bd534fa3257/crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
     );
     expect(() => profilerImportSourceUrl("../Cargo.toml")).toThrow("repository-relative");
   });
@@ -2581,6 +2590,7 @@ describe("curriculum integrity", () => {
     expect(host).toContain("fe2o3-debug sim --bundle-v5");
     expect(host).toContain("ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed");
     expect(host).toContain("ordinary_recursive_aggregates_export_and_execute_bundle_v5");
+    expect(host).toContain("--test production_semantic_conformance_v3");
     expect(host).toContain("explicitly_sized_dynamic_lds");
     expect(host).not.toContain("--kir-v7");
     const sourceDebug =
@@ -2617,6 +2627,10 @@ describe("curriculum integrity", () => {
     expect(result).toContain("Recursive Bundle V5 milestone at 1205ddc59");
     expect(result).toContain("SimRuntimeBackendV1: completed");
     expect(result).toContain("canonical bounds trap: dynamic error only when reached");
+    expect(result).toContain("Production semantic conformance V3 at 645750c12");
+    expect(result).toContain("generated integer cases: 32");
+    expect(result).toContain("ordinary u32 switch: agreement");
+    expect(result).toContain("initialization state: exact");
     expect(result).toContain(
       readFileSync("examples/source_simulation_result.json", "utf8").trim(),
     );
@@ -2652,15 +2666,15 @@ describe("curriculum integrity", () => {
       kind: "runnable-now",
       reference: {
         scope: "qualification-evidence",
-        commit: recursiveAggregateV2Milestone.commit,
-        tree: recursiveAggregateV2Milestone.tree,
+        commit: productionSemanticConformanceV3Milestone.commit,
+        tree: productionSemanticConformanceV3Milestone.tree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
       scope: "qualification-evidence",
-      commit: recursiveAggregateV2Milestone.commit,
-      tree: recursiveAggregateV2Milestone.tree,
+      commit: productionSemanticConformanceV3Milestone.commit,
+      tree: productionSemanticConformanceV3Milestone.tree,
       target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
     });
     expect(reference?.note).toContain("not protected compiler-execution authentication");
@@ -2670,6 +2684,8 @@ describe("curriculum integrity", () => {
         "docs/semantic-schedule-v1.md",
         "crates/rustc-codegen-fe2o3/src/bin/fe2o3-export-sim.rs",
         "crates/fe2o3-kir-sim/src/schedule.rs",
+        "crates/fe2o3-sim-differential/src/production_bundle_v5.rs",
+        "crates/rustc-codegen-fe2o3/tests/production_semantic_conformance_v3.rs",
       ]),
     );
     const content = serializedLessonContent("cpu-semantic-simulation");
@@ -2693,6 +2709,7 @@ describe("curriculum integrity", () => {
     expect(content).toContain(exactBundleV5Milestone.commit.slice(0, 9));
     expect(content).toContain(liveDirectKfdRocprofMilestone.commit.slice(0, 9));
     expect(content).toContain(recursiveAggregateV2Milestone.commit.slice(0, 9));
+    expect(content).toContain(productionSemanticConformanceV3Milestone.commit.slice(0, 9));
     expect(content).toContain(rocprofWrapperOverheadMilestone.commit.slice(0, 9));
     expect(content).toContain(agentVariantV2Milestone.commit.slice(0, 9));
     expect(content).toContain(transformationMapV2Milestone.commit.slice(0, 9));

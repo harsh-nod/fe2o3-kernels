@@ -56,6 +56,16 @@ if (
     "dynamic_terminal_if_reached" ||
   currentMilestonesData.recursiveAggregateV2.physicalIndirectCarrierRead !== false ||
   currentMilestonesData.recursiveAggregateV2.hardwareObserved !== false ||
+  !exactObject.test(currentMilestonesData.productionSemanticConformanceV3.commit) ||
+  !exactObject.test(currentMilestonesData.productionSemanticConformanceV3.tree) ||
+  currentMilestonesData.productionSemanticConformanceV3.bundleVersion !== 5 ||
+  currentMilestonesData.productionSemanticConformanceV3.kirVersion !== 10 ||
+  currentMilestonesData.productionSemanticConformanceV3.generatedIntegerCases !== 32 ||
+  currentMilestonesData.productionSemanticConformanceV3.floatCornerCases !== 18 ||
+  currentMilestonesData.productionSemanticConformanceV3.integerSwitch !== "exact" ||
+  currentMilestonesData.productionSemanticConformanceV3.comparesInitialization !== true ||
+  currentMilestonesData.productionSemanticConformanceV3.hardwareObserved !== false ||
+  currentMilestonesData.productionSemanticConformanceV3.performancePrediction !== false ||
   !exactObject.test(currentMilestonesData.exactBundleV5.commit) ||
   !exactObject.test(currentMilestonesData.exactBundleV5.tree) ||
   currentMilestonesData.exactBundleV5.productionKirVersion !== 9 ||
@@ -121,6 +131,9 @@ export const aggregateBundleV4Milestone = deepFreeze(
 );
 export const recursiveAggregateV2Milestone = deepFreeze(
   currentMilestonesData.recursiveAggregateV2,
+);
+export const productionSemanticConformanceV3Milestone = deepFreeze(
+  currentMilestonesData.productionSemanticConformanceV3,
 );
 export const exactBundleV5Milestone = deepFreeze(
   currentMilestonesData.exactBundleV5,

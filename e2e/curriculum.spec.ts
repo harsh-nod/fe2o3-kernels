@@ -671,9 +671,11 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Resolve each positive profiler site through exact KIR versions",
+      name: "Replay exact profiler owners in a fresh process",
     }),
   ).toBeVisible();
+  await expect(page.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
+    .toContainText("open_structural_archive");
   await expect(page.getByText("Synthetic import, bounded checkpoint qualified")).toBeVisible();
   await expect(page.getByRole("table", { name: "Process-local profiler agent mapping" }))
     .toContainText("7001");
@@ -714,6 +716,8 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
     .toContainText('"production_service_available": false');
   await expect(page.getByRole("table", { name: "Profiler import truth and nonclaims" }))
     .toContainText("Real GPU rocprof roundtrip");
+  await expect(page.getByRole("table", { name: "Profiler import truth and nonclaims" }))
+    .toContainText("restartable JSONL");
   await expect(page.getByRole("table", { name: "Profiler import truth and nonclaims" }))
     .toContainText("blocked on #182");
   await expect(page.getByRole("table", { name: "Profiler import truth and nonclaims" }))

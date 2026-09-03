@@ -232,32 +232,34 @@ export function ProfilerDispatchImportPage() {
 
       <section className="profiler-import-v3" aria-labelledby="profiler-v3-heading">
         <header>
-          <p className="section-kicker">Production structural bridge</p>
-          <h2 id="profiler-v3-heading">Resolve each positive profiler site through exact KIR versions</h2>
+          <p className="section-kicker">Restartable structural evidence</p>
+          <h2 id="profiler-v3-heading">Replay exact profiler owners in a fresh process</h2>
           <p>
-            Variant V3 replays the V2 comparison, requires an already-admitted
-            production bridge, and accepts a profiler occurrence only when it
-            resolves to one unique catalog record. Names, ordinal proximity, and
-            partial-capture absence cannot create a match.
+            Archive V{profilerVariantV3Milestone.archiveVersion} carries every bounded
+            input needed to rerun the Worker V3 finalizer checks and reconstruct
+            the production bridge, catalog, and Characteristic owners. Variant V3
+            accepts a profiler occurrence only when it resolves to one unique
+            catalog record; names, ordinal proximity, and partial-capture absence
+            cannot create a match.
           </p>
         </header>
         <div className="profiler-import-v3-flow" aria-label="Profiler Variant V3 identity join">
           <div>
-            <small>Bundle claim</small>
-            <strong>KIR V{profilerVariantV3Milestone.bundleKirVersion}</strong>
-            <code>exact canonical bytes</code>
+            <small>self-contained input</small>
+            <strong>Archive V{profilerVariantV3Milestone.archiveVersion}</strong>
+            <code>caller-pinned identity</code>
           </div>
           <ArrowRight size={18} aria-hidden="true" />
           <div>
-            <small>production bridge</small>
-            <strong>V7 → V8</strong>
-            <code>structural identity</code>
+            <small>exact admission</small>
+            <strong>finalizer replay</strong>
+            <code>complete derivation</code>
           </div>
           <ArrowRight size={18} aria-hidden="true" />
           <div>
-            <small>catalog occurrence</small>
-            <strong>unique KIR V{profilerVariantV3Milestone.catalogKirVersion}</strong>
-            <code>source · MIR · KIR · LLVM · ISA</code>
+            <small>production owners</small>
+            <strong>KIR V{profilerVariantV3Milestone.bundleKirVersion} → V{profilerVariantV3Milestone.catalogKirVersion}</strong>
+            <code>bridge · catalog · Characteristic</code>
           </div>
           <ArrowRight size={18} aria-hidden="true" />
           <div>
@@ -269,13 +271,17 @@ export function ProfilerDispatchImportPage() {
         <aside>
           <TriangleAlert size={18} aria-hidden="true" />
           <span>
-            <strong>Library owner boundary</strong>
-            Commit {profilerVariantV3Milestone.commit.slice(0, 10)} is available
-            in process. Authenticated self-contained agent transport, observed
-            schedule execution, add/remove claims, and causality remain typed
-            unavailable.
+            <strong>Fresh-process agent boundary</strong>
+            Commit {profilerVariantV3Milestone.commit.slice(0, 10)} serves at most{" "}
+            {profilerVariantV3Milestone.maximumOpenArchives} archive owners and{" "}
+            {profilerVariantV3Milestone.maximumRequests} requests per process.
+            Complete finalizer replay authenticates internal derivation, not the
+            external producer. Observed schedule execution and causality remain
+            typed unavailable.
           </span>
         </aside>
+        <pre><code>{`fe2o3-profiler-service variant-v3-jsonl
+discover_capabilities -> open_structural_archive -> compare_variants`}</code></pre>
       </section>
 
       <section className="profiler-import-sealed" aria-labelledby="profiler-sealed-heading">
@@ -372,7 +378,7 @@ export function ProfilerDispatchImportPage() {
         <header>
           <div>
             <p className="section-kicker">Illustrative query exercise</p>
-            <h2 id="profiler-agent-heading">Explore typed absence without a service claim</h2>
+            <h2 id="profiler-agent-heading">Keep illustrative import queries separate</h2>
             <p>
               These deterministic non-wire, non-authoritative examples show how an agent could
               explain a mapping or publication step. They are not a production

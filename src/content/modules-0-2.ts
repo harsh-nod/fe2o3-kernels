@@ -67,6 +67,8 @@ const recursiveAggregateSimulationTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed -- --ignored --exact";
 const recursiveAggregateV5ExecutionTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_recursive_aggregates_export_and_execute_bundle_v5 -- --ignored --exact";
+const productionSemanticConformanceTestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_semantic_conformance_v3 -- --ignored --test-threads=1";
 const v5SimulationExportCommand =
   "./target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output \"$PWD/wave-reduce-f32-v5.fe2sim\" --target gfx950 --bundle-version 5 --target-dir target/tutorial-v5-export -- --package fe2o3-production-ranked-bounds-fixture --features wave_reduce_f32 --lib";
 const v5DebuggerCommand =
@@ -497,13 +499,14 @@ const cpuSimulation: Lesson = {
   order: 2,
   title: "Export and debug Rust without a GPU",
   summary:
-    "Export ordinary Rust into exact V4/V5 bundles, debug V9 wave code as V10 on the CPU, and inspect the boundary around hardware evidence.",
+    "Export ordinary Rust into exact V4/V5 bundles, run generated production conformance on the CPU, and inspect the boundary around hardware evidence.",
   duration: "46 min",
   prerequisites: ["Kernel IR evidence boundaries", "JSON and JSONL request files"],
   objectives: [
     "Export an ordinary #[kernel] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
     "Recognize the bounded recursive Unit, array, tuple, and struct scalar-leaf ABI subset and its typed unavailable boundaries.",
     "Run an ordinary gfx950 f32 wave reduction from its exact production V9 identity through a same-module KIR V10 Bundle V5.",
+    "Run generated integer, exact float-bit, layout, bounds, and switch cases through the production Bundle V5 boundary.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
     "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
     "Inspect exact full-active logical Wave32/Wave64 collectives and fixed-width structured failure masks.",
@@ -516,10 +519,10 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 1205ddc59, the Linux-only exporter retains exact production KIR and recursively scalarizes a bounded pointer-free Unit, array, tuple, or struct from rustc-owned paths, offsets, validity, pass mode, and KIR slots. The public CPU debugger and SimRuntimeBackendV1 execute those independently rederived logical leaves through Bundle V5/KIR V10; neither reads an Indirect carrier pointer or aggregate padding. The same Bundle V5 surface runs the ordinary gfx950 f32 wave reduction. No route is a KFD launch or performance prediction.",
+        "At compiler 645750c12, the production conformance boundary runs 32 generated finite-width integer cases, 18 exact float-bit corner cases, scalar/buffer layout, checked bounds, and ordinary u32 switch lowering from strict Bundle V5 custody through KIR V10. The earlier recursive ABI milestone remains executable through the public CPU debugger and SimRuntimeBackendV1. Every result is simulated, non-hardware, and non-performance evidence.",
       reference: qualificationReference(
-        currentMilestones.recursiveAggregateV2.commit,
-        currentMilestones.recursiveAggregateV2.tree,
+        currentMilestones.productionSemanticConformanceV3.commit,
+        currentMilestones.productionSemanticConformanceV3.tree,
         [
           cpuSimulationBuildCommand,
           cpuSimulationExportCommand,
@@ -532,6 +535,7 @@ const cpuSimulation: Lesson = {
           aggregateSimulationTestCommand,
           recursiveAggregateSimulationTestCommand,
           recursiveAggregateV5ExecutionTestCommand,
+          productionSemanticConformanceTestCommand,
           v5SimulationExportCommand,
           v5DebuggerCommand,
           v5SimulationTestCommand,
@@ -553,6 +557,10 @@ const cpuSimulation: Lesson = {
           "crates/fe2o3-debug-cli/tests/bundle_v1.rs",
           "crates/fe2o3-sim-runtime/src/lib.rs",
           "crates/fe2o3-kernel-ir/src/simulation_bundle_v5.rs",
+          "crates/fe2o3-sim-differential/src/production_bundle_v5.rs",
+          "crates/rustc-codegen-fe2o3/tests/production_semantic_conformance_v3.rs",
+          "crates/rustc-codegen-fe2o3/tests/fixtures/production-semantic-conformance-device/src/lib.rs",
+          "docs/simulator-production-conformance-v3.md",
         ],
         {
           target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
@@ -635,6 +643,9 @@ printf '%s\\n' '{"operation":"step","schema":"fe2o3-debug-request-v1","request_i
 ${recursiveAggregateV5ExecutionTestCommand}
 ${recursiveAggregateSimulationTestCommand}
 
+# Run generated ordinary-source semantics through strict Bundle V5/KIR V10 custody.
+${productionSemanticConformanceTestCommand}
+
 # Export ordinary gfx950 V9 wave code into exact same-module V10 custody.
 ${v5SimulationExportCommand}
 printf '%s\\n' '{"schema":"fe2o3-simulation-request-v1","kernel":"wave_reduce_f32","grid":[64,1,1],"workgroup":[64,1,1],"arguments":[{"kind":"scalar","type":"f32","bits":"0x3f800000"},{"kind":"buffer","element":"f32","access":"read_write","alignment":4,"bytes":"0x${"00".repeat(64 * 4)}"}]}' > wave-reduce-f32-v5-request.json
@@ -671,6 +682,14 @@ Typed unavailable
   dynamic by-value array indices
 
 Physical Indirect carrier pointers and aggregate padding are never read.
+
+Production semantic conformance V3 at 645750c12
+  32 generated cases: i8/i16/i32/i64 and u8/u16/u32/u64
+  18 exact-bit cases: f32/f64 corner tables
+  additional exact families: scalar/buffer layout, checked bounds, u32 switch
+  comparison: exact output bytes and byte-initialization state
+  custody: strict Bundle V5 revalidation and canonical KIR V10 identity
+  authority: simulated only; hardware and performance remain false
 
 Bundle V5 exactness boundary
 
@@ -719,6 +738,18 @@ Recursive Bundle V5 milestone at 1205ddc59
   enum, embedded pointer, needs-drop: typed unavailable
   physical carrier/padding reads: none
   canonical bounds trap: dynamic error only when reached
+
+Production semantic conformance V3 at 645750c12
+  generated integer cases: 32
+  exact f32/f64 corner cases: 18
+  ordinary u32 switch: agreement
+  output bytes: exact
+  initialization state: exact
+  bundle version: 5
+  canonical simulator KIR version: 10
+  simulated: true
+  hardware_observed: false
+  performance_prediction: false
 
 Physical differential at 69ae3731b
   hardware passes: 0
