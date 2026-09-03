@@ -7,6 +7,16 @@
     "admittedAbi": ["direct", "pair", "ignore"],
     "hardwareObserved": false
   },
+  "exactBundleV5": {
+    "commit": "4c1cf6d9c005541785a246b96f77d613baa65dc0",
+    "tree": "ce2c14b6738827f07ffdcd2ea01b147a3bbb20fd",
+    "productionKirVersion": 9,
+    "simulationKirVersion": 10,
+    "target": "gfx950:xnack-",
+    "kernel": "wave_reduce_f32",
+    "hardwareObserved": false,
+    "performancePrediction": false
+  },
   "dynamicLds": {
     "commit": "62965b3f8dfa19420fc5af9b2584b15672db710c",
     "scope": "explicitly-sized-direct-kir-v10",
@@ -18,6 +28,24 @@
     "liveCaptureObserved": false,
     "decoderExecuted": false,
     "preservesLossAndCompleteness": true
+  },
+  "liveDirectKfdRocprof": {
+    "commit": "4ff9c82b7768e1b30edf69828865def6b20a200f",
+    "tree": "5c35a042dc2cc49d362fc21e5d413db58d3bbe0f",
+    "target": "gfx942:xnack-",
+    "runtimeEvents": 31,
+    "droppedEvents": 0,
+    "completedDispatches": 3,
+    "collectorArtifacts": 0,
+    "outcome": "runtime_dispatch_observed_collector_completed_no_artifacts",
+    "runtimeHardwareObserved": true,
+    "profilerKernelObservation": false
+  },
+  "transformationMapV2": {
+    "commit": "6f1f7d8967f2e2f03bbaf234bf63179d634fe0a9",
+    "tree": "2888a906fd5af48e30ce8ee170d49f2a1b9fb775",
+    "observedClasses": ["eliminated"],
+    "typedUnavailableClasses": ["duplicated", "fused", "outlined", "inlined", "moved"]
   },
   "physicalDifferential": {
     "packageIsolationCommit": "268ab66989f2173c127070a09a59f424ebc4f6f1",

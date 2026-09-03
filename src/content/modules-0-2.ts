@@ -63,14 +63,23 @@ const aggregateDebuggerCommand =
   "./target/debug/fe2o3-debug sim --bundle-v4 \"$PWD/aggregate-pair-struct-v4.fe2sim\" --request \"$PWD/aggregate-pair-struct-request.json\" --protocol jsonl";
 const aggregateSimulationTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_struct_argument_exports_exact_v4_components -- --ignored --exact";
+const v5SimulationExportCommand =
+  "./target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output \"$PWD/wave-reduce-f32-v5.fe2sim\" --target gfx950 --bundle-version 5 --target-dir target/tutorial-v5-export -- --package fe2o3-production-ranked-bounds-fixture --features wave_reduce_f32 --lib";
+const v5DebuggerCommand =
+  "./target/debug/fe2o3-debug sim --bundle-v5 \"$PWD/wave-reduce-f32-v5.fe2sim\" --request \"$PWD/wave-reduce-f32-v5-request.json\" --protocol jsonl --wave-width 64";
+const v5SimulationTestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_v9_wave_collective_exports_v5_and_runs_in_public_debugger -- --ignored --exact";
 const dynamicLdsSimulationTestCommand =
   "cargo test --locked -p fe2o3-kir-sim explicitly_sized_dynamic_lds -- --nocapture";
 const cpuSimulationSourceMarker =
   "#[cfg(feature = \"aggregate_pair_struct\")]\n#[repr(C)]\npub struct AggregatePairStruct";
 const cpuSimulationZstMarker =
   "#[cfg(feature = \"aggregate_zst\")]\npub struct AggregateZst;";
+const cpuSimulationWaveMarker =
+  "#[kernel(\n    typed,\n    launch(required = [64, 1, 1], max = [64, 1, 1]),\n)]\n#[cfg(feature = \"wave_reduce_f32\")]\npub fn wave_reduce_f32";
 const cpuSimulationSourceMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationSourceMarker);
 const cpuSimulationZstMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationZstMarker);
+const cpuSimulationWaveMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationWaveMarker);
 if (
   cpuSimulationSourceMarkerOffset <= 0 ||
   cpuSimulationSource.lastIndexOf(cpuSimulationSourceMarker) !== cpuSimulationSourceMarkerOffset
@@ -83,13 +92,20 @@ if (
 ) {
   throw new Error("CPU simulation source has a missing, duplicate, or reordered ZST fragment");
 }
+if (
+  cpuSimulationWaveMarkerOffset <= cpuSimulationZstMarkerOffset ||
+  cpuSimulationSource.lastIndexOf(cpuSimulationWaveMarker) !== cpuSimulationWaveMarkerOffset
+) {
+  throw new Error("CPU simulation source has a missing, duplicate, or reordered wave fragment");
+}
 const cpuSimulationSourceFragments = [
   cpuSimulationSource.slice(0, cpuSimulationSourceMarkerOffset).trimEnd(),
   cpuSimulationSource.slice(
     cpuSimulationSourceMarkerOffset,
     cpuSimulationZstMarkerOffset,
   ).trimEnd(),
-  cpuSimulationSource.slice(cpuSimulationZstMarkerOffset),
+  cpuSimulationSource.slice(cpuSimulationZstMarkerOffset, cpuSimulationWaveMarkerOffset).trimEnd(),
+  cpuSimulationSource.slice(cpuSimulationWaveMarkerOffset),
 ];
 
 const orientation: Lesson = {
@@ -477,12 +493,13 @@ const cpuSimulation: Lesson = {
   order: 2,
   title: "Export and debug Rust without a GPU",
   summary:
-    "Export ordinary Rust aggregates into Bundle V4, debug them on the CPU, and inspect the exact boundaries around dynamic LDS and hardware evidence.",
+    "Export ordinary Rust into exact V4/V5 bundles, debug V9 wave code as V10 on the CPU, and inspect the boundary around hardware evidence.",
   duration: "46 min",
   prerequisites: ["Kernel IR evidence boundaries", "JSON and JSONL request files"],
   objectives: [
     "Export an ordinary #[kernel] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
     "Recognize the exact Direct, Pair, and Ignore aggregate ABI subset and its typed unavailable boundaries.",
+    "Run an ordinary gfx950 f32 wave reduction from its exact production V9 identity through a same-module KIR V10 Bundle V5.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
     "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
     "Inspect exact full-active logical Wave32/Wave64 collectives and fixed-width structured failure masks.",
@@ -493,12 +510,12 @@ const cpuSimulation: Lesson = {
   claims: [
     {
       kind: "runnable-now",
-      label: "Source-to-bundle CPU simulation and semantic debugging",
+      label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 33ab7d13e, the Linux-only exporter sends ordinary attributed Rust structs, tuples, ZSTs, slices, and scalars through the sole production path into Bundle V4 when rustc supplies an exact Direct, Pair, or Ignore ABI. The debugger materializes compiler-projected leaves and zeroed padding from that compiler-derived, bundle-content-bound packing plan. This remains CPU semantic execution of canonical KIR V7, not KFD launch or performance prediction.",
+        "At compiler 4c1cf6d9c, the Linux-only exporter retains exact production KIR V8/V9 and emits a lossless same-module KIR V10 body in Bundle V5. The public CPU debugger executes an ordinary gfx950 f32 wave reduction and reconstructs its exact compiler-retained RegionSlice pair ABI. Legacy Bundle V4 remains available for exact Direct, Pair, and Ignore aggregate examples. Neither route is a KFD launch or performance prediction.",
       reference: qualificationReference(
-        currentMilestones.aggregateBundleV4.commit,
-        currentMilestones.aggregateBundleV4.tree,
+        currentMilestones.exactBundleV5.commit,
+        currentMilestones.exactBundleV5.tree,
         [
           cpuSimulationBuildCommand,
           cpuSimulationExportCommand,
@@ -509,6 +526,9 @@ const cpuSimulation: Lesson = {
           aggregateSimulationExportCommand,
           aggregateDebuggerCommand,
           aggregateSimulationTestCommand,
+          v5SimulationExportCommand,
+          v5DebuggerCommand,
+          v5SimulationTestCommand,
           dynamicLdsSimulationTestCommand,
         ],
         [
@@ -526,9 +546,10 @@ const cpuSimulation: Lesson = {
           "crates/fe2o3-debug-cli/src/lib.rs",
           "crates/fe2o3-debug-cli/tests/bundle_v1.rs",
           "crates/fe2o3-sim-runtime/src/lib.rs",
+          "crates/fe2o3-kernel-ir/src/simulation_bundle_v5.rs",
         ],
         {
-          target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
+          target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
           note: "Qualification evidence for observation-only execution of exact bundle content with compiler-bundle-bound source locations. This is not protected compiler-execution authentication, source-to-KIR refinement, GPU/device-runtime use, hardware validation, timing, or performance prediction.",
         },
       ),
@@ -547,14 +568,14 @@ const cpuSimulation: Lesson = {
       code: cpuSimulationSource,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
-      sourceCommit: currentMilestones.aggregateBundleV4.commit,
+      sourceCommit: currentMilestones.exactBundleV5.commit,
       sourceSha256:
-        "af0a424289a87c5f8330eca383fa5ec35e8a3f509c48424172812cc2336d5418",
+        "2eafbe80c7a6e9ba8292ba216f420a624af3a96ec6f8b10d4ba73957fffd8bbc",
       sourceDigestScope: "displayed",
       sourceFragments: cpuSimulationSourceFragments,
       explanatory: false,
       notice:
-        "Exact barrier, struct, tuple, and ZST excerpts from the ordinary attributed Rust crate used by the pinned simulator regressions.",
+        "Exact barrier, struct, tuple, and ZST excerpts, plus a gfx950 f32 wave-reduction excerpt, from the ordinary attributed Rust crate used by the pinned simulator regressions.",
     },
     {
       kind: "reference",
@@ -604,7 +625,12 @@ REQUEST='${aggregateSimulationRequest.trim()}'
 printf '%s\\n' "$REQUEST" > aggregate-pair-struct-request.json
 printf '%s\\n' '{"operation":"step","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"direction":"forward","granularity":"operation","count":1}' | ${aggregateDebuggerCommand}
 
-# Dynamic LDS is a separate exact direct-KIR-V10 surface, not a Bundle V4 downgrade.
+# Export ordinary gfx950 V9 wave code into exact same-module V10 custody.
+${v5SimulationExportCommand}
+printf '%s\\n' '{"schema":"fe2o3-simulation-request-v1","kernel":"wave_reduce_f32","grid":[64,1,1],"workgroup":[64,1,1],"arguments":[{"kind":"scalar","type":"f32","bits":"0x3f800000"},{"kind":"buffer","element":"f32","access":"read_write","alignment":4,"bytes":"0x${"00".repeat(64 * 4)}"}]}' > wave-reduce-f32-v5-request.json
+printf '%s\\n' '{"operation":"continue","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"max_events":1000000}' | ${v5DebuggerCommand}
+
+# Dynamic LDS remains a separate exact direct-KIR-V10 surface.
 ${dynamicLdsSimulationTestCommand}`,
     },
     {
@@ -628,10 +654,19 @@ Typed unavailable
   aggregate forms whose actual rustc ABI is not Direct, Pair, or Ignore
 
 The checked [u64; 2] fixture currently receives an unsupported aggregate ABI;
-array syntax alone does not imply admission.`,
+array syntax alone does not imply admission.
+
+Bundle V5 exactness boundary
+
+  production identity: canonical KIR V9
+  executable custody: canonical KIR V10
+  admission: re-encode the V10 module as V9 and require exact digest and length
+  RegionSlice: pointer @ 0, usize @ 8, ZST marker ignored
+  source map: exact bundle-bound V2 identity
+  authority: observation only; no compiler, load, launch, or hardware authority`,
       explanatory: true,
       notice:
-        "The JSONL prefix is the exact checked-in source-debug transcript; the appended ABI summary documents the separately pinned Bundle V4 regression. Admission follows compiler ABI/layout evidence, not Rust surface spelling.",
+        "The JSONL prefix is the exact checked-in source-debug transcript. The appended V4 and V5 boundaries come from separately pinned production regressions; admission follows compiler ABI/layout and KIR identity evidence, not Rust surface spelling.",
     },
     {
       kind: "result",
@@ -659,7 +694,16 @@ fe2o3-debug sim --bundle-v4
 Physical differential at 69ae3731b
   hardware passes: 0
   parity passes: 0
-  blocker: protected verifier and trust/refinement services unprovisioned`,
+  blocker: protected verifier and trust/refinement services unprovisioned
+
+Bundle V5 debugger at 4c1cf6d9c
+  production KIR: V9
+  simulator KIR: exact same-module V10
+  kernel: wave_reduce_f32 on gfx950:xnack-
+  stop reason: completed
+  session.simulated: true
+  session.hardware_observed: false
+  session.performance_prediction: false`,
       explanatory: true,
       notice:
         "These are assertions from the pinned production integration and qualification contracts, not a retained live hardware capture.",

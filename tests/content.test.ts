@@ -89,9 +89,10 @@ import {
   validateSourceDebuggerMilestone,
 } from "../src/content/source-debugger-milestone";
 import {
-  aggregateBundleV4Milestone,
   decodedAttSourceIsaMilestone,
   dynamicLdsMilestone,
+  exactBundleV5Milestone,
+  liveDirectKfdRocprofMilestone,
   sourceIsaCharacteristicDuplicateFacts,
   sourceIsaCharacteristicCollectionHex,
   sourceIsaCharacteristicFixtureReady,
@@ -109,6 +110,7 @@ import {
   sourceIsaAgentRequests,
   sourceIsaAgentResponses,
   sourceIsaAgentSources,
+  transformationMapV2Milestone,
 } from "../src/content/source-isa-agent";
 import {
   developmentCheckpointIds,
@@ -2494,7 +2496,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       explanatory: false,
-      sourceCommit: aggregateBundleV4Milestone.commit,
+      sourceCommit: exactBundleV5Milestone.commit,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceDigestScope: "displayed",
@@ -2506,6 +2508,8 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain("pub fn aggregate_pair_tuple");
     expect(kernel?.code).toContain("pub fn aggregate_zst");
     expect(kernel?.code).toContain("pub fn barrier_before_access");
+    expect(kernel?.code).toContain("pub fn wave_reduce_f32");
+    expect(kernel?.code).toContain("reduce_sum_f32::<64>");
     expect(kernel?.code).toContain("syncthreads();");
     const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code ?? "";
     expect(host).toContain(
@@ -2521,6 +2525,8 @@ describe("curriculum integrity", () => {
     expect(host).toContain("fe2o3-debug sim --bundle");
     expect(host).toContain("--bundle-version 4");
     expect(host).toContain("fe2o3-debug sim --bundle-v4");
+    expect(host).toContain("--bundle-version 5");
+    expect(host).toContain("fe2o3-debug sim --bundle-v5");
     expect(host).toContain("explicitly_sized_dynamic_lds");
     expect(host).not.toContain("--kir-v7");
     const sourceDebug =
@@ -2528,6 +2534,8 @@ describe("curriculum integrity", () => {
     expect(sourceDebug).toContain("Direct: one exact scalar leaf");
     expect(sourceDebug).toContain("enum discriminants and niches");
     expect(sourceDebug).toContain("[u64; 2]");
+    expect(sourceDebug).toContain("Bundle V5 exactness boundary");
+    expect(sourceDebug).toContain("production identity: canonical KIR V9");
     expect(sourceDebug).toContain(
       readFileSync("examples/source_debugger_requests_v1.jsonl", "utf8").trim(),
     );
@@ -2586,16 +2594,16 @@ describe("curriculum integrity", () => {
       kind: "runnable-now",
       reference: {
         scope: "qualification-evidence",
-        commit: aggregateBundleV4Milestone.commit,
-        tree: aggregateBundleV4Milestone.tree,
+        commit: exactBundleV5Milestone.commit,
+        tree: exactBundleV5Milestone.tree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
       scope: "qualification-evidence",
-      commit: aggregateBundleV4Milestone.commit,
-      tree: aggregateBundleV4Milestone.tree,
-      target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
+      commit: exactBundleV5Milestone.commit,
+      tree: exactBundleV5Milestone.tree,
+      target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
     });
     expect(reference?.note).toContain("not protected compiler-execution authentication");
     expect(reference?.sourcePaths).toEqual(
@@ -2624,6 +2632,9 @@ describe("curriculum integrity", () => {
     expect(content).toContain("broader superiority is not claimed");
     expect(content).toContain(dynamicLdsMilestone.commit.slice(0, 9));
     expect(content).toContain(decodedAttSourceIsaMilestone.commit.slice(0, 9));
+    expect(content).toContain(exactBundleV5Milestone.commit.slice(0, 9));
+    expect(content).toContain(liveDirectKfdRocprofMilestone.commit.slice(0, 9));
+    expect(content).toContain(transformationMapV2Milestone.commit.slice(0, 9));
     expect(content).toContain(profilerPhysicalDifferentialMilestone.commit.slice(0, 9));
     expect(content).toContain(profilerRuntimeCausalityMilestone.commit.slice(0, 9));
 

@@ -41,6 +41,14 @@ if (
   JSON.stringify(currentMilestonesData.aggregateBundleV4.admittedAbi) !==
     JSON.stringify(["direct", "pair", "ignore"]) ||
   currentMilestonesData.aggregateBundleV4.hardwareObserved !== false ||
+  !exactObject.test(currentMilestonesData.exactBundleV5.commit) ||
+  !exactObject.test(currentMilestonesData.exactBundleV5.tree) ||
+  currentMilestonesData.exactBundleV5.productionKirVersion !== 9 ||
+  currentMilestonesData.exactBundleV5.simulationKirVersion !== 10 ||
+  currentMilestonesData.exactBundleV5.target !== "gfx950:xnack-" ||
+  currentMilestonesData.exactBundleV5.kernel !== "wave_reduce_f32" ||
+  currentMilestonesData.exactBundleV5.hardwareObserved !== false ||
+  currentMilestonesData.exactBundleV5.performancePrediction !== false ||
   !exactObject.test(currentMilestonesData.dynamicLds.commit) ||
   currentMilestonesData.dynamicLds.scope !== "explicitly-sized-direct-kir-v10" ||
   currentMilestonesData.dynamicLds.ordinaryRustBundleVersion !== 4 ||
@@ -48,7 +56,24 @@ if (
   !exactObject.test(currentMilestonesData.decodedAttSourceIsa.tree) ||
   currentMilestonesData.decodedAttSourceIsa.liveCaptureObserved !== false ||
   currentMilestonesData.decodedAttSourceIsa.decoderExecuted !== false ||
-  currentMilestonesData.decodedAttSourceIsa.preservesLossAndCompleteness !== true
+  currentMilestonesData.decodedAttSourceIsa.preservesLossAndCompleteness !== true ||
+  !exactObject.test(currentMilestonesData.liveDirectKfdRocprof.commit) ||
+  !exactObject.test(currentMilestonesData.liveDirectKfdRocprof.tree) ||
+  currentMilestonesData.liveDirectKfdRocprof.target !== "gfx942:xnack-" ||
+  currentMilestonesData.liveDirectKfdRocprof.runtimeEvents !== 31 ||
+  currentMilestonesData.liveDirectKfdRocprof.droppedEvents !== 0 ||
+  currentMilestonesData.liveDirectKfdRocprof.completedDispatches !== 3 ||
+  currentMilestonesData.liveDirectKfdRocprof.collectorArtifacts !== 0 ||
+  currentMilestonesData.liveDirectKfdRocprof.outcome !==
+    "runtime_dispatch_observed_collector_completed_no_artifacts" ||
+  currentMilestonesData.liveDirectKfdRocprof.runtimeHardwareObserved !== true ||
+  currentMilestonesData.liveDirectKfdRocprof.profilerKernelObservation !== false ||
+  !exactObject.test(currentMilestonesData.transformationMapV2.commit) ||
+  !exactObject.test(currentMilestonesData.transformationMapV2.tree) ||
+  JSON.stringify(currentMilestonesData.transformationMapV2.observedClasses) !==
+    JSON.stringify(["eliminated"]) ||
+  JSON.stringify(currentMilestonesData.transformationMapV2.typedUnavailableClasses) !==
+    JSON.stringify(["duplicated", "fused", "outlined", "inlined", "moved"])
 ) {
   throw new Error("decoded ATT source/ISA milestone is malformed");
 }
@@ -59,7 +84,16 @@ export const decodedAttSourceIsaMilestone = deepFreeze(
 export const aggregateBundleV4Milestone = deepFreeze(
   currentMilestonesData.aggregateBundleV4,
 );
+export const exactBundleV5Milestone = deepFreeze(
+  currentMilestonesData.exactBundleV5,
+);
 export const dynamicLdsMilestone = deepFreeze(currentMilestonesData.dynamicLds);
+export const liveDirectKfdRocprofMilestone = deepFreeze(
+  currentMilestonesData.liveDirectKfdRocprof,
+);
+export const transformationMapV2Milestone = deepFreeze(
+  currentMilestonesData.transformationMapV2,
+);
 
 if (
   milestoneData.schema !== "fe2o3-source-isa-agent-tutorial-milestone-v1" ||

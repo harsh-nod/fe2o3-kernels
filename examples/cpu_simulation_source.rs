@@ -60,3 +60,17 @@ pub fn aggregate_zst(_marker: AggregateZst, mut output: DisjointSlice<u64>, scal
         *slot = scale;
     }
 }
+
+#[kernel(
+    typed,
+    launch(required = [64, 1, 1], max = [64, 1, 1]),
+)]
+#[cfg(feature = "wave_reduce_f32")]
+pub fn wave_reduce_f32(value: f32, mut output: DisjointSlice<f32>) {
+    let lane = thread::index_1d();
+    let subgroup = Gfx950Subgroup::current();
+    let reduced = subgroup.reduce_sum_f32::<64>(value);
+    if let Some(element) = output.get_mut(lane) {
+        *element = reduced;
+    }
+}

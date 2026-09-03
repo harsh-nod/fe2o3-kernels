@@ -389,7 +389,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "At compiler 33ab7d13e, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Pointer-free by-value structs and tuples whose exact rustc ABI is Direct or Pair, plus zero-sized Ignore arguments, can be flattened into compiler-emitted one-to-many component correspondence in Bundle V4. Slices and scalars remain ordinary adjacent arguments. fe2o3-debug sim --bundle-v4 consumes that exact bundle and packing plan without recompiling; this does not add a second importer or lowerer."
+        "text": "At compiler 4c1cf6d9c, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Bundle V4 retains exact Direct, Pair, and Ignore aggregate examples in canonical KIR V7. The independent Bundle V5 route retains the original production KIR V8/V9 identity, embeds a lossless same-module KIR V10 encoding, and carries Source Map V2, semantic MIR, and both storage maps. fe2o3-debug sim --bundle-v5 executes that exact V10 custody without recompiling. It does not add a second importer or lowerer."
       },
       {
         "type": "table",
@@ -406,13 +406,13 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             ".fe2sim admission",
-            "Bundle V4 retains the V1-V3/KIR V7 wire and adds the exact semantic layout, component projection, KIR parameter ordinal, and compiler-produced physical slot plan needed to reconstruct admitted arguments.",
-            "Caller-created packing claims, stale identities, reordered or overlapping slots, padding substitution, type or ordinal mismatch, and map substitution fail closed. Padding is deterministically zeroed rather than copied from host aggregate memory."
+            "Bundle V4 retains the V1-V3/KIR V7 wire. Bundle V5 is a separate self-contained format that binds exact V8/V9 production identity to a revalidated V10 module plus semantic and storage sections.",
+            "V5 re-encodes the decoded module under its original V8/V9 encoder and requires exact digest and length equality. Caller-created packing claims, stale identities, reordered or overlapping slots, padding substitution, type or ordinal mismatch, and section substitution fail closed."
           ],
           [
             "Semantic execution and replay",
-            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, compiler-projected aggregate leaves, and a bounded runnable-invocation decision record. Commit 62965b3f8 also executes explicitly sized dynamic LDS in admitted direct KIR V10 with exact request and schedule custody.",
-            "The ordinary-Rust Bundle V4 route remains canonical KIR V7; it does not silently downgrade V10. Unsupported operations, missing dynamic-LDS size, changed request or artifact custody, transcript drift, and resource-limit violations fail before replay is accepted."
+            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, compiler-projected aggregate leaves, and a bounded runnable-invocation decision record. Bundle V5 runs the ordinary gfx950 f32 wave-reduction production body as exact KIR V10; commit 62965b3f8 separately executes explicitly sized dynamic LDS in direct KIR V10.",
+            "Legacy Bundle V4 remains canonical KIR V7. Production source lowering for V10-only memory intrinsics is unavailable. Unsupported operations, missing dynamic-LDS size, changed request or artifact custody, transcript drift, and resource-limit violations fail before replay is accepted."
           ]
         ]
       },
@@ -436,7 +436,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The production regression at 33ab7d13e exports an ordinary repr(C) struct { u32, u64 }, a writable u64 slice, and a scalar into Bundle V4. Its compiler-derived, bundle-content-bound physical plan places the two aggregate leaves at byte offsets 0 and 8, the slice pointer and metadata at 16 and 24, and the scalar at 32 in a 40-byte, 8-byte-aligned explicit kernarg image. The same regression runs fe2o3-debug sim --bundle-v4 and observes status ok, simulated=true, and hardware_observed=false. Tuple and ZST/Ignore exports pass separately; unsupported aggregate forms fail typed."
+        "text": "The production regressions retain both ABI and executable-IR evidence. Bundle V4 places an ordinary repr(C) struct's leaves at offsets 0 and 8, a writable slice at 16 and 24, and a scalar at 32 in a 40-byte, 8-byte-aligned kernarg image. Bundle V5 adds the exact production V9 gfx950 wave_reduce_f32 body as same-module KIR V10 and validates the owned RegionSlice wrapper as a pointer/usize scalar pair with its ZST marker ignored. fe2o3-debug sim --bundle-v5 completes that wave kernel with simulated=true and hardware_observed=false; unsupported ABI forms still fail typed."
       },
       {
         "type": "table",
@@ -498,14 +498,24 @@ const narrativeRegistry = deepFreeze({
             "No live ATT capture or decoder execution occurred. External decoder declarations and self-claimed Characteristic records retain their loss, completeness, multiplicity, and producer-authentication limits; missing or ambiguous attribution stays unavailable."
           ],
           [
+            "Transformation Map V2",
+            "Commit 6f1f7d896 separates exact one-to-one, one-to-many, many-to-one, many-to-many, and eliminated relation shape from producer-authenticated transformation classification across stable source/MIR/KIR and artifact identities.",
+            "The current production finalizer authenticates elimination. Expansion is retained as cardinality-only; duplicated, fused, outlined, inlined, and moved remain typed unavailable until an authenticated producer emits them."
+          ],
+          [
             "Runtime causality",
             "Commit 17e21d939 pages bounded direct-KFD runtime events and schema-required local lifecycle edges, each with exact predecessor/successor evidence and a fixed inference rule.",
             "Producer sequence is capture-local, not a GPU clock. Device-copy and dependency producers, direct-KFD/rocprof dispatch identity, and clock correlation are absent, so those joins are explicitly unavailable rather than inferred."
           ],
           [
+            "Live direct-KFD plus rocprofv3",
+            "Commit 4ff9c82b7 archives a real MI300X KFD capture with 31 events, zero loss, and three completed dispatch lifecycles beside an exact successful ROCprofiler SDK 1.1.0 invocation.",
+            "That exact collector run produced no artifacts. Dispatch, code-object, and clock joins remain unavailable; this is not a zero-overhead result, proof of no GPU work, or universal ROCprofiler limitation."
+          ],
+          [
             "Agent contract",
-            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. The composite workbench keeps direct-KFD, generic ROCgdb/MI and Profiler Bundle V4 evidence separate. Seeded simulation retains canonical replay schedules and byte-level race, no-race, or incomplete evidence.",
-            "Authenticated GPU wave identity, ATT decoding, source/ISA correlation, complete hardware timelines and automated causal diagnosis remain open work."
+            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. The composite workbench keeps direct-KFD, generic ROCgdb/MI and profiler evidence separate. Seeded simulation retains canonical replay schedules and byte-level race, no-race, or incomplete evidence; a fresh-process read-only agent service diagnoses exact retained race and host-lifetime evidence and pages only its content-bound witness.",
+            "The agent service cannot simulate, execute, replay, read files, access a network, or apply patches. Authenticated GPU wave identity, live ATT/PC collection, complete hardware timelines, and end-to-end causal diagnosis remain open work."
           ]
         ]
       },
@@ -520,7 +530,7 @@ const narrativeRegistry = deepFreeze({
           [
             "fe2o3 semantic debugger",
             "Deterministic no-GPU execution, exact schedule replay, logical thread/wave/workgroup hierarchy, compiler-bundle-bound source/KIR sites, allocation-relative state, and bounded evidence-linked JSONL.",
-            "The distinctive value is retained compiler semantics and agent-readable counterexamples. Direct KFD now adds bounded outer stopped-queue evidence, but authenticated native wave/register state remains unavailable."
+            "The distinctive value is retained compiler semantics, exact V9-to-V10 custody, deterministic replay, and agent-readable counterexamples. Direct KFD adds bounded outer stopped-queue evidence, but authenticated native wave/register state remains unavailable."
           ],
           [
             "ROCgdb",
@@ -530,7 +540,7 @@ const narrativeRegistry = deepFreeze({
           [
             "rocprofv3 and compute viewer",
             "Measured runtime traces, counters, PC samples, ATT/thread trace, ISA correlation, and performance timelines.",
-            "Those tools remain the profiling substrate. fe2o3 strictly imports dispatch metadata plus ATT references and can bind supplied decoded ATT PCs to an exact HSACO symbol and Characteristic source/IR/ISA intervals while preserving observed, declared, inferred, unavailable, loss, and completeness states. It does not run the decoder or claim a live ATT capture, and the supplied decoder and Characteristic inputs remain producer-unauthenticated."
+            "Those tools remain the profiling substrate. fe2o3 strictly imports dispatch metadata plus ATT references and can bind supplied decoded ATT PCs to an exact HSACO symbol and Characteristic source/IR/ISA intervals while preserving observed, declared, inferred, unavailable, loss, and completeness states. A live MI300X qualification also seals the exact direct-KFD capture beside one rocprofv3 run, but its empty collector inventory has no common dispatch/code-object/clock join and is not promoted to a profiling result or universal limitation."
           ],
           [
             "Native HIP or Mojo workflow",
@@ -549,7 +559,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Unsupported semantics fail closed",
-        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, unadmitted wave or matrix operations, dynamically unsized LDS requests, unresolved external calls, unsupported memory intrinsics, and inline assembly remain typed unsupported. Explicitly sized dynamic LDS is implemented only for the admitted direct-KIR-V10 path; the ordinary-Rust Bundle V4 route remains KIR V7. Source Map V2 retains exact unchanged KIR parameters; moved, mutated, dropped, storage-reset, mutably aliased, projected, local, and unrepresented composite values stay typed unavailable. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
+        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, unadmitted wave or matrix operations, dynamically unsized LDS requests, unresolved external calls, unsupported memory intrinsics, and inline assembly remain typed unsupported. Explicitly sized dynamic LDS is implemented for admitted direct KIR V10; ordinary gfx950 f32 wave reduction now reaches V10 through Bundle V5, while legacy Bundle V4 remains KIR V7. Production source lowering for V10-only memory intrinsics is still unavailable. Source Map V2 retains exact unchanged KIR parameters; moved, mutated, dropped, storage-reset, mutably aliased, projected, local, and unrepresented composite values stay typed unavailable. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
       }
     ]
   },
