@@ -193,6 +193,15 @@ test("agent source/ISA characteristic workbench stays truthful and responsive", 
     }),
   ).toBeVisible();
   await expect(page.getByText("Exact authority-free archive")).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Bind an exact HSACO symbol before attributing a PC",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("table", { name: "Decoded ATT source correlation boundary" }),
+  ).toContainText("not observed");
   await expect(page.getByRole("tabpanel")).toContainText("discover_capabilities");
   await expect(page.getByRole("tabpanel")).toContainText("canonical_self_claimed_archive");
 
@@ -356,7 +365,9 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   const codePanel = page.locator("#lesson-code-panel");
   await expect(codePanel).toContainText("pub fn barrier_before_access");
   await expect(codePanel).toContainText("syncthreads");
-  await expect(page.getByText(/Exact excerpt from the ordinary attributed Rust crate/u)).toBeVisible();
+  await expect(
+    page.getByText(/Exact barrier, struct, tuple, and ZST excerpts/u),
+  ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
@@ -372,8 +383,10 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("--record-canonical-schedule");
   await expect(codePanel).toContainText("--replay-schedule");
   await expect(codePanel).toContainText("fe2o3-debug sim --bundle");
+  await expect(codePanel).toContainText("--bundle-version 4");
+  await expect(codePanel).toContainText("fe2o3-debug sim --bundle-v4");
 
-  await page.getByRole("tab", { name: "Source debug JSONL" }).click();
+  await page.getByRole("tab", { name: "Source debug and ABI boundary" }).click();
   await expect(codePanel).toContainText('"operation":"resolve_source"');
   await expect(codePanel).toContainText('"provenance":"compiler_bundle_bound"');
   await expect(codePanel).toContainText('"result":"stack"');
@@ -651,6 +664,17 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
   await expect(page.getByRole("table", { name: "Process-local profiler agent mapping" }))
     .toContainText("7001");
   await expect(page.getByText("MI300X bounded importer checkpoint qualified")).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Separate executable bridges from missing observations",
+    }),
+  ).toBeVisible();
+  const physicalStatus = page.getByRole("table", {
+    name: "Direct-KFD differential and causality status",
+  });
+  await expect(physicalStatus).toContainText("0 hardware / 0 parity");
+  await expect(physicalStatus).toContainText("unavailable");
   await expect(page.getByText(/bounded checkpoint is qualified at a5438d8220/u)).toBeVisible();
   await expect(page.getByText(/did not directly observe interpreter/u).first()).toBeVisible();
   await expect(page.getByText(/deterministic non-wire, non-authoritative examples/u)).toBeVisible();

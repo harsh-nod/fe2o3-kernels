@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import {
+  decodedAttSourceIsaMilestone,
   sourceIsaCharacteristicCommands,
   sourceIsaCharacteristicDuplicateFacts,
   sourceIsaCharacteristicFixtureDirectory,
@@ -127,6 +128,32 @@ export function SourceIsaAgentPage() {
           </span>
         </div>
       </header>
+
+      <section className="source-isa-agent-truth" aria-labelledby="decoded-att-correlation-heading">
+        <header>
+          <p className="section-kicker">Decoded ATT correlation</p>
+          <h2 id="decoded-att-correlation-heading">Bind an exact HSACO symbol before attributing a PC</h2>
+          <p>
+            At <code>{decodedAttSourceIsaMilestone.commit.slice(0, 10)}</code>, the read-only
+            service accepts already-decoded ATT V1, one exact code-object identity,
+            the claimed HSACO bytes, and Characteristic V1. It authenticates the
+            load span, metadata, kernel descriptor, and ELF symbol before returning
+            an opaque symbol identity, symbol-relative PC, and every exact
+            Rust/MIR/KIR/LLVM/ISA interval occurrence present in the archive.
+          </p>
+        </header>
+        <div className="table-scroll">
+          <table aria-label="Decoded ATT source correlation boundary">
+            <thead><tr><th>Evidence</th><th>State</th><th>Boundary</th></tr></thead>
+            <tbody>
+              <tr><th>Exact artifact relation</th><td><code>implemented</code></td><td>Artifact digest, load span, metadata, descriptor, ELF symbol, and symbol-relative PC are checked.</td></tr>
+              <tr><th>Characteristic lineage</th><td><code>preserved</code></td><td>Only coordinates present in the supplied archive are returned; duplicate and ambiguous occurrences remain distinct.</td></tr>
+              <tr><th>Loss and completeness</th><td><code>preserved</code></td><td>Decoded ATT loss, incomplete wave inputs, and raw-decode origin stay attached to every result.</td></tr>
+              <tr><th>Live capture / decoder run</th><td><code>not observed</code></td><td>No live ATT capture or decoder execution was performed, and neither input authenticates its producer.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
       <section className="source-isa-agent-flow" aria-label="Characteristic query planes">
         {sourceIsaCharacteristicPlanes.map((plane, index) => (

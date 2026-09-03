@@ -6,6 +6,7 @@ import characteristicRequestsRaw from "../../examples/source_isa_characteristic_
 import characteristicResponsesRaw from "../../examples/source_isa_characteristic_v1/responses.jsonl?raw";
 import milestoneData from "../../config/source-isa-agent-milestone.json";
 import characteristicMilestoneData from "../../config/source-isa-characteristic-tutorial.json";
+import currentMilestonesData from "../../config/debugger-profiler-current-milestones.json";
 import { deepFreeze } from "./registry";
 
 interface JsonRecord {
@@ -31,6 +32,34 @@ const responses = parseJsonl(responsesRaw, "source/ISA agent responses");
 const collectionHex = collectionHexRaw.trimEnd();
 const exactObject = /^[0-9a-f]{40}$/u;
 const exactDigest = /^[0-9a-f]{64}$/u;
+
+if (
+  currentMilestonesData.schema !== "fe2o3-debugger-profiler-current-milestones-v1" ||
+  currentMilestonesData.reviewedOn !== "2026-09-02" ||
+  !exactObject.test(currentMilestonesData.aggregateBundleV4.commit) ||
+  !exactObject.test(currentMilestonesData.aggregateBundleV4.tree) ||
+  JSON.stringify(currentMilestonesData.aggregateBundleV4.admittedAbi) !==
+    JSON.stringify(["direct", "pair", "ignore"]) ||
+  currentMilestonesData.aggregateBundleV4.hardwareObserved !== false ||
+  !exactObject.test(currentMilestonesData.dynamicLds.commit) ||
+  currentMilestonesData.dynamicLds.scope !== "explicitly-sized-direct-kir-v10" ||
+  currentMilestonesData.dynamicLds.ordinaryRustBundleVersion !== 4 ||
+  !exactObject.test(currentMilestonesData.decodedAttSourceIsa.commit) ||
+  !exactObject.test(currentMilestonesData.decodedAttSourceIsa.tree) ||
+  currentMilestonesData.decodedAttSourceIsa.liveCaptureObserved !== false ||
+  currentMilestonesData.decodedAttSourceIsa.decoderExecuted !== false ||
+  currentMilestonesData.decodedAttSourceIsa.preservesLossAndCompleteness !== true
+) {
+  throw new Error("decoded ATT source/ISA milestone is malformed");
+}
+
+export const decodedAttSourceIsaMilestone = deepFreeze(
+  currentMilestonesData.decodedAttSourceIsa,
+);
+export const aggregateBundleV4Milestone = deepFreeze(
+  currentMilestonesData.aggregateBundleV4,
+);
+export const dynamicLdsMilestone = deepFreeze(currentMilestonesData.dynamicLds);
 
 if (
   milestoneData.schema !== "fe2o3-source-isa-agent-tutorial-milestone-v1" ||

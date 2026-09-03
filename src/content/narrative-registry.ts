@@ -389,7 +389,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Extraction consumes that transaction immediately after exact KIR verification and publishes one private .fe2sim; it does not add a second importer or lowerer and never falls back from a hardware launch. fe2o3-kir-sim and fe2o3-debug then consume the exact embedded KIR and compiler-bound debug map without recompiling."
+        "text": "At compiler 33ab7d13e, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Pointer-free by-value structs and tuples whose exact rustc ABI is Direct or Pair, plus zero-sized Ignore arguments, can be flattened into compiler-emitted one-to-many component correspondence in Bundle V4. Slices and scalars remain ordinary adjacent arguments. fe2o3-debug sim --bundle-v4 consumes that exact bundle and packing plan without recompiling; this does not add a second importer or lowerer."
       },
       {
         "type": "table",
@@ -401,18 +401,18 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           [
             "Production extraction",
-            "Ordinary #[kernel] Rust, live rustc spans, semantic MIR ownership, ranked generic checks, and the same-session target-neutral KIR lowering.",
-            "Unsupported source, checks, KIR V7 projection, multiple bodies, or source-map function identity fail before publication."
+            "Ordinary #[kernel] Rust, live rustc spans, semantic MIR ownership, ranked checks, and same-session target-neutral KIR lowering, including exact Direct, Pair, and Ignore by-value aggregate ABI evidence.",
+            "Enums, pointer- or reference-containing aggregates, Cast, Indirect, adjusted, unsized, uninhabited, or otherwise unproved layouts fail with typed unavailability before publication. Arrays are admitted only when their actual compiler ABI is one of the exact supported forms; the checked [u64; 2] case is not."
           ],
           [
             ".fe2sim admission",
-            "One content-addressed bundle with exact extraction identities, target, KIR V8/V7 identities, kernel ABI, and optional bounded source map, plus one strict request.",
-            "Symlinks, special files, mutation, oversize, duplicate or unknown fields, stale subjects, stale KIR, and map substitution fail closed."
+            "Bundle V4 retains the V1-V3/KIR V7 wire and adds the exact semantic layout, component projection, KIR parameter ordinal, and compiler-produced physical slot plan needed to reconstruct admitted arguments.",
+            "Caller-created packing claims, stale identities, reordered or overlapping slots, padding substitution, type or ordinal mismatch, and map substitution fail closed. Padding is deterministically zeroed rather than copied from host aggregate memory."
           ],
           [
             "Semantic execution and replay",
-            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, and a bounded runnable-invocation decision record.",
-            "Unsupported operations, unavailable decisions, changed request or artifact custody, transcript drift, and every resource-limit violation fail before replay is accepted."
+            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, compiler-projected aggregate leaves, and a bounded runnable-invocation decision record. Commit 62965b3f8 also executes explicitly sized dynamic LDS in admitted direct KIR V10 with exact request and schedule custody.",
+            "The ordinary-Rust Bundle V4 route remains canonical KIR V7; it does not silently downgrade V10. Unsupported operations, missing dynamic-LDS size, changed request or artifact custody, transcript drift, and resource-limit violations fail before replay is accepted."
           ]
         ]
       },
@@ -436,7 +436,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The checked-in production capture starts from barrier_before_access in an ordinary attributed Rust crate. Its bundle contains KIR identity 33d3bc2d6bdc307283bb148c726cd20ccbdd38ed78e265a1d96bad290a158edc over 1,187 canonical bytes. The request visits one WG64, crosses one barrier release, commits one f32 value as exact bits 0x3f800000, and records two runnable selections. Canonical record and replay produced byte-identical result JSON."
+        "text": "The production regression at 33ab7d13e exports an ordinary repr(C) struct { u32, u64 }, a writable u64 slice, and a scalar into Bundle V4. Its compiler-derived, bundle-content-bound physical plan places the two aggregate leaves at byte offsets 0 and 8, the slice pointer and metadata at 16 and 24, and the scalar at 32 in a 40-byte, 8-byte-aligned explicit kernarg image. The same regression runs fe2o3-debug sim --bundle-v4 and observes status ok, simulated=true, and hardware_observed=false. Tuple and ZST/Ignore exports pass separately; unsupported aggregate forms fail typed."
       },
       {
         "type": "table",
@@ -488,6 +488,21 @@ const narrativeRegistry = deepFreeze({
             "The headers are not one atomic checkpoint. Inner hardware wave/lane state, native registers, CWSR record decoding, target memory, source/KIR stepping and hardware replay remain unavailable."
           ],
           [
+            "Direct-KFD differential",
+            "Commit 268ab6698 isolates the opt-in fe2o3-sim-physical-differential package from the CPU-only simulator and virtual-runtime closure. At 69ae3731b, its single-use bridge accepts only an already-authenticated GeneratedWorkerV3KfdInvocation, binds that owner to exact simulator state, calls execute_for_differential, and compares only a sealed unambiguous completion; the V2 qualification enumerates 14 protected prerequisites without accepting caller pass counts.",
+            "The protected backend, trust deployment, rollback authority, and proof-to-machine, Rust-layout, and Rust-effect refinement producers are not provisioned. The milestone remains 0 hardware passes and 0 parity passes; synthetic, stale, runtime-failed, or ambiguous results cannot mint a hardware observation or physical comparison report."
+          ],
+          [
+            "Decoded ATT source/ISA",
+            "Commit 1fb80202b accepts already-decoded ATT V1, exact selected code-object identity, exact HSACO bytes, and Characteristic V1; it authenticates load span, metadata, descriptor, and ELF symbol before returning an opaque symbol identity, symbol-relative PC, and every exact Rust/MIR/KIR/LLVM/ISA interval occurrence.",
+            "No live ATT capture or decoder execution occurred. External decoder declarations and self-claimed Characteristic records retain their loss, completeness, multiplicity, and producer-authentication limits; missing or ambiguous attribution stays unavailable."
+          ],
+          [
+            "Runtime causality",
+            "Commit 17e21d939 pages bounded direct-KFD runtime events and schema-required local lifecycle edges, each with exact predecessor/successor evidence and a fixed inference rule.",
+            "Producer sequence is capture-local, not a GPU clock. Device-copy and dependency producers, direct-KFD/rocprof dispatch identity, and clock correlation are absent, so those joins are explicitly unavailable rather than inferred."
+          ],
+          [
             "Agent contract",
             "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. The composite workbench keeps direct-KFD, generic ROCgdb/MI and Profiler Bundle V4 evidence separate. Seeded simulation retains canonical replay schedules and byte-level race, no-race, or incomplete evidence.",
             "Authenticated GPU wave identity, ATT decoding, source/ISA correlation, complete hardware timelines and automated causal diagnosis remain open work."
@@ -515,7 +530,7 @@ const narrativeRegistry = deepFreeze({
           [
             "rocprofv3 and compute viewer",
             "Measured runtime traces, counters, PC samples, ATT/thread trace, ISA correlation, and performance timelines.",
-            "Those tools remain the profiling substrate. fe2o3 now orchestrates bounded authorized rocprofv3 capture and strictly imports dispatch metadata plus ATT references into Profiler Bundle V4, preserving observed, declared, inferred, and unavailable origins. It does not yet authenticate source/ISA correlation or decode ATT timelines."
+            "Those tools remain the profiling substrate. fe2o3 strictly imports dispatch metadata plus ATT references and can bind supplied decoded ATT PCs to an exact HSACO symbol and Characteristic source/IR/ISA intervals while preserving observed, declared, inferred, unavailable, loss, and completeness states. It does not run the decoder or claim a live ATT capture, and the supplied decoder and Characteristic inputs remain producer-unauthenticated."
           ],
           [
             "Native HIP or Mojo workflow",
@@ -534,7 +549,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Unsupported semantics fail closed",
-        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, wave reductions/scans and matrix operations, dynamic or non-scalar workgroup memory, gfx950 LDS transpose, unresolved external calls, memory intrinsics, and inline assembly remain typed unsupported. Explicit Source Map V2 export retains exact unchanged KIR parameters; moved, mutated, dropped, storage-reset, mutably aliased, projected, local, and composite values stay typed unrepresented. Default and explicit V1 remain byte-compatible and do not inspect V2 metadata. V1 emits the final rustc call site rather than a macro expansion stack; synthetic KIR has no fabricated source; helper or multi-body maps fail until correspondence carries exact KIR function identity. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
+        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, unadmitted wave or matrix operations, dynamically unsized LDS requests, unresolved external calls, unsupported memory intrinsics, and inline assembly remain typed unsupported. Explicitly sized dynamic LDS is implemented only for the admitted direct-KIR-V10 path; the ordinary-Rust Bundle V4 route remains KIR V7. Source Map V2 retains exact unchanged KIR parameters; moved, mutated, dropped, storage-reset, mutably aliased, projected, local, and unrepresented composite values stay typed unavailable. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
       }
     ]
   },

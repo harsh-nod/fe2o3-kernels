@@ -24,11 +24,13 @@ import {
   profilerImportManifest,
   profilerImportMilestone,
   profilerImportPublicationStages,
+  profilerPhysicalDifferentialMilestone,
   profilerImportRequests,
   profilerImportResponses,
   profilerImportSources,
   profilerImportSourceUrl,
   profilerImportTruthRows,
+  profilerRuntimeCausalityMilestone,
 } from "../content/profiler-dispatch-import";
 
 function exactJson(value: unknown): string {
@@ -396,6 +398,29 @@ export function ProfilerDispatchImportPage() {
           ATT, performance, or GPU-execution authority, and carries no producer
           attestation.
         </p>
+      </section>
+
+      <section className="profiler-import-truth" aria-labelledby="profiler-kfd-evidence-heading">
+        <header>
+          <p className="section-kicker">Direct-KFD evidence joins</p>
+          <h2 id="profiler-kfd-evidence-heading">Separate executable bridges from missing observations</h2>
+          <p>
+            Package isolation began at <code>{profilerPhysicalDifferentialMilestone.packageIsolationCommit.slice(0, 10)}</code>.
+            The protected bridge at <code>{profilerPhysicalDifferentialMilestone.commit.slice(0, 10)}</code> accepts only an
+            already-authenticated generated Worker V3 invocation and consumes it once.
+          </p>
+        </header>
+        <div className="table-scroll">
+          <table aria-label="Direct-KFD differential and causality status">
+            <thead><tr><th>Surface</th><th>State</th><th>Exact boundary</th></tr></thead>
+            <tbody>
+              <tr><th>Physical differential</th><td><code>0 hardware / 0 parity</code></td><td>The V2 qualification lists {profilerPhysicalDifferentialMilestone.prerequisiteCount} protected prerequisites. Backend, trust, rollback, and refinement producers remain unprovisioned.</td></tr>
+              <tr><th>Evidence minting</th><td><code>fail closed</code></td><td>Synthetic, stale, runtime-failed, or ambiguous completion cannot mint a hardware observation or physical comparison report.</td></tr>
+              <tr><th>Runtime lifecycle</th><td><code>capture-local</code></td><td>At {profilerRuntimeCausalityMilestone.commit.slice(0, 10)}, exact event identities support only schema-required local lifecycle edges.</td></tr>
+              <tr><th>Dispatch / clock join</th><td><code>unavailable</code></td><td>Direct-KFD/rocprof dispatch identity, clock correlation, device-copy producers, and dependency producers are absent.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
       <section className="profiler-import-evidence" aria-labelledby="profiler-evidence-heading">

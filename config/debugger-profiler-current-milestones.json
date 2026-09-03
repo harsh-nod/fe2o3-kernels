@@ -1,0 +1,38 @@
+{
+  "schema": "fe2o3-debugger-profiler-current-milestones-v1",
+  "reviewedOn": "2026-09-02",
+  "aggregateBundleV4": {
+    "commit": "33ab7d13e0501ecd199407a2009d3395e27c77d5",
+    "tree": "3728f4aa187ffd439b2088802f246e309a75bb57",
+    "admittedAbi": ["direct", "pair", "ignore"],
+    "hardwareObserved": false
+  },
+  "dynamicLds": {
+    "commit": "62965b3f8dfa19420fc5af9b2584b15672db710c",
+    "scope": "explicitly-sized-direct-kir-v10",
+    "ordinaryRustBundleVersion": 4
+  },
+  "decodedAttSourceIsa": {
+    "commit": "1fb80202bf36e4a7b49925707e7553eff5e0d3ec",
+    "tree": "46642b3b0e7f733f10dce11bd4fe0b3d939990b1",
+    "liveCaptureObserved": false,
+    "decoderExecuted": false,
+    "preservesLossAndCompleteness": true
+  },
+  "physicalDifferential": {
+    "packageIsolationCommit": "268ab66989f2173c127070a09a59f424ebc4f6f1",
+    "commit": "69ae3731b6f11d4a6a2a0c0043c5e154daf4f254",
+    "tree": "8db8f81e887b2170cf0dc3ccecd12be2ff9b1dc6",
+    "prerequisiteCount": 14,
+    "hardwarePasses": 0,
+    "parityPasses": 0,
+    "blocker": "protected_verifier_unavailable"
+  },
+  "runtimeCausality": {
+    "commit": "17e21d939fc81a9815fcb60d7b993e2819afc85e",
+    "dispatchJoin": "unavailable",
+    "clockJoin": "unavailable",
+    "deviceCopyProducer": "unavailable",
+    "dependencyProducer": "unavailable"
+  }
+}

@@ -3,9 +3,11 @@ import { currentState } from "./current-state";
 import { semanticMilestoneLessonBoundary } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
 import cpuSimulationSource from "../../examples/cpu_simulation_source.rs?raw";
+import aggregateSimulationRequest from "../../examples/aggregate_simulation_request_v1.json?raw";
 import sourceSimulationRequest from "../../examples/source_simulation_request.json?raw";
 import sourceSimulationResult from "../../examples/source_simulation_result.json?raw";
 import sourceSimulationSchedule from "../../examples/source_simulation_schedule_v1.json?raw";
+import currentMilestones from "../../config/debugger-profiler-current-milestones.json";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
@@ -17,6 +19,7 @@ import {
   currentImplementationReference,
   historicalReference,
   pinnedReference,
+  qualificationReference,
   type CurriculumModule,
   type Lesson,
 } from "./model";
@@ -54,6 +57,40 @@ const cpuDebuggerCommand =
   "./target/debug/fe2o3-debug sim --bundle \"$PWD/barrier-before-access.fe2sim\" --request \"$PWD/barrier-before-access-request.json\" --protocol jsonl --wave-width 64";
 const cpuSimulationTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_kernel_source_exports_one_verified_authority_free_simulation_bundle -- --ignored --exact";
+const aggregateSimulationExportCommand =
+  "./target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output \"$PWD/aggregate-pair-struct-v4.fe2sim\" --target gfx942 --bundle-version 4 --target-dir target/tutorial-aggregate-export -- --package fe2o3-production-ranked-bounds-fixture --features aggregate_pair_struct --lib";
+const aggregateDebuggerCommand =
+  "./target/debug/fe2o3-debug sim --bundle-v4 \"$PWD/aggregate-pair-struct-v4.fe2sim\" --request \"$PWD/aggregate-pair-struct-request.json\" --protocol jsonl";
+const aggregateSimulationTestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_struct_argument_exports_exact_v4_components -- --ignored --exact";
+const dynamicLdsSimulationTestCommand =
+  "cargo test --locked -p fe2o3-kir-sim explicitly_sized_dynamic_lds -- --nocapture";
+const cpuSimulationSourceMarker =
+  "#[cfg(feature = \"aggregate_pair_struct\")]\n#[repr(C)]\npub struct AggregatePairStruct";
+const cpuSimulationZstMarker =
+  "#[cfg(feature = \"aggregate_zst\")]\npub struct AggregateZst;";
+const cpuSimulationSourceMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationSourceMarker);
+const cpuSimulationZstMarkerOffset = cpuSimulationSource.indexOf(cpuSimulationZstMarker);
+if (
+  cpuSimulationSourceMarkerOffset <= 0 ||
+  cpuSimulationSource.lastIndexOf(cpuSimulationSourceMarker) !== cpuSimulationSourceMarkerOffset
+) {
+  throw new Error("CPU simulation source is missing the aggregate fragment");
+}
+if (
+  cpuSimulationZstMarkerOffset <= cpuSimulationSourceMarkerOffset ||
+  cpuSimulationSource.lastIndexOf(cpuSimulationZstMarker) !== cpuSimulationZstMarkerOffset
+) {
+  throw new Error("CPU simulation source has a missing, duplicate, or reordered ZST fragment");
+}
+const cpuSimulationSourceFragments = [
+  cpuSimulationSource.slice(0, cpuSimulationSourceMarkerOffset).trimEnd(),
+  cpuSimulationSource.slice(
+    cpuSimulationSourceMarkerOffset,
+    cpuSimulationZstMarkerOffset,
+  ).trimEnd(),
+  cpuSimulationSource.slice(cpuSimulationZstMarkerOffset),
+];
 
 const orientation: Lesson = {
   id: "read-the-evidence",
@@ -440,11 +477,12 @@ const cpuSimulation: Lesson = {
   order: 2,
   title: "Export and debug Rust without a GPU",
   summary:
-    "Export an ordinary attributed Rust kernel, explore bounded CPU schedules, replay semantic witnesses, and correlate truth-labeled profiler evidence.",
+    "Export ordinary Rust aggregates into Bundle V4, debug them on the CPU, and inspect the exact boundaries around dynamic LDS and hardware evidence.",
   duration: "46 min",
   prerequisites: ["Kernel IR evidence boundaries", "JSON and JSONL request files"],
   objectives: [
     "Export an ordinary #[kernel] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
+    "Recognize the exact Direct, Pair, and Ignore aggregate ABI subset and its typed unavailable boundaries.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
     "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
     "Inspect exact full-active logical Wave32/Wave64 collectives and fixed-width structured failure masks.",
@@ -457,8 +495,10 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Source-to-bundle CPU simulation and semantic debugging",
       detail:
-        "The Linux-only fe2o3-export-sim command sends ordinary attributed Rust through the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages, then publishes one authority-free .fe2sim. fe2o3-kir-sim consumes its embedded exact KIR V7 directly, persists and replays a strict bounded schedule, and fe2o3-debug uses its compiler-bundle-bound map for source resolution, source breakpoints, captured stacks, and source stepping. Bundle binding authenticates exact local content, not protected compiler execution, and grants no proof, artifact, compiler, hardware, load, launch, timing, profiling, or performance-prediction authority.",
-      reference: currentImplementationReference(
+        "At compiler 33ab7d13e, the Linux-only exporter sends ordinary attributed Rust structs, tuples, ZSTs, slices, and scalars through the sole production path into Bundle V4 when rustc supplies an exact Direct, Pair, or Ignore ABI. The debugger materializes compiler-projected leaves and zeroed padding from that compiler-derived, bundle-content-bound packing plan. This remains CPU semantic execution of canonical KIR V7, not KFD launch or performance prediction.",
+      reference: qualificationReference(
+        currentMilestones.aggregateBundleV4.commit,
+        currentMilestones.aggregateBundleV4.tree,
         [
           cpuSimulationBuildCommand,
           cpuSimulationExportCommand,
@@ -466,6 +506,10 @@ const cpuSimulation: Lesson = {
           cpuSimulationReplayCommand,
           cpuDebuggerCommand,
           cpuSimulationTestCommand,
+          aggregateSimulationExportCommand,
+          aggregateDebuggerCommand,
+          aggregateSimulationTestCommand,
+          dynamicLdsSimulationTestCommand,
         ],
         [
           "docs/simulation-bundle-v1.md",
@@ -481,10 +525,11 @@ const cpuSimulation: Lesson = {
           "crates/fe2o3-kir-sim/tests/float_core.rs",
           "crates/fe2o3-debug-cli/src/lib.rs",
           "crates/fe2o3-debug-cli/tests/bundle_v1.rs",
+          "crates/fe2o3-sim-runtime/src/lib.rs",
         ],
         {
           target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
-          note: "Observation-only execution of exact bundle content with compiler-bundle-bound source locations. This is not protected compiler-execution authentication, source-to-KIR refinement, GPU/device-runtime use, hardware validation, timing, or performance prediction.",
+          note: "Qualification evidence for observation-only execution of exact bundle content with compiler-bundle-bound source locations. This is not protected compiler-execution authentication, source-to-KIR refinement, GPU/device-runtime use, hardware validation, timing, or performance prediction.",
         },
       ),
     },
@@ -502,14 +547,14 @@ const cpuSimulation: Lesson = {
       code: cpuSimulationSource,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: currentMilestones.aggregateBundleV4.commit,
       sourceSha256:
-        "49cb3a97f822e4b00cb3dafd7ee2fde81f12e9e2419d86d111f1f528e740fd67",
+        "af0a424289a87c5f8330eca383fa5ec35e8a3f509c48424172812cc2336d5418",
       sourceDigestScope: "displayed",
-      sourceFragments: [cpuSimulationSource],
+      sourceFragments: cpuSimulationSourceFragments,
       explanatory: false,
       notice:
-        "Exact excerpt from the ordinary attributed Rust crate used by the pinned source-to-bundle production regression.",
+        "Exact barrier, struct, tuple, and ZST excerpts from the ordinary attributed Rust crate used by the pinned simulator regressions.",
     },
     {
       kind: "reference",
@@ -544,29 +589,49 @@ const cpuSimulation: Lesson = {
       code: `# Build the exporter and its sibling extraction compiler, simulator, and debugger.
 ${cpuSimulationBuildCommand}
 
-# Export ordinary attributed Rust through the sole production lowering.
+# Export the barrier example, record/replay its schedule, and inspect source stepping.
 ${cpuSimulationExportCommand}
-
-# Publish the strict request used by the integration regression.
 REQUEST='${sourceSimulationRequest.trim()}'
 printf '%s\\n' "$REQUEST" > barrier-before-access-request.json
-
-# Record, then replay, the exact bounded semantic schedule.
 ${cpuSimulationCommand}
 ${cpuSimulationReplayCommand}
-
-# Run the source debugger against the map embedded in the same bundle.
 DEBUG_REQUESTS='${sourceDebuggerRequestsJsonl.trim()}'
-printf '%s\\n' "$DEBUG_REQUESTS" | ${cpuDebuggerCommand}`,
+printf '%s\\n' "$DEBUG_REQUESTS" | ${cpuDebuggerCommand}
+
+# Export the aggregate example and publish its strict flattened component request.
+${aggregateSimulationExportCommand}
+REQUEST='${aggregateSimulationRequest.trim()}'
+printf '%s\\n' "$REQUEST" > aggregate-pair-struct-request.json
+printf '%s\\n' '{"operation":"step","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"direction":"forward","granularity":"operation","count":1}' | ${aggregateDebuggerCommand}
+
+# Dynamic LDS is a separate exact direct-KIR-V10 surface, not a Bundle V4 downgrade.
+${dynamicLdsSimulationTestCommand}`,
     },
     {
       kind: "comparison",
-      label: "Source debug JSONL",
+      label: "Source debug and ABI boundary",
       language: "text",
-      code: sourceDebuggerTranscript,
+      code: `${sourceDebuggerTranscript}
+
+Aggregate Bundle V4 ABI boundary
+
+Admitted now
+  Direct: one exact scalar leaf
+  Pair: two compiler-ordered leaves, including repr(C) struct and tuple cases
+  Ignore: zero components for a ZST/unit argument
+  Slices/scalars: ordinary adjacent KIR parameters
+
+Typed unavailable
+  enum discriminants and niches
+  pointer/reference-containing aggregates
+  Cast, Indirect, adjusted, unsized, or uninhabited ABI
+  aggregate forms whose actual rustc ABI is not Direct, Pair, or Ignore
+
+The checked [u64; 2] fixture currently receives an unsupported aggregate ABI;
+array syntax alone does not imply admission.`,
       explanatory: true,
       notice:
-        "Exact checked-in request/response transcript captured by the pinned ordinary-Rust production integration test. Source provenance is compiler_bundle_bound, not compiler-execution authenticated.",
+        "The JSONL prefix is the exact checked-in source-debug transcript; the appended ABI summary documents the separately pinned Bundle V4 regression. Admission follows compiler ABI/layout evidence, not Rust surface spelling.",
     },
     {
       kind: "result",
@@ -576,10 +641,28 @@ printf '%s\\n' "$DEBUG_REQUESTS" | ${cpuDebuggerCommand}`,
 ${sourceSimulationResult.trimEnd()}
 
 # fe2o3-simulation-schedule-v1
-${sourceSimulationSchedule.trimEnd()}`,
+${sourceSimulationSchedule.trimEnd()}
+
+# Aggregate Bundle V4 regression
+Compiler-produced Bundle V4
+  explicit kernarg bytes: 40
+  explicit kernarg alignment: 8
+  struct fields: u32 @ 0, u64 @ 8
+  slice: value @ 16, metadata @ 24
+  scalar: u64 @ 32
+
+fe2o3-debug sim --bundle-v4
+  status: ok
+  session.simulated: true
+  session.hardware_observed: false
+
+Physical differential at 69ae3731b
+  hardware passes: 0
+  parity passes: 0
+  blocker: protected verifier and trust/refinement services unprovisioned`,
       explanatory: true,
       notice:
-        "Exact checked-in simulator output and persisted schedule from the same compiler-produced .fe2sim bundle. Canonical record and replay produced byte-identical result JSON.",
+        "These are assertions from the pinned production integration and qualification contracts, not a retained live hardware capture.",
     },
   ],
   diagram: "simulation",

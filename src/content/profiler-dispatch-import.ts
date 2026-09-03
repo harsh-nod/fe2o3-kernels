@@ -6,12 +6,40 @@ import dialectsRaw from "../../examples/profiler_dispatch_import_v1/dialects.jso
 import manifestRaw from "../../examples/profiler_dispatch_import_v1/publication-manifest.txt?raw";
 import receiptRaw from "../../examples/profiler_dispatch_import_v1/receipt-v1-projection.json?raw";
 import milestoneData from "../../config/profiler-dispatch-import-tutorial.json";
+import currentMilestonesData from "../../config/debugger-profiler-current-milestones.json";
 import { deepFreeze } from "./registry";
 
 type JsonRecord = Record<string, unknown>;
 
 const digestPattern = /^[0-9a-f]{64}$/u;
 const objectPairPattern = /^[0-9a-f]{40}:[0-9a-f]{40}$/u;
+
+const exactObject = /^[0-9a-f]{40}$/u;
+if (
+  currentMilestonesData.schema !== "fe2o3-debugger-profiler-current-milestones-v1" ||
+  currentMilestonesData.reviewedOn !== "2026-09-02" ||
+  !exactObject.test(currentMilestonesData.physicalDifferential.commit) ||
+  !exactObject.test(currentMilestonesData.physicalDifferential.tree) ||
+  !exactObject.test(currentMilestonesData.physicalDifferential.packageIsolationCommit) ||
+  currentMilestonesData.physicalDifferential.prerequisiteCount !== 14 ||
+  currentMilestonesData.physicalDifferential.hardwarePasses !== 0 ||
+  currentMilestonesData.physicalDifferential.parityPasses !== 0 ||
+  currentMilestonesData.physicalDifferential.blocker !== "protected_verifier_unavailable" ||
+  !exactObject.test(currentMilestonesData.runtimeCausality.commit) ||
+  currentMilestonesData.runtimeCausality.dispatchJoin !== "unavailable" ||
+  currentMilestonesData.runtimeCausality.clockJoin !== "unavailable" ||
+  currentMilestonesData.runtimeCausality.deviceCopyProducer !== "unavailable" ||
+  currentMilestonesData.runtimeCausality.dependencyProducer !== "unavailable"
+) {
+  throw new Error("direct-KFD differential or runtime-causality milestone is malformed");
+}
+
+export const profilerPhysicalDifferentialMilestone = deepFreeze(
+  currentMilestonesData.physicalDifferential,
+);
+export const profilerRuntimeCausalityMilestone = deepFreeze(
+  currentMilestonesData.runtimeCausality,
+);
 const boundCompilerRevision =
   "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044";
 const milestoneKeys = [

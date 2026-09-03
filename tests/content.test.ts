@@ -48,11 +48,13 @@ import {
   profilerImportDialectProjection,
   profilerImportManifest,
   profilerImportMilestone,
+  profilerPhysicalDifferentialMilestone,
   profilerImportReceiptProjection,
   profilerImportRequests,
   profilerImportResponses,
   profilerImportSources,
   profilerImportSourceUrl,
+  profilerRuntimeCausalityMilestone,
   validateProfilerImportTutorial,
 } from "../src/content/profiler-dispatch-import";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
@@ -87,6 +89,9 @@ import {
   validateSourceDebuggerMilestone,
 } from "../src/content/source-debugger-milestone";
 import {
+  aggregateBundleV4Milestone,
+  decodedAttSourceIsaMilestone,
+  dynamicLdsMilestone,
   sourceIsaCharacteristicDuplicateFacts,
   sourceIsaCharacteristicCollectionHex,
   sourceIsaCharacteristicFixtureReady,
@@ -2489,7 +2494,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       explanatory: false,
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: aggregateBundleV4Milestone.commit,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceDigestScope: "displayed",
@@ -2497,20 +2502,32 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toBe(
       readFileSync("examples/cpu_simulation_source.rs", "utf8"),
     );
+    expect(kernel?.code).toContain("pub fn aggregate_pair_struct");
+    expect(kernel?.code).toContain("pub fn aggregate_pair_tuple");
+    expect(kernel?.code).toContain("pub fn aggregate_zst");
     expect(kernel?.code).toContain("pub fn barrier_before_access");
     expect(kernel?.code).toContain("syncthreads();");
     const host = lesson?.tabs.find((tab) => tab.kind === "host")?.code ?? "";
     expect(host).toContain(
       readFileSync("examples/source_simulation_request.json", "utf8").trim(),
     );
+    expect(host).toContain(
+      readFileSync("examples/aggregate_simulation_request_v1.json", "utf8").trim(),
+    );
     expect(host).toContain("fe2o3-export-sim --crate");
     expect(host).toContain("fe2o3-kir-sim --bundle");
     expect(host).toContain("--record-canonical-schedule");
     expect(host).toContain("--replay-schedule");
     expect(host).toContain("fe2o3-debug sim --bundle");
+    expect(host).toContain("--bundle-version 4");
+    expect(host).toContain("fe2o3-debug sim --bundle-v4");
+    expect(host).toContain("explicitly_sized_dynamic_lds");
     expect(host).not.toContain("--kir-v7");
     const sourceDebug =
       lesson?.tabs.find((tab) => tab.kind === "comparison")?.code ?? "";
+    expect(sourceDebug).toContain("Direct: one exact scalar leaf");
+    expect(sourceDebug).toContain("enum discriminants and niches");
+    expect(sourceDebug).toContain("[u64; 2]");
     expect(sourceDebug).toContain(
       readFileSync("examples/source_debugger_requests_v1.jsonl", "utf8").trim(),
     );
@@ -2531,18 +2548,21 @@ describe("curriculum integrity", () => {
         .digest("hex"),
     ).toBe(SOURCE_DEBUGGER_RESPONSES_SHA256);
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    const simulationResult = JSON.parse(
-      readFileSync("examples/source_simulation_result.json", "utf8"),
-    ) as Record<string, unknown>;
-    const persistedSchedule = JSON.parse(
-      readFileSync("examples/source_simulation_schedule_v1.json", "utf8"),
-    ) as Record<string, unknown>;
+    expect(result).toContain("explicit kernarg bytes: 40");
+    expect(result).toContain("session.simulated: true");
+    expect(result).toContain("hardware passes: 0");
     expect(result).toContain(
       readFileSync("examples/source_simulation_result.json", "utf8").trim(),
     );
     expect(result).toContain(
       readFileSync("examples/source_simulation_schedule_v1.json", "utf8").trim(),
     );
+    const simulationResult = JSON.parse(
+      readFileSync("examples/source_simulation_result.json", "utf8"),
+    ) as Record<string, unknown>;
+    const persistedSchedule = JSON.parse(
+      readFileSync("examples/source_simulation_schedule_v1.json", "utf8"),
+    ) as Record<string, unknown>;
     expect(simulationResult).toMatchObject({
       authority: "observation_only",
       simulated: true,
@@ -2555,9 +2575,7 @@ describe("curriculum integrity", () => {
         scheduled_slots_visited: 64,
         steps_executed: 43,
       },
-      schedule: {
-        coverage: { decisions: 2, barrier_releases: 1, complete: true },
-      },
+      schedule: { coverage: { decisions: 2, barrier_releases: 1, complete: true } },
     });
     expect(persistedSchedule).toMatchObject({
       schema: "fe2o3-simulation-schedule-v1",
@@ -2567,16 +2585,16 @@ describe("curriculum integrity", () => {
     expect(lesson?.claims[0]).toMatchObject({
       kind: "runnable-now",
       reference: {
-        scope: "current-implementation",
-        commit: currentState.compilerCommit,
-        tree: currentState.compilerTree,
+        scope: "qualification-evidence",
+        commit: aggregateBundleV4Milestone.commit,
+        tree: aggregateBundleV4Milestone.tree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
-      scope: "current-implementation",
-      commit: currentState.compilerCommit,
-      tree: currentState.compilerTree,
+      scope: "qualification-evidence",
+      commit: aggregateBundleV4Milestone.commit,
+      tree: aggregateBundleV4Milestone.tree,
       target: "amdgpu_64_little_endian_v1 (simulated scalar profile)",
     });
     expect(reference?.note).toContain("not protected compiler-execution authentication");
@@ -2597,13 +2615,17 @@ describe("curriculum integrity", () => {
     expect(content).toContain("captured stacks");
     expect(content).toContain("Direct-KFD hardware V3");
     expect(content).toContain("Wave32/Wave64");
-    expect(content).toContain("gfx950 LDS transpose");
+    expect(content).toContain("Explicitly sized dynamic LDS");
     expect(content).toContain("no source-to-KIR refinement");
     expect(content).toContain("performance prediction");
     expect(content).toContain("ROCgdb remains the hardware-debugging substrate");
     expect(content).toContain("rocprofv3 and compute viewer");
     expect(content).toContain("Native HIP or Mojo workflow");
     expect(content).toContain("broader superiority is not claimed");
+    expect(content).toContain(dynamicLdsMilestone.commit.slice(0, 9));
+    expect(content).toContain(decodedAttSourceIsaMilestone.commit.slice(0, 9));
+    expect(content).toContain(profilerPhysicalDifferentialMilestone.commit.slice(0, 9));
+    expect(content).toContain(profilerRuntimeCausalityMilestone.commit.slice(0, 9));
 
     expect(currentState.issues).toEqual(
       expect.arrayContaining([
