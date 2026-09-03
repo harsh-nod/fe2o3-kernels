@@ -117,13 +117,15 @@
       "workgroup": [64, 1, 1]
     },
     "capture": {
-      "availability": "complete",
+      "availability": "complete_public_header_ranges",
       "capturedBytes": 2324,
       "segmentCount": 2,
       "segments": [
-        {"kind": "control_stack", "offset": 12268, "bytes": 20},
-        {"kind": "wave_state", "offset": 14592, "bytes": 2304}
+        {"kind": "control_stack", "bytes": 20},
+        {"kind": "wave_state", "bytes": 2304}
       ],
+      "canonicalReceipt": "not_archived",
+      "relativeOffsets": "not_archived",
       "readPair": "adjacent_sequential_equal",
       "coherentInstant": false,
       "privateBytesExposed": false

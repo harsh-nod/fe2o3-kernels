@@ -624,6 +624,7 @@ describe("live KFD debugger milestone", () => {
     const sourcePaths = [
       "crates/fe2o3-debug-cli/README.md",
       "crates/fe2o3-debug-protocol/src/live_gpu_v3.rs",
+      "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
       "crates/fe2o3-runtime/tests/kfd_opaque_checkpoint_live.rs",
       "crates/fe2o3-runtime/fixtures/trusted-gfx942-active-checkpoint-v1/README.md",
       "docs/direct-kfd-opaque-checkpoint-v1.md",
@@ -676,9 +677,11 @@ describe("live KFD debugger milestone", () => {
       waveWidth: 64,
       backend: "direct_kfd",
       capture: {
-        availability: "complete",
+        availability: "complete_public_header_ranges",
         capturedBytes: 2_324,
         segmentCount: 2,
+        canonicalReceipt: "not_archived",
+        relativeOffsets: "not_archived",
         readPair: "adjacent_sequential_equal",
         coherentInstant: false,
         privateBytesExposed: false,
@@ -699,8 +702,8 @@ describe("live KFD debugger milestone", () => {
       publicStableInnerAbi: false,
     });
     expect(activeOpaqueCheckpointV1Milestone.capture.segments).toEqual([
-      { kind: "control_stack", offset: 12_268, bytes: 20 },
-      { kind: "wave_state", offset: 14_592, bytes: 2_304 },
+      { kind: "control_stack", bytes: 20 },
+      { kind: "wave_state", bytes: 2_304 },
     ]);
     expect(
       activeOpaqueCheckpointV1Milestone.capture.segments.reduce(
@@ -741,9 +744,11 @@ describe("live KFD debugger milestone", () => {
         resume_required: true,
       },
       opaque_checkpoint: {
-        availability: "complete",
+        availability: "complete_public_header_ranges",
         captured_bytes: 2_324,
         segment_count: 2,
+        canonical_receipt: "not_archived",
+        relative_offsets: "not_archived",
         reads: "adjacent_sequential_equal",
         coherent_instant: false,
         private_bytes_exposed: false,
@@ -768,9 +773,29 @@ describe("live KFD debugger milestone", () => {
     expect(directKfd.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
       .toBe(true);
     expect(directKfd.checkpoint?.segments).toEqual([
-      { kind: "control_stack", offset: 12_268, bytes: 20 },
-      { kind: "wave_state", offset: 14_592, bytes: 2_304 },
+      { kind: "control_stack", bytes: 20 },
+      { kind: "wave_state", bytes: 2_304 },
     ]);
+    expect(directKfd.evidenceId).toBeUndefined();
+    expect(directKfd.record).toMatchObject({
+      observed_outer_envelope: {
+        envelope_identity: {
+          status: "unavailable",
+          reason: "CanonicalReceiptNotArchived",
+        },
+        device: {
+          status: "unavailable",
+          reason: "CanonicalReceiptNotArchived",
+        },
+        queue: {
+          status: "unavailable",
+          reason: "CanonicalReceiptNotArchived",
+        },
+      },
+    });
+    expect(directKfd.checkpoint?.receiptBoundary).toContain(
+      "No canonical observation receipt or exact relative offsets were archived",
+    );
     expect(directKfd.checkpoint?.readContract).toContain(
       "not one coherent checkpoint instant",
     );

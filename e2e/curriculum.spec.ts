@@ -447,9 +447,13 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   const arbitraryScanExtents = semanticEvidence.getByRole("table", {
     name: "Arbitrary workgroup scan extent counts",
   });
-  await expect(arbitraryScanExtents).toContainText("3286");
-  await expect(arbitraryScanExtents).toContainText("6572316");
-  await expect(arbitraryScanExtents).toContainText("25582618");
+  const extentRows = arbitraryScanExtents.getByRole("row");
+  expect(await extentRows.nth(1).getByRole("cell").allTextContents())
+    .toEqual(["3", "2", "8", "6", "3 active"]);
+  expect(await extentRows.nth(2).getByRole("cell").allTextContents())
+    .toEqual(["65", "7", "23", "16", "64 + 1 active"]);
+  expect(await extentRows.nth(3).getByRole("cell").allTextContents())
+    .toEqual(["255", "8", "26", "18", "64 + 64 + 64 + 63 active"]);
   await expect(semanticEvidence.getByText("3 * ceil(log2(N)) + 2")).toBeVisible();
   await expect(semanticEvidence.getByText("2 * ceil(log2(N)) + 2")).toBeVisible();
   const scanResults = semanticEvidence.getByRole("table", {
@@ -698,13 +702,20 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
   await expect(checkpoint).toContainText("gfx942:xnack-");
   await expect(checkpoint).toContainText("Wave64");
   await expect(checkpoint).toContainText("2,324");
+  await expect(page.getByText("evidence identity unavailable")).toBeVisible();
   const checkpointSegments = checkpoint.getByRole("table", {
     name: "Opaque checkpoint segment ranges",
   });
-  await expect(checkpointSegments).toContainText("control stack12,26820");
-  await expect(checkpointSegments).toContainText("wave state14,5922,304");
+  const checkpointSegmentRows = checkpointSegments.getByRole("row");
+  expect(await checkpointSegmentRows.nth(1).getByRole("cell").allTextContents())
+    .toEqual(["20"]);
+  expect(await checkpointSegmentRows.nth(2).getByRole("cell").allTextContents())
+    .toEqual(["2,304"]);
   const checkpointLimits = checkpoint.getByLabel("Checkpoint evidence limits");
   await expect(checkpointLimits).toContainText("not one coherent checkpoint instant");
+  await expect(checkpointLimits).toContainText(
+    "No canonical observation receipt or exact relative offsets were archived",
+  );
   await expect(checkpointLimits).toContainText("process_vm_readv returned EFAULT");
   await expect(checkpointLimits).toContainText("only EFAULT admits");
   await expect(checkpointLimits).toContainText("read-only /proc/<pid>/mem fallback");
@@ -726,6 +737,15 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
     path: testInfo.outputPath("active-direct-kfd-checkpoint-panel.png"),
     animations: "disabled",
   });
+  const directKfdDimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+    workbenchWidth: document.querySelector(".gpu-workbench")?.scrollWidth ?? 0,
+    workbenchViewport: document.querySelector(".gpu-workbench")?.clientWidth ?? 0,
+  }));
+  expect(directKfdDimensions.width).toBeLessThanOrEqual(directKfdDimensions.viewport);
+  expect(directKfdDimensions.workbenchWidth)
+    .toBeLessThanOrEqual(directKfdDimensions.workbenchViewport);
 
   const backends = page.getByRole("tablist", { name: "Evidence backend" });
   await backends.getByRole("tab", { name: "ROCgdb / MI" }).click();

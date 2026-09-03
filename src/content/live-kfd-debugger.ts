@@ -38,7 +38,7 @@ export interface LiveWorkbenchBackend {
   status: string;
   scope: string;
   summary: string;
-  evidenceId: string;
+  evidenceId?: string;
   origin: LiveWorkbenchTruthOrigin;
   matrixLabel: string;
   matrixNote: string;
@@ -66,9 +66,9 @@ export interface LiveWorkbenchBackend {
     capturedBytes: number;
     segments: ReadonlyArray<{
       kind: string;
-      offset: number;
       bytes: number;
     }>;
+    receiptBoundary: string;
     readContract: string;
     custody: string;
     artifactBoundary: string;
@@ -141,14 +141,16 @@ if (
   activeCheckpoint.backend !== "direct_kfd" ||
   JSON.stringify(activeCheckpoint.dispatchGeometry) !==
     '{"grid":[64,1,1],"workgroup":[64,1,1]}' ||
-  activeCheckpoint.capture.availability !== "complete" ||
+  activeCheckpoint.capture.availability !== "complete_public_header_ranges" ||
   activeCheckpoint.capture.capturedBytes !== 2_324 ||
   activeCheckpoint.capture.segmentCount !== 2 ||
   activeCheckpointSegments.length !== activeCheckpoint.capture.segmentCount ||
   activeCheckpointSegments.reduce((total, segment) => total + segment.bytes, 0) !==
     activeCheckpoint.capture.capturedBytes ||
   JSON.stringify(activeCheckpointSegments) !==
-    '[{"kind":"control_stack","offset":12268,"bytes":20},{"kind":"wave_state","offset":14592,"bytes":2304}]' ||
+    '[{"kind":"control_stack","bytes":20},{"kind":"wave_state","bytes":2304}]' ||
+  activeCheckpoint.capture.canonicalReceipt !== "not_archived" ||
+  activeCheckpoint.capture.relativeOffsets !== "not_archived" ||
   activeCheckpoint.capture.readPair !== "adjacent_sequential_equal" ||
   activeCheckpoint.capture.coherentInstant !== false ||
   activeCheckpoint.capture.privateBytesExposed !== false ||
@@ -199,7 +201,6 @@ export function liveKfdSourceUrl(path: string, commit = liveKfdPublication.compi
 
 const identity = (byte: string) => byte.repeat(64 / byte.length);
 const declarationIdentity = identity("33");
-const stoppedCheckpointIdentity = identity("a1");
 const admittedMiIdentity = identity("b2");
 const profilerBundleIdentity = identity("c3");
 
@@ -218,7 +219,6 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
     scope: "gfx942 · KFD 1.18 · session-owned suspension",
     summary:
       "The session captured every public-header-announced byte for one active gfx942 Wave64 dispatch and reobserved the exact queue/device binding. Each segment was read twice as an adjacent sequential pair; the pairs do not form one coherent instant, and public KFD does not publish the inner gfx942 wave/register record layout.",
-    evidenceId: stoppedCheckpointIdentity,
     origin: "observed",
     matrixLabel: "Direct KFD unavailable inner wave and lane records",
     matrixNote:
@@ -295,6 +295,8 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       waveWidth: activeOpaqueCheckpointV1Milestone.waveWidth,
       capturedBytes: activeOpaqueCheckpointV1Milestone.capture.capturedBytes,
       segments: activeOpaqueCheckpointV1Milestone.capture.segments,
+      receiptBoundary:
+        "No canonical observation receipt or exact relative offsets were archived. This view reports only the range kinds and byte counts retained in the pinned contract.",
       readContract:
         "Each segment passed one adjacent sequential double read. This is not one coherent checkpoint instant.",
       custody:
@@ -310,9 +312,9 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       validated_evidence_scope: "mi300x_active_wave64_opaque_checkpoint",
       session_state: "running_with_suspension_retained",
       observed_outer_envelope: {
-        envelope_identity: stoppedCheckpointIdentity,
-        device: { generation: 1, ordinal: 1 },
-        queue: { generation: 1, ordinal: 1 },
+        envelope_identity: { status: "unavailable", reason: "CanonicalReceiptNotArchived" },
+        device: { status: "unavailable", reason: "CanonicalReceiptNotArchived" },
+        queue: { status: "unavailable", reason: "CanonicalReceiptNotArchived" },
         gfx_target_version: 90402,
         xcc_count: 8,
         ownership: "session_retained_suspension",
@@ -333,6 +335,8 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
         captured_bytes: activeOpaqueCheckpointV1Milestone.capture.capturedBytes,
         segment_count: activeOpaqueCheckpointV1Milestone.capture.segmentCount,
         segments: activeOpaqueCheckpointV1Milestone.capture.segments,
+        canonical_receipt: activeOpaqueCheckpointV1Milestone.capture.canonicalReceipt,
+        relative_offsets: activeOpaqueCheckpointV1Milestone.capture.relativeOffsets,
         reads: activeOpaqueCheckpointV1Milestone.capture.readPair,
         coherent_instant: activeOpaqueCheckpointV1Milestone.capture.coherentInstant,
         private_bytes_exposed:
@@ -731,6 +735,10 @@ export const liveKfdSources = [
     label: "V3 opaque checkpoint protocol",
     path: "crates/fe2o3-debug-protocol/src/live_gpu_v3.rs",
     commit: activeOpaqueCheckpointV1Milestone.commit,
+  },
+  {
+    label: "Historical MI300X V3 acceptance",
+    path: "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
   },
   {
     label: "Active checkpoint acceptance",

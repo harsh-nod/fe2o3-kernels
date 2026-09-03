@@ -125,9 +125,13 @@ describe("debugger and simulator evidence workbench", () => {
     const arbitraryScanExtents = screen.getByRole("table", {
       name: "Arbitrary workgroup scan extent counts",
     });
-    expect(arbitraryScanExtents).toHaveTextContent("3286");
-    expect(arbitraryScanExtents).toHaveTextContent("6572316");
-    expect(arbitraryScanExtents).toHaveTextContent("25582618");
+    const extentRows = within(arbitraryScanExtents).getAllByRole("row");
+    expect(within(extentRows[1]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["3", "2", "8", "6", "3 active"]);
+    expect(within(extentRows[2]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["65", "7", "23", "16", "64 + 1 active"]);
+    expect(within(extentRows[3]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["255", "8", "26", "18", "64 + 64 + 64 + 63 active"]);
     expect(screen.getByText("3 * ceil(log2(N)) + 2")).toBeInTheDocument();
     expect(screen.getByText("2 * ceil(log2(N)) + 2")).toBeInTheDocument();
     expect(
@@ -391,13 +395,20 @@ describe("live KFD debugger tutorial", () => {
     expect(checkpoint).toHaveTextContent("gfx942:xnack-");
     expect(checkpoint).toHaveTextContent("Wave64");
     expect(checkpoint).toHaveTextContent("2,324");
+    expect(screen.getByText("evidence identity unavailable")).toBeInTheDocument();
     const segments = within(checkpoint).getByRole("table", {
       name: "Opaque checkpoint segment ranges",
     });
-    expect(segments).toHaveTextContent("control stack12,26820");
-    expect(segments).toHaveTextContent("wave state14,5922,304");
+    const segmentRows = within(segments).getAllByRole("row");
+    expect(within(segmentRows[1]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["20"]);
+    expect(within(segmentRows[2]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["2,304"]);
     const limits = within(checkpoint).getByLabelText("Checkpoint evidence limits");
     expect(limits).toHaveTextContent("not one coherent checkpoint instant");
+    expect(limits).toHaveTextContent(
+      "No canonical observation receipt or exact relative offsets were archived",
+    );
     expect(limits).toHaveTextContent("process_vm_readv returned EFAULT");
     expect(limits).toHaveTextContent("only EFAULT admits");
     expect(limits).toHaveTextContent("read-only /proc/<pid>/mem fallback");

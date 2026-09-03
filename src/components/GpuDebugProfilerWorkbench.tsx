@@ -155,9 +155,15 @@ export function GpuDebugProfilerWorkbench() {
           <strong>{backend.status}</strong>
           <span>{backend.scope}</span>
         </div>
-        <code title={backend.evidenceId}>
-          evidence {shortIdentity(backend.evidenceId)}
-        </code>
+        {backend.evidenceId ? (
+          <code title={backend.evidenceId}>
+            evidence {shortIdentity(backend.evidenceId)}
+          </code>
+        ) : (
+          <code title="No canonical observation receipt was archived">
+            evidence identity unavailable
+          </code>
+        )}
       </div>
       <p className="gpu-workbench-summary">{backend.summary}</p>
 
@@ -168,7 +174,7 @@ export function GpuDebugProfilerWorkbench() {
         >
           <header>
             <div>
-              <span><Origin value="observed" /> complete capture</span>
+              <span><Origin value="observed" /> complete public-header ranges</span>
               <h3>{backend.checkpoint.label}</h3>
             </div>
             <dl>
@@ -195,7 +201,6 @@ export function GpuDebugProfilerWorkbench() {
               <thead>
                 <tr>
                   <th>Public header range</th>
-                  <th>Relative offset</th>
                   <th>Opaque bytes</th>
                 </tr>
               </thead>
@@ -203,7 +208,6 @@ export function GpuDebugProfilerWorkbench() {
                 {backend.checkpoint.segments.map((segment) => (
                   <tr key={segment.kind}>
                     <th>{segment.kind.replaceAll("_", " ")}</th>
-                    <td><code>{segment.offset.toLocaleString("en-US")}</code></td>
                     <td><code>{segment.bytes.toLocaleString("en-US")}</code></td>
                   </tr>
                 ))}
@@ -211,6 +215,7 @@ export function GpuDebugProfilerWorkbench() {
             </table>
           </div>
           <div className="gpu-checkpoint-contract" aria-label="Checkpoint evidence limits">
+            <p><strong>Receipt scope</strong>{backend.checkpoint.receiptBoundary}</p>
             <p><strong>Temporal scope</strong>{backend.checkpoint.readContract}</p>
             <p><strong>Read custody</strong>{backend.checkpoint.custody}</p>
             <p><strong>Artifact scope</strong>{backend.checkpoint.artifactBoundary}</p>
