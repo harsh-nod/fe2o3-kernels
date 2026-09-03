@@ -119,9 +119,23 @@ describe("debugger and simulator evidence workbench", () => {
     expect(screen.getByText(/A 32-lane launch is a typed workgroup mismatch/u)).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "Debug six target-neutral prefix contracts at KIR V10",
+        name: "Debug arbitrary 1D prefix contracts at KIR V10",
       }),
     ).toBeInTheDocument();
+    const arbitraryScanExtents = screen.getByRole("table", {
+      name: "Arbitrary workgroup scan extent counts",
+    });
+    expect(arbitraryScanExtents).toHaveTextContent("3286");
+    expect(arbitraryScanExtents).toHaveTextContent("6572316");
+    expect(arbitraryScanExtents).toHaveTextContent("25582618");
+    expect(screen.getByText("3 * ceil(log2(N)) + 2")).toBeInTheDocument();
+    expect(screen.getByText("2 * ceil(log2(N)) + 2")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /ba2171d19e…bb2aa45e/u }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/ba2171d19e32d957388f4e89ef510539bb2aa45e/docs/target-neutral-workgroup-scan-v1.md",
+    );
     const scanResults = screen.getByRole("table", {
       name: "Workgroup scan semantic results",
     });
@@ -373,6 +387,28 @@ describe("live KFD debugger tutorial", () => {
     expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
       "WaveRecordLayoutNotInKfdUapi",
     );
+    const checkpoint = screen.getByLabelText("Active direct KFD opaque checkpoint");
+    expect(checkpoint).toHaveTextContent("gfx942:xnack-");
+    expect(checkpoint).toHaveTextContent("Wave64");
+    expect(checkpoint).toHaveTextContent("2,324");
+    const segments = within(checkpoint).getByRole("table", {
+      name: "Opaque checkpoint segment ranges",
+    });
+    expect(segments).toHaveTextContent("control stack12,26820");
+    expect(segments).toHaveTextContent("wave state14,5922,304");
+    const limits = within(checkpoint).getByLabelText("Checkpoint evidence limits");
+    expect(limits).toHaveTextContent("not one coherent checkpoint instant");
+    expect(limits).toHaveTextContent("process_vm_readv returned EFAULT");
+    expect(limits).toHaveTextContent("only EFAULT admits");
+    expect(limits).toHaveTextContent("read-only /proc/<pid>/mem fallback");
+    expect(limits).toHaveTextContent("does not authenticate the code-object bytes");
+    expect(
+      within(
+        screen.getByRole("grid", {
+          name: "Direct KFD unavailable inner wave and lane records",
+        }),
+      ).getAllByRole("gridcell"),
+    ).toHaveLength(64);
 
     const backends = screen.getByRole("tablist", { name: "Evidence backend" });
     const directKfdTab = within(backends).getByRole("tab", { name: "Direct KFD" });

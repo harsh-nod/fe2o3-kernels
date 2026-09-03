@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { debuggerComparisonLinks } from "../content/debugger-workbench";
 import {
+  activeOpaqueCheckpointV1Milestone,
   liveKfdCommand,
   liveKfdComparisonRows,
   liveKfdCurrentImplementationPaths,
@@ -43,24 +44,23 @@ export function LiveKfdDebuggerPage() {
           <div>
             <h1>GPU debugger + profiler workbench</h1>
             <p className="lesson-summary">
-              Inspect direct-KFD queue evidence, authenticated ROCgdb stopped-state
-              contracts, multi-function source/KIR stacks, and content-addressed
-              profiler evidence without merging their validation scopes.
+              Inspect a direct-KFD active Wave64 opaque checkpoint, ROCgdb
+              stopped-state contracts, multi-function source/KIR stacks, and
+              content-addressed profiler evidence without merging their validation scopes.
             </p>
           </div>
           <span className="live-kfd-version">
-            <Braces size={16} aria-hidden="true" /> V5 debug · V3 bridge
+            <Braces size={16} aria-hidden="true" /> V5 debug · KFD checkpoint V1
           </span>
         </div>
         <div className="live-kfd-validation">
           <Radio size={17} aria-hidden="true" />
           <span>
             <strong>Scopes are separate</strong>
-            Direct-KFD stopped-queue headers are sequentially MI300X-observed,
-            not one atomic checkpoint. ROCgdb V5 admits same-stop register and
-            scalar-local structure, but the installed target did not reach a
-            GPU stop. Profiler V3 is a structural production-owner join, not a
-            live capture.
+            Direct KFD captured two public-header ranges totaling 2,324 opaque
+            bytes from one active gfx942 Wave64 dispatch. Each range passed an
+            adjacent sequential double read, not a coherent-instant snapshot.
+            ROCgdb and profiler evidence retain their separate scopes.
           </span>
         </div>
       </header>
@@ -275,9 +275,10 @@ export function LiveKfdDebuggerPage() {
           <p className="section-kicker">Auditable implementation</p>
           <h2 id="live-kfd-evidence-heading">Read the owning boundaries</h2>
           <p>
-            Historical KFD links stay pinned to {liveKfdPublication.compilerCommit.slice(0, 10)};
-            V5 links are pinned to {liveRocgdbV5Milestone.commit.slice(0, 10)} or
-            the exact multi-function custody milestone.
+            The active opaque-checkpoint links are pinned to {activeOpaqueCheckpointV1Milestone.commit.slice(0, 10)};
+            historical KFD links stay pinned to {liveKfdPublication.compilerCommit.slice(0, 10)},
+            and V5 links stay pinned to {liveRocgdbV5Milestone.commit.slice(0, 10)}
+            or the exact multi-function custody milestone.
           </p>
         </header>
         <div>

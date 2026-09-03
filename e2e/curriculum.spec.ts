@@ -441,9 +441,17 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   ).toBeVisible();
   await expect(
     semanticEvidence.getByRole("heading", {
-      name: "Debug six target-neutral prefix contracts at KIR V10",
+      name: "Debug arbitrary 1D prefix contracts at KIR V10",
     }),
   ).toBeVisible();
+  const arbitraryScanExtents = semanticEvidence.getByRole("table", {
+    name: "Arbitrary workgroup scan extent counts",
+  });
+  await expect(arbitraryScanExtents).toContainText("3286");
+  await expect(arbitraryScanExtents).toContainText("6572316");
+  await expect(arbitraryScanExtents).toContainText("25582618");
+  await expect(semanticEvidence.getByText("3 * ceil(log2(N)) + 2")).toBeVisible();
+  await expect(semanticEvidence.getByText("2 * ceil(log2(N)) + 2")).toBeVisible();
   const scanResults = semanticEvidence.getByRole("table", {
     name: "Workgroup scan semantic results",
   });
@@ -500,6 +508,10 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
 
   await semanticEvidence.screenshot({
     path: testInfo.outputPath("semantic-evidence-workbench.png"),
+    animations: "disabled",
+  });
+  await page.locator(".semantic-scan-extents").screenshot({
+    path: testInfo.outputPath("arbitrary-scan-extents.png"),
     animations: "disabled",
   });
   const semanticBounds = await semanticEvidence.evaluate((element) => ({
@@ -682,6 +694,38 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
   await expect(page.getByTestId("gpu-workbench-record")).toContainText(
     "WaveRecordLayoutNotInKfdUapi",
   );
+  const checkpoint = page.getByLabel("Active direct KFD opaque checkpoint");
+  await expect(checkpoint).toContainText("gfx942:xnack-");
+  await expect(checkpoint).toContainText("Wave64");
+  await expect(checkpoint).toContainText("2,324");
+  const checkpointSegments = checkpoint.getByRole("table", {
+    name: "Opaque checkpoint segment ranges",
+  });
+  await expect(checkpointSegments).toContainText("control stack12,26820");
+  await expect(checkpointSegments).toContainText("wave state14,5922,304");
+  const checkpointLimits = checkpoint.getByLabel("Checkpoint evidence limits");
+  await expect(checkpointLimits).toContainText("not one coherent checkpoint instant");
+  await expect(checkpointLimits).toContainText("process_vm_readv returned EFAULT");
+  await expect(checkpointLimits).toContainText("only EFAULT admits");
+  await expect(checkpointLimits).toContainText("read-only /proc/<pid>/mem fallback");
+  await expect(checkpointLimits).toContainText(
+    "does not authenticate the code-object bytes physically loaded or executed",
+  );
+  await expect(page.getByRole("gridcell", {
+    name: /inner records, lane 0, unavailable/u,
+  })).toBeVisible();
+  await expect(page.getByRole("gridcell", {
+    name: /inner records, lane 63, unavailable/u,
+  })).toBeVisible();
+  await page.screenshot({
+    path: testInfo.outputPath("active-direct-kfd-checkpoint.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+  await checkpoint.screenshot({
+    path: testInfo.outputPath("active-direct-kfd-checkpoint-panel.png"),
+    animations: "disabled",
+  });
 
   const backends = page.getByRole("tablist", { name: "Evidence backend" });
   await backends.getByRole("tab", { name: "ROCgdb / MI" }).click();

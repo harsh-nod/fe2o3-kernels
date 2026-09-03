@@ -285,11 +285,28 @@ function WorkgroupReductionPanel() {
 function WorkgroupScanPanel() {
   const fixture = debugSimWorkgroupScanFixture;
   const layers = fixture.evidence.evidence_layers;
+  const arbitrary = fixture.arbitraryExtents;
+  const extentRows = arbitrary.representativeExtents.map((extent) => {
+    const rounds = Math.ceil(Math.log2(extent));
+    const fullWaves = Math.floor(extent / 64);
+    const remainder = extent % 64;
+    const waveParts = [
+      ...Array.from({ length: fullWaves }, () => "64"),
+      ...(remainder === 0 ? [] : [String(remainder)]),
+    ];
+    return {
+      extent,
+      rounds,
+      memoryEffects: 3 * rounds + 2,
+      barriers: 2 * rounds + 2,
+      waveLayout: `${waveParts.join(" + ")} active`,
+    };
+  });
   return (
     <div className="semantic-scan-body">
       <div className="semantic-source-lineage">
         <span>
-          <GitCommitHorizontal size={15} aria-hidden="true" /> compiler milestone
+          <GitCommitHorizontal size={15} aria-hidden="true" /> base compiler milestone
           <a
             href={`https://github.com/harsh-nod/fe2o3/commit/${fixture.compiler.commit}`}
             rel="noreferrer"
@@ -319,6 +336,47 @@ function WorkgroupScanPanel() {
         <TruthCell label="semantic CPU cases" value={String(layers.direct_kir_semantic_simulations)} />
         <TruthCell label="retained ordinary bundles" value={String(layers.retained_ordinary_bundle_executions)} />
       </div>
+
+      <section className="semantic-scan-extents" aria-labelledby="semantic-scan-extents-heading">
+        <header>
+          <div>
+            <p className="debug-label">Current compiler extension</p>
+            <h4 id="semantic-scan-extents-heading">Every exact 1D extent from 1 through 256</h4>
+          </div>
+          <a
+            href={`https://github.com/harsh-nod/fe2o3/blob/${arbitrary.commit}/docs/target-neutral-workgroup-scan-v1.md`}
+            rel="noreferrer"
+            target="_blank"
+            title={arbitrary.commit}
+          >
+            <code>{shortIdentity(arbitrary.commit)}</code>
+          </a>
+        </header>
+        <p>
+          Odd extents and partial final Wave64 groups use the same target-neutral
+          inclusive/exclusive contract. For N lanes, the compiler records
+          <code>{arbitrary.memoryEffectFormula}</code> memory effects and
+          <code>{arbitrary.barrierFormula}</code> barriers, then replays the exact expansion.
+        </p>
+        <div role="table" aria-label="Arbitrary workgroup scan extent counts">
+          <div role="row">
+            <span role="columnheader">N</span>
+            <span role="columnheader">ceil(log2 N)</span>
+            <span role="columnheader">memory effects</span>
+            <span role="columnheader">barriers</span>
+            <span role="columnheader">Wave64 layout</span>
+          </div>
+          {extentRows.map((row) => (
+            <div role="row" key={row.extent}>
+              <code role="cell">{row.extent}</code>
+              <code role="cell">{row.rounds}</code>
+              <code role="cell">{row.memoryEffects}</code>
+              <code role="cell">{row.barriers}</code>
+              <span role="cell">{row.waveLayout}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <div className="semantic-scan-grid">
         <section aria-labelledby="semantic-scan-matrix-heading">
@@ -407,11 +465,12 @@ function WorkgroupScanPanel() {
       <p className="semantic-boundary-note">
         <ShieldAlert size={15} aria-hidden="true" />
         <span>
-          The six ordinary API combinations are compile contracts; three attributed kernel
-          representatives reach both production LLVM backends; the six displayed results come
-          from direct KIR V10 semantic tests. No ordinary scan Bundle V5 execution is retained in
-          this milestone. The external protected-production proof environment remains unavailable,
-          and none of this is GPU, hardware-validation, all-schedule, timing, or performance evidence.
+          The base six ordinary API combinations are compile contracts; the current extension
+          admits each exact N in 1..=256 and tests 3, 65, and 255 across every supported type and
+          mode. The displayed eight-lane results remain direct KIR V10 semantic fixtures. No
+          ordinary scan Bundle V5 execution is retained. The external protected-production proof
+          environment remains unavailable, and none of this is GPU, hardware-validation,
+          all-schedule, timing, or performance evidence.
         </span>
       </p>
     </div>
@@ -843,7 +902,7 @@ export function DebugSimMilestone() {
         <header>
           <div>
             <p className="debug-label">Ordinary Rust API + direct KIR semantics</p>
-            <h3 id="workgroup-scan-heading">Debug six target-neutral prefix contracts at KIR V10</h3>
+            <h3 id="workgroup-scan-heading">Debug arbitrary 1D prefix contracts at KIR V10</h3>
           </div>
           <span className="debug-schema">
             <MapPinned size={15} /> exact lanes + LDS + barriers

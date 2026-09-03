@@ -121,11 +121,28 @@ The **Live KFD debugger** reference at `#/debugger/live-kfd` retains an
 independent historical milestone at compiler commit
 `ba0efc7f958e3afdf72eceeef1c37c2994fe2402`, tree
 `3a595c10a3af6f28223ed89b6029ba444c16a2af`. It documents the exact-bound V3
-agent protocol and the direct-KFD MI300X acceptance result while keeping the
-still-unavailable live wave, lane, PC, register, memory, breakpoint, and step
-surfaces explicit. Current implementation links use the publication pin and
-state the narrower leader-only forced-teardown boundary. The historical
-milestone does not repin the broader functional-proof publication record.
+agent protocol and the direct-KFD MI300X acceptance result. A current checkpoint
+at compiler commit `ba2171d19e32d957388f4e89ef510539bb2aa45e`, tree
+`2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3`, adds one active gfx942 Wave64
+observation: two complete public-header ranges totaling 2,324 opaque bytes.
+Those adjacent sequential double reads are not one coherent checkpoint instant,
+and target-declared same-queue artifact correlation does not authenticate the
+code object physically loaded or executed. The page keeps decoded wave, lane,
+register, PC, and source values unavailable because public KFD publishes no
+stable inner ABI; target-memory values are also not captured. It states the
+retained ptrace/pidfd custody,
+`process_vm_readv` primary read, and EFAULT-only read-only `/proc/<pid>/mem`
+fallback. Current implementation links use this publication pin; the historical
+milestone and broader functional-proof publication record remain independently
+pinned.
+
+The CPU semantic simulation reference at `#/lesson/cpu-semantic-simulation`
+also links the same current compiler pin for exact 1D workgroup scans with every
+extent from 1 through 256. It makes odd and partial-Wave64 layouts plus the
+`ceil(log2 N)` effect and barrier counts visible, while preserving the older
+eight-lane fixture and its independent evidence boundary. These checks are CPU
+semantic/compiler evidence, not GPU execution, hardware validation, timing, or
+performance evidence.
 
 The **Agent-native source/ISA inspection** reference at
 `#/debugger/source-isa-agent` is independently pinned to compiler commit

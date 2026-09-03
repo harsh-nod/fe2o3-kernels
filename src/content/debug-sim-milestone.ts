@@ -662,6 +662,7 @@ function validateWorkgroupReductionMilestone(): string[] {
 
 function validateWorkgroupScanMilestone(): string[] {
   const milestone = currentMilestones.workgroupScanV1;
+  const arbitrary = currentMilestones.arbitraryWorkgroupScanExtentsV1;
   const trace = currentMilestones.semanticTraceV2;
   const layers = workgroupScanMatrix.evidence_layers;
   const execution = workgroupScanMatrix.semantic_execution;
@@ -776,6 +777,41 @@ function validateWorkgroupScanMilestone(): string[] {
     return ["workgroup scan evidence index changed its tested scope or truth boundary"];
   }
   if (
+    !exactKeys(arbitrary, [
+      "barrierFormula",
+      "commit",
+      "extentRange",
+      "hardwareObserved",
+      "hardwareValidation",
+      "memoryEffectFormula",
+      "modes",
+      "partialFinalWave64",
+      "performancePrediction",
+      "representativeExtents",
+      "scalarTypes",
+      "scheduleModes",
+      "targetNeutral",
+      "tree",
+    ]) ||
+    !exactGitObject.test(arbitrary.commit) ||
+    !exactGitObject.test(arbitrary.tree) ||
+    JSON.stringify(arbitrary.extentRange) !== "[1,256]" ||
+    JSON.stringify(arbitrary.representativeExtents) !== "[3,65,255]" ||
+    JSON.stringify(arbitrary.scalarTypes) !== '["u32","i32","f32"]' ||
+    JSON.stringify(arbitrary.modes) !== '["inclusive","exclusive"]' ||
+    arbitrary.memoryEffectFormula !== "3 * ceil(log2(N)) + 2" ||
+    arbitrary.barrierFormula !== "2 * ceil(log2(N)) + 2" ||
+    arbitrary.partialFinalWave64 !== true ||
+    arbitrary.targetNeutral !== true ||
+    JSON.stringify(arbitrary.scheduleModes) !==
+      '["canonical","seeded","persisted_replay"]' ||
+    arbitrary.hardwareObserved !== false ||
+    arbitrary.hardwareValidation !== false ||
+    arbitrary.performancePrediction !== false
+  ) {
+    return ["arbitrary workgroup scan extent milestone has an invalid closed envelope"];
+  }
+  if (
     !exactGitObject.test(trace.commit) ||
     !exactGitObject.test(trace.tree) ||
     trace.commit !== milestone.commit ||
@@ -823,6 +859,7 @@ export const debugSimMilestoneProjection = {
   },
   workgroupReduction: currentMilestones.workgroupReductionV5,
   workgroupScan: workgroupScanMatrix,
+  arbitraryWorkgroupScanExtents: currentMilestones.arbitraryWorkgroupScanExtentsV1,
   semanticTrace: currentMilestones.semanticTraceV2,
   multiRootSemanticDebug: currentMilestones.multiFunctionSemanticDebugV5,
 };
@@ -842,6 +879,7 @@ export const debugSimWorkgroupReductionFixture = {
 
 export const debugSimWorkgroupScanFixture = {
   compiler: currentMilestones.workgroupScanV1,
+  arbitraryExtents: currentMilestones.arbitraryWorkgroupScanExtentsV1,
   trace: currentMilestones.semanticTraceV2,
   correspondence: currentMilestones.multiFunctionSemanticDebugV5,
   evidence: workgroupScanMatrix,

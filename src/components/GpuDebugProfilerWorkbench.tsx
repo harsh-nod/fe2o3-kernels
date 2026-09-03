@@ -161,6 +161,63 @@ export function GpuDebugProfilerWorkbench() {
       </div>
       <p className="gpu-workbench-summary">{backend.summary}</p>
 
+      {backend.checkpoint && (
+        <section
+          className="gpu-checkpoint-summary"
+          aria-label="Active direct KFD opaque checkpoint"
+        >
+          <header>
+            <div>
+              <span><Origin value="observed" /> complete capture</span>
+              <h3>{backend.checkpoint.label}</h3>
+            </div>
+            <dl>
+              <div>
+                <dt>target</dt>
+                <dd>{backend.checkpoint.target}</dd>
+              </div>
+              <div>
+                <dt>logical width</dt>
+                <dd>Wave{backend.checkpoint.waveWidth}</dd>
+              </div>
+              <div>
+                <dt>opaque bytes</dt>
+                <dd>{backend.checkpoint.capturedBytes.toLocaleString("en-US")}</dd>
+              </div>
+              <div>
+                <dt>segments</dt>
+                <dd>{backend.checkpoint.segments.length}</dd>
+              </div>
+            </dl>
+          </header>
+          <div className="table-scroll">
+            <table aria-label="Opaque checkpoint segment ranges">
+              <thead>
+                <tr>
+                  <th>Public header range</th>
+                  <th>Relative offset</th>
+                  <th>Opaque bytes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {backend.checkpoint.segments.map((segment) => (
+                  <tr key={segment.kind}>
+                    <th>{segment.kind.replaceAll("_", " ")}</th>
+                    <td><code>{segment.offset.toLocaleString("en-US")}</code></td>
+                    <td><code>{segment.bytes.toLocaleString("en-US")}</code></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="gpu-checkpoint-contract" aria-label="Checkpoint evidence limits">
+            <p><strong>Temporal scope</strong>{backend.checkpoint.readContract}</p>
+            <p><strong>Read custody</strong>{backend.checkpoint.custody}</p>
+            <p><strong>Artifact scope</strong>{backend.checkpoint.artifactBoundary}</p>
+          </div>
+        </section>
+      )}
+
       <div className="gpu-matrix-shell">
         <header>
           <div>

@@ -37,6 +37,7 @@ import {
   validateDebuggerWorkbenchFixture,
 } from "../src/content/debugger-workbench";
 import {
+  activeOpaqueCheckpointV1Milestone,
   liveKfdComparisonRows,
   liveKfdCurrentImplementationPaths,
   liveKfdPublication,
@@ -623,7 +624,9 @@ describe("live KFD debugger milestone", () => {
     const sourcePaths = [
       "crates/fe2o3-debug-cli/README.md",
       "crates/fe2o3-debug-protocol/src/live_gpu_v3.rs",
-      "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
+      "crates/fe2o3-runtime/tests/kfd_opaque_checkpoint_live.rs",
+      "crates/fe2o3-runtime/fixtures/trusted-gfx942-active-checkpoint-v1/README.md",
+      "docs/direct-kfd-opaque-checkpoint-v1.md",
       "crates/fe2o3-kfd/src/target_debug_telemetry_v1.rs",
       "crates/fe2o3-kfd/src/stopped_state_v1.rs",
       "crates/fe2o3-debug-protocol/src/rocgdb_mi_v3.rs",
@@ -665,6 +668,57 @@ describe("live KFD debugger milestone", () => {
       physicalHelperBody: "single_shared_node_not_duplicated",
       protectedProductionProof: "unavailable_external_verifier_environment",
     });
+    expect(activeOpaqueCheckpointV1Milestone).toMatchObject({
+      commit: "ba2171d19e32d957388f4e89ef510539bb2aa45e",
+      tree: "2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3",
+      schema: "fe2o3-direct-kfd-opaque-checkpoint-v1",
+      target: "gfx942:xnack-",
+      waveWidth: 64,
+      backend: "direct_kfd",
+      capture: {
+        availability: "complete",
+        capturedBytes: 2_324,
+        segmentCount: 2,
+        readPair: "adjacent_sequential_equal",
+        coherentInstant: false,
+        privateBytesExposed: false,
+      },
+      binding: {
+        queueDevice: "exact_direct_kfd_reobserved",
+        artifactCorrelation: "target_declared_same_queue_runtime_observation",
+        physicalExecutionAuthenticated: false,
+      },
+      custody: {
+        process: "ptrace_pidfd",
+        primaryRead: "process_vm_readv",
+        observedPrimaryErrno: "EFAULT",
+        fallback: "/proc/<pid>/mem",
+        fallbackMode: "read_only",
+        fallbackErrnoGate: "EFAULT_only",
+      },
+      publicStableInnerAbi: false,
+    });
+    expect(activeOpaqueCheckpointV1Milestone.capture.segments).toEqual([
+      { kind: "control_stack", offset: 12_268, bytes: 20 },
+      { kind: "wave_state", offset: 14_592, bytes: 2_304 },
+    ]);
+    expect(
+      activeOpaqueCheckpointV1Milestone.capture.segments.reduce(
+        (total, segment) => total + segment.bytes,
+        0,
+      ),
+    ).toBe(activeOpaqueCheckpointV1Milestone.capture.capturedBytes);
+    expect(activeOpaqueCheckpointV1Milestone.typedUnavailable).toEqual([
+      "decoded_wave",
+      "decoded_lane",
+      "register",
+      "program_counter",
+      "source",
+      "target_memory",
+    ]);
+    expect(activeOpaqueCheckpointV1Milestone.validationCommand).toContain(
+      "--features hardware-qualification --test kfd_opaque_checkpoint_live",
+    );
     expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
     );
@@ -680,11 +734,30 @@ describe("live KFD debugger milestone", () => {
     expect(directKfd.record).toMatchObject({
       projection_schema: "fe2o3-tutorial-evidence-summary-v1",
       protocol_wire_record: false,
-      validated_evidence_scope: "mi300x_live_header_envelopes",
+      validated_evidence_scope: "mi300x_active_wave64_opaque_checkpoint",
       observed_outer_envelope: {
         xcc_count: 8,
         ownership: "session_retained_suspension",
         resume_required: true,
+      },
+      opaque_checkpoint: {
+        availability: "complete",
+        captured_bytes: 2_324,
+        segment_count: 2,
+        reads: "adjacent_sequential_equal",
+        coherent_instant: false,
+        private_bytes_exposed: false,
+        queue_device_binding: "exact_direct_kfd_reobserved",
+        artifact_correlation: "target_declared_same_queue_runtime_observation",
+        physical_execution_authenticated: false,
+        custody: {
+          process: "ptrace_pidfd",
+          primaryRead: "process_vm_readv",
+          observedPrimaryErrno: "EFAULT",
+          fallback: "/proc/<pid>/mem",
+          fallbackMode: "read_only",
+          fallbackErrnoGate: "EFAULT_only",
+        },
       },
     });
     expect(JSON.stringify(directKfd.record)).toContain(
@@ -694,6 +767,17 @@ describe("live KFD debugger milestone", () => {
     expect(directKfd.waveRows[0].cells).toHaveLength(64);
     expect(directKfd.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
       .toBe(true);
+    expect(directKfd.checkpoint?.segments).toEqual([
+      { kind: "control_stack", offset: 12_268, bytes: 20 },
+      { kind: "wave_state", offset: 14_592, bytes: 2_304 },
+    ]);
+    expect(directKfd.checkpoint?.readContract).toContain(
+      "not one coherent checkpoint instant",
+    );
+    expect(directKfd.checkpoint?.custody).toContain("read-only /proc/<pid>/mem");
+    expect(directKfd.checkpoint?.artifactBoundary).toContain(
+      "does not authenticate the code-object bytes physically loaded or executed",
+    );
 
     const rocgdb = liveWorkbenchBackends[1];
     expect(rocgdb.record).toMatchObject({
@@ -1119,6 +1203,21 @@ describe("debugger and simulator milestone content", () => {
           hardware_observed: false,
           performance_prediction: false,
         },
+      },
+      arbitraryExtents: {
+        commit: "ba2171d19e32d957388f4e89ef510539bb2aa45e",
+        tree: "2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3",
+        extentRange: [1, 256],
+        representativeExtents: [3, 65, 255],
+        scalarTypes: ["u32", "i32", "f32"],
+        modes: ["inclusive", "exclusive"],
+        memoryEffectFormula: "3 * ceil(log2(N)) + 2",
+        barrierFormula: "2 * ceil(log2(N)) + 2",
+        partialFinalWave64: true,
+        targetNeutral: true,
+        hardwareObserved: false,
+        hardwareValidation: false,
+        performancePrediction: false,
       },
     });
     expect(debugSimWorkgroupScanFixture.cases).toHaveLength(6);

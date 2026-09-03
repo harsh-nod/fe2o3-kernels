@@ -105,6 +105,53 @@
     "physicalGpuStopObserved": false,
     "sourceIsaMemory": "typed_unavailable"
   },
+  "activeOpaqueCheckpointV1": {
+    "commit": "ba2171d19e32d957388f4e89ef510539bb2aa45e",
+    "tree": "2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3",
+    "schema": "fe2o3-direct-kfd-opaque-checkpoint-v1",
+    "target": "gfx942:xnack-",
+    "waveWidth": 64,
+    "backend": "direct_kfd",
+    "dispatchGeometry": {
+      "grid": [64, 1, 1],
+      "workgroup": [64, 1, 1]
+    },
+    "capture": {
+      "availability": "complete",
+      "capturedBytes": 2324,
+      "segmentCount": 2,
+      "segments": [
+        {"kind": "control_stack", "offset": 12268, "bytes": 20},
+        {"kind": "wave_state", "offset": 14592, "bytes": 2304}
+      ],
+      "readPair": "adjacent_sequential_equal",
+      "coherentInstant": false,
+      "privateBytesExposed": false
+    },
+    "binding": {
+      "queueDevice": "exact_direct_kfd_reobserved",
+      "artifactCorrelation": "target_declared_same_queue_runtime_observation",
+      "physicalExecutionAuthenticated": false
+    },
+    "custody": {
+      "process": "ptrace_pidfd",
+      "primaryRead": "process_vm_readv",
+      "observedPrimaryErrno": "EFAULT",
+      "fallback": "/proc/<pid>/mem",
+      "fallbackMode": "read_only",
+      "fallbackErrnoGate": "EFAULT_only"
+    },
+    "typedUnavailable": [
+      "decoded_wave",
+      "decoded_lane",
+      "register",
+      "program_counter",
+      "source",
+      "target_memory"
+    ],
+    "publicStableInnerAbi": false,
+    "validationCommand": "cargo test --locked -p fe2o3-runtime --features hardware-qualification --test kfd_opaque_checkpoint_live mi300x_captures_nonempty_same_queue_opaque_checkpoint -- --exact --ignored --nocapture --test-threads=1"
+  },
   "multiFunctionSemanticDebugV5": {
     "commit": "2df6130c5f897b5120cdf6ade44d53030690fa8b",
     "tree": "1ddc7aec95db753ab54ff472e9457b0e6609d0f6",
@@ -166,6 +213,22 @@
     "wrongRoster": "typed_workgroup_mismatch",
     "replaySubstitution": "typed_request_binding_mismatch",
     "hardwareObserved": false,
+    "performancePrediction": false
+  },
+  "arbitraryWorkgroupScanExtentsV1": {
+    "commit": "ba2171d19e32d957388f4e89ef510539bb2aa45e",
+    "tree": "2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3",
+    "extentRange": [1, 256],
+    "representativeExtents": [3, 65, 255],
+    "scalarTypes": ["u32", "i32", "f32"],
+    "modes": ["inclusive", "exclusive"],
+    "memoryEffectFormula": "3 * ceil(log2(N)) + 2",
+    "barrierFormula": "2 * ceil(log2(N)) + 2",
+    "partialFinalWave64": true,
+    "targetNeutral": true,
+    "scheduleModes": ["canonical", "seeded", "persisted_replay"],
+    "hardwareObserved": false,
+    "hardwareValidation": false,
     "performancePrediction": false
   },
   "semanticTraceV2": {

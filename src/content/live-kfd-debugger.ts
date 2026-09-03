@@ -59,6 +59,20 @@ export interface LiveWorkbenchBackend {
     origin: LiveWorkbenchTruthOrigin;
     detail: string;
   }>;
+  checkpoint?: {
+    label: string;
+    target: string;
+    waveWidth: number;
+    capturedBytes: number;
+    segments: ReadonlyArray<{
+      kind: string;
+      offset: number;
+      bytes: number;
+    }>;
+    readContract: string;
+    custody: string;
+    artifactBoundary: string;
+  };
   record: Record<string, unknown>;
 }
 
@@ -89,6 +103,9 @@ function validateLiveKfdPublication(): void {
 
 validateLiveKfdPublication();
 
+const activeCheckpoint = currentMilestonesData.activeOpaqueCheckpointV1;
+const activeCheckpointSegments = activeCheckpoint.capture.segments;
+
 if (
   currentMilestonesData.reviewedOn !== "2026-09-03" ||
   !exactObject.test(currentMilestonesData.liveRocgdbV5.commit) ||
@@ -115,7 +132,42 @@ if (
   currentMilestonesData.multiFunctionSemanticDebugV5.physicalHelperBody !==
     "single_shared_node_not_duplicated" ||
   currentMilestonesData.multiFunctionSemanticDebugV5.protectedProductionProof !==
-    "unavailable_external_verifier_environment"
+    "unavailable_external_verifier_environment" ||
+  !exactObject.test(activeCheckpoint.commit) ||
+  !exactObject.test(activeCheckpoint.tree) ||
+  activeCheckpoint.schema !== "fe2o3-direct-kfd-opaque-checkpoint-v1" ||
+  activeCheckpoint.target !== "gfx942:xnack-" ||
+  activeCheckpoint.waveWidth !== 64 ||
+  activeCheckpoint.backend !== "direct_kfd" ||
+  JSON.stringify(activeCheckpoint.dispatchGeometry) !==
+    '{"grid":[64,1,1],"workgroup":[64,1,1]}' ||
+  activeCheckpoint.capture.availability !== "complete" ||
+  activeCheckpoint.capture.capturedBytes !== 2_324 ||
+  activeCheckpoint.capture.segmentCount !== 2 ||
+  activeCheckpointSegments.length !== activeCheckpoint.capture.segmentCount ||
+  activeCheckpointSegments.reduce((total, segment) => total + segment.bytes, 0) !==
+    activeCheckpoint.capture.capturedBytes ||
+  JSON.stringify(activeCheckpointSegments) !==
+    '[{"kind":"control_stack","offset":12268,"bytes":20},{"kind":"wave_state","offset":14592,"bytes":2304}]' ||
+  activeCheckpoint.capture.readPair !== "adjacent_sequential_equal" ||
+  activeCheckpoint.capture.coherentInstant !== false ||
+  activeCheckpoint.capture.privateBytesExposed !== false ||
+  activeCheckpoint.binding.queueDevice !== "exact_direct_kfd_reobserved" ||
+  activeCheckpoint.binding.artifactCorrelation !==
+    "target_declared_same_queue_runtime_observation" ||
+  activeCheckpoint.binding.physicalExecutionAuthenticated !== false ||
+  activeCheckpoint.custody.process !== "ptrace_pidfd" ||
+  activeCheckpoint.custody.primaryRead !== "process_vm_readv" ||
+  activeCheckpoint.custody.observedPrimaryErrno !== "EFAULT" ||
+  activeCheckpoint.custody.fallback !== "/proc/<pid>/mem" ||
+  activeCheckpoint.custody.fallbackMode !== "read_only" ||
+  activeCheckpoint.custody.fallbackErrnoGate !== "EFAULT_only" ||
+  JSON.stringify(activeCheckpoint.typedUnavailable) !==
+    '["decoded_wave","decoded_lane","register","program_counter","source","target_memory"]' ||
+  activeCheckpoint.publicStableInnerAbi !== false ||
+  !activeCheckpoint.validationCommand.includes(
+    "mi300x_captures_nonempty_same_queue_opaque_checkpoint",
+  )
 ) {
   throw new Error("current live debugger milestones are malformed");
 }
@@ -124,6 +176,7 @@ export const liveKfdPublication = deepFreeze(milestoneData);
 export const liveRocgdbV5Milestone = deepFreeze(
   currentMilestonesData.liveRocgdbV5,
 );
+export const activeOpaqueCheckpointV1Milestone = deepFreeze(activeCheckpoint);
 export const multiFunctionSemanticDebugV5Milestone = deepFreeze(
   currentMilestonesData.multiFunctionSemanticDebugV5,
 );
@@ -164,12 +217,12 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
     status: "MI300X stopped-queue envelope observed",
     scope: "gfx942 · KFD 1.18 · session-owned suspension",
     summary:
-      "The session retains queue suspension and validates the device, queue, save area, and eight sequential XCC header reads. They are not one atomic hardware checkpoint, and Linux KFD does not publish the inner gfx942 wave/register record layout.",
+      "The session captured every public-header-announced byte for one active gfx942 Wave64 dispatch and reobserved the exact queue/device binding. Each segment was read twice as an adjacent sequential pair; the pairs do not form one coherent instant, and public KFD does not publish the inner gfx942 wave/register record layout.",
     evidenceId: stoppedCheckpointIdentity,
     origin: "observed",
     matrixLabel: "Direct KFD unavailable inner wave and lane records",
     matrixNote:
-      "The 64 columns visualize the logical Wave64 lane surface expected by higher-level tools. They are not decoded hardware lanes; every inner record is explicitly unavailable.",
+      "The 64 columns visualize the logical Wave64 lane surface expected by higher-level tools. Public KFD has no stable inner record ABI, so decoded wave, lane, register, PC, and source values stay typed unavailable.",
     waveRows: [
       {
         id: "inner-records",
@@ -185,7 +238,7 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
     panels: [
       {
         label: "Source",
-        value: "SourceMapNotBound",
+        value: "Target-declared artifact correlation only; decoded source unavailable",
         origin: "unavailable",
       },
       {
@@ -212,10 +265,16 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
         detail: "session-retained suspension with exact queue/device binding checks",
       },
       {
-        label: "XCC topology",
+        label: "Opaque checkpoint",
         state: "available",
         origin: "observed",
-        detail: "8 sequential 40-byte CPU-visible headers; non-atomic across XCCs",
+        detail: "2 complete private segments · 2,324 bytes · no serialized content",
+      },
+      {
+        label: "Artifact correlation",
+        state: "available",
+        origin: "declared",
+        detail: "target-declared same-queue correlation; physical execution not authenticated",
       },
       {
         label: "Wave + lane records",
@@ -230,11 +289,25 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
         detail: "RegisterRecordLayoutNotInKfdUapi",
       },
     ],
+    checkpoint: {
+      label: "Active Wave64 checkpoint",
+      target: activeOpaqueCheckpointV1Milestone.target,
+      waveWidth: activeOpaqueCheckpointV1Milestone.waveWidth,
+      capturedBytes: activeOpaqueCheckpointV1Milestone.capture.capturedBytes,
+      segments: activeOpaqueCheckpointV1Milestone.capture.segments,
+      readContract:
+        "Each segment passed one adjacent sequential double read. This is not one coherent checkpoint instant.",
+      custody:
+        "process_vm_readv returned EFAULT; only EFAULT admits the read-only /proc/<pid>/mem fallback under retained ptrace/pidfd custody.",
+      artifactBoundary:
+        "The target declaration correlates the artifact to the same queue. It does not authenticate the code-object bytes physically loaded or executed.",
+    },
     record: {
       projection_schema: "fe2o3-tutorial-evidence-summary-v1",
       protocol_wire_record: false,
       backend_surface: "direct_kfd_stopped_queue_envelope",
-      validated_evidence_scope: "mi300x_live_header_envelopes",
+      implementation_commit: activeOpaqueCheckpointV1Milestone.commit,
+      validated_evidence_scope: "mi300x_active_wave64_opaque_checkpoint",
       session_state: "running_with_suspension_retained",
       observed_outer_envelope: {
         envelope_identity: stoppedCheckpointIdentity,
@@ -254,6 +327,22 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
             observation: "sequential_non_atomic_cpu_shadow",
           })),
         },
+      },
+      opaque_checkpoint: {
+        availability: activeOpaqueCheckpointV1Milestone.capture.availability,
+        captured_bytes: activeOpaqueCheckpointV1Milestone.capture.capturedBytes,
+        segment_count: activeOpaqueCheckpointV1Milestone.capture.segmentCount,
+        segments: activeOpaqueCheckpointV1Milestone.capture.segments,
+        reads: activeOpaqueCheckpointV1Milestone.capture.readPair,
+        coherent_instant: activeOpaqueCheckpointV1Milestone.capture.coherentInstant,
+        private_bytes_exposed:
+          activeOpaqueCheckpointV1Milestone.capture.privateBytesExposed,
+        queue_device_binding: activeOpaqueCheckpointV1Milestone.binding.queueDevice,
+        artifact_correlation:
+          activeOpaqueCheckpointV1Milestone.binding.artifactCorrelation,
+        physical_execution_authenticated:
+          activeOpaqueCheckpointV1Milestone.binding.physicalExecutionAuthenticated,
+        custody: activeOpaqueCheckpointV1Milestone.custody,
       },
       unavailable_inner_records: {
         wave: { status: "unavailable", reason: "WaveRecordLayoutNotInKfdUapi" },
@@ -531,8 +620,8 @@ export const liveKfdCommand = [
 
 export const liveKfdMilestone = [
   {
-    label: "KFD stopped queue envelope",
-    state: "sequential headers observed on MI300X",
+    label: "KFD opaque checkpoint",
+    state: "active Wave64 · 2 segments · 2,324 bytes",
     truth: "observed",
   },
   {
@@ -553,7 +642,7 @@ export const liveKfdMilestone = [
 ] as const;
 
 export const liveKfdUnsupported = [
-  "Atomic cross-XCC KFD checkpoint capture; the eight CPU-shadow headers are read sequentially",
+  "A coherent-instant KFD checkpoint; segment double reads are adjacent and sequential",
   "Direct KFD inner gfx942 wave, lane, register, and PC records",
   "A physical ROCgdb GPU stop for the direct-KFD target; V5 register and scalar-local values therefore remain unobserved on hardware",
   "ROCgdb lane values, source/ISA inspection, target memory, source stepping, and breakpoints",
@@ -579,7 +668,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Live hardware depth",
     fe2o3:
-      "Direct KFD owns suspension and validates a sequential stopped-queue header envelope, but inner wave/register records remain unavailable. ROCgdb V5 can admit same-stop registers and scalar locals after exact V4 hierarchy association; the installed direct-KFD target did not produce the required physical GPU stop.",
+      "Direct KFD owns suspension and captured two public-header-bounded private segments totaling 2,324 bytes for one active gfx942 Wave64 dispatch. The checkpoint is queue/device-bound, but its adjacent double reads are sequential rather than one coherent instant, artifact correlation is target-declared rather than authenticated physical execution, and inner wave/register records remain unavailable. ROCgdb V5 separately admits same-stop registers and scalar locals after exact V4 hierarchy association when it can produce a physical GPU stop.",
     rocgdb:
       "Ahead today: hardware wavefront threads, lanes, GPU register groups, breakpoints, stepping, and source-oriented live debugging.",
     rocprof:
@@ -639,20 +728,33 @@ export const liveKfdSources = [
     path: "crates/fe2o3-debug-cli/README.md",
   },
   {
-    label: "V3 wire protocol",
+    label: "V3 opaque checkpoint protocol",
     path: "crates/fe2o3-debug-protocol/src/live_gpu_v3.rs",
+    commit: activeOpaqueCheckpointV1Milestone.commit,
   },
   {
-    label: "MI300X acceptance test",
-    path: "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
+    label: "Active checkpoint acceptance",
+    path: "crates/fe2o3-runtime/tests/kfd_opaque_checkpoint_live.rs",
+    commit: activeOpaqueCheckpointV1Milestone.commit,
+  },
+  {
+    label: "Pinned Wave64 fixture policy",
+    path: "crates/fe2o3-runtime/fixtures/trusted-gfx942-active-checkpoint-v1/README.md",
+    commit: activeOpaqueCheckpointV1Milestone.commit,
+  },
+  {
+    label: "Opaque checkpoint contract",
+    path: "docs/direct-kfd-opaque-checkpoint-v1.md",
+    commit: activeOpaqueCheckpointV1Milestone.commit,
   },
   {
     label: "Target telemetry transport",
     path: "crates/fe2o3-kfd/src/target_debug_telemetry_v1.rs",
   },
   {
-    label: "Stopped queue producer",
+    label: "Stopped queue checkpoint producer",
     path: "crates/fe2o3-kfd/src/stopped_state_v1.rs",
+    commit: activeOpaqueCheckpointV1Milestone.commit,
   },
   {
     label: "ROCgdb MI protocol",

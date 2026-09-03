@@ -5595,6 +5595,76 @@ tr:last-child td {
   background: var(--surface);
 }
 
+.semantic-scan-extents {
+  padding: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.semantic-scan-extents > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.semantic-scan-extents h4 {
+  margin: 3px 0 0;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+}
+
+.semantic-scan-extents > header a {
+  flex: 0 0 auto;
+  color: var(--blue);
+  font-size: 0.62rem;
+}
+
+.semantic-scan-extents > p {
+  max-width: 860px;
+  margin: 10px 0 12px;
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.55;
+}
+
+.semantic-scan-extents > p code {
+  margin: 0 4px;
+  color: var(--text-strong);
+  font-size: 0.62rem;
+}
+
+.semantic-scan-extents > div {
+  overflow-x: auto;
+}
+
+.semantic-scan-extents > div > div {
+  display: grid;
+  grid-template-columns: 0.42fr 0.9fr 0.9fr 0.7fr minmax(150px, 1.35fr);
+  gap: 8px;
+  align-items: center;
+  min-width: 620px;
+  min-height: 36px;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-scan-extents > div > div:first-child {
+  min-height: 32px;
+  color: var(--faint);
+  background: var(--surface-2);
+  font-size: 0.54rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.semantic-scan-extents > div code,
+.semantic-scan-extents > div span {
+  min-width: 0;
+  color: var(--text-strong);
+  font-size: 0.62rem;
+  overflow-wrap: anywhere;
+}
+
 .semantic-scan-grid,
 .semantic-scan-custody {
   display: grid;
@@ -6381,6 +6451,27 @@ tr:last-child td {
     flex: 1 0 auto;
   }
 
+  .semantic-scan-extents > header {
+    display: grid;
+  }
+
+  .semantic-scan-extents > header a {
+    justify-self: start;
+  }
+
+  .semantic-scan-extents > div {
+    overflow: visible;
+  }
+
+  .semantic-scan-extents > div > div {
+    grid-template-columns: 30px minmax(80px, 1.25fr) minmax(92px, 1.1fr) minmax(55px, 0.7fr);
+    min-width: 0;
+  }
+
+  .semantic-scan-extents > div > div > :nth-child(5) {
+    grid-column: 1 / -1;
+  }
+
   .semantic-evidence-metrics,
   .semantic-source-lineage,
     .semantic-source-raw,
@@ -6989,6 +7080,128 @@ tr:last-child td {
   padding: 14px 0 18px;
 }
 
+.gpu-checkpoint-summary {
+  margin-bottom: 18px;
+  border: 1px solid var(--border);
+}
+
+.gpu-checkpoint-summary > header {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.7fr) minmax(0, 1.3fr);
+  gap: 18px;
+  align-items: center;
+  padding: 13px 14px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-checkpoint-summary > header > div:first-child {
+  display: grid;
+  gap: 7px;
+}
+
+.gpu-checkpoint-summary > header > div:first-child > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 0.6rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.gpu-checkpoint-summary dl {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  background: var(--border);
+}
+
+.gpu-checkpoint-summary dl > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 9px;
+  background: var(--surface-2);
+}
+
+.gpu-checkpoint-summary dt {
+  color: var(--faint);
+  font-size: 0.52rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gpu-checkpoint-summary dd {
+  margin: 0;
+  color: var(--text-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.gpu-checkpoint-summary .table-scroll {
+  margin: 0;
+}
+
+.gpu-checkpoint-summary table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: collapse;
+  font-size: 0.68rem;
+}
+
+.gpu-checkpoint-summary th,
+.gpu-checkpoint-summary td {
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.gpu-checkpoint-summary thead th {
+  color: var(--faint);
+  background: var(--surface-2);
+  font-size: 0.54rem;
+  text-transform: uppercase;
+}
+
+.gpu-checkpoint-summary tbody th {
+  color: var(--text-strong);
+  font-weight: 750;
+}
+
+.gpu-checkpoint-summary td code {
+  color: var(--blue);
+  font-size: 0.65rem;
+}
+
+.gpu-checkpoint-contract {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+  background: var(--border);
+}
+
+.gpu-checkpoint-contract p {
+  min-width: 0;
+  padding: 11px;
+  margin: 0;
+  color: var(--muted);
+  background: var(--surface);
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
+.gpu-checkpoint-contract strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--text-strong);
+  font-size: 0.6rem;
+}
+
 .workbench-origin {
   display: inline-flex;
   align-items: center;
@@ -7433,6 +7646,10 @@ tr:last-child td {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .gpu-checkpoint-summary > header {
+    grid-template-columns: 1fr;
+  }
+
   .gpu-workbench-lower {
     grid-template-columns: 1fr;
   }
@@ -7500,8 +7717,28 @@ tr:last-child td {
   }
 
   .gpu-detail-grid,
+  .gpu-checkpoint-contract,
   .live-kfd-current-paths > div {
     grid-template-columns: 1fr;
+  }
+
+  .gpu-checkpoint-summary dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .gpu-checkpoint-summary table {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  .gpu-checkpoint-summary th,
+  .gpu-checkpoint-summary td {
+    padding: 8px;
+    overflow-wrap: anywhere;
+  }
+
+  .gpu-checkpoint-summary th:first-child {
+    width: 44%;
   }
 
   .gpu-capabilities li {
