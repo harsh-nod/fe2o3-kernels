@@ -8,8 +8,8 @@
     "hardwareObserved": false
   },
   "recursiveAggregateV2": {
-    "commit": "69ab4a8aa96c6d82bd64586ef47bcd45c7afe75b",
-    "tree": "233f24d5be8467b381a28d6aa5f2c1448f288f1d",
+    "commit": "1205ddc59826782eb83911007f4421a855b639e7",
+    "tree": "ac1dacf324c21eb1c57a8cd103cf9dbc2e5962d3",
     "admittedShapes": [
       "unit",
       "array",
@@ -17,6 +17,12 @@
       "struct"
     ],
     "maximumStructuralNodes": 256,
+    "bundleVersion": 5,
+    "productionKirVersion": 8,
+    "simulationKirVersion": 10,
+    "debuggerCommand": "fe2o3-debug sim --bundle-v5",
+    "runtimeBackend": "SimRuntimeBackendV1",
+    "canonicalTrap": "dynamic_terminal_if_reached",
     "physicalIndirectCarrierRead": false,
     "hardwareObserved": false
   },

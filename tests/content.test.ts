@@ -2580,6 +2580,7 @@ describe("curriculum integrity", () => {
     expect(host).toContain("--bundle-version 5");
     expect(host).toContain("fe2o3-debug sim --bundle-v5");
     expect(host).toContain("ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed");
+    expect(host).toContain("ordinary_recursive_aggregates_export_and_execute_bundle_v5");
     expect(host).toContain("explicitly_sized_dynamic_lds");
     expect(host).not.toContain("--kir-v7");
     const sourceDebug =
@@ -2613,7 +2614,9 @@ describe("curriculum integrity", () => {
     expect(result).toContain("explicit kernarg bytes: 40");
     expect(result).toContain("session.simulated: true");
     expect(result).toContain("hardware passes: 0");
-    expect(result).toContain("Recursive ABI milestone at 69ab4a8aa");
+    expect(result).toContain("Recursive Bundle V5 milestone at 1205ddc59");
+    expect(result).toContain("SimRuntimeBackendV1: completed");
+    expect(result).toContain("canonical bounds trap: dynamic error only when reached");
     expect(result).toContain(
       readFileSync("examples/source_simulation_result.json", "utf8").trim(),
     );

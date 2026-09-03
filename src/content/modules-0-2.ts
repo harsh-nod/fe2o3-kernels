@@ -65,6 +65,8 @@ const aggregateSimulationTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_struct_argument_exports_exact_v4_components -- --ignored --exact";
 const recursiveAggregateSimulationTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed -- --ignored --exact";
+const recursiveAggregateV5ExecutionTestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_recursive_aggregates_export_and_execute_bundle_v5 -- --ignored --exact";
 const v5SimulationExportCommand =
   "./target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output \"$PWD/wave-reduce-f32-v5.fe2sim\" --target gfx950 --bundle-version 5 --target-dir target/tutorial-v5-export -- --package fe2o3-production-ranked-bounds-fixture --features wave_reduce_f32 --lib";
 const v5DebuggerCommand =
@@ -514,7 +516,7 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 69ab4a8aa, the Linux-only exporter retains exact production KIR and recursively scalarizes a bounded pointer-free Unit, array, tuple, or struct from rustc-owned paths, offsets, validity, pass mode, and KIR slots. The public CPU debugger consumes independently rederived logical leaves; it never reads an Indirect carrier pointer or aggregate padding. Bundle V5 also runs the ordinary gfx950 f32 wave reduction as exact same-module KIR V10. Neither route is a KFD launch or performance prediction.",
+        "At compiler 1205ddc59, the Linux-only exporter retains exact production KIR and recursively scalarizes a bounded pointer-free Unit, array, tuple, or struct from rustc-owned paths, offsets, validity, pass mode, and KIR slots. The public CPU debugger and SimRuntimeBackendV1 execute those independently rederived logical leaves through Bundle V5/KIR V10; neither reads an Indirect carrier pointer or aggregate padding. The same Bundle V5 surface runs the ordinary gfx950 f32 wave reduction. No route is a KFD launch or performance prediction.",
       reference: qualificationReference(
         currentMilestones.recursiveAggregateV2.commit,
         currentMilestones.recursiveAggregateV2.tree,
@@ -529,6 +531,7 @@ const cpuSimulation: Lesson = {
           aggregateDebuggerCommand,
           aggregateSimulationTestCommand,
           recursiveAggregateSimulationTestCommand,
+          recursiveAggregateV5ExecutionTestCommand,
           v5SimulationExportCommand,
           v5DebuggerCommand,
           v5SimulationTestCommand,
@@ -628,7 +631,8 @@ REQUEST='${aggregateSimulationRequest.trim()}'
 printf '%s\\n' "$REQUEST" > aggregate-pair-struct-request.json
 printf '%s\\n' '{"operation":"step","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"direction":"forward","granularity":"operation","count":1}' | ${aggregateDebuggerCommand}
 
-# Exercise the ordinary recursive array/nested-struct export and hostile shapes.
+# Exercise the ordinary recursive array/nested-struct Bundle V5 execution and hostile shapes.
+${recursiveAggregateV5ExecutionTestCommand}
 ${recursiveAggregateSimulationTestCommand}
 
 # Export ordinary gfx950 V9 wave code into exact same-module V10 custody.
@@ -647,7 +651,7 @@ ${dynamicLdsSimulationTestCommand}`,
 
 Aggregate Bundle V4 ABI boundary
 
-Admitted now at 69ab4a8aa
+Admitted and executable through Bundle V5 at 1205ddc59
   shapes: pointer-free Unit, fixed array, tuple, and struct
   bound: at most 256 structural nodes
   leaves: exact path, type, byte offset, scalar validity, ownership, and KIR slot
@@ -655,6 +659,9 @@ Admitted now at 69ab4a8aa
               and sized non-stack/non-metadata Indirect
   execution: logical leaf inputs after independent simulator rederivation
   checked example: [u64; 2] and nested repr(C) aggregate
+  production KIR: exact V8 identity
+  simulator KIR: exact same-module V10
+  consumers: fe2o3-debug sim --bundle-v5 and SimRuntimeBackendV1
 
 Typed unavailable
   enums and niche materialization
@@ -672,6 +679,8 @@ Bundle V5 exactness boundary
   admission: re-encode the V10 module as V9 and require exact digest and length
   RegionSlice: pointer @ 0, usize @ 8, ZST marker ignored
   source map: exact bundle-bound V2 identity
+  compiler bounds trap: admitted; terminal only if dynamically reached
+  other external diagnostics: typed unavailable
   authority: observation only; no compiler, load, launch, or hardware authority`,
       explanatory: true,
       notice:
@@ -700,12 +709,16 @@ fe2o3-debug sim --bundle-v4
   session.simulated: true
   session.hardware_observed: false
 
-Recursive ABI milestone at 69ab4a8aa
+Recursive Bundle V5 milestone at 1205ddc59
   [u64; 2]: admitted through exact sized Indirect evidence
   nested repr(C) struct: admitted as exact recursive scalar leaves
+  production KIR V8 -> exact same-module simulator KIR V10
+  fe2o3-debug sim --bundle-v5: completed
+  SimRuntimeBackendV1: completed
   hostile roster/path/offset/validity/overlap: rejected
   enum, embedded pointer, needs-drop: typed unavailable
   physical carrier/padding reads: none
+  canonical bounds trap: dynamic error only when reached
 
 Physical differential at 69ae3731b
   hardware passes: 0

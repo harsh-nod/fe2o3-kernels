@@ -46,6 +46,14 @@ if (
   JSON.stringify(currentMilestonesData.recursiveAggregateV2.admittedShapes) !==
     JSON.stringify(["unit", "array", "tuple", "struct"]) ||
   currentMilestonesData.recursiveAggregateV2.maximumStructuralNodes !== 256 ||
+  currentMilestonesData.recursiveAggregateV2.bundleVersion !== 5 ||
+  currentMilestonesData.recursiveAggregateV2.productionKirVersion !== 8 ||
+  currentMilestonesData.recursiveAggregateV2.simulationKirVersion !== 10 ||
+  currentMilestonesData.recursiveAggregateV2.debuggerCommand !==
+    "fe2o3-debug sim --bundle-v5" ||
+  currentMilestonesData.recursiveAggregateV2.runtimeBackend !== "SimRuntimeBackendV1" ||
+  currentMilestonesData.recursiveAggregateV2.canonicalTrap !==
+    "dynamic_terminal_if_reached" ||
   currentMilestonesData.recursiveAggregateV2.physicalIndirectCarrierRead !== false ||
   currentMilestonesData.recursiveAggregateV2.hardwareObserved !== false ||
   !exactObject.test(currentMilestonesData.exactBundleV5.commit) ||

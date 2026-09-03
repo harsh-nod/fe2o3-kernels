@@ -389,7 +389,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "At compiler 69ab4a8aa, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Bundle V4 recursively projects a bounded pointer-free Unit, fixed array, tuple, or struct into exact logical scalar leaves using rustc-owned paths, byte offsets, validity, pass mode, and KIR slots. The simulator independently rederives that roster and never reads physical Indirect carrier pointers or aggregate padding. The Bundle V5 route retains the original production KIR V8/V9 identity, embeds a lossless same-module KIR V10 encoding, and carries Source Map V2, semantic MIR, and both storage maps. fe2o3-debug sim --bundle-v5 executes that exact V10 custody without recompiling. It does not add a second importer or lowerer."
+        "text": "At compiler 1205ddc59, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Bundle V4 recursively projects a bounded pointer-free Unit, fixed array, tuple, or struct into exact logical scalar leaves using rustc-owned paths, byte offsets, validity, pass mode, and KIR slots. Bundle V5 now executes those independently rederived leaves through exact same-module KIR V10 in both fe2o3-debug sim --bundle-v5 and SimRuntimeBackendV1; neither reads physical Indirect carrier pointers or aggregate padding. The route retains the original production KIR V8/V9 identity and carries Source Map V2, semantic MIR, and both storage maps. It does not add a second importer or lowerer."
       },
       {
         "type": "table",
@@ -411,8 +411,8 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Semantic execution and replay",
-            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, compiler-projected aggregate leaves, and a bounded runnable-invocation decision record. Bundle V5 runs the ordinary gfx950 f32 wave-reduction production body as exact KIR V10; commit 62965b3f8 separately executes explicitly sized dynamic LDS in direct KIR V10.",
-            "Legacy Bundle V4 remains canonical KIR V7. Production source lowering for V10-only memory intrinsics is unavailable. Unsupported operations, missing dynamic-LDS size, changed request or artifact custody, transcript drift, and resource-limit violations fail before replay is accepted."
+            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, compiler-projected aggregate leaves, and a bounded runnable-invocation decision record. Bundle V5 runs ordinary recursive aggregates from production KIR V8 and the gfx950 f32 wave-reduction body from production KIR V9 as exact same-module KIR V10; commit 62965b3f8 separately executes explicitly sized dynamic LDS in direct KIR V10.",
+            "Legacy Bundle V4 remains canonical KIR V7. The exact canonical compiler bounds trap is a dynamic terminal error only when reached; other external diagnostics remain typed unavailable. Production source lowering for V10-only memory intrinsics is unavailable. Unsupported operations, missing dynamic-LDS size, changed request or artifact custody, transcript drift, and resource-limit violations fail before replay is accepted."
           ]
         ]
       },
@@ -436,7 +436,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The production regressions retain both ABI and executable-IR evidence. Bundle V4 places an ordinary repr(C) struct's leaves at offsets 0 and 8, a writable slice at 16 and 24, and a scalar at 32 in a 40-byte, 8-byte-aligned kernarg image. At 69ab4a8aa it also accepts `[u64; 2]` and a nested repr(C) tuple/array struct through exact recursive logical leaves, while independently rejecting roster, path, offset, validity, overlap, enum, embedded-pointer, and needs-drop substitutions. Bundle V5 adds the exact production V9 gfx950 wave_reduce_f32 body as same-module KIR V10 and validates the owned RegionSlice wrapper as a pointer/usize scalar pair with its ZST marker ignored. Every CPU result remains simulated=true and hardware_observed=false."
+        "text": "The production regressions retain both ABI and executable-IR evidence. Bundle V4 places an ordinary repr(C) struct's leaves at offsets 0 and 8, a writable slice at 16 and 24, and a scalar at 32 in a 40-byte, 8-byte-aligned kernarg image. At 1205ddc59, `[u64; 2]` and a nested repr(C) tuple/array struct execute from exact production KIR V8 through Bundle V5/KIR V10 in both the debugger and runtime adapter, while independently rejecting roster, path, offset, validity, overlap, enum, embedded-pointer, and needs-drop substitutions. Bundle V5 also carries the exact production V9 gfx950 wave_reduce_f32 body and validates the owned RegionSlice wrapper as a pointer/usize scalar pair with its ZST marker ignored. Every CPU result remains simulated=true and hardware_observed=false."
       },
       {
         "type": "table",
