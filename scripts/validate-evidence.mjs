@@ -252,6 +252,8 @@ try {
     ["race_replay_schedule_v1.json", "replaySchedule"],
     ["wave32_collectives_result_v1.json", "wave32Result"],
     ["wave64_collectives_result_v1.json", "wave64Result"],
+    ["workgroup_reduce_queries_v1.jsonl", "workgroupReduceQueries"],
+    ["workgroup_scan_matrix_v1.json", "workgroupScanMatrix"],
   ];
   for (const [file, key] of debugSimArtifacts) {
     const observed = createHash("sha256")

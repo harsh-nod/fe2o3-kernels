@@ -5398,6 +5398,7 @@ tr:last-child td {
 .semantic-exploration-body,
 .semantic-source-body,
 .semantic-reduction-body,
+.semantic-scan-body,
 .semantic-wave-body,
 .semantic-counter-body,
 .semantic-pc-body {
@@ -5577,6 +5578,246 @@ tr:last-child td {
 }
 
 .semantic-reduction-body > .semantic-boundary-note {
+  margin: 12px;
+}
+
+.semantic-scan-layers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  gap: 1px;
+}
+
+.semantic-scan-layers > span {
+  min-height: 56px;
+  padding: 10px 12px;
+  background: var(--surface);
+}
+
+.semantic-scan-grid,
+.semantic-scan-custody {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  gap: 1px;
+}
+
+.semantic-scan-grid > section,
+.semantic-scan-custody > section {
+  min-width: 0;
+  padding: 14px;
+  background: var(--surface);
+}
+
+.semantic-scan-grid h4,
+.semantic-scan-custody h4 {
+  margin: 3px 0 12px;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+}
+
+.semantic-scan-matrix > div {
+  display: grid;
+  grid-template-columns: 0.8fr 0.45fr minmax(180px, 1.35fr) minmax(180px, 1.35fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-scan-matrix > div:first-child {
+  min-height: 32px;
+  color: var(--faint);
+  background: var(--surface-2);
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.semantic-scan-matrix strong,
+.semantic-scan-matrix code,
+.semantic-scan-matrix span {
+  min-width: 0;
+  color: var(--text-strong);
+  font-size: 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+.semantic-scan-events {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.semantic-scan-events li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-scan-events li > span {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  color: var(--accent-strong);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+}
+
+.semantic-scan-events strong {
+  min-width: 0;
+  color: var(--text);
+  font-size: 0.65rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.semantic-scan-schedules {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 12px;
+  border: 1px solid var(--border);
+}
+
+.semantic-scan-schedules > span {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 9px;
+}
+
+.semantic-scan-schedules > span:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.semantic-scan-schedules > span:nth-child(-n + 2) {
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-scan-schedules small,
+.semantic-helper-custody small {
+  color: var(--faint);
+  font-size: 0.54rem;
+  text-transform: uppercase;
+}
+
+.semantic-scan-schedules strong {
+  color: var(--text-strong);
+  font-size: 0.62rem;
+}
+
+.semantic-trace-versions {
+  border-top: 1px solid var(--border);
+}
+
+.semantic-trace-versions > div {
+  display: grid;
+  grid-template-columns: 0.48fr 1fr 1.25fr;
+  gap: 8px;
+  align-items: center;
+  min-height: 38px;
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-trace-versions strong,
+.semantic-trace-versions code,
+.semantic-trace-versions span {
+  min-width: 0;
+  color: var(--text-strong);
+  font-size: 0.62rem;
+  overflow-wrap: anywhere;
+}
+
+.semantic-helper-custody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr) 18px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+}
+
+.semantic-helper-custody > span {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 8px;
+  border-left: 2px solid var(--border-strong);
+}
+
+.semantic-helper-custody > span.physical {
+  border-left-color: var(--accent);
+  background: var(--surface-2);
+}
+
+.semantic-helper-custody svg {
+  color: var(--accent);
+}
+
+.semantic-helper-custody code {
+  color: var(--text-strong);
+  font-size: 0.58rem;
+  overflow-wrap: anywhere;
+}
+
+.semantic-scan-custody section > p:last-child {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.65rem;
+  line-height: 1.55;
+}
+
+.semantic-scan-sources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid var(--border);
+}
+
+.semantic-scan-sources a {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  padding: 10px 12px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+}
+
+.semantic-scan-sources a:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.semantic-scan-sources a:hover span {
+  color: var(--accent-strong);
+}
+
+.semantic-scan-sources span {
+  color: var(--text-strong);
+  font-size: 0.63rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.semantic-scan-sources code {
+  min-width: 0;
+  color: var(--faint);
+  font-size: 0.56rem;
+  overflow-wrap: anywhere;
+}
+
+.semantic-scan-raw {
+  border-top: 1px solid var(--border);
+}
+
+.semantic-scan-body > .semantic-boundary-note {
   margin: 12px;
 }
 
@@ -6088,6 +6329,11 @@ tr:last-child td {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .semantic-scan-grid,
+  .semantic-scan-custody {
+    grid-template-columns: 1fr;
+  }
+
   .semantic-wave-operations {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -6137,8 +6383,10 @@ tr:last-child td {
 
   .semantic-evidence-metrics,
   .semantic-source-lineage,
-  .semantic-source-raw,
-  .semantic-reduction-grid,
+    .semantic-source-raw,
+    .semantic-reduction-grid,
+    .semantic-scan-layers,
+    .semantic-scan-sources,
   .semantic-witness-grid,
   .semantic-wave-summary,
   .semantic-counter-dispatches,
@@ -6164,6 +6412,26 @@ tr:last-child td {
 
   .semantic-reduction-results > div {
     min-width: 470px;
+  }
+
+  .semantic-scan-matrix {
+    overflow-x: auto;
+  }
+
+  .semantic-scan-matrix > div {
+    min-width: 690px;
+  }
+
+  .semantic-helper-custody {
+    grid-template-columns: 1fr;
+  }
+
+  .semantic-helper-custody > svg {
+    display: none;
+  }
+
+  .semantic-scan-sources a:nth-child(odd) {
+    border-right: 0;
   }
 
   .semantic-wave-operations {

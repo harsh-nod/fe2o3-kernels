@@ -392,6 +392,10 @@ const narrativeRegistry = deepFreeze({
         "text": "At compiler 1205ddc59, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Bundle V4 recursively projects a bounded pointer-free Unit, fixed array, tuple, or struct into exact logical scalar leaves using rustc-owned paths, byte offsets, validity, pass mode, and KIR slots. Bundle V5 now executes those independently rederived leaves through exact same-module KIR V10 in both fe2o3-debug sim --bundle-v5 and SimRuntimeBackendV1; neither reads physical Indirect carrier pointers or aggregate padding. The route retains the original production KIR V8/V9 identity and carries Source Map V2, semantic MIR, and both storage maps. It does not add a second importer or lowerer."
       },
       {
+        "type": "paragraph",
+        "text": "The public 2df6130c5 scan milestone keeps three evidence layers separate. The ordinary API compile contract covers inclusive and exclusive u32, i32, and f32 scans. Three attributed representatives, inclusive u32, exclusive i32, and inclusive f32, reach both production LLVM backends through Semantic MIR V10 and production KIR V8. Separately, six direct KIR V10 semantic cases match exact prefix oracles under canonical, seed 0x5ca1, and replay schedules while the debugger retains lane, KIR site, LDS, barrier, and decision evidence. No ordinary scan Bundle V5 execution is retained, so the tutorial does not present those direct KIR observations as source-bundle execution."
+      },
+      {
         "type": "table",
         "headers": [
           "Boundary",
@@ -411,7 +415,7 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Semantic execution and replay",
-            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, compiler-projected aggregate leaves, and a bounded runnable-invocation decision record. Bundle V5 runs ordinary recursive aggregates from production KIR V8 and the gfx950 f32 wave-reduction body from production KIR V9 as exact same-module KIR V10; commit 62965b3f8 separately executes explicitly sized dynamic LDS in direct KIR V10.",
+            "Formal memory, exact scalar bits, cooperative barriers, integer atomics and fences, compiler-projected aggregate leaves, and a bounded runnable-invocation decision record. Bundle V5 runs ordinary recursive aggregates from production KIR V8 and the gfx950 f32 wave-reduction body from production KIR V9 as exact same-module KIR V10; commit 62965b3f8 separately executes explicitly sized dynamic LDS in direct KIR V10. At 2df6130c5, direct KIR V10 executes all six admitted workgroup scan type/mode pairs with exact seeded replay and debugger events.",
             "Legacy Bundle V4 remains canonical KIR V7. The exact canonical compiler bounds trap is a dynamic terminal error only when reached; other external diagnostics remain typed unavailable. Production source lowering for V10-only memory intrinsics is unavailable. Unsupported operations, missing dynamic-LDS size, changed request or artifact custody, transcript drift, and resource-limit violations fail before replay is accepted."
           ]
         ]
@@ -436,7 +440,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The production regressions retain both ABI and executable-IR evidence. Bundle V4 places an ordinary repr(C) struct's leaves at offsets 0 and 8, a writable slice at 16 and 24, and a scalar at 32 in a 40-byte, 8-byte-aligned kernarg image. At 1205ddc59, `[u64; 2]` and a nested repr(C) tuple/array struct execute from exact production KIR V8 through Bundle V5/KIR V10 in both the debugger and runtime adapter, while independently rejecting roster, path, offset, validity, overlap, enum, embedded-pointer, and needs-drop substitutions. Bundle V5 also carries the exact production V9 gfx950 wave_reduce_f32 body and validates the owned RegionSlice wrapper as a pointer/usize scalar pair with its ZST marker ignored. Every CPU result remains simulated=true and hardware_observed=false."
+        "text": "The production regressions retain both ABI and executable-IR evidence. Bundle V4 places an ordinary repr(C) struct's leaves at offsets 0 and 8, a writable slice at 16 and 24, and a scalar at 32 in a 40-byte, 8-byte-aligned kernarg image. At 1205ddc59, `[u64; 2]` and a nested repr(C) tuple/array struct execute from exact production KIR V8 through Bundle V5/KIR V10 in both the debugger and runtime adapter, while independently rejecting roster, path, offset, validity, overlap, enum, embedded-pointer, and needs-drop substitutions. Bundle V5 also carries the exact production V9 gfx950 wave_reduce_f32 body and validates the owned RegionSlice wrapper as a pointer/usize scalar pair with its ZST marker ignored. Semantic Trace V2 additively admits exact canonical KIR V9 or V10 after independent adapter validation; Trace V1 remains exact KIR V7 and the versions never cross-decode. Every CPU result remains simulated=true and hardware_observed=false."
       },
       {
         "type": "table",
@@ -479,7 +483,7 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           [
             "CPU semantic session",
-            "Thread, logical Wave32/Wave64, workgroup and dispatch hierarchy; KIR/source breakpoints; allocation watchpoints; SSA and memory; captured stacks; source resolution and stepping; exact schedule replay.",
+            "Thread, logical Wave32/Wave64, workgroup and dispatch hierarchy; KIR/source breakpoints; allocation watchpoints; SSA and memory; captured stacks; source resolution and stepping; exact schedule replay. Workgroup scans additionally retain the logical lane, exact KIR operation, typed LDS reads/writes, barrier phase and participant count, and schedule decision ordinal.",
             "Logical waves are visual partitions, not decoded hardware wavefronts. Raw-KIR sessions correctly report source as unavailable."
           ],
           [
@@ -514,7 +518,7 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Agent contract",
-            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. At abfd64143 the fresh-process reference client independently discovers the Variant V2 service contract, submits exact retained baseline/candidate inputs, recomputes the production comparison locally, and requires stable capability/comparison response identities. Seeded simulation separately retains canonical replay schedules and byte-level race, no-race, or incomplete evidence.",
+            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. At abfd64143 the fresh-process reference client independently discovers the Variant V2 service contract, submits exact retained baseline/candidate inputs, recomputes the production comparison locally, and requires stable capability/comparison response identities. Seeded simulation separately retains canonical replay schedules and byte-level race, no-race, or incomplete evidence. Instance-qualified custody maps multiple source-root occurrences to one byte-identical physical helper without duplicating its KIR node.",
             "The Variant V2 service is read-only and has no execution, attach, scheduling, collection, decoder, or launch authority. Without authenticated PC/ATT evidence it reports baseline/candidate correlation, the profiler-KIR to Characteristic-KIR bridge, and causality as typed unavailable. Authenticated GPU wave identity, live ATT/PC collection, complete hardware timelines, and end-to-end causal diagnosis remain open work."
           ]
         ]
@@ -553,13 +557,13 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "info",
         "title": "Current milestone: replayable interleavings, logical waves, and exact scalar bits",
-        "text": "The simulator covers bounded structured scalar control flow and internal calls; booleans and fixed-width integers; D1-D3 launch queries; private, typed global, and static scalar workgroup memory; cooperative barriers; admitted integer atomic kinds, legal orderings and scopes; and explicit fence order points. Seeded exploration sweeps an explicit schedule budget and retains at most one canonical replay witness for race, no-race, and incomplete outcomes without claiming schedule-space exhaustion. Full-active logical Wave32/Wave64 lane ID, ballot, any, all, and integer shuffle-index collectives are exact; partial or divergent participation fails with structured masks and KIR sites. F16, BF16, F32, and F64 constants, memory, arithmetic, comparisons, selects, casts, integer conversions, fused multiply-add, rounding, and BF16x2 use pinned software floating-point semantics and preserve exact bits rather than host floating arithmetic."
+        "text": "The simulator covers bounded structured scalar control flow and internal calls; booleans and fixed-width integers; D1-D3 launch queries; private, typed global, and static scalar workgroup memory; cooperative barriers; admitted integer atomic kinds, legal orderings and scopes; and explicit fence order points. Seeded exploration sweeps an explicit schedule budget and retains at most one canonical replay witness for race, no-race, and incomplete outcomes without claiming schedule-space exhaustion. Full-active logical Wave32/Wave64 lane ID, ballot, any, all, and integer shuffle-index collectives are exact; partial or divergent participation fails with structured masks and KIR sites. Inclusive and exclusive u32, i32, and strict f32 workgroup scans execute as fixed power-of-two KIR V10 recipes under canonical, seeded, and replay schedules. F16, BF16, F32, and F64 constants, memory, arithmetic, comparisons, selects, casts, integer conversions, fused multiply-add, rounding, and BF16x2 use pinned software floating-point semantics and preserve exact bits rather than host floating arithmetic."
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Unsupported semantics fail closed",
-        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, unadmitted wave or matrix operations, dynamically unsized LDS requests, unresolved external calls, unsupported memory intrinsics, and inline assembly remain typed unsupported. Explicitly sized dynamic LDS is implemented for admitted direct KIR V10; ordinary gfx950 f32 wave reduction now reaches V10 through Bundle V5, while legacy Bundle V4 remains KIR V7. Production source lowering for V10-only memory intrinsics is still unavailable. Source Map V2 retains exact unchanged KIR parameters; moved, mutated, dropped, storage-reset, mutably aliased, projected, local, and unrepresented composite values stay typed unavailable. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
+        "text": "Unsupported scalar math such as sqrt, sin, cos, exp and log, float atomics, unadmitted wave or matrix operations, dynamically unsized LDS requests, unresolved external calls, unsupported memory intrinsics, and inline assembly remain typed unsupported. Explicitly sized dynamic LDS is implemented for admitted direct KIR V10; ordinary gfx950 f32 wave reduction now reaches V10 through Bundle V5, while legacy Bundle V4 remains KIR V7. Workgroup scan evidence is limited to power-of-two widths in 1..=256, and the six semantic results are direct KIR observations rather than retained ordinary-source Bundle executions. Source Map V2 retains exact unchanged KIR parameters; moved, mutated, dropped, storage-reset, mutably aliased, projected, local, and unrepresented composite values stay typed unavailable. No result establishes source-to-KIR refinement, compiler correctness, race freedom, LLVM or ISA behavior, GPU equivalence, timing, profiling, or performance prediction."
       }
     ]
   },
@@ -1959,7 +1963,7 @@ const narrativeRegistry = deepFreeze({
       ),
       {
         type: "paragraph",
-        text: "Where an independent sequential oracle exists, run the same typed inputs through it and the exact bundle. A mismatch blocks the candidate immediately. Matching finite cases improve confidence in the request, oracle, bundle, and source map, but compiler-bundle binding alone does not prove protected compiler execution or discharge any universal compiler or Verus obligation.",
+        text: "Where an independent sequential oracle exists, run the same typed inputs through it and the exact bundle. A mismatch blocks the candidate immediately. For the scan milestone, direct KIR tests cover six finite type/mode cases while only three attributed source representatives reach production LLVM, and no ordinary scan Bundle execution is retained. Matching finite cases improve confidence in the semantic recipe, scheduler, and debugger events, but the unavailable external protected-production proof environment means they cannot prove protected compiler execution or discharge any universal compiler or Verus obligation.",
       },
     ],
   },

@@ -19,6 +19,7 @@ import {
   debugSimSourceVariableFixture,
   debugSimWaveFixtures,
   debugSimWorkgroupReductionFixture,
+  debugSimWorkgroupScanFixture,
   type ExplorationEvidenceId,
   type LogicalWaveWidth,
 } from "../content/debug-sim-milestone";
@@ -245,9 +246,9 @@ function WorkgroupReductionPanel() {
           </header>
           <p>
             Entry and helper bodies use the exact correspondence owner, semantic function, role,
-            symbol, and absolute KIR ordinal. Disjoint multi-root closures survive Source Map V2,
-            protected lineage, and independent finalizer replay; duplicate, reordered,
-            overlapping, or substituted records fail closed.
+            symbol, and absolute KIR ordinal. Instance-qualified root occurrences survive Source
+            Map V2, protected lineage, and independent finalizer replay; duplicate, reordered,
+            ambiguous, or substituted records fail closed without duplicating a shared helper body.
           </p>
         </section>
         <section>
@@ -272,9 +273,145 @@ function WorkgroupReductionPanel() {
         <span>
           This is bounded CPU semantics for the admitted production KIR, not GPU execution,
           timing, or performance prediction. A 32-lane launch is a typed workgroup mismatch.
-          Shared semantic helpers reused across roots, new wave scans or explicit active-mask
-          operations, and unsupported pointer, enum, needs-drop, adjusted, or complex-cast shapes
-          remain unavailable.
+          Workgroup scans are documented separately below; explicit active-mask operations and
+          unsupported pointer, enum, needs-drop, adjusted, or complex-cast shapes remain
+          unavailable.
+        </span>
+      </p>
+    </div>
+  );
+}
+
+function WorkgroupScanPanel() {
+  const fixture = debugSimWorkgroupScanFixture;
+  const layers = fixture.evidence.evidence_layers;
+  return (
+    <div className="semantic-scan-body">
+      <div className="semantic-source-lineage">
+        <span>
+          <GitCommitHorizontal size={15} aria-hidden="true" /> compiler milestone
+          <a
+            href={`https://github.com/harsh-nod/fe2o3/commit/${fixture.compiler.commit}`}
+            rel="noreferrer"
+            target="_blank"
+            title={fixture.compiler.commit}
+          >
+            <code>{shortIdentity(fixture.compiler.commit)}</code>
+          </a>
+        </span>
+        <span>
+          semantic lowering
+          <code>MIR V{fixture.compiler.semanticMirVersion} / KIR V{fixture.compiler.simulationKirVersion}</code>
+        </span>
+        <span>
+          tested schedules
+          <code>canonical / seeded / replay</code>
+        </span>
+        <span>
+          debugger seed
+          <code>0x{fixture.compiler.debuggerSchedule.toString(16)}</code>
+        </span>
+      </div>
+
+      <div className="semantic-scan-layers" aria-label="Workgroup scan evidence layers">
+        <TruthCell label="ordinary API pairs" value={String(layers.ordinary_api_compile_contracts)} />
+        <TruthCell label="production examples" value={String(layers.ordinary_production_kernel_examples)} />
+        <TruthCell label="semantic CPU cases" value={String(layers.direct_kir_semantic_simulations)} />
+        <TruthCell label="retained ordinary bundles" value={String(layers.retained_ordinary_bundle_executions)} />
+      </div>
+
+      <div className="semantic-scan-grid">
+        <section aria-labelledby="semantic-scan-matrix-heading">
+          <p className="debug-label">Six exact prefix oracles</p>
+          <h4 id="semantic-scan-matrix-heading">Type and mode stay visible at every lane</h4>
+          <div className="semantic-scan-matrix" role="table" aria-label="Workgroup scan semantic results">
+            <div role="row">
+              <span role="columnheader">mode</span>
+              <span role="columnheader">type</span>
+              <span role="columnheader">input lanes</span>
+              <span role="columnheader">output prefixes</span>
+            </div>
+            {fixture.cases.map((testCase) => (
+              <div key={`${testCase.mode}-${testCase.scalar}`} role="row">
+                <strong role="cell">{testCase.mode}</strong>
+                <code role="cell">{testCase.scalar}</code>
+                <code role="cell">[{testCase.input.join(", ")}]</code>
+                <code role="cell">[{testCase.output.join(", ")}]</code>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="semantic-scan-evidence-heading">
+          <p className="debug-label">Debugger event custody</p>
+          <h4 id="semantic-scan-evidence-heading">One decision links a lane, KIR site, LDS epoch, and barrier</h4>
+          <ol className="semantic-scan-events">
+            {fixture.evidence.debugger_evidence.map((item, index) => (
+              <li key={item}>
+                <span>{index + 1}</span>
+                <strong>{item}</strong>
+              </li>
+            ))}
+          </ol>
+          <div className="semantic-scan-schedules" aria-label="Scan schedule checks">
+            <span><small>canonical</small><strong>prefix oracle matches</strong></span>
+            <span><small>seed 0x5ca1</small><strong>same exact arguments</strong></span>
+            <span><small>persisted replay</small><strong>same exact arguments</strong></span>
+            <span><small>changed input</small><strong>binding mismatch</strong></span>
+          </div>
+        </section>
+      </div>
+
+      <div className="semantic-scan-custody">
+        <section aria-labelledby="semantic-trace-version-heading">
+          <p className="debug-label">Additive trace versioning</p>
+          <h4 id="semantic-trace-version-heading">Semantic Trace V2 admits exact KIR V9 or V10</h4>
+          <div className="semantic-trace-versions" role="table" aria-label="Semantic Trace version custody">
+            <div role="row"><strong role="cell">V1</strong><code role="cell">exact KIR V7</code><span role="cell">unchanged</span></div>
+            <div role="row"><strong role="cell">V2</strong><code role="cell">exact KIR V9 or V10</code><span role="cell">canonical bytes revalidated</span></div>
+            <div role="row"><strong role="cell">projection</strong><code role="cell">none</code><span role="cell">versions never cross-decode</span></div>
+          </div>
+        </section>
+        <section aria-labelledby="semantic-shared-helper-heading">
+          <p className="debug-label">Shared physical helper</p>
+          <h4 id="semantic-shared-helper-heading">One body, instance-qualified source custody</h4>
+          <div className="semantic-helper-custody" aria-label="Shared helper instance custody">
+            <span><small>root A occurrence</small><code>owner A + instance 0</code></span>
+            <Network size={17} aria-hidden="true" />
+            <span className="physical"><small>physical helper</small><code>one KIR node</code></span>
+            <Network size={17} aria-hidden="true" />
+            <span><small>root B occurrence</small><code>owner B + instance 0</code></span>
+          </div>
+          <p>
+            The occurrence sidecar keeps forward and reverse owner queries exact without
+            duplicating the shared physical function. Admission still requires byte-identical
+            helper semantics, body, bindings, spans, role, and symbol.
+          </p>
+        </section>
+      </div>
+
+      <div className="semantic-scan-sources" aria-label="Pinned workgroup scan sources">
+        {fixture.sources.map((source) => (
+          <a href={source.href} key={`${source.label}:${source.path}`} rel="noreferrer" target="_blank">
+            <span>{source.label}</span>
+            <code>{source.path}</code>
+          </a>
+        ))}
+      </div>
+
+      <details className="semantic-raw-evidence semantic-scan-raw">
+        <summary><Braces size={15} aria-hidden="true" /> Exact tutorial evidence index</summary>
+        <pre data-testid="workgroup-scan-evidence-v1">{fixture.raw}</pre>
+      </details>
+
+      <p className="semantic-boundary-note">
+        <ShieldAlert size={15} aria-hidden="true" />
+        <span>
+          The six ordinary API combinations are compile contracts; three attributed kernel
+          representatives reach both production LLVM backends; the six displayed results come
+          from direct KIR V10 semantic tests. No ordinary scan Bundle V5 execution is retained in
+          this milestone. The external protected-production proof environment remains unavailable,
+          and none of this is GPU, hardware-validation, all-schedule, timing, or performance evidence.
         </span>
       </p>
     </div>
@@ -700,6 +837,19 @@ export function DebugSimMilestone() {
           </span>
         </header>
         <WorkgroupReductionPanel />
+      </section>
+
+      <section className="semantic-evidence-band" aria-labelledby="workgroup-scan-heading">
+        <header>
+          <div>
+            <p className="debug-label">Ordinary Rust API + direct KIR semantics</p>
+            <h3 id="workgroup-scan-heading">Debug six target-neutral prefix contracts at KIR V10</h3>
+          </div>
+          <span className="debug-schema">
+            <MapPinned size={15} /> exact lanes + LDS + barriers
+          </span>
+        </header>
+        <WorkgroupScanPanel />
       </section>
 
       <section className="semantic-evidence-band" aria-labelledby="exploration-heading">

@@ -390,6 +390,9 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("--bundle-version 4");
   await expect(codePanel).toContainText("fe2o3-debug sim --bundle-v4");
   await expect(codePanel).toContainText("--features workgroup_reduce_u32");
+  await expect(codePanel).toContainText("--test simulation workgroup_scan");
+  await expect(codePanel).toContainText("--test codec_v2");
+  await expect(codePanel).toContainText("ordinary_neutral_collectives_reach_both_target_llvm_backends");
   await expect(codePanel).toContainText('"category":"memory"');
   await expect(codePanel).toContainText('"category":"operation"');
 
@@ -398,8 +401,9 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText('"provenance":"compiler_bundle_bound"');
   await expect(codePanel).toContainText('"result":"stack"');
   await expect(codePanel).toContainText('"values":{"status":"captured"');
-  await expect(codePanel).toContainText("Multi-root semantic debug custody at e55a0117d");
-  await expect(codePanel).toContainText("shared semantic helper across roots: typed unavailable");
+  await expect(codePanel).toContainText("Multi-root semantic debug custody at 2df6130c5");
+  await expect(codePanel).toContainText("shared physical helper: one KIR body, not duplicated");
+  await expect(codePanel).toContainText("Trace V2: exact canonical KIR V9 or V10");
 
   await page.getByRole("tab", { name: "Expected result" }).click();
   await expect(codePanel).toContainText('"canonical_bytes":1187');
@@ -408,6 +412,8 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText('"barrier_releases":1');
   await expect(codePanel).toContainText('"record_sha256"');
   await expect(codePanel).toContainText("Portable workgroup reductions at 9176b9c27");
+  await expect(codePanel).toContainText("Target-neutral workgroup scans at 2df6130c5");
+  await expect(codePanel).toContainText("retained ordinary scan Bundle V5 executions: 0");
   await expect(codePanel).toContainText("f32 input 1.5 -> 96.0 (0x42c00000)");
 
   const semanticEvidence = page.getByRole("region", {
@@ -422,6 +428,21 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
       name: "Debug a portable workgroup reduction end to end",
     }),
   ).toBeVisible();
+  await expect(
+    semanticEvidence.getByRole("heading", {
+      name: "Debug six target-neutral prefix contracts at KIR V10",
+    }),
+  ).toBeVisible();
+  const scanResults = semanticEvidence.getByRole("table", {
+    name: "Workgroup scan semantic results",
+  });
+  await expect(scanResults).toContainText("[1, 3, 6, 10, 15, 21, 28, 36]");
+  await expect(scanResults).toContainText("[0, -4, 3, 1, 10, 7, 8, 14]");
+  await expect(semanticEvidence.getByRole("table", {
+    name: "Semantic Trace version custody",
+  })).toContainText("exact KIR V9 or V10");
+  await expect(semanticEvidence.getByLabel("Shared helper instance custody"))
+    .toContainText("one KIR node");
   const reductionResults = semanticEvidence.getByRole("table", {
     name: "Portable workgroup reduction results",
   });
@@ -632,6 +653,15 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
       name: "Follow one stop across entry and helper frames",
     }),
   ).toBeVisible();
+  const helperCustody = page.locator("aside").filter({
+    hasText: "Identity-bound, not name-matched",
+  });
+  await expect(helperCustody).toContainText(
+    "exact owner qualified occurrence sidecar",
+  );
+  await expect(helperCustody).toContainText(
+    "external verifier environment was not provisioned",
+  );
   await expect(page.getByText(/CPU simulator debugging is a separate/u)).toContainText(
     "CPU performance prediction",
   );

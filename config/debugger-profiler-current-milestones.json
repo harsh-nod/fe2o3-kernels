@@ -106,8 +106,8 @@
     "sourceIsaMemory": "typed_unavailable"
   },
   "multiFunctionSemanticDebugV5": {
-    "commit": "e55a0117d76866b66f8ca5d157c9e03e0c69bbb6",
-    "tree": "6be940b7574ba5f9a0ab49ea9d866b5c26fe2d3c",
+    "commit": "2df6130c5f897b5120cdf6ade44d53030690fa8b",
+    "tree": "1ddc7aec95db753ab54ff472e9457b0e6609d0f6",
     "correspondenceVersion": 5,
     "multiRootCorrespondencePayloadVersion": 2,
     "ordinaryHelperExported": true,
@@ -115,8 +115,10 @@
     "absoluteKirOrdinals": true,
     "functionQualifiedSyntheticSpans": true,
     "independentFinalizerReplay": true,
-    "multiRootCustody": "exact_disjoint_root_closures",
-    "sharedHelperInstances": "typed_unavailable"
+    "multiRootCustody": "exact_instance_qualified_root_closures",
+    "sharedHelperInstances": "exact_owner_qualified_occurrence_sidecar",
+    "physicalHelperBody": "single_shared_node_not_duplicated",
+    "protectedProductionProof": "unavailable_external_verifier_environment"
   },
   "workgroupReductionV5": {
     "commit": "9176b9c27696ac3c86814dea60ef9ecc12f10539",
@@ -134,6 +136,46 @@
     "runtimeBackend": "SimRuntimeBackendV1",
     "debuggerCommand": "fe2o3-debug sim --bundle-v5",
     "wrongRoster": "typed_workgroup_mismatch",
+    "hardwareObserved": false,
+    "performancePrediction": false
+  },
+  "workgroupScanV1": {
+    "commit": "2df6130c5f897b5120cdf6ade44d53030690fa8b",
+    "tree": "1ddc7aec95db753ab54ff472e9457b0e6609d0f6",
+    "semanticMirVersion": 10,
+    "productionKirVersion": 8,
+    "simulationKirVersion": 10,
+    "scalarTypes": ["u32", "i32", "f32"],
+    "modes": ["inclusive", "exclusive"],
+    "ordinaryApiCombinations": 6,
+    "ordinaryProductionExamples": 3,
+    "semanticSimulationCases": 6,
+    "retainedOrdinaryBundleExecutions": 0,
+    "semanticWorkgroup": [8, 1, 1],
+    "ordinaryExampleWorkgroup": [64, 1, 1],
+    "scheduleModes": ["canonical", "seeded", "persisted_replay"],
+    "seededSchedule": 23713,
+    "debuggerSchedule": 3384,
+    "debuggerEvidence": [
+      "logical_coordinates",
+      "exact_kir_site",
+      "typed_lds_reads_and_writes",
+      "barrier_phase_and_participants",
+      "schedule_identity_and_decision"
+    ],
+    "wrongRoster": "typed_workgroup_mismatch",
+    "replaySubstitution": "typed_request_binding_mismatch",
+    "hardwareObserved": false,
+    "performancePrediction": false
+  },
+  "semanticTraceV2": {
+    "commit": "2df6130c5f897b5120cdf6ade44d53030690fa8b",
+    "tree": "1ddc7aec95db753ab54ff472e9457b0e6609d0f6",
+    "v1ExactKirVersions": [7],
+    "v2ExactKirVersions": [9, 10],
+    "crossVersionProjection": false,
+    "adapterRevalidatesCanonicalBytes": true,
+    "v1EnvelopeChanged": false,
     "hardwareObserved": false,
     "performancePrediction": false
   },

@@ -108,6 +108,27 @@ describe("debugger and simulator evidence workbench", () => {
     expect(screen.getByText("One owner for each source and KIR site")).toBeInTheDocument();
     expect(screen.getByText("The schedule cannot drift to another bundle")).toBeInTheDocument();
     expect(screen.getByText(/A 32-lane launch is a typed workgroup mismatch/u)).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Debug six target-neutral prefix contracts at KIR V10",
+      }),
+    ).toBeInTheDocument();
+    const scanResults = screen.getByRole("table", {
+      name: "Workgroup scan semantic results",
+    });
+    expect(within(scanResults).getAllByText("inclusive")).toHaveLength(3);
+    expect(within(scanResults).getAllByText("exclusive")).toHaveLength(3);
+    expect(scanResults).toHaveTextContent("[1, 3, 6, 10, 15, 21, 28, 36]");
+    expect(scanResults).toHaveTextContent("[0, -4, 3, 1, 10, 7, 8, 14]");
+    expect(screen.getByLabelText("Workgroup scan evidence layers")).toHaveTextContent(
+      "retained ordinary bundles0",
+    );
+    expect(screen.getByRole("table", { name: "Semantic Trace version custody" }))
+      .toHaveTextContent("exact KIR V9 or V10");
+    expect(screen.getByLabelText("Shared helper instance custody"))
+      .toHaveTextContent("one KIR node");
+    expect(screen.getByText(/No ordinary scan Bundle V5 execution is retained/u))
+      .toBeInTheDocument();
 
     const raceTabs = screen.getByRole("tablist", { name: "Race evidence outcome" });
     await user.click(within(raceTabs).getByRole("tab", { name: "No race observed" }));
@@ -319,6 +340,12 @@ describe("live KFD debugger tutorial", () => {
     expect(
       screen.getByLabelText("Multi-function source and KIR identity flow"),
     ).toHaveTextContent("KIR-to-source");
+    expect(screen.getByText(/Identity-bound, not name-matched/u).closest("aside")).toHaveTextContent(
+      "exact owner qualified occurrence sidecar",
+    );
+    expect(screen.getByText(/Identity-bound, not name-matched/u).closest("aside")).toHaveTextContent(
+      "external verifier environment was not provisioned",
+    );
     expect(screen.getByText(/CPU simulator debugging is a separate/u)).toHaveTextContent(
       "CPU performance prediction",
     );

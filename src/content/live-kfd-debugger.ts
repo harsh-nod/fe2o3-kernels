@@ -109,9 +109,13 @@ if (
   currentMilestonesData.multiFunctionSemanticDebugV5.functionQualifiedSyntheticSpans !== true ||
   currentMilestonesData.multiFunctionSemanticDebugV5.independentFinalizerReplay !== true ||
   currentMilestonesData.multiFunctionSemanticDebugV5.multiRootCustody !==
-    "exact_disjoint_root_closures" ||
+    "exact_instance_qualified_root_closures" ||
   currentMilestonesData.multiFunctionSemanticDebugV5.sharedHelperInstances !==
-    "typed_unavailable"
+    "exact_owner_qualified_occurrence_sidecar" ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.physicalHelperBody !==
+    "single_shared_node_not_duplicated" ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.protectedProductionProof !==
+    "unavailable_external_verifier_environment"
 ) {
   throw new Error("current live debugger milestones are malformed");
 }
@@ -543,7 +547,7 @@ export const liveKfdMilestone = [
   },
   {
     label: "Multi-function source map",
-    state: "ordinary entry + helper replayed",
+    state: "entry/helper replay plus shared occurrence custody",
     truth: "inferred",
   },
 ] as const;
@@ -564,7 +568,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Artifact and semantic identity",
     fe2o3:
-      "Composes exact debugger checkpoint, compiler, simulation, and profiler identities while retaining declared, observed, inferred, and unavailable origins. Correspondence V5 preserves exact entry/helper owners and absolute KIR ordinals.",
+      "Composes exact debugger checkpoint, compiler, simulation, and profiler identities while retaining declared, observed, inferred, and unavailable origins. Correspondence V5 preserves exact entry/helper owners and absolute KIR ordinals; an instance sidecar maps shared source occurrences to one physical helper body.",
     rocgdb:
       "Provides mature live source and machine debugging. It does not use fe2o3's compiler/simulator identity graph or its declaration/proof/observation truth lattice.",
     rocprof:
@@ -672,6 +676,16 @@ export const liveKfdSources = [
   {
     label: "Ordinary helper debugger acceptance",
     path: "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+    commit: multiFunctionSemanticDebugV5Milestone.commit,
+  },
+  {
+    label: "Shared-helper instance custody",
+    path: "crates/fe2o3-hsaco-finalize/src/semantic_debug_instance_custody_v1.rs",
+    commit: multiFunctionSemanticDebugV5Milestone.commit,
+  },
+  {
+    label: "Multi-function custody boundary",
+    path: "docs/production-multifunction-semantic-debug-v1.md",
     commit: multiFunctionSemanticDebugV5Milestone.commit,
   },
   {

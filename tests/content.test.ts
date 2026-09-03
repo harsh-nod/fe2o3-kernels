@@ -21,6 +21,8 @@ import {
   debugSimPcSampleFixture,
   debugSimSourceVariableFixture,
   debugSimWorkgroupReductionFixture,
+  debugSimWorkgroupScanFixture,
+  debugSimSourceUrl,
   validateDebugSimMilestone,
 } from "../src/content/debug-sim-milestone";
 import {
@@ -629,6 +631,8 @@ describe("live KFD debugger milestone", () => {
       "crates/fe2o3-debug-cli/src/rocgdb_mi_v3/process.rs",
       "crates/fe2o3-lower-mir-kernel/src/production_correspondence_evidence_v5.rs",
       "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+      "crates/fe2o3-hsaco-finalize/src/semantic_debug_instance_custody_v1.rs",
+      "docs/production-multifunction-semantic-debug-v1.md",
       "crates/fe2o3-debug-cli/src/rocgdb_mi_v3.rs",
       "crates/fe2o3-debug-cli/src/live_rocgdb_v3.rs",
       "crates/cargo-fe2o3/src/profile_command.rs",
@@ -651,13 +655,15 @@ describe("live KFD debugger milestone", () => {
       physicalGpuStopObserved: false,
     });
     expect(multiFunctionSemanticDebugV5Milestone).toMatchObject({
-      commit: "e55a0117d76866b66f8ca5d157c9e03e0c69bbb6",
+      commit: "2df6130c5f897b5120cdf6ade44d53030690fa8b",
       correspondenceVersion: 5,
       multiRootCorrespondencePayloadVersion: 2,
       simulatorStackFrames: 2,
       independentFinalizerReplay: true,
-      multiRootCustody: "exact_disjoint_root_closures",
-      sharedHelperInstances: "typed_unavailable",
+      multiRootCustody: "exact_instance_qualified_root_closures",
+      sharedHelperInstances: "exact_owner_qualified_occurrence_sidecar",
+      physicalHelperBody: "single_shared_node_not_duplicated",
+      protectedProductionProof: "unavailable_external_verifier_environment",
     });
     expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
@@ -969,6 +975,7 @@ describe("debugger and simulator milestone content", () => {
       ["wave32_collectives_result_v1.json", "wave32Result"],
       ["wave64_collectives_result_v1.json", "wave64Result"],
       ["workgroup_reduce_queries_v1.jsonl", "workgroupReduceQueries"],
+      ["workgroup_scan_matrix_v1.json", "workgroupScanMatrix"],
     ];
     for (const [file, digest] of files) {
       expect(
@@ -1063,9 +1070,10 @@ describe("debugger and simulator milestone content", () => {
         performancePrediction: false,
       },
       correspondence: {
-        commit: "e55a0117d76866b66f8ca5d157c9e03e0c69bbb6",
-        multiRootCustody: "exact_disjoint_root_closures",
-        sharedHelperInstances: "typed_unavailable",
+        commit: "2df6130c5f897b5120cdf6ade44d53030690fa8b",
+        multiRootCustody: "exact_instance_qualified_root_closures",
+        sharedHelperInstances: "exact_owner_qualified_occurrence_sidecar",
+        physicalHelperBody: "single_shared_node_not_duplicated",
       },
       cases: [
         { scalar: "u32", expected: "128", exactBits: "0x00000080" },
@@ -1083,6 +1091,51 @@ describe("debugger and simulator milestone content", () => {
       "query_events",
       "inspect_scope",
     ]);
+    expect(debugSimWorkgroupScanFixture).toMatchObject({
+      compiler: {
+        commit: "2df6130c5f897b5120cdf6ade44d53030690fa8b",
+        semanticMirVersion: 10,
+        simulationKirVersion: 10,
+        ordinaryApiCombinations: 6,
+        ordinaryProductionExamples: 3,
+        semanticSimulationCases: 6,
+        retainedOrdinaryBundleExecutions: 0,
+        seededSchedule: 0x5ca1,
+        debuggerSchedule: 0xd38,
+        hardwareObserved: false,
+        performancePrediction: false,
+      },
+      trace: {
+        v1ExactKirVersions: [7],
+        v2ExactKirVersions: [9, 10],
+        crossVersionProjection: false,
+        v1EnvelopeChanged: false,
+      },
+      evidence: {
+        protocol_wire_record: false,
+        boundaries: {
+          authority: "observation_only",
+          external_protected_production_proof: "unavailable",
+          hardware_observed: false,
+          performance_prediction: false,
+        },
+      },
+    });
+    expect(debugSimWorkgroupScanFixture.cases).toHaveLength(6);
+    expect(debugSimWorkgroupScanFixture.cases[0].output).toEqual([
+      1, 3, 6, 10, 15, 21, 28, 36,
+    ]);
+    expect(debugSimWorkgroupScanFixture.cases[3].output).toEqual([
+      0, -4, 3, 1, 10, 7, 8, 14,
+    ]);
+    expect(debugSimWorkgroupScanFixture.sources).toHaveLength(8);
+    expect(debugSimWorkgroupScanFixture.sources.every((source) =>
+      source.href.startsWith(
+        "https://github.com/harsh-nod/fe2o3/blob/2df6130c5f897b5120cdf6ade44d53030690fa8b/",
+      ),
+    )).toBe(true);
+    expect(() => debugSimSourceUrl("../Cargo.toml", debugSimWorkgroupScanFixture.compiler.commit))
+      .toThrow("repository-relative");
     expect(JSON.stringify(debugSimMilestoneProjection)).not.toMatch(
       /performance_prediction":true|hardware_observed":true/iu,
     );
@@ -2598,7 +2651,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       explanatory: false,
-      sourceCommit: debugSimWorkgroupReductionFixture.compiler.commit,
+      sourceCommit: debugSimWorkgroupScanFixture.compiler.commit,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceDigestScope: "displayed",
@@ -2643,6 +2696,11 @@ describe("curriculum integrity", () => {
     expect(host).toContain(
       "ordinary_rust_workgroup_reductions_export_v5_and_execute_every_cpu_path",
     );
+    expect(host).toContain("--test device_api_ui");
+    expect(host).toContain("--test simulation workgroup_scan");
+    expect(host).toContain("--test codec_v2");
+    expect(host).toContain("v2_trace_adapter_rejects_v7_and_binds_exact_v9_v10_owners");
+    expect(host).toContain("ordinary_neutral_collectives_reach_both_target_llvm_backends");
     expect(host).toContain('"level":"workgroup"');
     expect(host).toContain('"category":"memory"');
     expect(host).toContain('"category":"operation"');
@@ -2657,9 +2715,11 @@ describe("curriculum integrity", () => {
     expect(sourceDebug).toContain("Physical Indirect carrier pointers and aggregate padding are never read");
     expect(sourceDebug).toContain("Bundle V5 exactness boundary");
     expect(sourceDebug).toContain("production identity: canonical KIR V9");
-    expect(sourceDebug).toContain("Multi-root semantic debug custody at e55a0117d");
+    expect(sourceDebug).toContain("Multi-root semantic debug custody at 2df6130c5");
     expect(sourceDebug).toContain("absolute ordinal + role + symbol");
-    expect(sourceDebug).toContain("shared semantic helper across roots: typed unavailable");
+    expect(sourceDebug).toContain("shared physical helper: one KIR body, not duplicated");
+    expect(sourceDebug).toContain("exact owner-qualified occurrence sidecar");
+    expect(sourceDebug).toContain("Trace V2: exact canonical KIR V9 or V10");
     expect(sourceDebug).toContain(
       readFileSync("examples/source_debugger_requests_v1.jsonl", "utf8").trim(),
     );
@@ -2691,6 +2751,9 @@ describe("curriculum integrity", () => {
     expect(result).toContain("ordinary u32 switch: agreement");
     expect(result).toContain("initialization state: exact");
     expect(result).toContain("Portable workgroup reductions at 9176b9c27");
+    expect(result).toContain("Target-neutral workgroup scans at 2df6130c5");
+    expect(result).toContain("ordinary Rust API contracts: 6");
+    expect(result).toContain("retained ordinary scan Bundle V5 executions: 0");
     expect(result).toContain("u32 input 2 -> 128 in all 64 output lanes");
     expect(result).toContain("f32 input 1.5 -> 96.0 (0x42c00000)");
     expect(result).toContain("wrong [32, 1, 1] roster: typed workgroup mismatch");
@@ -2729,15 +2792,15 @@ describe("curriculum integrity", () => {
       kind: "runnable-now",
       reference: {
         scope: "qualification-evidence",
-        commit: debugSimWorkgroupReductionFixture.compiler.commit,
-        tree: debugSimWorkgroupReductionFixture.compiler.tree,
+        commit: debugSimWorkgroupScanFixture.compiler.commit,
+        tree: debugSimWorkgroupScanFixture.compiler.tree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
       scope: "qualification-evidence",
-      commit: debugSimWorkgroupReductionFixture.compiler.commit,
-      tree: debugSimWorkgroupReductionFixture.compiler.tree,
+      commit: debugSimWorkgroupScanFixture.compiler.commit,
+      tree: debugSimWorkgroupScanFixture.compiler.tree,
       target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
     });
     expect(reference?.note).toContain("not protected compiler-execution authentication");

@@ -125,13 +125,30 @@ exported `workgroup_reduce_u32` bundle.
 
 This is differentiated from a text log by exact, machine-queryable custody:
 each retained site is qualified by correspondence owner, semantic function,
-role, symbol, and absolute KIR ordinal; disjoint root closures carry those
-identities through Source Map V2 and independent finalizer replay. A persisted
+role, symbol, and absolute KIR ordinal. At public compiler commit
+`2df6130c5f897b5120cdf6ade44d53030690fa8b`, tree
+`1ddc7aec95db753ab54ff472e9457b0e6609d0f6`, an owner-qualified occurrence
+sidecar distinguishes shared-helper instances while preserving one physical
+KIR helper node. Source Map V2 and independent finalizer replay reject
+ambiguous, reordered, or substituted associations. A persisted
 schedule binds the Bundle V5 subject and body as well as request, target,
 limits, context, transcript, and runnable decisions, so an agent gets a typed
-binding error rather than silently replaying against different code. Shared
-helpers reused across roots remain typed unavailable because the current wire
-cannot distinguish their instances.
+binding error rather than silently replaying against different code. The
+ordinary protected-production proof still requires external verifier and
+rust-src inputs that were not provisioned for this milestone.
+
+`workgroup_scan_matrix_v1.json` is a tutorial evidence index, not a protocol
+capture. It transcribes exact oracles and boundaries from the pinned public
+tests while preserving the distinction among six ordinary Rust API compile
+contracts, three attributed production kernel representatives, six direct KIR
+V10 semantic simulations, and zero retained ordinary scan Bundle executions.
+The semantic tests cover inclusive and exclusive `u32`, `i32`, and strict
+`f32` under canonical, seed `0x5ca1`, and exact replay schedules. A separate
+seed `0xd38` debugger test retains logical coordinates, exact KIR sites, typed
+LDS accesses, barrier phase and eight participants, schedule identity, and
+decision ordinal. Semantic Trace V2 additively admits exact canonical KIR V9
+or V10 after independent adapter validation; Trace V1 stays exact KIR V7 and
+the two envelopes do not cross-decode.
 
 The repeated `01` KIR digest is a declared test binding, not authenticated
 source, ISA, or hardware correlation. Counter and PC inputs are exact structured
@@ -149,9 +166,9 @@ replay, performance prediction, or CPU support for every kernel.
 
 The workgroup milestone is also CPU semantic evidence only. It does not observe
 GPU workgroups, waves, timing, or performance; it does not add performance
-prediction. New wave-scan or explicit active-mask operations and unsupported
-pointer, enum, needs-drop, adjusted, and complex-cast shapes remain typed
-unavailable.
+prediction or prove all schedules. Explicit active-mask operations and
+unsupported pointer, enum, needs-drop, adjusted, and complex-cast shapes remain
+typed unavailable.
 
 | Artifact | SHA-256 |
 | --- | --- |
@@ -176,3 +193,4 @@ unavailable.
 | `pc_hotspots_v3.json` | `113d6df2e0e9a5d74a2f3a3dcbbf7f7aac3ab23aeee04e9c02aad6e5323a512c` |
 | `pc_capabilities_v3.json` | `a1a4b3819815b4879c2fc1b8eccf1c28f967d83784356131ba40ff93739736ed` |
 | `workgroup_reduce_queries_v1.jsonl` | `3426bc52547f2989d5b9476552dda58759800cb5364075a3a967a88e730f4410` |
+| `workgroup_scan_matrix_v1.json` | `ef1eec8c96f26f8ad3bf6327ffb405c1c5f8748b2e6d6b63899f78e7ffc33736` |

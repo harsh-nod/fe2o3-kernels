@@ -107,7 +107,8 @@ export function LiveKfdDebuggerPage() {
             every source site into one kernel body. The ordinary Rust acceptance
             exports an entry plus helper, stops inside the helper, returns a
             two-frame stack, and resolves the absolute KIR operation back to its
-            exact source owner.
+            exact source owner. Shared physical helpers now keep one KIR body and
+            use an instance-qualified sidecar for every owning root occurrence.
           </p>
         </header>
         <div
@@ -144,8 +145,11 @@ export function LiveKfdDebuggerPage() {
             <strong>Identity-bound, not name-matched</strong>
             Commit {multiFunctionSemanticDebugV5Milestone.commit.slice(0, 10)} rejects
             duplicate, reordered, sparse, renamed, and substituted rosters.
-            Disjoint multi-root custody is {multiFunctionSemanticDebugV5Milestone.multiRootCustody.replaceAll("_", " ")};
-            shared helper instances remain {multiFunctionSemanticDebugV5Milestone.sharedHelperInstances.replaceAll("_", " ")}.
+            Multi-root custody is {multiFunctionSemanticDebugV5Milestone.multiRootCustody.replaceAll("_", " ")};
+            shared helper instances use an {multiFunctionSemanticDebugV5Milestone.sharedHelperInstances.replaceAll("_", " ")},
+            while the physical helper remains a {multiFunctionSemanticDebugV5Milestone.physicalHelperBody.replaceAll("_", " ")}.
+            The ordinary protected-production proof remains unavailable because its external
+            verifier environment was not provisioned.
           </span>
         </aside>
       </section>
@@ -273,7 +277,7 @@ export function LiveKfdDebuggerPage() {
           <p>
             Historical KFD links stay pinned to {liveKfdPublication.compilerCommit.slice(0, 10)};
             V5 links are pinned to {liveRocgdbV5Milestone.commit.slice(0, 10)} or
-            the exact multi-function producer commit.
+            the exact multi-function custody milestone.
           </p>
         </header>
         <div>

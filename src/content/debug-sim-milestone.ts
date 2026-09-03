@@ -25,6 +25,8 @@ import wave64Error from "../../examples/debug_sim_milestone_v1/partial_wave64_er
 import wave32Result from "../../examples/debug_sim_milestone_v1/wave32_collectives_result_v1.json";
 import wave64Result from "../../examples/debug_sim_milestone_v1/wave64_collectives_result_v1.json";
 import workgroupReduceQueriesRaw from "../../examples/debug_sim_milestone_v1/workgroup_reduce_queries_v1.jsonl?raw";
+import workgroupScanMatrix from "../../examples/debug_sim_milestone_v1/workgroup_scan_matrix_v1.json";
+import workgroupScanMatrixRaw from "../../examples/debug_sim_milestone_v1/workgroup_scan_matrix_v1.json?raw";
 import currentMilestones from "../../config/debugger-profiler-current-milestones.json";
 
 type JsonObject = Record<string, unknown>;
@@ -58,7 +60,26 @@ export const DEBUG_SIM_ARTIFACT_SHA256 = {
   wave32Result: "ec856159689ad4aa2672587be7005965fa76216f7e3adf140a50e54f01c00334",
   wave64Result: "8cd9fcddf8835683093f5bd6e39bfbd7a2b2871665f069f635634841adc56305",
   workgroupReduceQueries: "3426bc52547f2989d5b9476552dda58759800cb5364075a3a967a88e730f4410",
+  workgroupScanMatrix: "ef1eec8c96f26f8ad3bf6327ffb405c1c5f8748b2e6d6b63899f78e7ffc33736",
 } as const;
+
+const exactGitObject = /^[0-9a-f]{40}$/u;
+
+export function debugSimSourceUrl(path: string, commit: string): string {
+  if (
+    path.trim().length === 0 ||
+    path !== path.trim() ||
+    path.startsWith("/") ||
+    path.includes("\\") ||
+    path.split("/").includes("..")
+  ) {
+    throw new Error("debug simulator source path must stay repository-relative");
+  }
+  if (!exactGitObject.test(commit)) {
+    throw new Error("debug simulator source commit must be exact");
+  }
+  return `https://github.com/harsh-nod/fe2o3/blob/${commit}/${path}`;
+}
 
 const explorationTopKeys = [
   "authority",
@@ -583,8 +604,8 @@ function validateWorkgroupReductionMilestone(): string[] {
       "workgroupBarriers",
       "wrongRoster",
     ]) ||
-    !/^[0-9a-f]{40}$/u.test(milestone.commit) ||
-    !/^[0-9a-f]{40}$/u.test(milestone.tree) ||
+    !exactGitObject.test(milestone.commit) ||
+    !exactGitObject.test(milestone.tree) ||
     milestone.target !== "gfx942:xnack-" ||
     JSON.stringify(milestone.scalarTypes) !== '["u32","i32","f32"]' ||
     JSON.stringify(milestone.workgroup) !== "[64,1,1]" ||
@@ -605,15 +626,17 @@ function validateWorkgroupReductionMilestone(): string[] {
     return ["workgroup reduction milestone has an invalid closed envelope"];
   }
   if (
-    !/^[0-9a-f]{40}$/u.test(multiRoot.commit) ||
-    !/^[0-9a-f]{40}$/u.test(multiRoot.tree) ||
+    !exactGitObject.test(multiRoot.commit) ||
+    !exactGitObject.test(multiRoot.tree) ||
     multiRoot.correspondenceVersion !== 5 ||
     multiRoot.multiRootCorrespondencePayloadVersion !== 2 ||
     multiRoot.absoluteKirOrdinals !== true ||
     multiRoot.functionQualifiedSyntheticSpans !== true ||
     multiRoot.independentFinalizerReplay !== true ||
-    multiRoot.multiRootCustody !== "exact_disjoint_root_closures" ||
-    multiRoot.sharedHelperInstances !== "typed_unavailable"
+    multiRoot.multiRootCustody !== "exact_instance_qualified_root_closures" ||
+    multiRoot.sharedHelperInstances !== "exact_owner_qualified_occurrence_sidecar" ||
+    multiRoot.physicalHelperBody !== "single_shared_node_not_duplicated" ||
+    multiRoot.protectedProductionProof !== "unavailable_external_verifier_environment"
   ) {
     return ["multi-root semantic debug milestone lost exact custody or its typed boundary"];
   }
@@ -633,6 +656,139 @@ function validateWorkgroupReductionMilestone(): string[] {
     field(field(workgroupReduceQueries[4], "scope"), "level") !== "wave"
   ) {
     return ["workgroup reduction queries lost their exact bounded debugger sequence"];
+  }
+  return [];
+}
+
+function validateWorkgroupScanMilestone(): string[] {
+  const milestone = currentMilestones.workgroupScanV1;
+  const trace = currentMilestones.semanticTraceV2;
+  const layers = workgroupScanMatrix.evidence_layers;
+  const execution = workgroupScanMatrix.semantic_execution;
+  const boundaries = workgroupScanMatrix.boundaries;
+  if (
+    !exactKeys(milestone, [
+      "commit",
+      "debuggerEvidence",
+      "debuggerSchedule",
+      "hardwareObserved",
+      "modes",
+      "ordinaryApiCombinations",
+      "ordinaryExampleWorkgroup",
+      "ordinaryProductionExamples",
+      "performancePrediction",
+      "productionKirVersion",
+      "replaySubstitution",
+      "retainedOrdinaryBundleExecutions",
+      "scalarTypes",
+      "scheduleModes",
+      "seededSchedule",
+      "semanticMirVersion",
+      "semanticSimulationCases",
+      "semanticWorkgroup",
+      "simulationKirVersion",
+      "tree",
+      "wrongRoster",
+    ]) ||
+    !exactKeys(trace, [
+      "adapterRevalidatesCanonicalBytes",
+      "commit",
+      "crossVersionProjection",
+      "hardwareObserved",
+      "performancePrediction",
+      "tree",
+      "v1EnvelopeChanged",
+      "v1ExactKirVersions",
+      "v2ExactKirVersions",
+    ]) ||
+    !exactGitObject.test(milestone.commit) ||
+    !exactGitObject.test(milestone.tree) ||
+    milestone.commit !== workgroupScanMatrix.source_commit ||
+    milestone.tree !== workgroupScanMatrix.source_tree ||
+    milestone.semanticMirVersion !== 10 ||
+    milestone.productionKirVersion !== 8 ||
+    milestone.simulationKirVersion !== 10 ||
+    JSON.stringify(milestone.scalarTypes) !== '["u32","i32","f32"]' ||
+    JSON.stringify(milestone.modes) !== '["inclusive","exclusive"]' ||
+    milestone.ordinaryApiCombinations !== 6 ||
+    milestone.ordinaryProductionExamples !== 3 ||
+    milestone.semanticSimulationCases !== 6 ||
+    milestone.retainedOrdinaryBundleExecutions !== 0 ||
+    JSON.stringify(milestone.semanticWorkgroup) !== "[8,1,1]" ||
+    JSON.stringify(milestone.ordinaryExampleWorkgroup) !== "[64,1,1]" ||
+    JSON.stringify(milestone.scheduleModes) !==
+      '["canonical","seeded","persisted_replay"]' ||
+    milestone.seededSchedule !== 0x5ca1 ||
+    milestone.debuggerSchedule !== 0xd38 ||
+    JSON.stringify(milestone.debuggerEvidence) !==
+      '["logical_coordinates","exact_kir_site","typed_lds_reads_and_writes","barrier_phase_and_participants","schedule_identity_and_decision"]' ||
+    milestone.wrongRoster !== "typed_workgroup_mismatch" ||
+    milestone.replaySubstitution !== "typed_request_binding_mismatch" ||
+    milestone.hardwareObserved !== false ||
+    milestone.performancePrediction !== false
+  ) {
+    return ["workgroup scan milestone has an invalid closed envelope"];
+  }
+  if (
+    !exactKeys(workgroupScanMatrix, [
+      "boundaries",
+      "debugger_evidence",
+      "evidence_layers",
+      "protocol_wire_record",
+      "schema",
+      "semantic_execution",
+      "source_commit",
+      "source_paths",
+      "source_tree",
+    ]) ||
+    !exactKeys(layers, [
+      "direct_kir_semantic_simulations",
+      "ordinary_api_compile_contracts",
+      "ordinary_production_kernel_examples",
+      "retained_ordinary_bundle_executions",
+    ]) ||
+    workgroupScanMatrix.schema !== "fe2o3-tutorial-workgroup-scan-evidence-v1" ||
+    workgroupScanMatrix.protocol_wire_record !== false ||
+    layers.ordinary_api_compile_contracts !== 6 ||
+    layers.ordinary_production_kernel_examples !== 3 ||
+    layers.direct_kir_semantic_simulations !== 6 ||
+    layers.retained_ordinary_bundle_executions !== 0 ||
+    execution.kir_wire_version !== 10 ||
+    JSON.stringify(execution.workgroup) !== "[8,1,1]" ||
+    JSON.stringify(execution.schedule_modes) !==
+      '["canonical","seeded","persisted_replay"]' ||
+    execution.seeded_schedule !== milestone.seededSchedule ||
+    execution.debugger_schedule !== milestone.debuggerSchedule ||
+    execution.cases.length !== 6 ||
+    new Set(execution.cases.map((entry) => `${entry.mode}:${entry.scalar}`)).size !== 6 ||
+    JSON.stringify(execution.cases) !==
+      '[{"mode":"inclusive","scalar":"u32","input":[1,2,3,4,5,6,7,8],"output":[1,3,6,10,15,21,28,36]},{"mode":"exclusive","scalar":"u32","input":[1,2,3,4,5,6,7,8],"output":[0,1,3,6,10,15,21,28]},{"mode":"inclusive","scalar":"i32","input":[-4,7,-2,9,-3,1,6,-5],"output":[-4,3,1,10,7,8,14,9]},{"mode":"exclusive","scalar":"i32","input":[-4,7,-2,9,-3,1,6,-5],"output":[0,-4,3,1,10,7,8,14]},{"mode":"inclusive","scalar":"f32","input":[1,1,1,1,1,1,1,1],"output":[1,2,3,4,5,6,7,8]},{"mode":"exclusive","scalar":"f32","input":[1,1,1,1,1,1,1,1],"output":[0,1,2,3,4,5,6,7]}]' ||
+    workgroupScanMatrix.debugger_evidence.length !== 5 ||
+    JSON.stringify(workgroupScanMatrix.source_paths) !==
+      '{"api_contract":"crates/fe2o3-device/tests/ui/pass/bounded_collective_contract.rs","semantic_simulator":"crates/fe2o3-kir-sim/tests/simulation.rs","debugger":"crates/fe2o3-kir-sim/tests/simulation.rs","production_driver":"crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs","design":"docs/target-neutral-workgroup-scan-v1.md","trace_codec":"crates/fe2o3-semantic-trace/tests/codec_v2.rs","trace_adapter":"crates/fe2o3-kir-sim-trace/tests/adapter_v1.rs","shared_helper_custody":"crates/fe2o3-hsaco-finalize/src/semantic_debug_instance_custody_v1.rs"}' ||
+    boundaries.authority !== "observation_only" ||
+    boundaries.external_protected_production_proof !== "unavailable" ||
+    boundaries.hardware_observed !== false ||
+    boundaries.hardware_validation !== false ||
+    boundaries.performance_prediction !== false ||
+    boundaries.all_schedules_explored !== false
+  ) {
+    return ["workgroup scan evidence index changed its tested scope or truth boundary"];
+  }
+  if (
+    !exactGitObject.test(trace.commit) ||
+    !exactGitObject.test(trace.tree) ||
+    trace.commit !== milestone.commit ||
+    trace.tree !== milestone.tree ||
+    JSON.stringify(trace.v1ExactKirVersions) !== "[7]" ||
+    JSON.stringify(trace.v2ExactKirVersions) !== "[9,10]" ||
+    trace.crossVersionProjection !== false ||
+    trace.adapterRevalidatesCanonicalBytes !== true ||
+    trace.v1EnvelopeChanged !== false ||
+    trace.hardwareObserved !== false ||
+    trace.performancePrediction !== false
+  ) {
+    return ["Semantic Trace V2 milestone lost its additive exact-version boundary"];
   }
   return [];
 }
@@ -666,6 +822,8 @@ export const debugSimMilestoneProjection = {
     hotspots: pcHotspots,
   },
   workgroupReduction: currentMilestones.workgroupReductionV5,
+  workgroupScan: workgroupScanMatrix,
+  semanticTrace: currentMilestones.semanticTraceV2,
   multiRootSemanticDebug: currentMilestones.multiFunctionSemanticDebugV5,
 };
 
@@ -680,6 +838,20 @@ export const debugSimWorkgroupReductionFixture = {
   outputLanes: 64,
   queries: workgroupReduceQueries,
   queriesRaw: workgroupReduceQueriesRaw,
+} as const;
+
+export const debugSimWorkgroupScanFixture = {
+  compiler: currentMilestones.workgroupScanV1,
+  trace: currentMilestones.semanticTraceV2,
+  correspondence: currentMilestones.multiFunctionSemanticDebugV5,
+  evidence: workgroupScanMatrix,
+  cases: workgroupScanMatrix.semantic_execution.cases,
+  raw: workgroupScanMatrixRaw,
+  sources: Object.entries(workgroupScanMatrix.source_paths).map(([label, path]) => ({
+    label: label.replaceAll("_", " "),
+    path,
+    href: debugSimSourceUrl(path, currentMilestones.workgroupScanV1.commit),
+  })),
 } as const;
 
 const mappedSourceVariables = sourceMap.variables as JsonObject[];
@@ -864,6 +1036,7 @@ export function validateDebugSimMilestone(): string[] {
     ...validateCounterCapture(counterCapture),
     ...validatePcSampleMilestone(),
     ...validateWorkgroupReductionMilestone(),
+    ...validateWorkgroupScanMilestone(),
   ];
   const raceWitness = field(field(explorationRace, "witnesses"), "first_race");
   if (

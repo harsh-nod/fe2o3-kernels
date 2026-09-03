@@ -83,6 +83,14 @@ const workgroupReductionDebuggerCommand =
   "./target/debug/fe2o3-debug sim --bundle-v5 \"$PWD/workgroup-reduce-u32-v5.fe2sim\" --request \"$PWD/workgroup-reduce-u32-request.json\" --protocol jsonl --wave-width 64";
 const workgroupReductionTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_workgroup_reductions_export_v5_and_execute_every_cpu_path -- --ignored --exact";
+const workgroupScanApiTestCommand =
+  "cargo test --locked -p fe2o3-device --test device_api_ui device_api_enforces_witness_boundaries -- --exact";
+const workgroupScanSemanticTestCommand =
+  "cargo test --locked -p fe2o3-kir-sim --test simulation workgroup_scan -- --nocapture";
+const workgroupScanProductionTestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_neutral_collectives_reach_both_target_llvm_backends -- --ignored --exact";
+const semanticTraceV2TestCommand =
+  "cargo test --locked -p fe2o3-semantic-trace --test codec_v2 && cargo test --locked -p fe2o3-kir-sim-trace --test adapter_v1 v2_trace_adapter_rejects_v7_and_binds_exact_v9_v10_owners -- --exact";
 const cpuSimulationSourceMarker =
   "#[cfg(feature = \"aggregate_pair_struct\")]\n#[repr(C)]\npub struct AggregatePairStruct";
 const cpuSimulationZstMarker =
@@ -532,12 +540,14 @@ const cpuSimulation: Lesson = {
     "Run an ordinary gfx950 f32 wave reduction from its exact production V9 identity through a same-module KIR V10 Bundle V5.",
     "Run generated integer, exact float-bit, layout, bounds, and switch cases through the production Bundle V5 boundary.",
     "Export ordinary u32, i32, and f32 portable workgroup reductions and inspect workgroup, wave, memory, and operation views through one JSONL debugger session.",
+    "Distinguish six ordinary inclusive/exclusive u32, i32, and f32 scan API contracts, three production kernel representatives, and six direct KIR V10 semantic executions.",
+    "Follow one scan decision through logical coordinates, its exact KIR site, typed LDS traffic, barrier phase and participants, and replay ordinal.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
     "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
     "Inspect exact full-active logical Wave32/Wave64 collectives and fixed-width structured failure masks.",
     "Query imported Counter Capture V2 and stochastic PC Sample Capture V3 evidence without inventing source, ISA, ATT, clock, loss, or per-lane instruction facts.",
     "Resolve source, stop at a source breakpoint, inspect a captured call stack, and step by source through the agent JSONL protocol.",
-    "Explain how function-qualified disjoint multi-root correspondence and Bundle V5 schedule custody prevent cross-wired source sites and stale replay.",
+    "Explain how instance-qualified shared-helper correspondence and schedule custody prevent cross-wired source sites and stale replay.",
     "Separate bundle-bound source association from protected compiler authentication, hardware validation, and performance evidence.",
   ],
   claims: [
@@ -545,10 +555,10 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 9176b9c27, ordinary u32, i32, and f32 portable workgroup reductions execute through strict Bundle V5/KIR V10 custody in the public CPU debugger and SimRuntimeBackendV1. The same regression inspects workgroup, wave, memory, and operation views, replays canonical and seeded schedules, and rejects a stale bundle or 32-lane roster. The earlier generated semantic conformance and recursive ABI milestones remain covered. Every result is simulated, non-hardware, and non-performance evidence.",
+        "At compiler 2df6130c5, target-neutral workgroup scan coverage is explicit at each layer: all six inclusive/exclusive u32, i32, and f32 ordinary Rust API combinations compile; three attributed kernel representatives reach the gfx942 and gfx950 production LLVM backends; and all six direct KIR V10 semantic cases agree under canonical, seeded, and exact replay schedules. Debug records retain lane, site, LDS, barrier, and schedule evidence. No ordinary scan Bundle V5 execution is retained, protected production proof inputs remain external and unavailable, and every displayed execution is non-hardware and non-performance evidence.",
       reference: qualificationReference(
-        currentMilestones.workgroupReductionV5.commit,
-        currentMilestones.workgroupReductionV5.tree,
+        currentMilestones.workgroupScanV1.commit,
+        currentMilestones.workgroupScanV1.tree,
         [
           cpuSimulationBuildCommand,
           cpuSimulationExportCommand,
@@ -569,6 +579,10 @@ const cpuSimulation: Lesson = {
           workgroupReductionExportCommand,
           workgroupReductionDebuggerCommand,
           workgroupReductionTestCommand,
+          workgroupScanApiTestCommand,
+          workgroupScanSemanticTestCommand,
+          workgroupScanProductionTestCommand,
+          semanticTraceV2TestCommand,
         ],
         [
           "docs/simulation-bundle-v1.md",
@@ -591,6 +605,13 @@ const cpuSimulation: Lesson = {
           "crates/rustc-codegen-fe2o3/tests/fixtures/production-semantic-conformance-device/src/lib.rs",
           "docs/simulator-production-conformance-v3.md",
           "docs/production-multifunction-semantic-debug-v1.md",
+          "docs/target-neutral-workgroup-scan-v1.md",
+          "crates/fe2o3-device/tests/ui/pass/bounded_collective_contract.rs",
+          "crates/fe2o3-kir-sim/tests/simulation.rs",
+          "crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs",
+          "crates/fe2o3-semantic-trace/tests/codec_v2.rs",
+          "crates/fe2o3-kir-sim-trace/tests/adapter_v1.rs",
+          "crates/fe2o3-hsaco-finalize/src/semantic_debug_instance_custody_v1.rs",
         ],
         {
           target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
@@ -612,7 +633,7 @@ const cpuSimulation: Lesson = {
       code: cpuSimulationSource,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
-      sourceCommit: currentMilestones.workgroupReductionV5.commit,
+      sourceCommit: currentMilestones.workgroupScanV1.commit,
       sourceSha256:
         "ed4273d0b9eda1e04e916773886f2442e0404d7ba489b25ddf94d2e7d5fc61d1",
       sourceDigestScope: "displayed",
@@ -693,6 +714,17 @@ printf '%s\\n' \\
   | ${workgroupReductionDebuggerCommand}
 
 ${workgroupReductionTestCommand}
+
+# Exercise every scan type/mode API contract and all six direct KIR V10 semantic cases.
+${workgroupScanApiTestCommand}
+${workgroupScanSemanticTestCommand}
+
+# Trace V2 is additive: exact KIR V9/V10 only; Trace V1 remains exact KIR V7.
+${semanticTraceV2TestCommand}
+
+# Requires the pinned nightly rust-src and AMD targets; this compiles three attributed
+# scan representatives through both production LLVM backends but does not execute a bundle.
+${workgroupScanProductionTestCommand}
 ${dynamicLdsSimulationTestCommand}`,
     },
     {
@@ -743,13 +775,21 @@ Bundle V5 exactness boundary
   other external diagnostics: typed unavailable
   authority: observation only; no compiler, load, launch, or hardware authority
 
-Multi-root semantic debug custody at e55a0117d
-  exact scope: singleton and disjoint root closures
+Multi-root semantic debug custody at 2df6130c5
+  exact scope: singleton, disjoint, and shared-helper root occurrences
   identity key: correspondence owner + semantic function
   KIR identity: absolute ordinal + role + symbol
   custody: Source Map V2, semantic map, protected lineage, finalizer replay
   rejects: duplicate/reordered roots, substituted identities, overlapping spans
-  shared semantic helper across roots: typed unavailable`,
+  shared physical helper: one KIR body, not duplicated
+  shared source custody: exact owner-qualified occurrence sidecar
+  protected ordinary-production proof: unavailable external verifier environment
+
+Semantic Trace version custody at 2df6130c5
+  Trace V1: unchanged, exact canonical KIR V7
+  Trace V2: exact canonical KIR V9 or V10
+  adapter: independently revalidates exact canonical bytes
+  cross-version projection and cross-decoding: rejected`,
       explanatory: true,
       notice:
         "The JSONL prefix is the exact checked-in source-debug transcript. The appended recursive ABI and V5 boundaries come from separately pinned production regressions; admission follows compiler ABI/layout and KIR identity evidence, not Rust surface spelling.",
@@ -797,6 +837,25 @@ Production semantic conformance V3 at 645750c12
   bundle version: 5
   canonical simulator KIR version: 10
   simulated: true
+  hardware_observed: false
+  performance_prediction: false
+
+Target-neutral workgroup scans at 2df6130c5
+  ordinary Rust API contracts: 6 (inclusive/exclusive x u32/i32/f32)
+  attributed production representatives: 3 (inclusive u32, exclusive i32, inclusive f32)
+  direct KIR V10 semantic cases: 6 under canonical, seed 0x5ca1, and exact replay
+  u32 inclusive: [1, 3, 6, 10, 15, 21, 28, 36]
+  u32 exclusive: [0, 1, 3, 6, 10, 15, 21, 28]
+  i32 inclusive: [-4, 3, 1, 10, 7, 8, 14, 9]
+  i32 exclusive: [0, -4, 3, 1, 10, 7, 8, 14]
+  f32 inclusive: [1, 2, 3, 4, 5, 6, 7, 8]
+  f32 exclusive: [0, 1, 2, 3, 4, 5, 6, 7]
+  debugger: local lane 7, typed LDS event, 8-participant barrier release,
+            seeded schedule identity, bounded decision ordinal
+  wrong [4, 1, 1] roster: typed workgroup mismatch
+  changed replay input: typed request binding mismatch
+  retained ordinary scan Bundle V5 executions: 0
+  external protected-production proof: unavailable
   hardware_observed: false
   performance_prediction: false
 
