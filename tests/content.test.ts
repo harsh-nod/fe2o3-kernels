@@ -1394,7 +1394,7 @@ describe("curriculum integrity", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
       0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
     ]);
-    expect(lessons).toHaveLength(35);
+    expect(lessons).toHaveLength(36);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
       new Set(
@@ -4466,6 +4466,7 @@ describe("curriculum integrity", () => {
       expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
         [
           "gemm-tiling",
+          "gemm-autoresearch",
           "gemm-proof-plan",
           "softmax-invariant",
           "flash-attention",

@@ -2,6 +2,7 @@ import Prism from "prismjs";
 import "prismjs/components/prism-bash";
 import "prismjs/components/prism-c";
 import "prismjs/components/prism-cpp";
+import "prismjs/components/prism-python";
 import "prismjs/components/prism-rust";
 import { useMemo, type ReactNode } from "react";
 import type { CodeTab } from "../content/model";
@@ -9,6 +10,7 @@ import type { CodeTab } from "../content/model";
 const grammars: Partial<Record<CodeTab["language"], Prism.Grammar>> = {
   bash: Prism.languages.bash,
   cpp: Prism.languages.cpp,
+  python: Prism.languages.python,
   rust: Prism.languages.rust,
 };
 

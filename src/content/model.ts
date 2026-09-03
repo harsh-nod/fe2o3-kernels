@@ -196,7 +196,7 @@ export type CodeTabKind =
 export interface CodeTab {
   kind: CodeTabKind;
   label: string;
-  language: "rust" | "bash" | "cpp" | "text";
+  language: "rust" | "bash" | "cpp" | "python" | "text";
   code: string;
   sourcePath?: string;
   sourceCommit?: string;

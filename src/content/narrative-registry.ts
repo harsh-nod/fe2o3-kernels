@@ -1451,6 +1451,171 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "gemm-autoresearch/fixed-loop": {
+    "sectionId": "fixed-loop",
+    "title": "Freeze the evaluator, vary one kernel",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "This tutorial adapts Karpathy's autoresearch pattern to kernel engineering: a human-written program fixes the rules, one source file is mutable, every candidate runs through the same evaluator, and an append-only ledger preserves both wins and failures. Here the only edit surface is examples/gemm_autoresearch_v1/src/kernel.rs. Compilation, the CPU oracle, benchmark shapes, sampling, and scoring stay fixed."
+      },
+      {
+        "type": "links",
+        "items": [
+          {
+            "label": "Original autoresearch project",
+            "href": "https://github.com/karpathy/autoresearch"
+          },
+          {
+            "label": "Pinned fe2o3 tutorial source",
+            "href": "https://github.com/harsh-nod/fe2o3/tree/3bda4af3bbeec3a0682e456b52128ba46f6e6a95/examples/gemm_autoresearch_v1"
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Surface",
+          "Policy",
+          "Reason"
+        ],
+        "rows": [
+          [
+            "src/kernel.rs",
+            "Mutable",
+            "Contains tile mapping, fragment movement, loop schedule, and MFMA accumulation."
+          ],
+          [
+            "src/reference.rs and src/main.rs",
+            "Fixed",
+            "Define dynamic strides, alpha/beta semantics, edges, padding, and the numerical gate."
+          ],
+          [
+            "evaluate.py and run-gfx942.sh",
+            "Fixed",
+            "Own production lowering, device selection, repeated event timing, scoring, and evidence output."
+          ],
+          [
+            "results.tsv",
+            "Append only and untracked",
+            "Survives rejected source edits without becoming source authority."
+          ]
+        ]
+      },
+      {
+        "type": "steps",
+        "items": [
+          "Expose exactly one authorized GPU with ROCR_VISIBLE_DEVICES and measure the untouched candidate first.",
+          "State one hypothesis and make one attributable change to src/kernel.rs.",
+          "Let production extraction, generic compiler checks, gfx942 lowering, HSACO generation, launch, and the independent oracle fail the candidate before timing.",
+          "Collect eleven device-event samples at each fixed size in three fresh processes, then use the median process score rather than a best run.",
+          "Keep or reject the edit, append its exact source hash and explanation to results.tsv, and begin the next hypothesis from the retained winner."
+        ]
+      }
+    ]
+  },
+  "gemm-autoresearch/experiment": {
+    "sectionId": "experiment",
+    "title": "A negative result becomes the lesson",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "The first experiment asked whether compiler-owned two-slot LDS staging could overlap future loads with the current MFMA. Both variants produced zero maximum absolute error, but the one-wave 16x16 mapping gives each operand fragment only one consumer. The pipeline therefore copies unique values through LDS and adds publication, wait, release, and barrier work without creating cross-wave reuse."
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Variant",
+          "Median score",
+          "Decision",
+          "Machine consequence"
+        ],
+        "rows": [
+          [
+            "Direct typed MFMA fragments",
+            "3,060.22 GFLOP/s",
+            "Keep",
+            "One static v_mfma_f32_16x16x16_bf16; zero LDS, zero barriers, 36 VGPRs."
+          ],
+          [
+            "Two-slot LDS pipeline",
+            "2,149.04 GFLOP/s",
+            "Reject",
+            "Extra staging and synchronization without fragment reuse."
+          ]
+        ]
+      },
+      {
+        "type": "table",
+        "headers": [
+          "Square GEMM",
+          "Direct process-median latency",
+          "Two-slot LDS process-median latency",
+          "Direct reduction"
+        ],
+        "rows": [
+          ["256", "48.454 us", "97.369 us", "50.24%"],
+          ["512", "72.232 us", "98.880 us", "26.95%"],
+          ["1024", "186.439 us", "199.792 us", "6.68%"]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "info",
+        "title": "What to try next",
+        "text": "Do not conclude that LDS is generally slow. Change the ownership geometry first: a 32x32 or larger multi-wave workgroup can let multiple waves consume the same staged A and B tiles. Only then does a two-slot pipeline have a reuse benefit to trade against its barriers and register pressure."
+      }
+    ]
+  },
+  "gemm-autoresearch/evidence-boundary": {
+    "sectionId": "evidence-boundary",
+    "title": "Interpret the score at its real strength",
+    "blocks": [
+      {
+        "type": "table",
+        "headers": [
+          "Gate",
+          "Campaign record",
+          "Remaining limitation"
+        ],
+        "rows": [
+          [
+            "Semantics",
+            "Both variants matched the independent 19x21x23 strided alpha/beta reference with zero maximum absolute error and preserved output padding.",
+            "One bounded oracle is not a proof over every input, shape, or floating-point edge case."
+          ],
+          [
+            "Compiler and artifact",
+            "Each process rebuilt ordinary Rust through ranked PLIRON, Kernel IR, gfx942 LLVM, and HSACO. The retained HSACO is SHA-256 bound and its symbol-scoped ISA was inspected.",
+            "Qualification output does not grant protected publication authority or complete source-to-machine refinement."
+          ],
+          [
+            "Timing",
+            "Ten warmups and eleven event samples per size, three fresh processes per variant; geometric mean across sizes and median across processes.",
+            "Every GPU carried unrelated work, so clocks, queuing, and contention were uncontrolled."
+          ]
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "warning",
+        "title": "Shared-host timing is a search signal",
+        "text": "GPU utilization was 72-93% across all eight devices after the campaign and similarly high before it. The 1.424x score ratio is useful for this tutorial's keep/reject decision because direct fragments also won at every process-median size, but it is not a clean peak-performance, library-comparison, or state-of-the-art result."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Reproduce before promoting",
+        "text": "A publishable performance claim requires an idle reserved GPU, controlled clocks and power, randomized AB/BA ordering, more processes, a named library comparator, representative values and shapes, bootstrap uncertainty, and exact source, compiler, HSACO, ISA, and environment bindings. Keep the fixed oracle gate unchanged while adding that stronger campaign."
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Semantic-correctness milestone",
+        "text": "Milestone status: partial-current at compiler 308d8fa00fa41e098b2a1a47bbfea1bc29735464. The fixed CPU oracle and production execution receipt establish bounded numerical evidence for the tested shape, but they do not grant protected publication authority, complete source-to-machine refinement, whole-model equivalence, or universal correctness."
+      }
+    ]
+  },
   "softmax-invariant/spec": {
     "sectionId": "spec",
     "title": "One wave owns one dynamic row",

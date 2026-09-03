@@ -14,6 +14,12 @@ import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.r
 import dynamicGemmHost from "../../examples/tiled_gemm_general_v1/src/main.rs?raw";
 import dynamicGemmHip from "../../examples/tiled_gemm_general_v1/benchmark_hip.cpp?raw";
 import dynamicGemmReference from "../../examples/tiled_gemm_general_v1/src/reference.rs?raw";
+import gemmAutoresearchEvaluator from "../../examples/gemm_autoresearch_v1/evaluate.py?raw";
+import gemmAutoresearchEvidence from "../../examples/gemm_autoresearch_v1/mi300x-evidence.json?raw";
+import gemmAutoresearchProgram from "../../examples/gemm_autoresearch_v1/program.md?raw";
+import gemmAutoresearchRejected from "../../examples/gemm_autoresearch_v1/experiments/double_buffer.rs?raw";
+import gemmAutoresearchKernel from "../../examples/gemm_autoresearch_v1/src/kernel.rs?raw";
+import gemmAutoresearchReference from "../../examples/gemm_autoresearch_v1/src/reference.rs?raw";
 import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
 import wave64CollectivesReference from "../../examples/wave64_collectives_v1/src/oracle.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
@@ -55,6 +61,8 @@ const workgroupPipelineSource = sourceMilestoneRecord(
 );
 const qualificationCommit = workgroupPipelineSource.commit;
 const qualificationTree = workgroupPipelineSource.tree;
+const gemmAutoresearchCommit = "3bda4af3bbeec3a0682e456b52128ba46f6e6a95";
+const gemmAutoresearchTree = "3d1613263cab8802136f8a2f19bb4d07f70a9757";
 const gemmProofEvidence = stagedEvidenceRecord(
   "tiled-lds-source-model-correspondence-v1",
 );
@@ -673,6 +681,151 @@ const gemmProof: Lesson = {
   glossary: ["property ledger", "translation validation", "numerical oracle"],
 };
 
+const gemmAutoresearch: Lesson = {
+  id: "gemm-autoresearch",
+  module: 4,
+  order: 2,
+  title: "Autoresearch GEMM loop",
+  summary:
+    "Use one mutable Rust kernel, a fixed evaluator, and an experiment ledger to optimize from evidence on MI300X.",
+  duration: "32 min",
+  prerequisites: ["Dynamic GEMM end to end", "GEMM proof plan"],
+  objectives: [
+    "Define one legal edit surface and keep compilation, correctness, timing, and scoring fixed.",
+    "Reject invalid candidates before performance measurements can influence a decision.",
+    "Use per-shape device-event distributions and independent-process medians instead of one timing.",
+    "Explain why the retained direct-MFMA candidate beats two-slot LDS staging for a one-wave tile.",
+    "Record candidate hashes, hypotheses, results, and keep or reject decisions in an experiment ledger.",
+  ],
+  claims: [
+    {
+      kind: "gpu-observed",
+      label: "Autoresearch evaluator runs end to end on MI300X",
+      detail:
+        "At the pinned core commit, both displayed Rust variants passed production extraction, gfx942 LLVM and HSACO generation, launch, and the independent 19x21x23 strided alpha/beta oracle at zero maximum absolute error. Three fresh processes per variant then measured 256, 512, and 1024 square GEMMs with HIP events.",
+      reference: qualificationReference(
+        gemmAutoresearchCommit,
+        gemmAutoresearchTree,
+        [
+          "ROCR_VISIBLE_DEVICES=<one-id> python3 examples/gemm_autoresearch_v1/evaluate.py --label direct-mfma",
+        ],
+        [
+          "examples/gemm_autoresearch_v1/src/kernel.rs",
+          "examples/gemm_autoresearch_v1/src/reference.rs",
+          "examples/gemm_autoresearch_v1/src/main.rs",
+          "examples/gemm_autoresearch_v1/evaluate.py",
+          "examples/gemm_autoresearch_v1/mi300x-evidence.json",
+        ],
+        {
+          target: FE2O3_PIN.target,
+          note: "Bounded qualification on a contended shared MI300X host; this is tutorial validation, not a clean performance publication.",
+        },
+      ),
+    },
+    {
+      kind: "design-only",
+      label: "Single mutable source surface",
+      detail:
+        "The research contract permits edits only to src/kernel.rs. The production runner, Rust host, independent reference, benchmark sizes, event sampling, score, and result schema remain fixed inputs to every candidate decision.",
+    },
+  ],
+  sections: [
+    narrativeSection("gemm-autoresearch/fixed-loop"),
+    narrativeSection("gemm-autoresearch/experiment"),
+    narrativeSection("gemm-autoresearch/evidence-boundary"),
+  ],
+  tabs: [
+    {
+      kind: "kernel",
+      label: "Winning candidate",
+      language: "rust",
+      code: gemmAutoresearchKernel,
+      sourcePath: "examples/gemm_autoresearch_v1/src/kernel.rs",
+      sourceCommit: gemmAutoresearchCommit,
+      sourceSha256:
+        "4b8ef3ac0a921df6ca616fca7c7c596dc53e2747296dcd7e9a2f21f73c11ccd8",
+      explanatory: false,
+      notice:
+        "Exact safe Rust edit surface retained by the MI300X campaign. The production compiler lowers its typed fragments to gfx942 MFMA without LDS or barriers.",
+    },
+    {
+      kind: "reference",
+      label: "Fixed CPU oracle",
+      language: "rust",
+      code: gemmAutoresearchReference,
+      sourcePath: "examples/gemm_autoresearch_v1/src/reference.rs",
+      sourceCommit: gemmAutoresearchCommit,
+      sourceSha256:
+        "80674fede2edfd020254e82637b77618bede8674d67b79e7d5c20ed780c1b5bc",
+      explanatory: false,
+      notice:
+        "The evaluator does not score a candidate until this independent strided alpha/beta reference agrees and output padding remains unchanged.",
+    },
+    {
+      kind: "comparison",
+      label: "Rejected two-slot LDS",
+      language: "rust",
+      code: gemmAutoresearchRejected,
+      sourcePath: "examples/gemm_autoresearch_v1/experiments/double_buffer.rs",
+      sourceCommit: gemmAutoresearchCommit,
+      sourceSha256:
+        "1f18f3eb2f5e3e403fff06265794ff108edab3c2d2861a2c0071c61dca07042a",
+      explanatory: false,
+      notice:
+        "This exact candidate passed correctness but was rejected by the fixed score. It is retained so the negative result remains reproducible.",
+    },
+    {
+      kind: "host",
+      label: "Fixed evaluator",
+      language: "python",
+      code: gemmAutoresearchEvaluator,
+      sourcePath: "examples/gemm_autoresearch_v1/evaluate.py",
+      sourceCommit: gemmAutoresearchCommit,
+      sourceSha256:
+        "9f6adae002ca33d03928810b939793f514f2afdf4a4331e6bbeb14f34ce6921f",
+      explanatory: false,
+      notice:
+        "The evaluator requires exactly one visible GPU, runs three fresh processes, parses only complete correctness and benchmark records, and appends an untracked ledger row.",
+    },
+    {
+      kind: "verus",
+      label: "Research contract",
+      language: "text",
+      code: gemmAutoresearchProgram,
+      sourcePath: "examples/gemm_autoresearch_v1/program.md",
+      sourceCommit: gemmAutoresearchCommit,
+      sourceSha256:
+        "a84b996e74d7d63a95a832591a345cf8eeb3baf1d00661805e843e0bad8e0c3d",
+      explanatory: true,
+      notice:
+        "This is the human-written research protocol, not a Verus proof. It constrains the agent and defines keep/reject policy; the compiler and oracle enforce the executable gates.",
+    },
+    {
+      kind: "result",
+      label: "MI300X evidence",
+      language: "text",
+      code: gemmAutoresearchEvidence,
+      sourcePath: "examples/gemm_autoresearch_v1/mi300x-evidence.json",
+      sourceCommit: gemmAutoresearchCommit,
+      sourceSha256:
+        "6a270959d7b2daa137ff505f67c016a0dc8db9c12ff1be396daddd1f21843a97",
+      explanatory: false,
+      notice:
+        "Machine-readable campaign record with exact candidate hashes, per-process distributions, artifact facts, and the shared-host claim boundary.",
+    },
+  ],
+  diagram: "gemm",
+  exercises: [
+    {
+      prompt: "Design a 32x32 multi-wave tile that gives LDS staging actual cross-wave reuse.",
+      hint: "Count how many waves consume each staged A and B fragment before selecting slots or adding barriers.",
+      acceptance:
+        "The candidate preserves the dynamic shape and oracle contract, passes production lowering, records a new hash and hypothesis, and improves the fixed score without a material per-size regression.",
+    },
+  ],
+  glossary: ["GEMM", "autoresearch", "experiment ledger", "search objective", "geometric mean", "MFMA", "LDS"],
+};
+
 const softmax: Lesson = {
   id: "softmax-invariant",
   module: 5,
@@ -938,7 +1091,7 @@ export const modules3to5: CurriculumModule[] = [
     number: 4,
     title: "GEMM: correct, then fast",
     summary: "Run the dynamic baseline, then reason about a safe LDS/MFMA optimization.",
-    lessons: [gemmMapping, gemmProof],
+    lessons: [gemmMapping, gemmProof, gemmAutoresearch],
   },
   {
     number: 5,

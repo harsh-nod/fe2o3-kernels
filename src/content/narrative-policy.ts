@@ -33,6 +33,9 @@ export const narrativeIds = deepFreeze([
   "gemm-tiling/loop-proof",
   "gemm-proof-plan/proof-ledger",
   "gemm-proof-plan/evidence",
+  "gemm-autoresearch/fixed-loop",
+  "gemm-autoresearch/experiment",
+  "gemm-autoresearch/evidence-boundary",
   "softmax-invariant/spec",
   "softmax-invariant/proof",
   "flash-attention/online",
@@ -168,6 +171,11 @@ export const narrativeOrderByLesson = deepFreeze({
     "gemm-tiling/public-layout-proof",
     "gemm-proof-plan/evidence",
     "gemm-proof-plan/total-correctness-boundary"
+  ],
+  "gemm-autoresearch": [
+    "gemm-autoresearch/fixed-loop",
+    "gemm-autoresearch/experiment",
+    "gemm-autoresearch/evidence-boundary"
   ],
   "softmax-invariant": [
     "softmax-invariant/spec",
@@ -312,6 +320,9 @@ export const narrativeFingerprints = deepFreeze({
   "gemm-tiling/loop-proof": "68315eb03fd0c542ca1a68286daa841c8b6ba6302d9b41cb2c4ac114f7c1ee3d",
   "gemm-proof-plan/proof-ledger": "635b84e78c427a7c59e189832896c38d0e3f50ba0249e203c3c1ab186daa77c2",
   "gemm-proof-plan/evidence": "961353dad93a62fb2d79e63b2f0d738b7e37814346ab4d5f9113656a9c9edbff",
+  "gemm-autoresearch/fixed-loop": "499e3e1f303196cf1fc325812f86123b215448123cd1a8a55cdc94b2a22d5910",
+  "gemm-autoresearch/experiment": "de205666d8a8e340a8171802f977b8ea3ba4752e6a8eb3ad08eea9d8e5e5520a",
+  "gemm-autoresearch/evidence-boundary": "96256c58bf761088e2574b3c81a6e1b33f06225eb7eb00fefa9c5b4b235a05e4",
   "softmax-invariant/spec": "493bdb99522133b45ed61ff2bc2d57c67ad5b730c1ee6118bde29be1c910f931",
   "softmax-invariant/proof": "1fcdc8b212488687151af2eebe67cddc47e709f751a0a302a4bc51d0bbee05f2",
   "flash-attention/online": "dcdb5fba5b78b8bef5efa9da5d2c2d8fbc56ba667460efc5869e189ef21cfcdc",

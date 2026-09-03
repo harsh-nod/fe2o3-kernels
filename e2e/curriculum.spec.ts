@@ -1773,7 +1773,7 @@ test("every internal curriculum route resolves without page overflow", async ({
     timeout: 120_000,
   });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(35);
+  await expect(routeLinks).toHaveCount(36);
   const routes = await routeLinks.evaluateAll((links) =>
     links.map((link) => ({
       href: (link as HTMLAnchorElement).href,
