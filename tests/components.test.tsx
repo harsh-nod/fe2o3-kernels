@@ -20,6 +20,7 @@ import { narrativeEntry } from "../src/content/narrative-registry";
 import { stagedEvidenceRecord } from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
 import { searchCatalog } from "../src/lib/search";
+import { authorFacingCode } from "../src/lib/kernel-authoring";
 
 describe("community getting started tutorial", () => {
   it("shows the executable CPU path, semantic hierarchy, and fail-closed GPU boundary", () => {
@@ -542,9 +543,17 @@ describe("code tabs", () => {
     render(<CodeTabs tabs={tabs} />);
 
     const panel = screen.getByRole("tabpanel");
+    const authoringKernel = authorFacingCode(tabs[0]);
     expect(panel.querySelector("code.language-rust")).toBeInTheDocument();
     expect(panel.querySelector(".token.keyword")).toBeInTheDocument();
-    expect(panel.textContent).toBe(tabs[0].code);
+    expect(panel.textContent).toBe(authoringKernel.code);
+    expect(panel).not.toHaveTextContent(/\bnamespace\s*=/u);
+    expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
+      "title",
+      "Open archived source",
+    );
+    await user.click(screen.getByRole("button", { name: "Copy code" }));
+    expect(writeText).toHaveBeenCalledWith(authoringKernel.code);
 
     const kernelTab = screen.getByRole("tab", { name: "Kernel" });
     kernelTab.focus();

@@ -69,9 +69,10 @@ cargo fe2o3 build
 
 The first three commands are authority-free host workflows; `build` is the
 production GPU compiler route. Hashes displayed in evidence records are
-compiler outputs retained for reproducibility. Advanced lesson source from old
-evidence commits may still show the former explicit syntax because those bytes
-are immutable historical records, not current author templates.
+compiler outputs retained for reproducibility. Kernel tabs project older
+evidence sources into the current namespace-free authoring syntax; their
+archived source links and digests continue to identify the immutable evidence
+bytes.
 
 ## Start without a GPU
 

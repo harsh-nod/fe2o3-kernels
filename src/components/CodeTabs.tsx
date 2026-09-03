@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useState, type KeyboardEvent } from "react";
 import { sourceUrl, type CodeTab } from "../content/model";
+import { authorFacingCode } from "../lib/kernel-authoring";
 import { HighlightedCode } from "./HighlightedCode";
 
 function isProofDetail(tab: CodeTab): boolean {
@@ -36,9 +37,11 @@ export function CodeTabs({
   const currentVisibleIndex = activeVisibleIndex >= 0 ? activeVisibleIndex : 0;
   const currentEntry = visibleTabs[currentVisibleIndex];
   const current = currentEntry.tab;
+  const authoringProjection = authorFacingCode(current);
+  const isAuthoringProjection = authoringProjection.removedNamespaceCount > 0;
 
   const copy = async () => {
-    await navigator.clipboard.writeText(current.code);
+    await navigator.clipboard.writeText(authoringProjection.code);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1400);
   };
@@ -103,7 +106,7 @@ export function CodeTabs({
               href={sourceUrl(current.sourcePath, current.sourceCommit)}
               target="_blank"
               rel="noreferrer"
-              title="Open pinned source"
+              title={isAuthoringProjection ? "Open archived source" : "Open pinned source"}
             >
               Source <ExternalLink size={13} aria-hidden="true" />
             </a>
@@ -119,11 +122,13 @@ export function CodeTabs({
           </button>
         </div>
       </div>
-      {(current.explanatory || current.notice) && (
+      {(isAuthoringProjection || current.explanatory || current.notice) && (
         <div className="code-status">
           <Info size={14} aria-hidden="true" />
-          {current.notice ??
-            "Explanatory source. It is not a runnable fe2o3 GPU kernel at the pinned commit."}
+          {isAuthoringProjection
+            ? "Current authoring syntax. The archived source link preserves the exact evidence bytes; fe2o3 now derives the binding identity."
+            : current.notice ??
+              "Explanatory source. It is not a runnable fe2o3 GPU kernel at the pinned commit."}
         </div>
       )}
       <pre
@@ -131,7 +136,10 @@ export function CodeTabs({
         role="tabpanel"
         aria-labelledby={`code-tab-${currentEntry.sourceIndex}`}
       >
-        <HighlightedCode code={current.code} language={current.language} />
+        <HighlightedCode
+          code={authoringProjection.code}
+          language={current.language}
+        />
       </pre>
       <span className="sr-only" aria-live="polite">
         {copied ? "Code copied" : ""}

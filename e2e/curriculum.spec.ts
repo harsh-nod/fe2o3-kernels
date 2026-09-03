@@ -146,6 +146,11 @@ test("curriculum is responsive, navigable, and visually nonempty", async ({
   const codePanel = page.getByRole("tabpanel");
   await expect(codePanel.locator("code.language-rust")).toBeVisible();
   await expect(codePanel.locator(".token.keyword").first()).toBeVisible();
+  await expect(codePanel).not.toContainText("namespace =");
+  await expect(page.getByText("Current authoring syntax.", { exact: false }))
+    .toBeVisible();
+  await expect(page.getByRole("link", { name: "Source", exact: true }))
+    .toHaveAttribute("title", "Open archived source");
   const syntaxColors = await codePanel
     .locator(".token.keyword, .token.function, .token.string")
     .evaluateAll((tokens) =>
@@ -1541,6 +1546,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
     ).toHaveAttribute("aria-selected", "true");
     await expect(page.getByRole("tabpanel")).toContainText(symbol);
     await expect(page.getByRole("tabpanel")).toContainText("rust");
+    await expect(page.getByRole("tabpanel")).not.toContainText("namespace =");
     await expect(
       page.getByRole("link", { name: "Source", exact: true }),
     ).toHaveAttribute(

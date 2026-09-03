@@ -12,6 +12,7 @@ import {
 import { narrativeEntry } from "../content/narrative-registry";
 import { operatorCookbook } from "../content/operator-cookbook";
 import { semanticEquivalencePage } from "../content/semantic-equivalence";
+import { authorFacingCode } from "./kernel-authoring";
 
 export interface SearchResult {
   id: string;
@@ -256,7 +257,7 @@ export function searchCatalog(
     ]).join(" ");
     const tabText = lesson.tabs.flatMap((tab) => [
       tab.label,
-      tab.code,
+      authorFacingCode(tab).code,
       tab.notice ?? "",
       tab.sourcePath ?? "",
     ]).join(" ");
