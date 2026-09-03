@@ -34,6 +34,22 @@ export const gettingStartedResult = deepFreeze({
     tutorialFixtureData.expected_result.counts.scheduled_slots_visited,
 });
 
+export const gettingStartedAuthoring = deepFreeze({
+  source: `#[kernel(typed)]
+pub fn fill(mut out: DisjointSlice<f32>) {
+    let index = thread::index_1d();
+    if index < out.len() {
+        *out.get_mut(index) = 42.5;
+    }
+}`,
+  commands: [
+    "cargo fe2o3 check --all-targets",
+    "cargo fe2o3 clippy --all-targets -- -D warnings",
+    "cargo fe2o3 test --all-targets",
+    "cargo fe2o3 build",
+  ],
+});
+
 export const gettingStartedHierarchy = deepFreeze([
   {
     level: "Dispatch",

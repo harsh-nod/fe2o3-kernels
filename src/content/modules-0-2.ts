@@ -293,7 +293,7 @@ const fill: Lesson = {
       kind: "runnable-now",
       label: "Source-to-CPU fill",
       detail:
-        "The no-GPU quickstart exports the ordinary #[kernel] fill source through the production source/MIR/PLIRON/KIR transaction and executes its temporary authority-free bundle on the CPU.",
+        "The no-GPU quickstart exports the ordinary #[kernel(typed)] fill source through the production source/MIR/PLIRON/KIR transaction and executes its temporary authority-free bundle on the CPU.",
       reference: currentImplementationReference(
         [noGpuQuickstartCommand],
         [
@@ -535,7 +535,7 @@ const cpuSimulation: Lesson = {
   duration: "46 min",
   prerequisites: ["Kernel IR evidence boundaries", "JSON and JSONL request files"],
   objectives: [
-    "Export an ordinary #[kernel] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
+    "Export an ordinary #[kernel(typed)] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
     "Recognize the bounded recursive Unit, array, tuple, and struct scalar-leaf ABI subset and its typed unavailable boundaries.",
     "Run an ordinary gfx950 f32 wave reduction from its exact production V9 identity through a same-module KIR V10 Bundle V5.",
     "Run generated integer, exact float-bit, layout, bounds, and switch cases through the production Bundle V5 boundary.",

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
+  gettingStartedAuthoring,
   gettingStartedBoundaries,
   gettingStartedBinding,
   gettingStartedCommands,
@@ -58,6 +59,14 @@ cpu-source-check: available; cpu-simulation: available; source-export: extractio
 application-execution: unavailable worker-v3-application-route-unwired
 overall: diagnostics-complete`;
 
+const authoringOutput = `${gettingStartedAuthoring.source}
+
+# Host development
+${gettingStartedAuthoring.commands.slice(0, 3).join("\n")}
+
+# Production GPU compilation
+${gettingStartedAuthoring.commands[3]}`;
+
 export function GettingStartedPage() {
   return (
     <article className="lesson-page getting-started-page">
@@ -69,7 +78,7 @@ export function GettingStartedPage() {
           <div>
             <h1>Run a Rust kernel without a GPU</h1>
             <p className="lesson-summary">
-              Export an ordinary <code>#[kernel]</code> function through the
+              Export an ordinary <code>#[kernel(typed)]</code> function through the
               production source, MIR, and KIR path, execute its temporary bundle
               on the CPU, then read the retained validation projection at
               work-item, logical-wave, and workgroup scope.
@@ -89,6 +98,52 @@ export function GettingStartedPage() {
           </span>
         </div>
       </header>
+
+      <section
+        className="getting-started-run getting-started-authoring"
+        aria-labelledby="getting-started-authoring-heading"
+      >
+        <div>
+          <p className="section-kicker">Kernel authoring</p>
+          <h2 id="getting-started-authoring-heading">Write the type, not an identity hash</h2>
+          <p>
+            Authors use <code>#[kernel(typed)]</code>. The compiler derives the
+            crate and kernel bindings from Cargo and rustc metadata, then
+            carries those values through evidence as reproducibility outputs.
+            Do not add a <code>namespace = &quot;...&quot;</code> argument to
+            application source. The detached checkout below is an evidence
+            baseline; use current compiler <code>main</code> for these authoring
+            commands.
+          </p>
+          <div
+            className="getting-started-requirements"
+            aria-label="Typed kernel binding rules"
+          >
+            <span>
+              <CheckCircle2 size={15} aria-hidden="true" /> Compiler-derived
+              binding
+            </span>
+            <span>
+              <CheckCircle2 size={15} aria-hidden="true" /> Typed host checks
+              and lints
+            </span>
+            <span>
+              <XCircle size={15} aria-hidden="true" /> No authored SHA
+            </span>
+          </div>
+        </div>
+        <div
+          className="getting-started-terminal"
+          aria-label="Typed kernel authoring commands"
+        >
+          <span>
+            <Terminal size={14} aria-hidden="true" /> Rust + Cargo
+          </span>
+          <pre>
+            <code>{authoringOutput}</code>
+          </pre>
+        </div>
+      </section>
 
       <section className="getting-started-run" aria-labelledby="getting-started-run-heading">
         <div>

@@ -370,7 +370,7 @@ describe("application shell", () => {
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Portable namespace: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
+      "Compiler-derived binding: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "Rust-produced HSACO SHA-256: 90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",

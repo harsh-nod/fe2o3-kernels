@@ -38,6 +38,12 @@ test("community quick start is truthful and responsive", async ({ page }, testIn
   await expect(
     page.getByRole("heading", { level: 1, name: "Run a Rust kernel without a GPU" }),
   ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Write the type, not an identity hash" }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Typed kernel authoring commands")).toContainText(
+    "cargo fe2o3 clippy --all-targets -- -D warnings",
+  );
   await expect(page.getByLabel("No-GPU quick start commands")).toContainText(
     "bash scripts/quickstart.sh no-gpu",
   );
@@ -1445,7 +1451,7 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
 
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Portable namespace: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
+    "Compiler-derived binding: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "Rust-produced HSACO SHA-256: 90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",

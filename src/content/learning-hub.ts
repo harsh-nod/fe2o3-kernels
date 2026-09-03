@@ -400,7 +400,7 @@ const rawLearningHub = {
         {
           label: "Build low-precision tutorial checks",
           command:
-            "cargo test --locked --manifest-path examples/gfx950_low_precision/Cargo.toml",
+            "cargo fe2o3 test --locked --all-targets --manifest-path examples/gfx950_low_precision/Cargo.toml",
           expected:
             "Low-precision references and source-shape checks pass before any hardware runner is used.",
         },
@@ -506,7 +506,7 @@ const rawLearningHub = {
       status: "runnable-now",
       commands: [checkoutCurrentFe2o3, noGpuQuickstart],
       expectedOutput:
-        "The ordinary Fill #[kernel] Rust source produces four typed f32 values equal to 42.5 and debugger-ready semantic state on the CPU.",
+        "The ordinary Fill #[kernel(typed)] Rust source produces four typed f32 values equal to 42.5 and debugger-ready semantic state on the CPU.",
       sourcePaths: [
         "scripts/quickstart.sh",
         "scripts/quickstart/fill-request.json",

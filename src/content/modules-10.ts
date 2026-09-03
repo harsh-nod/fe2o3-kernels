@@ -297,7 +297,7 @@ function evidenceLines(evidence: AdvancedRustEvidence): string[] {
     return [
       ...common,
       "Evidence status: pending mi350 end-to-end execution",
-      "Portable namespace: pending",
+      "Compiler-derived binding: pending",
       "Rust-produced LLVM SHA-256: pending",
       "Rust-produced HSACO SHA-256: pending",
       "Rust numerical result: pending",
@@ -309,7 +309,7 @@ function evidenceLines(evidence: AdvancedRustEvidence): string[] {
     "Evidence status: observed",
     `Artifact source commit: ${evidence.sourceCommit}`,
     `Artifact source tree: ${evidence.sourceTree}`,
-    `Portable namespace: ${evidence.namespace}`,
+    `Compiler-derived binding: ${evidence.namespace}`,
     `Rust-produced LLVM SHA-256: ${evidence.llvmSha256}`,
     `Rust-produced HSACO SHA-256: ${evidence.hsacoSha256}`,
     `Symbol-scoped ISA SHA-256: ${evidence.isaSha256}`,
@@ -369,7 +369,7 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
     kind: "source-example",
     label: "Production Rust pipeline integrated; mi350 record pending",
     detail:
-      `The lesson displays the ordinary attributed Rust kernels and independent safe CPU references. Each kernel has a dedicated production ${advancedProductionTarget} runner and digest-pinned HSA harness entry. Measured namespaces, LLVM/HSACO digests, numerical results, and GPU-observed authority remain fail-closed until the mi350 campaign is recorded.`,
+      `The lesson displays the ordinary attributed Rust kernels and independent safe CPU references. Each kernel has a dedicated production ${advancedProductionTarget} runner and digest-pinned HSA harness entry. Measured compiler-derived bindings, LLVM/HSACO digests, numerical results, and GPU-observed authority remain fail-closed until the mi350 campaign is recorded.`,
   };
 }
 
@@ -518,8 +518,8 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
             ? "The pinned production Rust artifacts and MI350X runs support only these bounded GPU-observed claims. HIP remains a separate comparison; proof, performance, protected publication, and full-model claims are not promoted."
             : "The pinned production Rust artifacts and MI350X run support only this bounded GPU-observed claim. No equivalent HIP fixture is published; proof, performance, protected publication, and full-model claims are not promoted."
           : hipSymbols.length > 0
-            ? "Production evidence is intentionally pending until every displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane."
-            : "Production evidence is intentionally pending until the displayed kernel has an exact mi350 namespace, LLVM/HSACO digest, ISA record, and numerical result. No equivalent HIP fixture is published.",
+            ? "Production evidence is intentionally pending until every displayed kernel has an exact mi350 compiler-derived binding, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane."
+            : "Production evidence is intentionally pending until the displayed kernel has an exact mi350 compiler-derived binding, LLVM/HSACO digest, ISA record, and numerical result. No equivalent HIP fixture is published.",
     },
   ];
   const performance = advancedPerformanceTabFor(spec.id);
@@ -777,11 +777,11 @@ const gptOssMegakernelLesson: Lesson = {
           "Historical campaign commit: " + gptOssHistoricalCampaignCommit,
           "Historical campaign tree: " + gptOssHistoricalCampaignTree,
           "Final compatibility matrix: perf-evidence/gfx950-integrated-compatibility-v1.json; 32/32 cases passed",
-          "Final compatibility namespace: " + gptOssCompatibility.namespace,
+          "Final compatibility compiler binding: " + gptOssCompatibility.namespace,
           "Final compatibility LLVM SHA-256: " + gptOssCompatibility.llvmSha256,
           "Final compatibility HSACO SHA-256: " + gptOssCompatibility.hsacoSha256,
           "Final compatibility ISA SHA-256: " + gptOssCompatibility.isaSha256,
-          "Portable namespace: af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
+          "Compiler-derived binding: af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
           "Rust-produced LLVM SHA-256: 7d28da46358c29ce8f3c12fecce42f491cef490f098fdb1602923ffdfc7947b3",
           "Rust-produced HSACO SHA-256: 066056a1fb2228c9043474d1746a7555ac31c0ca559d678844dc9e89d601f212",
           "Symbol-scoped ISA SHA-256: 216f41669a7243a6d34c1b1b80d31f75871e5ba4a38d6484a74bf81a47db9a75",

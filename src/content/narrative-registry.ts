@@ -44,7 +44,7 @@ function advancedScope(
         rows: [
           ["Rust source", `${sourcePath} and its independent safe Rust reference are mirrored exactly; the pinned commit and both SHA-256 values are recorded.`, "Identifies the exact source and oracle; it does not by itself establish lowering, execution, proof, or model equivalence."],
           ["Fixed shape", "Every extent and operator stage is copied from the final teaching suite.", "No dynamic-shape or production generalization."],
-          ["Compiler and ISA", "Every Rust kernel has a dedicated runner for production extraction, authenticated Kernel IR, gfx950 LLVM, COV6 finalization, and symbol-scoped ISA inspection.", "A measured claim requires the runner's exact namespace plus LLVM and HSACO digests; the comparison-only HIP object grants no Rust authority."],
+          ["Compiler and ISA", "Every Rust kernel has a dedicated runner for production extraction, authenticated Kernel IR, gfx950 LLVM, COV6 finalization, and symbol-scoped ISA inspection.", "A measured claim requires the runner's exact compiler-derived binding plus LLVM and HSACO digests; the comparison-only HIP object grants no Rust authority."],
           ["Oracle and runtime", "Every Rust kernel has a named digest-pinned HSA harness test against an independent safe CPU reference, with poison, canary, immutability, metadata, and finite-output checks.", "GPU-observed authority exists only when the evidence record names the mi350 environment, numerical result, and tolerance for that exact Rust HSACO."],
         ],
       },
@@ -55,7 +55,7 @@ function advancedScope(
         text: `This lesson covers only the source-declared fixed shape after mirroring. ${familyBoundary} It makes no production serving, full distributed collective, formal-proof, performance, convergence, training-quality, or full-model-equivalence claim.`,
       },
       milestoneCallout(
-        "This lesson exposes the ordinary Rust source, its independent safe CPU reference, and the per-kernel production Rust-to-gfx950 runner. Treat a kernel as GPU-observed only when its evidence record contains the exact namespace, LLVM and HSACO digests, ISA requirements, mi350 runtime observation, numerical result, and tolerance. No formal compiler-refinement receipt, performance label, protected publication authority, or full-model result is implied; HIP remains comparison-only.",
+        "This lesson exposes the ordinary Rust source, its independent safe CPU reference, and the per-kernel production Rust-to-gfx950 runner. Treat a kernel as GPU-observed only when its evidence record contains the exact compiler-derived binding, LLVM and HSACO digests, ISA requirements, mi350 runtime observation, numerical result, and tolerance. Historical source snapshots can retain the former explicit binding syntax; current authors use #[kernel(typed)] without a hash. No formal compiler-refinement receipt, performance label, protected publication authority, or full-model result is implied; HIP remains comparison-only.",
       ),
     ],
   };
@@ -2948,7 +2948,7 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Evidence identity",
-            "The exact c1383e97 campaign pins the displayed kernel and oracle together with namespace, LLVM, HSACO, ABI, ISA, and numerical output.",
+            "The exact c1383e97 campaign pins the displayed kernel and oracle together with its compiler-derived binding, LLVM, HSACO, ABI, ISA, and numerical output.",
             "A complete-layer or whole-model result, source-to-machine proof, fastest claim, or state-of-the-art result."
           ]
         ]
@@ -2988,7 +2988,7 @@ const narrativeRegistry = deepFreeze({
         "type": "callout",
         "tone": "boundary",
         "title": "Final integrated artifact",
-        "text": "The successful MI350X campaign used the exact displayed source at commit c1383e97db732f9f1ff8105f10d5c2b5971143e1 and tree 42385e6464ca40318fc70ae104845d3997844140. The campaign binds namespace, LLVM, HSACO, ISA, ABI, correctness, and dispatch timing for this fixed tile; it does not widen the result to a complete layer, whole model, fastest claim, or state of the art."
+        "text": "The successful MI350X campaign used the exact displayed source at commit c1383e97db732f9f1ff8105f10d5c2b5971143e1 and tree 42385e6464ca40318fc70ae104845d3997844140. The campaign binds the compiler-derived binding, LLVM, HSACO, ISA, ABI, correctness, and dispatch timing for this fixed tile; it does not widen the result to a complete layer, whole model, fastest claim, or state of the art."
       },
       {
         "type": "callout",

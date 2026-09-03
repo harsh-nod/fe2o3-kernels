@@ -190,7 +190,7 @@ function tutorialTabs(
       sourceSha256: rustExcerptSha256,
       sourceDigestScope: "displayed",
       explanatory: false,
-      notice: `Exact ordinary #[kernel(typed)] Rust excerpt for ${rustSymbol}, pinned to the production core commit and displayed-byte SHA-256. Its portable namespace is ${evidence.namespace}; the evidence record binds the corresponding Rust-produced LLVM, HSACO, ISA, and MI350X run.`,
+      notice: `Exact ordinary #[kernel(typed)] Rust excerpt for ${rustSymbol}, pinned to the production core commit and displayed-byte SHA-256. Its measured compiler-derived binding is ${evidence.namespace}; the evidence record binds the corresponding Rust-produced LLVM, HSACO, ISA, and MI350X run. Historical source bytes can retain the former explicit syntax and are not current author templates.`,
     },
     {
       kind: "reference",
@@ -255,7 +255,7 @@ function tutorialTabs(
           `CPU reference: ${referenceSymbol} in ${rustReferencePath}`,
           `Reference file SHA-256: ${rustReferenceFileSha256}`,
           `Production runner: bash ${evidence.runnerPath}`,
-          `Portable namespace: ${evidence.namespace}`,
+          `Compiler-derived binding: ${evidence.namespace}`,
           `Rust-produced LLVM SHA-256: ${evidence.llvmSha256}`,
           `Rust-produced HSACO SHA-256: ${evidence.hsacoSha256}`,
           "Rust gfx950 lowering supported: true",

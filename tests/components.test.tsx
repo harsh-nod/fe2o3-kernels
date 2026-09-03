@@ -32,6 +32,14 @@ describe("community getting started tutorial", () => {
     expect(
       screen.getByRole("heading", { name: "Run a Rust kernel without a GPU" }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "Write the type, not an identity hash" }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Typed kernel authoring commands"))
+      .toHaveTextContent("#[kernel(typed)]");
+    expect(screen.getByLabelText("Typed kernel authoring commands"))
+      .toHaveTextContent("cargo fe2o3 clippy --all-targets -- -D warnings");
+    expect(screen.getByText("No authored SHA")).toBeInTheDocument();
     expect(screen.getByLabelText("No-GPU quick start commands")).toHaveTextContent(
       "bash scripts/quickstart.sh no-gpu",
     );

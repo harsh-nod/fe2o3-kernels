@@ -55,6 +55,24 @@ softmax, GEMM, FlashAttention, MoE routing, Kimi Delta Attention,
 sparse/hybrid attention, residual mixing, speculative verification, N-gram
 gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
+## Write a typed kernel
+
+Application source uses `#[kernel(typed)]` without a namespace hash. The
+compiler derives crate and kernel bindings from Cargo and rustc metadata:
+
+```text
+cargo fe2o3 check --all-targets
+cargo fe2o3 clippy --all-targets -- -D warnings
+cargo fe2o3 test --all-targets
+cargo fe2o3 build
+```
+
+The first three commands are authority-free host workflows; `build` is the
+production GPU compiler route. Hashes displayed in evidence records are
+compiler outputs retained for reproducibility. Advanced lesson source from old
+evidence commits may still show the former explicit syntax because those bytes
+are immutable historical records, not current author templates.
+
 ## Start without a GPU
 
 Open the [Getting Started tutorial](https://harsh-nod.github.io/fe2o3-kernels/#/getting-started)
@@ -1028,7 +1046,7 @@ current replay instructions.
   machine-shape inspection for one 17x19x18 profile, including alpha/beta and
   predicated edge access. It has no attributed source, protected runtime or
   hardware numerical execution, compiler refinement, or general profile.
-- `#[kernel]` is the canonical user form. The procedural attribute marks an
+- `#[kernel(typed)]` is the canonical user form. The procedural attribute marks an
   ordinary Rust function for fe2o3's frontend and generated typed API, including
   exact WG64/WG256 launch contracts. Slice 1 now reaches canonical Kernel IR, an
   exact descriptor, a one-shot inert final HSACO receipt, and generated typed

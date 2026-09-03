@@ -87,7 +87,7 @@ export function pendingAdvancedEvidence(
 }
 
 // Use this constructor only after the exact wrapper completed on mi350 and the
-// namespace and digests were copied from that retained run record.
+// Compiler-derived binding and digests were copied from that retained run record.
 export function observedAdvancedEvidence(
   contract: AdvancedKernelContract,
   measurement: AdvancedMeasurement,

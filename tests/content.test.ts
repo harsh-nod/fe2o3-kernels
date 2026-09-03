@@ -1564,7 +1564,7 @@ describe("curriculum integrity", () => {
       expect(result).toContain("FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE");
       expect(result).toContain("Core source commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
       expect(result).toContain("Core source tree: 42385e6464ca40318fc70ae104845d3997844140");
-      expect(result).toContain(`Portable namespace: ${namespace}`);
+      expect(result).toContain(`Compiler-derived binding: ${namespace}`);
       expect(result).toContain(`Rust-produced LLVM SHA-256: ${llvmSha256}`);
       expect(result).toContain(`Rust-produced HSACO SHA-256: ${hsacoSha256}`);
       expect(result).toContain("Rust gfx950 lowering supported: true");
@@ -1828,7 +1828,7 @@ describe("curriculum integrity", () => {
         expect(evidence).toContain("Evidence status: observed");
         expect(evidence).toContain(`Artifact source commit: ${record.sourceCommit}`);
         expect(evidence).toContain(`Artifact source tree: ${record.sourceTree}`);
-        expect(evidence).toContain(`Portable namespace: ${record.namespace}`);
+        expect(evidence).toContain(`Compiler-derived binding: ${record.namespace}`);
         expect(evidence).toContain(`Rust-produced LLVM SHA-256: ${record.llvmSha256}`);
         expect(evidence).toContain(`Rust-produced HSACO SHA-256: ${record.hsacoSha256}`);
         expect(evidence).toContain(`Symbol-scoped ISA SHA-256: ${record.isaSha256}`);
