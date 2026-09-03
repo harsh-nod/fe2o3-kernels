@@ -63,6 +63,8 @@ const aggregateDebuggerCommand =
   "./target/debug/fe2o3-debug sim --bundle-v4 \"$PWD/aggregate-pair-struct-v4.fe2sim\" --request \"$PWD/aggregate-pair-struct-request.json\" --protocol jsonl";
 const aggregateSimulationTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_rust_struct_argument_exports_exact_v4_components -- --ignored --exact";
+const recursiveAggregateSimulationTestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_ranked_bounds_driver_v1 ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed -- --ignored --exact";
 const v5SimulationExportCommand =
   "./target/debug/fe2o3-export-sim --crate fe2o3_production_ranked_bounds_fixture --output \"$PWD/wave-reduce-f32-v5.fe2sim\" --target gfx950 --bundle-version 5 --target-dir target/tutorial-v5-export -- --package fe2o3-production-ranked-bounds-fixture --features wave_reduce_f32 --lib";
 const v5DebuggerCommand =
@@ -498,7 +500,7 @@ const cpuSimulation: Lesson = {
   prerequisites: ["Kernel IR evidence boundaries", "JSON and JSONL request files"],
   objectives: [
     "Export an ordinary #[kernel] crate to one authority-free .fe2sim through the production source, MIR, PLIRON, and KIR stages.",
-    "Recognize the exact Direct, Pair, and Ignore aggregate ABI subset and its typed unavailable boundaries.",
+    "Recognize the bounded recursive Unit, array, tuple, and struct scalar-leaf ABI subset and its typed unavailable boundaries.",
     "Run an ordinary gfx950 f32 wave reduction from its exact production V9 identity through a same-module KIR V10 Bundle V5.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
     "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
@@ -512,10 +514,10 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 4c1cf6d9c, the Linux-only exporter retains exact production KIR V8/V9 and emits a lossless same-module KIR V10 body in Bundle V5. The public CPU debugger executes an ordinary gfx950 f32 wave reduction and reconstructs its exact compiler-retained RegionSlice pair ABI. Legacy Bundle V4 remains available for exact Direct, Pair, and Ignore aggregate examples. Neither route is a KFD launch or performance prediction.",
+        "At compiler 69ab4a8aa, the Linux-only exporter retains exact production KIR and recursively scalarizes a bounded pointer-free Unit, array, tuple, or struct from rustc-owned paths, offsets, validity, pass mode, and KIR slots. The public CPU debugger consumes independently rederived logical leaves; it never reads an Indirect carrier pointer or aggregate padding. Bundle V5 also runs the ordinary gfx950 f32 wave reduction as exact same-module KIR V10. Neither route is a KFD launch or performance prediction.",
       reference: qualificationReference(
-        currentMilestones.exactBundleV5.commit,
-        currentMilestones.exactBundleV5.tree,
+        currentMilestones.recursiveAggregateV2.commit,
+        currentMilestones.recursiveAggregateV2.tree,
         [
           cpuSimulationBuildCommand,
           cpuSimulationExportCommand,
@@ -526,6 +528,7 @@ const cpuSimulation: Lesson = {
           aggregateSimulationExportCommand,
           aggregateDebuggerCommand,
           aggregateSimulationTestCommand,
+          recursiveAggregateSimulationTestCommand,
           v5SimulationExportCommand,
           v5DebuggerCommand,
           v5SimulationTestCommand,
@@ -568,14 +571,14 @@ const cpuSimulation: Lesson = {
       code: cpuSimulationSource,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
-      sourceCommit: currentMilestones.exactBundleV5.commit,
+      sourceCommit: currentMilestones.recursiveAggregateV2.commit,
       sourceSha256:
-        "2eafbe80c7a6e9ba8292ba216f420a624af3a96ec6f8b10d4ba73957fffd8bbc",
+        "2d27de2319a4f776fcd44c5686a0759c9176503fb6b7e2092c210974ca9d606a",
       sourceDigestScope: "displayed",
       sourceFragments: cpuSimulationSourceFragments,
       explanatory: false,
       notice:
-        "Exact barrier, struct, tuple, and ZST excerpts, plus a gfx950 f32 wave-reduction excerpt, from the ordinary attributed Rust crate used by the pinned simulator regressions.",
+        "Exact barrier, struct, tuple, array, ZST, nested aggregate, rejected enum/pointer/drop, and gfx950 f32 wave-reduction excerpts from the ordinary attributed Rust crate used by the pinned simulator regressions.",
     },
     {
       kind: "reference",
@@ -625,6 +628,9 @@ REQUEST='${aggregateSimulationRequest.trim()}'
 printf '%s\\n' "$REQUEST" > aggregate-pair-struct-request.json
 printf '%s\\n' '{"operation":"step","schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"direction":"forward","granularity":"operation","count":1}' | ${aggregateDebuggerCommand}
 
+# Exercise the ordinary recursive array/nested-struct export and hostile shapes.
+${recursiveAggregateSimulationTestCommand}
+
 # Export ordinary gfx950 V9 wave code into exact same-module V10 custody.
 ${v5SimulationExportCommand}
 printf '%s\\n' '{"schema":"fe2o3-simulation-request-v1","kernel":"wave_reduce_f32","grid":[64,1,1],"workgroup":[64,1,1],"arguments":[{"kind":"scalar","type":"f32","bits":"0x3f800000"},{"kind":"buffer","element":"f32","access":"read_write","alignment":4,"bytes":"0x${"00".repeat(64 * 4)}"}]}' > wave-reduce-f32-v5-request.json
@@ -641,20 +647,23 @@ ${dynamicLdsSimulationTestCommand}`,
 
 Aggregate Bundle V4 ABI boundary
 
-Admitted now
-  Direct: one exact scalar leaf
-  Pair: two compiler-ordered leaves, including repr(C) struct and tuple cases
-  Ignore: zero components for a ZST/unit argument
-  Slices/scalars: ordinary adjacent KIR parameters
+Admitted now at 69ab4a8aa
+  shapes: pointer-free Unit, fixed array, tuple, and struct
+  bound: at most 256 structural nodes
+  leaves: exact path, type, byte offset, scalar validity, ownership, and KIR slot
+  pass modes: exact Ignore, Direct, Pair, simple Rust integer Cast,
+              and sized non-stack/non-metadata Indirect
+  execution: logical leaf inputs after independent simulator rederivation
+  checked example: [u64; 2] and nested repr(C) aggregate
 
 Typed unavailable
-  enum discriminants and niches
-  pointer/reference-containing aggregates
-  Cast, Indirect, adjusted, unsized, or uninhabited ABI
-  aggregate forms whose actual rustc ABI is not Direct, Pair, or Ignore
+  enums and niche materialization
+  embedded pointers without owned region bindings
+  adjusted, unsized, uninhabited, or needs-drop values
+  complex/foreign Cast and metadata, on-stack, or non-exact Indirect
+  dynamic by-value array indices
 
-The checked [u64; 2] fixture currently receives an unsupported aggregate ABI;
-array syntax alone does not imply admission.
+Physical Indirect carrier pointers and aggregate padding are never read.
 
 Bundle V5 exactness boundary
 
@@ -666,7 +675,7 @@ Bundle V5 exactness boundary
   authority: observation only; no compiler, load, launch, or hardware authority`,
       explanatory: true,
       notice:
-        "The JSONL prefix is the exact checked-in source-debug transcript. The appended V4 and V5 boundaries come from separately pinned production regressions; admission follows compiler ABI/layout and KIR identity evidence, not Rust surface spelling.",
+        "The JSONL prefix is the exact checked-in source-debug transcript. The appended recursive ABI and V5 boundaries come from separately pinned production regressions; admission follows compiler ABI/layout and KIR identity evidence, not Rust surface spelling.",
     },
     {
       kind: "result",
@@ -690,6 +699,13 @@ fe2o3-debug sim --bundle-v4
   status: ok
   session.simulated: true
   session.hardware_observed: false
+
+Recursive ABI milestone at 69ab4a8aa
+  [u64; 2]: admitted through exact sized Indirect evidence
+  nested repr(C) struct: admitted as exact recursive scalar leaves
+  hostile roster/path/offset/validity/overlap: rejected
+  enum, embedded pointer, needs-drop: typed unavailable
+  physical carrier/padding reads: none
 
 Physical differential at 69ae3731b
   hardware passes: 0

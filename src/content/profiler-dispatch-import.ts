@@ -17,7 +17,7 @@ const objectPairPattern = /^[0-9a-f]{40}:[0-9a-f]{40}$/u;
 const exactObject = /^[0-9a-f]{40}$/u;
 if (
   currentMilestonesData.schema !== "fe2o3-debugger-profiler-current-milestones-v1" ||
-  currentMilestonesData.reviewedOn !== "2026-09-02" ||
+  currentMilestonesData.reviewedOn !== "2026-09-03" ||
   !exactObject.test(currentMilestonesData.physicalDifferential.commit) ||
   !exactObject.test(currentMilestonesData.physicalDifferential.tree) ||
   !exactObject.test(currentMilestonesData.physicalDifferential.packageIsolationCommit) ||
@@ -29,7 +29,22 @@ if (
   currentMilestonesData.runtimeCausality.dispatchJoin !== "unavailable" ||
   currentMilestonesData.runtimeCausality.clockJoin !== "unavailable" ||
   currentMilestonesData.runtimeCausality.deviceCopyProducer !== "unavailable" ||
-  currentMilestonesData.runtimeCausality.dependencyProducer !== "unavailable"
+  currentMilestonesData.runtimeCausality.dependencyProducer !== "unavailable" ||
+  !exactObject.test(currentMilestonesData.rocprofWrapperOverhead.commit) ||
+  !exactObject.test(currentMilestonesData.rocprofWrapperOverhead.tree) ||
+  currentMilestonesData.rocprofWrapperOverhead.warmupPairs !== 5 ||
+  currentMilestonesData.rocprofWrapperOverhead.measuredPairs !== 30 ||
+  currentMilestonesData.rocprofWrapperOverhead.rawMedianNs !== 819180977 ||
+  currentMilestonesData.rocprofWrapperOverhead.wrappedMedianNs !== 1075406076 ||
+  currentMilestonesData.rocprofWrapperOverhead.pairedMedianDeltaBps !== 3135 ||
+  currentMilestonesData.rocprofWrapperOverhead.candidateBudgetBps !== 1000 ||
+  currentMilestonesData.rocprofWrapperOverhead.collectorArtifacts !== 0 ||
+  currentMilestonesData.rocprofWrapperOverhead.captureOverhead !==
+    "unavailable_no_admitted_capture" ||
+  currentMilestonesData.rocprofWrapperOverhead.productionQualified !== false ||
+  !exactObject.test(currentMilestonesData.liveDirectKfdRocprof.investigationCommit) ||
+  currentMilestonesData.liveDirectKfdRocprof.directKfdQueueRegistration !==
+    "unavailable_in_installed_rocprofv3_cli"
 ) {
   throw new Error("direct-KFD differential or runtime-causality milestone is malformed");
 }
@@ -39,6 +54,12 @@ export const profilerPhysicalDifferentialMilestone = deepFreeze(
 );
 export const profilerRuntimeCausalityMilestone = deepFreeze(
   currentMilestonesData.runtimeCausality,
+);
+export const profilerWrapperOverheadMilestone = deepFreeze(
+  currentMilestonesData.rocprofWrapperOverhead,
+);
+export const profilerDirectKfdInvestigationMilestone = deepFreeze(
+  currentMilestonesData.liveDirectKfdRocprof,
 );
 const boundCompilerRevision =
   "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044";
@@ -434,7 +455,8 @@ export const profilerImportPublicationStages = deepFreeze([
 export const profilerImportTruthRows = deepFreeze([
   ["Tutorial source records", "synthetic", "Deterministic schematic projections; no collector or GPU produced them."],
   ["Bounded MI300X checkpoint", "qualified", "Focused importer, profile, query, agent-client, and hosted-parity checks passed; generic-core passed with soft nofile 1024. This does not qualify T3 overall."],
-  ["Real GPU rocprof roundtrip", "not run", "The installed-loader target was Python; KFD-bound JSON/CSV imports used fake collector records, so no GPU dispatch flowed from rocprofv3 through import."],
+  ["Real GPU rocprof roundtrip", "unavailable", "A pure direct-KFD target ran under the installed ROCProfiler SDK 1.1.0 wrapper, but the collector emitted no dispatch artifact, so no GPU dispatch flowed from rocprofv3 through import."],
+  ["Wrapper process wall time", "+31.35% observed", "Five warmup and thirty measured alternating pairs compare raw and wrapped processes for one exact MI300X target. Empty artifact inventories make actual kernel-capture overhead unavailable, not zero."],
   ["Exact KIR V7", "declared + admitted", "Canonical verified bytes constrain target family and Wave64 compatibility; they do not prove execution."],
   ["ATT", "unavailable", "Sealed collection rejects the decoder's mutable-directory requirement."],
   ["Protected source/ISA 3x2 matrix", "not run", "The protected family-by-target acceptance remains unavailable and is not covered by this checkpoint."],
@@ -451,6 +473,9 @@ export const profilerImportSources = deepFreeze([
   { label: "Semantic Capture", path: "crates/fe2o3-semantic-import/src/capture.rs" },
   { label: "Semantic Profiler Bundle V4", path: "crates/fe2o3-semantic-import/src/profiler_bundle.rs" },
   { label: "Production CLI acceptance", path: "crates/cargo-fe2o3/tests/profile_cli.rs" },
+  { label: "Bounded wrapper overhead contract", path: "crates/cargo-fe2o3/src/profile_wrapper_overhead_v1.rs", commit: profilerWrapperOverheadMilestone.commit, tree: profilerWrapperOverheadMilestone.tree },
+  { label: "Exact MI300X wrapper record", path: "docs/evidence/mi300x-rocprof-wrapper-host-wall-2026-09-03.json", commit: profilerWrapperOverheadMilestone.commit, tree: profilerWrapperOverheadMilestone.tree },
+  { label: "Direct-KFD empty-inventory investigation", path: "docs/evidence/mi300x-direct-kfd-rocprof-2026-09-03.md", commit: profilerDirectKfdInvestigationMilestone.investigationCommit, tree: profilerDirectKfdInvestigationMilestone.investigationTree },
   { label: "Installed JSON dialect fixture", path: "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-installed-97f5574-kernel-dispatch-schema.json" },
   { label: "Forward JSON dialect fixture", path: "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-forward-848868-kernel-dispatch-schema.json" },
   { label: "Current CSV dialect fixture", path: "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-current-kernel-dispatch.csv" },
@@ -470,8 +495,10 @@ export function profilerImportSourceUrl(path: string): string | null {
   ) {
     throw new Error("profiler import source path must stay repository-relative");
   }
-  const [commit] = profilerImportMilestone.compilerRevision.split(":");
-  return objectPairPattern.test(profilerImportMilestone.compilerRevision)
+  const source = profilerImportSources.find((candidate) => candidate.path === path);
+  const [importCommit] = profilerImportMilestone.compilerRevision.split(":");
+  const commit = source && typeof source.commit === "string" ? source.commit : importCommit;
+  return typeof commit === "string" && exactObject.test(commit)
     ? `https://github.com/harsh-nod/fe2o3/blob/${commit}/${path}`
     : null;
 }

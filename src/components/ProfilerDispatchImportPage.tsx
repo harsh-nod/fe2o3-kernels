@@ -30,7 +30,9 @@ import {
   profilerImportSources,
   profilerImportSourceUrl,
   profilerImportTruthRows,
+  profilerDirectKfdInvestigationMilestone,
   profilerRuntimeCausalityMilestone,
+  profilerWrapperOverheadMilestone,
 } from "../content/profiler-dispatch-import";
 
 function exactJson(value: unknown): string {
@@ -417,6 +419,8 @@ export function ProfilerDispatchImportPage() {
               <tr><th>Physical differential</th><td><code>0 hardware / 0 parity</code></td><td>The V2 qualification lists {profilerPhysicalDifferentialMilestone.prerequisiteCount} protected prerequisites. Backend, trust, rollback, and refinement producers remain unprovisioned.</td></tr>
               <tr><th>Evidence minting</th><td><code>fail closed</code></td><td>Synthetic, stale, runtime-failed, or ambiguous completion cannot mint a hardware observation or physical comparison report.</td></tr>
               <tr><th>Runtime lifecycle</th><td><code>capture-local</code></td><td>At {profilerRuntimeCausalityMilestone.commit.slice(0, 10)}, exact event identities support only schema-required local lifecycle edges.</td></tr>
+              <tr><th>Wrapper process wall time</th><td><code>+{(profilerWrapperOverheadMilestone.pairedMedianDeltaBps / 100).toFixed(2)}%</code></td><td>{profilerWrapperOverheadMilestone.warmupPairs} warmup and {profilerWrapperOverheadMilestone.measuredPairs} measured alternating pairs compare raw and wrapped execution for one exact target. With {profilerWrapperOverheadMilestone.collectorArtifacts} admitted collector artifacts, capture overhead is unavailable and production qualification is false.</td></tr>
+              <tr><th>Direct-KFD collector boundary</th><td><code>typed unavailable</code></td><td>The raw-entrypoint follow-up at {profilerDirectKfdInvestigationMilestone.investigationCommit.slice(0, 10)} confirmed configured contexts but zero output-generating services. The installed CLI exposes no direct-KFD queue-registration path.</td></tr>
               <tr><th>Dispatch / clock join</th><td><code>unavailable</code></td><td>Direct-KFD/rocprof dispatch identity, clock correlation, device-copy producers, and dependency producers are absent.</td></tr>
             </tbody>
           </table>

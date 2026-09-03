@@ -35,12 +35,19 @@ const exactDigest = /^[0-9a-f]{64}$/u;
 
 if (
   currentMilestonesData.schema !== "fe2o3-debugger-profiler-current-milestones-v1" ||
-  currentMilestonesData.reviewedOn !== "2026-09-02" ||
+  currentMilestonesData.reviewedOn !== "2026-09-03" ||
   !exactObject.test(currentMilestonesData.aggregateBundleV4.commit) ||
   !exactObject.test(currentMilestonesData.aggregateBundleV4.tree) ||
   JSON.stringify(currentMilestonesData.aggregateBundleV4.admittedAbi) !==
     JSON.stringify(["direct", "pair", "ignore"]) ||
   currentMilestonesData.aggregateBundleV4.hardwareObserved !== false ||
+  !exactObject.test(currentMilestonesData.recursiveAggregateV2.commit) ||
+  !exactObject.test(currentMilestonesData.recursiveAggregateV2.tree) ||
+  JSON.stringify(currentMilestonesData.recursiveAggregateV2.admittedShapes) !==
+    JSON.stringify(["unit", "array", "tuple", "struct"]) ||
+  currentMilestonesData.recursiveAggregateV2.maximumStructuralNodes !== 256 ||
+  currentMilestonesData.recursiveAggregateV2.physicalIndirectCarrierRead !== false ||
+  currentMilestonesData.recursiveAggregateV2.hardwareObserved !== false ||
   !exactObject.test(currentMilestonesData.exactBundleV5.commit) ||
   !exactObject.test(currentMilestonesData.exactBundleV5.tree) ||
   currentMilestonesData.exactBundleV5.productionKirVersion !== 9 ||
@@ -68,6 +75,26 @@ if (
     "runtime_dispatch_observed_collector_completed_no_artifacts" ||
   currentMilestonesData.liveDirectKfdRocprof.runtimeHardwareObserved !== true ||
   currentMilestonesData.liveDirectKfdRocprof.profilerKernelObservation !== false ||
+  !exactObject.test(currentMilestonesData.liveDirectKfdRocprof.investigationCommit) ||
+  !exactObject.test(currentMilestonesData.liveDirectKfdRocprof.investigationTree) ||
+  currentMilestonesData.liveDirectKfdRocprof.directKfdQueueRegistration !==
+    "unavailable_in_installed_rocprofv3_cli" ||
+  !exactObject.test(currentMilestonesData.rocprofWrapperOverhead.commit) ||
+  !exactObject.test(currentMilestonesData.rocprofWrapperOverhead.tree) ||
+  currentMilestonesData.rocprofWrapperOverhead.warmupPairs !== 5 ||
+  currentMilestonesData.rocprofWrapperOverhead.measuredPairs !== 30 ||
+  currentMilestonesData.rocprofWrapperOverhead.pairedMedianDeltaBps !== 3135 ||
+  currentMilestonesData.rocprofWrapperOverhead.collectorArtifacts !== 0 ||
+  currentMilestonesData.rocprofWrapperOverhead.captureOverhead !==
+    "unavailable_no_admitted_capture" ||
+  currentMilestonesData.rocprofWrapperOverhead.productionQualified !== false ||
+  !exactObject.test(currentMilestonesData.agentVariantV2.commit) ||
+  !exactObject.test(currentMilestonesData.agentVariantV2.tree) ||
+  currentMilestonesData.agentVariantV2.freshProcessCases !== 4 ||
+  currentMilestonesData.agentVariantV2.authority !==
+    "read_only_no_execution_attach_scheduling_collection_or_decoder_authority" ||
+  currentMilestonesData.agentVariantV2.pcAttCorrelation !==
+    "typed_unavailable_without_authenticated_evidence" ||
   !exactObject.test(currentMilestonesData.transformationMapV2.commit) ||
   !exactObject.test(currentMilestonesData.transformationMapV2.tree) ||
   JSON.stringify(currentMilestonesData.transformationMapV2.observedClasses) !==
@@ -84,6 +111,9 @@ export const decodedAttSourceIsaMilestone = deepFreeze(
 export const aggregateBundleV4Milestone = deepFreeze(
   currentMilestonesData.aggregateBundleV4,
 );
+export const recursiveAggregateV2Milestone = deepFreeze(
+  currentMilestonesData.recursiveAggregateV2,
+);
 export const exactBundleV5Milestone = deepFreeze(
   currentMilestonesData.exactBundleV5,
 );
@@ -91,6 +121,10 @@ export const dynamicLdsMilestone = deepFreeze(currentMilestonesData.dynamicLds);
 export const liveDirectKfdRocprofMilestone = deepFreeze(
   currentMilestonesData.liveDirectKfdRocprof,
 );
+export const rocprofWrapperOverheadMilestone = deepFreeze(
+  currentMilestonesData.rocprofWrapperOverhead,
+);
+export const agentVariantV2Milestone = deepFreeze(currentMilestonesData.agentVariantV2);
 export const transformationMapV2Milestone = deepFreeze(
   currentMilestonesData.transformationMapV2,
 );

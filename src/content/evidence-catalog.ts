@@ -168,8 +168,21 @@ const profilerImportEvidence: GitEvidenceObject[] =
         label: "in-process profiler dispatch import milestone",
         commit: profilerRevision[0],
         tree: profilerRevision[1],
-        sourcePaths: profilerImportSources.map((source) => source.path),
-      }]
+        sourcePaths: profilerImportSources
+          .filter((source) => !("commit" in source))
+          .map((source) => source.path),
+      }, ...profilerImportSources.flatMap((source) => {
+        const commit = source.commit;
+        const tree = source.tree;
+        return typeof commit === "string" && typeof tree === "string"
+          ? [{
+              label: source.label,
+              commit,
+              tree,
+              sourcePaths: [source.path],
+            }]
+          : [];
+      })]
     : [];
 
 const profilerImportLocalArtifacts: LocalEvidenceArtifact[] = [

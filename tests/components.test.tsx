@@ -400,6 +400,15 @@ describe("in-process profiler import tutorial", () => {
     ).toHaveTextContent("Real GPU rocprof roundtrip");
     expect(
       screen.getByRole("table", { name: "Profiler import truth and nonclaims" }),
+    ).toHaveTextContent("+31.35% observed");
+    expect(
+      screen.getByRole("table", { name: "Direct-KFD differential and causality status" }),
+    ).toHaveTextContent("Wrapper process wall time");
+    expect(
+      screen.getByRole("table", { name: "Direct-KFD differential and causality status" }),
+    ).toHaveTextContent("no direct-KFD queue-registration path");
+    expect(
+      screen.getByRole("table", { name: "Profiler import truth and nonclaims" }),
     ).toHaveTextContent("blocked on #182");
     expect(
       screen.getByRole("table", { name: "Profiler import truth and nonclaims" }),

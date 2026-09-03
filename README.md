@@ -142,6 +142,15 @@ blocked on the issue #182 typed producer. The query JSONL on the page is a
 deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
 
+The current debugger/profiler milestone adds a separate live direct-KFD
+qualification boundary. A pure direct-KFD MI300X target completed under the
+installed ROCProfiler SDK 1.1.0 wrapper, but the collector emitted no admitted
+dispatch artifact. A bounded 5-warmup/30-measured-pair record observed 31.35%
+wrapper/process wall-time overhead for that exact target; it is not capture
+overhead and does not qualify production use. The tutorial keeps dispatch,
+code-object, clock, counter, PC, ATT, debugger, and capture-overhead conclusions
+typed unavailable.
+
 The checked-in publication gate is pinned to immutable implementation-evidence
 commit `308d8fa00fa41e098b2a1a47bbfea1bc29735464`, tree
 `aee01674fefa733731db35eae1a1705b3286179e`. Deployment requires

@@ -1,10 +1,23 @@
 {
   "schema": "fe2o3-debugger-profiler-current-milestones-v1",
-  "reviewedOn": "2026-09-02",
+  "reviewedOn": "2026-09-03",
   "aggregateBundleV4": {
     "commit": "33ab7d13e0501ecd199407a2009d3395e27c77d5",
     "tree": "3728f4aa187ffd439b2088802f246e309a75bb57",
     "admittedAbi": ["direct", "pair", "ignore"],
+    "hardwareObserved": false
+  },
+  "recursiveAggregateV2": {
+    "commit": "69ab4a8aa96c6d82bd64586ef47bcd45c7afe75b",
+    "tree": "233f24d5be8467b381a28d6aa5f2c1448f288f1d",
+    "admittedShapes": [
+      "unit",
+      "array",
+      "tuple",
+      "struct"
+    ],
+    "maximumStructuralNodes": 256,
+    "physicalIndirectCarrierRead": false,
     "hardwareObserved": false
   },
   "exactBundleV5": {
@@ -32,6 +45,8 @@
   "liveDirectKfdRocprof": {
     "commit": "4ff9c82b7768e1b30edf69828865def6b20a200f",
     "tree": "5c35a042dc2cc49d362fc21e5d413db58d3bbe0f",
+    "investigationCommit": "f8eaf090ab98f41a7555484a93c48aea6a3c3c1d",
+    "investigationTree": "7cefaad29a5b247e69eb6450d4765bfafd474a19",
     "target": "gfx942:xnack-",
     "runtimeEvents": 31,
     "droppedEvents": 0,
@@ -39,7 +54,28 @@
     "collectorArtifacts": 0,
     "outcome": "runtime_dispatch_observed_collector_completed_no_artifacts",
     "runtimeHardwareObserved": true,
-    "profilerKernelObservation": false
+    "profilerKernelObservation": false,
+    "directKfdQueueRegistration": "unavailable_in_installed_rocprofv3_cli"
+  },
+  "rocprofWrapperOverhead": {
+    "commit": "473b76668c2b4307ae54876b784fb561f44f84bc",
+    "tree": "8af6d6b5a20bd2a32b60bbf0c75eea08a7a6033f",
+    "warmupPairs": 5,
+    "measuredPairs": 30,
+    "rawMedianNs": 819180977,
+    "wrappedMedianNs": 1075406076,
+    "pairedMedianDeltaBps": 3135,
+    "candidateBudgetBps": 1000,
+    "collectorArtifacts": 0,
+    "captureOverhead": "unavailable_no_admitted_capture",
+    "productionQualified": false
+  },
+  "agentVariantV2": {
+    "commit": "abfd64143f2b77ed9eb719fa8de361443600f9ed",
+    "tree": "a7122a6646e102deace80fab0c401554eeb446aa",
+    "freshProcessCases": 4,
+    "authority": "read_only_no_execution_attach_scheduling_collection_or_decoder_authority",
+    "pcAttCorrelation": "typed_unavailable_without_authenticated_evidence"
   },
   "transformationMapV2": {
     "commit": "6f1f7d8967f2e2f03bbaf234bf63179d634fe0a9",

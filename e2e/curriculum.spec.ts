@@ -366,7 +366,9 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("pub fn barrier_before_access");
   await expect(codePanel).toContainText("syncthreads");
   await expect(
-    page.getByText(/Exact barrier, struct, tuple, and ZST excerpts/u),
+    page.getByText(
+      /Exact barrier, struct, tuple, array, ZST, nested aggregate, rejected enum\/pointer\/drop/u,
+    ),
   ).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),

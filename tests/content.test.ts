@@ -55,6 +55,7 @@ import {
   profilerImportSources,
   profilerImportSourceUrl,
   profilerRuntimeCausalityMilestone,
+  profilerWrapperOverheadMilestone,
   validateProfilerImportTutorial,
 } from "../src/content/profiler-dispatch-import";
 import { evidenceCatalog } from "../src/content/evidence-catalog";
@@ -93,6 +94,9 @@ import {
   dynamicLdsMilestone,
   exactBundleV5Milestone,
   liveDirectKfdRocprofMilestone,
+  recursiveAggregateV2Milestone,
+  rocprofWrapperOverheadMilestone,
+  agentVariantV2Milestone,
   sourceIsaCharacteristicDuplicateFacts,
   sourceIsaCharacteristicCollectionHex,
   sourceIsaCharacteristicFixtureReady,
@@ -2496,7 +2500,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       explanatory: false,
-      sourceCommit: exactBundleV5Milestone.commit,
+      sourceCommit: recursiveAggregateV2Milestone.commit,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceDigestScope: "displayed",
@@ -2506,6 +2510,9 @@ describe("curriculum integrity", () => {
     );
     expect(kernel?.code).toContain("pub fn aggregate_pair_struct");
     expect(kernel?.code).toContain("pub fn aggregate_pair_tuple");
+    expect(kernel?.code).toContain("pub fn aggregate_pair_array");
+    expect(kernel?.code).toContain("pub fn aggregate_nested");
+    expect(kernel?.code).toContain("pub fn aggregate_drop");
     expect(kernel?.code).toContain("pub fn aggregate_zst");
     expect(kernel?.code).toContain("pub fn barrier_before_access");
     expect(kernel?.code).toContain("pub fn wave_reduce_f32");
@@ -2527,13 +2534,15 @@ describe("curriculum integrity", () => {
     expect(host).toContain("fe2o3-debug sim --bundle-v4");
     expect(host).toContain("--bundle-version 5");
     expect(host).toContain("fe2o3-debug sim --bundle-v5");
+    expect(host).toContain("ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed");
     expect(host).toContain("explicitly_sized_dynamic_lds");
     expect(host).not.toContain("--kir-v7");
     const sourceDebug =
       lesson?.tabs.find((tab) => tab.kind === "comparison")?.code ?? "";
-    expect(sourceDebug).toContain("Direct: one exact scalar leaf");
-    expect(sourceDebug).toContain("enum discriminants and niches");
+    expect(sourceDebug).toContain("shapes: pointer-free Unit, fixed array, tuple, and struct");
+    expect(sourceDebug).toContain("enums and niche materialization");
     expect(sourceDebug).toContain("[u64; 2]");
+    expect(sourceDebug).toContain("Physical Indirect carrier pointers and aggregate padding are never read");
     expect(sourceDebug).toContain("Bundle V5 exactness boundary");
     expect(sourceDebug).toContain("production identity: canonical KIR V9");
     expect(sourceDebug).toContain(
@@ -2559,6 +2568,7 @@ describe("curriculum integrity", () => {
     expect(result).toContain("explicit kernarg bytes: 40");
     expect(result).toContain("session.simulated: true");
     expect(result).toContain("hardware passes: 0");
+    expect(result).toContain("Recursive ABI milestone at 69ab4a8aa");
     expect(result).toContain(
       readFileSync("examples/source_simulation_result.json", "utf8").trim(),
     );
@@ -2594,15 +2604,15 @@ describe("curriculum integrity", () => {
       kind: "runnable-now",
       reference: {
         scope: "qualification-evidence",
-        commit: exactBundleV5Milestone.commit,
-        tree: exactBundleV5Milestone.tree,
+        commit: recursiveAggregateV2Milestone.commit,
+        tree: recursiveAggregateV2Milestone.tree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
       scope: "qualification-evidence",
-      commit: exactBundleV5Milestone.commit,
-      tree: exactBundleV5Milestone.tree,
+      commit: recursiveAggregateV2Milestone.commit,
+      tree: recursiveAggregateV2Milestone.tree,
       target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
     });
     expect(reference?.note).toContain("not protected compiler-execution authentication");
@@ -2634,9 +2644,13 @@ describe("curriculum integrity", () => {
     expect(content).toContain(decodedAttSourceIsaMilestone.commit.slice(0, 9));
     expect(content).toContain(exactBundleV5Milestone.commit.slice(0, 9));
     expect(content).toContain(liveDirectKfdRocprofMilestone.commit.slice(0, 9));
+    expect(content).toContain(recursiveAggregateV2Milestone.commit.slice(0, 9));
+    expect(content).toContain(rocprofWrapperOverheadMilestone.commit.slice(0, 9));
+    expect(content).toContain(agentVariantV2Milestone.commit.slice(0, 9));
     expect(content).toContain(transformationMapV2Milestone.commit.slice(0, 9));
     expect(content).toContain(profilerPhysicalDifferentialMilestone.commit.slice(0, 9));
     expect(content).toContain(profilerRuntimeCausalityMilestone.commit.slice(0, 9));
+    expect(profilerWrapperOverheadMilestone.productionQualified).toBe(false);
 
     expect(currentState.issues).toEqual(
       expect.arrayContaining([

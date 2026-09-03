@@ -389,7 +389,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "At compiler 4c1cf6d9c, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Bundle V4 retains exact Direct, Pair, and Ignore aggregate examples in canonical KIR V7. The independent Bundle V5 route retains the original production KIR V8/V9 identity, embeds a lossless same-module KIR V10 encoding, and carries Source Map V2, semantic MIR, and both storage maps. fe2o3-debug sim --bundle-v5 executes that exact V10 custody without recompiling. It does not add a second importer or lowerer."
+        "text": "At compiler 69ab4a8aa, fe2o3-export-sim accepts an ordinary attributed Rust crate and reuses the sole production source, semantic MIR, ranked PLIRON, and target-neutral KIR stages. Bundle V4 recursively projects a bounded pointer-free Unit, fixed array, tuple, or struct into exact logical scalar leaves using rustc-owned paths, byte offsets, validity, pass mode, and KIR slots. The simulator independently rederives that roster and never reads physical Indirect carrier pointers or aggregate padding. The Bundle V5 route retains the original production KIR V8/V9 identity, embeds a lossless same-module KIR V10 encoding, and carries Source Map V2, semantic MIR, and both storage maps. fe2o3-debug sim --bundle-v5 executes that exact V10 custody without recompiling. It does not add a second importer or lowerer."
       },
       {
         "type": "table",
@@ -401,8 +401,8 @@ const narrativeRegistry = deepFreeze({
         "rows": [
           [
             "Production extraction",
-            "Ordinary #[kernel] Rust, live rustc spans, semantic MIR ownership, ranked checks, and same-session target-neutral KIR lowering, including exact Direct, Pair, and Ignore by-value aggregate ABI evidence.",
-            "Enums, pointer- or reference-containing aggregates, Cast, Indirect, adjusted, unsized, uninhabited, or otherwise unproved layouts fail with typed unavailability before publication. Arrays are admitted only when their actual compiler ABI is one of the exact supported forms; the checked [u64; 2] case is not."
+            "Ordinary #[kernel] Rust, live rustc spans, semantic MIR ownership, ranked checks, same-session target-neutral KIR lowering, and at most 256 recursive scalar-layout nodes for pointer-free Unit, fixed array, tuple, and struct arguments.",
+            "Enums/niches, embedded pointers without owned region bindings, adjusted/unsized/uninhabited/needs-drop values, complex or foreign Cast, metadata/on-stack/non-exact Indirect, and dynamic by-value array indices fail with typed unavailability before publication. The checked [u64; 2] and nested repr(C) cases now pass through exact sized Indirect evidence as logical leaves."
           ],
           [
             ".fe2sim admission",
@@ -436,7 +436,7 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "The production regressions retain both ABI and executable-IR evidence. Bundle V4 places an ordinary repr(C) struct's leaves at offsets 0 and 8, a writable slice at 16 and 24, and a scalar at 32 in a 40-byte, 8-byte-aligned kernarg image. Bundle V5 adds the exact production V9 gfx950 wave_reduce_f32 body as same-module KIR V10 and validates the owned RegionSlice wrapper as a pointer/usize scalar pair with its ZST marker ignored. fe2o3-debug sim --bundle-v5 completes that wave kernel with simulated=true and hardware_observed=false; unsupported ABI forms still fail typed."
+        "text": "The production regressions retain both ABI and executable-IR evidence. Bundle V4 places an ordinary repr(C) struct's leaves at offsets 0 and 8, a writable slice at 16 and 24, and a scalar at 32 in a 40-byte, 8-byte-aligned kernarg image. At 69ab4a8aa it also accepts `[u64; 2]` and a nested repr(C) tuple/array struct through exact recursive logical leaves, while independently rejecting roster, path, offset, validity, overlap, enum, embedded-pointer, and needs-drop substitutions. Bundle V5 adds the exact production V9 gfx950 wave_reduce_f32 body as same-module KIR V10 and validates the owned RegionSlice wrapper as a pointer/usize scalar pair with its ZST marker ignored. Every CPU result remains simulated=true and hardware_observed=false."
       },
       {
         "type": "table",
@@ -509,13 +509,13 @@ const narrativeRegistry = deepFreeze({
           ],
           [
             "Live direct-KFD plus rocprofv3",
-            "Commit 4ff9c82b7 archives a real MI300X KFD capture with 31 events, zero loss, and three completed dispatch lifecycles beside an exact successful ROCprofiler SDK 1.1.0 invocation.",
-            "That exact collector run produced no artifacts. Dispatch, code-object, and clock joins remain unavailable; this is not a zero-overhead result, proof of no GPU work, or universal ROCprofiler limitation."
+            "Commit 4ff9c82b7 archives a real MI300X KFD capture with 31 events, zero loss, and three completed dispatch lifecycles beside an exact successful ROCProfiler SDK 1.1.0 invocation. Commit 473b76668 adds an authorized 5-warmup/30-measured-pair raw-versus-wrapper process-wall record: 819,180,977 ns raw median, 1,075,406,076 ns wrapped median, and +3,135 basis points paired median.",
+            "The collector inventories were empty, so this is wrapper/process overhead for one exact target, not kernel-capture overhead; production_qualified is false. A raw-entrypoint follow-up at f8eaf090a confirmed configured contexts but zero output-generating services and no installed direct-KFD queue-registration CLI. Dispatch, code-object, clock, counter, PC, ATT, debugger, and actual capture-overhead results remain unavailable, not zero."
           ],
           [
             "Agent contract",
-            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. The composite workbench keeps direct-KFD, generic ROCgdb/MI and profiler evidence separate. Seeded simulation retains canonical replay schedules and byte-level race, no-race, or incomplete evidence; a fresh-process read-only agent service diagnoses exact retained race and host-lifetime evidence and pages only its content-bound witness.",
-            "The agent service cannot simulate, execute, replay, read files, access a network, or apply patches. Authenticated GPU wave identity, live ATT/PC collection, complete hardware timelines, and end-to-end causal diagnosis remain open work."
+            "Strict bounded versioned JSONL, revision and configuration identities, pagination generations, explicit effect classes and unavailable responses without eval strings or raw GPU addresses. At abfd64143 the fresh-process reference client independently discovers the Variant V2 service contract, submits exact retained baseline/candidate inputs, recomputes the production comparison locally, and requires stable capability/comparison response identities. Seeded simulation separately retains canonical replay schedules and byte-level race, no-race, or incomplete evidence.",
+            "The Variant V2 service is read-only and has no execution, attach, scheduling, collection, decoder, or launch authority. Without authenticated PC/ATT evidence it reports baseline/candidate correlation, the profiler-KIR to Characteristic-KIR bridge, and causality as typed unavailable. Authenticated GPU wave identity, live ATT/PC collection, complete hardware timelines, and end-to-end causal diagnosis remain open work."
           ]
         ]
       },
@@ -540,7 +540,7 @@ const narrativeRegistry = deepFreeze({
           [
             "rocprofv3 and compute viewer",
             "Measured runtime traces, counters, PC samples, ATT/thread trace, ISA correlation, and performance timelines.",
-            "Those tools remain the profiling substrate. fe2o3 strictly imports dispatch metadata plus ATT references and can bind supplied decoded ATT PCs to an exact HSACO symbol and Characteristic source/IR/ISA intervals while preserving observed, declared, inferred, unavailable, loss, and completeness states. A live MI300X qualification also seals the exact direct-KFD capture beside one rocprofv3 run, but its empty collector inventory has no common dispatch/code-object/clock join and is not promoted to a profiling result or universal limitation."
+            "Those tools remain the profiling substrate. fe2o3 strictly imports dispatch metadata plus ATT references and can bind supplied decoded ATT PCs to an exact HSACO symbol and Characteristic source/IR/ISA intervals while preserving observed, declared, inferred, unavailable, loss, and completeness states. The live MI300X qualification seals direct-KFD evidence beside rocprofv3 and now measures the wrapper path, but the installed collector's empty inventory has no common queue/dispatch/code-object/clock join and cannot establish capture overhead or a performance conclusion."
           ],
           [
             "Native HIP or Mojo workflow",
