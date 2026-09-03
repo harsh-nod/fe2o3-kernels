@@ -32,6 +32,7 @@ import {
   profilerImportTruthRows,
   profilerDirectKfdInvestigationMilestone,
   profilerRuntimeCausalityMilestone,
+  profilerVariantV3Milestone,
   profilerWrapperOverheadMilestone,
 } from "../content/profiler-dispatch-import";
 
@@ -105,7 +106,7 @@ export function ProfilerDispatchImportPage() {
             </p>
           </div>
           <span className="profiler-import-version">
-            <Braces size={16} aria-hidden="true" /> Bundle V4 · receipt V1
+            <Braces size={16} aria-hidden="true" /> Bundle V4 · bridge V3
           </span>
         </div>
         <div className="profiler-import-boundary">
@@ -225,6 +226,54 @@ export function ProfilerDispatchImportPage() {
             The importer retains canonical verified module bytes and unions
             module, function, and kernel capabilities. A legacy scalar hash,
             length, or wave-width declaration cannot authorize production import.
+          </span>
+        </aside>
+      </section>
+
+      <section className="profiler-import-v3" aria-labelledby="profiler-v3-heading">
+        <header>
+          <p className="section-kicker">Production structural bridge</p>
+          <h2 id="profiler-v3-heading">Resolve each positive profiler site through exact KIR versions</h2>
+          <p>
+            Variant V3 replays the V2 comparison, requires an already-admitted
+            production bridge, and accepts a profiler occurrence only when it
+            resolves to one unique catalog record. Names, ordinal proximity, and
+            partial-capture absence cannot create a match.
+          </p>
+        </header>
+        <div className="profiler-import-v3-flow" aria-label="Profiler Variant V3 identity join">
+          <div>
+            <small>Bundle claim</small>
+            <strong>KIR V{profilerVariantV3Milestone.bundleKirVersion}</strong>
+            <code>exact canonical bytes</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div>
+            <small>production bridge</small>
+            <strong>V7 → V8</strong>
+            <code>structural identity</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div>
+            <small>catalog occurrence</small>
+            <strong>unique KIR V{profilerVariantV3Milestone.catalogKirVersion}</strong>
+            <code>source · MIR · KIR · LLVM · ISA</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div>
+            <small>comparison result</small>
+            <strong>positive co-observation</strong>
+            <code>causality unavailable</code>
+          </div>
+        </div>
+        <aside>
+          <TriangleAlert size={18} aria-hidden="true" />
+          <span>
+            <strong>Library owner boundary</strong>
+            Commit {profilerVariantV3Milestone.commit.slice(0, 10)} is available
+            in process. Authenticated self-contained agent transport, observed
+            schedule execution, add/remove claims, and causality remain typed
+            unavailable.
           </span>
         </aside>
       </section>

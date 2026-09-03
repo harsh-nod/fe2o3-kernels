@@ -77,6 +77,35 @@
     "authority": "read_only_no_execution_attach_scheduling_collection_or_decoder_authority",
     "pcAttCorrelation": "typed_unavailable_without_authenticated_evidence"
   },
+  "liveRocgdbV5": {
+    "commit": "2c0bb3833a2df91b95de68de5c6cd8f1e835cae9",
+    "tree": "0ab481e2e835ea0a6a69e4eea04b67bf4fafd64f",
+    "schema": "fe2o3-live-rocgdb-kfd-v5",
+    "miCommandProbes": 5,
+    "sameStopRegisters": true,
+    "sameStopScalarLocals": true,
+    "physicalGpuStopObserved": false,
+    "sourceIsaMemory": "typed_unavailable"
+  },
+  "multiFunctionSemanticDebugV5": {
+    "commit": "1b58e886d5351f9b8690275cc4d9c5fa781cc8c9",
+    "tree": "63def037ef9b61a4ef2e898d7196827b49154754",
+    "correspondenceVersion": 5,
+    "ordinaryHelperExported": true,
+    "simulatorStackFrames": 2,
+    "absoluteKirOrdinals": true,
+    "multiRootCustody": "typed_unavailable"
+  },
+  "profilerVariantV3": {
+    "commit": "96cfcf66f6bf825d4503e8319fd92d2d0fd6fe47",
+    "tree": "3539564ec4ac8f5095ef0d7ccf194436a30dae16",
+    "bundleKirVersion": 7,
+    "catalogKirVersion": 8,
+    "uniqueCatalogJoin": true,
+    "agentTransport": "typed_unavailable",
+    "scheduleExecution": "typed_unavailable",
+    "causality": "typed_unavailable"
+  },
   "transformationMapV2": {
     "commit": "6f1f7d8967f2e2f03bbaf234bf63179d634fe0a9",
     "tree": "2888a906fd5af48e30ce8ee170d49f2a1b9fb775",

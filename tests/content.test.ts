@@ -37,10 +37,12 @@ import {
   liveKfdComparisonRows,
   liveKfdCurrentImplementationPaths,
   liveKfdPublication,
+  liveRocgdbV5Milestone,
   liveKfdSourceUrl,
   liveKfdSources,
   liveKfdUnsupported,
   liveWorkbenchBackends,
+  multiFunctionSemanticDebugV5Milestone,
 } from "../src/content/live-kfd-debugger";
 import {
   profilerImportBundleProjection,
@@ -55,6 +57,7 @@ import {
   profilerImportSources,
   profilerImportSourceUrl,
   profilerRuntimeCausalityMilestone,
+  profilerVariantV3Milestone,
   profilerWrapperOverheadMilestone,
   validateProfilerImportTutorial,
 } from "../src/content/profiler-dispatch-import";
@@ -620,6 +623,10 @@ describe("live KFD debugger milestone", () => {
       "crates/fe2o3-kfd/src/target_debug_telemetry_v1.rs",
       "crates/fe2o3-kfd/src/stopped_state_v1.rs",
       "crates/fe2o3-debug-protocol/src/rocgdb_mi_v3.rs",
+      "crates/fe2o3-debug-protocol/src/rocgdb_mi_v5.rs",
+      "crates/fe2o3-debug-cli/src/rocgdb_mi_v3/process.rs",
+      "crates/fe2o3-lower-mir-kernel/src/production_correspondence_evidence_v5.rs",
+      "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
       "crates/fe2o3-debug-cli/src/rocgdb_mi_v3.rs",
       "crates/fe2o3-debug-cli/src/live_rocgdb_v3.rs",
       "crates/cargo-fe2o3/src/profile_command.rs",
@@ -627,11 +634,26 @@ describe("live KFD debugger milestone", () => {
       "crates/fe2o3-semantic-query/src/profiler_query.rs",
     ];
     expect(liveKfdSources.map((source) => source.path)).toEqual(sourcePaths);
-    for (const path of sourcePaths) {
-      expect(liveKfdSourceUrl(path)).toBe(
-        `https://github.com/harsh-nod/fe2o3/blob/ba0efc7f958e3afdf72eceeef1c37c2994fe2402/${path}`,
+    for (const source of liveKfdSources) {
+      const commit = "commit" in source
+        ? source.commit
+        : "ba0efc7f958e3afdf72eceeef1c37c2994fe2402";
+      expect(liveKfdSourceUrl(source.path, commit)).toBe(
+        `https://github.com/harsh-nod/fe2o3/blob/${commit}/${source.path}`,
       );
     }
+    expect(liveRocgdbV5Milestone).toMatchObject({
+      commit: "2c0bb3833a2df91b95de68de5c6cd8f1e835cae9",
+      sameStopRegisters: true,
+      sameStopScalarLocals: true,
+      physicalGpuStopObserved: false,
+    });
+    expect(multiFunctionSemanticDebugV5Milestone).toMatchObject({
+      commit: "1b58e886d5351f9b8690275cc4d9c5fa781cc8c9",
+      correspondenceVersion: 5,
+      simulatorStackFrames: 2,
+      multiRootCustody: "typed_unavailable",
+    });
     expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
     );
@@ -666,14 +688,21 @@ describe("live KFD debugger milestone", () => {
     expect(rocgdb.record).toMatchObject({
       projection_schema: "fe2o3-tutorial-evidence-summary-v1",
       protocol_wire_record: false,
-      validated_evidence_scope: "deterministic_fake_mi_fixture",
+      backend_surface: "live_rocgdb_kfd_v5_stopped_inspection",
+      validated_evidence_scope:
+        "deterministic_v5_fixture_and_installed_command_registry",
       live_gpu_stop_validated: false,
+      command_registry: { required: 5, installed: 5 },
+      physical_observation: {
+        status: "unavailable",
+        reason: "direct_kfd_target_did_not_produce_gpu_stop",
+      },
     });
     expect(rocgdb.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
       .toBe(true);
-    expect(JSON.stringify(rocgdb.record)).toContain("generic_mi_thread");
-    expect(JSON.stringify(rocgdb.record)).toContain("gpu_classification");
-    expect(rocgdb.scope).toContain("GPU classification unavailable");
+    expect(JSON.stringify(rocgdb.record)).toContain("same_stop_contract");
+    expect(JSON.stringify(rocgdb.record)).toContain("pointer_like_locals");
+    expect(rocgdb.scope).toContain("direct-KFD stop unavailable");
 
     const profiler = liveWorkbenchBackends[2];
     expect(JSON.stringify(profiler.record)).toContain("wait_events");
@@ -874,7 +903,23 @@ describe("in-process profiler dispatch import milestone", () => {
         "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-current-kernel-dispatch.csv",
         "docs/source-isa-characteristic-acceptance-v2.md",
         "crates/fe2o3-semantic-query/src/distributed_overlap_v1.rs",
+        "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
+        "docs/profiler-variant-v3.md",
       ]),
+    );
+    expect(profilerVariantV3Milestone).toMatchObject({
+      commit: "96cfcf66f6bf825d4503e8319fd92d2d0fd6fe47",
+      bundleKirVersion: 7,
+      catalogKirVersion: 8,
+      uniqueCatalogJoin: true,
+      agentTransport: "typed_unavailable",
+    });
+    expect(
+      profilerImportSourceUrl(
+        "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
+      ),
+    ).toBe(
+      "https://github.com/harsh-nod/fe2o3/blob/96cfcf66f6bf825d4503e8319fd92d2d0fd6fe47/crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
     );
     expect(() => profilerImportSourceUrl("../Cargo.toml")).toThrow("repository-relative");
   });

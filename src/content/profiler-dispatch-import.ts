@@ -44,7 +44,15 @@ if (
   currentMilestonesData.rocprofWrapperOverhead.productionQualified !== false ||
   !exactObject.test(currentMilestonesData.liveDirectKfdRocprof.investigationCommit) ||
   currentMilestonesData.liveDirectKfdRocprof.directKfdQueueRegistration !==
-    "unavailable_in_installed_rocprofv3_cli"
+    "unavailable_in_installed_rocprofv3_cli" ||
+  !exactObject.test(currentMilestonesData.profilerVariantV3.commit) ||
+  !exactObject.test(currentMilestonesData.profilerVariantV3.tree) ||
+  currentMilestonesData.profilerVariantV3.bundleKirVersion !== 7 ||
+  currentMilestonesData.profilerVariantV3.catalogKirVersion !== 8 ||
+  currentMilestonesData.profilerVariantV3.uniqueCatalogJoin !== true ||
+  currentMilestonesData.profilerVariantV3.agentTransport !== "typed_unavailable" ||
+  currentMilestonesData.profilerVariantV3.scheduleExecution !== "typed_unavailable" ||
+  currentMilestonesData.profilerVariantV3.causality !== "typed_unavailable"
 ) {
   throw new Error("direct-KFD differential or runtime-causality milestone is malformed");
 }
@@ -60,6 +68,9 @@ export const profilerWrapperOverheadMilestone = deepFreeze(
 );
 export const profilerDirectKfdInvestigationMilestone = deepFreeze(
   currentMilestonesData.liveDirectKfdRocprof,
+);
+export const profilerVariantV3Milestone = deepFreeze(
+  currentMilestonesData.profilerVariantV3,
 );
 const boundCompilerRevision =
   "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044";
@@ -458,6 +469,7 @@ export const profilerImportTruthRows = deepFreeze([
   ["Real GPU rocprof roundtrip", "unavailable", "A pure direct-KFD target ran under the installed ROCProfiler SDK 1.1.0 wrapper, but the collector emitted no dispatch artifact, so no GPU dispatch flowed from rocprofv3 through import."],
   ["Wrapper process wall time", "+31.35% observed", "Five warmup and thirty measured alternating pairs compare raw and wrapped processes for one exact MI300X target. Empty artifact inventories make actual kernel-capture overhead unavailable, not zero."],
   ["Exact KIR V7", "declared + admitted", "Canonical verified bytes constrain target family and Wave64 compatibility; they do not prove execution."],
+  ["Profiler Variant V3 bridge", "available in process", "An already-admitted production V7-to-V8 bridge and exact catalog projection resolve each positive profiler occurrence to one unique catalog record. Self-contained agent transport remains unavailable."],
   ["ATT", "unavailable", "Sealed collection rejects the decoder's mutable-directory requirement."],
   ["Protected source/ISA 3x2 matrix", "not run", "The protected family-by-target acceptance remains unavailable and is not covered by this checkpoint."],
   ["T5 distributed overlap", "blocked on #182", "No issue #182 typed producer supplies admitted operation, transfer, collective, and clock-correlation identities."],
@@ -483,6 +495,8 @@ export const profilerImportSources = deepFreeze([
   { label: "Issue #215 closure matrix", path: "docs/debugger-profiler-architecture-v1.md" },
   { label: "Protected source/ISA 3x2 boundary", path: "docs/source-isa-characteristic-acceptance-v2.md" },
   { label: "T5 issue #182 dependency contract", path: "crates/fe2o3-semantic-query/src/distributed_overlap_v1.rs" },
+  { label: "Profiler Variant V3 production bridge", path: "crates/fe2o3-semantic-query/src/profiler_variant_v3.rs", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
+  { label: "Profiler Variant V3 contract", path: "docs/profiler-variant-v3.md", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
 ]);
 
 export function profilerImportSourceUrl(path: string): string | null {

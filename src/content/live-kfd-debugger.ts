@@ -1,4 +1,5 @@
 import milestoneData from "../../config/live-kfd-debugger-milestone.json";
+import currentMilestonesData from "../../config/debugger-profiler-current-milestones.json";
 import { deepFreeze } from "./registry";
 
 export interface LiveKfdComparisonRow {
@@ -88,9 +89,37 @@ function validateLiveKfdPublication(): void {
 
 validateLiveKfdPublication();
 
-export const liveKfdPublication = deepFreeze(milestoneData);
+if (
+  currentMilestonesData.reviewedOn !== "2026-09-03" ||
+  !exactObject.test(currentMilestonesData.liveRocgdbV5.commit) ||
+  !exactObject.test(currentMilestonesData.liveRocgdbV5.tree) ||
+  currentMilestonesData.liveRocgdbV5.schema !== "fe2o3-live-rocgdb-kfd-v5" ||
+  currentMilestonesData.liveRocgdbV5.miCommandProbes !== 5 ||
+  currentMilestonesData.liveRocgdbV5.sameStopRegisters !== true ||
+  currentMilestonesData.liveRocgdbV5.sameStopScalarLocals !== true ||
+  currentMilestonesData.liveRocgdbV5.physicalGpuStopObserved !== false ||
+  currentMilestonesData.liveRocgdbV5.sourceIsaMemory !== "typed_unavailable" ||
+  !exactObject.test(currentMilestonesData.multiFunctionSemanticDebugV5.commit) ||
+  !exactObject.test(currentMilestonesData.multiFunctionSemanticDebugV5.tree) ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.correspondenceVersion !== 5 ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.ordinaryHelperExported !== true ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.simulatorStackFrames !== 2 ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.absoluteKirOrdinals !== true ||
+  currentMilestonesData.multiFunctionSemanticDebugV5.multiRootCustody !==
+    "typed_unavailable"
+) {
+  throw new Error("current live debugger milestones are malformed");
+}
 
-export function liveKfdSourceUrl(path: string): string {
+export const liveKfdPublication = deepFreeze(milestoneData);
+export const liveRocgdbV5Milestone = deepFreeze(
+  currentMilestonesData.liveRocgdbV5,
+);
+export const multiFunctionSemanticDebugV5Milestone = deepFreeze(
+  currentMilestonesData.multiFunctionSemanticDebugV5,
+);
+
+export function liveKfdSourceUrl(path: string, commit = liveKfdPublication.compilerCommit): string {
   if (
     path.trim().length === 0 ||
     path !== path.trim() ||
@@ -100,7 +129,10 @@ export function liveKfdSourceUrl(path: string): string {
   ) {
     throw new Error("live KFD source path must stay repository-relative");
   }
-  return `https://github.com/harsh-nod/fe2o3/blob/${liveKfdPublication.compilerCommit}/${path}`;
+  if (!exactObject.test(commit)) {
+    throw new Error("live KFD source commit must be exact");
+  }
+  return `https://github.com/harsh-nod/fe2o3/blob/${commit}/${path}`;
 }
 
 const identity = (byte: string) => byte.repeat(64 / byte.length);
@@ -230,26 +262,26 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
   },
   {
     id: "rocgdb-mi",
-    label: "ROCgdb / MI thread admission",
+    label: "ROCgdb / MI stopped-state V5",
     shortLabel: "ROCgdb / MI",
-    status: "Generic MI thread admitted",
-    scope: "fake-MI tests + installed ROCgdb; GPU classification unavailable",
+    status: "Same-stop inspection admitted; physical GPU stop unavailable",
+    scope: "fake-MI V5 + installed command probes; direct-KFD stop unavailable",
     summary:
-      "A strict parser admits one caller-selected generic thread from structured -thread-info. Host, missing, and GPU-looking target text cannot establish a hardware wave; authorized breakpoint, continue, pause, and step control remain available.",
+      "V4 authenticates the hierarchy and symbol-relative PC before V5 can retain same-stop, wave-scoped registers and simple scalar locals. Native thread selectors, absolute addresses, pointer-like locals, and raw control authority never enter the response. The installed MI300X debugger exposes all five required commands, but the direct-KFD target still cannot reach a physical GPU stop, so this tutorial shows the admitted contract and its typed unavailable result, not fabricated hardware values.",
     evidenceId: admittedMiIdentity,
-    origin: "observed",
-    matrixLabel: "ROCgdb GPU wave and lane classification availability",
+    origin: "declared",
+    matrixLabel: "ROCgdb V5 physical GPU lane availability",
     matrixNote:
-      "The deterministic fixture authenticates a generic MI thread record only. Every GPU lane remains unavailable until a separate trusted source correlates that thread to a hardware wave.",
+      "The V5 fixture proves association and redaction behavior. Every lane remains unavailable in the real probe because ROCgdb did not produce an authenticated direct-KFD GPU stop.",
     waveRows: [
       {
-        id: "gpu-classification",
-        label: "GPU wave unavailable",
+        id: "physical-stop",
+        label: "physical stop unavailable",
         cells: laneCells((lane) => ({
           lane,
           state: "unavailable",
           origin: "unavailable",
-          detail: "gpu_classification_unavailable",
+          detail: "stopped_state_unavailable: direct_kfd_target_did_not_stop",
         })),
       },
     ],
@@ -266,7 +298,7 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       },
       {
         label: "ISA / PC",
-        value: "Relative GPU PC unsupported",
+        value: "Symbol-relative PC admitted by V4; no physical stop observed",
         origin: "unavailable",
       },
       {
@@ -277,50 +309,57 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
     ],
     capabilities: [
       {
-        label: "Structured generic threads",
+        label: "Authenticated hierarchy",
         state: "available",
-        origin: "observed",
-        detail: "caller-selected -thread-info tuple with sanitized logical identity",
+        origin: "declared",
+        detail: "exact stop, thread, workgroup, wave and symbol-relative PC association",
       },
       {
-        label: "GPU wave + lane state",
+        label: "Same-stop registers",
+        state: "available",
+        origin: "declared",
+        detail: "bounded name/value pairs, wave-scoped and address-redacted",
+      },
+      {
+        label: "Simple scalar locals",
+        state: "available",
+        origin: "declared",
+        detail: "same-stop scalars only; pointers, aggregates, floats and unknowns withheld",
+      },
+      {
+        label: "Physical GPU values",
         state: "unavailable",
         origin: "unavailable",
-        detail: "target-id text is not trusted GPU classification evidence",
-      },
-      {
-        label: "GPU registers + PC + memory",
-        state: "unavailable",
-        origin: "unavailable",
-        detail: "unsupported until a trusted GPU thread correlation exists",
-      },
-      {
-        label: "Pause / continue / step",
-        state: "available",
-        origin: "observed",
-        detail: "authorization identity, expected revision, effect, and audit identity",
+        detail: "installed direct-KFD target did not produce a GPU stop",
       },
     ],
     record: {
       projection_schema: "fe2o3-tutorial-evidence-summary-v1",
       protocol_wire_record: false,
-      backend_surface: "rocgdb_mi_generic_thread_admission",
-      validated_evidence_scope: "deterministic_fake_mi_fixture",
+      backend_surface: "live_rocgdb_kfd_v5_stopped_inspection",
+      validated_evidence_scope: "deterministic_v5_fixture_and_installed_command_registry",
+      implementation_commit: liveRocgdbV5Milestone.commit,
       live_gpu_stop_validated: false,
-      admission: {
-        source: "structured_thread_info",
-        thread_ordinal: 3,
-        thread_identity: admittedMiIdentity,
-        classification: "generic_mi_thread",
+      command_registry: {
+        required: liveRocgdbV5Milestone.miCommandProbes,
+        installed: liveRocgdbV5Milestone.miCommandProbes,
       },
-      gpu_classification: { status: "unavailable", reason: "unsupported" },
-      stopped_wave: { status: "unavailable", reason: "unsupported" },
-      registers: { status: "unavailable", reason: "unsupported" },
-      control: {
-        authorization_identity: identity("b5"),
-        expected_revision: 4,
-        effect: "committed",
-        audit_identity: identity("b6"),
+      same_stop_contract: {
+        hierarchy: "exact_v4_association",
+        registers: "available_when_stopped",
+        scalar_locals: "available_when_stopped",
+        native_selectors: "redacted",
+        absolute_pc: "redacted",
+        pointer_like_locals: "unavailable",
+      },
+      physical_observation: {
+        status: "unavailable",
+        reason: "direct_kfd_target_did_not_produce_gpu_stop",
+        registers: "unavailable",
+        scalar_locals: "unavailable",
+        source: "unavailable",
+        isa: "unavailable",
+        memory: "unavailable",
       },
     },
   },
@@ -493,13 +532,13 @@ export const liveKfdMilestone = [
     truth: "unavailable",
   },
   {
-    label: "ROCgdb / MI generic thread",
-    state: "admitted; GPU classification unavailable",
-    truth: "observed",
+    label: "ROCgdb V5 stopped inspection",
+    state: "contract admitted; physical stop unavailable",
+    truth: "declared",
   },
   {
-    label: "Profiler V4 queries",
-    state: "inferred from canonical fixture",
+    label: "Multi-function source map",
+    state: "ordinary entry + helper replayed",
     truth: "inferred",
   },
 ] as const;
@@ -507,7 +546,8 @@ export const liveKfdMilestone = [
 export const liveKfdUnsupported = [
   "Atomic cross-XCC KFD checkpoint capture; the eight CPU-shadow headers are read sequentially",
   "Direct KFD inner gfx942 wave, lane, register, and PC records",
-  "ROCgdb/MI GPU-thread classification and live GPU wave state",
+  "A physical ROCgdb GPU stop for the direct-KFD target; V5 register and scalar-local values therefore remain unobserved on hardware",
+  "ROCgdb lane values, source/ISA inspection, target memory, source stepping, and breakpoints",
   "Decoded ATT events, waits, and full-grid wave coverage",
   "Authenticated source/KIR/ISA correlation across every backend",
   "Descendant containment: the pidfd and PTRACE_O_EXITKILL protection cover only the directly launched process leader",
@@ -519,7 +559,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Artifact and semantic identity",
     fe2o3:
-      "Composes exact debugger checkpoint, compiler, simulation, and Profiler Bundle V4 identities while retaining declared, observed, inferred, and unavailable origins.",
+      "Composes exact debugger checkpoint, compiler, simulation, and profiler identities while retaining declared, observed, inferred, and unavailable origins. Correspondence V5 preserves exact entry/helper owners and absolute KIR ordinals.",
     rocgdb:
       "Provides mature live source and machine debugging. It does not use fe2o3's compiler/simulator identity graph or its declaration/proof/observation truth lattice.",
     rocprof:
@@ -530,7 +570,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Live hardware depth",
     fe2o3:
-      "Direct KFD owns suspension and validates a sequential stopped-queue header envelope, but inner wave/register records remain unavailable. ROCgdb/MI admits generic threads and control; it does not yet authenticate GPU thread or wave state.",
+      "Direct KFD owns suspension and validates a sequential stopped-queue header envelope, but inner wave/register records remain unavailable. ROCgdb V5 can admit same-stop registers and scalar locals after exact V4 hierarchy association; the installed direct-KFD target did not produce the required physical GPU stop.",
     rocgdb:
       "Ahead today: hardware wavefront threads, lanes, GPU register groups, breakpoints, stepping, and source-oriented live debugging.",
     rocprof:
@@ -541,7 +581,7 @@ export const liveKfdComparisonRows: LiveKfdComparisonRow[] = [
   {
     surface: "Agent interaction",
     fe2o3:
-      "Agent-native structured records join logical IDs, exact evidence links, revisions, typed unavailable results, control effects, profiler queries, comparisons, and bounded next-capture plans. GPU-looking MI text cannot upgrade a generic thread into wave truth.",
+      "Agent-native structured records join logical IDs, exact evidence links, revisions, typed unavailable results, control effects, profiler queries, comparisons, and bounded next-capture plans. Native debugger selectors and addresses stay out of responses, and GPU-looking MI text cannot upgrade a generic thread into wave truth.",
     rocgdb:
       "GDB/MI is scriptable and mature, but its generic debugger model does not encode fe2o3 semantic evidence or exact CPU-reference correlation.",
     rocprof:
@@ -608,6 +648,26 @@ export const liveKfdSources = [
   {
     label: "ROCgdb MI protocol",
     path: "crates/fe2o3-debug-protocol/src/rocgdb_mi_v3.rs",
+  },
+  {
+    label: "ROCgdb stopped inspection V5",
+    path: "crates/fe2o3-debug-protocol/src/rocgdb_mi_v5.rs",
+    commit: liveRocgdbV5Milestone.commit,
+  },
+  {
+    label: "ROCgdb V5 process adapter",
+    path: "crates/fe2o3-debug-cli/src/rocgdb_mi_v3/process.rs",
+    commit: liveRocgdbV5Milestone.commit,
+  },
+  {
+    label: "Multi-function correspondence V5",
+    path: "crates/fe2o3-lower-mir-kernel/src/production_correspondence_evidence_v5.rs",
+    commit: multiFunctionSemanticDebugV5Milestone.commit,
+  },
+  {
+    label: "Ordinary helper debugger acceptance",
+    path: "crates/rustc-codegen-fe2o3/tests/production_ranked_bounds_driver_v1.rs",
+    commit: multiFunctionSemanticDebugV5Milestone.commit,
   },
   {
     label: "ROCgdb MI live backend",

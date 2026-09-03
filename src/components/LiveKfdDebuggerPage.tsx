@@ -16,9 +16,11 @@ import {
   liveKfdCurrentImplementationPaths,
   liveKfdMilestone,
   liveKfdPublication,
+  liveRocgdbV5Milestone,
   liveKfdSourceUrl,
   liveKfdSources,
   liveKfdUnsupported,
+  multiFunctionSemanticDebugV5Milestone,
 } from "../content/live-kfd-debugger";
 import { currentSourceUrl, currentState } from "../content/current-state";
 import { GpuDebugProfilerWorkbench } from "./GpuDebugProfilerWorkbench";
@@ -41,13 +43,13 @@ export function LiveKfdDebuggerPage() {
           <div>
             <h1>GPU debugger + profiler workbench</h1>
             <p className="lesson-summary">
-              Inspect direct-KFD queue-suspension evidence, generic ROCgdb/MI threads,
-              and content-addressed rocprof evidence without merging their
-              distinct authority or validation scopes.
+              Inspect direct-KFD queue evidence, authenticated ROCgdb stopped-state
+              contracts, multi-function source/KIR stacks, and content-addressed
+              profiler evidence without merging their validation scopes.
             </p>
           </div>
           <span className="live-kfd-version">
-            <Braces size={16} aria-hidden="true" /> V3 debug · V4 profile
+            <Braces size={16} aria-hidden="true" /> V5 debug · V3 bridge
           </span>
         </div>
         <div className="live-kfd-validation">
@@ -55,9 +57,10 @@ export function LiveKfdDebuggerPage() {
           <span>
             <strong>Scopes are separate</strong>
             Direct-KFD stopped-queue headers are sequentially MI300X-observed,
-            not one atomic checkpoint. ROCgdb fixtures admit generic MI threads,
-            and Profiler V4 is queried from canonical fixtures; none claims a
-            validated live GPU wave stop.
+            not one atomic checkpoint. ROCgdb V5 admits same-stop register and
+            scalar-local structure, but the installed target did not reach a
+            GPU stop. Profiler V3 is a structural production-owner join, not a
+            live capture.
           </span>
         </div>
       </header>
@@ -90,6 +93,60 @@ export function LiveKfdDebuggerPage() {
             );
           })}
         </div>
+      </section>
+
+      <section
+        className="live-kfd-multifunction"
+        aria-labelledby="live-kfd-multifunction-heading"
+      >
+        <header>
+          <p className="section-kicker">Function-level semantic map</p>
+          <h2 id="live-kfd-multifunction-heading">Follow one stop across entry and helper frames</h2>
+          <p>
+            Correspondence V5 retains function ownership instead of flattening
+            every source site into one kernel body. The ordinary Rust acceptance
+            exports an entry plus helper, stops inside the helper, returns a
+            two-frame stack, and resolves the absolute KIR operation back to its
+            exact source owner.
+          </p>
+        </header>
+        <div
+          className="live-kfd-function-flow"
+          aria-label="Multi-function source and KIR identity flow"
+        >
+          <div>
+            <small>source owner</small>
+            <strong>debug entry</strong>
+            <code>role: entry</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div>
+            <small>KIR function</small>
+            <strong>absolute ordinal 0</strong>
+            <code>call helper</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div>
+            <small>source owner</small>
+            <strong>debug helper</strong>
+            <code>role: internal</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div>
+            <small>debug stop</small>
+            <strong>{multiFunctionSemanticDebugV5Milestone.simulatorStackFrames} exact frames</strong>
+            <code>KIR-to-source</code>
+          </div>
+        </div>
+        <aside>
+          <ShieldCheck size={18} aria-hidden="true" />
+          <span>
+            <strong>Identity-bound, not name-matched</strong>
+            Commit {multiFunctionSemanticDebugV5Milestone.commit.slice(0, 10)} rejects
+            duplicate, reordered, sparse, renamed, and substituted rosters.
+            Multi-root custody remains {multiFunctionSemanticDebugV5Milestone.multiRootCustody.replaceAll("_", " ")}.
+          </span>
+        </aside>
       </section>
 
       <section className="live-kfd-launch" aria-labelledby="live-kfd-launch-heading">
@@ -149,7 +206,7 @@ export function LiveKfdDebuggerPage() {
           CPU simulator debugging is a separate deterministic semantic replay
           over supported KIR. It can provide thread,
           logical-wave, workgroup, KIR, SSA, and allocation-relative state.
-          Neither live debug backend nor Profiler V4 presents those simulator
+          Neither live debug backend nor profiler evidence presents those simulator
           facts as live GPU wave state, GPU equivalence, timing, or CPU
           performance prediction.
         </p>
@@ -213,12 +270,22 @@ export function LiveKfdDebuggerPage() {
           <p className="section-kicker">Auditable implementation</p>
           <h2 id="live-kfd-evidence-heading">Read the owning boundaries</h2>
           <p>
-            Source links are pinned to compiler commit {liveKfdPublication.compilerCommit.slice(0, 10)}.
+            Historical KFD links stay pinned to {liveKfdPublication.compilerCommit.slice(0, 10)};
+            V5 links are pinned to {liveRocgdbV5Milestone.commit.slice(0, 10)} or
+            the exact multi-function producer commit.
           </p>
         </header>
         <div>
           {liveKfdSources.map((source) => (
-            <a href={liveKfdSourceUrl(source.path)} key={source.path} rel="noreferrer" target="_blank">
+            <a
+              href={liveKfdSourceUrl(
+                source.path,
+                "commit" in source ? source.commit : undefined,
+              )}
+              key={source.path}
+              rel="noreferrer"
+              target="_blank"
+            >
               <span>{source.label}</span>
               <code>{source.path}</code>
               <ExternalLink size={14} aria-hidden="true" />

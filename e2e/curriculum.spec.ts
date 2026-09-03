@@ -601,6 +601,12 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
     }),
   ).toBeVisible();
   await expect(page.getByText("Scopes are separate")).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Follow one stop across entry and helper frames",
+    }),
+  ).toBeVisible();
   await expect(page.getByText(/CPU simulator debugging is a separate/u)).toContainText(
     "CPU performance prediction",
   );
@@ -618,7 +624,7 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
   );
   await expect(
     page.getByRole("gridcell", {
-      name: /GPU wave unavailable, lane 0, unavailable/u,
+      name: /physical stop unavailable, lane 0, unavailable/u,
     }),
   ).toBeVisible();
   await page.screenshot({
@@ -661,6 +667,12 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
   await page.goto("./#/debugger/profiler-import");
   await expect(
     page.getByRole("heading", { level: 1, name: "In-process profiler import" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Resolve each positive profiler site through exact KIR versions",
+    }),
   ).toBeVisible();
   await expect(page.getByText("Synthetic import, bounded checkpoint qualified")).toBeVisible();
   await expect(page.getByRole("table", { name: "Process-local profiler agent mapping" }))

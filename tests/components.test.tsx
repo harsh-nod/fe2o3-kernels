@@ -294,6 +294,14 @@ describe("live KFD debugger tutorial", () => {
       screen.getByRole("heading", { name: "GPU debugger + profiler workbench" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Scopes are separate")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Follow one stop across entry and helper frames",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Multi-function source and KIR identity flow"),
+    ).toHaveTextContent("KIR-to-source");
     expect(screen.getByText(/CPU simulator debugging is a separate/u)).toHaveTextContent(
       "CPU performance prediction",
     );
@@ -323,7 +331,7 @@ describe("live KFD debugger tutorial", () => {
     );
     await user.click(
       screen.getByRole("gridcell", {
-        name: /GPU wave unavailable, lane 1, unavailable/u,
+        name: /physical stop unavailable, lane 1, unavailable/u,
       }),
     );
     expect(screen.getByText(/lane 1/u)).toBeInTheDocument();
@@ -353,6 +361,13 @@ describe("in-process profiler import tutorial", () => {
       screen.getByRole("heading", { name: "In-process profiler import" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Synthetic import, bounded checkpoint qualified")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: "Resolve each positive profiler site through exact KIR versions",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Profiler Variant V3 identity join"))
+      .toHaveTextContent("positive co-observation");
     expect(screen.getByRole("table", { name: "Process-local profiler agent mapping" }))
       .toHaveTextContent("7001");
     expect(screen.getByText("MI300X bounded importer checkpoint qualified")).toBeInTheDocument();
