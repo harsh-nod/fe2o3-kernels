@@ -253,6 +253,7 @@ try {
     ["wave32_collectives_result_v1.json", "wave32Result"],
     ["wave64_collectives_result_v1.json", "wave64Result"],
     ["workgroup_reduce_queries_v1.jsonl", "workgroupReduceQueries"],
+    ["workgroup_scan_bundle_v5_v1.json", "workgroupScanBundleV5"],
     ["workgroup_scan_matrix_v1.json", "workgroupScanMatrix"],
   ];
   for (const [file, key] of debugSimArtifacts) {

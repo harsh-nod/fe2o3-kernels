@@ -404,6 +404,10 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("--test simulation workgroup_scan");
   await expect(codePanel).toContainText("--test codec_v2");
   await expect(codePanel).toContainText("ordinary_neutral_collectives_reach_both_target_llvm_backends");
+  await expect(codePanel).toContainText(
+    "ordinary_scan_sources_export_v5_and_execute_every_cpu_observation_path",
+  );
+  await expect(codePanel).toContainText("examples/workgroup_sync_v1/scan-u32-request.json");
   await expect(codePanel).toContainText('"category":"memory"');
   await expect(codePanel).toContainText('"category":"operation"');
 
@@ -425,6 +429,11 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("Portable workgroup reductions at 9176b9c27");
   await expect(codePanel).toContainText("Target-neutral workgroup scans at 2df6130c5");
   await expect(codePanel).toContainText("retained ordinary scan Bundle V5 executions: 0");
+  await expect(codePanel).toContainText("Ordinary Scan Bundle V5 qualification at 199311b61");
+  await expect(codePanel).toContainText("3 scalar types x 2 modes x extents 3, 65, and 255 = 18 entries");
+  await expect(codePanel).toContainText("cross-bundle replay: schedule_binding_mismatch");
+  await expect(codePanel).toContainText("resource_exhaustion, exact=false, outcome=active");
+  await expect(codePanel).toContainText("archived schedule documents: 0");
   await expect(codePanel).toContainText("f32 input 1.5 -> 96.0 (0x42c00000)");
 
   const semanticEvidence = page.getByRole("region", {
@@ -456,6 +465,31 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
     .toEqual(["255", "8", "26", "18", "64 + 64 + 64 + 63 active"]);
   await expect(semanticEvidence.getByText("3 * ceil(log2(N)) + 2")).toBeVisible();
   await expect(semanticEvidence.getByText("2 * ceil(log2(N)) + 2")).toBeVisible();
+  const sourceBundleMatrix = semanticEvidence.getByRole("table", {
+    name: "Ordinary scan Bundle V5 matrix",
+  });
+  const sourceBundleRows = sourceBundleMatrix.getByRole("row");
+  await expect(sourceBundleRows).toHaveCount(7);
+  expect(await sourceBundleRows.nth(1).getByRole("cell").allTextContents())
+    .toEqual(["u32", "inclusive", "exact · 0x5ca0", "exact · 0x5ca1", "exact · 0x5ca2"]);
+  expect(await sourceBundleRows.nth(6).getByRole("cell").allTextContents())
+    .toEqual(["f32", "exclusive", "exact · 0x5caf", "exact · 0x5cb0", "exact · 0x5cb1"]);
+  await expect(semanticEvidence.getByRole("heading", {
+    name: "18 canonical documents round-trip and replay exactly",
+  })).toBeVisible();
+  await expect(semanticEvidence.getByText(/trap-bearing Semantic MIR uses additive V11/u))
+    .toBeVisible();
+  await expect(semanticEvidence.getByText("schedule_binding_mismatch")).toBeVisible();
+  await expect(semanticEvidence.getByRole("heading", {
+    name: "The final Wave64 contains one logical lane",
+  })).toBeVisible();
+  await expect(semanticEvidence.getByRole("heading", {
+    name: "Resource exhaustion remains inspectable and inexact",
+  })).toBeVisible();
+  await expect(semanticEvidence.getByText(/does not expose which retention dimension/u))
+    .toBeVisible();
+  await expect(semanticEvidence.getByText(/does not execute a GPU or predict GPU behavior/u))
+    .toBeVisible();
   const scanResults = semanticEvidence.getByRole("table", {
     name: "Workgroup scan semantic results",
   });
@@ -496,7 +530,7 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
     name: "Logical wave width",
   });
   await waveTabs.getByRole("tab", { name: "Wave64" }).click();
-  await expect(semanticEvidence.getByText("0x0000000000000001")).toBeVisible();
+  await expect(semanticEvidence.getByText("0x0000000000000001").last()).toBeVisible();
   await expect(semanticEvidence.getByText("execution_incomplete_wave")).toBeVisible();
 
   await expect(semanticEvidence.getByText("Counter Capture V2 importer regression")).toBeVisible();
@@ -516,6 +550,10 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   });
   await page.locator(".semantic-scan-extents").screenshot({
     path: testInfo.outputPath("arbitrary-scan-extents.png"),
+    animations: "disabled",
+  });
+  await page.locator(".semantic-scan-bundle").screenshot({
+    path: testInfo.outputPath("scan-bundle-v5-matrix.png"),
     animations: "disabled",
   });
   const semanticBounds = await semanticEvidence.evaluate((element) => ({

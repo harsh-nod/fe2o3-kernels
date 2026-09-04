@@ -1219,6 +1219,7 @@ describe("debugger and simulator milestone content", () => {
       ["wave32_collectives_result_v1.json", "wave32Result"],
       ["wave64_collectives_result_v1.json", "wave64Result"],
       ["workgroup_reduce_queries_v1.jsonl", "workgroupReduceQueries"],
+      ["workgroup_scan_bundle_v5_v1.json", "workgroupScanBundleV5"],
       ["workgroup_scan_matrix_v1.json", "workgroupScanMatrix"],
     ];
     for (const [file, digest] of files) {
@@ -1387,6 +1388,68 @@ describe("debugger and simulator milestone content", () => {
         hardwareValidation: false,
         performancePrediction: false,
       },
+      bundleV5: {
+        commit: "199311b61c4b7ef08813f4ba60b61f569926c202",
+        tree: "ecd73e0a1eff794d010d83cd93f72654d4937bd5",
+        target: "gfx942:xnack-",
+        bundleVersion: 5,
+        semanticMirVersion: 11,
+        productionKirVersion: 8,
+        simulationKirVersion: 10,
+        sourceFamilies: 6,
+        caseCount: 18,
+        persistedReplayCases: 18,
+        partialWaveExtent: 65,
+        resourceCapExtent: 255,
+        retainedBundleArtifacts: 0,
+        retainedScheduleArtifacts: 0,
+        hardwareObserved: false,
+        hardwareValidation: false,
+        gpuExecution: false,
+        performancePrediction: false,
+      },
+      bundleV5Evidence: {
+        schema: "fe2o3-tutorial-workgroup-scan-bundle-v5-evidence-v1",
+        protocol_wire_record: false,
+        qualification: {
+          semantic_mir_version: 11,
+        },
+        persisted_replay: {
+          case_count: 18,
+          seed_range: [0x5ca0, 0x5cb1],
+          document: "canonical_round_trip_and_ephemeral_test_scratch_only",
+          cross_bundle_substitution: "schedule_binding_mismatch",
+          archived_schedule_documents: 0,
+        },
+        partial_wave64: {
+          extent: 65,
+          case_count: 6,
+          wave: 1,
+          wave_width: 64,
+          active_mask: 1,
+          logical_workitem: [64, 0, 0],
+          interpretation: "logical_visualization",
+        },
+        debugger_resource_cap: {
+          extent: 255,
+          case_count: 6,
+          continue_max_events: 1_000_000,
+          stop: { reason: "resource_exhaustion", exact: false, outcome: "active" },
+          specific_exhausted_dimension: "not_exposed_by_stop",
+          retained_prefix_inspectable: true,
+        },
+        boundaries: {
+          authority: "observation_only",
+          retained_bundle_artifacts: 0,
+          retained_schedule_artifacts: 0,
+          hardware_observed: false,
+          hardware_validation: false,
+          gpu_execution: false,
+          performance_prediction: false,
+          all_schedules_explored: false,
+          protected_compiler_execution_authenticated: false,
+        },
+      },
     });
     expect(debugSimWorkgroupScanFixture.cases).toHaveLength(6);
     expect(debugSimWorkgroupScanFixture.cases[0].output).toEqual([
@@ -1400,6 +1463,27 @@ describe("debugger and simulator milestone content", () => {
       debugSimWorkgroupScanFixture.sources.every((source) =>
         source.href.startsWith(
           "https://github.com/harsh-nod/fe2o3/blob/2df6130c5f897b5120cdf6ade44d53030690fa8b/",
+        ),
+      ),
+    ).toBe(true);
+    expect(debugSimWorkgroupScanFixture.bundleV5Evidence.cases).toHaveLength(18);
+    expect(
+      new Set(
+        debugSimWorkgroupScanFixture.bundleV5Evidence.cases.map(
+          (entry) => `${entry.scalar}:${entry.mode}:${entry.extent}`,
+        ),
+      ).size,
+    ).toBe(18);
+    expect(
+      debugSimWorkgroupScanFixture.bundleV5Evidence.cases.map(
+        (entry) => entry.seeded_schedule,
+      ),
+    ).toEqual(Array.from({ length: 18 }, (_, index) => 0x5ca0 + index));
+    expect(debugSimWorkgroupScanFixture.bundleV5Sources).toHaveLength(19);
+    expect(
+      debugSimWorkgroupScanFixture.bundleV5Sources.every((source) =>
+        source.href.startsWith(
+          "https://github.com/harsh-nod/fe2o3/blob/199311b61c4b7ef08813f4ba60b61f569926c202/",
         ),
       ),
     ).toBe(true);
@@ -3668,6 +3752,11 @@ describe("curriculum integrity", () => {
     expect(host).toContain(
       "ordinary_neutral_collectives_reach_both_target_llvm_backends",
     );
+    expect(host).toContain(
+      "ordinary_scan_sources_export_v5_and_execute_every_cpu_observation_path",
+    );
+    expect(host).toContain("scripts/quickstart.sh simulate-source");
+    expect(host).toContain("examples/workgroup_sync_v1/scan-u32-request.json");
     expect(host).toContain('"level":"workgroup"');
     expect(host).toContain('"category":"memory"');
     expect(host).toContain('"category":"operation"');
@@ -3735,6 +3824,16 @@ describe("curriculum integrity", () => {
     expect(result).toContain("Target-neutral workgroup scans at 2df6130c5");
     expect(result).toContain("ordinary Rust API contracts: 6");
     expect(result).toContain("retained ordinary scan Bundle V5 executions: 0");
+    expect(result).toContain("Ordinary Scan Bundle V5 qualification at 199311b61");
+    expect(result).toContain("3 scalar types x 2 modes x extents 3, 65, and 255 = 18 entries");
+    expect(result).toContain("semantic MIR: additive V11 (V10 remains byte-for-byte closed)");
+    expect(result).toContain("replay seeds: 0x5ca0 through 0x5cb1");
+    expect(result).toContain("cross-bundle replay: schedule_binding_mismatch");
+    expect(result).toContain("Wave64 active mask 0x0000000000000001");
+    expect(result).toContain("resource_exhaustion, exact=false, outcome=active");
+    expect(result).toContain("exhausted dimension not exposed");
+    expect(result).toContain("archived generated bundles: 0");
+    expect(result).toContain("archived schedule documents: 0");
     expect(result).toContain("u32 input 2 -> 128 in all 64 output lanes");
     expect(result).toContain("f32 input 1.5 -> 96.0 (0x42c00000)");
     expect(result).toContain(
@@ -3780,16 +3879,16 @@ describe("curriculum integrity", () => {
       kind: "runnable-now",
       reference: {
         scope: "qualification-evidence",
-        commit: debugSimWorkgroupScanFixture.compiler.commit,
-        tree: debugSimWorkgroupScanFixture.compiler.tree,
+        commit: debugSimWorkgroupScanFixture.bundleV5.commit,
+        tree: debugSimWorkgroupScanFixture.bundleV5.tree,
       },
     });
     const reference = lesson?.claims[0].reference;
     expect(reference).toMatchObject({
       scope: "qualification-evidence",
-      commit: debugSimWorkgroupScanFixture.compiler.commit,
-      tree: debugSimWorkgroupScanFixture.compiler.tree,
-      target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
+      commit: debugSimWorkgroupScanFixture.bundleV5.commit,
+      tree: debugSimWorkgroupScanFixture.bundleV5.tree,
+      target: "gfx942:xnack- CPU semantic qualification; gfx942/gfx950 production compile coverage",
     });
     expect(reference?.note).toContain(
       "not protected compiler-execution authentication",
@@ -3802,6 +3901,9 @@ describe("curriculum integrity", () => {
         "crates/fe2o3-kir-sim/src/schedule.rs",
         "crates/fe2o3-sim-differential/src/production_bundle_v5.rs",
         "crates/rustc-codegen-fe2o3/tests/production_semantic_conformance_v3.rs",
+        "crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs",
+        "examples/workgroup_sync_v1/src/kernel_scan_u32.rs",
+        "scripts/quickstart.sh",
       ]),
     );
     const content = serializedLessonContent("cpu-semantic-simulation");

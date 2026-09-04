@@ -148,13 +148,49 @@ describe("debugger and simulator evidence workbench", () => {
     expect(scanResults).toHaveTextContent("[1, 3, 6, 10, 15, 21, 28, 36]");
     expect(scanResults).toHaveTextContent("[0, -4, 3, 1, 10, 7, 8, 14]");
     expect(screen.getByLabelText("Workgroup scan evidence layers")).toHaveTextContent(
-      "retained ordinary bundles0",
+      "ordinary V5 cases18",
+    );
+    expect(screen.getByLabelText("Workgroup scan evidence layers")).toHaveTextContent(
+      "archived bundles0",
+    );
+    const sourceBundleMatrix = screen.getByRole("table", {
+      name: "Ordinary scan Bundle V5 matrix",
+    });
+    const sourceBundleRows = within(sourceBundleMatrix).getAllByRole("row");
+    expect(sourceBundleRows).toHaveLength(7);
+    expect(within(sourceBundleRows[1]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["u32", "inclusive", "exact · 0x5ca0", "exact · 0x5ca1", "exact · 0x5ca2"]);
+    expect(within(sourceBundleRows[6]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["f32", "exclusive", "exact · 0x5caf", "exact · 0x5cb0", "exact · 0x5cb1"]);
+    expect(screen.getByRole("heading", {
+      name: "18 canonical documents round-trip and replay exactly",
+    })).toBeInTheDocument();
+    expect(screen.getByText(/trap-bearing Semantic MIR uses additive V11/u)).toBeInTheDocument();
+    expect(screen.getByText("schedule_binding_mismatch")).toBeInTheDocument();
+    expect(screen.getByRole("heading", {
+      name: "The final Wave64 contains one logical lane",
+    })).toBeInTheDocument();
+    expect(screen.getByText("0x0000000000000001")).toBeInTheDocument();
+    expect(screen.getByRole("heading", {
+      name: "Resource exhaustion remains inspectable and inexact",
+    })).toBeInTheDocument();
+    expect(screen.getByText(/does not expose which retention dimension/u)).toBeInTheDocument();
+    const sourceBundleSection = screen.getByRole("region", {
+      name: "All 18 source cases reach every CPU observation path",
+    });
+    expect(within(sourceBundleSection).getByRole("link", {
+      name: /199311b61c…9926c202/u,
+    })).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/199311b61c4b7ef08813f4ba60b61f569926c202/docs/target-neutral-workgroup-scan-v1.md",
     );
     expect(screen.getByRole("table", { name: "Semantic Trace version custody" }))
       .toHaveTextContent("exact KIR V9 or V10");
     expect(screen.getByLabelText("Shared helper instance custody"))
       .toHaveTextContent("one KIR node");
-    expect(screen.getByText(/No ordinary scan Bundle V5 execution is retained/u))
+    expect(screen.getByText(/archives none of the generated bundles or schedule documents/u))
+      .toBeInTheDocument();
+    expect(screen.getByText(/does not execute a GPU or predict GPU behavior/u))
       .toBeInTheDocument();
 
     const raceTabs = screen.getByRole("tablist", { name: "Race evidence outcome" });
@@ -166,7 +202,7 @@ describe("debugger and simulator evidence workbench", () => {
     const waveTabs = screen.getByRole("tablist", { name: "Logical wave width" });
     await user.click(within(waveTabs).getByRole("tab", { name: "Wave64" }));
     expect(screen.getAllByText("0xffffffffffffffff")).toHaveLength(2);
-    expect(screen.getByText("0x0000000000000001")).toBeInTheDocument();
+    expect(screen.getAllByText("0x0000000000000001")).toHaveLength(2);
     expect(screen.getByText("execution_incomplete_wave")).toBeInTheDocument();
 
     expect(screen.getByText("Counter Capture V2 importer regression")).toBeInTheDocument();

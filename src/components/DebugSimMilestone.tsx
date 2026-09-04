@@ -286,6 +286,15 @@ function WorkgroupScanPanel() {
   const fixture = debugSimWorkgroupScanFixture;
   const layers = fixture.evidence.evidence_layers;
   const arbitrary = fixture.arbitraryExtents;
+  const bundle = fixture.bundleV5Evidence;
+  const bundleRows = fixture.bundleV5.scalarTypes.flatMap((scalar) =>
+    fixture.bundleV5.modes.map((mode) => ({
+      scalar,
+      mode,
+      cases: bundle.cases.filter((testCase) =>
+        testCase.scalar === scalar && testCase.mode === mode),
+    })),
+  );
   const extentRows = arbitrary.representativeExtents.map((extent) => {
     const rounds = Math.ceil(Math.log2(extent));
     const fullWaves = Math.floor(extent / 64);
@@ -328,13 +337,24 @@ function WorkgroupScanPanel() {
           debugger seed
           <code>0x{fixture.compiler.debuggerSchedule.toString(16)}</code>
         </span>
+        <span>
+          ordinary Bundle V5 gate
+          <a
+            href={`https://github.com/harsh-nod/fe2o3/commit/${fixture.bundleV5.commit}`}
+            rel="noreferrer"
+            target="_blank"
+            title={fixture.bundleV5.commit}
+          >
+            <code>{shortIdentity(fixture.bundleV5.commit)}</code>
+          </a>
+        </span>
       </div>
 
       <div className="semantic-scan-layers" aria-label="Workgroup scan evidence layers">
         <TruthCell label="ordinary API pairs" value={String(layers.ordinary_api_compile_contracts)} />
-        <TruthCell label="production examples" value={String(layers.ordinary_production_kernel_examples)} />
         <TruthCell label="semantic CPU cases" value={String(layers.direct_kir_semantic_simulations)} />
-        <TruthCell label="retained ordinary bundles" value={String(layers.retained_ordinary_bundle_executions)} />
+        <TruthCell label="ordinary V5 cases" value={String(fixture.bundleV5.caseCount)} />
+        <TruthCell label="archived bundles" value={String(fixture.bundleV5.retainedBundleArtifacts)} />
       </div>
 
       <section className="semantic-scan-extents" aria-labelledby="semantic-scan-extents-heading">
@@ -377,6 +397,93 @@ function WorkgroupScanPanel() {
           ))}
         </div>
       </section>
+
+      <section className="semantic-scan-bundle" aria-labelledby="semantic-scan-bundle-heading">
+        <header>
+          <div>
+            <p className="debug-label">Ordinary Rust to Bundle V5</p>
+            <h4 id="semantic-scan-bundle-heading">All 18 source cases reach every CPU observation path</h4>
+          </div>
+          <a
+            href={`https://github.com/harsh-nod/fe2o3/blob/${fixture.bundleV5.commit}/docs/target-neutral-workgroup-scan-v1.md`}
+            rel="noreferrer"
+            target="_blank"
+            title={fixture.bundleV5.commit}
+          >
+            <code>{shortIdentity(fixture.bundleV5.commit)}</code>
+          </a>
+        </header>
+        <p>
+          Each cell is one feature-isolated attributed Rust entry exported for
+          <code>{fixture.bundleV5.target}</code>. Its trap-bearing Semantic MIR uses additive V11;
+          production KIR V8 then maps to exact same-module KIR V10. The direct simulator, Trace V2,
+          runtime adapter, and replay assert exact output bytes; the JSONL debugger separately
+          asserts bounded stops and hierarchy.
+        </p>
+        <div className="semantic-scan-bundle-matrix" role="table" aria-label="Ordinary scan Bundle V5 matrix">
+          <div role="row">
+            <span role="columnheader">type</span>
+            <span role="columnheader">mode</span>
+            {fixture.bundleV5.representativeExtents.map((extent) => (
+              <span role="columnheader" key={extent}>N={extent}</span>
+            ))}
+          </div>
+          {bundleRows.map((row) => (
+            <div role="row" key={`${row.scalar}-${row.mode}`}>
+              <strong role="cell">{row.scalar}</strong>
+              <span role="cell">{row.mode}</span>
+              {row.cases.map((testCase) => (
+                <code role="cell" key={testCase.feature} title={testCase.kernel}>
+                  exact · 0x{testCase.seeded_schedule.toString(16)}
+                </code>
+              ))}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="semantic-scan-observations">
+        <section aria-labelledby="semantic-scan-replay-heading">
+          <p className="debug-label">Persisted schedule custody</p>
+          <h4 id="semantic-scan-replay-heading">18 canonical documents round-trip and replay exactly</h4>
+          <dl>
+            <div><dt>seed range</dt><dd><code>0x5ca0..0x5cb1</code></dd></div>
+            <div><dt>coverage</dt><dd>equal and complete</dd></div>
+            <div><dt>substitution</dt><dd><code>schedule_binding_mismatch</code></dd></div>
+            <div><dt>archived documents</dt><dd>0</dd></div>
+          </dl>
+          <p>
+            Each case encodes and decodes a canonical schedule document, requires equal binding,
+            record, schedule, transcript identity, coverage, and output, then writes only to
+            ephemeral test scratch.
+          </p>
+        </section>
+        <section aria-labelledby="semantic-scan-partial-heading">
+          <p className="debug-label">N=65 debugger inspection</p>
+          <h4 id="semantic-scan-partial-heading">The final Wave64 contains one logical lane</h4>
+          <dl>
+            <div><dt>wave</dt><dd>1 of 2</dd></div>
+            <div><dt>active mask</dt><dd><code>0x0000000000000001</code></dd></div>
+            <div><dt>lane</dt><dd><code>[64, 0, 0]</code></dd></div>
+            <div><dt>interpretation</dt><dd>logical visualization</dd></div>
+          </dl>
+          <p>All six 65-lane type/mode cases complete exactly before scope inspection.</p>
+        </section>
+        <section aria-labelledby="semantic-scan-cap-heading">
+          <p className="debug-label">N=255 bounded debugger</p>
+          <h4 id="semantic-scan-cap-heading">Resource exhaustion remains inspectable and inexact</h4>
+          <dl>
+            <div><dt>stop</dt><dd><code>resource_exhaustion</code></dd></div>
+            <div><dt>exact</dt><dd>false</dd></div>
+            <div><dt>outcome</dt><dd>active</dd></div>
+            <div><dt>retained prefix</dt><dd>inspectable</dd></div>
+          </dl>
+          <p>
+            The session is bounded by 1,000,000 checkpoints, 16,000,000 values, and 256 MiB.
+            The stop does not expose which retention dimension was exhausted.
+          </p>
+        </section>
+      </div>
 
       <div className="semantic-scan-grid">
         <section aria-labelledby="semantic-scan-matrix-heading">
@@ -449,7 +556,7 @@ function WorkgroupScanPanel() {
       </div>
 
       <div className="semantic-scan-sources" aria-label="Pinned workgroup scan sources">
-        {fixture.sources.map((source) => (
+        {fixture.bundleV5Sources.map((source) => (
           <a href={source.href} key={`${source.label}:${source.path}`} rel="noreferrer" target="_blank">
             <span>{source.label}</span>
             <code>{source.path}</code>
@@ -458,19 +565,23 @@ function WorkgroupScanPanel() {
       </div>
 
       <details className="semantic-raw-evidence semantic-scan-raw">
-        <summary><Braces size={15} aria-hidden="true" /> Exact tutorial evidence index</summary>
+        <summary><Braces size={15} aria-hidden="true" /> Exact Scan Bundle V5 evidence index</summary>
+        <pre data-testid="workgroup-scan-bundle-v5-evidence-v1">{fixture.bundleV5Raw}</pre>
+      </details>
+      <details className="semantic-raw-evidence semantic-scan-raw">
+        <summary><Braces size={15} aria-hidden="true" /> Earlier direct KIR scan evidence index</summary>
         <pre data-testid="workgroup-scan-evidence-v1">{fixture.raw}</pre>
       </details>
 
       <p className="semantic-boundary-note">
         <ShieldAlert size={15} aria-hidden="true" />
         <span>
-          The base six ordinary API combinations are compile contracts; the current extension
-          admits each exact N in 1..=256 and tests 3, 65, and 255 across every supported type and
-          mode. The displayed eight-lane results remain direct KIR V10 semantic fixtures. No
-          ordinary scan Bundle V5 execution is retained. The external protected-production proof
-          environment remains unavailable, and none of this is GPU, hardware-validation,
-          all-schedule, timing, or performance evidence.
+          The base six API combinations and displayed eight-lane outputs retain their older,
+          independent evidence pins. The new gate exercises 18 ordinary source-to-Bundle V5 cases,
+          but archives none of the generated bundles or schedule documents in this site. The
+          external protected-production proof environment remains unavailable. This CPU semantic
+          simulator does not execute a GPU or predict GPU behavior, timing, throughput, or
+          performance, and it does not explore every possible schedule.
         </span>
       </p>
     </div>

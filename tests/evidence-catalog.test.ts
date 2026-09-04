@@ -103,4 +103,24 @@ describe("evidence source digest scopes", () => {
       ]),
     );
   });
+
+  it("catalogs the exact Scan Bundle V5 qualification sources", () => {
+    const scan = evidenceCatalog.gitObjects.find(
+      (object) => object.label ===
+        "cpu-semantic-simulation: Exact production KIR in the CPU semantic debugger",
+    );
+
+    expect(scan).toMatchObject({
+      commit: "199311b61c4b7ef08813f4ba60b61f569926c202",
+      tree: "ecd73e0a1eff794d010d83cd93f72654d4937bd5",
+    });
+    expect(scan?.sourcePaths).toEqual(expect.arrayContaining([
+      "docs/target-neutral-workgroup-scan-v1.md",
+      "crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs",
+      "crates/fe2o3-lower-mir-kernel/src/production_semantic_kir_v1.rs",
+      "examples/workgroup_sync_v1/src/kernel_scan_u32.rs",
+      "examples/workgroup_sync_v1/src/kernel_scan_f32_exclusive.rs",
+      "scripts/quickstart.sh",
+    ]));
+  });
 });

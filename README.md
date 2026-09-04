@@ -137,12 +137,16 @@ milestone and broader functional-proof publication record remain independently
 pinned.
 
 The CPU semantic simulation reference at `#/lesson/cpu-semantic-simulation`
-also links the same current compiler pin for exact 1D workgroup scans with every
-extent from 1 through 256. It makes odd and partial-Wave64 layouts plus the
-`ceil(log2 N)` effect and barrier counts visible, while preserving the older
-eight-lane fixture and its independent evidence boundary. These checks are CPU
-semantic/compiler evidence, not GPU execution, hardware validation, timing, or
-performance evidence.
+retains the arbitrary-extent compiler pin above for exact 1D workgroup scans
+from 1 through 256, then adds an independent Scan Bundle V5 qualification pin
+at compiler commit `199311b61c4b7ef08813f4ba60b61f569926c202`, tree
+`ecd73e0a1eff794d010d83cd93f72654d4937bd5`. The new gate covers all 18
+ordinary Rust type/mode/extent cases, exact persisted seeded replay, the N=65
+one-lane final logical Wave64, and the N=255 debugger's bounded inexact
+resource-exhaustion stop. Their trap-bearing Semantic MIR uses additive V11
+while V10 remains byte-for-byte closed. Generated bundles and schedule documents remain
+ephemeral test artifacts. These checks are CPU semantic/compiler evidence,
+not GPU execution, hardware validation, timing, or performance prediction.
 
 The **Agent-native source/ISA inspection** reference at
 `#/debugger/source-isa-agent` is independently pinned to compiler commit

@@ -300,7 +300,7 @@ export const narrativeFingerprints = deepFreeze({
   "first-fill/trust": "53e785e3a4b30002ce0149a1190627aefab3923621442d274f317134e6b72a80",
   "typed-vecadd/same-body": "f13736ba4fb9726a65f1637d6658ce4ef5cdf9676ceeec1ebdea5a8728b629f8",
   "typed-vecadd/typed-host": "ff066ea1d248c592326ae6f85394a074420e735063dc73892f03e0b627e9d199",
-  "cpu-semantic-simulation/pipeline": "399919c08fcc7450c71a0574bd42dace786244564a2e822efa1128540befd8f0",
+  "cpu-semantic-simulation/pipeline": "1ab2174f839283945be18c0eb5f131cb1dcbf1b630f03312d5cefd785c5136ab",
   "cpu-semantic-simulation/evidence-boundary": "30d2361e35712e89f5a0bc1688131b63fbcf274be9b2f6de20b53dc7534e05ae",
   "verus-contracts/contract-shape": "6f0bce0ee5e7ee41dc19f9f0ed3b59e2c2238562ceac22380381454002d86ad1",
   "verus-contracts/negative": "38875c71f6dd93237a558f59db083e9eb48b93d9407fa23f210d3dfd14c379ca",

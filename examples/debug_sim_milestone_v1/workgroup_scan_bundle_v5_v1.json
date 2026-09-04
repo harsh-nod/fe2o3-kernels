@@ -1,0 +1,115 @@
+{
+  "schema": "fe2o3-tutorial-workgroup-scan-bundle-v5-evidence-v1",
+  "protocol_wire_record": false,
+  "source_commit": "199311b61c4b7ef08813f4ba60b61f569926c202",
+  "source_tree": "ecd73e0a1eff794d010d83cd93f72654d4937bd5",
+  "qualification": {
+    "test": "ordinary_scan_sources_export_v5_and_execute_every_cpu_observation_path",
+    "target": "gfx942:xnack-",
+    "bundle_version": 5,
+    "semantic_mir_version": 11,
+    "production_kir_version": 8,
+    "simulation_kir_version": 10,
+    "source_families": 6,
+    "case_count": 18,
+    "execution_paths": [
+      "direct_cpu_simulator",
+      "semantic_trace_v2",
+      "sim_runtime_backend_v1",
+      "jsonl_semantic_debugger",
+      "persisted_seeded_schedule_replay"
+    ]
+  },
+  "cases": [
+    { "feature": "lds-scan-u32-kernel", "kernel": "lds_inclusive_scan_u32_v1", "scalar": "u32", "mode": "inclusive", "extent": 3, "seeded_schedule": 23712, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-u32-65-kernel", "kernel": "lds_inclusive_scan_u32_65_v1", "scalar": "u32", "mode": "inclusive", "extent": 65, "seeded_schedule": 23713, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-u32-255-kernel", "kernel": "lds_inclusive_scan_u32_255_v1", "scalar": "u32", "mode": "inclusive", "extent": 255, "seeded_schedule": 23714, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-u32-exclusive-3-kernel", "kernel": "lds_exclusive_scan_u32_3_v1", "scalar": "u32", "mode": "exclusive", "extent": 3, "seeded_schedule": 23715, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-u32-exclusive-65-kernel", "kernel": "lds_exclusive_scan_u32_65_v1", "scalar": "u32", "mode": "exclusive", "extent": 65, "seeded_schedule": 23716, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-u32-exclusive-kernel", "kernel": "lds_exclusive_scan_u32_v1", "scalar": "u32", "mode": "exclusive", "extent": 255, "seeded_schedule": 23717, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-i32-inclusive-kernel", "kernel": "lds_inclusive_scan_i32_v1", "scalar": "i32", "mode": "inclusive", "extent": 3, "seeded_schedule": 23718, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-i32-inclusive-65-kernel", "kernel": "lds_inclusive_scan_i32_65_v1", "scalar": "i32", "mode": "inclusive", "extent": 65, "seeded_schedule": 23719, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-i32-inclusive-255-kernel", "kernel": "lds_inclusive_scan_i32_255_v1", "scalar": "i32", "mode": "inclusive", "extent": 255, "seeded_schedule": 23720, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-i32-3-kernel", "kernel": "lds_exclusive_scan_i32_3_v1", "scalar": "i32", "mode": "exclusive", "extent": 3, "seeded_schedule": 23721, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-i32-kernel", "kernel": "lds_exclusive_scan_i32_v1", "scalar": "i32", "mode": "exclusive", "extent": 65, "seeded_schedule": 23722, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-i32-255-kernel", "kernel": "lds_exclusive_scan_i32_255_v1", "scalar": "i32", "mode": "exclusive", "extent": 255, "seeded_schedule": 23723, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-f32-3-kernel", "kernel": "lds_inclusive_scan_f32_3_v1", "scalar": "f32", "mode": "inclusive", "extent": 3, "seeded_schedule": 23724, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-f32-65-kernel", "kernel": "lds_inclusive_scan_f32_65_v1", "scalar": "f32", "mode": "inclusive", "extent": 65, "seeded_schedule": 23725, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-f32-kernel", "kernel": "lds_inclusive_scan_f32_v1", "scalar": "f32", "mode": "inclusive", "extent": 255, "seeded_schedule": 23726, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-f32-exclusive-3-kernel", "kernel": "lds_exclusive_scan_f32_3_v1", "scalar": "f32", "mode": "exclusive", "extent": 3, "seeded_schedule": 23727, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-f32-exclusive-kernel", "kernel": "lds_exclusive_scan_f32_v1", "scalar": "f32", "mode": "exclusive", "extent": 65, "seeded_schedule": 23728, "result": "exact_prefix_oracle_matched" },
+    { "feature": "lds-scan-f32-exclusive-255-kernel", "kernel": "lds_exclusive_scan_f32_255_v1", "scalar": "f32", "mode": "exclusive", "extent": 255, "seeded_schedule": 23729, "result": "exact_prefix_oracle_matched" }
+  ],
+  "persisted_replay": {
+    "case_count": 18,
+    "seed_range": [23712, 23729],
+    "document": "canonical_round_trip_and_ephemeral_test_scratch_only",
+    "checks": [
+      "bundle_and_request_binding_equal",
+      "canonical_document_bytes_equal",
+      "schedule_record_equal",
+      "schedule_equal",
+      "transcript_identity_equal",
+      "coverage_equal_and_complete",
+      "exact_output_rows_equal"
+    ],
+    "cross_bundle_substitution": "schedule_binding_mismatch",
+    "archived_schedule_documents": 0
+  },
+  "partial_wave64": {
+    "extent": 65,
+    "case_count": 6,
+    "stop": { "reason": "completed", "exact": true },
+    "wave": 1,
+    "wave_width": 64,
+    "active_mask": 1,
+    "lane": 0,
+    "logical_workitem": [64, 0, 0],
+    "interpretation": "logical_visualization"
+  },
+  "debugger_resource_cap": {
+    "extent": 255,
+    "case_count": 6,
+    "continue_max_events": 1000000,
+    "session_limits": {
+      "max_checkpoints": 1000000,
+      "max_values": 16000000,
+      "max_bytes": 268435456
+    },
+    "stop": { "reason": "resource_exhaustion", "exact": false, "outcome": "active" },
+    "specific_exhausted_dimension": "not_exposed_by_stop",
+    "retained_prefix_inspectable": true
+  },
+  "source_paths": {
+    "design": "docs/target-neutral-workgroup-scan-v1.md",
+    "qualification_driver": "crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs",
+    "ranked_projection": "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+    "semantic_model": "crates/fe2o3-mir-model/src/semantic_mir_v1.rs",
+    "semantic_decode": "crates/fe2o3-mir-model/src/semantic_mir_v1/canonical_decode.rs",
+    "simulator_preflight": "crates/fe2o3-kir-sim/src/preflight.rs",
+    "simulator_execution": "crates/fe2o3-kir-sim/src/execute.rs",
+    "exact_launch_lowering": "crates/fe2o3-lower-mir-kernel/src/production_semantic_kir_v1.rs",
+    "ordinary_examples": "examples/workgroup_sync_v1/src/lib.rs",
+    "ordinary_u32_inclusive": "examples/workgroup_sync_v1/src/kernel_scan_u32.rs",
+    "ordinary_u32_exclusive": "examples/workgroup_sync_v1/src/kernel_scan_u32_exclusive.rs",
+    "ordinary_i32_inclusive": "examples/workgroup_sync_v1/src/kernel_scan_i32_inclusive.rs",
+    "ordinary_i32_exclusive": "examples/workgroup_sync_v1/src/kernel_scan_i32.rs",
+    "ordinary_f32_inclusive": "examples/workgroup_sync_v1/src/kernel_scan_f32.rs",
+    "ordinary_f32_exclusive": "examples/workgroup_sync_v1/src/kernel_scan_f32_exclusive.rs",
+    "quickstart_readme": "examples/workgroup_sync_v1/README.md",
+    "quickstart_request": "examples/workgroup_sync_v1/scan-u32-request.json",
+    "quickstart": "scripts/quickstart.sh",
+    "quickstart_test": "scripts/tests/quickstart.sh"
+  },
+  "boundaries": {
+    "authority": "observation_only",
+    "retained_bundle_artifacts": 0,
+    "retained_schedule_artifacts": 0,
+    "hardware_observed": false,
+    "hardware_validation": false,
+    "gpu_execution": false,
+    "performance_prediction": false,
+    "all_schedules_explored": false,
+    "protected_compiler_execution_authenticated": false
+  }
+}

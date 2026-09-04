@@ -5665,6 +5665,141 @@ tr:last-child td {
   overflow-wrap: anywhere;
 }
 
+.semantic-scan-bundle {
+  padding: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.semantic-scan-bundle > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.semantic-scan-bundle h4,
+.semantic-scan-observations h4 {
+  margin: 3px 0 0;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+}
+
+.semantic-scan-bundle > header a {
+  flex: 0 0 auto;
+  color: var(--blue);
+  font-size: 0.62rem;
+}
+
+.semantic-scan-bundle > p {
+  max-width: 880px;
+  margin: 10px 0 12px;
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.55;
+}
+
+.semantic-scan-bundle > p code {
+  margin: 0 4px;
+  color: var(--text-strong);
+  font-size: 0.62rem;
+}
+
+.semantic-scan-bundle-matrix {
+  overflow-x: auto;
+}
+
+.semantic-scan-bundle-matrix > div {
+  display: grid;
+  grid-template-columns: 0.42fr 0.7fr repeat(3, minmax(130px, 1fr));
+  gap: 8px;
+  align-items: center;
+  min-width: 650px;
+  min-height: 38px;
+  padding: 7px 9px;
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-scan-bundle-matrix > div:first-child {
+  min-height: 32px;
+  color: var(--faint);
+  background: var(--surface-2);
+  font-size: 0.54rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.semantic-scan-bundle-matrix strong,
+.semantic-scan-bundle-matrix code,
+.semantic-scan-bundle-matrix span {
+  min-width: 0;
+  color: var(--text-strong);
+  font-size: 0.6rem;
+  overflow-wrap: anywhere;
+}
+
+.semantic-scan-observations {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+}
+
+.semantic-scan-observations > section {
+  min-width: 0;
+  padding: 14px;
+  background: var(--surface);
+}
+
+.semantic-scan-observations dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 12px 0;
+  border: 1px solid var(--border);
+}
+
+.semantic-scan-observations dl > div {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.semantic-scan-observations dl > div:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.semantic-scan-observations dl > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.semantic-scan-observations dt {
+  color: var(--faint);
+  font-size: 0.52rem;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.semantic-scan-observations dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 0.61rem;
+  overflow-wrap: anywhere;
+}
+
+.semantic-scan-observations dd code {
+  font-size: 0.57rem;
+}
+
+.semantic-scan-observations > section > p:last-child {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.64rem;
+  line-height: 1.5;
+}
+
 .semantic-scan-grid,
 .semantic-scan-custody {
   display: grid;
@@ -6400,7 +6535,8 @@ tr:last-child td {
   }
 
   .semantic-scan-grid,
-  .semantic-scan-custody {
+  .semantic-scan-custody,
+  .semantic-scan-observations {
     grid-template-columns: 1fr;
   }
 
@@ -6455,7 +6591,15 @@ tr:last-child td {
     display: grid;
   }
 
+  .semantic-scan-bundle > header {
+    display: grid;
+  }
+
   .semantic-scan-extents > header a {
+    justify-self: start;
+  }
+
+  .semantic-scan-bundle > header a {
     justify-self: start;
   }
 

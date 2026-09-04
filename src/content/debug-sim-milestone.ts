@@ -25,6 +25,8 @@ import wave64Error from "../../examples/debug_sim_milestone_v1/partial_wave64_er
 import wave32Result from "../../examples/debug_sim_milestone_v1/wave32_collectives_result_v1.json";
 import wave64Result from "../../examples/debug_sim_milestone_v1/wave64_collectives_result_v1.json";
 import workgroupReduceQueriesRaw from "../../examples/debug_sim_milestone_v1/workgroup_reduce_queries_v1.jsonl?raw";
+import workgroupScanBundleV5 from "../../examples/debug_sim_milestone_v1/workgroup_scan_bundle_v5_v1.json";
+import workgroupScanBundleV5Raw from "../../examples/debug_sim_milestone_v1/workgroup_scan_bundle_v5_v1.json?raw";
 import workgroupScanMatrix from "../../examples/debug_sim_milestone_v1/workgroup_scan_matrix_v1.json";
 import workgroupScanMatrixRaw from "../../examples/debug_sim_milestone_v1/workgroup_scan_matrix_v1.json?raw";
 import currentMilestones from "../../config/debugger-profiler-current-milestones.json";
@@ -60,6 +62,7 @@ export const DEBUG_SIM_ARTIFACT_SHA256 = {
   wave32Result: "ec856159689ad4aa2672587be7005965fa76216f7e3adf140a50e54f01c00334",
   wave64Result: "8cd9fcddf8835683093f5bd6e39bfbd7a2b2871665f069f635634841adc56305",
   workgroupReduceQueries: "3426bc52547f2989d5b9476552dda58759800cb5364075a3a967a88e730f4410",
+  workgroupScanBundleV5: "50450de319a2e199a59ddf2195dd0a1bb8a002e715e1fa797340e82f200b6bca",
   workgroupScanMatrix: "ef1eec8c96f26f8ad3bf6327ffb405c1c5f8748b2e6d6b63899f78e7ffc33736",
 } as const;
 
@@ -829,6 +832,256 @@ function validateWorkgroupScanMilestone(): string[] {
   return [];
 }
 
+const expectedScanBundleV5Cases = [
+  ["lds-scan-u32-kernel", "lds_inclusive_scan_u32_v1", "u32", "inclusive", 3],
+  ["lds-scan-u32-65-kernel", "lds_inclusive_scan_u32_65_v1", "u32", "inclusive", 65],
+  ["lds-scan-u32-255-kernel", "lds_inclusive_scan_u32_255_v1", "u32", "inclusive", 255],
+  ["lds-scan-u32-exclusive-3-kernel", "lds_exclusive_scan_u32_3_v1", "u32", "exclusive", 3],
+  ["lds-scan-u32-exclusive-65-kernel", "lds_exclusive_scan_u32_65_v1", "u32", "exclusive", 65],
+  ["lds-scan-u32-exclusive-kernel", "lds_exclusive_scan_u32_v1", "u32", "exclusive", 255],
+  ["lds-scan-i32-inclusive-kernel", "lds_inclusive_scan_i32_v1", "i32", "inclusive", 3],
+  ["lds-scan-i32-inclusive-65-kernel", "lds_inclusive_scan_i32_65_v1", "i32", "inclusive", 65],
+  ["lds-scan-i32-inclusive-255-kernel", "lds_inclusive_scan_i32_255_v1", "i32", "inclusive", 255],
+  ["lds-scan-i32-3-kernel", "lds_exclusive_scan_i32_3_v1", "i32", "exclusive", 3],
+  ["lds-scan-i32-kernel", "lds_exclusive_scan_i32_v1", "i32", "exclusive", 65],
+  ["lds-scan-i32-255-kernel", "lds_exclusive_scan_i32_255_v1", "i32", "exclusive", 255],
+  ["lds-scan-f32-3-kernel", "lds_inclusive_scan_f32_3_v1", "f32", "inclusive", 3],
+  ["lds-scan-f32-65-kernel", "lds_inclusive_scan_f32_65_v1", "f32", "inclusive", 65],
+  ["lds-scan-f32-kernel", "lds_inclusive_scan_f32_v1", "f32", "inclusive", 255],
+  ["lds-scan-f32-exclusive-3-kernel", "lds_exclusive_scan_f32_3_v1", "f32", "exclusive", 3],
+  ["lds-scan-f32-exclusive-kernel", "lds_exclusive_scan_f32_v1", "f32", "exclusive", 65],
+  ["lds-scan-f32-exclusive-255-kernel", "lds_exclusive_scan_f32_255_v1", "f32", "exclusive", 255],
+] as const;
+
+function validateWorkgroupScanBundleV5Milestone(): string[] {
+  const milestone = currentMilestones.workgroupScanBundleV5V1;
+  const evidence = workgroupScanBundleV5;
+  const qualification = evidence.qualification;
+  const replay = evidence.persisted_replay;
+  const partial = evidence.partial_wave64;
+  const capped = evidence.debugger_resource_cap;
+  const boundaries = evidence.boundaries;
+  if (
+    !exactKeys(milestone, [
+      "bundleVersion",
+      "caseCount",
+      "commit",
+      "executionPaths",
+      "gpuExecution",
+      "hardwareObserved",
+      "hardwareValidation",
+      "modes",
+      "partialWaveExtent",
+      "performancePrediction",
+      "persistedReplayCases",
+      "productionKirVersion",
+      "representativeExtents",
+      "resourceCapExtent",
+      "retainedBundleArtifacts",
+      "retainedScheduleArtifacts",
+      "scalarTypes",
+      "semanticMirVersion",
+      "simulationKirVersion",
+      "sourceFamilies",
+      "target",
+      "tree",
+    ]) ||
+    !exactGitObject.test(milestone.commit) ||
+    !exactGitObject.test(milestone.tree) ||
+    milestone.commit !== evidence.source_commit ||
+    milestone.tree !== evidence.source_tree ||
+    milestone.target !== "gfx942:xnack-" ||
+    milestone.bundleVersion !== 5 ||
+    milestone.semanticMirVersion !== 11 ||
+    milestone.productionKirVersion !== 8 ||
+    milestone.simulationKirVersion !== 10 ||
+    milestone.sourceFamilies !== 6 ||
+    milestone.caseCount !== 18 ||
+    JSON.stringify(milestone.representativeExtents) !== "[3,65,255]" ||
+    JSON.stringify(milestone.scalarTypes) !== '["u32","i32","f32"]' ||
+    JSON.stringify(milestone.modes) !== '["inclusive","exclusive"]' ||
+    JSON.stringify(milestone.executionPaths) !==
+      '["direct_cpu_simulator","semantic_trace_v2","sim_runtime_backend_v1","jsonl_semantic_debugger","persisted_seeded_schedule_replay"]' ||
+    milestone.persistedReplayCases !== 18 ||
+    milestone.partialWaveExtent !== 65 ||
+    milestone.resourceCapExtent !== 255 ||
+    milestone.retainedBundleArtifacts !== 0 ||
+    milestone.retainedScheduleArtifacts !== 0 ||
+    milestone.hardwareObserved !== false ||
+    milestone.hardwareValidation !== false ||
+    milestone.gpuExecution !== false ||
+    milestone.performancePrediction !== false
+  ) {
+    return ["Scan Bundle V5 milestone has an invalid closed envelope"];
+  }
+  if (
+    !exactKeys(qualification, [
+      "bundle_version",
+      "case_count",
+      "execution_paths",
+      "production_kir_version",
+      "semantic_mir_version",
+      "simulation_kir_version",
+      "source_families",
+      "target",
+      "test",
+    ]) ||
+    !exactKeys(evidence, [
+      "boundaries",
+      "cases",
+      "debugger_resource_cap",
+      "partial_wave64",
+      "persisted_replay",
+      "protocol_wire_record",
+      "qualification",
+      "schema",
+      "source_commit",
+      "source_paths",
+      "source_tree",
+    ]) ||
+    evidence.schema !== "fe2o3-tutorial-workgroup-scan-bundle-v5-evidence-v1" ||
+    evidence.protocol_wire_record !== false ||
+    qualification.test !==
+      "ordinary_scan_sources_export_v5_and_execute_every_cpu_observation_path" ||
+    qualification.target !== milestone.target ||
+    qualification.bundle_version !== milestone.bundleVersion ||
+    qualification.semantic_mir_version !== milestone.semanticMirVersion ||
+    qualification.production_kir_version !== milestone.productionKirVersion ||
+    qualification.simulation_kir_version !== milestone.simulationKirVersion ||
+    qualification.source_families !== milestone.sourceFamilies ||
+    qualification.case_count !== milestone.caseCount ||
+    JSON.stringify(qualification.execution_paths) !== JSON.stringify(milestone.executionPaths)
+  ) {
+    return ["Scan Bundle V5 evidence index changed its pinned qualification"];
+  }
+  if (
+    evidence.cases.length !== expectedScanBundleV5Cases.length ||
+    evidence.cases.some((entry, index) => {
+      const expected = expectedScanBundleV5Cases[index];
+      return (
+        !exactKeys(entry, [
+          "extent",
+          "feature",
+          "kernel",
+          "mode",
+          "result",
+          "scalar",
+          "seeded_schedule",
+        ]) ||
+        entry.feature !== expected[0] ||
+        entry.kernel !== expected[1] ||
+        entry.scalar !== expected[2] ||
+        entry.mode !== expected[3] ||
+        entry.extent !== expected[4] ||
+        entry.seeded_schedule !== 0x5ca0 + index ||
+        entry.result !== "exact_prefix_oracle_matched"
+      );
+    }) ||
+    new Set(evidence.cases.map((entry) => entry.feature)).size !== 18 ||
+    new Set(evidence.cases.map((entry) => entry.kernel)).size !== 18
+  ) {
+    return ["Scan Bundle V5 evidence lost one of its 18 exact source cases"];
+  }
+  if (
+    !exactKeys(replay, [
+      "archived_schedule_documents",
+      "case_count",
+      "checks",
+      "cross_bundle_substitution",
+      "document",
+      "seed_range",
+    ]) ||
+    replay.case_count !== 18 ||
+    JSON.stringify(replay.seed_range) !== "[23712,23729]" ||
+    replay.document !== "canonical_round_trip_and_ephemeral_test_scratch_only" ||
+    JSON.stringify(replay.checks) !==
+      '["bundle_and_request_binding_equal","canonical_document_bytes_equal","schedule_record_equal","schedule_equal","transcript_identity_equal","coverage_equal_and_complete","exact_output_rows_equal"]' ||
+    replay.cross_bundle_substitution !== "schedule_binding_mismatch" ||
+    replay.archived_schedule_documents !== 0
+  ) {
+    return ["Scan Bundle V5 persisted replay lost exact binding or retention truth"];
+  }
+  if (
+    !exactKeys(partial, [
+      "active_mask",
+      "case_count",
+      "extent",
+      "interpretation",
+      "lane",
+      "logical_workitem",
+      "stop",
+      "wave",
+      "wave_width",
+    ]) ||
+    !exactKeys(partial.stop, ["exact", "reason"]) ||
+    partial.extent !== 65 ||
+    partial.case_count !== 6 ||
+    partial.stop.reason !== "completed" ||
+    partial.stop.exact !== true ||
+    partial.wave !== 1 ||
+    partial.wave_width !== 64 ||
+    partial.active_mask !== 1 ||
+    partial.lane !== 0 ||
+    JSON.stringify(partial.logical_workitem) !== "[64,0,0]" ||
+    partial.interpretation !== "logical_visualization"
+  ) {
+    return ["Scan Bundle V5 partial Wave64 evidence changed"];
+  }
+  if (
+    !exactKeys(capped, [
+      "case_count",
+      "continue_max_events",
+      "extent",
+      "retained_prefix_inspectable",
+      "session_limits",
+      "specific_exhausted_dimension",
+      "stop",
+    ]) ||
+    !exactKeys(capped.session_limits, ["max_bytes", "max_checkpoints", "max_values"]) ||
+    !exactKeys(capped.stop, ["exact", "outcome", "reason"]) ||
+    capped.extent !== 255 ||
+    capped.case_count !== 6 ||
+    capped.continue_max_events !== 1_000_000 ||
+    capped.session_limits.max_checkpoints !== 1_000_000 ||
+    capped.session_limits.max_values !== 16_000_000 ||
+    capped.session_limits.max_bytes !== 256 * 1024 * 1024 ||
+    capped.stop.reason !== "resource_exhaustion" ||
+    capped.stop.exact !== false ||
+    capped.stop.outcome !== "active" ||
+    capped.specific_exhausted_dimension !== "not_exposed_by_stop" ||
+    capped.retained_prefix_inspectable !== true
+  ) {
+    return ["Scan Bundle V5 debugger cap lost its inexact bounded stop"];
+  }
+  if (
+    !exactKeys(boundaries, [
+      "all_schedules_explored",
+      "authority",
+      "gpu_execution",
+      "hardware_observed",
+      "hardware_validation",
+      "performance_prediction",
+      "protected_compiler_execution_authenticated",
+      "retained_bundle_artifacts",
+      "retained_schedule_artifacts",
+    ]) ||
+    JSON.stringify(evidence.source_paths) !==
+      '{"design":"docs/target-neutral-workgroup-scan-v1.md","qualification_driver":"crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs","ranked_projection":"crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs","semantic_model":"crates/fe2o3-mir-model/src/semantic_mir_v1.rs","semantic_decode":"crates/fe2o3-mir-model/src/semantic_mir_v1/canonical_decode.rs","simulator_preflight":"crates/fe2o3-kir-sim/src/preflight.rs","simulator_execution":"crates/fe2o3-kir-sim/src/execute.rs","exact_launch_lowering":"crates/fe2o3-lower-mir-kernel/src/production_semantic_kir_v1.rs","ordinary_examples":"examples/workgroup_sync_v1/src/lib.rs","ordinary_u32_inclusive":"examples/workgroup_sync_v1/src/kernel_scan_u32.rs","ordinary_u32_exclusive":"examples/workgroup_sync_v1/src/kernel_scan_u32_exclusive.rs","ordinary_i32_inclusive":"examples/workgroup_sync_v1/src/kernel_scan_i32_inclusive.rs","ordinary_i32_exclusive":"examples/workgroup_sync_v1/src/kernel_scan_i32.rs","ordinary_f32_inclusive":"examples/workgroup_sync_v1/src/kernel_scan_f32.rs","ordinary_f32_exclusive":"examples/workgroup_sync_v1/src/kernel_scan_f32_exclusive.rs","quickstart_readme":"examples/workgroup_sync_v1/README.md","quickstart_request":"examples/workgroup_sync_v1/scan-u32-request.json","quickstart":"scripts/quickstart.sh","quickstart_test":"scripts/tests/quickstart.sh"}' ||
+    boundaries.authority !== "observation_only" ||
+    boundaries.retained_bundle_artifacts !== 0 ||
+    boundaries.retained_schedule_artifacts !== 0 ||
+    boundaries.hardware_observed !== false ||
+    boundaries.hardware_validation !== false ||
+    boundaries.gpu_execution !== false ||
+    boundaries.performance_prediction !== false ||
+    boundaries.all_schedules_explored !== false ||
+    boundaries.protected_compiler_execution_authenticated !== false
+  ) {
+    return ["Scan Bundle V5 evidence changed its source custody or nonclaims"];
+  }
+  return [];
+}
+
 export const debugSimMilestoneProjection = {
   compiler: DEBUG_SIM_COMPILER_PIN,
   sourceVariables: {
@@ -859,6 +1112,7 @@ export const debugSimMilestoneProjection = {
   },
   workgroupReduction: currentMilestones.workgroupReductionV5,
   workgroupScan: workgroupScanMatrix,
+  workgroupScanBundleV5,
   arbitraryWorkgroupScanExtents: currentMilestones.arbitraryWorkgroupScanExtentsV1,
   semanticTrace: currentMilestones.semanticTraceV2,
   multiRootSemanticDebug: currentMilestones.multiFunctionSemanticDebugV5,
@@ -883,12 +1137,20 @@ export const debugSimWorkgroupScanFixture = {
   trace: currentMilestones.semanticTraceV2,
   correspondence: currentMilestones.multiFunctionSemanticDebugV5,
   evidence: workgroupScanMatrix,
+  bundleV5: currentMilestones.workgroupScanBundleV5V1,
+  bundleV5Evidence: workgroupScanBundleV5,
+  bundleV5Raw: workgroupScanBundleV5Raw,
   cases: workgroupScanMatrix.semantic_execution.cases,
   raw: workgroupScanMatrixRaw,
   sources: Object.entries(workgroupScanMatrix.source_paths).map(([label, path]) => ({
     label: label.replaceAll("_", " "),
     path,
     href: debugSimSourceUrl(path, currentMilestones.workgroupScanV1.commit),
+  })),
+  bundleV5Sources: Object.entries(workgroupScanBundleV5.source_paths).map(([label, path]) => ({
+    label: label.replaceAll("_", " "),
+    path,
+    href: debugSimSourceUrl(path, currentMilestones.workgroupScanBundleV5V1.commit),
   })),
 } as const;
 
@@ -1075,6 +1337,7 @@ export function validateDebugSimMilestone(): string[] {
     ...validatePcSampleMilestone(),
     ...validateWorkgroupReductionMilestone(),
     ...validateWorkgroupScanMilestone(),
+    ...validateWorkgroupScanBundleV5Milestone(),
   ];
   const raceWitness = field(field(explorationRace, "witnesses"), "first_race");
   if (

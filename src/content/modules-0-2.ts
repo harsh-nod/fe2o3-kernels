@@ -89,6 +89,10 @@ const workgroupScanSemanticTestCommand =
   "cargo test --locked -p fe2o3-kir-sim --test simulation workgroup_scan -- --nocapture";
 const workgroupScanProductionTestCommand =
   "cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_neutral_collectives_reach_both_target_llvm_backends -- --ignored --exact";
+const workgroupScanBundleV5TestCommand =
+  "cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_scan_sources_export_v5_and_execute_every_cpu_observation_path -- --ignored --exact --test-threads=1";
+const workgroupScanBundleV5QuickstartCommand =
+  "./scripts/quickstart.sh simulate-source --crate fe2o3_workgroup_sync_v1 --request examples/workgroup_sync_v1/scan-u32-request.json --bundle-version 5 --output /tmp/scan-u32.fe2sim -- --manifest-path examples/workgroup_sync_v1/Cargo.toml --no-default-features --features lds-scan-u32-kernel --lib";
 const semanticTraceV2TestCommand =
   "cargo test --locked -p fe2o3-semantic-trace --test codec_v2 && cargo test --locked -p fe2o3-kir-sim-trace --test adapter_v1 v2_trace_adapter_rejects_v7_and_binds_exact_v9_v10_owners -- --exact";
 const cpuSimulationSourceMarker =
@@ -540,8 +544,8 @@ const cpuSimulation: Lesson = {
     "Run an ordinary gfx950 f32 wave reduction from its exact production V9 identity through a same-module KIR V10 Bundle V5.",
     "Run generated integer, exact float-bit, layout, bounds, and switch cases through the production Bundle V5 boundary.",
     "Export ordinary u32, i32, and f32 portable workgroup reductions and inspect workgroup, wave, memory, and operation views through one JSONL debugger session.",
-    "Distinguish six ordinary inclusive/exclusive u32, i32, and f32 scan API contracts, three production kernel representatives, and six direct KIR V10 semantic executions.",
-    "Follow one scan decision through logical coordinates, its exact KIR site, typed LDS traffic, barrier phase and participants, and replay ordinal.",
+    "Run all 18 ordinary inclusive/exclusive u32, i32, and f32 scan entries at extents 3, 65, and 255 through Bundle V5 CPU observation paths.",
+    "Replay every persisted seeded schedule exactly, inspect the N=65 one-lane final Wave64, and recognize the N=255 debugger's bounded inexact resource stop.",
     "Run the embedded exact KIR, record and replay its bounded semantic schedule, and inspect exact software floating-point bits.",
     "Distinguish a retained byte-level race, a bounded no-race observation, and an incomplete happens-before assessment without claiming schedule-space exhaustion.",
     "Inspect exact full-active logical Wave32/Wave64 collectives and fixed-width structured failure masks.",
@@ -555,10 +559,10 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 2df6130c5, target-neutral workgroup scan coverage is explicit at each layer: all six inclusive/exclusive u32, i32, and f32 ordinary Rust API combinations compile; three attributed kernel representatives reach the gfx942 and gfx950 production LLVM backends; and all six direct KIR V10 semantic cases agree under canonical, seeded, and exact replay schedules. Debug records retain lane, site, LDS, barrier, and schedule evidence. No ordinary scan Bundle V5 execution is retained, protected production proof inputs remain external and unavailable, and every displayed execution is non-hardware and non-performance evidence.",
+        "At compiler 199311b61, one bounded gfx942 qualification gate exports all 18 ordinary inclusive/exclusive u32, i32, and f32 scan entries at extents 3, 65, and 255 as authority-free Bundle V5. The direct CPU simulator, complete Trace V2, SimRuntimeBackendV1, and persisted seeded replay each check exact output bytes; the JSONL semantic debugger separately checks bounded stops and nonempty hierarchy views. The N=65 debugger exposes its one-lane final logical Wave64; N=255 reaches a typed inexact resource-exhaustion stop while the retained prefix remains inspectable. Generated bundles and schedule documents are ephemeral test artifacts, protected compiler execution is not authenticated, and this is neither GPU execution nor performance prediction.",
       reference: qualificationReference(
-        currentMilestones.workgroupScanV1.commit,
-        currentMilestones.workgroupScanV1.tree,
+        currentMilestones.workgroupScanBundleV5V1.commit,
+        currentMilestones.workgroupScanBundleV5V1.tree,
         [
           cpuSimulationBuildCommand,
           cpuSimulationExportCommand,
@@ -582,6 +586,8 @@ const cpuSimulation: Lesson = {
           workgroupScanApiTestCommand,
           workgroupScanSemanticTestCommand,
           workgroupScanProductionTestCommand,
+          workgroupScanBundleV5TestCommand,
+          workgroupScanBundleV5QuickstartCommand,
           semanticTraceV2TestCommand,
         ],
         [
@@ -609,13 +615,26 @@ const cpuSimulation: Lesson = {
           "crates/fe2o3-device/tests/ui/pass/bounded_collective_contract.rs",
           "crates/fe2o3-kir-sim/tests/simulation.rs",
           "crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs",
+          "crates/rustc-codegen-fe2o3/src/production_ranked_projection_v1.rs",
+          "crates/fe2o3-mir-model/src/semantic_mir_v1/canonical_decode.rs",
+          "crates/fe2o3-lower-mir-kernel/src/production_semantic_kir_v1.rs",
+          "examples/workgroup_sync_v1/src/lib.rs",
+          "examples/workgroup_sync_v1/src/kernel_scan_u32.rs",
+          "examples/workgroup_sync_v1/src/kernel_scan_u32_exclusive.rs",
+          "examples/workgroup_sync_v1/src/kernel_scan_i32.rs",
+          "examples/workgroup_sync_v1/src/kernel_scan_i32_inclusive.rs",
+          "examples/workgroup_sync_v1/src/kernel_scan_f32.rs",
+          "examples/workgroup_sync_v1/src/kernel_scan_f32_exclusive.rs",
+          "examples/workgroup_sync_v1/scan-u32-request.json",
+          "scripts/quickstart.sh",
+          "scripts/tests/quickstart.sh",
           "crates/fe2o3-semantic-trace/tests/codec_v2.rs",
           "crates/fe2o3-kir-sim-trace/tests/adapter_v1.rs",
           "crates/fe2o3-hsaco-finalize/src/semantic_debug_instance_custody_v1.rs",
         ],
         {
-          target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
-          note: "Qualification evidence for observation-only execution of exact bundle content with compiler-bundle-bound source locations. This is not protected compiler-execution authentication, source-to-KIR refinement, GPU/device-runtime use, hardware validation, timing, or performance prediction.",
+          target: "gfx942:xnack- CPU semantic qualification; gfx942/gfx950 production compile coverage",
+          note: "Qualification evidence for observation-only execution of exact Bundle V5 content with compiler-bundle-bound source locations. Generated bundles and schedule documents exist only in ephemeral test scratch. This is not protected compiler-execution authentication, source-to-KIR refinement, GPU/device-runtime use, hardware validation, timing, or performance prediction.",
         },
       ),
     },
@@ -725,6 +744,13 @@ ${semanticTraceV2TestCommand}
 # Requires the pinned nightly rust-src and AMD targets; this compiles three attributed
 # scan representatives through both production LLVM backends but does not execute a bundle.
 ${workgroupScanProductionTestCommand}
+
+# Run all 18 ordinary scan entries through Bundle V5 CPU simulation, Trace V2,
+# SimRuntimeBackendV1, debugger inspection, and exact persisted seeded replay.
+${workgroupScanBundleV5TestCommand}
+
+# Export and run the ordinary three-lane u32 quickstart without GPU access.
+${workgroupScanBundleV5QuickstartCommand}
 ${dynamicLdsSimulationTestCommand}`,
     },
     {
@@ -858,6 +884,27 @@ Target-neutral workgroup scans at 2df6130c5
   external protected-production proof: unavailable
   hardware_observed: false
   performance_prediction: false
+
+Ordinary Scan Bundle V5 qualification at 199311b61
+  target: gfx942:xnack-
+  matrix: 3 scalar types x 2 modes x extents 3, 65, and 255 = 18 entries
+  semantic MIR: additive V11 (V10 remains byte-for-byte closed)
+  production KIR V8 -> exact same-module simulator KIR V10
+  paths: direct CPU simulator, complete Trace V2, SimRuntimeBackendV1,
+         JSONL semantic debugger, persisted seeded schedule replay
+  replay seeds: 0x5ca0 through 0x5cb1
+  replay checks: exact binding, canonical bytes, record, schedule,
+                 transcript identity, complete coverage, and output rows
+  cross-bundle replay: schedule_binding_mismatch
+  N=65: wave 1, Wave64 active mask 0x0000000000000001,
+        lane 0 -> logical work-item [64, 0, 0]
+  N=255: resource_exhaustion, exact=false, outcome=active;
+         retained prefix inspectable, exhausted dimension not exposed
+  debugger bounds: 1,000,000 checkpoints, 16,000,000 values, 256 MiB
+  archived generated bundles: 0
+  archived schedule documents: 0
+  protected compiler execution authenticated: false
+  GPU execution / hardware validation / performance prediction: false
 
 Physical differential at 69ae3731b
   hardware passes: 0
