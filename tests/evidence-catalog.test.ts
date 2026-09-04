@@ -111,8 +111,8 @@ describe("evidence source digest scopes", () => {
     );
 
     expect(scan).toMatchObject({
-      commit: "199311b61c4b7ef08813f4ba60b61f569926c202",
-      tree: "ecd73e0a1eff794d010d83cd93f72654d4937bd5",
+      commit: "b15cf628f628db435cf12269c507b06fbef6597e",
+      tree: "f77977b6f94411acd10f8d33159196425bee1b2d",
     });
     expect(scan?.sourcePaths).toEqual(expect.arrayContaining([
       "docs/target-neutral-workgroup-scan-v1.md",

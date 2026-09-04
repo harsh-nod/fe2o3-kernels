@@ -62,7 +62,7 @@ export const DEBUG_SIM_ARTIFACT_SHA256 = {
   wave32Result: "ec856159689ad4aa2672587be7005965fa76216f7e3adf140a50e54f01c00334",
   wave64Result: "8cd9fcddf8835683093f5bd6e39bfbd7a2b2871665f069f635634841adc56305",
   workgroupReduceQueries: "3426bc52547f2989d5b9476552dda58759800cb5364075a3a967a88e730f4410",
-  workgroupScanBundleV5: "50450de319a2e199a59ddf2195dd0a1bb8a002e715e1fa797340e82f200b6bca",
+  workgroupScanBundleV5: "c9dd5247ff1165d69efcdbbfa59aa6fed48e6a311cc34e5ed1ab1a55c964663f",
   workgroupScanMatrix: "ef1eec8c96f26f8ad3bf6327ffb405c1c5f8748b2e6d6b63899f78e7ffc33736",
 } as const;
 

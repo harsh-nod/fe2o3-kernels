@@ -179,10 +179,10 @@ describe("debugger and simulator evidence workbench", () => {
       name: "All 18 source cases reach every CPU observation path",
     });
     expect(within(sourceBundleSection).getByRole("link", {
-      name: /199311b61c…9926c202/u,
+      name: /b15cf628f6…bef6597e/u,
     })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/199311b61c4b7ef08813f4ba60b61f569926c202/docs/target-neutral-workgroup-scan-v1.md",
+      "https://github.com/harsh-nod/fe2o3/blob/b15cf628f628db435cf12269c507b06fbef6597e/docs/target-neutral-workgroup-scan-v1.md",
     );
     expect(screen.getByRole("table", { name: "Semantic Trace version custody" }))
       .toHaveTextContent("exact KIR V9 or V10");

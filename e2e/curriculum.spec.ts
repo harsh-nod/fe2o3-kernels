@@ -429,7 +429,7 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("Portable workgroup reductions at 9176b9c27");
   await expect(codePanel).toContainText("Target-neutral workgroup scans at 2df6130c5");
   await expect(codePanel).toContainText("retained ordinary scan Bundle V5 executions: 0");
-  await expect(codePanel).toContainText("Ordinary Scan Bundle V5 qualification at 199311b61");
+  await expect(codePanel).toContainText("Ordinary Scan Bundle V5 qualification at b15cf628f");
   await expect(codePanel).toContainText("3 scalar types x 2 modes x extents 3, 65, and 255 = 18 entries");
   await expect(codePanel).toContainText("cross-bundle replay: schedule_binding_mismatch");
   await expect(codePanel).toContainText("resource_exhaustion, exact=false, outcome=active");

@@ -1,8 +1,8 @@
 {
   "schema": "fe2o3-tutorial-workgroup-scan-bundle-v5-evidence-v1",
   "protocol_wire_record": false,
-  "source_commit": "199311b61c4b7ef08813f4ba60b61f569926c202",
-  "source_tree": "ecd73e0a1eff794d010d83cd93f72654d4937bd5",
+  "source_commit": "b15cf628f628db435cf12269c507b06fbef6597e",
+  "source_tree": "f77977b6f94411acd10f8d33159196425bee1b2d",
   "qualification": {
     "test": "ordinary_scan_sources_export_v5_and_execute_every_cpu_observation_path",
     "target": "gfx942:xnack-",

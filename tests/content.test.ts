@@ -1389,8 +1389,8 @@ describe("debugger and simulator milestone content", () => {
         performancePrediction: false,
       },
       bundleV5: {
-        commit: "199311b61c4b7ef08813f4ba60b61f569926c202",
-        tree: "ecd73e0a1eff794d010d83cd93f72654d4937bd5",
+        commit: "b15cf628f628db435cf12269c507b06fbef6597e",
+        tree: "f77977b6f94411acd10f8d33159196425bee1b2d",
         target: "gfx942:xnack-",
         bundleVersion: 5,
         semanticMirVersion: 11,
@@ -1483,7 +1483,7 @@ describe("debugger and simulator milestone content", () => {
     expect(
       debugSimWorkgroupScanFixture.bundleV5Sources.every((source) =>
         source.href.startsWith(
-          "https://github.com/harsh-nod/fe2o3/blob/199311b61c4b7ef08813f4ba60b61f569926c202/",
+          "https://github.com/harsh-nod/fe2o3/blob/b15cf628f628db435cf12269c507b06fbef6597e/",
         ),
       ),
     ).toBe(true);
@@ -3824,7 +3824,7 @@ describe("curriculum integrity", () => {
     expect(result).toContain("Target-neutral workgroup scans at 2df6130c5");
     expect(result).toContain("ordinary Rust API contracts: 6");
     expect(result).toContain("retained ordinary scan Bundle V5 executions: 0");
-    expect(result).toContain("Ordinary Scan Bundle V5 qualification at 199311b61");
+    expect(result).toContain("Ordinary Scan Bundle V5 qualification at b15cf628f");
     expect(result).toContain("3 scalar types x 2 modes x extents 3, 65, and 255 = 18 entries");
     expect(result).toContain("semantic MIR: additive V11 (V10 remains byte-for-byte closed)");
     expect(result).toContain("replay seeds: 0x5ca0 through 0x5cb1");

@@ -559,7 +559,7 @@ const cpuSimulation: Lesson = {
       kind: "runnable-now",
       label: "Exact production KIR in the CPU semantic debugger",
       detail:
-        "At compiler 199311b61, one bounded gfx942 qualification gate exports all 18 ordinary inclusive/exclusive u32, i32, and f32 scan entries at extents 3, 65, and 255 as authority-free Bundle V5. The direct CPU simulator, complete Trace V2, SimRuntimeBackendV1, and persisted seeded replay each check exact output bytes; the JSONL semantic debugger separately checks bounded stops and nonempty hierarchy views. The N=65 debugger exposes its one-lane final logical Wave64; N=255 reaches a typed inexact resource-exhaustion stop while the retained prefix remains inspectable. Generated bundles and schedule documents are ephemeral test artifacts, protected compiler execution is not authenticated, and this is neither GPU execution nor performance prediction.",
+        "At compiler b15cf628f, one bounded gfx942 qualification gate exports all 18 ordinary inclusive/exclusive u32, i32, and f32 scan entries at extents 3, 65, and 255 as authority-free Bundle V5. The direct CPU simulator, complete Trace V2, SimRuntimeBackendV1, and persisted seeded replay each check exact output bytes; the JSONL semantic debugger separately checks bounded stops and nonempty hierarchy views. The N=65 debugger exposes its one-lane final logical Wave64; N=255 reaches a typed inexact resource-exhaustion stop while the retained prefix remains inspectable. Generated bundles and schedule documents are ephemeral test artifacts, protected compiler execution is not authenticated, and this is neither GPU execution nor performance prediction.",
       reference: qualificationReference(
         currentMilestones.workgroupScanBundleV5V1.commit,
         currentMilestones.workgroupScanBundleV5V1.tree,
@@ -885,7 +885,7 @@ Target-neutral workgroup scans at 2df6130c5
   hardware_observed: false
   performance_prediction: false
 
-Ordinary Scan Bundle V5 qualification at 199311b61
+Ordinary Scan Bundle V5 qualification at b15cf628f
   target: gfx942:xnack-
   matrix: 3 scalar types x 2 modes x extents 3, 65, and 255 = 18 entries
   semantic MIR: additive V11 (V10 remains byte-for-byte closed)

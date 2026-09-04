@@ -139,8 +139,8 @@ pinned.
 The CPU semantic simulation reference at `#/lesson/cpu-semantic-simulation`
 retains the arbitrary-extent compiler pin above for exact 1D workgroup scans
 from 1 through 256, then adds an independent Scan Bundle V5 qualification pin
-at compiler commit `199311b61c4b7ef08813f4ba60b61f569926c202`, tree
-`ecd73e0a1eff794d010d83cd93f72654d4937bd5`. The new gate covers all 18
+at compiler commit `b15cf628f628db435cf12269c507b06fbef6597e`, tree
+`f77977b6f94411acd10f8d33159196425bee1b2d`. The new gate covers all 18
 ordinary Rust type/mode/extent cases, exact persisted seeded replay, the N=65
 one-lane final logical Wave64, and the N=255 debugger's bounded inexact
 resource-exhaustion stop. Their trap-bearing Semantic MIR uses additive V11
