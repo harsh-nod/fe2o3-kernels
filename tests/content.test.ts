@@ -2748,7 +2748,7 @@ describe("curriculum integrity", () => {
       expect(Object.isFrozen(evidence)).toBe(true);
       expect(evidence.requiredIsa.length).toBeGreaterThan(0);
       expect(evidence.kernargBytes).toBeGreaterThan(0);
-      expect(evidence.workgroupSize).toBeGreaterThan(0);
+      expect(evidence.workgroupSize).toBe(256);
       expect(evidence.ldsBytes).toBeGreaterThanOrEqual(0);
       expect(evidence.status).toBe("observed");
       if (evidence.status !== "observed") {
@@ -2764,13 +2764,6 @@ describe("curriculum integrity", () => {
       expect(evidence.tolerance).not.toMatch(/\bpending\b/iu);
       expect(evidence.runtimeObservation).not.toMatch(/\bpending\b/iu);
     }
-
-    expect(
-      advancedRustEvidence.gfx950_moe_route_fp4_t16_e4_k2_v1.workgroupSize,
-    ).toBe(256);
-    expect(
-      advancedRustEvidence.gfx950_moe_expert_rank_fp4_fp8_v1.workgroupSize,
-    ).toBe(64);
 
     expect(() =>
       observedAdvancedEvidence(
@@ -2907,6 +2900,34 @@ describe("curriculum integrity", () => {
       [
         "gfx950_mhc_sinkhorn_mix",
         "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+      ],
+      [
+        "gfx950_moe_route_fp4_t16_e4_k2_v1",
+        "examples/gfx950_advanced_systems/run-moe-route-gfx950.sh",
+      ],
+      [
+        "gfx950_moe_expert_rank_fp4_fp8_v1",
+        "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
+      ],
+      [
+        "gfx950_combine_expert_ranks_v1",
+        "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh",
+      ],
+      [
+        "gfx950_speculative_transaction_v1",
+        "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+      ],
+      [
+        "gfx950_qwen_ngram_gather_v1",
+        "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+      ],
+      [
+        "gfx950_stage_gradient_shard_v1",
+        "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
+      ],
+      [
+        "gfx950_muon_update_4x4_v1",
+        "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
       ],
       [
         "gfx950_gpt_oss_120b_decode_megakernel_v1",
@@ -3180,7 +3201,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_systems/optimization-evidence-v1.json",
-        "a458e48eefea481431fdc06ae0c281631589ecc7c30c6946155dfcac622b3692",
+        "de02830eb6c726c366aadc1b02363a7124c117c886672949dc543bf80049ccfa",
       ],
       [
         "examples/gfx950_advanced_systems/README.md",

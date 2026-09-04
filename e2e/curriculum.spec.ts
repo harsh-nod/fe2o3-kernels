@@ -281,7 +281,7 @@ test("launch hub and operator cookbook are discoverable", async ({ page }, testI
     page.getByRole("heading", { level: 1, name: "Operator cookbook" }),
   ).toBeVisible();
   await expect(page.locator("#kda-gdn")).toContainText(
-    "One head with K=16",
+    "Four independent WG256 heads at grid4, each with K=16",
   );
   await expect(page.locator("#kda-gdn")).toContainText(
     "No full Kimi K3 layer",
@@ -1603,13 +1603,13 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
 
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Compiler-derived binding: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
+    "Compiler-derived binding: 84784601f60af13beafd467edd5bb86f872e3aa9d48e1ad5e8c84e1452dd13a1",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO SHA-256: 90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
+    "Rust-produced HSACO SHA-256: cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust numerical result: max_absolute_error=2.235174179e-8",
+    "Rust numerical result: 4,096 outputs; max_absolute_error=1.192092896e-7",
   );
 
   await page.goto("./#/lesson/gfx950-fp8-attention");
@@ -1643,28 +1643,28 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950-fp4-gemm",
       "gfx950 FP4 GEMM",
       "gfx950_fp4_gemm_rust",
-      "1308d41a97d523d2e77ad15e16a3292e9d5a75e2f4eedf53f9e1008c481ca750",
+      "2e9cc2bd178e1e1b72237cb32cc8f3e08d2d140d735520ea0147ed84fe81f93b",
       "max_absolute_error=0",
     ],
     [
       "gfx950-fp8-gemm",
       "gfx950 FP8 GEMM",
       "gfx950_fp8_gemm_rust",
-      "701a0a4ef137173ba9563dfe8b3b1f916d3d57dca0063d393d8e81c671e4dd2b",
+      "75ce58c286cc6c3b199bf1144e571e8a3d6b7dc0e373a9dee0589bf67b3d1e6d",
       "max_absolute_error=0",
     ],
     [
       "gfx950-fp4-attention",
       "gfx950 FP4 flash attention",
       "gfx950_fp4_attention_rust",
-      "90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
-      "max_absolute_error=2.235174179e-8",
+      "cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
+      "4,096 outputs; max_absolute_error=1.192092896e-7",
     ],
     [
       "gfx950-fp8-attention",
       "gfx950 FP8 flash attention",
       "gfx950_fp8_attention_rust",
-      "9208b439a4fbd1a987ea3cca19c01cac79e69e00b021ccb54f09f440d11f6294",
+      "4273c31ce4545e09e051abfcb704d1c7750d7b52ee50b01801caec5ddd2d0479",
       "max_absolute_error=5.960464478e-8",
     ],
   ] as const;
@@ -1698,7 +1698,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       page.getByRole("link", { name: "Source", exact: true }),
     ).toHaveAttribute(
       "href",
-      /\/blob\/c1383e97db732f9f1ff8105f10d5c2b5971143e1\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+      /\/blob\/65ddfd76c4fe276dedcb5046d592d50b4bf921ac\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
     );
     await page.getByRole("tab", { name: "Evidence record" }).click();
     await expect(page.getByRole("tabpanel")).toContainText(
@@ -1761,7 +1761,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     ],
     [
       "gfx950-gpt-oss-120b-megakernel",
-      "gpt-oss-120b batch-1 layer-tile megakernel",
+      "gpt-oss-120b 16-item layer-tile megakernel",
       "gfx950_gpt_oss_120b_decode_megakernel_v1",
     ],
   ] as const;
@@ -1855,7 +1855,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     "gfx950_kda_chunkwise_prefill",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "output_chunk1_replicated max_absolute_error=7.450580597e-9",
+    "output_chunk1_replicated outputs=1024 max_absolute_error=7.450580597e-9",
   );
 
   await page.goto("./#/lesson/gfx950-deepseek-sparse-attention");
@@ -1888,7 +1888,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/f88432e7fe5d0b462b5598b9d84a8596fce13b3e/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/65ddfd76c4fe276dedcb5046d592d50b4bf921ac/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -1906,13 +1906,13 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
   await page.goto("./#/lesson/gfx950-muon-optimizer");
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "eight visible AMD Instinct MI350X devices",
+    "physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset)",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "reduced norm max_error=0 with norm=0.614919",
+    "output outputs=256 max_absolute_error=7.450580597e-9; output_norm outputs=16 max_absolute_error=5.960464478e-8",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO SHA-256: bb6e61181e05244a71b6475bcc34a6a0c62d94147bbe27304287f71d8181fe5d",
+    "Rust-produced HSACO SHA-256: b32da414bc18cfa84aa725b691d445d3a919d9758f6cd5846f02704ee8f1fe83",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "Evidence status: observed",

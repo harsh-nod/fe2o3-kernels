@@ -22,11 +22,11 @@
     "date": "2026-09-03",
     "host": "smci350-rck-g03-b19-03",
     "architecture": "gfx950",
-    "source_state": "validated from the uncommitted gfx950/multi-workgroup-wave-20260903 worktree; a final source commit is not yet available",
+    "source_state": "validated source is published at core commit 65ddfd76c4fe276dedcb5046d592d50b4bf921ac with tree dfcc77d91ea992dd07a67ed268f69553efc0774c",
     "results": [
       {"kernel": "gfx950_moe_route_fp4_t16_e4_k2_v1", "checked_elements": "top_experts=512 exact, top_weights=512 max_abs_error=2.980232239e-8, expert_counts=64 exact, dispatch=2048 exact", "hsaco_sha256": "c353b9dc394efbfbc87fb8f9c295e5d23b701d7b1c4c517e04c0a4f71953ee11", "binding_sha256": "344537929cdf16d940f1b7244b0efa12b6e6c00704c6431889fb9baebf23c80e"},
       {"kernel": "gfx950_moe_expert_rank_fp4_fp8_v1", "checked_elements": "four plans x 4096 outputs; max_abs_error=[9.536743164e-7,4.768371582e-7,0,0]", "hsaco_sha256": "a221d2678c133346dbcef0faa106c896c7fdf22f57735232fa31c3275e915f7c", "binding_sha256": "3b0b091c97e08d3fba5fc96a824eedb40391e561f60cb6bd48102ee48ec69a39"},
-      {"kernel": "gfx950_combine_expert_ranks_v1", "checked_elements": "1024 outputs, max_abs_error=0", "hsaco_sha256": "2ea273809becd4d9502ed6296aed3345ea95fe3292421016103a5098cb6340f1a", "binding_sha256": "12dcf936e1fed25f6498ecb2235b729a973b127c900adc02bdcad1e6a8f8f178"},
+      {"kernel": "gfx950_combine_expert_ranks_v1", "checked_elements": "1024 outputs, max_abs_error=0", "hsaco_sha256": "2ea273809becd4d9502ed6296aed3345ea95fe3292421016103a5098cb6340f1", "binding_sha256": "12dcf936e1fed25f6498ecb2235b729a973b127c900adc02bdcad1e6a8f8f178"},
       {"kernel": "gfx950_speculative_transaction_v1", "checked_elements": "accepted=128 exact, committed=128 exact, output_state=1024 max_abs_error=1.192092896e-7", "hsaco_sha256": "7e853da0e9694dc99cebdea7248ce8175743309c10592452d05e79932716a922", "binding_sha256": "7437746e7fe0f2a2bd080266dbd8044f22f282b0365a91246578026ba8dc2de9"},
       {"kernel": "gfx950_qwen_ngram_gather_v1", "checked_elements": "128 outputs exact", "hsaco_sha256": "f948126ccf46e8b0a7fca47c126a13966b9f70b63e68ed5a00ee94284bc623b2", "binding_sha256": "cf9e82fc336e94af81b661021e263aa3bd44bc00c07f543790f14573c331f063"},
       {"kernel": "gfx950_stage_gradient_shard_v1", "checked_elements": "two plans x 256 outputs, max_abs_error=[0,0]", "hsaco_sha256": "b095c06802edc03bf5a42ae4ac7f1f71173add1990120c047bd80c50e4021a3b", "binding_sha256": "e762db1956bdf059b71cd68c7ccc7b6821626733e2a1c0dba04a9d9497c72ee4"},

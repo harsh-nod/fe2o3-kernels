@@ -507,10 +507,10 @@ describe("application shell", () => {
       "Evidence status: observed",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "output max_absolute_error=7.450580597e-9",
+      "output outputs=256 max_absolute_error=7.450580597e-9",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "two shard launches; output outputs=16 max_absolute_error=0.000000000e0",
+      "two shard launches; output outputs=256 max_absolute_error=0 for each launch",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "Performance result: not claimed",
