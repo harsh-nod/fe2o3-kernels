@@ -479,7 +479,11 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   })).toBeVisible();
   await expect(semanticEvidence.getByText(/trap-bearing Semantic MIR uses additive V11/u))
     .toBeVisible();
-  await expect(semanticEvidence.getByText("schedule_binding_mismatch")).toBeVisible();
+  const persistedReplay = semanticEvidence.getByRole("region", {
+    name: "18 canonical documents round-trip and replay exactly",
+  });
+  await expect(persistedReplay.getByText("schedule_binding_mismatch", { exact: true }))
+    .toBeVisible();
   await expect(semanticEvidence.getByRole("heading", {
     name: "The final Wave64 contains one logical lane",
   })).toBeVisible();
