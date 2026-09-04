@@ -1134,7 +1134,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6399ee2cf8456c6237a89d5507f50c1872602269/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -1193,7 +1193,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6399ee2cf8456c6237a89d5507f50c1872602269/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
@@ -1405,7 +1405,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6399ee2cf8456c6237a89d5507f50c1872602269/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -1544,7 +1544,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6399ee2cf8456c6237a89d5507f50c1872602269/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -1698,14 +1698,14 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950-fp4-gemm",
       "gfx950 FP4 GEMM",
       "gfx950_fp4_gemm_rust",
-      "2e9cc2bd178e1e1b72237cb32cc8f3e08d2d140d735520ea0147ed84fe81f93b",
+      "436964a09c11a1a3f7ae24642972ddeb632cfcd62c52e6db33ddea0ff13d9900",
       "max_absolute_error=0",
     ],
     [
       "gfx950-fp8-gemm",
       "gfx950 FP8 GEMM",
       "gfx950_fp8_gemm_rust",
-      "75ce58c286cc6c3b199bf1144e571e8a3d6b7dc0e373a9dee0589bf67b3d1e6d",
+      "16a6725e375a0e8a71defb8740a2f2080f67bd035c749c29df3a895fcbcb08e0",
       "max_absolute_error=0",
     ],
     [
@@ -1719,7 +1719,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950-fp8-attention",
       "gfx950 FP8 flash attention",
       "gfx950_fp8_attention_rust",
-      "4273c31ce4545e09e051abfcb704d1c7750d7b52ee50b01801caec5ddd2d0479",
+      "aa479249efa9d45e7eb0fd44f000feb77005b289556ba2030afd2545b4fda1e1",
       "max_absolute_error=5.960464478e-8",
     ],
   ] as const;
@@ -1753,7 +1753,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       page.getByRole("link", { name: "Source", exact: true }),
     ).toHaveAttribute(
       "href",
-      /\/blob\/65ddfd76c4fe276dedcb5046d592d50b4bf921ac\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+      /\/blob\/6399ee2cf8456c6237a89d5507f50c1872602269\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
     );
     await page.getByRole("tab", { name: "Evidence record" }).click();
     await expect(page.getByRole("tabpanel")).toContainText(
@@ -1943,7 +1943,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/65ddfd76c4fe276dedcb5046d592d50b4bf921ac/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/6399ee2cf8456c6237a89d5507f50c1872602269/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -1967,7 +1967,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     "output outputs=256 max_absolute_error=7.450580597e-9; output_norm outputs=16 max_absolute_error=5.960464478e-8",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO SHA-256: b32da414bc18cfa84aa725b691d445d3a919d9758f6cd5846f02704ee8f1fe83",
+    "Rust-produced HSACO SHA-256: 7511daf2e49b86fd6b6074e8f4d2f7ea0cd9ccefe49926df73ec33621438fa38",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "Evidence status: observed",

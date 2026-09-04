@@ -17,6 +17,7 @@ import { DebuggerWorkbench } from "./DebuggerWorkbench";
 import { DebugSimMilestone } from "./DebugSimMilestone";
 import { EvidenceBadge } from "./EvidenceBadge";
 import { FunctionalCorrectnessPanel } from "./FunctionalCorrectnessPanel";
+import { KernelWritingGuide } from "./KernelWritingGuide";
 import { LessonSections } from "./LessonSections";
 
 interface LessonPageProps {
@@ -36,6 +37,9 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
   const isComplete = completed.has(lesson.id);
   const hasSafeReference = lesson.tabs.some(
     (tab) => tab.kind === "reference",
+  );
+  const hasKernelSource = lesson.tabs.some(
+    (tab) => tab.kind === "kernel" && !tab.explanatory,
   );
 
   return (
@@ -93,6 +97,7 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
         </>
       )}
       <LessonSections lessonId={lesson.id} sections={lesson.sections} />
+      {hasKernelSource && <KernelWritingGuide />}
       <FunctionalCorrectnessPanel lessonId={lesson.id} />
 
       <section className="code-section">

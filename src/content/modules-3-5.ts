@@ -61,6 +61,7 @@ const workgroupPipelineSource = sourceMilestoneRecord(
 );
 const qualificationCommit = workgroupPipelineSource.commit;
 const qualificationTree = workgroupPipelineSource.tree;
+const annotatedKernelCommit = "6399ee2cf8456c6237a89d5507f50c1872602269";
 const gemmAutoresearchCommit = "3bda4af3bbeec3a0682e456b52128ba46f6e6a95";
 const gemmAutoresearchTree = "3d1613263cab8802136f8a2f19bb4d07f70a9757";
 const gemmProofEvidence = stagedEvidenceRecord(
@@ -180,7 +181,7 @@ function exactDynamicGemmKernelTab() {
     evidenceId: workgroupPipelineSource.id,
     explanatory: false,
     notice:
-      "Exact safe Rust source executed at compiler commit 1dd61a01. The workload-neutral compiler carries its dynamic loops, checked tiled ownership, typed MFMA payloads, and double-buffer epochs through PLIRON, KIR, gfx942 LLVM, HSACO, and MI300X launch.",
+      "Current annotated safe Rust source. Its executable statements match the qualified 1dd61a01 snapshot; the added phase comments make the ownership, typed MFMA, and double-buffer contracts explicit.",
   };
 }
 
@@ -741,12 +742,12 @@ const gemmAutoresearch: Lesson = {
       language: "rust",
       code: gemmAutoresearchKernel,
       sourcePath: "examples/gemm_autoresearch_v1/src/kernel.rs",
-      sourceCommit: gemmAutoresearchCommit,
+      sourceCommit: annotatedKernelCommit,
       sourceSha256:
-        "4b8ef3ac0a921df6ca616fca7c7c596dc53e2747296dcd7e9a2f21f73c11ccd8",
+        "3199202452896fa59e0e3f7f5e7f6e656636af039d4bf5b0718febc5edf8f9d0",
       explanatory: false,
       notice:
-        "Exact safe Rust edit surface retained by the MI300X campaign. The production compiler lowers its typed fragments to gfx942 MFMA without LDS or barriers.",
+        "Current annotated safe Rust edit surface. Its executable statements match the MI300X campaign winner; the added comments expose the fixed evaluator contract and wave-tile ownership.",
     },
     {
       kind: "reference",
@@ -873,10 +874,12 @@ const softmax: Lesson = {
       language: "rust",
       code: rowSoftmaxKernel,
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: annotatedKernelCommit,
       sourceSha256:
-        "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
+        "8b4775baafb5ebc3e92ebb249e8362d06a64c33dbba96028802a529ec3b003c3",
       explanatory: false,
+      notice:
+        "Current annotated kernel source; the three numerical passes and disjoint row ownership are now explicit. Historical execution evidence remains pinned separately.",
     },
     {
       language: "rust",
@@ -1008,12 +1011,12 @@ const flash: Lesson = {
       language: "rust",
       code: flashAttentionKernel,
       sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
-      sourceCommit: qualificationCommit,
+      sourceCommit: annotatedKernelCommit,
       sourceSha256:
-        "943ff29a75653510992e7c2cbfa48fd81286abcf876c540d7c7f8442dcf92f02",
+        "f160e1391e1b354657049b5b11d745428fbbfb8fb6e5e2fceb4143ac93e7b00b",
       explanatory: false,
       notice:
-        "Exact safe Rust source executed at compiler commit 1dd61a01. The same workload-neutral compiler path handles its nested dynamic loops, checked tiled ownership, MFMA fragments, and double-buffer protocol without recognizing attention.",
+        "Current annotated safe Rust source. Its executable statements match the qualified 1dd61a01 snapshot; comments now identify whole-launch validation, checked ownership, online FP32 softmax, and the double-buffer protocol.",
     },
     {
       language: "rust",

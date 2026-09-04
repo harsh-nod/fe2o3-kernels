@@ -8,22 +8,22 @@ describe("evidence source digest scopes", () => {
       [
         "gfx950-fp4-gemm: Rust kernel",
         "gfx950_fp4_gemm_rust",
-        "c6a00cb6e0df1e38563641bbc533a5725bf7a09d72bc8f50932c8b4c7b966616",
+        "3877bfb0afdcdd30b3ef8a11eaafb4a7d40c6fefab348a8bac3ad76e23a61ef1",
       ],
       [
         "gfx950-fp8-gemm: Rust kernel",
         "gfx950_fp8_gemm_rust",
-        "0b05a0508c4970a64bed8fcb9c98341242076098aac56e6c3a4ca5ebb36c5055",
+        "b40f7cf4fa7560536a91914adda47107f4b2710bdbf5e176b7c1c71b690abf97",
       ],
       [
         "gfx950-fp4-attention: Rust kernel",
         "gfx950_fp4_attention_rust",
-        "f9a94dfe597a4a48271ca15bee859467540e43b29d2b5ae9d95c91a065015a49",
+        "f342cc1c42eef9058ceb1b5615cee104e6552a32a7190550c4e3f4f6234e3ed2",
       ],
       [
         "gfx950-fp8-attention: Rust kernel",
         "gfx950_fp8_attention_rust",
-        "f48050d4a711f4df78216c9414c6edac2ee3fed584be9d7755fb58076a566c5c",
+        "69650ea2502ee149949d6cbec3e909032ede026be47ca52568bda455b9d9ef2c",
       ],
     ] as const;
 
@@ -32,7 +32,7 @@ describe("evidence source digest scopes", () => {
         (candidate) => candidate.label === label,
       );
 
-      expect(source?.commit).toBe("65ddfd76c4fe276dedcb5046d592d50b4bf921ac");
+      expect(source?.commit).toBe("6399ee2cf8456c6237a89d5507f50c1872602269");
       expect(source?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
       );

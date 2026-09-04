@@ -434,6 +434,13 @@ describe("application shell", () => {
       ),
     ).toBeInTheDocument();
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("heading", { name: "Writing clear fe2o3 kernels" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("4. Uniform compute")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Do all physical participants execute the same collective sequence/u),
+    ).toBeInTheDocument();
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "gfx950_fp4_attention_rust",
     );
@@ -532,7 +539,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/6399ee2cf8456c6237a89d5507f50c1872602269/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     expect(

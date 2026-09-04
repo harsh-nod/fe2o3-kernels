@@ -19,10 +19,10 @@ const rustContractPath = "examples/gfx950_low_precision/src/lib.rs";
 const rustReadmePath = "examples/gfx950_low_precision/README.md";
 const rustManifestPath = "examples/gfx950_low_precision/Cargo.toml";
 const rustLockPath = "examples/gfx950_low_precision/Cargo.lock";
-const coreSourceCommit = "65ddfd76c4fe276dedcb5046d592d50b4bf921ac";
-const coreSourceTree = "dfcc77d91ea992dd07a67ed268f69553efc0774c";
+const coreSourceCommit = "6399ee2cf8456c6237a89d5507f50c1872602269";
+const coreSourceTree = "caf80d0ecd45913c0c644371c75c8469b93454cb";
 const rustKernelFileSha256 =
-  "2d703f77e75bee2094915ed1226903f526d3a6f45a1e67ed30dae2e72622ccfa";
+  "feebb7e80801c6b5323d19bcdb7908b93a5159c26fe2aa8181fb2de623bf6a5d";
 const rustReferenceFileSha256 =
   "c6b2d78ece4c1fb994922e3d99435e48a2ecd5a846b61725a75c494e6b862600";
 const hipSourcePath = "examples/gfx950_low_precision/gfx950_low_precision.hip";
@@ -57,10 +57,10 @@ const fp4GemmEvidence: ProductionRustEvidence = {
   runnerPath: "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
   namespace: "894d3b3350eb1f58293d096d32ef2572e657bdc013f3d27ba4ac55cff4523f04",
   llvmSha256:
-    "05fc7b8e50534a03f36423bed1d88489614f5d9d385b9d2d811bd8c8dadc8778",
+    "22d69934e8ad701c965af6e59b8d78778298f1c28569ea57729e2871987166b1",
   hsacoSha256:
-    "2e9cc2bd178e1e1b72237cb32cc8f3e08d2d140d735520ea0147ed84fe81f93b",
-  isaSha256: "0c641fe67a692d306b0551479c84c092c5a6ff66cb53d849d3d369c9d2dac7f7",
+    "436964a09c11a1a3f7ae24642972ddeb632cfcd62c52e6db33ddea0ff13d9900",
+  isaSha256: "7bb5bdc620523bfbcf888f067e1b556515aee4f201b20a328d89e23d30c16d1d",
   requiredIsa: ["v_mfma_f32_16x16x128_f8f6f4", "cbsz:4 blgp:4"],
   numericalResult: "max_absolute_error=0",
   tolerance: "absolute tolerance 1e-5",
@@ -75,10 +75,10 @@ const fp8GemmEvidence: ProductionRustEvidence = {
   runnerPath: "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
   namespace: "9e98141edaae16343d036d08caa473a6535f143b8bfcd752106e818f94585040",
   llvmSha256:
-    "673ccd03badd64acc565eb5363a7d8b981b798b11aff1c1f6ca4c6766cf9bca1",
+    "b3bc8f318151c70976be29ad6a0a1584195eeed09f502ec5534ad6dff8964e33",
   hsacoSha256:
-    "75ce58c286cc6c3b199bf1144e571e8a3d6b7dc0e373a9dee0589bf67b3d1e6d",
-  isaSha256: "5a043ff1948f95fe46a667603c5e618adadcb50c6237b457c4051ec14c46cf61",
+    "16a6725e375a0e8a71defb8740a2f2080f67bd035c749c29df3a895fcbcb08e0",
+  isaSha256: "37792b0f182b572364cbb3a3a82ee7ba3cb98332a4cd5674acb23d1fc4968b2b",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "E4M3 selectors (not cbsz:4 blgp:4)",
@@ -96,10 +96,10 @@ const fp4AttentionEvidence: ProductionRustEvidence = {
   runnerPath: "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
   namespace: "84784601f60af13beafd467edd5bb86f872e3aa9d48e1ad5e8c84e1452dd13a1",
   llvmSha256:
-    "83f1f8a1affa10dc498ad1a5f7ff42e39472d019e6da9dd966b963d027bafd85",
+    "bacedec0a61f3d4f8e76cb11ef7c43de11d9adfce18124ce4cde3f5b88772b5c",
   hsacoSha256:
     "cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
-  isaSha256: "3f15141351e1cf6b92b69e3be6443534099af87db4dec55195a81d5d6e4677ec",
+  isaSha256: "3206cd6ce8df7005fa424cae0fc3d39fecc817f7c1ef84089ad2dc685d8c79c2",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "cbsz:4 blgp:4",
@@ -123,10 +123,10 @@ const fp8AttentionEvidence: ProductionRustEvidence = {
   runnerPath: "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
   namespace: "1cf2661cadefed5b0f3dee8b6430acd144d47f9a4d5ba8182748fac23a2aa315",
   llvmSha256:
-    "0aeae851bf944cd34c678e9cbb7dfad27004a6121371c56ebcd3c28cc3882c5f",
+    "c52a1ebd0ad73ee77dcb52477f21c9b239fda49fdaceb2c82c001da530027835",
   hsacoSha256:
-    "4273c31ce4545e09e051abfcb704d1c7750d7b52ee50b01801caec5ddd2d0479",
-  isaSha256: "43d595b70ddc11be24c8494b1fe3986d677cc102872717259068094e3adedc4e",
+    "aa479249efa9d45e7eb0fd44f000feb77005b289556ba2030afd2545b4fda1e1",
+  isaSha256: "88dcc7383d5d77f552bba5a4c84aef3de44c1e1f13281135f326a761e4337797",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "E4M3 selectors (not cbsz:4 blgp:4)",
@@ -207,7 +207,7 @@ function productionRustClaim(evidence: ProductionRustEvidence): Claim {
       ],
       {
         target: productionTarget,
-        note: "Archived as the exact 2026-09-03 WG256/grid4 production Rust correctness campaign at the final core integration commit. The raw digest-pinned hardware harness grants no protected publication authority.",
+        note: "Archived as the exact 2026-09-04 WG256/grid4 production Rust correctness campaign at the final core integration commit. The raw digest-pinned hardware harness grants no protected publication authority.",
       },
     ),
   };
@@ -311,7 +311,7 @@ function tutorialTabs(
           "Rust gfx950 lowering supported: true",
           `Target: ${productionTarget}, Wave64, code object V6`,
           `Required Rust ISA: ${evidence.requiredIsa.join(", ")}`,
-          "Rust observation: ROCm 7.2.1 on MI350X gfx950 physical GPU 6, ssh host mi350, 2026-09-03.",
+          "Rust observation: ROCm 7.2.1 on MI350X gfx950 physical GPU 6, ssh host mi350, 2026-09-04.",
           `Rust numerical result: ${evidence.numericalResult}`,
           `Acceptance tolerance: ${evidence.tolerance}`,
           "The digest-pinned test checked all 4,096 outputs from 16 non-identical items, immutable inputs, output canaries, exact target metadata, and symbol-scoped ISA.",
@@ -363,7 +363,7 @@ const fp4Gemm: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp4_gemm_rust",
-    "c6a00cb6e0df1e38563641bbc533a5725bf7a09d72bc8f50932c8b4c7b966616",
+    "3877bfb0afdcdd30b3ef8a11eaafb4a7d40c6fefab348a8bac3ad76e23a61ef1",
     "gemm_reference",
     "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
     "gfx950_fp4_gemm",
@@ -407,7 +407,7 @@ const fp8Gemm: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp8_gemm_rust",
-    "0b05a0508c4970a64bed8fcb9c98341242076098aac56e6c3a4ca5ebb36c5055",
+    "b40f7cf4fa7560536a91914adda47107f4b2710bdbf5e176b7c1c71b690abf97",
     "gemm_reference",
     "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
     "gfx950_fp8_gemm",
@@ -452,7 +452,7 @@ const fp4Attention: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp4_attention_rust",
-    "f9a94dfe597a4a48271ca15bee859467540e43b29d2b5ae9d95c91a065015a49",
+    "f342cc1c42eef9058ceb1b5615cee104e6552a32a7190550c4e3f4f6234e3ed2",
     "attention_reference",
     "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
     "gfx950_fp4_flash_attention",
@@ -502,7 +502,7 @@ const fp8Attention: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp8_attention_rust",
-    "f48050d4a711f4df78216c9414c6edac2ee3fed584be9d7755fb58076a566c5c",
+    "69650ea2502ee149949d6cbec3e909032ede026be47ca52568bda455b9d9ef2c",
     "attention_reference",
     "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
     "gfx950_fp8_flash_attention",

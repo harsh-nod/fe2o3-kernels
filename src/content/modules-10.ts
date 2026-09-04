@@ -72,9 +72,9 @@ interface SourceBundle {
 }
 
 export const advancedCoreSourceCommit =
-  "65ddfd76c4fe276dedcb5046d592d50b4bf921ac";
+  "6399ee2cf8456c6237a89d5507f50c1872602269";
 export const advancedCoreSourceTree: string | null =
-  "dfcc77d91ea992dd07a67ed268f69553efc0774c";
+  "caf80d0ecd45913c0c644371c75c8469b93454cb";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -86,7 +86,7 @@ const attentionBundle: SourceBundle = {
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
   rustKernelFileSha256:
-    "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+    "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
   rustReferenceFileSha256:
     "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
@@ -110,7 +110,8 @@ const attentionBundle: SourceBundle = {
   hipHsacoSha256:
     "dcfb1e00354ac14dffae5e069138c5e212b0906133838195dd717686af26ce84",
   compiler: "ROCm 7.2.1, HIP 7.2.53211, AMD Clang 22.0.0git",
-  runtime: "visible gfx950 device through ssh alias mi350 on 2026-08-26",
+  runtime:
+    "AMD Instinct MI350X physical GPU 6 through ssh host mi350 on 2026-09-04",
   inputPolicy:
     "deterministic inputs; attention Q/K/V use non-uniform exactly representable E4M3 values and CPU comparisons reject non-finite values",
 };
@@ -125,7 +126,7 @@ const systemsBundle: SourceBundle = {
   rustReadmePath: "examples/gfx950_advanced_systems/README.md",
   rustLockPath: "examples/gfx950_advanced_systems/Cargo.lock",
   rustKernelFileSha256:
-    "9203c3e8aa98179b925d0500804577f47abd6116f1d849070c50d74f42a31fe6",
+    "b8f01f1a6bba7e0171405ee4e6ab515fc5bef528a8e73ce912b00817b895b4b0",
   rustReferenceFileSha256:
     "e7638564d1d5cff646ff8978c7771eddddb6d6e1422a2dcc3fc02c57a2761a05",
   loweringConstant: "GFX950_ADVANCED_SYSTEMS_SOURCE_LOWERING_SUPPORTED",
@@ -150,7 +151,7 @@ const systemsBundle: SourceBundle = {
     "5ccc37902f9b549ac405f1096ad6df8ea58eba5dd6a08c765f5ea3148eb47d16",
   compiler: "ROCm 7.2.1, HIP 7.2.53211, AMD Clang 22",
   runtime:
-    "AMD Instinct MI350X physical GPU 6 through ssh host mi350 on 2026-09-03",
+    "AMD Instinct MI350X physical GPU 6 through ssh host mi350 on 2026-09-04",
   inputPolicy:
     "16 nonuniform batch-local inputs for wave-oriented kernels and four for combine; floating-point comparisons reject non-finite values and compact outputs are checked in batch-major order",
 };
@@ -616,7 +617,7 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     code: gptOssRouterSerial,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
     sourceSha256:
-      "c1597e2ea93959f7d1586605058b9c0308e1f80264dc83fbf3c409d2e0fa0572",
+      "fdee28b13856ecc5464839273f58966e6663d27975ede2d6b78c9a8b888808f5",
     detail:
       "This WG256/grid4 serial-router source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (3f9fe7...).",
   },
@@ -626,7 +627,7 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     code: gptOssHeldFragments,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
     sourceSha256:
-      "bf49f42b16379cb9022db1ef95e453a38a43409987f5ececb96d540e8fe5bf4f",
+      "2309c35e55b4980c54acb607499767251d73d7ad7e56e802e5cf5ae43af1a021",
     detail:
       "This WG256/grid4 held-fragment source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (081ee7...).",
   },
@@ -637,7 +638,7 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     sourcePath:
       "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
     sourceSha256:
-      "18f2d609c29149739b558d2faf3cd634261850b816ba876d0d366426393fe710",
+      "3a34845ea4c82d1de356a3f64f8f3ee15467a8cb01ebc773623814f8af0e7a19",
     detail:
       "This WG256/grid4 interleaved-store source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (41e8ce...).",
   },
@@ -647,7 +648,7 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     code: gptOssComponents,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
     sourceSha256:
-      "3b724cb7fb84d70b8f5c39ae731b3e6c5965d49676e2508047e04d5cff3b763e",
+      "d83b12f14f5c5ce58834a48665f7e955210cab30dabf8476c16274d8748e5c64",
     detail:
       "This current file contains the router, attention, and expert exports validated at WG256/grid4 over 16 items; the da6 timing record retains its own historical single-wave source digest (fd2b80...).",
   },
@@ -658,7 +659,7 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     sourcePath:
       "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
     sourceSha256:
-      "f0d566daf5ecb358925b81b213b60b8ad6bc9a6c3e71e5d44a4a5ceb1c3e89cb",
+      "faf9bc589658b1381e1042c71b952881488261cc85ff86c21dbb7f1f1a83a460",
     detail:
       "The WG256/grid4 two-stage implementation was compiler-rejected because its retained pipeline scalar temporary has multiple definitions; it has no HSACO, numerical result, or latency result.",
   },
@@ -668,7 +669,7 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     code: gptOssScalarAttention,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
     sourceSha256:
-      "6893879667d51e407475c21071a2e5859ef57c42d1249f5c16feeb99d3ee2cec",
+      "e2e326a500c92bf1cbd33acb364f707bf339a54ee3259b79875c079a9f967c96",
     detail:
       "The WG256/grid4 scalar-attention candidate was compiler-rejected because a call terminator is reached before exact callable memory-effect summaries are available; it has no HSACO, numerical result, or latency result.",
   },
@@ -702,7 +703,7 @@ const gptOssMegakernelLesson: Lesson = {
       kind: "gpu-observed",
       label:
         "MI350X WG256/grid4 compatibility for the current kernel and oracle",
-      detail: `The current ordinary Rust source produced gfx950 LLVM and COV6 HSACO, then passed the bounded HSA oracle on physical GPU 7 at workgroup 256, grid 4, and 16 useful Wave64 items. It checked 4,096 attention outputs with maximum absolute error 1.192092896e-7, 4,096 exact expert outputs, and 1,024 exact packed-route words. The separate c138 single-wave performance archive measured fused 1.064644 ms versus its HIP three-dispatch comparator at 0.780362 ms, so that historical fused artifact was 1.3643x slower. Neither record is a fastest or state-of-the-art claim.`,
+      detail: `The current ordinary Rust source produced gfx950 LLVM and COV6 HSACO, then passed the bounded HSA oracle on physical GPU 6 at workgroup 256, grid 4, and 16 useful Wave64 items. It checked 4,096 attention outputs with maximum absolute error 1.192092896e-7, 4,096 exact expert outputs, and 1,024 exact packed-route words. The separate c138 single-wave performance archive measured fused 1.064644 ms versus its HIP three-dispatch comparator at 0.780362 ms, so that historical fused artifact was 1.3643x slower. Neither record is a fastest or state-of-the-art claim.`,
       reference: historicalReference(
         gptOssSourceCommit,
         gptOssSourceTree,
@@ -743,12 +744,12 @@ const gptOssMegakernelLesson: Lesson = {
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
       sourceCommit: gptOssSourceCommit,
       sourceSha256:
-        "106d9e76e662d81dd25892081d144468bde9f9418b00c2e08808d8b32acc9d30",
+        "fdc428f33edbcebe6ca7764c537db58e68009115d740fc21a8252253db8d4081",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssKernelExcerpt],
       explanatory: false,
       notice:
-        "Exact ordinary attributed WG256/grid4 Rust from the current mirrored core source. Its file SHA-256 is 3e9119ae9befb21d4cb482d736434948ad01f68bc894c63d5348edbf2a8f58b6.",
+        "Exact ordinary attributed WG256/grid4 Rust from the current mirrored core source. Its file SHA-256 is e731c38f983434aace7b4a89c17e176a058dab8eea9f05e7223e4cb097997423.",
     },
     ...gptOssVariantSources.map(variantSourceTab),
     {
@@ -822,7 +823,7 @@ const gptOssMegakernelLesson: Lesson = {
       ].join("\n"),
       explanatory: true,
       notice:
-        "Run on ssh mi350 with the documented ROCR_VISIBLE_DEVICES setting. Current WG256/grid4 compilation, ISA, and numerical evidence was observed on physical GPU 7. Retained timing numbers come only from the historical single-wave c1383e97 campaign and do not measure the current launch geometry.",
+        "Run on ssh mi350 with the documented ROCR_VISIBLE_DEVICES setting. Current WG256/grid4 compilation, ISA, and numerical evidence was observed on physical GPU 6. Retained timing numbers come only from the historical single-wave c1383e97 campaign and do not measure the current launch geometry.",
     },
     {
       kind: "result",
@@ -836,7 +837,7 @@ const gptOssMegakernelLesson: Lesson = {
           "Kernel symbol: " + gptOssKernelSymbol,
           "Displayed source commit: " + gptOssSourceCommit,
           "Displayed source tree: " + gptOssSourceTree,
-          "Kernel file SHA-256: 3e9119ae9befb21d4cb482d736434948ad01f68bc894c63d5348edbf2a8f58b6",
+          "Kernel file SHA-256: e731c38f983434aace7b4a89c17e176a058dab8eea9f05e7223e4cb097997423",
           "Reference file SHA-256: 5ac168adad32e821164947d3baa57d78cf813332b8a265e992263964e556628d",
           "Historical campaign commit: " + gptOssHistoricalCampaignCommit,
           "Historical campaign tree: " + gptOssHistoricalCampaignTree,
@@ -855,7 +856,7 @@ const gptOssMegakernelLesson: Lesson = {
           "ABI: kernarg=208 bytes; workgroup=256x1x1; grid=4x1x1; static LDS=0 bytes",
           "ISA: exactly four v_mfma_f32_16x16x16_bf16 and four FP4 v_mfma_f32_16x16x128_f8f6f4; no transpose instructions",
           "Current numerical result: attention outputs=4096 max_absolute_error=1.192092896e-7; expert outputs=4096 exact; packed top-4 exact_u32_outputs=1024",
-          "Current WG256/grid4 wrapper: passed 2026-09-03 on MI350X gfx950 physical GPU 7",
+          "Current WG256/grid4 wrapper: passed 2026-09-04 on MI350X gfx950 physical GPU 6",
           "Historical single-wave performance wrapper: passed at c1383e97 on MI350X gfx950",
           "Historical single-wave fused median: 1.064644 ms [1.064483, 1.064844] ms",
           "Historical single-wave fused p5/p95: 1.059803 / 1.069283 ms",
@@ -910,7 +911,7 @@ const advancedLessons = [
       "gfx950_combine_expert_ranks_v1",
     ],
     rustExcerptSha256:
-      "e6c004e3802b04e4b7741b9e5192056621d9f0b72050ea0240c3c1bee90259c0",
+      "602cd981600e8cad37cc9e73f1dca9ecf83b250679113ef02da0a24306e136ff",
     referenceSymbols: [
       "moe_routing_reference",
       "batched_moe_routing_reference",
@@ -986,7 +987,7 @@ const advancedLessons = [
       "exact matrix-state KDA decode and WY/UT chunkwise-prefill teaching kernels",
     rustSymbols: ["gfx950_kda_decode", "gfx950_kda_chunkwise_prefill"],
     rustExcerptSha256:
-      "31fc7bdc42d49c6512f320ee33c49e30b5f5a45824f8aafa487556d4594eb50e",
+      "2f6be28d762205ac3dc82434e9151748da69b4587d3fb13feecf1b0b99f468c0",
     referenceSymbols: ["kda_decode_reference_v2", "kda_prefill_reference_v2"],
     referenceExcerptSha256:
       "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
@@ -1054,7 +1055,7 @@ const advancedLessons = [
     sourceRole: "content-indexed sparse QK, softmax, and PV teaching kernel",
     rustSymbols: ["gfx950_content_sparse_attention"],
     rustExcerptSha256:
-      "a84b9879c947d8cda0603c4a4efacdbae1a2524d34a6434325031ae951180c21",
+      "8af6b4374d55d1cda9a8c5b8488df3b29dd280690fcf5f643d0d3a7776fd21bd",
     referenceSymbols: ["content_sparse_attention_reference_v1"],
     referenceExcerptSha256:
       "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
@@ -1116,7 +1117,7 @@ const advancedLessons = [
       "DeepSeek sparse selected-QK, stable softmax, and selected-PV teaching kernel",
     rustSymbols: ["gfx950_deepseek_sparse_attention"],
     rustExcerptSha256:
-      "9207defaad05feb0845bb803a36a1b9c44124a334b9835b6896eebf77bb02861",
+      "124bb602771c522b38bba672e1f6fd4bc572e3ac2a943f7178443d31713bdc61",
     referenceSymbols: ["deepseek_sparse_attention_reference_v1"],
     referenceExcerptSha256:
       "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
@@ -1182,7 +1183,7 @@ const advancedLessons = [
       "compressed-state, direct-attention, and hybrid fusion teaching kernels",
     rustSymbols: ["gfx950_compressed_hybrid_attention"],
     rustExcerptSha256:
-      "e28aca35318d39d2b930d85add4d6746a70d2dd69f4eae5c1fd6e61a87c24c19",
+      "f1d09336b950f0a71e8fc81beeff438ce19ba045c46d6865db833175fba0b1e1",
     referenceSymbols: ["compressed_hybrid_attention_reference_v1"],
     referenceExcerptSha256:
       "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
@@ -1245,7 +1246,7 @@ const advancedLessons = [
       "gfx950_mhc_sinkhorn_mix",
     ],
     rustExcerptSha256:
-      "2b8e8f3d367533082da8d38764055f66ebf1621277acd93e250c1440c3b7fd28",
+      "d22caea2ef1cfdde6dfb6a13839886e4d74e43d90ebfef7334b5aadc696b84c7",
     referenceSymbols: [
       "attnres_aggregate_reference_v1",
       "four_branch_residual_reference_v1",
@@ -1306,7 +1307,7 @@ const advancedLessons = [
         code: advancedAttentionAblation,
         sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
         sourceSha256:
-          "edca3d771ac60c79c6de3a083b16739934755d1548c529232e86f2df72c6b721",
+          "e5bd1cabc0d0e54610fb9b0e9ba3ac68843b6e442518a63776f1526023e19730",
         detail:
           "The current WG256/grid4 file is batch-wide compatibility validated. Every live alternate passed on 2026-09-03; the da6 timing record used archived single-workgroup bytes, so its timing is historical and is not attributed to this file.",
       },
@@ -1324,7 +1325,7 @@ const advancedLessons = [
       "speculative-decoding and multi-token-prediction verification teaching kernels",
     rustSymbols: ["gfx950_speculative_transaction_v1"],
     rustExcerptSha256:
-      "9c1e6701a53f5cdd03472e51a96c8758ed241b8cc68291d0301cf6f95b15d83d",
+      "2730064fc70eca25fc1f18933ac2d71899f48a4467338a49cd9800e9fa2a5fcd",
     referenceSymbols: [
       "speculative_reference",
       "batched_speculative_reference",
@@ -1394,7 +1395,7 @@ const advancedLessons = [
       "N-gram hash-table lookup and integer-value gather teaching kernel",
     rustSymbols: ["gfx950_qwen_ngram_gather_v1"],
     rustExcerptSha256:
-      "2198e9600947462ba7a0fd25c730313041e7b80ca0d6a13f4d88da8ca86acf01",
+      "ec93dc1a8b806b1c777a846517b42319b5dcfb5cc86d1fff4dda1b87d7d91b9c",
     referenceSymbols: ["ngram_reference", "batched_ngram_reference"],
     referenceExcerptSha256:
       "a15572e565a090dba9169056ede64caf7186815a48c618985f1f95bb129f51de",
@@ -1463,7 +1464,7 @@ const advancedLessons = [
       "gfx950_muon_update_4x4_v1",
     ],
     rustExcerptSha256:
-      "8dc1f8ca6a88cd0b57a97bbd567c8c4cdb5b852de3c901ff28bad258d8837c27",
+      "df2ded4e4f5fa4fe6e170f2701097d9087ef0929c318768b8c5ac83fa63896f5",
     referenceSymbols: ["muon_reference", "batched_muon_reference"],
     referenceExcerptSha256:
       "d43c796135a06d777cd4189267ff0a9fc6fa37ff94c4c04273820a5bfcdfc24f",

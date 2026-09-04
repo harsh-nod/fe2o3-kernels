@@ -188,10 +188,12 @@ const expertCompute: Lesson = {
       language: "rust",
       code: moeExpertKernel,
       sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
       sourceSha256:
-        "3db71a144f7a5d0c44aae9ae93dd3532eeb3867b34cd07cb8983209ce310f505",
+        "a4af47e5ab3cad6a16d4b0cd2fc9028d0660469a75914474a7fc0d984934bd0a",
       explanatory: false,
+      notice:
+        "Current annotated kernel source; comments expose launch validation, wave ownership, the typed MFMA tile, and disjoint output commit. Historical execution evidence remains pinned separately.",
     },
     {
       language: "rust",

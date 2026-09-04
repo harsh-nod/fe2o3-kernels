@@ -132,17 +132,17 @@ export function isObservedAdvancedEvidence(
 }
 
 const finalMi350Campaign = Object.freeze({
-  sourceCommit: "65ddfd76c4fe276dedcb5046d592d50b4bf921ac",
-  sourceTree: "dfcc77d91ea992dd07a67ed268f69553efc0774c",
+  sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+  sourceTree: "caf80d0ecd45913c0c644371c75c8469b93454cb",
   runtimeObservation:
-    "observed 2026-09-03 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
+    "observed 2026-09-04 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
 });
 
 const attentionMultiGridCampaign = Object.freeze({
   sourceCommit: finalMi350Campaign.sourceCommit,
   sourceTree: finalMi350Campaign.sourceTree,
   runtimeObservation:
-    "observed 2026-09-03 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
+    "observed 2026-09-04 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
 });
 
 // The compiler binding below authenticates the exact validated source closure;
@@ -151,7 +151,7 @@ const gptOssMultiGridCampaign = Object.freeze({
   sourceCommit: finalMi350Campaign.sourceCommit,
   sourceTree: finalMi350Campaign.sourceTree,
   runtimeObservation:
-    "observed 2026-09-03 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 7 (ROCR_VISIBLE_DEVICES=7, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
+    "observed 2026-09-04 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
 });
 
 export const advancedRustEvidence = Object.freeze({
@@ -173,9 +173,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "3f3221a3dc1c1c8e1cca65e0751b34f6829d93c98c5414cf9a4ef53b36863b0d",
       llvmSha256:
-        "ba9eb84c44468f8b4d657f05c7524a4600641cf75d8b3dfefa258ea89669b5a7",
+        "70ae8bfa1fb598c2bffdc7fda3ed924d3b1cc3f91bb4ba632324c88e45423dc3",
       hsacoSha256:
-        "11af04ea552ea1e7c2a7bcad2a3dd26222ced4ffac39148015bb90b578c3f7b0",
+        "b28749b42385f3c08e4b8f6707cafe7f970e0ca5c7b1140741d5bd0f2a98d421",
       isaSha256:
         "8b5340ee348631beb84ccdbf7718625454e97180755dc061b157ecbc204a64ee",
       numericalResult:
@@ -204,9 +204,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "842f02aba09789e97545e7ad82c183ca22968209ae9a4e5f4013500969e705a0",
       llvmSha256:
-        "86f0b6f1cd7b4df2e5c6748a3213fc3547c83f7af884d1a49b896efebfcf0969",
+        "64dff8a0d79ce14b253cc633d875a9575b3e19f8f57fba75c64d479587dc7090",
       hsacoSha256:
-        "dcb9f8cc55339234e05ac814536fd8b98b2d34f8c41de9c76c6baa475edaea9c",
+        "940ee8123dae9187eabb7fcc97eec6d8d9fcc63b1e78a49eb20e98421cf2e523",
       isaSha256:
         "5dd677c827b5bbda813de61b42d3709949258f203f426e83c2e78e79568ec7a5",
       numericalResult:
@@ -236,11 +236,11 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "41184ff7591988ce338b0c66adc81694015c4ec76e5d0905d7079a02a9ff3515",
       llvmSha256:
-        "7eb0a0fde72b8a0eac77a42f7481b98ed42cdd1a6d0775b30d4c55cb075f987b",
+        "4faf344e5de16a696cea4727e618e798e5e2407f02ef2dfd26781dabcf0890bc",
       hsacoSha256:
-        "d609377c0e56d3589f88fb0a850c39c60a3e34cac3d53ad8f3dfcf0159d02d9d",
+        "c97643db6675b1a771750a8d795223892ceb23df87e5a7fadea7c11d9350c139",
       isaSha256:
-        "3af0fafe421feab37339cad81588d441ba2f8c32b8a0e7029834595592cab5a7",
+        "4b2919d194a1a74daafeb9b1618121f08755d9b7d28828027c340a5dc1eefab5",
       numericalResult:
         "16 Wave64 heads; output outputs=256 max_absolute_error=5.820766091e-11; selected_output exact_u32_outputs=48",
       tolerance:
@@ -265,9 +265,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "00b4df99b377546bde34c7c368996cee85a2aa746e712d15d4a147906ec79890",
       llvmSha256:
-        "bddff7bd7f10232ad71a9d159d119f58e86b74e1e66ddbef02a9265b2d35ca6e",
+        "e4db5c905c08f3c3a8c1dc3092d3c91b577e11685a43b4733ec9dfbcd48041a4",
       hsacoSha256:
-        "1d55054669d735190e1747c2e16f510455ae89a623d93b1fb66c2037676f9437",
+        "7990cb59896ec32b75ebce009ec72cbf023f9ae3b673b9cc07edcf68abdf933e",
       isaSha256:
         "1605051d5b24425899e104f279cffe61f9144e053c94496afdac373c8129d958",
       numericalResult:
@@ -297,9 +297,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "0b0ef0cc765b333ea46bf5c8b395b117726baf1df45cb30a36f3b5b366b9cd90",
       llvmSha256:
-        "148e9b8b02a47015e4c2d43e018e6559b39ebbbc1fbf83978ef78aaa35c93029",
+        "84ab660c38dcdc8b9931d4c6cdbc77c532aad3883911dbb3e3955395e85a3411",
       hsacoSha256:
-        "314ed596839d1aa04557ca26b18f9a4a2356ad67e767a3865e40a7bc0bf6a90d",
+        "200307b6a81f6e87c0808da7060eefb154c775c703537fabb9123b5e4aeafba3",
       isaSha256:
         "ff983971927d64f7917b95a7d898bbed6bc9ec1cd088c766ab5d98e9d180c950",
       numericalResult: "output max_absolute_error=5.960464478e-8",
@@ -322,9 +322,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "d8d15c9cc317ecf7ea18134dc1bf20e7118d57c18484633343737e26b34b1e8b",
       llvmSha256:
-        "1eff7b8b8a41a87d4b095a11935b5754b297eaa8cc7d7bf427215f9ef7746ccf",
+        "6adb23264b8886906b93415d3e5cf22c4e45a508ad6d914fbac129ef83a830e3",
       hsacoSha256:
-        "8622031a6d857b060b8b036e99d8e2f91068904f075fa54d7c1b88b40d6c96b3",
+        "63fed3f7542dd1f2fc392f67ee9e65c9536cc7a740f7a2f33a02a2b46837380b",
       isaSha256:
         "24a639b63b9f14ba08b1a57ab0afecae8513895beb04a0ac5e819ffe16860ea1",
       numericalResult:
@@ -349,9 +349,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "8cb728188775d6d83180232142d7257b544fa7d47d370df4cd9f47341a98ec4f",
       llvmSha256:
-        "d47ec7f57f4cf9b5a2f0f2057c41196f217415e2767bc8cf2fc01c13009c8dbf",
+        "ec6a7e752985f1759e6b245d63fd521b52583b57613ebf0e2f301c101b59571c",
       hsacoSha256:
-        "fd77ba3f34568aa95b7b59ebe9fc71506e317d7ac6090e3439601512fd46acdd",
+        "056fb9b88560acc5e947cfc7e6642543aa78c248d57634d127dae292b06eed46",
       isaSha256:
         "410363e17ce2b22943fedeea66b87ad0c08880a2bf49a786e0514b13094ba6af",
       numericalResult:
@@ -375,9 +375,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "73f4092c29d502123674e2db869cecad075cb0986ffd1455c03e83169f5ac9d3",
       llvmSha256:
-        "67d374f7132bbbfad2955b21637eb6b115e58a0e4f5f15df0a3233edd8028468",
+        "1327ed86eddeebbd1dac1f4f14a133a76aff8c1abfd1f20f52669be49b92cb2f",
       hsacoSha256:
-        "e441bf98aec02fc596f55e00477ab2f647dd776bb8756099c6168802b16b6a13",
+        "9fc74c6174d0649aa25e46f01f4a49e96563ab2128c94490a8052e40f6385340",
       isaSha256:
         "452a8595fd4a5ee9a058937f420c78a57132dda0789f9da5b90ca432617211cd",
       numericalResult:
@@ -403,11 +403,11 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "344537929cdf16d940f1b7244b0efa12b6e6c00704c6431889fb9baebf23c80e",
       llvmSha256:
-        "6a64d962f587529532c950ffd753eaa987083633ead2c19ec17b6ccbb6972bb1",
+        "b58ddffb7254f3150c5503627379b4d0a8ba68c16cf0b7b1e786a5cf008e8d94",
       hsacoSha256:
-        "c353b9dc394efbfbc87fb8f9c295e5d23b701d7b1c4c517e04c0a4f71953ee11",
+        "56633ed87ab9d74755a74f633d22bcac14abfbe6a20abbe76623b143cedf3883",
       isaSha256:
-        "7ec3d71ffcf424f6267499137ae2e2311c48c1e15d5800ae2567345f447e5268",
+        "36a71407c4b0a429b9991980ea68e860ee8282b0cac05f05ed1850fab4d8c6fc",
       numericalResult:
         "top_experts exact_u32_outputs=512; top_weights max_absolute_error=2.980232239e-8; expert_counts exact_u32_outputs=64; dispatch exact_i32_outputs=2048",
       tolerance:
@@ -434,11 +434,11 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "3b0b091c97e08d3fba5fc96a824eedb40391e561f60cb6bd48102ee48ec69a39",
       llvmSha256:
-        "978c80d8d1a661cc587ad106a9c23bf6aa9ef8fa211bd32af6ee70d8e88735ef",
+        "7d58ec15ccfc401b717c8b8092fba69917502cdb54d263b3a7307f19b21d0420",
       hsacoSha256:
-        "a221d2678c133346dbcef0faa106c896c7fdf22f57735232fa31c3275e915f7c",
+        "832457cffd1808683a4c31f126fe1aad2173e59580ab473e7be29beae28272a7",
       isaSha256:
-        "4c9ef1b6028511ab28656aa2e0cd9e72a9f96827da6db295f12751fbf8b5e633",
+        "9d0c9a56424e0bb04f5ec34ef8fdfad5938a75d4a3327fa193e8df5785863c4e",
       numericalResult:
         "four plans with 4096 outputs each; max_absolute_error=[9.536743164e-7, 4.768371582e-7, 0, 0]",
       tolerance:
@@ -465,9 +465,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "12dcf936e1fed25f6498ecb2235b729a973b127c900adc02bdcad1e6a8f8f178",
       llvmSha256:
-        "1f8592cb1d0021d2a5d2d5ee3a3b51b5b5561c22adfc290e11bc3afc8ec98618",
+        "7c09340baf27809f598a1806c0a22c2a3860c547eca3574aca20bbbaf9d23fcd",
       hsacoSha256:
-        "2ea273809becd4d9502ed6296aed3345ea95fe3292421016103a5098cb6340f1",
+        "cd75fbc78f6c6f0ac0baf01b9fd8674ab214d91ccc204d28fa7bd9c11203e8ef",
       isaSha256:
         "9723bee66c08727aaefc44deb98e5eb0d5d122dbd023a6d00cf755fe888149ca",
       numericalResult: "output outputs=1024 max_absolute_error=0",
@@ -494,9 +494,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "7437746e7fe0f2a2bd080266dbd8044f22f282b0365a91246578026ba8dc2de9",
       llvmSha256:
-        "af3a3db876ab1199d190a3ddee5a78bc21f02127572049e6368d182fdf71152f",
+        "48b89db6afe29cffc42d3aeed7e2b1d2b0b59ca5d950e8c465b1091eb4a2f517",
       hsacoSha256:
-        "7e853da0e9694dc99cebdea7248ce8175743309c10592452d05e79932716a922",
+        "fdcf54fa359091b31a7cb5e773ac0e1f0ee03ff7d0ec41ff0ff3a453eb4fdbfa",
       isaSha256:
         "2785ba133d868cb0413f44859a0da6e3022fab8f186bbf977252be181d91a9e7",
       numericalResult:
@@ -524,11 +524,11 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "cf9e82fc336e94af81b661021e263aa3bd44bc00c07f543790f14573c331f063",
       llvmSha256:
-        "929721470d4ae8afa4b98c5b87583707b6c8e49df1f16606233f8b6ffc4b12af",
+        "5c554c79bd5677c6addbe122e8e959e82944c8d510319706ee2a11bdd89c63df",
       hsacoSha256:
-        "f948126ccf46e8b0a7fca47c126a13966b9f70b63e68ed5a00ee94284bc623b2",
+        "8a287e4cd2f443a09c20b0c8880d99fd344df24220bdf8957f04b599b9e9ab12",
       isaSha256:
-        "139e6854065e4042576a14595f4fd0681147a7b74061c3eff0a4e6fde41825a9",
+        "cf6767941d8bb3a5b21608ac653397a997ed8ba2d6a20e1432bb8f07ace0ed84",
       numericalResult: "output exact_i32_outputs=128",
       tolerance: "all 128 gathered values exact",
     },
@@ -553,9 +553,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "e762db1956bdf059b71cd68c7ccc7b6821626733e2a1c0dba04a9d9497c72ee4",
       llvmSha256:
-        "bdcf61c21fdf363c5306c2ceaf0b0c492504375a13e83069acfe2bd13ff4da9d",
+        "259f2b83554f5ecab7a1e2325038475cff164f7414bd1b0ab20441724f679c55",
       hsacoSha256:
-        "b095c06802edc03bf5a42ae4ac7f1f71173add1990120c047bd80c50e4021a3b",
+        "592c3672416d8e26ea14ff668964cb93cc00f399c7a3580c8b80ccdb7804f6e9",
       isaSha256:
         "e635a9427aba19635c1284dfa0a30e768cf1f2ee5958e8ff0c5a9a629ad39bc8",
       numericalResult:
@@ -582,9 +582,9 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "4f0a63ee8c2945bec7e91a08246dc084e4c914358ed436fd50b8cf0c1ae65c09",
       llvmSha256:
-        "6b4ec355f71143806d26f2d4eb4ce19b3601764b0475fabfd0dedea3f1dc037f",
+        "424a843b2cfd51f689e2e0d793c351118f4321568394f9abf9cf2d1d55a02ead",
       hsacoSha256:
-        "b32da414bc18cfa84aa725b691d445d3a919d9758f6cd5846f02704ee8f1fe83",
+        "7511daf2e49b86fd6b6074e8f4d2f7ea0cd9ccefe49926df73ec33621438fa38",
       isaSha256:
         "a43edf458b9ab7da395544ef9b1b05361170fa7ad8ac70974eb1e83cc634bac2",
       numericalResult:
@@ -612,11 +612,11 @@ export const advancedRustEvidence = Object.freeze({
       namespace:
         "7194a44ee0231763c5f1e345dcb682beb0922ede14a8ce1899d41b44b2b053d0",
       llvmSha256:
-        "ae9301289f784ed43a906b8e5c2165176deca52b0d629445726e9128b94c3e12",
+        "bd012d9791b503c2fce15f033065f302c8ed3bcbf424e9bdba77dd8f47688d60",
       hsacoSha256:
-        "d6b2f1b54b0398cceb751d4e4a70a42b74efe368e9fbc892283a72952013daec",
+        "638bfae059a6904ec8877c9d6fa83c3949e1a195ea4f02992deccd94ec1c45aa",
       isaSha256:
-        "f52d49e23917bc11ac4b2ea1f3d8205d200b9d6ed7365350fc1189392ee837d5",
+        "bd77ec1c3baa9401add71b6817cdf01276f89c2b62764b2b286b7cf33cb09509",
       numericalResult:
         "attention outputs=4096 max_absolute_error=1.192092896e-7; expert outputs=4096 exact; packed top-4 exact_u32_outputs=1024",
       tolerance:

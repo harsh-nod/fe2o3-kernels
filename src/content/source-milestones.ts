@@ -49,11 +49,11 @@ const sourceMilestoneRecords = deepFreeze({
     lessonId: "gemm-tiling",
     claim: "source-tested",
     authority: "source-tested-only",
-    claimLabel: "Current safe executable workgroup-pipeline source",
+    claimLabel: "Current annotated executable workgroup-pipeline source",
     detail:
-      "Compiler commit 1dd61a01 contains ordinary safe Rust GEMM and attention kernels that use the same compiler-owned double-buffered workgroup pipeline API. Locked source tests pass, and the exact displayed sources were separately compiled through semantic MIR, ranked PLIRON, Kernel IR, gfx942 LLVM, and HSACO and executed on MI300X. This source record authenticates the displayed Rust only; the separate GPU-observed claims carry the execution evidence, and protected Worker V3 publication remains a different authority boundary.",
-    commit: "1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e",
-    tree: "625b2092263b0c8d1b070bb7e047db3bec9cac64",
+      "Compiler commit 0794def2 contains the current ordinary safe Rust GEMM and attention kernels with phase-oriented comments around the compiler-owned double-buffered workgroup pipeline API. This record authenticates the displayed source and source tests only. The executable statements match the earlier qualification snapshot; historical GPU observations remain pinned to their original commit and do not transfer byte-for-byte to this annotated file.",
+    commit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+    tree: "caf80d0ecd45913c0c644371c75c8469b93454cb",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
       "cargo test --locked --manifest-path examples/flash_attention_general_v1/Cargo.toml",
@@ -77,7 +77,7 @@ const sourceMilestoneRecords = deepFreeze({
     ],
     primarySourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
     primarySourceSha256:
-      "414213d07b324628d56d51f1f5ed364d3829d7116b387a03752b15beee79580d",
+      "a898a078ac411b17764d87c0b06681045ddccc83ea8d4314fd2a48b59e8462cd",
     target: "gfx942:xnack-",
   },
   "dynamic-gemm-executable-source-v1": {
