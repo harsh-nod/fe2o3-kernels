@@ -106,8 +106,8 @@
     "sourceIsaMemory": "typed_unavailable"
   },
   "activeOpaqueCheckpointV1": {
-    "commit": "ba2171d19e32d957388f4e89ef510539bb2aa45e",
-    "tree": "2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3",
+    "commit": "656ddbda60e5b76ba62ccf3f494d491e29ba0dea",
+    "tree": "8d33795489509fe13b1eed5eeeb74d9e8a81e16c",
     "schema": "fe2o3-direct-kfd-opaque-checkpoint-v1",
     "target": "gfx942:xnack-",
     "waveWidth": 64,
@@ -124,11 +124,52 @@
         {"kind": "control_stack", "bytes": 20},
         {"kind": "wave_state", "bytes": 2304}
       ],
-      "canonicalReceipt": "not_archived",
-      "relativeOffsets": "not_archived",
+      "canonicalReceipt": "archived_redacted_canonical_v1",
+      "relativeOffsets": "archived_redacted_canonical_v1",
       "readPair": "adjacent_sequential_equal",
       "coherentInstant": false,
       "privateBytesExposed": false
+    },
+    "qualificationReceipt": {
+      "schema": "fe2o3-direct-kfd-opaque-checkpoint-qualification-v1",
+      "schemaVersion": 1,
+      "recordBytes": 3407,
+      "identity": "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f",
+      "rawSha256": "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+      "producerCommit": "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+      "producerTree": "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+      "producerManifestSha256": "18fdfd09a075ea73d0e7f731954d0a0681172cff163082c369a3a3f509492258",
+      "receiptPath": "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json",
+      "narrativePath": "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-2026-09-03.md",
+      "captureLimitBytes": 185630720,
+      "slotCount": 16,
+      "stoppedSnapshotIdentity": "3299d8fcffd53612c37a48b7183dceb7b2eb66c8d0493b1e323baeec8b2d09f9",
+      "queueObservationIdentity": "bd6aa56e15aebcecb2ab3fef3271c911927a110397bc78d0da6f4ef879eee7bc",
+      "deviceObservationIdentity": "2dc28a3ab000797d6d73b2b87206553349ebc1eacae253d6cdb9e89d75dd76d8",
+      "contextSaveIdentity": "e115d442305336668d17532b03d341ce3ee32b1d72d051b2dd52eacb0cdd6ec8",
+      "checkpointIdentity": "ebda7a05374ab119f5cba25bbe3befb2c12321403417ff44a5583ef0ce1188f8",
+      "checkpointContentIdentity": "429363b1de04579eb73cd6a828a8a4e87da1b395d4cefc0ec931d1ec9f672fbb",
+      "slots": [
+        {"xccOrdinal": 0, "kind": "control_stack", "offset": 12268, "bytes": 20, "status": "complete"},
+        {"xccOrdinal": 0, "kind": "wave_state", "offset": 14592, "bytes": 2304, "status": "complete"},
+        {"xccOrdinal": 1, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 1, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 2, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 2, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 3, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 3, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 4, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 4, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 5, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 5, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 6, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 6, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 7, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 7, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"}
+      ],
+      "selectors": "typed_unavailable",
+      "authentication": false,
+      "authority": false
     },
     "binding": {
       "queueDevice": "exact_direct_kfd_reobserved",
@@ -152,7 +193,8 @@
       "target_memory"
     ],
     "publicStableInnerAbi": false,
-    "validationCommand": "cargo test --locked -p fe2o3-runtime --features hardware-qualification --test kfd_opaque_checkpoint_live mi300x_captures_nonempty_same_queue_opaque_checkpoint -- --exact --ignored --nocapture --test-threads=1"
+    "validationCommand": "cargo test --locked -p fe2o3-runtime --features hardware-qualification --test kfd_opaque_checkpoint_live mi300x_captures_nonempty_same_queue_opaque_checkpoint -- --exact --ignored --nocapture --test-threads=1",
+    "qualificationCommand": "scripts/qualify-kfd-opaque-checkpoint.sh --bless"
   },
   "multiFunctionSemanticDebugV5": {
     "commit": "2df6130c5f897b5120cdf6ade44d53030690fa8b",

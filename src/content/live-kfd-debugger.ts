@@ -63,11 +63,26 @@ export interface LiveWorkbenchBackend {
     label: string;
     target: string;
     waveWidth: number;
+    recordBytes: number;
     capturedBytes: number;
+    slotCount: number;
     segments: ReadonlyArray<{
       kind: string;
       bytes: number;
     }>;
+    ranges: ReadonlyArray<{
+      xccOrdinal: number;
+      kind: string;
+      offset: number;
+      bytes: number;
+      status: "complete" | "empty";
+    }>;
+    receiptIdentity: string;
+    rawSha256: string;
+    producerCommit: string;
+    producerTree: string;
+    receiptPath: string;
+    narrativePath: string;
     receiptBoundary: string;
     readContract: string;
     custody: string;
@@ -105,6 +120,27 @@ validateLiveKfdPublication();
 
 const activeCheckpoint = currentMilestonesData.activeOpaqueCheckpointV1;
 const activeCheckpointSegments = activeCheckpoint.capture.segments;
+const checkpointReceipt = activeCheckpoint.qualificationReceipt;
+const checkpointReceiptSlots = checkpointReceipt.slots.map((slot) => {
+  if (slot.status !== "complete" && slot.status !== "empty") {
+    throw new Error("checkpoint receipt range status is malformed");
+  }
+
+  const status: "complete" | "empty" = slot.status;
+  return { ...slot, status };
+});
+const checkpointReceiptIdentity =
+  "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f";
+const checkpointReceiptRawSha256 =
+  "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1";
+const checkpointProducerCommit = "7c2db0c15664fcc2671796f6cc62219fc935cfa9";
+const checkpointProducerTree = "0b354b4ec534383eff9b1162c20c34392cbbacc9";
+const checkpointArchiveCommit = "656ddbda60e5b76ba62ccf3f494d491e29ba0dea";
+const checkpointArchiveTree = "8d33795489509fe13b1eed5eeeb74d9e8a81e16c";
+const checkpointReceiptPath =
+  "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json";
+const checkpointNarrativePath =
+  "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-2026-09-03.md";
 
 if (
   currentMilestonesData.reviewedOn !== "2026-09-03" ||
@@ -135,6 +171,8 @@ if (
     "unavailable_external_verifier_environment" ||
   !exactObject.test(activeCheckpoint.commit) ||
   !exactObject.test(activeCheckpoint.tree) ||
+  activeCheckpoint.commit !== checkpointArchiveCommit ||
+  activeCheckpoint.tree !== checkpointArchiveTree ||
   activeCheckpoint.schema !== "fe2o3-direct-kfd-opaque-checkpoint-v1" ||
   activeCheckpoint.target !== "gfx942:xnack-" ||
   activeCheckpoint.waveWidth !== 64 ||
@@ -149,8 +187,8 @@ if (
     activeCheckpoint.capture.capturedBytes ||
   JSON.stringify(activeCheckpointSegments) !==
     '[{"kind":"control_stack","bytes":20},{"kind":"wave_state","bytes":2304}]' ||
-  activeCheckpoint.capture.canonicalReceipt !== "not_archived" ||
-  activeCheckpoint.capture.relativeOffsets !== "not_archived" ||
+  activeCheckpoint.capture.canonicalReceipt !== "archived_redacted_canonical_v1" ||
+  activeCheckpoint.capture.relativeOffsets !== "archived_redacted_canonical_v1" ||
   activeCheckpoint.capture.readPair !== "adjacent_sequential_equal" ||
   activeCheckpoint.capture.coherentInstant !== false ||
   activeCheckpoint.capture.privateBytesExposed !== false ||
@@ -167,9 +205,40 @@ if (
   JSON.stringify(activeCheckpoint.typedUnavailable) !==
     '["decoded_wave","decoded_lane","register","program_counter","source","target_memory"]' ||
   activeCheckpoint.publicStableInnerAbi !== false ||
+  checkpointReceipt.schema !==
+    "fe2o3-direct-kfd-opaque-checkpoint-qualification-v1" ||
+  checkpointReceipt.schemaVersion !== 1 ||
+  checkpointReceipt.recordBytes !== 3_407 ||
+  checkpointReceipt.identity !== checkpointReceiptIdentity ||
+  checkpointReceipt.rawSha256 !== checkpointReceiptRawSha256 ||
+  checkpointReceipt.producerCommit !== checkpointProducerCommit ||
+  checkpointReceipt.producerTree !== checkpointProducerTree ||
+  checkpointReceipt.producerManifestSha256 !==
+    "18fdfd09a075ea73d0e7f731954d0a0681172cff163082c369a3a3f509492258" ||
+  checkpointReceipt.receiptPath !== checkpointReceiptPath ||
+  checkpointReceipt.narrativePath !== checkpointNarrativePath ||
+  checkpointReceipt.captureLimitBytes !== 185_630_720 ||
+  checkpointReceipt.slotCount !== 16 ||
+  checkpointReceiptSlots.length !== checkpointReceipt.slotCount ||
+  checkpointReceiptSlots.some((slot, index) =>
+    slot.xccOrdinal !== Math.floor(index / 2) ||
+    slot.kind !== (index % 2 === 0 ? "control_stack" : "wave_state") ||
+    (slot.status === "empty" ? slot.bytes !== 0 : slot.bytes === 0)
+  ) ||
+  checkpointReceiptSlots
+    .filter((slot) => slot.status === "complete")
+    .reduce((total, slot) => total + slot.bytes, 0) !==
+    activeCheckpoint.capture.capturedBytes ||
+  JSON.stringify(checkpointReceiptSlots) !==
+    '[{"xccOrdinal":0,"kind":"control_stack","offset":12268,"bytes":20,"status":"complete"},{"xccOrdinal":0,"kind":"wave_state","offset":14592,"bytes":2304,"status":"complete"},{"xccOrdinal":1,"kind":"control_stack","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":1,"kind":"wave_state","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":2,"kind":"control_stack","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":2,"kind":"wave_state","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":3,"kind":"control_stack","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":3,"kind":"wave_state","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":4,"kind":"control_stack","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":4,"kind":"wave_state","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":5,"kind":"control_stack","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":5,"kind":"wave_state","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":6,"kind":"control_stack","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":6,"kind":"wave_state","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":7,"kind":"control_stack","offset":12288,"bytes":0,"status":"empty"},{"xccOrdinal":7,"kind":"wave_state","offset":12288,"bytes":0,"status":"empty"}]' ||
+  checkpointReceipt.selectors !== "typed_unavailable" ||
+  checkpointReceipt.authentication !== false ||
+  checkpointReceipt.authority !== false ||
   !activeCheckpoint.validationCommand.includes(
     "mi300x_captures_nonempty_same_queue_opaque_checkpoint",
-  )
+  ) ||
+  activeCheckpoint.qualificationCommand !==
+    "scripts/qualify-kfd-opaque-checkpoint.sh --bless"
 ) {
   throw new Error("current live debugger milestones are malformed");
 }
@@ -199,6 +268,13 @@ export function liveKfdSourceUrl(path: string, commit = liveKfdPublication.compi
   return `https://github.com/harsh-nod/fe2o3/blob/${commit}/${path}`;
 }
 
+export function liveKfdCommitUrl(commit: string): string {
+  if (!exactObject.test(commit)) {
+    throw new Error("live KFD commit must be exact");
+  }
+  return `https://github.com/harsh-nod/fe2o3/commit/${commit}`;
+}
+
 const identity = (byte: string) => byte.repeat(64 / byte.length);
 const declarationIdentity = identity("33");
 const admittedMiIdentity = identity("b2");
@@ -218,7 +294,8 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
     status: "MI300X stopped-queue envelope observed",
     scope: "gfx942 · KFD 1.18 · session-owned suspension",
     summary:
-      "The session captured every public-header-announced byte for one active gfx942 Wave64 dispatch and reobserved the exact queue/device binding. Each segment was read twice as an adjacent sequential pair; the pairs do not form one coherent instant, and public KFD does not publish the inner gfx942 wave/register record layout.",
+      "The session captured every public-header-announced byte for one active gfx942 Wave64 dispatch and reobserved the exact queue/device binding. A strict canonical 3,407-byte redacted receipt now archives all 16 relative range slots and opaque correlation identities. Each nonempty segment was read twice as an adjacent sequential pair; the pairs do not form one coherent instant, and public KFD does not publish the inner gfx942 wave/register record layout.",
+    evidenceId: checkpointReceipt.identity,
     origin: "observed",
     matrixLabel: "Direct KFD unavailable inner wave and lane records",
     matrixNote:
@@ -268,7 +345,8 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
         label: "Opaque checkpoint",
         state: "available",
         origin: "observed",
-        detail: "2 complete private segments · 2,324 bytes · no serialized content",
+        detail:
+          "16 archived range slots · 2 complete private segments · 2,324 bytes · no serialized content",
       },
       {
         label: "Artifact correlation",
@@ -293,10 +371,19 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       label: "Active Wave64 checkpoint",
       target: activeOpaqueCheckpointV1Milestone.target,
       waveWidth: activeOpaqueCheckpointV1Milestone.waveWidth,
+      recordBytes: checkpointReceipt.recordBytes,
       capturedBytes: activeOpaqueCheckpointV1Milestone.capture.capturedBytes,
+      slotCount: checkpointReceipt.slotCount,
       segments: activeOpaqueCheckpointV1Milestone.capture.segments,
+      ranges: checkpointReceiptSlots,
+      receiptIdentity: checkpointReceipt.identity,
+      rawSha256: checkpointReceipt.rawSha256,
+      producerCommit: checkpointReceipt.producerCommit,
+      producerTree: checkpointReceipt.producerTree,
+      receiptPath: checkpointReceipt.receiptPath,
+      narrativePath: checkpointReceipt.narrativePath,
       receiptBoundary:
-        "No canonical observation receipt or exact relative offsets were archived. This view reports only the range kinds and byte counts retained in the pinned contract.",
+        "The canonical redacted receipt archives exact relative offsets and scoped correlation commitments. Its self-identity and pinned raw digest detect substitution after publication; they are not signatures, do not authenticate the producer or physical execution, and grant no authority.",
       readContract:
         "Each segment passed one adjacent sequential double read. This is not one coherent checkpoint instant.",
       custody:
@@ -310,11 +397,34 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
       backend_surface: "direct_kfd_stopped_queue_envelope",
       implementation_commit: activeOpaqueCheckpointV1Milestone.commit,
       validated_evidence_scope: "mi300x_active_wave64_opaque_checkpoint",
-      session_state: "running_with_suspension_retained",
+      capture_session_state: "suspension_retained_at_capture",
+      publication_state:
+        "resumed_runtime_disabled_session_finished_cleanup_and_child_completed",
+      qualification_receipt: {
+        schema: checkpointReceipt.schema,
+        schema_version: checkpointReceipt.schemaVersion,
+        record_bytes: checkpointReceipt.recordBytes,
+        receipt_identity: checkpointReceipt.identity,
+        raw_sha256: checkpointReceipt.rawSha256,
+        producer_commit: checkpointReceipt.producerCommit,
+        producer_tree: checkpointReceipt.producerTree,
+        producer_manifest_sha256: checkpointReceipt.producerManifestSha256,
+        authentication: checkpointReceipt.authentication,
+        authority: checkpointReceipt.authority,
+      },
       observed_outer_envelope: {
-        envelope_identity: { status: "unavailable", reason: "CanonicalReceiptNotArchived" },
-        device: { status: "unavailable", reason: "CanonicalReceiptNotArchived" },
-        queue: { status: "unavailable", reason: "CanonicalReceiptNotArchived" },
+        envelope_identity: {
+          status: "archived_correlation",
+          identity: checkpointReceipt.stoppedSnapshotIdentity,
+        },
+        device: {
+          observation_identity: checkpointReceipt.deviceObservationIdentity,
+          selector: { status: "unavailable", reason: "ReceiptContainsNoLiveSelector" },
+        },
+        queue: {
+          observation_identity: checkpointReceipt.queueObservationIdentity,
+          selector: { status: "unavailable", reason: "ReceiptContainsNoLiveSelector" },
+        },
         gfx_target_version: 90402,
         xcc_count: 8,
         ownership: "session_retained_suspension",
@@ -335,6 +445,12 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
         captured_bytes: activeOpaqueCheckpointV1Milestone.capture.capturedBytes,
         segment_count: activeOpaqueCheckpointV1Milestone.capture.segmentCount,
         segments: activeOpaqueCheckpointV1Milestone.capture.segments,
+        capture_limit_bytes: checkpointReceipt.captureLimitBytes,
+        range_slot_count: checkpointReceipt.slotCount,
+        range_slots: checkpointReceipt.slots,
+        context_save_identity: checkpointReceipt.contextSaveIdentity,
+        checkpoint_identity: checkpointReceipt.checkpointIdentity,
+        checkpoint_content_identity: checkpointReceipt.checkpointContentIdentity,
         canonical_receipt: activeOpaqueCheckpointV1Milestone.capture.canonicalReceipt,
         relative_offsets: activeOpaqueCheckpointV1Milestone.capture.relativeOffsets,
         reads: activeOpaqueCheckpointV1Milestone.capture.readPair,
@@ -346,6 +462,22 @@ export const liveWorkbenchBackends: LiveWorkbenchBackend[] = [
           activeOpaqueCheckpointV1Milestone.binding.artifactCorrelation,
         physical_execution_authenticated:
           activeOpaqueCheckpointV1Milestone.binding.physicalExecutionAuthenticated,
+        decoded_wave: { status: "unavailable", reason: "WaveRecordLayoutNotInKfdUapi" },
+        decoded_lane: { status: "unavailable", reason: "LaneStateRequiresWaveRecords" },
+        register: { status: "unavailable", reason: "RegisterRecordLayoutNotInKfdUapi" },
+        program_counter: {
+          status: "unavailable",
+          reason: "ProgramCounterRequiresRegisterRecord",
+        },
+        source: { status: "unavailable", reason: "SourceRequiresProgramCounter" },
+        target_memory: { status: "unavailable", reason: "MemoryValuesNotCaptured" },
+        coherent_stopped_interval: false,
+        runtime_reobserved: false,
+        suspension_reobserved: false,
+        grants_observation_authority: false,
+        grants_execution_authority: false,
+        grants_resume_authority: false,
+        grants_memory_authority: false,
         custody: activeOpaqueCheckpointV1Milestone.custody,
       },
       unavailable_inner_records: {
@@ -743,6 +875,26 @@ export const liveKfdSources = [
   {
     label: "Active checkpoint acceptance",
     path: "crates/fe2o3-runtime/tests/kfd_opaque_checkpoint_live.rs",
+    commit: activeOpaqueCheckpointV1Milestone.commit,
+  },
+  {
+    label: "Canonical checkpoint receipt schema",
+    path: "crates/fe2o3-debug-protocol/src/kfd_checkpoint_qualification_v1.rs",
+    commit: activeOpaqueCheckpointV1Milestone.commit,
+  },
+  {
+    label: "Canonical redacted checkpoint receipt",
+    path: checkpointReceiptPath,
+    commit: activeOpaqueCheckpointV1Milestone.commit,
+  },
+  {
+    label: "MI300X checkpoint qualification narrative",
+    path: checkpointNarrativePath,
+    commit: activeOpaqueCheckpointV1Milestone.commit,
+  },
+  {
+    label: "Explicit checkpoint bless workflow",
+    path: "scripts/qualify-kfd-opaque-checkpoint.sh",
     commit: activeOpaqueCheckpointV1Milestone.commit,
   },
   {

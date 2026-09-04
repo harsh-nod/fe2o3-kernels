@@ -698,24 +698,74 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
   await expect(page.getByTestId("gpu-workbench-record")).toContainText(
     "WaveRecordLayoutNotInKfdUapi",
   );
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    "ReceiptContainsNoLiveSelector",
+  );
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    '"physical_execution_authenticated": false',
+  );
+  await expect(page.getByTestId("gpu-workbench-record")).not.toContainText(
+    "CanonicalReceiptNotArchived",
+  );
   const checkpoint = page.getByLabel("Active direct KFD opaque checkpoint");
   await expect(checkpoint).toContainText("gfx942:xnack-");
   await expect(checkpoint).toContainText("Wave64");
+  await expect(checkpoint).toContainText("3,407");
   await expect(checkpoint).toContainText("2,324");
-  await expect(page.getByText("evidence identity unavailable")).toBeVisible();
+  await expect(checkpoint).toContainText("16");
+  await expect(page.getByText("evidence f010a237…acb96f")).toBeVisible();
+  const checkpointPins = checkpoint.getByLabel("Checkpoint receipt pins");
+  await expect(checkpointPins).toContainText(
+    "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f",
+  );
+  await expect(checkpointPins).toContainText(
+    "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+  );
+  await expect(checkpointPins).toContainText(
+    "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+  );
+  await expect(checkpointPins).toContainText(
+    "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+  );
+  await expect(checkpointPins.getByRole("link", { name: /receipt identity/u }))
+    .toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/656ddbda60e5b76ba62ccf3f494d491e29ba0dea/docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json",
+    );
   const checkpointSegments = checkpoint.getByRole("table", {
-    name: "Opaque checkpoint segment ranges",
+    name: "Canonical opaque checkpoint range slots",
   });
   const checkpointSegmentRows = checkpointSegments.getByRole("row");
+  await expect(checkpointSegmentRows).toHaveCount(17);
   expect(await checkpointSegmentRows.nth(1).getByRole("cell").allTextContents())
-    .toEqual(["20"]);
+    .toEqual(["control stack", "12,268", "20", "complete"]);
   expect(await checkpointSegmentRows.nth(2).getByRole("cell").allTextContents())
-    .toEqual(["2,304"]);
+    .toEqual(["wave state", "14,592", "2,304", "complete"]);
+  expect(await checkpointSegmentRows.nth(3).getByRole("cell").allTextContents())
+    .toEqual(["control stack", "12,288", "0", "empty"]);
+  const checkpointBodyRows = checkpointSegments.locator("tbody tr");
+  for (let rowIndex = 0; rowIndex < 16; rowIndex += 1) {
+    const row = checkpointBodyRows.nth(rowIndex);
+    const rowHeader = row.locator('th[scope="row"]');
+    const rowId = await rowHeader.getAttribute("id");
+    expect(rowId).toBeTruthy();
+    const cells = row.getByRole("cell");
+    for (const [cellIndex, columnId] of [
+      "checkpoint-slot-kind",
+      "checkpoint-slot-offset",
+      "checkpoint-slot-bytes",
+      "checkpoint-slot-content",
+    ].entries()) {
+      await expect(cells.nth(cellIndex)).toHaveAttribute(
+        "headers",
+        `${rowId} ${columnId}`,
+      );
+    }
+  }
   const checkpointLimits = checkpoint.getByLabel("Checkpoint evidence limits");
   await expect(checkpointLimits).toContainText("not one coherent checkpoint instant");
-  await expect(checkpointLimits).toContainText(
-    "No canonical observation receipt or exact relative offsets were archived",
-  );
+  await expect(checkpointLimits).toContainText("not signatures");
+  await expect(checkpointLimits).toContainText("grant no authority");
   await expect(checkpointLimits).toContainText("process_vm_readv returned EFAULT");
   await expect(checkpointLimits).toContainText("only EFAULT admits");
   await expect(checkpointLimits).toContainText("read-only /proc/<pid>/mem fallback");
@@ -746,6 +796,39 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
   expect(directKfdDimensions.width).toBeLessThanOrEqual(directKfdDimensions.viewport);
   expect(directKfdDimensions.workbenchWidth)
     .toBeLessThanOrEqual(directKfdDimensions.workbenchViewport);
+  const mountedCheckpoint = await checkpoint.evaluate((element) => {
+    const tableScroller = element.querySelector<HTMLElement>(".table-scroll");
+    const table = tableScroller?.querySelector<HTMLElement>("table");
+    const pins = element.querySelector<HTMLElement>(".gpu-checkpoint-pins");
+    const parent = element.parentElement;
+    return {
+      connected: element.isConnected,
+      width: element.getBoundingClientRect().width,
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      parentWidth: parent?.clientWidth ?? 0,
+      pinsWidth: pins?.getBoundingClientRect().width ?? 0,
+      scrollerWidth: tableScroller?.getBoundingClientRect().width ?? 0,
+      scrollerClientWidth: tableScroller?.clientWidth ?? 0,
+      scrollerScrollWidth: tableScroller?.scrollWidth ?? 0,
+      scrollerOverflowX: tableScroller ? getComputedStyle(tableScroller).overflowX : "",
+      tableWidth: table?.getBoundingClientRect().width ?? 0,
+    };
+  });
+  expect(mountedCheckpoint.connected).toBe(true);
+  expect(mountedCheckpoint.width).toBeGreaterThan(0);
+  expect(mountedCheckpoint.width).toBeLessThanOrEqual(mountedCheckpoint.parentWidth + 1);
+  expect(mountedCheckpoint.scrollWidth).toBeLessThanOrEqual(mountedCheckpoint.clientWidth + 1);
+  expect(mountedCheckpoint.pinsWidth).toBeGreaterThan(0);
+  expect(mountedCheckpoint.pinsWidth).toBeLessThanOrEqual(mountedCheckpoint.clientWidth + 1);
+  expect(mountedCheckpoint.scrollerWidth).toBeGreaterThan(0);
+  expect(mountedCheckpoint.scrollerWidth).toBeLessThanOrEqual(mountedCheckpoint.clientWidth + 1);
+  expect(mountedCheckpoint.scrollerScrollWidth)
+    .toBeGreaterThanOrEqual(mountedCheckpoint.scrollerClientWidth);
+  expect(mountedCheckpoint.tableWidth).toBeGreaterThanOrEqual(
+    mountedCheckpoint.scrollerClientWidth,
+  );
+  expect(["auto", "scroll"]).toContain(mountedCheckpoint.scrollerOverflowX);
 
   const backends = page.getByRole("tablist", { name: "Evidence backend" });
   await backends.getByRole("tab", { name: "ROCgdb / MI" }).click();

@@ -7112,10 +7112,54 @@ tr:last-child td {
 
 .gpu-checkpoint-summary dl {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 1px;
   margin: 0;
   background: var(--border);
+}
+
+.gpu-checkpoint-pins {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-checkpoint-pins a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px;
+  gap: 5px 8px;
+  min-width: 0;
+  padding: 10px 12px;
+  color: var(--text-strong);
+  background: var(--surface-2);
+  text-decoration: none;
+}
+
+.gpu-checkpoint-pins a:hover {
+  background: var(--surface-3);
+}
+
+.gpu-checkpoint-pins span {
+  color: var(--faint);
+  font-size: 0.54rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gpu-checkpoint-pins code {
+  min-width: 0;
+  color: var(--blue);
+  font-size: 0.58rem;
+  overflow-wrap: anywhere;
+}
+
+.gpu-checkpoint-pins svg {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: center;
+  color: var(--accent-strong);
 }
 
 .gpu-checkpoint-summary dl > div {
@@ -7148,7 +7192,7 @@ tr:last-child td {
 
 .gpu-checkpoint-summary table {
   width: 100%;
-  min-width: 480px;
+  min-width: 660px;
   border-collapse: collapse;
   font-size: 0.68rem;
 }
@@ -7175,6 +7219,19 @@ tr:last-child td {
 .gpu-checkpoint-summary td code {
   color: var(--blue);
   font-size: 0.65rem;
+}
+
+.checkpoint-range-complete,
+.checkpoint-range-empty {
+  color: var(--accent-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.58rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.checkpoint-range-empty {
+  color: var(--faint);
 }
 
 .gpu-checkpoint-contract {
@@ -7718,6 +7775,7 @@ tr:last-child td {
 
   .gpu-detail-grid,
   .gpu-checkpoint-contract,
+  .gpu-checkpoint-pins,
   .live-kfd-current-paths > div {
     grid-template-columns: 1fr;
   }
@@ -7727,18 +7785,13 @@ tr:last-child td {
   }
 
   .gpu-checkpoint-summary table {
-    min-width: 0;
-    table-layout: fixed;
+    min-width: 620px;
   }
 
   .gpu-checkpoint-summary th,
   .gpu-checkpoint-summary td {
     padding: 8px;
     overflow-wrap: anywhere;
-  }
-
-  .gpu-checkpoint-summary th:first-child {
-    width: 44%;
   }
 
   .gpu-capabilities li {

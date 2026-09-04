@@ -58,9 +58,11 @@ export function LiveKfdDebuggerPage() {
           <span>
             <strong>Scopes are separate</strong>
             Direct KFD captured two public-header ranges totaling 2,324 opaque
-            bytes from one active gfx942 Wave64 dispatch. Each range passed an
-            adjacent sequential double read, not a coherent-instant snapshot.
-            ROCgdb and profiler evidence retain their separate scopes.
+            bytes from one active gfx942 Wave64 dispatch. Its 3,407-byte
+            canonical redacted receipt archives all 16 range slots. Each
+            nonempty range passed an adjacent sequential double read, not a
+            coherent-instant snapshot. ROCgdb and profiler evidence retain
+            their separate scopes.
           </span>
         </div>
       </header>
@@ -275,7 +277,8 @@ export function LiveKfdDebuggerPage() {
           <p className="section-kicker">Auditable implementation</p>
           <h2 id="live-kfd-evidence-heading">Read the owning boundaries</h2>
           <p>
-            The active opaque-checkpoint links are pinned to {activeOpaqueCheckpointV1Milestone.commit.slice(0, 10)};
+            The active opaque-checkpoint schema, receipt, narrative, and bless
+            workflow are pinned to {activeOpaqueCheckpointV1Milestone.commit.slice(0, 10)};
             historical KFD links stay pinned to {liveKfdPublication.compilerCommit.slice(0, 10)},
             and V5 links stay pinned to {liveRocgdbV5Milestone.commit.slice(0, 10)}
             or the exact multi-function custody milestone.

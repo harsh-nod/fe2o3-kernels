@@ -4,12 +4,16 @@ import {
   Check,
   CircleOff,
   Database,
+  ExternalLink,
   Gauge,
   Radio,
 } from "lucide-react";
 import { useRef, useState, type KeyboardEvent } from "react";
 import {
+  activeOpaqueCheckpointV1Milestone,
   liveWorkbenchBackends,
+  liveKfdCommitUrl,
+  liveKfdSourceUrl,
   type LiveWorkbenchBackendId,
   type LiveWorkbenchCell,
   type LiveWorkbenchTruthOrigin,
@@ -187,30 +191,100 @@ export function GpuDebugProfilerWorkbench() {
                 <dd>Wave{backend.checkpoint.waveWidth}</dd>
               </div>
               <div>
-                <dt>opaque bytes</dt>
+                <dt>receipt bytes</dt>
+                <dd>{backend.checkpoint.recordBytes.toLocaleString("en-US")}</dd>
+              </div>
+              <div>
+                <dt>captured bytes</dt>
                 <dd>{backend.checkpoint.capturedBytes.toLocaleString("en-US")}</dd>
               </div>
               <div>
-                <dt>segments</dt>
-                <dd>{backend.checkpoint.segments.length}</dd>
+                <dt>range slots</dt>
+                <dd>{backend.checkpoint.slotCount}</dd>
               </div>
             </dl>
           </header>
+          <div className="gpu-checkpoint-pins" aria-label="Checkpoint receipt pins">
+            <a
+              href={liveKfdSourceUrl(
+                backend.checkpoint.receiptPath,
+                activeOpaqueCheckpointV1Milestone.commit,
+              )}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <span>receipt identity</span>
+              <code>{backend.checkpoint.receiptIdentity}</code>
+              <ExternalLink size={13} aria-hidden="true" />
+            </a>
+            <a
+              href={liveKfdSourceUrl(
+                backend.checkpoint.receiptPath,
+                activeOpaqueCheckpointV1Milestone.commit,
+              )}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <span>raw SHA-256</span>
+              <code>{backend.checkpoint.rawSha256}</code>
+              <ExternalLink size={13} aria-hidden="true" />
+            </a>
+            <a
+              href={liveKfdCommitUrl(backend.checkpoint.producerCommit)}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <span>producer commit</span>
+              <code>{backend.checkpoint.producerCommit}</code>
+              <ExternalLink size={13} aria-hidden="true" />
+            </a>
+            <a
+              href={liveKfdSourceUrl(
+                backend.checkpoint.narrativePath,
+                activeOpaqueCheckpointV1Milestone.commit,
+              )}
+              rel="noreferrer"
+              target="_blank"
+            >
+              <span>producer tree</span>
+              <code>{backend.checkpoint.producerTree}</code>
+              <ExternalLink size={13} aria-hidden="true" />
+            </a>
+          </div>
           <div className="table-scroll">
-            <table aria-label="Opaque checkpoint segment ranges">
+            <table aria-label="Canonical opaque checkpoint range slots">
               <thead>
                 <tr>
-                  <th>Public header range</th>
-                  <th>Opaque bytes</th>
+                  <th id="checkpoint-slot-xcc" scope="col">XCC</th>
+                  <th id="checkpoint-slot-kind" scope="col">Public header range</th>
+                  <th id="checkpoint-slot-offset" scope="col">Relative offset</th>
+                  <th id="checkpoint-slot-bytes" scope="col">Opaque bytes</th>
+                  <th id="checkpoint-slot-content" scope="col">Content</th>
                 </tr>
               </thead>
               <tbody>
-                {backend.checkpoint.segments.map((segment) => (
-                  <tr key={segment.kind}>
-                    <th>{segment.kind.replaceAll("_", " ")}</th>
-                    <td><code>{segment.bytes.toLocaleString("en-US")}</code></td>
-                  </tr>
-                ))}
+                {backend.checkpoint.ranges.map((range) => {
+                  const rowId = `checkpoint-slot-${range.xccOrdinal}-${range.kind}`;
+                  return (
+                    <tr key={rowId}>
+                      <th id={rowId} scope="row">XCC {range.xccOrdinal}</th>
+                      <td headers={`${rowId} checkpoint-slot-kind`}>
+                        {range.kind.replaceAll("_", " ")}
+                      </td>
+                      <td headers={`${rowId} checkpoint-slot-offset`}>
+                        <code>{range.offset.toLocaleString("en-US")}</code>
+                      </td>
+                      <td headers={`${rowId} checkpoint-slot-bytes`}>
+                        <code>{range.bytes.toLocaleString("en-US")}</code>
+                      </td>
+                      <td headers={`${rowId} checkpoint-slot-content`}>
+                        <span className={`checkpoint-range-${range.status}`}>
+                          {range.status}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

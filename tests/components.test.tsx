@@ -391,24 +391,71 @@ describe("live KFD debugger tutorial", () => {
     expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
       "WaveRecordLayoutNotInKfdUapi",
     );
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      "ReceiptContainsNoLiveSelector",
+    );
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      '"physical_execution_authenticated": false',
+    );
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      '"grants_execution_authority": false',
+    );
     const checkpoint = screen.getByLabelText("Active direct KFD opaque checkpoint");
     expect(checkpoint).toHaveTextContent("gfx942:xnack-");
     expect(checkpoint).toHaveTextContent("Wave64");
+    expect(checkpoint).toHaveTextContent("3,407");
     expect(checkpoint).toHaveTextContent("2,324");
-    expect(screen.getByText("evidence identity unavailable")).toBeInTheDocument();
+    expect(checkpoint).toHaveTextContent("16");
+    expect(screen.getByText("evidence f010a237…acb96f")).toBeInTheDocument();
+    const pins = within(checkpoint).getByLabelText("Checkpoint receipt pins");
+    expect(within(pins).getByRole("link", { name: /receipt identity/u }))
+      .toHaveAttribute(
+        "href",
+        "https://github.com/harsh-nod/fe2o3/blob/656ddbda60e5b76ba62ccf3f494d491e29ba0dea/docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json",
+      );
+    expect(pins).toHaveTextContent(
+      "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+    );
+    expect(pins).toHaveTextContent(
+      "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+    );
+    expect(pins).toHaveTextContent(
+      "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+    );
     const segments = within(checkpoint).getByRole("table", {
-      name: "Opaque checkpoint segment ranges",
+      name: "Canonical opaque checkpoint range slots",
     });
     const segmentRows = within(segments).getAllByRole("row");
+    expect(segmentRows).toHaveLength(17);
+    expect(within(segmentRows[0]).getAllByRole("columnheader")).toHaveLength(5);
+    expect(within(segmentRows[0]).getByRole("columnheader", { name: "XCC" }))
+      .toHaveAttribute("scope", "col");
+    expect(within(segmentRows[1]).getByRole("rowheader", { name: "XCC 0" }))
+      .toHaveAttribute("scope", "row");
     expect(within(segmentRows[1]).getAllByRole("cell").map((cell) => cell.textContent))
-      .toEqual(["20"]);
+      .toEqual(["control stack", "12,268", "20", "complete"]);
     expect(within(segmentRows[2]).getAllByRole("cell").map((cell) => cell.textContent))
-      .toEqual(["2,304"]);
+      .toEqual(["wave state", "14,592", "2,304", "complete"]);
+    expect(within(segmentRows[3]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["control stack", "12,288", "0", "empty"]);
+    for (const row of segmentRows.slice(1)) {
+      const rowHeader = within(row).getByRole("rowheader");
+      const rowId = rowHeader.getAttribute("id");
+      expect(rowId).toBeTruthy();
+      const cells = within(row).getAllByRole("cell");
+      for (const [index, columnId] of [
+        "checkpoint-slot-kind",
+        "checkpoint-slot-offset",
+        "checkpoint-slot-bytes",
+        "checkpoint-slot-content",
+      ].entries()) {
+        expect(cells[index]).toHaveAttribute("headers", `${rowId} ${columnId}`);
+      }
+    }
     const limits = within(checkpoint).getByLabelText("Checkpoint evidence limits");
     expect(limits).toHaveTextContent("not one coherent checkpoint instant");
-    expect(limits).toHaveTextContent(
-      "No canonical observation receipt or exact relative offsets were archived",
-    );
+    expect(limits).toHaveTextContent("not signatures");
+    expect(limits).toHaveTextContent("grant no authority");
     expect(limits).toHaveTextContent("process_vm_readv returned EFAULT");
     expect(limits).toHaveTextContent("only EFAULT admits");
     expect(limits).toHaveTextContent("read-only /proc/<pid>/mem fallback");

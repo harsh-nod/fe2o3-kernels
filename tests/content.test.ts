@@ -40,6 +40,7 @@ import {
   activeOpaqueCheckpointV1Milestone,
   liveKfdComparisonRows,
   liveKfdCurrentImplementationPaths,
+  liveKfdCommitUrl,
   liveKfdPublication,
   liveRocgdbV5Milestone,
   liveKfdSourceUrl,
@@ -626,6 +627,10 @@ describe("live KFD debugger milestone", () => {
       "crates/fe2o3-debug-protocol/src/live_gpu_v3.rs",
       "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
       "crates/fe2o3-runtime/tests/kfd_opaque_checkpoint_live.rs",
+      "crates/fe2o3-debug-protocol/src/kfd_checkpoint_qualification_v1.rs",
+      "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json",
+      "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-2026-09-03.md",
+      "scripts/qualify-kfd-opaque-checkpoint.sh",
       "crates/fe2o3-runtime/fixtures/trusted-gfx942-active-checkpoint-v1/README.md",
       "docs/direct-kfd-opaque-checkpoint-v1.md",
       "crates/fe2o3-kfd/src/target_debug_telemetry_v1.rs",
@@ -670,8 +675,8 @@ describe("live KFD debugger milestone", () => {
       protectedProductionProof: "unavailable_external_verifier_environment",
     });
     expect(activeOpaqueCheckpointV1Milestone).toMatchObject({
-      commit: "ba2171d19e32d957388f4e89ef510539bb2aa45e",
-      tree: "2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3",
+      commit: "656ddbda60e5b76ba62ccf3f494d491e29ba0dea",
+      tree: "8d33795489509fe13b1eed5eeeb74d9e8a81e16c",
       schema: "fe2o3-direct-kfd-opaque-checkpoint-v1",
       target: "gfx942:xnack-",
       waveWidth: 64,
@@ -680,11 +685,25 @@ describe("live KFD debugger milestone", () => {
         availability: "complete_public_header_ranges",
         capturedBytes: 2_324,
         segmentCount: 2,
-        canonicalReceipt: "not_archived",
-        relativeOffsets: "not_archived",
+        canonicalReceipt: "archived_redacted_canonical_v1",
+        relativeOffsets: "archived_redacted_canonical_v1",
         readPair: "adjacent_sequential_equal",
         coherentInstant: false,
         privateBytesExposed: false,
+      },
+      qualificationReceipt: {
+        schema: "fe2o3-direct-kfd-opaque-checkpoint-qualification-v1",
+        schemaVersion: 1,
+        recordBytes: 3_407,
+        identity: "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f",
+        rawSha256: "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+        producerCommit: "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+        producerTree: "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+        captureLimitBytes: 185_630_720,
+        slotCount: 16,
+        selectors: "typed_unavailable",
+        authentication: false,
+        authority: false,
       },
       binding: {
         queueDevice: "exact_direct_kfd_reobserved",
@@ -705,6 +724,22 @@ describe("live KFD debugger milestone", () => {
       { kind: "control_stack", bytes: 20 },
       { kind: "wave_state", bytes: 2_304 },
     ]);
+    expect(activeOpaqueCheckpointV1Milestone.qualificationReceipt.slots).toEqual([
+      { xccOrdinal: 0, kind: "control_stack", offset: 12_268, bytes: 20, status: "complete" },
+      { xccOrdinal: 0, kind: "wave_state", offset: 14_592, bytes: 2_304, status: "complete" },
+      ...Array.from({ length: 14 }, (_, index) => ({
+        xccOrdinal: Math.floor(index / 2) + 1,
+        kind: index % 2 === 0 ? "control_stack" : "wave_state",
+        offset: 12_288,
+        bytes: 0,
+        status: "empty",
+      })),
+    ]);
+    expect(activeOpaqueCheckpointV1Milestone.qualificationReceipt.slots)
+      .toHaveLength(activeOpaqueCheckpointV1Milestone.qualificationReceipt.slotCount);
+    expect(activeOpaqueCheckpointV1Milestone.qualificationCommand).toBe(
+      "scripts/qualify-kfd-opaque-checkpoint.sh --bless",
+    );
     expect(
       activeOpaqueCheckpointV1Milestone.capture.segments.reduce(
         (total, segment) => total + segment.bytes,
@@ -725,6 +760,10 @@ describe("live KFD debugger milestone", () => {
     expect(() => liveKfdSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
     );
+    expect(liveKfdCommitUrl("7c2db0c15664fcc2671796f6cc62219fc935cfa9")).toBe(
+      "https://github.com/harsh-nod/fe2o3/commit/7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+    );
+    expect(() => liveKfdCommitUrl("main")).toThrow("must be exact");
   });
 
   it("keeps each composite workbench backend within its evidence scope", () => {
@@ -747,8 +786,8 @@ describe("live KFD debugger milestone", () => {
         availability: "complete_public_header_ranges",
         captured_bytes: 2_324,
         segment_count: 2,
-        canonical_receipt: "not_archived",
-        relative_offsets: "not_archived",
+        canonical_receipt: "archived_redacted_canonical_v1",
+        relative_offsets: "archived_redacted_canonical_v1",
         reads: "adjacent_sequential_equal",
         coherent_instant: false,
         private_bytes_exposed: false,
@@ -776,25 +815,65 @@ describe("live KFD debugger milestone", () => {
       { kind: "control_stack", bytes: 20 },
       { kind: "wave_state", bytes: 2_304 },
     ]);
-    expect(directKfd.evidenceId).toBeUndefined();
+    expect(directKfd.evidenceId).toBe(
+      "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f",
+    );
+    expect(directKfd.checkpoint).toMatchObject({
+      recordBytes: 3_407,
+      capturedBytes: 2_324,
+      slotCount: 16,
+      receiptIdentity: "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f",
+      rawSha256: "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+      producerCommit: "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+      producerTree: "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+    });
+    expect(directKfd.checkpoint?.ranges).toHaveLength(16);
     expect(directKfd.record).toMatchObject({
+      qualification_receipt: {
+        schema: "fe2o3-direct-kfd-opaque-checkpoint-qualification-v1",
+        record_bytes: 3_407,
+        authentication: false,
+        authority: false,
+      },
       observed_outer_envelope: {
         envelope_identity: {
-          status: "unavailable",
-          reason: "CanonicalReceiptNotArchived",
+          status: "archived_correlation",
+          identity: "3299d8fcffd53612c37a48b7183dceb7b2eb66c8d0493b1e323baeec8b2d09f9",
         },
         device: {
-          status: "unavailable",
-          reason: "CanonicalReceiptNotArchived",
+          observation_identity:
+            "2dc28a3ab000797d6d73b2b87206553349ebc1eacae253d6cdb9e89d75dd76d8",
+          selector: { status: "unavailable", reason: "ReceiptContainsNoLiveSelector" },
         },
         queue: {
-          status: "unavailable",
-          reason: "CanonicalReceiptNotArchived",
+          observation_identity:
+            "bd6aa56e15aebcecb2ab3fef3271c911927a110397bc78d0da6f4ef879eee7bc",
+          selector: { status: "unavailable", reason: "ReceiptContainsNoLiveSelector" },
         },
       },
+      opaque_checkpoint: {
+        range_slot_count: 16,
+        physical_execution_authenticated: false,
+        coherent_stopped_interval: false,
+        runtime_reobserved: false,
+        suspension_reobserved: false,
+        decoded_wave: { status: "unavailable" },
+        decoded_lane: { status: "unavailable" },
+        register: { status: "unavailable" },
+        program_counter: { status: "unavailable" },
+        source: { status: "unavailable" },
+        target_memory: { status: "unavailable" },
+        grants_observation_authority: false,
+        grants_execution_authority: false,
+        grants_resume_authority: false,
+        grants_memory_authority: false,
+      },
     });
+    expect(JSON.stringify(directKfd.record)).not.toContain(
+      "CanonicalReceiptNotArchived",
+    );
     expect(directKfd.checkpoint?.receiptBoundary).toContain(
-      "No canonical observation receipt or exact relative offsets were archived",
+      "not signatures",
     );
     expect(directKfd.checkpoint?.readContract).toContain(
       "not one coherent checkpoint instant",
