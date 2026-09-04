@@ -330,6 +330,42 @@
     "scheduleExecution": "typed_unavailable",
     "causality": "typed_unavailable"
   },
+  "profilerRegressionExplanationV1": {
+    "commit": "50c947693c9574de8857686d5deec0f49fa74277",
+    "tree": "9158db8f3cb2aa92ef5e1dfdac117da4fd42b87e",
+    "schemaVersion": 1,
+    "serviceSchema": "fe2o3-agent-profiler-variant-request-v3",
+    "operation": "explain_regression",
+    "responseSchema": "fe2o3-profiler-regression-explanation-v1",
+    "maximumResponseBytes": 20971520,
+    "maximumHypotheses": 8,
+    "maximumNextMeasurements": 8,
+    "optimizerPolicyVersion": 2,
+    "optimizerPassCount": 7,
+    "kernelNeutral": true,
+    "causality": "typed_unavailable",
+    "example": {
+      "kernel": "row_softmax_v1",
+      "basis": "deterministic_protocol_fixture_not_hardware_observed",
+      "baselineDurationTicks": [40, 60],
+      "candidateDurationTicks": [70, 110],
+      "durationDeltaTicks": [30, 50],
+      "baselineVgprCount": 7,
+      "candidateVgprCount": 8,
+      "baselineSgprSpillCount": 0,
+      "candidateSgprSpillCount": 1,
+      "hypothesisKind": "static_resource_co_observation",
+      "hypothesisOrigin": "inferred",
+      "confidence": "low",
+      "archiveOptimizerEvidence": "typed_unavailable_not_supplied",
+      "nextMeasurements": [
+        "counter_collection",
+        "pc_sampling",
+        "schedule_execution_observation",
+        "controlled_variant_replicates"
+      ]
+    }
+  },
   "transformationMapV2": {
     "commit": "6f1f7d8967f2e2f03bbaf234bf63179d634fe0a9",
     "tree": "2888a906fd5af48e30ce8ee170d49f2a1b9fb775",

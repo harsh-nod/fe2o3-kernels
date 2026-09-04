@@ -182,6 +182,17 @@ blocked on the issue #182 typed producer. The query JSONL on the page is a
 deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
 
+The same route now includes a row-softmax-named walkthrough of production
+`explain_regression`. Compiler milestone `50c947693c9574de8857686d5deec0f49fa74277`
+adds a bounded, kernel-neutral explanation response over exact comparable
+treatments. It projects current Archive V1 optimizer audits and joins longer
+dispatch ticks with HSACO resources, counters, positive source/IR/ISA
+occurrences, and complete structural multiplicity as evidence-linked inferred
+hypotheses. Each result retains contradictions, missing facts, and ordered next
+measurements; causal attribution stays unavailable. The walkthrough's ticks and
+HSACO metadata are deterministic protocol fixtures, not compiled row-softmax or
+hardware performance evidence.
+
 The current debugger/profiler milestone adds a separate live direct-KFD
 qualification boundary. A pure direct-KFD MI300X target completed under the
 installed ROCProfiler SDK 1.1.0 wrapper, but the collector emitted no admitted

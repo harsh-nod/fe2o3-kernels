@@ -931,6 +931,19 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
   ).toBeVisible();
   await expect(page.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
     .toContainText("open_structural_archive");
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Explain one row-softmax regression without inventing causality",
+    }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Row softmax regression comparison"))
+    .toContainText("+30 / +50 ticks");
+  await expect(page.getByText("Static resource co-observation")).toBeVisible();
+  await expect(page.getByRole("table", { name: "Profiler explanation next measurements" }))
+    .toContainText("controlled_variant_replicates");
+  await expect(page.getByText(/Causal attribution:/u))
+    .toContainText("typed_unavailable");
   await expect(page.getByText("Synthetic import, bounded checkpoint qualified")).toBeVisible();
   await expect(page.getByRole("table", { name: "Process-local profiler agent mapping" }))
     .toContainText("7001");

@@ -553,6 +553,19 @@ describe("in-process profiler import tutorial", () => {
       .toHaveTextContent("exact multiset delta");
     expect(screen.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
       .toHaveTextContent("open_structural_archive");
+    expect(
+      screen.getByRole("heading", {
+        name: "Explain one row-softmax regression without inventing causality",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Row softmax regression comparison"))
+      .toHaveTextContent("+30 / +50 ticks");
+    expect(screen.getByText("Static resource co-observation"))
+      .toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Profiler explanation next measurements" }))
+      .toHaveTextContent("controlled_variant_replicates");
+    expect(screen.getByText(/Causal attribution:/u))
+      .toHaveTextContent("typed_unavailable");
     expect(screen.getByRole("table", { name: "Process-local profiler agent mapping" }))
       .toHaveTextContent("7001");
     expect(screen.getByText("MI300X bounded importer checkpoint qualified")).toBeInTheDocument();

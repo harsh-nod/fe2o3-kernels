@@ -61,6 +61,7 @@ import {
   profilerImportResponses,
   profilerImportSources,
   profilerImportSourceUrl,
+  profilerRegressionExplanationMilestone,
   profilerRuntimeCausalityMilestone,
   profilerVariantV3Milestone,
   profilerWrapperOverheadMilestone,
@@ -1162,6 +1163,10 @@ describe("in-process profiler dispatch import milestone", () => {
         "crates/fe2o3-semantic-query/src/profiler_complete_structural_v1.rs",
         "docs/profiler-variant-v3.md",
         "docs/production-profiler-kir-archive-v1.md",
+        "crates/fe2o3-semantic-query/src/profiler_explanation_v1.rs",
+        "crates/fe2o3-semantic-query/tests/profiler_variant_v1.rs",
+        "docs/profiler-regression-explanation-v1.md",
+        "examples/row_softmax_v1/src/kernel.rs",
       ]),
     );
     expect(profilerVariantV3Milestone).toMatchObject({
@@ -1187,6 +1192,33 @@ describe("in-process profiler dispatch import milestone", () => {
       ),
     ).toBe(
       "https://github.com/harsh-nod/fe2o3/blob/9a20c93871a652d1d50eba2f63ef92242c58b826/crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
+    );
+    expect(profilerRegressionExplanationMilestone).toMatchObject({
+      commit: "50c947693c9574de8857686d5deec0f49fa74277",
+      schemaVersion: 1,
+      operation: "explain_regression",
+      maximumResponseBytes: 20971520,
+      maximumHypotheses: 8,
+      maximumNextMeasurements: 8,
+      optimizerPolicyVersion: 2,
+      optimizerPassCount: 7,
+      kernelNeutral: true,
+      causality: "typed_unavailable",
+      example: {
+        kernel: "row_softmax_v1",
+        basis: "deterministic_protocol_fixture_not_hardware_observed",
+        durationDeltaTicks: [30, 50],
+        hypothesisKind: "static_resource_co_observation",
+        hypothesisOrigin: "inferred",
+        archiveOptimizerEvidence: "typed_unavailable_not_supplied",
+      },
+    });
+    expect(
+      profilerImportSourceUrl(
+        "crates/fe2o3-semantic-query/src/profiler_explanation_v1.rs",
+      ),
+    ).toBe(
+      "https://github.com/harsh-nod/fe2o3/blob/50c947693c9574de8857686d5deec0f49fa74277/crates/fe2o3-semantic-query/src/profiler_explanation_v1.rs",
     );
     expect(() => profilerImportSourceUrl("../Cargo.toml")).toThrow(
       "repository-relative",
