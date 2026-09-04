@@ -19,17 +19,23 @@ const rustContractPath = "examples/gfx950_low_precision/src/lib.rs";
 const rustReadmePath = "examples/gfx950_low_precision/README.md";
 const rustManifestPath = "examples/gfx950_low_precision/Cargo.toml";
 const rustLockPath = "examples/gfx950_low_precision/Cargo.lock";
-const coreSourceCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
-const coreSourceTree = "42385e6464ca40318fc70ae104845d3997844140";
-const rustKernelFileSha256 = "7b8e9810ff23a84fae69ae87e52d88a5512f1afd2c176de3d72edb116a003dca";
-const rustReferenceFileSha256 = "388ec3bf3fff9a5290456afc92b9bd24be8813d9ae914865f780affb7fb6e3e7";
+const coreSourceCommit = "65ddfd76c4fe276dedcb5046d592d50b4bf921ac";
+const coreSourceTree = "dfcc77d91ea992dd07a67ed268f69553efc0774c";
+const rustKernelFileSha256 =
+  "2d703f77e75bee2094915ed1226903f526d3a6f45a1e67ed30dae2e72622ccfa";
+const rustReferenceFileSha256 =
+  "c6b2d78ece4c1fb994922e3d99435e48a2ecd5a846b61725a75c494e6b862600";
 const hipSourcePath = "examples/gfx950_low_precision/gfx950_low_precision.hip";
-const hipSourceSha256 = "5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a";
-const hipHsacoSha256 = "ab39293c0f251678496cb5da026b8fb6ebbb4f6c96989ad5a2962d3ad6018379";
+const hipSourceSha256 =
+  "5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a";
+const hipHsacoSha256 =
+  "ab39293c0f251678496cb5da026b8fb6ebbb4f6c96989ad5a2962d3ad6018379";
 const productionTarget = "gfx950:xnack-";
-const attentionRunnerPath = "examples/gfx950_low_precision/run-attention-gfx950.sh";
+const attentionRunnerPath =
+  "examples/gfx950_low_precision/run-attention-gfx950.sh";
 const ocmlClosurePath = "examples/gfx950_low_precision/gfx950-ocml-closure.sh";
-const ocmlManifestPath = "examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest";
+const ocmlManifestPath =
+  "examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest";
 
 interface ProductionRustEvidence {
   label: string;
@@ -37,9 +43,11 @@ interface ProductionRustEvidence {
   namespace: string;
   llvmSha256: string;
   hsacoSha256: string;
+  isaSha256: string;
   requiredIsa: string[];
   numericalResult: string;
   tolerance: string;
+  launch: string;
   hardwareTestPath: string;
   additionalSourcePaths?: string[];
 }
@@ -47,56 +55,78 @@ interface ProductionRustEvidence {
 const fp4GemmEvidence: ProductionRustEvidence = {
   label: "FP4 GEMM",
   runnerPath: "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
-  namespace: "ff22ff3610dda0a94803a8011ced229b78c77400ca63c9b929d6ecba78ed6f01",
-  llvmSha256: "2eae91d0c3c4181684589ce9c6dc3fe05a78b1d37bf6748f7c67726c119a3e4e",
-  hsacoSha256: "1308d41a97d523d2e77ad15e16a3292e9d5a75e2f4eedf53f9e1008c481ca750",
-  requiredIsa: [
-    "v_mfma_f32_16x16x128_f8f6f4",
-    "cbsz:4 blgp:4",
-  ],
+  namespace: "894d3b3350eb1f58293d096d32ef2572e657bdc013f3d27ba4ac55cff4523f04",
+  llvmSha256:
+    "05fc7b8e50534a03f36423bed1d88489614f5d9d385b9d2d811bd8c8dadc8778",
+  hsacoSha256:
+    "2e9cc2bd178e1e1b72237cb32cc8f3e08d2d140d735520ea0147ed84fe81f93b",
+  isaSha256: "0c641fe67a692d306b0551479c84c092c5a6ff66cb53d849d3d369c9d2dac7f7",
+  requiredIsa: ["v_mfma_f32_16x16x128_f8f6f4", "cbsz:4 blgp:4"],
   numericalResult: "max_absolute_error=0",
   tolerance: "absolute tolerance 1e-5",
-  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_fp4_gemm_hardware.rs",
+  launch:
+    "WG256/grid4; four Wave64 tiles per workgroup and 16 independent tiles per launch; static LDS=0 bytes",
+  hardwareTestPath:
+    "crates/fe2o3-hsa-runtime/tests/gfx950_fp4_gemm_hardware.rs",
 };
 
 const fp8GemmEvidence: ProductionRustEvidence = {
   label: "FP8 GEMM",
   runnerPath: "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
-  namespace: "d67f1755b38fbdac67cec83da3ebc359f874e3fbf90fcc036471455ec117dfea",
-  llvmSha256: "9081a38065e977df077cc0fd142b77fb008fdd88a54e3f6915c704fdc5349d16",
-  hsacoSha256: "701a0a4ef137173ba9563dfe8b3b1f916d3d57dca0063d393d8e81c671e4dd2b",
+  namespace: "9e98141edaae16343d036d08caa473a6535f143b8bfcd752106e818f94585040",
+  llvmSha256:
+    "673ccd03badd64acc565eb5363a7d8b981b798b11aff1c1f6ca4c6766cf9bca1",
+  hsacoSha256:
+    "75ce58c286cc6c3b199bf1144e571e8a3d6b7dc0e373a9dee0589bf67b3d1e6d",
+  isaSha256: "5a043ff1948f95fe46a667603c5e618adadcb50c6237b457c4051ec14c46cf61",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "E4M3 selectors (not cbsz:4 blgp:4)",
   ],
   numericalResult: "max_absolute_error=0",
   tolerance: "absolute tolerance 1e-5",
-  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_fp8_gemm_hardware.rs",
+  launch:
+    "WG256/grid4; four Wave64 tiles per workgroup and 16 independent tiles per launch; static LDS=0 bytes",
+  hardwareTestPath:
+    "crates/fe2o3-hsa-runtime/tests/gfx950_fp8_gemm_hardware.rs",
 };
 
 const fp4AttentionEvidence: ProductionRustEvidence = {
   label: "FP4 attention",
   runnerPath: "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
-  namespace: "a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
-  llvmSha256: "0914282d013f8bf6da47e2e807b569e7ca47beb908f30616211e8ff25529e508",
-  hsacoSha256: "90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
+  namespace: "84784601f60af13beafd467edd5bb86f872e3aa9d48e1ad5e8c84e1452dd13a1",
+  llvmSha256:
+    "83f1f8a1affa10dc498ad1a5f7ff42e39472d019e6da9dd966b963d027bafd85",
+  hsacoSha256:
+    "cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
+  isaSha256: "3f15141351e1cf6b92b69e3be6443534099af87db4dec55195a81d5d6e4677ec",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "cbsz:4 blgp:4",
     "two ds_read_b64_tr_b4",
   ],
-  numericalResult: "max_absolute_error=2.235174179e-8",
+  numericalResult: "4,096 outputs; max_absolute_error=1.192092896e-7",
   tolerance: "absolute tolerance 2e-3 plus relative tolerance 2e-3",
-  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs",
-  additionalSourcePaths: [attentionRunnerPath, ocmlClosurePath, ocmlManifestPath],
+  launch:
+    "WG256/grid4; four Wave64 heads per workgroup and 16 independent heads per launch; four private 1 KiB transpose tiles and 4 KiB static LDS per workgroup",
+  hardwareTestPath:
+    "crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs",
+  additionalSourcePaths: [
+    attentionRunnerPath,
+    ocmlClosurePath,
+    ocmlManifestPath,
+  ],
 };
 
 const fp8AttentionEvidence: ProductionRustEvidence = {
   label: "FP8 attention",
   runnerPath: "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
-  namespace: "0c9610e86137831ce25b08b9ad87073ec16f459aa11aeea6806733f788bbeec1",
-  llvmSha256: "32d869f2c4512717548913f693978773e91112f7f67158418cfb155106ef0d58",
-  hsacoSha256: "9208b439a4fbd1a987ea3cca19c01cac79e69e00b021ccb54f09f440d11f6294",
+  namespace: "1cf2661cadefed5b0f3dee8b6430acd144d47f9a4d5ba8182748fac23a2aa315",
+  llvmSha256:
+    "0aeae851bf944cd34c678e9cbb7dfad27004a6121371c56ebcd3c28cc3882c5f",
+  hsacoSha256:
+    "4273c31ce4545e09e051abfcb704d1c7750d7b52ee50b01801caec5ddd2d0479",
+  isaSha256: "43d595b70ddc11be24c8494b1fe3986d677cc102872717259068094e3adedc4e",
   requiredIsa: [
     "v_mfma_f32_16x16x128_f8f6f4",
     "E4M3 selectors (not cbsz:4 blgp:4)",
@@ -104,14 +134,23 @@ const fp8AttentionEvidence: ProductionRustEvidence = {
   ],
   numericalResult: "max_absolute_error=5.960464478e-8",
   tolerance: "absolute tolerance 2e-3 plus relative tolerance 2e-3",
-  hardwareTestPath: "crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs",
-  additionalSourcePaths: [attentionRunnerPath, ocmlClosurePath, ocmlManifestPath],
+  launch:
+    "WG256/grid4; four Wave64 heads per workgroup and 16 independent heads per launch; four private 2 KiB transpose tiles and 8 KiB static LDS per workgroup",
+  hardwareTestPath:
+    "crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs",
+  additionalSourcePaths: [
+    attentionRunnerPath,
+    ocmlClosurePath,
+    ocmlManifestPath,
+  ],
 };
 
 function hipKernelExcerpt(symbol: string, nextSymbol: string): string {
   const helperStart = lowPrecisionHipSource.indexOf("using i32x2");
   const helperEnd = lowPrecisionHipSource.indexOf("template <typename Encode>");
-  const kernelStart = lowPrecisionHipSource.indexOf(`extern "C" __global__ __launch_bounds__(64) void ${symbol}`);
+  const kernelStart = lowPrecisionHipSource.indexOf(
+    `extern "C" __global__ __launch_bounds__(64) void ${symbol}`,
+  );
   const kernelEnd = lowPrecisionHipSource.indexOf(nextSymbol, kernelStart);
   if (helperStart < 0 || helperEnd < 0 || kernelStart < 0 || kernelEnd < 0) {
     throw new Error(`Missing ${symbol} in ${hipSourcePath}`);
@@ -125,13 +164,18 @@ function hipKernelExcerpt(symbol: string, nextSymbol: string): string {
   ].join("\n");
 }
 
-function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean): string {
+function rustFunctionExcerpt(
+  source: string,
+  symbol: string,
+  attributed: boolean,
+): string {
   const position = source.indexOf(`pub fn ${symbol}(`);
   const start = attributed
     ? source.lastIndexOf("#[kernel(", position)
     : Math.max(0, source.lastIndexOf("///", position));
   const open = source.indexOf("{", position);
-  if (position < 0 || start < 0 || open < 0) throw new Error(`Missing Rust function ${symbol}`);
+  if (position < 0 || start < 0 || open < 0)
+    throw new Error(`Missing Rust function ${symbol}`);
   let depth = 0;
   for (let index = open; index < source.length; index += 1) {
     if (source[index] === "{") depth += 1;
@@ -145,8 +189,7 @@ function productionRustClaim(evidence: ProductionRustEvidence): Claim {
   return {
     kind: "gpu-observed",
     label: `Production Rust ${evidence.label} observed on MI350X`,
-    detail:
-      `At the exact pinned core commit, the ordinary #[kernel(typed)] Rust ${evidence.label} source passed its production extractor, ${productionTarget} LLVM and COV6 finalization checks, symbol-scoped ISA inspection, and digest-pinned HSA numerical test on the mi350 MI350X. The measured ${evidence.numericalResult} was within ${evidence.tolerance}. This bounded observation is not a formal source-to-machine proof, performance result, protected publication, or measured protected Worker V3 native build.`,
+    detail: `At the exact pinned core commit, the ordinary #[kernel(typed)] Rust ${evidence.label} source passed its production extractor, ${productionTarget} LLVM and COV6 finalization checks, symbol-scoped ISA inspection, and digest-pinned HSA numerical test on the mi350 MI350X. ${evidence.launch}. The measured ${evidence.numericalResult} was within ${evidence.tolerance}. This bounded observation is not a formal source-to-machine proof, performance result, protected publication, or measured protected Worker V3 native build.`,
     reference: historicalReference(
       coreSourceCommit,
       coreSourceTree,
@@ -164,7 +207,7 @@ function productionRustClaim(evidence: ProductionRustEvidence): Claim {
       ],
       {
         target: productionTarget,
-        note: "Historical exact production Rust GPU observation retained at its immutable core commit. The raw digest-pinned hardware harness grants no protected publication authority, and the reviewed protected Worker V3 provider still lacks a measured native build with matching LLVM/LLD development packages.",
+        note: "Archived as the exact 2026-09-03 WG256/grid4 production Rust correctness campaign at the final core integration commit. The raw digest-pinned hardware harness grants no protected publication authority.",
       },
     ),
   };
@@ -196,7 +239,11 @@ function tutorialTabs(
       kind: "reference",
       label: "Safe CPU reference",
       language: "rust",
-      code: rustFunctionExcerpt(lowPrecisionRustReference, referenceSymbol, false),
+      code: rustFunctionExcerpt(
+        lowPrecisionRustReference,
+        referenceSymbol,
+        false,
+      ),
       sourcePath: rustReferencePath,
       sourceCommit: coreSourceCommit,
       sourceSha256: referenceExcerptSha256,
@@ -229,7 +276,8 @@ function tutorialTabs(
         "- formal Rust source -> Kernel IR -> gfx950 ISA refinement",
       ].join("\n"),
       explanatory: true,
-      notice: "Obligation ledger only; no proof execution or compiler receipt is claimed.",
+      notice:
+        "Obligation ledger only; no proof execution or compiler receipt is claimed.",
     },
     {
       kind: "host",
@@ -258,13 +306,15 @@ function tutorialTabs(
           `Compiler-derived binding: ${evidence.namespace}`,
           `Rust-produced LLVM SHA-256: ${evidence.llvmSha256}`,
           `Rust-produced HSACO SHA-256: ${evidence.hsacoSha256}`,
+          `Symbol-scoped ISA SHA-256: ${evidence.isaSha256}`,
+          `Launch: ${evidence.launch}`,
           "Rust gfx950 lowering supported: true",
           `Target: ${productionTarget}, Wave64, code object V6`,
           `Required Rust ISA: ${evidence.requiredIsa.join(", ")}`,
-          "Rust observation: ROCm 7.2.1 on MI350X gfx950, ssh host mi350, 2026-08-29.",
+          "Rust observation: ROCm 7.2.1 on MI350X gfx950 physical GPU 6, ssh host mi350, 2026-09-03.",
           `Rust numerical result: ${evidence.numericalResult}`,
           `Acceptance tolerance: ${evidence.tolerance}`,
-          "The digest-pinned test checked all 256 outputs, immutable inputs, output canaries, exact target metadata, and symbol-scoped ISA.",
+          "The digest-pinned test checked all 4,096 outputs from 16 non-identical items, immutable inputs, output canaries, exact target metadata, and symbol-scoped ISA.",
           "Formal source-to-machine proof: not claimed.",
           "Performance result: not claimed.",
           "Protected publication authority: not claimed.",
@@ -281,7 +331,8 @@ function tutorialTabs(
         ].join("\n"),
       ),
       explanatory: true,
-      notice: "The pinned production Rust artifact and MI350X run are authoritative for this bounded GPU-observed claim. HIP remains a separate comparison; proof, performance, and protected publication are not promoted.",
+      notice:
+        "The pinned production Rust artifact and MI350X run are authoritative for this bounded GPU-observed claim. HIP remains a separate comparison; proof, performance, and protected publication are not promoted.",
     },
   ];
 }
@@ -292,7 +343,7 @@ const fp4Gemm: Lesson = {
   order: 0,
   title: "gfx950 FP4 GEMM",
   summary:
-    "Build a packed E2M1 16 x 16 x 128 wave64 GEMM around the gfx950 low-precision MFMA and an FP32 accumulator.",
+    "Build 16 independent packed E2M1 16 x 16 x 128 Wave64 GEMMs across four WG256 workgroups around the gfx950 low-precision MFMA and an FP32 accumulator.",
   duration: "32 min",
   prerequisites: [
     "MI350 or MI355X for execution",
@@ -312,11 +363,11 @@ const fp4Gemm: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp4_gemm_rust",
-    "0a4a3d325d588ddad15697aa58f0e354cd9af20ae83f441432bd1489965fecad",
+    "c6a00cb6e0df1e38563641bbc533a5725bf7a09d72bc8f50932c8b4c7b966616",
     "gemm_reference",
     "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
     "gfx950_fp4_gemm",
-    "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp8_gemm",
+    'extern "C" __global__ __launch_bounds__(64) void gfx950_fp8_gemm',
     fp4GemmEvidence,
   ),
   diagram: "gemm",
@@ -356,11 +407,11 @@ const fp8Gemm: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp8_gemm_rust",
-    "004ad607c55169f7f3291ea4cd74afc63e937877ec84efacf5b731f99248b9fd",
+    "0b05a0508c4970a64bed8fcb9c98341242076098aac56e6c3a4ca5ebb36c5055",
     "gemm_reference",
     "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
     "gfx950_fp8_gemm",
-    "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp4_flash_attention",
+    'extern "C" __global__ __launch_bounds__(64) void gfx950_fp4_flash_attention',
     fp8GemmEvidence,
   ),
   diagram: "gemm",
@@ -401,11 +452,11 @@ const fp4Attention: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp4_attention_rust",
-    "2e5adea75d61f9524f1f9ee9d0f00fa9c8e4a0fac3d1ebc2d8c49401b1797a96",
+    "f9a94dfe597a4a48271ca15bee859467540e43b29d2b5ae9d95c91a065015a49",
     "attention_reference",
     "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
     "gfx950_fp4_flash_attention",
-    "extern \"C\" __global__ __launch_bounds__(64) void gfx950_fp8_flash_attention",
+    'extern "C" __global__ __launch_bounds__(64) void gfx950_fp8_flash_attention',
     fp4AttentionEvidence,
   ),
   diagram: "attention",
@@ -417,7 +468,13 @@ const fp4Attention: Lesson = {
         "Future keys contribute neither to the maximum, denominator, nor V numerator, and the CPU reference covers every query row.",
     },
   ],
-  glossary: ["gfx950", "FP4", "transpose load", "flash attention", "online softmax"],
+  glossary: [
+    "gfx950",
+    "FP4",
+    "transpose load",
+    "flash attention",
+    "online softmax",
+  ],
 };
 
 const fp8Attention: Lesson = {
@@ -445,7 +502,7 @@ const fp8Attention: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp8_attention_rust",
-    "c926d59ea1746895f406b72d3e343c38d2b240faec4c0654675dec6e8e05b738",
+    "f48050d4a711f4df78216c9414c6edac2ee3fed584be9d7755fb58076a566c5c",
     "attention_reference",
     "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
     "gfx950_fp8_flash_attention",
@@ -461,7 +518,13 @@ const fp8Attention: Lesson = {
         "The bundle binds the inspected object to the gfx950 runtime and oracle output while leaving performance pending.",
     },
   ],
-  glossary: ["gfx950", "FP8", "transpose load", "artifact binding", "online softmax"],
+  glossary: [
+    "gfx950",
+    "FP8",
+    "transpose load",
+    "artifact binding",
+    "online softmax",
+  ],
 };
 
 export const modules9: CurriculumModule[] = [

@@ -71,9 +71,10 @@ interface SourceBundle {
   inputPolicy: string;
 }
 
-export const advancedCoreSourceCommit = "f88432e7fe5d0b462b5598b9d84a8596fce13b3e";
+export const advancedCoreSourceCommit =
+  "65ddfd76c4fe276dedcb5046d592d50b4bf921ac";
 export const advancedCoreSourceTree: string | null =
-  "a4858ac0b07005a178883508fc3ada6f10630f93";
+  "dfcc77d91ea992dd07a67ed268f69553efc0774c";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -84,8 +85,10 @@ const attentionBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_attention/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
-  rustKernelFileSha256: "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6",
-  rustReferenceFileSha256: "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53",
+  rustKernelFileSha256:
+    "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+  rustReferenceFileSha256:
+    "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
   manifestPath: "examples/gfx950_advanced_attention/Cargo.toml",
   productionSupportPaths: [
@@ -98,11 +101,14 @@ const attentionBundle: SourceBundle = {
     "examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest",
   ],
   hipSource: advancedAttentionSource,
-  hipSourcePath: "examples/gfx950_advanced_attention/gfx950_advanced_attention.hip",
+  hipSourcePath:
+    "examples/gfx950_advanced_attention/gfx950_advanced_attention.hip",
   build: advancedAttentionBuild,
   isa: advancedAttentionIsa,
-  hipSourceSha256: "c44b4227c0ec525a367359bdc16aff69c3086676aa61def1b653266604d1ed1d",
-  hipHsacoSha256: "dcfb1e00354ac14dffae5e069138c5e212b0906133838195dd717686af26ce84",
+  hipSourceSha256:
+    "c44b4227c0ec525a367359bdc16aff69c3086676aa61def1b653266604d1ed1d",
+  hipHsacoSha256:
+    "dcfb1e00354ac14dffae5e069138c5e212b0906133838195dd717686af26ce84",
   compiler: "ROCm 7.2.1, HIP 7.2.53211, AMD Clang 22.0.0git",
   runtime: "visible gfx950 device through ssh alias mi350 on 2026-08-26",
   inputPolicy:
@@ -118,8 +124,10 @@ const systemsBundle: SourceBundle = {
   rustContractPath: "examples/gfx950_advanced_systems/src/lib.rs",
   rustReadmePath: "examples/gfx950_advanced_systems/README.md",
   rustLockPath: "examples/gfx950_advanced_systems/Cargo.lock",
-  rustKernelFileSha256: "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6",
-  rustReferenceFileSha256: "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd",
+  rustKernelFileSha256:
+    "9203c3e8aa98179b925d0500804577f47abd6116f1d849070c50d74f42a31fe6",
+  rustReferenceFileSha256:
+    "e7638564d1d5cff646ff8978c7771eddddb6d6e1422a2dcc3fc02c57a2761a05",
   loweringConstant: "GFX950_ADVANCED_SYSTEMS_SOURCE_LOWERING_SUPPORTED",
   manifestPath: "examples/gfx950_advanced_systems/Cargo.toml",
   productionSupportPaths: [
@@ -136,12 +144,15 @@ const systemsBundle: SourceBundle = {
   hipSourcePath: "examples/gfx950_advanced_systems/gfx950_advanced_systems.hip",
   build: advancedSystemsBuild,
   isa: advancedSystemsIsa,
-  hipSourceSha256: "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5",
-  hipHsacoSha256: "5ccc37902f9b549ac405f1096ad6df8ea58eba5dd6a08c765f5ea3148eb47d16",
+  hipSourceSha256:
+    "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5",
+  hipHsacoSha256:
+    "5ccc37902f9b549ac405f1096ad6df8ea58eba5dd6a08c765f5ea3148eb47d16",
   compiler: "ROCm 7.2.1, HIP 7.2.53211, AMD Clang 22",
-  runtime: "eight visible AMD Instinct MI350X devices through ssh host mi350 on 2026-08-26",
+  runtime:
+    "AMD Instinct MI350X physical GPU 6 through ssh host mi350 on 2026-09-03",
   inputPolicy:
-    "deterministic inputs; floating-point comparisons reject non-finite values and speculative rollback is checked bitwise",
+    "16 nonuniform batch-local inputs for wave-oriented kernels and four for combine; floating-point comparisons reject non-finite values and compact outputs are checked in batch-major order",
 };
 
 interface AdvancedLessonSpec {
@@ -192,20 +203,29 @@ function exactHipKernelExcerpts(
   sourcePath: string,
   symbols: string[],
 ): string {
-  return symbols.map((symbol) => {
-    const symbolPosition = source.indexOf(`void ${symbol}(`);
-    const start = source.lastIndexOf('extern "C" __global__', symbolPosition);
-    const nextKernel = source.indexOf('extern "C" __global__', symbolPosition + 1);
-    const main = source.indexOf("int main()", symbolPosition + 1);
-    const end = nextKernel >= 0 ? nextKernel : main;
-    if (symbolPosition < 0 || start < 0 || end < 0) {
-      throw new Error(`Missing ${symbol} in ${sourcePath}`);
-    }
-    return source.slice(start, end).trimEnd();
-  }).join("\n\n");
+  return symbols
+    .map((symbol) => {
+      const symbolPosition = source.indexOf(`void ${symbol}(`);
+      const start = source.lastIndexOf('extern "C" __global__', symbolPosition);
+      const nextKernel = source.indexOf(
+        'extern "C" __global__',
+        symbolPosition + 1,
+      );
+      const main = source.indexOf("int main()", symbolPosition + 1);
+      const end = nextKernel >= 0 ? nextKernel : main;
+      if (symbolPosition < 0 || start < 0 || end < 0) {
+        throw new Error(`Missing ${symbol} in ${sourcePath}`);
+      }
+      return source.slice(start, end).trimEnd();
+    })
+    .join("\n\n");
 }
 
-function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean): string {
+function rustFunctionExcerpt(
+  source: string,
+  symbol: string,
+  attributed: boolean,
+): string {
   const position = source.indexOf(`pub fn ${symbol}(`);
   const start = attributed
     ? Math.max(
@@ -214,7 +234,8 @@ function rustFunctionExcerpt(source: string, symbol: string, attributed: boolean
       )
     : Math.max(0, source.lastIndexOf("///", position));
   const open = source.indexOf("{", position);
-  if (position < 0 || start < 0 || open < 0) throw new Error(`Missing Rust function ${symbol}`);
+  if (position < 0 || start < 0 || open < 0)
+    throw new Error(`Missing Rust function ${symbol}`);
   let depth = 0;
   for (let index = open; index < source.length; index += 1) {
     if (source[index] === "{") depth += 1;
@@ -228,7 +249,8 @@ function rustPrivateFunctionExcerpt(source: string, symbol: string): string {
   const position = source.indexOf(`fn ${symbol}(`);
   const start = source.lastIndexOf("\n", position) + 1;
   const open = source.indexOf("{", position);
-  if (position < 0 || open < 0) throw new Error(`Missing Rust function ${symbol}`);
+  if (position < 0 || open < 0)
+    throw new Error(`Missing Rust function ${symbol}`);
   let depth = 0;
   for (let index = open; index < source.length; index += 1) {
     if (source[index] === "{") depth += 1;
@@ -272,7 +294,9 @@ function variantSourceTab(source: VariantSourceSpec): CodeTab {
 }
 
 function loweringSupported(bundle: SourceBundle): boolean {
-  return bundle.rustContract.includes(`${bundle.loweringConstant}: bool = true`);
+  return bundle.rustContract.includes(
+    `${bundle.loweringConstant}: bool = true`,
+  );
 }
 
 function productionRunCommand(evidence: AdvancedRustEvidence): string {
@@ -341,8 +365,7 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
     return {
       kind: "gpu-observed",
       label: `Production Rust ${spec.sourceRole} observed on MI350X`,
-      detail:
-        `At retained campaign commit ${campaign.sourceCommit}, every ordinary attributed Rust kernel in this lesson passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and its digest-pinned HSA numerical comparison on mi350. The code tab separately pins the current promoted source at ${advancedCoreSourceCommit}. ${observed.map((entry) => `${entry.label}: ${entry.numericalResult}`).join("; ")}. This bounded observation is not a formal source-to-machine proof, protected publication, or full-model result.`,
+      detail: `At retained campaign commit ${campaign.sourceCommit}, every ordinary attributed Rust kernel in this lesson passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and its digest-pinned HSA numerical comparison on mi350. The code tab separately pins the current promoted source at ${advancedCoreSourceCommit}. ${observed.map((entry) => `${entry.label}: ${entry.numericalResult}`).join("; ")}. This bounded observation is not a formal source-to-machine proof, protected publication, or full-model result.`,
       reference: historicalReference(
         campaign.sourceCommit,
         campaign.sourceTree,
@@ -368,8 +391,7 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
   return {
     kind: "source-example",
     label: "Production Rust pipeline integrated; mi350 record pending",
-    detail:
-      `The lesson displays the ordinary attributed Rust kernels and independent safe CPU references. Each kernel has a dedicated production ${advancedProductionTarget} runner and digest-pinned HSA harness entry. Measured compiler-derived bindings, LLVM/HSACO digests, numerical results, and GPU-observed authority remain fail-closed until the mi350 campaign is recorded.`,
+    detail: `The lesson displays the ordinary attributed Rust kernels and independent safe CPU references. Each kernel has a dedicated production ${advancedProductionTarget} runner and digest-pinned HSA harness entry. Measured compiler-derived bindings, LLVM/HSACO digests, numerical results, and GPU-observed authority remain fail-closed until the mi350 campaign is recorded.`,
   };
 }
 
@@ -384,14 +406,19 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
     rustFunctionExcerpt(bundle.rustKernel, symbol, true),
   );
   if (spec.id === "gfx950-kda-gdn-linear-attention") {
-    rustFragments.unshift(rustMacroExcerpt(bundle.rustKernel, "kda_chunk_wy_v1"));
+    rustFragments.unshift(
+      rustMacroExcerpt(bundle.rustKernel, "kda_chunk_wy_v1"),
+    );
   }
   const referenceFragments = spec.referenceSymbols.map((symbol) =>
     rustFunctionExcerpt(bundle.rustReference, symbol, false),
   );
   if (spec.id === "gfx950-kda-gdn-linear-attention") {
     referenceFragments.unshift(
-      rustPrivateFunctionExcerpt(bundle.rustReference, "kda_matrix_step_f64_v2"),
+      rustPrivateFunctionExcerpt(
+        bundle.rustReference,
+        "kda_matrix_step_f64_v2",
+      ),
     );
   }
   const variantTabs = (spec.variantSources ?? []).map(variantSourceTab);
@@ -424,16 +451,22 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       notice: `Exact published independent safe CPU reference functions, pinned to the core commit and displayed-byte SHA-256: ${spec.referenceSymbols.join(", ")}.`,
     },
     ...(hipSymbols.length > 0
-      ? [{
-          kind: "comparison" as const,
-          label: "Equivalent HIP",
-          language: "cpp" as const,
-          code: exactHipKernelExcerpts(bundle.hipSource, bundle.hipSourcePath, hipSymbols),
-          sourcePath: bundle.hipSourcePath,
-          sourceSha256: bundle.hipSourceSha256,
-          explanatory: true,
-          notice: `Comparison-only HIP fixture. Its ${spec.isaRequirements.join("; ")} and historical runtime are independent of the Rust-produced LLVM, HSACO, and HSA run records.`,
-        }]
+      ? [
+          {
+            kind: "comparison" as const,
+            label: "Equivalent HIP",
+            language: "cpp" as const,
+            code: exactHipKernelExcerpts(
+              bundle.hipSource,
+              bundle.hipSourcePath,
+              hipSymbols,
+            ),
+            sourcePath: bundle.hipSourcePath,
+            sourceSha256: bundle.hipSourceSha256,
+            explanatory: true,
+            notice: `Comparison-only HIP fixture. Its ${spec.isaRequirements.join("; ")} and historical runtime are independent of the Rust-produced LLVM, HSACO, and HSA run records.`,
+          },
+        ]
       : []),
     {
       kind: "verus",
@@ -446,7 +479,8 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
         "- Rust source -> Kernel IR -> gfx950 ISA refinement remains unproved",
       ].join("\n"),
       explanatory: true,
-      notice: "Obligation ledger only; no proof transcript or correctness certificate is claimed.",
+      notice:
+        "Obligation ledger only; no proof transcript or correctness certificate is claimed.",
     },
     {
       kind: "host",
@@ -512,14 +546,13 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
         ].join("\n"),
       ),
       explanatory: true,
-      notice:
-        allObserved
-          ? hipSymbols.length > 0
-            ? "The pinned production Rust artifacts and MI350X runs support only these bounded GPU-observed claims. HIP remains a separate comparison; proof, performance, protected publication, and full-model claims are not promoted."
-            : "The pinned production Rust artifacts and MI350X run support only this bounded GPU-observed claim. No equivalent HIP fixture is published; proof, performance, protected publication, and full-model claims are not promoted."
-          : hipSymbols.length > 0
-            ? "Production evidence is intentionally pending until every displayed kernel has an exact mi350 compiler-derived binding, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane."
-            : "Production evidence is intentionally pending until the displayed kernel has an exact mi350 compiler-derived binding, LLVM/HSACO digest, ISA record, and numerical result. No equivalent HIP fixture is published.",
+      notice: allObserved
+        ? hipSymbols.length > 0
+          ? "The pinned production Rust artifacts and MI350X runs support only these bounded GPU-observed claims. HIP remains a separate comparison; proof, performance, protected publication, and full-model claims are not promoted."
+          : "The pinned production Rust artifacts and MI350X run support only this bounded GPU-observed claim. No equivalent HIP fixture is published; proof, performance, protected publication, and full-model claims are not promoted."
+        : hipSymbols.length > 0
+          ? "Production evidence is intentionally pending until every displayed kernel has an exact mi350 compiler-derived binding, LLVM/HSACO digest, ISA record, and numerical result. HIP remains a separate comparison lane."
+          : "Production evidence is intentionally pending until the displayed kernel has an exact mi350 compiler-derived binding, LLVM/HSACO digest, ISA record, and numerical result. No equivalent HIP fixture is published.",
     },
   ];
   const performance = advancedPerformanceTabFor(spec.id);
@@ -550,11 +583,21 @@ function lesson(spec: AdvancedLessonSpec): Lesson {
 }
 
 const gptOssKernelSymbol = "gfx950_gpt_oss_120b_decode_megakernel_v1";
-const gptOssKernelExcerpt = rustFunctionExcerpt(gptOssRustKernel, gptOssKernelSymbol, true);
-const gptOssReferenceExcerpt = rustFunctionExcerpt(gptOssRustReference, "reference", false);
+const gptOssKernelExcerpt = rustFunctionExcerpt(
+  gptOssRustKernel,
+  gptOssKernelSymbol,
+  true,
+);
+const gptOssReferenceExcerpt = rustFunctionExcerpt(
+  gptOssRustReference,
+  "reference",
+  false,
+);
 const gptOssSourceCommit = advancedCoreSourceCommit;
 const gptOssSourceTree = advancedCoreSourceTree;
-const gptOssCompatibilityCandidate = advancedEvidenceFor([gptOssKernelSymbol])[0];
+const gptOssCompatibilityCandidate = advancedEvidenceFor([
+  gptOssKernelSymbol,
+])[0];
 if (
   gptOssSourceTree === null ||
   gptOssCompatibilityCandidate === undefined ||
@@ -563,7 +606,8 @@ if (
   throw new Error("Missing final GPT-OSS compatibility evidence");
 }
 const gptOssCompatibility = gptOssCompatibilityCandidate;
-const gptOssHistoricalCampaignCommit = "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
+const gptOssHistoricalCampaignCommit =
+  "c1383e97db732f9f1ff8105f10d5c2b5971143e1";
 const gptOssHistoricalCampaignTree = "42385e6464ca40318fc70ae104845d3997844140";
 const gptOssVariantSources: VariantSourceSpec[] = [
   {
@@ -571,60 +615,76 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     status: "compatibility-validated",
     code: gptOssRouterSerial,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
-    sourceSha256: "060c5600b8522bea3f6245794809a15fbc468bee008f7b497e5c7f06740af841",
-    detail: "This is the current serial-router source validated by the final compatibility campaign; the da6 timing record retains its own historical source digest (3f9fe7...).",
+    sourceSha256:
+      "c1597e2ea93959f7d1586605058b9c0308e1f80264dc83fbf3c409d2e0fa0572",
+    detail:
+      "This WG256/grid4 serial-router source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (3f9fe7...).",
   },
   {
     label: "Held-fragment ablation",
     status: "compatibility-validated",
     code: gptOssHeldFragments,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
-    sourceSha256: "a2cc65e6e9c74f4523786706d994193d0d68d708386f9b29163b13bcd98e12d2",
-    detail: "This is the current held-fragment source validated by the final compatibility campaign; the da6 timing record retains its own historical source digest (081ee7...).",
+    sourceSha256:
+      "bf49f42b16379cb9022db1ef95e453a38a43409987f5ececb96d540e8fe5bf4f",
+    detail:
+      "This WG256/grid4 held-fragment source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (081ee7...).",
   },
   {
     label: "Interleaved-store ablation",
     status: "compatibility-validated",
     code: gptOssInterleavedStores,
-    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
-    sourceSha256: "a31af40117e11ed6779ecb9d54cc597805449bbb04db47af7a005ca3da55d72e",
-    detail: "This is the current interleaved-store source validated by the final compatibility campaign; the da6 timing record retains its own historical source digest (41e8ce...).",
+    sourcePath:
+      "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
+    sourceSha256:
+      "18f2d609c29149739b558d2faf3cd634261850b816ba876d0d366426393fe710",
+    detail:
+      "This WG256/grid4 interleaved-store source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (41e8ce...).",
   },
   {
     label: "Materialized components",
     status: "compatibility-validated",
     code: gptOssComponents,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
-    sourceSha256: "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1",
-    detail: "This current file contains the three component exports validated by the final compatibility campaign; the da6 timing record retains its own historical source digest (fd2b80...).",
+    sourceSha256:
+      "3b724cb7fb84d70b8f5c39ae731b3e6c5965d49676e2508047e04d5cff3b763e",
+    detail:
+      "This current file contains the router, attention, and expert exports validated at WG256/grid4 over 16 items; the da6 timing record retains its own historical single-wave source digest (fd2b80...).",
   },
   {
     label: "BF16 LDS pipeline",
     status: "compiler-rejected",
     code: gptOssPipelinedAttention,
-    sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
-    sourceSha256: "96e2e4c1ea1019aa30ed8ce5674671d0674687131b529ae15220965e2dcc7c79",
-    detail: "The exact two-stage implementation reached ranked projection and was compiler-rejected; it has no latency result.",
+    sourcePath:
+      "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
+    sourceSha256:
+      "f0d566daf5ecb358925b81b213b60b8ad6bc9a6c3e71e5d44a4a5ceb1c3e89cb",
+    detail:
+      "The WG256/grid4 two-stage implementation was compiler-rejected because its retained pipeline scalar temporary has multiple definitions; it has no HSACO, numerical result, or latency result.",
   },
   {
     label: "Scalar attention",
     status: "compiler-rejected",
     code: gptOssScalarAttention,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
-    sourceSha256: "0755e02ef766b8ae88ca876ba8cf16d0cdc8da1cebc05a0aa354b766fac57b49",
-    detail: "This exact scalar-attention candidate was compiler-rejected and has no latency result.",
+    sourceSha256:
+      "6893879667d51e407475c21071a2e5859ef57c42d1249f5c16feeb99d3ee2cec",
+    detail:
+      "The WG256/grid4 scalar-attention candidate was compiler-rejected because a call terminator is reached before exact callable memory-effect summaries are available; it has no HSACO, numerical result, or latency result.",
   },
 ];
-const gptOssPerformance = advancedPerformanceTabFor("gfx950-gpt-oss-120b-megakernel");
+const gptOssPerformance = advancedPerformanceTabFor(
+  "gfx950-gpt-oss-120b-megakernel",
+);
 if (!gptOssPerformance) throw new Error("Missing GPT-OSS performance evidence");
 
 const gptOssMegakernelLesson: Lesson = {
   id: "gfx950-gpt-oss-120b-megakernel",
   module: 10,
   order: 9,
-  title: "gpt-oss-120b batch-1 layer-tile megakernel",
+  title: "gpt-oss-120b 16-item layer-tile megakernel",
   summary:
-    "Inspect a real safe-Rust gfx950 layer tile that fuses 128-way routing, one sink-softmax GQA tile, and one dynamically selected MXFP4 expert projection, together with its archived c138 HIP three-dispatch comparator.",
+    "Inspect a real safe-Rust gfx950 launch whose four WG256 workgroups run 16 independent Wave64 layer tiles, each fusing 128-way routing, one sink-softmax GQA tile, and one dynamically selected MXFP4 expert projection; historical single-wave timing is kept separate.",
   duration: "60 min",
   prerequisites: [
     "gfx950 advanced MoE pipeline",
@@ -633,16 +693,16 @@ const gptOssMegakernelLesson: Lesson = {
     "Paired latency experiments",
   ],
   objectives: [
-    "Trace stable top-4 routing, sink-softmax attention, and selected-expert MXFP4 work through one Wave64 dispatch.",
-    "Relate sequential MXFP4 fragment consumption to the measured VGPR and latency reduction.",
-    "Compare the fused kernel with the archived c138 HIP three-dispatch comparator without widening the result to a whole model or state-of-the-art claim.",
+    "Trace stable top-4 routing, sink-softmax attention, and selected-expert MXFP4 work through four waves per workgroup and four workgroups.",
+    "Verify global-wave item ownership gives all 16 items disjoint inputs, blocked output tiles, and packed-route slots.",
+    "Relate sequential MXFP4 fragment consumption to the historical single-wave VGPR and latency reduction without treating it as a current-grid measurement.",
   ],
   claims: [
     {
       kind: "gpu-observed",
-      label: "Final MI350X compatibility for the promoted kernel and oracle",
-      detail:
-        `At promoted commit ${gptOssSourceCommit}, the ordinary Rust kernel produced gfx950 LLVM and COV6 HSACO and passed the bounded HSA oracle against the independent CPU reference as case 26 of the final 32/32 compatibility matrix. The separate c138 performance archive measured fused 1.064644 ms versus its HIP three-dispatch comparator at 0.780362 ms, so that historical fused artifact was 1.3643x slower. Neither record is a fastest or state-of-the-art claim.`,
+      label:
+        "MI350X WG256/grid4 compatibility for the current kernel and oracle",
+      detail: `The current ordinary Rust source produced gfx950 LLVM and COV6 HSACO, then passed the bounded HSA oracle on physical GPU 7 at workgroup 256, grid 4, and 16 useful Wave64 items. It checked 4,096 attention outputs with maximum absolute error 1.192092896e-7, 4,096 exact expert outputs, and 1,024 exact packed-route words. The separate c138 single-wave performance archive measured fused 1.064644 ms versus its HIP three-dispatch comparator at 0.780362 ms, so that historical fused artifact was 1.3643x slower. Neither record is a fastest or state-of-the-art claim.`,
       reference: historicalReference(
         gptOssSourceCommit,
         gptOssSourceTree,
@@ -665,7 +725,7 @@ const gptOssMegakernelLesson: Lesson = {
         ],
         {
           target: advancedProductionTarget,
-          note: "Historical evidence boundary: final promoted-source compatibility covers one fixed Wave64 layer tile, while performance remains the separately archived c138 campaign. Neither record covers a complete layer, whole model, fastest result, or state of the art.",
+          note: "Evidence boundary: current compatibility covers 16 independent Wave64 layer tiles at WG256/grid4, while performance remains the separately archived c138 single-wave campaign. Neither record covers a complete layer, whole model, fastest result, or state of the art.",
         },
       ),
     },
@@ -682,12 +742,13 @@ const gptOssMegakernelLesson: Lesson = {
       code: gptOssKernelExcerpt,
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
       sourceCommit: gptOssSourceCommit,
-      sourceSha256: "6c10867e6dcb8b016e9f654f0ed1b357b128b4d466d896663ae365c837f0f0b0",
+      sourceSha256:
+        "106d9e76e662d81dd25892081d144468bde9f9418b00c2e08808d8b32acc9d30",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssKernelExcerpt],
       explanatory: false,
       notice:
-        "Exact ordinary attributed Rust from the current promoted core source. Its file SHA-256 is b84b16ed5797fdcf5bdf05f603823f47bfa9839f017921d92bd0bcfbd73aecb6.",
+        "Exact ordinary attributed WG256/grid4 Rust from the current mirrored core source. Its file SHA-256 is 3e9119ae9befb21d4cb482d736434948ad01f68bc894c63d5348edbf2a8f58b6.",
     },
     ...gptOssVariantSources.map(variantSourceTab),
     {
@@ -697,12 +758,13 @@ const gptOssMegakernelLesson: Lesson = {
       code: gptOssReferenceExcerpt,
       sourcePath: "examples/gfx950_gpt_oss_decode/src/reference.rs",
       sourceCommit: gptOssSourceCommit,
-      sourceSha256: "f4f361e44d8cf56348d1189aa012ebeb2a83efc1833eaa110ea4f095ce22bd84",
+      sourceSha256:
+        "f4f361e44d8cf56348d1189aa012ebeb2a83efc1833eaa110ea4f095ce22bd84",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssReferenceExcerpt],
       explanatory: false,
       notice:
-        "Exact independent CPU oracle from the final core commit. Its file SHA-256 is 1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05.",
+        "Exact independent 16-item CPU oracle from the current mirrored core source. Its file SHA-256 is 5ac168adad32e821164947d3baa57d78cf813332b8a265e992263964e556628d.",
     },
     {
       kind: "comparison",
@@ -711,7 +773,8 @@ const gptOssMegakernelLesson: Lesson = {
       code: gptOssUnfusedHip,
       sourcePath: "examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip",
       sourceCommit: gptOssSourceCommit,
-      sourceSha256: "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b",
+      sourceSha256:
+        "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b",
       explanatory: true,
       notice:
         "Archived c138 HIP three-dispatch router, attention, and expert comparator with the same fixed inputs and output oracle. It is distinct from the da6 exact Rust component-materialization ablation and is not a framework or whole-model baseline.",
@@ -726,7 +789,8 @@ const gptOssMegakernelLesson: Lesson = {
         "- prove the stable lower-expert-ID top-4 tie rule over all 128 router logits",
         "- prove sink-softmax bounds and canonical padding-row semantics",
         "- prove the selected expert offset and all four MXFP4 block offsets stay in range",
-        "- prove disjoint ownership of 256 attention, 256 expert, and one packed-ID output",
+        "- prove global Wave64 identity maps 16 items to disjoint input slices",
+        "- prove disjoint ownership of 4,096 attention, 4,096 expert, and 1,024 packed-ID outputs",
         "- bind source, Kernel IR, LLVM, ISA, artifact, ABI, and launch identity",
         "- keep whole-layer and whole-model equivalence outside this fixed tile",
       ].join("\n"),
@@ -758,7 +822,7 @@ const gptOssMegakernelLesson: Lesson = {
       ].join("\n"),
       explanatory: true,
       notice:
-        "Run on ssh mi350 with the documented ROCR_VISIBLE_DEVICES setting. Retained timing numbers come from the exact historical c1383e97 campaign; final integrated compilation, ISA, and numerical provenance comes from the separately pinned promoted-source compatibility campaign.",
+        "Run on ssh mi350 with the documented ROCR_VISIBLE_DEVICES setting. Current WG256/grid4 compilation, ISA, and numerical evidence was observed on physical GPU 7. Retained timing numbers come only from the historical single-wave c1383e97 campaign and do not measure the current launch geometry.",
     },
     {
       kind: "result",
@@ -768,30 +832,33 @@ const gptOssMegakernelLesson: Lesson = {
         "gpu-observed",
         [
           "GPT-OSS-120B BATCH-1 LAYER-TILE MEGAKERNEL",
-          "Scope: one fixed Wave64 layer tile; not a complete layer or whole-model kernel",
+          "Scope: WG256/grid4, four Wave64 items per workgroup and 16 independent batch-1 layer tiles; not a complete layer or whole-model kernel",
           "Kernel symbol: " + gptOssKernelSymbol,
           "Displayed source commit: " + gptOssSourceCommit,
           "Displayed source tree: " + gptOssSourceTree,
-          "Kernel file SHA-256: b84b16ed5797fdcf5bdf05f603823f47bfa9839f017921d92bd0bcfbd73aecb6",
-          "Reference file SHA-256: 1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05",
+          "Kernel file SHA-256: 3e9119ae9befb21d4cb482d736434948ad01f68bc894c63d5348edbf2a8f58b6",
+          "Reference file SHA-256: 5ac168adad32e821164947d3baa57d78cf813332b8a265e992263964e556628d",
           "Historical campaign commit: " + gptOssHistoricalCampaignCommit,
           "Historical campaign tree: " + gptOssHistoricalCampaignTree,
-          "Final compatibility matrix: perf-evidence/gfx950-integrated-compatibility-v1.json; 32/32 cases passed",
-          "Final compatibility compiler binding: " + gptOssCompatibility.namespace,
-          "Final compatibility LLVM SHA-256: " + gptOssCompatibility.llvmSha256,
-          "Final compatibility HSACO SHA-256: " + gptOssCompatibility.hsacoSha256,
-          "Final compatibility ISA SHA-256: " + gptOssCompatibility.isaSha256,
-          "Compiler-derived binding: af2c0007439bbc767bc23b4fd2c13af8df1c38719d3f82c7d422c6cf955aa08e",
-          "Rust-produced LLVM SHA-256: 7d28da46358c29ce8f3c12fecce42f491cef490f098fdb1602923ffdfc7947b3",
-          "Rust-produced HSACO SHA-256: 066056a1fb2228c9043474d1746a7555ac31c0ca559d678844dc9e89d601f212",
-          "Symbol-scoped ISA SHA-256: 216f41669a7243a6d34c1b1b80d31f75871e5ba4a38d6484a74bf81a47db9a75",
-          "ABI: kernarg=208 bytes; workgroup=64x1x1; static LDS=0 bytes",
+          "Current WG256/grid4 compiler binding: " +
+            gptOssCompatibility.namespace,
+          "Current WG256/grid4 LLVM SHA-256: " + gptOssCompatibility.llvmSha256,
+          "Current WG256/grid4 HSACO SHA-256: " +
+            gptOssCompatibility.hsacoSha256,
+          "Current WG256/grid4 ISA SHA-256: " + gptOssCompatibility.isaSha256,
+          "Current serial-router binding/HSACO: 0d3dd5be58c3fc42b575a9028359d3be63f5f86dffd8261a24564c09ec8c77f7 / 26515f0bd0539030f076efaf88bf52c11c13fcb6acd13997bf822a207d559722",
+          "Current held-fragment binding/HSACO: 94f0b2a229e36aa690afd63d7523b549390d6b62a7829a41940ee410da3f30db / 258f002896efe9315a84db491a273f651d1cb6320b0e705e3b5a14e50859b215",
+          "Current interleaved-store binding/HSACO: cbd2a9d218b865e59afdd868c38db0aa034933cf224bb1928b6b7873a10261e0 / b0447014a5e5c46d2c4efc862349be399100c7357a958c5b72d1a26c77c57ac6",
+          "Current router-component binding/HSACO: eab1554fa8b5ca3dd61c081c2a94fe5b3a8dacbe6e263ce5ebecbc68138f980e / 9ca3a3db0dd64f0de7a1a56b560fe097e826c6448817f749a7117c1016b10bc6",
+          "Current attention-component binding/HSACO: 7e4af27e8a08344360c28b8c9b735ef8c5aa55a0807601bac5042f6f59b951b1 / fe61d17d8679f3dde03e9ef19cacb7e0e9a2475d69eebf4a6f2803cbc194e336",
+          "Current expert-component binding/HSACO: a5299095f8322658479d027ef414fc05add7e9079610ae41797eb31507097ed7 / 3265642593dc75200cb4e078f9d8c456705b71857c8607e7eb3f491658519cb5",
+          "ABI: kernarg=208 bytes; workgroup=256x1x1; grid=4x1x1; static LDS=0 bytes",
           "ISA: exactly four v_mfma_f32_16x16x16_bf16 and four FP4 v_mfma_f32_16x16x128_f8f6f4; no transpose instructions",
-          "Numerical result: attention max_absolute_error=8.940696716e-8; expert exact; packed top-4 exact",
-          "Final promoted-source wrapper: passed at c766ca761 on MI350X gfx950",
-          "Historical performance wrapper: passed at c1383e97 on MI350X gfx950",
-          "Fused median: 1.064644 ms [1.064483, 1.064844] ms",
-          "Fused p5/p95: 1.059803 / 1.069283 ms",
+          "Current numerical result: attention outputs=4096 max_absolute_error=1.192092896e-7; expert outputs=4096 exact; packed top-4 exact_u32_outputs=1024",
+          "Current WG256/grid4 wrapper: passed 2026-09-03 on MI350X gfx950 physical GPU 7",
+          "Historical single-wave performance wrapper: passed at c1383e97 on MI350X gfx950",
+          "Historical single-wave fused median: 1.064644 ms [1.064483, 1.064844] ms",
+          "Historical single-wave fused p5/p95: 1.059803 / 1.069283 ms",
           "Archived c138 HIP three-dispatch median: 0.780362 ms [0.780243, 0.780482] ms",
           "Archived c138 HIP three-dispatch p5/p95: 0.778162 / 0.783123 ms",
           "Archived c138 HIP three-dispatch/fused ratio: 0.732979",
@@ -804,20 +871,27 @@ const gptOssMegakernelLesson: Lesson = {
       ),
       explanatory: true,
       notice:
-        "The final MI350X compatibility result applies to the promoted kernel and oracle; latency remains pinned to the separate c138 archive. Neither establishes whole-model performance, fastest status, or state of the art.",
+        "The current MI350X compatibility result applies to WG256/grid4 and 16 independent items. Every latency number remains pinned to the separate historical c138 single-wave archive and does not measure this launch geometry. Neither establishes whole-model performance, fastest status, or state of the art.",
     },
     gptOssPerformance,
   ],
   diagram: "moe",
   exercises: [
     {
-      prompt: "Explain why the fused batch-1 tile loses to the archived c138 HIP three-dispatch comparator despite removing two dispatches.",
-      hint: "Use the 352-to-308 VGPR ablation, the 1.5 MB router stream, one-workgroup occupancy, and the serial dependency chain.",
+      prompt:
+        "Explain why the fused batch-1 tile loses to the archived c138 HIP three-dispatch comparator despite removing two dispatches.",
+      hint: "Use the historical 352-to-308 VGPR ablation, the 1.5 MB per-item router stream, the former one-workgroup occupancy, and the serial dependency chain.",
       acceptance:
         "The answer cites the measured 1.3643x slowdown, separates the 14.1268% within-fused gain from the fused/unfused comparison, and makes no fastest or state-of-the-art claim.",
     },
   ],
-  glossary: ["gfx950", "GPT-OSS-120B", "megakernel", "mixture of experts", "resource floor"],
+  glossary: [
+    "gfx950",
+    "GPT-OSS-120B",
+    "megakernel",
+    "mixture of experts",
+    "resource floor",
+  ],
 };
 const advancedLessons = [
   lesson({
@@ -825,55 +899,80 @@ const advancedLessons = [
     order: 0,
     title: "gfx950 advanced MoE pipeline",
     summary:
-      "Trace one compile-time-bounded token-to-expert dispatch, local expert compute, and weighted combine without implying a production serving path.",
+      "Trace batch-local token-to-expert dispatch, local expert compute, and weighted combine across WG256/grid4 without implying a production serving path.",
     duration: "48 min",
     bundle: "systems",
-    sourceRole: "stable top-2 metadata, all-expert MFMA, host-staged rank partial, and combine teaching kernels",
+    sourceRole:
+      "stable top-2 metadata, all-expert MFMA, host-staged rank partial, and combine teaching kernels",
     rustSymbols: [
       "gfx950_moe_route_fp4_t16_e4_k2_v1",
       "gfx950_moe_expert_rank_fp4_fp8_v1",
       "gfx950_combine_expert_ranks_v1",
     ],
-    rustExcerptSha256: "a774500131396c95a4768d2ff174b48fe1823e389b36debcf77dd4e35bc9a676",
-    referenceSymbols: ["moe_routing_reference", "moe_rank_reference"],
-    referenceExcerptSha256: "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e",
-    hipSymbols: ["gfx950_fused_fp4_fp8_moe", "gfx950_expert_parallel_rank", "gfx950_combine_expert_ranks"],
+    rustExcerptSha256:
+      "e6c004e3802b04e4b7741b9e5192056621d9f0b72050ea0240c3c1bee90259c0",
+    referenceSymbols: [
+      "moe_routing_reference",
+      "batched_moe_routing_reference",
+      "moe_rank_reference",
+      "batched_moe_rank_reference",
+    ],
+    referenceExcerptSha256:
+      "49826130508e509b46cb0d56dd746e49ddf60b470c19243dd9adc9b7d51c041f",
+    hipSymbols: [
+      "gfx950_fused_fp4_fp8_moe",
+      "gfx950_expert_parallel_rank",
+      "gfx950_combine_expert_ranks",
+    ],
     fixedShape:
-      "16 tokens, hidden 128, output 16, four routed experts plus one shared expert, top-2 routing",
+      "WG256/grid4; route and expert run 16 independent Wave64 batches of 16 tokens, while combine runs four independent 256-element workgroup batches",
     isaRequirements: [
       "all three lesson symbols are present",
       "gfx950_fused_fp4_fp8_moe contains exactly one v_mfma_f32_16x16x128_f8f6f4 with cbsz:4",
       "gfx942 compilation is rejected",
     ],
     observedResults: [
-      "router top weights max_error=0",
-      "fused MoE max_error=0",
-      "expert counts=9,7,6,10",
-      "logical rank 0 max_error=3.25963e-09",
-      "logical rank 1 max_error=4.76837e-07",
-      "GPU0 rank combine max_error=4.76837e-07",
-      "transport mode=two-device-peer",
+      "MI350 WG256/grid4 route: 512 expert IDs exact, 512 weights max_error=2.980232239e-8, 64 expert counts exact, 2048 dispatch entries exact",
+      "MI350 WG256/grid4 expert: four rank/shared plans x 4096 outputs; max_error=9.536743164e-7,4.768371582e-7,0,0",
+      "MI350 WG256/grid4 combine: 1024 outputs, max_error=0",
     ],
-    prerequisites: ["gfx950 FP8 GEMM", "MoE routing", "Grouped GEMM", "Stable route ownership"],
+    prerequisites: [
+      "gfx950 FP8 GEMM",
+      "MoE routing",
+      "Grouped GEMM",
+      "Stable route ownership",
+    ],
     objectives: [
       "Separate stable top-2 routing, dispatch metadata, all-expert tile computation, and weighted combine contracts.",
       "Audit fixed token, expert, top-k, and hidden extents before inspecting generated ISA.",
+      "Derive batch bases from global Wave64 or workgroup identity so every batch owns disjoint output slices without a grid barrier.",
       "Distinguish the bounded two-rank peer-copy fixture from production expert parallelism.",
     ],
-    narratives: ["gfx950-advanced-moe/fixed-pipeline", "gfx950-advanced-moe/scope-evidence"],
+    narratives: [
+      "gfx950-advanced-moe/fixed-pipeline",
+      "gfx950-advanced-moe/scope-evidence",
+    ],
     obligations: [
       "all 32 top-2 routes have one in-range expert and one deterministic compact slot",
       "equal router logits choose the lower expert ID as in the CPU oracle",
       "expert output returns to exactly its originating token-route pair",
       "the weighted combine reads every accepted route once and writes every output once",
+      "all 16 wave batches and four combine batches use batch-local inputs and disjoint output ownership",
     ],
     diagram: "moe",
     exercise: {
       prompt: "Add an exact router-logit tie oracle case.",
       hint: "Pin the lower-expert-ID tie rule for first and second selection, then inspect dispatch order.",
-      acceptance: "The expected top-2 expert IDs, weights, per-expert counts, and compact route order are explicit for all 16 tokens.",
+      acceptance:
+        "The expected top-2 expert IDs, weights, per-expert counts, and compact route order are explicit for all 16 tokens.",
     },
-    glossary: ["gfx950", "mixture of experts", "top-k", "capacity", "expert-major layout"],
+    glossary: [
+      "gfx950",
+      "mixture of experts",
+      "top-k",
+      "capacity",
+      "expert-major layout",
+    ],
   }),
   lesson({
     id: "gfx950-kda-gdn-linear-attention",
@@ -883,31 +982,42 @@ const advancedLessons = [
       "Implement exact matrix-state KDA decode and a two-chunk WY/UT prefill, then validate both against an independent sequential f64 recurrence on MI350X.",
     duration: "58 min",
     bundle: "attention",
-    sourceRole: "exact matrix-state KDA decode and WY/UT chunkwise-prefill teaching kernels",
+    sourceRole:
+      "exact matrix-state KDA decode and WY/UT chunkwise-prefill teaching kernels",
     rustSymbols: ["gfx950_kda_decode", "gfx950_kda_chunkwise_prefill"],
-    rustExcerptSha256: "0525fc3f4c6a71c04a5d67a58a3c5fc9b29e91aea05115613cdef6359e97b33b",
+    rustExcerptSha256:
+      "31fc7bdc42d49c6512f320ee33c49e30b5f5a45824f8aafa487556d4594eb50e",
     referenceSymbols: ["kda_decode_reference_v2", "kda_prefill_reference_v2"],
-    referenceExcerptSha256: "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
+    referenceExcerptSha256:
+      "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
     fixedShape:
-      "one head; K=16; V=16; FP32 16x16 matrix state; decode T=1; prefill T=8 as two ordered C=4 WY/UT chunks",
+      "four independent heads; K=16; V=16; FP32 16x16 matrix state; decode T=1; prefill T=8 as two ordered C=4 WY/UT chunks; one full problem per WG256 at grid4",
     isaRequirements: [
       "gfx950_kda_decode contains ds_bpermute_b32 Wave16 reductions and no MFMA or transpose instructions",
       "gfx950_kda_chunkwise_prefill contains ds_bpermute_b32 Wave16 reductions and no MFMA or transpose instructions",
     ],
     observedResults: [
-      "decode final_state max_absolute_error=1.490116119e-8",
-      "decode replicated output max_absolute_error=3.725290298e-9",
-      "prefill final_state max_absolute_error=2.980232239e-8",
+      "decode final_state max_absolute_error=2.980232239e-8",
+      "decode replicated output max_absolute_error=7.450580597e-9",
+      "prefill final_state max_absolute_error=1.490116119e-8",
       "prefill chunk outputs max_absolute_error=7.450580597e-9",
     ],
-    prerequisites: ["Linear attention", "Delta-rule updates", "Lower-triangular solves", "Wave16 reductions"],
+    prerequisites: [
+      "Linear attention",
+      "Delta-rule updates",
+      "Lower-triangular solves",
+      "Wave16 reductions",
+    ],
     objectives: [
       "Derive the exact decayed matrix, prediction error, rank-one update, and scaled query projection for decode.",
       "Expand the four-token WY/UT lower-triangular solve and carry its resulting matrix state into a second chunk.",
       "Reconcile logical S[K,V], physical H[V,K], and the replicated output layout required by checked Index1D ownership.",
       "Use the sequential f64 matrix recurrence as an oracle independent of the GPU chunk transform.",
     ],
-    narratives: ["gfx950-kda-gdn-linear-attention/recurrence", "gfx950-kda-gdn-linear-attention/scope-evidence"],
+    narratives: [
+      "gfx950-kda-gdn-linear-attention/recurrence",
+      "gfx950-kda-gdn-linear-attention/scope-evidence",
+    ],
     obligations: [
       "q and k are L2-normalized, alpha and beta are already activated, and q is scaled by 1/sqrt(16) inside the kernel",
       "the logical S[K,V] recurrence and physical H[V,K] state layout are related by an explicit transpose",
@@ -918,11 +1028,20 @@ const advancedLessons = [
     ],
     diagram: "attention",
     exercise: {
-      prompt: "Trace a two-token KDA update for one value column, then identify the C=4 WY terms that generalize it.",
+      prompt:
+        "Trace a two-token KDA update for one value column, then identify the C=4 WY terms that generalize it.",
       hint: "Start from D_t=diag(alpha_t)S_{t-1}, e_t=v_t-k_t^T D_t, and S_t=D_t+beta_t k_t e_t^T.",
-      acceptance: "The trace preserves matrix orientation, applies q/sqrt(16) after the update, and distinguishes the sequential oracle from the chunk transform.",
+      acceptance:
+        "The trace preserves matrix orientation, applies q/sqrt(16) after the update, and distinguishes the sequential oracle from the chunk transform.",
     },
-    glossary: ["gfx950", "Kimi Delta Attention", "matrix state", "WY representation", "UT transform", "Wave16"],
+    glossary: [
+      "gfx950",
+      "Kimi Delta Attention",
+      "matrix state",
+      "WY representation",
+      "UT transform",
+      "Wave16",
+    ],
   }),
   lesson({
     id: "gfx950-indexed-sparse-attention",
@@ -934,26 +1053,36 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole: "content-indexed sparse QK, softmax, and PV teaching kernel",
     rustSymbols: ["gfx950_content_sparse_attention"],
-    rustExcerptSha256: "8684d952e10438c4dd0bd4a6748010d04e38a7a911a69627ed388621a368b779",
+    rustExcerptSha256:
+      "a84b9879c947d8cda0603c4a4efacdbae1a2524d34a6434325031ae951180c21",
     referenceSymbols: ["content_sparse_attention_reference_v1"],
-    referenceExcerptSha256: "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
+    referenceExcerptSha256:
+      "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
     hipSymbols: ["gfx950_content_sparse_attention"],
     fixedShape:
-      "16 tokens, head dimension 128, 16 value channels; top two four-token blocks then top three tokens",
+      "16 independent Wave64 heads at WG256/grid4; each has 16 tokens, head dimension 128, 16 value channels, top two four-token blocks, top three tokens, and one private 2 KiB LDS tile",
     isaRequirements: [
       "gfx950_content_sparse_attention contains exactly four ds_read_b64_tr_b8 before one v_mfma_f32_16x16x128_f8f6f4",
     ],
     observedResults: [
-      "selected IDs=[7,1,4]",
-      "sparse attention max_error=2.98023e-08",
+      "48 selected IDs exact across 16 non-identical heads",
+      "256 outputs max_absolute_error=5.820766091e-11",
     ],
-    prerequisites: ["gfx950 flash attention", "Gather bounds", "Masking", "Online softmax"],
+    prerequisites: [
+      "gfx950 flash attention",
+      "Gather bounds",
+      "Masking",
+      "Online softmax",
+    ],
     objectives: [
       "Trace deterministic top-two block and top-three token selection into the active score mask.",
       "Keep content-score selection, selected token IDs, packed fragment layout, and logical attention order distinct.",
       "Confirm that unselected tokens contribute neither to the maximum, denominator, nor value numerator.",
     ],
-    narratives: ["gfx950-indexed-sparse-attention/index-contract", "gfx950-indexed-sparse-attention/scope-evidence"],
+    narratives: [
+      "gfx950-indexed-sparse-attention/index-contract",
+      "gfx950-indexed-sparse-attention/scope-evidence",
+    ],
     obligations: [
       "top-two block selection uses the source-declared stable tie behavior",
       "top-three token selection is unique and drawn only from the eight selected-block candidates",
@@ -964,9 +1093,16 @@ const advancedLessons = [
     exercise: {
       prompt: "Add tied block-score and tied token-score oracle cases.",
       hint: "Follow the source's stable lower-position tie order through both selection stages.",
-      acceptance: "The expected three unique token IDs and active softmax domain are explicit for each tie case.",
+      acceptance:
+        "The expected three unique token IDs and active softmax domain are explicit for each tie case.",
     },
-    glossary: ["gfx950", "indexed sparse attention", "gather contract", "duplicate semantics", "masking"],
+    glossary: [
+      "gfx950",
+      "indexed sparse attention",
+      "gather contract",
+      "duplicate semantics",
+      "masking",
+    ],
   }),
   lesson({
     id: "gfx950-deepseek-sparse-attention",
@@ -976,17 +1112,23 @@ const advancedLessons = [
       "Consume Lightning Indexer top-k token IDs, evaluate only the selected KV rows, and expose stable softmax state through a production Rust-to-gfx950 path.",
     duration: "50 min",
     bundle: "attention",
-    sourceRole: "DeepSeek sparse selected-QK, stable softmax, and selected-PV teaching kernel",
+    sourceRole:
+      "DeepSeek sparse selected-QK, stable softmax, and selected-PV teaching kernel",
     rustSymbols: ["gfx950_deepseek_sparse_attention"],
-    rustExcerptSha256: "0608190331ac2a480ddbc947b754aebd80a60ecdf541998d4aae27b5706df17a",
+    rustExcerptSha256:
+      "9207defaad05feb0845bb803a36a1b9c44124a334b9835b6896eebf77bb02861",
     referenceSymbols: ["deepseek_sparse_attention_reference_v1"],
-    referenceExcerptSha256: "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
+    referenceExcerptSha256:
+      "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
     fixedShape:
-      "one FP32 query with head dimension 128, 16 FP32 KV rows, 16 FP32 value channels, and four scalar top-k index slots",
+      "64 independent Wave16 heads at WG256/grid4; each has one FP32 query with head dimension 128, 16 FP32 KV rows, 16 FP32 value channels, and four scalar top-k index slots",
     isaRequirements: [
       "gfx950_deepseek_sparse_attention contains no MFMA or transpose instructions because it evaluates only the admitted sparse rows",
     ],
-    observedResults: [],
+    observedResults: [
+      "1,024 outputs max_absolute_error=5.215406418e-8",
+      "64 maxima max_absolute_error=1.490116119e-7; 64 normalizers max_absolute_error=4.768371582e-7",
+    ],
     prerequisites: [
       "gfx950 flash attention",
       "DeepSeek Lightning Indexer",
@@ -1013,7 +1155,8 @@ const advancedLessons = [
     ],
     diagram: "attention",
     exercise: {
-      prompt: "Extend the oracle matrix with every invalid-slot position and a permuted valid top-k order.",
+      prompt:
+        "Extend the oracle matrix with every invalid-slot position and a permuted valid top-k order.",
       hint: "The output is invariant to valid-index order, but duplicate valid IDs and an all-invalid list must still be rejected.",
       acceptance:
         "Each case pins output, maximum, and normalizer behavior and distinguishes invalid sentinels from forbidden duplicate valid tokens.",
@@ -1035,27 +1178,36 @@ const advancedLessons = [
       "Combine one bounded compressed-state branch with one bounded direct-attention branch under an explicit fusion rule.",
     duration: "48 min",
     bundle: "attention",
-    sourceRole: "compressed-state, direct-attention, and hybrid fusion teaching kernels",
+    sourceRole:
+      "compressed-state, direct-attention, and hybrid fusion teaching kernels",
     rustSymbols: ["gfx950_compressed_hybrid_attention"],
-    rustExcerptSha256: "4b905913f30edfb7e6e0b0a20893c14bd7ca1b656a3e99c6794efe1a2175df03",
+    rustExcerptSha256:
+      "e28aca35318d39d2b930d85add4d6746a70d2dd69f4eae5c1fd6e61a87c24c19",
     referenceSymbols: ["compressed_hybrid_attention_reference_v1"],
-    referenceExcerptSha256: "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
+    referenceExcerptSha256:
+      "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
     hipSymbols: ["gfx950_compressed_hybrid_attention"],
     fixedShape:
-      "16 tokens, head dimension 128, 16 value channels; three compressed four-token blocks plus tokens 12-15 as the local window",
+      "16 independent Wave64 heads at WG256/grid4; each has 16 tokens, head dimension 128, 16 value channels, three compressed four-token blocks, a four-token local window, and one private 2 KiB LDS tile",
     isaRequirements: [
       "gfx950_compressed_hybrid_attention contains exactly four ds_read_b64_tr_b8 before one v_mfma_f32_16x16x128_f8f6f4",
     ],
-    observedResults: [
-      "compressed hybrid attention max_error=1.67638e-07",
+    observedResults: ["256 outputs max_absolute_error=5.960464478e-8"],
+    prerequisites: [
+      "Linear attention",
+      "Sparse attention",
+      "State compression",
+      "Numerical oracles",
     ],
-    prerequisites: ["Linear attention", "Sparse attention", "State compression", "Numerical oracles"],
     objectives: [
       "Describe the compressed and direct branches as separate fixed-shape contracts.",
       "Record the exact branch fusion order, weights, and accumulator precision.",
       "Separate local kernel behavior from end-to-end hybrid-model equivalence.",
     ],
-    narratives: ["gfx950-compressed-hybrid-attention/fusion-contract", "gfx950-compressed-hybrid-attention/scope-evidence"],
+    narratives: [
+      "gfx950-compressed-hybrid-attention/fusion-contract",
+      "gfx950-compressed-hybrid-attention/scope-evidence",
+    ],
     obligations: [
       "compression reads the declared source domain and initializes every compressed-state element",
       "the direct branch uses the declared key domain and mask",
@@ -1066,9 +1218,16 @@ const advancedLessons = [
     exercise: {
       prompt: "Isolate each hybrid branch in the CPU oracle.",
       hint: "Choose fusion coefficients that select one branch at a time, then test their declared combination.",
-      acceptance: "Both isolated branches and the combined fixed case have independent expected outputs and tolerances.",
+      acceptance:
+        "Both isolated branches and the combined fixed case have independent expected outputs and tolerances.",
     },
-    glossary: ["gfx950", "compressed attention", "hybrid attention", "fusion contract", "model equivalence"],
+    glossary: [
+      "gfx950",
+      "compressed attention",
+      "hybrid attention",
+      "fusion contract",
+      "model equivalence",
+    ],
   }),
   lesson({
     id: "gfx950-attnres-gr-mhc",
@@ -1078,35 +1237,54 @@ const advancedLessons = [
       "Express bounded residual-stream selection, gating, and mixing as explicit tensor transforms with alias-safe stores.",
     duration: "40 min",
     bundle: "attention",
-    sourceRole: "AttnRes, gated-residual, and mHC residual-mixing teaching kernels",
+    sourceRole:
+      "AttnRes, gated-residual, and mHC residual-mixing teaching kernels",
     rustSymbols: [
       "gfx950_attnres_aggregate",
       "gfx950_four_branch_residual",
       "gfx950_mhc_sinkhorn_mix",
     ],
-    rustExcerptSha256: "5e9761447dfc694c713afe92f905867382a0c7f0069fe413806927d69c3863db",
-    referenceSymbols: ["attnres_aggregate_reference_v1", "four_branch_residual_reference_v1", "mhc_sinkhorn_mix_reference_v1"],
-    referenceExcerptSha256: "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
-    hipSymbols: ["gfx950_attnres_aggregate", "gfx950_four_branch_residual", "gfx950_mhc_sinkhorn_mix"],
+    rustExcerptSha256:
+      "2b8e8f3d367533082da8d38764055f66ebf1621277acd93e250c1440c3b7fd28",
+    referenceSymbols: [
+      "attnres_aggregate_reference_v1",
+      "four_branch_residual_reference_v1",
+      "mhc_sinkhorn_mix_reference_v1",
+    ],
+    referenceExcerptSha256:
+      "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
+    hipSymbols: [
+      "gfx950_attnres_aggregate",
+      "gfx950_four_branch_residual",
+      "gfx950_mhc_sinkhorn_mix",
+    ],
     fixedShape:
-      "16 channels; four AttnRes depths, four gated residual branches, and four mHC streams with three Sinkhorn iterations",
+      "WG256/grid4: 64 Wave16 AttnRes and four-branch items, plus 16 Wave64 mHC items; each item has 16 channels and mHC uses three Sinkhorn iterations",
     isaRequirements: [
       "gfx950_attnres_aggregate contains v_exp_f32",
       "gfx950_four_branch_residual contains v_exp_f32",
       "gfx950_mhc_sinkhorn_mix contains v_exp_f32",
     ],
     observedResults: [
-      "AttnRes max_error=0",
-      "four-branch residual max_error=0",
-      "mHC/Sinkhorn max_error=2.98023e-08",
+      "AttnRes 1,024 outputs max_absolute_error=4.470348358e-8",
+      "four-branch 1,024 outputs max_absolute_error=1.490116119e-8",
+      "mHC/Sinkhorn 1,024 outputs max_absolute_error=6.705522537e-8",
     ],
-    prerequisites: ["Residual connections", "Tensor layouts", "Gating", "Aliasing contracts"],
+    prerequisites: [
+      "Residual connections",
+      "Tensor layouts",
+      "Gating",
+      "Aliasing contracts",
+    ],
     objectives: [
       "Name the input streams, coefficient domain, mixing order, and output layout for each variant.",
       "Distinguish elementwise gates from stream-mixing matrices and normalization steps.",
       "Audit whether an in-place transform preserves unread residual inputs.",
     ],
-    narratives: ["gfx950-attnres-gr-mhc/mixing-contract", "gfx950-attnres-gr-mhc/scope-evidence"],
+    narratives: [
+      "gfx950-attnres-gr-mhc/mixing-contract",
+      "gfx950-attnres-gr-mhc/scope-evidence",
+    ],
     obligations: [
       "every output component names the exact source streams and coefficients it consumes",
       "gate and mixing transforms use the source-declared order and numeric type",
@@ -1117,7 +1295,8 @@ const advancedLessons = [
     exercise: {
       prompt: "Construct an aliasing-negative case for one mixing variant.",
       hint: "Find an output store that would precede a later read if input and output shared storage.",
-      acceptance: "The host rejects the alias or the kernel stages all required inputs before the first clobbering store.",
+      acceptance:
+        "The host rejects the alias or the kernel stages all required inputs before the first clobbering store.",
     },
     glossary: ["gfx950", "AttnRes", "GR", "mHC", "residual mixing"],
     variantSources: [
@@ -1126,8 +1305,10 @@ const advancedLessons = [
         status: "compatibility-validated",
         code: advancedAttentionAblation,
         sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
-        sourceSha256: "c34bd3b07e47446d79ad9cdf5328c8e207f81b02a591bca5eb22f25a00087b2e",
-        detail: "The current file is final-compatibility validated. The da6 timing record used the archived b5b1fc... file, so its timing is not attributed to these current bytes.",
+        sourceSha256:
+          "edca3d771ac60c79c6de3a083b16739934755d1548c529232e86f2df72c6b721",
+        detail:
+          "The current WG256/grid4 file is batch-wide compatibility validated. Every live alternate passed on 2026-09-03; the da6 timing record used archived single-workgroup bytes, so its timing is historical and is not attributed to this file.",
       },
     ],
   }),
@@ -1136,139 +1317,205 @@ const advancedLessons = [
     order: 6,
     title: "gfx950 speculative and MTP verification",
     summary:
-      "Verify one fixed-width candidate block and compute a deterministic accepted prefix without claiming a serving scheduler or sampler.",
+      "Verify 16 independent fixed-width candidate blocks across WG256/grid4 and compute deterministic accepted prefixes without claiming a serving scheduler or sampler.",
     duration: "44 min",
     bundle: "systems",
-    sourceRole: "speculative-decoding and multi-token-prediction verification teaching kernels",
+    sourceRole:
+      "speculative-decoding and multi-token-prediction verification teaching kernels",
     rustSymbols: ["gfx950_speculative_transaction_v1"],
-    rustExcerptSha256: "7af417d630bff4724837b23cfc901045d1b059d352f85ea28391258c7c99d3ff",
-    referenceSymbols: ["speculative_reference"],
-    referenceExcerptSha256: "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc",
+    rustExcerptSha256:
+      "9c1e6701a53f5cdd03472e51a96c8758ed241b8cc68291d0301cf6f95b15d83d",
+    referenceSymbols: [
+      "speculative_reference",
+      "batched_speculative_reference",
+    ],
+    referenceExcerptSha256:
+      "0e0f28117f664d0e54e85b853d442d68d36c280d442b6a428ed47d6510ae72b7",
     hipSymbols: ["gfx950_speculative_transaction"],
     fixedShape:
-      "eight candidates, four draft steps, eight state elements; commit state deltas only when all four steps pass",
+      "WG256/grid4 with 16 independent Wave64 batches; each batch has eight candidates, four draft steps, and eight state elements",
     isaRequirements: [
       "gfx950_speculative_transaction symbol is present",
       "gfx942 compilation is rejected for the complete suite",
     ],
     observedResults: [
-      "transaction state max_error=0",
-      "committed candidates=2",
-      "rolled-back candidates=6 with bitwise base-state equality",
+      "MI350 WG256/grid4 accepted lengths: 128 values exact",
+      "MI350 WG256/grid4 commit flags: 128 values exact",
+      "MI350 WG256/grid4 transaction state: 1024 values, max_error=1.192092896e-7",
     ],
-    prerequisites: ["Prefix scans", "Token logits", "Deterministic acceptance policy", "Gather bounds"],
+    prerequisites: [
+      "Prefix scans",
+      "Token logits",
+      "Deterministic acceptance policy",
+      "Gather bounds",
+    ],
     objectives: [
       "Separate candidate gathering, target evaluation, acceptance predicates, and prefix length.",
       "Define the first-rejection rule and output ownership for a fixed candidate width.",
+      "Use global Wave64 identity as the batch index and keep all candidate/state accesses batch local.",
       "Keep verification-kernel evidence separate from decoder and serving-system claims.",
     ],
-    narratives: ["gfx950-speculative-mtp-verification/prefix-contract", "gfx950-speculative-mtp-verification/scope-evidence"],
+    narratives: [
+      "gfx950-speculative-mtp-verification/prefix-contract",
+      "gfx950-speculative-mtp-verification/scope-evidence",
+    ],
     obligations: [
       "each candidate position reads the declared token and target value in range",
       "the acceptance predicate and first-rejection rule are deterministic for the teaching inputs",
       "no position after the first rejection is reported as accepted",
       "accepted length, commit flag, and fixed output state have one final owner per candidate",
+      "all 16 wave batches write disjoint accepted, commit, and state slices without grid synchronization",
     ],
     diagram: "reduction",
     exercise: {
-      prompt: "Add all-accepted, first-rejected, and last-rejected prefix cases.",
+      prompt:
+        "Add all-accepted, first-rejected, and last-rejected prefix cases.",
       hint: "Compute the per-position predicate first, then the accepted prefix length.",
-      acceptance: "The oracle covers all three boundaries and never treats independent accepted positions as a valid prefix.",
+      acceptance:
+        "The oracle covers all three boundaries and never treats independent accepted positions as a valid prefix.",
     },
-    glossary: ["gfx950", "speculative decoding", "MTP", "accepted prefix", "verification kernel"],
+    glossary: [
+      "gfx950",
+      "speculative decoding",
+      "MTP",
+      "accepted prefix",
+      "verification kernel",
+    ],
   }),
   lesson({
     id: "gfx950-ngram-embedding-gather",
     order: 7,
     title: "gfx950 N-gram hash-table gather",
     summary:
-      "Resolve fixed-order N-gram identifiers through a bounded priority table and return one integer table value per query.",
+      "Resolve 16 independent N-gram query batches through batch-local priority tables across WG256/grid4.",
     duration: "36 min",
     bundle: "systems",
-    sourceRole: "N-gram hash-table lookup and integer-value gather teaching kernel",
+    sourceRole:
+      "N-gram hash-table lookup and integer-value gather teaching kernel",
     rustSymbols: ["gfx950_qwen_ngram_gather_v1"],
-    rustExcerptSha256: "1ef0490edaf92a38ea77417654c187988b53d0281446f8e42e7dcdb2a1c3621d",
-    referenceSymbols: ["ngram_reference"],
-    referenceExcerptSha256: "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1",
+    rustExcerptSha256:
+      "2198e9600947462ba7a0fd25c730313041e7b80ca0d6a13f4d88da8ca86acf01",
+    referenceSymbols: ["ngram_reference", "batched_ngram_reference"],
+    referenceExcerptSha256:
+      "a15572e565a090dba9169056ede64caf7186815a48c618985f1f95bb129f51de",
     hipSymbols: ["gfx950_qwen_ngram_gather"],
     fixedShape:
-      "eight queries, three tokens per N-gram, 16 table slots, integer table-value output",
+      "WG256/grid4 with 16 independent Wave64 batches; each batch has eight queries, three-token N-grams, and 16 table slots",
     isaRequirements: [
       "gfx950_qwen_ngram_gather symbol is present",
       "gfx942 compilation is rejected for the complete suite",
     ],
     observedResults: [
-      "hits=4",
-      "misses=4",
-      "deterministic duplicate-key tie value=4242",
+      "MI350 WG256/grid4 gather: 128 integer outputs exact",
+      "nonuniform batch-local tables cover hits, misses, collisions, duplicate priority, and lower-slot ties",
     ],
-    prerequisites: ["Hash tables", "Indexed gathers", "Integer overflow checks", "Deterministic tie-breaking"],
+    prerequisites: [
+      "Hash tables",
+      "Indexed gathers",
+      "Integer overflow checks",
+      "Deterministic tie-breaking",
+    ],
     objectives: [
       "Bound N-gram construction and table addressing without unchecked integer overflow.",
       "Define lookup miss, hash collision, exact key comparison, and priority tie behavior.",
+      "Index queries and all table arrays from the global Wave64 batch while preserving one-writer output ownership.",
       "Keep the current integer table-value output distinct from a future embedding-vector gather.",
     ],
-    narratives: ["gfx950-ngram-embedding-gather/gather-contract", "gfx950-ngram-embedding-gather/scope-evidence"],
+    narratives: [
+      "gfx950-ngram-embedding-gather/gather-contract",
+      "gfx950-ngram-embedding-gather/scope-evidence",
+    ],
     obligations: [
       "token-window and N-gram identifier arithmetic cannot overflow its admitted integer type",
       "every resolved table row is in range or follows an explicit miss policy",
       "collisions and repeated identifiers have deterministic semantics",
       "the best matching slot returns exactly one integer table value, with -1 for a miss",
+      "all 16 wave batches read batch-local tables and write disjoint eight-value result slices",
     ],
     diagram: "indexing",
     exercise: {
-      prompt: "Add hash-collision, repeated-key, priority-tie, and lookup-miss oracle cases.",
+      prompt:
+        "Add hash-collision, repeated-key, priority-tie, and lookup-miss oracle cases.",
       hint: "Make exact-key matching, priority ties, and the -1 miss value explicit before returning a table value.",
-      acceptance: "Every query has one declared integer result and every table read is in range.",
+      acceptance:
+        "Every query has one declared integer result and every table read is in range.",
     },
-    glossary: ["gfx950", "N-gram", "hash-table gather", "lookup miss", "gather contract"],
+    glossary: [
+      "gfx950",
+      "N-gram",
+      "hash-table gather",
+      "lookup miss",
+      "gather contract",
+    ],
   }),
   lesson({
     id: "gfx950-muon-optimizer",
     order: 8,
     title: "gfx950 Muon polar update",
     summary:
-      "Reduce two fixed gradient shards, normalize one 4 x 4 matrix, run five polar iterations, and emit a scaled update.",
+      "Run 16 independent batch-local 4 x 4 Muon updates and shard copies across WG256/grid4.",
     duration: "50 min",
     bundle: "systems",
-    sourceRole: "Muon gradient staging, shard reduction, polar iteration, and update teaching kernels",
-    rustSymbols: ["gfx950_stage_gradient_shard_v1", "gfx950_muon_update_4x4_v1"],
-    rustExcerptSha256: "58e17e63a3a539c143c30e56997bfdd811d7c9dd8a3ae643c71976b194c64b43",
-    referenceSymbols: ["muon_reference"],
-    referenceExcerptSha256: "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af",
+    sourceRole:
+      "Muon gradient staging, shard reduction, polar iteration, and update teaching kernels",
+    rustSymbols: [
+      "gfx950_stage_gradient_shard_v1",
+      "gfx950_muon_update_4x4_v1",
+    ],
+    rustExcerptSha256:
+      "8dc1f8ca6a88cd0b57a97bbd567c8c4cdb5b852de3c901ff28bad258d8837c27",
+    referenceSymbols: ["muon_reference", "batched_muon_reference"],
+    referenceExcerptSha256:
+      "d43c796135a06d777cd4189267ff0a9fc6fa37ff94c4c04273820a5bfcdfc24f",
     hipSymbols: ["gfx950_stage_gradient_shard", "gfx950_muon_update"],
     fixedShape:
-      "two gradient shards reduced in rank order into one 4 x 4 FP32 matrix; five polar iterations; learning-rate scale 0.05",
+      "WG256/grid4 with 16 independent Wave64 matrices; two gradient shards per batch, five polar iterations, and learning-rate scale 0.05",
     isaRequirements: [
       "gfx950_stage_gradient_shard and gfx950_muon_update symbols are present",
       "gfx942 compilation is rejected for the complete suite",
     ],
     observedResults: [
-      "staged shard max_error=0",
-      "polar update max_error=4.65661e-09",
-      "reduced norm max_error=0 with norm=0.614919",
-      "mode=two-device-host-staged",
+      "MI350 WG256/grid4 staged shard: two plans x 256 outputs, max_error=0 for both",
+      "MI350 WG256/grid4 polar update: 256 outputs, max_error=7.450580597e-9",
+      "MI350 WG256/grid4 reduced norms: 16 outputs, max_error=5.960464478e-8",
     ],
-    prerequisites: ["Matrix norms", "Shard reduction", "Iterative matrix transforms", "FP32 accumulation"],
+    prerequisites: [
+      "Matrix norms",
+      "Shard reduction",
+      "Iterative matrix transforms",
+      "FP32 accumulation",
+    ],
     objectives: [
       "State the exact fixed matrix shape, shard order, iteration count, and update order.",
       "Track working precision and normalization through the bounded orthogonalization loop.",
+      "Derive one matrix batch from global Wave64 identity so shuffle collectives stay wave local and writes remain disjoint.",
       "Separate a single optimizer-step oracle from convergence or training-quality claims.",
     ],
-    narratives: ["gfx950-muon-optimizer/update-contract", "gfx950-muon-optimizer/scope-evidence"],
+    narratives: [
+      "gfx950-muon-optimizer/update-contract",
+      "gfx950-muon-optimizer/scope-evidence",
+    ],
     obligations: [
       "the two shards are reduced in fixed rank order before normalization",
       "normalization handles the source-declared zero and non-finite policies",
       "the orthogonalization loop executes the exact fixed iteration count in source order",
       "all 16 update elements and the reduced norm receive one final in-range store",
+      "all 16 wave batches consume distinct shard pairs and write disjoint update/norm slices",
     ],
     diagram: "gemm",
     exercise: {
       prompt: "Add zero-gradient and one bounded nonzero-matrix oracle cases.",
       hint: "Record the normalization policy before applying the fixed orthogonalization iterations.",
-      acceptance: "The cases pin the reduced norm and 16 update outputs without making convergence, throughput, or model-quality claims.",
+      acceptance:
+        "The cases pin the reduced norm and 16 update outputs without making convergence, throughput, or model-quality claims.",
     },
-    glossary: ["gfx950", "Muon", "polar iteration", "gradient shard", "optimizer update"],
+    glossary: [
+      "gfx950",
+      "Muon",
+      "polar iteration",
+      "gradient shard",
+      "optimizer update",
+    ],
   }),
   gptOssMegakernelLesson,
 ];

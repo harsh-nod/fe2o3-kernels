@@ -5,10 +5,26 @@ import { evidenceCatalog } from "../src/content/evidence-catalog";
 describe("evidence source digest scopes", () => {
   it("classifies displayed tab excerpts separately from whole files", () => {
     const expected = [
-      ["gfx950-fp4-gemm: Rust kernel", "gfx950_fp4_gemm_rust", "0a4a3d325d588ddad15697aa58f0e354cd9af20ae83f441432bd1489965fecad"],
-      ["gfx950-fp8-gemm: Rust kernel", "gfx950_fp8_gemm_rust", "004ad607c55169f7f3291ea4cd74afc63e937877ec84efacf5b731f99248b9fd"],
-      ["gfx950-fp4-attention: Rust kernel", "gfx950_fp4_attention_rust", "2e5adea75d61f9524f1f9ee9d0f00fa9c8e4a0fac3d1ebc2d8c49401b1797a96"],
-      ["gfx950-fp8-attention: Rust kernel", "gfx950_fp8_attention_rust", "c926d59ea1746895f406b72d3e343c38d2b240faec4c0654675dec6e8e05b738"],
+      [
+        "gfx950-fp4-gemm: Rust kernel",
+        "gfx950_fp4_gemm_rust",
+        "c6a00cb6e0df1e38563641bbc533a5725bf7a09d72bc8f50932c8b4c7b966616",
+      ],
+      [
+        "gfx950-fp8-gemm: Rust kernel",
+        "gfx950_fp8_gemm_rust",
+        "0b05a0508c4970a64bed8fcb9c98341242076098aac56e6c3a4ca5ebb36c5055",
+      ],
+      [
+        "gfx950-fp4-attention: Rust kernel",
+        "gfx950_fp4_attention_rust",
+        "f9a94dfe597a4a48271ca15bee859467540e43b29d2b5ae9d95c91a065015a49",
+      ],
+      [
+        "gfx950-fp8-attention: Rust kernel",
+        "gfx950_fp8_attention_rust",
+        "f48050d4a711f4df78216c9414c6edac2ee3fed584be9d7755fb58076a566c5c",
+      ],
     ] as const;
 
     for (const [label, symbol, displayedSha256] of expected) {
@@ -16,7 +32,7 @@ describe("evidence source digest scopes", () => {
         (candidate) => candidate.label === label,
       );
 
-      expect(source?.commit).toBe("c1383e97db732f9f1ff8105f10d5c2b5971143e1");
+      expect(source?.commit).toBe("65ddfd76c4fe276dedcb5046d592d50b4bf921ac");
       expect(source?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
       );
@@ -48,8 +64,9 @@ describe("evidence source digest scopes", () => {
   });
 
   it("catalogs every deterministic profiler import projection", () => {
-    const profilerArtifacts = evidenceCatalog.localArtifacts.filter((artifact) =>
-      artifact.path.startsWith("examples/profiler_dispatch_import_v1/"),
+    const profilerArtifacts = evidenceCatalog.localArtifacts.filter(
+      (artifact) =>
+        artifact.path.startsWith("examples/profiler_dispatch_import_v1/"),
     );
 
     expect(profilerArtifacts).toHaveLength(7);
@@ -62,11 +79,15 @@ describe("evidence source digest scopes", () => {
       "examples/profiler_dispatch_import_v1/agent-requests.jsonl",
       "examples/profiler_dispatch_import_v1/agent-responses.jsonl",
     ]);
-    expect(profilerArtifacts.every((artifact) => /^[0-9a-f]{64}$/u.test(artifact.sha256)))
-      .toBe(true);
+    expect(
+      profilerArtifacts.every((artifact) =>
+        /^[0-9a-f]{64}$/u.test(artifact.sha256),
+      ),
+    ).toBe(true);
 
     const compilerEvidence = evidenceCatalog.gitObjects.find(
-      (object) => object.label === "in-process profiler dispatch import milestone",
+      (object) =>
+        object.label === "in-process profiler dispatch import milestone",
     );
     expect(compilerEvidence).toMatchObject({
       commit: "a5438d82203eeb223b4ff8aa25ea6581b1f1af81",

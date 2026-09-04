@@ -35,34 +35,41 @@ describe("application shell", () => {
   it("makes the launch learning paths the primary overview action", async () => {
     renderApp("/");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "fe2o3 kernels",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "fe2o3 kernels",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Start tutorial/ })).toHaveAttribute(
-      "href",
-      "/getting-started",
-    );
+    expect(
+      screen.getByRole("link", { name: /Start tutorial/ }),
+    ).toHaveAttribute("href", "/getting-started");
     expect(screen.getByRole("link", { name: /Run today/ })).toHaveAttribute(
       "href",
       "/#run-today",
     );
     expect(
-      screen.getAllByRole("link", { name: /Operator cookbook/ })
+      screen
+        .getAllByRole("link", { name: /Operator cookbook/ })
         .some((link) => link.getAttribute("href") === "/operators"),
     ).toBe(true);
     expect(
-      screen.getAllByRole("link", { name: /Semantic equivalence/ })
+      screen
+        .getAllByRole("link", { name: /Semantic equivalence/ })
         .some((link) => link.getAttribute("href") === "/semantic-equivalence"),
     ).toBe(true);
     const runTodayTable = screen.getByRole("table", {
       name: "What can I run today",
     });
     expect(runTodayTable).toBeInTheDocument();
-    const kdaRunLink = screen.getAllByRole("link", {
+    const kdaRunLink = screen
+      .getAllByRole("link", {
         name: "gfx950 Kimi Delta Attention decode and chunkwise prefill",
-      }).find((link) => runTodayTable.contains(link));
+      })
+      .find((link) => runTodayTable.contains(link));
     expect(kdaRunLink).toHaveAttribute(
       "href",
       "/lesson/gfx950-kda-gdn-linear-attention",
@@ -72,8 +79,9 @@ describe("application shell", () => {
     expect(
       screen.getByRole("heading", { name: "What the evidence pin enforces" }),
     ).toBeInTheDocument();
-    expect(screen.getByText(`evidence pin ${currentState.compilerShortCommit}`))
-      .toBeInTheDocument();
+    expect(
+      screen.getByText(`evidence pin ${currentState.compilerShortCommit}`),
+    ).toBeInTheDocument();
     expect(screen.queryByText(/compiler main/u)).not.toBeInTheDocument();
     expect(screen.getByText("Run something first")).toBeInTheDocument();
   }, 20_000);
@@ -82,10 +90,14 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderHashApp("#/lesson/read-the-evidence?view=source");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "How to read this guide",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "How to read this guide",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
 
     const main = document.getElementById("main-content");
@@ -116,10 +128,14 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderHashApp("#/start?audience=operator");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "fe2o3 kernels",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "fe2o3 kernels",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
 
     const runTodayLink = screen.getByRole("link", { name: /Run today/ });
@@ -134,9 +150,7 @@ describe("application shell", () => {
     const runToday = document.getElementById("run-today");
     expect(runToday).not.toBeNull();
     await waitFor(() => {
-      expect(window.location.hash).toBe(
-        "#/start?audience=operator#run-today",
-      );
+      expect(window.location.hash).toBe("#/start?audience=operator#run-today");
       expect(runToday).toHaveFocus();
     });
     expect(
@@ -148,10 +162,14 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderHashApp("#/operators?status=current");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "Operator cookbook",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "Operator cookbook",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
 
     const index = document.querySelector(".operator-index");
@@ -159,10 +177,7 @@ describe("application shell", () => {
     const fillLink = within(index as HTMLElement).getByRole("link", {
       name: /^Fill/u,
     });
-    expect(fillLink).toHaveAttribute(
-      "href",
-      "#/operators?status=current#fill",
-    );
+    expect(fillLink).toHaveAttribute("href", "#/operators?status=current#fill");
     fillLink.focus();
     await user.keyboard("{Enter}");
 
@@ -180,18 +195,28 @@ describe("application shell", () => {
   it("renders the operator cookbook route", async () => {
     renderApp("/operators");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "Operator cookbook",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "Operator cookbook",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getAllByText("Kimi Delta Attention Decode/Prefill").length,
     ).toBeGreaterThan(0);
     expect(screen.getAllByText("Sparse Attention").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("DeepSeek sparse attention").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("GPT-OSS-120B Layer-Tile Megakernel").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Functional reference gate").length).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("DeepSeek sparse attention").length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("GPT-OSS-120B Layer-Tile Megakernel").length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getAllByText("Functional reference gate").length,
+    ).toBeGreaterThan(0);
     expect(screen.getAllByText("Runtime CPU oracle").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Runner paths").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Evidence paths").length).toBeGreaterThan(0);
@@ -203,19 +228,25 @@ describe("application shell", () => {
       .getByRole("heading", { level: 3, name: "Fill" })
       .closest("article");
     expect(fill).not.toBeNull();
-    expect(within(fill!).getByRole("link", { name: "examples/fill/src/lib.rs" }))
-      .toHaveAttribute("href", currentSourceUrl("examples/fill/src/lib.rs"));
-    expect(within(fill!).getByText("bash scripts/quickstart.sh no-gpu"))
-      .toBeInTheDocument();
+    expect(
+      within(fill!).getByRole("link", { name: "examples/fill/src/lib.rs" }),
+    ).toHaveAttribute("href", currentSourceUrl("examples/fill/src/lib.rs"));
+    expect(
+      within(fill!).getByText("bash scripts/quickstart.sh no-gpu"),
+    ).toBeInTheDocument();
 
     const vecadd = screen
       .getByRole("heading", { level: 3, name: "Vecadd" })
       .closest("article");
     expect(vecadd).not.toBeNull();
-    expect(within(vecadd!).getByText(
-      "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
-    )).toBeInTheDocument();
-    expect(within(vecadd!).getByText(/remains fail closed/u)).toBeInTheDocument();
+    expect(
+      within(vecadd!).getByText(
+        "bash scripts/quickstart.sh source-check examples/vecadd/Cargo.toml",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(vecadd!).getByText(/remains fail closed/u),
+    ).toBeInTheDocument();
 
     expect(
       screen.getByRole("link", { name: /Open compiler evidence pin/ }),
@@ -233,23 +264,33 @@ describe("application shell", () => {
         name: "Run a Rust kernel without a GPU",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("bash scripts/quickstart.sh no-gpu", { exact: false }))
-      .toBeInTheDocument();
-    expect(screen.getByText("git checkout --detach", { exact: false }))
-      .toBeInTheDocument();
-    expect(screen.getByLabelText("Debugger hierarchy and semantic state"))
-      .toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open the interactive simulator debugger/ }))
-      .toHaveAttribute("href", "/lesson/cpu-semantic-simulation");
+    expect(
+      screen.getByText("bash scripts/quickstart.sh no-gpu", { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("git checkout --detach", { exact: false }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Debugger hierarchy and semantic state"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", {
+        name: /Open the interactive simulator debugger/,
+      }),
+    ).toHaveAttribute("href", "/lesson/cpu-semantic-simulation");
   });
 
   it("renders the tutorial app as its first screen", async () => {
     renderApp();
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "How to read this guide",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "How to read this guide",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Curriculum")).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Kernel" })).toBeInTheDocument();
@@ -263,7 +304,9 @@ describe("application shell", () => {
         name: "Agent-native source/ISA inspection",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Exact authority-free archive")).toBeInTheDocument();
+    expect(
+      screen.getByText("Exact authority-free archive"),
+    ).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Capability" })).toHaveAttribute(
       "aria-selected",
       "true",
@@ -274,21 +317,40 @@ describe("application shell", () => {
   it("renders the semantic-equivalence worked example", async () => {
     renderApp("/semantic-equivalence");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "CPU reference to GPU kernel equivalence",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "CPU reference to GPU kernel equivalence",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
-    expect(screen.getByText("Worked example: Kimi Delta Attention decode and prefill")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Worked example: Kimi Delta Attention decode and prefill",
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText("Runtime oracles today")).toBeInTheDocument();
     expect(screen.getByRole("table")).toHaveTextContent("Bounded Recurrence");
     expect(screen.getByRole("table")).toHaveTextContent("Wave16 Collectives");
-    expect(screen.getByText(/KDA recurrence receipt is implemented and published/u)).toBeInTheDocument();
-    expect(screen.getByText(/Advanced gfx950 tutorials are runtime CPU-oracle checked today/u)).toBeInTheDocument();
-    expect(screen.getByText(/Unsupported loops, effects, barriers, or numerical operations/u)).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Open tutorial/ }),
-    ).toHaveAttribute("href", "/lesson/gfx950-kda-gdn-linear-attention");
+      screen.getByText(/KDA recurrence receipt is implemented and published/u),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Advanced gfx950 tutorials are runtime CPU-oracle checked today/u,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /Unsupported loops, effects, barriers, or numerical operations/u,
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open tutorial/ })).toHaveAttribute(
+      "href",
+      "/lesson/gfx950-kda-gdn-linear-attention",
+    );
     expect(
       screen.getByRole("link", { name: /Open operator contract/ }),
     ).toHaveAttribute("href", "/operators#kda-gdn");
@@ -302,19 +364,31 @@ describe("application shell", () => {
         name: "In-process profiler import",
       }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Synthetic import, bounded checkpoint qualified")).toBeInTheDocument();
+    expect(
+      screen.getByText("Synthetic import, bounded checkpoint qualified"),
+    ).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: "Installed JSON" })).toHaveAttribute(
       "aria-selected",
       "true",
     );
-    expect(screen.getByRole("tab", { name: "query capability" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("tab", { name: "query capability" }),
+    ).toBeInTheDocument();
   });
 
   it("persists completed lesson progress", async () => {
     const user = userEvent.setup();
     renderApp();
-    await user.click(await screen.findByRole("button", { name: "Mark complete" }, { timeout: 15_000 }));
-    expect(screen.getByRole("button", { name: "Completed" })).toBeInTheDocument();
+    await user.click(
+      await screen.findByRole(
+        "button",
+        { name: "Mark complete" },
+        { timeout: 15_000 },
+      ),
+    );
+    expect(
+      screen.getByRole("button", { name: "Completed" }),
+    ).toBeInTheDocument();
     expect(window.localStorage.getItem("fe2o3-kernels-progress-v2")).toContain(
       "read-the-evidence",
     );
@@ -324,9 +398,13 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderApp();
     await user.click(screen.getByRole("button", { name: /Search/ }));
-    const input = await screen.findByRole("combobox", {
-      name: "Search all lesson content",
-    }, { timeout: 15_000 });
+    const input = await screen.findByRole(
+      "combobox",
+      {
+        name: "Search all lesson content",
+      },
+      { timeout: 15_000 },
+    );
     await user.type(input, "flash attention");
     await user.click(
       screen.getByRole("option", {
@@ -346,10 +424,14 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderApp("/lesson/gfx950-fp4-attention");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "gfx950 FP4 flash attention",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "gfx950 FP4 flash attention",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
     expect(screen.getAllByText("GPU observed").length).toBeGreaterThan(0);
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
@@ -357,26 +439,28 @@ describe("application shell", () => {
     );
 
     await user.click(screen.getByRole("tab", { name: "Safe CPU reference" }));
-    expect(screen.getByRole("tabpanel")).toHaveTextContent("attention_reference");
-    await user.click(screen.getByRole("tab", { name: "Equivalent HIP" }));
-    expect(screen.getByRole("tabpanel")).toHaveTextContent("gfx950_fp4_flash_attention");
-    await user.click(screen.getByRole("tab", { name: "Run and inspect" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "ds_read_b64_tr_b4",
+      "attention_reference",
     );
+    await user.click(screen.getByRole("tab", { name: "Equivalent HIP" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "gfx950_fp4_flash_attention",
+    );
+    await user.click(screen.getByRole("tab", { name: "Run and inspect" }));
+    expect(screen.getByRole("tabpanel")).toHaveTextContent("ds_read_b64_tr_b4");
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "v_mfma_f32_16x16x128_f8f6f4",
     );
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Compiler-derived binding: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
+      "Compiler-derived binding: 84784601f60af13beafd467edd5bb86f872e3aa9d48e1ad5e8c84e1452dd13a1",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Rust-produced HSACO SHA-256: 90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
+      "Rust-produced HSACO SHA-256: cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "Rust numerical result: max_absolute_error=2.235174179e-8",
+      "Rust numerical result: 4,096 outputs; max_absolute_error=1.192092896e-7",
     );
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "SEPARATE COMPARISON-ONLY HIP LANE",
@@ -387,10 +471,14 @@ describe("application shell", () => {
     const user = userEvent.setup();
     renderApp("/lesson/gfx950-muon-optimizer");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "gfx950 Muon polar update",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "gfx950 Muon polar update",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
     expect(
       screen.getAllByText(/^(?:Source example|GPU observed)$/u).length,
@@ -398,8 +486,12 @@ describe("application shell", () => {
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
       "gfx950_stage_gradient_shard_v1",
     );
-    expect(screen.getByRole("tabpanel")).toHaveTextContent("gfx950_muon_update_4x4_v1");
-    expect(screen.getByText("Fixed-shape teaching boundary")).toBeInTheDocument();
+    expect(screen.getByRole("tabpanel")).toHaveTextContent(
+      "gfx950_muon_update_4x4_v1",
+    );
+    expect(
+      screen.getByText("Fixed-shape teaching boundary"),
+    ).toBeInTheDocument();
 
     await user.click(screen.getByRole("tab", { name: "Evidence record" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
@@ -455,7 +547,7 @@ describe("application shell", () => {
     );
     await user.click(screen.getByRole("tab", { name: "Host" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
-      "name: \"single-column\"",
+      'name: "single-column"',
     );
     await user.click(screen.getByRole("tab", { name: "Expected result" }));
     expect(screen.getByRole("tabpanel")).toHaveTextContent(
@@ -469,54 +561,82 @@ describe("application shell", () => {
   it("shows public and candidate kernel delivery states separately", async () => {
     renderApp("/status");
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "Kernel delivery and verification progress",
-      }, { timeout: 15_000 }),
+      await screen.findByRole(
+        "heading",
+        {
+          level: 1,
+          name: "Kernel delivery and verification progress",
+        },
+        { timeout: 15_000 },
+      ),
     ).toBeInTheDocument();
-    expect(screen.getByRole("table", { name: "Kernel implementation status" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("table", { name: "Kernel implementation status" }),
+    ).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
-    expect(document.querySelector(".pin-summary")).toHaveTextContent("308d8fa00f");
+    expect(document.querySelector(".pin-summary")).toHaveTextContent(
+      "308d8fa00f",
+    );
     expect(
       screen.getByText(/This site build is valid only after/),
     ).toHaveTextContent(
       "publication workflow verifies that harsh-nod/fe2o3 and powderluv/fe2o3 refs/heads/main both contain",
     );
-    expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "The ancestry, commit, and tree are all required",
-    );
-    expect(screen.getByText(/This site build is valid only after/)).toHaveTextContent(
-      "aee01674fefa733731db35eae1a1705b3286179e",
-    );
+    expect(
+      screen.getByText(/This site build is valid only after/),
+    ).toHaveTextContent("The ancestry, commit, and tree are all required");
+    expect(
+      screen.getByText(/This site build is valid only after/),
+    ).toHaveTextContent("aee01674fefa733731db35eae1a1705b3286179e");
     expect(
       screen.getByText("Published implementation snapshot (publication gated)"),
     ).toBeInTheDocument();
     const compilerRefactor = screen
       .getByText("Pliron ownership and device identity at 2f7c4fd1d")
       .closest("article");
-    expect(compilerRefactor).toHaveTextContent("2610651306ea3ba670f68d5d8b1e1159bcd521ed");
-    expect(compilerRefactor).toHaveTextContent("PassPlan is bounded and non-executing");
-    expect(compilerRefactor).toHaveTextContent("Issues #134, #135, and #140 remain open");
+    expect(compilerRefactor).toHaveTextContent(
+      "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
+    );
+    expect(compilerRefactor).toHaveTextContent(
+      "PassPlan is bounded and non-executing",
+    );
+    expect(compilerRefactor).toHaveTextContent(
+      "Issues #134, #135, and #140 remain open",
+    );
     expect(compilerRefactor).toHaveTextContent("run/verify/evidence gate");
-    expect(compilerRefactor).toHaveTextContent("opaque KIR bridge preserves canonical V1-V5 bytes");
-    expect(compilerRefactor).toHaveTextContent("not a second KIR serialization or semantic lowering");
-    expect(compilerRefactor).toHaveTextContent("detached context-bound services");
+    expect(compilerRefactor).toHaveTextContent(
+      "opaque KIR bridge preserves canonical V1-V5 bytes",
+    );
+    expect(compilerRefactor).toHaveTextContent(
+      "not a second KIR serialization or semantic lowering",
+    );
+    expect(compilerRefactor).toHaveTextContent(
+      "detached context-bound services",
+    );
     expect(compilerRefactor).toHaveTextContent("typed terminal errors");
-    expect(compilerRefactor).toHaveTextContent("no fallback and no result after failure");
+    expect(compilerRefactor).toHaveTextContent(
+      "no fallback and no result after failure",
+    );
     expect(compilerRefactor).toHaveTextContent("no COMGR or pliron-llvm path");
     expect(compilerRefactor).toHaveTextContent("checked MI300X identity");
     expect(compilerRefactor).toHaveTextContent("does not detect GPU reset");
-    expect(screen.getByText("Worker V2 ACK harness isolation").closest("article")).toHaveTextContent(
-      "test-harness determinism repair only",
-    );
-    expect(screen.getByText("Row-softmax ordinary attributed source").closest("article")).toHaveTextContent(
-      "Complete syn AST structural admission",
-    );
-    expect(screen.getByText("Durable broker prepared-session foundation").closest("article")).toHaveTextContent(
-      "AUTHORITY=none",
-    );
-    expect(screen.getByText("Deterministic generic CI sharding").closest("article")).toHaveTextContent(
+    expect(
+      screen.getByText("Worker V2 ACK harness isolation").closest("article"),
+    ).toHaveTextContent("test-harness determinism repair only");
+    expect(
+      screen
+        .getByText("Row-softmax ordinary attributed source")
+        .closest("article"),
+    ).toHaveTextContent("Complete syn AST structural admission");
+    expect(
+      screen
+        .getByText("Durable broker prepared-session foundation")
+        .closest("article"),
+    ).toHaveTextContent("AUTHORITY=none");
+    expect(
+      screen.getByText("Deterministic generic CI sharding").closest("article"),
+    ).toHaveTextContent(
       "the complete powderluv/fe2o3 GitHub-hosted generic run",
     );
     const w0Heading = screen.getByText(
@@ -539,30 +659,43 @@ describe("application shell", () => {
       "gfx942 Wave64 bounded source-model/KIR correspondence",
     );
     const wave64Card = wave64Heading.closest("article");
-    expect(wave64Card).toHaveTextContent("4,359 deterministic mask observations");
-    expect(wave64Card).toHaveTextContent("38 tests with one existing hardware test ignored");
+    expect(wave64Card).toHaveTextContent(
+      "4,359 deterministic mask observations",
+    );
+    expect(wave64Card).toHaveTextContent(
+      "38 tests with one existing hardware test ignored",
+    );
     expect(wave64Card).toHaveTextContent("22 positive obligations");
     expect(wave64Card).toHaveTextContent("no source-to-model correspondence");
     expect(wave64Card).toHaveTextContent("parity authority");
     const sourceCorrespondenceHeading = screen.getByText(
       "Wave64 reviewed attributed-source structural correspondence",
     );
-    const sourceCorrespondenceCard = sourceCorrespondenceHeading.closest("article");
+    const sourceCorrespondenceCard =
+      sourceCorrespondenceHeading.closest("article");
     expect(sourceCorrespondenceCard).toHaveTextContent("exact syn AST gate");
     expect(sourceCorrespondenceCard).toHaveTextContent("17,436 observations");
-    expect(sourceCorrespondenceCard).toHaveTextContent("13 positive obligations");
+    expect(sourceCorrespondenceCard).toHaveTextContent(
+      "13 positive obligations",
+    );
     expect(sourceCorrespondenceCard).toHaveTextContent(
       "proves_source_to_model_refinement=false",
     );
-    expect(sourceCorrespondenceCard).toHaveTextContent("model-internal/definitional");
+    expect(sourceCorrespondenceCard).toHaveTextContent(
+      "model-internal/definitional",
+    );
     expect(sourceCorrespondenceCard).toHaveTextContent("parity authority");
     const serviceHeading = screen.getByText(
       "Inert protected-service descriptor admission",
     );
     const serviceCard = serviceHeading.closest("article");
     expect(serviceCard).toHaveTextContent("AUTHORITY=none");
-    expect(serviceCard).toHaveTextContent("27 unit tests and two compile-fail doctests");
-    expect(serviceCard).toHaveTextContent("two privileged/root-only positive tests remain ignored");
+    expect(serviceCard).toHaveTextContent(
+      "27 unit tests and two compile-fail doctests",
+    );
+    expect(serviceCard).toHaveTextContent(
+      "two privileged/root-only positive tests remain ignored",
+    );
     expect(serviceCard).toHaveTextContent("no client liveness");
     expect(serviceCard).toHaveTextContent("no storage or anti-rollback");
     expect(serviceCard).toHaveTextContent("changes no parity status");
@@ -579,8 +712,12 @@ describe("application shell", () => {
       "db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52",
     );
     expect(preexecCard).toHaveTextContent("preattached ptrace tracer");
-    expect(preexecCard).toHaveTextContent("inherited seccomp user notification");
-    expect(preexecCard).toHaveTextContent("ordinary target exec resets dumpability");
+    expect(preexecCard).toHaveTextContent(
+      "inherited seccomp user notification",
+    );
+    expect(preexecCard).toHaveTextContent(
+      "ordinary target exec resets dumpability",
+    );
     expect(preexecCard).toHaveTextContent("parity authority");
     const rejectedHeading = screen.getByText(
       "Rejected W0-B static host-link candidate",
@@ -589,10 +726,16 @@ describe("application shell", () => {
     expect(rejectedCard).toBeInTheDocument();
     expect(rejectedCard).toHaveTextContent("rejected");
     expect(rejectedCard).toHaveTextContent("executed zero Workers");
-    expect(rejectedCard).toHaveTextContent("descriptor-backed HostLinkClosureV1");
-    expect(rejectedCard).toHaveTextContent("W1 is authenticated broker cargo-fe2o3 executable identity");
+    expect(rejectedCard).toHaveTextContent(
+      "descriptor-backed HostLinkClosureV1",
+    );
+    expect(rejectedCard).toHaveTextContent(
+      "W1 is authenticated broker cargo-fe2o3 executable identity",
+    );
     expect(rejectedCard).toHaveTextContent("in-process host LLD is deferred");
-    expect(screen.getByText("Formal evidence isolation V11")).toBeInTheDocument();
+    expect(
+      screen.getByText("Formal evidence isolation V11"),
+    ).toBeInTheDocument();
     const candidateHeading = screen.getByText(
       "MoE expert bounded V2 integrated checkpoint",
     );
@@ -615,9 +758,9 @@ describe("application shell", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
-    const productionRoute = screen.getByText("Unified production route").closest(
-      ".architecture-row",
-    );
+    const productionRoute = screen
+      .getByText("Unified production route")
+      .closest(".architecture-row");
     expect(productionRoute).toHaveTextContent(
       "standalone AMDGCN/PLIRON-to-LLVM and KIR/PLIRON bridge packages have been deleted",
     );

@@ -202,30 +202,32 @@ describe("community getting started tutorial", () => {
       compilerCommitAuthority: "config/publication-gate.json#requiredCommit",
       fixture: {
         path: "examples/getting_started_v1/expected-projection.json",
-        sha256: "b23169971701a37a9cf0a1f06eb41f3a461f334e3114c6915c119f5e579b5940",
+        sha256:
+          "b23169971701a37a9cf0a1f06eb41f3a461f334e3114c6915c119f5e579b5940",
       },
       cargoChildEnvironment: {
         FE2O3_HIP_SYS_DISABLE: "1",
         FE2O3_HSA_RUNTIME_DISABLE: "1",
       },
     });
-    expect(gettingStartedBinding.compilerSourceBindings.map(({ path }) => path))
-      .toEqual([
-        "scripts/quickstart.sh",
-        "scripts/tests/quickstart.sh",
-        "scripts/quickstart/fill-request.json",
-        "examples/fill/src/lib.rs",
-        "crates/cargo-fe2o3/src/doctor.rs",
-        "crates/fe2o3-debug-cli/README.md",
-        "Cargo.toml",
-        "crates/cargo-fe2o3/tests/production_dependency_closure.rs",
-        "crates/fe2o3-host/Cargo.toml",
-        "crates/fe2o3-host/src/lib.rs",
-        "crates/fe2o3-host/src/generated_kfd_arguments.rs",
-        "crates/fe2o3-host/src/production_application.rs",
-        "crates/fe2o3-macros/src/lib.rs",
-        "examples/vecadd/src/main.rs",
-      ]);
+    expect(
+      gettingStartedBinding.compilerSourceBindings.map(({ path }) => path),
+    ).toEqual([
+      "scripts/quickstart.sh",
+      "scripts/tests/quickstart.sh",
+      "scripts/quickstart/fill-request.json",
+      "examples/fill/src/lib.rs",
+      "crates/cargo-fe2o3/src/doctor.rs",
+      "crates/fe2o3-debug-cli/README.md",
+      "Cargo.toml",
+      "crates/cargo-fe2o3/tests/production_dependency_closure.rs",
+      "crates/fe2o3-host/Cargo.toml",
+      "crates/fe2o3-host/src/lib.rs",
+      "crates/fe2o3-host/src/generated_kfd_arguments.rs",
+      "crates/fe2o3-host/src/production_application.rs",
+      "crates/fe2o3-macros/src/lib.rs",
+      "examples/vecadd/src/main.rs",
+    ]);
     const vecaddBinding = gettingStartedBinding.compilerSourceBindings.find(
       ({ path }) => path === "examples/vecadd/src/main.rs",
     );
@@ -273,11 +275,9 @@ describe("agent-native source/ISA inspection milestone", () => {
         .digest("hex"),
     ).toBe(sourceIsaAgentMilestone.fixtureSha256);
     expect(sourceIsaAgentRequests).toHaveLength(3);
-    expect(sourceIsaAgentResponses.map((response) => response.response_revision)).toEqual([
-      1,
-      2,
-      3,
-    ]);
+    expect(
+      sourceIsaAgentResponses.map((response) => response.response_revision),
+    ).toEqual([1, 2, 3]);
     expect(sourceIsaAgentResponses[1]).toMatchObject({
       status: "ok",
       result: {
@@ -302,7 +302,8 @@ describe("agent-native source/ISA inspection milestone", () => {
     expect(sourceIsaAgentSources).toHaveLength(5);
     expect(
       evidenceCatalog.gitObjects.find(
-        (object) => object.label === "agent-native source/ISA inspection milestone",
+        (object) =>
+          object.label === "agent-native source/ISA inspection milestone",
       ),
     ).toMatchObject({
       commit: sourceIsaAgentMilestone.compilerCommit,
@@ -318,8 +319,10 @@ describe("agent-native source/ISA inspection milestone", () => {
       compilerTree: "0233d541ffb8c2a573444eda76683bc4adca2cb9",
       fixtureKind: "synthetic-canonical-self-claimed-characteristic-archive",
       fixtureCanonicalBytes: 1424,
-      fixtureSha256: "ad395666f9a036a259ce6a8f6e47a568693dbfe1c923c3eb6bd062492627b3b4",
-      collectionIdentity: "5595821cf85ebc8cb5018f68a7ac07e938af0b4ed424e9f4039201581db23a7c",
+      fixtureSha256:
+        "ad395666f9a036a259ce6a8f6e47a568693dbfe1c923c3eb6bd062492627b3b4",
+      collectionIdentity:
+        "5595821cf85ebc8cb5018f68a7ac07e938af0b4ed424e9f4039201581db23a7c",
       synthetic: true,
       hardwareExecuted: false,
       archiveAuthenticated: false,
@@ -329,7 +332,9 @@ describe("agent-native source/ISA inspection milestone", () => {
       expectedPlaneCount: 4,
     });
     expect(sourceIsaCharacteristicFixtureReady).toBe(true);
-    expect(Buffer.from(sourceIsaCharacteristicCollectionHex, "hex")).toHaveLength(1424);
+    expect(
+      Buffer.from(sourceIsaCharacteristicCollectionHex, "hex"),
+    ).toHaveLength(1424);
     expect(
       createHash("sha256")
         .update(Buffer.from(sourceIsaCharacteristicCollectionHex, "hex"))
@@ -343,9 +348,14 @@ describe("agent-native source/ISA inspection milestone", () => {
       "Facts",
       "Intervals",
     ]);
-    expect(sourceIsaCharacteristicPlanes.every((plane) =>
-      plane.state === "available" && plane.request !== null && plane.response !== null
-    )).toBe(true);
+    expect(
+      sourceIsaCharacteristicPlanes.every(
+        (plane) =>
+          plane.state === "available" &&
+          plane.request !== null &&
+          plane.response !== null,
+      ),
+    ).toBe(true);
     expect(sourceIsaCharacteristicLineage.map((stage) => stage.label)).toEqual([
       "Source",
       "MIR",
@@ -355,9 +365,11 @@ describe("agent-native source/ISA inspection milestone", () => {
       "LLVM handoff",
       "Sparse ISA",
     ]);
-    expect(sourceIsaCharacteristicLineage.every((stage) =>
-      stage.status === "present" && stage.value !== null
-    )).toBe(true);
+    expect(
+      sourceIsaCharacteristicLineage.every(
+        (stage) => stage.status === "present" && stage.value !== null,
+      ),
+    ).toBe(true);
     expect(sourceIsaCharacteristicMemoryTarget).toMatchObject({
       kind: { label: "global_store", memory_form: { label: "plain" } },
       correlation_count: 2,
@@ -367,7 +379,11 @@ describe("agent-native source/ISA inspection milestone", () => {
       correlation_count: 0,
     });
     expect(sourceIsaCharacteristicDuplicateFacts).not.toBeNull();
-    expect(sourceIsaCharacteristicDuplicateFacts?.map((fact) => fact.occurrence_identity)).toEqual([
+    expect(
+      sourceIsaCharacteristicDuplicateFacts?.map(
+        (fact) => fact.occurrence_identity,
+      ),
+    ).toEqual([
       "d000c249aa034c3b7e13d51e7f63e52d12c6510329c8ee916426e19d89bb57c0",
       "23a201c5966c0b2d7338d26439356cbe14c08834ad4b0094f28b45f20038b3f6",
     ]);
@@ -378,16 +394,24 @@ describe("agent-native source/ISA inspection milestone", () => {
     expect(sourceIsaCharacteristicIntervals[0]?.identity).not.toBe(
       sourceIsaCharacteristicIntervals[1]?.identity,
     );
-    expect(sourceIsaCharacteristicResponses.every((response) => {
-      const result = response.result as { authority?: Record<string, unknown> };
-      return result.authority?.service_provenance === "canonical_self_claimed_archive" &&
-        result.authority.archive_authenticity_proved === false &&
-        result.authority.producer_evidence_authenticated === false &&
-        result.authority.hardware_observation_authority === false;
-    })).toBe(true);
+    expect(
+      sourceIsaCharacteristicResponses.every((response) => {
+        const result = response.result as {
+          authority?: Record<string, unknown>;
+        };
+        return (
+          result.authority?.service_provenance ===
+            "canonical_self_claimed_archive" &&
+          result.authority.archive_authenticity_proved === false &&
+          result.authority.producer_evidence_authenticated === false &&
+          result.authority.hardware_observation_authority === false
+        );
+      }),
+    ).toBe(true);
     expect(
       evidenceCatalog.gitObjects.find(
-        (object) => object.label === "source/ISA characteristic tutorial fixture",
+        (object) =>
+          object.label === "source/ISA characteristic tutorial fixture",
       ),
     ).toMatchObject({
       commit: sourceIsaCharacteristicMilestone.compilerCommit,
@@ -402,16 +426,12 @@ function serializedLessonContent(lessonId: string): string {
   return JSON.stringify({
     lesson,
     narratives: lesson?.sections.flatMap((section) =>
-      section.kind === "narrative"
-        ? [narrativeEntry(section.narrativeId)]
-        : [],
+      section.kind === "narrative" ? [narrativeEntry(section.narrativeId)] : [],
     ),
   });
 }
 
-function checkpointDetail(
-  checkpoint: unknown,
-): string {
+function checkpointDetail(checkpoint: unknown): string {
   return checkpoint ? developmentCheckpointDetail(checkpoint) : "";
 }
 
@@ -425,14 +445,10 @@ function expectAdvancedPerformanceContract(
   );
 
   const optimizations = [
-    ...code.matchAll(
-      /^OPTIMIZATION \[([a-z0-9][a-z0-9._-]*)\]:\s+(.+)$/gimu,
-    ),
+    ...code.matchAll(/^OPTIMIZATION \[([a-z0-9][a-z0-9._-]*)\]:\s+(.+)$/gimu),
   ];
   const impacts = [
-    ...code.matchAll(
-      /^IMPACT \[([a-z0-9][a-z0-9._-]*)\]:\s+(.+)$/gimu,
-    ),
+    ...code.matchAll(/^IMPACT \[([a-z0-9][a-z0-9._-]*)\]:\s+(.+)$/gimu),
   ];
   expect(
     optimizations.length,
@@ -445,10 +461,9 @@ function expectAdvancedPerformanceContract(
     new Set(optimizationIds).size,
     `${lessonId}: unique optimization IDs`,
   ).toBe(optimizationIds.length);
-  expect(
-    new Set(impactIds).size,
-    `${lessonId}: unique impact IDs`,
-  ).toBe(impactIds.length);
+  expect(new Set(impactIds).size, `${lessonId}: unique impact IDs`).toBe(
+    impactIds.length,
+  );
   expect(
     [...impactIds].sort(),
     `${lessonId}: one impact for every optimization`,
@@ -548,7 +563,9 @@ describe("debugger workbench content", () => {
     expect(debuggerWorkbenchProjection.source.protocol_responses_sha256).toBe(
       DEBUGGER_RESPONSES_SHA256,
     );
-    expect(validateDebuggerProtocolRequests(debuggerProtocolRequests)).toEqual([]);
+    expect(validateDebuggerProtocolRequests(debuggerProtocolRequests)).toEqual(
+      [],
+    );
     expect(debuggerProtocolRequests).toHaveLength(19);
     expect(debuggerWorkbenchFixture.session).toMatchObject({
       execution_kind: "cpu_kir_simulation",
@@ -559,16 +576,19 @@ describe("debugger workbench content", () => {
     });
     const serialized = JSON.stringify(debuggerWorkbenchProjection);
     expect(serialized).toContain("requires_authenticated_map");
-    expect(serialized).toContain("CPU KIR simulation does not expose hardware registers");
+    expect(serialized).toContain(
+      "CPU KIR simulation does not expose hardware registers",
+    );
     expect(serialized).toContain("allocation_relative_pointer");
-    expect(serialized).not.toMatch(/native_(?:address|pointer)|gpu_va|host_address/u);
+    expect(serialized).not.toMatch(
+      /native_(?:address|pointer)|gpu_va|host_address/u,
+    );
   });
 
   it("rejects unknown fixture keys through curriculum content validation", () => {
-    const extraTopLevel = structuredClone(debuggerWorkbenchProjection) as unknown as Record<
-      string,
-      unknown
-    >;
+    const extraTopLevel = structuredClone(
+      debuggerWorkbenchProjection,
+    ) as unknown as Record<string, unknown>;
     extraTopLevel.native_address = "0xdeadbeef";
     expect(validateDebuggerWorkbenchFixture(extraTopLevel)).toContain(
       "fixture must contain only the exact CLI projection keys",
@@ -579,7 +599,9 @@ describe("debugger workbench content", () => {
       ]),
     );
 
-    const extraEventField = structuredClone(debuggerWorkbenchProjection) as unknown as {
+    const extraEventField = structuredClone(
+      debuggerWorkbenchProjection,
+    ) as unknown as {
       events: { result: { events: Array<Record<string, unknown>> } };
     };
     extraEventField.events.result.events[0].native_registers = ["exec"];
@@ -601,7 +623,9 @@ describe("debugger workbench content", () => {
     expect(comparison).toContain("early access");
     expect(comparison).toContain("LLDB does not support Mojo GPU debugging");
     expect(comparison).toContain("complements");
-    expect(comparison).not.toMatch(/better than|replaces ROCgdb|replaces rocprof/iu);
+    expect(comparison).not.toMatch(
+      /better than|replaces ROCgdb|replaces rocprof/iu,
+    );
   });
 });
 
@@ -650,9 +674,10 @@ describe("live KFD debugger milestone", () => {
     ];
     expect(liveKfdSources.map((source) => source.path)).toEqual(sourcePaths);
     for (const source of liveKfdSources) {
-      const commit = "commit" in source
-        ? source.commit
-        : "ba0efc7f958e3afdf72eceeef1c37c2994fe2402";
+      const commit =
+        "commit" in source
+          ? source.commit
+          : "ba0efc7f958e3afdf72eceeef1c37c2994fe2402";
       expect(liveKfdSourceUrl(source.path, commit)).toBe(
         `https://github.com/harsh-nod/fe2o3/blob/${commit}/${source.path}`,
       );
@@ -809,8 +834,9 @@ describe("live KFD debugger milestone", () => {
     );
     expect(JSON.stringify(directKfd)).toContain("WaveRecordLayoutNotInKfdUapi");
     expect(directKfd.waveRows[0].cells).toHaveLength(64);
-    expect(directKfd.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
-      .toBe(true);
+    expect(
+      directKfd.waveRows[0].cells.every((cell) => cell.state === "unavailable"),
+    ).toBe(true);
     expect(directKfd.checkpoint?.segments).toEqual([
       { kind: "control_stack", bytes: 20 },
       { kind: "wave_state", bytes: 2_304 },
@@ -878,7 +904,9 @@ describe("live KFD debugger milestone", () => {
     expect(directKfd.checkpoint?.readContract).toContain(
       "not one coherent checkpoint instant",
     );
-    expect(directKfd.checkpoint?.custody).toContain("read-only /proc/<pid>/mem");
+    expect(directKfd.checkpoint?.custody).toContain(
+      "read-only /proc/<pid>/mem",
+    );
     expect(directKfd.checkpoint?.artifactBoundary).toContain(
       "does not authenticate the code-object bytes physically loaded or executed",
     );
@@ -897,8 +925,9 @@ describe("live KFD debugger milestone", () => {
         reason: "direct_kfd_target_did_not_produce_gpu_stop",
       },
     });
-    expect(rocgdb.waveRows[0].cells.every((cell) => cell.state === "unavailable"))
-      .toBe(true);
+    expect(
+      rocgdb.waveRows[0].cells.every((cell) => cell.state === "unavailable"),
+    ).toBe(true);
     expect(JSON.stringify(rocgdb.record)).toContain("same_stop_contract");
     expect(JSON.stringify(rocgdb.record)).toContain("pointer_like_locals");
     expect(rocgdb.scope).toContain("direct-KFD stop unavailable");
@@ -927,7 +956,8 @@ describe("live KFD debugger milestone", () => {
           "artifact",
         ],
         unrepresented: ["arguments", "input_content"],
-        artifact_identity: "separately_supplied_fixture_claim_available_and_exact",
+        artifact_identity:
+          "separately_supplied_fixture_claim_available_and_exact",
         ordinary_profile_recipe_artifact_identity: "unavailable",
         numeric_dimension: "dispatch_total_duration_ticks",
         pc_delta: {
@@ -948,7 +978,9 @@ describe("live KFD debugger milestone", () => {
       },
     });
     expect(
-      profiler.capabilities.find((capability) => capability.label === "Wait analysis"),
+      profiler.capabilities.find(
+        (capability) => capability.label === "Wait analysis",
+      ),
     ).toMatchObject({ state: "unavailable", origin: "unavailable" });
     expect(liveKfdCurrentImplementationPaths).toContain(
       "crates/fe2o3-semantic-query/src/profiler_query.rs",
@@ -959,10 +991,16 @@ describe("live KFD debugger milestone", () => {
     expect(liveKfdCurrentImplementationPaths).toContain(
       "crates/fe2o3-debug-cli/tests/live_kfd_v3_live.rs",
     );
-    expect(liveKfdUnsupported.join(" ")).toContain("directly launched process leader");
-    expect(liveKfdUnsupported.join(" ")).toContain("CPU or GPU performance prediction");
-    expect(liveKfdComparisonRows.find((row) => row.surface === "Agent interaction")?.fe2o3)
-      .toContain("Agent-native structured records");
+    expect(liveKfdUnsupported.join(" ")).toContain(
+      "directly launched process leader",
+    );
+    expect(liveKfdUnsupported.join(" ")).toContain(
+      "CPU or GPU performance prediction",
+    );
+    expect(
+      liveKfdComparisonRows.find((row) => row.surface === "Agent interaction")
+        ?.fe2o3,
+    ).toContain("Agent-native structured records");
   });
 });
 
@@ -974,13 +1012,15 @@ describe("in-process profiler dispatch import milestone", () => {
       status: "implemented-qualified-bounded-checkpoint",
       issue: 215,
       issueState: "open",
-      compilerRevision: "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
+      compilerRevision:
+        "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
       fixtureKind: "synthetic-deterministic-schematic-unexecuted",
       liveValidation: {
         host: "mi300x",
         machine: "MI300X",
         state: "bounded-importer-sealed-loader-qualified",
-        checkpointRevision: "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
+        checkpointRevision:
+          "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044",
         observed: [
           "sealed-route-validation",
           "target-mapping",
@@ -1015,7 +1055,9 @@ describe("in-process profiler dispatch import milestone", () => {
       ],
     });
 
-    const dialects = profilerImportDialectProjection.dialects as Array<Record<string, unknown>>;
+    const dialects = profilerImportDialectProjection.dialects as Array<
+      Record<string, unknown>
+    >;
     expect(dialects.map((dialect) => dialect.id)).toEqual([
       "rocprofv3_json_installed1_1_97f5574",
       "rocprofv3_json_forward_848868d",
@@ -1026,8 +1068,13 @@ describe("in-process profiler dispatch import milestone", () => {
     expect(csvHeaders[3]).toBe("Stream_Id");
     expect(csvHeaders[5]).toBe("Dispatch_Id");
 
-    const bindings = profilerImportDialectProjection.json_process_local_bindings as Array<Record<string, unknown>>;
-    expect(bindings.map((binding) => binding.opaque_agent_handle)).toEqual([7001, 7001]);
+    const bindings =
+      profilerImportDialectProjection.json_process_local_bindings as Array<
+        Record<string, unknown>
+      >;
+    expect(bindings.map((binding) => binding.opaque_agent_handle)).toEqual([
+      7001, 7001,
+    ]);
     expect(bindings.map((binding) => binding.direct_kfd_node)).toEqual([1, 2]);
     expect(bindings.map((binding) => binding.process_index)).toEqual([0, 1]);
 
@@ -1069,14 +1116,18 @@ describe("in-process profiler dispatch import milestone", () => {
       authority: completeFalseAuthority,
     });
     expect(profilerImportManifest).toContain("manifest-publication: last");
-    expect(profilerImportManifest).toContain("identity-labels: schematic-not-content-identities");
+    expect(profilerImportManifest).toContain(
+      "identity-labels: schematic-not-content-identities",
+    );
     expect(profilerImportRequests).toHaveLength(3);
     expect(
-      profilerImportRequests.every((request) =>
-        request.schema === "fe2o3-profiler-import-query-exercise-request-v1" &&
-        request.protocol_wire_record === false &&
-        request.production_service_available === false &&
-        request.exercise_kind === "deterministic_illustrative_non_wire"
+      profilerImportRequests.every(
+        (request) =>
+          request.schema ===
+            "fe2o3-profiler-import-query-exercise-request-v1" &&
+          request.protocol_wire_record === false &&
+          request.production_service_available === false &&
+          request.exercise_kind === "deterministic_illustrative_non_wire",
       ),
     ).toBe(true);
     expect(profilerImportResponses[0]).toMatchObject({
@@ -1087,9 +1138,12 @@ describe("in-process profiler dispatch import milestone", () => {
       status: "unavailable",
       truth_origin: "unavailable",
       production_service_available: false,
-      reason: "att_decoder_requires_mutable_directory_namespace_without_sealed_route",
+      reason:
+        "att_decoder_requires_mutable_directory_namespace_without_sealed_route",
     });
-    expect(profilerImportSourceUrl("crates/cargo-fe2o3/src/profile_command.rs")).toBe(
+    expect(
+      profilerImportSourceUrl("crates/cargo-fe2o3/src/profile_command.rs"),
+    ).toBe(
       "https://github.com/harsh-nod/fe2o3/blob/a5438d82203eeb223b4ff8aa25ea6581b1f1af81/crates/cargo-fe2o3/src/profile_command.rs",
     );
     expect(profilerImportSources.map((source) => source.path)).toEqual(
@@ -1134,7 +1188,9 @@ describe("in-process profiler dispatch import milestone", () => {
     ).toBe(
       "https://github.com/harsh-nod/fe2o3/blob/9a20c93871a652d1d50eba2f63ef92242c58b826/crates/fe2o3-semantic-query/src/profiler_variant_v3.rs",
     );
-    expect(() => profilerImportSourceUrl("../Cargo.toml")).toThrow("repository-relative");
+    expect(() => profilerImportSourceUrl("../Cargo.toml")).toThrow(
+      "repository-relative",
+    );
   });
 });
 
@@ -1234,7 +1290,9 @@ describe("debugger and simulator milestone content", () => {
     expect(debugSimSourceVariableFixture.raw.exportReceipt).toContain(
       "authenticates_compiler_execution=false",
     );
-    expect(debugSimSourceVariableFixture.raw.response).not.toContain("native_address");
+    expect(debugSimSourceVariableFixture.raw.response).not.toContain(
+      "native_address",
+    );
     expect(debugSimPcSampleFixture).toMatchObject({
       open: {
         samples: 5,
@@ -1242,9 +1300,15 @@ describe("debugger and simulator milestone content", () => {
         loss: "unknown",
       },
     });
-    expect(debugSimPcSampleFixture.samples[0].execMask).toBe("0xffffffffffffffff");
+    expect(debugSimPcSampleFixture.samples[0].execMask).toBe(
+      "0xffffffffffffffff",
+    );
     expect(debugSimPcSampleFixture.hotspots).toHaveLength(4);
-    expect(debugSimPcSampleFixture.hotspots.every((item) => item.origin === "inferred")).toBe(true);
+    expect(
+      debugSimPcSampleFixture.hotspots.every(
+        (item) => item.origin === "inferred",
+      ),
+    ).toBe(true);
     expect(debugSimWorkgroupReductionFixture).toMatchObject({
       compiler: {
         commit: "9176b9c27696ac3c86814dea60ef9ecc12f10539",
@@ -1332,13 +1396,19 @@ describe("debugger and simulator milestone content", () => {
       0, -4, 3, 1, 10, 7, 8, 14,
     ]);
     expect(debugSimWorkgroupScanFixture.sources).toHaveLength(8);
-    expect(debugSimWorkgroupScanFixture.sources.every((source) =>
-      source.href.startsWith(
-        "https://github.com/harsh-nod/fe2o3/blob/2df6130c5f897b5120cdf6ade44d53030690fa8b/",
+    expect(
+      debugSimWorkgroupScanFixture.sources.every((source) =>
+        source.href.startsWith(
+          "https://github.com/harsh-nod/fe2o3/blob/2df6130c5f897b5120cdf6ade44d53030690fa8b/",
+        ),
       ),
-    )).toBe(true);
-    expect(() => debugSimSourceUrl("../Cargo.toml", debugSimWorkgroupScanFixture.compiler.commit))
-      .toThrow("repository-relative");
+    ).toBe(true);
+    expect(() =>
+      debugSimSourceUrl(
+        "../Cargo.toml",
+        debugSimWorkgroupScanFixture.compiler.commit,
+      ),
+    ).toThrow("repository-relative");
     expect(JSON.stringify(debugSimMilestoneProjection)).not.toMatch(
       /performance_prediction":true|hardware_observed":true/iu,
     );
@@ -1424,9 +1494,7 @@ describe("curriculum integrity", () => {
         language: "rust",
         explanatory: true,
       });
-      expect(specification?.notice, lessonId).toContain(
-        "compiler",
-      );
+      expect(specification?.notice, lessonId).toContain("compiler");
       expect(specification?.notice, lessonId).toContain("Incomplete");
       expect(specification?.code, lessonId).toContain("WORKLOAD SPECIFICATION");
       expect(specification?.code, lessonId).toContain("arithmetic_is_defined");
@@ -1440,9 +1508,9 @@ describe("curriculum integrity", () => {
       compilerCommit: semanticCorrectnessMilestone.compilerCommit,
       compilerTree: semanticCorrectnessMilestone.compilerTree,
     });
-    expect(functionalRefinementPublication.referenceCompilerCommand).not.toContain(
-      "qualification-oracles-test-only",
-    );
+    expect(
+      functionalRefinementPublication.referenceCompilerCommand,
+    ).not.toContain("qualification-oracles-test-only");
     expect(
       functionalRefinementPublication.validationCommands.filter((command) =>
         command.includes("--test reference_binding_v1"),
@@ -1472,15 +1540,18 @@ describe("curriculum integrity", () => {
     expect(functionalCorrectnessCatalog).toHaveLength(11);
 
     for (const entry of functionalCorrectnessCatalog) {
-      const lesson = lessons.find((candidate) => candidate.id === entry.lessonId);
+      const lesson = lessons.find(
+        (candidate) => candidate.id === entry.lessonId,
+      );
       const reference = lesson?.tabs.find((tab) => tab.kind === "reference");
       expect(lesson, entry.lessonId).toBeDefined();
       expect(reference?.sourcePath, entry.lessonId).toBe(
         entry.referenceSourcePath,
       );
-      expect(existsSync(entry.referenceSourcePath), entry.referenceSourcePath).toBe(
-        true,
-      );
+      expect(
+        existsSync(entry.referenceSourcePath),
+        entry.referenceSourcePath,
+      ).toBe(true);
       expect(entry.outputRelations.length, entry.lessonId).toBeGreaterThan(0);
       expect(entry.scheduleRelations.length, entry.lessonId).toBeGreaterThan(0);
       expect(
@@ -1542,15 +1613,19 @@ describe("curriculum integrity", () => {
       "moe-expert-compute",
     ]) {
       expect(
-        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
-          ?.boundary,
+        functionalCorrectnessCatalog.find(
+          (entry) => entry.lessonId === lessonId,
+        )?.boundary,
         lessonId,
       ).toMatch(/tensor|MFMA/iu);
       expect(
-        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
-          ?.cooperativeTensor,
+        functionalCorrectnessCatalog.find(
+          (entry) => entry.lessonId === lessonId,
+        )?.cooperativeTensor,
         lessonId,
-      ).toMatch(/typed result component.*exact output store.*tensor-component formula replay/isu);
+      ).toMatch(
+        /typed result component.*exact output store.*tensor-component formula replay/isu,
+      );
     }
 
     for (const lessonId of [
@@ -1563,18 +1638,24 @@ describe("curriculum integrity", () => {
       "moe-expert-compute",
     ]) {
       expect(
-        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
-          ?.numericalPolicy,
+        functionalCorrectnessCatalog.find(
+          (entry) => entry.lessonId === lessonId,
+        )?.numericalPolicy,
         lessonId,
-      ).toMatch(/finite-error-formula replay is not implemented.*target IEEE.*LLVM/isu);
+      ).toMatch(
+        /finite-error-formula replay is not implemented.*target IEEE.*LLVM/isu,
+      );
     }
 
     for (const lessonId of ["moe-routing", "moe-expert-compute"]) {
       expect(
-        functionalCorrectnessCatalog.find((entry) => entry.lessonId === lessonId)
-          ?.boundary,
+        functionalCorrectnessCatalog.find(
+          (entry) => entry.lessonId === lessonId,
+        )?.boundary,
         lessonId,
-      ).toMatch(/multiple output|multiple outputs|output product|separated-output/iu);
+      ).toMatch(
+        /multiple output|multiple outputs|output product|separated-output/iu,
+      );
     }
   });
 
@@ -1615,14 +1696,19 @@ describe("curriculum integrity", () => {
       {
         lessonId: "gfx950-fp4-gemm",
         rustSymbol: "gfx950_fp4_gemm_rust",
-        rustSha256: "0a4a3d325d588ddad15697aa58f0e354cd9af20ae83f441432bd1489965fecad",
+        rustSha256:
+          "c6a00cb6e0df1e38563641bbc533a5725bf7a09d72bc8f50932c8b4c7b966616",
         referenceSymbol: "gemm_reference",
-        referenceSha256: "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
+        referenceSha256:
+          "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
         hipSymbol: "gfx950_fp4_gemm",
         runner: "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
-        namespace: "ff22ff3610dda0a94803a8011ced229b78c77400ca63c9b929d6ecba78ed6f01",
-        llvmSha256: "2eae91d0c3c4181684589ce9c6dc3fe05a78b1d37bf6748f7c67726c119a3e4e",
-        hsacoSha256: "1308d41a97d523d2e77ad15e16a3292e9d5a75e2f4eedf53f9e1008c481ca750",
+        namespace:
+          "894d3b3350eb1f58293d096d32ef2572e657bdc013f3d27ba4ac55cff4523f04",
+        llvmSha256:
+          "05fc7b8e50534a03f36423bed1d88489614f5d9d385b9d2d811bd8c8dadc8778",
+        hsacoSha256:
+          "2e9cc2bd178e1e1b72237cb32cc8f3e08d2d140d735520ea0147ed84fe81f93b",
         hostIsa: "cbsz:4 blgp:4",
         requiredIsa: "cbsz:4 blgp:4",
         numericalResult: "max_absolute_error=0",
@@ -1631,14 +1717,19 @@ describe("curriculum integrity", () => {
       {
         lessonId: "gfx950-fp8-gemm",
         rustSymbol: "gfx950_fp8_gemm_rust",
-        rustSha256: "004ad607c55169f7f3291ea4cd74afc63e937877ec84efacf5b731f99248b9fd",
+        rustSha256:
+          "0b05a0508c4970a64bed8fcb9c98341242076098aac56e6c3a4ca5ebb36c5055",
         referenceSymbol: "gemm_reference",
-        referenceSha256: "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
+        referenceSha256:
+          "cfcd4e567eb84127d93e77e9b568facb61674816026cd584f36d262a91b9541c",
         hipSymbol: "gfx950_fp8_gemm",
         runner: "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
-        namespace: "d67f1755b38fbdac67cec83da3ebc359f874e3fbf90fcc036471455ec117dfea",
-        llvmSha256: "9081a38065e977df077cc0fd142b77fb008fdd88a54e3f6915c704fdc5349d16",
-        hsacoSha256: "701a0a4ef137173ba9563dfe8b3b1f916d3d57dca0063d393d8e81c671e4dd2b",
+        namespace:
+          "9e98141edaae16343d036d08caa473a6535f143b8bfcd752106e818f94585040",
+        llvmSha256:
+          "673ccd03badd64acc565eb5363a7d8b981b798b11aff1c1f6ca4c6766cf9bca1",
+        hsacoSha256:
+          "75ce58c286cc6c3b199bf1144e571e8a3d6b7dc0e373a9dee0589bf67b3d1e6d",
         hostIsa: "v_mfma_f32_16x16x128_f8f6f4",
         requiredIsa: "E4M3 selectors (not cbsz:4 blgp:4)",
         numericalResult: "max_absolute_error=0",
@@ -1647,30 +1738,40 @@ describe("curriculum integrity", () => {
       {
         lessonId: "gfx950-fp4-attention",
         rustSymbol: "gfx950_fp4_attention_rust",
-        rustSha256: "2e5adea75d61f9524f1f9ee9d0f00fa9c8e4a0fac3d1ebc2d8c49401b1797a96",
+        rustSha256:
+          "f9a94dfe597a4a48271ca15bee859467540e43b29d2b5ae9d95c91a065015a49",
         referenceSymbol: "attention_reference",
-        referenceSha256: "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
+        referenceSha256:
+          "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
         hipSymbol: "gfx950_fp4_flash_attention",
         runner: "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
-        namespace: "a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
-        llvmSha256: "0914282d013f8bf6da47e2e807b569e7ca47beb908f30616211e8ff25529e508",
-        hsacoSha256: "90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
+        namespace:
+          "84784601f60af13beafd467edd5bb86f872e3aa9d48e1ad5e8c84e1452dd13a1",
+        llvmSha256:
+          "83f1f8a1affa10dc498ad1a5f7ff42e39472d019e6da9dd966b963d027bafd85",
+        hsacoSha256:
+          "cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
         hostIsa: "ds_read_b64_tr_b4",
         requiredIsa: "two ds_read_b64_tr_b4",
-        numericalResult: "max_absolute_error=2.235174179e-8",
+        numericalResult: "4,096 outputs; max_absolute_error=1.192092896e-7",
         tolerance: "absolute tolerance 2e-3 plus relative tolerance 2e-3",
       },
       {
         lessonId: "gfx950-fp8-attention",
         rustSymbol: "gfx950_fp8_attention_rust",
-        rustSha256: "c926d59ea1746895f406b72d3e343c38d2b240faec4c0654675dec6e8e05b738",
+        rustSha256:
+          "f48050d4a711f4df78216c9414c6edac2ee3fed584be9d7755fb58076a566c5c",
         referenceSymbol: "attention_reference",
-        referenceSha256: "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
+        referenceSha256:
+          "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
         hipSymbol: "gfx950_fp8_flash_attention",
         runner: "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
-        namespace: "0c9610e86137831ce25b08b9ad87073ec16f459aa11aeea6806733f788bbeec1",
-        llvmSha256: "32d869f2c4512717548913f693978773e91112f7f67158418cfb155106ef0d58",
-        hsacoSha256: "9208b439a4fbd1a987ea3cca19c01cac79e69e00b021ccb54f09f440d11f6294",
+        namespace:
+          "1cf2661cadefed5b0f3dee8b6430acd144d47f9a4d5ba8182748fac23a2aa315",
+        llvmSha256:
+          "0aeae851bf944cd34c678e9cbb7dfad27004a6121371c56ebcd3c28cc3882c5f",
+        hsacoSha256:
+          "4273c31ce4545e09e051abfcb704d1c7750d7b52ee50b01801caec5ddd2d0479",
         hostIsa: "ds_read_b64_tr_b8",
         requiredIsa: "four ds_read_b64_tr_b8",
         numericalResult: "max_absolute_error=5.960464478e-8",
@@ -1703,8 +1804,8 @@ describe("curriculum integrity", () => {
       ]);
       expect(lesson?.claims[0].reference).toMatchObject({
         scope: "historical-evidence",
-        commit: "c1383e97db732f9f1ff8105f10d5c2b5971143e1",
-        tree: "42385e6464ca40318fc70ae104845d3997844140",
+        commit: "65ddfd76c4fe276dedcb5046d592d50b4bf921ac",
+        tree: "dfcc77d91ea992dd07a67ed268f69553efc0774c",
         commands: [`bash ${runner}`],
         target: "gfx950:xnack-",
       });
@@ -1719,18 +1820,29 @@ describe("curriculum integrity", () => {
           runner,
         ]),
       );
-      expect(lesson?.claims[0].reference?.sourcePaths.some((path) =>
-        path.startsWith("crates/fe2o3-hsa-runtime/tests/gfx950_"),
-      )).toBe(true);
+      expect(
+        lesson?.claims[0].reference?.sourcePaths.some((path) =>
+          path.startsWith("crates/fe2o3-hsa-runtime/tests/gfx950_"),
+        ),
+      ).toBe(true);
       expect(lesson?.tabs.map((tab) => tab.kind)).toEqual([
-        "kernel", "reference", "comparison", "verus", "host", "result",
+        "kernel",
+        "reference",
+        "comparison",
+        "verus",
+        "host",
+        "result",
       ]);
       const kernel = lesson?.tabs[0];
       expect(kernel?.label).toBe("Rust kernel");
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
-      expect(kernel?.sourceCommit).toBe("c1383e97db732f9f1ff8105f10d5c2b5971143e1");
-      expect(kernel?.sourcePath).toBe("examples/gfx950_low_precision/src/kernel.rs");
+      expect(kernel?.sourceCommit).toBe(
+        "65ddfd76c4fe276dedcb5046d592d50b4bf921ac",
+      );
+      expect(kernel?.sourcePath).toBe(
+        "examples/gfx950_low_precision/src/kernel.rs",
+      );
       expect(kernel?.code).toContain(rustSymbol);
       expect(kernel?.sourceSha256).toBe(rustSha256);
       expect(kernel?.code).toContain("Blocked<Index1D, 16, 4>");
@@ -1748,7 +1860,9 @@ describe("curriculum integrity", () => {
       expect(reference?.kind).toBe("reference");
       expect(reference?.language).toBe("rust");
       expect(reference?.explanatory).toBe(false);
-      expect(reference?.sourceCommit).toBe("c1383e97db732f9f1ff8105f10d5c2b5971143e1");
+      expect(reference?.sourceCommit).toBe(
+        "65ddfd76c4fe276dedcb5046d592d50b4bf921ac",
+      );
       expect(reference?.code).toContain(referenceSymbol);
       expect(reference?.sourceSha256).toBe(referenceSha256);
       const comparison = lesson?.tabs[2];
@@ -1765,8 +1879,12 @@ describe("curriculum integrity", () => {
       expect(host?.code).toContain("Comparison only");
       const result = lesson?.tabs[5]?.code;
       expect(result).toContain("FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE");
-      expect(result).toContain("Core source commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
-      expect(result).toContain("Core source tree: 42385e6464ca40318fc70ae104845d3997844140");
+      expect(result).toContain(
+        "Core source commit: 65ddfd76c4fe276dedcb5046d592d50b4bf921ac",
+      );
+      expect(result).toContain(
+        "Core source tree: dfcc77d91ea992dd07a67ed268f69553efc0774c",
+      );
       expect(result).toContain(`Compiler-derived binding: ${namespace}`);
       expect(result).toContain(`Rust-produced LLVM SHA-256: ${llvmSha256}`);
       expect(result).toContain(`Rust-produced HSACO SHA-256: ${hsacoSha256}`);
@@ -1785,10 +1903,16 @@ describe("curriculum integrity", () => {
     const fp4Gemm = serializedLessonContent("gfx950-fp4-gemm");
     expect(
       createHash("sha256")
-        .update(readFileSync("examples/gfx950_low_precision/gfx950_low_precision.hip"))
+        .update(
+          readFileSync(
+            "examples/gfx950_low_precision/gfx950_low_precision.hip",
+          ),
+        )
         .digest("hex"),
     ).toBe("5ecfad224a691b61a07ef4aa16e144853bd3e8f53295a0e9c60404877356609a");
-    expect(fp4Gemm).toContain("ab39293c0f251678496cb5da026b8fb6ebbb4f6c96989ad5a2962d3ad6018379");
+    expect(fp4Gemm).toContain(
+      "ab39293c0f251678496cb5da026b8fb6ebbb4f6c96989ad5a2962d3ad6018379",
+    );
     expect(fp4Gemm).toContain("one fixed K=128 phase");
     expect(fp4Gemm).toContain("identity-scale operands encoded as constants");
     const fp4Attention = serializedLessonContent("gfx950-fp4-attention");
@@ -1812,7 +1936,8 @@ describe("curriculum integrity", () => {
     expect(lesson?.tabs.map((tab) => tab.kind)).toContain("performance");
     expect(lesson?.tabs.map((tab) => tab.kind)).not.toContain("ablation");
 
-    const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel")?.code ?? "";
+    const kernel =
+      lesson?.tabs.find((tab) => tab.kind === "kernel")?.code ?? "";
     expect(kernel).toContain("macro_rules! kda_chunk_wy_v1");
     expect(kernel).toContain("pub fn gfx950_kda_decode");
     expect(kernel).toContain("pub fn gfx950_kda_chunkwise_prefill");
@@ -1827,14 +1952,18 @@ describe("curriculum integrity", () => {
     expect(content).toContain("D_t = diag(alpha_t) S_(t-1)");
     expect(content).toContain("C=4 WY/UT equations");
     expect(content).toContain("L2-normalized q and k");
-    expect(content).toContain("output_replicated max_absolute_error=3.725290298e-9");
-    expect(content).toContain("output_chunk0_replicated max_absolute_error=7.450580597e-9");
-    expect(content).toContain("https://arxiv.org/abs/2510.26692");
     expect(content).toContain(
-      "e249ff03f475aa75595229ee6a68e816a2a9ad395940c495ad874c54c0e9b0ad",
+      "output_replicated outputs=1024 max_absolute_error=7.450580597e-9",
     );
     expect(content).toContain(
-      "673210266e41c1a545820dbc0baec859659b5c1cf4d5e3e8ac6b5e542b4028d3",
+      "output_chunk0_replicated outputs=1024 max_absolute_error=7.450580597e-9",
+    );
+    expect(content).toContain("https://arxiv.org/abs/2510.26692");
+    expect(content).toContain(
+      "3f3221a3dc1c1c8e1cca65e0751b34f6829d93c98c5414cf9a4ef53b36863b0d",
+    );
+    expect(content).toContain(
+      "842f02aba09789e97545e7ad82c183ca22968209ae9a4e5f4013500969e705a0",
     );
     expect(content).toContain("OPTIMIZATION [decode-key-reuse]");
     expect(content).toContain("OPTIMIZATION [prefill-c4-wy-ut]");
@@ -1846,67 +1975,240 @@ describe("curriculum integrity", () => {
 
   it("publishes exact bounded advanced gfx950 source and fail-closed production runners", () => {
     const expected = [
-      ["gfx950-advanced-moe", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_moe_route_fp4_t16_e4_k2_v1", "moe_routing_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_fused_fp4_fp8_moe", "expert counts=9,7,6,10", "cbsz:4"],
-      ["gfx950-kda-gdn-linear-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_kda_decode", "kda_decode_reference_v2", "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6", null, "final_state_value_major max_absolute_error=1.490116119e-8", "ds_bpermute_b32"],
-      ["gfx950-indexed-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_content_sparse_attention", "content_sparse_attention_reference_v1", "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6", "gfx950_content_sparse_attention", "selected IDs=[7,1,4]", "ds_read_b64_tr_b8"],
-      ["gfx950-deepseek-sparse-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_deepseek_sparse_attention", "deepseek_sparse_attention_reference_v1", "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6", null, "DeepSeek sparse attention", "no MFMA or transpose instructions"],
-      ["gfx950-compressed-hybrid-attention", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_compressed_hybrid_attention", "compressed_hybrid_attention_reference_v1", "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6", "gfx950_compressed_hybrid_attention", "compressed hybrid attention max_error=1.67638e-07", "v_mfma_f32_16x16x128_f8f6f4"],
-      ["gfx950-attnres-gr-mhc", "examples/gfx950_advanced_attention/src/kernel.rs", "gfx950_mhc_sinkhorn_mix", "mhc_sinkhorn_mix_reference_v1", "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6", "gfx950_mhc_sinkhorn_mix", "mHC/Sinkhorn max_error=2.98023e-08", "v_exp_f32"],
-      ["gfx950-speculative-mtp-verification", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_speculative_transaction_v1", "speculative_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_speculative_transaction", "rolled-back candidates=6 with bitwise base-state equality", "gfx950_speculative_transaction"],
-      ["gfx950-ngram-embedding-gather", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_qwen_ngram_gather_v1", "ngram_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_qwen_ngram_gather", "deterministic duplicate-key tie value=4242", "gfx950_qwen_ngram_gather"],
-      ["gfx950-muon-optimizer", "examples/gfx950_advanced_systems/src/kernel.rs", "gfx950_muon_update_4x4_v1", "muon_reference", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6", "gfx950_muon_update", "reduced norm max_error=0 with norm=0.614919", "gfx950_muon_update"],
+      [
+        "gfx950-advanced-moe",
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "gfx950_moe_route_fp4_t16_e4_k2_v1",
+        "moe_routing_reference",
+        "9203c3e8aa98179b925d0500804577f47abd6116f1d849070c50d74f42a31fe6",
+        "gfx950_fused_fp4_fp8_moe",
+        "MI350 WG256/grid4 combine: 1024 outputs, max_error=0",
+        "cbsz:4",
+      ],
+      [
+        "gfx950-kda-gdn-linear-attention",
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "gfx950_kda_decode",
+        "kda_decode_reference_v2",
+        "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+        null,
+        "final_state_value_major outputs=1024 max_absolute_error=2.980232239e-8",
+        "ds_bpermute_b32",
+      ],
+      [
+        "gfx950-indexed-sparse-attention",
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "gfx950_content_sparse_attention",
+        "content_sparse_attention_reference_v1",
+        "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+        "gfx950_content_sparse_attention",
+        "selected_output exact_u32_outputs=48",
+        "ds_read_b64_tr_b8",
+      ],
+      [
+        "gfx950-deepseek-sparse-attention",
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "gfx950_deepseek_sparse_attention",
+        "deepseek_sparse_attention_reference_v1",
+        "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+        null,
+        "output outputs=1024 max_absolute_error=5.215406418e-8",
+        "no MFMA or transpose instructions",
+      ],
+      [
+        "gfx950-compressed-hybrid-attention",
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "gfx950_compressed_hybrid_attention",
+        "compressed_hybrid_attention_reference_v1",
+        "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+        "gfx950_compressed_hybrid_attention",
+        "output max_absolute_error=5.960464478e-8",
+        "v_mfma_f32_16x16x128_f8f6f4",
+      ],
+      [
+        "gfx950-attnres-gr-mhc",
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "gfx950_mhc_sinkhorn_mix",
+        "mhc_sinkhorn_mix_reference_v1",
+        "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+        "gfx950_mhc_sinkhorn_mix",
+        "output outputs=1024 max_absolute_error=6.705522537e-8",
+        "v_exp_f32",
+      ],
+      [
+        "gfx950-speculative-mtp-verification",
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "gfx950_speculative_transaction_v1",
+        "speculative_reference",
+        "9203c3e8aa98179b925d0500804577f47abd6116f1d849070c50d74f42a31fe6",
+        "gfx950_speculative_transaction",
+        "MI350 WG256/grid4 accepted lengths: 128 values exact",
+        "gfx950_speculative_transaction",
+      ],
+      [
+        "gfx950-ngram-embedding-gather",
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "gfx950_qwen_ngram_gather_v1",
+        "ngram_reference",
+        "9203c3e8aa98179b925d0500804577f47abd6116f1d849070c50d74f42a31fe6",
+        "gfx950_qwen_ngram_gather",
+        "MI350 WG256/grid4 gather: 128 integer outputs exact",
+        "gfx950_qwen_ngram_gather",
+      ],
+      [
+        "gfx950-muon-optimizer",
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "gfx950_muon_update_4x4_v1",
+        "muon_reference",
+        "9203c3e8aa98179b925d0500804577f47abd6116f1d849070c50d74f42a31fe6",
+        "gfx950_muon_update",
+        "MI350 WG256/grid4 reduced norms: 16 outputs, max_error=5.960464478e-8",
+        "gfx950_muon_update",
+      ],
     ] as const;
 
     const excerptHashes = {
-      "gfx950-advanced-moe": ["a774500131396c95a4768d2ff174b48fe1823e389b36debcf77dd4e35bc9a676", "13ab007af1facc9263b07b4be60479ff377eb6821629af5a009c4445c2d4690e"],
-      "gfx950-kda-gdn-linear-attention": ["0525fc3f4c6a71c04a5d67a58a3c5fc9b29e91aea05115613cdef6359e97b33b", "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d"],
-      "gfx950-indexed-sparse-attention": ["8684d952e10438c4dd0bd4a6748010d04e38a7a911a69627ed388621a368b779", "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9"],
-      "gfx950-deepseek-sparse-attention": ["0608190331ac2a480ddbc947b754aebd80a60ecdf541998d4aae27b5706df17a", "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f"],
-      "gfx950-compressed-hybrid-attention": ["4b905913f30edfb7e6e0b0a20893c14bd7ca1b656a3e99c6794efe1a2175df03", "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db"],
-      "gfx950-attnres-gr-mhc": ["5e9761447dfc694c713afe92f905867382a0c7f0069fe413806927d69c3863db", "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f"],
-      "gfx950-speculative-mtp-verification": ["7af417d630bff4724837b23cfc901045d1b059d352f85ea28391258c7c99d3ff", "36ca2f84521a24cf65177a8e030dbf935f3b1b03e30ef5fb7e8a8a1e2241d6bc"],
-      "gfx950-ngram-embedding-gather": ["1ef0490edaf92a38ea77417654c187988b53d0281446f8e42e7dcdb2a1c3621d", "9ce2cdd494c09f727ba87834de2874a80400cddde22691e50dcacb532dc505b1"],
-      "gfx950-muon-optimizer": ["58e17e63a3a539c143c30e56997bfdd811d7c9dd8a3ae643c71976b194c64b43", "20613ed1fad5dbdfd09f2bad3421e0927157a77e3085e0303092567d633403af"],
+      "gfx950-advanced-moe": [
+        "e6c004e3802b04e4b7741b9e5192056621d9f0b72050ea0240c3c1bee90259c0",
+        "49826130508e509b46cb0d56dd746e49ddf60b470c19243dd9adc9b7d51c041f",
+      ],
+      "gfx950-kda-gdn-linear-attention": [
+        "31fc7bdc42d49c6512f320ee33c49e30b5f5a45824f8aafa487556d4594eb50e",
+        "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
+      ],
+      "gfx950-indexed-sparse-attention": [
+        "a84b9879c947d8cda0603c4a4efacdbae1a2524d34a6434325031ae951180c21",
+        "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
+      ],
+      "gfx950-deepseek-sparse-attention": [
+        "9207defaad05feb0845bb803a36a1b9c44124a334b9835b6896eebf77bb02861",
+        "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
+      ],
+      "gfx950-compressed-hybrid-attention": [
+        "e28aca35318d39d2b930d85add4d6746a70d2dd69f4eae5c1fd6e61a87c24c19",
+        "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
+      ],
+      "gfx950-attnres-gr-mhc": [
+        "2b8e8f3d367533082da8d38764055f66ebf1621277acd93e250c1440c3b7fd28",
+        "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
+      ],
+      "gfx950-speculative-mtp-verification": [
+        "9c1e6701a53f5cdd03472e51a96c8758ed241b8cc68291d0301cf6f95b15d83d",
+        "0e0f28117f664d0e54e85b853d442d68d36c280d442b6a428ed47d6510ae72b7",
+      ],
+      "gfx950-ngram-embedding-gather": [
+        "2198e9600947462ba7a0fd25c730313041e7b80ca0d6a13f4d88da8ca86acf01",
+        "a15572e565a090dba9169056ede64caf7186815a48c618985f1f95bb129f51de",
+      ],
+      "gfx950-muon-optimizer": [
+        "8dc1f8ca6a88cd0b57a97bbd567c8c4cdb5b852de3c901ff28bad258d8837c27",
+        "d43c796135a06d777cd4189267ff0a9fc6fa37ff94c4c04273820a5bfcdfc24f",
+      ],
     } as const;
 
     const productionRecords = {
       "gfx950-advanced-moe": [
-        ["gfx950_moe_route_fp4_t16_e4_k2_v1", "run-moe-route-gfx950.sh", "gfx950_moe_route_rust_cov6_matches_cpu_reference"],
-        ["gfx950_moe_expert_rank_fp4_fp8_v1", "run-moe-expert-rank-gfx950.sh", "gfx950_moe_expert_rank_rust_cov6_matches_cpu_reference"],
-        ["gfx950_combine_expert_ranks_v1", "run-combine-expert-ranks-gfx950.sh", "gfx950_combine_expert_ranks_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_moe_route_fp4_t16_e4_k2_v1",
+          "run-moe-route-gfx950.sh",
+          "gfx950_moe_route_rust_cov6_matches_cpu_reference",
+        ],
+        [
+          "gfx950_moe_expert_rank_fp4_fp8_v1",
+          "run-moe-expert-rank-gfx950.sh",
+          "gfx950_moe_expert_rank_rust_cov6_matches_cpu_reference",
+        ],
+        [
+          "gfx950_combine_expert_ranks_v1",
+          "run-combine-expert-ranks-gfx950.sh",
+          "gfx950_combine_expert_ranks_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-kda-gdn-linear-attention": [
-        ["gfx950_kda_decode", "run-kda-decode-gfx950.sh", "gfx950_kda_decode_rust_cov6_matches_cpu_reference"],
-        ["gfx950_kda_chunkwise_prefill", "run-kda-chunkwise-prefill-gfx950.sh", "gfx950_kda_chunkwise_prefill_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_kda_decode",
+          "run-kda-decode-gfx950.sh",
+          "gfx950_kda_decode_rust_cov6_matches_cpu_reference",
+        ],
+        [
+          "gfx950_kda_chunkwise_prefill",
+          "run-kda-chunkwise-prefill-gfx950.sh",
+          "gfx950_kda_chunkwise_prefill_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-indexed-sparse-attention": [
-        ["gfx950_content_sparse_attention", "run-content-sparse-attention-gfx950.sh", "gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_content_sparse_attention",
+          "run-content-sparse-attention-gfx950.sh",
+          "gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-deepseek-sparse-attention": [
-        ["gfx950_deepseek_sparse_attention", "run-deepseek-sparse-attention-gfx950.sh", "gfx950_deepseek_sparse_attention_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_deepseek_sparse_attention",
+          "run-deepseek-sparse-attention-gfx950.sh",
+          "gfx950_deepseek_sparse_attention_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-compressed-hybrid-attention": [
-        ["gfx950_compressed_hybrid_attention", "run-compressed-hybrid-attention-gfx950.sh", "gfx950_compressed_hybrid_attention_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_compressed_hybrid_attention",
+          "run-compressed-hybrid-attention-gfx950.sh",
+          "gfx950_compressed_hybrid_attention_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-attnres-gr-mhc": [
-        ["gfx950_attnres_aggregate", "run-attnres-aggregate-gfx950.sh", "gfx950_attnres_aggregate_rust_cov6_matches_cpu_reference"],
-        ["gfx950_four_branch_residual", "run-four-branch-residual-gfx950.sh", "gfx950_four_branch_residual_rust_cov6_matches_cpu_reference"],
-        ["gfx950_mhc_sinkhorn_mix", "run-mhc-sinkhorn-mix-gfx950.sh", "gfx950_mhc_sinkhorn_mix_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_attnres_aggregate",
+          "run-attnres-aggregate-gfx950.sh",
+          "gfx950_attnres_aggregate_rust_cov6_matches_cpu_reference",
+        ],
+        [
+          "gfx950_four_branch_residual",
+          "run-four-branch-residual-gfx950.sh",
+          "gfx950_four_branch_residual_rust_cov6_matches_cpu_reference",
+        ],
+        [
+          "gfx950_mhc_sinkhorn_mix",
+          "run-mhc-sinkhorn-mix-gfx950.sh",
+          "gfx950_mhc_sinkhorn_mix_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-speculative-mtp-verification": [
-        ["gfx950_speculative_transaction_v1", "run-speculative-transaction-gfx950.sh", "gfx950_speculative_transaction_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_speculative_transaction_v1",
+          "run-speculative-transaction-gfx950.sh",
+          "gfx950_speculative_transaction_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-ngram-embedding-gather": [
-        ["gfx950_qwen_ngram_gather_v1", "run-qwen-ngram-gather-gfx950.sh", "gfx950_qwen_ngram_gather_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_qwen_ngram_gather_v1",
+          "run-qwen-ngram-gather-gfx950.sh",
+          "gfx950_qwen_ngram_gather_rust_cov6_matches_cpu_reference",
+        ],
       ],
       "gfx950-muon-optimizer": [
-        ["gfx950_stage_gradient_shard_v1", "run-stage-gradient-shard-gfx950.sh", "gfx950_stage_gradient_shard_rust_cov6_matches_cpu_reference"],
-        ["gfx950_muon_update_4x4_v1", "run-muon-update-gfx950.sh", "gfx950_muon_update_rust_cov6_matches_cpu_reference"],
+        [
+          "gfx950_stage_gradient_shard_v1",
+          "run-stage-gradient-shard-gfx950.sh",
+          "gfx950_stage_gradient_shard_rust_cov6_matches_cpu_reference",
+        ],
+        [
+          "gfx950_muon_update_4x4_v1",
+          "run-muon-update-gfx950.sh",
+          "gfx950_muon_update_rust_cov6_matches_cpu_reference",
+        ],
       ],
     } as const;
 
     const referenceRecords = {
-      "gfx950-advanced-moe": ["moe_routing_reference", "moe_rank_reference"],
+      "gfx950-advanced-moe": [
+        "moe_routing_reference",
+        "batched_moe_routing_reference",
+        "moe_rank_reference",
+        "batched_moe_rank_reference",
+      ],
       "gfx950-kda-gdn-linear-attention": [
         "kda_decode_reference_v2",
         "kda_prefill_reference_v2",
@@ -1925,19 +2227,36 @@ describe("curriculum integrity", () => {
         "four_branch_residual_reference_v1",
         "mhc_sinkhorn_mix_reference_v1",
       ],
-      "gfx950-speculative-mtp-verification": ["speculative_reference"],
-      "gfx950-ngram-embedding-gather": ["ngram_reference"],
-      "gfx950-muon-optimizer": ["muon_reference"],
+      "gfx950-speculative-mtp-verification": [
+        "speculative_reference",
+        "batched_speculative_reference",
+      ],
+      "gfx950-ngram-embedding-gather": [
+        "ngram_reference",
+        "batched_ngram_reference",
+      ],
+      "gfx950-muon-optimizer": ["muon_reference", "batched_muon_reference"],
     } as const;
 
-    for (const [lessonId, sourcePath, rustSymbol, referenceSymbol, sourceFileSha256, hipSymbol, result, isa] of expected) {
-      const [rustExcerptSha256, referenceExcerptSha256] = excerptHashes[lessonId];
+    for (const [
+      lessonId,
+      sourcePath,
+      rustSymbol,
+      referenceSymbol,
+      sourceFileSha256,
+      hipSymbol,
+      result,
+      isa,
+    ] of expected) {
+      const [rustExcerptSha256, referenceExcerptSha256] =
+        excerptHashes[lessonId];
       const advanced = lessons.find((candidate) => candidate.id === lessonId);
       expect(advanced, lessonId).toBeDefined();
       expect(advanced?.module).toBe(10);
       expect(advanced?.claims).toEqual([
         expect.objectContaining({
-          kind: advancedCoreSourceTree === null ? "source-example" : "gpu-observed",
+          kind:
+            advancedCoreSourceTree === null ? "source-example" : "gpu-observed",
         }),
       ]);
       const variantSourceCount = lessonId === "gfx950-attnres-gr-mhc" ? 1 : 0;
@@ -1966,14 +2285,16 @@ describe("curriculum integrity", () => {
       expect(kernel?.code.match(/pub fn gfx950_/gu) ?? []).toHaveLength(
         productionRecords[lessonId].length,
       );
-      expect(createHash("sha256").update(readFileSync(sourcePath)).digest("hex")).toBe(
-        sourceFileSha256,
-      );
+      expect(
+        createHash("sha256").update(readFileSync(sourcePath)).digest("hex"),
+      ).toBe(sourceFileSha256);
 
       const reference = advanced?.tabs.find((tab) => tab.kind === "reference");
       expect(reference?.kind).toBe("reference");
       expect(reference?.language).toBe("rust");
-      expect(reference?.sourcePath).toBe(sourcePath.replace("kernel.rs", "reference.rs"));
+      expect(reference?.sourcePath).toBe(
+        sourcePath.replace("kernel.rs", "reference.rs"),
+      );
       expect(reference?.sourceCommit).toBe(advancedCoreSourceCommit);
       expect(reference?.sourceSha256).toBe(referenceExcerptSha256);
       expect(reference?.explanatory).toBe(false);
@@ -1981,7 +2302,9 @@ describe("curriculum integrity", () => {
         expect(reference?.code).toContain(`pub fn ${exactReference}(`);
       }
       expect(reference?.code).toContain(referenceSymbol);
-      const comparison = advanced?.tabs.find((tab) => tab.kind === "comparison");
+      const comparison = advanced?.tabs.find(
+        (tab) => tab.kind === "comparison",
+      );
       if (hipSymbol === null) {
         expect(comparison).toBeUndefined();
       } else {
@@ -1996,9 +2319,13 @@ describe("curriculum integrity", () => {
       expect(host?.code).toContain("ordinary Rust -> LLVM -> COV6 HSACO");
       expect(host?.code).toContain("gfx950:xnack-");
 
-      const evidence = advanced?.tabs.find((tab) => tab.kind === "result")?.code;
+      const evidence = advanced?.tabs.find(
+        (tab) => tab.kind === "result",
+      )?.code;
       expect(evidence).toContain(`Kernel file SHA-256: ${sourceFileSha256}`);
-      expect(evidence).toContain(`Core source commit: ${advancedCoreSourceCommit}`);
+      expect(evidence).toContain(
+        `Core source commit: ${advancedCoreSourceCommit}`,
+      );
       expect(evidence).toContain(result);
       expect(evidence).toContain("FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE");
       expect(evidence).toContain("Rust gfx950 lowering supported: true");
@@ -2009,15 +2336,18 @@ describe("curriculum integrity", () => {
         expect(evidence).not.toContain("HIP runtime observation:");
       } else {
         expect(evidence).toContain("HIP runtime observation:");
-        expect(evidence).toContain("does not produce, bind, or authorize any Rust artifact");
+        expect(evidence).toContain(
+          "does not produce, bind, or authorize any Rust artifact",
+        );
       }
       expect(evidence).toContain("Performance result: not claimed");
       expect(evidence).toContain("Formal source-to-machine proof: not claimed");
 
-      for (const [symbol, runner, hardwareTest] of productionRecords[lessonId]) {
-        const record = advancedRustEvidence[
-          symbol as keyof typeof advancedRustEvidence
-        ];
+      for (const [symbol, runner, hardwareTest] of productionRecords[
+        lessonId
+      ]) {
+        const record =
+          advancedRustEvidence[symbol as keyof typeof advancedRustEvidence];
         expect(record.status).toBe("observed");
         if (record.status !== "observed") {
           throw new Error(`${symbol} must have an observed MI350 record`);
@@ -2025,17 +2355,33 @@ describe("curriculum integrity", () => {
         expect(kernel?.code).toContain(`pub fn ${symbol}(`);
         expect(host?.code).toContain(runner);
         expect(evidence).toContain(`Symbol: ${symbol}`);
-        expect(evidence).toContain(`Production runner: bash examples/gfx950_advanced_`);
+        expect(evidence).toContain(
+          `Production runner: bash examples/gfx950_advanced_`,
+        );
         expect(evidence).toContain(runner);
         expect(evidence).toContain(hardwareTest);
         expect(evidence).toContain("Evidence status: observed");
-        expect(evidence).toContain(`Artifact source commit: ${record.sourceCommit}`);
-        expect(evidence).toContain(`Artifact source tree: ${record.sourceTree}`);
-        expect(evidence).toContain(`Compiler-derived binding: ${record.namespace}`);
-        expect(evidence).toContain(`Rust-produced LLVM SHA-256: ${record.llvmSha256}`);
-        expect(evidence).toContain(`Rust-produced HSACO SHA-256: ${record.hsacoSha256}`);
-        expect(evidence).toContain(`Symbol-scoped ISA SHA-256: ${record.isaSha256}`);
-        expect(evidence).toContain(`Rust numerical result: ${record.numericalResult}`);
+        expect(evidence).toContain(
+          `Artifact source commit: ${record.sourceCommit}`,
+        );
+        expect(evidence).toContain(
+          `Artifact source tree: ${record.sourceTree}`,
+        );
+        expect(evidence).toContain(
+          `Compiler-derived binding: ${record.namespace}`,
+        );
+        expect(evidence).toContain(
+          `Rust-produced LLVM SHA-256: ${record.llvmSha256}`,
+        );
+        expect(evidence).toContain(
+          `Rust-produced HSACO SHA-256: ${record.hsacoSha256}`,
+        );
+        expect(evidence).toContain(
+          `Symbol-scoped ISA SHA-256: ${record.isaSha256}`,
+        );
+        expect(evidence).toContain(
+          `Rust numerical result: ${record.numericalResult}`,
+        );
         expect(evidence).toContain(`Acceptance tolerance: ${record.tolerance}`);
         expect(evidence).not.toContain("pending mi350 end-to-end execution");
       }
@@ -2070,25 +2416,24 @@ describe("curriculum integrity", () => {
         sourcePath: "examples/gfx950_advanced_attention/src/ablation.rs",
         sourceCommit: advancedCoreSourceCommit,
         sourceSha256:
-          "c34bd3b07e47446d79ad9cdf5328c8e207f81b02a591bca5eb22f25a00087b2e",
+          "edca3d771ac60c79c6de3a083b16739934755d1548c529232e86f2df72c6b721",
         sourceDigestScope: "file",
         explanatory: false,
       });
-      expect(variant?.notice).toContain("Exact final-compatibility Rust ablation source");
+      expect(variant?.notice).toContain(
+        "Exact final-compatibility Rust ablation source",
+      );
       for (const symbol of symbols) {
         expect(variant?.code).toContain(`pub fn ${symbol}(`);
       }
     }
   });
 
-
   it("publishes the real GPT-OSS Rust layer-tile tutorial with final integrated evidence boundaries", () => {
     const lesson = lessons.find(
       (candidate) => candidate.id === "gfx950-gpt-oss-120b-megakernel",
     );
-    expect(lesson?.title).toBe(
-      "gpt-oss-120b batch-1 layer-tile megakernel",
-    );
+    expect(lesson?.title).toBe("gpt-oss-120b 16-item layer-tile megakernel");
     expect(lesson?.claims.map((claim) => claim.kind)).toEqual(["gpu-observed"]);
     expect(lesson?.tabs.map((tab) => tab.kind)).toEqual([
       "kernel",
@@ -2107,14 +2452,16 @@ describe("curriculum integrity", () => {
     ]);
 
     const kernel = lesson?.tabs.find(
-      (tab) => tab.sourcePath === "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+      (tab) =>
+        tab.sourcePath === "examples/gfx950_gpt_oss_decode/src/kernel.rs",
     );
     expect(kernel).toMatchObject({
       label: "Rust kernel",
       language: "rust",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
       sourceCommit: advancedCoreSourceCommit,
-      sourceSha256: "6c10867e6dcb8b016e9f654f0ed1b357b128b4d466d896663ae365c837f0f0b0",
+      sourceSha256:
+        "106d9e76e662d81dd25892081d144468bde9f9418b00c2e08808d8b32acc9d30",
       explanatory: false,
     });
     expect(kernel?.code).toContain(
@@ -2124,7 +2471,8 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/reference.rs",
-      sourceSha256: "f4f361e44d8cf56348d1189aa012ebeb2a83efc1833eaa110ea4f095ce22bd84",
+      sourceSha256:
+        "f4f361e44d8cf56348d1189aa012ebeb2a83efc1833eaa110ea4f095ce22bd84",
       explanatory: false,
     });
     expect(reference?.code).toContain("pub fn reference(");
@@ -2133,12 +2481,42 @@ describe("curriculum integrity", () => {
     expect(comparison?.code).toContain("gpt_oss_unfused_router");
 
     const expectedVariants = [
-      ["Serial router ablation [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs", "060c5600b8522bea3f6245794809a15fbc468bee008f7b497e5c7f06740af841", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
-      ["Held-fragment ablation [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs", "a2cc65e6e9c74f4523786706d994193d0d68d708386f9b29163b13bcd98e12d2", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
-      ["Interleaved-store ablation [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs", "a31af40117e11ed6779ecb9d54cc597805449bbb04db47af7a005ca3da55d72e", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
-      ["Materialized components [FINAL-COMPATIBILITY]", "examples/gfx950_gpt_oss_decode/src/kernel_components.rs", "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1", "pub fn gfx950_gpt_oss_120b_router_v1("],
-      ["BF16 LDS pipeline [COMPILER-REJECTED]", "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs", "96e2e4c1ea1019aa30ed8ce5674671d0674687131b529ae15220965e2dcc7c79", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
-      ["Scalar attention [COMPILER-REJECTED]", "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs", "0755e02ef766b8ae88ca876ba8cf16d0cdc8da1cebc05a0aa354b766fac57b49", "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1("],
+      [
+        "Serial router ablation [FINAL-COMPATIBILITY]",
+        "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
+        "c1597e2ea93959f7d1586605058b9c0308e1f80264dc83fbf3c409d2e0fa0572",
+        "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
+      ],
+      [
+        "Held-fragment ablation [FINAL-COMPATIBILITY]",
+        "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
+        "bf49f42b16379cb9022db1ef95e453a38a43409987f5ececb96d540e8fe5bf4f",
+        "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
+      ],
+      [
+        "Interleaved-store ablation [FINAL-COMPATIBILITY]",
+        "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
+        "18f2d609c29149739b558d2faf3cd634261850b816ba876d0d366426393fe710",
+        "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
+      ],
+      [
+        "Materialized components [FINAL-COMPATIBILITY]",
+        "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+        "3b724cb7fb84d70b8f5c39ae731b3e6c5965d49676e2508047e04d5cff3b763e",
+        "pub fn gfx950_gpt_oss_120b_router_v1(",
+      ],
+      [
+        "BF16 LDS pipeline [COMPILER-REJECTED]",
+        "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
+        "f0d566daf5ecb358925b81b213b60b8ad6bc9a6c3e71e5d44a4a5ceb1c3e89cb",
+        "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
+      ],
+      [
+        "Scalar attention [COMPILER-REJECTED]",
+        "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+        "6893879667d51e407475c21071a2e5859ef57c42d1249f5c16feeb99d3ee2cec",
+        "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
+      ],
     ] as const;
     for (const [label, sourcePath, sourceSha256, symbol] of expectedVariants) {
       const variant = lesson?.tabs.find((tab) => tab.label === label);
@@ -2166,11 +2544,21 @@ describe("curriculum integrity", () => {
     );
     expect(host).toContain("bash perf-evidence/run-gpt-oss-performance.sh");
     const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
-    expect(result).toContain("Historical campaign commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1");
-    expect(result).toContain("Final promoted-source wrapper: passed at c766ca761 on MI350X gfx950");
-    expect(result).toContain("Historical performance wrapper: passed at c1383e97 on MI350X gfx950");
-    expect(result).toContain("Final compatibility matrix: perf-evidence/gfx950-integrated-compatibility-v1.json; 32/32 cases passed");
-    expect(result).toContain("Fused p5/p95: 1.059803 / 1.069283 ms");
+    expect(result).toContain(
+      "Historical campaign commit: c1383e97db732f9f1ff8105f10d5c2b5971143e1",
+    );
+    expect(result).toContain(
+      "Current WG256/grid4 wrapper: passed 2026-09-03 on MI350X gfx950 physical GPU 7",
+    );
+    expect(result).toContain(
+      "Historical single-wave performance wrapper: passed at c1383e97 on MI350X gfx950",
+    );
+    expect(result).toContain(
+      "Current numerical result: attention outputs=4096 max_absolute_error=1.192092896e-7; expert outputs=4096 exact; packed top-4 exact_u32_outputs=1024",
+    );
+    expect(result).toContain(
+      "Historical single-wave fused p5/p95: 1.059803 / 1.069283 ms",
+    );
     expect(result).toContain(
       "Archived c138 HIP three-dispatch/fused ratio: 0.732979",
     );
@@ -2225,7 +2613,8 @@ describe("curriculum integrity", () => {
         symbol === "gfx950_deepseek_sparse_attention" ||
         symbol === "gfx950_kda_decode" ||
         symbol === "gfx950_kda_chunkwise_prefill"
-      ) continue;
+      )
+        continue;
       expect(performanceText, symbol).toContain(`KERNEL: ${symbol}`);
     }
     expect(performanceText).not.toContain("canonical early exit");
@@ -2251,7 +2640,9 @@ describe("curriculum integrity", () => {
     const gptPerformance = performanceFor("gfx950-gpt-oss-120b-megakernel");
     expect(gptPerformance).toContain("hidden 2,880");
     expect(gptPerformance).toContain("a 0.0375% median reduction");
-    expect(gptPerformance).toContain("da6 exact Rust component-materialization");
+    expect(gptPerformance).toContain(
+      "da6 exact Rust component-materialization",
+    );
 
     for (const candidateId of [
       "sparse-lds-pingpong",
@@ -2265,15 +2656,22 @@ describe("curriculum integrity", () => {
       "gpt-tile-tuning",
     ]) {
       expect(performanceText, candidateId).toMatch(
-        new RegExp(`OPTIMIZATION \\[${candidateId}\\]: [^\\n]*NOT IMPLEMENTED`, "u"),
+        new RegExp(
+          `OPTIMIZATION \\[${candidateId}\\]: [^\\n]*NOT IMPLEMENTED`,
+          "u",
+        ),
       );
     }
     expect(gptPerformance).toContain(
       "OPTIMIZATION [bf16-lds-pipeline]: IMPLEMENTED; COMPILER-REJECTED",
     );
-    const gptContent = serializedLessonContent("gfx950-gpt-oss-120b-megakernel");
+    const gptContent = serializedLessonContent(
+      "gfx950-gpt-oss-120b-megakernel",
+    );
     expect(gptContent).toContain("archived c138 HIP three-dispatch comparator");
-    expect(gptContent).toContain("da6 exact Rust component-materialization ablation");
+    expect(gptContent).toContain(
+      "da6 exact Rust component-materialization ablation",
+    );
 
     const finalAdvanced = JSON.parse(
       readFileSync(
@@ -2310,7 +2708,9 @@ describe("curriculum integrity", () => {
       .find((lesson) => lesson.id === "gfx950-attnres-gr-mhc")
       ?.tabs.find((tab) => tab.kind === "performance")?.code;
     expect(mhc).toContain("a 1.448x speedup and 30.9392% reduction");
-    expect(mhc).toContain("mHC derivation: max(576 B / 8 TB/s, 616 counted FP32 algebraic ops / 144.2 TFLOP/s) = 0.072 ns");
+    expect(mhc).toContain(
+      "mHC derivation: max(576 B / 8 TB/s, 616 counted FP32 algebraic ops / 144.2 TFLOP/s) = 0.072 ns",
+    );
     expect(mhc).toContain("independent latency is unavailable");
 
     const speculativeTab = module10
@@ -2340,9 +2740,10 @@ describe("curriculum integrity", () => {
       "gfx950_gpt_oss_120b_decode_megakernel_v1",
     ]);
 
-    for (const [symbol, evidence] of Object.entries(
-      advancedRustEvidence,
-    ) as [string, AdvancedRustEvidence][]) {
+    for (const [symbol, evidence] of Object.entries(advancedRustEvidence) as [
+      string,
+      AdvancedRustEvidence,
+    ][]) {
       expect(evidence.symbol).toBe(symbol);
       expect(Object.isFrozen(evidence)).toBe(true);
       expect(evidence.requiredIsa.length).toBeGreaterThan(0);
@@ -2364,8 +2765,12 @@ describe("curriculum integrity", () => {
       expect(evidence.runtimeObservation).not.toMatch(/\bpending\b/iu);
     }
 
-    expect(advancedRustEvidence.gfx950_moe_route_fp4_t16_e4_k2_v1.workgroupSize).toBe(256);
-    expect(advancedRustEvidence.gfx950_moe_expert_rank_fp4_fp8_v1.workgroupSize).toBe(64);
+    expect(
+      advancedRustEvidence.gfx950_moe_route_fp4_t16_e4_k2_v1.workgroupSize,
+    ).toBe(256);
+    expect(
+      advancedRustEvidence.gfx950_moe_expert_rank_fp4_fp8_v1.workgroupSize,
+    ).toBe(64);
 
     expect(() =>
       observedAdvancedEvidence(
@@ -2374,7 +2779,8 @@ describe("curriculum integrity", () => {
           symbol: "gfx950_invalid_fixture",
           runnerPath:
             "examples/gfx950_advanced_attention/run-invalid-fixture-gfx950.sh",
-          hardwareTest: "gfx950_invalid_fixture_rust_cov6_matches_cpu_reference",
+          hardwareTest:
+            "gfx950_invalid_fixture_rust_cov6_matches_cpu_reference",
           requiredIsa: ["symbol"],
           kernargBytes: 8,
           workgroupSize: 64,
@@ -2415,9 +2821,9 @@ describe("curriculum integrity", () => {
     });
     expect(matrix.claim_boundary.performance_measurements_included).toBe(false);
     expect(matrix.cases).toHaveLength(32);
-    expect(matrix.cases.map((entry: { ordinal: number }) => entry.ordinal)).toEqual(
-      Array.from({ length: 32 }, (_, index) => index + 1),
-    );
+    expect(
+      matrix.cases.map((entry: { ordinal: number }) => entry.ordinal),
+    ).toEqual(Array.from({ length: 32 }, (_, index) => index + 1));
     for (const entry of matrix.cases) {
       expect(entry.result).toBe("pass");
       expect(entry.artifact).toMatchObject({
@@ -2444,13 +2850,14 @@ describe("curriculum integrity", () => {
         expect(workload.input_sha256).toMatch(/^[0-9a-f]{64}$/u);
         expect(workload.buffers.length).toBeGreaterThan(0);
         expect(
-          workload.buffers.some(
-            (buffer: { oracle: { kind: string } }) =>
-              buffer.oracle.kind.startsWith("cpu-reference-"),
+          workload.buffers.some((buffer: { oracle: { kind: string } }) =>
+            buffer.oracle.kind.startsWith("cpu-reference-"),
           ),
         ).toBe(true);
       }
-      expect(Object.values(entry.gates).every((gate) => gate === "pass")).toBe(true);
+      expect(Object.values(entry.gates).every((gate) => gate === "pass")).toBe(
+        true,
+      );
     }
 
     const canonicalOrdinals = new Map([
@@ -2468,20 +2875,49 @@ describe("curriculum integrity", () => {
       ["gfx950_muon_update_4x4_v1", 24],
       ["gfx950_gpt_oss_120b_decode_megakernel_v1", 26],
     ]);
+    const currentCampaignRunners = new Map([
+      [
+        "gfx950_kda_decode",
+        "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
+      ],
+      [
+        "gfx950_kda_chunkwise_prefill",
+        "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
+      ],
+      [
+        "gfx950_content_sparse_attention",
+        "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
+      ],
+      [
+        "gfx950_deepseek_sparse_attention",
+        "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+      ],
+      [
+        "gfx950_compressed_hybrid_attention",
+        "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
+      ],
+      [
+        "gfx950_attnres_aggregate",
+        "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
+      ],
+      [
+        "gfx950_four_branch_residual",
+        "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
+      ],
+      [
+        "gfx950_mhc_sinkhorn_mix",
+        "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+      ],
+      [
+        "gfx950_gpt_oss_120b_decode_megakernel_v1",
+        "examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+      ],
+    ]);
     for (const [symbol, evidence] of Object.entries(advancedRustEvidence)) {
-      if (
-        symbol === "gfx950_deepseek_sparse_attention" ||
-        symbol === "gfx950_kda_decode" ||
-        symbol === "gfx950_kda_chunkwise_prefill"
-      ) {
+      const currentCampaignRunner = currentCampaignRunners.get(symbol);
+      if (currentCampaignRunner !== undefined) {
         expect(evidence.sourceCommit).toMatch(/^[0-9a-f]{40}$/u);
-        expect(evidence.runnerPath).toBe(
-          symbol === "gfx950_deepseek_sparse_attention"
-            ? "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh"
-            : symbol === "gfx950_kda_decode"
-              ? "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh"
-              : "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
-        );
+        expect(evidence.runnerPath).toBe(currentCampaignRunner);
         continue;
       }
       if (evidence.status !== "observed") {
@@ -2505,16 +2941,18 @@ describe("curriculum integrity", () => {
       if (Array.isArray(value)) return value.forEach(visit);
       if (!value || typeof value !== "object") return;
       for (const [key, child] of Object.entries(value)) {
-        if (/timer|duration|latency|throughput/iu.test(key)) prohibitedKeys.push(key);
+        if (/timer|duration|latency|throughput/iu.test(key))
+          prohibitedKeys.push(key);
         visit(child);
       }
     };
     visit(matrix);
     expect(prohibitedKeys).toEqual([]);
-    expect(matrix.rejected_candidates.map((entry: { variant: string }) => entry.variant)).toEqual([
-      "scalar-attention",
-      "pipelined-attention",
-    ]);
+    expect(
+      matrix.rejected_candidates.map(
+        (entry: { variant: string }) => entry.variant,
+      ),
+    ).toEqual(["scalar-attention", "pipelined-attention"]);
     for (const rejection of matrix.rejected_candidates) {
       expect(rejection.source_blob).toMatch(/^[0-9a-f]{40}$/u);
       expect(rejection.source_sha256).toMatch(/^[0-9a-f]{64}$/u);
@@ -2522,7 +2960,6 @@ describe("curriculum integrity", () => {
       expect(rejection.diagnostic).toMatch(/call terminator|pipeline scalar/u);
     }
   });
-
 
   it("publishes real Rust source tabs for all 20 gfx950 tutorial kernels", () => {
     const expectedSymbols = [
@@ -2545,106 +2982,400 @@ describe("curriculum integrity", () => {
   });
   it("pins byte-exact Rust mirrors for all gfx950 packages", () => {
     const mirrors = [
-      ["examples/gfx950_low_precision/README.md", "5dc64435d18dc371431dacddaae8cd6114358fe0fce5e6924e046d0d4e351a6f"],
-      ["examples/gfx950_low_precision/Cargo.toml", "79022908ab305eb2b608818e9338e8796e5515af43e590ed367acb222676e3c6"],
-      ["examples/gfx950_low_precision/Cargo.lock", "0b9188ed6e3b51caab75b152e7ae142ae39410e4a3e8c96c47b4f691a4f5b9a1"],
-      ["examples/gfx950_low_precision/src/kernel.rs", "7b8e9810ff23a84fae69ae87e52d88a5512f1afd2c176de3d72edb116a003dca"],
-      ["examples/gfx950_low_precision/src/reference.rs", "388ec3bf3fff9a5290456afc92b9bd24be8813d9ae914865f780affb7fb6e3e7"],
-      ["examples/gfx950_low_precision/src/lib.rs", "ef673aa1c80c6268d8039a5f819cb2ceea1656ef6214217efc8daeabe1bf4e4f"],
-      ["examples/gfx950_low_precision/tests/kernel_source.rs", "addf296e35be54c66e51fc63393ce04bdc9dff2ce706171e8de20e0eb0fdb960"],
-      ["crates/fe2o3-hsa-runtime/tests/gfx950_fp4_gemm_hardware.rs", "77e320d7175613ac7c9ef31571cdbd0b87940145963b66fe1e7bc1b1b5f8d3bc"],
-      ["crates/fe2o3-hsa-runtime/tests/gfx950_fp8_gemm_hardware.rs", "d37a381d66bf79f4f9f01fa1c32c9c24076e4450cc691e4f4ce3479197371870"],
-      ["crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs", "d8b619377275a297cc7c7c3b8ae77563523897cddb060cc3bf5a78234aadf42e"],
-      ["examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh", "a02d26d57716aff60099f98dbf76073a34bacd9a753bcb79d58d47c0ace603c7"],
-      ["examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh", "94734d16e766e6295b4311cbeb5b086566a25da21207e9ea2811339951ee65c5"],
-      ["examples/gfx950_low_precision/run-fp4-attention-gfx950.sh", "b4bf55787793b3aa3f9fc042521c2941e643d04a2b6bf7933b1847d891b53dd6"],
-      ["examples/gfx950_low_precision/run-fp8-attention-gfx950.sh", "73e3c73c37154ee0b6b5f9b9ec450cc1c11167335457100c29a576736279955d"],
-      ["examples/gfx950_low_precision/run-attention-gfx950.sh", "9253aa5c740671ff91d69c44917a75cb1dc7c69b6f596f6ed999ded9d6db93ff"],
-      ["examples/gfx950_low_precision/gfx950-ocml-closure.sh", "4acd64af08347456aa9b8e2c105e1af7ce2946167e95496c02c5dc88e2544c6a"],
-      ["examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest", "43b868ede4500d71ff0f81fe3db2b91cec5cf4c973befc1533adfac51d9accc6"],
-      ["examples/gfx950_advanced_attention/Cargo.lock", "d70c31f63c8672048de6e7384fb255ddcc18321100e1d21abfe3531710da6aab"],
-      ["examples/gfx950_advanced_attention/Cargo.toml", "cc3413d34ffdf346e36aa98f1270ba09d36a89405418e97506949ca61c268283"],
-      ["examples/gfx950_advanced_attention/ablation-variants-v1.json", "dbcecc81b0edc6274abd8ed65e26e376f0807ec9397f9c95dc581cf40d2a3a64"],
-      ["examples/gfx950_advanced_attention/README.md", "e93802a42c6f81676f3c4b47750a22b8d13b17f1861299468fc05a7f83ea94c5"],
-      ["examples/gfx950_advanced_attention/benchmark_fla_kda_mi350.py", "e1e152ef6d5ead3cf927f0b69dcdea47ebefa3ec826b6fc4ec2f4bbec56cc9ff"],
-      ["examples/gfx950_advanced_attention/kda-mi350-performance-v1.json", "d2069f5cbbbde188ed38c8be81f340c574c06d40cc7274d570f037a8d51cb751"],
-      ["examples/gfx950_advanced_attention/build_and_test.sh", "edfb9d27b52a1493c6f9371ed0944d6bdbca230971cf0efcff35133c5b59e17d"],
-      ["examples/gfx950_advanced_attention/check_isa.sh", "66781023b3d9706973cd14693d7ae2b018c662cde9cbd230a98ff1bd6a845615"],
-      ["examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh", "978e7f09899298c92bf44802b268e02480b9e00d6d93bf9720528ef649552985"],
-      ["examples/gfx950_advanced_attention/gfx950_advanced_attention.hip", "c44b4227c0ec525a367359bdc16aff69c3086676aa61def1b653266604d1ed1d"],
-      ["examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh", "b869214fcab25ac6768856cd5402ef098838a50f2a9626f90ee107f9d3be51b6"],
-      ["examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh", "6709edbd2da0424fbfbaeb02d4b612e4a78ca8e941929dc9ecc2ecd3ecaef779"],
-      ["examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh", "972e38c13f18c85fa087a3649d3f7ea4f5c7ebb7b97709b131386f4d0adc830c"],
-      ["examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh", "cf9739d455303269357d742bef85aeb4675a5652073e0d9a701ebd6c87691094"],
-      ["examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh", "9c4a4c2fceee19680e6f6a844966f591ef12feb1093b0300750a4448f22d7bf5"],
-      ["examples/gfx950_advanced_attention/run-gfx950.sh", "e46c8d0730fd5e0b88f0822922b0d847b280e06f96d2131fb9de1cdb4da0658b"],
-      ["examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh", "47dc9c7f29f709f1fbe8ad4ff07099ecaf0431dafcc3f28763f15edc32c6a58c"],
-      ["examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh", "b52f355e42d920435f12f46c4727bafdcbb89460ffe7ade9a66170d14123fd07"],
-      ["examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh", "0546e3565717c05a5680420f5c87e1ee34b89ccce0d25f153bd3740cea6c3788"],
-      ["examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh", "5e17ad7d3e87b67342b49eba0615f106051827d664eea228780b80a05ef81b26"],
-      ["examples/gfx950_advanced_attention/src/ablation.rs", "c34bd3b07e47446d79ad9cdf5328c8e207f81b02a591bca5eb22f25a00087b2e"],
-      ["examples/gfx950_advanced_attention/src/kda_baseline.rs", "b9bf9872f9bd7fe66bd3f4fb267c56ab52948f7a1e15321bf6b14f0c1165d09a"],
-      ["examples/gfx950_advanced_attention/src/kernel.rs", "6bb1d5dcfaa50c683c13c622df9c7624e7a23e84b15310062c76b6e8e01ca3f6"],
-      ["examples/gfx950_advanced_attention/src/reference.rs", "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53"],
-      ["examples/gfx950_advanced_attention/src/lib.rs", "6f7a3fb129c5b59719ab93e30a9c66ef61b4e3604b465582dac7845429716945"],
-      ["examples/gfx950_advanced_attention/summarize_kda_mi350.py", "95deffa129111aca353ca1d3d11117931cb95a6ffd17e1e1643ac90960235f12"],
-      ["examples/gfx950_advanced_attention/test-extractor-runtime.sh", "47f0fa7b258d7b59dae1da26377a8b5acfe992ddf62511f96cf24d7ab4549363"],
-      ["examples/gfx950_advanced_attention/tests/kernel_source.rs", "e0d8ae4a29d0a232cc5f165ed8b5fa7edb86a56cc04d44eaecfb9181b8b557aa"],
-      ["examples/gfx950_advanced_attention/tests/reference.rs", "6adcdf2128ea36e13dfcc14bb0cb6cf197f7ae5381a932f1f0754d12bf5d9a08"],
-      ["examples/gfx950_advanced_systems/Cargo.lock", "223572e69b42b6e54f55935c3e1e1cf54b152466ed0d61acdb97010d647ebf1c"],
-      ["examples/gfx950_advanced_systems/Cargo.toml", "4bb727180242b4f1a55693ecf2abcd87026e324cbd208d9c6a6970a45ae681e7"],
-      ["examples/gfx950_advanced_systems/ablation-variants-v1.json", "e222f3bef1be96cd946b1847a8ac9b5341b8c67c8aeb0b6d4fd9d5a5268b3bba"],
-      ["examples/gfx950_advanced_systems/optimization-evidence-v1.json", "b39ef177352261c3d33a6ea1c6804707ad8fb52de1641175308808ce09c72956"],
-      ["examples/gfx950_advanced_systems/README.md", "2888360c965442ab0b4f5999bbe81d59eb4bb8fae66773408d730ff050444f25"],
-      ["examples/gfx950_advanced_systems/build_and_test.sh", "20f05e523e56aa1fff05f5d766960ab0539dfcc2d1dd2d33405a15725c715d54"],
-      ["examples/gfx950_advanced_systems/check_isa.sh", "7a115cbdabc14575f597b35f8443a6d9db36261fbd8d31551447c55a02196b53"],
-      ["examples/gfx950_advanced_systems/gfx950_advanced_systems.hip", "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5"],
-      ["examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh", "d586548c5529ab771b8795132ed375e1ea79d5ccb22d36ce3783a30151e36071"],
-      ["examples/gfx950_advanced_systems/run-gfx950.sh", "bfc9dbc79e84a90f9a7b73a265b4c6f7bc5be938ec732e140f72e4615c37c922"],
-      ["examples/gfx950_advanced_systems/run-ablation-gfx950.sh", "190a5193ba1bfdee841842b09f7b35615790c31af15458119bbe0a853f71e846"],
-      ["examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh", "3f117cf3c2cb585dcabcf7b7e8d19f4c1f8c0b37d4c45faa957bcf736c65bb98"],
-      ["examples/gfx950_advanced_systems/run-moe-route-gfx950.sh", "176766f056546afff1b854cd0525b7475c36ea57371106a819bd367506832489"],
-      ["examples/gfx950_advanced_systems/run-muon-update-gfx950.sh", "d4bbf39e0e5fc38f7f767fffcae81bd1749911a2fdfcd250b0f79b0394cfbe3d"],
-      ["examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "d25726c4015a35e05ab31c8fa7f7f8f04cc10686727f982adb86eeda36d10da1"],
-      ["examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "a85a7c2317f10077dcf97c1df9e2d95326a843e6a325dce3062ae4d06e8629fd"],
-      ["examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh", "7f2bcc17211dcfc2b8234e0e1842a7f4b6166f8d31672636ee89f9604092f3c5"],
-      ["examples/gfx950_advanced_systems/src/kernel.rs", "8e1d432962a1c51f4d8b08d33cb38dc838fad94ca47ebc64102ed2ce2e70dbd6"],
-      ["examples/gfx950_advanced_systems/src/reference.rs", "7817c51c5274671197460f11ceed5fdd2b8415ba934119013adad68c7d7c8dbd"],
-      ["examples/gfx950_advanced_systems/src/lib.rs", "3ae59a0e6d0c36afccc1518d3bd418452a83297bcc59b71f5172fdd38c932f95"],
-      ["examples/gfx950_advanced_systems/tests/references.rs", "dd16aa4d15c630a8756b5d96a0d505c8cbfd6cd7a4aa77692891304da219f5dd"],
-      ["examples/gfx950_advanced_systems/tests/source.rs", "04535fabdb54d7d0f10c8b9f913d774d33506c92b51c39420a0329e3b84749f1"],
-      ["examples/gfx950_gpt_oss_decode/Cargo.lock", "da37f44ba68cd16107506e418830e63a11099de15d9f8235daeccc9522c0f09b"],
-      ["examples/gfx950_gpt_oss_decode/Cargo.toml", "ccae3bc056ca2487a47f04a840b89247e24e7ff3b648674dbadbbc9ce60de299"],
-      ["examples/gfx950_gpt_oss_decode/README.md", "17c37981f54857f21d51edb045de965b8d007736d0cb1954c52251bae6fd8861"],
-      ["examples/gfx950_gpt_oss_decode/ablation-variants-v1.json", "716f7f39909268834e353fc296185fa01dd436a54d9c06b52445a71f1c36bd04"],
-      ["examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip", "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b"],
-      ["examples/gfx950_gpt_oss_decode/run-gfx950.sh", "b88b02df8b6c7b3ef7de9d839d4be742eb25f3e56a59b634b559408fe7e206a3"],
-      ["examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "413b4d43426e3227a3166c9703dd5704a9a4b798722a85fb36442e6ed250b787"],
-      ["examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh", "bd6df83ce6a9b6b2db11c5d18e6ee6fff283c7ef122481b44fffc90d47b532da"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel.rs", "b84b16ed5797fdcf5bdf05f603823f47bfa9839f017921d92bd0bcfbd73aecb6"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_components.rs", "6f7b1ca11e492ff8b2f0e8e4b8e34e0c5809a7d5b24dcefa4814fbbadce536a1"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs", "a2cc65e6e9c74f4523786706d994193d0d68d708386f9b29163b13bcd98e12d2"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs", "a31af40117e11ed6779ecb9d54cc597805449bbb04db47af7a005ca3da55d72e"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs", "96e2e4c1ea1019aa30ed8ce5674671d0674687131b529ae15220965e2dcc7c79"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs", "060c5600b8522bea3f6245794809a15fbc468bee008f7b497e5c7f06740af841"],
-      ["examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs", "0755e02ef766b8ae88ca876ba8cf16d0cdc8da1cebc05a0aa354b766fac57b49"],
-      ["examples/gfx950_gpt_oss_decode/src/lib.rs", "a0d8a54c855c2bf9a0b1c20dab682f9ece1370e479d9ea9b85882a7586ad6949"],
-      ["examples/gfx950_gpt_oss_decode/src/reference.rs", "1739eee2283c6aee6a10f16a38458a8657dd56478849e621072795734d915f05"],
-      ["examples/gfx950_gpt_oss_decode/tests/reference.rs", "60156d4d1c2d932e00c792b3cb65b63784131b1919f3a97cd83d29b4e8ec0e94"],
-      ["examples/gfx950_gpt_oss_decode/tests/source.rs", "f6f36b7082eb9376c5985f5b6ba85a9cae2ab91adebf0fae3f7a3318ccc37227"],
-      ["perf-evidence/gpt-oss-layer-tile-evidence-v1.json", "65ae89cdba30261d4dc3dc92a295f392e95b7bcded67f721c48defd8de17635a"],
-      ["perf-evidence/gfx950-advanced-ablation-evidence-v1.json", "da0bf8e61151ca1ae15dbaf57743a840e2099556c3d20eebfe0c43d4ec792ec5"],
-      ["perf-evidence/gfx950-integrated-compatibility-v1.json", "803835efa3e9bd973a40791184e50cfcbefa60d22af7fb02c9d45e9f6c191a59"],
-      ["perf-evidence/mi350x-bound-inputs-v1.json", "79057257dcba07cec6adeed2341c8cb7e8ccdcef231a7c7b9687cb562f49ab49"],
-      ["perf-evidence/gfx950-rejection-logs/scalar-attention.log", "033c71aa06489832eff24ef48abcd451924b1950959546f8f29acb39ac022c14"],
-      ["perf-evidence/gfx950-rejection-logs/pipelined-attention.log", "ddea01325d7723ab42cec98c7c90e48edd681d38c5fbe97a6f35e1045e6e3066"],
-      ["perf-evidence/gfx950-advanced-evidence-v1.json", "550b290ec4e8dbf43fa338f31fda88199c6f8d86ae55f9570789bac7b968fd6a"],
-      ["perf-evidence/run-gpt-oss-performance.sh", "e4ab1ba9b2f7ce2489bf163922d9cdb4bbf01591643cc9aef0d4b30db175f28f"],
-      ["perf-evidence/run-gfx950-advanced-ablation.sh", "adb6ec6814935a8023eb9f0b65cedb110768e2a795aa8907968650fc044629ab"],
-      ["crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs", "10a1d90c9093b33c0d8900c6c0a9aee7ada55d86a67082d3682a719e157a17a7"],
+      [
+        "examples/gfx950_low_precision/README.md",
+        "847de6763f743a2e0144922fdb18480fd860657686515de9279fe73b532b24db",
+      ],
+      [
+        "examples/gfx950_low_precision/Cargo.toml",
+        "79022908ab305eb2b608818e9338e8796e5515af43e590ed367acb222676e3c6",
+      ],
+      [
+        "examples/gfx950_low_precision/Cargo.lock",
+        "0b9188ed6e3b51caab75b152e7ae142ae39410e4a3e8c96c47b4f691a4f5b9a1",
+      ],
+      [
+        "examples/gfx950_low_precision/src/kernel.rs",
+        "2d703f77e75bee2094915ed1226903f526d3a6f45a1e67ed30dae2e72622ccfa",
+      ],
+      [
+        "examples/gfx950_low_precision/src/reference.rs",
+        "c6b2d78ece4c1fb994922e3d99435e48a2ecd5a846b61725a75c494e6b862600",
+      ],
+      [
+        "examples/gfx950_low_precision/src/lib.rs",
+        "ef673aa1c80c6268d8039a5f819cb2ceea1656ef6214217efc8daeabe1bf4e4f",
+      ],
+      [
+        "examples/gfx950_low_precision/tests/kernel_source.rs",
+        "fa92a124b46fce36b825a747fe79ea1f43ff4664ff517a2048c4c37f47da3a4f",
+      ],
+      [
+        "crates/fe2o3-hsa-runtime/tests/gfx950_fp4_gemm_hardware.rs",
+        "77e320d7175613ac7c9ef31571cdbd0b87940145963b66fe1e7bc1b1b5f8d3bc",
+      ],
+      [
+        "crates/fe2o3-hsa-runtime/tests/gfx950_fp8_gemm_hardware.rs",
+        "d37a381d66bf79f4f9f01fa1c32c9c24076e4450cc691e4f4ce3479197371870",
+      ],
+      [
+        "crates/fe2o3-hsa-runtime/tests/gfx950_attention_hardware.rs",
+        "d8b619377275a297cc7c7c3b8ae77563523897cddb060cc3bf5a78234aadf42e",
+      ],
+      [
+        "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
+        "6ca7444631983d12ed414f06119762b0730a568de7974840eef85d2be447c051",
+      ],
+      [
+        "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
+        "18cb0c5d8a6a5c3c73016e1522dd0fcf337d5552941f4ab352c3b4f7387a3bf7",
+      ],
+      [
+        "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
+        "b4bf55787793b3aa3f9fc042521c2941e643d04a2b6bf7933b1847d891b53dd6",
+      ],
+      [
+        "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
+        "73e3c73c37154ee0b6b5f9b9ec450cc1c11167335457100c29a576736279955d",
+      ],
+      [
+        "examples/gfx950_low_precision/run-attention-gfx950.sh",
+        "b6dba484dedc444341c26758a5832d460d28fd59f18bec8d8c4545d27988d3a0",
+      ],
+      [
+        "examples/gfx950_low_precision/gfx950-ocml-closure.sh",
+        "4acd64af08347456aa9b8e2c105e1af7ce2946167e95496c02c5dc88e2544c6a",
+      ],
+      [
+        "examples/gfx950_low_precision/gfx950-ocml-rocm-7.2.1.manifest",
+        "43b868ede4500d71ff0f81fe3db2b91cec5cf4c973befc1533adfac51d9accc6",
+      ],
+      [
+        "examples/gfx950_advanced_attention/Cargo.lock",
+        "d70c31f63c8672048de6e7384fb255ddcc18321100e1d21abfe3531710da6aab",
+      ],
+      [
+        "examples/gfx950_advanced_attention/Cargo.toml",
+        "cc3413d34ffdf346e36aa98f1270ba09d36a89405418e97506949ca61c268283",
+      ],
+      [
+        "examples/gfx950_advanced_attention/ablation-variants-v1.json",
+        "fc4727a4137904dc8a6f388722f412de6bedf2d011a9d125d4906ee17ba6f588",
+      ],
+      [
+        "examples/gfx950_advanced_attention/README.md",
+        "5992c9c9e7ef644a8e1cbe0038f4bf9a84a58adec567fc2ab0b80487a3013065",
+      ],
+      [
+        "examples/gfx950_advanced_attention/benchmark_fla_kda_mi350.py",
+        "e1e152ef6d5ead3cf927f0b69dcdea47ebefa3ec826b6fc4ec2f4bbec56cc9ff",
+      ],
+      [
+        "examples/gfx950_advanced_attention/kda-mi350-performance-v1.json",
+        "d2069f5cbbbde188ed38c8be81f340c574c06d40cc7274d570f037a8d51cb751",
+      ],
+      [
+        "examples/gfx950_advanced_attention/build_and_test.sh",
+        "edfb9d27b52a1493c6f9371ed0944d6bdbca230971cf0efcff35133c5b59e17d",
+      ],
+      [
+        "examples/gfx950_advanced_attention/check_isa.sh",
+        "66781023b3d9706973cd14693d7ae2b018c662cde9cbd230a98ff1bd6a845615",
+      ],
+      [
+        "examples/gfx950_advanced_attention/gfx950-extractor-runtime.sh",
+        "978e7f09899298c92bf44802b268e02480b9e00d6d93bf9720528ef649552985",
+      ],
+      [
+        "examples/gfx950_advanced_attention/gfx950_advanced_attention.hip",
+        "c44b4227c0ec525a367359bdc16aff69c3086676aa61def1b653266604d1ed1d",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
+        "b869214fcab25ac6768856cd5402ef098838a50f2a9626f90ee107f9d3be51b6",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
+        "6709edbd2da0424fbfbaeb02d4b612e4a78ca8e941929dc9ecc2ecd3ecaef779",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
+        "972e38c13f18c85fa087a3649d3f7ea4f5c7ebb7b97709b131386f4d0adc830c",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+        "cf9739d455303269357d742bef85aeb4675a5652073e0d9a701ebd6c87691094",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
+        "9c4a4c2fceee19680e6f6a844966f591ef12feb1093b0300750a4448f22d7bf5",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "b2e4b742d9c7b179cb974a05d53354094108f7060acef5433432168b3fe7e655",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
+        "47dc9c7f29f709f1fbe8ad4ff07099ecaf0431dafcc3f28763f15edc32c6a58c",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
+        "b52f355e42d920435f12f46c4727bafdcbb89460ffe7ade9a66170d14123fd07",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-kda-prefill-gfx950.sh",
+        "0546e3565717c05a5680420f5c87e1ee34b89ccce0d25f153bd3740cea6c3788",
+      ],
+      [
+        "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+        "5e17ad7d3e87b67342b49eba0615f106051827d664eea228780b80a05ef81b26",
+      ],
+      [
+        "examples/gfx950_advanced_attention/src/ablation.rs",
+        "edca3d771ac60c79c6de3a083b16739934755d1548c529232e86f2df72c6b721",
+      ],
+      [
+        "examples/gfx950_advanced_attention/src/kda_baseline.rs",
+        "5cc3927c0a41363e5a66589eb5cfa14af33ed2eb6863afcfe1abe0ce4dc7446c",
+      ],
+      [
+        "examples/gfx950_advanced_attention/src/kernel.rs",
+        "934b395dd621f4d492ac2ae9ce53364ab2b1151312ac92d7eaea5a25c96ac7b8",
+      ],
+      [
+        "examples/gfx950_advanced_attention/src/reference.rs",
+        "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53",
+      ],
+      [
+        "examples/gfx950_advanced_attention/src/lib.rs",
+        "f567f5bce1977953622d723dca3174997f45c18e131a3edf182496c25f34eac2",
+      ],
+      [
+        "examples/gfx950_advanced_attention/summarize_kda_mi350.py",
+        "95deffa129111aca353ca1d3d11117931cb95a6ffd17e1e1643ac90960235f12",
+      ],
+      [
+        "examples/gfx950_advanced_attention/test-extractor-runtime.sh",
+        "47f0fa7b258d7b59dae1da26377a8b5acfe992ddf62511f96cf24d7ab4549363",
+      ],
+      [
+        "examples/gfx950_advanced_attention/tests/kernel_source.rs",
+        "ed94aa85436f64e81b9e264237997c54cb91de82580254cbd6ac556bcc54bb3c",
+      ],
+      [
+        "examples/gfx950_advanced_attention/tests/reference.rs",
+        "6adcdf2128ea36e13dfcc14bb0cb6cf197f7ae5381a932f1f0754d12bf5d9a08",
+      ],
+      [
+        "examples/gfx950_advanced_systems/Cargo.lock",
+        "223572e69b42b6e54f55935c3e1e1cf54b152466ed0d61acdb97010d647ebf1c",
+      ],
+      [
+        "examples/gfx950_advanced_systems/Cargo.toml",
+        "4bb727180242b4f1a55693ecf2abcd87026e324cbd208d9c6a6970a45ae681e7",
+      ],
+      [
+        "examples/gfx950_advanced_systems/ablation-variants-v1.json",
+        "bdac1beaa6950cbf750b0e4d23c8460e65f8613dd8a2cd890d44c18e66738dc1",
+      ],
+      [
+        "examples/gfx950_advanced_systems/optimization-evidence-v1.json",
+        "a458e48eefea481431fdc06ae0c281631589ecc7c30c6946155dfcac622b3692",
+      ],
+      [
+        "examples/gfx950_advanced_systems/README.md",
+        "368ae8dd1097e87064912187b039a8adeabb9eda1b6a8a7a745931fb25104583",
+      ],
+      [
+        "examples/gfx950_advanced_systems/build_and_test.sh",
+        "20f05e523e56aa1fff05f5d766960ab0539dfcc2d1dd2d33405a15725c715d54",
+      ],
+      [
+        "examples/gfx950_advanced_systems/check_isa.sh",
+        "7a115cbdabc14575f597b35f8443a6d9db36261fbd8d31551447c55a02196b53",
+      ],
+      [
+        "examples/gfx950_advanced_systems/gfx950_advanced_systems.hip",
+        "c29a6bc2de55563abddfb50f43aaccf6077ef0b4706fbfb314266ecaa48054c5",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh",
+        "d586548c5529ab771b8795132ed375e1ea79d5ccb22d36ce3783a30151e36071",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-gfx950.sh",
+        "bfc9dbc79e84a90f9a7b73a265b4c6f7bc5be938ec732e140f72e4615c37c922",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-ablation-gfx950.sh",
+        "190a5193ba1bfdee841842b09f7b35615790c31af15458119bbe0a853f71e846",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
+        "3f117cf3c2cb585dcabcf7b7e8d19f4c1f8c0b37d4c45faa957bcf736c65bb98",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-moe-route-gfx950.sh",
+        "176766f056546afff1b854cd0525b7475c36ea57371106a819bd367506832489",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
+        "d4bbf39e0e5fc38f7f767fffcae81bd1749911a2fdfcd250b0f79b0394cfbe3d",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+        "d25726c4015a35e05ab31c8fa7f7f8f04cc10686727f982adb86eeda36d10da1",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+        "a85a7c2317f10077dcf97c1df9e2d95326a843e6a325dce3062ae4d06e8629fd",
+      ],
+      [
+        "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
+        "7f2bcc17211dcfc2b8234e0e1842a7f4b6166f8d31672636ee89f9604092f3c5",
+      ],
+      [
+        "examples/gfx950_advanced_systems/src/kernel.rs",
+        "9203c3e8aa98179b925d0500804577f47abd6116f1d849070c50d74f42a31fe6",
+      ],
+      [
+        "examples/gfx950_advanced_systems/src/reference.rs",
+        "e7638564d1d5cff646ff8978c7771eddddb6d6e1422a2dcc3fc02c57a2761a05",
+      ],
+      [
+        "examples/gfx950_advanced_systems/src/lib.rs",
+        "09cdc3e34ec0a8c5fb4b51b15ea445e4d2d17909bd5692135757913e6d70eece",
+      ],
+      [
+        "examples/gfx950_advanced_systems/tests/references.rs",
+        "4ac55c365165fcd45455d657502a1e4944cb146bc6b7fd0e6f23d8cb11d780ac",
+      ],
+      [
+        "examples/gfx950_advanced_systems/tests/source.rs",
+        "6aea6eefbcd18dea165a6078824be5927547c7b4eae3185b87c1bc415f43f913",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "da37f44ba68cd16107506e418830e63a11099de15d9f8235daeccc9522c0f09b",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "ccae3bc056ca2487a47f04a840b89247e24e7ff3b648674dbadbbc9ce60de299",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/README.md",
+        "7554ae74855fccea408f90bfede5dbdf7034c51ec565c6ec001775cb02c0d968",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/ablation-variants-v1.json",
+        "de6cada6bcbf4e5074bb856d2d628db8ce289e41f603e10b9322c906be4e2c42",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip",
+        "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+        "b88b02df8b6c7b3ef7de9d839d4be742eb25f3e56a59b634b559408fe7e206a3",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+        "413b4d43426e3227a3166c9703dd5704a9a4b798722a85fb36442e6ed250b787",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh",
+        "bd6df83ce6a9b6b2db11c5d18e6ee6fff283c7ef122481b44fffc90d47b532da",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+        "3e9119ae9befb21d4cb482d736434948ad01f68bc894c63d5348edbf2a8f58b6",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+        "3b724cb7fb84d70b8f5c39ae731b3e6c5965d49676e2508047e04d5cff3b763e",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
+        "bf49f42b16379cb9022db1ef95e453a38a43409987f5ececb96d540e8fe5bf4f",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
+        "18f2d609c29149739b558d2faf3cd634261850b816ba876d0d366426393fe710",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
+        "f0d566daf5ecb358925b81b213b60b8ad6bc9a6c3e71e5d44a4a5ceb1c3e89cb",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
+        "c1597e2ea93959f7d1586605058b9c0308e1f80264dc83fbf3c409d2e0fa0572",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+        "6893879667d51e407475c21071a2e5859ef57c42d1249f5c16feeb99d3ee2cec",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/lib.rs",
+        "406a52847e856f2e737101364ea634a97e627bacfdcff785e9ee37a8857c7b79",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/src/reference.rs",
+        "5ac168adad32e821164947d3baa57d78cf813332b8a265e992263964e556628d",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/tests/reference.rs",
+        "4b1e39f02d9439a921331e67f15432ab0917fff176586393c4657bf8dbe9f073",
+      ],
+      [
+        "examples/gfx950_gpt_oss_decode/tests/source.rs",
+        "3f399fa432c18ae80aab973b8780d6de5cd51950620c1b2aff4498e2d85ef69a",
+      ],
+      [
+        "perf-evidence/gpt-oss-layer-tile-evidence-v1.json",
+        "65ae89cdba30261d4dc3dc92a295f392e95b7bcded67f721c48defd8de17635a",
+      ],
+      [
+        "perf-evidence/gfx950-advanced-ablation-evidence-v1.json",
+        "da0bf8e61151ca1ae15dbaf57743a840e2099556c3d20eebfe0c43d4ec792ec5",
+      ],
+      [
+        "perf-evidence/gfx950-integrated-compatibility-v1.json",
+        "803835efa3e9bd973a40791184e50cfcbefa60d22af7fb02c9d45e9f6c191a59",
+      ],
+      [
+        "perf-evidence/mi350x-bound-inputs-v1.json",
+        "79057257dcba07cec6adeed2341c8cb7e8ccdcef231a7c7b9687cb562f49ab49",
+      ],
+      [
+        "perf-evidence/gfx950-rejection-logs/scalar-attention.log",
+        "033c71aa06489832eff24ef48abcd451924b1950959546f8f29acb39ac022c14",
+      ],
+      [
+        "perf-evidence/gfx950-rejection-logs/pipelined-attention.log",
+        "ddea01325d7723ab42cec98c7c90e48edd681d38c5fbe97a6f35e1045e6e3066",
+      ],
+      [
+        "perf-evidence/gfx950-advanced-evidence-v1.json",
+        "550b290ec4e8dbf43fa338f31fda88199c6f8d86ae55f9570789bac7b968fd6a",
+      ],
+      [
+        "perf-evidence/run-gpt-oss-performance.sh",
+        "e4ab1ba9b2f7ce2489bf163922d9cdb4bbf01591643cc9aef0d4b30db175f28f",
+      ],
+      [
+        "perf-evidence/run-gfx950-advanced-ablation.sh",
+        "adb6ec6814935a8023eb9f0b65cedb110768e2a795aa8907968650fc044629ab",
+      ],
+      [
+        "crates/fe2o3-hsa-runtime/tests/gfx950_advanced_hardware.rs",
+        "10a1d90c9093b33c0d8900c6c0a9aee7ada55d86a67082d3682a719e157a17a7",
+      ],
     ] as const;
     for (const [path, digest] of mirrors) {
-      expect(createHash("sha256").update(readFileSync(path)).digest("hex"), path).toBe(digest);
+      expect(
+        createHash("sha256").update(readFileSync(path)).digest("hex"),
+        path,
+      ).toBe(digest);
     }
   });
 
@@ -2663,7 +3394,8 @@ describe("curriculum integrity", () => {
   it("pins the exact compiler-generated WG64 debugger schedule", () => {
     const lesson = lessons.find((entry) => entry.id === "reductions-scans");
     const claim = lesson?.claims.find(
-      (entry) => entry.label === "Exact target-neutral WG64 generated-effect schedule",
+      (entry) =>
+        entry.label === "Exact target-neutral WG64 generated-effect schedule",
     );
     expect(claim).toMatchObject({
       kind: "compiler-checked",
@@ -2881,7 +3613,10 @@ describe("curriculum integrity", () => {
       readFileSync("examples/source_simulation_request.json", "utf8").trim(),
     );
     expect(host).toContain(
-      readFileSync("examples/aggregate_simulation_request_v1.json", "utf8").trim(),
+      readFileSync(
+        "examples/aggregate_simulation_request_v1.json",
+        "utf8",
+      ).trim(),
     );
     expect(host).toContain("fe2o3-export-sim --crate");
     expect(host).toContain("fe2o3-kir-sim --bundle");
@@ -2892,8 +3627,12 @@ describe("curriculum integrity", () => {
     expect(host).toContain("fe2o3-debug sim --bundle-v4");
     expect(host).toContain("--bundle-version 5");
     expect(host).toContain("fe2o3-debug sim --bundle-v5");
-    expect(host).toContain("ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed");
-    expect(host).toContain("ordinary_recursive_aggregates_export_and_execute_bundle_v5");
+    expect(host).toContain(
+      "ordinary_recursive_aggregates_export_and_unsafe_shapes_fail_typed",
+    );
+    expect(host).toContain(
+      "ordinary_recursive_aggregates_export_and_execute_bundle_v5",
+    );
     expect(host).toContain("--test production_semantic_conformance_v3");
     expect(host).toContain("--features workgroup_reduce_u32");
     expect(host).toContain(
@@ -2902,8 +3641,12 @@ describe("curriculum integrity", () => {
     expect(host).toContain("--test device_api_ui");
     expect(host).toContain("--test simulation workgroup_scan");
     expect(host).toContain("--test codec_v2");
-    expect(host).toContain("v2_trace_adapter_rejects_v7_and_binds_exact_v9_v10_owners");
-    expect(host).toContain("ordinary_neutral_collectives_reach_both_target_llvm_backends");
+    expect(host).toContain(
+      "v2_trace_adapter_rejects_v7_and_binds_exact_v9_v10_owners",
+    );
+    expect(host).toContain(
+      "ordinary_neutral_collectives_reach_both_target_llvm_backends",
+    );
     expect(host).toContain('"level":"workgroup"');
     expect(host).toContain('"category":"memory"');
     expect(host).toContain('"category":"operation"');
@@ -2912,22 +3655,33 @@ describe("curriculum integrity", () => {
     expect(host).not.toContain("--kir-v7");
     const sourceDebug =
       lesson?.tabs.find((tab) => tab.kind === "comparison")?.code ?? "";
-    expect(sourceDebug).toContain("shapes: pointer-free Unit, fixed array, tuple, and struct");
+    expect(sourceDebug).toContain(
+      "shapes: pointer-free Unit, fixed array, tuple, and struct",
+    );
     expect(sourceDebug).toContain("enums and niche materialization");
     expect(sourceDebug).toContain("[u64; 2]");
-    expect(sourceDebug).toContain("Physical Indirect carrier pointers and aggregate padding are never read");
+    expect(sourceDebug).toContain(
+      "Physical Indirect carrier pointers and aggregate padding are never read",
+    );
     expect(sourceDebug).toContain("Bundle V5 exactness boundary");
     expect(sourceDebug).toContain("production identity: canonical KIR V9");
-    expect(sourceDebug).toContain("Multi-root semantic debug custody at 2df6130c5");
+    expect(sourceDebug).toContain(
+      "Multi-root semantic debug custody at 2df6130c5",
+    );
     expect(sourceDebug).toContain("absolute ordinal + role + symbol");
-    expect(sourceDebug).toContain("shared physical helper: one KIR body, not duplicated");
+    expect(sourceDebug).toContain(
+      "shared physical helper: one KIR body, not duplicated",
+    );
     expect(sourceDebug).toContain("exact owner-qualified occurrence sidecar");
     expect(sourceDebug).toContain("Trace V2: exact canonical KIR V9 or V10");
     expect(sourceDebug).toContain(
       readFileSync("examples/source_debugger_requests_v1.jsonl", "utf8").trim(),
     );
     expect(sourceDebug).toContain(
-      readFileSync("examples/source_debugger_responses_v1.jsonl", "utf8").trim(),
+      readFileSync(
+        "examples/source_debugger_responses_v1.jsonl",
+        "utf8",
+      ).trim(),
     );
     expect(validateSourceDebuggerMilestone()).toEqual([]);
     expect(sourceDebuggerRequests).toHaveLength(5);
@@ -2942,13 +3696,16 @@ describe("curriculum integrity", () => {
         .update(readFileSync("examples/source_debugger_responses_v1.jsonl"))
         .digest("hex"),
     ).toBe(SOURCE_DEBUGGER_RESPONSES_SHA256);
-    const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    const result =
+      lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
     expect(result).toContain("explicit kernarg bytes: 40");
     expect(result).toContain("session.simulated: true");
     expect(result).toContain("hardware passes: 0");
     expect(result).toContain("Recursive Bundle V5 milestone at 1205ddc59");
     expect(result).toContain("SimRuntimeBackendV1: completed");
-    expect(result).toContain("canonical bounds trap: dynamic error only when reached");
+    expect(result).toContain(
+      "canonical bounds trap: dynamic error only when reached",
+    );
     expect(result).toContain("Production semantic conformance V3 at 645750c12");
     expect(result).toContain("generated integer cases: 32");
     expect(result).toContain("ordinary u32 switch: agreement");
@@ -2959,12 +3716,17 @@ describe("curriculum integrity", () => {
     expect(result).toContain("retained ordinary scan Bundle V5 executions: 0");
     expect(result).toContain("u32 input 2 -> 128 in all 64 output lanes");
     expect(result).toContain("f32 input 1.5 -> 96.0 (0x42c00000)");
-    expect(result).toContain("wrong [32, 1, 1] roster: typed workgroup mismatch");
+    expect(result).toContain(
+      "wrong [32, 1, 1] roster: typed workgroup mismatch",
+    );
     expect(result).toContain(
       readFileSync("examples/source_simulation_result.json", "utf8").trim(),
     );
     expect(result).toContain(
-      readFileSync("examples/source_simulation_schedule_v1.json", "utf8").trim(),
+      readFileSync(
+        "examples/source_simulation_schedule_v1.json",
+        "utf8",
+      ).trim(),
     );
     const simulationResult = JSON.parse(
       readFileSync("examples/source_simulation_result.json", "utf8"),
@@ -2984,7 +3746,9 @@ describe("curriculum integrity", () => {
         scheduled_slots_visited: 64,
         steps_executed: 43,
       },
-      schedule: { coverage: { decisions: 2, barrier_releases: 1, complete: true } },
+      schedule: {
+        coverage: { decisions: 2, barrier_releases: 1, complete: true },
+      },
     });
     expect(persistedSchedule).toMatchObject({
       schema: "fe2o3-simulation-schedule-v1",
@@ -3006,7 +3770,9 @@ describe("curriculum integrity", () => {
       tree: debugSimWorkgroupScanFixture.compiler.tree,
       target: "gfx942:xnack- and gfx950:xnack- semantic profiles",
     });
-    expect(reference?.note).toContain("not protected compiler-execution authentication");
+    expect(reference?.note).toContain(
+      "not protected compiler-execution authentication",
+    );
     expect(reference?.sourcePaths).toEqual(
       expect.arrayContaining([
         "docs/simulation-bundle-v1.md",
@@ -3029,7 +3795,9 @@ describe("curriculum integrity", () => {
     expect(content).toContain("Explicitly sized dynamic LDS");
     expect(content).toContain("no source-to-KIR refinement");
     expect(content).toContain("performance prediction");
-    expect(content).toContain("ROCgdb remains the hardware-debugging substrate");
+    expect(content).toContain(
+      "ROCgdb remains the hardware-debugging substrate",
+    );
     expect(content).toContain("rocprofv3 and compute viewer");
     expect(content).toContain("Native HIP or Mojo workflow");
     expect(content).toContain("broader superiority is not claimed");
@@ -3038,14 +3806,26 @@ describe("curriculum integrity", () => {
     expect(content).toContain(exactBundleV5Milestone.commit.slice(0, 9));
     expect(content).toContain(liveDirectKfdRocprofMilestone.commit.slice(0, 9));
     expect(content).toContain(recursiveAggregateV2Milestone.commit.slice(0, 9));
-    expect(content).toContain(productionSemanticConformanceV3Milestone.commit.slice(0, 9));
-    expect(content).toContain(debugSimWorkgroupReductionFixture.compiler.commit.slice(0, 9));
-    expect(content).toContain(debugSimWorkgroupReductionFixture.correspondence.commit.slice(0, 9));
-    expect(content).toContain(rocprofWrapperOverheadMilestone.commit.slice(0, 9));
+    expect(content).toContain(
+      productionSemanticConformanceV3Milestone.commit.slice(0, 9),
+    );
+    expect(content).toContain(
+      debugSimWorkgroupReductionFixture.compiler.commit.slice(0, 9),
+    );
+    expect(content).toContain(
+      debugSimWorkgroupReductionFixture.correspondence.commit.slice(0, 9),
+    );
+    expect(content).toContain(
+      rocprofWrapperOverheadMilestone.commit.slice(0, 9),
+    );
     expect(content).toContain(agentVariantV2Milestone.commit.slice(0, 9));
     expect(content).toContain(transformationMapV2Milestone.commit.slice(0, 9));
-    expect(content).toContain(profilerPhysicalDifferentialMilestone.commit.slice(0, 9));
-    expect(content).toContain(profilerRuntimeCausalityMilestone.commit.slice(0, 9));
+    expect(content).toContain(
+      profilerPhysicalDifferentialMilestone.commit.slice(0, 9),
+    );
+    expect(content).toContain(
+      profilerRuntimeCausalityMilestone.commit.slice(0, 9),
+    );
     expect(profilerWrapperOverheadMilestone.productionQualified).toBe(false);
 
     expect(currentState.issues).toEqual(
@@ -3058,7 +3838,9 @@ describe("curriculum integrity", () => {
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
       )?.detail,
-    ).toContain("Compiler-bundle binding authenticates exact local map/KIR content");
+    ).toContain(
+      "Compiler-bundle binding authenticates exact local map/KIR content",
+    );
     expect(
       currentState.capabilities.find(
         (capability) => capability.id === "semantic-debug-profile",
@@ -3203,9 +3985,9 @@ describe("curriculum integrity", () => {
       "On mi300x, every listed functional-refinement",
     );
     expect(
-      functionalCorrectnessCatalog.map(({ perCompilationVerus }) =>
-        perCompilationVerus
-      ).join("\n"),
+      functionalCorrectnessCatalog
+        .map(({ perCompilationVerus }) => perCompilationVerus)
+        .join("\n"),
     ).toContain("retains no immutable transcript or run record");
   });
 
@@ -3225,7 +4007,9 @@ describe("curriculum integrity", () => {
     expect(kernel?.code).toContain("lhs_pipeline.stage(future_epoch)");
     expect(kernel?.code).toContain("lhs_pipeline.wait(phase_index)");
     expect(kernel?.code).toContain("lhs_pipeline.discard(phase_count)");
-    expect(kernel?.code).toContain("matrix.multiply_accumulate(lhs, rhs, accumulator)");
+    expect(kernel?.code).toContain(
+      "matrix.multiply_accumulate(lhs, rhs, accumulator)",
+    );
     expect(kernel?.code).toContain("-> KernelResult");
     expect(kernel?.code).toContain(
       "let a_matrix = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)?;",
@@ -3284,23 +4068,28 @@ describe("curriculum integrity", () => {
     expect(host?.code).toContain("rows: 19");
     expect(host?.code).toContain("grid_dim: (tile_rows * tile_columns, 1, 1)");
 
-    const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    const result =
+      lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
     expect(result).toContain("110 correspondence blocks");
     expect(result).toContain("v_mfma_f32_16x16x16_bf16");
     expect(result).toContain("PASS tiled_gemm_general_v1: 19x21x23");
     expect(result).toContain("4 x s_barrier");
-    expect(result).toContain("functional qualification, not a performance claim");
+    expect(result).toContain(
+      "functional qualification, not a performance claim",
+    );
     expect(result).toContain("138.005 us");
     expect(result).toContain("130.514 us");
 
     const proofLesson = lessons.find((entry) => entry.id === "gemm-proof-plan");
-    expect(proofLesson?.tabs.find((tab) => tab.kind === "kernel")).toMatchObject({
+    expect(
+      proofLesson?.tabs.find((tab) => tab.kind === "kernel"),
+    ).toMatchObject({
       sourcePath: "examples/tiled_gemm_v1/src/kernel.rs",
       evidenceId: "tiled-gemm-safe-source-v1",
     });
-    expect(proofLesson?.tabs.find((tab) => tab.kind === "verus")?.code).toContain(
-      "--test lds_source_refinement",
-    );
+    expect(
+      proofLesson?.tabs.find((tab) => tab.kind === "verus")?.code,
+    ).toContain("--test lds_source_refinement");
 
     const changed = structuredClone(curriculum);
     const changedKernel = changed
@@ -3324,8 +4113,12 @@ describe("curriculum integrity", () => {
     const contract = JSON.stringify(
       narrativeEntry("gemm-tiling/general-contract"),
     );
-    expect(contract).toContain("Generic PLIRON safety passes are mandatory before lowering");
-    expect(contract).toContain("mandatory workload-neutral safety sequence before Kernel IR lowering");
+    expect(contract).toContain(
+      "Generic PLIRON safety passes are mandatory before lowering",
+    );
+    expect(contract).toContain(
+      "mandatory workload-neutral safety sequence before Kernel IR lowering",
+    );
     expect(contract).toContain("memory bounds");
     expect(contract).toContain("atomic legality");
     expect(contract).toContain("global race freedom");
@@ -3333,8 +4126,12 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("workgroup-memory initialization/publication");
     expect(contract).toContain("declared semantic refinement");
     expect(contract).toContain("sparse affine index dataflow");
-    expect(contract).toContain("contains no GEMM names, tile-size tests, or schedule recognizers");
-    expect(contract).toContain("checked index, success path, extent, dominance, provenance");
+    expect(contract).toContain(
+      "contains no GEMM names, tile-size tests, or schedule recognizers",
+    );
+    expect(contract).toContain(
+      "checked index, success path, extent, dominance, provenance",
+    );
     expect(contract).toContain("KIR, LLVM, HSACO, and qualification launch");
     expect(contract).toContain("Remaining work is protected publication");
     expect(contract).toContain("current kernel uses BF16/F32 MFMA");
@@ -3345,7 +4142,9 @@ describe("curriculum integrity", () => {
     expect(contract).toContain("alpha*acc[m,n] + beta*C[m,n]");
     expect(contract).toContain("Ten safe UI fixtures");
     expect(contract).toContain("not fe2o3 semantic proof diagnostics");
-    expect(contract).toContain("unsafe never discharges or bypasses a verifier obligation");
+    expect(contract).toContain(
+      "unsafe never discharges or bypasses a verifier obligation",
+    );
     for (const [obligation, code] of [
       ["memory_safe", "0x46470101"],
       ["bounds_safe", "0x46470102"],
@@ -3390,12 +4189,8 @@ describe("curriculum integrity", () => {
     expect(compilerNarrative).toContain(
       "No pass recognizes GEMM, softmax, attention, routing, or another workload name",
     );
-    expect(compilerNarrative).toContain(
-      "Static bounded ranked access witness",
-    );
-    expect(compilerNarrative).toContain(
-      "Nonempty tensor-layout witness",
-    );
+    expect(compilerNarrative).toContain("Static bounded ranked access witness");
+    expect(compilerNarrative).toContain("Nonempty tensor-layout witness");
     expect(compilerNarrative).toContain(
       "every other current independent stage witness remain Incomplete",
     );
@@ -3414,9 +4209,7 @@ describe("curriculum integrity", () => {
     expect(compilerNarrative).toContain(
       "Overflow and zero divisors stay unfurled",
     );
-    expect(compilerNarrative).toContain(
-      "Canonical hashes are labels only",
-    );
+    expect(compilerNarrative).toContain("Canonical hashes are labels only");
     expect(compilerNarrative).toContain(
       "Debug the verified bundle without upgrading observation into proof",
     );
@@ -3489,18 +4282,12 @@ describe("curriculum integrity", () => {
     expect(fold?.code).toContain("kernel.index_binary Add");
     expect(fold?.code).toContain("kernel.index_constant 12");
     expect(fold?.notice).toContain("separate evaluator and structural replay");
-    expect(result?.code).toContain(
-      "static bounded ranked access raw replay",
-    );
-    expect(result?.code).toContain(
-      "nonempty tensor-layout replay",
-    );
+    expect(result?.code).toContain("static bounded ranked access raw replay");
+    expect(result?.code).toContain("nonempty tensor-layout replay");
     expect(result?.code).toContain(
       "every other current independent stage witness",
     );
-    expect(result?.code.split("\n\nIncomplete:")[0]).not.toContain(
-      "tensor",
-    );
+    expect(result?.code.split("\n\nIncomplete:")[0]).not.toContain("tensor");
     expect(host?.code).toContain("production_ranked_constant_fold");
     expect(host?.code).toContain("pliron_analysis_witness");
     expect(host?.code).toContain("pliron_lit");
@@ -3508,7 +4295,9 @@ describe("curriculum integrity", () => {
 
     const claim = lesson?.claims[0];
     expect(claim?.detail).toContain("sealed checked constant fold");
-    expect(claim?.detail).toContain("all other current witnesses remain Incomplete");
+    expect(claim?.detail).toContain(
+      "all other current witnesses remain Incomplete",
+    );
     expect(claim?.reference?.sourcePaths).toEqual(
       expect.arrayContaining([
         "crates/fe2o3-pliron/src/production/ranked/ranked_index_constant_fold_v1.rs",
@@ -3546,12 +4335,8 @@ describe("curriculum integrity", () => {
     ]) {
       expect(narrative).toContain(boundary);
     }
-    expect(narrative).toContain(
-      "Raw or textual carriers without those facts",
-    );
-    expect(narrative).toContain(
-      "active stores injective",
-    );
+    expect(narrative).toContain("Raw or textual carriers without those facts");
+    expect(narrative).toContain("active stores injective");
     expect(narrative).not.toContain("zero production transformations");
     expect(narrative).not.toContain("all eight independent semantic-witness");
   });
@@ -3566,9 +4351,11 @@ describe("curriculum integrity", () => {
         "58012e0d5168161cf48fa3f06644af04585c4e603af0a15b8737964ba96f04de",
       explanatory: false,
     });
-    expect(createHash("sha256").update(kernel?.code ?? "").digest("hex")).toBe(
-      kernel?.sourceSha256,
-    );
+    expect(
+      createHash("sha256")
+        .update(kernel?.code ?? "")
+        .digest("hex"),
+    ).toBe(kernel?.sourceSha256);
     expect(kernel?.code).toContain("#[kernel(");
     expect(kernel?.code).toContain("control_flow(loop_bounds(64, 64, 64))");
     expect(kernel?.code).toContain("Math::current()");
@@ -3600,14 +4387,19 @@ describe("curriculum integrity", () => {
     expect(host?.code).toContain("maximum-width");
     expect(host?.code).toContain("wrote output padding");
 
-    const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
-    expect(result).toContain("Historical dynamic row softmax qualification on MI300X/gfx942");
+    const result =
+      lesson?.tabs.find((tab) => tab.kind === "result")?.code ?? "";
+    expect(result).toContain(
+      "Historical dynamic row softmax qualification on MI300X/gfx942",
+    );
     expect(result).toContain("workload-selecting route is not present");
     expect(result).toContain("PASS single-column");
     expect(result).toContain("PASS maximum-width");
     expect(result).toContain("four ranked dynamic-index obligations");
     expect(result).toContain("lane shuffles and no MFMA");
-    expect(result).toContain("not a proof for every input or a performance claim");
+    expect(result).toContain(
+      "not a proof for every input or a performance claim",
+    );
 
     const proofNarrative = narrativeEntry("softmax-invariant/proof");
     expect(JSON.stringify(proofNarrative)).toContain("PLIRON verification");
@@ -3715,38 +4507,39 @@ describe("curriculum integrity", () => {
       expect(kernel?.code).not.toMatch(/macro_rules!\s+[A-Za-z_]/u);
 
       for (const kind of ["host", "result"] as const) {
-        expect(
-          lesson?.tabs.find((tab) => tab.kind === kind)?.explanatory,
-        ).toBe(true);
+        expect(lesson?.tabs.find((tab) => tab.kind === kind)?.explanatory).toBe(
+          true,
+        );
       }
-      expect(lesson?.tabs.find((tab) => tab.kind === "verus")?.explanatory).toBe(
-        profile.lessonId !== "moe-routing",
-      );
+      expect(
+        lesson?.tabs.find((tab) => tab.kind === "verus")?.explanatory,
+      ).toBe(profile.lessonId !== "moe-routing");
       const result = lesson?.tabs.find((tab) => tab.kind === "result")?.code;
-      const gaps = profile.lessonId === "moe-routing"
-        ? [
-            "W0 authenticated HostLinkClosureV1",
-            "W1 broker cargo-fe2o3 executable identity",
-            "protected GPU output",
-            "authenticated proof consumption",
-            "IEEE FP32/compiler/logical-address refinement",
-            "source/model-to-machine refinement",
-          ]
-        : profile.lessonId === "lds-barriers-atomics"
+      const gaps =
+        profile.lessonId === "moe-routing"
           ? [
-              "source/compiler/machine refinement",
-              "generalized illegal-access safety",
-              "generalized race freedom",
+              "W0 authenticated HostLinkClosureV1",
+              "W1 broker cargo-fe2o3 executable identity",
+              "protected GPU output",
+              "authenticated proof consumption",
+              "IEEE FP32/compiler/logical-address refinement",
+              "source/model-to-machine refinement",
             ]
-          : profile.lessonId === "reductions-scans"
-            ? ["Compiler and Verus-to-machine refinement"]
-          : [
-            "compiler collector/lowering",
-            "compiler profile and descriptor",
-            "finalizer",
-            "generated host/runtime",
-            "protected gfx942 execution",
-          ];
+          : profile.lessonId === "lds-barriers-atomics"
+            ? [
+                "source/compiler/machine refinement",
+                "generalized illegal-access safety",
+                "generalized race freedom",
+              ]
+            : profile.lessonId === "reductions-scans"
+              ? ["Compiler and Verus-to-machine refinement"]
+              : [
+                  "compiler collector/lowering",
+                  "compiler profile and descriptor",
+                  "finalizer",
+                  "generated host/runtime",
+                  "protected gfx942 execution",
+                ];
       for (const gap of gaps) {
         expect(result).toContain(gap);
       }
@@ -3795,9 +4588,7 @@ describe("curriculum integrity", () => {
     );
     const synchronizationClaim = lessons
       .find((entry) => entry.id === "lds-barriers-atomics")
-      ?.claims.find(
-        (claim) => claim.reference?.scope === "source-milestone",
-      );
+      ?.claims.find((claim) => claim.reference?.scope === "source-milestone");
     expect(synchronizationClaim?.reference?.sourcePaths).toContain(atomicPath);
     expect(atomic).toContain("DeviceGlobalMutPtr<u32>");
   });
@@ -3844,7 +4635,9 @@ describe("curriculum integrity", () => {
   });
 
   it("rejects promoted GEMM tabs without exact evidence linkage", () => {
-    const mutateKernel = (mutate: (kernel: Record<string, unknown>) => void) => {
+    const mutateKernel = (
+      mutate: (kernel: Record<string, unknown>) => void,
+    ) => {
       const changed = structuredClone(curriculum);
       const kernel = changed
         .flatMap((module) => module.lessons)
@@ -3855,9 +4648,7 @@ describe("curriculum integrity", () => {
       return validateCurriculum(changed);
     };
 
-    expect(
-      mutateKernel((kernel) => delete kernel.evidenceId),
-    ).toContainEqual(
+    expect(mutateKernel((kernel) => delete kernel.evidenceId)).toContainEqual(
       expect.objectContaining({
         message:
           "promoted algorithm kernel tab lacks exact source and evidence linkage",
@@ -4151,9 +4942,15 @@ describe("curriculum integrity", () => {
         authority: "sealed-profile-registry-only",
       },
     ]);
-    expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(true);
-    expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(true);
-    expect(staged?.filter((claim) => claim.kind === "gpu-observed")).toHaveLength(2);
+    expect(staged?.every((claim) => claim.reference?.commands.length)).toBe(
+      true,
+    );
+    expect(staged?.every((claim) => claim.reference?.sourcePaths.length)).toBe(
+      true,
+    );
+    expect(
+      staged?.filter((claim) => claim.kind === "gpu-observed"),
+    ).toHaveLength(2);
   });
 
   it("requires whole Cargo test suites and referenced integration targets", () => {
@@ -4179,9 +4976,8 @@ describe("curriculum integrity", () => {
       "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_admission",
       "cargo test -p fe2o3-hsaco-finalize --test worker_v2_hsaco_finalization",
     ]);
-    const hardwareCommand = stagedEvidenceRecord(
-      "tiled-hardware-harness-v1",
-    ).commands[0];
+    const hardwareCommand = stagedEvidenceRecord("tiled-hardware-harness-v1")
+      .commands[0];
     const parsedHardwareCommand = parseExactCargoTestCommand(hardwareCommand);
     expect(hardwareCommand).toContain("cargo test --locked");
     expect(parsedHardwareCommand).toMatchObject({
@@ -4301,10 +5097,8 @@ describe("curriculum integrity", () => {
         FE2O3_OPT: "/opt/rocm-7.2.4/lib/llvm/bin/opt",
         FE2O3_LLC: "/opt/rocm-7.2.4/lib/llvm/bin/llc",
         FE2O3_LLD: "/opt/rocm-7.2.4/lib/llvm/bin/ld.lld",
-        FE2O3_LLVM_OBJDUMP:
-          "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
-        FE2O3_LLVM_READOBJ:
-          "/opt/rocm-7.2.4/lib/llvm/bin/llvm-readobj",
+        FE2O3_LLVM_OBJDUMP: "/opt/rocm-7.2.4/lib/llvm/bin/llvm-objdump",
+        FE2O3_LLVM_READOBJ: "/opt/rocm-7.2.4/lib/llvm/bin/llvm-readobj",
       },
     });
     for (const id of stagedEvidenceOrder) {
@@ -4368,7 +5162,8 @@ describe("curriculum integrity", () => {
     );
     expect(validateCurriculum(changed)).toContainEqual(
       expect.objectContaining({
-        message: "lesson must contain exactly one canonical staged evidence section",
+        message:
+          "lesson must contain exactly one canonical staged evidence section",
       }),
     );
   });
@@ -4447,7 +5242,9 @@ describe("curriculum integrity", () => {
       const mutable = section as unknown as Record<string, unknown>;
       mutable.narrativeId = invalidId;
       expect(validateCurriculum(changed)).toContainEqual(
-        expect.objectContaining({ message: `unknown narrative id ${invalidId}` }),
+        expect.objectContaining({
+          message: `unknown narrative id ${invalidId}`,
+        }),
       );
     }
   });
@@ -4487,16 +5284,10 @@ describe("curriculum integrity", () => {
 
     const narrative = narrativeEntry("first-fill/kernel-shape");
     const originalNarrativeText =
-      narrative.blocks[0].type === "paragraph"
-        ? narrative.blocks[0].text
-        : "";
+      narrative.blocks[0].type === "paragraph" ? narrative.blocks[0].text : "";
     expect(Object.isFrozen(narrative.blocks[0])).toBe(true);
     expect(
-      Reflect.set(
-        narrative.blocks[0] as object,
-        "text",
-        unsupportedAuthority,
-      ),
+      Reflect.set(narrative.blocks[0] as object, "text", unsupportedAuthority),
     ).toBe(false);
 
     const narrativeSnapshot = narrativeRegistrySnapshot();
@@ -4514,7 +5305,9 @@ describe("curriculum integrity", () => {
 
     const progressSnapshotCandidate = progressNarrativeRegistrySnapshot();
     progressSnapshotCandidate["progress/scalar-gemm-v1"] = unsupportedAuthority;
-    expect(validateProgressNarrativeRegistry(progressSnapshotCandidate)).toContain(
+    expect(
+      validateProgressNarrativeRegistry(progressSnapshotCandidate),
+    ).toContain(
       "progress/scalar-gemm-v1: canonical progress narrative text drift",
     );
     const scalarCheckpoint = developmentCheckpoints.find(
@@ -4527,11 +5320,7 @@ describe("curriculum integrity", () => {
     const staged = stagedEvidenceRecord("tiled-source-bridge-v1");
     expect(Object.isFrozen(staged.assertions[0])).toBe(true);
     expect(
-      Reflect.set(
-        staged.assertions[0] as object,
-        "text",
-        unsupportedAuthority,
-      ),
+      Reflect.set(staged.assertions[0] as object, "text", unsupportedAuthority),
     ).toBe(false);
     expect(stagedEvidenceDetail(["tiled-source-bridge-v1"])).not.toContain(
       unsupportedAuthority,
@@ -4621,13 +5410,17 @@ describe("curriculum integrity", () => {
     );
     expect(compilerRefactor).toContain("context-bound services");
     expect(compilerRefactor).toContain("terminal typed errors");
-    expect(compilerRefactor).toContain("no fallback and no result after failure");
+    expect(compilerRefactor).toContain(
+      "no fallback and no result after failure",
+    );
     expect(compilerRefactor).toContain(
       "2610651306ea3ba670f68d5d8b1e1159bcd521ed",
     );
     expect(compilerRefactor).toContain("non-executing");
     expect(compilerRefactor).toContain("issue #140");
-    expect(compilerRefactor).toContain("does not complete issue #134, #135, or #140");
+    expect(compilerRefactor).toContain(
+      "does not complete issue #134, #135, or #140",
+    );
     expect(compilerRefactor).toContain(
       "make any explanatory lesson kernel functional",
     );
@@ -4666,7 +5459,9 @@ describe("curriculum integrity", () => {
           "gpu-observed",
         ]);
       }
-      expect(lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory).toBe(
+      expect(
+        lesson.tabs.find((tab) => tab.kind === "kernel")?.explanatory,
+      ).toBe(
         [
           "gemm-tiling",
           "gemm-autoresearch",
@@ -4717,11 +5512,14 @@ describe("semantic equivalence reference page", () => {
     ]);
     for (const stage of semanticEquivalencePage.stages) {
       expect(stage.sourcePaths.length).toBeGreaterThan(0);
-      expect(stage.sourcePaths.every((path) =>
-        !path.startsWith("/") &&
-        !path.split("/").includes("..") &&
-        path.length > 0
-      )).toBe(true);
+      expect(
+        stage.sourcePaths.every(
+          (path) =>
+            !path.startsWith("/") &&
+            !path.split("/").includes("..") &&
+            path.length > 0,
+        ),
+      ).toBe(true);
       expect(stage.compileTimeFailure).toMatch(/reject|stop|prevent|cannot/u);
     }
 
@@ -4730,12 +5528,20 @@ describe("semantic equivalence reference page", () => {
       lessonId: "gfx950-kda-gdn-linear-attention",
       title: "Worked example: Kimi Delta Attention decode and prefill",
     });
-    expect(semanticEquivalencePage.workedExample.snippets.map((snippet) => snippet.label)).toEqual([
+    expect(
+      semanticEquivalencePage.workedExample.snippets.map(
+        (snippet) => snippet.label,
+      ),
+    ).toEqual([
       "Safe CPU reference",
       "fe2o3 kernel core",
       "Runtime oracles today",
     ]);
-    expect(semanticEquivalencePage.workedExample.invariants.map((invariant) => invariant.label)).toEqual([
+    expect(
+      semanticEquivalencePage.workedExample.invariants.map(
+        (invariant) => invariant.label,
+      ),
+    ).toEqual([
       "Domain and Layout",
       "Bounded Recurrence",
       "Chunk Order",
@@ -4743,12 +5549,12 @@ describe("semantic equivalence reference page", () => {
       "Observable Outputs",
       "Numerical Policy",
     ]);
-    expect(semanticEquivalencePage.workedExample.promotionSteps.join(" ")).toContain(
-      "BoundedRecurrence",
-    );
-    expect(semanticEquivalencePage.workedExample.promotionSteps.join(" ")).toContain(
-      "LinearProbeLookup",
-    );
+    expect(
+      semanticEquivalencePage.workedExample.promotionSteps.join(" "),
+    ).toContain("BoundedRecurrence");
+    expect(
+      semanticEquivalencePage.workedExample.promotionSteps.join(" "),
+    ).toContain("LinearProbeLookup");
     expect(semanticEquivalencePage.workedExample.nonClaims.join(" ")).toContain(
       "runtime CPU-oracle checked",
     );
@@ -4799,14 +5605,21 @@ describe("implementation progress integrity", () => {
       state: "public",
       narrativeId: "progress/compiler-refactor-infrastructure",
     });
-    const compilerRefactorDetail = developmentCheckpointDetail(compilerRefactor);
+    const compilerRefactorDetail =
+      developmentCheckpointDetail(compilerRefactor);
     expect(compilerRefactorDetail).toContain(
       "Upstream Pliron v0.17.0 commit 2610651306ea3ba670f68d5d8b1e1159bcd521ed",
     );
-    expect(compilerRefactorDetail).toContain("PassPlan is bounded and non-executing");
+    expect(compilerRefactorDetail).toContain(
+      "PassPlan is bounded and non-executing",
+    );
     expect(compilerRefactorDetail).toContain("issue #140");
-    expect(compilerRefactorDetail).toContain("Issues #134, #135, and #140 remain open");
-    expect(compilerRefactorDetail).toContain("make an explanatory kernel functional");
+    expect(compilerRefactorDetail).toContain(
+      "Issues #134, #135, and #140 remain open",
+    );
+    expect(compilerRefactorDetail).toContain(
+      "make an explanatory kernel functional",
+    );
     expect(compilerRefactorDetail).toContain(
       "opaque KIR bridge preserves canonical V1-V5 bytes",
     );
@@ -4854,8 +5667,12 @@ describe("implementation progress integrity", () => {
       commit: "c703eaa271040b7c297e0d3b9ea8cc9fa470f327",
       state: "public",
     });
-    expect(checkpointDetail(worker)).toContain("tree c75b6cb9d70c6984bb375d09f095580eb2f7581a");
-    expect(checkpointDetail(worker)).toContain("test-harness determinism repair only");
+    expect(checkpointDetail(worker)).toContain(
+      "tree c75b6cb9d70c6984bb375d09f095580eb2f7581a",
+    );
+    expect(checkpointDetail(worker)).toContain(
+      "test-harness determinism repair only",
+    );
 
     const source = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "row-softmax-ordinary-source",
@@ -4864,7 +5681,9 @@ describe("implementation progress integrity", () => {
       commit: "f4dcafb8b95345a5203a7f2c9886f9600345405f",
       state: "public",
     });
-    expect(checkpointDetail(source)).toContain("Complete syn AST structural admission");
+    expect(checkpointDetail(source)).toContain(
+      "Complete syn AST structural admission",
+    );
     expect(checkpointDetail(source)).toContain("not Rust semantic refinement");
     expect(checkpointDetail(source)).toContain("The row remains Partial");
 
@@ -4889,14 +5708,25 @@ describe("implementation progress integrity", () => {
       commit: "5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4",
       state: "public",
     });
-    expect(checkpointDetail(ci)).toContain("eight explicit rustc-codegen shards");
-    expect(checkpointDetail(ci)).toContain("19 current Cargo integration-test targets");
-    expect(checkpointDetail(ci)).toContain("Locked Cargo metadata is authoritative");
+    expect(checkpointDetail(ci)).toContain(
+      "eight explicit rustc-codegen shards",
+    );
+    expect(checkpointDetail(ci)).toContain(
+      "19 current Cargo integration-test targets",
+    );
+    expect(checkpointDetail(ci)).toContain(
+      "Locked Cargo metadata is authoritative",
+    );
     expect(checkpointDetail(ci)).toContain(
       "the complete powderluv/fe2o3 GitHub-hosted generic run",
     );
 
-    for (const id of ["softmax", "flash-attention", "moe-routing", "moe-experts"]) {
+    for (const id of [
+      "softmax",
+      "flash-attention",
+      "moe-routing",
+      "moe-experts",
+    ]) {
       expect(kernelProgress.find((kernel) => kernel.id === id)).toMatchObject({
         run: "partial",
         verify: "partial",
@@ -4924,7 +5754,9 @@ describe("implementation progress integrity", () => {
     expect(w0Detail).toContain("measured/no-authority");
     expect(w0Detail).toContain("no protected publication");
     expect(w0Detail).toContain("neither memory safety nor race freedom");
-    expect(w0Detail).toContain("no source-to-machine or Verus-to-machine refinement");
+    expect(w0Detail).toContain(
+      "no source-to-machine or Verus-to-machine refinement",
+    );
 
     const broker = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "broker-v4-inert-foundation",
@@ -4936,14 +5768,21 @@ describe("implementation progress integrity", () => {
       narrativeId: "progress/broker-v4-inert-foundation",
     });
     const brokerDetail = checkpointDetail(broker);
-    expect(brokerDetail).toContain("tree f39f9c76d964bafe9e8a12a0b48099766490b366");
+    expect(brokerDetail).toContain(
+      "tree f39f9c76d964bafe9e8a12a0b48099766490b366",
+    );
     expect(brokerDetail).toContain("AUTHORITY=none");
     expect(brokerDetail).toContain("No registry implementation");
     expect(brokerDetail).toContain("broker-owned durable registry");
     expect(brokerDetail).toContain("unforgeable move-only capability");
     expect(brokerDetail).toContain("persist replay exclusion across restart");
 
-    for (const id of ["softmax", "flash-attention", "moe-routing", "moe-experts"]) {
+    for (const id of [
+      "softmax",
+      "flash-attention",
+      "moe-routing",
+      "moe-experts",
+    ]) {
       expect(kernelProgress.find((kernel) => kernel.id === id)).toMatchObject({
         run: "partial",
         verify: "partial",
@@ -4965,11 +5804,17 @@ describe("implementation progress integrity", () => {
     const detail = checkpointDetail(wave64);
     expect(detail).toContain("tree bfedcca0e8fb58acda182d780700e520d093fb0f");
     expect(detail).toContain("4,359 deterministic mask observations");
-    expect(detail).toContain("38 tests with one existing hardware test ignored");
+    expect(detail).toContain(
+      "38 tests with one existing hardware test ignored",
+    );
     expect(detail).toContain("22 positive obligations");
     expect(detail).toContain("all eight expected-negative fixtures");
-    expect(detail).toContain("does not hash the CPU oracle or refinement implementation");
-    expect(detail).toContain("KIR order is validated but not operationally executed");
+    expect(detail).toContain(
+      "does not hash the CPU oracle or refinement implementation",
+    );
+    expect(detail).toContain(
+      "KIR order is validated but not operationally executed",
+    );
     expect(detail).toContain("does not compute SHA-256");
     expect(detail).toContain("no source-to-model correspondence");
     expect(detail).toContain("compiler causality");
@@ -4998,9 +5843,13 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("six expected-negative fixtures");
     expect(detail).toContain("proves_source_to_model_refinement=false");
     expect(detail).toContain("model-internal/definitional correspondence");
-    expect(detail).toContain("constants rather than a verified SHA computation");
+    expect(detail).toContain(
+      "constants rather than a verified SHA computation",
+    );
     expect(detail).toContain("interpreter is fixed after the AST gate");
-    expect(detail).toContain("no theorem gives the Rust syntax operational semantics");
+    expect(detail).toContain(
+      "no theorem gives the Rust syntax operational semantics",
+    );
     expect(detail).toContain("no compiler, LLVM/ISA, artifact, GPU");
     expect(detail).toContain("generalized memory-safety or race-freedom");
     expect(detail).toContain("parity authority");
@@ -5009,7 +5858,8 @@ describe("implementation progress integrity", () => {
 
   it("records only inert protected-service descriptor admission", () => {
     const admission = developmentCheckpoints.find(
-      (checkpoint) => checkpoint.id === "protected-service-descriptor-admission",
+      (checkpoint) =>
+        checkpoint.id === "protected-service-descriptor-admission",
     );
     expect(admission).toMatchObject({
       name: "Inert protected-service descriptor admission",
@@ -5021,12 +5871,16 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("tree ee06e94d6c5b5f5f447127a6c497e5a3e84ba417");
     expect(detail).toContain("AUTHORITY=none");
     expect(detail).toContain("27 unit tests and two compile-fail doctests");
-    expect(detail).toContain("two privileged/root-only positive tests remain ignored");
+    expect(detail).toContain(
+      "two privileged/root-only positive tests remain ignored",
+    );
     expect(detail).toContain("client liveness");
     expect(detail).toContain("PID-reuse protection");
     expect(detail).toContain("exclusive endpoint ownership");
     expect(detail).toContain("storage or anti-rollback");
-    expect(detail).toContain("replay, reservation, host-link, publication, load, launch");
+    expect(detail).toContain(
+      "replay, reservation, host-link, publication, load, launch",
+    );
     expect(detail).toContain("changes no parity status");
     expect(detail).toContain("run/verify/evidence gate");
     expect(detail).toContain("lesson pin");
@@ -5048,21 +5902,31 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("AUTHORITY=none");
     expect(detail).toContain("freestanding Linux x86-64 syscall-only _start");
     expect(detail).toContain("exact descriptor objects and process controls");
-    expect(detail).toContain("empty target environment and fixed one-element argv");
+    expect(detail).toContain(
+      "empty target environment and fixed one-element argv",
+    );
     expect(detail).toContain("post-exec target inherits PDEATHSIG(SIGKILL)");
     expect(detail).toContain("Fourteen CTests and the Cargo integration pass");
     expect(detail).toContain("17,488-byte executable");
     expect(detail).toContain(
       "db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52",
     );
-    expect(detail).toContain("trusts the supervisor and inherited process state");
+    expect(detail).toContain(
+      "trusts the supervisor and inherited process state",
+    );
     expect(detail).toContain("preattached ptrace tracer");
     expect(detail).toContain("inherited seccomp user notification");
     expect(detail).toContain("coarse object state");
-    expect(detail).toContain("parent-start provenance relies on trusted procfs mount state");
+    expect(detail).toContain(
+      "parent-start provenance relies on trusted procfs mount state",
+    );
     expect(detail).toContain("ordinary target exec resets dumpability");
-    expect(detail).toContain("no supervisor authentication, broker session or replay");
-    expect(detail).toContain("publication, link, load, launch, runtime, GPU, or parity authority");
+    expect(detail).toContain(
+      "no supervisor authentication, broker session or replay",
+    );
+    expect(detail).toContain(
+      "publication, link, load, launch, runtime, GPU, or parity authority",
+    );
     expect(detail).toContain("promotes no lesson or parity row");
   });
 
@@ -5084,7 +5948,9 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("caller-supplied pinned public-key value");
     expect(detail).toContain("constructible only after a valid signature");
     expect(detail).toContain("unrelated or later positions fail closed");
-    expect(detail).toContain("Fifteen unit, adversarial, and property-style tests");
+    expect(detail).toContain(
+      "Fifteen unit, adversarial, and property-style tests",
+    );
     expect(detail).toContain("three compile-fail doctests");
     expect(detail).toContain("every single-byte response mutation");
     expect(detail).toContain("durable nonce freshness");
@@ -5106,17 +5972,29 @@ describe("implementation progress integrity", () => {
     });
     const detail = checkpointDetail(rejected);
     expect(detail).toContain("tree 892f014381cd3e34f81cb05df3b9bbda4a412478");
-    expect(detail).toContain("is rejected and is not integrated, accepted, or public");
+    expect(detail).toContain(
+      "is rejected and is not integrated, accepted, or public",
+    );
     expect(detail).toContain(
       "crossed the static binding-wrapper, Cargo, rustc, backend, and kernel-collection boundaries",
     );
-    expect(detail).toContain("broker lacked an authenticated cargo-fe2o3 executable identity");
+    expect(detail).toContain(
+      "broker lacked an authenticated cargo-fe2o3 executable identity",
+    );
     expect(detail).toContain("executed zero Workers");
-    expect(detail).toContain("no artifact admission, load, dispatch, or GPU result");
+    expect(detail).toContain(
+      "no artifact admission, load, dispatch, or GPU result",
+    );
     expect(detail).toContain("opened no COMGR path");
-    expect(detail).toContain("ELF loader and system DSOs, CRTs, archives and objects, search roots");
-    expect(detail).toContain("forwarded Cargo target artifacts outside the authenticated closure");
-    expect(detail).toContain("env_clear reduces ambient configuration but does not authenticate");
+    expect(detail).toContain(
+      "ELF loader and system DSOs, CRTs, archives and objects, search roots",
+    );
+    expect(detail).toContain(
+      "forwarded Cargo target artifacts outside the authenticated closure",
+    );
+    expect(detail).toContain(
+      "env_clear reduces ambient configuration but does not authenticate",
+    );
     expect(detail).toContain("dedicated, genuinely static fe2o3-host-lld");
     expect(detail).toContain("pinned upstream LLVM/LLD archives");
     expect(detail).toContain("descriptor-backed HostLinkClosureV1");
@@ -5132,7 +6010,12 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("no COMGR or shell GPU linker");
     expect(detail).toContain("promote no parity or evidence row");
 
-    for (const id of ["softmax", "flash-attention", "moe-routing", "moe-experts"]) {
+    for (const id of [
+      "softmax",
+      "flash-attention",
+      "moe-routing",
+      "moe-experts",
+    ]) {
       expect(kernelProgress.find((kernel) => kernel.id === id)).toMatchObject({
         run: "partial",
         verify: "partial",
@@ -5174,12 +6057,16 @@ describe("implementation progress integrity", () => {
       "9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c",
     );
     expect(detail).toContain("Two fresh complete MI300X runs passed");
-    expect(detail).toContain("independent review accepted the evidence package");
+    expect(detail).toContain(
+      "independent review accepted the evidence package",
+    );
     expect(detail).toContain(
       "single retained HSACO identity 0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93",
     );
     expect(detail).toContain("did not dispatch a GPU");
-    expect(detail).toContain("upstream LLVM target-machine APIs plus in-process LLD");
+    expect(detail).toContain(
+      "upstream LLVM target-machine APIs plus in-process LLD",
+    );
     expect(detail).toContain("no runtime or GPU result, authentication");
   });
 
@@ -5241,20 +6128,27 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain("no measured proof of no-COMGR linkage");
 
     const reproducibility = developmentCheckpoints.find(
-      (checkpoint) => checkpoint.id === "flash-attention-upstream-reproducibility",
+      (checkpoint) =>
+        checkpoint.id === "flash-attention-upstream-reproducibility",
     );
     expect(reproducibility).toMatchObject({
       commit: "c1aecbb11017125e84209a333d978ec6d5bdddb1",
       state: "public",
     });
     const reproducibilityDetail = checkpointDetail(reproducibility);
-    expect(reproducibilityDetail).toContain("sole exact FlashAttention V1 machine compiler identity");
-    expect(reproducibilityDetail).toContain("Two previously absent worker build directories");
+    expect(reproducibilityDetail).toContain(
+      "sole exact FlashAttention V1 machine compiler identity",
+    );
+    expect(reproducibilityDetail).toContain(
+      "Two previously absent worker build directories",
+    );
     expect(reproducibilityDetail).toContain(
       "d2aa57c0f468f574f44a9fea06bbb8e98aa9b60bb2d9303cc4d8b6caf0cfca54",
     );
     expect(reproducibilityDetail).toContain("ROCm LLVM 7.2.4 is rejected");
-    expect(reproducibilityDetail).toContain("first measured toolchain divergence is linked bitcode");
+    expect(reproducibilityDetail).toContain(
+      "first measured toolchain divergence is linked bitcode",
+    );
     expect(reproducibilityDetail).toContain(
       "GPU device code-object path introduced no COMGR or shell GPU linker",
     );
@@ -5269,11 +6163,15 @@ describe("implementation progress integrity", () => {
     });
     const runtimeDetail = checkpointDetail(runtime);
     expect(runtimeDetail).toContain("typed four-buffer binding");
-    expect(runtimeDetail).toContain("Joined -> Loaded -> Completed -> Unloaded");
+    expect(runtimeDetail).toContain(
+      "Joined -> Loaded -> Completed -> Unloaded",
+    );
     expect(runtimeDetail).toContain("Nine compile-fail cases");
     expect(runtimeDetail).toContain("independent strict-f32 CPU oracle");
     expect(runtimeDetail).toContain("fails closed before HSA load");
-    expect(runtimeDetail).toContain("no protected GPU dispatch or numerical GPU result");
+    expect(runtimeDetail).toContain(
+      "no protected GPU dispatch or numerical GPU result",
+    );
     const memoryProof = developmentCheckpoints.find(
       (checkpoint) => checkpoint.id === "flash-attention-memory-proof",
     );
@@ -5285,8 +6183,12 @@ describe("implementation progress integrity", () => {
     expect(memoryProofDetail).toContain("13 verified obligations");
     expect(memoryProofDetail).toContain("all eight pinned mutations");
     expect(memoryProofDetail).toContain("explicitly inert");
-    expect(memoryProofDetail).toContain("has_identity_bound_verus_receipt false");
-    expect(memoryProofDetail).toContain("No AuthenticatedVerusExecutionReceiptV2 join");
+    expect(memoryProofDetail).toContain(
+      "has_identity_bound_verus_receipt false",
+    );
+    expect(memoryProofDetail).toContain(
+      "No AuthenticatedVerusExecutionReceiptV2 join",
+    );
     expect(
       kernelProgress.find((kernel) => kernel.id === "flash-attention")?.next,
     ).toContain("W1 with broker-owned durable replay exclusion");
@@ -5307,14 +6209,16 @@ describe("implementation progress integrity", () => {
     expect(result?.explanatory).toBe(true);
     const attentionContent = serializedLessonContent("flash-attention");
     expect(attentionContent).toContain("checked tiled output ownership");
-    expect(attentionContent).toContain("active workgroup/lane/component store map");
-    expect(result?.code).toContain("Executable dynamic fused attention qualification");
+    expect(attentionContent).toContain(
+      "active workgroup/lane/component store map",
+    );
+    expect(result?.code).toContain(
+      "Executable dynamic fused attention qualification",
+    );
     expect(result?.code).toContain("PASS flash_attention_general_v1");
     expect(result?.code).toContain("V_MFMA_F32_16X16X16_BF16");
     expect(result?.code).toContain("25 ranked dynamic-index discharges");
-    expect(result?.code).toContain(
-      "tuned-library performance claim",
-    );
+    expect(result?.code).toContain("tuned-library performance claim");
   });
 
   it("tracks G5 MoE finalization and typed runtime without granting GPU authority", () => {
@@ -5352,7 +6256,9 @@ describe("implementation progress integrity", () => {
     });
     const runtimeDetail = checkpointDetail(runtime);
     expect(runtimeDetail).toContain("eight-buffer binding");
-    expect(runtimeDetail).toContain("Joined -> Loaded -> Completed -> Unloaded");
+    expect(runtimeDetail).toContain(
+      "Joined -> Loaded -> Completed -> Unloaded",
+    );
     expect(runtimeDetail).toContain("nine compile-fail cases");
     expect(runtimeDetail).toContain("independent CPU oracle");
     expect(runtimeDetail).toContain("fails closed before HSA load");
@@ -5401,10 +6307,10 @@ describe("implementation progress integrity", () => {
     expect(expertEvidenceDetail).toContain(
       "does not authenticate router execution or device readback provenance",
     );
-    expect(expertEvidenceDetail).toContain("freshness, replay, compiler, finalizer");
     expect(expertEvidenceDetail).toContain(
-      "no router or expert GPU execution",
+      "freshness, replay, compiler, finalizer",
     );
+    expect(expertEvidenceDetail).toContain("no router or expert GPU execution");
     expect(progressSnapshot.eventualPublicCommit).toBe(
       "308d8fa00fa41e098b2a1a47bbfea1bc29735464",
     );
@@ -5430,12 +6336,20 @@ describe("implementation progress integrity", () => {
       (candidate) => candidate.id === "moe-expert-compute",
     );
     const expertHost = expertLesson?.tabs.find((tab) => tab.kind === "host");
-    const expertResult = expertLesson?.tabs.find((tab) => tab.kind === "result");
+    const expertResult = expertLesson?.tabs.find(
+      (tab) => tab.kind === "result",
+    );
     const expertContent = serializedLessonContent("moe-expert-compute");
     expect(expertContent).toContain("runtime padded rows");
-    expect(expertContent).toContain("MFMA is an operation, not a workload label");
-    expect(expertContent).toContain("has not been requalified at compiler commit 1dd61a01");
-    expect(expertContent).toContain("no KIR, MFMA lowering, launch, or hardware result is claimed");
+    expect(expertContent).toContain(
+      "MFMA is an operation, not a workload label",
+    );
+    expect(expertContent).toContain(
+      "has not been requalified at compiler commit 1dd61a01",
+    );
+    expect(expertContent).toContain(
+      "no KIR, MFMA lowering, launch, or hardware result is claimed",
+    );
     expect(expertContent).toContain("41 tokens, 4 experts, 82 routes");
     expect(expertContent).toContain("Host scheduling is still explicit");
     expect(expertLesson?.claims[0].reference).toMatchObject({
@@ -5481,14 +6395,15 @@ describe("implementation progress integrity", () => {
     });
     expect(
       kernelProgress.find((kernel) => kernel.id === "moe-experts")?.next,
-    ).toContain("Promote the exact compact-plan proof and host bridge only after");
+    ).toContain(
+      "Promote the exact compact-plan proof and host bridge only after",
+    );
   });
 
   it("tracks scalar GEMM hardware observation without upgrading authority", () => {
-    const scalarCheckpoint =
-      developmentCheckpoints.find(
-        (checkpoint) => checkpoint.name === "Scalar GEMM V1 vertical slice",
-      );
+    const scalarCheckpoint = developmentCheckpoints.find(
+      (checkpoint) => checkpoint.name === "Scalar GEMM V1 vertical slice",
+    );
     expect(scalarCheckpoint).toMatchObject({
       commit: progressSnapshot.lastAuditedPublicCommit,
       state: "public",
@@ -5500,7 +6415,9 @@ describe("implementation progress integrity", () => {
     expect(scalarDetail).toContain(
       "raw smoke deliberately bypasses production prerequisite authentication",
     );
-    expect(kernelProgress.find((kernel) => kernel.id === "scalar-gemm")).toMatchObject({
+    expect(
+      kernelProgress.find((kernel) => kernel.id === "scalar-gemm"),
+    ).toMatchObject({
       run: "partial",
       verify: "partial",
       evidence: "partial",
@@ -5511,11 +6428,13 @@ describe("implementation progress integrity", () => {
         "comparative performance evidence",
       ],
     });
-    expect(checkpointDetail(
-      developmentCheckpoints.find(
-        (checkpoint) => checkpoint.name === "Scalar GEMM proof profile",
+    expect(
+      checkpointDetail(
+        developmentCheckpoints.find(
+          (checkpoint) => checkpoint.name === "Scalar GEMM proof profile",
+        ),
       ),
-    )).toContain("does not execute Verus");
+    ).toContain("does not execute Verus");
     const physicalEffectCheckpoint = developmentCheckpoints.find(
       (checkpoint) => checkpoint.name === "Scalar GEMM physical-effect profile",
     );
@@ -5530,9 +6449,7 @@ describe("implementation progress integrity", () => {
       "9 address / 8 read / 1 write / 1 return / 0 calls",
     );
     expect(physicalEffectDetail).toContain("without COMGR");
-    expect(physicalEffectDetail).toContain(
-      "static, inert evidence only",
-    );
+    expect(physicalEffectDetail).toContain("static, inert evidence only");
     expect(physicalEffectDetail).toContain(
       "downstream authenticated evidence must bind the new identity",
     );
@@ -5540,7 +6457,8 @@ describe("implementation progress integrity", () => {
 
   it("tracks production S09 capture without granting compiler or execution authority", () => {
     const s09Checkpoint = developmentCheckpoints.find(
-      (checkpoint) => checkpoint.name === "Production S09 rustc invocation capture",
+      (checkpoint) =>
+        checkpoint.name === "Production S09 rustc invocation capture",
     );
     expect(s09Checkpoint).toMatchObject({
       commit: progressSnapshot.lastAuditedPublicCommit,
@@ -5564,9 +6482,7 @@ describe("implementation progress integrity", () => {
     expect(s09Detail).toContain(
       "no loading, execution, or verification authority",
     );
-    expect(s09Detail).toContain(
-      "not a pathname-to-object identity join",
-    );
+    expect(s09Detail).toContain("not a pathname-to-object identity join");
     expect(s09Detail).toContain(
       "no general source or output-object association",
     );
@@ -5582,27 +6498,17 @@ describe("implementation progress integrity", () => {
     });
     const detail = checkpointDetail(checkpoint);
     expect(detail).toContain("Linux x86_64");
-    expect(detail).toContain(
-      "pinned local runtime and tool snapshots",
-    );
+    expect(detail).toContain("pinned local runtime and tool snapshots");
     expect(detail).toContain(
       "clone3 pidfds and ptrace-unresumable checkpoints",
     );
     expect(detail).toContain("seccomp process-creation denial");
-    expect(detail).toContain(
-      "exact live executable/backing comparison",
-    );
-    expect(detail).toContain(
-      "runtime closure and baseline pinning",
-    );
+    expect(detail).toContain("exact live executable/backing comparison");
+    expect(detail).toContain("runtime closure and baseline pinning");
     expect(detail).toContain("vDSO pinning");
     expect(detail).toContain("immutable sealed results");
-    expect(detail).toContain(
-      "compressed and alternate debug-section families",
-    );
-    expect(detail).toContain(
-      "Package-scoped debug stripping",
-    );
+    expect(detail).toContain("compressed and alternate debug-section families");
+    expect(detail).toContain("Package-scoped debug stripping");
     expect(detail).toContain(
       "bounded two-root gate compares SHA-256, size, and Build ID",
     );
@@ -5614,9 +6520,7 @@ describe("implementation progress integrity", () => {
     expect(detail).toContain(
       "mi300x correctly failed closed on its different vDSO and runtime baseline",
     );
-    expect(detail).toContain(
-      "does not integrate stock Verus or Z3",
-    );
+    expect(detail).toContain("does not integrate stock Verus or Z3");
     expect(detail).toContain("semantic proof validity");
     expect(detail).toContain(
       "exclusive measured-image execution between checkpoints",
@@ -5635,24 +6539,14 @@ describe("implementation progress integrity", () => {
       state: "public",
     });
     const detail = checkpointDetail(foundation);
-    expect(detail).toContain(
-      "2ef91896bcdc4d26624f952e5c905c787cd9bc9e",
-    );
-    expect(detail).toContain(
-      "commit 027ab901bef7007d0e8da3370470556ed28baad1",
-    );
-    expect(detail).toContain(
-      "Exhaustive 64-lane x 4-component goldens",
-    );
+    expect(detail).toContain("2ef91896bcdc4d26624f952e5c905c787cd9bc9e");
+    expect(detail).toContain("commit 027ab901bef7007d0e8da3370470556ed28baad1");
+    expect(detail).toContain("Exhaustive 64-lane x 4-component goldens");
     expect(detail).toContain(
       "23 public Verus proof functions discharge 73 obligations",
     );
-    expect(detail).toContain(
-      "five formula mutations are rejected",
-    );
-    expect(detail).toContain(
-      "build-scoped WG64/288-byte fragment probe",
-    );
+    expect(detail).toContain("five formula mutations are rejected");
+    expect(detail).toContain("build-scoped WG64/288-byte fragment probe");
     expect(detail).toContain(
       "neither the later four-slice production profile nor the independent WG256/384-byte mutation",
     );
@@ -5661,7 +6555,8 @@ describe("implementation progress integrity", () => {
   it("tracks source-authenticated tiled lowering without claiming refinement", () => {
     const sourceBridge = developmentCheckpoints.find(
       (checkpoint) =>
-        checkpoint.name === "Tiled GEMM V1 source-authenticated compiler bridge",
+        checkpoint.name ===
+        "Tiled GEMM V1 source-authenticated compiler bridge",
     );
     expect(sourceBridge).toMatchObject({
       kind: "staged-evidence",
@@ -5720,9 +6615,7 @@ describe("implementation progress integrity", () => {
       "full observed root is stored in the private receipt and length-framed into its authority commitment",
     );
     expect(sourceBridgeDetail).toContain("Worker V2 handoff remains inert");
-    expect(sourceBridgeDetail).toContain(
-      "not a compiler refinement proof",
-    );
+    expect(sourceBridgeDetail).toContain("not a compiler refinement proof");
     expect(sourceBridgeDetail).toContain(
       "no final-HSACO, publication, loading, or launch authority",
     );
@@ -5737,13 +6630,13 @@ describe("implementation progress integrity", () => {
       commit: tiledGemmV1Commits.hardwareEvidence,
       state: "public",
     });
-    const hardwareDetail = hardware ? developmentCheckpointDetail(hardware) : "";
+    const hardwareDetail = hardware
+      ? developmentCheckpointDetail(hardware)
+      : "";
     expect(hardwareDetail).toContain("externally supplied digest-pinned bytes");
     expect(hardwareDetail).toContain("COV6/WG64/320-byte metadata");
     expect(hardwareDetail).toContain("bitwise dyadic 16x16 oracle");
-    expect(hardwareDetail).toContain(
-      "A/B/C inputs remained bitwise unchanged",
-    );
+    expect(hardwareDetail).toContain("A/B/C inputs remained bitwise unchanged");
     expect(hardwareDetail).not.toMatch(/immutable\s+inputs/);
     expect(hardwareDetail).toContain("6,672-byte HSACO");
     expect(hardwareDetail).toContain(
@@ -5753,7 +6646,9 @@ describe("implementation progress integrity", () => {
     expect(hardwareDetail).toContain("compact console receipt is committed");
     expect(hardwareDetail).toContain("zero LDS and is not source-derived");
     expect(hardwareDetail).toContain("non-authoritative observation");
-    expect(hardwareDetail).toContain("no compiler, publication, protected loading");
+    expect(hardwareDetail).toContain(
+      "no compiler, publication, protected loading",
+    );
   });
 
   it("tracks structural artifact admission without claiming body semantics", () => {
@@ -5821,10 +6716,7 @@ describe("implementation progress integrity", () => {
         "tiled-gemm-lds-grid-machine-inspection",
         tiledGemmV1Commits.ldsGridMachineInspection,
       ],
-      [
-        "tiled-gemm-lds-edge-kernel-ir",
-        tiledGemmV1Commits.ldsEdgeKernelIr,
-      ],
+      ["tiled-gemm-lds-edge-kernel-ir", tiledGemmV1Commits.ldsEdgeKernelIr],
       [
         "tiled-gemm-lds-edge-machine-inspection",
         tiledGemmV1Commits.ldsEdgeMachineInspection,
@@ -5833,10 +6725,7 @@ describe("implementation progress integrity", () => {
         "tiled-gemm-lds-source-model-correspondence",
         tiledGemmV1Commits.ldsSourceModelCorrespondence,
       ],
-      [
-        "tiled-gemm-lds-matrix-wire-v5",
-        tiledGemmV1Commits.ldsMatrixWireV5,
-      ],
+      ["tiled-gemm-lds-matrix-wire-v5", tiledGemmV1Commits.ldsMatrixWireV5],
       [
         "tiled-gemm-lds-inert-worker-handoff",
         tiledGemmV1Commits.ldsInertWorkerHandoff,
@@ -5859,17 +6748,19 @@ describe("implementation progress integrity", () => {
       "excludes IEEE rounding",
     );
     const source = stagedEvidenceDetail(["tiled-lds-attributed-source-v1"]);
-    expect(source).toContain("ordinary Rust function carrying #[kernel(typed, ...)]");
+    expect(source).toContain(
+      "ordinary Rust function carrying #[kernel(typed, ...)]",
+    );
     expect(source).toContain("without macro_rules!");
     expect(source).toContain("At commit ee76cedc");
     expect(source).toContain("source is deliberately non-executable");
     expect(source).toContain("Later records first add");
-    const machine = stagedEvidenceDetail([
-      "tiled-lds-machine-inspection-v1",
-    ]);
+    const machine = stagedEvidenceDetail(["tiled-lds-machine-inspection-v1"]);
     expect(machine).toContain("direct upstream llc and ld.lld");
     expect(machine).toContain("not collected from the attributed Rust source");
-    expect(machine).toContain("later hardware observation remains a separate evidence record");
+    expect(machine).toContain(
+      "later hardware observation remains a separate evidence record",
+    );
     const kphase = stagedEvidenceDetail(["tiled-lds-kphase-model-v2"]);
     expect(kphase).toContain("196 verified and 0 errors");
     expect(kphase).toContain("1-, 2-, and 4-phase cases");
@@ -5879,13 +6770,21 @@ describe("implementation progress integrity", () => {
     const hardware = stagedEvidenceDetail([
       "tiled-lds-hardware-observation-v1",
     ]);
-    expect(hardware).toContain("SHA-256-pinned upstream LLVM 22 llc, ld.lld, and llvm-objdump");
+    expect(hardware).toContain(
+      "SHA-256-pinned upstream LLVM 22 llc, ld.lld, and llvm-objdump",
+    );
     expect(hardware).toContain("COMGR is neither invoked nor admitted");
     expect(hardware).toContain("all 1,536 outputs");
     expect(hardware).toContain("passed 1/1 in 33.72 seconds");
-    expect(hardware).toContain("observational IR-derived hardware evidence only");
-    expect(hardware).toContain("no Worker V2, publisher, protected load, or protected launch authority");
-    expect(hardware).toContain("cannot establish general illegal-memory-access detection");
+    expect(hardware).toContain(
+      "observational IR-derived hardware evidence only",
+    );
+    expect(hardware).toContain(
+      "no Worker V2, publisher, protected load, or protected launch authority",
+    );
+    expect(hardware).toContain(
+      "cannot establish general illegal-memory-access detection",
+    );
     const k32Machine = stagedEvidenceDetail([
       "tiled-lds-k32-machine-inspection-v2",
     ]);
@@ -5902,13 +6801,13 @@ describe("implementation progress integrity", () => {
     expect(wg64).toContain("macro generates the frontend contract bytes");
     expect(wg64).toContain("no longer carries a handwritten frontend sidecar");
     expect(wg64).toContain("required-only exact WG64 and WG256 compatibility");
-    expect(wg64).toContain("fixed vecadd, alpha/zeta, and scalar-GEMM profiles");
+    expect(wg64).toContain(
+      "fixed vecadd, alpha/zeta, and scalar-GEMM profiles",
+    );
     expect(wg64).toContain("source-to-LDS Kernel IR collection");
     expect(wg64).toContain("compiler-issued LDS acquisition are still open");
     expect(wg64).toContain("later dc31f23eb source-correspondence record");
-    const gridStride = stagedEvidenceDetail([
-      "tiled-lds-grid-stride-model-v3",
-    ]);
+    const gridStride = stagedEvidenceDetail(["tiled-lds-grid-stride-model-v3"]);
     expect(gridStride).toContain("fixed-K16 Slice 3 Verus model");
     expect(gridStride).toContain("101 verified and 0 errors");
     expect(gridStride).toContain("73, 93, 196, and 101 verified obligations");
@@ -5927,9 +6826,13 @@ describe("implementation progress integrity", () => {
     expect(sourceIr).toContain("contains no macro_rules! body");
     expect(sourceIr).toContain("select only the verified canonical");
     expect(sourceIr).toContain("Removed-barrier, A-index-drift");
-    expect(sourceIr).toContain("stops before descriptor construction and Worker V2");
+    expect(sourceIr).toContain(
+      "stops before descriptor construction and Worker V2",
+    );
     expect(sourceIr).toContain("fe2o3 issue #85 was still open");
-    expect(sourceIr).toContain("not a source-to-machine or compiler-refinement proof");
+    expect(sourceIr).toContain(
+      "not a source-to-machine or compiler-refinement proof",
+    );
 
     const gridMachine = stagedEvidenceDetail([
       "tiled-lds-grid-machine-inspection-v3",
@@ -5937,8 +6840,12 @@ describe("implementation progress integrity", () => {
     expect(gridMachine).toContain("M=64, N=48, K=16");
     expect(gridMachine).toContain("lda=33, ldb=79, ldc=96");
     expect(gridMachine).toContain("gfx942:xnack- COV6");
-    expect(gridMachine).toContain("zero spills, scratch, calls, atomics, or COMGR");
-    expect(gridMachine).toContain("protected Slice 3 Worker V2 execution remains open");
+    expect(gridMachine).toContain(
+      "zero spills, scratch, calls, atomics, or COMGR",
+    );
+    expect(gridMachine).toContain(
+      "protected Slice 3 Worker V2 execution remains open",
+    );
 
     const edgeIr = stagedEvidenceDetail(["tiled-lds-edge-kernel-ir-v4"]);
     expect(edgeIr).toContain("M=17, N=19, K=18");
@@ -5957,9 +6864,15 @@ describe("implementation progress integrity", () => {
     expect(edgeMachine).toContain("two predicated K16 phases");
     expect(edgeMachine).toContain("exactly two static barriers");
     expect(edgeMachine).toContain("one static loop-body BF16 MFMA");
-    expect(edgeMachine).toContain("5 active tests and 1 intentional LLVM-tool ignore");
-    expect(edgeMachine).toContain("129 active dialect tests with 23 intentional ignores");
-    expect(edgeMachine).toContain("362 active Kernel IR tests with 1 intentional ignore");
+    expect(edgeMachine).toContain(
+      "5 active tests and 1 intentional LLVM-tool ignore",
+    );
+    expect(edgeMachine).toContain(
+      "129 active dialect tests with 23 intentional ignores",
+    );
+    expect(edgeMachine).toContain(
+      "362 active Kernel IR tests with 1 intentional ignore",
+    );
     expect(edgeMachine).toContain("closes fe2o3 issue #86");
     expect(edgeMachine).toContain("protected Slice 4 MI300X execution in #89");
 
@@ -5973,7 +6886,9 @@ describe("implementation progress integrity", () => {
     expect(sourceModel).toContain("7 doctests in each lane");
     expect(sourceModel).toContain("all six positive proof groups");
     expect(sourceModel).toContain("all 21 expected-negative fixtures");
-    expect(sourceModel).toContain("identity-bound bounded source/model correspondence only");
+    expect(sourceModel).toContain(
+      "identity-bound bounded source/model correspondence only",
+    );
     expect(sourceModel).toContain("does not prove rustc MIR-to-IR semantics");
     expect(sourceModel).toContain("descriptor or Worker V2 integrity");
     expect(sourceModel).toContain("certificate consumption");
@@ -6037,9 +6952,7 @@ describe("implementation progress integrity", () => {
     expect(renderedStaged).toContain(
       "eight BF16 loads, four f32 loads, one BF16 MFMA, and four f32 stores",
     );
-    expect(renderedStaged).toContain(
-      "WG64/288-byte fragment probe",
-    );
+    expect(renderedStaged).toContain("WG64/288-byte fragment probe");
     expect(renderedStaged).toContain(
       "independent WG256 and 384-byte structural mutations",
     );
@@ -6060,15 +6973,23 @@ describe("implementation progress integrity", () => {
     expect(renderedStaged).not.toContain(
       "crates/fe2o3-host/tests/generated_lds_gemm_lifecycle.rs",
     );
-    expect(mapping).toContain("Safe Rust qualification kernel for dynamic strided matrix multiplication");
-    expect(mapping).toContain("sourceCommit\":\"1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e");
+    expect(mapping).toContain(
+      "Safe Rust qualification kernel for dynamic strided matrix multiplication",
+    );
+    expect(mapping).toContain(
+      'sourceCommit":"1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e',
+    );
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
     expect(proofPlan).toContain("Historical LDS-family routes are retired");
-    expect(proofPlan).toContain("Protected Worker V3 publication remains separate");
+    expect(proofPlan).toContain(
+      "Protected Worker V3 publication remains separate",
+    );
     expect(proofPlan).toContain("collected-source selector");
     expect(proofPlan).toContain("authenticates the exact attributed source");
-    expect(proofPlan).toContain("stops before descriptor construction and Worker V2");
+    expect(proofPlan).toContain(
+      "stops before descriptor construction and Worker V2",
+    );
     expect(proofPlan).toContain("six cases checked 1,536 outputs");
     expect(proofPlan).toContain("not Rust-source correspondence");
     expect(proofPlan).toContain("196 verified and 0 errors");
@@ -6081,7 +7002,9 @@ describe("implementation progress integrity", () => {
     expect(proofPlan).toContain("M=64, N=48, K=16");
     expect(proofPlan).toContain("gfx942:xnack- COV6");
     expect(proofPlan).toContain("passed 1/1 in 14.36 seconds");
-    expect(proofPlan).toContain("one exact bounded Slice 1 protected hardware observation");
+    expect(proofPlan).toContain(
+      "one exact bounded Slice 1 protected hardware observation",
+    );
     expect(proofPlan).toContain("Slice 4 at f24063534");
     expect(proofPlan).toContain("Commit 35575cc32");
     expect(proofPlan).toContain("M=17, N=19, K=18");
@@ -6104,16 +7027,24 @@ describe("implementation progress integrity", () => {
       expect(proofPlan).toContain(issue);
     }
     expect(proofPlan).toContain("fe2o3-kernels #2");
-    expect(proofPlan).toContain("the sealed authority-free exact-profile registry (#96)");
-    expect(proofPlan).toContain("were later deleted from the unified compiler tree");
+    expect(proofPlan).toContain(
+      "the sealed authority-free exact-profile registry (#96)",
+    );
+    expect(proofPlan).toContain(
+      "were later deleted from the unified compiler tree",
+    );
     expect(renderedStaged).toContain("Historical archive only");
     expect(proofPlan).toContain("96 verified and 0 errors");
     expect(proofPlan).toContain("76 debug tests, 76 release tests");
-    expect(proofPlan).toContain("Production certificate consumption is tracked in #91");
+    expect(proofPlan).toContain(
+      "Production certificate consumption is tracked in #91",
+    );
     expect(proofPlan).toContain(
       "new dynamic WorkgroupPipeline route reaches KIR, LLVM, HSACO, and MI300X qualification",
     );
-    for (const issue of [85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 96, 97, 99, 100]) {
+    for (const issue of [
+      85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 96, 97, 99, 100,
+    ]) {
       expect(proofPlan).toContain(
         `https://github.com/harsh-nod/fe2o3/issues/${String(issue)}`,
       );
@@ -6121,7 +7052,9 @@ describe("implementation progress integrity", () => {
     expect(proofPlan).toContain(
       "https://github.com/harsh-nod/fe2o3-kernels/issues/2",
     );
-    expect(proofPlan).not.toContain("#[kernel] WG64 contract integration remain open");
+    expect(proofPlan).not.toContain(
+      "#[kernel] WG64 contract integration remain open",
+    );
 
     expect(proofPlan).toContain("multi-phase source-to-machine derivation");
     expect(proofPlan).toContain("remain separate from the attributed source");
