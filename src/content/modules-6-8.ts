@@ -188,7 +188,7 @@ const expertCompute: Lesson = {
       language: "rust",
       code: moeExpertKernel,
       sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
-      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
       sourceSha256:
         "a4af47e5ab3cad6a16d4b0cd2fc9028d0660469a75914474a7fc0d984934bd0a",
       explanatory: false,

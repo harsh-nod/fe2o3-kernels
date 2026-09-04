@@ -32,7 +32,7 @@ describe("evidence source digest scopes", () => {
         (candidate) => candidate.label === label,
       );
 
-      expect(source?.commit).toBe("6399ee2cf8456c6237a89d5507f50c1872602269");
+      expect(source?.commit).toBe("9006001157e2c3062e44088634e467b0f8963ee0");
       expect(source?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
       );

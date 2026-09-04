@@ -61,7 +61,7 @@ const workgroupPipelineSource = sourceMilestoneRecord(
 );
 const qualificationCommit = workgroupPipelineSource.commit;
 const qualificationTree = workgroupPipelineSource.tree;
-const annotatedKernelCommit = "6399ee2cf8456c6237a89d5507f50c1872602269";
+const annotatedKernelCommit = "9006001157e2c3062e44088634e467b0f8963ee0";
 const gemmAutoresearchCommit = "3bda4af3bbeec3a0682e456b52128ba46f6e6a95";
 const gemmAutoresearchTree = "3d1613263cab8802136f8a2f19bb4d07f70a9757";
 const gemmProofEvidence = stagedEvidenceRecord(

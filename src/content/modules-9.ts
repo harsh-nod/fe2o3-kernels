@@ -19,8 +19,8 @@ const rustContractPath = "examples/gfx950_low_precision/src/lib.rs";
 const rustReadmePath = "examples/gfx950_low_precision/README.md";
 const rustManifestPath = "examples/gfx950_low_precision/Cargo.toml";
 const rustLockPath = "examples/gfx950_low_precision/Cargo.lock";
-const coreSourceCommit = "6399ee2cf8456c6237a89d5507f50c1872602269";
-const coreSourceTree = "caf80d0ecd45913c0c644371c75c8469b93454cb";
+const coreSourceCommit = "9006001157e2c3062e44088634e467b0f8963ee0";
+const coreSourceTree = "874a9a250f904e3229410e0d620cfcecaab3f49d";
 const rustKernelFileSha256 =
   "feebb7e80801c6b5323d19bcdb7908b93a5159c26fe2aa8181fb2de623bf6a5d";
 const rustReferenceFileSha256 =

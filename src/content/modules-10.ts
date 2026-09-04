@@ -72,9 +72,9 @@ interface SourceBundle {
 }
 
 export const advancedCoreSourceCommit =
-  "6399ee2cf8456c6237a89d5507f50c1872602269";
+  "9006001157e2c3062e44088634e467b0f8963ee0";
 export const advancedCoreSourceTree: string | null =
-  "caf80d0ecd45913c0c644371c75c8469b93454cb";
+  "874a9a250f904e3229410e0d620cfcecaab3f49d";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,

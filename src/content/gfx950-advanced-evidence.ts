@@ -132,8 +132,8 @@ export function isObservedAdvancedEvidence(
 }
 
 const finalMi350Campaign = Object.freeze({
-  sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
-  sourceTree: "caf80d0ecd45913c0c644371c75c8469b93454cb",
+  sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
+  sourceTree: "874a9a250f904e3229410e0d620cfcecaab3f49d",
   runtimeObservation:
     "observed 2026-09-04 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
 });

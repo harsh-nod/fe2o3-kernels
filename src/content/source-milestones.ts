@@ -52,8 +52,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Current annotated executable workgroup-pipeline source",
     detail:
       "Compiler commit 0794def2 contains the current ordinary safe Rust GEMM and attention kernels with phase-oriented comments around the compiler-owned double-buffered workgroup pipeline API. This record authenticates the displayed source and source tests only. The executable statements match the earlier qualification snapshot; historical GPU observations remain pinned to their original commit and do not transfer byte-for-byte to this annotated file.",
-    commit: "6399ee2cf8456c6237a89d5507f50c1872602269",
-    tree: "caf80d0ecd45913c0c644371c75c8469b93454cb",
+    commit: "9006001157e2c3062e44088634e467b0f8963ee0",
+    tree: "874a9a250f904e3229410e0d620cfcecaab3f49d",
     commands: [
       "cargo test --locked --manifest-path examples/tiled_gemm_general_v1/Cargo.toml",
       "cargo test --locked --manifest-path examples/flash_attention_general_v1/Cargo.toml",

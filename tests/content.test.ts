@@ -1920,8 +1920,8 @@ describe("curriculum integrity", () => {
       ]);
       expect(lesson?.claims[0].reference).toMatchObject({
         scope: "historical-evidence",
-        commit: "6399ee2cf8456c6237a89d5507f50c1872602269",
-        tree: "caf80d0ecd45913c0c644371c75c8469b93454cb",
+        commit: "9006001157e2c3062e44088634e467b0f8963ee0",
+        tree: "874a9a250f904e3229410e0d620cfcecaab3f49d",
         commands: [`bash ${runner}`],
         target: "gfx950:xnack-",
       });
@@ -1954,7 +1954,7 @@ describe("curriculum integrity", () => {
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
       expect(kernel?.sourceCommit).toBe(
-        "6399ee2cf8456c6237a89d5507f50c1872602269",
+        "9006001157e2c3062e44088634e467b0f8963ee0",
       );
       expect(kernel?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
@@ -1977,7 +1977,7 @@ describe("curriculum integrity", () => {
       expect(reference?.language).toBe("rust");
       expect(reference?.explanatory).toBe(false);
       expect(reference?.sourceCommit).toBe(
-        "6399ee2cf8456c6237a89d5507f50c1872602269",
+        "9006001157e2c3062e44088634e467b0f8963ee0",
       );
       expect(reference?.code).toContain(referenceSymbol);
       expect(reference?.sourceSha256).toBe(referenceSha256);
@@ -1996,10 +1996,10 @@ describe("curriculum integrity", () => {
       const result = lesson?.tabs[5]?.code;
       expect(result).toContain("FE2O3 PRODUCTION RUST -> GFX950 EVIDENCE");
       expect(result).toContain(
-        "Core source commit: 6399ee2cf8456c6237a89d5507f50c1872602269",
+        "Core source commit: 9006001157e2c3062e44088634e467b0f8963ee0",
       );
       expect(result).toContain(
-        "Core source tree: caf80d0ecd45913c0c644371c75c8469b93454cb",
+        "Core source tree: 874a9a250f904e3229410e0d620cfcecaab3f49d",
       );
       expect(result).toContain(`Compiler-derived binding: ${namespace}`);
       expect(result).toContain(`Rust-produced LLVM SHA-256: ${llvmSha256}`);
@@ -4229,7 +4229,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
       sourceSha256:
         "a898a078ac411b17764d87c0b06681045ddccc83ea8d4314fd2a48b59e8462cd",
       evidenceId: "workgroup-pipeline-source-v1",
@@ -4260,7 +4260,7 @@ describe("curriculum integrity", () => {
     expect(reference).toMatchObject({
       label: "Safe CPU reference",
       sourcePath: "examples/tiled_gemm_general_v1/src/reference.rs",
-      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
       explanatory: false,
     });
     expect(reference?.code).toContain("#![forbid(unsafe_code)]");
@@ -4292,7 +4292,7 @@ describe("curriculum integrity", () => {
     const host = lesson?.tabs.find((tab) => tab.kind === "host");
     expect(host).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/main.rs",
-      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
       sourceSha256:
         "fdd4efbeff66aeb7f423abe11ec3ee1330918adde21558525241ca58ce27e64b",
       evidenceId: "workgroup-pipeline-source-v1",
@@ -4579,7 +4579,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
       sourceSha256:
         "8b4775baafb5ebc3e92ebb249e8362d06a64c33dbba96028802a529ec3b003c3",
       explanatory: false,
@@ -6431,7 +6431,7 @@ describe("implementation progress integrity", () => {
     const result = lesson?.tabs.find((tab) => tab.kind === "result");
     expect(host).toMatchObject({
       sourcePath: "examples/flash_attention_general_v1/src/main.rs",
-      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
       sourceSha256:
         "afb79e75ca9e0f5f5f20ed3a9db15d05a05ba776c1e16ebf03ee6caf55f9c0a1",
       explanatory: false,
@@ -7210,7 +7210,7 @@ describe("implementation progress integrity", () => {
       "Safe Rust qualification kernel for dynamic strided matrix multiplication",
     );
     expect(mapping).toContain(
-      'sourceCommit":"6399ee2cf8456c6237a89d5507f50c1872602269',
+      'sourceCommit":"9006001157e2c3062e44088634e467b0f8963ee0',
     );
     expect(mapping).not.toContain("Optimized schedule mutation diagnostics");
     expect(mapping).not.toContain("staged-evidence");
