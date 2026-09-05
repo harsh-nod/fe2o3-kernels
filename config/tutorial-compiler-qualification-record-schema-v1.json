@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "evidenceIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": { "minimum": 1, "type": "integer" },
+        "schema": { "minLength": 1, "type": "string" },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["bytes", "schema", "sha256"],
+      "type": "object"
+    },
+    "targetEvidenceIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": { "minimum": 1, "type": "integer" },
+        "schema": { "minLength": 1, "type": "string" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "target": { "pattern": "^gfx[0-9]{3}$", "type": "string" }
+      },
+      "required": ["bytes", "schema", "sha256", "target"],
+      "type": "object"
+    },
+    "gitIdentity": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "slug": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "compilerAuthority": { "const": false },
+        "hardwareAuthority": { "const": false },
+        "launchAuthority": { "const": false },
+        "loadAuthority": { "const": false },
+        "publicationAuthority": { "const": false }
+      },
+      "required": [
+        "compilerAuthority",
+        "hardwareAuthority",
+        "launchAuthority",
+        "loadAuthority",
+        "publicationAuthority"
+      ],
+      "type": "object"
+    },
+    "candidate": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": { "$ref": "#/$defs/gitIdentity" },
+        "tree": { "$ref": "#/$defs/gitIdentity" },
+        "worktreeClean": { "const": true }
+      },
+      "required": ["commit", "tree", "worktreeClean"],
+      "type": "object"
+    },
+    "contracts": {
+      "additionalProperties": false,
+      "properties": {
+        "amdCostModelRevision": { "const": 2 },
+        "amdPolicyVersion": { "const": 2 },
+        "amdResourceModelRevision": { "const": 3 },
+        "canonicalKirVersion": { "const": 12 },
+        "finalOptimizedGraphVerification": { "const": true },
+        "inspectionFormatVersion": { "const": 2 },
+        "neutralPolicyVersion": { "const": 4 },
+        "pipelineEntry": { "const": "rustc-codegen-fe2o3::production_pipeline" },
+        "targetReplayEvidenceVersion": { "const": 9 }
+      },
+      "required": [
+        "amdCostModelRevision",
+        "amdPolicyVersion",
+        "amdResourceModelRevision",
+        "canonicalKirVersion",
+        "finalOptimizedGraphVerification",
+        "inspectionFormatVersion",
+        "neutralPolicyVersion",
+        "pipelineEntry",
+        "targetReplayEvidenceVersion"
+      ],
+      "type": "object"
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "baselineReports": {
+          "items": { "$ref": "#/$defs/targetEvidenceIdentity" },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array"
+        },
+        "hardware": {
+          "items": { "$ref": "#/$defs/targetEvidenceIdentity" },
+          "maxItems": 16,
+          "type": "array"
+        },
+        "semantic": { "$ref": "#/$defs/evidenceIdentity" }
+      },
+      "required": ["baselineReports", "hardware", "semantic"],
+      "type": "object"
+    },
+    "fixtures": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "fixtureId": { "$ref": "#/$defs/slug" },
+          "hardware": {
+            "additionalProperties": false,
+            "properties": {
+              "caseId": { "oneOf": [{ "$ref": "#/$defs/slug" }, { "type": "null" }] },
+              "compilerInspectionSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+              "evidenceSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+              "hostLogSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+              "hsacoSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+              "llvmIrSha256": { "oneOf": [{ "$ref": "#/$defs/sha256" }, { "type": "null" }] },
+              "required": { "type": "boolean" },
+              "status": { "enum": ["not-required", "passed"] }
+            },
+            "required": [
+              "caseId",
+              "compilerInspectionSha256",
+              "evidenceSha256",
+              "hostLogSha256",
+              "hsacoSha256",
+              "llvmIrSha256",
+              "required",
+              "status"
+            ],
+            "type": "object"
+          },
+          "productionCompile": {
+            "additionalProperties": false,
+            "properties": {
+              "finalTargetKirSha256": { "$ref": "#/$defs/sha256" },
+              "finalVerifiedKirSha256": { "$ref": "#/$defs/sha256" },
+              "inspectionRecordSha256": { "$ref": "#/$defs/sha256" },
+              "status": { "const": "passed" }
+            },
+            "required": [
+              "finalTargetKirSha256",
+              "finalVerifiedKirSha256",
+              "inspectionRecordSha256",
+              "status"
+            ],
+            "type": "object"
+          },
+          "semantic": {
+            "additionalProperties": false,
+            "properties": {
+              "evidenceSha256": { "$ref": "#/$defs/sha256" },
+              "reference": { "enum": ["not-required", "passed"] },
+              "referenceSuiteIds": { "items": { "$ref": "#/$defs/slug" }, "maxItems": 64, "type": "array" },
+              "simulator": { "enum": ["not-required", "passed"] },
+              "simulatorSuiteIds": { "items": { "$ref": "#/$defs/slug" }, "maxItems": 64, "type": "array" }
+            },
+            "required": [
+              "evidenceSha256",
+              "reference",
+              "referenceSuiteIds",
+              "simulator",
+              "simulatorSuiteIds"
+            ],
+            "type": "object"
+          },
+          "target": { "pattern": "^gfx[0-9]{3}$", "type": "string" },
+          "testId": { "minLength": 1, "type": "string" }
+        },
+        "required": ["fixtureId", "hardware", "productionCompile", "semantic", "target", "testId"],
+        "type": "object"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array"
+    },
+    "measuredCorpus": {
+      "additionalProperties": false,
+      "properties": {
+        "corpusContractSha256": { "$ref": "#/$defs/sha256" },
+        "manifestBytes": { "minimum": 1, "type": "integer" },
+        "manifestPath": { "const": "config/tutorial-kernel-manifest-v1.json" },
+        "rawManifestSha256": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["corpusContractSha256", "manifestBytes", "manifestPath", "rawManifestSha256"],
+      "type": "object"
+    },
+    "roadmapIssue": { "const": "https://github.com/harsh-nod/fe2o3/issues/271" },
+    "schema": { "const": "fe2o3-tutorial-compiler-qualification-record-v1" }
+  },
+  "required": ["authority", "candidate", "contracts", "evidence", "fixtures", "measuredCorpus", "roadmapIssue", "schema"],
+  "title": "fe2o3 tutorial compiler qualification record v1",
+  "type": "object"
+}

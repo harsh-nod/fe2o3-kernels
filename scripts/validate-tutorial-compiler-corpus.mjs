@@ -2,9 +2,10 @@
 
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
-import { lstatSync, readFileSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve } from "node:path";
 import { tutorialCorpusContractSha256 } from "./tutorial-corpus-contract.mjs";
+import { validateQualificationRecord } from "./tutorial-qualification-record.mjs";
 
 const TOP_LEVEL_KEYS = [
   "baseline",
@@ -69,6 +70,7 @@ const SHARED_SCHEMA_SHA256 = new Map([
   ["tutorial-compiler-baseline-report-schema-v1.json", "9518095c335043c93f5ccb111f6564e7485f1e4f5bda8ad833f60dd0305e1dc4"],
   ["tutorial-compiler-no-regression-threshold-schema-v1.json", "dc4b321174fdbed4be2dddea6392b7a6d46ca61745621f127322eaf204f4bb6e"],
   ["tutorial-gfx942-hardware-evidence-schema-v1.json", "75266f9cb6017770ef7d899b2d3e2d4d41fc191b93b1ab479024db560c3a10d7"],
+  ["tutorial-compiler-qualification-record-schema-v1.json", "d07a617cf591ae825528fc708508a1beb1d4b8e10d60f3a542332d1d113f630f"],
 ]);
 
 function fail(message) {
@@ -605,7 +607,7 @@ function validateSidecar(path, inspector, expectedCase, expectedTarget) {
 }
 
 function parseArguments(arguments_) {
-  const values = { reports: [], sidecars: new Map() };
+  const values = { rawArtifacts: false, reports: [], sidecars: new Map() };
   for (let index = 0; index < arguments_.length; index += 1) {
     const argument = arguments_[index];
     const next = () => {
@@ -618,6 +620,10 @@ function parseArguments(arguments_) {
     else if (argument === "--baseline-schema") values.baselineSchema = next();
     else if (argument === "--threshold-schema") values.thresholdSchema = next();
     else if (argument === "--hardware-schema") values.hardwareSchema = next();
+    else if (argument === "--qualification-schema") values.qualificationSchema = next();
+    else if (argument === "--qualification-record") values.qualificationRecord = next();
+    else if (argument === "--qualification-record-digest") values.qualificationRecordDigest = next();
+    else if (argument === "--raw-artifacts") values.rawArtifacts = true;
     else if (argument === "--baseline-report") values.reports.push(next());
     else if (argument === "--inspector") values.inspector = next();
     else if (argument === "--sidecar") {
@@ -654,11 +660,19 @@ function main() {
     resolve(arguments_.hardwareSchema ?? resolve(repositoryRoot, "config/tutorial-gfx942-hardware-evidence-schema-v1.json")),
     "tutorial-gfx942-hardware-evidence-schema-v1.json",
   );
+  validateSharedSchema(
+    resolve(arguments_.qualificationSchema ?? resolve(repositoryRoot, "config/tutorial-compiler-qualification-record-schema-v1.json")),
+    "tutorial-compiler-qualification-record-schema-v1.json",
+  );
 
   const qualifiedFixtureIds = new Set(manifest.entries.filter((entry) => entry.qualificationStatus === "qualified").flatMap((entry) => entry.compilerFixtureIds));
-  if (qualifiedFixtureIds.size === 0) {
-    if (arguments_.reports.length !== 0 || arguments_.sidecars.size !== 0 || arguments_.inspector) fail("qualification evidence is stale because no fixture is qualified");
-  } else {
+  const defaultRecord = resolve(repositoryRoot, "config/tutorial-compiler-qualification-record-v1.json");
+  const defaultRecordDigest = resolve(repositoryRoot, "config/tutorial-compiler-qualification-record-v1.sha256");
+  const rawInputsPresent = arguments_.reports.length !== 0 || arguments_.sidecars.size !== 0 || arguments_.inspector;
+  if (arguments_.rawArtifacts) {
+    if (qualifiedFixtureIds.size === 0) {
+      if (rawInputsPresent) fail("qualification evidence is stale because no fixture is qualified");
+    } else {
     if (arguments_.reports.length === 0) fail("qualified fixtures require measured baseline reports");
     if (!arguments_.inspector) fail("qualified fixtures require the authenticated compiler inspector");
     const observedCases = new Map();
@@ -677,6 +691,23 @@ function main() {
     }
     for (const fixtureId of arguments_.sidecars.keys()) {
       if (!qualifiedFixtureIds.has(fixtureId)) fail(`sidecar supplied for unqualified fixture ${fixtureId}`);
+    }
+    }
+  } else {
+    if (rawInputsPresent) fail("raw baseline/sidecar reproduction requires explicit --raw-artifacts");
+    const recordPath = resolve(arguments_.qualificationRecord ?? defaultRecord);
+    const recordDigestPath = resolve(arguments_.qualificationRecordDigest ?? defaultRecordDigest);
+    if (qualifiedFixtureIds.size === 0) {
+      if (arguments_.qualificationRecord || arguments_.qualificationRecordDigest || existsSync(defaultRecord) || existsSync(defaultRecordDigest)) {
+        fail("qualification record is stale because no fixture is qualified");
+      }
+    } else {
+      validateQualificationRecord({
+        recordPath,
+        digestPath: recordDigestPath,
+        manifest,
+        manifestDigests,
+      });
     }
   }
   console.log(`validated tutorial compiler corpus: ${manifest.entries.length} lessons, ${manifest.fixtureById.size} compiler fixtures, neutral V4 / AMD V2 / resource V3 / inspection V2`);

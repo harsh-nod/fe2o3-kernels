@@ -12,6 +12,7 @@ import { describe, expect, it } from "vitest";
 import baselineSchemaDocument from "../config/tutorial-compiler-baseline-report-schema-v1.json";
 import thresholdSchemaDocument from "../config/tutorial-compiler-no-regression-threshold-schema-v1.json";
 import hardwareSchemaDocument from "../config/tutorial-gfx942-hardware-evidence-schema-v1.json";
+import qualificationRecordSchemaDocument from "../config/tutorial-compiler-qualification-record-schema-v1.json";
 import manifestDocument from "../config/tutorial-kernel-manifest-v1.json";
 import { tutorialCorpusContractSha256 } from "../scripts/tutorial-corpus-contract.mjs";
 import { lessons } from "../src/content/curriculum";
@@ -70,6 +71,148 @@ function digest(bytes: Buffer | string) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+function canonicalValue(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(canonicalValue);
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>)
+        .sort(([left], [right]) => left.localeCompare(right))
+        .map(([key, item]) => [key, canonicalValue(item)]),
+    );
+  }
+  return value;
+}
+
+function writeQualificationRecord(document: Manifest, directory: string) {
+  for (const entry of document.entries) entry.qualificationStatus = "qualified";
+  const candidate = { commit: "1".repeat(40), tree: "2".repeat(40), worktreeClean: true };
+  const requirements = new Map(
+    document.compilerFixtures.map((fixture) => [
+      fixture.fixtureId,
+      { hardware: false, reference: false, simulator: false },
+    ]),
+  );
+  for (const entry of document.entries) {
+    for (const fixtureId of entry.compilerFixtureIds) {
+      const required = requirements.get(fixtureId)!;
+      required.hardware ||= entry.requiredGates.includes("hardware");
+      required.reference ||= entry.requiredGates.includes("cpu-reference");
+      required.simulator ||= entry.requiredGates.includes("semantic-simulation");
+    }
+  }
+  const targets = Array.from(new Set(document.compilerFixtures.map((fixture) => fixture.target))).sort();
+  const hardwareTargets = Array.from(new Set(
+    document.compilerFixtures
+      .filter((fixture) => requirements.get(fixture.fixtureId)!.hardware)
+      .map((fixture) => fixture.target),
+  )).sort();
+  const semanticSha = "3".repeat(64);
+  const hardwareSha = new Map(hardwareTargets.map((target, index) => [target, String(index + 4).repeat(64)]));
+  const candidateManifestBytes = `${JSON.stringify(document, null, 2)}\n`;
+  const record = {
+    schema: "fe2o3-tutorial-compiler-qualification-record-v1",
+    roadmapIssue: "https://github.com/harsh-nod/fe2o3/issues/271",
+    authority: {
+      compilerAuthority: false,
+      hardwareAuthority: false,
+      launchAuthority: false,
+      loadAuthority: false,
+      publicationAuthority: false,
+    },
+    candidate,
+    contracts: {
+      amdCostModelRevision: 2,
+      amdPolicyVersion: 2,
+      amdResourceModelRevision: 3,
+      canonicalKirVersion: 12,
+      finalOptimizedGraphVerification: true,
+      inspectionFormatVersion: 2,
+      neutralPolicyVersion: 4,
+      pipelineEntry: "rustc-codegen-fe2o3::production_pipeline",
+      targetReplayEvidenceVersion: 9,
+    },
+    evidence: {
+      baselineReports: targets.map((target, index) => ({
+        bytes: 1,
+        schema: "fe2o3-tutorial-compiler-baseline-report-v1",
+        sha256: String(index + 6).repeat(64),
+        target,
+      })),
+      hardware: hardwareTargets.map((target) => ({
+        bytes: 1,
+        schema: `fe2o3-tutorial-${target}-hardware-evidence-v1`,
+        sha256: hardwareSha.get(target),
+        target,
+      })),
+      semantic: {
+        bytes: 1,
+        schema: "fe2o3-tutorial-semantic-qualification-evidence-v1",
+        sha256: semanticSha,
+      },
+    },
+    fixtures: [...document.compilerFixtures]
+      .sort((left, right) => left.fixtureId.localeCompare(right.fixtureId))
+      .map((fixture) => {
+        const required = requirements.get(fixture.fixtureId)!;
+        const inspection = digest(`inspection:${fixture.fixtureId}`);
+        return {
+          fixtureId: fixture.fixtureId,
+          target: fixture.target,
+          testId: fixture.testId,
+          productionCompile: {
+            finalTargetKirSha256: digest(`target:${fixture.fixtureId}`),
+            finalVerifiedKirSha256: digest(`verified:${fixture.fixtureId}`),
+            inspectionRecordSha256: inspection,
+            status: "passed",
+          },
+          semantic: {
+            evidenceSha256: semanticSha,
+            reference: required.reference ? "passed" : "not-required",
+            referenceSuiteIds: required.reference ? ["cpu-reference-suite"] : [],
+            simulator: required.simulator ? "passed" : "not-required",
+            simulatorSuiteIds: required.simulator ? ["semantic-simulation-suite"] : [],
+          },
+          hardware: required.hardware ? {
+            caseId: fixture.matrix?.caseId ?? fixture.fixtureId,
+            compilerInspectionSha256: inspection,
+            evidenceSha256: hardwareSha.get(fixture.target),
+            hostLogSha256: digest(`host:${fixture.fixtureId}`),
+            hsacoSha256: digest(`hsaco:${fixture.fixtureId}`),
+            llvmIrSha256: digest(`llvm:${fixture.fixtureId}`),
+            required: true,
+            status: "passed",
+          } : {
+            caseId: null,
+            compilerInspectionSha256: null,
+            evidenceSha256: null,
+            hostLogSha256: null,
+            hsacoSha256: null,
+            llvmIrSha256: null,
+            required: false,
+            status: "not-required",
+          },
+        };
+      }),
+    measuredCorpus: {
+      corpusContractSha256: tutorialCorpusContractSha256(document),
+      manifestBytes: Buffer.byteLength(candidateManifestBytes),
+      manifestPath: "config/tutorial-kernel-manifest-v1.json",
+      rawManifestSha256: digest(candidateManifestBytes),
+    },
+  };
+  const recordPath = resolve(directory, "tutorial-compiler-qualification-record-v1.json");
+  const digestPath = resolve(directory, "tutorial-compiler-qualification-record-v1.sha256");
+  const bytes = `${JSON.stringify(canonicalValue(record), null, 2)}\n`;
+  writeFileSync(recordPath, bytes);
+  writeFileSync(digestPath, `${digest(bytes)}  tutorial-compiler-qualification-record-v1.json\n`);
+  document.baseline = {
+    compilerCommit: candidate.commit,
+    compilerTree: candidate.tree,
+    status: "qualified",
+  };
+  return { record, recordPath, digestPath };
+}
+
 function withTemporaryCorpus(
   mutate: (document: Manifest, directory: string) => string[],
 ) {
@@ -77,6 +220,8 @@ function withTemporaryCorpus(
   try {
     const document = structuredClone(manifest);
     const extraArguments = mutate(document, directory);
+    const rawMode = extraArguments.some((argument) =>
+      ["--baseline-report", "--inspector", "--sidecar"].includes(argument));
     const manifestPath = resolve(directory, "tutorial-kernel-manifest-v1.json");
     const digestPath = resolve(directory, "tutorial-kernel-manifest-v1.sha256");
     const bytes = `${JSON.stringify(document, null, 2)}\n`;
@@ -93,6 +238,7 @@ function withTemporaryCorpus(
         manifestPath,
         "--digest",
         digestPath,
+        ...(rawMode ? ["--raw-artifacts"] : []),
         ...extraArguments,
       ],
       { encoding: "utf8" },
@@ -487,6 +633,15 @@ describe("production compiler tutorial corpus", () => {
         canonicalKirVersion: { const: 12 },
         summaryFieldCount: { const: 52 },
       });
+    expect(qualificationRecordSchemaDocument.properties.schema.const).toBe(
+      "fe2o3-tutorial-compiler-qualification-record-v1",
+    );
+    expect(qualificationRecordSchemaDocument.properties.authority.properties)
+      .toMatchObject({
+        compilerAuthority: { const: false },
+        hardwareAuthority: { const: false },
+        publicationAuthority: { const: false },
+      });
 
     const documentation = readFileSync(
       resolve("docs/compiler-corpus-qualification-v1.md"),
@@ -541,6 +696,92 @@ describe("production compiler tutorial corpus", () => {
     });
     expect(hardware.status).toBe(1);
     expect(hardware.stderr).toContain("differs from the compiler M9 contract");
+
+    const qualificationRecord = withTemporaryCorpus((_document, directory) => {
+      const changed = structuredClone(qualificationRecordSchemaDocument);
+      changed.properties.authority.required = changed.properties.authority.required
+        .filter((field) => field !== "publicationAuthority");
+      const schemaPath = resolve(directory, "tutorial-compiler-qualification-record-schema-v1.json");
+      writeFileSync(schemaPath, `${JSON.stringify(changed, null, 2)}\n`);
+      return ["--qualification-schema", schemaPath];
+    });
+    expect(qualificationRecord.status).toBe(1);
+    expect(qualificationRecord.stderr).toContain("differs from the compiler M9 contract");
+  });
+
+  it("validates the tracked Candidate A record offline across the Candidate B publication edit", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const qualification = writeQualificationRecord(document, directory);
+      return [
+        "--qualification-record",
+        qualification.recordPath,
+        "--qualification-record-digest",
+        qualification.digestPath,
+      ];
+    });
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("validated tutorial compiler corpus");
+  });
+
+  it("rejects hostile offline record authority, join, pin, and digest mutations", () => {
+    for (const mutation of ["authority", "semantic-join", "hardware-join", "inspection-join", "candidate-pin", "digest"] as const) {
+      const result = withTemporaryCorpus((document, directory) => {
+        const qualification = writeQualificationRecord(document, directory);
+        if (mutation === "digest") {
+          writeFileSync(qualification.digestPath, `${"0".repeat(64)}  tutorial-compiler-qualification-record-v1.json\n`);
+        } else {
+          const changed = structuredClone(qualification.record);
+          if (mutation === "authority") changed.authority.publicationAuthority = true;
+          if (mutation === "semantic-join") changed.fixtures[0].semantic.evidenceSha256 = "f".repeat(64);
+          if (mutation === "hardware-join") {
+            const hardwareFixture = changed.fixtures.find((fixture) => fixture.hardware.required)!;
+            hardwareFixture.hardware.evidenceSha256 = "f".repeat(64);
+          }
+          if (mutation === "inspection-join") {
+            const hardwareFixture = changed.fixtures.find((fixture) => fixture.hardware.required)!;
+            hardwareFixture.hardware.compilerInspectionSha256 = "f".repeat(64);
+          }
+          if (mutation === "candidate-pin") changed.candidate.commit = "f".repeat(40);
+          const bytes = `${JSON.stringify(canonicalValue(changed), null, 2)}\n`;
+          writeFileSync(qualification.recordPath, bytes);
+          writeFileSync(
+            qualification.digestPath,
+            `${digest(bytes)}  tutorial-compiler-qualification-record-v1.json\n`,
+          );
+        }
+        return [
+          "--qualification-record",
+          qualification.recordPath,
+          "--qualification-record-digest",
+          qualification.digestPath,
+        ];
+      });
+      expect(result.status, mutation).toBe(1);
+    }
+  });
+
+  it("keeps raw artifact reproduction behind an explicit mode", () => {
+    const directory = mkdtempSync(resolve(tmpdir(), "fe2o3-site-corpus-raw-mode-"));
+    try {
+      const manifestPath = resolve(directory, "tutorial-kernel-manifest-v1.json");
+      const digestPath = resolve(directory, "tutorial-kernel-manifest-v1.sha256");
+      const bytes = `${JSON.stringify(manifest, null, 2)}\n`;
+      writeFileSync(manifestPath, bytes);
+      writeFileSync(digestPath, `${digest(bytes)}  ${relative(resolve("."), manifestPath)}\n`);
+      const result = spawnSync(process.execPath, [
+        validator,
+        "--manifest",
+        manifestPath,
+        "--digest",
+        digestPath,
+        "--baseline-report",
+        resolve(directory, "raw-report.json"),
+      ], { encoding: "utf8" });
+      expect(result.status).toBe(1);
+      expect(result.stderr).toContain("requires explicit --raw-artifacts");
+    } finally {
+      rmSync(directory, { force: true, recursive: true });
+    }
   });
 
   it("rejects missing, duplicate, stale, and non-resolving fixture IDs", () => {
