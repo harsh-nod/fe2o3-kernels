@@ -121,11 +121,32 @@ The **Live KFD debugger** reference at `#/debugger/live-kfd` retains an
 independent historical milestone at compiler commit
 `ba0efc7f958e3afdf72eceeef1c37c2994fe2402`, tree
 `3a595c10a3af6f28223ed89b6029ba444c16a2af`. It documents the exact-bound V3
-agent protocol and the direct-KFD MI300X acceptance result while keeping the
-still-unavailable live wave, lane, PC, register, memory, breakpoint, and step
-surfaces explicit. Current implementation links use the publication pin and
-state the narrower leader-only forced-teardown boundary. The historical
-milestone does not repin the broader functional-proof publication record.
+agent protocol and the direct-KFD MI300X acceptance result. A current checkpoint
+at compiler commit `ba2171d19e32d957388f4e89ef510539bb2aa45e`, tree
+`2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3`, adds one active gfx942 Wave64
+observation: two complete public-header ranges totaling 2,324 opaque bytes.
+Those adjacent sequential double reads are not one coherent checkpoint instant,
+and target-declared same-queue artifact correlation does not authenticate the
+code object physically loaded or executed. The page keeps decoded wave, lane,
+register, PC, and source values unavailable because public KFD publishes no
+stable inner ABI; target-memory values are also not captured. It states the
+retained ptrace/pidfd custody,
+`process_vm_readv` primary read, and EFAULT-only read-only `/proc/<pid>/mem`
+fallback. Current implementation links use this publication pin; the historical
+milestone and broader functional-proof publication record remain independently
+pinned.
+
+The CPU semantic simulation reference at `#/lesson/cpu-semantic-simulation`
+retains the arbitrary-extent compiler pin above for exact 1D workgroup scans
+from 1 through 256, then adds an independent Scan Bundle V5 qualification pin
+at compiler commit `b15cf628f628db435cf12269c507b06fbef6597e`, tree
+`f77977b6f94411acd10f8d33159196425bee1b2d`. The new gate covers all 18
+ordinary Rust type/mode/extent cases, exact persisted seeded replay, the N=65
+one-lane final logical Wave64, and the N=255 debugger's bounded inexact
+resource-exhaustion stop. Their trap-bearing Semantic MIR uses additive V11
+while V10 remains byte-for-byte closed. Generated bundles and schedule documents remain
+ephemeral test artifacts. These checks are CPU semantic/compiler evidence,
+not GPU execution, hardware validation, timing, or performance prediction.
 
 The **Agent-native source/ISA inspection** reference at
 `#/debugger/source-isa-agent` is independently pinned to compiler commit
@@ -160,6 +181,17 @@ protected 3x2 source/ISA matrix has not run, and T5 distributed overlap remains
 blocked on the issue #182 typed producer. The query JSONL on the page is a
 deterministic illustrative non-wire, non-authoritative exercise, not a
 production protocol, service endpoint, or operation-availability claim.
+
+The same route now includes a row-softmax-named walkthrough of production
+`explain_regression`. Compiler milestone `50c947693c9574de8857686d5deec0f49fa74277`
+adds a bounded, kernel-neutral explanation response over exact comparable
+treatments. It projects current Archive V1 optimizer audits and joins longer
+dispatch ticks with HSACO resources, counters, positive source/IR/ISA
+occurrences, and complete structural multiplicity as evidence-linked inferred
+hypotheses. Each result retains contradictions, missing facts, and ordered next
+measurements; causal attribution stays unavailable. The walkthrough's ticks and
+HSACO metadata are deterministic protocol fixtures, not compiled row-softmax or
+hardware performance evidence.
 
 The current debugger/profiler milestone adds a separate live direct-KFD
 qualification boundary. A pure direct-KFD MI300X target completed under the

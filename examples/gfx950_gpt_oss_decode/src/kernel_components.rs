@@ -1,4 +1,10 @@
 //! Exact-semantics materialized GPT-OSS-120B layer-tile component kernels.
+//!
+//! These kernels split the megakernel at materialization boundaries without
+//! changing its math. Review each as: validate, establish wave/item ownership,
+//! construct checked views, execute uniform collectives, then store through a
+//! disjoint capability. The shared phase structure makes fused and split forms
+//! straightforward to compare.
 
 #![allow(missing_docs)]
 
@@ -17,14 +23,14 @@ use crate::{
 const ATTENTION_SCALE: f32 = 0.125;
 const ROUTER_FLOOR: f32 = -1.0e30;
 
+/// Scores 128 experts in parallel and writes a deterministic packed top-4 route.
 #[cfg(any(
     not(target_arch = "amdgpu"),
     feature = "kernel-gpt-oss-router-component"
 ))]
 #[kernel(
     typed,
-    namespace = "8ea858c2d33346948501917b2a613d3e4844622372e15b43fb2e2d092e3f336d",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1]),
     control_flow(loop_bounds(2880, 64))
 )]
 pub fn gfx950_gpt_oss_120b_router_v1(
@@ -32,18 +38,27 @@ pub fn gfx950_gpt_oss_120b_router_v1(
     router_f32: &[f32],
     mut packed_top4: DisjointSlice<u32>,
 ) -> KernelResult {
-    if hidden_f32.len() < HIDDEN_SIZE
+    // The complete buffer contract is uniform across the launch and precedes broadcasts.
+    if hidden_f32.len() < crate::PROFILE_ITEMS * HIDDEN_SIZE
         || router_f32.len() < EXPERTS * HIDDEN_SIZE
-        || packed_top4.len() < 1
+        || packed_top4.len() < crate::PACKED_ROUTE_ELEMENTS
     {
         return Err(KernelError::InvalidArgument);
     }
+    // One Wave64 owns one profile item; every lane scores two expert rows.
     let index = thread::index_1d();
-    let lane_index = index.get();
+    let global_index = index.get();
+    let lane_index = global_index % crate::WAVE_SIZE;
+    let item_index = global_index / crate::WAVE_SIZE;
     let subgroup = Gfx950Subgroup::current();
-    let Ok(hidden) =
-        StridedReadView2D::from_shared_slice(hidden_f32, 0, 1, HIDDEN_SIZE, HIDDEN_SIZE)
-    else {
+    // Checked views name the item and expert strides outside the hot reduction loop.
+    let Ok(hidden) = StridedReadView2D::from_shared_slice(
+        hidden_f32,
+        item_index.wrapping_mul(HIDDEN_SIZE),
+        1,
+        HIDDEN_SIZE,
+        HIDDEN_SIZE,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let Ok(router) =
@@ -63,6 +78,7 @@ pub fn gfx950_gpt_oss_120b_router_v1(
         depth += 1;
     }
 
+    // Uniform broadcasts build the same tie-stable top-4 list in every lane.
     let mut best0 = ROUTER_FLOOR;
     let mut best1 = ROUTER_FLOOR;
     let mut best2 = ROUTER_FLOOR;
@@ -195,23 +211,22 @@ pub fn gfx950_gpt_oss_120b_router_v1(
         }
         source += 1;
     }
-    if lane_index == 0 {
-        let packed = id0 | (id1 << 7) | (id2 << 14) | (id3 << 21);
-        if let Some(slot) = packed_top4.get_mut(index) {
-            *slot = packed;
-        }
+    // The one-dimensional capability assigns one packed result to each item lane.
+    let packed = id0 | (id1 << 7) | (id2 << 14) | (id3 << 21);
+    if let Some(slot) = packed_top4.get_mut(index) {
+        *slot = packed;
     }
     Ok(())
 }
 
+/// Computes sink-stabilized BF16 attention and writes four value columns per lane.
 #[cfg(any(
     not(target_arch = "amdgpu"),
     feature = "kernel-gpt-oss-attention-component"
 ))]
 #[kernel(
     typed,
-    namespace = "35a1574b42e18b024498807f2e7dd4bde031da33b5b588652fc699cdebb7bb6a",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1]),
     control_flow(loop_bounds(16))
 )]
 pub fn gfx950_gpt_oss_120b_attention_v1(
@@ -221,25 +236,35 @@ pub fn gfx950_gpt_oss_120b_attention_v1(
     sinks_f32: &[f32],
     mut attention_output: DisjointSlice<f32, Blocked<Index1D, 64, 4>>,
 ) -> KernelResult {
-    if query_bf16.len() < MATRIX_ROWS * HEAD_DIM
-        || key_transposed_bf16.len() < HEAD_DIM * CONTEXT_TOKENS
-        || value_f32.len() < CONTEXT_TOKENS * VALUE_TILE
-        || sinks_f32.len() < MATRIX_ROWS
+    // Validate all shapes before MFMA and Wave16 reduction collectives.
+    if query_bf16.len() < crate::PROFILE_ITEMS * MATRIX_ROWS * HEAD_DIM
+        || key_transposed_bf16.len() < crate::PROFILE_ITEMS * HEAD_DIM * CONTEXT_TOKENS
+        || value_f32.len() < crate::PROFILE_ITEMS * CONTEXT_TOKENS * VALUE_TILE
+        || sinks_f32.len() < crate::PROFILE_ITEMS * MATRIX_ROWS
         || attention_output.len() < ATTENTION_OUTPUT_ELEMENTS
     {
         return Err(KernelError::InvalidArgument);
     }
+    // One Wave64 owns an item; its four Wave16 subgroups own four-row groups.
     let index = thread::index_1d();
-    let lane_index = index.get();
+    let global_index = index.get();
+    let lane_index = global_index % crate::WAVE_SIZE;
+    let item_index = global_index / crate::WAVE_SIZE;
     let lane = WaveLane::<Wave64>::current();
     let subgroup = Gfx950Subgroup::current();
-    let Ok(query) = Bf16MfmaAMatrix::row_major(query_bf16, 0, MATRIX_ROWS, HEAD_DIM, HEAD_DIM)
-    else {
+    // Typed MFMA views encode Q/K layout, including the host-pretransposed key stride.
+    let Ok(query) = Bf16MfmaAMatrix::row_major(
+        query_bf16,
+        item_index.wrapping_mul(MATRIX_ROWS * HEAD_DIM),
+        MATRIX_ROWS,
+        HEAD_DIM,
+        HEAD_DIM,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let Ok(key) = Bf16MfmaBMatrix::row_major(
         key_transposed_bf16,
-        0,
+        item_index.wrapping_mul(HEAD_DIM * CONTEXT_TOKENS),
         HEAD_DIM,
         CONTEXT_TOKENS,
         CONTEXT_TOKENS,
@@ -271,13 +296,22 @@ pub fn gfx950_gpt_oss_120b_attention_v1(
         )
         .into_values();
 
-    let Ok(values) =
-        StridedReadView2D::from_shared_slice(value_f32, 0, CONTEXT_TOKENS, VALUE_TILE, VALUE_TILE)
-    else {
+    let Ok(values) = StridedReadView2D::from_shared_slice(
+        value_f32,
+        item_index.wrapping_mul(CONTEXT_TOKENS * VALUE_TILE),
+        CONTEXT_TOKENS,
+        VALUE_TILE,
+        VALUE_TILE,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
-    let Ok(sinks) = StridedReadView2D::from_shared_slice(sinks_f32, 0, 1, MATRIX_ROWS, MATRIX_ROWS)
-    else {
+    let Ok(sinks) = StridedReadView2D::from_shared_slice(
+        sinks_f32,
+        item_index.wrapping_mul(MATRIX_ROWS),
+        1,
+        MATRIX_ROWS,
+        MATRIX_ROWS,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let row_group = lane_index / CONTEXT_TOKENS;
@@ -289,6 +323,7 @@ pub fn gfx950_gpt_oss_120b_attention_v1(
     let sink1 = sinks.load_or(0, row1, 0.0);
     let sink2 = sinks.load_or(0, row2, 0.0);
     let sink3 = sinks.load_or(0, row3, 0.0);
+    // Max-subtracted FP32 softmax includes the learned sink in both max and denominator.
     let reduced0 = subgroup.reduce_max_f32::<16>(scores[0] * ATTENTION_SCALE);
     let reduced1 = subgroup.reduce_max_f32::<16>(scores[1] * ATTENTION_SCALE);
     let reduced2 = subgroup.reduce_max_f32::<16>(scores[2] * ATTENTION_SCALE);
@@ -314,6 +349,7 @@ pub fn gfx950_gpt_oss_120b_attention_v1(
     let probability1 = probability1 / denominator1;
     let probability2 = probability2 / denominator2;
     let probability3 = probability3 / denominator3;
+    // Broadcast probabilities within Wave16 while each lane accumulates its value column.
     let column = lane_index % VALUE_TILE;
     let mut attention0 = 0.0_f32;
     let mut attention1 = 0.0_f32;
@@ -329,6 +365,7 @@ pub fn gfx950_gpt_oss_120b_attention_v1(
         token += 1;
     }
 
+    // The blocked capability proves the four output stores per lane are disjoint.
     let Some(output_block) = index.checked_block::<64, 4>() else {
         return Err(KernelError::OutOfBounds);
     };
@@ -347,14 +384,14 @@ pub fn gfx950_gpt_oss_120b_attention_v1(
     Ok(())
 }
 
+/// Projects through the routed MXFP4 expert selected by the materialized top-4 route.
 #[cfg(any(
     not(target_arch = "amdgpu"),
     feature = "kernel-gpt-oss-expert-component"
 ))]
 #[kernel(
     typed,
-    namespace = "d3675e464d34094297c8b0033dc08d278cc17baf15ed6fd5f53bd382421f8c99",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
 )]
 pub fn gfx950_gpt_oss_120b_expert_v1(
     expert_activation_blocks_fp4: &[u8],
@@ -364,26 +401,36 @@ pub fn gfx950_gpt_oss_120b_expert_v1(
     packed_top4: &[u32],
     mut expert_output: DisjointSlice<f32, Blocked<Index1D, 64, 4>>,
 ) -> KernelResult {
-    if expert_activation_blocks_fp4.len() < MXFP4_BLOCKS * MATRIX_ROWS * EXPERT_K_TILE
+    // Validate the materialized boundary and all quantized operands before collectives.
+    if expert_activation_blocks_fp4.len()
+        < crate::PROFILE_ITEMS * MXFP4_BLOCKS * MATRIX_ROWS * EXPERT_K_TILE
         || expert_weight_blocks_fp4.len() < EXPERTS * MXFP4_BLOCKS * EXPERT_K_TILE * EXPERT_N_TILE
-        || activation_scales.len() < MXFP4_BLOCKS
+        || activation_scales.len() < crate::PROFILE_ITEMS * MXFP4_BLOCKS
         || expert_weight_scales.len() < EXPERTS * MXFP4_BLOCKS * EXPERT_N_TILE
-        || packed_top4.len() < 1
+        || packed_top4.len() < crate::PACKED_ROUTE_ELEMENTS
         || expert_output.len() < EXPERT_OUTPUT_ELEMENTS
     {
         return Err(KernelError::InvalidArgument);
     }
+    // One Wave64 owns one item and four output values per lane.
     let index = thread::index_1d();
-    let lane_index = index.get();
+    let global_index = index.get();
+    let lane_index = global_index % crate::WAVE_SIZE;
+    let item_index = global_index / crate::WAVE_SIZE;
     let lane = WaveLane::<Wave64>::current();
-    let Ok(packed) = StridedReadView2D::from_shared_slice(packed_top4, 0, 1, 1, 1) else {
+    // Lane zero's route is broadcast so every MFMA lane selects the same expert.
+    let packed_item_base = item_index.wrapping_mul(crate::WAVE_SIZE);
+    let Ok(packed) = StridedReadView2D::from_shared_slice(packed_top4, packed_item_base, 1, 1, 1)
+    else {
         return Err(KernelError::InvalidArgument);
     };
-    let selected = (packed.load_or(0, 0, 0) as usize) & (EXPERTS - 1);
+    let selected_local = (packed.load_or(0, 0, 0) as usize) & (EXPERTS - 1);
+    let selected = Gfx950Subgroup::current().broadcast_f32::<64>(selected_local as f32, 0) as usize;
     let column = lane_index % EXPERT_N_TILE;
     let expert_reduction_base = selected
         .wrapping_mul(MXFP4_BLOCKS)
         .wrapping_mul(EXPERT_K_TILE);
+    // Typed views capture expert/block layout and separate quantized values from scales.
     let Ok(weights) = Gfx950Fp4MfmaBMatrix::row_major(
         expert_weight_blocks_fp4,
         0,
@@ -393,9 +440,13 @@ pub fn gfx950_gpt_oss_120b_expert_v1(
     ) else {
         return Err(KernelError::InvalidArgument);
     };
-    let Ok(activation_scale) =
-        StridedReadView2D::from_shared_slice(activation_scales, 0, 1, MXFP4_BLOCKS, MXFP4_BLOCKS)
-    else {
+    let Ok(activation_scale) = StridedReadView2D::from_shared_slice(
+        activation_scales,
+        item_index.wrapping_mul(MXFP4_BLOCKS),
+        1,
+        MXFP4_BLOCKS,
+        MXFP4_BLOCKS,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let Ok(weight_scale) = StridedReadView2D::from_shared_slice(
@@ -429,9 +480,11 @@ pub fn gfx950_gpt_oss_120b_expert_v1(
         );
     let gfx950 = Gfx950Matrix::current();
 
+    // Consume four K=128 MFMA fragments in order, scaling each block in FP32.
+    let activation_item_base = item_index.wrapping_mul(MXFP4_BLOCKS * MATRIX_ROWS * EXPERT_K_TILE);
     let Ok(activation_matrix0) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        0,
+        activation_item_base,
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -452,7 +505,7 @@ pub fn gfx950_gpt_oss_120b_expert_v1(
 
     let Ok(activation_matrix1) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        MATRIX_ROWS * EXPERT_K_TILE,
+        activation_item_base.wrapping_add(MATRIX_ROWS * EXPERT_K_TILE),
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -473,7 +526,7 @@ pub fn gfx950_gpt_oss_120b_expert_v1(
 
     let Ok(activation_matrix2) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        2 * MATRIX_ROWS * EXPERT_K_TILE,
+        activation_item_base.wrapping_add(2 * MATRIX_ROWS * EXPERT_K_TILE),
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -498,7 +551,7 @@ pub fn gfx950_gpt_oss_120b_expert_v1(
 
     let Ok(activation_matrix3) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        3 * MATRIX_ROWS * EXPERT_K_TILE,
+        activation_item_base.wrapping_add(3 * MATRIX_ROWS * EXPERT_K_TILE),
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -521,6 +574,7 @@ pub fn gfx950_gpt_oss_120b_expert_v1(
     expert_acc2 += expert3[2] * scale3;
     expert_acc3 += expert3[3] * scale3;
 
+    // Blocked ownership assigns four unique projected elements to each lane.
     let Some(output_block) = index.checked_block::<64, 4>() else {
         return Err(KernelError::OutOfBounds);
     };

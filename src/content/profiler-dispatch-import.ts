@@ -62,9 +62,46 @@ if (
   currentMilestonesData.profilerVariantV3.sampledAbsence !== "excluded" ||
   currentMilestonesData.profilerVariantV3.externalProvenance !== "not_authenticated" ||
   currentMilestonesData.profilerVariantV3.scheduleExecution !== "typed_unavailable" ||
-  currentMilestonesData.profilerVariantV3.causality !== "typed_unavailable"
+  currentMilestonesData.profilerVariantV3.causality !== "typed_unavailable" ||
+  !exactObject.test(currentMilestonesData.profilerRegressionExplanationV1.commit) ||
+  !exactObject.test(currentMilestonesData.profilerRegressionExplanationV1.tree) ||
+  currentMilestonesData.profilerRegressionExplanationV1.schemaVersion !== 1 ||
+  currentMilestonesData.profilerRegressionExplanationV1.serviceSchema !==
+    "fe2o3-agent-profiler-variant-request-v3" ||
+  currentMilestonesData.profilerRegressionExplanationV1.operation !==
+    "explain_regression" ||
+  currentMilestonesData.profilerRegressionExplanationV1.responseSchema !==
+    "fe2o3-profiler-regression-explanation-v1" ||
+  currentMilestonesData.profilerRegressionExplanationV1.maximumResponseBytes !== 20971520 ||
+  currentMilestonesData.profilerRegressionExplanationV1.maximumHypotheses !== 8 ||
+  currentMilestonesData.profilerRegressionExplanationV1.maximumNextMeasurements !== 8 ||
+  currentMilestonesData.profilerRegressionExplanationV1.optimizerPolicyVersion !== 2 ||
+  currentMilestonesData.profilerRegressionExplanationV1.optimizerPassCount !== 7 ||
+  currentMilestonesData.profilerRegressionExplanationV1.kernelNeutral !== true ||
+  currentMilestonesData.profilerRegressionExplanationV1.causality !== "typed_unavailable" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.kernel !== "row_softmax_v1" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.basis !==
+    "deterministic_protocol_fixture_not_hardware_observed" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.baselineDurationTicks.join(",") !==
+    "40,60" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.candidateDurationTicks.join(",") !==
+    "70,110" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.durationDeltaTicks.join(",") !==
+    "30,50" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.baselineVgprCount !== 7 ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.candidateVgprCount !== 8 ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.baselineSgprSpillCount !== 0 ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.candidateSgprSpillCount !== 1 ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.hypothesisKind !==
+    "static_resource_co_observation" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.hypothesisOrigin !== "inferred" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.confidence !== "low" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.archiveOptimizerEvidence !==
+    "typed_unavailable_not_supplied" ||
+  currentMilestonesData.profilerRegressionExplanationV1.example.nextMeasurements.join(",") !==
+    "counter_collection,pc_sampling,schedule_execution_observation,controlled_variant_replicates"
 ) {
-  throw new Error("direct-KFD differential or runtime-causality milestone is malformed");
+  throw new Error("debugger/profiler milestone data is malformed");
 }
 
 export const profilerPhysicalDifferentialMilestone = deepFreeze(
@@ -81,6 +118,9 @@ export const profilerDirectKfdInvestigationMilestone = deepFreeze(
 );
 export const profilerVariantV3Milestone = deepFreeze(
   currentMilestonesData.profilerVariantV3,
+);
+export const profilerRegressionExplanationMilestone = deepFreeze(
+  currentMilestonesData.profilerRegressionExplanationV1,
 );
 const boundCompilerRevision =
   "a5438d82203eeb223b4ff8aa25ea6581b1f1af81:3a319954541af34b3d77366498e73fe4663f2044";
@@ -480,6 +520,7 @@ export const profilerImportTruthRows = deepFreeze([
   ["Wrapper process wall time", "+31.35% observed", "Five warmup and thirty measured alternating pairs compare raw and wrapped processes for one exact MI300X target. Empty artifact inventories make actual kernel-capture overhead unavailable, not zero."],
   ["Exact KIR V7", "declared + admitted", "Canonical verified bytes constrain target family and Wave64 compatibility; they do not prove execution."],
   ["Profiler Variant V3 archive", "restartable JSONL", "A self-contained Archive V1 replays the complete Worker V3 finalizer derivation and reconstructs exact V7-to-V8 bridge and catalog owners. Two complete catalogs in one stable source/MIR universe can produce exact structural multiplicity deltas; sampled or lossy absence is excluded. External producer provenance remains unauthenticated."],
+  ["Regression explanation V1", "inferred, evidence-linked", "The kernel-neutral service joins comparable duration, optimizer, resource, counter, positive source/IR/ISA, and complete structural changes into bounded hypotheses with contradictions, missing facts, and next measurements. Causality remains unavailable."],
   ["ATT", "unavailable", "Sealed collection rejects the decoder's mutable-directory requirement."],
   ["Protected source/ISA 3x2 matrix", "not run", "The protected family-by-target acceptance remains unavailable and is not covered by this checkpoint."],
   ["T5 distributed overlap", "blocked on #182", "No issue #182 typed producer supplies admitted operation, transfer, collective, and clock-correlation identities."],
@@ -511,6 +552,10 @@ export const profilerImportSources = deepFreeze([
   { label: "Complete structural catalog comparison", path: "crates/fe2o3-semantic-query/src/profiler_complete_structural_v1.rs", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
   { label: "Profiler Variant V3 contract", path: "docs/profiler-variant-v3.md", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
   { label: "Production profiler archive contract", path: "docs/production-profiler-kir-archive-v1.md", commit: profilerVariantV3Milestone.commit, tree: profilerVariantV3Milestone.tree },
+  { label: "Profiler regression explanation", path: "crates/fe2o3-semantic-query/src/profiler_explanation_v1.rs", commit: profilerRegressionExplanationMilestone.commit, tree: profilerRegressionExplanationMilestone.tree },
+  { label: "Agent-native explanation acceptance", path: "crates/fe2o3-semantic-query/tests/profiler_variant_v1.rs", commit: profilerRegressionExplanationMilestone.commit, tree: profilerRegressionExplanationMilestone.tree },
+  { label: "Profiler explanation contract", path: "docs/profiler-regression-explanation-v1.md", commit: profilerRegressionExplanationMilestone.commit, tree: profilerRegressionExplanationMilestone.tree },
+  { label: "Row softmax V1 kernel", path: "examples/row_softmax_v1/src/kernel.rs", commit: profilerRegressionExplanationMilestone.commit, tree: profilerRegressionExplanationMilestone.tree },
 ]);
 
 export function profilerImportSourceUrl(path: string): string | null {

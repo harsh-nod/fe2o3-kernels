@@ -1,4 +1,9 @@
-//! Safe Rust source for the bounded GPT-OSS-120B gfx950 decode megakernel.
+//! Compiler-rejected two-stage BF16 attention-pipeline experiment.
+//!
+//! This file is retained as a documented counterexample, not as a kernel to
+//! copy: the compiler rejects the retained pipeline scalar temporary because it
+//! has multiple definitions. Its phase comments show the intended experiment,
+//! while the tutorial clearly separates it from runnable variants.
 
 #![allow(missing_docs)]
 
@@ -18,14 +23,14 @@ use crate::{
 const ATTENTION_SCALE: f32 = 0.125;
 const ROUTER_FLOOR: f32 = -1.0e30;
 
+/// Experiments with double-buffered LDS Q/K fragments; currently has no HSACO.
 #[cfg(any(
     not(target_arch = "amdgpu"),
     feature = "kernel-gpt-oss-decode-pipelined-attention"
 ))]
 #[kernel(
     typed,
-    namespace = "fdac2bfe29c5e088f817374ab8ebec27e0574d46b1d2601704a4d1108d2524ed",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1]),
     control_flow(loop_bounds(2880, 64, 4, 16))
 )]
 #[allow(clippy::too_many_arguments, clippy::many_single_char_names)]
@@ -44,32 +49,42 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
     mut expert_output: DisjointSlice<f32, Blocked<Index1D, 64, 4>>,
     mut packed_top4: DisjointSlice<u32>,
 ) -> KernelResult {
-    if hidden_f32.len() < HIDDEN_SIZE
+    // Validate the entire item contract before any collective or pipeline operation.
+    if hidden_f32.len() < crate::PROFILE_ITEMS * HIDDEN_SIZE
         || router_f32.len() < EXPERTS * HIDDEN_SIZE
-        || query_bf16.len() < MATRIX_ROWS * HEAD_DIM
-        || key_transposed_bf16.len() < HEAD_DIM * CONTEXT_TOKENS
-        || value_f32.len() < CONTEXT_TOKENS * VALUE_TILE
-        || sinks_f32.len() < MATRIX_ROWS
-        || expert_activation_blocks_fp4.len() < MXFP4_BLOCKS * MATRIX_ROWS * EXPERT_K_TILE
+        || query_bf16.len() < crate::PROFILE_ITEMS * MATRIX_ROWS * HEAD_DIM
+        || key_transposed_bf16.len() < crate::PROFILE_ITEMS * HEAD_DIM * CONTEXT_TOKENS
+        || value_f32.len() < crate::PROFILE_ITEMS * CONTEXT_TOKENS * VALUE_TILE
+        || sinks_f32.len() < crate::PROFILE_ITEMS * MATRIX_ROWS
+        || expert_activation_blocks_fp4.len()
+            < crate::PROFILE_ITEMS * MXFP4_BLOCKS * MATRIX_ROWS * EXPERT_K_TILE
         || expert_weight_blocks_fp4.len() < EXPERTS * MXFP4_BLOCKS * EXPERT_K_TILE * EXPERT_N_TILE
-        || activation_scales.len() < MXFP4_BLOCKS
+        || activation_scales.len() < crate::PROFILE_ITEMS * MXFP4_BLOCKS
         || expert_weight_scales.len() < EXPERTS * MXFP4_BLOCKS * EXPERT_N_TILE
         || attention_output.len() < ATTENTION_OUTPUT_ELEMENTS
         || expert_output.len() < EXPERT_OUTPUT_ELEMENTS
-        || packed_top4.len() < 1
+        || packed_top4.len() < crate::PACKED_ROUTE_ELEMENTS
     {
         return Err(KernelError::InvalidArgument);
     }
 
+    // One Wave64 owns an item; all four workgroup waves also address the LDS pipeline.
     let index = thread::index_1d();
-    let lane_index = index.get();
-    let pipeline_lane = lane_index % 64;
+    let global_index = index.get();
+    let lane_index = global_index % crate::WAVE_SIZE;
+    let item_index = global_index / crate::WAVE_SIZE;
+    let pipeline_lane = global_index % crate::WORKGROUP_SIZE;
     let lane = WaveLane::<Wave64>::current();
     let subgroup = Gfx950Subgroup::current();
 
-    let Ok(hidden) =
-        StridedReadView2D::from_shared_slice(hidden_f32, 0, 1, HIDDEN_SIZE, HIDDEN_SIZE)
-    else {
+    // Checked views establish offsets and strides before the experimental phase.
+    let Ok(hidden) = StridedReadView2D::from_shared_slice(
+        hidden_f32,
+        item_index.wrapping_mul(HIDDEN_SIZE),
+        1,
+        HIDDEN_SIZE,
+        HIDDEN_SIZE,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let Ok(router) =
@@ -89,6 +104,7 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
         depth += 1;
     }
 
+    // Router broadcasts remain uniform and identical to the production kernel.
     let mut best0 = ROUTER_FLOOR;
     let mut best1 = ROUTER_FLOOR;
     let mut best2 = ROUTER_FLOOR;
@@ -223,13 +239,19 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
     }
     let selected = (id0 as usize) & (EXPERTS - 1);
 
-    let Ok(query) = Bf16MfmaAMatrix::row_major(query_bf16, 0, MATRIX_ROWS, HEAD_DIM, HEAD_DIM)
-    else {
+    // Intended design: overlap the next Q/K tile in two LDS stages with current MFMA.
+    let Ok(query) = Bf16MfmaAMatrix::row_major(
+        query_bf16,
+        item_index.wrapping_mul(MATRIX_ROWS * HEAD_DIM),
+        MATRIX_ROWS,
+        HEAD_DIM,
+        HEAD_DIM,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let Ok(key) = Bf16MfmaBMatrix::row_major(
         key_transposed_bf16,
-        0,
+        item_index.wrapping_mul(HEAD_DIM * CONTEXT_TOKENS),
         HEAD_DIM,
         CONTEXT_TOKENS,
         CONTEXT_TOKENS,
@@ -239,9 +261,9 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
     let matrix = DeviceMatrix::current();
     let mut pipeline_scope = WorkgroupLdsScope::current();
     let mut query_pipeline =
-        WorkgroupPipeline::<Bf16MfmaAFragment<'_>, 2, 64, 1>::current(&mut pipeline_scope);
+        WorkgroupPipeline::<Bf16MfmaAFragment<'_>, 2, 256, 1>::current(&mut pipeline_scope);
     let mut key_pipeline =
-        WorkgroupPipeline::<Bf16MfmaBFragment<'_>, 2, 64, 1>::current(&mut pipeline_scope);
+        WorkgroupPipeline::<Bf16MfmaBFragment<'_>, 2, 256, 1>::current(&mut pipeline_scope);
 
     query_pipeline.stage(0);
     query_pipeline.write(0, pipeline_lane, query.load_m16k16(&lane, 0, 0));
@@ -285,13 +307,22 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
     key_pipeline.release(phase_index);
     let scores = scores.into_values();
 
-    let Ok(values) =
-        StridedReadView2D::from_shared_slice(value_f32, 0, CONTEXT_TOKENS, VALUE_TILE, VALUE_TILE)
-    else {
+    let Ok(values) = StridedReadView2D::from_shared_slice(
+        value_f32,
+        item_index.wrapping_mul(CONTEXT_TOKENS * VALUE_TILE),
+        CONTEXT_TOKENS,
+        VALUE_TILE,
+        VALUE_TILE,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
-    let Ok(sinks) = StridedReadView2D::from_shared_slice(sinks_f32, 0, 1, MATRIX_ROWS, MATRIX_ROWS)
-    else {
+    let Ok(sinks) = StridedReadView2D::from_shared_slice(
+        sinks_f32,
+        item_index.wrapping_mul(MATRIX_ROWS),
+        1,
+        MATRIX_ROWS,
+        MATRIX_ROWS,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let row_group = lane_index / CONTEXT_TOKENS;
@@ -343,6 +374,7 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
         token += 1;
     }
 
+    // Expert projection and stores remain controls; the LDS pipeline is the only variable.
     let expert_reduction_base = selected
         .wrapping_mul(MXFP4_BLOCKS)
         .wrapping_mul(EXPERT_K_TILE);
@@ -355,9 +387,13 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
     ) else {
         return Err(KernelError::InvalidArgument);
     };
-    let Ok(activation_scale) =
-        StridedReadView2D::from_shared_slice(activation_scales, 0, 1, MXFP4_BLOCKS, MXFP4_BLOCKS)
-    else {
+    let Ok(activation_scale) = StridedReadView2D::from_shared_slice(
+        activation_scales,
+        item_index.wrapping_mul(MXFP4_BLOCKS),
+        1,
+        MXFP4_BLOCKS,
+        MXFP4_BLOCKS,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
     let Ok(weight_scale) = StridedReadView2D::from_shared_slice(
@@ -391,9 +427,10 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
         );
     let gfx950 = Gfx950Matrix::current();
 
+    let activation_item_base = item_index.wrapping_mul(MXFP4_BLOCKS * MATRIX_ROWS * EXPERT_K_TILE);
     let Ok(activation_matrix0) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        0,
+        activation_item_base,
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -414,7 +451,7 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
 
     let Ok(activation_matrix1) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        MATRIX_ROWS * EXPERT_K_TILE,
+        activation_item_base.wrapping_add(MATRIX_ROWS * EXPERT_K_TILE),
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -435,7 +472,7 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
 
     let Ok(activation_matrix2) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        2 * MATRIX_ROWS * EXPERT_K_TILE,
+        activation_item_base.wrapping_add(2 * MATRIX_ROWS * EXPERT_K_TILE),
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -460,7 +497,7 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
 
     let Ok(activation_matrix3) = Gfx950Fp4MfmaAMatrix::row_major(
         expert_activation_blocks_fp4,
-        3 * MATRIX_ROWS * EXPERT_K_TILE,
+        activation_item_base.wrapping_add(3 * MATRIX_ROWS * EXPERT_K_TILE),
         MATRIX_ROWS,
         EXPERT_K_TILE,
         EXPERT_K_TILE,
@@ -483,6 +520,7 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
     expert_acc2 += expert3[2] * scale3;
     expert_acc3 += expert3[3] * scale3;
 
+    // Blocked capabilities would keep all output writes disjoint if lowering succeeded.
     let Some(output_block) = index.checked_block::<64, 4>() else {
         return Err(KernelError::OutOfBounds);
     };
@@ -510,11 +548,9 @@ pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(
     if let Some(slot) = expert_output.get_block_mut(&output_block, 3) {
         *slot = expert_acc3;
     }
-    if lane_index == 0 {
-        let packed = id0 | (id1 << 7) | (id2 << 14) | (id3 << 21);
-        if let Some(slot) = packed_top4.get_mut(thread::index_1d()) {
-            *slot = packed;
-        }
+    let packed = id0 | (id1 << 7) | (id2 << 14) | (id3 << 21);
+    if let Some(slot) = packed_top4.get_mut(thread::index_1d()) {
+        *slot = packed;
     }
     Ok(())
 }

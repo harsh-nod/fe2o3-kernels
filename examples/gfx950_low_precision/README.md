@@ -18,10 +18,19 @@ perform stable softmax and value accumulation through typed fe2o3 operations.
 `src/reference.rs` is an independent CPU oracle with deterministic,
 axis-varying inputs and exact OCP E2M1/E4M3 decoders.
 
+All four Rust kernels launch four `256`-thread workgroups. Each workgroup owns
+four Wave64 problems, for a total batch of 16 non-identical inputs. A GEMM wave
+owns one complete `16x16` output tile. An attention wave owns one complete
+16-token head and a private transpose tile: 1 KiB for FP4 or 2 KiB for FP8.
+The compiler reserves 4 KiB or 8 KiB of static LDS per workgroup. All waves
+execute the same stage, publication, uniform workgroup barrier, and
+transpose-read lifecycle, while wave-relative LDS addresses prevent aliasing.
+No output element is shared between waves or workgroups.
+
 Run the Rust source and oracle checks with:
 
 ```bash
-cargo test --manifest-path Cargo.toml
+cargo fe2o3 test --all-targets --manifest-path Cargo.toml
 ```
 
 The production rustc importer, V8/V9 Kernel IR schemas, exact gfx950 target
@@ -48,7 +57,7 @@ ordered nine-file ROCm 7.2.1 closure accepted by
 four B8 transpose reads, one uniform publication barrier, and the exact static
 LDS allocation before dispatch.
 
-The selected root extraction namespace is portable across checkout paths.
+The selected root compiler binding is portable across checkout paths.
 Cargo's original ordered metadata remains a separate build observation; only
 the terminal analysis session receives the package-, manifest-, feature-,
 target-, and profile-bound portable token. Dependency compilations and general
@@ -58,6 +67,22 @@ The strict Worker V3 provider and admission policy also pin this exact closure
 and reject caller-supplied providers. A measured native protected-worker build
 still requires matching LLVM/LLD development packages; this does not block the
 ordinary Rust-to-HSACO runners above.
+
+## Current WG256/grid4 numerical qualification
+
+On 2026-09-03, all four production Rust wrappers completed extraction,
+gfx950:xnack- COV6 finalization, symbol-scoped ISA inspection, and numerical
+execution on physical GPU 6 of SSH host `mi350` with ROCm 7.2.1. Each launch
+checked 16 non-identical inputs and all 4,096 output values, as well as
+immutable inputs and guard canaries. These receipts do not include new timing
+measurements.
+
+| Kernel | Maximum absolute error | HSACO SHA-256 |
+| --- | ---: | --- |
+| FP4 GEMM | `0` | `2e9cc2bd178e1e1b72237cb32cc8f3e08d2d140d735520ea0147ed84fe81f93b` |
+| FP8 GEMM | `0` | `75ce58c286cc6c3b199bf1144e571e8a3d6b7dc0e373a9dee0589bf67b3d1e6d` |
+| FP4 attention | `1.192092896e-7` | `cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38` |
+| FP8 attention | `5.960464478e-8` | `4273c31ce4545e09e051abfcb704d1c7750d7b52ee50b01801caec5ddd2d0479` |
 
 ## HIP comparison fixture
 
@@ -100,14 +125,16 @@ softmax result. The comparison rejects NaN and infinity before applying its
 error tolerance. Execution is rejected when the selected HIP device is not
 `gfx950`.
 
-## Rust validation evidence
+## Previous single-wave Rust evidence
 
-On 2026-08-26, all four ordinary Rust runners passed through SSH host alias
+The following 2026-08-26 measurements predate the four-workgroup, four-wave
+mapping. They establish the numerical and ISA baseline but are not evidence for
+the current launch geometry. All four ordinary Rust runners passed through SSH host alias
 `mi350` (remote hostname `smci350-rck-g03-b19-03`) with ROCm 7.2.1 on gfx950.
 Every test checked all 256 outputs, immutable inputs, output canaries, exact
 gfx950:xnack- COV6 metadata, and symbol-scoped ISA.
 
-| Rust kernel | Portable namespace | LLVM SHA-256 | HSACO SHA-256 | Required ISA | Maximum absolute error |
+| Rust kernel | Compiler-derived binding | LLVM SHA-256 | HSACO SHA-256 | Required ISA | Maximum absolute error |
 | --- | --- | --- | --- | --- | --- |
 | `gfx950_fp4_gemm_rust` | `ff22ff3610dda0a94803a8011ced229b78c77400ca63c9b929d6ecba78ed6f01` | `b92ceef45655bb2ae131c2b09645ff8fb588299a994e9cbf84b07b7868fca115` | `f170671b0b778cda3876faee253e4ac3a092efdd9c1ebbfcfe901590ea3e4e4d` | scaled MFMA, `cbsz:4 blgp:4` | `0` |
 | `gfx950_fp8_gemm_rust` | `d67f1755b38fbdac67cec83da3ebc359f874e3fbf90fcc036471455ec117dfea` | `351dbfeecec00e673e3e15557b97dc1c53006839dfb9d1a0a7b03ac6c23ae6e3` | `4c19d4a90ec71afa7621cc7f9f8d4d5af8e9dd87486536c702b8eb6dcc4c3d8f` | scaled MFMA, FP8 selectors | `0` |

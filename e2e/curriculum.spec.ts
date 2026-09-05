@@ -281,7 +281,7 @@ test("launch hub and operator cookbook are discoverable", async ({ page }, testI
     page.getByRole("heading", { level: 1, name: "Operator cookbook" }),
   ).toBeVisible();
   await expect(page.locator("#kda-gdn")).toContainText(
-    "One head with K=16",
+    "Four independent WG256 heads at grid4, each with K=16",
   );
   await expect(page.locator("#kda-gdn")).toContainText(
     "No full Kimi K3 layer",
@@ -404,6 +404,10 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("--test simulation workgroup_scan");
   await expect(codePanel).toContainText("--test codec_v2");
   await expect(codePanel).toContainText("ordinary_neutral_collectives_reach_both_target_llvm_backends");
+  await expect(codePanel).toContainText(
+    "ordinary_scan_sources_export_v5_and_execute_every_cpu_observation_path",
+  );
+  await expect(codePanel).toContainText("examples/workgroup_sync_v1/scan-u32-request.json");
   await expect(codePanel).toContainText('"category":"memory"');
   await expect(codePanel).toContainText('"category":"operation"');
 
@@ -425,6 +429,11 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   await expect(codePanel).toContainText("Portable workgroup reductions at 9176b9c27");
   await expect(codePanel).toContainText("Target-neutral workgroup scans at 2df6130c5");
   await expect(codePanel).toContainText("retained ordinary scan Bundle V5 executions: 0");
+  await expect(codePanel).toContainText("Ordinary Scan Bundle V5 qualification at b15cf628f");
+  await expect(codePanel).toContainText("3 scalar types x 2 modes x extents 3, 65, and 255 = 18 entries");
+  await expect(codePanel).toContainText("cross-bundle replay: schedule_binding_mismatch");
+  await expect(codePanel).toContainText("resource_exhaustion, exact=false, outcome=active");
+  await expect(codePanel).toContainText("archived schedule documents: 0");
   await expect(codePanel).toContainText("f32 input 1.5 -> 96.0 (0x42c00000)");
 
   const semanticEvidence = page.getByRole("region", {
@@ -441,9 +450,50 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
   ).toBeVisible();
   await expect(
     semanticEvidence.getByRole("heading", {
-      name: "Debug six target-neutral prefix contracts at KIR V10",
+      name: "Debug arbitrary 1D prefix contracts at KIR V10",
     }),
   ).toBeVisible();
+  const arbitraryScanExtents = semanticEvidence.getByRole("table", {
+    name: "Arbitrary workgroup scan extent counts",
+  });
+  const extentRows = arbitraryScanExtents.getByRole("row");
+  expect(await extentRows.nth(1).getByRole("cell").allTextContents())
+    .toEqual(["3", "2", "8", "6", "3 active"]);
+  expect(await extentRows.nth(2).getByRole("cell").allTextContents())
+    .toEqual(["65", "7", "23", "16", "64 + 1 active"]);
+  expect(await extentRows.nth(3).getByRole("cell").allTextContents())
+    .toEqual(["255", "8", "26", "18", "64 + 64 + 64 + 63 active"]);
+  await expect(semanticEvidence.getByText("3 * ceil(log2(N)) + 2")).toBeVisible();
+  await expect(semanticEvidence.getByText("2 * ceil(log2(N)) + 2")).toBeVisible();
+  const sourceBundleMatrix = semanticEvidence.getByRole("table", {
+    name: "Ordinary scan Bundle V5 matrix",
+  });
+  const sourceBundleRows = sourceBundleMatrix.getByRole("row");
+  await expect(sourceBundleRows).toHaveCount(7);
+  expect(await sourceBundleRows.nth(1).getByRole("cell").allTextContents())
+    .toEqual(["u32", "inclusive", "exact · 0x5ca0", "exact · 0x5ca1", "exact · 0x5ca2"]);
+  expect(await sourceBundleRows.nth(6).getByRole("cell").allTextContents())
+    .toEqual(["f32", "exclusive", "exact · 0x5caf", "exact · 0x5cb0", "exact · 0x5cb1"]);
+  await expect(semanticEvidence.getByRole("heading", {
+    name: "18 canonical documents round-trip and replay exactly",
+  })).toBeVisible();
+  await expect(semanticEvidence.getByText(/trap-bearing Semantic MIR uses additive V11/u))
+    .toBeVisible();
+  const persistedReplay = semanticEvidence.getByRole("region", {
+    name: "18 canonical documents round-trip and replay exactly",
+  });
+  await expect(persistedReplay.getByText("schedule_binding_mismatch", { exact: true }))
+    .toBeVisible();
+  await expect(semanticEvidence.getByRole("heading", {
+    name: "The final Wave64 contains one logical lane",
+  })).toBeVisible();
+  await expect(semanticEvidence.getByRole("heading", {
+    name: "Resource exhaustion remains inspectable and inexact",
+  })).toBeVisible();
+  await expect(semanticEvidence.getByText(/does not expose which retention dimension/u))
+    .toBeVisible();
+  await expect(semanticEvidence.getByText(/does not execute a GPU or predict GPU behavior/u))
+    .toBeVisible();
   const scanResults = semanticEvidence.getByRole("table", {
     name: "Workgroup scan semantic results",
   });
@@ -484,7 +534,7 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
     name: "Logical wave width",
   });
   await waveTabs.getByRole("tab", { name: "Wave64" }).click();
-  await expect(semanticEvidence.getByText("0x0000000000000001")).toBeVisible();
+  await expect(semanticEvidence.getByText("0x0000000000000001").last()).toBeVisible();
   await expect(semanticEvidence.getByText("execution_incomplete_wave")).toBeVisible();
 
   await expect(semanticEvidence.getByText("Counter Capture V2 importer regression")).toBeVisible();
@@ -500,6 +550,14 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
 
   await semanticEvidence.screenshot({
     path: testInfo.outputPath("semantic-evidence-workbench.png"),
+    animations: "disabled",
+  });
+  await page.locator(".semantic-scan-extents").screenshot({
+    path: testInfo.outputPath("arbitrary-scan-extents.png"),
+    animations: "disabled",
+  });
+  await page.locator(".semantic-scan-bundle").screenshot({
+    path: testInfo.outputPath("scan-bundle-v5-matrix.png"),
     animations: "disabled",
   });
   const semanticBounds = await semanticEvidence.evaluate((element) => ({
@@ -682,6 +740,137 @@ test("GPU debugger profiler workbench keeps backend authority distinct", async (
   await expect(page.getByTestId("gpu-workbench-record")).toContainText(
     "WaveRecordLayoutNotInKfdUapi",
   );
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    "ReceiptContainsNoLiveSelector",
+  );
+  await expect(page.getByTestId("gpu-workbench-record")).toContainText(
+    '"physical_execution_authenticated": false',
+  );
+  await expect(page.getByTestId("gpu-workbench-record")).not.toContainText(
+    "CanonicalReceiptNotArchived",
+  );
+  const checkpoint = page.getByLabel("Active direct KFD opaque checkpoint");
+  await expect(checkpoint).toContainText("gfx942:xnack-");
+  await expect(checkpoint).toContainText("Wave64");
+  await expect(checkpoint).toContainText("3,407");
+  await expect(checkpoint).toContainText("2,324");
+  await expect(checkpoint).toContainText("16");
+  await expect(page.getByText("evidence f010a237…acb96f")).toBeVisible();
+  const checkpointPins = checkpoint.getByLabel("Checkpoint receipt pins");
+  await expect(checkpointPins).toContainText(
+    "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f",
+  );
+  await expect(checkpointPins).toContainText(
+    "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+  );
+  await expect(checkpointPins).toContainText(
+    "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+  );
+  await expect(checkpointPins).toContainText(
+    "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+  );
+  await expect(checkpointPins.getByRole("link", { name: /receipt identity/u }))
+    .toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/656ddbda60e5b76ba62ccf3f494d491e29ba0dea/docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json",
+    );
+  const checkpointSegments = checkpoint.getByRole("table", {
+    name: "Canonical opaque checkpoint range slots",
+  });
+  const checkpointSegmentRows = checkpointSegments.getByRole("row");
+  await expect(checkpointSegmentRows).toHaveCount(17);
+  expect(await checkpointSegmentRows.nth(1).getByRole("cell").allTextContents())
+    .toEqual(["control stack", "12,268", "20", "complete"]);
+  expect(await checkpointSegmentRows.nth(2).getByRole("cell").allTextContents())
+    .toEqual(["wave state", "14,592", "2,304", "complete"]);
+  expect(await checkpointSegmentRows.nth(3).getByRole("cell").allTextContents())
+    .toEqual(["control stack", "12,288", "0", "empty"]);
+  const checkpointBodyRows = checkpointSegments.locator("tbody tr");
+  for (let rowIndex = 0; rowIndex < 16; rowIndex += 1) {
+    const row = checkpointBodyRows.nth(rowIndex);
+    const rowHeader = row.locator('th[scope="row"]');
+    const rowId = await rowHeader.getAttribute("id");
+    expect(rowId).toBeTruthy();
+    const cells = row.getByRole("cell");
+    for (const [cellIndex, columnId] of [
+      "checkpoint-slot-kind",
+      "checkpoint-slot-offset",
+      "checkpoint-slot-bytes",
+      "checkpoint-slot-content",
+    ].entries()) {
+      await expect(cells.nth(cellIndex)).toHaveAttribute(
+        "headers",
+        `${rowId} ${columnId}`,
+      );
+    }
+  }
+  const checkpointLimits = checkpoint.getByLabel("Checkpoint evidence limits");
+  await expect(checkpointLimits).toContainText("not one coherent checkpoint instant");
+  await expect(checkpointLimits).toContainText("not signatures");
+  await expect(checkpointLimits).toContainText("grant no authority");
+  await expect(checkpointLimits).toContainText("process_vm_readv returned EFAULT");
+  await expect(checkpointLimits).toContainText("only EFAULT admits");
+  await expect(checkpointLimits).toContainText("read-only /proc/<pid>/mem fallback");
+  await expect(checkpointLimits).toContainText(
+    "does not authenticate the code-object bytes physically loaded or executed",
+  );
+  await expect(page.getByRole("gridcell", {
+    name: /inner records, lane 0, unavailable/u,
+  })).toBeVisible();
+  await expect(page.getByRole("gridcell", {
+    name: /inner records, lane 63, unavailable/u,
+  })).toBeVisible();
+  await page.screenshot({
+    path: testInfo.outputPath("active-direct-kfd-checkpoint.png"),
+    animations: "disabled",
+    fullPage: true,
+  });
+  await checkpoint.screenshot({
+    path: testInfo.outputPath("active-direct-kfd-checkpoint-panel.png"),
+    animations: "disabled",
+  });
+  const directKfdDimensions = await page.evaluate(() => ({
+    width: document.documentElement.scrollWidth,
+    viewport: window.innerWidth,
+    workbenchWidth: document.querySelector(".gpu-workbench")?.scrollWidth ?? 0,
+    workbenchViewport: document.querySelector(".gpu-workbench")?.clientWidth ?? 0,
+  }));
+  expect(directKfdDimensions.width).toBeLessThanOrEqual(directKfdDimensions.viewport);
+  expect(directKfdDimensions.workbenchWidth)
+    .toBeLessThanOrEqual(directKfdDimensions.workbenchViewport);
+  const mountedCheckpoint = await checkpoint.evaluate((element) => {
+    const tableScroller = element.querySelector<HTMLElement>(".table-scroll");
+    const table = tableScroller?.querySelector<HTMLElement>("table");
+    const pins = element.querySelector<HTMLElement>(".gpu-checkpoint-pins");
+    const parent = element.parentElement;
+    return {
+      connected: element.isConnected,
+      width: element.getBoundingClientRect().width,
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      parentWidth: parent?.clientWidth ?? 0,
+      pinsWidth: pins?.getBoundingClientRect().width ?? 0,
+      scrollerWidth: tableScroller?.getBoundingClientRect().width ?? 0,
+      scrollerClientWidth: tableScroller?.clientWidth ?? 0,
+      scrollerScrollWidth: tableScroller?.scrollWidth ?? 0,
+      scrollerOverflowX: tableScroller ? getComputedStyle(tableScroller).overflowX : "",
+      tableWidth: table?.getBoundingClientRect().width ?? 0,
+    };
+  });
+  expect(mountedCheckpoint.connected).toBe(true);
+  expect(mountedCheckpoint.width).toBeGreaterThan(0);
+  expect(mountedCheckpoint.width).toBeLessThanOrEqual(mountedCheckpoint.parentWidth + 1);
+  expect(mountedCheckpoint.scrollWidth).toBeLessThanOrEqual(mountedCheckpoint.clientWidth + 1);
+  expect(mountedCheckpoint.pinsWidth).toBeGreaterThan(0);
+  expect(mountedCheckpoint.pinsWidth).toBeLessThanOrEqual(mountedCheckpoint.clientWidth + 1);
+  expect(mountedCheckpoint.scrollerWidth).toBeGreaterThan(0);
+  expect(mountedCheckpoint.scrollerWidth).toBeLessThanOrEqual(mountedCheckpoint.clientWidth + 1);
+  expect(mountedCheckpoint.scrollerScrollWidth)
+    .toBeGreaterThanOrEqual(mountedCheckpoint.scrollerClientWidth);
+  expect(mountedCheckpoint.tableWidth).toBeGreaterThanOrEqual(
+    mountedCheckpoint.scrollerClientWidth,
+  );
+  expect(["auto", "scroll"]).toContain(mountedCheckpoint.scrollerOverflowX);
 
   const backends = page.getByRole("tablist", { name: "Evidence backend" });
   await backends.getByRole("tab", { name: "ROCgdb / MI" }).click();
@@ -742,6 +931,19 @@ test("profiler import tutorial preserves sealed execution and evidence boundarie
   ).toBeVisible();
   await expect(page.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
     .toContainText("open_structural_archive");
+  await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Explain one row-softmax regression without inventing causality",
+    }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Row softmax regression comparison"))
+    .toContainText("+30 / +50 ticks");
+  await expect(page.getByText("Static resource co-observation")).toBeVisible();
+  await expect(page.getByRole("table", { name: "Profiler explanation next measurements" }))
+    .toContainText("controlled_variant_replicates");
+  await expect(page.getByText(/Causal attribution:/u))
+    .toContainText("typed_unavailable");
   await expect(page.getByText("Synthetic import, bounded checkpoint qualified")).toBeVisible();
   await expect(page.getByRole("table", { name: "Process-local profiler agent mapping" }))
     .toContainText("7001");
@@ -932,7 +1134,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -991,7 +1193,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e/examples/tiled_gemm_general_v1/src/main.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/tiled_gemm_general_v1/src/main.rs",
   );
 
   await page.getByRole("tab", { name: "MI300X result" }).click();
@@ -1203,7 +1405,7 @@ test("row softmax shows dynamic source and GPU qualification", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/row_softmax_general_v1/src/kernel.rs",
   );
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
@@ -1342,7 +1544,7 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/308d8fa00fa41e098b2a1a47bbfea1bc29735464/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
@@ -1456,13 +1658,13 @@ test("gfx950 lessons expose production Rust source, ISA, and runtime evidence", 
 
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Compiler-derived binding: a9a878f0e2fc3a42ad17edf0a326a89695398bb6d7460eaf278ea3e8c53f4cf5",
+    "Compiler-derived binding: 84784601f60af13beafd467edd5bb86f872e3aa9d48e1ad5e8c84e1452dd13a1",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO SHA-256: 90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
+    "Rust-produced HSACO SHA-256: cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust numerical result: max_absolute_error=2.235174179e-8",
+    "Rust numerical result: 4,096 outputs; max_absolute_error=1.192092896e-7",
   );
 
   await page.goto("./#/lesson/gfx950-fp8-attention");
@@ -1496,28 +1698,28 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950-fp4-gemm",
       "gfx950 FP4 GEMM",
       "gfx950_fp4_gemm_rust",
-      "1308d41a97d523d2e77ad15e16a3292e9d5a75e2f4eedf53f9e1008c481ca750",
+      "436964a09c11a1a3f7ae24642972ddeb632cfcd62c52e6db33ddea0ff13d9900",
       "max_absolute_error=0",
     ],
     [
       "gfx950-fp8-gemm",
       "gfx950 FP8 GEMM",
       "gfx950_fp8_gemm_rust",
-      "701a0a4ef137173ba9563dfe8b3b1f916d3d57dca0063d393d8e81c671e4dd2b",
+      "16a6725e375a0e8a71defb8740a2f2080f67bd035c749c29df3a895fcbcb08e0",
       "max_absolute_error=0",
     ],
     [
       "gfx950-fp4-attention",
       "gfx950 FP4 flash attention",
       "gfx950_fp4_attention_rust",
-      "90d8f5e0b1b058c96a0b855893f20d3c4a3adc86fe72fe4b9a0de9652eef122b",
-      "max_absolute_error=2.235174179e-8",
+      "cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
+      "4,096 outputs; max_absolute_error=1.192092896e-7",
     ],
     [
       "gfx950-fp8-attention",
       "gfx950 FP8 flash attention",
       "gfx950_fp8_attention_rust",
-      "9208b439a4fbd1a987ea3cca19c01cac79e69e00b021ccb54f09f440d11f6294",
+      "aa479249efa9d45e7eb0fd44f000feb77005b289556ba2030afd2545b4fda1e1",
       "max_absolute_error=5.960464478e-8",
     ],
   ] as const;
@@ -1551,7 +1753,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       page.getByRole("link", { name: "Source", exact: true }),
     ).toHaveAttribute(
       "href",
-      /\/blob\/c1383e97db732f9f1ff8105f10d5c2b5971143e1\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+      /\/blob\/9006001157e2c3062e44088634e467b0f8963ee0\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
     );
     await page.getByRole("tab", { name: "Evidence record" }).click();
     await expect(page.getByRole("tabpanel")).toContainText(
@@ -1614,7 +1816,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     ],
     [
       "gfx950-gpt-oss-120b-megakernel",
-      "gpt-oss-120b batch-1 layer-tile megakernel",
+      "gpt-oss-120b 16-item layer-tile megakernel",
       "gfx950_gpt_oss_120b_decode_megakernel_v1",
     ],
   ] as const;
@@ -1708,7 +1910,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     "gfx950_kda_chunkwise_prefill",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "output_chunk1_replicated max_absolute_error=7.450580597e-9",
+    "output_chunk1_replicated outputs=1024 max_absolute_error=7.450580597e-9",
   );
 
   await page.goto("./#/lesson/gfx950-deepseek-sparse-attention");
@@ -1741,7 +1943,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/f88432e7fe5d0b462b5598b9d84a8596fce13b3e/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -1759,13 +1961,13 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
   await page.goto("./#/lesson/gfx950-muon-optimizer");
   await page.getByRole("tab", { name: "Evidence record" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
-    "eight visible AMD Instinct MI350X devices",
+    "physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset)",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "reduced norm max_error=0 with norm=0.614919",
+    "output outputs=256 max_absolute_error=7.450580597e-9; output_norm outputs=16 max_absolute_error=5.960464478e-8",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Rust-produced HSACO SHA-256: bb6e61181e05244a71b6475bcc34a6a0c62d94147bbe27304287f71d8181fe5d",
+    "Rust-produced HSACO SHA-256: 7511daf2e49b86fd6b6074e8f4d2f7ea0cd9ccefe49926df73ec33621438fa38",
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "Evidence status: observed",

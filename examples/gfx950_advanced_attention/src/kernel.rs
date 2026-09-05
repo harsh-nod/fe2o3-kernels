@@ -1,14 +1,20 @@
 //! Ordinary attributed Rust for the bounded advanced-attention profiles.
+//!
+//! Device entrypoints follow a common review order: validate whole-launch
+//! shapes before collectives, derive batch and lane ownership, create checked
+//! multidimensional views, run uniform subgroup or matrix operations, then
+//! write only through disjoint output capabilities. Host fallbacks deliberately
+//! call the independent references so simulation never masquerades as device ISA.
 
 #![allow(missing_docs)] // The kernel macro emits an undocumented helper module.
 
+use fe2o3_device::{DeviceMath, DisjointSlice, thread};
 #[cfg(target_arch = "amdgpu")]
 use fe2o3_device::{
-    kernel, Gfx950F32AccumulatorFragment, Gfx950Fp8E4M3, Gfx950Fp8MfmaAMatrix,
-    Gfx950LdsTransposeTile, Gfx950Matrix, Gfx950Subgroup, Gfx950TransposeUninitialized, Index1D,
-    KernelError, KernelResult, StridedReadView2D, Wave64, WaveLane,
+    Gfx950F32AccumulatorFragment, Gfx950Fp8E4M3, Gfx950Fp8MfmaAMatrix, Gfx950LdsTransposeTile,
+    Gfx950Matrix, Gfx950Subgroup, Gfx950TransposeUninitialized, Index1D, KernelError, KernelResult,
+    RowStriped2D, StridedReadView2D, Wave64, WaveLane, kernel,
 };
-use fe2o3_device::{thread, DeviceMath, DisjointSlice};
 #[cfg(not(target_arch = "amdgpu"))]
 use fe2o3_device::{GridExclusive, GridLeader};
 
@@ -22,6 +28,12 @@ use crate::{
 };
 
 const ATTENTION_SCALE_V1: f32 = 0.088_388_346;
+#[cfg(target_arch = "amdgpu")]
+const MULTIGRID_WORKGROUPS_V1: usize = 4;
+#[cfg(target_arch = "amdgpu")]
+const MULTIGRID_SUBGROUP_BATCHES_V1: usize = 64;
+#[cfg(target_arch = "amdgpu")]
+const MULTIGRID_WAVE_BATCHES_V1: usize = 16;
 
 #[cfg(not(target_arch = "amdgpu"))]
 fn finite_slice_v1(values: &[f32], expected: usize) -> bool {
@@ -64,6 +76,8 @@ fn decode_fp8_e4m3_v1(value: u8) -> f32 {
     }
 }
 
+// Keep decoding as an expression macro because the admitted device subset does
+// not lower this helper as an ordinary call on every production path.
 #[cfg(any(target_arch = "amdgpu", test))]
 macro_rules! decode_fp8_e4m3_v1 {
     ($value:expr) => {{
@@ -95,6 +109,7 @@ macro_rules! decode_fp8_e4m3_v1 {
     }};
 }
 
+// Maintain the three best sparse candidates with deterministic rank order.
 #[cfg(target_arch = "amdgpu")]
 macro_rules! consider_sparse_candidate_v1 {
     ($id:expr, $rank:expr, $attention:expr, $id0:ident, $rank0:ident, $attention0:ident,
@@ -171,6 +186,8 @@ fn write_u32_v1(
     *slot = value;
 }
 #[cfg(target_arch = "amdgpu")]
+// One WY chunk advances four tokens while carrying one matrix-state element
+// per thread. Every Wave16 reduction must be reached uniformly by all lanes.
 macro_rules! kda_chunk_wy_v1 {
     ($base:expr, $query:ident, $key:ident, $value:ident, $alpha:ident, $beta:ident,
      $subgroup:ident, $key_index:ident, $value_column:ident, $state:ident,
@@ -246,8 +263,7 @@ macro_rules! kda_chunk_wy_v1 {
 ))]
 #[kernel(
     typed,
-    namespace = "e249ff03f475aa75595229ee6a68e816a2a9ad395940c495ad874c54c0e9b0ad",
-    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [1, 1, 1])
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
 )]
 pub fn gfx950_kda_decode(
     query: &[f32],
@@ -259,38 +275,73 @@ pub fn gfx950_kda_decode(
     mut final_state: DisjointSlice<f32, Index1D>,
     mut output: DisjointSlice<f32, Index1D>,
 ) {
-    if query.len() != KDA_KEY_DIMENSION_V1
-        || key.len() != KDA_KEY_DIMENSION_V1
-        || value.len() != KDA_VALUE_DIMENSION_V1
-        || alpha.len() != KDA_KEY_DIMENSION_V1
-        || beta.len() != 1
-        || initial_state.len() != KDA_STATE_ELEMENTS_V1
-        || final_state.len() != KDA_STATE_ELEMENTS_V1
-        || output.len() != KDA_STATE_ELEMENTS_V1
+    // One workgroup owns one complete 16x16 matrix-state problem.
+    let batches = MULTIGRID_WORKGROUPS_V1;
+    let batch = thread::block_idx_x() as usize;
+    if query.len() != batches * KDA_KEY_DIMENSION_V1
+        || key.len() != batches * KDA_KEY_DIMENSION_V1
+        || value.len() != batches * KDA_VALUE_DIMENSION_V1
+        || alpha.len() != batches * KDA_KEY_DIMENSION_V1
+        || beta.len() != batches
+        || initial_state.len() != batches * KDA_STATE_ELEMENTS_V1
+        || final_state.len() != batches * KDA_STATE_ELEMENTS_V1
+        || output.len() != batches * KDA_STATE_ELEMENTS_V1
     {
         return;
     }
-    let Ok(query) = StridedReadView2D::from_shared_slice(query, 0, 1, 16, 16) else {
+    // Checked views separate batch offsets from the recurrence arithmetic.
+    let Ok(query) = StridedReadView2D::from_shared_slice(
+        query,
+        batch.wrapping_mul(KDA_KEY_DIMENSION_V1),
+        1,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(key) = StridedReadView2D::from_shared_slice(key, 0, 1, 16, 16) else {
+    let Ok(key) = StridedReadView2D::from_shared_slice(
+        key,
+        batch.wrapping_mul(KDA_KEY_DIMENSION_V1),
+        1,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(value) = StridedReadView2D::from_shared_slice(value, 0, 1, 16, 16) else {
+    let Ok(value) = StridedReadView2D::from_shared_slice(
+        value,
+        batch.wrapping_mul(KDA_VALUE_DIMENSION_V1),
+        1,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(alpha) = StridedReadView2D::from_shared_slice(alpha, 0, 1, 16, 16) else {
+    let Ok(alpha) = StridedReadView2D::from_shared_slice(
+        alpha,
+        batch.wrapping_mul(KDA_KEY_DIMENSION_V1),
+        1,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(beta) = StridedReadView2D::from_shared_slice(beta, 0, 1, 1, 1) else {
+    let Ok(beta) = StridedReadView2D::from_shared_slice(beta, batch, 1, 1, 1) else {
         return;
     };
-    let Ok(state) = StridedReadView2D::from_shared_slice(initial_state, 0, 16, 16, 16) else {
+    let Ok(state) = StridedReadView2D::from_shared_slice(
+        initial_state,
+        batch.wrapping_mul(KDA_STATE_ELEMENTS_V1),
+        16,
+        16,
+        16,
+    ) else {
         return;
     };
     #[cfg(not(feature = "kernel-kda-decode-baseline-v1"))]
     {
-        let linear = thread::index_1d().get();
+        // The 256 threads map bijectively to (value column, key index).
+        let linear = thread::thread_idx_x() as usize;
         let key_index = linear & 15;
         let value_column = linear >> 4;
         let subgroup = Gfx950Subgroup::current();
@@ -300,10 +351,12 @@ pub fn gfx950_kda_decode(
         let value_input = value.load_or(0, value_column, 0.0);
         let step = beta.load_or(0, 0, 0.0);
         let decay = alpha_value * state.load_or(value_column, key_index, 0.0);
+        // Wave16 reductions implement the matrix-vector products over K=16.
         let prediction = subgroup.reduce_sum_f32::<16>(key_value * decay);
         let error = value_input - prediction;
         let updated = decay + step * key_value * error;
         let result = subgroup.reduce_sum_f32::<16>(0.25 * query_value * updated);
+        // Each thread publishes its state element and replicated output element.
         if let Some(slot) = final_state.get_mut(thread::index_1d()) {
             *slot = updated;
         }
@@ -314,6 +367,7 @@ pub fn gfx950_kda_decode(
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent safe reference for host simulation.
 pub fn gfx950_kda_decode(
     query: &[f32],
     key: &[f32],
@@ -324,6 +378,7 @@ pub fn gfx950_kda_decode(
     mut final_state: DisjointSlice<f32, GridExclusive>,
     mut output: DisjointSlice<f32, GridExclusive>,
 ) {
+    // Only the grid leader materializes the serial CPU reference result.
     let Some(leader) = thread::grid_leader() else {
         return;
     };
@@ -355,8 +410,7 @@ pub fn gfx950_kda_decode(
 ))]
 #[kernel(
     typed,
-    namespace = "673210266e41c1a545820dbc0baec859659b5c1cf4d5e3e8ac6b5e542b4028d3",
-    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [1, 1, 1])
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
 )]
 pub fn gfx950_kda_chunkwise_prefill(
     query: &[f32],
@@ -369,38 +423,73 @@ pub fn gfx950_kda_chunkwise_prefill(
     mut output_chunk0: DisjointSlice<f32, Index1D>,
     mut output_chunk1: DisjointSlice<f32, Index1D>,
 ) {
-    if query.len() != PREFILL_TOKENS_V1 * KDA_KEY_DIMENSION_V1
-        || key.len() != PREFILL_TOKENS_V1 * KDA_KEY_DIMENSION_V1
-        || value.len() != PREFILL_TOKENS_V1 * KDA_VALUE_DIMENSION_V1
-        || alpha.len() != PREFILL_TOKENS_V1 * KDA_KEY_DIMENSION_V1
-        || beta.len() != PREFILL_TOKENS_V1
-        || initial_state.len() != KDA_STATE_ELEMENTS_V1
-        || final_state.len() != KDA_STATE_ELEMENTS_V1
-        || output_chunk0.len() != KDA_STATE_ELEMENTS_V1
-        || output_chunk1.len() != KDA_STATE_ELEMENTS_V1
+    // One workgroup owns one eight-token problem and its carried matrix state.
+    let batches = MULTIGRID_WORKGROUPS_V1;
+    let batch = thread::block_idx_x() as usize;
+    if query.len() != batches * PREFILL_TOKENS_V1 * KDA_KEY_DIMENSION_V1
+        || key.len() != batches * PREFILL_TOKENS_V1 * KDA_KEY_DIMENSION_V1
+        || value.len() != batches * PREFILL_TOKENS_V1 * KDA_VALUE_DIMENSION_V1
+        || alpha.len() != batches * PREFILL_TOKENS_V1 * KDA_KEY_DIMENSION_V1
+        || beta.len() != batches * PREFILL_TOKENS_V1
+        || initial_state.len() != batches * KDA_STATE_ELEMENTS_V1
+        || final_state.len() != batches * KDA_STATE_ELEMENTS_V1
+        || output_chunk0.len() != batches * KDA_STATE_ELEMENTS_V1
+        || output_chunk1.len() != batches * KDA_STATE_ELEMENTS_V1
     {
         return;
     }
-    let Ok(query) = StridedReadView2D::from_shared_slice(query, 0, 8, 16, 16) else {
+    // Convert the workgroup batch to checked token-major input views.
+    let token_base = batch.wrapping_mul(PREFILL_TOKENS_V1);
+    let Ok(query) = StridedReadView2D::from_shared_slice(
+        query,
+        token_base.wrapping_mul(KDA_KEY_DIMENSION_V1),
+        8,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(key) = StridedReadView2D::from_shared_slice(key, 0, 8, 16, 16) else {
+    let Ok(key) = StridedReadView2D::from_shared_slice(
+        key,
+        token_base.wrapping_mul(KDA_KEY_DIMENSION_V1),
+        8,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(value) = StridedReadView2D::from_shared_slice(value, 0, 8, 16, 16) else {
+    let Ok(value) = StridedReadView2D::from_shared_slice(
+        value,
+        token_base.wrapping_mul(KDA_VALUE_DIMENSION_V1),
+        8,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(alpha) = StridedReadView2D::from_shared_slice(alpha, 0, 8, 16, 16) else {
+    let Ok(alpha) = StridedReadView2D::from_shared_slice(
+        alpha,
+        token_base.wrapping_mul(KDA_KEY_DIMENSION_V1),
+        8,
+        16,
+        16,
+    ) else {
         return;
     };
-    let Ok(beta) = StridedReadView2D::from_shared_slice(beta, 0, 1, 8, 8) else {
+    let Ok(beta) = StridedReadView2D::from_shared_slice(beta, token_base, 1, 8, 8) else {
         return;
     };
-    let Ok(initial_state) = StridedReadView2D::from_shared_slice(initial_state, 0, 16, 16, 16)
-    else {
+    let Ok(initial_state) = StridedReadView2D::from_shared_slice(
+        initial_state,
+        batch.wrapping_mul(KDA_STATE_ELEMENTS_V1),
+        16,
+        16,
+        16,
+    ) else {
         return;
     };
-    let linear = thread::index_1d().get();
+    // The 256 threads map bijectively to (value column, key index).
+    let linear = thread::thread_idx_x() as usize;
     let key_index = linear & 15;
     let value_column = linear >> 4;
     let subgroup = Gfx950Subgroup::current();
@@ -409,6 +498,7 @@ pub fn gfx950_kda_chunkwise_prefill(
     let mut c01 = 0.0;
     let mut c02 = 0.0;
     let mut c03 = 0.0;
+    // Execute two ordered four-token chunks; state0 is the explicit carry.
     kda_chunk_wy_v1!(
         0,
         query,
@@ -469,12 +559,14 @@ pub fn gfx950_kda_chunkwise_prefill(
     if let Some(slot) = output_chunk1.get_mut(thread::index_1d()) {
         *slot = selected1;
     }
+    // Publish the carried state and each chunk's final replicated output.
     if let Some(slot) = final_state.get_mut(thread::index_1d()) {
         *slot = state;
     }
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent safe prefill reference for host simulation.
 pub fn gfx950_kda_chunkwise_prefill(
     query: &[f32],
     key: &[f32],
@@ -485,6 +577,7 @@ pub fn gfx950_kda_chunkwise_prefill(
     mut final_state: DisjointSlice<f32, GridExclusive>,
     mut output: DisjointSlice<f32, GridExclusive>,
 ) {
+    // Only the grid leader materializes the serial CPU reference result.
     let Some(leader) = thread::grid_leader() else {
         return;
     };
@@ -604,16 +697,14 @@ fn deepseek_attention_score_v1(q: &[f32], k: &[f32], token: usize) -> Option<f32
     not(feature = "kernel-content-sparse-attention-reciprocal-reuse-v1"),
     kernel(
         typed,
-        namespace = "8e4b6794b9080758a96900d9f3bedc81f043b9c733ce0348fd3d56ab46e4ccf7",
-        launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
+        launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
     )
 )]
 #[cfg_attr(
     feature = "kernel-content-sparse-attention-reciprocal-reuse-v1",
     kernel(
         typed,
-        namespace = "f218efb0354f7130940595fdb01023c6a5ec4dfd290be3858934c069d0db78b7",
-        launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
+        launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
     )
 )]
 pub fn gfx950_content_sparse_attention(
@@ -621,42 +712,47 @@ pub fn gfx950_content_sparse_attention(
     k: &[u8],
     v: &[u8],
     content_scores: &[f32],
-    mut output: DisjointSlice<f32, Index1D>,
-    mut selected_output: DisjointSlice<u32, Index1D>,
+    mut output: DisjointSlice<f32, RowStriped2D<Index1D, 64, 1>>,
+    mut selected_output: DisjointSlice<u32, RowStriped2D<Index1D, 64, 1>>,
 ) {
-    if q.len() < ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
-        || k.len() < ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
-        || v.len() < ATTENTION_TOKENS_V1 * CHANNELS_V1
-        || content_scores.len() < ATTENTION_TOKENS_V1
-        || output.len() < CHANNELS_V1
-        || selected_output.len() < SELECTED_TOKENS_V1
+    // Reject malformed launch-wide storage before LDS and Wave16 collectives.
+    if q.len() < MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
+        || k.len() < MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
+        || v.len() < MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1 * CHANNELS_V1
+        || content_scores.len() < MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1
+        || output.len() < MULTIGRID_WAVE_BATCHES_V1 * CHANNELS_V1
+        || selected_output.len() < MULTIGRID_WAVE_BATCHES_V1 * SELECTED_TOKENS_V1
     {
         fe2o3_device::trap();
     }
+    // Each global Wave64 owns one attention item; its lanes cover 16 columns.
     let index = thread::index_1d();
+    let batch = index.get() / 64;
     let column = index.get() % ATTENTION_TOKENS_V1;
     let lane = WaveLane::<Wave64>::current();
+    // Use typed Q and K layouts, with K transposed in wave-private LDS.
     let Ok(query) = Gfx950Fp8MfmaAMatrix::row_major(
         q,
         0,
-        ATTENTION_TOKENS_V1,
+        MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1,
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
         fe2o3_device::trap();
     };
-    let query = query.load_m16k128(&lane, 0, 0);
+    let row_base = batch.wrapping_mul(ATTENTION_TOKENS_V1);
+    let query = query.load_m16k128(&lane, row_base, 0);
     let Ok(key) = Gfx950Fp8MfmaAMatrix::row_major(
         k,
         0,
-        ATTENTION_TOKENS_V1,
+        MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1,
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
         fe2o3_device::trap();
     };
     let key = Gfx950LdsTransposeTile::<Gfx950Fp8E4M3, Gfx950TransposeUninitialized>::current(&lane)
-        .stage_k_transposed(&key, 0, 0)
+        .stage_k_transposed(&key, row_base, 0)
         .publish()
         .read_mfma_fragment();
     let accumulator = Gfx950F32AccumulatorFragment::<Gfx950Fp8E4M3>::zero(&lane);
@@ -665,7 +761,7 @@ pub fn gfx950_content_sparse_attention(
         .into_values();
     let Ok(content) = StridedReadView2D::from_shared_slice(
         content_scores,
-        0,
+        batch.wrapping_mul(ATTENTION_TOKENS_V1),
         1,
         ATTENTION_TOKENS_V1,
         ATTENTION_TOKENS_V1,
@@ -673,6 +769,7 @@ pub fn gfx950_content_sparse_attention(
         fe2o3_device::trap();
     };
 
+    // Broadcast all 16 lane scores so block and token selection is deterministic.
     let subgroup = Gfx950Subgroup::current();
     let math = DeviceMath::current();
     let lane_content = content.load_or(0, column, f32::NEG_INFINITY);
@@ -1031,8 +1128,9 @@ pub fn gfx950_content_sparse_attention(
         selected2_rank,
         selected2_attention
     );
+    // Only the first three ranks write IDs; row-striped ownership prevents races.
     let selected_index = thread::index_1d();
-    let selected_rank = selected_index.get();
+    let selected_rank = selected_index.get() % 64;
     if selected_rank < SELECTED_TOKENS_V1 {
         let selected = if selected_rank == 0 {
             selected0
@@ -1041,16 +1139,30 @@ pub fn gfx950_content_sparse_attention(
         } else {
             selected2
         };
-        if let Some(slot) = selected_output.get_mut(selected_index) {
+        let Some(selected_stripe) = selected_index.checked_row_striped_2d::<64, 1>() else {
+            fe2o3_device::trap();
+        };
+        if let Some(slot) = selected_output.get_row_striped_2d_mut(
+            &selected_stripe,
+            0,
+            MULTIGRID_WAVE_BATCHES_V1,
+            SELECTED_TOKENS_V1,
+            SELECTED_TOKENS_V1,
+        ) {
             *slot = selected as u32;
         }
     }
 
-    let Ok(value) =
-        StridedReadView2D::from_shared_slice(v, 0, ATTENTION_TOKENS_V1, CHANNELS_V1, CHANNELS_V1)
-    else {
+    let Ok(value) = StridedReadView2D::from_shared_slice(
+        v,
+        batch.wrapping_mul(ATTENTION_TOKENS_V1 * CHANNELS_V1),
+        ATTENTION_TOKENS_V1,
+        CHANNELS_V1,
+        CHANNELS_V1,
+    ) else {
         fe2o3_device::trap();
     };
+    // Normalize only the retained tokens with max-subtracted FP32 softmax.
     let mut maximum = selected0_attention;
     if selected1_attention > maximum {
         maximum = selected1_attention;
@@ -1075,14 +1187,23 @@ pub fn gfx950_content_sparse_attention(
             * reciprocal
     };
     let output_gate = 1.0 / (1.0 + math.exp_f32(-maximum * 0.01));
-    if index.get() < CHANNELS_V1 {
-        if let Some(slot) = output.get_mut(index) {
-            *slot = result * output_gate;
-        }
+    // Publish the gated PV result through the proven row-striped mapping.
+    let Some(output_stripe) = index.checked_row_striped_2d::<64, 1>() else {
+        fe2o3_device::trap();
+    };
+    if let Some(slot) = output.get_row_striped_2d_mut(
+        &output_stripe,
+        0,
+        MULTIGRID_WAVE_BATCHES_V1,
+        CHANNELS_V1,
+        CHANNELS_V1,
+    ) {
+        *slot = result * output_gate;
     }
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent serial sparse-attention reference on the host.
 pub fn gfx950_content_sparse_attention(
     q: &[u8],
     k: &[u8],
@@ -1091,6 +1212,7 @@ pub fn gfx950_content_sparse_attention(
     mut output: DisjointSlice<f32, GridExclusive>,
     mut selected_output: DisjointSlice<u32, GridExclusive>,
 ) {
+    // Host simulation is intentionally leader-only and uses no device collectives.
     let Some(leader) = thread::grid_leader() else {
         return;
     };
@@ -1157,8 +1279,7 @@ pub fn gfx950_content_sparse_attention(
 #[cfg(all(target_arch = "amdgpu", feature = "kernel-deepseek-sparse-attention"))]
 #[kernel(
     typed,
-    namespace = "62a1ee5804a9926ebb929061195f2229630ebdaf5a13a19d17ce7ddb4fcbbbe3",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
 )]
 pub fn gfx950_deepseek_sparse_attention(
     q: &[f32],
@@ -1172,16 +1293,19 @@ pub fn gfx950_deepseek_sparse_attention(
     mut softmax_maximum_output: DisjointSlice<f32, Index1D>,
     mut softmax_normalizer_output: DisjointSlice<f32, Index1D>,
 ) {
-    if q.len() != HEAD_DIMENSION_V1
-        || k.len() != ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
-        || v.len() != ATTENTION_TOKENS_V1 * CHANNELS_V1
-        || output.len() != CHANNELS_V1
-        || softmax_maximum_output.len() != 1
-        || softmax_normalizer_output.len() != 1
+    // Validate all batch-major tensors before any Wave16 reduction.
+    let batches = MULTIGRID_SUBGROUP_BATCHES_V1;
+    if q.len() != batches * HEAD_DIMENSION_V1
+        || k.len() != batches * ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
+        || v.len() != batches * ATTENTION_TOKENS_V1 * CHANNELS_V1
+        || output.len() != batches * CHANNELS_V1
+        || softmax_maximum_output.len() != batches * CHANNELS_V1
+        || softmax_normalizer_output.len() != batches * CHANNELS_V1
     {
         fe2o3_device::trap();
     }
 
+    // Convert sentinels to safe addresses, then carry validity as an explicit mask.
     let raw0 = index0;
     let raw1 = index1;
     let raw2 = index2;
@@ -1190,6 +1314,101 @@ pub fn gfx950_deepseek_sparse_attention(
     let valid1 = raw1 < ATTENTION_TOKENS_V1 as u32;
     let valid2 = raw2 < ATTENTION_TOKENS_V1 as u32;
     let valid3 = raw3 < ATTENTION_TOKENS_V1 as u32;
+    let token0 = raw0 as usize % ATTENTION_TOKENS_V1;
+    let token1 = raw1 as usize % ATTENTION_TOKENS_V1;
+    let token2 = raw2 as usize % ATTENTION_TOKENS_V1;
+    let token3 = raw3 as usize % ATTENTION_TOKENS_V1;
+    // Each Wave16 subgroup handles one batch; each lane owns one output channel.
+    let linear_index = thread::index_1d().get();
+    let batch = linear_index / CHANNELS_V1;
+    let column = linear_index % CHANNELS_V1;
+    let Ok(query_view) =
+        StridedReadView2D::from_shared_slice(q, 0, batches, HEAD_DIMENSION_V1, HEAD_DIMENSION_V1)
+    else {
+        fe2o3_device::trap();
+    };
+    let Ok(key_view) = StridedReadView2D::from_shared_slice(
+        k,
+        0,
+        batches * ATTENTION_TOKENS_V1,
+        HEAD_DIMENSION_V1,
+        HEAD_DIMENSION_V1,
+    ) else {
+        fe2o3_device::trap();
+    };
+    let Ok(value_view) = StridedReadView2D::from_shared_slice(
+        v,
+        0,
+        batches * ATTENTION_TOKENS_V1,
+        CHANNELS_V1,
+        CHANNELS_V1,
+    ) else {
+        fe2o3_device::trap();
+    };
+
+    // Eight coalesced depth slices per lane cover the full 128-wide dot product.
+    let depth0 = column;
+    let depth1 = column + CHANNELS_V1;
+    let depth2 = column + 2 * CHANNELS_V1;
+    let depth3 = column + 3 * CHANNELS_V1;
+    let depth4 = column + 4 * CHANNELS_V1;
+    let depth5 = column + 5 * CHANNELS_V1;
+    let depth6 = column + 6 * CHANNELS_V1;
+    let depth7 = column + 7 * CHANNELS_V1;
+    let query0 = query_view.load_or(batch, depth0, 0.0);
+    let query1 = query_view.load_or(batch, depth1, 0.0);
+    let query2 = query_view.load_or(batch, depth2, 0.0);
+    let query3 = query_view.load_or(batch, depth3, 0.0);
+    let query4 = query_view.load_or(batch, depth4, 0.0);
+    let query5 = query_view.load_or(batch, depth5, 0.0);
+    let query6 = query_view.load_or(batch, depth6, 0.0);
+    let query7 = query_view.load_or(batch, depth7, 0.0);
+    let batch_row = batch.wrapping_mul(ATTENTION_TOKENS_V1);
+    let row0 = batch_row.wrapping_add(token0);
+    let row1 = batch_row.wrapping_add(token1);
+    let row2 = batch_row.wrapping_add(token2);
+    let row3 = batch_row.wrapping_add(token3);
+    // Invalid slots use the safe row zero and are masked after the uniform
+    // collective sequence. Every Wave16 subgroup therefore executes the same
+    // four reductions even when the top-k list contains sentinels.
+    let partial0 = query0 * key_view.load_or(row0, depth0, 0.0)
+        + query1 * key_view.load_or(row0, depth1, 0.0)
+        + query2 * key_view.load_or(row0, depth2, 0.0)
+        + query3 * key_view.load_or(row0, depth3, 0.0)
+        + query4 * key_view.load_or(row0, depth4, 0.0)
+        + query5 * key_view.load_or(row0, depth5, 0.0)
+        + query6 * key_view.load_or(row0, depth6, 0.0)
+        + query7 * key_view.load_or(row0, depth7, 0.0);
+    let partial1 = query0 * key_view.load_or(row1, depth0, 0.0)
+        + query1 * key_view.load_or(row1, depth1, 0.0)
+        + query2 * key_view.load_or(row1, depth2, 0.0)
+        + query3 * key_view.load_or(row1, depth3, 0.0)
+        + query4 * key_view.load_or(row1, depth4, 0.0)
+        + query5 * key_view.load_or(row1, depth5, 0.0)
+        + query6 * key_view.load_or(row1, depth6, 0.0)
+        + query7 * key_view.load_or(row1, depth7, 0.0);
+    let partial2 = query0 * key_view.load_or(row2, depth0, 0.0)
+        + query1 * key_view.load_or(row2, depth1, 0.0)
+        + query2 * key_view.load_or(row2, depth2, 0.0)
+        + query3 * key_view.load_or(row2, depth3, 0.0)
+        + query4 * key_view.load_or(row2, depth4, 0.0)
+        + query5 * key_view.load_or(row2, depth5, 0.0)
+        + query6 * key_view.load_or(row2, depth6, 0.0)
+        + query7 * key_view.load_or(row2, depth7, 0.0);
+    let partial3 = query0 * key_view.load_or(row3, depth0, 0.0)
+        + query1 * key_view.load_or(row3, depth1, 0.0)
+        + query2 * key_view.load_or(row3, depth2, 0.0)
+        + query3 * key_view.load_or(row3, depth3, 0.0)
+        + query4 * key_view.load_or(row3, depth4, 0.0)
+        + query5 * key_view.load_or(row3, depth5, 0.0)
+        + query6 * key_view.load_or(row3, depth6, 0.0)
+        + query7 * key_view.load_or(row3, depth7, 0.0);
+
+    let subgroup = Gfx950Subgroup::current();
+    let reduced0 = subgroup.reduce_sum_f32::<16>(partial0);
+    let reduced1 = subgroup.reduce_sum_f32::<16>(partial1);
+    let reduced2 = subgroup.reduce_sum_f32::<16>(partial2);
+    let reduced3 = subgroup.reduce_sum_f32::<16>(partial3);
     if !(valid0 || valid1 || valid2 || valid3)
         || (valid0 && valid1 && raw0 == raw1)
         || (valid0 && valid2 && raw0 == raw2)
@@ -1200,111 +1419,23 @@ pub fn gfx950_deepseek_sparse_attention(
     {
         fe2o3_device::trap();
     }
-    let token0 = if valid0 { raw0 as usize } else { 0 };
-    let token1 = if valid1 { raw1 as usize } else { 0 };
-    let token2 = if valid2 { raw2 as usize } else { 0 };
-    let token3 = if valid3 { raw3 as usize } else { 0 };
-    let Ok(query_view) =
-        StridedReadView2D::from_shared_slice(q, 0, 1, HEAD_DIMENSION_V1, HEAD_DIMENSION_V1)
-    else {
-        fe2o3_device::trap();
-    };
-    let Ok(key_view) = StridedReadView2D::from_shared_slice(
-        k,
-        0,
-        ATTENTION_TOKENS_V1,
-        HEAD_DIMENSION_V1,
-        HEAD_DIMENSION_V1,
-    ) else {
-        fe2o3_device::trap();
-    };
-    let Ok(value_view) =
-        StridedReadView2D::from_shared_slice(v, 0, ATTENTION_TOKENS_V1, CHANNELS_V1, CHANNELS_V1)
-    else {
-        fe2o3_device::trap();
-    };
-
-    let linear_index = thread::index_1d().get();
-    let column = linear_index % CHANNELS_V1;
-    let depth0 = column;
-    let depth1 = column + CHANNELS_V1;
-    let depth2 = column + 2 * CHANNELS_V1;
-    let depth3 = column + 3 * CHANNELS_V1;
-    let depth4 = column + 4 * CHANNELS_V1;
-    let depth5 = column + 5 * CHANNELS_V1;
-    let depth6 = column + 6 * CHANNELS_V1;
-    let depth7 = column + 7 * CHANNELS_V1;
-    let query0 = query_view.load_or(0, depth0, 0.0);
-    let query1 = query_view.load_or(0, depth1, 0.0);
-    let query2 = query_view.load_or(0, depth2, 0.0);
-    let query3 = query_view.load_or(0, depth3, 0.0);
-    let query4 = query_view.load_or(0, depth4, 0.0);
-    let query5 = query_view.load_or(0, depth5, 0.0);
-    let query6 = query_view.load_or(0, depth6, 0.0);
-    let query7 = query_view.load_or(0, depth7, 0.0);
-    let mut partial0 = 0.0_f32;
-    let mut partial1 = 0.0_f32;
-    let mut partial2 = 0.0_f32;
-    let mut partial3 = 0.0_f32;
-    if valid0 {
-        partial0 = query0 * key_view.load_or(token0, depth0, 0.0)
-            + query1 * key_view.load_or(token0, depth1, 0.0)
-            + query2 * key_view.load_or(token0, depth2, 0.0)
-            + query3 * key_view.load_or(token0, depth3, 0.0)
-            + query4 * key_view.load_or(token0, depth4, 0.0)
-            + query5 * key_view.load_or(token0, depth5, 0.0)
-            + query6 * key_view.load_or(token0, depth6, 0.0)
-            + query7 * key_view.load_or(token0, depth7, 0.0);
-    }
-    if valid1 {
-        partial1 = query0 * key_view.load_or(token1, depth0, 0.0)
-            + query1 * key_view.load_or(token1, depth1, 0.0)
-            + query2 * key_view.load_or(token1, depth2, 0.0)
-            + query3 * key_view.load_or(token1, depth3, 0.0)
-            + query4 * key_view.load_or(token1, depth4, 0.0)
-            + query5 * key_view.load_or(token1, depth5, 0.0)
-            + query6 * key_view.load_or(token1, depth6, 0.0)
-            + query7 * key_view.load_or(token1, depth7, 0.0);
-    }
-    if valid2 {
-        partial2 = query0 * key_view.load_or(token2, depth0, 0.0)
-            + query1 * key_view.load_or(token2, depth1, 0.0)
-            + query2 * key_view.load_or(token2, depth2, 0.0)
-            + query3 * key_view.load_or(token2, depth3, 0.0)
-            + query4 * key_view.load_or(token2, depth4, 0.0)
-            + query5 * key_view.load_or(token2, depth5, 0.0)
-            + query6 * key_view.load_or(token2, depth6, 0.0)
-            + query7 * key_view.load_or(token2, depth7, 0.0);
-    }
-    if valid3 {
-        partial3 = query0 * key_view.load_or(token3, depth0, 0.0)
-            + query1 * key_view.load_or(token3, depth1, 0.0)
-            + query2 * key_view.load_or(token3, depth2, 0.0)
-            + query3 * key_view.load_or(token3, depth3, 0.0)
-            + query4 * key_view.load_or(token3, depth4, 0.0)
-            + query5 * key_view.load_or(token3, depth5, 0.0)
-            + query6 * key_view.load_or(token3, depth6, 0.0)
-            + query7 * key_view.load_or(token3, depth7, 0.0);
-    }
-
-    let subgroup = Gfx950Subgroup::current();
     let score0 = if valid0 {
-        subgroup.reduce_sum_f32::<16>(partial0) * ATTENTION_SCALE_V1
+        reduced0 * ATTENTION_SCALE_V1
     } else {
         f32::NEG_INFINITY
     };
     let score1 = if valid1 {
-        subgroup.reduce_sum_f32::<16>(partial1) * ATTENTION_SCALE_V1
+        reduced1 * ATTENTION_SCALE_V1
     } else {
         f32::NEG_INFINITY
     };
     let score2 = if valid2 {
-        subgroup.reduce_sum_f32::<16>(partial2) * ATTENTION_SCALE_V1
+        reduced2 * ATTENTION_SCALE_V1
     } else {
         f32::NEG_INFINITY
     };
     let score3 = if valid3 {
-        subgroup.reduce_sum_f32::<16>(partial3) * ATTENTION_SCALE_V1
+        reduced3 * ATTENTION_SCALE_V1
     } else {
         f32::NEG_INFINITY
     };
@@ -1319,6 +1450,7 @@ pub fn gfx950_deepseek_sparse_attention(
         maximum = score3;
     }
 
+    // Mask invalid candidates and apply a stable softmax over the retained rows.
     let math = DeviceMath::current();
     let weight0 = if valid0 {
         math.exp_f32(score0 - maximum)
@@ -1343,33 +1475,31 @@ pub fn gfx950_deepseek_sparse_attention(
     let normalizer = weight0 + weight1 + weight2 + weight3;
     let mut numerator = 0.0_f32;
     if valid0 {
-        numerator += weight0 * value_view.load_or(token0, column, 0.0);
+        numerator += weight0 * value_view.load_or(row0, column, 0.0);
     }
     if valid1 {
-        numerator += weight1 * value_view.load_or(token1, column, 0.0);
+        numerator += weight1 * value_view.load_or(row1, column, 0.0);
     }
     if valid2 {
-        numerator += weight2 * value_view.load_or(token2, column, 0.0);
+        numerator += weight2 * value_view.load_or(row2, column, 0.0);
     }
     if valid3 {
-        numerator += weight3 * value_view.load_or(token3, column, 0.0);
+        numerator += weight3 * value_view.load_or(row3, column, 0.0);
     }
-    if linear_index < CHANNELS_V1 {
-        if let Some(slot) = output.get_mut(thread::index_1d()) {
-            *slot = numerator / normalizer;
-        }
+    // Output, maximum, and normalizer share the same disjoint linear owner.
+    if let Some(slot) = output.get_mut(thread::index_1d()) {
+        *slot = numerator / normalizer;
     }
-    if linear_index == 0 {
-        if let Some(slot) = softmax_maximum_output.get_mut(thread::index_1d()) {
-            *slot = maximum;
-        }
-        if let Some(slot) = softmax_normalizer_output.get_mut(thread::index_1d()) {
-            *slot = normalizer;
-        }
+    if let Some(slot) = softmax_maximum_output.get_mut(thread::index_1d()) {
+        *slot = maximum;
+    }
+    if let Some(slot) = softmax_normalizer_output.get_mut(thread::index_1d()) {
+        *slot = normalizer;
     }
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent serial DeepSeek sparse-attention reference.
 pub fn gfx950_deepseek_sparse_attention(
     q: &[f32],
     k: &[f32],
@@ -1379,6 +1509,7 @@ pub fn gfx950_deepseek_sparse_attention(
     mut softmax_maximum_output: DisjointSlice<f32, GridExclusive>,
     mut softmax_normalizer_output: DisjointSlice<f32, GridExclusive>,
 ) {
+    // Host simulation is leader-only and preserves the device error policy.
     let Some(leader) = thread::grid_leader() else {
         return;
     };
@@ -1468,16 +1599,14 @@ pub fn gfx950_deepseek_sparse_attention(
     not(feature = "kernel-compressed-hybrid-attention-division-baseline-v1"),
     kernel(
         typed,
-        namespace = "c8cf1919826911b62fad830db644250616be68fd3aa252db280fb6cbf9157d3b",
-        launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
+        launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
     )
 )]
 #[cfg_attr(
     feature = "kernel-compressed-hybrid-attention-division-baseline-v1",
     kernel(
         typed,
-        namespace = "df561e677c408c086c041faff22c05436c173edc2e4f9deda3eeaca93dc2a32b",
-        launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1])
+        launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1])
     )
 )]
 pub fn gfx950_compressed_hybrid_attention(
@@ -1485,52 +1614,67 @@ pub fn gfx950_compressed_hybrid_attention(
     k: &[u8],
     v: &[u8],
     token_bias: &[f32],
-    mut output: DisjointSlice<f32, Index1D>,
+    mut output: DisjointSlice<f32, RowStriped2D<Index1D, 64, 1>>,
 ) {
-    if q.len() != ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
-        || k.len() != ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
-        || v.len() != ATTENTION_TOKENS_V1 * CHANNELS_V1
-        || token_bias.len() != ATTENTION_TOKENS_V1
-        || output.len() != CHANNELS_V1
+    // Validate exact fixed shapes before LDS publication and subgroup collectives.
+    if q.len() != MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
+        || k.len() != MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1 * HEAD_DIMENSION_V1
+        || v.len() != MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1 * CHANNELS_V1
+        || token_bias.len() != MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1
+        || output.len() != MULTIGRID_WAVE_BATCHES_V1 * CHANNELS_V1
     {
         fe2o3_device::trap();
     }
+    // A global wave owns one item; lane modulo 16 selects its output channel.
     let index = thread::index_1d();
+    let batch = index.get() / 64;
     let column = index.get() % ATTENTION_TOKENS_V1;
     let lane = WaveLane::<Wave64>::current();
+    // Compute the shared QK tile with typed E4M3 views and transposed K.
     let Ok(query) = Gfx950Fp8MfmaAMatrix::row_major(
         q,
         0,
-        ATTENTION_TOKENS_V1,
+        MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1,
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
         fe2o3_device::trap();
     };
-    let query = query.load_m16k128(&lane, 0, 0);
+    let row_base = batch.wrapping_mul(ATTENTION_TOKENS_V1);
+    let query = query.load_m16k128(&lane, row_base, 0);
     let Ok(key) = Gfx950Fp8MfmaAMatrix::row_major(
         k,
         0,
-        ATTENTION_TOKENS_V1,
+        MULTIGRID_WAVE_BATCHES_V1 * ATTENTION_TOKENS_V1,
         HEAD_DIMENSION_V1,
         HEAD_DIMENSION_V1,
     ) else {
         fe2o3_device::trap();
     };
     let key = Gfx950LdsTransposeTile::<Gfx950Fp8E4M3, Gfx950TransposeUninitialized>::current(&lane)
-        .stage_k_transposed(&key, 0, 0)
+        .stage_k_transposed(&key, row_base, 0)
         .publish()
         .read_mfma_fragment();
     let accumulator = Gfx950F32AccumulatorFragment::<Gfx950Fp8E4M3>::zero(&lane);
     let scores = Gfx950Matrix::current()
         .multiply_accumulate_fp8(query, key, accumulator)
         .into_values();
-    let Ok(value) =
-        StridedReadView2D::from_shared_slice(v, 0, ATTENTION_TOKENS_V1, CHANNELS_V1, CHANNELS_V1)
-    else {
+    let Ok(value) = StridedReadView2D::from_shared_slice(
+        v,
+        batch.wrapping_mul(ATTENTION_TOKENS_V1 * CHANNELS_V1),
+        ATTENTION_TOKENS_V1,
+        CHANNELS_V1,
+        CHANNELS_V1,
+    ) else {
         fe2o3_device::trap();
     };
-    let Ok(bias) = StridedReadView2D::from_shared_slice(token_bias, 0, 1, 16, 16) else {
+    let Ok(bias) = StridedReadView2D::from_shared_slice(
+        token_bias,
+        batch.wrapping_mul(ATTENTION_TOKENS_V1),
+        1,
+        16,
+        16,
+    ) else {
         fe2o3_device::trap();
     };
     let subgroup = Gfx950Subgroup::current();
@@ -1544,6 +1688,7 @@ pub fn gfx950_compressed_hybrid_attention(
     let score14 = subgroup.broadcast_f32::<16>(score, 14);
     let score15 = subgroup.broadcast_f32::<16>(score, 15);
 
+    // Normalize the exact four-token local window independently.
     let mut local_maximum = score12;
     if score13 > local_maximum {
         local_maximum = score13;
@@ -1574,6 +1719,7 @@ pub fn gfx950_compressed_hybrid_attention(
             * reciprocal
     };
 
+    // Normalize three compressed global blocks independently from the local path.
     let mut global_maximum = score0;
     if score4 > global_maximum {
         global_maximum = score4;
@@ -1609,15 +1755,24 @@ pub fn gfx950_compressed_hybrid_attention(
         + global_weight1 * compressed1
         + global_weight2 * compressed2)
         * (1.0 / global_sum);
+    // A learned gate blends the two normalized paths before one disjoint store.
     let mix = 1.0 / (1.0 + math.exp_f32(-score0 * 0.01));
-    if index.get() < CHANNELS_V1 {
-        if let Some(slot) = output.get_mut(index) {
-            *slot = mix * global_value + (1.0 - mix) * local_value;
-        }
+    let Some(output_stripe) = index.checked_row_striped_2d::<64, 1>() else {
+        fe2o3_device::trap();
+    };
+    if let Some(slot) = output.get_row_striped_2d_mut(
+        &output_stripe,
+        0,
+        MULTIGRID_WAVE_BATCHES_V1,
+        CHANNELS_V1,
+        CHANNELS_V1,
+    ) {
+        *slot = mix * global_value + (1.0 - mix) * local_value;
     }
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent serial compressed-hybrid reference.
 pub fn gfx950_compressed_hybrid_attention(
     q: &[u8],
     k: &[u8],
@@ -1625,6 +1780,7 @@ pub fn gfx950_compressed_hybrid_attention(
     token_bias: &[f32],
     mut output: DisjointSlice<f32, GridExclusive>,
 ) {
+    // Host simulation is leader-only and deliberately mirrors the fixed shape.
     let Some(leader) = thread::grid_leader() else {
         return;
     };
@@ -1725,8 +1881,7 @@ pub fn gfx950_compressed_hybrid_attention(
 ))]
 #[kernel(
     typed,
-    namespace = "0f1b91664465bf059b47aa1fda8168a1cb4901cbfb81fd4dc770184520fca412",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1]),
     control_flow(loop_bounds(4, 4))
 )]
 pub fn gfx950_attnres_aggregate(
@@ -1734,23 +1889,28 @@ pub fn gfx950_attnres_aggregate(
     depth_logits: &[f32],
     mut output: DisjointSlice<f32, Index1D>,
 ) -> KernelResult {
-    if depth_values.len() != MIXING_STREAMS_V1 * CHANNELS_V1
-        || depth_logits.len() != MIXING_STREAMS_V1 * CHANNELS_V1
-        || output.len() != CHANNELS_V1
+    // Wave16 batches map one thread to one output channel.
+    let batches = MULTIGRID_SUBGROUP_BATCHES_V1;
+    if depth_values.len() != batches * MIXING_STREAMS_V1 * CHANNELS_V1
+        || depth_logits.len() != batches * MIXING_STREAMS_V1 * CHANNELS_V1
+        || output.len() != batches * CHANNELS_V1
     {
         return Err(KernelError::InvalidArgument);
     }
     let index = thread::index_1d();
-    let channel = index.get();
-    if channel >= CHANNELS_V1 {
-        return Ok(());
-    }
-    let Ok(values) = StridedReadView2D::from_shared_slice(depth_values, 0, 4, 16, 16) else {
+    let linear = index.get();
+    let batch = linear / CHANNELS_V1;
+    let channel = linear % CHANNELS_V1;
+    let batch_offset = batch.wrapping_mul(MIXING_STREAMS_V1 * CHANNELS_V1);
+    let Ok(values) = StridedReadView2D::from_shared_slice(depth_values, batch_offset, 4, 16, 16)
+    else {
         return Err(KernelError::InvalidArgument);
     };
-    let Ok(logits) = StridedReadView2D::from_shared_slice(depth_logits, 0, 4, 16, 16) else {
+    let Ok(logits) = StridedReadView2D::from_shared_slice(depth_logits, batch_offset, 4, 16, 16)
+    else {
         return Err(KernelError::InvalidArgument);
     };
+    // Use a max-subtracted four-way softmax before the weighted depth sum.
     let math = DeviceMath::current();
     let mut maximum = logits.load_or(0, channel, f32::NEG_INFINITY);
     for depth in 1..4 {
@@ -1766,6 +1926,7 @@ pub fn gfx950_attnres_aggregate(
         denominator += weight;
         value += weight * values.load_or(depth, channel, 0.0);
     }
+    // The linear index is the exclusive owner of this channel.
     if let Some(slot) = output.get_mut(index) {
         *slot = value / denominator;
     }
@@ -1773,11 +1934,13 @@ pub fn gfx950_attnres_aggregate(
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent serial AttnRes reference.
 pub fn gfx950_attnres_aggregate(
     depth_values: &[f32],
     depth_logits: &[f32],
     mut output: DisjointSlice<f32, GridExclusive>,
 ) {
+    // Host simulation is leader-only so it cannot imitate subgroup execution.
     let Some(leader) = thread::grid_leader() else {
         return;
     };
@@ -1824,8 +1987,7 @@ pub fn gfx950_attnres_aggregate(
 ))]
 #[kernel(
     typed,
-    namespace = "5a21124887ab5e89f2893f9a688ddc75efe2cf1c40dfda56be36acb530d69326",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1]),
     control_flow(loop_bounds(4))
 )]
 pub fn gfx950_four_branch_residual(
@@ -1834,37 +1996,45 @@ pub fn gfx950_four_branch_residual(
     gate_logits: &[f32],
     mut output: DisjointSlice<f32, Index1D>,
 ) {
-    if residual.len() != CHANNELS_V1
-        || branches.len() != MIXING_STREAMS_V1 * CHANNELS_V1
-        || gate_logits.len() != MIXING_STREAMS_V1 * CHANNELS_V1
-        || output.len() != CHANNELS_V1
+    // Wave16 batches map one thread to one residual channel.
+    let batches = MULTIGRID_SUBGROUP_BATCHES_V1;
+    if residual.len() != batches * CHANNELS_V1
+        || branches.len() != batches * MIXING_STREAMS_V1 * CHANNELS_V1
+        || gate_logits.len() != batches * MIXING_STREAMS_V1 * CHANNELS_V1
+        || output.len() != batches * CHANNELS_V1
     {
         return;
     }
     let index = thread::index_1d();
-    let channel = index.get();
-    if channel >= CHANNELS_V1 {
-        return;
-    }
+    let linear = index.get();
+    let batch = linear / CHANNELS_V1;
+    let channel = linear % CHANNELS_V1;
+    let batch_offset = batch.wrapping_mul(MIXING_STREAMS_V1 * CHANNELS_V1);
     let math = DeviceMath::current();
-    let mut value = residual[channel];
+    // Accumulate each sigmoid gate explicitly in stable branch order.
+    let mut value = residual[batch.wrapping_mul(CHANNELS_V1).wrapping_add(channel)];
     for branch in 0_usize..4 {
-        let offset = branch.wrapping_mul(CHANNELS_V1).wrapping_add(channel);
+        let offset = batch_offset
+            .wrapping_add(branch.wrapping_mul(CHANNELS_V1))
+            .wrapping_add(channel);
         let gate = 1.0 / (1.0 + math.exp_f32(-gate_logits[offset]));
         value += 0.25 * gate * branches[offset];
     }
+    // The linear index is the exclusive owner of this channel.
     if let Some(slot) = output.get_mut(index) {
         *slot = value;
     }
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent serial four-branch residual reference.
 pub fn gfx950_four_branch_residual(
     residual: &[f32],
     branches: &[f32],
     gate_logits: &[f32],
     mut output: DisjointSlice<f32, GridExclusive>,
 ) {
+    // Host simulation is leader-only and retains the same finite-value checks.
     let Some(leader) = thread::grid_leader() else {
         return;
     };
@@ -1903,8 +2073,7 @@ pub fn gfx950_four_branch_residual(
 ))]
 #[kernel(
     typed,
-    namespace = "e2bce999a5fa1929fa89c847d6dade5511566efd3cffca3003a77d00e870fdbf",
-    launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [1, 1, 1]),
+    launch(required = [256, 1, 1], max = [256, 1, 1], max_grid = [4, 1, 1]),
     control_flow(loop_bounds(3))
 )]
 pub fn gfx950_mhc_sinkhorn_mix(
@@ -1912,27 +2081,45 @@ pub fn gfx950_mhc_sinkhorn_mix(
     mixing_logits: &[f32],
     mut output: DisjointSlice<f32, Index1D>,
 ) -> KernelResult {
-    if streams.len() != MIXING_STREAMS_V1 * CHANNELS_V1
-        || mixing_logits.len() != MIXING_STREAMS_V1 * MIXING_STREAMS_V1
-        || output.len() != MIXING_STREAMS_V1 * CHANNELS_V1
+    // One Wave64 owns one item: four rows by 16 channel lanes.
+    let batches = MULTIGRID_WAVE_BATCHES_V1;
+    if streams.len() != batches * MIXING_STREAMS_V1 * CHANNELS_V1
+        || mixing_logits.len() != batches * MIXING_STREAMS_V1 * MIXING_STREAMS_V1
+        || output.len() != batches * MIXING_STREAMS_V1 * CHANNELS_V1
     {
         return Err(KernelError::InvalidArgument);
     }
     let index = thread::index_1d();
     let linear = index.get();
+    let batch = linear / 64;
+    let local = thread::thread_idx_x() as usize % 64;
     let math = DeviceMath::current();
     let subgroup = Gfx950Subgroup::current();
-    let Ok(logits) = StridedReadView2D::from_shared_slice(mixing_logits, 0, 1, 16, 16) else {
+    let Ok(logits) = StridedReadView2D::from_shared_slice(
+        mixing_logits,
+        batch.wrapping_mul(MIXING_STREAMS_V1 * MIXING_STREAMS_V1),
+        1,
+        16,
+        16,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
-    let Ok(streams) = StridedReadView2D::from_shared_slice(streams, 0, 4, 16, 16) else {
+    let Ok(streams) = StridedReadView2D::from_shared_slice(
+        streams,
+        batch.wrapping_mul(MIXING_STREAMS_V1 * CHANNELS_V1),
+        4,
+        16,
+        16,
+    ) else {
         return Err(KernelError::InvalidArgument);
     };
-    let row = linear / CHANNELS_V1;
-    let local_lane = linear % CHANNELS_V1;
+    // Map each lane to one 4x4 mixing coefficient and its output channel.
+    let row = local / CHANNELS_V1;
+    let local_lane = local % CHANNELS_V1;
     let matrix_index = local_lane.wrapping_add(row.wrapping_mul(MIXING_STREAMS_V1))
         % (MIXING_STREAMS_V1 * MIXING_STREAMS_V1);
     let mut matrix = math.exp_f32(logits.load_or(0, matrix_index, 0.0));
+    // Alternate row and column normalization for the fixed Sinkhorn depth.
     for _iteration in 0..3 {
         let row_reciprocal = 1.0 / subgroup.reduce_sum_f32::<4>(matrix);
         matrix *= row_reciprocal;
@@ -1944,6 +2131,7 @@ pub fn gfx950_mhc_sinkhorn_mix(
             + subgroup.broadcast_f32::<16>(matrix, column.wrapping_add(12) & 15);
         matrix *= 1.0 / column_sum;
     }
+    // Broadcast the normalized row and mix the four input streams.
     let weight0 = subgroup.broadcast_f32::<16>(matrix, 0);
     let weight1 = subgroup.broadcast_f32::<16>(matrix, 1);
     let weight2 = subgroup.broadcast_f32::<16>(matrix, 2);
@@ -1959,11 +2147,13 @@ pub fn gfx950_mhc_sinkhorn_mix(
 }
 
 #[cfg(not(target_arch = "amdgpu"))]
+/// Executes the independent serial mHC Sinkhorn reference.
 pub fn gfx950_mhc_sinkhorn_mix(
     streams: &[f32],
     mixing_logits: &[f32],
     mut output: DisjointSlice<f32, GridExclusive>,
 ) {
+    // Host simulation is leader-only and materializes the small matrix directly.
     let Some(leader) = thread::grid_leader() else {
         return;
     };

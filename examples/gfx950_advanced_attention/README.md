@@ -2,18 +2,22 @@
 
 The ordinary attributed Rust kernels in [`src/kernel.rs`](src/kernel.rs) are
 the fe2o3 source for these tutorials. [`src/reference.rs`](src/reference.rs)
-contains independent safe CPU references, and `cargo test --offline` checks
+contains independent safe CPU references, and
+`cargo fe2o3 test --offline --all-targets` checks
 their fixed-shape numerical and selection contracts. The HIP program remains
 a separate compiler, ISA, and MI350 hardware-validation companion for the
-older non-KDA profiles; the matrix-state KDA evidence is production Rust only.
+older non-KDA profiles. The matrix-state KDA artifacts come from the production
+Rust compiler path, but their recorded device execution uses the deprecated
+HSA qualification oracle rather than the production direct-KFD runtime.
 
 Each `run-*-gfx950.sh` entry point selects exactly one kernel feature, invokes
 the production fe2o3 extractor, checks the compiler-published crate binding,
 links an exact gfx950:xnack- COV6 HSACO, validates its single-kernel metadata
-and symbol-scoped ISA, and runs a digest-pinned numerical HSA test. This is an
-explicit verification path; it does not grant protected artifact publication
-authority. The HIP ISA and runtime results below remain independent evidence
-only for the symbols that the HIP program implements with the same semantics.
+and symbol-scoped ISA, and runs a digest-pinned numerical test through the
+deprecated HSA qualification oracle. This is an explicit verification path; it
+does not grant protected artifact publication or production runtime authority.
+The HIP ISA and runtime results below remain independent evidence only for the
+symbols that the HIP program implements with the same semantics.
 
 This directory is a bounded educational validation suite for AMD CDNA 4
 (`gfx950`). It is not a production implementation, performance claim, model
@@ -39,6 +43,22 @@ contains:
 - AttnRes four-depth softmax aggregation, four-branch gated residual mixing,
   and a four-stream mHC mixer with three Sinkhorn iterations.
 
+Every production Rust kernel launches four `256`-thread workgroups. KDA uses
+all four Wave64s in a workgroup for one matrix-state problem, producing four
+independent batches per launch. Content-sparse and compressed-hybrid attention
+assign one independent head to each Wave64, for 16 heads per launch. DeepSeek
+sparse attention, AttnRes, and four-branch residual assign one independent
+16-channel item to each Wave16 subgroup, for 64 items per launch. mHC assigns
+one independent four-stream problem to each Wave64, for 16 items per launch.
+Inputs vary by batch and every output span has a single wave, subgroup, or
+workgroup owner.
+
+The two transpose-based kernels give each Wave64 a private 2 KiB LDS K tile.
+The compiler therefore reserves 8 KiB of static LDS for each WG256. All four
+waves execute the same stage, publication, workgroup-barrier, and transpose-read
+lifecycle uniformly, while wave-relative LDS addresses prevent cross-wave
+aliasing.
+
 Every output and sparse index is compared against an independently written CPU
 oracle using deterministic inputs. The KDA oracle is an f64 scalar,
 token-by-token implementation of the matrix recurrence; it does not reuse the
@@ -53,9 +73,8 @@ each kernel symbol. At this bounded shape, the score MFMA covers all 16 tokens;
 the sparse kernel applies its selected ragged set to softmax and the value
 reduction. The separate DeepSeek kernel instead performs FP32 Wave16 reductions
 for exactly the indexed rows; using the dense MFMA tile there
-would defeat its sparse-compute contract. The current teaching profile repeats
-the selected score reductions in four Wave16 subgroups and gives subgroup zero
-exclusive ownership of the 16 output stores. It does not reproduce the learned
+would defeat its sparse-compute contract. Each Wave16 subgroup now owns one
+independent indexed head and its 16 output stores. It does not reproduce the learned
 indexer or claim a production FlashMLA scheduling strategy.
 
 For KDA, the public inputs begin after the surrounding model projections and
@@ -63,11 +82,13 @@ short convolution: `q` and `k` are L2-normalized, `alpha` is already in
 `(0,1]`, and `beta` is already in `[0,1]`. The kernel applies the fixed
 `1/sqrt(16)` query scale. The logical recurrence stores `S[K,V]`; production
 device memory stores its transpose `H[V,K]`, allowing each 16-lane Wave16 group
-to reduce one value column. The current checked `Index1D` ownership model makes
+to reduce one value column. Each of the four workgroups receives a distinct
+state and input sequence. Its checked `Index1D` ownership model makes each
 decode output physical length 256, with each logical value replicated across
-its 16 key lanes. Prefill similarly uses four lanes per logical token in each
-256-element chunk-output buffer. The runtime verifier compares every replica
-and canary, while tutorials identify how to recover the logical outputs. This
+its 16 key lanes; the launch ABI concatenates four such spans. Prefill likewise
+uses four lanes per logical token in each 256-element chunk-output span. The
+runtime verifier compares every replica and canary, while tutorials identify
+how to recover the logical outputs. This
 fixed profile excludes learned projections, the width-four convolution, gate
 parameterization, RMS/output gating, and the output projection used by a full
 Kimi Linear layer.
@@ -75,10 +96,11 @@ Kimi Linear layer.
 Run the Rust source and independent CPU-reference checks:
 
 ```bash
-cargo test --offline
+cargo fe2o3 test --offline --all-targets
 ```
 
-Run the production Rust lowering and numerical verification on a gfx950 host:
+Run the production Rust lowering and deprecated HSA qualification-oracle
+numerical verification on a gfx950 host:
 
 ```bash
 ./run-kda-decode-gfx950.sh
@@ -91,7 +113,32 @@ Run the production Rust lowering and numerical verification on a gfx950 host:
 ./run-mhc-sinkhorn-mix-gfx950.sh
 ```
 
-## KDA MI350 performance evidence
+## Current WG256/grid4 numerical qualification
+
+On 2026-09-03, all eight production Rust wrappers completed extraction,
+gfx950:xnack- COV6 finalization, symbol-scoped ISA inspection, and numerical
+execution on physical GPU 6 of SSH host `mi350` with ROCm 7.2.1. Every launch
+used four WG256 workgroups, exercised all disjoint non-identical problems, and
+checked immutable inputs plus output canaries. These are correctness and
+artifact-identity receipts, not latency measurements.
+
+| Kernel | Maximum absolute error | HSACO SHA-256 |
+| --- | ---: | --- |
+| KDA decode | state `2.980232239e-8`; output `7.450580597e-9` | `11af04ea552ea1e7c2a7bcad2a3dd26222ced4ffac39148015bb90b578c3f7b0` |
+| KDA chunkwise prefill | state `1.490116119e-8`; both chunks `7.450580597e-9` | `dcb9f8cc55339234e05ac814536fd8b98b2d34f8c41de9c76c6baa475edaea9c` |
+| Content-sparse attention | output `5.820766091e-11`; 48 selected IDs exact | `d609377c0e56d3589f88fb0a850c39c60a3e34cac3d53ad8f3dfcf0159d02d9d` |
+| DeepSeek sparse attention | output `5.215406418e-8`; maximum `1.490116119e-7`; normalizer `4.768371582e-7` | `1d55054669d735190e1747c2e16f510455ae89a623d93b1fb66c2037676f9437` |
+| Compressed-hybrid attention | output `5.960464478e-8` | `314ed596839d1aa04557ca26b18f9a4a2356ad67e767a3865e40a7bc0bf6a90d` |
+| AttnRes aggregate | output `4.470348358e-8` | `8622031a6d857b060b8b036e99d8e2f91068904f075fa54d7c1b88b40d6c96b3` |
+| Four-branch residual | output `1.490116119e-8` | `fd77ba3f34568aa95b7b59ebe9fc71506e317d7ac6090e3439601512fd46acdd` |
+| mHC Sinkhorn mix | output `6.705522537e-8` | `e441bf98aec02fc596f55e00477ab2f647dd776bb8756099c6168802b16b6a13` |
+
+## Historical KDA MI350 performance evidence
+
+These measurements use the preceding single-workgroup launch geometry. They
+remain provenance for the earlier implementation, but they do not measure the
+current four-workgroup kernels and must not be used as current throughput or
+latency claims until the multigrid campaign is rerun.
 
 [`kda-mi350-performance-v1.json`](kda-mi350-performance-v1.json) records the
 replicated fixed-shape KDA campaign, raw-file SHA-256 manifests, exact source
@@ -113,13 +160,14 @@ an environment containing that checkout, PyTorch ROCm, Triton, and FLA with
 `benchmark_fla_kda_mi350.py`. Both implementations were checked against an
 independent sequential matrix-state recurrence before timing.
 
-For FP32 B=H=1, K=V=16, the median of five process medians was 4,720 ns for
-fe2o3 decode versus 39,345 ns for FLA (8.336x), and 11,400 ns for fe2o3
-two-chunk prefill versus 39,113 ns for FLA (3.431x). These are the fastest
-measured eligible implementations for this exact shape and semantics, not a
-universal KDA state-of-the-art claim. The fe2o3 and FLA device-side timers use
-different sampling granularities, which is retained as a protocol caveat in
-the evidence file.
+For FP32 B=H=1, K=V=16, the median of five process medians was 4,720 ns for the
+fe2o3 code object executed through the HSA qualification oracle versus 39,345
+ns for FLA (8.336x), and 11,400 ns for fe2o3 two-chunk prefill through that
+oracle versus 39,113 ns for FLA (3.431x). These are the fastest measured
+eligible implementations for this exact shape and semantics, not a universal
+KDA state-of-the-art claim or direct-KFD runtime measurement. The fe2o3 and FLA
+device-side timers use different sampling granularities, which is retained as
+a protocol caveat in the evidence file.
 
 The sparse and hybrid runners additionally require exactly four
 `ds_read_b64_tr_b8` instructions before one FP8
@@ -129,11 +177,17 @@ square root lowers to its target-native LLVM intrinsic. Set
 `FE2O3_REPO_ROOT`, `ROCM_PATH`, `RUSTUP`, `CARGO`, or the documented tool and
 target-directory environment variables when validating a copied checkout.
 
-## Production Rust validation evidence
+## Previous single-workgroup compiler and qualification-oracle evidence
+
+The correctness and artifact identities below predate WG256/grid4 batching for
+the non-KDA kernels and grid4 batching for KDA. They establish historical
+lowering and ISA behavior only; current multigrid evidence is generated by the
+updated runners and hardware plans.
 
 On 2026-09-01, the exact matrix-state KDA wrappers passed production Rust
-lowering, COV6 linking, symbol-scoped ISA inspection, and real HSA execution on
-SSH host `mi350` (`smci350-rck-g03-b19-03`) with ROCm 7.2.1, using physical GPU
+lowering, COV6 linking, symbol-scoped ISA inspection, and deprecated HSA
+qualification-oracle execution on SSH host `mi350`
+(`smci350-rck-g03-b19-03`) with ROCm 7.2.1, using physical GPU
 6 (`ROCR_VISIBLE_DEVICES=6`, `HIP_VISIBLE_DEVICES` unset). Decode maximum
 absolute errors were `1.490116119e-8` for the 256-element final state and
 `3.725290298e-9` for every replicated output. Chunkwise prefill errors were
@@ -143,7 +197,8 @@ four-token output buffers. The checked symbols use Wave16
 instructions. Final source and artifact identities are pinned by the advanced
 tutorial evidence records.
 
-On 2026-08-27, the remaining production Rust wrappers passed on the same host.
+On 2026-08-27, the remaining production-compiler wrappers passed through the
+same HSA qualification oracle on the same host.
 The largest observed absolute errors were `0` for both dense-tile attention
 kernels and AttnRes, `0` for four-branch residual, and `4.470348358e-8` for
 mHC. Sparse token IDs were checked exactly.
@@ -151,10 +206,10 @@ mHC. Sparse token IDs were checked exactly.
 On 2026-08-31, the eighth wrapper,
 `run-deepseek-sparse-attention-gfx950.sh`, passed on the same host and ROCm
 release using physical GPU 6 (`ROCR_VISIBLE_DEVICES=6`,
-`HIP_VISIBLE_DEVICES` unset). The production kernel returned maximum absolute
-errors of `2.980232239e-8` for both the 16-channel output and softmax maximum,
+`HIP_VISIBLE_DEVICES` unset). The production-compiled kernel returned maximum
+absolute errors of `2.980232239e-8` for both the 16-channel output and softmax maximum,
 and `2.384185791e-7` for the softmax normalizer, against a `5e-3` finite-value
-tolerance. Its portable namespace is
+tolerance. Its measured compiler-derived binding is
 `62a1ee5804a9926ebb929061195f2229630ebdaf5a13a19d17ce7ddb4fcbbbe3`;
 the LLVM, COV6 HSACO, and symbol-scoped ISA SHA-256 values are respectively
 `0767554b7997f42b4e2fb85271779ca29182ec241b07cc162cb9185cac41362c`,
@@ -165,8 +220,8 @@ selected-only sparse arithmetic contract.
 
 The sparse and hybrid Rust HSACOs each contained exactly four
 `ds_read_b64_tr_b8` instructions before one
-`v_mfma_f32_16x16x128_f8f6f4` with E4M3 selectors. The per-kernel portable
-namespace and LLVM/HSACO SHA-256 values are printed by each wrapper and pinned
+`v_mfma_f32_16x16x128_f8f6f4` with E4M3 selectors. The per-kernel
+compiler-derived binding and LLVM/HSACO SHA-256 values are printed by each wrapper and pinned
 by the corresponding advanced tutorial evidence record.
 
 Build, inspect, and run the independent companion HIP validation:

@@ -32,6 +32,7 @@ import {
   profilerImportTruthRows,
   profilerDirectKfdInvestigationMilestone,
   profilerRuntimeCausalityMilestone,
+  profilerRegressionExplanationMilestone,
   profilerVariantV3Milestone,
   profilerWrapperOverheadMilestone,
 } from "../content/profiler-dispatch-import";
@@ -80,6 +81,13 @@ type Binding = {
   wave_width: number;
 };
 
+const profilerMeasurementDetails: Readonly<Record<string, readonly [string, string]>> = {
+  counter_collection: ["moderate", "Add exact counter dimensions and completeness."],
+  pc_sampling: ["moderate", "Find positive source/IR/ISA occurrences; absence stays sampled."],
+  schedule_execution_observation: ["low", "Bind the treatment schedule to an observed dispatch."],
+  controlled_variant_replicates: ["high", "Estimate run variance with bounded interleaved repetitions."],
+};
+
 export function ProfilerDispatchImportPage() {
   const [activeDialect, setActiveDialect] = useState(0);
   const [activeQuery, setActiveQuery] = useState(0);
@@ -89,6 +97,7 @@ export function ProfilerDispatchImportPage() {
   const bindings = profilerImportDialectProjection.json_process_local_bindings as Binding[];
   const boundedCheckpointQualified =
     profilerImportMilestone.status === "implemented-qualified-bounded-checkpoint";
+  const regressionExample = profilerRegressionExplanationMilestone.example;
 
   return (
     <article className="lesson-page profiler-import-page">
@@ -284,7 +293,101 @@ export function ProfilerDispatchImportPage() {
           </span>
         </aside>
         <pre><code>{`fe2o3-profiler-service variant-v3-jsonl
-discover_capabilities -> open_structural_archive -> compare_complete_structural_catalogs`}</code></pre>
+discover_capabilities -> open_structural_archive -> compare_complete_structural_catalogs -> explain_regression`}</code></pre>
+      </section>
+
+      <section className="profiler-import-explanation" aria-labelledby="profiler-explanation-heading">
+        <header>
+          <p className="section-kicker">Agent-native regression explanation</p>
+          <h2 id="profiler-explanation-heading">Explain one row-softmax regression without inventing causality</h2>
+          <p>
+            This worked example sends two comparable, one-kernel treatments to
+            <code>{profilerRegressionExplanationMilestone.operation}</code>. The
+            kernel name makes the walkthrough concrete; the service rules use only
+            typed resources, structural coordinates, admitted observations, and
+            content identities, so the same path applies to every kernel.
+          </p>
+        </header>
+        <div className="profiler-explanation-disclosure">
+          <TriangleAlert size={18} aria-hidden="true" />
+          <span>
+            <strong>Deterministic protocol fixture, not a benchmark</strong>
+            The <code>{regressionExample.kernel}</code> name, ticks, and HSACO
+            metadata below are synthetic acceptance inputs. They were not produced
+            by compiling that example source or by a hardware capture.
+          </span>
+        </div>
+        <div
+          className="profiler-explanation-comparison"
+          aria-label="Row softmax regression comparison"
+        >
+          <div>
+            <small>baseline</small>
+            <strong>{regressionExample.baselineDurationTicks.join(" / ")} ticks</strong>
+            <code>VGPR {regressionExample.baselineVgprCount} · SGPR spills {regressionExample.baselineSgprSpillCount}</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div className="profiler-explanation-delta">
+            <small>two exact dispatch deltas</small>
+            <strong>+{regressionExample.durationDeltaTicks.join(" / +")} ticks</strong>
+            <code>same environment and launch axes</code>
+          </div>
+          <ArrowRight size={18} aria-hidden="true" />
+          <div>
+            <small>candidate</small>
+            <strong>{regressionExample.candidateDurationTicks.join(" / ")} ticks</strong>
+            <code>VGPR {regressionExample.candidateVgprCount} · SGPR spills {regressionExample.candidateSgprSpillCount}</code>
+          </div>
+        </div>
+        <div className="profiler-explanation-result">
+          <div className="profiler-explanation-rank">1</div>
+          <div>
+            <small>{regressionExample.hypothesisOrigin} · {regressionExample.confidence} confidence</small>
+            <strong>Static resource co-observation</strong>
+            <p>
+              Final HSACO resources changed in the treatment with longer captured
+              dispatch duration. Supporting and contradicting capture identities
+              remain attached to the machine-readable response.
+            </p>
+          </div>
+          <code>{regressionExample.hypothesisKind}</code>
+        </div>
+        <aside className="profiler-explanation-optimizer">
+          <Braces size={18} aria-hidden="true" />
+          <span>
+            <strong>Optimizer evidence is unavailable in this fixture</strong>
+            No structural archive was supplied, so the response says
+            <code>{regressionExample.archiveOptimizerEvidence}</code>. A current
+            admitted Archive V1 projects optimizer policy
+            {profilerRegressionExplanationMilestone.optimizerPolicyVersion} and
+            all {profilerRegressionExplanationMilestone.optimizerPassCount} ordered
+            pass decisions; legacy archives remain typed unavailable.
+          </span>
+        </aside>
+        <div className="table-scroll profiler-explanation-next">
+          <table aria-label="Profiler explanation next measurements">
+            <thead><tr><th>Order</th><th>Measurement</th><th>Cost</th><th>Why next</th></tr></thead>
+            <tbody>
+              {regressionExample.nextMeasurements.map((measurement, index) => {
+                const [cost, reason] = profilerMeasurementDetails[measurement] ??
+                  ["unavailable", "Unsupported measurement kind."];
+                return (
+                  <tr key={measurement}>
+                    <td>{index + 1}</td>
+                    <th scope="row"><code>{measurement}</code></th>
+                    <td>{cost}</td>
+                    <td>{reason}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="profiler-explanation-nonclaim">
+          Causal attribution: <code>{profilerRegressionExplanationMilestone.causality}</code>.
+          Fixed ranking is a deterministic evidence triage policy, not probability
+          or proof that the resource change caused the regression.
+        </p>
       </section>
 
       <section className="profiler-import-sealed" aria-labelledby="profiler-sealed-heading">

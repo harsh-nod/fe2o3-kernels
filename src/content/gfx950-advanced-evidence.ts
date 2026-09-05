@@ -33,8 +33,7 @@ export interface ObservedAdvancedRustEvidence extends AdvancedKernelContract {
 }
 
 export type AdvancedRustEvidence =
-  | PendingAdvancedRustEvidence
-  | ObservedAdvancedRustEvidence;
+  PendingAdvancedRustEvidence | ObservedAdvancedRustEvidence;
 
 export interface AdvancedMeasurement {
   sourceCommit: string;
@@ -133,21 +132,26 @@ export function isObservedAdvancedEvidence(
 }
 
 const finalMi350Campaign = Object.freeze({
-  sourceCommit: "c766ca761c492c4cd188047a497664f6b2ade278",
-  sourceTree: "cbda6eba10b34acb3eec93c6e504462fca3c8705",
+  sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
+  sourceTree: "874a9a250f904e3229410e0d620cfcecaab3f49d",
   runtimeObservation:
-    "observed 2026-08-30 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; gfx950-final-compatibility-c766ca761-gpu6 digest-pinned COV6 HSA harness PASS",
+    "observed 2026-09-04 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
 });
 
-const compressedHybridPromotionCampaign = Object.freeze({
-  ...finalMi350Campaign,
+const attentionMultiGridCampaign = Object.freeze({
+  sourceCommit: finalMi350Campaign.sourceCommit,
+  sourceTree: finalMi350Campaign.sourceTree,
+  runtimeObservation:
+    "observed 2026-09-04 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
 });
 
-const kdaMi350Campaign = Object.freeze({
-  sourceCommit: "cf8a766fe11a53b7bfa6d5678c903e877bb95d75",
-  sourceTree: "b9c09ca3ae2807cecd967d89ec3e4c4ca56ee633",
+// The compiler binding below authenticates the exact validated source closure;
+// do not substitute the former single-wave artifact digests.
+const gptOssMultiGridCampaign = Object.freeze({
+  sourceCommit: finalMi350Campaign.sourceCommit,
+  sourceTree: finalMi350Campaign.sourceTree,
   runtimeObservation:
-    "observed 2026-09-02 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; five-process production COV6 HSA correctness and timing campaign PASS",
+    "observed 2026-09-04 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; WG256/grid4 production COV6 HSA correctness campaign PASS",
 });
 
 export const advancedRustEvidence = Object.freeze({
@@ -165,13 +169,19 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 256,
     },
     {
-      ...kdaMi350Campaign,
-      namespace: "e249ff03f475aa75595229ee6a68e816a2a9ad395940c495ad874c54c0e9b0ad",
-      llvmSha256: "6bb6dade12e55652f188a9596a594d54f74e6504d976a4ef4072d107137b1fa2",
-      hsacoSha256: "9f65a1407247cafa26eebaa574a92037cadc4bd1f11da1c81535927fc9cafde4",
-      isaSha256: "873fbcfafc9bb04e612a8a803ef2848c52c7744b0fd308ba7eed93f56dd1de86",
-      numericalResult: "final_state_value_major max_absolute_error=1.490116119e-8; output_replicated max_absolute_error=3.725290298e-9",
-      tolerance: "absolute tolerance 2.0e-5 for all 256 state elements and all 256 output replicas; finite values required; immutable inputs and guard canaries exact",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "3f3221a3dc1c1c8e1cca65e0751b34f6829d93c98c5414cf9a4ef53b36863b0d",
+      llvmSha256:
+        "70ae8bfa1fb598c2bffdc7fda3ed924d3b1cc3f91bb4ba632324c88e45423dc3",
+      hsacoSha256:
+        "b28749b42385f3c08e4b8f6707cafe7f970e0ca5c7b1140741d5bd0f2a98d421",
+      isaSha256:
+        "8b5340ee348631beb84ccdbf7718625454e97180755dc061b157ecbc204a64ee",
+      numericalResult:
+        "four problems; final_state_value_major outputs=1024 max_absolute_error=2.980232239e-8; output_replicated outputs=1024 max_absolute_error=7.450580597e-9",
+      tolerance:
+        "absolute tolerance 2.0e-5 for all 1,024 state elements and all 1,024 output replicas; finite values required; immutable inputs and guard canaries exact",
     },
   ),
   gfx950_kda_chunkwise_prefill: observedAdvancedEvidence(
@@ -190,37 +200,51 @@ export const advancedRustEvidence = Object.freeze({
       workgroupSize: 256,
     },
     {
-      ...kdaMi350Campaign,
-      namespace: "673210266e41c1a545820dbc0baec859659b5c1cf4d5e3e8ac6b5e542b4028d3",
-      llvmSha256: "f176ad770713545ca2652fc01bc3a676d638f5702bcb5d7a54d856ea5ea6724e",
-      hsacoSha256: "af4b48c379010aca3b5d64761eb92058823d042a0e95b5a7ded0cc81c0ea7791",
-      isaSha256: "4ae116f20e3f2e38fe9e279c0eb9329c763eec451d2a2b4fa4d7f217e52f2c62",
-      numericalResult: "final_state_value_major max_absolute_error=2.980232239e-8; output_chunk0_replicated max_absolute_error=7.450580597e-9; output_chunk1_replicated max_absolute_error=7.450580597e-9",
-      tolerance: "absolute tolerance 2.0e-4 for all 256 state elements and both 256-element output-replica buffers; finite values required; immutable inputs and guard canaries exact",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "842f02aba09789e97545e7ad82c183ca22968209ae9a4e5f4013500969e705a0",
+      llvmSha256:
+        "64dff8a0d79ce14b253cc633d875a9575b3e19f8f57fba75c64d479587dc7090",
+      hsacoSha256:
+        "940ee8123dae9187eabb7fcc97eec6d8d9fcc63b1e78a49eb20e98421cf2e523",
+      isaSha256:
+        "5dd677c827b5bbda813de61b42d3709949258f203f426e83c2e78e79568ec7a5",
+      numericalResult:
+        "four problems; final_state_value_major outputs=1024 max_absolute_error=1.490116119e-8; output_chunk0_replicated outputs=1024 max_absolute_error=7.450580597e-9; output_chunk1_replicated outputs=1024 max_absolute_error=7.450580597e-9",
+      tolerance:
+        "absolute tolerance 2.0e-4 for all 1,024 state elements and both 1,024-element output-replica buffers; finite values required; immutable inputs and guard canaries exact",
     },
   ),
   gfx950_content_sparse_attention: observedAdvancedEvidence(
     {
       label: "content sparse attention",
       symbol: "gfx950_content_sparse_attention",
-      runnerPath: "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
-      hardwareTest: "gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference",
+      runnerPath:
+        "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
+      hardwareTest:
+        "gfx950_content_sparse_attention_rust_cov6_matches_cpu_reference",
       requiredIsa: [
         "exactly four ds_read_b64_tr_b8",
         "exactly one v_mfma_f32_16x16x128_f8f6f4 with E4M3 selectors",
       ],
       kernargBytes: 96,
-      workgroupSize: 64,
-      ldsBytes: 2048,
+      workgroupSize: 256,
+      ldsBytes: 8192,
     },
     {
-      ...finalMi350Campaign,
-      namespace: "8e4b6794b9080758a96900d9f3bedc81f043b9c733ce0348fd3d56ab46e4ccf7",
-      llvmSha256: "2ff295eec904f464d0379dc7c5ba1a0223c32689fc9699745cab969c3f4f89e7",
-      hsacoSha256: "be4eb0216b5f0a8d431e4b07a61f7ab0e99dadfbaf7eca60c067088a54110a24",
-      isaSha256: "af1d6c6c51d5c68d4efd50a81776e2d9a706b49485b18009bb46423c8f14c6a7",
-      numericalResult: "output max_absolute_error=0.000000000e0; selected_output exact_u32_outputs=3",
-      tolerance: "output absolute tolerance 5.0e-3 with finite values; selected IDs exact",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "41184ff7591988ce338b0c66adc81694015c4ec76e5d0905d7079a02a9ff3515",
+      llvmSha256:
+        "4faf344e5de16a696cea4727e618e798e5e2407f02ef2dfd26781dabcf0890bc",
+      hsacoSha256:
+        "c97643db6675b1a771750a8d795223892ceb23df87e5a7fadea7c11d9350c139",
+      isaSha256:
+        "4b2919d194a1a74daafeb9b1618121f08755d9b7d28828027c340a5dc1eefab5",
+      numericalResult:
+        "16 Wave64 heads; output outputs=256 max_absolute_error=5.820766091e-11; selected_output exact_u32_outputs=48",
+      tolerance:
+        "output absolute tolerance 5.0e-3 with finite values; selected IDs exact",
     },
   ),
   gfx950_deepseek_sparse_attention: observedAdvancedEvidence(
@@ -233,41 +257,51 @@ export const advancedRustEvidence = Object.freeze({
         "gfx950_deepseek_sparse_attention_rust_cov6_matches_cpu_reference",
       requiredIsa: ["no MFMA or transpose instructions"],
       kernargBytes: 112,
-      workgroupSize: 64,
+      workgroupSize: 256,
       ldsBytes: 0,
     },
     {
-      sourceCommit: "6157061b827ed98db96722cb2fca988016fbb2ee",
-      sourceTree: "32a26b37092af3cbde6552011b61df409df4c830",
-      namespace: "62a1ee5804a9926ebb929061195f2229630ebdaf5a13a19d17ce7ddb4fcbbbe3",
-      llvmSha256: "0767554b7997f42b4e2fb85271779ca29182ec241b07cc162cb9185cac41362c",
-      hsacoSha256: "c5f5465c405306d6df944df4f02066f75b94295b7e91b8c8cf73bc16482ed930",
-      isaSha256: "fa54e785c34d2ec26e94dad04a8f63ef2a68485ad9190a0ca747999216d5237a",
-      numericalResult: "output max_absolute_error=2.980232239e-8; softmax_maximum max_absolute_error=2.980232239e-8; softmax_normalizer max_absolute_error=2.384185791e-7",
-      tolerance: "absolute tolerance 5.0e-3 for output, maximum, and normalizer; finite values required; valid selected IDs unique and all-invalid domains rejected",
-      runtimeObservation: "observed 2026-08-31 on ssh mi350 / smci350-rck-g03-b19-03 physical GPU 6 (ROCR_VISIBLE_DEVICES=6, HIP_VISIBLE_DEVICES unset); ROCm 7.2.1; Rust nightly-2026-04-03; gfx950:xnack-; Wave64; production COV6 HSA wrapper PASS",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "00b4df99b377546bde34c7c368996cee85a2aa746e712d15d4a147906ec79890",
+      llvmSha256:
+        "e4db5c905c08f3c3a8c1dc3092d3c91b577e11685a43b4733ec9dfbcd48041a4",
+      hsacoSha256:
+        "7990cb59896ec32b75ebce009ec72cbf023f9ae3b673b9cc07edcf68abdf933e",
+      isaSha256:
+        "1605051d5b24425899e104f279cffe61f9144e053c94496afdac373c8129d958",
+      numericalResult:
+        "64 Wave16 heads; output outputs=1024 max_absolute_error=5.215406418e-8; softmax_maximum max_absolute_error=1.490116119e-7; softmax_normalizer max_absolute_error=4.768371582e-7",
+      tolerance:
+        "absolute tolerance 5.0e-3 for output, maximum, and normalizer; finite values required; valid selected IDs unique and all-invalid domains rejected",
     },
   ),
   gfx950_compressed_hybrid_attention: observedAdvancedEvidence(
     {
       label: "compressed hybrid attention",
       symbol: "gfx950_compressed_hybrid_attention",
-      runnerPath: "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
-      hardwareTest: "gfx950_compressed_hybrid_attention_rust_cov6_matches_cpu_reference",
+      runnerPath:
+        "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
+      hardwareTest:
+        "gfx950_compressed_hybrid_attention_rust_cov6_matches_cpu_reference",
       requiredIsa: [
         "exactly four ds_read_b64_tr_b8",
         "exactly one v_mfma_f32_16x16x128_f8f6f4 with E4M3 selectors",
       ],
       kernargBytes: 80,
-      workgroupSize: 64,
-      ldsBytes: 2048,
+      workgroupSize: 256,
+      ldsBytes: 8192,
     },
     {
-      ...compressedHybridPromotionCampaign,
-      namespace: "c8cf1919826911b62fad830db644250616be68fd3aa252db280fb6cbf9157d3b",
-      llvmSha256: "1b37ee1c28c98fa0e74c6712cf8f70eea5d39edc55ac4c97595fc2218e93aa30",
-      hsacoSha256: "86cf8a4b14d4d40a241c22a0cf4488c5ce8684ecea1a4dd3ca4d70f53cc15e1a",
-      isaSha256: "c671acf65d5893189a084e2bf4b0a016bee658dd380f727055c730eee79f5d56",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "0b0ef0cc765b333ea46bf5c8b395b117726baf1df45cb30a36f3b5b366b9cd90",
+      llvmSha256:
+        "84ab660c38dcdc8b9931d4c6cdbc77c532aad3883911dbb3e3955395e85a3411",
+      hsacoSha256:
+        "200307b6a81f6e87c0808da7060eefb154c775c703537fabb9123b5e4aeafba3",
+      isaSha256:
+        "ff983971927d64f7917b95a7d898bbed6bc9ec1cd088c766ab5d98e9d180c950",
       numericalResult: "output max_absolute_error=5.960464478e-8",
       tolerance: "absolute tolerance 5.0e-3; finite values required",
     },
@@ -276,19 +310,25 @@ export const advancedRustEvidence = Object.freeze({
     {
       label: "AttnRes aggregate",
       symbol: "gfx950_attnres_aggregate",
-      runnerPath: "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
+      runnerPath:
+        "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
       hardwareTest: "gfx950_attnres_aggregate_rust_cov6_matches_cpu_reference",
       requiredIsa: ["v_exp_f32"],
       kernargBytes: 48,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
-      ...finalMi350Campaign,
-      namespace: "0f1b91664465bf059b47aa1fda8168a1cb4901cbfb81fd4dc770184520fca412",
-      llvmSha256: "7752d78ffeb52c737ce52b46ab0c2d457fc66dfa642f2d7916465b21cbf32249",
-      hsacoSha256: "f3ab4ebd7b8f2310918eada0d8b90efd57c281914bbac91499040417f5c4a2e6",
-      isaSha256: "c135a286829e0513f6b10815b63616e6770d89dadf6b16bf0864f2cf8bcda6b6",
-      numericalResult: "output max_absolute_error=0.000000000e0",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "d8d15c9cc317ecf7ea18134dc1bf20e7118d57c18484633343737e26b34b1e8b",
+      llvmSha256:
+        "6adb23264b8886906b93415d3e5cf22c4e45a508ad6d914fbac129ef83a830e3",
+      hsacoSha256:
+        "63fed3f7542dd1f2fc392f67ee9e65c9536cc7a740f7a2f33a02a2b46837380b",
+      isaSha256:
+        "24a639b63b9f14ba08b1a57ab0afecae8513895beb04a0ac5e819ffe16860ea1",
+      numericalResult:
+        "64 Wave16 items; output outputs=1024 max_absolute_error=4.470348358e-8",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
     },
   ),
@@ -296,19 +336,26 @@ export const advancedRustEvidence = Object.freeze({
     {
       label: "four-branch residual",
       symbol: "gfx950_four_branch_residual",
-      runnerPath: "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
-      hardwareTest: "gfx950_four_branch_residual_rust_cov6_matches_cpu_reference",
+      runnerPath:
+        "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
+      hardwareTest:
+        "gfx950_four_branch_residual_rust_cov6_matches_cpu_reference",
       requiredIsa: ["v_exp_f32"],
       kernargBytes: 64,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
-      ...finalMi350Campaign,
-      namespace: "5a21124887ab5e89f2893f9a688ddc75efe2cf1c40dfda56be36acb530d69326",
-      llvmSha256: "aa9fc3a4fb302c7e8f9f2ec00fb122f98216357957ed2bf914a51b1ee15d8ec7",
-      hsacoSha256: "190ce48f1172f15b3827b1220ad6ee190087ad4be52892946eff26cfea168ec0",
-      isaSha256: "d3641b00c44748decbb0d53a83018b9f4f2e1c88b89b23adf644dc6ce972a431",
-      numericalResult: "output max_absolute_error=0.000000000e0",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "8cb728188775d6d83180232142d7257b544fa7d47d370df4cd9f47341a98ec4f",
+      llvmSha256:
+        "ec6a7e752985f1759e6b245d63fd521b52583b57613ebf0e2f301c101b59571c",
+      hsacoSha256:
+        "056fb9b88560acc5e947cfc7e6642543aa78c248d57634d127dae292b06eed46",
+      isaSha256:
+        "410363e17ce2b22943fedeea66b87ad0c08880a2bf49a786e0514b13094ba6af",
+      numericalResult:
+        "64 Wave16 items; output outputs=1024 max_absolute_error=1.490116119e-8",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
     },
   ),
@@ -316,19 +363,25 @@ export const advancedRustEvidence = Object.freeze({
     {
       label: "mHC Sinkhorn mix",
       symbol: "gfx950_mhc_sinkhorn_mix",
-      runnerPath: "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+      runnerPath:
+        "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
       hardwareTest: "gfx950_mhc_sinkhorn_mix_rust_cov6_matches_cpu_reference",
       requiredIsa: ["v_exp_f32"],
       kernargBytes: 48,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
-      ...finalMi350Campaign,
-      namespace: "e2bce999a5fa1929fa89c847d6dade5511566efd3cffca3003a77d00e870fdbf",
-      llvmSha256: "7a9095ce73e881ca4199f5b95bfdb55feb64845664435716343b26af11682cdb",
-      hsacoSha256: "f463b05e53db65c4e9ea73a0d33ce1398c85bcc8b5aab64788fdeb7858c9fdcc",
-      isaSha256: "c063e5fba4347499a02c9c3197fee427beaea07e910bf39e698f51a53e6da236",
-      numericalResult: "output max_absolute_error=5.960464478e-8",
+      ...attentionMultiGridCampaign,
+      namespace:
+        "73f4092c29d502123674e2db869cecad075cb0986ffd1455c03e83169f5ac9d3",
+      llvmSha256:
+        "1327ed86eddeebbd1dac1f4f14a133a76aff8c1abfd1f20f52669be49b92cb2f",
+      hsacoSha256:
+        "9fc74c6174d0649aa25e46f01f4a49e96563ab2128c94490a8052e40f6385340",
+      isaSha256:
+        "452a8595fd4a5ee9a058937f420c78a57132dda0789f9da5b90ca432617211cd",
+      numericalResult:
+        "16 Wave64 items; output outputs=1024 max_absolute_error=6.705522537e-8",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
     },
   ),
@@ -338,25 +391,35 @@ export const advancedRustEvidence = Object.freeze({
       symbol: "gfx950_moe_route_fp4_t16_e4_k2_v1",
       runnerPath: "examples/gfx950_advanced_systems/run-moe-route-gfx950.sh",
       hardwareTest: "gfx950_moe_route_rust_cov6_matches_cpu_reference",
-      requiredIsa: ["gfx950_moe_route_fp4_t16_e4_k2_v1 symbol", "no MFMA or transpose instructions"],
+      requiredIsa: [
+        "gfx950_moe_route_fp4_t16_e4_k2_v1 symbol",
+        "no MFMA or transpose instructions",
+      ],
       kernargBytes: 96,
       workgroupSize: 256,
     },
     {
       ...finalMi350Campaign,
-      namespace: "bb933fcd1e3f8124227991b6743de97b6fa108551cc44c617d9450933ad98170",
-      llvmSha256: "236742e3c269b84917ef8538f2a2364e391a718404bf18affbabd337127cd3da",
-      hsacoSha256: "6d766905e6a7acbd7587a9b0c1bdf120db7e0ae7c765c567f4be9c4deedef0fe",
-      isaSha256: "1713fc61f132a45a580973476fa864197ed355466a3a5b3ff94bd119c4ba22a3",
-      numericalResult: "top_experts exact_u32_outputs=32; top_weights max_absolute_error=0.000000000e0; expert_counts exact_u32_outputs=4; dispatch exact_i32_outputs=128",
-      tolerance: "top_weights absolute tolerance 2.0e-6; route IDs, counts, and dispatch exact",
+      namespace:
+        "344537929cdf16d940f1b7244b0efa12b6e6c00704c6431889fb9baebf23c80e",
+      llvmSha256:
+        "b58ddffb7254f3150c5503627379b4d0a8ba68c16cf0b7b1e786a5cf008e8d94",
+      hsacoSha256:
+        "56633ed87ab9d74755a74f633d22bcac14abfbe6a20abbe76623b143cedf3883",
+      isaSha256:
+        "36a71407c4b0a429b9991980ea68e860ee8282b0cac05f05ed1850fab4d8c6fc",
+      numericalResult:
+        "top_experts exact_u32_outputs=512; top_weights max_absolute_error=2.980232239e-8; expert_counts exact_u32_outputs=64; dispatch exact_i32_outputs=2048",
+      tolerance:
+        "top_weights absolute tolerance 2.0e-6; route IDs, counts, and dispatch exact",
     },
   ),
   gfx950_moe_expert_rank_fp4_fp8_v1: observedAdvancedEvidence(
     {
       label: "MoE FP4/FP8 expert rank",
       symbol: "gfx950_moe_expert_rank_fp4_fp8_v1",
-      runnerPath: "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
+      runnerPath:
+        "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
       hardwareTest: "gfx950_moe_expert_rank_rust_cov6_matches_cpu_reference",
       requiredIsa: [
         "exactly three v_mfma_f32_16x16x128_f8f6f4",
@@ -364,35 +427,50 @@ export const advancedRustEvidence = Object.freeze({
         "no transpose instructions",
       ],
       kernargBytes: 88,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
       ...finalMi350Campaign,
-      namespace: "dad4ffb4c5c270c853b36fbb21ecc1095dcf33cf74d9585029fdce96e90d38e2",
-      llvmSha256: "25546d6c8107e1d554146247bc38612d74c2eb15918c7b4ec79c89485320584f",
-      hsacoSha256: "9e875ff1940dbac2839270faf219c8781e168559f6520071f7ec6f9714fea1ca",
-      isaSha256: "b9860d8a74f01f7490381c715719e17ae6e742295bf19dd9ccf946708cb41bd9",
-      numericalResult: "rank 0 output max_absolute_error=1.490116119e-8; rank 1 output max_absolute_error=4.768371582e-7",
-      tolerance: "absolute tolerance 3.0e-3 for both rank outputs; finite values required",
+      namespace:
+        "3b0b091c97e08d3fba5fc96a824eedb40391e561f60cb6bd48102ee48ec69a39",
+      llvmSha256:
+        "7d58ec15ccfc401b717c8b8092fba69917502cdb54d263b3a7307f19b21d0420",
+      hsacoSha256:
+        "832457cffd1808683a4c31f126fe1aad2173e59580ab473e7be29beae28272a7",
+      isaSha256:
+        "9d0c9a56424e0bb04f5ec34ef8fdfad5938a75d4a3327fa193e8df5785863c4e",
+      numericalResult:
+        "four plans with 4096 outputs each; max_absolute_error=[9.536743164e-7, 4.768371582e-7, 0, 0]",
+      tolerance:
+        "absolute tolerance 3.0e-3 for both rank outputs; finite values required",
     },
   ),
   gfx950_combine_expert_ranks_v1: observedAdvancedEvidence(
     {
       label: "MoE rank combine",
       symbol: "gfx950_combine_expert_ranks_v1",
-      runnerPath: "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh",
-      hardwareTest: "gfx950_combine_expert_ranks_rust_cov6_matches_cpu_reference",
-      requiredIsa: ["gfx950_combine_expert_ranks_v1 symbol", "no MFMA or transpose instructions"],
+      runnerPath:
+        "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh",
+      hardwareTest:
+        "gfx950_combine_expert_ranks_rust_cov6_matches_cpu_reference",
+      requiredIsa: [
+        "gfx950_combine_expert_ranks_v1 symbol",
+        "no MFMA or transpose instructions",
+      ],
       kernargBytes: 48,
       workgroupSize: 256,
     },
     {
       ...finalMi350Campaign,
-      namespace: "75b93b89a635855d620e2974e64c7ad6299d75329410616cdceaaabe02db89ae",
-      llvmSha256: "4e33fea0a38b028bc1e3804f8abb7d54ccd125fd6b539c6d74633a07f90763ca",
-      hsacoSha256: "fdd9cc5f181800f7e68ca05ddb93031a851a567955a35909daee72fbe99a64f5",
-      isaSha256: "c5f1c6260a1515294413ad53d44b795ece43ad362d96a1c74f3a0a168aaf4f1a",
-      numericalResult: "output max_absolute_error=0.000000000e0",
+      namespace:
+        "12dcf936e1fed25f6498ecb2235b729a973b127c900adc02bdcad1e6a8f8f178",
+      llvmSha256:
+        "7c09340baf27809f598a1806c0a22c2a3860c547eca3574aca20bbbaf9d23fcd",
+      hsacoSha256:
+        "cd75fbc78f6c6f0ac0baf01b9fd8674ab214d91ccc204d28fa7bd9c11203e8ef",
+      isaSha256:
+        "9723bee66c08727aaefc44deb98e5eb0d5d122dbd023a6d00cf755fe888149ca",
+      numericalResult: "output outputs=1024 max_absolute_error=0",
       tolerance: "absolute tolerance 3.0e-3; finite values required",
     },
   ),
@@ -400,60 +478,89 @@ export const advancedRustEvidence = Object.freeze({
     {
       label: "speculative transaction",
       symbol: "gfx950_speculative_transaction_v1",
-      runnerPath: "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
-      hardwareTest: "gfx950_speculative_transaction_rust_cov6_matches_cpu_reference",
-      requiredIsa: ["gfx950_speculative_transaction_v1 symbol", "no MFMA or transpose instructions"],
+      runnerPath:
+        "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+      hardwareTest:
+        "gfx950_speculative_transaction_rust_cov6_matches_cpu_reference",
+      requiredIsa: [
+        "gfx950_speculative_transaction_v1 symbol",
+        "no MFMA or transpose instructions",
+      ],
       kernargBytes: 144,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
       ...finalMi350Campaign,
-      namespace: "712bf821d681a74855c892c7f02fb02b2c64fe36617092999f673a1531777f8b",
-      llvmSha256: "0cad13668a48fdae5b06c3fb7ad222651b8625955c1f8af3b764b5b9a7f8e9bb",
-      hsacoSha256: "5074044f3b46e0b04d24b066cfc23877df312d093dec151c75e3d126d36bbfde",
-      isaSha256: "40fb5eff8d22c9f34f7ef9354e35b7392900c3b81871f11795eebf0f989a9da3",
-      numericalResult: "accepted_steps exact_u32_outputs=8; committed exact_u32_outputs=8; output_state max_absolute_error=2.980232239e-8",
-      tolerance: "output state absolute tolerance 1.0e-7; 48 rollback lanes bitwise exact; metadata exact",
+      namespace:
+        "7437746e7fe0f2a2bd080266dbd8044f22f282b0365a91246578026ba8dc2de9",
+      llvmSha256:
+        "48b89db6afe29cffc42d3aeed7e2b1d2b0b59ca5d950e8c465b1091eb4a2f517",
+      hsacoSha256:
+        "fdcf54fa359091b31a7cb5e773ac0e1f0ee03ff7d0ec41ff0ff3a453eb4fdbfa",
+      isaSha256:
+        "2785ba133d868cb0413f44859a0da6e3022fab8f186bbf977252be181d91a9e7",
+      numericalResult:
+        "accepted_steps exact_u32_outputs=128; committed exact_u32_outputs=128; output_state outputs=1024 max_absolute_error=1.192092896e-7",
+      tolerance:
+        "output state absolute tolerance 2.0e-7; zero-commit state lanes bitwise exact; metadata exact",
     },
   ),
   gfx950_qwen_ngram_gather_v1: observedAdvancedEvidence(
     {
       label: "N-gram gather",
       symbol: "gfx950_qwen_ngram_gather_v1",
-      runnerPath: "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+      runnerPath:
+        "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
       hardwareTest: "gfx950_qwen_ngram_gather_rust_cov6_matches_cpu_reference",
-      requiredIsa: ["gfx950_qwen_ngram_gather_v1 symbol", "no MFMA or transpose instructions"],
+      requiredIsa: [
+        "gfx950_qwen_ngram_gather_v1 symbol",
+        "no MFMA or transpose instructions",
+      ],
       kernargBytes: 96,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
       ...finalMi350Campaign,
-      namespace: "a9bf254981d5af7855538f611e59b2a273ed274201689cd16443b7279c327175",
-      llvmSha256: "892ce3aec5a1c825b9857411e9380e6f86af22c53a13ed14e131a451f67d7441",
-      hsacoSha256: "98c846c2fdf20cdc935d955f5b14253e878e1c4b1ee1ef1c2bf772470a13a8c4",
-      isaSha256: "3a2812cbd9f684d28adcf0a09cb15ad98b423ca8df43afccdd7da0e2ddb530fd",
-      numericalResult: "output exact_i32_outputs=8",
-      tolerance: "all eight gathered values exact",
+      namespace:
+        "cf9e82fc336e94af81b661021e263aa3bd44bc00c07f543790f14573c331f063",
+      llvmSha256:
+        "5c554c79bd5677c6addbe122e8e959e82944c8d510319706ee2a11bdd89c63df",
+      hsacoSha256:
+        "8a287e4cd2f443a09c20b0c8880d99fd344df24220bdf8957f04b599b9e9ab12",
+      isaSha256:
+        "cf6767941d8bb3a5b21608ac653397a997ed8ba2d6a20e1432bb8f07ace0ed84",
+      numericalResult: "output exact_i32_outputs=128",
+      tolerance: "all 128 gathered values exact",
     },
   ),
   gfx950_stage_gradient_shard_v1: observedAdvancedEvidence(
     {
       label: "gradient shard staging",
       symbol: "gfx950_stage_gradient_shard_v1",
-      runnerPath: "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
-      hardwareTest: "gfx950_stage_gradient_shard_rust_cov6_matches_cpu_reference",
-      requiredIsa: ["gfx950_stage_gradient_shard_v1 symbol", "no MFMA or transpose instructions"],
+      runnerPath:
+        "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
+      hardwareTest:
+        "gfx950_stage_gradient_shard_rust_cov6_matches_cpu_reference",
+      requiredIsa: [
+        "gfx950_stage_gradient_shard_v1 symbol",
+        "no MFMA or transpose instructions",
+      ],
       kernargBytes: 32,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
       ...finalMi350Campaign,
-      namespace: "487472b4b767bb11afc7a2d5bb85795b2b538c040432da4c0d5755900dd4867e",
-      llvmSha256: "13f588dd88d76ea8053aaf9848e7ad073264233b471c735f1a31268c0ef16b63",
-      hsacoSha256: "ac52b38973af23d63dbb05f6edd0ceea5caa92f1f331318d95fe7d62d5b251ce",
-      isaSha256: "cd61a1115bcba6e465bd77ab9ce291fe2e5a157c7e4567f4ae617ba2161e85f0",
-      numericalResult: "two shard launches; output outputs=16 max_absolute_error=0.000000000e0 for each launch",
-      tolerance: "all 32 staged FP32 elements bitwise exact",
+      namespace:
+        "e762db1956bdf059b71cd68c7ccc7b6821626733e2a1c0dba04a9d9497c72ee4",
+      llvmSha256:
+        "259f2b83554f5ecab7a1e2325038475cff164f7414bd1b0ab20441724f679c55",
+      hsacoSha256:
+        "592c3672416d8e26ea14ff668964cb93cc00f399c7a3580c8b80ccdb7804f6e9",
+      isaSha256:
+        "e635a9427aba19635c1284dfa0a30e768cf1f2ee5958e8ff0c5a9a629ad39bc8",
+      numericalResult:
+        "two shard launches; output outputs=256 max_absolute_error=0 for each launch",
+      tolerance: "all 512 staged FP32 elements bitwise exact",
     },
   ),
   gfx950_muon_update_4x4_v1: observedAdvancedEvidence(
@@ -468,21 +575,27 @@ export const advancedRustEvidence = Object.freeze({
         "no MFMA or transpose instructions",
       ],
       kernargBytes: 48,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
       ...finalMi350Campaign,
-      namespace: "9640ccf630920dc28c840f4d796dab11ddd9cebf804b0315b877e0c048eb7829",
-      llvmSha256: "eaa43985cf60aa4f220f86d2f762364a02185a9b544e6d1e6dec77f8a024da91",
-      hsacoSha256: "bb6e61181e05244a71b6475bcc34a6a0c62d94147bbe27304287f71d8181fe5d",
-      isaSha256: "a37e7395089d1c94a884506af9fd388fa0566ee516f681af9f85eb78c01338da",
-      numericalResult: "output max_absolute_error=7.450580597e-9; output_norm max_absolute_error=0.000000000e0",
-      tolerance: "absolute tolerance 2.0e-6 for update and norm; finite values required",
+      namespace:
+        "4f0a63ee8c2945bec7e91a08246dc084e4c914358ed436fd50b8cf0c1ae65c09",
+      llvmSha256:
+        "424a843b2cfd51f689e2e0d793c351118f4321568394f9abf9cf2d1d55a02ead",
+      hsacoSha256:
+        "7511daf2e49b86fd6b6074e8f4d2f7ea0cd9ccefe49926df73ec33621438fa38",
+      isaSha256:
+        "a43edf458b9ab7da395544ef9b1b05361170fa7ad8ac70974eb1e83cc634bac2",
+      numericalResult:
+        "output outputs=256 max_absolute_error=7.450580597e-9; output_norm outputs=16 max_absolute_error=5.960464478e-8",
+      tolerance:
+        "absolute tolerance 2.0e-6 for update and norm; finite values required",
     },
   ),
   gfx950_gpt_oss_120b_decode_megakernel_v1: observedAdvancedEvidence(
     {
-      label: "gpt-oss-120b batch-1 layer-tile megakernel",
+      label: "gpt-oss-120b 16-item layer-tile megakernel",
       symbol: "gfx950_gpt_oss_120b_decode_megakernel_v1",
       runnerPath: "examples/gfx950_gpt_oss_decode/run-gfx950.sh",
       hardwareTest: "gfx950_gpt_oss_layer_tile_rust_cov6_matches_cpu_reference",
@@ -492,16 +605,22 @@ export const advancedRustEvidence = Object.freeze({
         "no transpose instructions",
       ],
       kernargBytes: 208,
-      workgroupSize: 64,
+      workgroupSize: 256,
     },
     {
-      ...finalMi350Campaign,
-      namespace: "0739c8414cc87e4bd943b2d563152bbb25abc619847f75f405c6dadb154858d9",
-      llvmSha256: "827dd2a5e614efccd5fd9c75a3a51dcd380ad3b2315a2852ce90c3d9e8e5ce79",
-      hsacoSha256: "b021635066f0a41c62e81da95225d245e5ba9d0f87b5c49d376d880c506f90bc",
-      isaSha256: "c166782bcef26c424822b97ea3feae707a0b629d4ee2488e7b24671e81275b55",
-      numericalResult: "attention max_absolute_error=8.940696716e-8; expert exact; packed top-4 exact",
-      tolerance: "attention absolute tolerance 3.0e-3 with finite values; expert and packed top-4 exact",
+      ...gptOssMultiGridCampaign,
+      namespace:
+        "7194a44ee0231763c5f1e345dcb682beb0922ede14a8ce1899d41b44b2b053d0",
+      llvmSha256:
+        "bd012d9791b503c2fce15f033065f302c8ed3bcbf424e9bdba77dd8f47688d60",
+      hsacoSha256:
+        "638bfae059a6904ec8877c9d6fa83c3949e1a195ea4f02992deccd94ec1c45aa",
+      isaSha256:
+        "bd77ec1c3baa9401add71b6817cdf01276f89c2b62764b2b286b7cf33cb09509",
+      numericalResult:
+        "attention outputs=4096 max_absolute_error=1.192092896e-7; expert outputs=4096 exact; packed top-4 exact_u32_outputs=1024",
+      tolerance:
+        "attention absolute tolerance 3.0e-3 with finite values; expert and packed top-4 exact",
     },
   ),
 } satisfies Record<string, AdvancedRustEvidence>);

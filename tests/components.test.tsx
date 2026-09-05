@@ -119,9 +119,27 @@ describe("debugger and simulator evidence workbench", () => {
     expect(screen.getByText(/A 32-lane launch is a typed workgroup mismatch/u)).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
-        name: "Debug six target-neutral prefix contracts at KIR V10",
+        name: "Debug arbitrary 1D prefix contracts at KIR V10",
       }),
     ).toBeInTheDocument();
+    const arbitraryScanExtents = screen.getByRole("table", {
+      name: "Arbitrary workgroup scan extent counts",
+    });
+    const extentRows = within(arbitraryScanExtents).getAllByRole("row");
+    expect(within(extentRows[1]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["3", "2", "8", "6", "3 active"]);
+    expect(within(extentRows[2]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["65", "7", "23", "16", "64 + 1 active"]);
+    expect(within(extentRows[3]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["255", "8", "26", "18", "64 + 64 + 64 + 63 active"]);
+    expect(screen.getByText("3 * ceil(log2(N)) + 2")).toBeInTheDocument();
+    expect(screen.getByText("2 * ceil(log2(N)) + 2")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /ba2171d19e…bb2aa45e/u }),
+    ).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/ba2171d19e32d957388f4e89ef510539bb2aa45e/docs/target-neutral-workgroup-scan-v1.md",
+    );
     const scanResults = screen.getByRole("table", {
       name: "Workgroup scan semantic results",
     });
@@ -130,13 +148,49 @@ describe("debugger and simulator evidence workbench", () => {
     expect(scanResults).toHaveTextContent("[1, 3, 6, 10, 15, 21, 28, 36]");
     expect(scanResults).toHaveTextContent("[0, -4, 3, 1, 10, 7, 8, 14]");
     expect(screen.getByLabelText("Workgroup scan evidence layers")).toHaveTextContent(
-      "retained ordinary bundles0",
+      "ordinary V5 cases18",
+    );
+    expect(screen.getByLabelText("Workgroup scan evidence layers")).toHaveTextContent(
+      "archived bundles0",
+    );
+    const sourceBundleMatrix = screen.getByRole("table", {
+      name: "Ordinary scan Bundle V5 matrix",
+    });
+    const sourceBundleRows = within(sourceBundleMatrix).getAllByRole("row");
+    expect(sourceBundleRows).toHaveLength(7);
+    expect(within(sourceBundleRows[1]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["u32", "inclusive", "exact · 0x5ca0", "exact · 0x5ca1", "exact · 0x5ca2"]);
+    expect(within(sourceBundleRows[6]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["f32", "exclusive", "exact · 0x5caf", "exact · 0x5cb0", "exact · 0x5cb1"]);
+    expect(screen.getByRole("heading", {
+      name: "18 canonical documents round-trip and replay exactly",
+    })).toBeInTheDocument();
+    expect(screen.getByText(/trap-bearing Semantic MIR uses additive V11/u)).toBeInTheDocument();
+    expect(screen.getByText("schedule_binding_mismatch")).toBeInTheDocument();
+    expect(screen.getByRole("heading", {
+      name: "The final Wave64 contains one logical lane",
+    })).toBeInTheDocument();
+    expect(screen.getByText("0x0000000000000001")).toBeInTheDocument();
+    expect(screen.getByRole("heading", {
+      name: "Resource exhaustion remains inspectable and inexact",
+    })).toBeInTheDocument();
+    expect(screen.getByText(/does not expose which retention dimension/u)).toBeInTheDocument();
+    const sourceBundleSection = screen.getByRole("region", {
+      name: "All 18 source cases reach every CPU observation path",
+    });
+    expect(within(sourceBundleSection).getByRole("link", {
+      name: /b15cf628f6…bef6597e/u,
+    })).toHaveAttribute(
+      "href",
+      "https://github.com/harsh-nod/fe2o3/blob/b15cf628f628db435cf12269c507b06fbef6597e/docs/target-neutral-workgroup-scan-v1.md",
     );
     expect(screen.getByRole("table", { name: "Semantic Trace version custody" }))
       .toHaveTextContent("exact KIR V9 or V10");
     expect(screen.getByLabelText("Shared helper instance custody"))
       .toHaveTextContent("one KIR node");
-    expect(screen.getByText(/No ordinary scan Bundle V5 execution is retained/u))
+    expect(screen.getByText(/archives none of the generated bundles or schedule documents/u))
+      .toBeInTheDocument();
+    expect(screen.getByText(/does not execute a GPU or predict GPU behavior/u))
       .toBeInTheDocument();
 
     const raceTabs = screen.getByRole("tablist", { name: "Race evidence outcome" });
@@ -148,7 +202,7 @@ describe("debugger and simulator evidence workbench", () => {
     const waveTabs = screen.getByRole("tablist", { name: "Logical wave width" });
     await user.click(within(waveTabs).getByRole("tab", { name: "Wave64" }));
     expect(screen.getAllByText("0xffffffffffffffff")).toHaveLength(2);
-    expect(screen.getByText("0x0000000000000001")).toBeInTheDocument();
+    expect(screen.getAllByText("0x0000000000000001")).toHaveLength(2);
     expect(screen.getByText("execution_incomplete_wave")).toBeInTheDocument();
 
     expect(screen.getByText("Counter Capture V2 importer regression")).toBeInTheDocument();
@@ -373,6 +427,82 @@ describe("live KFD debugger tutorial", () => {
     expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
       "WaveRecordLayoutNotInKfdUapi",
     );
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      "ReceiptContainsNoLiveSelector",
+    );
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      '"physical_execution_authenticated": false',
+    );
+    expect(screen.getByTestId("gpu-workbench-record")).toHaveTextContent(
+      '"grants_execution_authority": false',
+    );
+    const checkpoint = screen.getByLabelText("Active direct KFD opaque checkpoint");
+    expect(checkpoint).toHaveTextContent("gfx942:xnack-");
+    expect(checkpoint).toHaveTextContent("Wave64");
+    expect(checkpoint).toHaveTextContent("3,407");
+    expect(checkpoint).toHaveTextContent("2,324");
+    expect(checkpoint).toHaveTextContent("16");
+    expect(screen.getByText("evidence f010a237…acb96f")).toBeInTheDocument();
+    const pins = within(checkpoint).getByLabelText("Checkpoint receipt pins");
+    expect(within(pins).getByRole("link", { name: /receipt identity/u }))
+      .toHaveAttribute(
+        "href",
+        "https://github.com/harsh-nod/fe2o3/blob/656ddbda60e5b76ba62ccf3f494d491e29ba0dea/docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json",
+      );
+    expect(pins).toHaveTextContent(
+      "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+    );
+    expect(pins).toHaveTextContent(
+      "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+    );
+    expect(pins).toHaveTextContent(
+      "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+    );
+    const segments = within(checkpoint).getByRole("table", {
+      name: "Canonical opaque checkpoint range slots",
+    });
+    const segmentRows = within(segments).getAllByRole("row");
+    expect(segmentRows).toHaveLength(17);
+    expect(within(segmentRows[0]).getAllByRole("columnheader")).toHaveLength(5);
+    expect(within(segmentRows[0]).getByRole("columnheader", { name: "XCC" }))
+      .toHaveAttribute("scope", "col");
+    expect(within(segmentRows[1]).getByRole("rowheader", { name: "XCC 0" }))
+      .toHaveAttribute("scope", "row");
+    expect(within(segmentRows[1]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["control stack", "12,268", "20", "complete"]);
+    expect(within(segmentRows[2]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["wave state", "14,592", "2,304", "complete"]);
+    expect(within(segmentRows[3]).getAllByRole("cell").map((cell) => cell.textContent))
+      .toEqual(["control stack", "12,288", "0", "empty"]);
+    for (const row of segmentRows.slice(1)) {
+      const rowHeader = within(row).getByRole("rowheader");
+      const rowId = rowHeader.getAttribute("id");
+      expect(rowId).toBeTruthy();
+      const cells = within(row).getAllByRole("cell");
+      for (const [index, columnId] of [
+        "checkpoint-slot-kind",
+        "checkpoint-slot-offset",
+        "checkpoint-slot-bytes",
+        "checkpoint-slot-content",
+      ].entries()) {
+        expect(cells[index]).toHaveAttribute("headers", `${rowId} ${columnId}`);
+      }
+    }
+    const limits = within(checkpoint).getByLabelText("Checkpoint evidence limits");
+    expect(limits).toHaveTextContent("not one coherent checkpoint instant");
+    expect(limits).toHaveTextContent("not signatures");
+    expect(limits).toHaveTextContent("grant no authority");
+    expect(limits).toHaveTextContent("process_vm_readv returned EFAULT");
+    expect(limits).toHaveTextContent("only EFAULT admits");
+    expect(limits).toHaveTextContent("read-only /proc/<pid>/mem fallback");
+    expect(limits).toHaveTextContent("does not authenticate the code-object bytes");
+    expect(
+      within(
+        screen.getByRole("grid", {
+          name: "Direct KFD unavailable inner wave and lane records",
+        }),
+      ).getAllByRole("gridcell"),
+    ).toHaveLength(64);
 
     const backends = screen.getByRole("tablist", { name: "Evidence backend" });
     const directKfdTab = within(backends).getByRole("tab", { name: "Direct KFD" });
@@ -423,6 +553,19 @@ describe("in-process profiler import tutorial", () => {
       .toHaveTextContent("exact multiset delta");
     expect(screen.getByText(/fe2o3-profiler-service variant-v3-jsonl/u))
       .toHaveTextContent("open_structural_archive");
+    expect(
+      screen.getByRole("heading", {
+        name: "Explain one row-softmax regression without inventing causality",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Row softmax regression comparison"))
+      .toHaveTextContent("+30 / +50 ticks");
+    expect(screen.getByText("Static resource co-observation"))
+      .toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Profiler explanation next measurements" }))
+      .toHaveTextContent("controlled_variant_replicates");
+    expect(screen.getByText(/Causal attribution:/u))
+      .toHaveTextContent("typed_unavailable");
     expect(screen.getByRole("table", { name: "Process-local profiler agent mapping" }))
       .toHaveTextContent("7001");
     expect(screen.getByText("MI300X bounded importer checkpoint qualified")).toBeInTheDocument();

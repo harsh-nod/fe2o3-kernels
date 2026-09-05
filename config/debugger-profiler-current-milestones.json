@@ -105,6 +105,97 @@
     "physicalGpuStopObserved": false,
     "sourceIsaMemory": "typed_unavailable"
   },
+  "activeOpaqueCheckpointV1": {
+    "commit": "656ddbda60e5b76ba62ccf3f494d491e29ba0dea",
+    "tree": "8d33795489509fe13b1eed5eeeb74d9e8a81e16c",
+    "schema": "fe2o3-direct-kfd-opaque-checkpoint-v1",
+    "target": "gfx942:xnack-",
+    "waveWidth": 64,
+    "backend": "direct_kfd",
+    "dispatchGeometry": {
+      "grid": [64, 1, 1],
+      "workgroup": [64, 1, 1]
+    },
+    "capture": {
+      "availability": "complete_public_header_ranges",
+      "capturedBytes": 2324,
+      "segmentCount": 2,
+      "segments": [
+        {"kind": "control_stack", "bytes": 20},
+        {"kind": "wave_state", "bytes": 2304}
+      ],
+      "canonicalReceipt": "archived_redacted_canonical_v1",
+      "relativeOffsets": "archived_redacted_canonical_v1",
+      "readPair": "adjacent_sequential_equal",
+      "coherentInstant": false,
+      "privateBytesExposed": false
+    },
+    "qualificationReceipt": {
+      "schema": "fe2o3-direct-kfd-opaque-checkpoint-qualification-v1",
+      "schemaVersion": 1,
+      "recordBytes": 3407,
+      "identity": "f010a23714d3e2d4cfe2918be28c590e325f7db94686370f89a930d273acb96f",
+      "rawSha256": "9e9e633b1a5f714662036317290338a86cacc27e5265704bd08b744d4b6ecdf1",
+      "producerCommit": "7c2db0c15664fcc2671796f6cc62219fc935cfa9",
+      "producerTree": "0b354b4ec534383eff9b1162c20c34392cbbacc9",
+      "producerManifestSha256": "18fdfd09a075ea73d0e7f731954d0a0681172cff163082c369a3a3f509492258",
+      "receiptPath": "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-v1.json",
+      "narrativePath": "docs/evidence/mi300x-direct-kfd-opaque-checkpoint-qualification-2026-09-03.md",
+      "captureLimitBytes": 185630720,
+      "slotCount": 16,
+      "stoppedSnapshotIdentity": "3299d8fcffd53612c37a48b7183dceb7b2eb66c8d0493b1e323baeec8b2d09f9",
+      "queueObservationIdentity": "bd6aa56e15aebcecb2ab3fef3271c911927a110397bc78d0da6f4ef879eee7bc",
+      "deviceObservationIdentity": "2dc28a3ab000797d6d73b2b87206553349ebc1eacae253d6cdb9e89d75dd76d8",
+      "contextSaveIdentity": "e115d442305336668d17532b03d341ce3ee32b1d72d051b2dd52eacb0cdd6ec8",
+      "checkpointIdentity": "ebda7a05374ab119f5cba25bbe3befb2c12321403417ff44a5583ef0ce1188f8",
+      "checkpointContentIdentity": "429363b1de04579eb73cd6a828a8a4e87da1b395d4cefc0ec931d1ec9f672fbb",
+      "slots": [
+        {"xccOrdinal": 0, "kind": "control_stack", "offset": 12268, "bytes": 20, "status": "complete"},
+        {"xccOrdinal": 0, "kind": "wave_state", "offset": 14592, "bytes": 2304, "status": "complete"},
+        {"xccOrdinal": 1, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 1, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 2, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 2, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 3, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 3, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 4, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 4, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 5, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 5, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 6, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 6, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 7, "kind": "control_stack", "offset": 12288, "bytes": 0, "status": "empty"},
+        {"xccOrdinal": 7, "kind": "wave_state", "offset": 12288, "bytes": 0, "status": "empty"}
+      ],
+      "selectors": "typed_unavailable",
+      "authentication": false,
+      "authority": false
+    },
+    "binding": {
+      "queueDevice": "exact_direct_kfd_reobserved",
+      "artifactCorrelation": "target_declared_same_queue_runtime_observation",
+      "physicalExecutionAuthenticated": false
+    },
+    "custody": {
+      "process": "ptrace_pidfd",
+      "primaryRead": "process_vm_readv",
+      "observedPrimaryErrno": "EFAULT",
+      "fallback": "/proc/<pid>/mem",
+      "fallbackMode": "read_only",
+      "fallbackErrnoGate": "EFAULT_only"
+    },
+    "typedUnavailable": [
+      "decoded_wave",
+      "decoded_lane",
+      "register",
+      "program_counter",
+      "source",
+      "target_memory"
+    ],
+    "publicStableInnerAbi": false,
+    "validationCommand": "cargo test --locked -p fe2o3-runtime --features hardware-qualification --test kfd_opaque_checkpoint_live mi300x_captures_nonempty_same_queue_opaque_checkpoint -- --exact --ignored --nocapture --test-threads=1",
+    "qualificationCommand": "scripts/qualify-kfd-opaque-checkpoint.sh --bless"
+  },
   "multiFunctionSemanticDebugV5": {
     "commit": "2df6130c5f897b5120cdf6ade44d53030690fa8b",
     "tree": "1ddc7aec95db753ab54ff472e9457b0e6609d0f6",
@@ -168,6 +259,46 @@
     "hardwareObserved": false,
     "performancePrediction": false
   },
+  "arbitraryWorkgroupScanExtentsV1": {
+    "commit": "ba2171d19e32d957388f4e89ef510539bb2aa45e",
+    "tree": "2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3",
+    "extentRange": [1, 256],
+    "representativeExtents": [3, 65, 255],
+    "scalarTypes": ["u32", "i32", "f32"],
+    "modes": ["inclusive", "exclusive"],
+    "memoryEffectFormula": "3 * ceil(log2(N)) + 2",
+    "barrierFormula": "2 * ceil(log2(N)) + 2",
+    "partialFinalWave64": true,
+    "targetNeutral": true,
+    "scheduleModes": ["canonical", "seeded", "persisted_replay"],
+    "hardwareObserved": false,
+    "hardwareValidation": false,
+    "performancePrediction": false
+  },
+  "workgroupScanBundleV5V1": {
+    "commit": "b15cf628f628db435cf12269c507b06fbef6597e",
+    "tree": "f77977b6f94411acd10f8d33159196425bee1b2d",
+    "target": "gfx942:xnack-",
+    "bundleVersion": 5,
+    "semanticMirVersion": 11,
+    "productionKirVersion": 8,
+    "simulationKirVersion": 10,
+    "sourceFamilies": 6,
+    "caseCount": 18,
+    "representativeExtents": [3, 65, 255],
+    "scalarTypes": ["u32", "i32", "f32"],
+    "modes": ["inclusive", "exclusive"],
+    "executionPaths": ["direct_cpu_simulator", "semantic_trace_v2", "sim_runtime_backend_v1", "jsonl_semantic_debugger", "persisted_seeded_schedule_replay"],
+    "persistedReplayCases": 18,
+    "partialWaveExtent": 65,
+    "resourceCapExtent": 255,
+    "retainedBundleArtifacts": 0,
+    "retainedScheduleArtifacts": 0,
+    "hardwareObserved": false,
+    "hardwareValidation": false,
+    "gpuExecution": false,
+    "performancePrediction": false
+  },
   "semanticTraceV2": {
     "commit": "2df6130c5f897b5120cdf6ade44d53030690fa8b",
     "tree": "1ddc7aec95db753ab54ff472e9457b0e6609d0f6",
@@ -198,6 +329,42 @@
     "externalProvenance": "not_authenticated",
     "scheduleExecution": "typed_unavailable",
     "causality": "typed_unavailable"
+  },
+  "profilerRegressionExplanationV1": {
+    "commit": "50c947693c9574de8857686d5deec0f49fa74277",
+    "tree": "9158db8f3cb2aa92ef5e1dfdac117da4fd42b87e",
+    "schemaVersion": 1,
+    "serviceSchema": "fe2o3-agent-profiler-variant-request-v3",
+    "operation": "explain_regression",
+    "responseSchema": "fe2o3-profiler-regression-explanation-v1",
+    "maximumResponseBytes": 20971520,
+    "maximumHypotheses": 8,
+    "maximumNextMeasurements": 8,
+    "optimizerPolicyVersion": 2,
+    "optimizerPassCount": 7,
+    "kernelNeutral": true,
+    "causality": "typed_unavailable",
+    "example": {
+      "kernel": "row_softmax_v1",
+      "basis": "deterministic_protocol_fixture_not_hardware_observed",
+      "baselineDurationTicks": [40, 60],
+      "candidateDurationTicks": [70, 110],
+      "durationDeltaTicks": [30, 50],
+      "baselineVgprCount": 7,
+      "candidateVgprCount": 8,
+      "baselineSgprSpillCount": 0,
+      "candidateSgprSpillCount": 1,
+      "hypothesisKind": "static_resource_co_observation",
+      "hypothesisOrigin": "inferred",
+      "confidence": "low",
+      "archiveOptimizerEvidence": "typed_unavailable_not_supplied",
+      "nextMeasurements": [
+        "counter_collection",
+        "pc_sampling",
+        "schedule_execution_observation",
+        "controlled_variant_replicates"
+      ]
+    }
   },
   "transformationMapV2": {
     "commit": "6f1f7d8967f2e2f03bbaf234bf63179d634fe0a9",

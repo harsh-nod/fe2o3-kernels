@@ -110,10 +110,7 @@ const entries = [
     paths: {
       source: ["examples/fill/src/lib.rs"],
       reference: ["examples/verus_vecadd/src/reference.rs"],
-      runner: [
-        "scripts/quickstart.sh",
-        "scripts/quickstart/fill-request.json",
-      ],
+      runner: ["scripts/quickstart.sh", "scripts/quickstart/fill-request.json"],
       evidence: ["examples/verus_vecadd/verus/fill.rs"],
     },
     nonClaims: [
@@ -272,7 +269,7 @@ const entries = [
         lessonId: "gfx950-fp4-attention",
         evidenceKind: "gpu-observed",
         implementedShape:
-          "Packed E2M1 K fragments, B4 LDS transpose load, one low-precision MFMA score tile, FP32 softmax state.",
+          "WG256/grid4 with 16 independent Wave64 heads; packed E2M1 K fragments, four private 1 KiB B4 LDS transpose tiles per workgroup, one low-precision MFMA score tile per head, and FP32 softmax state.",
         commandOrStatus:
           "bash examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
       },
@@ -281,7 +278,7 @@ const entries = [
         lessonId: "gfx950-fp8-attention",
         evidenceKind: "gpu-observed",
         implementedShape:
-          "Packed E4M3 Q/K fragments, B8 LDS transpose load, one low-precision MFMA score tile, FP32 softmax state.",
+          "WG256/grid4 with 16 independent Wave64 heads; packed E4M3 Q/K fragments, four private 2 KiB B8 LDS transpose tiles per workgroup, one low-precision MFMA score tile per head, and FP32 softmax state.",
         commandOrStatus:
           "bash examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
       },
@@ -354,7 +351,7 @@ const entries = [
         lessonId: "gfx950-fp4-gemm",
         evidenceKind: "gpu-observed",
         implementedShape:
-          "Packed E2M1 16x16x128 wave64 GEMM with gfx950 low-precision MFMA and FP32 accumulator.",
+          "WG256/grid4 with 16 independent Wave64 packed E2M1 16x16x128 GEMMs, gfx950 low-precision MFMA, and FP32 accumulators.",
         commandOrStatus:
           "bash examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
       },
@@ -363,7 +360,7 @@ const entries = [
         lessonId: "gfx950-fp8-gemm",
         evidenceKind: "gpu-observed",
         implementedShape:
-          "Packed E4M3 16x16x128 wave64 GEMM through the unified f8f6f4 MFMA path.",
+          "WG256/grid4 with 16 independent Wave64 packed E4M3 16x16x128 GEMMs through the unified f8f6f4 MFMA path.",
         commandOrStatus:
           "bash examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
       },
@@ -473,7 +470,7 @@ const entries = [
     computeContract:
       "Maintain the FP32 matrix-state Kimi Delta Attention recurrence, apply decayed state updates, project the scaled query output, and batch prefill through two ordered WY/UT chunks.",
     implementedShape:
-      "One head with K=16, V=16, FP32 16x16 matrix state, decode T=1, and prefill T=8 as two ordered C=4 WY/UT chunks.",
+      "Four independent WG256 heads at grid4, each with K=16, V=16, FP32 16x16 matrix state, decode T=1, and prefill T=8 as two ordered C=4 WY/UT chunks.",
     run: {
       label: "Run the gfx950 KDA decode kernel",
       evidenceKind: "gpu-observed",
@@ -481,7 +478,7 @@ const entries = [
       command:
         "bash examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
       status:
-        "MI350X-observed production Rust matrix-state decode and chunkwise prefill teaching kernels; prefill has its own runner.",
+        "MI350X-observed WG256/grid4 production Rust matrix-state decode and chunkwise prefill teaching kernels; prefill has its own runner and all 1,024 state/output replicas are checked.",
     },
     functionalGate: runtimeCpuOracleGate({
       command:
@@ -536,7 +533,7 @@ const entries = [
     computeContract:
       "Select bounded key/value rows, reject invalid sparse domains, evaluate only the selected rows, and expose stable softmax output/state against a CPU oracle.",
     implementedShape:
-      "Content sparse attention uses 16 tokens, head dimension 128, 16 value channels, top two four-token blocks, then top three tokens. DeepSeek sparse attention consumes four caller-provided top-k slots over 16 KV rows.",
+      "WG256/grid4 content sparse attention maps 16 heads to Wave64 with private LDS tiles. DeepSeek sparse attention maps 64 heads to Wave16; each consumes four caller-provided top-k slots over 16 KV rows.",
     run: {
       label: "Run the gfx950 DeepSeek sparse-attention slice",
       evidenceKind: "gpu-observed",
@@ -544,7 +541,7 @@ const entries = [
       command:
         "bash examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
       status:
-        "MI350X-observed content-indexed and DeepSeek sparse-attention teaching kernels with CPU-reference output/state checks.",
+        "MI350X-observed WG256/grid4 content-indexed and DeepSeek sparse-attention teaching kernels with batch-wide CPU-reference output/state checks.",
     },
     functionalGate: runtimeCpuOracleGate({
       command:
@@ -605,7 +602,7 @@ const entries = [
     computeContract:
       "Fuse a bounded compressed-state branch with a bounded direct-attention branch under an explicit fixed coefficient rule.",
     implementedShape:
-      "16 tokens, head dimension 128, 16 value channels, three compressed four-token blocks, and tokens 12-15 as the local direct window.",
+      "WG256/grid4 with 16 Wave64 heads; each has 16 tokens, head dimension 128, 16 value channels, three compressed four-token blocks, tokens 12-15 as the local window, and a private 2 KiB LDS tile.",
     run: {
       label: "Run compressed hybrid attention",
       evidenceKind: "gpu-observed",
@@ -652,7 +649,7 @@ const entries = [
     computeContract:
       "Apply bounded residual-stream aggregation, four-branch gating, and mHC Sinkhorn mixing as separate explicit tensor transforms.",
     implementedShape:
-      "16 channels across four AttnRes depths, four gated residual branches, and four mHC streams with three Sinkhorn iterations.",
+      "WG256/grid4: 64 Wave16 AttnRes and gated-residual items plus 16 Wave64 mHC items, each over 16 channels; mHC performs three Sinkhorn iterations.",
     run: {
       label: "Run mHC Sinkhorn mix",
       evidenceKind: "gpu-observed",
@@ -873,23 +870,23 @@ const entries = [
     evidenceKind: "gpu-observed",
     learningLevel: "advanced-kernel",
     computeContract:
-      "Fuse one batch-1 layer tile containing stable top-4 routing, one sink-softmax grouped-query attention tile, and one dynamically selected MXFP4 expert projection into a single Wave64 dispatch.",
+      "Fuse stable top-4 routing, one sink-softmax grouped-query attention tile, and one dynamically selected MXFP4 expert projection per Wave64, with four independent waves in each of four WG256 workgroups.",
     implementedShape:
-      "One fixed Wave64 layer tile: 128 router logits, top-4 packed IDs, 256 attention outputs, 256 expert outputs, four BF16 MFMA instructions, four FP4 f8f6f4 MFMA instructions, kernarg=208 bytes, and static LDS=0.",
+      "WG256/grid4 with 16 independent batch-1 layer tiles: each item has 128 router logits, 64 replicated packed-ID words, 256 attention outputs, 256 expert outputs, four BF16 MFMA instructions, and four FP4 f8f6f4 MFMA instructions; kernarg=208 bytes and static LDS=0.",
     run: {
       label: "Run the promoted gfx950 megakernel compatibility wrapper",
       evidenceKind: "gpu-observed",
       target: gfx950,
       command: "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
       status:
-        "Final promoted-source compatibility passed as one case in the 32/32 MI350X matrix; separate c138 performance archive measured this fused artifact slower than the HIP three-dispatch comparator.",
+        "Current WG256/grid4 compatibility passed end to end for 4,096 attention, 4,096 expert, and 1,024 packed-route outputs on MI350X; the separate c138 single-wave performance archive measured its historical fused artifact slower than the HIP three-dispatch comparator.",
     },
     functionalGate: runtimeCpuOracleGate({
       command: "bash examples/gfx950_gpt_oss_decode/run-gfx950.sh",
       mismatchBehavior:
         "A bounded layer-tile output, router, attention, or expert mismatch against the independent safe CPU reference fails the compatibility runner; whole-layer and whole-model equivalence are not compile-time claims.",
       supportedSubset:
-        "Safe CPU reference/oracle for one fixed Wave64 GPT-OSS-style layer tile with router logits, sink-softmax attention tile, selected MXFP4 expert projection, and packed outputs.",
+        "Safe CPU reference/oracle for 16 nonuniform GPT-OSS-style Wave64 layer tiles with router logits, sink-softmax attention tiles, selected MXFP4 expert projections, and disjoint packed outputs.",
     }),
     paths: {
       source: [
