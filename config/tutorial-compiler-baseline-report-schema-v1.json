@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/harsh-nod/fe2o3/config/tutorial-compiler-baseline-report-schema-v1.json",
+  "title": "fe2o3 tutorial compiler measured baseline report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "manifest", "compiler", "measurement", "pipelineContract", "cases"],
+  "properties": {
+    "schema": {"const": "fe2o3-tutorial-compiler-baseline-report-v1"},
+    "manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"const": "config/tutorial-kernel-manifest-v1.json"},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "compiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "tree", "worktreeClean"],
+      "properties": {
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "worktreeClean": {"const": true}
+      }
+    },
+    "measurement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "target", "toolchain", "measuredAtUtc", "durationClock"],
+      "properties": {
+        "command": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "pattern": "^gfx[0-9]{3}$"},
+        "toolchain": {"type": "string", "minLength": 1},
+        "measuredAtUtc": {"type": "string", "format": "date-time"},
+        "durationClock": {"const": "CLOCK_MONOTONIC"}
+      }
+    },
+    "pipelineContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry", "requiredPolicyVersion", "requiresFinalOptimizedGraphVerification"],
+      "properties": {
+        "entry": {"const": "rustc-codegen-fe2o3::production_pipeline"},
+        "requiredPolicyVersion": {"type": "integer", "minimum": 3},
+        "requiresFinalOptimizedGraphVerification": {"const": true}
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fixtureId", "testId", "familyIds", "target", "compileTimeNanoseconds", "irSizes", "pipelineOutcome", "semanticOutcome"],
+        "properties": {
+          "fixtureId": {"type": "string", "minLength": 1},
+          "testId": {"type": "string", "minLength": 1},
+          "familyIds": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "target": {"type": "string", "pattern": "^gfx[0-9]{3}$"},
+          "compileTimeNanoseconds": {"type": "integer", "minimum": 0},
+          "irSizes": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["canonicalKirBytes", "llvmIrBytes", "llvmIrFileCount", "hsacoBytes"],
+            "properties": {
+              "canonicalKirBytes": {"type": "integer", "minimum": 1},
+              "llvmIrBytes": {"type": "integer", "minimum": 1},
+              "llvmIrFileCount": {"const": 1},
+              "hsacoBytes": {"type": "integer", "minimum": 1}
+            }
+          },
+          "pipelineOutcome": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["compileOnly", "policyVersionObserved", "amdPolicyVersionObserved", "amdCostModelRevisionObserved", "inspectionRecordSha256", "finalTargetKirSha256", "finalVerifiedV11Sha256", "finalOptimizedGraphVerificationObserved"],
+            "properties": {
+              "compileOnly": {"const": "passed"},
+              "policyVersionObserved": {"type": "integer", "minimum": 0},
+              "amdPolicyVersionObserved": {"type": "integer", "minimum": 0},
+              "amdCostModelRevisionObserved": {"type": "integer", "minimum": 0},
+              "inspectionRecordSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "finalTargetKirSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "finalVerifiedV11Sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "finalOptimizedGraphVerificationObserved": {"const": true}
+            }
+          },
+          "semanticOutcome": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["simulator", "reference"],
+            "properties": {
+              "simulator": {"enum": ["passed", "failed", "not-run", "not-required", "unavailable"]},
+              "reference": {"enum": ["passed", "failed", "not-run", "not-required", "unavailable"]}
+            }
+          }
+        }
+      }
+    }
+  }
+}

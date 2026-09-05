@@ -812,7 +812,9 @@ const narrativeRegistry = deepFreeze({
           "The fixed stages run in order: tensor layout, bounds, atomic legality, race freedom, hierarchy ownership, barrier convergence, pipeline protocol, workgroup memory, and semantic refinement.",
           "The compiler seals each report and independently replays its witness. Only the admitted static bounded-access fragment can be Complete; nonempty tensor and every other current independent stage witness remain Incomplete even when a policy report is Clean.",
           "ProductionMiddleEndEvidenceV5 is the only live producer for that ordered result. The strict V4 decoder remains only for immutable historical bytes, and the removed V1 declarative refinement API cannot be used as an alternate admission route.",
-          "Only the normalized ranked recipe and admitted reports can proceed to KIR. Typed live validation checks pairing, shape, substitution resistance, predicated use, and source-derived index, extent, dominance, provenance, and launch-coordinate relations. Supported authenticated tiled and row-striped maps proceed to retained KIR; raw or textual recipes missing that custody fail closed. KIR admission still does not grant protected publication, general LLVM/ISA refinement, or universal functional correctness."
+          "Only the normalized ranked recipe and admitted reports can proceed to KIR. Typed live validation checks pairing, shape, substitution resistance, predicated use, and source-derived index, extent, dominance, provenance, and launch-coordinate relations. Supported authenticated tiled and row-striped maps proceed to retained KIR; raw or textual recipes missing that custody fail closed.",
+          "The issue #271 production contract then runs target-neutral policy V4 in one closed order: initial scalar/CFG cleanup, private SROA, global value numbering, interprocedural optimization, post-interprocedural cleanup, loop canonicalization, memory and guard optimization, bounded unrolling, and final scalar/CFG cleanup. Each phase carries exact input/output identities, mutation epochs, limits, accounting, and phase evidence; the independent verifier re-executes the complete transaction and requires the exact report and output.",
+          "AMD target policy V1 follows with address reduction, integer strength reduction, vector access packing, LDS layout, wave/MFMA selection, unrolling and scheduling, and guarded specialization. Final canonical KIR V11 admission and exact target replay happen before LLVM emission. These optimizer checks do not grant protected publication, general LLVM/ISA refinement, or universal functional correctness."
         ]
       },
       {
@@ -824,15 +826,42 @@ const narrativeRegistry = deepFreeze({
           ["V5 evidence custody", "The exact fixed nine-pass order and its retained live production record; V4 bytes decode only as inert historical data.", "That a Clean report is independently correct, or that an archived V4 record is fresh or authoritative."],
           ["Sealed report custody", "Omission, duplication, reordering, replay, stale checkpoints, and payload or status substitution.", "That a Clean payload follows from the live IR."],
           ["Independent raw replay", "Exact supported static bounds reconstructed from live PLIRON rather than from report success bits.", "Nonempty tensor flow and every other pass or shape; those remain Incomplete."],
-          ["Independent transform replay", "The exact checked IndexBinary to IndexConstant relation, value, position, result identity, CFG, types, effects, and proof sites.", "Any other optimization, algebraic equivalence, or semantic preservation theorem."],
-          ["KIR custody", "Downstream lowering receives the transformed ranked recipe rather than the stale pre-transform form.", "KIR-to-LLVM, LLVM-to-ISA, artifact, launch, or hardware correctness."]
+          ["Independent ranked transform replay", "The exact checked IndexBinary to IndexConstant relation, value, position, result identity, CFG, types, effects, and proof sites before KIR construction.", "A general proof of MIR projection or arbitrary source transformations."],
+          ["Production optimizer V4 replay", "The complete fixed target-neutral phase chain, exact report, identities, epochs, resource accounting, and final output are independently re-executed from the original KIR input.", "A mechanized semantic-preservation theorem, LLVM refinement, or permission to select another pipeline."],
+          ["KIR custody", "Downstream formal-memory and target lowering receive the exact optimized canonical KIR V11 rather than a stale pre-transform graph.", "KIR-to-LLVM, LLVM-to-ISA, artifact, launch, or hardware correctness."]
         ]
       },
       {
         "type": "callout",
         "tone": "boundary",
         "title": "Current end-to-end boundary",
-        "text": "The compiler has one checked transformation and relation-specific replay for supported bounds and ownership forms. Authenticated checked tiled and row-striped mappings can now produce a Clean dynamic race result and retained KIR when their source-derived success, extent, dominance, provenance, and launch facts are complete. Raw or textual carriers without those facts, unknown aliases, unsupported maps, malformed SCCs, and source-width or u64 no-wrap gaps fail closed."
+        "text": "The pre-KIR verifier retains relation-specific replay for supported bounds and ownership forms, while production optimizer V4 independently replays the complete fixed KIR transaction. Authenticated checked tiled and row-striped mappings can produce a Clean dynamic race result and retained KIR when their source-derived success, extent, dominance, provenance, and launch facts are complete. Unsupported aliases, effects, CFGs, loops, calls, growth, or exhausted budgets remain unchanged or fail closed according to the typed phase contract; no per-kernel selector or fallback is admitted."
+      }
+    ]
+  },
+  "compiler-checks/optimized-ir-inspection": {
+    "sectionId": "optimized-ir-inspection",
+    "title": "Inspect the exact optimized IR transaction",
+    "blocks": [
+      {
+        "type": "paragraph",
+        "text": "A production compile retains one primary LLVM .ll output. Its inspection record is at that exact path plus .fe2o3-compiler-inspection-v1. The canonical binary begins with F2KIRP01 and binds the target, neutral policy V4, AMD policy V1, AMD cost-model revision V1, before-neutral, after-neutral, and final target KIR V11 snapshots, and the closed sixteen pass remarks."
+      },
+      {
+        "type": "steps",
+        "items": [
+          "Open the primary .ll file to inspect the LLVM module that is handed to target finalization.",
+          "Decode the adjacent sidecar with cargo fe2o3 inspect --format compiler-inspection-v1 <primary.ll.fe2o3-compiler-inspection-v1>.",
+          "Require the decoder to re-admit all three embedded snapshots as exact canonical KIR V11 and to report policies neutral=4, amd=1, amd-cost-model=1.",
+          "Bind the sidecar SHA-256, final target-KIR SHA-256, verified-V11 SHA-256, LLVM byte count, and HSACO byte count into the measured corpus report.",
+          "Reject a missing sidecar, bad magic, digest mismatch, unknown fixture ID, changed pass order, policy drift, malformed snapshot, or any report that claims final verification without the authenticated decode."
+        ]
+      },
+      {
+        "type": "callout",
+        "tone": "boundary",
+        "title": "Inspection is not authority",
+        "text": "The sidecar is bounded and authority-free. It grants no compiler-occurrence authentication, publication, load, launch, GPU execution, hardware numerical result, performance result, or formal compiler-correctness theorem. The shared tutorial corpus is still migration-only: all entries are pending and no final compiler SHA or measured V4 baseline is pinned."
       }
     ]
   },
@@ -2020,10 +2049,12 @@ const narrativeRegistry = deepFreeze({
         "type": "steps",
         "items": [
           "Add one shared executable body and a CPU oracle with edge dimensions.",
+          "Register the lesson only in config/tutorial-kernel-manifest-v1.json. Compiler-produced lessons must resolve exact compiler fixture and test IDs; source-model-only lessons must not claim them.",
           "Declare target, ABI, layout, launch, effect, synchronization, and numerical contracts.",
           "Add positive Verus properties and one targeted expected-negative fixture per property.",
           "Reject unsupported source shapes and remove stale outputs transactionally.",
           "Inspect LLVM/HSACO target, symbols, descriptors, kernarg layout, resources, and relevant instructions.",
+          "For a V4 qualification candidate, retain the primary LLVM .ll file and its exact adjacent .fe2o3-compiler-inspection-v1 sidecar; authenticate F2KIRP01, V4/V1/V1 policies, all three KIR V11 snapshots, and the closed sixteen-pass record with cargo fe2o3 inspect.",
           "Run the opt-in gfx942 hardware lane only for its documented KFD identity, memory, queue, and debug-control scope.",
           "Do not record application GPU output unless a separate exact qualification route actually dispatches it and checks an independent oracle.",
           "Record exact commit, tree, tools, command, target, artifact digests, logs, and limitations."
@@ -2191,7 +2222,9 @@ const narrativeRegistry = deepFreeze({
           ["Loop progress policy", "Clean for the canonical committed form; independent witness remains Incomplete", "Canonical single-entry multi-block forwarding SCCs need i < bound, one positive constant latch step, and both source-width and ranked u64 no-wrap proofs."],
           ["Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses", "Incomplete", "Their reports can reject concrete errors, but a Clean report has no independent Complete replay yet."],
           ["Checked index constant fold", "Applied or NotApplicable after exact typed replay", "Only exact preceding same-block IndexConstant operands, checked Add or Multiply, and nonzero Divide or Remainder. One input clone is replayed against the moved receipt-owned output; unrelated CFG, values, types, effects, and proof sites remain identical."],
-          ["Any other transformation", "Unsupported", "No callback, pass name, digest match, or final structural equality can authorize another rewrite."]
+          ["Production optimizer V4 transaction", "Exact deterministic replay required", "Nine target-neutral phases run under fixed work, storage, growth, depth, iteration, canonical-byte, and epoch limits. The independent verifier reruns the closed policy from the original KIR and requires exact phase order, identities, report, accounting, and output."],
+          ["AMD target optimizer V1 transaction", "Exact target replay required", "Seven target phases operate only under the selected gfx942:xnack- or gfx950:xnack- profile, then final canonical KIR V11 is re-admitted before LLVM. A successful target rewrite is not an LLVM or hardware refinement proof."],
+          ["Unmodeled transformation", "Unsupported", "No callback, pass name, digest match, structural similarity, per-kernel selection, or fallback can authorize a rewrite outside the closed production policies."]
         ],
       },
       {

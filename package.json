@@ -16,8 +16,9 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:all": "npm run validate && npm run test:e2e",
+    "validate:compiler-corpus": "node scripts/validate-tutorial-compiler-corpus.mjs",
     "validate:evidence": "node scripts/validate-evidence.mjs",
-    "validate": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "validate": "npm run validate:compiler-corpus && npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
     "lucide-react": "1.31.0",

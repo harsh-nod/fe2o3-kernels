@@ -1,4 +1,5 @@
 import { CheckCircle2, CircleDashed, Clock3, ExternalLink, ShieldAlert } from "lucide-react";
+import tutorialKernelManifest from "../../config/tutorial-kernel-manifest-v1.json";
 import {
   developmentCheckpoints,
   developmentCheckpointDetail,
@@ -7,6 +8,17 @@ import {
   progressSnapshot,
   type DeliveryGate,
 } from "../content/progress";
+
+const compilerCorpus = tutorialKernelManifest as {
+  baseline: { status: "migration" | "qualified" };
+  productionContract: { requiredPolicyVersion: number };
+  compilerFixtures: { target: string }[];
+  entries: {
+    classification: string;
+    lessonId: string;
+    qualificationStatus: "pending" | "qualified";
+  }[];
+};
 
 const GateIcon = {
   complete: CheckCircle2,
@@ -83,6 +95,30 @@ export function ProgressPage() {
             </article>
           ))}
         </div>
+      </section>
+
+      <section>
+        <p className="section-kicker">Compiler corpus migration</p>
+        <h2>V4 qualification remains pending</h2>
+        <div className="status-summary">
+          <div><span>Manifest state</span><code>{compilerCorpus.baseline.status}</code></div>
+          <div><span>Required policy</span><code>V{compilerCorpus.productionContract.requiredPolicyVersion}</code></div>
+          <div><span>gfx942 fixtures</span><code>{compilerCorpus.compilerFixtures.filter((fixture) => fixture.target === "gfx942").length}</code></div>
+          <div><span>gfx950 fixtures</span><code>{compilerCorpus.compilerFixtures.filter((fixture) => fixture.target === "gfx950").length}</code></div>
+        </div>
+        <p className="status-boundary">
+          All {compilerCorpus.entries.length} tutorial entries remain pending.
+          {" "}{compilerCorpus.entries.filter((entry) => entry.classification === "compiler-produced").length}
+          {" "}entries resolve through the shared compiler fixture registry; MoE
+          routing remains source-model-only and design-only because its attributed
+          source does not yet have authenticated production MIR-to-KIR lowering.
+          No final compiler commit, measured V4 baseline, or qualified inspection
+          sidecar set is pinned. Promotion requires the exact neutral V4 and AMD V1
+          transaction identities, final canonical KIR V11 verification, LLVM and
+          HSACO sizes, required simulator/reference outcomes, and each target's
+          actual hardware gate. Historical MI300X and MI350X records do not satisfy
+          this new corpus run automatically.
+        </p>
       </section>
 
       <section>

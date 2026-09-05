@@ -807,6 +807,7 @@ describe("lesson section rendering policy", () => {
     for (const heading of [
       "From safe Rust to checked Kernel IR",
       "One production path, with explicit proof boundaries",
+      "Inspect the exact optimized IR transaction",
       "Debug the verified bundle without upgrading observation into proof",
       "What is complete today",
     ]) {
@@ -816,7 +817,8 @@ describe("lesson section rendering policy", () => {
       "Static bounded ranked access witness",
       "Nonempty tensor-layout witness",
       "Checked index constant fold",
-      "Any other transformation",
+      "Production optimizer V4 transaction",
+      "Unmodeled transformation",
     ]) {
       expect(screen.getByRole("cell", { name: cell })).toBeInTheDocument();
     }

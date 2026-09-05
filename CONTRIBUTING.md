@@ -25,7 +25,8 @@ rather than duplicating large code blocks. A complete evidence packet contains:
 - Verus specifications with assumptions and trusted boundaries;
 - compiler and Kernel IR checks for the intended operations;
 - linked HSACO metadata and machine-effect inspection;
-- exact `gfx942:xnack-` hardware commands and observed target identity; and
+- exact target-specific hardware commands and observed `gfx942:xnack-` or
+  `gfx950:xnack-` identity, when that hardware gate is required; and
 - an immutable binding among source, proof, toolchain, artifact, and result.
 
 Only include the pieces that exist. Missing evidence belongs in the lesson's
@@ -44,13 +45,44 @@ Use these promotion rules:
 - Add **GPU observed** only with a target-specific campaign and independent
   result check.
 - Keep **Design only** until the claimed capability is present. Design-only
-  claims intentionally have no execution reference in the schema.
+claims intentionally have no execution reference in the schema.
+
+## Compiler corpus qualification
+
+`config/tutorial-kernel-manifest-v1.json` is shared with the compiler repository
+and is the only registry for tutorial lesson IDs, compiler fixture/test IDs,
+targets, and required gates. Do not add a second kernel or target list to site
+code or CI. A compiler-produced entry must resolve at least one registered
+fixture and require `production-compile`; a source-model-only or design-only
+entry must not claim a compiler fixture.
+
+The current manifest is a migration contract, not a qualified baseline. It
+requires the closed target-neutral optimizer policy V4, final optimized-graph
+verification, and no pipeline selection or fallback. Do not pin a new compiler
+commit or mark an entry `qualified` until a clean-tree measured report covers
+its exact fixture and all required semantic and hardware gates.
+
+Each qualified compile must retain the primary LLVM `.ll` output and the exact
+adjacent `<primary.ll>.fe2o3-compiler-inspection-v1` sidecar. The sidecar must
+start with `F2KIRP01`, match the report's SHA-256, and decode successfully with:
+
+```bash
+cargo fe2o3 inspect --format compiler-inspection-v1 \
+  <primary.ll.fe2o3-compiler-inspection-v1>
+```
+
+The decoder must report neutral policy V4, AMD target policy V1, AMD cost-model
+revision V1, the exact three canonical KIR V11 snapshots, and all 16 ordered
+pass remarks. This record is inspection-only; it grants no publication, load,
+launch, hardware, numerical, performance, or formal compiler-correctness
+authority.
 
 ## Validation
 
 ```bash
 npm ci
 npx playwright install chromium
+npm run validate:compiler-corpus
 npm run test:all
 ```
 

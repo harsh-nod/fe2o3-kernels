@@ -1035,7 +1035,7 @@ const compilerChecks: Lesson = {
   order: 2,
   title: "Compiler checks: one path, explicit boundaries",
   summary:
-    "Follow safe Rust through bounded target preflight, the fixed eight ranked PLIRON checks, one independently validated constant fold, and the one raw-replay fragment that is complete today.",
+    "Follow safe Rust through ranked PLIRON verification, canonical KIR, the closed production V4 optimizer, exact transaction replay, and authenticated IR inspection without confusing any layer with hardware proof.",
   duration: "18 min",
   prerequisites: ["Bounds, initialization, and race freedom", "Rust arrays and slices"],
   objectives: [
@@ -1044,6 +1044,8 @@ const compilerChecks: Lesson = {
     "Explain what checked tiled and row-striped obligation carriers validate structurally, and why their missing source-semantic custody still fails closed.",
     "Identify static bounded access as the sole Complete independent raw-replay fragment.",
     "Explain how exact typed replay admits index constant folding without authorizing other transformations.",
+    "Read the nine target-neutral and seven AMD target optimization phases in their fixed order.",
+    "Use the canonical inspection sidecar to identify exact KIR V11 snapshots and policy revisions without upgrading inspection into publication authority.",
     "Recognize unsupported CFG, no-wrap, dynamic, alias, and tensor cases as fail-closed compilation results.",
   ],
   claims: [
@@ -1085,6 +1087,7 @@ const compilerChecks: Lesson = {
   sections: [
     narrativeSection("compiler-checks/catalog"),
     narrativeSection("compiler-checks/production-path"),
+    narrativeSection("compiler-checks/optimized-ir-inspection"),
     narrativeSection("compiler-checks/v7-simulation"),
     narrativeSection("compiler-checks/complete-correctness-catalog"),
   ],
@@ -1111,6 +1114,15 @@ const compilerChecks: Lesson = {
       explanatory: true,
       notice:
         "The folder proposes the rewrite. A separate evaluator and structural replay check the u64 result, SSA identity, CFG, operation position, and every unrelated typed operation before the transformed recipe is admitted.",
+    },
+    {
+      kind: "comparison",
+      label: "Optimized IR",
+      language: "text",
+      code: "target-neutral V4:\n  initial-scalar-cfg\n  private-sroa\n  global-value-numbering\n  interprocedural\n  post-interprocedural-scalar-cfg\n  loop-canonicalization\n  memory-and-guards\n  bounded-unrolling\n  final-scalar-cfg\n\nAMD target V1:\n  address-reduction\n  integer-strength-reduction\n  vector-access-packing\n  lds-layout\n  wave-mfma-selection\n  unrolling-scheduling\n  guarded-specialization",
+      explanatory: true,
+      notice:
+        "Qualification requires exact replay of the closed V4 transaction, final canonical KIR V11 admission, and an authenticated F2KIRP01 inspection record. The corpus remains pending until those records and target gates are measured at one final clean compiler tree.",
     },
     {
       kind: "verus",

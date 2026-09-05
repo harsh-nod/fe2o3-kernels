@@ -8,11 +8,59 @@
   },
   "productionContract": {
     "pipelineEntry": "rustc-codegen-fe2o3::production_pipeline",
-    "requiredPolicyVersion": 3,
+    "requiredPolicyVersion": 4,
     "requiresFinalOptimizedGraphVerification": true,
     "allowsPipelineSelection": false,
     "allowsFallback": false
   },
+  "compilerFixtures": [
+    {"fixtureId": "gfx942-fill-simulation", "testId": "kernel-compile-matrix/gfx942/fill", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "fill", "runnerPath": "examples/fill/run-gfx942.sh", "artifactName": "fill.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-flash-attention", "testId": "kernel-compile-matrix/gfx942/flash-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "flash-attention", "runnerPath": "examples/flash_attention_general_v1/run-gfx942.sh", "artifactName": "flash_attention_general_v1.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-gemm-autoresearch", "testId": "kernel-compile-matrix/gfx942/gemm-autoresearch", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "gemm-autoresearch", "runnerPath": "examples/gemm_autoresearch_v1/run-gfx942.sh", "artifactName": "gemm_autoresearch_v1.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-grouped-expert-moe", "testId": "kernel-compile-matrix/gfx942/grouped-expert-moe", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "grouped-expert-moe", "runnerPath": "examples/moe_grouped_expert_general_v1/run-gfx942.sh", "artifactName": "moe_grouped_expert_general_v1.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-row-softmax", "testId": "kernel-compile-matrix/gfx942/row-softmax", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "row-softmax", "runnerPath": "examples/row_softmax_general_v1/run-gfx942.sh", "artifactName": "row_softmax_general_v1.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-tiled-gemm", "testId": "kernel-compile-matrix/gfx942/tiled-gemm", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "tiled-gemm", "runnerPath": "examples/tiled_gemm_general_v1/run-gfx942.sh", "artifactName": "tiled_gemm_general_v1.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-typed-vecadd-source", "testId": "kernel-compile-matrix/gfx942/typed-vecadd", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "typed-vecadd", "runnerPath": "examples/vecadd/run-gfx942.sh", "artifactName": "vecadd.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-wave64-collectives", "testId": "kernel-compile-matrix/gfx942/wave64-collectives", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "wave64-collectives", "runnerPath": "examples/wave64_collectives_v1/run-gfx942.sh", "artifactName": "wave64_collectives_v1.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx942-workgroup-collectives", "testId": "kernel-compile-matrix/gfx942/workgroup-collectives", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "workgroup-collectives", "runnerPath": "examples/workgroup_sync_v1/run-gfx942.sh", "artifactName": "workgroup_sync_v1.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-attnres-aggregate", "testId": "kernel-compile-matrix/gfx950/attnres-aggregate", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "attnres-aggregate", "runnerPath": "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh", "artifactName": "kernel-attnres-aggregate.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-attnres-aggregate-explicit-reuse", "testId": "kernel-compile-matrix/gfx950/attnres-aggregate-explicit-reuse", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "attnres-aggregate-explicit-reuse", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-attnres-aggregate-explicit-reuse-v1.hsaco", "runnerArguments": ["kernel-attnres-aggregate-explicit-reuse-v1"], "environment": []}},
+    {"fixtureId": "gfx950-combine-expert-ranks", "testId": "kernel-compile-matrix/gfx950/combine-expert-ranks", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "combine-expert-ranks", "runnerPath": "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh", "artifactName": "kernel-combine-expert-ranks.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-compressed-hybrid-attention", "testId": "kernel-compile-matrix/gfx950/compressed-hybrid-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "compressed-hybrid-attention", "runnerPath": "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh", "artifactName": "kernel-compressed-hybrid-attention.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-compressed-hybrid-attention-division-baseline", "testId": "kernel-compile-matrix/gfx950/compressed-hybrid-attention-division-baseline", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "compressed-hybrid-attention-division-baseline", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-compressed-hybrid-attention-division-baseline-v1.hsaco", "runnerArguments": ["kernel-compressed-hybrid-attention-division-baseline-v1"], "environment": []}},
+    {"fixtureId": "gfx950-content-sparse-attention", "testId": "kernel-compile-matrix/gfx950/content-sparse-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "content-sparse-attention", "runnerPath": "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh", "artifactName": "kernel-content-sparse-attention.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-content-sparse-attention-reciprocal-reuse", "testId": "kernel-compile-matrix/gfx950/content-sparse-attention-reciprocal-reuse", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "content-sparse-attention-reciprocal-reuse", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-content-sparse-attention-reciprocal-reuse-v1.hsaco", "runnerArguments": ["kernel-content-sparse-attention-reciprocal-reuse-v1"], "environment": []}},
+    {"fixtureId": "gfx950-deepseek-sparse-attention", "testId": "kernel-compile-matrix/gfx950/deepseek-sparse-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "deepseek-sparse-attention", "runnerPath": "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh", "artifactName": "kernel-deepseek-sparse-attention.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-four-branch-residual", "testId": "kernel-compile-matrix/gfx950/four-branch-residual", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "four-branch-residual", "runnerPath": "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh", "artifactName": "kernel-four-branch-residual.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-four-branch-residual-explicit", "testId": "kernel-compile-matrix/gfx950/four-branch-residual-explicit", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "four-branch-residual-explicit", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-four-branch-residual-explicit-v1.hsaco", "runnerArguments": ["kernel-four-branch-residual-explicit-v1"], "environment": []}},
+    {"fixtureId": "gfx950-fp4-attention", "testId": "kernel-compile-matrix/gfx950/fp4-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp4-attention", "runnerPath": "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh", "artifactName": "gfx950-fp4-attention.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-fp4-gemm", "testId": "kernel-compile-matrix/gfx950/fp4-gemm", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp4-gemm", "runnerPath": "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh", "artifactName": "gfx950-fp4-gemm.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-fp8-attention", "testId": "kernel-compile-matrix/gfx950/fp8-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp8-attention", "runnerPath": "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh", "artifactName": "gfx950-fp8-attention.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-fp8-gemm", "testId": "kernel-compile-matrix/gfx950/fp8-gemm", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp8-gemm", "runnerPath": "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh", "artifactName": "gfx950-fp8-gemm.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-gpt-oss-decode", "testId": "kernel-compile-matrix/gfx950/gpt-oss-decode", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-decode", "runnerPath": "examples/gfx950_gpt_oss_decode/run-gfx950.sh", "artifactName": "kernel-gpt-oss-decode.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-gpt-oss-held-fragments", "testId": "kernel-compile-matrix/gfx950/gpt-oss-held-fragments", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-held-fragments", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-decode-held-fragments.hsaco", "runnerArguments": ["held-fragments"], "environment": []}},
+    {"fixtureId": "gfx950-gpt-oss-interleaved-stores", "testId": "kernel-compile-matrix/gfx950/gpt-oss-interleaved-stores", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-interleaved-stores", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-decode-interleaved-stores.hsaco", "runnerArguments": ["interleaved-stores"], "environment": []}},
+    {"fixtureId": "gfx950-gpt-oss-materialized-attention", "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-materialized-attention", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-attention-component.hsaco", "runnerArguments": ["materialized-attention"], "environment": []}},
+    {"fixtureId": "gfx950-gpt-oss-materialized-expert", "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-expert", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-materialized-expert", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-expert-component.hsaco", "runnerArguments": ["materialized-expert"], "environment": []}},
+    {"fixtureId": "gfx950-gpt-oss-materialized-router", "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-router", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-materialized-router", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-router-component.hsaco", "runnerArguments": ["materialized-router"], "environment": []}},
+    {"fixtureId": "gfx950-gpt-oss-serial-router", "testId": "kernel-compile-matrix/gfx950/gpt-oss-serial-router", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-serial-router", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-decode-router-serial.hsaco", "runnerArguments": ["serial-router"], "environment": []}},
+    {"fixtureId": "gfx950-kda-decode", "testId": "kernel-compile-matrix/gfx950/kda-decode", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-decode", "runnerPath": "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh", "artifactName": "kernel-kda-decode.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-kda-decode-baseline", "testId": "kernel-compile-matrix/gfx950/kda-decode-baseline", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-decode-baseline", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-kda-decode-baseline-v1.hsaco", "runnerArguments": ["kernel-kda-decode-baseline-v1"], "environment": []}},
+    {"fixtureId": "gfx950-kda-prefill", "testId": "kernel-compile-matrix/gfx950/kda-prefill", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-prefill", "runnerPath": "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh", "artifactName": "kernel-kda-prefill.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-kda-prefill-baseline", "testId": "kernel-compile-matrix/gfx950/kda-prefill-baseline", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-prefill-baseline", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-kda-prefill-baseline-v1.hsaco", "runnerArguments": ["kernel-kda-prefill-baseline-v1"], "environment": []}},
+    {"fixtureId": "gfx950-mhc-sinkhorn-mix", "testId": "kernel-compile-matrix/gfx950/mhc-sinkhorn-mix", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "mhc-sinkhorn-mix", "runnerPath": "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh", "artifactName": "kernel-mhc-sinkhorn-mix.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-mhc-sinkhorn-mix-scalar", "testId": "kernel-compile-matrix/gfx950/mhc-sinkhorn-mix-scalar", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "mhc-sinkhorn-mix-scalar", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-mhc-sinkhorn-mix-scalar-v1.hsaco", "runnerArguments": ["kernel-mhc-sinkhorn-mix-scalar-v1"], "environment": []}},
+    {"fixtureId": "gfx950-moe-expert-rank", "testId": "kernel-compile-matrix/gfx950/moe-expert-rank", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "moe-expert-rank", "runnerPath": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh", "artifactName": "kernel-moe-expert-rank.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-moe-expert-rank-expert-serial", "testId": "kernel-compile-matrix/gfx950/moe-expert-rank-expert-serial", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "moe-expert-rank-expert-serial", "runnerPath": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh", "artifactName": "kernel-moe-expert-rank.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=expert-serial"]}},
+    {"fixtureId": "gfx950-moe-route", "testId": "kernel-compile-matrix/gfx950/moe-route", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "moe-route", "runnerPath": "examples/gfx950_advanced_systems/run-moe-route-gfx950.sh", "artifactName": "kernel-moe-route.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-muon-update", "testId": "kernel-compile-matrix/gfx950/muon-update", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "muon-update", "runnerPath": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh", "artifactName": "kernel-muon-update.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-muon-update-broadcast16", "testId": "kernel-compile-matrix/gfx950/muon-update-broadcast16", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "muon-update-broadcast16", "runnerPath": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh", "artifactName": "kernel-muon-update.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=muon-broadcast16"]}},
+    {"fixtureId": "gfx950-qwen-ngram-gather", "testId": "kernel-compile-matrix/gfx950/qwen-ngram-gather", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "qwen-ngram-gather", "runnerPath": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "artifactName": "kernel-qwen-ngram-gather.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-qwen-ngram-gather-reverse-probe", "testId": "kernel-compile-matrix/gfx950/qwen-ngram-gather-reverse-probe", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "qwen-ngram-gather-reverse-probe", "runnerPath": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "artifactName": "kernel-qwen-ngram-gather.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=ngram-reverse-probe"]}},
+    {"fixtureId": "gfx950-speculative-transaction", "testId": "kernel-compile-matrix/gfx950/speculative-transaction", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "speculative-transaction", "runnerPath": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "artifactName": "kernel-speculative-transaction.hsaco", "runnerArguments": [], "environment": []}},
+    {"fixtureId": "gfx950-speculative-transaction-recompute-prefix", "testId": "kernel-compile-matrix/gfx950/speculative-transaction-recompute-prefix", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "speculative-transaction-recompute-prefix", "runnerPath": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "artifactName": "kernel-speculative-transaction.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=speculative-recompute-prefix"]}},
+    {"fixtureId": "gfx950-stage-gradient-shard", "testId": "kernel-compile-matrix/gfx950/stage-gradient-shard", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "stage-gradient-shard", "runnerPath": "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh", "artifactName": "kernel-stage-gradient-shard.hsaco", "runnerArguments": [], "environment": []}}
+  ],
   "entries": [
     {
       "lessonId": "cpu-semantic-simulation",
@@ -20,7 +68,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/fill/Cargo.toml",
       "sourcePaths": ["examples/fill/src/lib.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-fill-simulation"],
       "requiredGates": ["production-compile", "semantic-simulation"],
       "qualificationStatus": "pending"
     },
@@ -30,7 +78,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/fill/Cargo.toml",
       "sourcePaths": ["examples/fill/src/lib.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-fill-simulation"],
       "requiredGates": ["production-compile", "semantic-simulation"],
       "qualificationStatus": "pending"
     },
@@ -40,7 +88,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/flash_attention_general_v1/Cargo.toml",
       "sourcePaths": ["examples/flash_attention_general_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-flash-attention"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -50,7 +98,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
       "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-gemm-autoresearch", "gfx942-tiled-gemm"],
       "requiredGates": ["production-compile", "cpu-reference"],
       "qualificationStatus": "pending"
     },
@@ -60,7 +108,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
       "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-gemm-autoresearch", "gfx942-tiled-gemm"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -70,7 +118,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-combine-expert-ranks", "gfx950-moe-expert-rank", "gfx950-moe-expert-rank-expert-serial", "gfx950-moe-route", "gfx950-stage-gradient-shard"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -80,7 +128,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-attnres-aggregate", "gfx950-attnres-aggregate-explicit-reuse", "gfx950-four-branch-residual", "gfx950-four-branch-residual-explicit", "gfx950-mhc-sinkhorn-mix", "gfx950-mhc-sinkhorn-mix-scalar"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -90,7 +138,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-compressed-hybrid-attention", "gfx950-compressed-hybrid-attention-division-baseline"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -100,7 +148,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-deepseek-sparse-attention"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -110,7 +158,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-fp4-attention"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -120,7 +168,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-fp4-gemm"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -130,7 +178,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-fp8-attention"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -140,7 +188,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-fp8-gemm"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -154,7 +202,7 @@
         "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
         "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs"
       ],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-gpt-oss-decode", "gfx950-gpt-oss-held-fragments", "gfx950-gpt-oss-interleaved-stores", "gfx950-gpt-oss-materialized-attention", "gfx950-gpt-oss-materialized-expert", "gfx950-gpt-oss-materialized-router", "gfx950-gpt-oss-serial-router"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -164,7 +212,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-content-sparse-attention", "gfx950-content-sparse-attention-reciprocal-reuse"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -174,7 +222,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-kda-decode", "gfx950-kda-decode-baseline", "gfx950-kda-prefill", "gfx950-kda-prefill-baseline"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -184,7 +232,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-muon-update", "gfx950-muon-update-broadcast16"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -194,7 +242,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-qwen-ngram-gather", "gfx950-qwen-ngram-gather-reverse-probe"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -204,7 +252,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "targets": ["gfx950"],
+      "compilerFixtureIds": ["gfx950-speculative-transaction", "gfx950-speculative-transaction-recompute-prefix"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -214,7 +262,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/workgroup_sync_v1/Cargo.toml",
       "sourcePaths": ["examples/workgroup_sync_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-workgroup-collectives"],
       "requiredGates": ["production-compile", "semantic-simulation", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -224,18 +272,18 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/moe_grouped_expert_general_v1/Cargo.toml",
       "sourcePaths": ["examples/moe_grouped_expert_general_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-grouped-expert-moe"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
     {
       "lessonId": "moe-routing",
       "siteEvidenceKind": "source-model-verified",
-      "classification": "compiler-produced",
+      "classification": "design-only",
       "packageManifest": "examples/moe_top2_v1/Cargo.toml",
       "sourcePaths": ["examples/moe_top2_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
-      "requiredGates": ["production-compile", "cpu-reference"],
+      "compilerFixtureIds": [],
+      "requiredGates": ["cpu-reference"],
       "qualificationStatus": "pending"
     },
     {
@@ -244,7 +292,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/wave64_collectives_v1/Cargo.toml",
       "sourcePaths": ["examples/wave64_collectives_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-wave64-collectives"],
       "requiredGates": ["production-compile", "semantic-simulation", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -254,7 +302,7 @@
       "classification": "compiler-produced",
       "packageManifest": "examples/row_softmax_general_v1/Cargo.toml",
       "sourcePaths": ["examples/row_softmax_general_v1/src/kernel.rs"],
-      "targets": ["gfx942"],
+      "compilerFixtureIds": ["gfx942-row-softmax"],
       "requiredGates": ["production-compile", "cpu-reference", "hardware"],
       "qualificationStatus": "pending"
     },
@@ -263,8 +311,8 @@
       "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/vecadd/Cargo.toml",
-      "sourcePaths": ["examples/vecadd/src/vecadd_body.rs"],
-      "targets": ["gfx942"],
+      "sourcePaths": ["examples/vecadd/src/lib.rs", "examples/vecadd/src/vecadd_body.rs"],
+      "compilerFixtureIds": ["gfx942-typed-vecadd-source"],
       "requiredGates": ["production-compile", "cpu-reference"],
       "qualificationStatus": "pending"
     }

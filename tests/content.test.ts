@@ -3254,7 +3254,9 @@ describe("curriculum integrity", () => {
       "Loop progress policy",
       "Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses",
       "Checked index constant fold",
-      "Any other transformation",
+      "Production optimizer V4 transaction",
+      "AMD target optimizer V1 transaction",
+      "Unmodeled transformation",
     ]);
     expect(
       relationTable.rows.find(
@@ -3274,7 +3276,7 @@ describe("curriculum integrity", () => {
       title: "Compiler checks: one path, explicit boundaries",
       duration: "18 min",
     });
-    expect(lesson?.objectives).toHaveLength(6);
+    expect(lesson?.objectives).toHaveLength(8);
     expect(bounds).toMatchObject({
       label: "Static bounds",
       explanatory: false,
@@ -3319,6 +3321,7 @@ describe("curriculum integrity", () => {
     const narrative = JSON.stringify([
       narrativeEntry("compiler-checks/catalog"),
       narrativeEntry("compiler-checks/production-path"),
+      narrativeEntry("compiler-checks/optimized-ir-inspection"),
       narrativeEntry("compiler-checks/complete-correctness-catalog"),
     ]);
     for (const boundary of [
@@ -3336,7 +3339,8 @@ describe("curriculum integrity", () => {
       "FE2O3-TARGET-000",
       "Authenticated checked tiled and row-striped mappings",
       "Same-TyCtxt descriptor identity hardens substitution checks",
-      "Any other transformation",
+      "Production optimizer V4 transaction",
+      "F2KIRP01",
       "kernel.index_unsigned_cast",
       "Supported authenticated tiled and row-striped maps proceed to retained KIR",
       "not universal correctness",
@@ -3344,7 +3348,7 @@ describe("curriculum integrity", () => {
       expect(narrative).toContain(boundary);
     }
     expect(narrative).toContain(
-      "Raw or textual carriers without those facts",
+      "raw or textual carriers without that custody",
     );
     expect(narrative).toContain(
       "active stores injective",

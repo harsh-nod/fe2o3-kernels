@@ -1,10 +1,18 @@
 import { ExternalLink, ShieldCheck } from "lucide-react";
+import tutorialKernelManifest from "../../config/tutorial-kernel-manifest-v1.json";
 import {
   currentSourceUrl,
   currentState,
 } from "../content/current-state";
 import { FE2O3_PIN } from "../content/model";
 import { LessonDiagram } from "../diagrams/LessonDiagram";
+
+const compilerCorpus = tutorialKernelManifest as {
+  baseline: { status: "migration" | "qualified" };
+  productionContract: { requiredPolicyVersion: number };
+  compilerFixtures: { target: string }[];
+  entries: { classification: string; qualificationStatus: string }[];
+};
 
 export function ArchitecturePage() {
   return (
@@ -13,9 +21,10 @@ export function ArchitecturePage() {
         <p className="lesson-breadcrumb">Reference / architecture</p>
         <h1>Evidence pipeline and authority boundaries</h1>
         <p>
-          The immutable published compiler evidence baseline and historical lesson
-          evidence are shown separately. Public main may point to a descendant of
-          the evidence commit; neither status is inferred from the other.
+          The immutable published compiler evidence baseline, the issue #271 V4
+          qualification migration, and historical lesson evidence are shown
+          separately. Public main may point to a descendant of an evidence commit;
+          none of these statuses is inferred from another.
         </p>
       </header>
 
@@ -29,6 +38,9 @@ export function ArchitecturePage() {
             ["rustc", "Enforces Rust moves, borrows, lifetimes, visibility, local typestate, and Result control flow."],
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
+            ["Production optimizer V4", "Runs the closed nine-phase target-neutral policy: initial scalar/CFG cleanup, private SROA, global value numbering, interprocedural optimization, post-interprocedural cleanup, loop canonicalization, memory/guard optimization, bounded unrolling, and final cleanup. Each phase is bounded and the complete input/report/output transaction is independently re-executed before custody advances."],
+            ["AMD target optimizer V1", "Runs the closed seven-phase target policy: address reduction, integer strength reduction, vector access packing, LDS layout, wave/MFMA selection, unrolling/scheduling, and guarded specialization. The final canonical target KIR is re-admitted as exact V11 before LLVM emission."],
+            ["Compiler inspection record", "Writes canonical F2KIRP01 inspection bytes beside the primary LLVM output. The record binds the target, V4/V1/V1 policy revisions, before-neutral, after-neutral, and target KIR V11 snapshots, plus the closed 16-pass remarks; it is inspection-only and grants no publication, load, launch, or hardware authority."],
             ["V7 simulator", "Consumes either exact KIR or an authority-free bundle exported through the sole production compiler transaction. It runs the supported subset with legal integer atomics and fences plus exact software F16/BF16/F32/F64 scalar bits on a bounded deterministic CPU schedule; it is not an alternate compiler, GPU execution, timing, performance prediction, or proof."],
             ["Compiler analyses", "Run the fixed nine ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, pipeline-protocol, workgroup-memory, and semantic checks. The pipeline certificate proves epoch lifecycle, modulo slot selection, release-before-reuse, and dynamic prologue/steady-state/drain structure before workgroup-memory verification. Only the admitted static bounded-access fragment has Complete independent raw replay; nonempty tensor flow and every other current stage witness remain Incomplete."],
             ["Target preflight", "Before target-aware verification scans launch facts, a bounded structural inventory accounts the closed ranked function and contains malformed input or verifier failure as FE2O3-TARGET-000."],
@@ -47,6 +59,28 @@ export function ArchitecturePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      <section>
+        <p className="section-kicker">Issue #271 migration contract</p>
+        <h2>Exact V4 verification is required before corpus promotion</h2>
+        <div className="status-summary">
+          <div><span>Corpus status</span><code>{compilerCorpus.baseline.status}</code></div>
+          <div><span>Required neutral policy</span><code>V{compilerCorpus.productionContract.requiredPolicyVersion}</code></div>
+          <div><span>Compiler fixtures</span><code>{compilerCorpus.compilerFixtures.length}</code></div>
+          <div><span>Qualified lessons</span><code>{compilerCorpus.entries.filter((entry) => entry.qualificationStatus === "qualified").length}/{compilerCorpus.entries.length}</code></div>
+        </div>
+        <p className="status-boundary">
+          The shared manifest is the single source of truth for fixture IDs,
+          targets, and required gates. Every compiler-produced lesson must resolve
+          at least one registered fixture; the source-model-only MoE routing lesson
+          remains design-only because authenticated MIR-to-KIR lowering is not
+          available for that source. The migration has no final compiler SHA,
+          measured baseline, or qualified sidecar set yet. Gfx942 and gfx950
+          compilation, simulation/reference gates, and required MI300X or MI350X
+          hardware lanes must be rerun against the eventual clean compiler tree
+          before any entry or baseline becomes qualified.
+        </p>
       </section>
 
       <section>
@@ -99,7 +133,7 @@ export function ArchitecturePage() {
         </div>
         <p className="status-boundary">
           One production route carries supported Rust MIR into ranked PLIRON,
-          runs the sealed checked index constant fold, verifies the fixed eight
+          runs the sealed checked index constant fold, verifies the fixed nine
           workload-neutral stages, and only then constructs KIR lowering input.
           Target-aware entry points first account the bounded ranked structure,
           then invoke recursive PLIRON verification under failure containment.
