@@ -1104,7 +1104,7 @@ const rawLearningHub = {
           label: "Bind digests when artifacts are cited",
           required: true,
           action:
-            "Record source, displayed excerpt, LLVM, authenticated compiler-inspection sidecar, final KIR V11, HSACO, ISA, or manifest SHA-256 values whenever the claim depends on exact bytes. A qualified compiler fixture must decode its F2KIRP01 sidecar with the real compiler inspector.",
+            "Record source, displayed excerpt, LLVM, authenticated compiler-inspection sidecar, final KIR V11, HSACO, ISA, or manifest SHA-256 values whenever the claim depends on exact bytes. A qualified compiler fixture must decode its F2KIRP01 sidecar with the real compiler inspector and retain measured compiler, optimizer, and HSACO resource fields for the reviewed regression gate.",
           command: "npm run validate:compiler-corpus && npm run validate:evidence -- --repository /path/to/fe2o3",
           sourcePaths: [
             "config/tutorial-kernel-manifest-v1.json",
@@ -1112,7 +1112,7 @@ const rawLearningHub = {
             "scripts/validate-evidence.mjs",
           ],
           evidenceBoundary:
-            "Digest and canonical decoder binding identify exact V4 compiler records; they do not by themselves prove compiler semantics, LLVM refinement, or runtime behavior.",
+            "Digest, canonical decoder, and threshold binding identify exact V4 compiler records and measured ceilings; typed unavailable occupancy or runtime is not zero, and none of these facts proves compiler semantics, LLVM refinement, or runtime behavior.",
         },
       ],
     },

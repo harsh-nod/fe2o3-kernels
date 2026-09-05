@@ -77,6 +77,20 @@ pass remarks. This record is inspection-only; it grants no publication, load,
 launch, hardware, numerical, performance, or formal compiler-correctness
 authority.
 
+The measured report must also retain peak RSS, diagnostic bytes, optimizer pass
+work and graph growth, KIR/LLVM/HSACO sizes, and HSACO register, spill, LDS,
+private-segment, workgroup, wavefront, and occupancy metadata. Record absent
+occupancy as `unavailable-not-emitted` with both occupancy values `null`.
+Compile-only runtime is `not-run-compile-only` with a `null` duration; never
+convert either unavailable result to zero.
+
+Derive reviewed compile-time, size, resource, and work margins from a real
+baseline, then run the compiler-owned regression checker. It must bind the
+exact baseline report, compiler tree, and manifest and reject missing, extra,
+or duplicate fixtures; policy, target, semantic-outcome, or occupancy drift;
+and any measured ceiling regression. Runtime becomes enforceable only after an
+execution report provides a real target-matched measurement.
+
 ## Validation
 
 ```bash

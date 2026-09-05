@@ -21,10 +21,12 @@
     "derivation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["maxCompileTimeRegressionBasisPoints", "maxSizeRegressionBasisPoints", "rounding"],
+      "required": ["maxCompileTimeRegressionBasisPoints", "maxSizeRegressionBasisPoints", "maxResourceRegressionBasisPoints", "maxWorkRegressionBasisPoints", "rounding"],
       "properties": {
         "maxCompileTimeRegressionBasisPoints": {"type": "integer", "minimum": 0, "maximum": 100000},
         "maxSizeRegressionBasisPoints": {"type": "integer", "minimum": 0, "maximum": 100000},
+        "maxResourceRegressionBasisPoints": {"type": "integer", "minimum": 0, "maximum": 100000},
+        "maxWorkRegressionBasisPoints": {"type": "integer", "minimum": 0, "maximum": 100000},
         "rounding": {"const": "integer-ceiling"}
       }
     },
@@ -44,13 +46,31 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["fixtureId", "maxCompileTimeNanoseconds", "maxCanonicalKirBytes", "maxLlvmIrBytes", "maxHsacoBytes"],
+              "required": ["fixtureId", "maxCompileTimeNanoseconds", "maxCanonicalKirBytes", "maxLlvmIrBytes", "maxHsacoBytes", "maxPeakResidentSetBytes", "maxDiagnosticBytes", "maxInspectionSidecarBytes", "maxInspectionRecordBytes", "maxNeutralPassWork", "maxTargetPassWork", "maxNeutralGraphGrowthBytes", "maxTargetBindingAndOptimizationGrowthBytes", "maxAgprCount", "maxSgprCount", "maxVgprCount", "maxSgprSpillCount", "maxVgprSpillCount", "maxLdsBytes", "maxPrivateSegmentBytes", "minimumWavesPerExecutionUnit", "maximumWavesPerExecutionUnit", "maxRuntimeNanoseconds"],
               "properties": {
                 "fixtureId": {"type": "string", "minLength": 1},
                 "maxCompileTimeNanoseconds": {"type": "integer", "minimum": 0},
                 "maxCanonicalKirBytes": {"type": ["integer", "null"], "minimum": 0},
                 "maxLlvmIrBytes": {"type": ["integer", "null"], "minimum": 0},
-                "maxHsacoBytes": {"type": "integer", "minimum": 1}
+                "maxHsacoBytes": {"type": "integer", "minimum": 1},
+                "maxPeakResidentSetBytes": {"type": "integer", "minimum": 1},
+                "maxDiagnosticBytes": {"type": "integer", "minimum": 0},
+                "maxInspectionSidecarBytes": {"type": "integer", "minimum": 1},
+                "maxInspectionRecordBytes": {"type": "integer", "minimum": 1},
+                "maxNeutralPassWork": {"type": "integer", "minimum": 0},
+                "maxTargetPassWork": {"type": "integer", "minimum": 0},
+                "maxNeutralGraphGrowthBytes": {"type": "integer", "minimum": 0},
+                "maxTargetBindingAndOptimizationGrowthBytes": {"type": "integer", "minimum": 0},
+                "maxAgprCount": {"type": "integer", "minimum": 0},
+                "maxSgprCount": {"type": "integer", "minimum": 0},
+                "maxVgprCount": {"type": "integer", "minimum": 0},
+                "maxSgprSpillCount": {"type": "integer", "minimum": 0},
+                "maxVgprSpillCount": {"type": "integer", "minimum": 0},
+                "maxLdsBytes": {"type": "integer", "minimum": 0},
+                "maxPrivateSegmentBytes": {"type": "integer", "minimum": 0},
+                "minimumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+                "maximumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+                "maxRuntimeNanoseconds": {"type": ["integer", "null"], "minimum": 0}
               }
             }
           },

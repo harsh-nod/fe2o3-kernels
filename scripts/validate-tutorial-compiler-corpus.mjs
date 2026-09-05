@@ -63,6 +63,10 @@ const GIT_ID = /^[0-9a-f]{40}$/u;
 const TARGET = /^gfx[0-9]{3}$/u;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const MAX_SIDECAR_BYTES = 3 * 16 * 1024 * 1024 + 256 * 1024;
+const SHARED_SCHEMA_SHA256 = new Map([
+  ["tutorial-compiler-baseline-report-schema-v1.json", "4a0fbe2b6975725e2c40ddf11881cee59725d1c3c36c58f503b6f585e2b7bd7e"],
+  ["tutorial-compiler-no-regression-threshold-schema-v1.json", "bc5fabb9da14edfb18d3556e34915872af049710c71b028d179862d695b1a5f5"],
+]);
 
 function fail(message) {
   throw new Error(`tutorial compiler corpus: ${message}`);
@@ -121,6 +125,13 @@ function parseJson(path, label) {
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function integerAtLeast(value, minimum, label) {
+  if (!Number.isSafeInteger(value) || value < minimum) {
+    fail(`${label} must be an integer of at least ${minimum}`);
+  }
+  return value;
 }
 
 function validateFixture(rawFixture, index, fixtureById, testIds, matrixCases) {
@@ -312,6 +323,20 @@ function validateDigest(manifestPath, digestPath, manifestBytes, repositoryRoot)
   return actual;
 }
 
+function validateSharedSchema(path, expectedName) {
+  let bytes;
+  try {
+    bytes = readFileSync(path);
+    JSON.parse(bytes.toString("utf8"));
+  } catch (error) {
+    fail(`cannot read shared schema ${path}: ${error.message}`);
+  }
+  const expected = SHARED_SCHEMA_SHA256.get(expectedName);
+  if (!expected || sha256(bytes) !== expected) {
+    fail(`${expectedName} differs from the compiler M9 contract`);
+  }
+}
+
 function validateReport(path, manifestDigest, manifest) {
   const report = exactKeys(parseJson(path, "baseline report"), [
     "cases", "compiler", "manifest", "measurement", "pipelineContract", "schema",
@@ -346,14 +371,14 @@ function validateReport(path, manifestDigest, manifest) {
   for (const [index, rawCase] of report.cases.entries()) {
     const label = `${path}.cases[${index}]`;
     const item = exactKeys(rawCase, [
-      "compileTimeNanoseconds", "familyIds", "fixtureId", "irSizes", "pipelineOutcome", "semanticOutcome", "target", "testId",
+      "artifactResources", "compilerMetrics", "compileTimeNanoseconds", "familyIds", "fixtureId", "irSizes", "pipelineOutcome", "runtimeMetrics", "semanticOutcome", "target", "testId",
     ], label);
     const fixture = manifest.fixtureById.get(item.fixtureId);
     if (!fixture || fixture.testId !== item.testId || fixture.target !== item.target || item.target !== measurement.target) {
       fail(`${label} does not resolve its exact manifest fixture`);
     }
     if (cases.has(item.fixtureId)) fail(`${path} contains duplicate case ${item.fixtureId}`);
-    if (!Number.isSafeInteger(item.compileTimeNanoseconds) || item.compileTimeNanoseconds < 0) fail(`${label} has invalid compile time`);
+    integerAtLeast(item.compileTimeNanoseconds, 0, `${label}.compileTimeNanoseconds`);
     const familyIds = stringArray(item.familyIds, `${label}.familyIds`, { nonempty: true });
     const expectedFamilies = manifest.entries
       .filter((entry) => entry.compilerFixtureIds.includes(item.fixtureId))
@@ -362,8 +387,8 @@ function validateReport(path, manifestDigest, manifest) {
     if (JSON.stringify(familyIds) !== JSON.stringify(expectedFamilies)) {
       fail(`${label}.familyIds do not match the manifest lesson owners`);
     }
-    const sizes = exactKeys(item.irSizes, ["canonicalKirBytes", "hsacoBytes", "llvmIrBytes", "llvmIrFileCount"], `${label}.irSizes`);
-    if (![sizes.canonicalKirBytes, sizes.hsacoBytes, sizes.llvmIrBytes].every((value) => Number.isSafeInteger(value) && value > 0) || sizes.llvmIrFileCount !== 1) {
+    const sizes = exactKeys(item.irSizes, ["canonicalKirBytes", "hsacoBytes", "inputNeutralKirBytes", "llvmIrBytes", "llvmIrFileCount", "optimizedNeutralKirBytes"], `${label}.irSizes`);
+    if (![sizes.inputNeutralKirBytes, sizes.optimizedNeutralKirBytes, sizes.canonicalKirBytes, sizes.hsacoBytes, sizes.llvmIrBytes].every((value) => Number.isSafeInteger(value) && value > 0) || sizes.llvmIrFileCount !== 1) {
       fail(`${label} has invalid measured IR sizes`);
     }
     const outcome = exactKeys(item.pipelineOutcome, [
@@ -377,6 +402,38 @@ function validateReport(path, manifestDigest, manifest) {
       outcome.finalOptimizedGraphVerificationObserved !== true ||
       ![outcome.inspectionRecordSha256, outcome.finalTargetKirSha256, outcome.finalVerifiedV11Sha256].every((value) => SHA256.test(value))
     ) fail(`${label} does not carry exact authenticated V4/V1/V1 optimized output facts`);
+    const metrics = exactKeys(item.compilerMetrics, [
+      "diagnosticBytes", "inspectionRecordBytes", "inspectionSidecarBytes", "neutralGraphGrowthBytes", "neutralPassWork", "optimizerApplied", "optimizerCandidates", "peakResidentSetBytes", "targetBindingAndOptimizationGrowthBytes", "targetPassWork",
+    ], `${label}.compilerMetrics`);
+    for (const field of ["peakResidentSetBytes", "inspectionSidecarBytes", "inspectionRecordBytes"]) {
+      integerAtLeast(metrics[field], 1, `${label}.compilerMetrics.${field}`);
+    }
+    for (const field of ["diagnosticBytes", "neutralPassWork", "targetPassWork", "optimizerCandidates", "optimizerApplied", "neutralGraphGrowthBytes", "targetBindingAndOptimizationGrowthBytes"]) {
+      integerAtLeast(metrics[field], 0, `${label}.compilerMetrics.${field}`);
+    }
+    const resources = exactKeys(item.artifactResources, [
+      "agprCount", "ldsBytes", "maximumWavesPerExecutionUnit", "maxFlatWorkgroupSize", "minimumWavesPerExecutionUnit", "occupancyStatus", "privateSegmentBytes", "sgprCount", "sgprSpillCount", "vgprCount", "vgprSpillCount", "wavefrontSize",
+    ], `${label}.artifactResources`);
+    for (const field of ["agprCount", "sgprCount", "vgprCount", "sgprSpillCount", "vgprSpillCount", "ldsBytes", "privateSegmentBytes"]) {
+      integerAtLeast(resources[field], 0, `${label}.artifactResources.${field}`);
+    }
+    integerAtLeast(resources.maxFlatWorkgroupSize, 1, `${label}.artifactResources.maxFlatWorkgroupSize`);
+    integerAtLeast(resources.wavefrontSize, 1, `${label}.artifactResources.wavefrontSize`);
+    const minimumWaves = resources.minimumWavesPerExecutionUnit;
+    const maximumWaves = resources.maximumWavesPerExecutionUnit;
+    if (resources.occupancyStatus === "unavailable-not-emitted") {
+      if (minimumWaves !== null || maximumWaves !== null) fail(`${label} invents occupancy for unavailable HSACO metadata`);
+    } else if (resources.occupancyStatus === "reported-by-hsaco-metadata") {
+      integerAtLeast(minimumWaves, 1, `${label}.artifactResources.minimumWavesPerExecutionUnit`);
+      integerAtLeast(maximumWaves, 1, `${label}.artifactResources.maximumWavesPerExecutionUnit`);
+      if (maximumWaves < minimumWaves) fail(`${label} has an inverted HSACO occupancy interval`);
+    } else fail(`${label} has an unsupported occupancy status`);
+    const runtime = exactKeys(item.runtimeMetrics, ["runtimeNanoseconds", "status"], `${label}.runtimeMetrics`);
+    if (runtime.status === "measured") {
+      integerAtLeast(runtime.runtimeNanoseconds, 0, `${label}.runtimeMetrics.runtimeNanoseconds`);
+    } else if (runtime.status === "not-run-compile-only" || runtime.status === "unavailable") {
+      if (runtime.runtimeNanoseconds !== null) fail(`${label} invents a runtime measurement for status ${runtime.status}`);
+    } else fail(`${label} has an unsupported runtime status`);
     const semantic = exactKeys(item.semanticOutcome, ["reference", "simulator"], `${label}.semanticOutcome`);
     const semanticStatuses = new Set(["failed", "not-required", "not-run", "passed", "unavailable"]);
     if (!semanticStatuses.has(semantic.reference) || !semanticStatuses.has(semantic.simulator)) {
@@ -387,7 +444,7 @@ function validateReport(path, manifestDigest, manifest) {
   return cases;
 }
 
-function validateDecodedInspection(output, expected, expectedTarget, expectedSha) {
+function validateDecodedInspection(output, expected, expectedTarget, expectedCase, expectedSha) {
   const lines = output.split(/\r?\n/u).filter(Boolean);
   const required = [
     "format: fe2o3-production-compiler-inspection-v1",
@@ -405,6 +462,19 @@ function validateDecodedInspection(output, expected, expectedTarget, expectedSha
   const snapshots = lines.filter((line) => /^kir\.(before-neutral|after-neutral|target): version=11 sha256=[0-9a-f]{64} bytes=[1-9][0-9]* verified-v11=[0-9a-f]{64}$/u.test(line));
   if (snapshots.length !== 3 || !["before-neutral", "after-neutral", "target"].every((name) => snapshots.some((line) => line.startsWith(`kir.${name}:`)))) {
     fail("inspector did not independently verify the exact three KIR V11 snapshots");
+  }
+  const expectedSnapshotBytes = new Map([
+    ["before-neutral", expectedCase.irSizes.inputNeutralKirBytes],
+    ["after-neutral", expectedCase.irSizes.optimizedNeutralKirBytes],
+    ["target", expectedCase.irSizes.canonicalKirBytes],
+  ]);
+  for (const line of snapshots) {
+    const match = /^kir\.(before-neutral|after-neutral|target): version=11 sha256=([0-9a-f]{64}) bytes=([1-9][0-9]*) verified-v11=([0-9a-f]{64})$/u.exec(line);
+    if (!match) fail("inspector emitted a malformed KIR snapshot");
+    if (Number(match[3]) !== expectedSnapshotBytes.get(match[1])) fail(`inspector ${match[1]} KIR size differs from the measured report`);
+    if (match[1] === "target" && (match[2] !== expectedCase.pipelineOutcome.finalTargetKirSha256 || match[4] !== expectedCase.pipelineOutcome.finalVerifiedV11Sha256)) {
+      fail("inspector target KIR identities differ from the measured report");
+    }
   }
   const remarks = lines.flatMap((line) => {
     const match = /^remark\[([0-9]+)\]: .+$/u.exec(line);
@@ -430,6 +500,9 @@ function validateSidecar(path, inspector, expectedCase, expectedTarget) {
   if (!bytes.subarray(0, SIDECAR_MAGIC.length).equals(SIDECAR_MAGIC)) fail(`inspection sidecar ${path} has forged magic`);
   const digest = sha256(bytes);
   if (digest !== expectedCase.pipelineOutcome.inspectionRecordSha256) fail(`inspection sidecar ${path} SHA-256 does not match its measured report`);
+  if (metadata.size !== expectedCase.compilerMetrics.inspectionSidecarBytes || metadata.size !== expectedCase.compilerMetrics.inspectionRecordBytes) {
+    fail(`inspection sidecar ${path} byte count does not match its measured report`);
+  }
   let inspectorMetadata;
   try {
     inspectorMetadata = lstatSync(inspector);
@@ -442,7 +515,7 @@ function validateSidecar(path, inspector, expectedCase, expectedTarget) {
     maxBuffer: 100 * 1024 * 1024,
   });
   if (decoded.error || decoded.status !== 0) fail(`authenticated compiler inspector rejected ${path}`);
-  validateDecodedInspection(decoded.stdout, bytes, expectedTarget, digest);
+  validateDecodedInspection(decoded.stdout, bytes, expectedTarget, expectedCase, digest);
 }
 
 function parseArguments(arguments_) {
@@ -456,6 +529,8 @@ function parseArguments(arguments_) {
     };
     if (argument === "--manifest") values.manifest = next();
     else if (argument === "--digest") values.digest = next();
+    else if (argument === "--baseline-schema") values.baselineSchema = next();
+    else if (argument === "--threshold-schema") values.thresholdSchema = next();
     else if (argument === "--baseline-report") values.reports.push(next());
     else if (argument === "--inspector") values.inspector = next();
     else if (argument === "--sidecar") {
@@ -480,6 +555,14 @@ function main() {
   const manifest = validateManifest(manifestDocument);
   const digestPath = resolve(arguments_.digest ?? (manifestPath.endsWith(".json") ? `${manifestPath.slice(0, -5)}.sha256` : `${manifestPath}.sha256`));
   const manifestDigest = validateDigest(manifestPath, digestPath, manifestBytes, repositoryRoot);
+  validateSharedSchema(
+    resolve(arguments_.baselineSchema ?? resolve(repositoryRoot, "config/tutorial-compiler-baseline-report-schema-v1.json")),
+    "tutorial-compiler-baseline-report-schema-v1.json",
+  );
+  validateSharedSchema(
+    resolve(arguments_.thresholdSchema ?? resolve(repositoryRoot, "config/tutorial-compiler-no-regression-threshold-schema-v1.json")),
+    "tutorial-compiler-no-regression-threshold-schema-v1.json",
+  );
 
   const qualifiedFixtureIds = new Set(manifest.entries.filter((entry) => entry.qualificationStatus === "qualified").flatMap((entry) => entry.compilerFixtureIds));
   if (qualifiedFixtureIds.size === 0) {

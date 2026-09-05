@@ -1153,7 +1153,13 @@ starts with `F2KIRP01` and is independently decoded as neutral policy V4, AMD
 target policy V1, AMD cost-model revision V1, three exact KIR V11 snapshots,
 and 16 ordered pass remarks. It is inspection-only and grants no compiler,
 publication, load, launch, hardware, numerical, performance, or formal
-compiler-correctness authority. Gfx942 and gfx950 compile matrices, required
+compiler-correctness authority. A measured report also records peak RSS,
+diagnostic volume, optimizer work and graph growth, IR sizes, and HSACO
+register, spill, LDS, private-segment, workgroup, wave, and occupancy metadata.
+Missing occupancy and compile-only runtime remain typed unavailable, never
+zero. Reviewed integer-ceiling thresholds bind the exact baseline and reject
+fixture, manifest, target, policy, semantic-outcome, occupancy, or measured
+ceiling regressions. Gfx942 and gfx950 compile matrices, required
 simulator/reference outcomes, and the MI300X or MI350X hardware gates still
 need to be rerun together against the eventual clean compiler tree.
 

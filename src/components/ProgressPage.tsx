@@ -117,7 +117,12 @@ export function ProgressPage() {
           transaction identities, final canonical KIR V11 verification, LLVM and
           HSACO sizes, required simulator/reference outcomes, and each target's
           actual hardware gate. Historical MI300X and MI350X records do not satisfy
-          this new corpus run automatically.
+          this new corpus run automatically. The future report must retain peak
+          RSS, diagnostic and inspection bytes, optimizer work and graph growth,
+          IR sizes, and HSACO register, spill, LDS, private-segment, wave, and
+          occupancy metadata. Missing occupancy and compile-only runtime remain
+          typed unavailable. Reviewed thresholds reject fixture, manifest,
+          target, policy, semantic-outcome, occupancy, or measured ceiling drift.
         </p>
       </section>
 

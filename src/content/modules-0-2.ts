@@ -1122,7 +1122,7 @@ const compilerChecks: Lesson = {
       code: "target-neutral V4:\n  initial-scalar-cfg\n  private-sroa\n  global-value-numbering\n  interprocedural\n  post-interprocedural-scalar-cfg\n  loop-canonicalization\n  memory-and-guards\n  bounded-unrolling\n  final-scalar-cfg\n\nAMD target V1:\n  address-reduction\n  integer-strength-reduction\n  vector-access-packing\n  lds-layout\n  wave-mfma-selection\n  unrolling-scheduling\n  guarded-specialization",
       explanatory: true,
       notice:
-        "Qualification requires exact replay of the closed V4 transaction, final canonical KIR V11 admission, and an authenticated F2KIRP01 inspection record. The corpus remains pending until those records and target gates are measured at one final clean compiler tree.",
+        "Qualification requires exact replay of the closed V4 transaction, final canonical KIR V11 admission, an authenticated F2KIRP01 inspection record, and measured compiler, optimizer, IR, and HSACO resource fields. Missing occupancy and compile-only runtime stay typed unavailable. The corpus remains pending until those records and target gates are measured at one final clean compiler tree.",
     },
     {
       kind: "verus",

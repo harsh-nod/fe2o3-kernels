@@ -854,8 +854,23 @@ const narrativeRegistry = deepFreeze({
           "Decode the adjacent sidecar with cargo fe2o3 inspect --format compiler-inspection-v1 <primary.ll.fe2o3-compiler-inspection-v1>.",
           "Require the decoder to re-admit all three embedded snapshots as exact canonical KIR V11 and to report policies neutral=4, amd=1, amd-cost-model=1.",
           "Bind the sidecar SHA-256, final target-KIR SHA-256, verified-V11 SHA-256, LLVM byte count, and HSACO byte count into the measured corpus report.",
+          "Record peak RSS, diagnostic and inspection bytes, neutral and target pass work, optimizer candidates and applications, neutral and target graph growth, and HSACO register, spill, LDS, private-segment, workgroup, wavefront, and occupancy metadata.",
           "Reject a missing sidecar, bad magic, digest mismatch, unknown fixture ID, changed pass order, policy drift, malformed snapshot, or any report that claims final verification without the authenticated decode."
         ]
+      },
+      {
+        "type": "table",
+        "headers": ["Signal", "Measured contract", "Unavailable policy"],
+        "rows": [
+          ["Compiler process", "Monotonic compile duration, peak resident-set bytes, and bounded diagnostics", "No invented duration or memory value; the report is produced only from a clean measured run."],
+          ["Optimizer", "Input-neutral, optimized-neutral, and target KIR bytes; pass work; candidate/application counts; and nonnegative graph growth", "A no-change phase reports measured zero work or growth only when the authenticated record says zero."],
+          ["HSACO", "Bytes, AGPR/SGPR/VGPR counts, spills, LDS, private segment, maximum workgroup, wavefront, and optional waves per execution unit", "Absent occupancy is unavailable-not-emitted with both occupancy values null, never inferred from another resource."],
+          ["Runtime", "A target-matched execution report may carry runtime nanoseconds", "Compile-only is not-run-compile-only with runtime null; unavailable is also null and neither is a performance measurement."]
+        ]
+      },
+      {
+        "type": "paragraph",
+        "text": "Reviewed thresholds use separate integer-ceiling margins for compile time, byte sizes, resources, and optimizer work. The compiler regression checker binds them to the exact baseline report SHA-256, compiler commit and tree, and manifest SHA-256, then rejects missing, extra, or duplicate fixtures, target or policy drift, unqualified semantic outcomes, changed occupancy metadata, and any measured ceiling regression. A runtime ceiling remains null until a real execution baseline exists."
       },
       {
         "type": "callout",
@@ -2055,6 +2070,8 @@ const narrativeRegistry = deepFreeze({
           "Reject unsupported source shapes and remove stale outputs transactionally.",
           "Inspect LLVM/HSACO target, symbols, descriptors, kernarg layout, resources, and relevant instructions.",
           "For a V4 qualification candidate, retain the primary LLVM .ll file and its exact adjacent .fe2o3-compiler-inspection-v1 sidecar; authenticate F2KIRP01, V4/V1/V1 policies, all three KIR V11 snapshots, and the closed sixteen-pass record with cargo fe2o3 inspect.",
+          "Record peak RSS, diagnostics, optimizer work and graph growth, all KIR/LLVM/HSACO sizes, and HSACO register, spill, LDS, private-segment, workgroup, wave, and occupancy metadata. Keep missing occupancy and compile-only runtime explicitly null.",
+          "Derive separate reviewed compile-time, size, resource, and work ceilings from a real baseline; run the compiler regression checker and reject fixture, manifest, target, policy, semantic-outcome, occupancy, or measured ceiling drift.",
           "Run the opt-in gfx942 hardware lane only for its documented KFD identity, memory, queue, and debug-control scope.",
           "Do not record application GPU output unless a separate exact qualification route actually dispatches it and checks an independent oracle.",
           "Record exact commit, tree, tools, command, target, artifact digests, logs, and limitations."

@@ -103,6 +103,7 @@ function qualifyTypedVecadd(
   document: Manifest,
   directory: string,
   sidecarBytes?: Buffer,
+  mutation?: "missing-compiler-metrics" | "fabricated-runtime" | "forged-occupancy",
 ) {
   const entry = document.entries.find((candidate) => candidate.lessonId === "typed-vecadd");
   if (!entry) throw new Error("typed-vecadd manifest entry is missing");
@@ -116,12 +117,11 @@ function qualifyTypedVecadd(
     directory,
     "vecadd.ll.fe2o3-compiler-inspection-v1",
   );
-  const inspectionSha256 = digest(sidecarBytes ?? Buffer.from("F2KIRP01missing", "ascii"));
+  const expectedSidecar = sidecarBytes ?? Buffer.from("F2KIRP01missing", "ascii");
+  const inspectionSha256 = digest(expectedSidecar);
   const reportPath = resolve(directory, "gfx942-report.json");
   const prospectiveManifest = `${JSON.stringify(document, null, 2)}\n`;
-  writeFileSync(
-    reportPath,
-    `${JSON.stringify({
+  const report = {
       schema: "fe2o3-tutorial-compiler-baseline-report-v1",
       manifest: {
         path: "config/tutorial-kernel-manifest-v1.json",
@@ -152,6 +152,8 @@ function qualifyTypedVecadd(
           target: fixture.target,
           compileTimeNanoseconds: 1,
           irSizes: {
+            inputNeutralKirBytes: 1,
+            optimizedNeutralKirBytes: 1,
             canonicalKirBytes: 1,
             llvmIrBytes: 1,
             llvmIrFileCount: 1,
@@ -167,11 +169,57 @@ function qualifyTypedVecadd(
             finalVerifiedV11Sha256: "2".repeat(64),
             finalOptimizedGraphVerificationObserved: true,
           },
+          compilerMetrics: {
+            peakResidentSetBytes: 1,
+            diagnosticBytes: 0,
+            inspectionSidecarBytes: expectedSidecar.length,
+            inspectionRecordBytes: expectedSidecar.length,
+            neutralPassWork: 0,
+            targetPassWork: 0,
+            optimizerCandidates: 0,
+            optimizerApplied: 0,
+            neutralGraphGrowthBytes: 0,
+            targetBindingAndOptimizationGrowthBytes: 0,
+          },
+          artifactResources: {
+            agprCount: 0,
+            sgprCount: 0,
+            vgprCount: 0,
+            sgprSpillCount: 0,
+            vgprSpillCount: 0,
+            ldsBytes: 0,
+            privateSegmentBytes: 0,
+            maxFlatWorkgroupSize: 64,
+            wavefrontSize: 64,
+            minimumWavesPerExecutionUnit: null,
+            maximumWavesPerExecutionUnit: null,
+            occupancyStatus: "unavailable-not-emitted",
+          },
+          runtimeMetrics: {
+            status: "not-run-compile-only",
+            runtimeNanoseconds: null,
+          },
           semanticOutcome: { simulator: "not-required", reference: "passed" },
         },
       ],
-    }, null, 2)}\n`,
-  );
+    };
+  const reportCase = report.cases[0] as Record<string, unknown>;
+  if (mutation === "missing-compiler-metrics") {
+    delete reportCase.compilerMetrics;
+  } else if (mutation === "fabricated-runtime") {
+    reportCase.runtimeMetrics = {
+      status: "not-run-compile-only",
+      runtimeNanoseconds: 1,
+    };
+  } else if (mutation === "forged-occupancy") {
+    reportCase.artifactResources = {
+      ...report.cases[0].artifactResources,
+      minimumWavesPerExecutionUnit: 1,
+      maximumWavesPerExecutionUnit: 2,
+      occupancyStatus: "unavailable-not-emitted",
+    };
+  }
+  writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   if (sidecarBytes) writeFileSync(sidecarPath, sidecarBytes);
   return { fixtureId, reportPath, sidecarPath };
 }
@@ -262,6 +310,21 @@ describe("production compiler tutorial corpus", () => {
 
   it("syncs measured report and no-regression schemas without measurements", () => {
     expect(baselineSchemaDocument.title).toContain("measured baseline report v1");
+    expect(baselineSchemaDocument.properties.cases.items.required).toEqual(
+      expect.arrayContaining([
+        "compilerMetrics",
+        "artifactResources",
+        "runtimeMetrics",
+      ]),
+    );
+    expect(baselineSchemaDocument.properties.cases.items.properties.irSizes.required)
+      .toEqual(expect.arrayContaining([
+        "inputNeutralKirBytes",
+        "optimizedNeutralKirBytes",
+        "canonicalKirBytes",
+        "llvmIrBytes",
+        "hsacoBytes",
+      ]));
     expect(baselineSchemaDocument.properties.cases.items.properties.pipelineOutcome.required)
       .toEqual(expect.arrayContaining([
         "policyVersionObserved",
@@ -272,7 +335,57 @@ describe("production compiler tutorial corpus", () => {
         "finalVerifiedV11Sha256",
         "finalOptimizedGraphVerificationObserved",
       ]));
+    expect(baselineSchemaDocument.properties.cases.items.properties.compilerMetrics.required)
+      .toEqual(expect.arrayContaining([
+        "peakResidentSetBytes",
+        "diagnosticBytes",
+        "neutralPassWork",
+        "targetPassWork",
+        "optimizerCandidates",
+        "optimizerApplied",
+        "neutralGraphGrowthBytes",
+        "targetBindingAndOptimizationGrowthBytes",
+      ]));
+    expect(baselineSchemaDocument.properties.cases.items.properties.artifactResources.required)
+      .toEqual(expect.arrayContaining([
+        "agprCount",
+        "sgprCount",
+        "vgprCount",
+        "sgprSpillCount",
+        "vgprSpillCount",
+        "ldsBytes",
+        "privateSegmentBytes",
+        "minimumWavesPerExecutionUnit",
+        "maximumWavesPerExecutionUnit",
+        "occupancyStatus",
+      ]));
+    expect(baselineSchemaDocument.properties.cases.items.properties.runtimeMetrics.properties.status.enum)
+      .toEqual(["measured", "not-run-compile-only", "unavailable"]);
     expect(thresholdSchemaDocument.title).toContain("no-regression thresholds v1");
+    expect(thresholdSchemaDocument.properties.derivation.required).toEqual([
+      "maxCompileTimeRegressionBasisPoints",
+      "maxSizeRegressionBasisPoints",
+      "maxResourceRegressionBasisPoints",
+      "maxWorkRegressionBasisPoints",
+      "rounding",
+    ]);
+    expect(thresholdSchemaDocument.properties.families.items.properties.fixtures.items.required)
+      .toEqual(expect.arrayContaining([
+        "maxPeakResidentSetBytes",
+        "maxDiagnosticBytes",
+        "maxNeutralPassWork",
+        "maxTargetPassWork",
+        "maxNeutralGraphGrowthBytes",
+        "maxTargetBindingAndOptimizationGrowthBytes",
+        "maxAgprCount",
+        "maxSgprCount",
+        "maxVgprCount",
+        "maxLdsBytes",
+        "maxPrivateSegmentBytes",
+        "minimumWavesPerExecutionUnit",
+        "maximumWavesPerExecutionUnit",
+        "maxRuntimeNanoseconds",
+      ]));
     expect(thresholdSchemaDocument.properties.families.items.properties.requiredPipeline.required)
       .toEqual(expect.arrayContaining([
         "neutralPolicyVersion",
@@ -280,6 +393,50 @@ describe("production compiler tutorial corpus", () => {
         "amdCostModelRevision",
         "finalOptimizedGraphVerification",
       ]));
+
+    const documentation = readFileSync(
+      resolve("docs/compiler-corpus-qualification-v1.md"),
+      "utf8",
+    );
+    for (const contract of [
+      "peak resident set size",
+      "optimizer work",
+      "unavailable-not-emitted",
+      "not-run-compile-only",
+      "integer-ceiling margins",
+      "extra, missing, or duplicate",
+      "changed occupancy metadata",
+      "runtime ceiling; a compile-only `null`",
+    ]) {
+      expect(documentation).toContain(contract);
+    }
+  });
+
+  it("rejects byte-level drift in either shared M9 schema", () => {
+    const baseline = withTemporaryCorpus((_document, directory) => {
+      const changed = structuredClone(baselineSchemaDocument);
+      changed.properties.cases.items.required = changed.properties.cases.items.required
+        .filter((field) => field !== "compilerMetrics");
+      const schemaPath = resolve(directory, "tutorial-compiler-baseline-report-schema-v1.json");
+      writeFileSync(schemaPath, `${JSON.stringify(changed, null, 2)}\n`);
+      return ["--baseline-schema", schemaPath];
+    });
+    expect(baseline.status).toBe(1);
+    expect(baseline.stderr).toContain("differs from the compiler M9 contract");
+
+    const thresholds = withTemporaryCorpus((_document, directory) => {
+      const changed = structuredClone(thresholdSchemaDocument);
+      changed.properties.derivation.required = changed.properties.derivation.required
+        .filter((field) => field !== "maxWorkRegressionBasisPoints");
+      const schemaPath = resolve(
+        directory,
+        "tutorial-compiler-no-regression-threshold-schema-v1.json",
+      );
+      writeFileSync(schemaPath, `${JSON.stringify(changed, null, 2)}\n`);
+      return ["--threshold-schema", schemaPath];
+    });
+    expect(thresholds.status).toBe(1);
+    expect(thresholds.stderr).toContain("differs from the compiler M9 contract");
   });
 
   it("rejects missing, duplicate, stale, and non-resolving fixture IDs", () => {
@@ -359,5 +516,61 @@ describe("production compiler tutorial corpus", () => {
     });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("forged magic");
+  });
+
+  it("rejects missing M9 compiler resource metrics", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const qualification = qualifyTypedVecadd(
+        document,
+        directory,
+        undefined,
+        "missing-compiler-metrics",
+      );
+      return [
+        "--baseline-report",
+        qualification.reportPath,
+        "--inspector",
+        process.execPath,
+      ];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("keys differ");
+    expect(result.stderr).toContain("cases[0]");
+  });
+
+  it("rejects invented compile-only runtime and unavailable occupancy", () => {
+    const runtime = withTemporaryCorpus((document, directory) => {
+      const qualification = qualifyTypedVecadd(
+        document,
+        directory,
+        undefined,
+        "fabricated-runtime",
+      );
+      return [
+        "--baseline-report",
+        qualification.reportPath,
+        "--inspector",
+        process.execPath,
+      ];
+    });
+    expect(runtime.status).toBe(1);
+    expect(runtime.stderr).toContain("invents a runtime measurement");
+
+    const occupancy = withTemporaryCorpus((document, directory) => {
+      const qualification = qualifyTypedVecadd(
+        document,
+        directory,
+        undefined,
+        "forged-occupancy",
+      );
+      return [
+        "--baseline-report",
+        qualification.reportPath,
+        "--inspector",
+        process.execPath,
+      ];
+    });
+    expect(occupancy.status).toBe(1);
+    expect(occupancy.stderr).toContain("invents occupancy");
   });
 });

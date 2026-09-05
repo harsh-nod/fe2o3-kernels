@@ -66,10 +66,43 @@ hardware, numerical, or performance authority.
 ## Measured baseline
 
 `config/tutorial-compiler-baseline-report-schema-v1.json` defines the measured
-compile-time, canonical KIR, LLVM IR, HSACO, pipeline, and semantic outcome
-record. `config/tutorial-compiler-no-regression-threshold-schema-v1.json`
-defines thresholds derived from such a report. Neither file contains invented
-measurements.
+compile time and peak resident set size; bounded diagnostic, sidecar, and
+inspection-record bytes; input-neutral, optimized-neutral, target KIR, LLVM IR,
+and HSACO sizes; neutral and target optimizer work; candidate and applied
+counts; neutral and target graph growth; and HSACO AGPR, SGPR, VGPR, spill, LDS,
+private-segment, workgroup, wavefront, and occupancy metadata. It also retains
+the exact pipeline identities and semantic outcomes.
+
+Missing occupancy metadata is represented only as
+`occupancyStatus: unavailable-not-emitted` with both waves-per-execution-unit
+fields `null`. A compile-only campaign records
+`runtimeMetrics.status: not-run-compile-only` and a `null` runtime. Neither
+absence is inferred as zero, and compilation or simulation is not relabeled as
+hardware timing.
+
+`config/tutorial-compiler-no-regression-threshold-schema-v1.json` defines
+reviewed integer-ceiling margins independently for compile time, byte sizes,
+resources, and optimizer work. The derivation keeps spill ceilings exact,
+preserves unavailable occupancy and runtime as `null`, and binds the result to
+the exact baseline report SHA-256, compiler commit/tree, and manifest SHA-256.
+Neither schema contains invented measurements.
+
+The compiler-owned regression checker compares a candidate report with that
+exact baseline and threshold record:
+
+```text
+scripts/check-tutorial-compiler-regressions.py \
+  --baseline /path/to/reviewed-baseline.json \
+  --thresholds /path/to/reviewed-thresholds.json \
+  --candidate /path/to/candidate-report.json
+```
+
+It rejects baseline-binding or manifest drift, extra, missing, or duplicate
+fixtures, target or production-policy drift, semantic outcomes below their
+required status, changed occupancy metadata, and every measured ceiling
+regression. Runtime is checked only when the reviewed threshold contains a real
+runtime ceiling; a compile-only `null` does not silently become a performance
+budget.
 
 A final compiler commit and tree may be pinned only after a clean-tree campaign
 covers every exact fixture, required simulator and CPU-reference gate, and the

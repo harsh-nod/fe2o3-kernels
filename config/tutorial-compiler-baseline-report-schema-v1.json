@@ -54,7 +54,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["fixtureId", "testId", "familyIds", "target", "compileTimeNanoseconds", "irSizes", "pipelineOutcome", "semanticOutcome"],
+        "required": ["fixtureId", "testId", "familyIds", "target", "compileTimeNanoseconds", "irSizes", "pipelineOutcome", "compilerMetrics", "artifactResources", "runtimeMetrics", "semanticOutcome"],
         "properties": {
           "fixtureId": {"type": "string", "minLength": 1},
           "testId": {"type": "string", "minLength": 1},
@@ -64,8 +64,10 @@
           "irSizes": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["canonicalKirBytes", "llvmIrBytes", "llvmIrFileCount", "hsacoBytes"],
+            "required": ["inputNeutralKirBytes", "optimizedNeutralKirBytes", "canonicalKirBytes", "llvmIrBytes", "llvmIrFileCount", "hsacoBytes"],
             "properties": {
+              "inputNeutralKirBytes": {"type": "integer", "minimum": 1},
+              "optimizedNeutralKirBytes": {"type": "integer", "minimum": 1},
               "canonicalKirBytes": {"type": "integer", "minimum": 1},
               "llvmIrBytes": {"type": "integer", "minimum": 1},
               "llvmIrFileCount": {"const": 1},
@@ -85,6 +87,51 @@
               "finalTargetKirSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
               "finalVerifiedV11Sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
               "finalOptimizedGraphVerificationObserved": {"const": true}
+            }
+          },
+          "compilerMetrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["peakResidentSetBytes", "diagnosticBytes", "inspectionSidecarBytes", "inspectionRecordBytes", "neutralPassWork", "targetPassWork", "optimizerCandidates", "optimizerApplied", "neutralGraphGrowthBytes", "targetBindingAndOptimizationGrowthBytes"],
+            "properties": {
+              "peakResidentSetBytes": {"type": "integer", "minimum": 1},
+              "diagnosticBytes": {"type": "integer", "minimum": 0},
+              "inspectionSidecarBytes": {"type": "integer", "minimum": 1},
+              "inspectionRecordBytes": {"type": "integer", "minimum": 1},
+              "neutralPassWork": {"type": "integer", "minimum": 0},
+              "targetPassWork": {"type": "integer", "minimum": 0},
+              "optimizerCandidates": {"type": "integer", "minimum": 0},
+              "optimizerApplied": {"type": "integer", "minimum": 0},
+              "neutralGraphGrowthBytes": {"type": "integer", "minimum": 0},
+              "targetBindingAndOptimizationGrowthBytes": {"type": "integer", "minimum": 0}
+            }
+          },
+          "artifactResources": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["agprCount", "sgprCount", "vgprCount", "sgprSpillCount", "vgprSpillCount", "ldsBytes", "privateSegmentBytes", "maxFlatWorkgroupSize", "wavefrontSize", "minimumWavesPerExecutionUnit", "maximumWavesPerExecutionUnit", "occupancyStatus"],
+            "properties": {
+              "agprCount": {"type": "integer", "minimum": 0},
+              "sgprCount": {"type": "integer", "minimum": 0},
+              "vgprCount": {"type": "integer", "minimum": 0},
+              "sgprSpillCount": {"type": "integer", "minimum": 0},
+              "vgprSpillCount": {"type": "integer", "minimum": 0},
+              "ldsBytes": {"type": "integer", "minimum": 0},
+              "privateSegmentBytes": {"type": "integer", "minimum": 0},
+              "maxFlatWorkgroupSize": {"type": "integer", "minimum": 1},
+              "wavefrontSize": {"type": "integer", "minimum": 1},
+              "minimumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+              "maximumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+              "occupancyStatus": {"enum": ["reported-by-hsaco-metadata", "unavailable-not-emitted"]}
+            }
+          },
+          "runtimeMetrics": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "runtimeNanoseconds"],
+            "properties": {
+              "status": {"enum": ["measured", "not-run-compile-only", "unavailable"]},
+              "runtimeNanoseconds": {"type": ["integer", "null"], "minimum": 0}
             }
           },
           "semanticOutcome": {
