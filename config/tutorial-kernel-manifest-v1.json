@@ -1,0 +1,272 @@
+{
+  "schema": "fe2o3-tutorial-kernel-manifest-v1",
+  "roadmapIssue": "https://github.com/harsh-nod/fe2o3/issues/271",
+  "baseline": {
+    "compilerCommit": "4413b086482f2f4ad218f28e4485dc089d6cc020",
+    "compilerTree": "f851e1bb447d7c078b4972acb248cf86ac3736ec",
+    "status": "migration"
+  },
+  "productionContract": {
+    "pipelineEntry": "rustc-codegen-fe2o3::production_pipeline",
+    "requiredPolicyVersion": 3,
+    "requiresFinalOptimizedGraphVerification": true,
+    "allowsPipelineSelection": false,
+    "allowsFallback": false
+  },
+  "entries": [
+    {
+      "lessonId": "cpu-semantic-simulation",
+      "siteEvidenceKind": "runnable-now",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/fill/Cargo.toml",
+      "sourcePaths": ["examples/fill/src/lib.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "semantic-simulation"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "first-fill",
+      "siteEvidenceKind": "runnable-now",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/fill/Cargo.toml",
+      "sourcePaths": ["examples/fill/src/lib.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "semantic-simulation"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "flash-attention",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/flash_attention_general_v1/Cargo.toml",
+      "sourcePaths": ["examples/flash_attention_general_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gemm-proof-plan",
+      "siteEvidenceKind": "source-tested",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
+      "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "cpu-reference"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gemm-tiling",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
+      "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-advanced-moe",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-attnres-gr-mhc",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-compressed-hybrid-attention",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-deepseek-sparse-attention",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-fp4-attention",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-fp4-gemm",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-fp8-attention",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-fp8-gemm",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-gpt-oss-120b-megakernel",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+      "sourcePaths": [
+        "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+        "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+        "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs"
+      ],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-indexed-sparse-attention",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-kda-gdn-linear-attention",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-muon-optimizer",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-ngram-embedding-gather",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "gfx950-speculative-mtp-verification",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
+      "targets": ["gfx950"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "lds-barriers-atomics",
+      "siteEvidenceKind": "compiler-hsaco-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/workgroup_sync_v1/Cargo.toml",
+      "sourcePaths": ["examples/workgroup_sync_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "semantic-simulation", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "moe-expert-compute",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/moe_grouped_expert_general_v1/Cargo.toml",
+      "sourcePaths": ["examples/moe_grouped_expert_general_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "moe-routing",
+      "siteEvidenceKind": "source-model-verified",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/moe_top2_v1/Cargo.toml",
+      "sourcePaths": ["examples/moe_top2_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "cpu-reference"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "reductions-scans",
+      "siteEvidenceKind": "compiler-checked",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/wave64_collectives_v1/Cargo.toml",
+      "sourcePaths": ["examples/wave64_collectives_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "semantic-simulation", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "softmax-invariant",
+      "siteEvidenceKind": "gpu-observed",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/row_softmax_general_v1/Cargo.toml",
+      "sourcePaths": ["examples/row_softmax_general_v1/src/kernel.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
+      "qualificationStatus": "pending"
+    },
+    {
+      "lessonId": "typed-vecadd",
+      "siteEvidenceKind": "compiler-checked",
+      "classification": "compiler-produced",
+      "packageManifest": "examples/vecadd/Cargo.toml",
+      "sourcePaths": ["examples/vecadd/src/vecadd_body.rs"],
+      "targets": ["gfx942"],
+      "requiredGates": ["production-compile", "cpu-reference"],
+      "qualificationStatus": "pending"
+    }
+  ]
+}
