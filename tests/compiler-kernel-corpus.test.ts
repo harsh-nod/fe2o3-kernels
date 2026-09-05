@@ -66,6 +66,20 @@ type Manifest = {
 
 const manifest = manifestDocument as Manifest;
 const validator = resolve("scripts/validate-tutorial-compiler-corpus.mjs");
+const sourceIsaV2Implementation = {
+  collectionBytes: 4797,
+  collectionSha256: "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072",
+  fixturePath: "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json",
+  schema: "fe2o3-source-isa-characteristic-v2",
+  status: "admitted-production-shaped-worker-v3-v12",
+  targetProfile: "gfx942:xnack-",
+};
+const sourceIsaV2Unavailable = {
+  collectionBytes: 0,
+  collectionSha256: null,
+  inspectionStatus: "not-contained-pre-finalization",
+  status: "unavailable-direct-link-no-protected-finalizer",
+};
 
 function digest(bytes: Buffer | string) {
   return createHash("sha256").update(bytes).digest("hex");
@@ -126,6 +140,7 @@ function writeQualificationRecord(document: Manifest, directory: string) {
       publicationAuthority: false,
     },
     candidate,
+    sourceIsaCharacteristicV2: structuredClone(sourceIsaV2Implementation),
     contracts: {
       amdCostModelRevision: 2,
       amdPolicyVersion: 2,
@@ -172,6 +187,7 @@ function writeQualificationRecord(document: Manifest, directory: string) {
             finalTargetKirSha256: digest(`target:${fixture.fixtureId}`),
             finalVerifiedKirSha256: digest(`verified:${fixture.fixtureId}`),
             inspectionRecordSha256: inspection,
+            sourceIsaCharacteristicV2: structuredClone(sourceIsaV2Unavailable),
             status: "passed",
           },
           semantic: {
@@ -281,6 +297,7 @@ function qualifyTypedVecadd(
   const prospectiveManifest = `${JSON.stringify(document, null, 2)}\n`;
   const report = {
       schema: "fe2o3-tutorial-compiler-baseline-report-v1",
+      sourceIsaCharacteristicV2: structuredClone(sourceIsaV2Implementation),
       manifest: {
         path: "config/tutorial-kernel-manifest-v1.json",
         sha256: digest(prospectiveManifest),
@@ -333,6 +350,7 @@ function qualifyTypedVecadd(
             finalTargetKirSha256: "1".repeat(64),
             finalVerifiedKirSha256: "2".repeat(64),
             finalOptimizedGraphVerificationObserved: true,
+            sourceIsaCharacteristicV2: structuredClone(sourceIsaV2Unavailable),
           },
           compilerMetrics: {
             peakResidentSetBytes: 1,
@@ -640,8 +658,12 @@ describe("production compiler tutorial corpus", () => {
     expect(hardwareSchemaDocument.properties.cases.items.properties.observations.properties.compilerModel.properties)
       .toMatchObject({
         canonicalKirVersion: { const: 12 },
-        summaryFieldCount: { const: 52 },
+        summaryFieldCount: { const: 55 },
       });
+    expect(baselineSchemaDocument.properties.sourceIsaCharacteristicV2.$ref)
+      .toBe("#/$defs/sourceIsaV2ImplementationEvidence");
+    expect(hardwareSchemaDocument.properties.sourceIsaCharacteristicV2.$ref)
+      .toBe("#/$defs/sourceIsaV2ImplementationEvidence");
     expect(qualificationRecordSchemaDocument.properties.schema.const).toBe(
       "fe2o3-tutorial-compiler-qualification-record-v1",
     );
@@ -720,6 +742,17 @@ describe("production compiler tutorial corpus", () => {
     expect(qualificationRecord.stderr).toContain("differs from the compiler M9 contract");
   });
 
+  it("rejects byte drift in the protected Worker V3/V12 Source/ISA fixture", () => {
+    const result = withTemporaryCorpus((_document, directory) => {
+      const fixturePath = resolve(directory, "source-isa-v2.json");
+      const bytes = readFileSync(sourceIsaV2Implementation.fixturePath);
+      writeFileSync(fixturePath, Buffer.concat([bytes, Buffer.from("\n")]));
+      return ["--source-isa-v2-fixture", fixturePath];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("Source/ISA V2 fixture");
+  });
+
   it("validates the tracked Candidate A record offline across the Candidate B publication edit", () => {
     const result = withTemporaryCorpus((document, directory) => {
       const qualification = writeQualificationRecord(document, directory);
@@ -743,6 +776,8 @@ describe("production compiler tutorial corpus", () => {
       "threshold-join",
       "threshold-self-gate",
       "candidate-pin",
+      "source-isa-fixture",
+      "source-isa-observation",
       "digest",
     ] as const) {
       const result = withTemporaryCorpus((document, directory) => {
@@ -766,6 +801,12 @@ describe("production compiler tutorial corpus", () => {
           }
           if (mutation === "threshold-self-gate") changed.evidence.thresholds[0].selfGate = "failed";
           if (mutation === "candidate-pin") changed.candidate.commit = "f".repeat(40);
+          if (mutation === "source-isa-fixture") {
+            changed.sourceIsaCharacteristicV2.collectionSha256 = "f".repeat(64);
+          }
+          if (mutation === "source-isa-observation") {
+            changed.fixtures[0].productionCompile.sourceIsaCharacteristicV2.status = "passed";
+          }
           const bytes = `${JSON.stringify(canonicalValue(changed), null, 2)}\n`;
           writeFileSync(qualification.recordPath, bytes);
           writeFileSync(
@@ -782,7 +823,7 @@ describe("production compiler tutorial corpus", () => {
       });
       expect(result.status, mutation).toBe(1);
     }
-  });
+  }, 15_000);
 
   it("keeps raw artifact reproduction behind an explicit mode", () => {
     const directory = mkdtempSync(resolve(tmpdir(), "fe2o3-site-corpus-raw-mode-"));

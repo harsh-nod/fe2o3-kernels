@@ -126,6 +126,30 @@
     "slug": {
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
       "type": "string"
+    },
+    "sourceIsaV2ImplementationEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "collectionBytes": { "const": 4797 },
+        "collectionSha256": { "const": "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072" },
+        "fixturePath": { "const": "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json" },
+        "schema": { "const": "fe2o3-source-isa-characteristic-v2" },
+        "status": { "const": "admitted-production-shaped-worker-v3-v12" },
+        "targetProfile": { "const": "gfx942:xnack-" }
+      },
+      "required": ["collectionBytes", "collectionSha256", "fixturePath", "schema", "status", "targetProfile"],
+      "type": "object"
+    },
+    "unavailableSourceIsaV2Observation": {
+      "additionalProperties": false,
+      "properties": {
+        "collectionBytes": { "const": 0 },
+        "collectionSha256": { "type": "null" },
+        "inspectionStatus": { "const": "not-contained-pre-finalization" },
+        "status": { "const": "unavailable-direct-link-no-protected-finalizer" }
+      },
+      "required": ["collectionBytes", "collectionSha256", "inspectionStatus", "status"],
+      "type": "object"
     }
   },
   "$id": "https://harsh-nod.github.io/fe2o3/schemas/tutorial-gfx942-hardware-evidence-v1.json",
@@ -234,7 +258,10 @@
                     "type": "integer"
                   },
                   "summaryFieldCount": {
-                    "const": 52
+                    "const": 55
+                  },
+                  "sourceIsaCharacteristicV2": {
+                    "$ref": "#/$defs/unavailableSourceIsaV2Observation"
                   },
                   "targetKirSha256": {
                     "$ref": "#/$defs/sha256"
@@ -261,6 +288,7 @@
                   "resourceModelRevision",
                   "sgprAllocationGranuleDwordsPerWave",
                   "summaryFieldCount",
+                  "sourceIsaCharacteristicV2",
                   "targetKirSha256",
                   "verifiedTargetKirSha256",
                   "vgprAllocationGranuleDwordsPerLane"
@@ -495,6 +523,9 @@
       ],
       "type": "object"
     },
+    "sourceIsaCharacteristicV2": {
+      "$ref": "#/$defs/sourceIsaV2ImplementationEvidence"
+    },
     "records": {
       "additionalProperties": false,
       "properties": {
@@ -565,6 +596,7 @@
     "compiler",
     "manifest",
     "productionContract",
+    "sourceIsaCharacteristicV2",
     "records",
     "roadmapIssue",
     "schema",

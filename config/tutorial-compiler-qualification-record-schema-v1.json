@@ -53,6 +53,30 @@
     "slug": {
       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
       "type": "string"
+    },
+    "sourceIsaV2ImplementationEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "collectionBytes": { "const": 4797 },
+        "collectionSha256": { "const": "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072" },
+        "fixturePath": { "const": "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json" },
+        "schema": { "const": "fe2o3-source-isa-characteristic-v2" },
+        "status": { "const": "admitted-production-shaped-worker-v3-v12" },
+        "targetProfile": { "const": "gfx942:xnack-" }
+      },
+      "required": ["collectionBytes", "collectionSha256", "fixturePath", "schema", "status", "targetProfile"],
+      "type": "object"
+    },
+    "unavailableSourceIsaV2Observation": {
+      "additionalProperties": false,
+      "properties": {
+        "collectionBytes": { "const": 0 },
+        "collectionSha256": { "type": "null" },
+        "inspectionStatus": { "const": "not-contained-pre-finalization" },
+        "status": { "const": "unavailable-direct-link-no-protected-finalizer" }
+      },
+      "required": ["collectionBytes", "collectionSha256", "inspectionStatus", "status"],
+      "type": "object"
     }
   },
   "additionalProperties": false,
@@ -171,12 +195,14 @@
               "finalTargetKirSha256": { "$ref": "#/$defs/sha256" },
               "finalVerifiedKirSha256": { "$ref": "#/$defs/sha256" },
               "inspectionRecordSha256": { "$ref": "#/$defs/sha256" },
+              "sourceIsaCharacteristicV2": { "$ref": "#/$defs/unavailableSourceIsaV2Observation" },
               "status": { "const": "passed" }
             },
             "required": [
               "finalTargetKirSha256",
               "finalVerifiedKirSha256",
               "inspectionRecordSha256",
+              "sourceIsaCharacteristicV2",
               "status"
             ],
             "type": "object"
@@ -221,9 +247,10 @@
       "type": "object"
     },
     "roadmapIssue": { "const": "https://github.com/harsh-nod/fe2o3/issues/271" },
-    "schema": { "const": "fe2o3-tutorial-compiler-qualification-record-v1" }
+    "schema": { "const": "fe2o3-tutorial-compiler-qualification-record-v1" },
+    "sourceIsaCharacteristicV2": { "$ref": "#/$defs/sourceIsaV2ImplementationEvidence" }
   },
-  "required": ["authority", "candidate", "contracts", "evidence", "fixtures", "measuredCorpus", "roadmapIssue", "schema"],
+  "required": ["authority", "candidate", "contracts", "evidence", "fixtures", "measuredCorpus", "roadmapIssue", "schema", "sourceIsaCharacteristicV2"],
   "title": "fe2o3 tutorial compiler qualification record v1",
   "type": "object"
 }

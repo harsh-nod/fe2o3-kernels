@@ -67,11 +67,26 @@ const TARGET = /^gfx[0-9]{3}$/u;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const MAX_SIDECAR_BYTES = 3 * 16 * 1024 * 1024 + 256 * 1024;
 const SHARED_SCHEMA_SHA256 = new Map([
-  ["tutorial-compiler-baseline-report-schema-v1.json", "9518095c335043c93f5ccb111f6564e7485f1e4f5bda8ad833f60dd0305e1dc4"],
+  ["tutorial-compiler-baseline-report-schema-v1.json", "a2704e6a7b843b4f11e1e27ea6095d8aaeb55853809c5f3a57e5b3be759b42d1"],
   ["tutorial-compiler-no-regression-threshold-schema-v1.json", "dc4b321174fdbed4be2dddea6392b7a6d46ca61745621f127322eaf204f4bb6e"],
-  ["tutorial-gfx942-hardware-evidence-schema-v1.json", "75266f9cb6017770ef7d899b2d3e2d4d41fc191b93b1ab479024db560c3a10d7"],
-  ["tutorial-compiler-qualification-record-schema-v1.json", "ed293b8c1cdf77fafe366b185e9a12a374aea89cb53aa26c97dadc6be4a82b13"],
+  ["tutorial-gfx942-hardware-evidence-schema-v1.json", "4ab38389760f904b1782a54aed9960c7e174039b192590c042968aafaaed1346"],
+  ["tutorial-compiler-qualification-record-schema-v1.json", "ab8797566eeb11fd7d12b01e84e7ea1f6e878c51d7dbd6856dd7e8c0deb95317"],
 ]);
+const SOURCE_ISA_V2_FIXTURE_PATH = "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json";
+const SOURCE_ISA_V2_IMPLEMENTATION = {
+  collectionBytes: 4797,
+  collectionSha256: "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072",
+  fixturePath: SOURCE_ISA_V2_FIXTURE_PATH,
+  schema: "fe2o3-source-isa-characteristic-v2",
+  status: "admitted-production-shaped-worker-v3-v12",
+  targetProfile: "gfx942:xnack-",
+};
+const SOURCE_ISA_V2_UNAVAILABLE = {
+  collectionBytes: 0,
+  collectionSha256: null,
+  inspectionStatus: "not-contained-pre-finalization",
+  status: "unavailable-direct-link-no-protected-finalizer",
+};
 
 function fail(message) {
   throw new Error(`tutorial compiler corpus: ${message}`);
@@ -130,6 +145,27 @@ function parseJson(path, label) {
 
 function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
+}
+
+function exactSourceIsaV2(value, expected, label) {
+  const record = exactKeys(value, Object.keys(expected), label);
+  if (Object.entries(expected).some(([key, expectedValue]) => record[key] !== expectedValue)) {
+    fail(`${label} differs from the exact Source/ISA V2 evidence contract`);
+  }
+  return record;
+}
+
+function validateSourceIsaFixture(path) {
+  let metadata;
+  try { metadata = lstatSync(path); } catch (error) { fail(`cannot inspect Source/ISA V2 fixture: ${error.message}`); }
+  if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size !== SOURCE_ISA_V2_IMPLEMENTATION.collectionBytes) {
+    fail("Source/ISA V2 fixture must be the exact bounded regular compiler fixture");
+  }
+  const bytes = readFileSync(path);
+  if (sha256(bytes) !== SOURCE_ISA_V2_IMPLEMENTATION.collectionSha256) {
+    fail("Source/ISA V2 fixture digest differs from the compiler contract");
+  }
+  return bytes;
 }
 
 function integerAtLeast(value, minimum, label) {
@@ -383,7 +419,7 @@ function validateResourceEstimateV3(resource, granules, label) {
 
 function validateReport(path, manifestDigests, manifest) {
   const report = exactKeys(parseJson(path, "baseline report"), [
-    "cases", "compiler", "manifest", "measurement", "pipelineContract", "schema",
+    "cases", "compiler", "manifest", "measurement", "pipelineContract", "schema", "sourceIsaCharacteristicV2",
   ], `baseline report ${path}`);
   if (report.schema !== "fe2o3-tutorial-compiler-baseline-report-v1") fail(`${path} has unsupported report schema`);
   const binding = exactKeys(report.manifest, ["path", "sha256", "corpusContractSha256"], `${path}.manifest`);
@@ -419,6 +455,11 @@ function validateReport(path, manifestDigests, manifest) {
     pipeline.requiredAmdResourceModelRevision !== 3 ||
     pipeline.requiresFinalOptimizedGraphVerification !== true
   ) fail(`${path} does not bind the exact production V4/AMD V2/resource V3 pipeline contract`);
+  exactSourceIsaV2(
+    report.sourceIsaCharacteristicV2,
+    SOURCE_ISA_V2_IMPLEMENTATION,
+    `${path}.sourceIsaCharacteristicV2`,
+  );
   if (!Array.isArray(report.cases) || report.cases.length === 0) fail(`${path}.cases must be nonempty`);
   const cases = new Map();
   for (const [index, rawCase] of report.cases.entries()) {
@@ -448,6 +489,7 @@ function validateReport(path, manifestDigests, manifest) {
       "amdCostModelRevisionObserved", "amdPolicyVersionObserved", "amdResourceModelRevisionObserved",
       "canonicalKirVersionObserved", "compileOnly", "finalOptimizedGraphVerificationObserved",
       "finalTargetKirSha256", "finalVerifiedKirSha256", "inspectionRecordSha256", "policyVersionObserved",
+      "sourceIsaCharacteristicV2",
     ], `${label}.pipelineOutcome`);
     if (
       outcome.compileOnly !== "passed" ||
@@ -459,6 +501,11 @@ function validateReport(path, manifestDigests, manifest) {
       outcome.finalOptimizedGraphVerificationObserved !== true ||
       ![outcome.inspectionRecordSha256, outcome.finalTargetKirSha256, outcome.finalVerifiedKirSha256].every((value) => SHA256.test(value))
     ) fail(`${label} does not carry exact authenticated V4/AMD V2/resource V3 optimized output facts`);
+    exactSourceIsaV2(
+      outcome.sourceIsaCharacteristicV2,
+      SOURCE_ISA_V2_UNAVAILABLE,
+      `${label}.pipelineOutcome.sourceIsaCharacteristicV2`,
+    );
     const metrics = exactKeys(item.compilerMetrics, [
       "diagnosticBytes", "inspectionRecordBytes", "inspectionSidecarBytes", "neutralGraphGrowthBytes",
       "neutralPassCount", "neutralPassWork", "optimizerApplied", "optimizerCandidates", "peakResidentSetBytes",
@@ -527,6 +574,7 @@ function validateDecodedInspection(output, expected, expectedTarget, expectedCas
     "publication-authority: false",
     "load-authority: false",
     "launch-authority: false",
+    "source-isa-characteristic-v2: status=not-contained-pre-finalization sha256=none bytes=0 authority=observation-only",
     `target: ${expectedTarget}:xnack-`,
     "policies: neutral=4 amd=2 amd-cost-model=2",
     "remarks: 16",
@@ -623,6 +671,7 @@ function parseArguments(arguments_) {
     else if (argument === "--qualification-schema") values.qualificationSchema = next();
     else if (argument === "--qualification-record") values.qualificationRecord = next();
     else if (argument === "--qualification-record-digest") values.qualificationRecordDigest = next();
+    else if (argument === "--source-isa-v2-fixture") values.sourceIsaV2Fixture = next();
     else if (argument === "--raw-artifacts") values.rawArtifacts = true;
     else if (argument === "--baseline-report") values.reports.push(next());
     else if (argument === "--inspector") values.inspector = next();
@@ -648,6 +697,10 @@ function main() {
   const manifest = validateManifest(manifestDocument);
   const digestPath = resolve(arguments_.digest ?? (manifestPath.endsWith(".json") ? `${manifestPath.slice(0, -5)}.sha256` : `${manifestPath}.sha256`));
   const manifestDigests = validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot);
+  const sourceIsaFixturePath = resolve(
+    arguments_.sourceIsaV2Fixture ?? resolve(repositoryRoot, SOURCE_ISA_V2_FIXTURE_PATH),
+  );
+  validateSourceIsaFixture(sourceIsaFixturePath);
   validateSharedSchema(
     resolve(arguments_.baselineSchema ?? resolve(repositoryRoot, "config/tutorial-compiler-baseline-report-schema-v1.json")),
     "tutorial-compiler-baseline-report-schema-v1.json",
@@ -707,6 +760,7 @@ function main() {
         digestPath: recordDigestPath,
         manifest,
         manifestDigests,
+        sourceIsaFixturePath,
       });
     }
   }

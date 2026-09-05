@@ -12,6 +12,20 @@ const SHA256 = /^[0-9a-f]{64}$/u;
 const GIT_ID = /^[0-9a-f]{40}$/u;
 const TARGET = /^gfx[0-9]{3}$/u;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
+const SOURCE_ISA_V2_IMPLEMENTATION = {
+  collectionBytes: 4797,
+  collectionSha256: "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072",
+  fixturePath: "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json",
+  schema: "fe2o3-source-isa-characteristic-v2",
+  status: "admitted-production-shaped-worker-v3-v12",
+  targetProfile: "gfx942:xnack-",
+};
+const SOURCE_ISA_V2_UNAVAILABLE = {
+  collectionBytes: 0,
+  collectionSha256: null,
+  inspectionStatus: "not-contained-pre-finalization",
+  status: "unavailable-direct-link-no-protected-finalizer",
+};
 
 function fail(message) {
   throw new Error(`tutorial qualification record: ${message}`);
@@ -122,6 +136,32 @@ function candidate(value) {
   return result;
 }
 
+function sourceIsaV2Implementation(value, fixtureBytes, label) {
+  const evidence = exactKeys(value, [
+    "collectionBytes", "collectionSha256", "fixturePath", "schema", "status", "targetProfile",
+  ], label);
+  if (JSON.stringify(evidence) !== JSON.stringify(SOURCE_ISA_V2_IMPLEMENTATION)) {
+    fail(`${label} does not bind the exact target-scoped protected-finalizer fixture`);
+  }
+  if (
+    fixtureBytes.length !== evidence.collectionBytes ||
+    createHash("sha256").update(fixtureBytes).digest("hex") !== evidence.collectionSha256
+  ) {
+    fail(`${label} fixture bytes differ from its admitted identity`);
+  }
+  return evidence;
+}
+
+function unavailableSourceIsaV2(value, label) {
+  const evidence = exactKeys(value, [
+    "collectionBytes", "collectionSha256", "inspectionStatus", "status",
+  ], label);
+  if (JSON.stringify(evidence) !== JSON.stringify(SOURCE_ISA_V2_UNAVAILABLE)) {
+    fail(`${label} invents protected-finalizer Source/ISA V2 evidence`);
+  }
+  return evidence;
+}
+
 function manifestRequirements(manifest) {
   const fixtureById = manifest.fixtureById;
   const requirements = new Map(
@@ -142,9 +182,10 @@ function manifestRequirements(manifest) {
   return requirements;
 }
 
-function validateDocument(document, manifest, manifestDigests) {
+function validateDocument(document, manifest, manifestDigests, sourceIsaFixtureBytes) {
   const record = exactKeys(document, [
     "authority", "candidate", "contracts", "evidence", "fixtures", "measuredCorpus", "roadmapIssue", "schema",
+    "sourceIsaCharacteristicV2",
   ], "record");
   if (record.schema !== RECORD_SCHEMA || record.roadmapIssue !== ROADMAP) fail("record schema or roadmap identity differs");
   const authority = exactKeys(record.authority, [
@@ -175,6 +216,11 @@ function validateDocument(document, manifest, manifestDigests) {
     targetReplayEvidenceVersion: 9,
   };
   if (JSON.stringify(contracts) !== JSON.stringify(expectedContracts)) fail("record has a non-production compiler contract");
+  sourceIsaV2Implementation(
+    record.sourceIsaCharacteristicV2,
+    sourceIsaFixtureBytes,
+    "sourceIsaCharacteristicV2",
+  );
   const corpus = exactKeys(record.measuredCorpus, [
     "corpusContractSha256", "manifestBytes", "manifestPath", "rawManifestSha256",
   ], "measuredCorpus");
@@ -253,12 +299,16 @@ function validateDocument(document, manifest, manifestDigests) {
     text(fixture.testId, `${label}.testId`);
     if (!baselineByTarget.has(fixture.target)) fail(`${label} lacks target baseline evidence`);
     const production = exactKeys(fixture.productionCompile, [
-      "finalTargetKirSha256", "finalVerifiedKirSha256", "inspectionRecordSha256", "status",
+      "finalTargetKirSha256", "finalVerifiedKirSha256", "inspectionRecordSha256", "sourceIsaCharacteristicV2", "status",
     ], `${label}.productionCompile`);
     if (production.status !== "passed") fail(`${label} production compile did not pass`);
     for (const field of ["finalTargetKirSha256", "finalVerifiedKirSha256", "inspectionRecordSha256"]) {
       digest(production[field], `${label}.productionCompile.${field}`);
     }
+    unavailableSourceIsaV2(
+      production.sourceIsaCharacteristicV2,
+      `${label}.productionCompile.sourceIsaCharacteristicV2`,
+    );
     const semantic = exactKeys(fixture.semantic, [
       "evidenceSha256", "reference", "referenceSuiteIds", "simulator", "simulatorSuiteIds",
     ], `${label}.semantic`);
@@ -303,7 +353,18 @@ function validateDocument(document, manifest, manifestDigests) {
   return record;
 }
 
-export function validateQualificationRecord({ recordPath, digestPath, manifest, manifestDigests }) {
+export function validateQualificationRecord({
+  recordPath,
+  digestPath,
+  manifest,
+  manifestDigests,
+  sourceIsaFixturePath,
+}) {
+  const sourceIsaFixtureBytes = regularBytes(
+    sourceIsaFixturePath,
+    8192,
+    "Source/ISA V2 implementation fixture",
+  );
   const bytes = regularBytes(recordPath, MAX_RECORD_BYTES, "qualification record");
   let document;
   try {
@@ -325,5 +386,5 @@ export function validateQualificationRecord({ recordPath, digestPath, manifest, 
   }
   const actual = createHash("sha256").update(bytes).digest("hex");
   if (actual !== parts[0]) fail("qualification record digest does not match its bytes");
-  return validateDocument(document, manifest, manifestDigests);
+  return validateDocument(document, manifest, manifestDigests, sourceIsaFixtureBytes);
 }

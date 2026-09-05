@@ -9,6 +9,23 @@ import { tutorialCorpusContractSha256 } from "../scripts/tutorial-corpus-contrac
 
 const validator = resolve("scripts/validate-tutorial-gfx942-hardware-evidence.mjs");
 const manifestPath = resolve("config/tutorial-kernel-manifest-v1.json");
+const sourceIsaV2FixturePath = resolve(
+  "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json",
+);
+const sourceIsaV2Implementation = {
+  collectionBytes: 4797,
+  collectionSha256: "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072",
+  fixturePath: "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json",
+  schema: "fe2o3-source-isa-characteristic-v2",
+  status: "admitted-production-shaped-worker-v3-v12",
+  targetProfile: "gfx942:xnack-",
+};
+const sourceIsaV2Unavailable = {
+  collectionBytes: 0,
+  collectionSha256: null,
+  inspectionStatus: "not-contained-pre-finalization",
+  status: "unavailable-direct-link-no-protected-finalizer",
+};
 
 function sha256(bytes: Buffer | string) {
   return createHash("sha256").update(bytes).digest("hex");
@@ -105,6 +122,7 @@ function syntheticEvidence(): Synthetic {
       4, 2, 2, 12, 1, 1, 1, inspection.bytes, 9, 7, 0, 0, 0, 0,
       inspection.sha256, targetKir, targetKir, 3, 8, 16,
       ...resourceFields(), ...resourceFields(),
+      "not-contained-pre-finalization", "none", 0,
     ].join("\t") + "\n";
     write(directory, `${prefix}/inspection-summary.tsv`, summary);
     write(directory, `${prefix}/resource-summary.tsv`, "0\t0\t0\t0\t0\t0\t0\t64\t64\tna\tna\n");
@@ -131,7 +149,8 @@ function syntheticEvidence(): Synthetic {
           record: fileRecord(directory, `${prefix}/inspection-summary.tsv`),
           resourceModelRevision: 3,
           sgprAllocationGranuleDwordsPerWave: 16,
-          summaryFieldCount: 52,
+          sourceIsaCharacteristicV2: structuredClone(sourceIsaV2Unavailable),
+          summaryFieldCount: 55,
           targetKirSha256: targetKir,
           verifiedTargetKirSha256: targetKir,
           vgprAllocationGranuleDwordsPerLane: 8,
@@ -219,18 +238,25 @@ function syntheticEvidence(): Synthetic {
     },
     roadmapIssue: manifestDocument.roadmapIssue,
     schema: "fe2o3-tutorial-gfx942-hardware-evidence-v1",
+    sourceIsaCharacteristicV2: structuredClone(sourceIsaV2Implementation),
     target: { hardwareObserved: true, processor: "gfx942", profile: "gfx942:xnack-", xnack: "disabled" },
   };
   const evidencePath = resolve(directory, "evidence.json");
   return { directory, evidence, evidencePath };
 }
 
-function runSynthetic(mutate?: (value: Synthetic) => void) {
+function runSynthetic(
+  mutate?: (value: Synthetic) => void,
+  extraArguments: string[] | ((value: Synthetic) => string[]) = [],
+) {
   const value = syntheticEvidence();
   try {
     mutate?.(value);
     writeFileSync(value.evidencePath, `${JSON.stringify(value.evidence, null, 2)}\n`);
-    return spawnSync(process.execPath, [validator, "--manifest", manifestPath, "--evidence", value.evidencePath, "--artifact-root", value.directory], { encoding: "utf8" });
+    const arguments_ = typeof extraArguments === "function"
+      ? extraArguments(value)
+      : extraArguments;
+    return spawnSync(process.execPath, [validator, "--manifest", manifestPath, "--evidence", value.evidencePath, "--artifact-root", value.directory, ...arguments_], { encoding: "utf8" });
   } finally {
     rmSync(value.directory, { force: true, recursive: true });
   }
@@ -247,6 +273,15 @@ describe("gfx942 hardware evidence trust boundary", () => {
     ["target", (value: Synthetic) => { value.evidence.target.profile = "gfx950:xnack-"; }, "required constant"],
     ["corpus", (value: Synthetic) => { value.evidence.manifest.corpusContractSha256 = "0".repeat(64); }, "stable corpus contract"],
     ["fixture", (value: Synthetic) => { value.evidence.cases[0].fixtureId = "hostile-fixture"; }, "manifest matrix"],
+    ["Source/ISA implementation target", (value: Synthetic) => {
+      (value.evidence.sourceIsaCharacteristicV2 as { targetProfile: string }).targetProfile = "gfx950:xnack-";
+    }, "required constant"],
+    ["direct-link Source/ISA status", (value: Synthetic) => {
+      const observations = value.evidence.cases[0].observations as Record<string, unknown>;
+      const compilerModel = observations.compilerModel as Record<string, unknown>;
+      const sourceIsa = compilerModel.sourceIsaCharacteristicV2 as Record<string, unknown>;
+      sourceIsa.status = "passed";
+    }, "required constant"],
   ])("rejects a %s mismatch", (_label, mutate, message) => {
     const result = runSynthetic(mutate);
     expect(result.status).toBe(1);
@@ -270,5 +305,15 @@ describe("gfx942 hardware evidence trust boundary", () => {
     });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("bytes do not match");
+  });
+
+  it("rejects byte drift in the protected Worker V3/V12 Source/ISA fixture", () => {
+    const result = runSynthetic((value) => {
+      const fixturePath = resolve(value.directory, "source-isa-v2.json");
+      const bytes = readFileSync(sourceIsaV2FixturePath);
+      writeFileSync(fixturePath, Buffer.concat([bytes, Buffer.from("\n")]));
+    }, (value) => ["--source-isa-v2-fixture", resolve(value.directory, "source-isa-v2.json")]);
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("Source/ISA V2 fixture");
   });
 });

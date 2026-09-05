@@ -5,9 +5,24 @@ import { lstatSync, readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve } from "node:path";
 import { tutorialCorpusContractSha256 } from "./tutorial-corpus-contract.mjs";
 
-const SCHEMA_SHA256 = "75266f9cb6017770ef7d899b2d3e2d4d41fc191b93b1ab479024db560c3a10d7";
+const SCHEMA_SHA256 = "4ab38389760f904b1782a54aed9960c7e174039b192590c042968aafaaed1346";
 const SHA256 = /^[0-9a-f]{64}$/u;
 const TARGET = "gfx942:xnack-";
+const SOURCE_ISA_V2_FIXTURE_PATH = "crates/fe2o3-hsaco-finalize/tests/fixtures/production-v12-source-isa-characteristic-v2.json";
+const SOURCE_ISA_V2_IMPLEMENTATION = {
+  collectionBytes: 4797,
+  collectionSha256: "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072",
+  fixturePath: SOURCE_ISA_V2_FIXTURE_PATH,
+  schema: "fe2o3-source-isa-characteristic-v2",
+  status: "admitted-production-shaped-worker-v3-v12",
+  targetProfile: TARGET,
+};
+const SOURCE_ISA_V2_UNAVAILABLE = {
+  collectionBytes: 0,
+  collectionSha256: null,
+  inspectionStatus: "not-contained-pre-finalization",
+  status: "unavailable-direct-link-no-protected-finalizer",
+};
 const MAX_FILE_BYTES = 256 * 1024 * 1024;
 const IDENTITY_FIELDS = [
   "schema", "compiler_commit", "compiler_tree", "target", "hardware_observed",
@@ -39,6 +54,21 @@ function readJson(path, label) {
     return { bytes, document: JSON.parse(bytes.toString("utf8")) };
   } catch (error) {
     fail(`cannot read ${label} ${path}: ${error.message}`);
+  }
+}
+
+function validateSourceIsaFixture(path, evidence) {
+  let metadata;
+  try { metadata = lstatSync(path); } catch (error) { fail(`cannot inspect Source/ISA V2 fixture: ${error.message}`); }
+  if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size !== SOURCE_ISA_V2_IMPLEMENTATION.collectionBytes) {
+    fail("Source/ISA V2 fixture must be the exact bounded regular compiler fixture");
+  }
+  const bytes = readFileSync(path);
+  if (
+    sha256(bytes) !== SOURCE_ISA_V2_IMPLEMENTATION.collectionSha256 ||
+    !sameJson(evidence, SOURCE_ISA_V2_IMPLEMENTATION)
+  ) {
+    fail("Source/ISA V2 implementation evidence differs from the compiler contract");
   }
 }
 
@@ -313,7 +343,7 @@ function resourceFromFields(fields, offset, vgprGranule, sgprGranule, label) {
 
 function validateModelSummary(bytes, model, policy, inspectionSha) {
   const fields = canonicalText(bytes, "compiler-model summary").trimEnd().split("\t");
-  if (fields.length !== 52) fail("compiler-model summary does not have the exact 52-field V2 shape");
+  if (fields.length !== 55) fail("compiler-model summary does not have the exact 55-field V2 shape");
   const integers = fields.slice(0, 14).map((value) => Number(value));
   if (integers.some((value, index) => !Number.isSafeInteger(value) || String(value) !== fields[index])) fail("compiler-model summary prefix is not canonical decimal");
   if (JSON.stringify(integers.slice(0, 4)) !== JSON.stringify([policy, 2, 2, 12]) || integers.slice(4, 8).some((value) => value <= 0) || JSON.stringify(integers.slice(8, 10)) !== JSON.stringify([9, 7])) {
@@ -324,13 +354,19 @@ function validateModelSummary(bytes, model, policy, inspectionSha) {
   const vgprGranule = Number(fields[18]);
   const sgprGranule = Number(fields[19]);
   if (revision !== 3 || vgprGranule < 1 || sgprGranule < 1) fail("compiler-model summary does not identify resource model V3");
+  if (
+    fields[52] !== SOURCE_ISA_V2_UNAVAILABLE.inspectionStatus ||
+    fields[53] !== "none" ||
+    fields[54] !== "0"
+  ) fail("compiler-model summary invents protected-finalizer Source/ISA V2 evidence");
   const expected = {
     amdCostModelRevision: 2, amdPolicyVersion: 2, canonicalKirVersion: 12,
     inputResources: resourceFromFields(fields, 20, vgprGranule, sgprGranule, "input resource summary"),
     inspectionRecordSha256: fields[14], neutralPolicyVersion: policy,
     outputResources: resourceFromFields(fields, 36, vgprGranule, sgprGranule, "output resource summary"),
     resourceModelRevision: 3, sgprAllocationGranuleDwordsPerWave: sgprGranule,
-    summaryFieldCount: 52, targetKirSha256: fields[15], verifiedTargetKirSha256: fields[16],
+    sourceIsaCharacteristicV2: SOURCE_ISA_V2_UNAVAILABLE,
+    summaryFieldCount: 55, targetKirSha256: fields[15], verifiedTargetKirSha256: fields[16],
     vgprAllocationGranuleDwordsPerLane: vgprGranule,
   };
   const observed = Object.fromEntries(Object.entries(model).filter(([key]) => !["hardwareObserved", "kind", "record"].includes(key)));
@@ -361,6 +397,7 @@ function parseArguments(arguments_) {
     else if (key === "--schema") result.schema = value;
     else if (key === "--evidence") result.evidence = value;
     else if (key === "--artifact-root") result.artifactRoot = value;
+    else if (key === "--source-isa-v2-fixture") result.sourceIsaV2Fixture = value;
     else fail(`unknown argument ${key}`);
   }
   if (!result.evidence || !result.artifactRoot) fail("--evidence and --artifact-root are required");
@@ -381,6 +418,10 @@ function main() {
   if (sha256(schema.bytes) !== SCHEMA_SHA256) fail("hardware evidence schema differs from the compiler contract");
   const evidence = readJson(resolve(arguments_.evidence), "evidence").document;
   validateSchema(evidence, schema.document, schema.document);
+  validateSourceIsaFixture(
+    resolve(arguments_.sourceIsaV2Fixture ?? resolve(repositoryRoot, SOURCE_ISA_V2_FIXTURE_PATH)),
+    evidence.sourceIsaCharacteristicV2,
+  );
 
   const cases = manifestCases(manifest.document);
   if (
