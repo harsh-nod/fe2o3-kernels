@@ -185,7 +185,7 @@ function validateDocument(document, manifest, manifestDigests) {
     fail("current stable corpus differs from measured Candidate A");
   }
 
-  const evidence = exactKeys(record.evidence, ["baselineReports", "hardware", "semantic"], "evidence");
+  const evidence = exactKeys(record.evidence, ["baselineReports", "hardware", "semantic", "thresholds"], "evidence");
   const semanticEvidence = evidenceIdentity(evidence.semantic, "evidence.semantic", false);
   if (semanticEvidence.schema !== "fe2o3-tutorial-semantic-qualification-evidence-v1") {
     fail("record references an unsupported semantic evidence contract");
@@ -194,7 +194,26 @@ function validateDocument(document, manifest, manifestDigests) {
     .map((item, index) => evidenceIdentity(item, `evidence.baselineReports[${index}]`, true));
   const hardwareRecords = boundedArray(evidence.hardware, MAX_TARGETS, "evidence.hardware")
     .map((item, index) => evidenceIdentity(item, `evidence.hardware[${index}]`, true));
-  for (const [label, values] of [["baseline", baselines], ["hardware", hardwareRecords]]) {
+  const thresholds = boundedArray(evidence.thresholds, MAX_TARGETS, "evidence.thresholds", true)
+    .map((item, index) => {
+      const label = `evidence.thresholds[${index}]`;
+      const threshold = exactKeys(item, [
+        "baselineReportSha256", "bytes", "schema", "selfGate", "sha256", "target",
+      ], label);
+      evidenceIdentity({
+        bytes: threshold.bytes,
+        schema: threshold.schema,
+        sha256: threshold.sha256,
+        target: threshold.target,
+      }, label, true);
+      digest(threshold.baselineReportSha256, `${label}.baselineReportSha256`);
+      if (
+        threshold.schema !== "fe2o3-tutorial-compiler-no-regression-thresholds-v1" ||
+        threshold.selfGate !== "passed"
+      ) fail(`${label} lacks the exact self-gated threshold contract`);
+      return threshold;
+    });
+  for (const [label, values] of [["baseline", baselines], ["hardware", hardwareRecords], ["threshold", thresholds]]) {
     const targets = values.map((item) => item.target);
     if (new Set(targets).size !== targets.length || JSON.stringify(targets) !== JSON.stringify([...targets].sort())) {
       fail(`${label} evidence targets must be sorted and unique`);
@@ -207,6 +226,15 @@ function validateDocument(document, manifest, manifestDigests) {
     if (hardware.schema !== `fe2o3-tutorial-${hardware.target}-hardware-evidence-v1`) fail(`${hardware.target} hardware schema differs`);
   }
   const baselineByTarget = new Map(baselines.map((item) => [item.target, item.sha256]));
+  const thresholdByTarget = new Map(thresholds.map((item) => [item.target, item]));
+  if (JSON.stringify([...thresholdByTarget.keys()]) !== JSON.stringify([...baselineByTarget.keys()])) {
+    fail("threshold evidence target coverage differs from baseline evidence");
+  }
+  for (const [targetName, baselineSha256] of baselineByTarget) {
+    if (thresholdByTarget.get(targetName).baselineReportSha256 !== baselineSha256) {
+      fail(`${targetName} threshold evidence does not join its baseline report`);
+    }
+  }
   const hardwareByTarget = new Map(hardwareRecords.map((item) => [item.target, item.sha256]));
   const requirements = manifestRequirements(manifest);
   const fixtures = boundedArray(record.fixtures, MAX_FIXTURES, "fixtures", true);

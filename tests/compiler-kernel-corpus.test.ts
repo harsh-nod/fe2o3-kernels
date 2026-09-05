@@ -108,6 +108,12 @@ function writeQualificationRecord(document: Manifest, directory: string) {
   )).sort();
   const semanticSha = "3".repeat(64);
   const hardwareSha = new Map(hardwareTargets.map((target, index) => [target, String(index + 4).repeat(64)]));
+  const baselineReports = targets.map((target, index) => ({
+    bytes: 1,
+    schema: "fe2o3-tutorial-compiler-baseline-report-v1",
+    sha256: String(index + 6).repeat(64),
+    target,
+  }));
   const candidateManifestBytes = `${JSON.stringify(document, null, 2)}\n`;
   const record = {
     schema: "fe2o3-tutorial-compiler-qualification-record-v1",
@@ -132,12 +138,7 @@ function writeQualificationRecord(document: Manifest, directory: string) {
       targetReplayEvidenceVersion: 9,
     },
     evidence: {
-      baselineReports: targets.map((target, index) => ({
-        bytes: 1,
-        schema: "fe2o3-tutorial-compiler-baseline-report-v1",
-        sha256: String(index + 6).repeat(64),
-        target,
-      })),
+      baselineReports,
       hardware: hardwareTargets.map((target) => ({
         bytes: 1,
         schema: `fe2o3-tutorial-${target}-hardware-evidence-v1`,
@@ -149,6 +150,14 @@ function writeQualificationRecord(document: Manifest, directory: string) {
         schema: "fe2o3-tutorial-semantic-qualification-evidence-v1",
         sha256: semanticSha,
       },
+      thresholds: baselineReports.map((baseline, index) => ({
+        baselineReportSha256: baseline.sha256,
+        bytes: 1,
+        schema: "fe2o3-tutorial-compiler-no-regression-thresholds-v1",
+        selfGate: "passed",
+        sha256: String(index + 8).repeat(64),
+        target: baseline.target,
+      })),
     },
     fixtures: [...document.compilerFixtures]
       .sort((left, right) => left.fixtureId.localeCompare(right.fixtureId))
@@ -642,6 +651,8 @@ describe("production compiler tutorial corpus", () => {
         hardwareAuthority: { const: false },
         publicationAuthority: { const: false },
       });
+    expect(qualificationRecordSchemaDocument.properties.evidence.required)
+      .toContain("thresholds");
 
     const documentation = readFileSync(
       resolve("docs/compiler-corpus-qualification-v1.md"),
@@ -724,7 +735,16 @@ describe("production compiler tutorial corpus", () => {
   });
 
   it("rejects hostile offline record authority, join, pin, and digest mutations", () => {
-    for (const mutation of ["authority", "semantic-join", "hardware-join", "inspection-join", "candidate-pin", "digest"] as const) {
+    for (const mutation of [
+      "authority",
+      "semantic-join",
+      "hardware-join",
+      "inspection-join",
+      "threshold-join",
+      "threshold-self-gate",
+      "candidate-pin",
+      "digest",
+    ] as const) {
       const result = withTemporaryCorpus((document, directory) => {
         const qualification = writeQualificationRecord(document, directory);
         if (mutation === "digest") {
@@ -741,6 +761,10 @@ describe("production compiler tutorial corpus", () => {
             const hardwareFixture = changed.fixtures.find((fixture) => fixture.hardware.required)!;
             hardwareFixture.hardware.compilerInspectionSha256 = "f".repeat(64);
           }
+          if (mutation === "threshold-join") {
+            changed.evidence.thresholds[0].baselineReportSha256 = "f".repeat(64);
+          }
+          if (mutation === "threshold-self-gate") changed.evidence.thresholds[0].selfGate = "failed";
           if (mutation === "candidate-pin") changed.candidate.commit = "f".repeat(40);
           const bytes = `${JSON.stringify(canonicalValue(changed), null, 2)}\n`;
           writeFileSync(qualification.recordPath, bytes);

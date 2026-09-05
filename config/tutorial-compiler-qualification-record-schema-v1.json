@@ -22,6 +22,26 @@
       "required": ["bytes", "schema", "sha256", "target"],
       "type": "object"
     },
+    "thresholdEvidenceIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "baselineReportSha256": { "$ref": "#/$defs/sha256" },
+        "bytes": { "minimum": 1, "type": "integer" },
+        "schema": { "const": "fe2o3-tutorial-compiler-no-regression-thresholds-v1" },
+        "selfGate": { "const": "passed" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "target": { "pattern": "^gfx[0-9]{3}$", "type": "string" }
+      },
+      "required": [
+        "baselineReportSha256",
+        "bytes",
+        "schema",
+        "selfGate",
+        "sha256",
+        "target"
+      ],
+      "type": "object"
+    },
     "gitIdentity": {
       "pattern": "^[0-9a-f]{40}$",
       "type": "string"
@@ -105,9 +125,15 @@
           "maxItems": 16,
           "type": "array"
         },
-        "semantic": { "$ref": "#/$defs/evidenceIdentity" }
+        "semantic": { "$ref": "#/$defs/evidenceIdentity" },
+        "thresholds": {
+          "items": { "$ref": "#/$defs/thresholdEvidenceIdentity" },
+          "maxItems": 16,
+          "minItems": 1,
+          "type": "array"
+        }
       },
-      "required": ["baselineReports", "hardware", "semantic"],
+      "required": ["baselineReports", "hardware", "semantic", "thresholds"],
       "type": "object"
     },
     "fixtures": {

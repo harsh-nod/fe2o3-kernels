@@ -70,7 +70,7 @@ const SHARED_SCHEMA_SHA256 = new Map([
   ["tutorial-compiler-baseline-report-schema-v1.json", "9518095c335043c93f5ccb111f6564e7485f1e4f5bda8ad833f60dd0305e1dc4"],
   ["tutorial-compiler-no-regression-threshold-schema-v1.json", "dc4b321174fdbed4be2dddea6392b7a6d46ca61745621f127322eaf204f4bb6e"],
   ["tutorial-gfx942-hardware-evidence-schema-v1.json", "75266f9cb6017770ef7d899b2d3e2d4d41fc191b93b1ab479024db560c3a10d7"],
-  ["tutorial-compiler-qualification-record-schema-v1.json", "d07a617cf591ae825528fc708508a1beb1d4b8e10d60f3a542332d1d113f630f"],
+  ["tutorial-compiler-qualification-record-schema-v1.json", "ed293b8c1cdf77fafe366b185e9a12a374aea89cb53aa26c97dadc6be4a82b13"],
 ]);
 
 function fail(message) {
