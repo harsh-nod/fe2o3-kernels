@@ -11,7 +11,9 @@ import { relative, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import baselineSchemaDocument from "../config/tutorial-compiler-baseline-report-schema-v1.json";
 import thresholdSchemaDocument from "../config/tutorial-compiler-no-regression-threshold-schema-v1.json";
+import hardwareSchemaDocument from "../config/tutorial-gfx942-hardware-evidence-schema-v1.json";
 import manifestDocument from "../config/tutorial-kernel-manifest-v1.json";
+import { tutorialCorpusContractSha256 } from "../scripts/tutorial-corpus-contract.mjs";
 import { lessons } from "../src/content/curriculum";
 import { operatorCookbook } from "../src/content/operator-cookbook";
 import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
@@ -56,6 +58,7 @@ type Manifest = {
     allowsPipelineSelection: boolean;
     allowsFallback: boolean;
   };
+  qualification: unknown;
   compilerFixtures: Fixture[];
   entries: Entry[];
 };
@@ -103,7 +106,7 @@ function qualifyTypedVecadd(
   document: Manifest,
   directory: string,
   sidecarBytes?: Buffer,
-  mutation?: "missing-compiler-metrics" | "fabricated-runtime" | "forged-occupancy",
+  mutation?: "missing-compiler-metrics" | "fabricated-runtime" | "forged-occupancy" | "independent-compiler" | "retired-amd" | "forged-resource-occupancy" | "wrong-corpus-digest",
 ) {
   const entry = document.entries.find((candidate) => candidate.lessonId === "typed-vecadd");
   if (!entry) throw new Error("typed-vecadd manifest entry is missing");
@@ -115,9 +118,9 @@ function qualifyTypedVecadd(
   if (!fixture) throw new Error("typed-vecadd fixture is missing");
   const sidecarPath = resolve(
     directory,
-    "vecadd.ll.fe2o3-compiler-inspection-v1",
+    "vecadd.ll.fe2o3-compiler-inspection-v2",
   );
-  const expectedSidecar = sidecarBytes ?? Buffer.from("F2KIRP01missing", "ascii");
+  const expectedSidecar = sidecarBytes ?? Buffer.from("F2KIRP02missing", "ascii");
   const inspectionSha256 = digest(expectedSidecar);
   const reportPath = resolve(directory, "gfx942-report.json");
   const prospectiveManifest = `${JSON.stringify(document, null, 2)}\n`;
@@ -126,10 +129,11 @@ function qualifyTypedVecadd(
       manifest: {
         path: "config/tutorial-kernel-manifest-v1.json",
         sha256: digest(prospectiveManifest),
+        corpusContractSha256: tutorialCorpusContractSha256(document),
       },
       compiler: {
-        commit: document.baseline.compilerCommit,
-        tree: document.baseline.compilerTree,
+        commit: mutation === "independent-compiler" ? "d".repeat(40) : document.baseline.compilerCommit,
+        tree: mutation === "independent-compiler" ? "e".repeat(40) : document.baseline.compilerTree,
         worktreeClean: true,
       },
       measurement: {
@@ -142,6 +146,10 @@ function qualifyTypedVecadd(
       pipelineContract: {
         entry: document.productionContract.pipelineEntry,
         requiredPolicyVersion: 4,
+        requiredCanonicalKirVersion: 12,
+        requiredAmdPolicyVersion: 2,
+        requiredAmdCostModelRevision: 2,
+        requiredAmdResourceModelRevision: 3,
         requiresFinalOptimizedGraphVerification: true,
       },
       cases: [
@@ -162,11 +170,13 @@ function qualifyTypedVecadd(
           pipelineOutcome: {
             compileOnly: "passed",
             policyVersionObserved: 4,
-            amdPolicyVersionObserved: 1,
-            amdCostModelRevisionObserved: 1,
+            amdPolicyVersionObserved: 2,
+            amdCostModelRevisionObserved: 2,
+            amdResourceModelRevisionObserved: 3,
+            canonicalKirVersionObserved: 12,
             inspectionRecordSha256: inspectionSha256,
             finalTargetKirSha256: "1".repeat(64),
-            finalVerifiedV11Sha256: "2".repeat(64),
+            finalVerifiedKirSha256: "2".repeat(64),
             finalOptimizedGraphVerificationObserved: true,
           },
           compilerMetrics: {
@@ -174,12 +184,58 @@ function qualifyTypedVecadd(
             diagnosticBytes: 0,
             inspectionSidecarBytes: expectedSidecar.length,
             inspectionRecordBytes: expectedSidecar.length,
+            neutralPassCount: 9,
+            targetPassCount: 7,
             neutralPassWork: 0,
             targetPassWork: 0,
             optimizerCandidates: 0,
             optimizerApplied: 0,
             neutralGraphGrowthBytes: 0,
             targetBindingAndOptimizationGrowthBytes: 0,
+            targetResourceModelV3: {
+              modelRevision: 3,
+              vgprAllocationGranuleDwordsPerLane: 8,
+              sgprAllocationGranuleDwordsPerWave: 16,
+              input: {
+                livenessValues: 0,
+                livenessWorkUnits: 0,
+                peakLiveVgprDwordsPerLane: 0,
+                peakLiveVgprFunction: 0,
+                peakLiveSgprDwordsPerWave: 0,
+                peakLiveSgprFunction: 0,
+                allocatedVgprDwordsPerLane: 0,
+                allocatedSgprDwordsPerWave: 0,
+                requiredVgprSpillDwordsPerLane: 0,
+                requiredSgprSpillDwordsPerWave: 0,
+                vgprLimitedWavesPerExecutionUnit: 1,
+                sgprLimitedWavesPerExecutionUnit: 1,
+                ldsLimitedWavesPerExecutionUnit: null,
+                estimatedWavesPerExecutionUnit: 1,
+                occupancyComplete: false,
+                spillAdmissible: true,
+              },
+              output: {
+                livenessValues: 0,
+                livenessWorkUnits: 0,
+                peakLiveVgprDwordsPerLane: 0,
+                peakLiveVgprFunction: 0,
+                peakLiveSgprDwordsPerWave: 0,
+                peakLiveSgprFunction: 0,
+                allocatedVgprDwordsPerLane: 0,
+                allocatedSgprDwordsPerWave: 0,
+                requiredVgprSpillDwordsPerLane: 0,
+                requiredSgprSpillDwordsPerWave: 0,
+                vgprLimitedWavesPerExecutionUnit: 1,
+                sgprLimitedWavesPerExecutionUnit: 1,
+                ldsLimitedWavesPerExecutionUnit: null,
+                estimatedWavesPerExecutionUnit: 1,
+                occupancyComplete: false,
+                spillAdmissible: true,
+              },
+              hardwareObserved: false,
+              comparisonPolicy: "compiler-policy-identity-only",
+              comparisonRationale: "replay-validated compiler estimates are policy evidence, not hardware observations",
+            },
           },
           artifactResources: {
             agprCount: 0,
@@ -204,7 +260,9 @@ function qualifyTypedVecadd(
       ],
     };
   const reportCase = report.cases[0] as Record<string, unknown>;
-  if (mutation === "missing-compiler-metrics") {
+  if (mutation === "wrong-corpus-digest") {
+    report.manifest.corpusContractSha256 = "0".repeat(64);
+  } else if (mutation === "missing-compiler-metrics") {
     delete reportCase.compilerMetrics;
   } else if (mutation === "fabricated-runtime") {
     reportCase.runtimeMetrics = {
@@ -218,6 +276,10 @@ function qualifyTypedVecadd(
       maximumWavesPerExecutionUnit: 2,
       occupancyStatus: "unavailable-not-emitted",
     };
+  } else if (mutation === "retired-amd") {
+    report.cases[0].pipelineOutcome.amdPolicyVersionObserved = 1;
+  } else if (mutation === "forged-resource-occupancy") {
+    report.cases[0].compilerMetrics.targetResourceModelV3.output.occupancyComplete = true;
   }
   writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`);
   if (sidecarBytes) writeFileSync(sidecarPath, sidecarBytes);
@@ -236,11 +298,28 @@ describe("production compiler tutorial corpus", () => {
     expect(recordedPath).toBe("config/tutorial-kernel-manifest-v1.json");
     expect(digest(readFileSync(path))).toBe(expectedDigest);
     expect(expectedDigest).toBe(
-      "c3530c2646ad0c587869e4e642e61c4032703471683dcca95087adebf6913a51",
+      "62faa6f1c0204aaf456a99aa7eab85f006179d3fd59f3dd8fa50e6fec828fcd6",
     );
     expect(manifest.schema).toBe("fe2o3-tutorial-kernel-manifest-v1");
     expect(manifest.roadmapIssue).toBe(
       "https://github.com/harsh-nod/fe2o3/issues/271",
+    );
+  });
+
+  it("uses the compiler's stable domain-separated corpus identity", () => {
+    expect(tutorialCorpusContractSha256(manifest)).toBe(
+      "0b8c030e4604b9a1dd9f7dd13ab8e9ded6283571a6e2b310cf42619dcd8161ad",
+    );
+    const publicationChange = structuredClone(manifest);
+    publicationChange.baseline.compilerCommit = "f".repeat(40);
+    publicationChange.baseline.status = "qualified";
+    expect(tutorialCorpusContractSha256(publicationChange)).toBe(
+      tutorialCorpusContractSha256(manifest),
+    );
+    const corpusChange = structuredClone(manifest);
+    corpusChange.compilerFixtures[0].testPath += ".hostile";
+    expect(tutorialCorpusContractSha256(corpusChange)).not.toBe(
+      tutorialCorpusContractSha256(manifest),
     );
   });
 
@@ -330,21 +409,26 @@ describe("production compiler tutorial corpus", () => {
         "policyVersionObserved",
         "amdPolicyVersionObserved",
         "amdCostModelRevisionObserved",
+        "amdResourceModelRevisionObserved",
+        "canonicalKirVersionObserved",
         "inspectionRecordSha256",
         "finalTargetKirSha256",
-        "finalVerifiedV11Sha256",
+        "finalVerifiedKirSha256",
         "finalOptimizedGraphVerificationObserved",
       ]));
     expect(baselineSchemaDocument.properties.cases.items.properties.compilerMetrics.required)
       .toEqual(expect.arrayContaining([
         "peakResidentSetBytes",
         "diagnosticBytes",
+        "neutralPassCount",
+        "targetPassCount",
         "neutralPassWork",
         "targetPassWork",
         "optimizerCandidates",
         "optimizerApplied",
         "neutralGraphGrowthBytes",
         "targetBindingAndOptimizationGrowthBytes",
+        "targetResourceModelV3",
       ]));
     expect(baselineSchemaDocument.properties.cases.items.properties.artifactResources.required)
       .toEqual(expect.arrayContaining([
@@ -382,8 +466,8 @@ describe("production compiler tutorial corpus", () => {
         "maxVgprCount",
         "maxLdsBytes",
         "maxPrivateSegmentBytes",
-        "minimumWavesPerExecutionUnit",
-        "maximumWavesPerExecutionUnit",
+        "minimumMinimumWavesPerExecutionUnit",
+        "minimumMaximumWavesPerExecutionUnit",
         "maxRuntimeNanoseconds",
       ]));
     expect(thresholdSchemaDocument.properties.families.items.properties.requiredPipeline.required)
@@ -391,8 +475,18 @@ describe("production compiler tutorial corpus", () => {
         "neutralPolicyVersion",
         "amdPolicyVersion",
         "amdCostModelRevision",
+        "amdResourceModelRevision",
+        "canonicalKirVersion",
         "finalOptimizedGraphVerification",
-      ]));
+    ]));
+    expect(hardwareSchemaDocument.properties.target.properties.profile.const).toBe(
+      "gfx942:xnack-",
+    );
+    expect(hardwareSchemaDocument.properties.cases.items.properties.observations.properties.compilerModel.properties)
+      .toMatchObject({
+        canonicalKirVersion: { const: 12 },
+        summaryFieldCount: { const: 52 },
+      });
 
     const documentation = readFileSync(
       resolve("docs/compiler-corpus-qualification-v1.md"),
@@ -412,7 +506,7 @@ describe("production compiler tutorial corpus", () => {
     }
   });
 
-  it("rejects byte-level drift in either shared M9 schema", () => {
+  it("rejects byte-level drift in every shared M9 schema", () => {
     const baseline = withTemporaryCorpus((_document, directory) => {
       const changed = structuredClone(baselineSchemaDocument);
       changed.properties.cases.items.required = changed.properties.cases.items.required
@@ -437,6 +531,16 @@ describe("production compiler tutorial corpus", () => {
     });
     expect(thresholds.status).toBe(1);
     expect(thresholds.stderr).toContain("differs from the compiler M9 contract");
+
+    const hardware = withTemporaryCorpus((_document, directory) => {
+      const changed = structuredClone(hardwareSchemaDocument);
+      changed.properties.target.properties.profile.const = "gfx950:xnack-";
+      const schemaPath = resolve(directory, "tutorial-gfx942-hardware-evidence-schema-v1.json");
+      writeFileSync(schemaPath, `${JSON.stringify(changed, null, 2)}\n`);
+      return ["--hardware-schema", schemaPath];
+    });
+    expect(hardware.status).toBe(1);
+    expect(hardware.stderr).toContain("differs from the compiler M9 contract");
   });
 
   it("rejects missing, duplicate, stale, and non-resolving fixture IDs", () => {
@@ -499,6 +603,41 @@ describe("production compiler tutorial corpus", () => {
     });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("missing its inspection sidecar");
+  });
+
+  it("does not recursively require the measured compiler to equal publication metadata", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const qualification = qualifyTypedVecadd(document, directory, undefined, "independent-compiler");
+      return ["--baseline-report", qualification.reportPath, "--inspector", process.execPath];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("missing its inspection sidecar");
+    expect(result.stderr).not.toContain("manifest compiler commit and tree");
+  });
+
+  it("rejects a report bound only to stale or substituted corpus semantics", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const qualification = qualifyTypedVecadd(document, directory, undefined, "wrong-corpus-digest");
+      return ["--baseline-report", qualification.reportPath, "--inspector", process.execPath];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("does not bind the exact tutorial manifest");
+  });
+
+  it("rejects retired AMD policy and inconsistent dynamic-LDS resource evidence", () => {
+    const retired = withTemporaryCorpus((document, directory) => {
+      const qualification = qualifyTypedVecadd(document, directory, undefined, "retired-amd");
+      return ["--baseline-report", qualification.reportPath, "--inspector", process.execPath];
+    });
+    expect(retired.status).toBe(1);
+    expect(retired.stderr).toContain("V4/AMD V2/resource V3");
+
+    const occupancy = withTemporaryCorpus((document, directory) => {
+      const qualification = qualifyTypedVecadd(document, directory, undefined, "forged-resource-occupancy");
+      return ["--baseline-report", qualification.reportPath, "--inspector", process.execPath];
+    });
+    expect(occupancy.status).toBe(1);
+    expect(occupancy.stderr).toContain("dynamic LDS conservatively");
   });
 
   it("rejects forged inspection framing before invoking the compiler decoder", () => {

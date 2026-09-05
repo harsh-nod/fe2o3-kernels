@@ -3255,7 +3255,7 @@ describe("curriculum integrity", () => {
       "Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses",
       "Checked index constant fold",
       "Production optimizer V4 transaction",
-      "AMD target optimizer V1 transaction",
+      "AMD target optimizer V2 transaction",
       "Unmodeled transformation",
     ]);
     expect(
@@ -3340,7 +3340,9 @@ describe("curriculum integrity", () => {
       "Authenticated checked tiled and row-striped mappings",
       "Same-TyCtxt descriptor identity hardens substitution checks",
       "Production optimizer V4 transaction",
-      "F2KIRP01",
+      "F2KIRP02",
+      "replay evidence V9",
+      "resource model V3",
       "peak resident-set bytes",
       "unavailable-not-emitted",
       "not-run-compile-only",

@@ -1,0 +1,575 @@
+{
+  "$defs": {
+    "compilerModelResource": {
+      "additionalProperties": false,
+      "properties": {
+        "allocatedSgprDwordsPerWave": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "allocatedVgprDwordsPerLane": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "estimatedWavesPerEu": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "ldsLimitedWavesPerEu": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "livenessValues": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "livenessWork": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "occupancyComplete": {
+          "type": "boolean"
+        },
+        "peakSgprDwordsPerWave": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "peakSgprFunction": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "peakVgprDwordsPerLane": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "peakVgprFunction": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "requiredSgprSpillDwordsPerWave": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "requiredVgprSpillDwordsPerLane": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "sgprLimitedWavesPerEu": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "spillAdmissible": {
+          "type": "boolean"
+        },
+        "vgprLimitedWavesPerEu": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "allocatedSgprDwordsPerWave",
+        "allocatedVgprDwordsPerLane",
+        "estimatedWavesPerEu",
+        "ldsLimitedWavesPerEu",
+        "livenessValues",
+        "livenessWork",
+        "occupancyComplete",
+        "peakSgprDwordsPerWave",
+        "peakSgprFunction",
+        "peakVgprDwordsPerLane",
+        "peakVgprFunction",
+        "requiredSgprSpillDwordsPerWave",
+        "requiredVgprSpillDwordsPerLane",
+        "sgprLimitedWavesPerEu",
+        "spillAdmissible",
+        "vgprLimitedWavesPerEu"
+      ],
+      "type": "object"
+    },
+    "fileRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path": {
+          "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9._-]*/)*[A-Za-z0-9][A-Za-z0-9._-]*$",
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "bytes",
+        "path",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "gitIdentity": {
+      "pattern": "^[0-9a-f]{40}$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "slug": {
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "type": "string"
+    }
+  },
+  "$id": "https://harsh-nod.github.io/fe2o3/schemas/tutorial-gfx942-hardware-evidence-v1.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "additionalProperties": false,
+      "properties": {
+        "compilerAuthority": {
+          "const": false
+        },
+        "launchAuthority": {
+          "const": false
+        },
+        "loadAuthority": {
+          "const": false
+        },
+        "publicationAuthority": {
+          "const": false
+        }
+      },
+      "required": [
+        "compilerAuthority",
+        "launchAuthority",
+        "loadAuthority",
+        "publicationAuthority"
+      ],
+      "type": "object"
+    },
+    "cases": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "artifacts": {
+            "additionalProperties": false,
+            "properties": {
+              "compilerInspection": {
+                "$ref": "#/$defs/fileRecord"
+              },
+              "hsaco": {
+                "$ref": "#/$defs/fileRecord"
+              },
+              "llvmIr": {
+                "$ref": "#/$defs/fileRecord"
+              }
+            },
+            "required": [
+              "compilerInspection",
+              "hsaco",
+              "llvmIr"
+            ],
+            "type": "object"
+          },
+          "caseId": {
+            "$ref": "#/$defs/slug"
+          },
+          "fixtureId": {
+            "$ref": "#/$defs/slug"
+          },
+          "observations": {
+            "additionalProperties": false,
+            "properties": {
+              "compilerModel": {
+                "additionalProperties": false,
+                "properties": {
+                  "amdCostModelRevision": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "amdPolicyVersion": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "canonicalKirVersion": {
+                    "const": 12
+                  },
+                  "hardwareObserved": {
+                    "const": false
+                  },
+                  "inputResources": {
+                    "$ref": "#/$defs/compilerModelResource"
+                  },
+                  "inspectionRecordSha256": {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  "kind": {
+                    "const": "compiler-resource-model"
+                  },
+                  "neutralPolicyVersion": {
+                    "minimum": 4,
+                    "type": "integer"
+                  },
+                  "outputResources": {
+                    "$ref": "#/$defs/compilerModelResource"
+                  },
+                  "record": {
+                    "$ref": "#/$defs/fileRecord"
+                  },
+                  "resourceModelRevision": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "sgprAllocationGranuleDwordsPerWave": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "summaryFieldCount": {
+                    "const": 52
+                  },
+                  "targetKirSha256": {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  "verifiedTargetKirSha256": {
+                    "$ref": "#/$defs/sha256"
+                  },
+                  "vgprAllocationGranuleDwordsPerLane": {
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "amdCostModelRevision",
+                  "amdPolicyVersion",
+                  "canonicalKirVersion",
+                  "hardwareObserved",
+                  "inputResources",
+                  "inspectionRecordSha256",
+                  "kind",
+                  "neutralPolicyVersion",
+                  "outputResources",
+                  "record",
+                  "resourceModelRevision",
+                  "sgprAllocationGranuleDwordsPerWave",
+                  "summaryFieldCount",
+                  "targetKirSha256",
+                  "verifiedTargetKirSha256",
+                  "vgprAllocationGranuleDwordsPerLane"
+                ],
+                "type": "object"
+              },
+              "hardwareExecution": {
+                "additionalProperties": false,
+                "properties": {
+                  "compileOnly": {
+                    "const": false
+                  },
+                  "hardwareObserved": {
+                    "const": true
+                  },
+                  "hostLog": {
+                    "$ref": "#/$defs/fileRecord"
+                  },
+                  "kind": {
+                    "const": "hardware-execution"
+                  },
+                  "status": {
+                    "const": "PASS"
+                  }
+                },
+                "required": [
+                  "compileOnly",
+                  "hardwareObserved",
+                  "hostLog",
+                  "kind",
+                  "status"
+                ],
+                "type": "object"
+              },
+              "hsacoMetadata": {
+                "additionalProperties": false,
+                "properties": {
+                  "agprCount": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "groupSegmentFixedBytes": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "hardwareObserved": {
+                    "const": false
+                  },
+                  "kind": {
+                    "const": "hsaco-metadata"
+                  },
+                  "maxFlatWorkgroupSize": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "maximumWavesPerEu": {
+                    "anyOf": [
+                      {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "minimumWavesPerEu": {
+                    "anyOf": [
+                      {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "privateSegmentFixedBytes": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "record": {
+                    "$ref": "#/$defs/fileRecord"
+                  },
+                  "sgprCount": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "sgprSpillCount": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "vgprCount": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "vgprSpillCount": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "wavefrontSize": {
+                    "const": 64
+                  }
+                },
+                "required": [
+                  "agprCount",
+                  "groupSegmentFixedBytes",
+                  "hardwareObserved",
+                  "kind",
+                  "maxFlatWorkgroupSize",
+                  "maximumWavesPerEu",
+                  "minimumWavesPerEu",
+                  "privateSegmentFixedBytes",
+                  "record",
+                  "sgprCount",
+                  "sgprSpillCount",
+                  "vgprCount",
+                  "vgprSpillCount",
+                  "wavefrontSize"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "compilerModel",
+              "hardwareExecution",
+              "hsacoMetadata"
+            ],
+            "type": "object"
+          },
+          "ordinal": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "status": {
+            "const": "PASS"
+          },
+          "testId": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "artifacts",
+          "caseId",
+          "fixtureId",
+          "observations",
+          "ordinal",
+          "status",
+          "testId"
+        ],
+        "type": "object"
+      },
+      "maxItems": 256,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "commit": {
+          "$ref": "#/$defs/gitIdentity"
+        },
+        "tree": {
+          "$ref": "#/$defs/gitIdentity"
+        }
+      },
+      "required": [
+        "commit",
+        "tree"
+      ],
+      "type": "object"
+    },
+    "manifest": {
+      "additionalProperties": false,
+      "properties": {
+        "bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "caseCount": {
+          "maximum": 256,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "corpusContractSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "schema": {
+          "const": "fe2o3-tutorial-kernel-manifest-v1"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "bytes",
+        "caseCount",
+        "corpusContractSha256",
+        "schema",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "productionContract": {
+      "additionalProperties": false,
+      "properties": {
+        "allowsFallback": {
+          "const": false
+        },
+        "allowsPipelineSelection": {
+          "const": false
+        },
+        "pipelineEntry": {
+          "const": "rustc-codegen-fe2o3::production_pipeline"
+        },
+        "requiredPolicyVersion": {
+          "minimum": 4,
+          "type": "integer"
+        },
+        "requiresFinalOptimizedGraphVerification": {
+          "const": true
+        }
+      },
+      "required": [
+        "allowsFallback",
+        "allowsPipelineSelection",
+        "pipelineEntry",
+        "requiredPolicyVersion",
+        "requiresFinalOptimizedGraphVerification"
+      ],
+      "type": "object"
+    },
+    "records": {
+      "additionalProperties": false,
+      "properties": {
+        "buildLogs": {
+          "items": {
+            "$ref": "#/$defs/fileRecord"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "commands": {
+          "$ref": "#/$defs/fileRecord"
+        },
+        "identity": {
+          "$ref": "#/$defs/fileRecord"
+        },
+        "results": {
+          "$ref": "#/$defs/fileRecord"
+        },
+        "rocminfo": {
+          "$ref": "#/$defs/fileRecord"
+        }
+      },
+      "required": [
+        "buildLogs",
+        "commands",
+        "identity",
+        "results",
+        "rocminfo"
+      ],
+      "type": "object"
+    },
+    "roadmapIssue": {
+      "const": "https://github.com/harsh-nod/fe2o3/issues/271"
+    },
+    "schema": {
+      "const": "fe2o3-tutorial-gfx942-hardware-evidence-v1"
+    },
+    "target": {
+      "additionalProperties": false,
+      "properties": {
+        "hardwareObserved": {
+          "const": true
+        },
+        "processor": {
+          "const": "gfx942"
+        },
+        "profile": {
+          "const": "gfx942:xnack-"
+        },
+        "xnack": {
+          "const": "disabled"
+        }
+      },
+      "required": [
+        "hardwareObserved",
+        "processor",
+        "profile",
+        "xnack"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "authority",
+    "cases",
+    "compiler",
+    "manifest",
+    "productionContract",
+    "records",
+    "roadmapIssue",
+    "schema",
+    "target"
+  ],
+  "title": "fe2o3 tutorial gfx942 hardware evidence V1",
+  "type": "object"
+}

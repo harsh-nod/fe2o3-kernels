@@ -13,6 +13,263 @@
     "allowsPipelineSelection": false,
     "allowsFallback": false
   },
+  "qualification": {
+    "evidenceSchemaPath": "config/tutorial-semantic-qualification-evidence-schema-v1.json",
+    "hardwareTargets": [
+      {
+        "target": "gfx942",
+        "availability": "unavailable",
+        "unavailableReason": "No authenticated hardware execution lane is part of the deterministic semantic runner; gfx942 remains a separate required qualification gate."
+      },
+      {
+        "target": "gfx950",
+        "availability": "unavailable",
+        "unavailableReason": "No authenticated hardware execution lane is part of the deterministic semantic runner; gfx950 remains a separate required qualification gate."
+      }
+    ],
+    "suites": [
+      {
+        "suiteId": "cpu-reference-flash-attention",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/flash_attention_general_v1/Cargo.toml", "lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "flash-attention", "fixtureIds": ["gfx942-flash-attention"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-gemm-autoresearch",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/gemm_autoresearch_v1/Cargo.toml", "lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "gemm-proof-plan", "fixtureIds": ["gfx942-gemm-autoresearch"]},
+          {"lessonId": "gemm-tiling", "fixtureIds": ["gfx942-gemm-autoresearch"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-gfx950-advanced-attention",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/gfx950_advanced_attention/Cargo.toml", "test", "reference"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "gfx950-attnres-gr-mhc", "fixtureIds": ["gfx950-attnres-aggregate", "gfx950-attnres-aggregate-explicit-reuse", "gfx950-four-branch-residual", "gfx950-four-branch-residual-explicit", "gfx950-mhc-sinkhorn-mix", "gfx950-mhc-sinkhorn-mix-scalar"]},
+          {"lessonId": "gfx950-compressed-hybrid-attention", "fixtureIds": ["gfx950-compressed-hybrid-attention", "gfx950-compressed-hybrid-attention-division-baseline"]},
+          {"lessonId": "gfx950-deepseek-sparse-attention", "fixtureIds": ["gfx950-deepseek-sparse-attention"]},
+          {"lessonId": "gfx950-indexed-sparse-attention", "fixtureIds": ["gfx950-content-sparse-attention", "gfx950-content-sparse-attention-reciprocal-reuse"]},
+          {"lessonId": "gfx950-kda-gdn-linear-attention", "fixtureIds": ["gfx950-kda-decode", "gfx950-kda-decode-baseline", "gfx950-kda-prefill", "gfx950-kda-prefill-baseline"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-gfx950-advanced-systems",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/gfx950_advanced_systems/Cargo.toml", "test", "references"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "gfx950-advanced-moe", "fixtureIds": ["gfx950-combine-expert-ranks", "gfx950-moe-expert-rank", "gfx950-moe-expert-rank-expert-serial", "gfx950-moe-route", "gfx950-stage-gradient-shard"]},
+          {"lessonId": "gfx950-muon-optimizer", "fixtureIds": ["gfx950-muon-update", "gfx950-muon-update-broadcast16"]},
+          {"lessonId": "gfx950-ngram-embedding-gather", "fixtureIds": ["gfx950-qwen-ngram-gather", "gfx950-qwen-ngram-gather-reverse-probe"]},
+          {"lessonId": "gfx950-speculative-mtp-verification", "fixtureIds": ["gfx950-speculative-transaction", "gfx950-speculative-transaction-recompute-prefix"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-gfx950-gpt-oss-decode",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/gfx950_gpt_oss_decode/Cargo.toml", "test", "reference"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "gfx950-gpt-oss-120b-megakernel", "fixtureIds": ["gfx950-gpt-oss-decode", "gfx950-gpt-oss-held-fragments", "gfx950-gpt-oss-interleaved-stores", "gfx950-gpt-oss-materialized-attention", "gfx950-gpt-oss-materialized-expert", "gfx950-gpt-oss-materialized-router", "gfx950-gpt-oss-serial-router"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-gfx950-low-precision",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/gfx950_low_precision/Cargo.toml", "lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "gfx950-fp4-attention", "fixtureIds": ["gfx950-fp4-attention"]},
+          {"lessonId": "gfx950-fp4-gemm", "fixtureIds": ["gfx950-fp4-gemm"]},
+          {"lessonId": "gfx950-fp8-attention", "fixtureIds": ["gfx950-fp8-attention"]},
+          {"lessonId": "gfx950-fp8-gemm", "fixtureIds": ["gfx950-fp8-gemm"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-moe-grouped-expert",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/moe_grouped_expert_general_v1/Cargo.toml", "lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "moe-expert-compute", "fixtureIds": ["gfx942-grouped-expert-moe"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-moe-top2",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/moe_top2_v1/Cargo.toml", "test", "oracle"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "moe-routing", "fixtureIds": []}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-row-softmax",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/row_softmax_general_v1/Cargo.toml", "lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "softmax-invariant", "fixtureIds": ["gfx942-row-softmax"]}
+        ]
+      },
+      {
+        "suiteId": "cpu-reference-tiled-gemm",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": ["examples/tiled_gemm_general_v1/Cargo.toml", "lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "gemm-proof-plan", "fixtureIds": ["gfx942-tiled-gemm"]},
+          {"lessonId": "gemm-tiling", "fixtureIds": ["gfx942-tiled-gemm"]}
+        ]
+      },
+      {
+      "suiteId": "cpu-reference-typed-vecadd",
+      "gate": "cpu-reference",
+      "availability": "available",
+      "command": {
+        "executable": "scripts/run-tutorial-cpu-reference.sh",
+        "arguments": [
+          "examples/vecadd/Cargo.toml",
+          "lib"
+        ],
+        "environment": [],
+        "workingDirectory": ".",
+        "timeoutSeconds": 1200
+      },
+      "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "typed-vecadd", "fixtureIds": ["gfx942-typed-vecadd-source"]}
+        ]
+      },
+      {
+        "suiteId": "semantic-simulation-fill",
+        "gate": "semantic-simulation",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-semantic-simulation.py",
+          "arguments": ["--expectation", "scripts/quickstart/fill-expectation.json", "--", "simulate-source", "--crate", "fe2o3_fill", "--request", "scripts/quickstart/fill-request.json", "--target", "gfx942", "--bundle-version", "7", "--", "--package", "fe2o3-fill", "--lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 3600
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "cpu-semantic-simulation", "fixtureIds": ["gfx942-fill-simulation"]},
+          {"lessonId": "first-fill", "fixtureIds": ["gfx942-fill-simulation"]}
+        ]
+      },
+      {
+        "suiteId": "semantic-simulation-wave64-collectives",
+        "gate": "semantic-simulation",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-semantic-simulation.py",
+          "arguments": ["--expectation", "examples/wave64_collectives_v1/full-mask-expectation.json", "--", "simulate-source", "--crate", "fe2o3_wave64_collectives_v1", "--request", "examples/wave64_collectives_v1/full-mask-request.json", "--target", "gfx942", "--bundle-version", "7", "--", "--manifest-path", "examples/wave64_collectives_v1/Cargo.toml", "--lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 3600
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "reductions-scans", "fixtureIds": ["gfx942-wave64-collectives"]}
+        ]
+      },
+      {
+        "suiteId": "semantic-simulation-workgroup-collectives",
+        "gate": "semantic-simulation",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-semantic-simulation.py",
+          "arguments": ["--expectation", "examples/workgroup_sync_v1/scan-u32-expectation.json", "--", "simulate-source", "--crate", "fe2o3_workgroup_sync_v1", "--request", "examples/workgroup_sync_v1/scan-u32-request.json", "--target", "gfx942", "--bundle-version", "7", "--", "--manifest-path", "examples/workgroup_sync_v1/Cargo.toml", "--no-default-features", "--features", "lds-scan-u32-kernel", "--lib"],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 3600
+        },
+        "unavailableReason": null,
+        "coverage": [
+          {"lessonId": "lds-barriers-atomics", "fixtureIds": ["gfx942-workgroup-collectives"]}
+        ]
+      }
+    ]
+  },
   "compilerFixtures": [
     {"fixtureId": "gfx942-fill-simulation", "testId": "kernel-compile-matrix/gfx942/fill", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "fill", "runnerPath": "examples/fill/run-gfx942.sh", "artifactName": "fill.hsaco", "runnerArguments": [], "environment": []}},
     {"fixtureId": "gfx942-flash-attention", "testId": "kernel-compile-matrix/gfx942/flash-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "flash-attention", "runnerPath": "examples/flash_attention_general_v1/run-gfx942.sh", "artifactName": "flash_attention_general_v1.hsaco", "runnerArguments": [], "environment": []}},

@@ -39,8 +39,9 @@ export function ArchitecturePage() {
             ["Fe2O3 capabilities", "Extend affine ownership to invocation partitions, subgroup participation, LDS epochs, matrix contexts, and launch-scoped resources."],
             ["Kernel IR", "Records types, regions, effects, synchronization, and unsupported obligations."],
             ["Production optimizer V4", "Runs the closed nine-phase target-neutral policy: initial scalar/CFG cleanup, private SROA, global value numbering, interprocedural optimization, post-interprocedural cleanup, loop canonicalization, memory/guard optimization, bounded unrolling, and final cleanup. Each phase is bounded and the complete input/report/output transaction is independently re-executed before custody advances."],
-            ["AMD target optimizer V1", "Runs the closed seven-phase target policy: address reduction, integer strength reduction, vector access packing, LDS layout, wave/MFMA selection, unrolling/scheduling, and guarded specialization. The final canonical target KIR is re-admitted as exact V11 before LLVM emission."],
-            ["Compiler inspection record", "Writes canonical F2KIRP01 inspection bytes beside the primary LLVM output. The record binds the target, V4/V1/V1 policy revisions, before-neutral, after-neutral, and target KIR V11 snapshots, plus the closed 16-pass remarks. The measured report adds peak RSS, diagnostics, optimizer work/growth, IR sizes, and HSACO resources while keeping absent occupancy and compile-only runtime typed unavailable."],
+            ["AMD target optimizer V2", "Admits zero-offset address folding, integer x2 strength reduction, proved scalar-copy vector packing, redundant LDS-load removal, vector-layout removal/store folding, and MFMA accumulator scheduling. Loop unrolling and generated specialization have separate closed evidence. Wave handling only preserves Wave64 legality, and MFMA selection maps an already-attached tensor profile; it does not rewrite waves, promote LDS, or synthesize MFMA profiles."],
+            ["AMD cost and resource policy", "The deterministic gfx942/gfx950 V2 models use add/multiply/address costs 1/4/2 versus 1/3/1, scalar-memory/matrix costs 8/16 versus 7/8, 16- versus 32-byte vector caps, and unroll factors 4 versus 8. Resource V3 replays SSA liveness, 8-dword VGPR and 16-dword SGPR allocation granules, no-spill admission, and 65,536- versus 163,840-byte total LDS-per-CU occupancy inputs. Dynamic LDS leaves only LDS occupancy incomplete; transforms needing a bounded fact fail closed."],
+            ["Compiler inspection record", "Writes canonical F2KIRP02 inspection V2 bytes beside the primary LLVM output. The record binds the target, neutral V4, AMD policy/cost V2, resource model V3, before-neutral, after-neutral, and target KIR V12 snapshots, plus the closed 16-pass remarks. AMD replay evidence V9 reconstructs the target transaction and all affected legality analyses before final verification."],
             ["Regression gate", "Binds reviewed integer-ceiling compile-time, size, resource, and work thresholds to the exact baseline report, compiler tree, and corpus manifest. It rejects missing or extra fixtures, target/policy/semantic drift, changed occupancy metadata, and measured ceiling regressions; a null compile-only runtime is not a performance limit."],
             ["V7 simulator", "Consumes either exact KIR or an authority-free bundle exported through the sole production compiler transaction. It runs the supported subset with legal integer atomics and fences plus exact software F16/BF16/F32/F64 scalar bits on a bounded deterministic CPU schedule; it is not an alternate compiler, GPU execution, timing, performance prediction, or proof."],
             ["Compiler analyses", "Run the fixed nine ordered tensor, bounds, atomic, race, hierarchy-ownership, barrier, pipeline-protocol, workgroup-memory, and semantic checks. The pipeline certificate proves epoch lifecycle, modulo slot selection, release-before-reuse, and dynamic prologue/steady-state/drain structure before workgroup-memory verification. Only the admitted static bounded-access fragment has Complete independent raw replay; nonempty tensor flow and every other current stage witness remain Incomplete."],
@@ -80,7 +81,12 @@ export function ArchitecturePage() {
           measured baseline, or qualified sidecar set yet. Gfx942 and gfx950
           compilation, simulation/reference gates, and required MI300X or MI350X
           hardware lanes must be rerun against the eventual clean compiler tree
-          before any entry or baseline becomes qualified.
+          before any entry or baseline becomes qualified. Reports bind the manifest
+          path, raw SHA-256, and the domain-separated canonical corpus digest that
+          excludes only top-level baseline publication metadata. The strict gfx942
+          evidence path additionally binds every fixture, command, retained artifact,
+          resource summary, host log, and hardware target. No release evidence is
+          fabricated or implied by the migration contract.
         </p>
       </section>
 

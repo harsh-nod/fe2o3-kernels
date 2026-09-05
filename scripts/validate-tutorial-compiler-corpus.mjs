@@ -4,12 +4,14 @@ import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import { lstatSync, readFileSync } from "node:fs";
 import { isAbsolute, relative, resolve } from "node:path";
+import { tutorialCorpusContractSha256 } from "./tutorial-corpus-contract.mjs";
 
 const TOP_LEVEL_KEYS = [
   "baseline",
   "compilerFixtures",
   "entries",
   "productionContract",
+  "qualification",
   "roadmapIssue",
   "schema",
 ];
@@ -56,16 +58,17 @@ const ALLOWED_GATES = new Set([
   "production-compile",
   "semantic-simulation",
 ]);
-const SIDECAR_SUFFIX = ".ll.fe2o3-compiler-inspection-v1";
-const SIDECAR_MAGIC = Buffer.from("F2KIRP01", "ascii");
+const SIDECAR_SUFFIX = ".ll.fe2o3-compiler-inspection-v2";
+const SIDECAR_MAGIC = Buffer.from("F2KIRP02", "ascii");
 const SHA256 = /^[0-9a-f]{64}$/u;
 const GIT_ID = /^[0-9a-f]{40}$/u;
 const TARGET = /^gfx[0-9]{3}$/u;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const MAX_SIDECAR_BYTES = 3 * 16 * 1024 * 1024 + 256 * 1024;
 const SHARED_SCHEMA_SHA256 = new Map([
-  ["tutorial-compiler-baseline-report-schema-v1.json", "4a0fbe2b6975725e2c40ddf11881cee59725d1c3c36c58f503b6f585e2b7bd7e"],
-  ["tutorial-compiler-no-regression-threshold-schema-v1.json", "bc5fabb9da14edfb18d3556e34915872af049710c71b028d179862d695b1a5f5"],
+  ["tutorial-compiler-baseline-report-schema-v1.json", "9518095c335043c93f5ccb111f6564e7485f1e4f5bda8ad833f60dd0305e1dc4"],
+  ["tutorial-compiler-no-regression-threshold-schema-v1.json", "dc4b321174fdbed4be2dddea6392b7a6d46ca61745621f127322eaf204f4bb6e"],
+  ["tutorial-gfx942-hardware-evidence-schema-v1.json", "75266f9cb6017770ef7d899b2d3e2d4d41fc191b93b1ab479024db560c3a10d7"],
 ]);
 
 function fail(message) {
@@ -313,14 +316,20 @@ function validateManifest(document) {
   return { baseline, contract, entries, fixtureById };
 }
 
-function validateDigest(manifestPath, digestPath, manifestBytes, repositoryRoot) {
+function validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot) {
   const [expected, recordedPath, ...extra] = readFileSync(digestPath, "ascii").trimEnd().split("  ");
   if (extra.length !== 0 || !SHA256.test(expected)) fail("manifest digest record is malformed");
   const expectedPath = relative(repositoryRoot, manifestPath).replaceAll("\\", "/");
   if (recordedPath !== expectedPath) fail("manifest digest record names the wrong path");
   const actual = sha256(manifestBytes);
   if (actual !== expected) fail(`manifest digest mismatch: expected ${expected}, got ${actual}`);
-  return actual;
+  let corpusContractSha256;
+  try {
+    corpusContractSha256 = tutorialCorpusContractSha256(manifestDocument);
+  } catch (error) {
+    fail(`cannot compute stable corpus contract: ${error.message}`);
+  }
+  return { rawSha256: actual, corpusContractSha256 };
 }
 
 function validateSharedSchema(path, expectedName) {
@@ -337,21 +346,55 @@ function validateSharedSchema(path, expectedName) {
   }
 }
 
-function validateReport(path, manifestDigest, manifest) {
+function validateResourceEstimateV3(resource, granules, label) {
+  const fields = [
+    "livenessValues", "livenessWorkUnits", "peakLiveVgprDwordsPerLane", "peakLiveVgprFunction",
+    "peakLiveSgprDwordsPerWave", "peakLiveSgprFunction", "allocatedVgprDwordsPerLane",
+    "allocatedSgprDwordsPerWave", "requiredVgprSpillDwordsPerLane",
+    "requiredSgprSpillDwordsPerWave", "vgprLimitedWavesPerExecutionUnit",
+    "sgprLimitedWavesPerExecutionUnit", "ldsLimitedWavesPerExecutionUnit",
+    "estimatedWavesPerExecutionUnit", "occupancyComplete", "spillAdmissible",
+  ];
+  exactKeys(resource, fields, label);
+  for (const field of fields.slice(0, 10)) integerAtLeast(resource[field], 0, `${label}.${field}`);
+  for (const field of ["vgprLimitedWavesPerExecutionUnit", "sgprLimitedWavesPerExecutionUnit", "estimatedWavesPerExecutionUnit"]) {
+    integerAtLeast(resource[field], 1, `${label}.${field}`);
+  }
+  if (resource.ldsLimitedWavesPerExecutionUnit !== null) {
+    integerAtLeast(resource.ldsLimitedWavesPerExecutionUnit, 1, `${label}.ldsLimitedWavesPerExecutionUnit`);
+  }
+  if (
+    resource.allocatedVgprDwordsPerLane < resource.peakLiveVgprDwordsPerLane ||
+    resource.allocatedVgprDwordsPerLane % granules.vgpr !== 0 ||
+    resource.allocatedSgprDwordsPerWave < resource.peakLiveSgprDwordsPerWave ||
+    resource.allocatedSgprDwordsPerWave % granules.sgpr !== 0
+  ) fail(`${label} has an invalid register allocation`);
+  const occupancyComplete = resource.ldsLimitedWavesPerExecutionUnit !== null;
+  if (resource.occupancyComplete !== occupancyComplete) fail(`${label} does not represent dynamic LDS conservatively`);
+  const limits = [resource.vgprLimitedWavesPerExecutionUnit, resource.sgprLimitedWavesPerExecutionUnit];
+  if (occupancyComplete) limits.push(resource.ldsLimitedWavesPerExecutionUnit);
+  if (resource.estimatedWavesPerExecutionUnit !== Math.min(...limits)) fail(`${label} has an invalid occupancy estimate`);
+  const spillAdmissible = resource.requiredVgprSpillDwordsPerLane === 0 && resource.requiredSgprSpillDwordsPerWave === 0;
+  if (resource.spillAdmissible !== spillAdmissible) fail(`${label} has an invalid spill admission result`);
+  return resource;
+}
+
+function validateReport(path, manifestDigests, manifest) {
   const report = exactKeys(parseJson(path, "baseline report"), [
     "cases", "compiler", "manifest", "measurement", "pipelineContract", "schema",
   ], `baseline report ${path}`);
   if (report.schema !== "fe2o3-tutorial-compiler-baseline-report-v1") fail(`${path} has unsupported report schema`);
-  const binding = exactKeys(report.manifest, ["path", "sha256"], `${path}.manifest`);
-  if (binding.path !== "config/tutorial-kernel-manifest-v1.json" || binding.sha256 !== manifestDigest) {
+  const binding = exactKeys(report.manifest, ["path", "sha256", "corpusContractSha256"], `${path}.manifest`);
+  if (
+    binding.path !== "config/tutorial-kernel-manifest-v1.json" ||
+    binding.sha256 !== manifestDigests.rawSha256 ||
+    binding.corpusContractSha256 !== manifestDigests.corpusContractSha256
+  ) {
     fail(`${path} does not bind the exact tutorial manifest`);
   }
   const compiler = exactKeys(report.compiler, ["commit", "tree", "worktreeClean"], `${path}.compiler`);
   if (!GIT_ID.test(compiler.commit) || !GIT_ID.test(compiler.tree) || compiler.worktreeClean !== true) {
     fail(`${path} does not identify a clean exact compiler tree`);
-  }
-  if (compiler.commit !== manifest.baseline.compilerCommit || compiler.tree !== manifest.baseline.compilerTree) {
-    fail(`${path} does not bind the manifest compiler commit and tree`);
   }
   const measurement = exactKeys(report.measurement, ["command", "durationClock", "measuredAtUtc", "target", "toolchain"], `${path}.measurement`);
   if (!TARGET.test(measurement.target) || measurement.durationClock !== "CLOCK_MONOTONIC") {
@@ -360,12 +403,20 @@ function validateReport(path, manifestDigest, manifest) {
   string(measurement.command, `${path}.measurement.command`);
   string(measurement.toolchain, `${path}.measurement.toolchain`);
   if (Number.isNaN(Date.parse(measurement.measuredAtUtc))) fail(`${path} has an invalid measuredAtUtc`);
-  const pipeline = exactKeys(report.pipelineContract, ["entry", "requiredPolicyVersion", "requiresFinalOptimizedGraphVerification"], `${path}.pipelineContract`);
+  const pipeline = exactKeys(report.pipelineContract, [
+    "entry", "requiredPolicyVersion", "requiredCanonicalKirVersion", "requiredAmdPolicyVersion",
+    "requiredAmdCostModelRevision", "requiredAmdResourceModelRevision",
+    "requiresFinalOptimizedGraphVerification",
+  ], `${path}.pipelineContract`);
   if (
     pipeline.entry !== manifest.contract.pipelineEntry ||
     pipeline.requiredPolicyVersion !== 4 ||
+    pipeline.requiredCanonicalKirVersion !== 12 ||
+    pipeline.requiredAmdPolicyVersion !== 2 ||
+    pipeline.requiredAmdCostModelRevision !== 2 ||
+    pipeline.requiredAmdResourceModelRevision !== 3 ||
     pipeline.requiresFinalOptimizedGraphVerification !== true
-  ) fail(`${path} does not bind the exact production V4 pipeline contract`);
+  ) fail(`${path} does not bind the exact production V4/AMD V2/resource V3 pipeline contract`);
   if (!Array.isArray(report.cases) || report.cases.length === 0) fail(`${path}.cases must be nonempty`);
   const cases = new Map();
   for (const [index, rawCase] of report.cases.entries()) {
@@ -392,25 +443,46 @@ function validateReport(path, manifestDigest, manifest) {
       fail(`${label} has invalid measured IR sizes`);
     }
     const outcome = exactKeys(item.pipelineOutcome, [
-      "amdCostModelRevisionObserved", "amdPolicyVersionObserved", "compileOnly", "finalOptimizedGraphVerificationObserved", "finalTargetKirSha256", "finalVerifiedV11Sha256", "inspectionRecordSha256", "policyVersionObserved",
+      "amdCostModelRevisionObserved", "amdPolicyVersionObserved", "amdResourceModelRevisionObserved",
+      "canonicalKirVersionObserved", "compileOnly", "finalOptimizedGraphVerificationObserved",
+      "finalTargetKirSha256", "finalVerifiedKirSha256", "inspectionRecordSha256", "policyVersionObserved",
     ], `${label}.pipelineOutcome`);
     if (
       outcome.compileOnly !== "passed" ||
       outcome.policyVersionObserved !== 4 ||
-      outcome.amdPolicyVersionObserved !== 1 ||
-      outcome.amdCostModelRevisionObserved !== 1 ||
+      outcome.amdPolicyVersionObserved !== 2 ||
+      outcome.amdCostModelRevisionObserved !== 2 ||
+      outcome.amdResourceModelRevisionObserved !== 3 ||
+      outcome.canonicalKirVersionObserved !== 12 ||
       outcome.finalOptimizedGraphVerificationObserved !== true ||
-      ![outcome.inspectionRecordSha256, outcome.finalTargetKirSha256, outcome.finalVerifiedV11Sha256].every((value) => SHA256.test(value))
-    ) fail(`${label} does not carry exact authenticated V4/V1/V1 optimized output facts`);
+      ![outcome.inspectionRecordSha256, outcome.finalTargetKirSha256, outcome.finalVerifiedKirSha256].every((value) => SHA256.test(value))
+    ) fail(`${label} does not carry exact authenticated V4/AMD V2/resource V3 optimized output facts`);
     const metrics = exactKeys(item.compilerMetrics, [
-      "diagnosticBytes", "inspectionRecordBytes", "inspectionSidecarBytes", "neutralGraphGrowthBytes", "neutralPassWork", "optimizerApplied", "optimizerCandidates", "peakResidentSetBytes", "targetBindingAndOptimizationGrowthBytes", "targetPassWork",
+      "diagnosticBytes", "inspectionRecordBytes", "inspectionSidecarBytes", "neutralGraphGrowthBytes",
+      "neutralPassCount", "neutralPassWork", "optimizerApplied", "optimizerCandidates", "peakResidentSetBytes",
+      "targetBindingAndOptimizationGrowthBytes", "targetPassCount", "targetPassWork", "targetResourceModelV3",
     ], `${label}.compilerMetrics`);
-    for (const field of ["peakResidentSetBytes", "inspectionSidecarBytes", "inspectionRecordBytes"]) {
+    for (const field of ["peakResidentSetBytes", "inspectionSidecarBytes", "inspectionRecordBytes", "neutralPassCount", "targetPassCount"]) {
       integerAtLeast(metrics[field], 1, `${label}.compilerMetrics.${field}`);
     }
     for (const field of ["diagnosticBytes", "neutralPassWork", "targetPassWork", "optimizerCandidates", "optimizerApplied", "neutralGraphGrowthBytes", "targetBindingAndOptimizationGrowthBytes"]) {
       integerAtLeast(metrics[field], 0, `${label}.compilerMetrics.${field}`);
     }
+    const resourceModel = exactKeys(metrics.targetResourceModelV3, [
+      "comparisonPolicy", "comparisonRationale", "hardwareObserved", "input", "modelRevision", "output",
+      "sgprAllocationGranuleDwordsPerWave", "vgprAllocationGranuleDwordsPerLane",
+    ], `${label}.compilerMetrics.targetResourceModelV3`);
+    if (
+      resourceModel.modelRevision !== 3 || resourceModel.hardwareObserved !== false ||
+      resourceModel.comparisonPolicy !== "compiler-policy-identity-only" ||
+      resourceModel.comparisonRationale !== "replay-validated compiler estimates are policy evidence, not hardware observations"
+    ) fail(`${label} has an invalid target resource model authority boundary`);
+    const granules = {
+      vgpr: integerAtLeast(resourceModel.vgprAllocationGranuleDwordsPerLane, 1, `${label}.resourceModel.vgprGranule`),
+      sgpr: integerAtLeast(resourceModel.sgprAllocationGranuleDwordsPerWave, 1, `${label}.resourceModel.sgprGranule`),
+    };
+    validateResourceEstimateV3(resourceModel.input, granules, `${label}.compilerMetrics.targetResourceModelV3.input`);
+    validateResourceEstimateV3(resourceModel.output, granules, `${label}.compilerMetrics.targetResourceModelV3.output`);
     const resources = exactKeys(item.artifactResources, [
       "agprCount", "ldsBytes", "maximumWavesPerExecutionUnit", "maxFlatWorkgroupSize", "minimumWavesPerExecutionUnit", "occupancyStatus", "privateSegmentBytes", "sgprCount", "sgprSpillCount", "vgprCount", "vgprSpillCount", "wavefrontSize",
     ], `${label}.artifactResources`);
@@ -447,21 +519,30 @@ function validateReport(path, manifestDigest, manifest) {
 function validateDecodedInspection(output, expected, expectedTarget, expectedCase, expectedSha) {
   const lines = output.split(/\r?\n/u).filter(Boolean);
   const required = [
-    "format: fe2o3-production-compiler-inspection-v1",
+    "format: fe2o3-production-compiler-inspection-v2",
     "authority: inspection-only",
     "compiler-authority: false",
     "publication-authority: false",
     "load-authority: false",
     "launch-authority: false",
     `target: ${expectedTarget}:xnack-`,
-    "policies: neutral=4 amd=1 amd-cost-model=1",
+    "policies: neutral=4 amd=2 amd-cost-model=2",
     "remarks: 16",
   ];
   for (const line of required) if (lines.filter((candidate) => candidate === line).length !== 1) fail(`inspector omitted canonical line ${line}`);
   if (!lines.includes(`record: sha256=${expectedSha} bytes=${expected.length}`)) fail("inspector record identity differs from the sidecar bytes");
-  const snapshots = lines.filter((line) => /^kir\.(before-neutral|after-neutral|target): version=11 sha256=[0-9a-f]{64} bytes=[1-9][0-9]* verified-v11=[0-9a-f]{64}$/u.test(line));
+  const resourceModel = expectedCase.compilerMetrics.targetResourceModelV3;
+  const expectedResourceLines = [
+    `resources-v3-model: revision=3 vgpr-allocation-granule-dwords-per-lane=${resourceModel.vgprAllocationGranuleDwordsPerLane} sgpr-allocation-granule-dwords-per-wave=${resourceModel.sgprAllocationGranuleDwordsPerWave} hardware-observed=false`,
+    resourceInspectionLine("input", resourceModel.input),
+    resourceInspectionLine("output", resourceModel.output),
+  ];
+  for (const line of expectedResourceLines) {
+    if (lines.filter((candidate) => candidate === line).length !== 1) fail(`inspector omitted exact replayed resource line ${line}`);
+  }
+  const snapshots = lines.filter((line) => /^kir\.(before-neutral|after-neutral|target): version=12 sha256=[0-9a-f]{64} bytes=[1-9][0-9]* verified-canonical=[0-9a-f]{64}$/u.test(line));
   if (snapshots.length !== 3 || !["before-neutral", "after-neutral", "target"].every((name) => snapshots.some((line) => line.startsWith(`kir.${name}:`)))) {
-    fail("inspector did not independently verify the exact three KIR V11 snapshots");
+    fail("inspector did not independently verify the exact three canonical KIR V12 snapshots");
   }
   const expectedSnapshotBytes = new Map([
     ["before-neutral", expectedCase.irSizes.inputNeutralKirBytes],
@@ -469,10 +550,10 @@ function validateDecodedInspection(output, expected, expectedTarget, expectedCas
     ["target", expectedCase.irSizes.canonicalKirBytes],
   ]);
   for (const line of snapshots) {
-    const match = /^kir\.(before-neutral|after-neutral|target): version=11 sha256=([0-9a-f]{64}) bytes=([1-9][0-9]*) verified-v11=([0-9a-f]{64})$/u.exec(line);
+    const match = /^kir\.(before-neutral|after-neutral|target): version=12 sha256=([0-9a-f]{64}) bytes=([1-9][0-9]*) verified-canonical=([0-9a-f]{64})$/u.exec(line);
     if (!match) fail("inspector emitted a malformed KIR snapshot");
     if (Number(match[3]) !== expectedSnapshotBytes.get(match[1])) fail(`inspector ${match[1]} KIR size differs from the measured report`);
-    if (match[1] === "target" && (match[2] !== expectedCase.pipelineOutcome.finalTargetKirSha256 || match[4] !== expectedCase.pipelineOutcome.finalVerifiedV11Sha256)) {
+    if (match[1] === "target" && (match[2] !== expectedCase.pipelineOutcome.finalTargetKirSha256 || match[4] !== expectedCase.pipelineOutcome.finalVerifiedKirSha256)) {
       fail("inspector target KIR identities differ from the measured report");
     }
   }
@@ -483,6 +564,11 @@ function validateDecodedInspection(output, expected, expectedTarget, expectedCas
   if (JSON.stringify(remarks) !== JSON.stringify(Array.from({ length: 16 }, (_, index) => index))) {
     fail("inspector did not emit the closed ordered 16-pass record");
   }
+}
+
+function resourceInspectionLine(stage, resource) {
+  const lds = resource.ldsLimitedWavesPerExecutionUnit ?? "na";
+  return `resources-v3-${stage}: basis=canonical-kir-ssa-policy liveness-values=${resource.livenessValues} liveness-work=${resource.livenessWorkUnits} peak-vgpr-dwords-per-lane=${resource.peakLiveVgprDwordsPerLane} peak-vgpr-function=${resource.peakLiveVgprFunction} peak-sgpr-dwords-per-wave=${resource.peakLiveSgprDwordsPerWave} peak-sgpr-function=${resource.peakLiveSgprFunction} allocated-vgpr-dwords-per-lane=${resource.allocatedVgprDwordsPerLane} allocated-sgpr-dwords-per-wave=${resource.allocatedSgprDwordsPerWave} required-vgpr-spill-dwords-per-lane=${resource.requiredVgprSpillDwordsPerLane} required-sgpr-spill-dwords-per-wave=${resource.requiredSgprSpillDwordsPerWave} vgpr-limited-waves-per-eu=${resource.vgprLimitedWavesPerExecutionUnit} sgpr-limited-waves-per-eu=${resource.sgprLimitedWavesPerExecutionUnit} lds-limited-waves-per-eu=${lds} estimated-waves-per-eu=${resource.estimatedWavesPerExecutionUnit} occupancy-complete=${resource.occupancyComplete} spill-admissible=${resource.spillAdmissible} hardware-observed=false`;
 }
 
 function validateSidecar(path, inspector, expectedCase, expectedTarget) {
@@ -510,7 +596,7 @@ function validateSidecar(path, inspector, expectedCase, expectedTarget) {
     fail(`cannot inspect compiler decoder ${inspector}: ${error.message}`);
   }
   if (!inspectorMetadata.isFile() || inspectorMetadata.isSymbolicLink()) fail("compiler inspector must be a regular executable");
-  const decoded = spawnSync(inspector, ["inspect", "--format", "compiler-inspection-v1", path], {
+  const decoded = spawnSync(inspector, ["inspect", "--format", "compiler-inspection-v2", path], {
     encoding: "utf8",
     maxBuffer: 100 * 1024 * 1024,
   });
@@ -531,6 +617,7 @@ function parseArguments(arguments_) {
     else if (argument === "--digest") values.digest = next();
     else if (argument === "--baseline-schema") values.baselineSchema = next();
     else if (argument === "--threshold-schema") values.thresholdSchema = next();
+    else if (argument === "--hardware-schema") values.hardwareSchema = next();
     else if (argument === "--baseline-report") values.reports.push(next());
     else if (argument === "--inspector") values.inspector = next();
     else if (argument === "--sidecar") {
@@ -554,7 +641,7 @@ function main() {
   const manifestDocument = JSON.parse(manifestBytes.toString("utf8"));
   const manifest = validateManifest(manifestDocument);
   const digestPath = resolve(arguments_.digest ?? (manifestPath.endsWith(".json") ? `${manifestPath.slice(0, -5)}.sha256` : `${manifestPath}.sha256`));
-  const manifestDigest = validateDigest(manifestPath, digestPath, manifestBytes, repositoryRoot);
+  const manifestDigests = validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot);
   validateSharedSchema(
     resolve(arguments_.baselineSchema ?? resolve(repositoryRoot, "config/tutorial-compiler-baseline-report-schema-v1.json")),
     "tutorial-compiler-baseline-report-schema-v1.json",
@@ -562,6 +649,10 @@ function main() {
   validateSharedSchema(
     resolve(arguments_.thresholdSchema ?? resolve(repositoryRoot, "config/tutorial-compiler-no-regression-threshold-schema-v1.json")),
     "tutorial-compiler-no-regression-threshold-schema-v1.json",
+  );
+  validateSharedSchema(
+    resolve(arguments_.hardwareSchema ?? resolve(repositoryRoot, "config/tutorial-gfx942-hardware-evidence-schema-v1.json")),
+    "tutorial-gfx942-hardware-evidence-schema-v1.json",
   );
 
   const qualifiedFixtureIds = new Set(manifest.entries.filter((entry) => entry.qualificationStatus === "qualified").flatMap((entry) => entry.compilerFixtureIds));
@@ -572,7 +663,7 @@ function main() {
     if (!arguments_.inspector) fail("qualified fixtures require the authenticated compiler inspector");
     const observedCases = new Map();
     for (const reportPath of arguments_.reports) {
-      for (const [fixtureId, item] of validateReport(resolve(reportPath), manifestDigest, manifest)) {
+      for (const [fixtureId, item] of validateReport(resolve(reportPath), manifestDigests, manifest)) {
         if (observedCases.has(fixtureId)) fail(`duplicate qualified fixture report ${fixtureId}`);
         observedCases.set(fixtureId, item);
       }
@@ -588,7 +679,7 @@ function main() {
       if (!qualifiedFixtureIds.has(fixtureId)) fail(`sidecar supplied for unqualified fixture ${fixtureId}`);
     }
   }
-  console.log(`validated tutorial compiler corpus: ${manifest.entries.length} lessons, ${manifest.fixtureById.size} compiler fixtures, policy V4`);
+  console.log(`validated tutorial compiler corpus: ${manifest.entries.length} lessons, ${manifest.fixtureById.size} compiler fixtures, neutral V4 / AMD V2 / resource V3 / inspection V2`);
 }
 
 try {

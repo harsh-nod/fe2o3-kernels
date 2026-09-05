@@ -10,10 +10,11 @@
     "manifest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["path", "sha256"],
+      "required": ["path", "sha256", "corpusContractSha256"],
       "properties": {
         "path": {"const": "config/tutorial-kernel-manifest-v1.json"},
-        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "corpusContractSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
       }
     },
     "compiler": {
@@ -41,10 +42,14 @@
     "pipelineContract": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["entry", "requiredPolicyVersion", "requiresFinalOptimizedGraphVerification"],
+      "required": ["entry", "requiredPolicyVersion", "requiredCanonicalKirVersion", "requiredAmdPolicyVersion", "requiredAmdCostModelRevision", "requiredAmdResourceModelRevision", "requiresFinalOptimizedGraphVerification"],
       "properties": {
         "entry": {"const": "rustc-codegen-fe2o3::production_pipeline"},
         "requiredPolicyVersion": {"type": "integer", "minimum": 3},
+        "requiredCanonicalKirVersion": {"const": 12},
+        "requiredAmdPolicyVersion": {"const": 2},
+        "requiredAmdCostModelRevision": {"const": 2},
+        "requiredAmdResourceModelRevision": {"const": 3},
         "requiresFinalOptimizedGraphVerification": {"const": true}
       }
     },
@@ -77,33 +82,52 @@
           "pipelineOutcome": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["compileOnly", "policyVersionObserved", "amdPolicyVersionObserved", "amdCostModelRevisionObserved", "inspectionRecordSha256", "finalTargetKirSha256", "finalVerifiedV11Sha256", "finalOptimizedGraphVerificationObserved"],
+            "required": ["compileOnly", "policyVersionObserved", "amdPolicyVersionObserved", "amdCostModelRevisionObserved", "amdResourceModelRevisionObserved", "canonicalKirVersionObserved", "inspectionRecordSha256", "finalTargetKirSha256", "finalVerifiedKirSha256", "finalOptimizedGraphVerificationObserved"],
             "properties": {
               "compileOnly": {"const": "passed"},
               "policyVersionObserved": {"type": "integer", "minimum": 0},
-              "amdPolicyVersionObserved": {"type": "integer", "minimum": 0},
-              "amdCostModelRevisionObserved": {"type": "integer", "minimum": 0},
+              "amdPolicyVersionObserved": {"const": 2},
+              "amdCostModelRevisionObserved": {"const": 2},
+              "amdResourceModelRevisionObserved": {"const": 3},
+              "canonicalKirVersionObserved": {"const": 12},
               "inspectionRecordSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
               "finalTargetKirSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
-              "finalVerifiedV11Sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "finalVerifiedKirSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
               "finalOptimizedGraphVerificationObserved": {"const": true}
             }
           },
           "compilerMetrics": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["peakResidentSetBytes", "diagnosticBytes", "inspectionSidecarBytes", "inspectionRecordBytes", "neutralPassWork", "targetPassWork", "optimizerCandidates", "optimizerApplied", "neutralGraphGrowthBytes", "targetBindingAndOptimizationGrowthBytes"],
+            "required": ["peakResidentSetBytes", "diagnosticBytes", "inspectionSidecarBytes", "inspectionRecordBytes", "neutralPassCount", "targetPassCount", "neutralPassWork", "targetPassWork", "optimizerCandidates", "optimizerApplied", "neutralGraphGrowthBytes", "targetBindingAndOptimizationGrowthBytes", "targetResourceModelV3"],
             "properties": {
               "peakResidentSetBytes": {"type": "integer", "minimum": 1},
               "diagnosticBytes": {"type": "integer", "minimum": 0},
               "inspectionSidecarBytes": {"type": "integer", "minimum": 1},
               "inspectionRecordBytes": {"type": "integer", "minimum": 1},
+              "neutralPassCount": {"type": "integer", "minimum": 1},
+              "targetPassCount": {"type": "integer", "minimum": 1},
               "neutralPassWork": {"type": "integer", "minimum": 0},
               "targetPassWork": {"type": "integer", "minimum": 0},
               "optimizerCandidates": {"type": "integer", "minimum": 0},
               "optimizerApplied": {"type": "integer", "minimum": 0},
               "neutralGraphGrowthBytes": {"type": "integer", "minimum": 0},
-              "targetBindingAndOptimizationGrowthBytes": {"type": "integer", "minimum": 0}
+              "targetBindingAndOptimizationGrowthBytes": {"type": "integer", "minimum": 0},
+              "targetResourceModelV3": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["modelRevision", "vgprAllocationGranuleDwordsPerLane", "sgprAllocationGranuleDwordsPerWave", "input", "output", "hardwareObserved", "comparisonPolicy", "comparisonRationale"],
+                "properties": {
+                  "modelRevision": {"const": 3},
+                  "vgprAllocationGranuleDwordsPerLane": {"type": "integer", "minimum": 1},
+                  "sgprAllocationGranuleDwordsPerWave": {"type": "integer", "minimum": 1},
+                  "input": {"$ref": "#/$defs/targetResourceEstimateV3"},
+                  "output": {"$ref": "#/$defs/targetResourceEstimateV3"},
+                  "hardwareObserved": {"const": false},
+                  "comparisonPolicy": {"const": "compiler-policy-identity-only"},
+                  "comparisonRationale": {"const": "replay-validated compiler estimates are policy evidence, not hardware observations"}
+                }
+              }
             }
           },
           "artifactResources": {
@@ -144,6 +168,31 @@
             }
           }
         }
+      }
+    }
+  },
+  "$defs": {
+    "targetResourceEstimateV3": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["livenessValues", "livenessWorkUnits", "peakLiveVgprDwordsPerLane", "peakLiveVgprFunction", "peakLiveSgprDwordsPerWave", "peakLiveSgprFunction", "allocatedVgprDwordsPerLane", "allocatedSgprDwordsPerWave", "requiredVgprSpillDwordsPerLane", "requiredSgprSpillDwordsPerWave", "vgprLimitedWavesPerExecutionUnit", "sgprLimitedWavesPerExecutionUnit", "ldsLimitedWavesPerExecutionUnit", "estimatedWavesPerExecutionUnit", "occupancyComplete", "spillAdmissible"],
+      "properties": {
+        "livenessValues": {"type": "integer", "minimum": 0},
+        "livenessWorkUnits": {"type": "integer", "minimum": 0},
+        "peakLiveVgprDwordsPerLane": {"type": "integer", "minimum": 0},
+        "peakLiveVgprFunction": {"type": "integer", "minimum": 0},
+        "peakLiveSgprDwordsPerWave": {"type": "integer", "minimum": 0},
+        "peakLiveSgprFunction": {"type": "integer", "minimum": 0},
+        "allocatedVgprDwordsPerLane": {"type": "integer", "minimum": 0},
+        "allocatedSgprDwordsPerWave": {"type": "integer", "minimum": 0},
+        "requiredVgprSpillDwordsPerLane": {"type": "integer", "minimum": 0},
+        "requiredSgprSpillDwordsPerWave": {"type": "integer", "minimum": 0},
+        "vgprLimitedWavesPerExecutionUnit": {"type": "integer", "minimum": 1},
+        "sgprLimitedWavesPerExecutionUnit": {"type": "integer", "minimum": 1},
+        "ldsLimitedWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+        "estimatedWavesPerExecutionUnit": {"type": "integer", "minimum": 1},
+        "occupancyComplete": {"type": "boolean"},
+        "spillAdmissible": {"type": "boolean"}
       }
     }
   }

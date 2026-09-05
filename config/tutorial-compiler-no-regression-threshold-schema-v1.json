@@ -10,12 +10,14 @@
     "baseline": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["reportSha256", "compilerCommit", "compilerTree", "manifestSha256"],
+      "required": ["reportSha256", "compilerCommit", "compilerTree", "manifestSha256", "corpusContractSha256", "target"],
       "properties": {
         "reportSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "compilerCommit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
         "compilerTree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
-        "manifestSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        "manifestSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "corpusContractSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "target": {"type": "string", "pattern": "^gfx[0-9]{3}$"}
       }
     },
     "derivation": {
@@ -46,17 +48,22 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["fixtureId", "maxCompileTimeNanoseconds", "maxCanonicalKirBytes", "maxLlvmIrBytes", "maxHsacoBytes", "maxPeakResidentSetBytes", "maxDiagnosticBytes", "maxInspectionSidecarBytes", "maxInspectionRecordBytes", "maxNeutralPassWork", "maxTargetPassWork", "maxNeutralGraphGrowthBytes", "maxTargetBindingAndOptimizationGrowthBytes", "maxAgprCount", "maxSgprCount", "maxVgprCount", "maxSgprSpillCount", "maxVgprSpillCount", "maxLdsBytes", "maxPrivateSegmentBytes", "minimumWavesPerExecutionUnit", "maximumWavesPerExecutionUnit", "maxRuntimeNanoseconds"],
+              "required": ["fixtureId", "maxCompileTimeNanoseconds", "maxInputNeutralKirBytes", "maxOptimizedNeutralKirBytes", "maxCanonicalKirBytes", "requiredLlvmIrFileCount", "maxLlvmIrBytes", "maxHsacoBytes", "maxPeakResidentSetBytes", "maxDiagnosticBytes", "maxInspectionSidecarBytes", "maxInspectionRecordBytes", "requiredNeutralPassCount", "requiredTargetPassCount", "maxNeutralPassWork", "maxTargetPassWork", "maxNeutralGraphGrowthBytes", "maxTargetBindingAndOptimizationGrowthBytes", "maxAgprCount", "maxSgprCount", "maxVgprCount", "maxSgprSpillCount", "maxVgprSpillCount", "maxLdsBytes", "maxPrivateSegmentBytes", "requiredMaxFlatWorkgroupSize", "requiredWavefrontSize", "requiredOccupancyStatus", "minimumMinimumWavesPerExecutionUnit", "minimumMaximumWavesPerExecutionUnit", "requiredRuntimeStatus", "maxRuntimeNanoseconds"],
               "properties": {
                 "fixtureId": {"type": "string", "minLength": 1},
                 "maxCompileTimeNanoseconds": {"type": "integer", "minimum": 0},
-                "maxCanonicalKirBytes": {"type": ["integer", "null"], "minimum": 0},
-                "maxLlvmIrBytes": {"type": ["integer", "null"], "minimum": 0},
+                "maxInputNeutralKirBytes": {"type": "integer", "minimum": 1},
+                "maxOptimizedNeutralKirBytes": {"type": "integer", "minimum": 1},
+                "maxCanonicalKirBytes": {"type": "integer", "minimum": 1},
+                "requiredLlvmIrFileCount": {"const": 1},
+                "maxLlvmIrBytes": {"type": "integer", "minimum": 1},
                 "maxHsacoBytes": {"type": "integer", "minimum": 1},
                 "maxPeakResidentSetBytes": {"type": "integer", "minimum": 1},
                 "maxDiagnosticBytes": {"type": "integer", "minimum": 0},
                 "maxInspectionSidecarBytes": {"type": "integer", "minimum": 1},
                 "maxInspectionRecordBytes": {"type": "integer", "minimum": 1},
+                "requiredNeutralPassCount": {"type": "integer", "minimum": 1},
+                "requiredTargetPassCount": {"type": "integer", "minimum": 1},
                 "maxNeutralPassWork": {"type": "integer", "minimum": 0},
                 "maxTargetPassWork": {"type": "integer", "minimum": 0},
                 "maxNeutralGraphGrowthBytes": {"type": "integer", "minimum": 0},
@@ -68,8 +75,12 @@
                 "maxVgprSpillCount": {"type": "integer", "minimum": 0},
                 "maxLdsBytes": {"type": "integer", "minimum": 0},
                 "maxPrivateSegmentBytes": {"type": "integer", "minimum": 0},
-                "minimumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
-                "maximumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+                "requiredMaxFlatWorkgroupSize": {"type": "integer", "minimum": 1},
+                "requiredWavefrontSize": {"type": "integer", "minimum": 1},
+                "requiredOccupancyStatus": {"enum": ["reported-by-hsaco-metadata", "unavailable-not-emitted"]},
+                "minimumMinimumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+                "minimumMaximumWavesPerExecutionUnit": {"type": ["integer", "null"], "minimum": 1},
+                "requiredRuntimeStatus": {"enum": ["measured", "not-run-compile-only", "unavailable"]},
                 "maxRuntimeNanoseconds": {"type": ["integer", "null"], "minimum": 0}
               }
             }
@@ -77,11 +88,14 @@
           "requiredPipeline": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["neutralPolicyVersion", "amdPolicyVersion", "amdCostModelRevision", "finalOptimizedGraphVerification"],
+            "required": ["neutralPolicyVersion", "amdPolicyVersion", "amdCostModelRevision", "amdResourceModelRevision", "targetResourceComparisonPolicy", "canonicalKirVersion", "finalOptimizedGraphVerification"],
             "properties": {
               "neutralPolicyVersion": {"type": "integer", "minimum": 3},
-              "amdPolicyVersion": {"type": "integer", "minimum": 0},
-              "amdCostModelRevision": {"type": "integer", "minimum": 0},
+              "amdPolicyVersion": {"const": 2},
+              "amdCostModelRevision": {"const": 2},
+              "amdResourceModelRevision": {"const": 3},
+              "targetResourceComparisonPolicy": {"const": "compiler-policy-identity-only"},
+              "canonicalKirVersion": {"const": 12},
               "finalOptimizedGraphVerification": {"const": true}
             }
           },

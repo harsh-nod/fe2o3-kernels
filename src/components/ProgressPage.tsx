@@ -113,15 +113,20 @@ export function ProgressPage() {
           routing remains source-model-only and design-only because its attributed
           source does not yet have authenticated production MIR-to-KIR lowering.
           No final compiler commit, measured V4 baseline, or qualified inspection
-          sidecar set is pinned. Promotion requires the exact neutral V4 and AMD V1
-          transaction identities, final canonical KIR V11 verification, LLVM and
+          sidecar set is pinned. Promotion requires neutral V4, AMD target and cost
+          policy V2, AMD replay evidence V9, inspection V2, resource model V3,
+          complete final canonical KIR V12 verification, LLVM and
           HSACO sizes, required simulator/reference outcomes, and each target's
           actual hardware gate. Historical MI300X and MI350X records do not satisfy
           this new corpus run automatically. The future report must retain peak
           RSS, diagnostic and inspection bytes, optimizer work and graph growth,
           IR sizes, and HSACO register, spill, LDS, private-segment, wave, and
-          occupancy metadata. Missing occupancy and compile-only runtime remain
-          typed unavailable. Reviewed thresholds reject fixture, manifest,
+          occupancy metadata. Dynamic LDS keeps its LDS occupancy component typed
+          incomplete without blocking a separately proved resource-neutral rewrite.
+          The stable corpus digest excludes only top-level baseline publication
+          metadata; the raw manifest SHA remains a historical byte observation.
+          Gfx942 evidence must bind the exact fixture, command, retained artifacts,
+          model summaries, host logs, and hardware identity. Reviewed thresholds reject fixture, manifest,
           target, policy, semantic-outcome, occupancy, or measured ceiling drift.
         </p>
       </section>

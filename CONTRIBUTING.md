@@ -62,20 +62,33 @@ verification, and no pipeline selection or fallback. Do not pin a new compiler
 commit or mark an entry `qualified` until a clean-tree measured report covers
 its exact fixture and all required semantic and hardware gates.
 
+The raw manifest SHA-256 records exact historical bytes. The stable
+domain-separated corpus digest canonicalizes the manifest while excluding only
+top-level `baseline`; reports must bind
+`{path, sha256, corpusContractSha256}`. A report's measured compiler identity is
+not required to equal mutable baseline publication metadata. The baseline pin
+is advanced only after the complete evidence set has been reviewed.
+
 Each qualified compile must retain the primary LLVM `.ll` output and the exact
-adjacent `<primary.ll>.fe2o3-compiler-inspection-v1` sidecar. The sidecar must
-start with `F2KIRP01`, match the report's SHA-256, and decode successfully with:
+adjacent `<primary.ll>.fe2o3-compiler-inspection-v2` sidecar. The sidecar must
+start with `F2KIRP02`, match the report's SHA-256, and decode successfully with:
 
 ```bash
-cargo fe2o3 inspect --format compiler-inspection-v1 \
-  <primary.ll.fe2o3-compiler-inspection-v1>
+cargo fe2o3 inspect --format compiler-inspection-v2 \
+  <primary.ll.fe2o3-compiler-inspection-v2>
 ```
 
-The decoder must report neutral policy V4, AMD target policy V1, AMD cost-model
-revision V1, the exact three canonical KIR V11 snapshots, and all 16 ordered
-pass remarks. This record is inspection-only; it grants no publication, load,
-launch, hardware, numerical, performance, or formal compiler-correctness
-authority.
+The decoder must report neutral policy V4, AMD target policy V2, AMD cost-model
+revision V2, AMD resource-model revision V3, the exact three canonical KIR V12
+snapshots, and all 16 ordered pass remarks. Current AMD target reconstruction is
+replay evidence V9. Its local transform subset is zero-offset address folding,
+integer multiply-by-two reduction, proved scalar-copy vector packing,
+redundant LDS-load removal, vector-layout removal/store folding, and MFMA
+accumulator scheduling. Wave handling is Wave64 legality/preservation; MFMA
+selection maps an already-attached tensor profile and does not promote LDS or
+synthesize a profile. Unsupported cases fail closed. This record is
+inspection-only; it grants no publication, load, launch, hardware, numerical,
+performance, or formal compiler-correctness authority.
 
 The measured report must also retain peak RSS, diagnostic bytes, optimizer pass
 work and graph growth, KIR/LLVM/HSACO sizes, and HSACO register, spill, LDS,
@@ -83,6 +96,13 @@ private-segment, workgroup, wavefront, and occupancy metadata. Record absent
 occupancy as `unavailable-not-emitted` with both occupancy values `null`.
 Compile-only runtime is `not-run-compile-only` with a `null` duration; never
 convert either unavailable result to zero.
+
+For a required gfx942 hardware gate, seal a completed run with the compiler's
+`tutorial-gfx942-hardware-evidence-schema-v1.json` contract and validate its
+retained directory with `npm run validate:gfx942-hardware-evidence --
+--evidence ... --artifact-root ...`. Target, corpus, fixture, command, result,
+inspection, LLVM, HSACO, resource-summary, metadata, and host-log identities
+must all match. Do not create placeholder or inferred release evidence.
 
 Derive reviewed compile-time, size, resource, and work margins from a real
 baseline, then run the compiler-owned regression checker. It must bind the

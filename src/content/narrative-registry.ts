@@ -814,7 +814,7 @@ const narrativeRegistry = deepFreeze({
           "ProductionMiddleEndEvidenceV5 is the only live producer for that ordered result. The strict V4 decoder remains only for immutable historical bytes, and the removed V1 declarative refinement API cannot be used as an alternate admission route.",
           "Only the normalized ranked recipe and admitted reports can proceed to KIR. Typed live validation checks pairing, shape, substitution resistance, predicated use, and source-derived index, extent, dominance, provenance, and launch-coordinate relations. Supported authenticated tiled and row-striped maps proceed to retained KIR; raw or textual recipes missing that custody fail closed.",
           "The issue #271 production contract then runs target-neutral policy V4 in one closed order: initial scalar/CFG cleanup, private SROA, global value numbering, interprocedural optimization, post-interprocedural cleanup, loop canonicalization, memory and guard optimization, bounded unrolling, and final scalar/CFG cleanup. Each phase carries exact input/output identities, mutation epochs, limits, accounting, and phase evidence; the independent verifier re-executes the complete transaction and requires the exact report and output.",
-          "AMD target policy V1 follows with address reduction, integer strength reduction, vector access packing, LDS layout, wave/MFMA selection, unrolling and scheduling, and guarded specialization. Final canonical KIR V11 admission and exact target replay happen before LLVM emission. These optimizer checks do not grant protected publication, general LLVM/ISA refinement, or universal functional correctness."
+          "AMD target policy V2 follows with seven fixed report classes. Its local mutation subset is exactly zero-offset address folding, integer multiply-by-two reduction, proved scalar-copy vector packing, redundant LDS-load removal, vector-layout removal/store folding, and dependency-safe MFMA accumulator scheduling. Closed loop unrolling and generated specialization use separate evidence. Wave handling only checks and preserves Wave64; MFMA selection maps an already-attached tensor profile and does not rewrite waves, promote LDS, synthesize profiles, or create MFMA. Replay evidence V9 reconstructs each delta, reruns every affected legality analysis plus V2 cost and V3 resource checks, and requires final canonical KIR V12 verification before LLVM emission. Unsupported cases remain unchanged or fail closed."
         ]
       },
       {
@@ -828,7 +828,8 @@ const narrativeRegistry = deepFreeze({
           ["Independent raw replay", "Exact supported static bounds reconstructed from live PLIRON rather than from report success bits.", "Nonempty tensor flow and every other pass or shape; those remain Incomplete."],
           ["Independent ranked transform replay", "The exact checked IndexBinary to IndexConstant relation, value, position, result identity, CFG, types, effects, and proof sites before KIR construction.", "A general proof of MIR projection or arbitrary source transformations."],
           ["Production optimizer V4 replay", "The complete fixed target-neutral phase chain, exact report, identities, epochs, resource accounting, and final output are independently re-executed from the original KIR input.", "A mechanized semantic-preservation theorem, LLVM refinement, or permission to select another pipeline."],
-          ["KIR custody", "Downstream formal-memory and target lowering receive the exact optimized canonical KIR V11 rather than a stale pre-transform graph.", "KIR-to-LLVM, LLVM-to-ISA, artifact, launch, or hardware correctness."]
+          ["AMD V2/V3 model", "gfx942/gfx950 use add/multiply/address costs 1/4/2 versus 1/3/1, scalar-memory/matrix costs 8/16 versus 7/8, vector caps 16 versus 32 bytes, and unroll factors 4 versus 8. V3 replays SSA liveness with 8-dword VGPR and 16-dword SGPR granules and total-LDS-per-CU inputs 65,536 versus 163,840 bytes.", "These are deterministic compiler policy estimates, not hardware measurements. Dynamic LDS leaves LDS occupancy incomplete and resource-guards transforms needing a bounded fact."],
+          ["KIR custody", "Downstream formal-memory and target lowering receive the exact optimized canonical KIR V12 rather than a stale pre-transform graph.", "KIR-to-LLVM, LLVM-to-ISA, artifact, launch, or hardware correctness."]
         ]
       },
       {
@@ -845,16 +846,16 @@ const narrativeRegistry = deepFreeze({
     "blocks": [
       {
         "type": "paragraph",
-        "text": "A production compile retains one primary LLVM .ll output. Its inspection record is at that exact path plus .fe2o3-compiler-inspection-v1. The canonical binary begins with F2KIRP01 and binds the target, neutral policy V4, AMD policy V1, AMD cost-model revision V1, before-neutral, after-neutral, and final target KIR V11 snapshots, and the closed sixteen pass remarks."
+        "text": "A production compile retains one primary LLVM .ll output. Its inspection record is at that exact path plus .fe2o3-compiler-inspection-v2. The canonical binary begins with F2KIRP02 and binds the target, neutral policy V4, AMD policy and cost-model V2, resource model V3, before-neutral, after-neutral, and final target KIR V12 snapshots, and the closed sixteen pass remarks. The V2 decoder authenticates current replay evidence V9; frozen older formats remain historical observations only."
       },
       {
         "type": "steps",
         "items": [
           "Open the primary .ll file to inspect the LLVM module that is handed to target finalization.",
-          "Decode the adjacent sidecar with cargo fe2o3 inspect --format compiler-inspection-v1 <primary.ll.fe2o3-compiler-inspection-v1>.",
-          "Require the decoder to re-admit all three embedded snapshots as exact canonical KIR V11 and to report policies neutral=4, amd=1, amd-cost-model=1.",
-          "Bind the sidecar SHA-256, final target-KIR SHA-256, verified-V11 SHA-256, LLVM byte count, and HSACO byte count into the measured corpus report.",
-          "Record peak RSS, diagnostic and inspection bytes, neutral and target pass work, optimizer candidates and applications, neutral and target graph growth, and HSACO register, spill, LDS, private-segment, workgroup, wavefront, and occupancy metadata.",
+          "Decode the adjacent sidecar with cargo fe2o3 inspect --format compiler-inspection-v2 <primary.ll.fe2o3-compiler-inspection-v2>.",
+          "Require the decoder to re-admit all three embedded snapshots as exact canonical KIR V12 and to report policies neutral=4, amd=2, amd-cost-model=2 plus exact resource model V3 input/output receipts.",
+          "Bind manifest path, raw SHA-256, stable corpusContractSha256, sidecar SHA-256, final target-KIR and verified-KIR SHA-256 values, LLVM byte count, and HSACO byte count into the measured corpus report. The report compiler identity need not recursively equal mutable baseline publication metadata.",
+          "Record peak RSS, diagnostic and inspection bytes, neutral and target pass counts/work, optimizer candidates and applications, neutral and target graph growth, V3 resource estimates, and HSACO register, spill, LDS, private-segment, workgroup, wavefront, and occupancy metadata.",
           "Reject a missing sidecar, bad magic, digest mismatch, unknown fixture ID, changed pass order, policy drift, malformed snapshot, or any report that claims final verification without the authenticated decode."
         ]
       },
@@ -870,7 +871,7 @@ const narrativeRegistry = deepFreeze({
       },
       {
         "type": "paragraph",
-        "text": "Reviewed thresholds use separate integer-ceiling margins for compile time, byte sizes, resources, and optimizer work. The compiler regression checker binds them to the exact baseline report SHA-256, compiler commit and tree, and manifest SHA-256, then rejects missing, extra, or duplicate fixtures, target or policy drift, unqualified semantic outcomes, changed occupancy metadata, and any measured ceiling regression. A runtime ceiling remains null until a real execution baseline exists."
+        "text": "Reviewed thresholds use separate integer-ceiling margins for compile time, byte sizes, resources, and optimizer work. The compiler regression checker binds them to the exact baseline report SHA-256, compiler commit and tree, raw manifest SHA-256, and stable domain-separated corpus digest, then rejects missing, extra, or duplicate fixtures, target or policy drift, unqualified semantic outcomes, changed occupancy metadata, and any measured ceiling regression. A runtime ceiling remains null until a real execution baseline exists."
       },
       {
         "type": "callout",
@@ -2069,7 +2070,8 @@ const narrativeRegistry = deepFreeze({
           "Add positive Verus properties and one targeted expected-negative fixture per property.",
           "Reject unsupported source shapes and remove stale outputs transactionally.",
           "Inspect LLVM/HSACO target, symbols, descriptors, kernarg layout, resources, and relevant instructions.",
-          "For a V4 qualification candidate, retain the primary LLVM .ll file and its exact adjacent .fe2o3-compiler-inspection-v1 sidecar; authenticate F2KIRP01, V4/V1/V1 policies, all three KIR V11 snapshots, and the closed sixteen-pass record with cargo fe2o3 inspect.",
+          "For a V4 qualification candidate, retain the primary LLVM .ll file and its exact adjacent .fe2o3-compiler-inspection-v2 sidecar; authenticate F2KIRP02, neutral V4, AMD policy/cost V2, replay evidence V9, resource model V3, all three KIR V12 snapshots, and the closed sixteen-pass record with cargo fe2o3 inspect.",
+          "Bind the manifest path, raw SHA-256, and stable corpusContractSha256. For gfx942 hardware evidence, also bind the exact fixture, command, result, inspection, LLVM, HSACO, resource summaries, host log, and gfx942:xnack- identity; never invent release evidence.",
           "Record peak RSS, diagnostics, optimizer work and graph growth, all KIR/LLVM/HSACO sizes, and HSACO register, spill, LDS, private-segment, workgroup, wave, and occupancy metadata. Keep missing occupancy and compile-only runtime explicitly null.",
           "Derive separate reviewed compile-time, size, resource, and work ceilings from a real baseline; run the compiler regression checker and reject fixture, manifest, target, policy, semantic-outcome, occupancy, or measured ceiling drift.",
           "Run the opt-in gfx942 hardware lane only for its documented KFD identity, memory, queue, and debug-control scope.",
@@ -2240,7 +2242,7 @@ const narrativeRegistry = deepFreeze({
           ["Barrier, atomic, workgroup-memory, hierarchy, and semantic witnesses", "Incomplete", "Their reports can reject concrete errors, but a Clean report has no independent Complete replay yet."],
           ["Checked index constant fold", "Applied or NotApplicable after exact typed replay", "Only exact preceding same-block IndexConstant operands, checked Add or Multiply, and nonzero Divide or Remainder. One input clone is replayed against the moved receipt-owned output; unrelated CFG, values, types, effects, and proof sites remain identical."],
           ["Production optimizer V4 transaction", "Exact deterministic replay required", "Nine target-neutral phases run under fixed work, storage, growth, depth, iteration, canonical-byte, and epoch limits. The independent verifier reruns the closed policy from the original KIR and requires exact phase order, identities, report, accounting, and output."],
-          ["AMD target optimizer V1 transaction", "Exact target replay required", "Seven target phases operate only under the selected gfx942:xnack- or gfx950:xnack- profile, then final canonical KIR V11 is re-admitted before LLVM. A successful target rewrite is not an LLVM or hardware refinement proof."],
+          ["AMD target optimizer V2 transaction", "Exact V9 target replay required", "The admitted local subset is zero-offset folding, integer x2 reduction, scalar-copy vector packing, redundant LDS-load removal, vector-layout/store folding, and MFMA accumulator scheduling. Wave64 is preserved, MFMA maps an attached tensor profile, V2/V3 cost and resource receipts plus every affected legality analysis replay, and final canonical KIR V12 is re-admitted before LLVM. No wave rewrite, LDS promotion, MFMA synthesis, LLVM proof, or hardware claim follows."],
           ["Unmodeled transformation", "Unsupported", "No callback, pass name, digest match, structural similarity, per-kernel selection, or fallback can authorize a rewrite outside the closed production policies."]
         ],
       },
@@ -2501,7 +2503,7 @@ const narrativeRegistry = deepFreeze({
           "Describe reductions, recurrences, permutations, and collectives through generic contracts.",
           "Require total output coverage, unique final owners, finality, and a complete observable frame.",
           "Add positive proofs plus holes, duplicates, overwrites, unmodeled effects, arithmetic mismatches, and missing-receipt mutations.",
-          "Record exact compiler report, receipt, source, proof, artifact, target, and runtime identities.",
+          "Record exact compiler report, receipt, source, proof, artifact, target, and runtime identities. A production report binds manifest path, raw SHA-256, stable corpusContractSha256, neutral V4, AMD V2 replay V9, inspection V2, resource V3, and complete final KIR V12 verification; gfx942 hardware evidence separately binds every retained command, fixture, artifact, resource summary, and host log.",
         ],
       },
     ],

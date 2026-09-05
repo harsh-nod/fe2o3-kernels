@@ -1045,7 +1045,7 @@ const compilerChecks: Lesson = {
     "Identify static bounded access as the sole Complete independent raw-replay fragment.",
     "Explain how exact typed replay admits index constant folding without authorizing other transformations.",
     "Read the nine target-neutral and seven AMD target optimization phases in their fixed order.",
-    "Use the canonical inspection sidecar to identify exact KIR V11 snapshots and policy revisions without upgrading inspection into publication authority.",
+    "Use inspection V2 to identify exact KIR V12 snapshots, neutral V4, AMD V2, replay V9, and resource V3 receipts without upgrading inspection into publication authority.",
     "Recognize unsupported CFG, no-wrap, dynamic, alias, and tensor cases as fail-closed compilation results.",
   ],
   claims: [
@@ -1119,10 +1119,10 @@ const compilerChecks: Lesson = {
       kind: "comparison",
       label: "Optimized IR",
       language: "text",
-      code: "target-neutral V4:\n  initial-scalar-cfg\n  private-sroa\n  global-value-numbering\n  interprocedural\n  post-interprocedural-scalar-cfg\n  loop-canonicalization\n  memory-and-guards\n  bounded-unrolling\n  final-scalar-cfg\n\nAMD target V1:\n  address-reduction\n  integer-strength-reduction\n  vector-access-packing\n  lds-layout\n  wave-mfma-selection\n  unrolling-scheduling\n  guarded-specialization",
+      code: "target-neutral V4:\n  initial-scalar-cfg\n  private-sroa\n  global-value-numbering\n  interprocedural\n  post-interprocedural-scalar-cfg\n  loop-canonicalization\n  memory-and-guards\n  bounded-unrolling\n  final-scalar-cfg\n\nAMD target V2 report classes:\n  address-reduction\n  integer-strength-reduction\n  vector-access-packing\n  lds-layout\n  wave-mfma-selection\n  unrolling-scheduling\n  guarded-specialization\n\nlocal mutation subset:\n  zero-offset fold; integer x2 reduction\n  scalar-copy vector packing; redundant LDS load removal\n  vector layout/store fold; MFMA accumulator scheduling",
       explanatory: true,
       notice:
-        "Qualification requires exact replay of the closed V4 transaction, final canonical KIR V11 admission, an authenticated F2KIRP01 inspection record, and measured compiler, optimizer, IR, and HSACO resource fields. Missing occupancy and compile-only runtime stay typed unavailable. The corpus remains pending until those records and target gates are measured at one final clean compiler tree.",
+        "Qualification requires exact replay of neutral V4 and AMD V2 with replay evidence V9, final canonical KIR V12 admission, an authenticated F2KIRP02 inspection V2 record, V3 resource receipts, and measured compiler, optimizer, IR, and HSACO fields. Missing occupancy and compile-only runtime stay typed unavailable. The corpus remains pending until those records and target gates are measured at one final clean compiler tree.",
     },
     {
       kind: "verus",
