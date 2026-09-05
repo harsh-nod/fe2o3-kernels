@@ -8,6 +8,7 @@ import {
   progressSnapshot,
   type DeliveryGate,
 } from "../content/progress";
+import { ProductionPipelinePanel } from "./ProductionPipelinePanel";
 
 const compilerCorpus = tutorialKernelManifest as {
   baseline: { status: "migration" | "qualified" };
@@ -130,6 +131,8 @@ export function ProgressPage() {
           target, policy, semantic-outcome, occupancy, or measured ceiling drift.
         </p>
       </section>
+
+      <ProductionPipelinePanel />
 
       <section>
         <p className="section-kicker">Kernel ladder</p>

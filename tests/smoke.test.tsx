@@ -582,6 +582,14 @@ describe("application shell", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Historical audited baseline")).toBeInTheDocument();
     expect(screen.getByText("Publication-gated baseline")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "One source, three KIR snapshots, two optimizer policies",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("before-neutral KIR", { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Dynamic values", { exact: true })).toBeInTheDocument();
     expect(document.querySelector(".pin-summary")).toHaveTextContent(
       "308d8fa00f",
     );
@@ -764,6 +772,14 @@ describe("application shell", () => {
         name: "Compiler baseline at 308d8fa00f",
       }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "One source, three KIR snapshots, two optimizer policies",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Target KIR", { exact: true })).toBeInTheDocument();
+    expect(screen.getByText("target KIR V12", { exact: true })).toBeInTheDocument();
     expect(screen.getByText("Generic pre-lowering safety")).toBeInTheDocument();
     const productionRoute = screen
       .getByText("Unified production route")

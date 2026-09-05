@@ -3,6 +3,28 @@
 Contributions should improve a kernel lesson without weakening the distinction
 between proof, compiler evidence, and runtime observation.
 
+## Canonical source and production route
+
+Author kernels with the ordinary SHA-free form `#[kernel(typed)]`. Binding identity
+comes from Cargo and rustc metadata; namespace or source hashes do not belong in
+application source. The shipped production route is one workload-neutral transaction:
+
+1. rustc retains checked semantic MIR and source locations;
+2. projection builds typed ranked PLIRON and the before-neutral canonical KIR;
+3. neutral optimizer policy V4 runs its fixed nine passes and emits the after-neutral KIR;
+4. AMD target policy V2 and resource model V3 replay target-local legality and cost facts;
+5. the final target KIR V12 is re-admitted before LLVM/LLD emission.
+
+The inspection record makes the before-neutral, after-neutral, and target KIR snapshots
+readable. Runtime values remain SSA operands. A transformation requiring an unproved
+range, alias, dynamic resource, or target fact stays unchanged or fails closed; no
+per-kernel selector or fallback is implicit.
+
+V4/V2 reports, KIR snapshots, LLVM, and HSACO inspection are evidence about one
+transaction. They are not by themselves a proof of compiler semantics, source-to-KIR
+or KIR-to-ISA refinement, artifact identity, launch, hardware execution, or numerical
+correctness. Keep those boundaries explicit in every contribution.
+
 ## Before editing content
 
 1. Check out the fe2o3 commit named in `FE2O3_PIN`.

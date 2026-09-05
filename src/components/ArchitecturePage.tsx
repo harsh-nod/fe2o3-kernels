@@ -6,6 +6,7 @@ import {
 } from "../content/current-state";
 import { FE2O3_PIN } from "../content/model";
 import { LessonDiagram } from "../diagrams/LessonDiagram";
+import { ProductionPipelinePanel } from "./ProductionPipelinePanel";
 
 const compilerCorpus = tutorialKernelManifest as {
   baseline: { status: "migration" | "qualified" };
@@ -29,6 +30,8 @@ export function ArchitecturePage() {
       </header>
 
       <LessonDiagram kind="evidence" />
+
+      <ProductionPipelinePanel />
 
       <section>
         <p className="section-kicker">Authority rule</p>

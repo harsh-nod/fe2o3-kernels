@@ -3921,6 +3921,42 @@ tr:last-child td {
   line-height: 1.5;
 }
 
+.pipeline-contract > p:not(.section-kicker) {
+  max-width: 860px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.pipeline-contract .architecture-row {
+  grid-template-columns: 36px 180px minmax(0, 1fr) 20px;
+}
+
+.pipeline-contract .architecture-row > svg {
+  color: var(--accent);
+}
+
+.pipeline-contract .status-summary > div {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.pipeline-contract .status-summary code {
+  grid-column: 2;
+}
+
+.authoring-source {
+  max-width: 760px;
+  padding: 16px;
+  overflow-x: auto;
+  color: var(--code-text);
+  background: var(--code-bg);
+  border: 1px solid #2b3b3d;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+
 .pin-details {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4475,6 +4511,14 @@ tr:last-child td {
 
   .architecture-row p {
     grid-column: 2;
+  }
+
+  .pipeline-contract .architecture-row {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .pipeline-contract .architecture-row > svg {
+    display: none;
   }
 
   .pin-details,

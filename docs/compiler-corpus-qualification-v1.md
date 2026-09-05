@@ -64,6 +64,23 @@ These are executable independent checkers, not a mechanized proof that every
 optimization preserves Rust semantics. They do not verify LLVM or machine-code
 refinement.
 
+### Readable KIR checkpoints
+
+Reviewers should be able to open three canonical snapshots for each measured
+transaction: `before-neutral` is the target-neutral input to V4, `after-neutral`
+is the exact output of the nine-pass V4 policy, and `target-kir` is the final V2
+AMD target form after target replay and canonical KIR V12 re-admission. The
+snapshots are bound to one another and to the inspection record; they are not
+three independent inputs or a permission to choose a more favorable output.
+
+Dynamic lengths, strides, predicates, and loop bounds remain typed SSA values.
+V4 and V2 may use a dynamic value only when the relevant range, alias, ownership,
+resource, and target legality facts are available within the bounded replay. A
+missing fact is unchanged or fail-closed, never an inferred constant or implicit
+fallback. These snapshots make the transformation boundary inspectable, but do
+not prove compiler semantics, source-to-KIR refinement, KIR-to-LLVM/ISA
+refinement, artifact identity, launch, hardware execution, or numerical intent.
+
 ## Inspection sidecar
 
 Each measured compile must retain exactly one primary LLVM `.ll` output and the

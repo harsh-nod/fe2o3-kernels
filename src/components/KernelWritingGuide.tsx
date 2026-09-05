@@ -1,3 +1,5 @@
+import { CircleHelp } from "lucide-react";
+
 const reviewRows = [
   [
     "1. Contract",
@@ -80,6 +82,28 @@ export function KernelWritingGuide() {
             and performance measurements as separate evidence gates.
           </li>
         </ul>
+      </section>
+      <section aria-labelledby="kernel-writing-source-heading">
+        <p className="section-kicker">Canonical source shape</p>
+        <h2 id="kernel-writing-source-heading">Write ordinary typed attributes</h2>
+        <pre className="authoring-source"><code>{"#[kernel(typed)]\npub fn add(input: &[f32], output: &mut [f32], n: usize) {\n    for index in 0..n {\n        output[index] = input[index] + 1.0;\n    }\n}"}</code></pre>
+        <p>
+          The compiler derives binding identity from Cargo and rustc metadata. Do not
+          paste a namespace hash into source or treat a displayed digest as a proof.
+          Dynamic <code>n</code>, indexing, and loop progress remain explicit values;
+          V4 and AMD V2 transform them only within their checked limits.
+        </p>
+        <aside className="callout callout-boundary">
+          <CircleHelp size={19} aria-hidden="true" />
+          <div>
+            <strong>Trust boundary</strong>
+            <p>
+              A clean policy report and readable KIR snapshots document what was
+              admitted. They do not establish source-to-KIR, KIR-to-LLVM, artifact,
+              launch, hardware, or numerical refinement by themselves.
+            </p>
+          </div>
+        </aside>
       </section>
     </div>
   );
