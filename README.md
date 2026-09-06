@@ -1169,21 +1169,22 @@ current replay instructions.
 
 ### Compiler corpus migration
 
-`config/tutorial-kernel-manifest-v1.json` is the shared source of truth for the
-25 tutorial entries and their 46 compiler fixture/test IDs. It requires the
-closed target-neutral optimizer policy V4, final optimized-graph verification,
-and no pipeline selection or fallback. Twenty-four entries are
-compiler-produced; the MoE routing lesson is source-model-only and remains
-design-only because its attributed source does not yet have authenticated
-production MIR-to-KIR lowering.
+`config/tutorial-kernel-manifest-v1.json` is the shared source of truth for 25
+compiler-produced tutorial entries and their 47 compiler fixture/test IDs. It
+requires the closed target-neutral optimizer policy V4, final optimized-graph
+verification, and no pipeline selection or fallback. MoE routing is included
+through the ordinary attributed `moe_top2_v1` source and an exact gfx942
+fixture. Site CI compares the manifest and digest byte-for-byte with the
+checked-out compiler repository.
 
-The corpus is still in migration status. Every entry is pending, and this site
-does not pin a final compiler commit or publish a measured V4 baseline. A future
+The corpus is still in migration status, and this site does not pin a final
+compiler commit or publish a measured V4 baseline. Qualification is atomic at
+the top-level baseline and requires complete evidence for every fixture. A
 qualified compile must retain one LLVM `.ll` primary output and its exact
-adjacent `.fe2o3-compiler-inspection-v1` sidecar. The bounded canonical record
-starts with `F2KIRP01` and is independently decoded as neutral policy V4, AMD
-target policy V1, AMD cost-model revision V1, three exact KIR V11 snapshots,
-and 16 ordered pass remarks. It is inspection-only and grants no compiler,
+adjacent `.fe2o3-compiler-inspection-v2` sidecar. The bounded canonical record
+starts with `F2KIRP02` and is independently decoded as neutral policy V4, AMD
+target policy V2, AMD cost-model revision V2, resource model V3, three exact KIR
+V12 snapshots, and 16 ordered pass remarks. It is inspection-only and grants no compiler,
 publication, load, launch, hardware, numerical, performance, or formal
 compiler-correctness authority. A measured report also records peak RSS,
 diagnostic volume, optimizer work and graph growth, IR sizes, and HSACO
@@ -1192,8 +1193,10 @@ Missing occupancy and compile-only runtime remain typed unavailable, never
 zero. Reviewed integer-ceiling thresholds bind the exact baseline and reject
 fixture, manifest, target, policy, semantic-outcome, occupancy, or measured
 ceiling regressions. Gfx942 and gfx950 compile matrices, required
-simulator/reference outcomes, and the MI300X or MI350X hardware gates still
-need to be rerun together against the eventual clean compiler tree.
+simulator/reference outcomes, and the MI300X gfx942 hardware gate still need to
+be rerun together against the eventual clean compiler tree. Gfx950 remains a
+compile/simulator lane until target-matched hardware is explicitly admitted;
+it is not a release-blocking hardware claim.
 
 Verus proves the specifications encoded in its source models under their stated
 assumptions. It does not by itself prove LLVM lowering, linker behavior, the

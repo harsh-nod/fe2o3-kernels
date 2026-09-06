@@ -56,6 +56,24 @@ const moeRouting: Lesson = {
   claims: [
     sourceMilestoneClaim("moe-top2-source-v1"),
     sourceMilestoneClaim("moe-top2-verus-v1"),
+    {
+      kind: "compiler-checked",
+      label: "MoE top-2 is in the production compiler corpus",
+      detail:
+        "The compiler-owned issue #271 manifest binds this ordinary attributed source to the exact gfx942 MoE top-2 production fixture, with CPU-reference and hardware gates. The corpus remains in migration until one complete Candidate A qualification record is published; this claim does not manufacture hardware, publication, or formal-refinement authority.",
+      reference: pinnedReference(
+        ["scripts/tests/kernel-compile-matrix.sh gfx942 moe-top2"],
+        [
+          "config/tutorial-kernel-manifest-v1.json",
+          "examples/moe_top2_v1/src/kernel.rs",
+          "examples/moe_top2_v1/src/oracle.rs",
+        ],
+        {
+          target: "gfx942:xnack-",
+          note: "Compiler corpus coverage requirement; qualification remains controlled by the top-level Candidate A/B record.",
+        },
+      ),
+    },
   ],
   sections: [
     narrativeSection("moe-routing/assumptions"),

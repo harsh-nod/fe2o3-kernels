@@ -21,12 +21,25 @@ const ENTRY_KEYS = [
   "compilerFixtureIds",
   "lessonId",
   "packageManifest",
-  "qualificationStatus",
   "requiredGates",
   "siteEvidenceKind",
   "sourcePaths",
 ];
-const FIXTURE_KEYS = ["fixtureId", "matrix", "target", "testId", "testPath"];
+const FIXTURE_KEYS = ["compilerInput", "fixtureId", "matrix", "target", "testId", "testPath"];
+const COMPILER_INPUT_KEYS = [
+  "cargoLockPath",
+  "cargoLockSha256",
+  "cargoTarget",
+  "contractSha256",
+  "defaultFeatures",
+  "features",
+  "kernelSymbols",
+  "packageManifest",
+  "packageManifestSha256",
+  "sourceClosureSha256",
+  "sourcePaths",
+];
+const CARGO_TARGET_KEYS = ["kind", "name", "sourcePath"];
 const MATRIX_KEYS = [
   "artifactName",
   "caseId",
@@ -65,6 +78,11 @@ const SHA256 = /^[0-9a-f]{64}$/u;
 const GIT_ID = /^[0-9a-f]{40}$/u;
 const TARGET = /^gfx[0-9]{3}$/u;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
+const RUST_IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/u;
+const FIXTURE_INPUT_DIGEST_DOMAIN = Buffer.from(
+  "fe2o3-tutorial-fixture-compiler-input-v1\0",
+  "ascii",
+);
 const MAX_SIDECAR_BYTES = 3 * 16 * 1024 * 1024 + 256 * 1024;
 const SHARED_SCHEMA_SHA256 = new Map([
   ["tutorial-compiler-baseline-report-schema-v1.json", "a2704e6a7b843b4f11e1e27ea6095d8aaeb55853809c5f3a57e5b3be759b42d1"],
@@ -175,6 +193,72 @@ function integerAtLeast(value, minimum, label) {
   return value;
 }
 
+function canonicalDigestValue(value) {
+  if (Array.isArray(value)) return value.map(canonicalDigestValue);
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value).sort().map((key) => [key, canonicalDigestValue(value[key])]),
+    );
+  }
+  return value;
+}
+
+function validateCompilerInput(fixture, label) {
+  const input = exactKeys(fixture.compilerInput, COMPILER_INPUT_KEYS, `${label}.compilerInput`);
+  const packageManifest = canonicalPath(input.packageManifest, `${label}.compilerInput.packageManifest`);
+  if (!packageManifest.endsWith("/Cargo.toml")) {
+    fail(`${label}.compilerInput.packageManifest must name a Cargo.toml`);
+  }
+  const sourcePaths = stringArray(input.sourcePaths, `${label}.compilerInput.sourcePaths`, { nonempty: true });
+  for (const [index, path] of sourcePaths.entries()) {
+    canonicalPath(path, `${label}.compilerInput.sourcePaths[${index}]`);
+  }
+  canonicalPath(input.cargoLockPath, `${label}.compilerInput.cargoLockPath`);
+  for (const field of [
+    "cargoLockSha256",
+    "contractSha256",
+    "packageManifestSha256",
+    "sourceClosureSha256",
+  ]) {
+    if (!SHA256.test(input[field])) fail(`${label}.compilerInput.${field} must be a lowercase SHA-256`);
+  }
+  const cargoTarget = exactKeys(input.cargoTarget, CARGO_TARGET_KEYS, `${label}.compilerInput.cargoTarget`);
+  if (cargoTarget.kind !== "lib") fail(`${label}.compilerInput.cargoTarget.kind must be lib`);
+  if (!RUST_IDENTIFIER.test(string(cargoTarget.name, `${label}.compilerInput.cargoTarget.name`))) {
+    fail(`${label}.compilerInput.cargoTarget.name must be a Rust identifier`);
+  }
+  canonicalPath(cargoTarget.sourcePath, `${label}.compilerInput.cargoTarget.sourcePath`);
+  if (typeof input.defaultFeatures !== "boolean") {
+    fail(`${label}.compilerInput.defaultFeatures must be boolean`);
+  }
+  const features = stringArray(input.features, `${label}.compilerInput.features`);
+  if (JSON.stringify(features) !== JSON.stringify([...features].sort())) {
+    fail(`${label}.compilerInput.features must be sorted`);
+  }
+  const symbols = stringArray(input.kernelSymbols, `${label}.compilerInput.kernelSymbols`, { nonempty: true });
+  if (
+    JSON.stringify(symbols) !== JSON.stringify([...symbols].sort()) ||
+    symbols.some((symbol) => !RUST_IDENTIFIER.test(symbol))
+  ) {
+    fail(`${label}.compilerInput.kernelSymbols must be sorted Rust identifiers`);
+  }
+  const contract = {
+    fixtureId: fixture.fixtureId,
+    target: fixture.target,
+    matrix: fixture.matrix,
+    compilerInput: Object.fromEntries(
+      Object.entries(input).filter(([key]) => key !== "contractSha256"),
+    ),
+  };
+  const observed = createHash("sha256")
+    .update(FIXTURE_INPUT_DIGEST_DOMAIN)
+    .update(JSON.stringify(canonicalDigestValue(contract)), "ascii")
+    .digest("hex");
+  if (input.contractSha256 !== observed) {
+    fail(`${label}.compilerInput.contractSha256 is stale`);
+  }
+}
+
 function validateFixture(rawFixture, index, fixtureById, testIds, matrixCases) {
   const label = `compilerFixtures[${index}]`;
   const fixture = exactKeys(rawFixture, FIXTURE_KEYS, label);
@@ -190,6 +274,7 @@ function validateFixture(rawFixture, index, fixtureById, testIds, matrixCases) {
   const target = string(fixture.target, `${label}.target`);
   if (!TARGET.test(target)) fail(`${label}.target is unsupported: ${target}`);
   const testPath = canonicalPath(fixture.testPath, `${label}.testPath`);
+  validateCompilerInput(fixture, label);
 
   if (fixture.matrix === null) {
     if (!testId.startsWith("compiler-test/")) {
@@ -286,9 +371,6 @@ function validateEntry(rawEntry, index, fixtureById, referencedFixtures) {
   if (gates.includes("hardware") && fixtureIds.length === 0) {
     fail(`${lessonId} cannot require hardware without an exact compiler target`);
   }
-  if (!new Set(["pending", "qualified"]).has(entry.qualificationStatus)) {
-    fail(`${lessonId} has unsupported qualificationStatus`);
-  }
   return entry;
 }
 
@@ -348,9 +430,6 @@ function validateManifest(document) {
   }
   const staleFixtures = fixtureIds.filter((fixtureId) => !referencedFixtures.has(fixtureId));
   if (staleFixtures.length !== 0) fail(`stale compiler fixture IDs: ${staleFixtures.join(", ")}`);
-  if (baseline.status === "qualified" && entries.some((entry) => entry.qualificationStatus !== "qualified")) {
-    fail("a qualified baseline requires every tutorial entry to be qualified");
-  }
   return { baseline, contract, entries, fixtureById };
 }
 
@@ -368,6 +447,58 @@ function validateDigest(manifestPath, digestPath, manifestBytes, manifestDocumen
     fail(`cannot compute stable corpus contract: ${error.message}`);
   }
   return { rawSha256: actual, corpusContractSha256 };
+}
+
+function gitBytes(repository, arguments_, label) {
+  const result = spawnSync("git", ["-C", repository, ...arguments_], {
+    encoding: null,
+    maxBuffer: 16 * 1024 * 1024,
+  });
+  if (result.error || result.status !== 0) {
+    fail(`cannot resolve ${label} from compiler repository`);
+  }
+  return result.stdout;
+}
+
+function validateCompilerManifestParity(repositoryPath, manifestBytes, digestBytes, baseline) {
+  const repository = resolve(repositoryPath);
+  let metadata;
+  try {
+    metadata = lstatSync(repository);
+  } catch (error) {
+    fail(`cannot inspect compiler repository ${repository}: ${error.message}`);
+  }
+  if (!metadata.isDirectory() || metadata.isSymbolicLink()) {
+    fail("compiler repository must be a real directory");
+  }
+  const head = gitBytes(repository, ["rev-parse", "--verify", "HEAD"], "compiler HEAD")
+    .toString("ascii").trimEnd();
+  if (!GIT_ID.test(head)) fail("compiler repository HEAD is malformed");
+  for (const [path, expected] of [
+    ["config/tutorial-kernel-manifest-v1.json", manifestBytes],
+    ["config/tutorial-kernel-manifest-v1.sha256", digestBytes],
+  ]) {
+    const observed = gitBytes(repository, ["show", `${head}:${path}`], path);
+    if (!observed.equals(expected)) {
+      fail(`site ${path} differs byte-for-byte from compiler ${head}:${path}`);
+    }
+  }
+  const measuredTree = gitBytes(
+    repository,
+    ["show", "-s", "--format=%T", baseline.compilerCommit],
+    "measured compiler tree",
+  ).toString("ascii").trimEnd();
+  if (measuredTree !== baseline.compilerTree) {
+    fail("top-level baseline compiler tree differs from its compiler commit");
+  }
+  const ancestry = spawnSync(
+    "git",
+    ["-C", repository, "merge-base", "--is-ancestor", baseline.compilerCommit, head],
+    { encoding: "utf8" },
+  );
+  if (ancestry.error || ancestry.status !== 0) {
+    fail("compiler repository HEAD does not contain the measured baseline commit");
+  }
 }
 
 function validateSharedSchema(path, expectedName) {
@@ -672,6 +803,7 @@ function parseArguments(arguments_) {
     else if (argument === "--qualification-record") values.qualificationRecord = next();
     else if (argument === "--qualification-record-digest") values.qualificationRecordDigest = next();
     else if (argument === "--source-isa-v2-fixture") values.sourceIsaV2Fixture = next();
+    else if (argument === "--compiler-repository") values.compilerRepository = next();
     else if (argument === "--raw-artifacts") values.rawArtifacts = true;
     else if (argument === "--baseline-report") values.reports.push(next());
     else if (argument === "--inspector") values.inspector = next();
@@ -696,7 +828,17 @@ function main() {
   const manifestDocument = JSON.parse(manifestBytes.toString("utf8"));
   const manifest = validateManifest(manifestDocument);
   const digestPath = resolve(arguments_.digest ?? (manifestPath.endsWith(".json") ? `${manifestPath.slice(0, -5)}.sha256` : `${manifestPath}.sha256`));
+  const digestBytes = readFileSync(digestPath);
   const manifestDigests = validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot);
+  const compilerRepository = arguments_.compilerRepository ?? process.env.FE2O3_COMPILER_REPOSITORY;
+  if (compilerRepository) {
+    validateCompilerManifestParity(
+      compilerRepository,
+      manifestBytes,
+      digestBytes,
+      manifest.baseline,
+    );
+  }
   const sourceIsaFixturePath = resolve(
     arguments_.sourceIsaV2Fixture ?? resolve(repositoryRoot, SOURCE_ISA_V2_FIXTURE_PATH),
   );
@@ -718,7 +860,9 @@ function main() {
     "tutorial-compiler-qualification-record-schema-v1.json",
   );
 
-  const qualifiedFixtureIds = new Set(manifest.entries.filter((entry) => entry.qualificationStatus === "qualified").flatMap((entry) => entry.compilerFixtureIds));
+  const qualifiedFixtureIds = manifest.baseline.status === "qualified"
+    ? new Set(manifest.fixtureById.keys())
+    : new Set();
   const defaultRecord = resolve(repositoryRoot, "config/tutorial-compiler-qualification-record-v1.json");
   const defaultRecordDigest = resolve(repositoryRoot, "config/tutorial-compiler-qualification-record-v1.sha256");
   const rawInputsPresent = arguments_.reports.length !== 0 || arguments_.sidecars.size !== 0 || arguments_.inspector;

@@ -43,6 +43,8 @@ jobs:
         run: npm ci
 
       - name: Validate and build
+        env:
+          FE2O3_COMPILER_REPOSITORY: .evidence/fe2o3
         run: npm run validate
 
       - name: Validate evidence objects and issue states

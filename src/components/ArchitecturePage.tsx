@@ -12,7 +12,7 @@ const compilerCorpus = tutorialKernelManifest as {
   baseline: { status: "migration" | "qualified" };
   productionContract: { requiredPolicyVersion: number };
   compilerFixtures: { target: string }[];
-  entries: { classification: string; qualificationStatus: string }[];
+  entries: { classification: string }[];
 };
 
 export function ArchitecturePage() {
@@ -73,18 +73,19 @@ export function ArchitecturePage() {
           <div><span>Corpus status</span><code>{compilerCorpus.baseline.status}</code></div>
           <div><span>Required neutral policy</span><code>V{compilerCorpus.productionContract.requiredPolicyVersion}</code></div>
           <div><span>Compiler fixtures</span><code>{compilerCorpus.compilerFixtures.length}</code></div>
-          <div><span>Qualified lessons</span><code>{compilerCorpus.entries.filter((entry) => entry.qualificationStatus === "qualified").length}/{compilerCorpus.entries.length}</code></div>
+          <div><span>Qualified lessons</span><code>{compilerCorpus.baseline.status === "qualified" ? compilerCorpus.entries.length : 0}/{compilerCorpus.entries.length}</code></div>
         </div>
         <p className="status-boundary">
           The shared manifest is the single source of truth for fixture IDs,
           targets, and required gates. Every compiler-produced lesson must resolve
-          at least one registered fixture; the source-model-only MoE routing lesson
-          remains design-only because authenticated MIR-to-KIR lowering is not
-          available for that source. The migration has no final compiler SHA,
-          measured baseline, or qualified sidecar set yet. Gfx942 and gfx950
-          compilation, simulation/reference gates, and required MI300X or MI350X
-          hardware lanes must be rerun against the eventual clean compiler tree
-          before any entry or baseline becomes qualified. Reports bind the manifest
+          at least one registered fixture; this includes the ordinary attributed
+          MoE top-2 routing source. Qualification is atomic at the top-level
+          baseline, so no site-authored per-lesson flag can promote partial
+          evidence. The migration has no final compiler SHA, measured baseline, or
+          qualified sidecar set yet. Gfx942 and gfx950 compilation and declared
+          simulation/reference gates must be rerun against the eventual clean
+          compiler tree. The MI300X lane is required for gfx942; gfx950 remains
+          compile/simulator-only until target-matched hardware is admitted. Reports bind the manifest
           path, raw SHA-256, and the domain-separated canonical corpus digest that
           excludes only top-level baseline publication metadata. The strict gfx942
           evidence path additionally binds every fixture, command, retained artifact,

@@ -40,6 +40,8 @@ jobs:
         run: npm run validate:evidence -- --repository .evidence/fe2o3 --check-issues
 
       - name: Validate content and production build
+        env:
+          FE2O3_COMPILER_REPOSITORY: .evidence/fe2o3
         run: npm run validate
 
       - name: Install Chromium

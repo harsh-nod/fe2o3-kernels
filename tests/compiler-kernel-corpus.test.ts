@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { spawnSync } from "node:child_process";
 import {
+  mkdirSync,
   mkdtempSync,
   readFileSync,
   rmSync,
@@ -20,6 +21,7 @@ import { operatorCookbook } from "../src/content/operator-cookbook";
 import { semanticCorrectnessMilestone } from "../src/content/semantic-correctness-milestone";
 
 type Fixture = {
+  compilerInput: unknown;
   fixtureId: string;
   testId: string;
   testPath: string;
@@ -41,7 +43,6 @@ type Entry = {
   sourcePaths: string[];
   compilerFixtureIds: string[];
   requiredGates: string[];
-  qualificationStatus: "pending" | "qualified";
 };
 
 type Manifest = {
@@ -81,6 +82,42 @@ const sourceIsaV2Unavailable = {
   status: "unavailable-direct-link-no-protected-finalizer",
 };
 
+function git(directory: string, ...arguments_: string[]) {
+  const result = spawnSync("git", ["-C", directory, ...arguments_], {
+    encoding: "utf8",
+  });
+  if (result.error || result.status !== 0) {
+    throw new Error(`git ${arguments_.join(" ")} failed: ${result.stderr}`);
+  }
+  return result.stdout.trimEnd();
+}
+
+function writeCompilerManifestHistory(document: Manifest, directory: string) {
+  const repository = resolve(directory, "compiler");
+  mkdirSync(repository);
+  git(repository, "init", "--quiet");
+  git(repository, "config", "user.name", "Corpus Test");
+  git(repository, "config", "user.email", "corpus@example.invalid");
+  writeFileSync(resolve(repository, "candidate-a.txt"), "measured candidate\n");
+  git(repository, "add", "candidate-a.txt");
+  git(repository, "commit", "--quiet", "-m", "candidate A");
+  document.baseline = {
+    compilerCommit: git(repository, "rev-parse", "HEAD"),
+    compilerTree: git(repository, "rev-parse", "HEAD^{tree}"),
+    status: "migration",
+  };
+  mkdirSync(resolve(repository, "config"));
+  const bytes = `${JSON.stringify(document, null, 2)}\n`;
+  writeFileSync(resolve(repository, "config/tutorial-kernel-manifest-v1.json"), bytes);
+  writeFileSync(
+    resolve(repository, "config/tutorial-kernel-manifest-v1.sha256"),
+    `${digest(bytes)}  ${relative(resolve("."), resolve(directory, "tutorial-kernel-manifest-v1.json"))}\n`,
+  );
+  git(repository, "add", "config");
+  git(repository, "commit", "--quiet", "-m", "candidate B");
+  return repository;
+}
+
 function digest(bytes: Buffer | string) {
   return createHash("sha256").update(bytes).digest("hex");
 }
@@ -98,7 +135,6 @@ function canonicalValue(value: unknown): unknown {
 }
 
 function writeQualificationRecord(document: Manifest, directory: string) {
-  for (const entry of document.entries) entry.qualificationStatus = "qualified";
   const candidate = { commit: "1".repeat(40), tree: "2".repeat(40), worktreeClean: true };
   const requirements = new Map(
     document.compilerFixtures.map((fixture) => [
@@ -281,7 +317,7 @@ function qualifyTypedVecadd(
 ) {
   const entry = document.entries.find((candidate) => candidate.lessonId === "typed-vecadd");
   if (!entry) throw new Error("typed-vecadd manifest entry is missing");
-  entry.qualificationStatus = "qualified";
+  document.baseline.status = "qualified";
   const fixtureId = entry.compilerFixtureIds[0];
   const fixture = document.compilerFixtures.find(
     (candidate) => candidate.fixtureId === fixtureId,
@@ -471,7 +507,7 @@ describe("production compiler tutorial corpus", () => {
     expect(recordedPath).toBe("config/tutorial-kernel-manifest-v1.json");
     expect(digest(readFileSync(path))).toBe(expectedDigest);
     expect(expectedDigest).toBe(
-      "62faa6f1c0204aaf456a99aa7eab85f006179d3fd59f3dd8fa50e6fec828fcd6",
+      "d16ad6382f1ce180867b3877212b4b414aa7560238be4caa7b58a28b5f0b41bc",
     );
     expect(manifest.schema).toBe("fe2o3-tutorial-kernel-manifest-v1");
     expect(manifest.roadmapIssue).toBe(
@@ -481,7 +517,7 @@ describe("production compiler tutorial corpus", () => {
 
   it("uses the compiler's stable domain-separated corpus identity", () => {
     expect(tutorialCorpusContractSha256(manifest)).toBe(
-      "0b8c030e4604b9a1dd9f7dd13ab8e9ded6283571a6e2b310cf42619dcd8161ad",
+      "41629ea563720257439add111d88106cbcb84365989f1c09dab938c00e8d4b6f",
     );
     const publicationChange = structuredClone(manifest);
     publicationChange.baseline.compilerCommit = "f".repeat(40);
@@ -494,6 +530,24 @@ describe("production compiler tutorial corpus", () => {
     expect(tutorialCorpusContractSha256(corpusChange)).not.toBe(
       tutorialCorpusContractSha256(manifest),
     );
+  });
+
+  it("requires byte-identical compiler-owned manifest state when a compiler checkout is supplied", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const repository = writeCompilerManifestHistory(document, directory);
+      return ["--compiler-repository", repository];
+    });
+    expect(result.status, result.stderr).toBe(0);
+  });
+
+  it("rejects site-only manifest drift against the compiler checkout", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const repository = writeCompilerManifestHistory(document, directory);
+      document.entries[0].requiredGates = ["production-compile"];
+      return ["--compiler-repository", repository];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("differs byte-for-byte from compiler");
   });
 
   it("covers the complete semantic and operator lesson union", () => {
@@ -511,7 +565,12 @@ describe("production compiler tutorial corpus", () => {
       const lesson = lessons.find((candidate) => candidate.id === entry.lessonId);
       expect(lesson, entry.lessonId).toBeDefined();
       expect(
-        lesson?.claims.some((claim) => claim.kind === entry.siteEvidenceKind),
+        lesson?.claims.some((claim) =>
+          claim.kind === entry.siteEvidenceKind ||
+          (
+            entry.siteEvidenceKind === "compiler-checked" &&
+            ["compiler-hsaco-observed", "gpu-observed", "runnable-now"].includes(claim.kind)
+          )),
         `${entry.lessonId}: ${entry.siteEvidenceKind}`,
       ).toBe(true);
     }
@@ -522,7 +581,7 @@ describe("production compiler tutorial corpus", () => {
       manifest.compilerFixtures.map((fixture) => [fixture.fixtureId, fixture]),
     );
     const referenced = new Set<string>();
-    expect(fixtures.size).toBe(46);
+    expect(fixtures.size).toBe(47);
     for (const entry of manifest.entries) {
       if (entry.classification === "compiler-produced") {
         expect(entry.compilerFixtureIds.length, entry.lessonId).toBeGreaterThan(0);
@@ -540,10 +599,10 @@ describe("production compiler tutorial corpus", () => {
     expect(
       manifest.entries.find((entry) => entry.lessonId === "moe-routing"),
     ).toMatchObject({
-      siteEvidenceKind: "source-model-verified",
-      classification: "design-only",
-      compilerFixtureIds: [],
-      requiredGates: ["cpu-reference"],
+      siteEvidenceKind: "compiler-checked",
+      classification: "compiler-produced",
+      compilerFixtureIds: ["gfx942-moe-top2"],
+      requiredGates: ["production-compile", "cpu-reference", "hardware"],
     });
   });
 
@@ -556,7 +615,7 @@ describe("production compiler tutorial corpus", () => {
       allowsFallback: false,
     });
     expect(manifest.baseline.status).toBe("migration");
-    expect(manifest.entries.every((entry) => entry.qualificationStatus === "pending"))
+    expect(manifest.entries.every((entry) => !("qualificationStatus" in entry)))
       .toBe(true);
   });
 
@@ -874,7 +933,7 @@ describe("production compiler tutorial corpus", () => {
       return [];
     });
     expect(stale.status).toBe(1);
-    expect(stale.stderr).toContain("stale compiler fixture IDs");
+    expect(stale.stderr).toContain("compilerInput.contractSha256 is stale");
 
     const nonresolving = withTemporaryCorpus((document) => {
       const entry = document.entries.find((candidate) => candidate.lessonId === "typed-vecadd")!;
@@ -894,10 +953,10 @@ describe("production compiler tutorial corpus", () => {
       return [];
     });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("cannot downgrade gpu-observed out of compiler coverage");
+    expect(result.stderr).toContain("cannot downgrade compiler-checked out of compiler coverage");
   });
 
-  it("rejects a qualified classification with a missing inspection sidecar", () => {
+  it("requires complete measured coverage once the top-level baseline is qualified", () => {
     const result = withTemporaryCorpus((document, directory) => {
       const qualification = qualifyTypedVecadd(document, directory);
       return [
@@ -908,7 +967,7 @@ describe("production compiler tutorial corpus", () => {
       ];
     });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("missing its inspection sidecar");
+    expect(result.stderr).toContain("is missing a measured report");
   });
 
   it("does not recursively require the measured compiler to equal publication metadata", () => {
@@ -917,7 +976,7 @@ describe("production compiler tutorial corpus", () => {
       return ["--baseline-report", qualification.reportPath, "--inspector", process.execPath];
     });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("missing its inspection sidecar");
+    expect(result.stderr).toContain("is missing a measured report");
     expect(result.stderr).not.toContain("manifest compiler commit and tree");
   });
 
@@ -946,7 +1005,7 @@ describe("production compiler tutorial corpus", () => {
     expect(occupancy.stderr).toContain("dynamic LDS conservatively");
   });
 
-  it("rejects forged inspection framing before invoking the compiler decoder", () => {
+  it("does not let a single forged sidecar bypass complete corpus coverage", () => {
     const forged = Buffer.from("NOTAUTHENTICATED", "ascii");
     const result = withTemporaryCorpus((document, directory) => {
       const qualification = qualifyTypedVecadd(document, directory, forged);
@@ -960,7 +1019,7 @@ describe("production compiler tutorial corpus", () => {
       ];
     });
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("forged magic");
+    expect(result.stderr).toContain("is missing a measured report");
   });
 
   it("rejects missing M9 compiler resource metrics", () => {

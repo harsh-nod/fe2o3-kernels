@@ -163,14 +163,14 @@ function unavailableSourceIsaV2(value, label) {
 }
 
 function manifestRequirements(manifest) {
+  if (manifest.baseline.status !== "qualified") {
+    fail("a tracked qualification record requires a qualified top-level baseline");
+  }
   const fixtureById = manifest.fixtureById;
   const requirements = new Map(
     [...fixtureById.keys()].map((fixtureId) => [fixtureId, { hardware: false, reference: false, simulator: false }]),
   );
   for (const entry of manifest.entries) {
-    if (entry.qualificationStatus !== "qualified") {
-      fail("a tracked qualification record requires every tutorial entry to be qualified");
-    }
     for (const fixtureId of entry.compilerFixtureIds) {
       const gates = requirements.get(fixtureId);
       if (!gates) fail(`entry references unknown fixture ${fixtureId}`);

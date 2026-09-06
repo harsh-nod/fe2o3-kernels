@@ -18,13 +18,13 @@
     "hardwareTargets": [
       {
         "target": "gfx942",
-        "availability": "unavailable",
-        "unavailableReason": "No authenticated hardware execution lane is part of the deterministic semantic runner; gfx942 remains a separate required qualification gate."
+        "deterministicSemanticRunnerAvailability": "unavailable",
+        "reason": "No authenticated hardware execution lane is part of the deterministic semantic runner; gfx942 remains a separate required qualification gate."
       },
       {
         "target": "gfx950",
-        "availability": "unavailable",
-        "unavailableReason": "No authenticated hardware execution lane is part of the deterministic semantic runner; gfx950 remains a separate required qualification gate."
+        "deterministicSemanticRunnerAvailability": "unavailable",
+        "reason": "The tutorial corpus qualifies gfx950 by production compilation and CPU reference only; no gfx950 hardware qualification is claimed or required."
       }
     ],
     "suites": [
@@ -34,14 +34,22 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/flash_attention_general_v1/Cargo.toml", "lib"],
+          "arguments": [
+            "examples/flash_attention_general_v1/Cargo.toml",
+            "lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "flash-attention", "fixtureIds": ["gfx942-flash-attention"]}
+          {
+            "lessonId": "flash-attention",
+            "fixtureIds": [
+              "gfx942-flash-attention"
+            ]
+          }
         ]
       },
       {
@@ -50,15 +58,28 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/gemm_autoresearch_v1/Cargo.toml", "lib"],
+          "arguments": [
+            "examples/gemm_autoresearch_v1/Cargo.toml",
+            "lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "gemm-proof-plan", "fixtureIds": ["gfx942-gemm-autoresearch"]},
-          {"lessonId": "gemm-tiling", "fixtureIds": ["gfx942-gemm-autoresearch"]}
+          {
+            "lessonId": "gemm-proof-plan",
+            "fixtureIds": [
+              "gfx942-gemm-autoresearch"
+            ]
+          },
+          {
+            "lessonId": "gemm-tiling",
+            "fixtureIds": [
+              "gfx942-gemm-autoresearch"
+            ]
+          }
         ]
       },
       {
@@ -67,18 +88,57 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/gfx950_advanced_attention/Cargo.toml", "test", "reference"],
+          "arguments": [
+            "examples/gfx950_advanced_attention/Cargo.toml",
+            "test",
+            "reference"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "gfx950-attnres-gr-mhc", "fixtureIds": ["gfx950-attnres-aggregate", "gfx950-attnres-aggregate-explicit-reuse", "gfx950-four-branch-residual", "gfx950-four-branch-residual-explicit", "gfx950-mhc-sinkhorn-mix", "gfx950-mhc-sinkhorn-mix-scalar"]},
-          {"lessonId": "gfx950-compressed-hybrid-attention", "fixtureIds": ["gfx950-compressed-hybrid-attention", "gfx950-compressed-hybrid-attention-division-baseline"]},
-          {"lessonId": "gfx950-deepseek-sparse-attention", "fixtureIds": ["gfx950-deepseek-sparse-attention"]},
-          {"lessonId": "gfx950-indexed-sparse-attention", "fixtureIds": ["gfx950-content-sparse-attention", "gfx950-content-sparse-attention-reciprocal-reuse"]},
-          {"lessonId": "gfx950-kda-gdn-linear-attention", "fixtureIds": ["gfx950-kda-decode", "gfx950-kda-decode-baseline", "gfx950-kda-prefill", "gfx950-kda-prefill-baseline"]}
+          {
+            "lessonId": "gfx950-attnres-gr-mhc",
+            "fixtureIds": [
+              "gfx950-attnres-aggregate",
+              "gfx950-attnres-aggregate-explicit-reuse",
+              "gfx950-four-branch-residual",
+              "gfx950-four-branch-residual-explicit",
+              "gfx950-mhc-sinkhorn-mix",
+              "gfx950-mhc-sinkhorn-mix-scalar"
+            ]
+          },
+          {
+            "lessonId": "gfx950-compressed-hybrid-attention",
+            "fixtureIds": [
+              "gfx950-compressed-hybrid-attention",
+              "gfx950-compressed-hybrid-attention-division-baseline"
+            ]
+          },
+          {
+            "lessonId": "gfx950-deepseek-sparse-attention",
+            "fixtureIds": [
+              "gfx950-deepseek-sparse-attention"
+            ]
+          },
+          {
+            "lessonId": "gfx950-indexed-sparse-attention",
+            "fixtureIds": [
+              "gfx950-content-sparse-attention",
+              "gfx950-content-sparse-attention-reciprocal-reuse"
+            ]
+          },
+          {
+            "lessonId": "gfx950-kda-gdn-linear-attention",
+            "fixtureIds": [
+              "gfx950-kda-decode",
+              "gfx950-kda-decode-baseline",
+              "gfx950-kda-prefill",
+              "gfx950-kda-prefill-baseline"
+            ]
+          }
         ]
       },
       {
@@ -87,17 +147,48 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/gfx950_advanced_systems/Cargo.toml", "test", "references"],
+          "arguments": [
+            "examples/gfx950_advanced_systems/Cargo.toml",
+            "test",
+            "references"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "gfx950-advanced-moe", "fixtureIds": ["gfx950-combine-expert-ranks", "gfx950-moe-expert-rank", "gfx950-moe-expert-rank-expert-serial", "gfx950-moe-route", "gfx950-stage-gradient-shard"]},
-          {"lessonId": "gfx950-muon-optimizer", "fixtureIds": ["gfx950-muon-update", "gfx950-muon-update-broadcast16"]},
-          {"lessonId": "gfx950-ngram-embedding-gather", "fixtureIds": ["gfx950-qwen-ngram-gather", "gfx950-qwen-ngram-gather-reverse-probe"]},
-          {"lessonId": "gfx950-speculative-mtp-verification", "fixtureIds": ["gfx950-speculative-transaction", "gfx950-speculative-transaction-recompute-prefix"]}
+          {
+            "lessonId": "gfx950-advanced-moe",
+            "fixtureIds": [
+              "gfx950-combine-expert-ranks",
+              "gfx950-moe-expert-rank",
+              "gfx950-moe-expert-rank-expert-serial",
+              "gfx950-moe-route",
+              "gfx950-stage-gradient-shard"
+            ]
+          },
+          {
+            "lessonId": "gfx950-muon-optimizer",
+            "fixtureIds": [
+              "gfx950-muon-update",
+              "gfx950-muon-update-broadcast16"
+            ]
+          },
+          {
+            "lessonId": "gfx950-ngram-embedding-gather",
+            "fixtureIds": [
+              "gfx950-qwen-ngram-gather",
+              "gfx950-qwen-ngram-gather-reverse-probe"
+            ]
+          },
+          {
+            "lessonId": "gfx950-speculative-mtp-verification",
+            "fixtureIds": [
+              "gfx950-speculative-transaction",
+              "gfx950-speculative-transaction-recompute-prefix"
+            ]
+          }
         ]
       },
       {
@@ -106,14 +197,29 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/gfx950_gpt_oss_decode/Cargo.toml", "test", "reference"],
+          "arguments": [
+            "examples/gfx950_gpt_oss_decode/Cargo.toml",
+            "test",
+            "reference"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "gfx950-gpt-oss-120b-megakernel", "fixtureIds": ["gfx950-gpt-oss-decode", "gfx950-gpt-oss-held-fragments", "gfx950-gpt-oss-interleaved-stores", "gfx950-gpt-oss-materialized-attention", "gfx950-gpt-oss-materialized-expert", "gfx950-gpt-oss-materialized-router", "gfx950-gpt-oss-serial-router"]}
+          {
+            "lessonId": "gfx950-gpt-oss-120b-megakernel",
+            "fixtureIds": [
+              "gfx950-gpt-oss-decode",
+              "gfx950-gpt-oss-held-fragments",
+              "gfx950-gpt-oss-interleaved-stores",
+              "gfx950-gpt-oss-materialized-attention",
+              "gfx950-gpt-oss-materialized-expert",
+              "gfx950-gpt-oss-materialized-router",
+              "gfx950-gpt-oss-serial-router"
+            ]
+          }
         ]
       },
       {
@@ -122,17 +228,40 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/gfx950_low_precision/Cargo.toml", "lib"],
+          "arguments": [
+            "examples/gfx950_low_precision/Cargo.toml",
+            "lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "gfx950-fp4-attention", "fixtureIds": ["gfx950-fp4-attention"]},
-          {"lessonId": "gfx950-fp4-gemm", "fixtureIds": ["gfx950-fp4-gemm"]},
-          {"lessonId": "gfx950-fp8-attention", "fixtureIds": ["gfx950-fp8-attention"]},
-          {"lessonId": "gfx950-fp8-gemm", "fixtureIds": ["gfx950-fp8-gemm"]}
+          {
+            "lessonId": "gfx950-fp4-attention",
+            "fixtureIds": [
+              "gfx950-fp4-attention"
+            ]
+          },
+          {
+            "lessonId": "gfx950-fp4-gemm",
+            "fixtureIds": [
+              "gfx950-fp4-gemm"
+            ]
+          },
+          {
+            "lessonId": "gfx950-fp8-attention",
+            "fixtureIds": [
+              "gfx950-fp8-attention"
+            ]
+          },
+          {
+            "lessonId": "gfx950-fp8-gemm",
+            "fixtureIds": [
+              "gfx950-fp8-gemm"
+            ]
+          }
         ]
       },
       {
@@ -141,14 +270,22 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/moe_grouped_expert_general_v1/Cargo.toml", "lib"],
+          "arguments": [
+            "examples/moe_grouped_expert_general_v1/Cargo.toml",
+            "lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "moe-expert-compute", "fixtureIds": ["gfx942-grouped-expert-moe"]}
+          {
+            "lessonId": "moe-expert-compute",
+            "fixtureIds": [
+              "gfx942-grouped-expert-moe"
+            ]
+          }
         ]
       },
       {
@@ -157,14 +294,23 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/moe_top2_v1/Cargo.toml", "test", "oracle"],
+          "arguments": [
+            "examples/moe_top2_v1/Cargo.toml",
+            "test",
+            "oracle"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "moe-routing", "fixtureIds": []}
+          {
+            "lessonId": "moe-routing",
+            "fixtureIds": [
+              "gfx942-moe-top2"
+            ]
+          }
         ]
       },
       {
@@ -173,14 +319,22 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/row_softmax_general_v1/Cargo.toml", "lib"],
+          "arguments": [
+            "examples/row_softmax_general_v1/Cargo.toml",
+            "lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "softmax-invariant", "fixtureIds": ["gfx942-row-softmax"]}
+          {
+            "lessonId": "softmax-invariant",
+            "fixtureIds": [
+              "gfx942-row-softmax"
+            ]
+          }
         ]
       },
       {
@@ -189,34 +343,52 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-cpu-reference.sh",
-          "arguments": ["examples/tiled_gemm_general_v1/Cargo.toml", "lib"],
+          "arguments": [
+            "examples/tiled_gemm_general_v1/Cargo.toml",
+            "lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 1200
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "gemm-proof-plan", "fixtureIds": ["gfx942-tiled-gemm"]},
-          {"lessonId": "gemm-tiling", "fixtureIds": ["gfx942-tiled-gemm"]}
+          {
+            "lessonId": "gemm-proof-plan",
+            "fixtureIds": [
+              "gfx942-tiled-gemm"
+            ]
+          },
+          {
+            "lessonId": "gemm-tiling",
+            "fixtureIds": [
+              "gfx942-tiled-gemm"
+            ]
+          }
         ]
       },
       {
-      "suiteId": "cpu-reference-typed-vecadd",
-      "gate": "cpu-reference",
-      "availability": "available",
-      "command": {
-        "executable": "scripts/run-tutorial-cpu-reference.sh",
-        "arguments": [
-          "examples/vecadd/Cargo.toml",
-          "lib"
-        ],
-        "environment": [],
-        "workingDirectory": ".",
-        "timeoutSeconds": 1200
-      },
-      "unavailableReason": null,
+        "suiteId": "cpu-reference-typed-vecadd",
+        "gate": "cpu-reference",
+        "availability": "available",
+        "command": {
+          "executable": "scripts/run-tutorial-cpu-reference.sh",
+          "arguments": [
+            "examples/vecadd/Cargo.toml",
+            "lib"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "unavailableReason": null,
         "coverage": [
-          {"lessonId": "typed-vecadd", "fixtureIds": ["gfx942-typed-vecadd-source"]}
+          {
+            "lessonId": "typed-vecadd",
+            "fixtureIds": [
+              "gfx942-typed-vecadd-source"
+            ]
+          }
         ]
       },
       {
@@ -225,15 +397,42 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-semantic-simulation.py",
-          "arguments": ["--expectation", "scripts/quickstart/fill-expectation.json", "--", "simulate-source", "--crate", "fe2o3_fill", "--request", "scripts/quickstart/fill-request.json", "--target", "gfx942", "--bundle-version", "7", "--", "--package", "fe2o3-fill", "--lib"],
+          "arguments": [
+            "--expectation",
+            "scripts/quickstart/fill-expectation.json",
+            "--",
+            "simulate-source",
+            "--crate",
+            "fe2o3_fill",
+            "--request",
+            "scripts/quickstart/fill-request.json",
+            "--target",
+            "gfx942",
+            "--bundle-version",
+            "7",
+            "--",
+            "--package",
+            "fe2o3-fill",
+            "--lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 3600
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "cpu-semantic-simulation", "fixtureIds": ["gfx942-fill-simulation"]},
-          {"lessonId": "first-fill", "fixtureIds": ["gfx942-fill-simulation"]}
+          {
+            "lessonId": "cpu-semantic-simulation",
+            "fixtureIds": [
+              "gfx942-fill-simulation"
+            ]
+          },
+          {
+            "lessonId": "first-fill",
+            "fixtureIds": [
+              "gfx942-fill-simulation"
+            ]
+          }
         ]
       },
       {
@@ -242,14 +441,36 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-semantic-simulation.py",
-          "arguments": ["--expectation", "examples/wave64_collectives_v1/full-mask-expectation.json", "--", "simulate-source", "--crate", "fe2o3_wave64_collectives_v1", "--request", "examples/wave64_collectives_v1/full-mask-request.json", "--target", "gfx942", "--bundle-version", "7", "--", "--manifest-path", "examples/wave64_collectives_v1/Cargo.toml", "--lib"],
+          "arguments": [
+            "--expectation",
+            "examples/wave64_collectives_v1/full-mask-expectation.json",
+            "--",
+            "simulate-source",
+            "--crate",
+            "fe2o3_wave64_collectives_v1",
+            "--request",
+            "examples/wave64_collectives_v1/full-mask-request.json",
+            "--target",
+            "gfx942",
+            "--bundle-version",
+            "7",
+            "--",
+            "--manifest-path",
+            "examples/wave64_collectives_v1/Cargo.toml",
+            "--lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 3600
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "reductions-scans", "fixtureIds": ["gfx942-wave64-collectives"]}
+          {
+            "lessonId": "reductions-scans",
+            "fixtureIds": [
+              "gfx942-wave64-collectives"
+            ]
+          }
         ]
       },
       {
@@ -258,65 +479,1756 @@
         "availability": "available",
         "command": {
           "executable": "scripts/run-tutorial-semantic-simulation.py",
-          "arguments": ["--expectation", "examples/workgroup_sync_v1/scan-u32-expectation.json", "--", "simulate-source", "--crate", "fe2o3_workgroup_sync_v1", "--request", "examples/workgroup_sync_v1/scan-u32-request.json", "--target", "gfx942", "--bundle-version", "7", "--", "--manifest-path", "examples/workgroup_sync_v1/Cargo.toml", "--no-default-features", "--features", "lds-scan-u32-kernel", "--lib"],
+          "arguments": [
+            "--expectation",
+            "examples/workgroup_sync_v1/scan-u32-expectation.json",
+            "--",
+            "simulate-source",
+            "--crate",
+            "fe2o3_workgroup_sync_v1",
+            "--request",
+            "examples/workgroup_sync_v1/scan-u32-request.json",
+            "--target",
+            "gfx942",
+            "--bundle-version",
+            "7",
+            "--",
+            "--manifest-path",
+            "examples/workgroup_sync_v1/Cargo.toml",
+            "--no-default-features",
+            "--features",
+            "lds-scan-u32-kernel",
+            "--lib"
+          ],
           "environment": [],
           "workingDirectory": ".",
           "timeoutSeconds": 3600
         },
         "unavailableReason": null,
         "coverage": [
-          {"lessonId": "lds-barriers-atomics", "fixtureIds": ["gfx942-workgroup-collectives"]}
+          {
+            "lessonId": "lds-barriers-atomics",
+            "fixtureIds": [
+              "gfx942-workgroup-collectives"
+            ]
+          }
         ]
       }
     ]
   },
   "compilerFixtures": [
-    {"fixtureId": "gfx942-fill-simulation", "testId": "kernel-compile-matrix/gfx942/fill", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "fill", "runnerPath": "examples/fill/run-gfx942.sh", "artifactName": "fill.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-flash-attention", "testId": "kernel-compile-matrix/gfx942/flash-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "flash-attention", "runnerPath": "examples/flash_attention_general_v1/run-gfx942.sh", "artifactName": "flash_attention_general_v1.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-gemm-autoresearch", "testId": "kernel-compile-matrix/gfx942/gemm-autoresearch", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "gemm-autoresearch", "runnerPath": "examples/gemm_autoresearch_v1/run-gfx942.sh", "artifactName": "gemm_autoresearch_v1.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-grouped-expert-moe", "testId": "kernel-compile-matrix/gfx942/grouped-expert-moe", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "grouped-expert-moe", "runnerPath": "examples/moe_grouped_expert_general_v1/run-gfx942.sh", "artifactName": "moe_grouped_expert_general_v1.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-row-softmax", "testId": "kernel-compile-matrix/gfx942/row-softmax", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "row-softmax", "runnerPath": "examples/row_softmax_general_v1/run-gfx942.sh", "artifactName": "row_softmax_general_v1.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-tiled-gemm", "testId": "kernel-compile-matrix/gfx942/tiled-gemm", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "tiled-gemm", "runnerPath": "examples/tiled_gemm_general_v1/run-gfx942.sh", "artifactName": "tiled_gemm_general_v1.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-typed-vecadd-source", "testId": "kernel-compile-matrix/gfx942/typed-vecadd", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "typed-vecadd", "runnerPath": "examples/vecadd/run-gfx942.sh", "artifactName": "vecadd.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-wave64-collectives", "testId": "kernel-compile-matrix/gfx942/wave64-collectives", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "wave64-collectives", "runnerPath": "examples/wave64_collectives_v1/run-gfx942.sh", "artifactName": "wave64_collectives_v1.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx942-workgroup-collectives", "testId": "kernel-compile-matrix/gfx942/workgroup-collectives", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx942", "matrix": {"caseId": "workgroup-collectives", "runnerPath": "examples/workgroup_sync_v1/run-gfx942.sh", "artifactName": "workgroup_sync_v1.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-attnres-aggregate", "testId": "kernel-compile-matrix/gfx950/attnres-aggregate", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "attnres-aggregate", "runnerPath": "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh", "artifactName": "kernel-attnres-aggregate.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-attnres-aggregate-explicit-reuse", "testId": "kernel-compile-matrix/gfx950/attnres-aggregate-explicit-reuse", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "attnres-aggregate-explicit-reuse", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-attnres-aggregate-explicit-reuse-v1.hsaco", "runnerArguments": ["kernel-attnres-aggregate-explicit-reuse-v1"], "environment": []}},
-    {"fixtureId": "gfx950-combine-expert-ranks", "testId": "kernel-compile-matrix/gfx950/combine-expert-ranks", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "combine-expert-ranks", "runnerPath": "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh", "artifactName": "kernel-combine-expert-ranks.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-compressed-hybrid-attention", "testId": "kernel-compile-matrix/gfx950/compressed-hybrid-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "compressed-hybrid-attention", "runnerPath": "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh", "artifactName": "kernel-compressed-hybrid-attention.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-compressed-hybrid-attention-division-baseline", "testId": "kernel-compile-matrix/gfx950/compressed-hybrid-attention-division-baseline", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "compressed-hybrid-attention-division-baseline", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-compressed-hybrid-attention-division-baseline-v1.hsaco", "runnerArguments": ["kernel-compressed-hybrid-attention-division-baseline-v1"], "environment": []}},
-    {"fixtureId": "gfx950-content-sparse-attention", "testId": "kernel-compile-matrix/gfx950/content-sparse-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "content-sparse-attention", "runnerPath": "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh", "artifactName": "kernel-content-sparse-attention.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-content-sparse-attention-reciprocal-reuse", "testId": "kernel-compile-matrix/gfx950/content-sparse-attention-reciprocal-reuse", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "content-sparse-attention-reciprocal-reuse", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-content-sparse-attention-reciprocal-reuse-v1.hsaco", "runnerArguments": ["kernel-content-sparse-attention-reciprocal-reuse-v1"], "environment": []}},
-    {"fixtureId": "gfx950-deepseek-sparse-attention", "testId": "kernel-compile-matrix/gfx950/deepseek-sparse-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "deepseek-sparse-attention", "runnerPath": "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh", "artifactName": "kernel-deepseek-sparse-attention.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-four-branch-residual", "testId": "kernel-compile-matrix/gfx950/four-branch-residual", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "four-branch-residual", "runnerPath": "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh", "artifactName": "kernel-four-branch-residual.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-four-branch-residual-explicit", "testId": "kernel-compile-matrix/gfx950/four-branch-residual-explicit", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "four-branch-residual-explicit", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-four-branch-residual-explicit-v1.hsaco", "runnerArguments": ["kernel-four-branch-residual-explicit-v1"], "environment": []}},
-    {"fixtureId": "gfx950-fp4-attention", "testId": "kernel-compile-matrix/gfx950/fp4-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp4-attention", "runnerPath": "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh", "artifactName": "gfx950-fp4-attention.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-fp4-gemm", "testId": "kernel-compile-matrix/gfx950/fp4-gemm", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp4-gemm", "runnerPath": "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh", "artifactName": "gfx950-fp4-gemm.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-fp8-attention", "testId": "kernel-compile-matrix/gfx950/fp8-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp8-attention", "runnerPath": "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh", "artifactName": "gfx950-fp8-attention.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-fp8-gemm", "testId": "kernel-compile-matrix/gfx950/fp8-gemm", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "fp8-gemm", "runnerPath": "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh", "artifactName": "gfx950-fp8-gemm.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-gpt-oss-decode", "testId": "kernel-compile-matrix/gfx950/gpt-oss-decode", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-decode", "runnerPath": "examples/gfx950_gpt_oss_decode/run-gfx950.sh", "artifactName": "kernel-gpt-oss-decode.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-gpt-oss-held-fragments", "testId": "kernel-compile-matrix/gfx950/gpt-oss-held-fragments", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-held-fragments", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-decode-held-fragments.hsaco", "runnerArguments": ["held-fragments"], "environment": []}},
-    {"fixtureId": "gfx950-gpt-oss-interleaved-stores", "testId": "kernel-compile-matrix/gfx950/gpt-oss-interleaved-stores", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-interleaved-stores", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-decode-interleaved-stores.hsaco", "runnerArguments": ["interleaved-stores"], "environment": []}},
-    {"fixtureId": "gfx950-gpt-oss-materialized-attention", "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-attention", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-materialized-attention", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-attention-component.hsaco", "runnerArguments": ["materialized-attention"], "environment": []}},
-    {"fixtureId": "gfx950-gpt-oss-materialized-expert", "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-expert", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-materialized-expert", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-expert-component.hsaco", "runnerArguments": ["materialized-expert"], "environment": []}},
-    {"fixtureId": "gfx950-gpt-oss-materialized-router", "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-router", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-materialized-router", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-router-component.hsaco", "runnerArguments": ["materialized-router"], "environment": []}},
-    {"fixtureId": "gfx950-gpt-oss-serial-router", "testId": "kernel-compile-matrix/gfx950/gpt-oss-serial-router", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "gpt-oss-serial-router", "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh", "artifactName": "kernel-gpt-oss-decode-router-serial.hsaco", "runnerArguments": ["serial-router"], "environment": []}},
-    {"fixtureId": "gfx950-kda-decode", "testId": "kernel-compile-matrix/gfx950/kda-decode", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-decode", "runnerPath": "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh", "artifactName": "kernel-kda-decode.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-kda-decode-baseline", "testId": "kernel-compile-matrix/gfx950/kda-decode-baseline", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-decode-baseline", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-kda-decode-baseline-v1.hsaco", "runnerArguments": ["kernel-kda-decode-baseline-v1"], "environment": []}},
-    {"fixtureId": "gfx950-kda-prefill", "testId": "kernel-compile-matrix/gfx950/kda-prefill", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-prefill", "runnerPath": "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh", "artifactName": "kernel-kda-prefill.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-kda-prefill-baseline", "testId": "kernel-compile-matrix/gfx950/kda-prefill-baseline", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "kda-prefill-baseline", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-kda-prefill-baseline-v1.hsaco", "runnerArguments": ["kernel-kda-prefill-baseline-v1"], "environment": []}},
-    {"fixtureId": "gfx950-mhc-sinkhorn-mix", "testId": "kernel-compile-matrix/gfx950/mhc-sinkhorn-mix", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "mhc-sinkhorn-mix", "runnerPath": "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh", "artifactName": "kernel-mhc-sinkhorn-mix.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-mhc-sinkhorn-mix-scalar", "testId": "kernel-compile-matrix/gfx950/mhc-sinkhorn-mix-scalar", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "mhc-sinkhorn-mix-scalar", "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh", "artifactName": "kernel-mhc-sinkhorn-mix-scalar-v1.hsaco", "runnerArguments": ["kernel-mhc-sinkhorn-mix-scalar-v1"], "environment": []}},
-    {"fixtureId": "gfx950-moe-expert-rank", "testId": "kernel-compile-matrix/gfx950/moe-expert-rank", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "moe-expert-rank", "runnerPath": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh", "artifactName": "kernel-moe-expert-rank.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-moe-expert-rank-expert-serial", "testId": "kernel-compile-matrix/gfx950/moe-expert-rank-expert-serial", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "moe-expert-rank-expert-serial", "runnerPath": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh", "artifactName": "kernel-moe-expert-rank.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=expert-serial"]}},
-    {"fixtureId": "gfx950-moe-route", "testId": "kernel-compile-matrix/gfx950/moe-route", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "moe-route", "runnerPath": "examples/gfx950_advanced_systems/run-moe-route-gfx950.sh", "artifactName": "kernel-moe-route.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-muon-update", "testId": "kernel-compile-matrix/gfx950/muon-update", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "muon-update", "runnerPath": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh", "artifactName": "kernel-muon-update.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-muon-update-broadcast16", "testId": "kernel-compile-matrix/gfx950/muon-update-broadcast16", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "muon-update-broadcast16", "runnerPath": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh", "artifactName": "kernel-muon-update.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=muon-broadcast16"]}},
-    {"fixtureId": "gfx950-qwen-ngram-gather", "testId": "kernel-compile-matrix/gfx950/qwen-ngram-gather", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "qwen-ngram-gather", "runnerPath": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "artifactName": "kernel-qwen-ngram-gather.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-qwen-ngram-gather-reverse-probe", "testId": "kernel-compile-matrix/gfx950/qwen-ngram-gather-reverse-probe", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "qwen-ngram-gather-reverse-probe", "runnerPath": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh", "artifactName": "kernel-qwen-ngram-gather.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=ngram-reverse-probe"]}},
-    {"fixtureId": "gfx950-speculative-transaction", "testId": "kernel-compile-matrix/gfx950/speculative-transaction", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "speculative-transaction", "runnerPath": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "artifactName": "kernel-speculative-transaction.hsaco", "runnerArguments": [], "environment": []}},
-    {"fixtureId": "gfx950-speculative-transaction-recompute-prefix", "testId": "kernel-compile-matrix/gfx950/speculative-transaction-recompute-prefix", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "speculative-transaction-recompute-prefix", "runnerPath": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh", "artifactName": "kernel-speculative-transaction.hsaco", "runnerArguments": [], "environment": ["FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=speculative-recompute-prefix"]}},
-    {"fixtureId": "gfx950-stage-gradient-shard", "testId": "kernel-compile-matrix/gfx950/stage-gradient-shard", "testPath": "scripts/tests/kernel-compile-matrix.sh", "target": "gfx950", "matrix": {"caseId": "stage-gradient-shard", "runnerPath": "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh", "artifactName": "kernel-stage-gradient-shard.hsaco", "runnerArguments": [], "environment": []}}
+    {
+      "fixtureId": "gfx942-fill-simulation",
+      "testId": "kernel-compile-matrix/gfx942/fill",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "fill",
+        "runnerPath": "examples/fill/run-gfx942.sh",
+        "artifactName": "fill.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/fill/Cargo.toml",
+        "packageManifestSha256": "e65ca6e73f075c048a7e2bccf4be7eee6c021327d15c88239ce4eee67c1384c2",
+        "sourcePaths": [
+          "examples/fill/src/lib.rs"
+        ],
+        "sourceClosureSha256": "ae2c2c90b3f51e18bb875ef075884a5e33ab974de62771eba01b88add5fd4dbb",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_fill",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "fill"
+        ],
+        "cargoLockPath": "Cargo.lock",
+        "cargoLockSha256": "75e75527b57bedf8acd9ebe8f8531a7a07bc8006df862ff5a489a5bcdf1ee350",
+        "contractSha256": "fca4535012531e9645f5eaaba63aea13fbde617bfe99108fef0eb9902a828708"
+      }
+    },
+    {
+      "fixtureId": "gfx942-flash-attention",
+      "testId": "kernel-compile-matrix/gfx942/flash-attention",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "flash-attention",
+        "runnerPath": "examples/flash_attention_general_v1/run-gfx942.sh",
+        "artifactName": "flash_attention_general_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/flash_attention_general_v1/Cargo.toml",
+        "packageManifestSha256": "069fbfdfd2b91eadc8b4c285fa4d40f5fb6aeb72761411d1372c47b126616c1e",
+        "sourcePaths": [
+          "examples/flash_attention_general_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "e842d89971b13495d6b4be382f55c7375edffe1c13b9ca12828914f7cc04e872",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_flash_attention_general_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "flash_attention_general_v1"
+        ],
+        "cargoLockPath": "examples/flash_attention_general_v1/Cargo.lock",
+        "cargoLockSha256": "b97be3046c969e8cf81d8c0cb5f2f3ac9110d24a39bc656bff179e6f0ce5c12e",
+        "contractSha256": "6f199969dfb57c5f530bc6fc8489834f43fd143555d9a347ba8eec5b0e435479"
+      }
+    },
+    {
+      "fixtureId": "gfx942-gemm-autoresearch",
+      "testId": "kernel-compile-matrix/gfx942/gemm-autoresearch",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "gemm-autoresearch",
+        "runnerPath": "examples/gemm_autoresearch_v1/run-gfx942.sh",
+        "artifactName": "gemm_autoresearch_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gemm_autoresearch_v1/Cargo.toml",
+        "packageManifestSha256": "44789cfe4a214f59e60a62f917eb9a16a0bc9e85f069fe100d83f01c16672b79",
+        "sourcePaths": [
+          "examples/gemm_autoresearch_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "27aacc5240c9a85df607f1a4a9f38eed8105a86954c6efdced16c507969d7e03",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gemm_autoresearch_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "gemm_autoresearch_v1"
+        ],
+        "cargoLockPath": "examples/gemm_autoresearch_v1/Cargo.lock",
+        "cargoLockSha256": "ac7432b0785695cc768e7823d0ec4fb9028405f3d1146bbf2544bfab0844e2c6",
+        "contractSha256": "5e6c659800b8c4af94374c98754888f46657e6b70ba9292fe5301ff5cef349e7"
+      }
+    },
+    {
+      "fixtureId": "gfx942-grouped-expert-moe",
+      "testId": "kernel-compile-matrix/gfx942/grouped-expert-moe",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "grouped-expert-moe",
+        "runnerPath": "examples/moe_grouped_expert_general_v1/run-gfx942.sh",
+        "artifactName": "moe_grouped_expert_general_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/moe_grouped_expert_general_v1/Cargo.toml",
+        "packageManifestSha256": "e933e55b0e4a4e64a6b55ae0399b9eaa8fb1c9ea87b0f88a8ea491f4a590fd4f",
+        "sourcePaths": [
+          "examples/moe_grouped_expert_general_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "e84644d93400017718588894cf54dbad87319453467bc80188cb840ffc87be89",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_moe_grouped_expert_general_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "moe_grouped_expert_general_v1"
+        ],
+        "cargoLockPath": "examples/moe_grouped_expert_general_v1/Cargo.lock",
+        "cargoLockSha256": "d6e2b19877ff82a497b9910876c6833b70590a17bd7c9917b51f8ce973e71479",
+        "contractSha256": "a7eebfc5b6fddd8e908f150a34330aa87d7a579297b295de5c84f60bf8a4d2ff"
+      }
+    },
+    {
+      "fixtureId": "gfx942-moe-top2",
+      "testId": "kernel-compile-matrix/gfx942/moe-top2",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "moe-top2",
+        "runnerPath": "examples/moe_top2_v1/run-gfx942.sh",
+        "artifactName": "moe_top2_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/moe_top2_v1/Cargo.toml",
+        "packageManifestSha256": "b1318ebcb850491479033a9365c13a25dea197b1811f0ffa007b562f48d2a4ab",
+        "sourcePaths": [
+          "examples/moe_top2_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "9fd6ff197d0f0b0b80139622bc3e4609812276f391ecbbc35525c269b952f606",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_moe_top2_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "moe_top2_route_f32_t8_e4_k2_c4_v1"
+        ],
+        "cargoLockPath": "examples/moe_top2_v1/Cargo.lock",
+        "cargoLockSha256": "a2a6fbdb489ead555c8400d07a5ea1f2e5bc3f17c1a4d70b1fc2885728ddb3a1",
+        "contractSha256": "4c6ba7616ad517f6577270228e4809cb7368ec94337eb3b39ab58e4ef3463687"
+      }
+    },
+    {
+      "fixtureId": "gfx942-row-softmax",
+      "testId": "kernel-compile-matrix/gfx942/row-softmax",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "row-softmax",
+        "runnerPath": "examples/row_softmax_general_v1/run-gfx942.sh",
+        "artifactName": "row_softmax_general_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/row_softmax_general_v1/Cargo.toml",
+        "packageManifestSha256": "05745c2c356a338d753352db5d002628ba3781c7eff94ef446de841e6768a009",
+        "sourcePaths": [
+          "examples/row_softmax_general_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "0d4a5f327dca1d15788960f4692305bde678571f1e8d0377862bd7e2f77de609",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_row_softmax_general_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "row_softmax_general_v1"
+        ],
+        "cargoLockPath": "examples/row_softmax_general_v1/Cargo.lock",
+        "cargoLockSha256": "97631668f4ed267535d19a9de357d6d22dd286a101a5e9a3e9eef322b604caa0",
+        "contractSha256": "22f41ec3a8ca714a36cb55c7620426bd6acef114a1b7d0bce721c432382b73ca"
+      }
+    },
+    {
+      "fixtureId": "gfx942-tiled-gemm",
+      "testId": "kernel-compile-matrix/gfx942/tiled-gemm",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "tiled-gemm",
+        "runnerPath": "examples/tiled_gemm_general_v1/run-gfx942.sh",
+        "artifactName": "tiled_gemm_general_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
+        "packageManifestSha256": "8fcded65fb00a9e8c19214683bafecedd7c82832903db298145027ad8ace1021",
+        "sourcePaths": [
+          "examples/tiled_gemm_general_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "b20a03bfde4cfa37792f0289cc36401b12d2ddd72ae554e451b6198aea9a9088",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_tiled_gemm_general_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "tiled_gemm_general_v1"
+        ],
+        "cargoLockPath": "examples/tiled_gemm_general_v1/Cargo.lock",
+        "cargoLockSha256": "cd2b932af0a13f0c2a9c15f89052d8eb14a623769c2f776efbaf4bbebeb04bb7",
+        "contractSha256": "19e0a2e9e6309515362d50eb1ab04bcdc4bec927b7a1bbf49f35aeb3edc9de37"
+      }
+    },
+    {
+      "fixtureId": "gfx942-typed-vecadd-source",
+      "testId": "kernel-compile-matrix/gfx942/typed-vecadd",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "typed-vecadd",
+        "runnerPath": "examples/vecadd/run-gfx942.sh",
+        "artifactName": "vecadd.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/vecadd/Cargo.toml",
+        "packageManifestSha256": "68de605d3af20f4a4b181b0cbac91af3994546b85ab6d4f135689e306a1dbe99",
+        "sourcePaths": [
+          "examples/vecadd/src/lib.rs"
+        ],
+        "sourceClosureSha256": "4b984b9733cd067c59559e07744b917f71aaf47654e931207096d9246541101b",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_vecadd",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "vecadd"
+        ],
+        "cargoLockPath": "Cargo.lock",
+        "cargoLockSha256": "75e75527b57bedf8acd9ebe8f8531a7a07bc8006df862ff5a489a5bcdf1ee350",
+        "contractSha256": "f2aaa747bbc2afdda0c6df9f45aac4ca18bcb705a33469d57f68ebe6a19ba6ea"
+      }
+    },
+    {
+      "fixtureId": "gfx942-wave64-collectives",
+      "testId": "kernel-compile-matrix/gfx942/wave64-collectives",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "wave64-collectives",
+        "runnerPath": "examples/wave64_collectives_v1/run-gfx942.sh",
+        "artifactName": "wave64_collectives_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/wave64_collectives_v1/Cargo.toml",
+        "packageManifestSha256": "0dc0001705bec7bc3e0b7c43304104f1eba34cdb392e1fb840a5c2952077b22d",
+        "sourcePaths": [
+          "examples/wave64_collectives_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "5434714f2f0dc67626cfc403a84d69ef7c3b1513b329d0826e8a12ca14046333",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_wave64_collectives_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": true,
+        "features": [],
+        "kernelSymbols": [
+          "wave64_collectives_v1"
+        ],
+        "cargoLockPath": "examples/wave64_collectives_v1/Cargo.lock",
+        "cargoLockSha256": "e7420d74b1d82ab5b6ffc9306078478a4e79b1047639df340d672a927a10ed92",
+        "contractSha256": "1fba77ce02840892624668c6c1811491d090878a615423ebc513c35e5d839ba0"
+      }
+    },
+    {
+      "fixtureId": "gfx942-workgroup-collectives",
+      "testId": "kernel-compile-matrix/gfx942/workgroup-collectives",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx942",
+      "matrix": {
+        "caseId": "workgroup-collectives",
+        "runnerPath": "examples/workgroup_sync_v1/run-gfx942.sh",
+        "artifactName": "workgroup_sync_v1.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/workgroup_sync_v1/Cargo.toml",
+        "packageManifestSha256": "1abcdc6204d609cbf3813a27a13668289ef644c8b698f36caa67a25cf1ba3340",
+        "sourcePaths": [
+          "examples/workgroup_sync_v1/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "65718be4ff95de2997c0ed5e98861fa2397a51349b23a4b78cc8987fc30c3bc2",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_workgroup_sync_v1",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "lds-kernel"
+        ],
+        "kernelSymbols": [
+          "lds_publish_read_reduce_i32_v1"
+        ],
+        "cargoLockPath": "examples/workgroup_sync_v1/Cargo.lock",
+        "cargoLockSha256": "bbb6b475bd6545e9c520a6534e943f83be2c33010acc7d372a6bd127a2ebdd6e",
+        "contractSha256": "57241fe4710c953e9645bb15ce5d92cc2ee143e796b4dd9e757d9c71d9e5652b"
+      }
+    },
+    {
+      "fixtureId": "gfx950-attnres-aggregate",
+      "testId": "kernel-compile-matrix/gfx950/attnres-aggregate",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "attnres-aggregate",
+        "runnerPath": "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
+        "artifactName": "kernel-attnres-aggregate.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-attnres-aggregate"
+        ],
+        "kernelSymbols": [
+          "gfx950_attnres_aggregate"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "26585b8b2b3de481e074302147181e5bc7b3efe22b6d3230bfe089fae6693bcc"
+      }
+    },
+    {
+      "fixtureId": "gfx950-attnres-aggregate-explicit-reuse",
+      "testId": "kernel-compile-matrix/gfx950/attnres-aggregate-explicit-reuse",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "attnres-aggregate-explicit-reuse",
+        "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "artifactName": "kernel-attnres-aggregate-explicit-reuse-v1.hsaco",
+        "runnerArguments": [
+          "kernel-attnres-aggregate-explicit-reuse-v1"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/ablation.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-attnres-aggregate-explicit-reuse-v1"
+        ],
+        "kernelSymbols": [
+          "gfx950_attnres_aggregate"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "72561eca491ddf5489daac3fabdd78e22da2d3a4df14de2717164840240f2982"
+      }
+    },
+    {
+      "fixtureId": "gfx950-combine-expert-ranks",
+      "testId": "kernel-compile-matrix/gfx950/combine-expert-ranks",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "combine-expert-ranks",
+        "runnerPath": "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh",
+        "artifactName": "kernel-combine-expert-ranks.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-combine-expert-ranks"
+        ],
+        "kernelSymbols": [
+          "gfx950_combine_expert_ranks_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "9ddb68e4f600cc543942adffdb250a7f003f0acd18e4e255db5aa87002e4b18a"
+      }
+    },
+    {
+      "fixtureId": "gfx950-compressed-hybrid-attention",
+      "testId": "kernel-compile-matrix/gfx950/compressed-hybrid-attention",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "compressed-hybrid-attention",
+        "runnerPath": "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
+        "artifactName": "kernel-compressed-hybrid-attention.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-compressed-hybrid-attention"
+        ],
+        "kernelSymbols": [
+          "gfx950_compressed_hybrid_attention"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "609427b2c763792b770d00ccf5c0bca816012644b00278abf113b19b953c98b0"
+      }
+    },
+    {
+      "fixtureId": "gfx950-compressed-hybrid-attention-division-baseline",
+      "testId": "kernel-compile-matrix/gfx950/compressed-hybrid-attention-division-baseline",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "compressed-hybrid-attention-division-baseline",
+        "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "artifactName": "kernel-compressed-hybrid-attention-division-baseline-v1.hsaco",
+        "runnerArguments": [
+          "kernel-compressed-hybrid-attention-division-baseline-v1"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-compressed-hybrid-attention-division-baseline-v1"
+        ],
+        "kernelSymbols": [
+          "gfx950_compressed_hybrid_attention"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "55d784c12c028b16734a59c9899f1f0c52b27f60697767e14a12f8db0f4a6830"
+      }
+    },
+    {
+      "fixtureId": "gfx950-content-sparse-attention",
+      "testId": "kernel-compile-matrix/gfx950/content-sparse-attention",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "content-sparse-attention",
+        "runnerPath": "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
+        "artifactName": "kernel-content-sparse-attention.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-content-sparse-attention"
+        ],
+        "kernelSymbols": [
+          "gfx950_content_sparse_attention"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "f2037e84cd4b968f7dcf24d1597d03e3e0f923503c13003c1126feffe8ea9049"
+      }
+    },
+    {
+      "fixtureId": "gfx950-content-sparse-attention-reciprocal-reuse",
+      "testId": "kernel-compile-matrix/gfx950/content-sparse-attention-reciprocal-reuse",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "content-sparse-attention-reciprocal-reuse",
+        "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "artifactName": "kernel-content-sparse-attention-reciprocal-reuse-v1.hsaco",
+        "runnerArguments": [
+          "kernel-content-sparse-attention-reciprocal-reuse-v1"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-content-sparse-attention-reciprocal-reuse-v1"
+        ],
+        "kernelSymbols": [
+          "gfx950_content_sparse_attention"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "115d28ae91ff1343e6112506a7dc968b2bc653dcf579cc2fb245c072aef22421"
+      }
+    },
+    {
+      "fixtureId": "gfx950-deepseek-sparse-attention",
+      "testId": "kernel-compile-matrix/gfx950/deepseek-sparse-attention",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "deepseek-sparse-attention",
+        "runnerPath": "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+        "artifactName": "kernel-deepseek-sparse-attention.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-deepseek-sparse-attention"
+        ],
+        "kernelSymbols": [
+          "gfx950_deepseek_sparse_attention"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "475896e278681e92fe30728c31b965af0a0900a0cc9d26faab8fe58c5158cbec"
+      }
+    },
+    {
+      "fixtureId": "gfx950-four-branch-residual",
+      "testId": "kernel-compile-matrix/gfx950/four-branch-residual",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "four-branch-residual",
+        "runnerPath": "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
+        "artifactName": "kernel-four-branch-residual.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-four-branch-residual"
+        ],
+        "kernelSymbols": [
+          "gfx950_four_branch_residual"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "fb4f4d800e240c65ced5d68ac389745301e63835d528e77d68a2e9b927ec93f4"
+      }
+    },
+    {
+      "fixtureId": "gfx950-four-branch-residual-explicit",
+      "testId": "kernel-compile-matrix/gfx950/four-branch-residual-explicit",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "four-branch-residual-explicit",
+        "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "artifactName": "kernel-four-branch-residual-explicit-v1.hsaco",
+        "runnerArguments": [
+          "kernel-four-branch-residual-explicit-v1"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/ablation.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-four-branch-residual-explicit-v1"
+        ],
+        "kernelSymbols": [
+          "gfx950_four_branch_residual"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "7bc5cc0291dc27fc05e94a4695b4d37cf0c3df592e51dc4f823e93442c0f3c99"
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp4-attention",
+      "testId": "kernel-compile-matrix/gfx950/fp4-attention",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "fp4-attention",
+        "runnerPath": "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
+        "artifactName": "gfx950-fp4-attention.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+        "packageManifestSha256": "2a2a7d648a29f89f2a373d4c202dfee8e2fb0d91e633d4216213c9ccd41042eb",
+        "sourcePaths": [
+          "examples/gfx950_low_precision/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "1b48d6e964d882341203039de8d468355fc19bcd33fe120ac0784f6a42a0e9e5",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_low_precision",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-fp4-attention"
+        ],
+        "kernelSymbols": [
+          "gfx950_fp4_attention_rust"
+        ],
+        "cargoLockPath": "examples/gfx950_low_precision/Cargo.lock",
+        "cargoLockSha256": "f787460a6883862440706c624cb091f6206ec38976ede43a452ac873836fa9d3",
+        "contractSha256": "1d0f1ef6fe1939629555fc5c4c3119162fac1cac7302bd8dc769196e8741445d"
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp4-gemm",
+      "testId": "kernel-compile-matrix/gfx950/fp4-gemm",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "fp4-gemm",
+        "runnerPath": "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
+        "artifactName": "gfx950-fp4-gemm.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+        "packageManifestSha256": "2a2a7d648a29f89f2a373d4c202dfee8e2fb0d91e633d4216213c9ccd41042eb",
+        "sourcePaths": [
+          "examples/gfx950_low_precision/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "1b48d6e964d882341203039de8d468355fc19bcd33fe120ac0784f6a42a0e9e5",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_low_precision",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-fp4-gemm"
+        ],
+        "kernelSymbols": [
+          "gfx950_fp4_gemm_rust"
+        ],
+        "cargoLockPath": "examples/gfx950_low_precision/Cargo.lock",
+        "cargoLockSha256": "f787460a6883862440706c624cb091f6206ec38976ede43a452ac873836fa9d3",
+        "contractSha256": "0a5ad1ee8711ed5d34c5650ad38a11cacf6cf517004f9c9dba57875c92c322c3"
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp8-attention",
+      "testId": "kernel-compile-matrix/gfx950/fp8-attention",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "fp8-attention",
+        "runnerPath": "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
+        "artifactName": "gfx950-fp8-attention.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+        "packageManifestSha256": "2a2a7d648a29f89f2a373d4c202dfee8e2fb0d91e633d4216213c9ccd41042eb",
+        "sourcePaths": [
+          "examples/gfx950_low_precision/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "1b48d6e964d882341203039de8d468355fc19bcd33fe120ac0784f6a42a0e9e5",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_low_precision",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-fp8-attention"
+        ],
+        "kernelSymbols": [
+          "gfx950_fp8_attention_rust"
+        ],
+        "cargoLockPath": "examples/gfx950_low_precision/Cargo.lock",
+        "cargoLockSha256": "f787460a6883862440706c624cb091f6206ec38976ede43a452ac873836fa9d3",
+        "contractSha256": "ee4d21611939837d4572bea9f00482a3c450f87c99a1c5abb5828b4bd39da011"
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp8-gemm",
+      "testId": "kernel-compile-matrix/gfx950/fp8-gemm",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "fp8-gemm",
+        "runnerPath": "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
+        "artifactName": "gfx950-fp8-gemm.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
+        "packageManifestSha256": "2a2a7d648a29f89f2a373d4c202dfee8e2fb0d91e633d4216213c9ccd41042eb",
+        "sourcePaths": [
+          "examples/gfx950_low_precision/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "1b48d6e964d882341203039de8d468355fc19bcd33fe120ac0784f6a42a0e9e5",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_low_precision",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-fp8-gemm"
+        ],
+        "kernelSymbols": [
+          "gfx950_fp8_gemm_rust"
+        ],
+        "cargoLockPath": "examples/gfx950_low_precision/Cargo.lock",
+        "cargoLockSha256": "f787460a6883862440706c624cb091f6206ec38976ede43a452ac873836fa9d3",
+        "contractSha256": "4994a2d0149038eec25cea6f7ef2dffd09e0ec464081685af90cebfca5c51876"
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-decode",
+      "testId": "kernel-compile-matrix/gfx950/gpt-oss-decode",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "gpt-oss-decode",
+        "runnerPath": "examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+        "artifactName": "kernel-gpt-oss-decode.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "packageManifestSha256": "0a398ffdfe075a195ace31f491ca20b051860b5349ea3813e4213a2b698ed31b",
+        "sourcePaths": [
+          "examples/gfx950_gpt_oss_decode/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "238c776118c00728db2478b80d6d1bdcf94bbe51ed71ce52d42ddd5b0820e5fe",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_gpt_oss_decode",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-gpt-oss-decode"
+        ],
+        "kernelSymbols": [
+          "gfx950_gpt_oss_120b_decode_megakernel_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "cargoLockSha256": "d7888510488029db383ad3a7ef7546ef43399f9b9fadc18c687ddd887a1b6d4d",
+        "contractSha256": "7a487ae7cfd4b7bd1dc965dbef6264c293759ab38c61ebe2ce30f14326775a97"
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-held-fragments",
+      "testId": "kernel-compile-matrix/gfx950/gpt-oss-held-fragments",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "gpt-oss-held-fragments",
+        "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+        "artifactName": "kernel-gpt-oss-decode-held-fragments.hsaco",
+        "runnerArguments": [
+          "held-fragments"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "packageManifestSha256": "0a398ffdfe075a195ace31f491ca20b051860b5349ea3813e4213a2b698ed31b",
+        "sourcePaths": [
+          "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs"
+        ],
+        "sourceClosureSha256": "238c776118c00728db2478b80d6d1bdcf94bbe51ed71ce52d42ddd5b0820e5fe",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_gpt_oss_decode",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-gpt-oss-decode-held-fragments"
+        ],
+        "kernelSymbols": [
+          "gfx950_gpt_oss_120b_decode_megakernel_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "cargoLockSha256": "d7888510488029db383ad3a7ef7546ef43399f9b9fadc18c687ddd887a1b6d4d",
+        "contractSha256": "0ac0ade93d10c103301e68eca8c7a8432b417b2317eca8d7da08cd91c1150c95"
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-interleaved-stores",
+      "testId": "kernel-compile-matrix/gfx950/gpt-oss-interleaved-stores",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "gpt-oss-interleaved-stores",
+        "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+        "artifactName": "kernel-gpt-oss-decode-interleaved-stores.hsaco",
+        "runnerArguments": [
+          "interleaved-stores"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "packageManifestSha256": "0a398ffdfe075a195ace31f491ca20b051860b5349ea3813e4213a2b698ed31b",
+        "sourcePaths": [
+          "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs"
+        ],
+        "sourceClosureSha256": "238c776118c00728db2478b80d6d1bdcf94bbe51ed71ce52d42ddd5b0820e5fe",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_gpt_oss_decode",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-gpt-oss-decode-interleaved-stores"
+        ],
+        "kernelSymbols": [
+          "gfx950_gpt_oss_120b_decode_megakernel_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "cargoLockSha256": "d7888510488029db383ad3a7ef7546ef43399f9b9fadc18c687ddd887a1b6d4d",
+        "contractSha256": "fb350aee19073ec7a0eeb0f5f279ecd94c5040750680f9f5ab2c7363cb13753d"
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-materialized-attention",
+      "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-attention",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "gpt-oss-materialized-attention",
+        "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+        "artifactName": "kernel-gpt-oss-attention-component.hsaco",
+        "runnerArguments": [
+          "materialized-attention"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "packageManifestSha256": "0a398ffdfe075a195ace31f491ca20b051860b5349ea3813e4213a2b698ed31b",
+        "sourcePaths": [
+          "examples/gfx950_gpt_oss_decode/src/kernel_components.rs"
+        ],
+        "sourceClosureSha256": "238c776118c00728db2478b80d6d1bdcf94bbe51ed71ce52d42ddd5b0820e5fe",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_gpt_oss_decode",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-gpt-oss-attention-component"
+        ],
+        "kernelSymbols": [
+          "gfx950_gpt_oss_120b_attention_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "cargoLockSha256": "d7888510488029db383ad3a7ef7546ef43399f9b9fadc18c687ddd887a1b6d4d",
+        "contractSha256": "2005844bdb561c214c359759c22000da0d83352de85722621e52cdb9cee8e7af"
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-materialized-expert",
+      "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-expert",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "gpt-oss-materialized-expert",
+        "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+        "artifactName": "kernel-gpt-oss-expert-component.hsaco",
+        "runnerArguments": [
+          "materialized-expert"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "packageManifestSha256": "0a398ffdfe075a195ace31f491ca20b051860b5349ea3813e4213a2b698ed31b",
+        "sourcePaths": [
+          "examples/gfx950_gpt_oss_decode/src/kernel_components.rs"
+        ],
+        "sourceClosureSha256": "238c776118c00728db2478b80d6d1bdcf94bbe51ed71ce52d42ddd5b0820e5fe",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_gpt_oss_decode",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-gpt-oss-expert-component"
+        ],
+        "kernelSymbols": [
+          "gfx950_gpt_oss_120b_expert_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "cargoLockSha256": "d7888510488029db383ad3a7ef7546ef43399f9b9fadc18c687ddd887a1b6d4d",
+        "contractSha256": "56cb85f7640a836b9158a3231a8dbc173f03cec33489571103b8483617d82b3e"
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-materialized-router",
+      "testId": "kernel-compile-matrix/gfx950/gpt-oss-materialized-router",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "gpt-oss-materialized-router",
+        "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+        "artifactName": "kernel-gpt-oss-router-component.hsaco",
+        "runnerArguments": [
+          "materialized-router"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "packageManifestSha256": "0a398ffdfe075a195ace31f491ca20b051860b5349ea3813e4213a2b698ed31b",
+        "sourcePaths": [
+          "examples/gfx950_gpt_oss_decode/src/kernel_components.rs"
+        ],
+        "sourceClosureSha256": "238c776118c00728db2478b80d6d1bdcf94bbe51ed71ce52d42ddd5b0820e5fe",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_gpt_oss_decode",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-gpt-oss-router-component"
+        ],
+        "kernelSymbols": [
+          "gfx950_gpt_oss_120b_router_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "cargoLockSha256": "d7888510488029db383ad3a7ef7546ef43399f9b9fadc18c687ddd887a1b6d4d",
+        "contractSha256": "87a829a1cb9d5935381b89a37e45ae8803e545e9f2a9fb4e9987ee08730955d3"
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-serial-router",
+      "testId": "kernel-compile-matrix/gfx950/gpt-oss-serial-router",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "gpt-oss-serial-router",
+        "runnerPath": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+        "artifactName": "kernel-gpt-oss-decode-router-serial.hsaco",
+        "runnerArguments": [
+          "serial-router"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
+        "packageManifestSha256": "0a398ffdfe075a195ace31f491ca20b051860b5349ea3813e4213a2b698ed31b",
+        "sourcePaths": [
+          "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs"
+        ],
+        "sourceClosureSha256": "238c776118c00728db2478b80d6d1bdcf94bbe51ed71ce52d42ddd5b0820e5fe",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_gpt_oss_decode",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-gpt-oss-decode-router-serial"
+        ],
+        "kernelSymbols": [
+          "gfx950_gpt_oss_120b_decode_megakernel_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_gpt_oss_decode/Cargo.lock",
+        "cargoLockSha256": "d7888510488029db383ad3a7ef7546ef43399f9b9fadc18c687ddd887a1b6d4d",
+        "contractSha256": "e8ce89bd037d1f38de27389a193fa2edf49da12fad14e2d821ac902cde6fd618"
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-decode",
+      "testId": "kernel-compile-matrix/gfx950/kda-decode",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "kda-decode",
+        "runnerPath": "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
+        "artifactName": "kernel-kda-decode.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-kda-decode"
+        ],
+        "kernelSymbols": [
+          "gfx950_kda_decode"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "6777f7da5a6edec84db83bc1cba60dc03924af08bdd85ea8691415442d006ac8"
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-decode-baseline",
+      "testId": "kernel-compile-matrix/gfx950/kda-decode-baseline",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "kda-decode-baseline",
+        "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "artifactName": "kernel-kda-decode-baseline-v1.hsaco",
+        "runnerArguments": [
+          "kernel-kda-decode-baseline-v1"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kda_baseline.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-kda-decode-baseline-v1"
+        ],
+        "kernelSymbols": [
+          "gfx950_kda_decode"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "08876135956af4730913d8a2d15fd1a5ae880bc91a584ab18b708da9b8132435"
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-prefill",
+      "testId": "kernel-compile-matrix/gfx950/kda-prefill",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "kda-prefill",
+        "runnerPath": "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
+        "artifactName": "kernel-kda-prefill.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-kda-prefill"
+        ],
+        "kernelSymbols": [
+          "gfx950_kda_chunkwise_prefill"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "3ac54ab74a2f4d2fc72283e4a3f7b6424126d4ef099b6214649e9c8b6f0dad0c"
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-prefill-baseline",
+      "testId": "kernel-compile-matrix/gfx950/kda-prefill-baseline",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "kda-prefill-baseline",
+        "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "artifactName": "kernel-kda-prefill-baseline-v1.hsaco",
+        "runnerArguments": [
+          "kernel-kda-prefill-baseline-v1"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kda_baseline.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-kda-prefill-baseline-v1"
+        ],
+        "kernelSymbols": [
+          "gfx950_kda_chunkwise_prefill"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "32083c843f80d36e521a0d50387dab97cded6bd58d1ddd35eb644323c7b994a5"
+      }
+    },
+    {
+      "fixtureId": "gfx950-mhc-sinkhorn-mix",
+      "testId": "kernel-compile-matrix/gfx950/mhc-sinkhorn-mix",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "mhc-sinkhorn-mix",
+        "runnerPath": "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+        "artifactName": "kernel-mhc-sinkhorn-mix.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-mhc-sinkhorn-mix"
+        ],
+        "kernelSymbols": [
+          "gfx950_mhc_sinkhorn_mix"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "2e71d00c47c11d736e573bb73b2d66eb119dc0c894b333c7adc32ae1350ce082"
+      }
+    },
+    {
+      "fixtureId": "gfx950-mhc-sinkhorn-mix-scalar",
+      "testId": "kernel-compile-matrix/gfx950/mhc-sinkhorn-mix-scalar",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "mhc-sinkhorn-mix-scalar",
+        "runnerPath": "examples/gfx950_advanced_attention/run-gfx950.sh",
+        "artifactName": "kernel-mhc-sinkhorn-mix-scalar-v1.hsaco",
+        "runnerArguments": [
+          "kernel-mhc-sinkhorn-mix-scalar-v1"
+        ],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
+        "packageManifestSha256": "7ff5a4c2ae24b3e9a45adf53e619ea2582bfb0a3ee194b9c581d2e11765bf8fe",
+        "sourcePaths": [
+          "examples/gfx950_advanced_attention/src/ablation.rs"
+        ],
+        "sourceClosureSha256": "22d76242feefb516a37b4fcd4d374168eb469786035a4e13938210c08f8cb3d0",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_attention",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-mhc-sinkhorn-mix-scalar-v1"
+        ],
+        "kernelSymbols": [
+          "gfx950_mhc_sinkhorn_mix"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_attention/Cargo.lock",
+        "cargoLockSha256": "521197ef29c5073ebbb40cea0f0dec54112b456fc7f8bbae16bcc7e4c7234b4b",
+        "contractSha256": "67fcad3ac8881372a25a56dba0c4a88b6534601a301779c7f274fa87baa9258a"
+      }
+    },
+    {
+      "fixtureId": "gfx950-moe-expert-rank",
+      "testId": "kernel-compile-matrix/gfx950/moe-expert-rank",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "moe-expert-rank",
+        "runnerPath": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
+        "artifactName": "kernel-moe-expert-rank.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-moe-expert-rank"
+        ],
+        "kernelSymbols": [
+          "gfx950_moe_expert_rank_fp4_fp8_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "54f23cb0b1192b2dec129035c445640621d07e7dc71a08a15b8a89a547a55d66"
+      }
+    },
+    {
+      "fixtureId": "gfx950-moe-expert-rank-expert-serial",
+      "testId": "kernel-compile-matrix/gfx950/moe-expert-rank-expert-serial",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "moe-expert-rank-expert-serial",
+        "runnerPath": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
+        "artifactName": "kernel-moe-expert-rank.hsaco",
+        "runnerArguments": [],
+        "environment": [
+          "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=expert-serial"
+        ]
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "ablation-expert-serial",
+          "kernel-moe-expert-rank"
+        ],
+        "kernelSymbols": [
+          "gfx950_moe_expert_rank_fp4_fp8_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "621d9775772f4162ffe5b5312057b3ac89a83847b149af50bc8ebdb42acd9250"
+      }
+    },
+    {
+      "fixtureId": "gfx950-moe-route",
+      "testId": "kernel-compile-matrix/gfx950/moe-route",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "moe-route",
+        "runnerPath": "examples/gfx950_advanced_systems/run-moe-route-gfx950.sh",
+        "artifactName": "kernel-moe-route.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-moe-route"
+        ],
+        "kernelSymbols": [
+          "gfx950_moe_route_fp4_t16_e4_k2_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "e455b9f2df82abb7604abb31d6ae8eb92bea614e711fdeb48654208b5fee188a"
+      }
+    },
+    {
+      "fixtureId": "gfx950-muon-update",
+      "testId": "kernel-compile-matrix/gfx950/muon-update",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "muon-update",
+        "runnerPath": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
+        "artifactName": "kernel-muon-update.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-muon-update"
+        ],
+        "kernelSymbols": [
+          "gfx950_muon_update_4x4_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "13b54c2bab912d724f9d2946f46356935510c953b31edb02a879cc1318f3004b"
+      }
+    },
+    {
+      "fixtureId": "gfx950-muon-update-broadcast16",
+      "testId": "kernel-compile-matrix/gfx950/muon-update-broadcast16",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "muon-update-broadcast16",
+        "runnerPath": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
+        "artifactName": "kernel-muon-update.hsaco",
+        "runnerArguments": [],
+        "environment": [
+          "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=muon-broadcast16"
+        ]
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "ablation-muon-broadcast16",
+          "kernel-muon-update"
+        ],
+        "kernelSymbols": [
+          "gfx950_muon_update_4x4_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "d49ed52d58223e891f1b8a487b6ba511ba5eb2b98954cec13259fffcbe9ef468"
+      }
+    },
+    {
+      "fixtureId": "gfx950-qwen-ngram-gather",
+      "testId": "kernel-compile-matrix/gfx950/qwen-ngram-gather",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "qwen-ngram-gather",
+        "runnerPath": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+        "artifactName": "kernel-qwen-ngram-gather.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-qwen-ngram-gather"
+        ],
+        "kernelSymbols": [
+          "gfx950_qwen_ngram_gather_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "c58cffd7747f0f88aaf553b2763977bfcb977507085248846d0c27d73e9abf5a"
+      }
+    },
+    {
+      "fixtureId": "gfx950-qwen-ngram-gather-reverse-probe",
+      "testId": "kernel-compile-matrix/gfx950/qwen-ngram-gather-reverse-probe",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "qwen-ngram-gather-reverse-probe",
+        "runnerPath": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+        "artifactName": "kernel-qwen-ngram-gather.hsaco",
+        "runnerArguments": [],
+        "environment": [
+          "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=ngram-reverse-probe"
+        ]
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "ablation-ngram-reverse-probe",
+          "kernel-qwen-ngram-gather"
+        ],
+        "kernelSymbols": [
+          "gfx950_qwen_ngram_gather_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "0f091b371a3d4192367c64f9af92ae44759840b76eeddd0b2b83c21d0ad730d3"
+      }
+    },
+    {
+      "fixtureId": "gfx950-speculative-transaction",
+      "testId": "kernel-compile-matrix/gfx950/speculative-transaction",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "speculative-transaction",
+        "runnerPath": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+        "artifactName": "kernel-speculative-transaction.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-speculative-transaction"
+        ],
+        "kernelSymbols": [
+          "gfx950_speculative_transaction_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "90c0cc0d42ed4eb284bf6e25575a71dfef3017a481b361e10196ce5efab6c832"
+      }
+    },
+    {
+      "fixtureId": "gfx950-speculative-transaction-recompute-prefix",
+      "testId": "kernel-compile-matrix/gfx950/speculative-transaction-recompute-prefix",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "speculative-transaction-recompute-prefix",
+        "runnerPath": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+        "artifactName": "kernel-speculative-transaction.hsaco",
+        "runnerArguments": [],
+        "environment": [
+          "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=speculative-recompute-prefix"
+        ]
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "ablation-speculative-recompute-prefix",
+          "kernel-speculative-transaction"
+        ],
+        "kernelSymbols": [
+          "gfx950_speculative_transaction_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "f42ef6308f25b8fa4cc6faecb60695998fbbabdc2cb23534d37425d7dc25812c"
+      }
+    },
+    {
+      "fixtureId": "gfx950-stage-gradient-shard",
+      "testId": "kernel-compile-matrix/gfx950/stage-gradient-shard",
+      "testPath": "scripts/tests/kernel-compile-matrix.sh",
+      "target": "gfx950",
+      "matrix": {
+        "caseId": "stage-gradient-shard",
+        "runnerPath": "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
+        "artifactName": "kernel-stage-gradient-shard.hsaco",
+        "runnerArguments": [],
+        "environment": []
+      },
+      "compilerInput": {
+        "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
+        "packageManifestSha256": "bdf4ddb2f1c9a400591d5d0a6f18739a3089775b686e1dc7ee5e798745b52958",
+        "sourcePaths": [
+          "examples/gfx950_advanced_systems/src/kernel.rs"
+        ],
+        "sourceClosureSha256": "7c4b7cdf97a5fc3f4439d188954a3721cbd54d528b6c8a0e05a892ce6fb61ef4",
+        "cargoTarget": {
+          "kind": "lib",
+          "name": "fe2o3_gfx950_advanced_systems",
+          "sourcePath": "src/lib.rs"
+        },
+        "defaultFeatures": false,
+        "features": [
+          "kernel-stage-gradient-shard"
+        ],
+        "kernelSymbols": [
+          "gfx950_stage_gradient_shard_v1"
+        ],
+        "cargoLockPath": "examples/gfx950_advanced_systems/Cargo.lock",
+        "cargoLockSha256": "512d5c5f356903d1a1e05eb87fdedb7cbf256376cfe36136072d41d35c334830",
+        "contractSha256": "494449ef64da729c0eaf69997fa677457f124cd01a14ea612bf35ddeeb036f04"
+      }
+    }
   ],
   "entries": [
     {
@@ -324,134 +2236,228 @@
       "siteEvidenceKind": "runnable-now",
       "classification": "compiler-produced",
       "packageManifest": "examples/fill/Cargo.toml",
-      "sourcePaths": ["examples/fill/src/lib.rs"],
-      "compilerFixtureIds": ["gfx942-fill-simulation"],
-      "requiredGates": ["production-compile", "semantic-simulation"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/fill/src/lib.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-fill-simulation"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "semantic-simulation",
+        "hardware"
+      ]
     },
     {
       "lessonId": "first-fill",
       "siteEvidenceKind": "runnable-now",
       "classification": "compiler-produced",
       "packageManifest": "examples/fill/Cargo.toml",
-      "sourcePaths": ["examples/fill/src/lib.rs"],
-      "compilerFixtureIds": ["gfx942-fill-simulation"],
-      "requiredGates": ["production-compile", "semantic-simulation"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/fill/src/lib.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-fill-simulation"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "semantic-simulation",
+        "hardware"
+      ]
     },
     {
       "lessonId": "flash-attention",
       "siteEvidenceKind": "gpu-observed",
       "classification": "compiler-produced",
       "packageManifest": "examples/flash_attention_general_v1/Cargo.toml",
-      "sourcePaths": ["examples/flash_attention_general_v1/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx942-flash-attention"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/flash_attention_general_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-flash-attention"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference",
+        "hardware"
+      ]
     },
     {
       "lessonId": "gemm-proof-plan",
       "siteEvidenceKind": "source-tested",
       "classification": "compiler-produced",
       "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
-      "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx942-gemm-autoresearch", "gfx942-tiled-gemm"],
-      "requiredGates": ["production-compile", "cpu-reference"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/tiled_gemm_general_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-gemm-autoresearch",
+        "gfx942-tiled-gemm"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gemm-tiling",
       "siteEvidenceKind": "gpu-observed",
       "classification": "compiler-produced",
       "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
-      "sourcePaths": ["examples/tiled_gemm_general_v1/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx942-gemm-autoresearch", "gfx942-tiled-gemm"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/tiled_gemm_general_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-gemm-autoresearch",
+        "gfx942-tiled-gemm"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference",
+        "hardware"
+      ]
     },
     {
       "lessonId": "gfx950-advanced-moe",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-combine-expert-ranks", "gfx950-moe-expert-rank", "gfx950-moe-expert-rank-expert-serial", "gfx950-moe-route", "gfx950-stage-gradient-shard"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_systems/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-combine-expert-ranks",
+        "gfx950-moe-expert-rank",
+        "gfx950-moe-expert-rank-expert-serial",
+        "gfx950-moe-route",
+        "gfx950-stage-gradient-shard"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-attnres-gr-mhc",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-attnres-aggregate", "gfx950-attnres-aggregate-explicit-reuse", "gfx950-four-branch-residual", "gfx950-four-branch-residual-explicit", "gfx950-mhc-sinkhorn-mix", "gfx950-mhc-sinkhorn-mix-scalar"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_attention/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-attnres-aggregate",
+        "gfx950-attnres-aggregate-explicit-reuse",
+        "gfx950-four-branch-residual",
+        "gfx950-four-branch-residual-explicit",
+        "gfx950-mhc-sinkhorn-mix",
+        "gfx950-mhc-sinkhorn-mix-scalar"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-compressed-hybrid-attention",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-compressed-hybrid-attention", "gfx950-compressed-hybrid-attention-division-baseline"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_attention/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-compressed-hybrid-attention",
+        "gfx950-compressed-hybrid-attention-division-baseline"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-deepseek-sparse-attention",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-deepseek-sparse-attention"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_attention/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-deepseek-sparse-attention"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-fp4-attention",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-fp4-attention"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_low_precision/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-fp4-attention"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-fp4-gemm",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-fp4-gemm"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_low_precision/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-fp4-gemm"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-fp8-attention",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-fp8-attention"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_low_precision/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-fp8-attention"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-fp8-gemm",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_low_precision/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-fp8-gemm"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_low_precision/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-fp8-gemm"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-gpt-oss-120b-megakernel",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
       "sourcePaths": [
@@ -459,119 +2465,209 @@
         "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
         "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs"
       ],
-      "compilerFixtureIds": ["gfx950-gpt-oss-decode", "gfx950-gpt-oss-held-fragments", "gfx950-gpt-oss-interleaved-stores", "gfx950-gpt-oss-materialized-attention", "gfx950-gpt-oss-materialized-expert", "gfx950-gpt-oss-materialized-router", "gfx950-gpt-oss-serial-router"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "compilerFixtureIds": [
+        "gfx950-gpt-oss-decode",
+        "gfx950-gpt-oss-held-fragments",
+        "gfx950-gpt-oss-interleaved-stores",
+        "gfx950-gpt-oss-materialized-attention",
+        "gfx950-gpt-oss-materialized-expert",
+        "gfx950-gpt-oss-materialized-router",
+        "gfx950-gpt-oss-serial-router"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-indexed-sparse-attention",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-content-sparse-attention", "gfx950-content-sparse-attention-reciprocal-reuse"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_attention/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-content-sparse-attention",
+        "gfx950-content-sparse-attention-reciprocal-reuse"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-kda-gdn-linear-attention",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_attention/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-kda-decode", "gfx950-kda-decode-baseline", "gfx950-kda-prefill", "gfx950-kda-prefill-baseline"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_attention/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-kda-decode",
+        "gfx950-kda-decode-baseline",
+        "gfx950-kda-prefill",
+        "gfx950-kda-prefill-baseline"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-muon-optimizer",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-muon-update", "gfx950-muon-update-broadcast16"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_systems/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-muon-update",
+        "gfx950-muon-update-broadcast16"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-ngram-embedding-gather",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-qwen-ngram-gather", "gfx950-qwen-ngram-gather-reverse-probe"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_systems/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-qwen-ngram-gather",
+        "gfx950-qwen-ngram-gather-reverse-probe"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "gfx950-speculative-mtp-verification",
-      "siteEvidenceKind": "gpu-observed",
+      "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
-      "sourcePaths": ["examples/gfx950_advanced_systems/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx950-speculative-transaction", "gfx950-speculative-transaction-recompute-prefix"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/gfx950_advanced_systems/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx950-speculative-transaction",
+        "gfx950-speculative-transaction-recompute-prefix"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference"
+      ]
     },
     {
       "lessonId": "lds-barriers-atomics",
       "siteEvidenceKind": "compiler-hsaco-observed",
       "classification": "compiler-produced",
       "packageManifest": "examples/workgroup_sync_v1/Cargo.toml",
-      "sourcePaths": ["examples/workgroup_sync_v1/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx942-workgroup-collectives"],
-      "requiredGates": ["production-compile", "semantic-simulation", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/workgroup_sync_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-workgroup-collectives"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "semantic-simulation",
+        "hardware"
+      ]
     },
     {
       "lessonId": "moe-expert-compute",
       "siteEvidenceKind": "gpu-observed",
       "classification": "compiler-produced",
       "packageManifest": "examples/moe_grouped_expert_general_v1/Cargo.toml",
-      "sourcePaths": ["examples/moe_grouped_expert_general_v1/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx942-grouped-expert-moe"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/moe_grouped_expert_general_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-grouped-expert-moe"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference",
+        "hardware"
+      ]
     },
     {
       "lessonId": "moe-routing",
-      "siteEvidenceKind": "source-model-verified",
-      "classification": "design-only",
+      "siteEvidenceKind": "compiler-checked",
+      "classification": "compiler-produced",
       "packageManifest": "examples/moe_top2_v1/Cargo.toml",
-      "sourcePaths": ["examples/moe_top2_v1/src/kernel.rs"],
-      "compilerFixtureIds": [],
-      "requiredGates": ["cpu-reference"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/moe_top2_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-moe-top2"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference",
+        "hardware"
+      ]
     },
     {
       "lessonId": "reductions-scans",
       "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/wave64_collectives_v1/Cargo.toml",
-      "sourcePaths": ["examples/wave64_collectives_v1/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx942-wave64-collectives"],
-      "requiredGates": ["production-compile", "semantic-simulation", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/wave64_collectives_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-wave64-collectives"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "semantic-simulation",
+        "hardware"
+      ]
     },
     {
       "lessonId": "softmax-invariant",
       "siteEvidenceKind": "gpu-observed",
       "classification": "compiler-produced",
       "packageManifest": "examples/row_softmax_general_v1/Cargo.toml",
-      "sourcePaths": ["examples/row_softmax_general_v1/src/kernel.rs"],
-      "compilerFixtureIds": ["gfx942-row-softmax"],
-      "requiredGates": ["production-compile", "cpu-reference", "hardware"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/row_softmax_general_v1/src/kernel.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-row-softmax"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference",
+        "hardware"
+      ]
     },
     {
       "lessonId": "typed-vecadd",
       "siteEvidenceKind": "compiler-checked",
       "classification": "compiler-produced",
       "packageManifest": "examples/vecadd/Cargo.toml",
-      "sourcePaths": ["examples/vecadd/src/lib.rs", "examples/vecadd/src/vecadd_body.rs"],
-      "compilerFixtureIds": ["gfx942-typed-vecadd-source"],
-      "requiredGates": ["production-compile", "cpu-reference"],
-      "qualificationStatus": "pending"
+      "sourcePaths": [
+        "examples/vecadd/src/lib.rs",
+        "examples/vecadd/src/vecadd_body.rs"
+      ],
+      "compilerFixtureIds": [
+        "gfx942-typed-vecadd-source"
+      ],
+      "requiredGates": [
+        "production-compile",
+        "cpu-reference",
+        "hardware"
+      ]
     }
   ]
 }

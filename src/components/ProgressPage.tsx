@@ -17,7 +17,6 @@ const compilerCorpus = tutorialKernelManifest as {
   entries: {
     classification: string;
     lessonId: string;
-    qualificationStatus: "pending" | "qualified";
   }[];
 };
 
@@ -108,18 +107,20 @@ export function ProgressPage() {
           <div><span>gfx950 fixtures</span><code>{compilerCorpus.compilerFixtures.filter((fixture) => fixture.target === "gfx950").length}</code></div>
         </div>
         <p className="status-boundary">
-          All {compilerCorpus.entries.length} tutorial entries remain pending.
+          The top-level corpus is {compilerCorpus.baseline.status}; qualification
+          applies atomically to all {compilerCorpus.entries.length} tutorial entries.
           {" "}{compilerCorpus.entries.filter((entry) => entry.classification === "compiler-produced").length}
-          {" "}entries resolve through the shared compiler fixture registry; MoE
-          routing remains source-model-only and design-only because its attributed
-          source does not yet have authenticated production MIR-to-KIR lowering.
+          {" "}entries resolve through the shared compiler fixture registry,
+          including ordinary attributed MoE routing source.
           No final compiler commit, measured V4 baseline, or qualified inspection
           sidecar set is pinned. Promotion requires neutral V4, AMD target and cost
           policy V2, AMD replay evidence V9, inspection V2, resource model V3,
           complete final canonical KIR V12 verification, LLVM and
           HSACO sizes, required simulator/reference outcomes, and each target's
-          actual hardware gate. Historical MI300X and MI350X records do not satisfy
-          this new corpus run automatically. The future report must retain peak
+          declared hardware gate. The MI300X lane qualifies gfx942; gfx950 remains
+          compile/simulator-only until target-matched hardware is admitted.
+          Historical MI300X and MI350X records do not satisfy this new corpus run
+          automatically. The future report must retain peak
           RSS, diagnostic and inspection bytes, optimizer work and graph growth,
           IR sizes, and HSACO register, spill, LDS, private-segment, wave, and
           occupancy metadata. Dynamic LDS keeps its LDS occupancy component typed

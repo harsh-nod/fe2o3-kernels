@@ -13,11 +13,18 @@ all three of `{path, sha256, corpusContractSha256}`. The manifest, not a site
 component or shell list, owns every lesson-to-fixture mapping and target
 requirement.
 
-The current state is `migration`. It contains 25 tutorial entries and 46
-compiler fixtures: 9 for `gfx942` and 37 for `gfx950`. Twenty-four entries are
-compiler-produced. `moe-routing` remains design-only and source-model-verified;
-it has no compiler fixture because authenticated production MIR-to-KIR lowering
-for that source is unavailable. All entries remain pending.
+The current state is `migration`. It contains 25 compiler-produced tutorial
+entries and 47 compiler fixtures: 10 for `gfx942` and 37 for `gfx950`.
+`moe-routing` is compiled from the ordinary attributed `moe_top2_v1` source and
+is covered by an exact gfx942 fixture. Qualification is an atomic property of
+the top-level baseline, not a mutable per-lesson label: `migration` means that
+none of the corpus is published as qualified; `qualified` requires one complete
+record covering every fixture and declared gate.
+
+Site CI checks the manifest and companion digest byte-for-byte against the
+checked-out compiler repository. This prevents a site-only classification,
+fixture, compiler-input closure, gate, or publication change from manufacturing
+compiler coverage.
 
 ## Required production transaction
 
@@ -121,10 +128,11 @@ pipeline identities, complete final verification, and semantic outcomes.
 
 Missing occupancy metadata is represented only as
 `occupancyStatus: unavailable-not-emitted` with both waves-per-execution-unit
-fields `null`. A compile-only campaign records
-`runtimeMetrics.status: not-run-compile-only` and a `null` runtime. Neither
-absence is inferred as zero, and compilation or simulation is not relabeled as
-hardware timing.
+fields `null`. A compile-only campaign initially records
+`runtimeMetrics.status: not-run-compile-only` and a `null` runtime. An exact
+target-matched hardware record may replace that pair only through the
+compiler-owned identity-checking merge step. Neither absence is inferred as
+zero, and compilation or simulation is not relabeled as hardware timing.
 
 `config/tutorial-compiler-no-regression-threshold-schema-v1.json` defines
 reviewed integer-ceiling margins independently for compile time, byte sizes,
