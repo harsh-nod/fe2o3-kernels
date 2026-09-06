@@ -1790,11 +1790,11 @@ describe("curriculum integrity", () => {
     });
   });
 
-  it("covers modules zero through ten in order", () => {
+  it("covers modules zero through eleven in order", () => {
     expect(curriculum.map((module) => module.number)).toEqual([
-      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
     ]);
-    expect(lessons).toHaveLength(36);
+    expect(lessons).toHaveLength(56);
     expect(validateCurriculum(curriculum)).toEqual([]);
     expect(
       new Set(
@@ -1805,6 +1805,34 @@ describe("curriculum integrity", () => {
         ),
       ),
     ).toEqual(new Set(narrativeIds));
+  });
+
+  it("publishes one bounded performance lab for every advanced gfx950 kernel", () => {
+    const performanceLabs = lessons.filter((lesson) => lesson.module === 11);
+    expect(performanceLabs).toHaveLength(20);
+    for (const lab of performanceLabs) {
+      expect(lab.claims.map((claim) => claim.kind)).toEqual(["gpu-observed"]);
+      expect(lab.tabs.map((tab) => tab.kind)).toEqual([
+        "kernel",
+        "verus",
+        "host",
+        "result",
+        "performance",
+      ]);
+      const content = serializedLessonContent(lab.id);
+      expect(content, lab.id).toContain("ABLATION");
+      expect(content, lab.id).toContain("THEORETICAL FLOOR");
+      expect(content, lab.id).toContain("BEST-KNOWN PUBLIC CANDIDATE");
+      expect(content, lab.id).toContain("MODEL-DERIVED TARGET");
+      expect(content, lab.id).toContain("Model impact:");
+    }
+    const allLabs = performanceLabs
+      .map((lab) => serializedLessonContent(lab.id))
+      .join("\n");
+    expect(allLabs).toContain("moonshotai/Kimi-K3/blob/f831ab66814297da540d832a5235f8e904f29d06");
+    expect(allLabs).toContain("DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597");
+    expect(allLabs).toContain("zai-org/GLM-5.3/blob/aca966e4e02791568aa6a4ced368624b3d897f42");
+    expect(allLabs).toContain("fe2o3 is 1.4386x slower");
   });
 
   it("publishes bounded production Rust gfx950 low-precision evidence", () => {
@@ -2098,7 +2126,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_systems/src/kernel.rs",
         "gfx950_moe_route_fp4_t16_e4_k2_v1",
         "moe_routing_reference",
-        "b8f01f1a6bba7e0171405ee4e6ab515fc5bef528a8e73ce912b00817b895b4b0",
+        "0211e451f562b961eea723fd4d5a6c5b188cfaab83ae2354ff8bcf36dd5056d6",
         "gfx950_fused_fp4_fp8_moe",
         "MI350 WG256/grid4 combine: 1024 outputs, max_error=0",
         "cbsz:4",
@@ -2108,7 +2136,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_attention/src/kernel.rs",
         "gfx950_kda_decode",
         "kda_decode_reference_v2",
-        "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
+        "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240",
         null,
         "final_state_value_major outputs=1024 max_absolute_error=2.980232239e-8",
         "ds_bpermute_b32",
@@ -2118,7 +2146,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_attention/src/kernel.rs",
         "gfx950_content_sparse_attention",
         "content_sparse_attention_reference_v1",
-        "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
+        "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240",
         "gfx950_content_sparse_attention",
         "selected_output exact_u32_outputs=48",
         "ds_read_b64_tr_b8",
@@ -2128,7 +2156,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_attention/src/kernel.rs",
         "gfx950_deepseek_sparse_attention",
         "deepseek_sparse_attention_reference_v1",
-        "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
+        "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240",
         null,
         "output outputs=1024 max_absolute_error=5.215406418e-8",
         "no MFMA or transpose instructions",
@@ -2138,7 +2166,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_attention/src/kernel.rs",
         "gfx950_compressed_hybrid_attention",
         "compressed_hybrid_attention_reference_v1",
-        "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
+        "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240",
         "gfx950_compressed_hybrid_attention",
         "output max_absolute_error=5.960464478e-8",
         "v_mfma_f32_16x16x128_f8f6f4",
@@ -2148,7 +2176,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_attention/src/kernel.rs",
         "gfx950_mhc_sinkhorn_mix",
         "mhc_sinkhorn_mix_reference_v1",
-        "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
+        "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240",
         "gfx950_mhc_sinkhorn_mix",
         "output outputs=1024 max_absolute_error=6.705522537e-8",
         "v_exp_f32",
@@ -2158,7 +2186,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_systems/src/kernel.rs",
         "gfx950_speculative_transaction_v1",
         "speculative_reference",
-        "b8f01f1a6bba7e0171405ee4e6ab515fc5bef528a8e73ce912b00817b895b4b0",
+        "0211e451f562b961eea723fd4d5a6c5b188cfaab83ae2354ff8bcf36dd5056d6",
         "gfx950_speculative_transaction",
         "MI350 WG256/grid4 accepted lengths: 128 values exact",
         "gfx950_speculative_transaction",
@@ -2168,7 +2196,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_systems/src/kernel.rs",
         "gfx950_qwen_ngram_gather_v1",
         "ngram_reference",
-        "b8f01f1a6bba7e0171405ee4e6ab515fc5bef528a8e73ce912b00817b895b4b0",
+        "0211e451f562b961eea723fd4d5a6c5b188cfaab83ae2354ff8bcf36dd5056d6",
         "gfx950_qwen_ngram_gather",
         "MI350 WG256/grid4 gather: 128 integer outputs exact",
         "gfx950_qwen_ngram_gather",
@@ -2178,7 +2206,7 @@ describe("curriculum integrity", () => {
         "examples/gfx950_advanced_systems/src/kernel.rs",
         "gfx950_muon_update_4x4_v1",
         "muon_reference",
-        "b8f01f1a6bba7e0171405ee4e6ab515fc5bef528a8e73ce912b00817b895b4b0",
+        "0211e451f562b961eea723fd4d5a6c5b188cfaab83ae2354ff8bcf36dd5056d6",
         "gfx950_muon_update",
         "MI350 WG256/grid4 reduced norms: 16 outputs, max_error=5.960464478e-8",
         "gfx950_muon_update",
@@ -2187,7 +2215,7 @@ describe("curriculum integrity", () => {
 
     const excerptHashes = {
       "gfx950-advanced-moe": [
-        "602cd981600e8cad37cc9e73f1dca9ecf83b250679113ef02da0a24306e136ff",
+        "c2131eeb0bf55ad7d272076655f5d3144bf61aa2ed04e3960cca3e09a854929c",
         "49826130508e509b46cb0d56dd746e49ddf60b470c19243dd9adc9b7d51c041f",
       ],
       "gfx950-kda-gdn-linear-attention": [
@@ -2199,7 +2227,7 @@ describe("curriculum integrity", () => {
         "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
       ],
       "gfx950-deepseek-sparse-attention": [
-        "124bb602771c522b38bba672e1f6fd4bc572e3ac2a943f7178443d31713bdc61",
+        "6af51078d2c1b7bcf8949937dc843c0eeba408dff16ad7c552ec89bf8917845f",
         "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
       ],
       "gfx950-compressed-hybrid-attention": [
@@ -3262,19 +3290,19 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_attention/Cargo.lock",
-        "d70c31f63c8672048de6e7384fb255ddcc18321100e1d21abfe3531710da6aab",
+        "17fb18a7ebaaf438f58b056a7a94aca71fff64e33c45cf22262c58186467f3cc",
       ],
       [
         "examples/gfx950_advanced_attention/Cargo.toml",
-        "cc3413d34ffdf346e36aa98f1270ba09d36a89405418e97506949ca61c268283",
+        "8b2ab43081523420ce6921b3469893c561eb583e280f066061201681b998720e",
       ],
       [
         "examples/gfx950_advanced_attention/ablation-variants-v1.json",
-        "fc4727a4137904dc8a6f388722f412de6bedf2d011a9d125d4906ee17ba6f588",
+        "9f3ceff97c4e9e0b955b578f34888f0830f43f842c954ff2776de83d88ec0432",
       ],
       [
         "examples/gfx950_advanced_attention/README.md",
-        "5992c9c9e7ef644a8e1cbe0038f4bf9a84a58adec567fc2ab0b80487a3013065",
+        "749ce4c976fdfa8be56099e556a3b3608ccb9428bc012befab6304475016fba7",
       ],
       [
         "examples/gfx950_advanced_attention/benchmark_fla_kda_mi350.py",
@@ -3322,7 +3350,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_attention/run-gfx950.sh",
-        "b2e4b742d9c7b179cb974a05d53354094108f7060acef5433432168b3fe7e655",
+        "747df4ede249343be3e2d4526a26966843ed91608628b6e2baf7ca5cbf09aab4",
       ],
       [
         "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
@@ -3350,7 +3378,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_attention/src/kernel.rs",
-        "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
+        "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240",
       ],
       [
         "examples/gfx950_advanced_attention/src/reference.rs",
@@ -3370,7 +3398,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_attention/tests/kernel_source.rs",
-        "ed94aa85436f64e81b9e264237997c54cb91de82580254cbd6ac556bcc54bb3c",
+        "cc2d441f06780680971723e2d85001024c3ce13d1d73185e050e924640d8af8f",
       ],
       [
         "examples/gfx950_advanced_attention/tests/reference.rs",
@@ -3378,15 +3406,15 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_systems/Cargo.lock",
-        "223572e69b42b6e54f55935c3e1e1cf54b152466ed0d61acdb97010d647ebf1c",
+        "2d7834c84fdab10876a24dd0de2bf47ac6a7b210c00774405566cc953e1a83e3",
       ],
       [
         "examples/gfx950_advanced_systems/Cargo.toml",
-        "4bb727180242b4f1a55693ecf2abcd87026e324cbd208d9c6a6970a45ae681e7",
+        "0d4f6b3309f7d7cefbd57d6088a456e76890904865c1d383f06eaef7a89f6097",
       ],
       [
         "examples/gfx950_advanced_systems/ablation-variants-v1.json",
-        "bdac1beaa6950cbf750b0e4d23c8460e65f8613dd8a2cd890d44c18e66738dc1",
+        "e32d8827f41cf9fb577292c4ed2eed8c1b5156e93daddd6078adf9412836ee38",
       ],
       [
         "examples/gfx950_advanced_systems/optimization-evidence-v1.json",
@@ -3394,7 +3422,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_systems/README.md",
-        "368ae8dd1097e87064912187b039a8adeabb9eda1b6a8a7a745931fb25104583",
+        "aaa72a768c64e18bbe6db58bdd544df7748af7477656801c70e6d9cdbb79db62",
       ],
       [
         "examples/gfx950_advanced_systems/build_and_test.sh",
@@ -3418,7 +3446,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_systems/run-ablation-gfx950.sh",
-        "190a5193ba1bfdee841842b09f7b35615790c31af15458119bbe0a853f71e846",
+        "0c4a6058e10bdfc475cf4e313df7028f71cbd53ec390c80a3916314b98be7e57",
       ],
       [
         "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
@@ -3446,7 +3474,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_systems/src/kernel.rs",
-        "b8f01f1a6bba7e0171405ee4e6ab515fc5bef528a8e73ce912b00817b895b4b0",
+        "0211e451f562b961eea723fd4d5a6c5b188cfaab83ae2354ff8bcf36dd5056d6",
       ],
       [
         "examples/gfx950_advanced_systems/src/reference.rs",
@@ -3462,11 +3490,11 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_systems/tests/source.rs",
-        "6aea6eefbcd18dea165a6078824be5927547c7b4eae3185b87c1bc415f43f913",
+        "8bd61014d7e80dad5bc5be9ba7500c393904e3724041ff65977cbe1044271506",
       ],
       [
         "examples/gfx950_gpt_oss_decode/Cargo.lock",
-        "da37f44ba68cd16107506e418830e63a11099de15d9f8235daeccc9522c0f09b",
+        "32e568ef3ac757844e73db4a33c578305b32b2e4a87c009acf238ddf999f44ad",
       ],
       [
         "examples/gfx950_gpt_oss_decode/Cargo.toml",
@@ -3474,7 +3502,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_gpt_oss_decode/README.md",
-        "7554ae74855fccea408f90bfede5dbdf7034c51ec565c6ec001775cb02c0d968",
+        "ab1b08119f7f24aaee6f7ef15fb7e3a05b82a233da639ba629237fc0423cad62",
       ],
       [
         "examples/gfx950_gpt_oss_decode/ablation-variants-v1.json",
@@ -5676,7 +5704,7 @@ describe("curriculum integrity", () => {
     }
   });
 
-  it("keeps advanced runnable claims restricted while permitting bounded Module 9 and 10 GPU observations", () => {
+  it("keeps advanced runnable claims restricted while permitting bounded gfx950 GPU observations", () => {
     for (const lesson of lessons.filter((entry) => entry.module >= 4)) {
       const runnable = lesson.claims.some(
         (claim) => claim.kind === "runnable-now",
@@ -5688,6 +5716,11 @@ describe("curriculum integrity", () => {
         ]);
       }
       if (lesson.module === 10) {
+        expect(lesson.claims.map((claim) => claim.kind)).toEqual([
+          "gpu-observed",
+        ]);
+      }
+      if (lesson.module === 11) {
         expect(lesson.claims.map((claim) => claim.kind)).toEqual([
           "gpu-observed",
         ]);
@@ -5717,7 +5750,7 @@ describe("curriculum integrity", () => {
           "gfx950-ngram-embedding-gather",
           "gfx950-muon-optimizer",
           "gfx950-gpt-oss-120b-megakernel",
-        ].includes(lesson.id)
+        ].includes(lesson.id) || lesson.module === 11
           ? false
           : true,
       );

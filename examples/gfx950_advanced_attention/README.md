@@ -113,6 +113,15 @@ numerical verification on a gfx950 host:
 ./run-mhc-sinkhorn-mix-gfx950.sh
 ```
 
+## Performance audit
+
+[`PERFORMANCE_AUDIT.md`](PERFORMANCE_AUDIT.md) gives the per-kernel external
+candidate audit, exact-comparability decision, GPU4 latency, ablation result,
+and architecture-resource floor. The corresponding structured record is
+[`performance-audit-mi350-gpu4-v1.json`](performance-audit-mi350-gpu4-v1.json).
+The audit intentionally does not project these teaching shapes onto full-model
+latency or call a non-comparable result state of the art.
+
 ## Current WG256/grid4 numerical qualification
 
 On 2026-09-03, all eight production Rust wrappers completed extraction,
@@ -172,8 +181,10 @@ a protocol caveat in the evidence file.
 The sparse and hybrid runners additionally require exactly four
 `ds_read_b64_tr_b8` instructions before one FP8
 `v_mfma_f32_16x16x128_f8f6f4`. Exponential device math uses only the reviewed
-ROCm 7.2.1 OCML `exp` closure shared with the low-precision examples; gfx950
-square root lowers to its target-native LLVM intrinsic. Set
+selected reviewed OCML `exp` closure shared with the low-precision examples;
+ROCm 7.2.1 remains the default and the checked-in ROCm 7.2.4 manifest is an
+explicit alternative. Gfx950 square root lowers to its target-native LLVM
+intrinsic. Set
 `FE2O3_REPO_ROOT`, `ROCM_PATH`, `RUSTUP`, `CARGO`, or the documented tool and
 target-directory environment variables when validating a copied checkout.
 

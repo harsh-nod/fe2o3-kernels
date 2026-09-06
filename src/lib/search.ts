@@ -81,6 +81,7 @@ export function searchCatalog(
   limit = 12,
 ): SearchResult[] {
   const terms = query.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
+  const normalizedQuery = terms.join(" ");
 
   if (terms.length === 0) {
     const featured = ["compiler-checks", "gfx942-setup", "typed-vecadd"];
@@ -274,7 +275,11 @@ export function searchCatalog(
         context: `Module ${lesson.module} | ${lesson.summary}`,
         href: `/lesson/${lesson.id}`,
         lessonId: lesson.id,
-        score: lessonScore + 2,
+        score:
+          lessonScore +
+          2 +
+          (lesson.title.toLocaleLowerCase() === normalizedQuery ? 8 : 0) +
+          (100 - lesson.module) / 1000,
       });
     }
 

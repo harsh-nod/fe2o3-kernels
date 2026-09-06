@@ -280,6 +280,86 @@ export const narrativeOrderByLesson = deepFreeze({
   "gfx950-gpt-oss-120b-megakernel": [
     "gfx950-gpt-oss-120b-megakernel/layer-tile-contract",
     "gfx950-gpt-oss-120b-megakernel/performance-boundary"
+  ],
+  "gfx950-fp4-gemm-performance-lab": [
+    "gfx950-fp4-gemm/prerequisites",
+    "gfx950-fp4-gemm/tile-accumulator"
+  ],
+  "gfx950-fp8-gemm-performance-lab": [
+    "gfx950-fp8-gemm/format-layout",
+    "gfx950-fp8-gemm/tile-accumulator"
+  ],
+  "gfx950-fp4-attention-performance-lab": [
+    "gfx950-fp4-attention/transpose-pipeline",
+    "gfx950-fp4-attention/online-softmax"
+  ],
+  "gfx950-fp8-attention-performance-lab": [
+    "gfx950-fp8-attention/transpose-pipeline",
+    "gfx950-fp8-attention/evidence-boundary"
+  ],
+  "gfx950-kda-decode-performance-lab": [
+    "gfx950-kda-gdn-linear-attention/recurrence",
+    "gfx950-kda-gdn-linear-attention/scope-evidence"
+  ],
+  "gfx950-kda-prefill-performance-lab": [
+    "gfx950-kda-gdn-linear-attention/recurrence",
+    "gfx950-kda-gdn-linear-attention/scope-evidence"
+  ],
+  "gfx950-content-sparse-performance-lab": [
+    "gfx950-indexed-sparse-attention/index-contract",
+    "gfx950-indexed-sparse-attention/scope-evidence"
+  ],
+  "gfx950-deepseek-sparse-performance-lab": [
+    "gfx950-deepseek-sparse-attention/selected-domain",
+    "gfx950-deepseek-sparse-attention/scope-evidence"
+  ],
+  "gfx950-compressed-hybrid-performance-lab": [
+    "gfx950-compressed-hybrid-attention/fusion-contract",
+    "gfx950-compressed-hybrid-attention/scope-evidence"
+  ],
+  "gfx950-attnres-performance-lab": [
+    "gfx950-attnres-gr-mhc/mixing-contract",
+    "gfx950-attnres-gr-mhc/scope-evidence"
+  ],
+  "gfx950-four-branch-residual-performance-lab": [
+    "gfx950-attnres-gr-mhc/mixing-contract",
+    "gfx950-attnres-gr-mhc/scope-evidence"
+  ],
+  "gfx950-mhc-performance-lab": [
+    "gfx950-attnres-gr-mhc/mixing-contract",
+    "gfx950-attnres-gr-mhc/scope-evidence"
+  ],
+  "gfx950-moe-route-performance-lab": [
+    "gfx950-advanced-moe/fixed-pipeline",
+    "gfx950-advanced-moe/scope-evidence"
+  ],
+  "gfx950-moe-expert-performance-lab": [
+    "gfx950-advanced-moe/fixed-pipeline",
+    "gfx950-advanced-moe/scope-evidence"
+  ],
+  "gfx950-expert-combine-performance-lab": [
+    "gfx950-advanced-moe/fixed-pipeline",
+    "gfx950-advanced-moe/scope-evidence"
+  ],
+  "gfx950-speculative-performance-lab": [
+    "gfx950-speculative-mtp-verification/prefix-contract",
+    "gfx950-speculative-mtp-verification/scope-evidence"
+  ],
+  "gfx950-ngram-performance-lab": [
+    "gfx950-ngram-embedding-gather/gather-contract",
+    "gfx950-ngram-embedding-gather/scope-evidence"
+  ],
+  "gfx950-gradient-stage-performance-lab": [
+    "gfx950-muon-optimizer/update-contract",
+    "gfx950-muon-optimizer/scope-evidence"
+  ],
+  "gfx950-muon-performance-lab": [
+    "gfx950-muon-optimizer/update-contract",
+    "gfx950-muon-optimizer/scope-evidence"
+  ],
+  "gfx950-gpt-oss-megakernel-performance-lab": [
+    "gfx950-gpt-oss-120b-megakernel/layer-tile-contract",
+    "gfx950-gpt-oss-120b-megakernel/performance-boundary"
   ]
 } satisfies Record<string, readonly NarrativeId[]>);
 

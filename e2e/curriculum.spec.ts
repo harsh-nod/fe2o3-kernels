@@ -1943,7 +1943,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/3d10825df93a86644cc5a5b006cadd45f71afb91/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -1987,7 +1987,7 @@ test("every internal curriculum route resolves without page overflow", async ({
     timeout: 120_000,
   });
   const routeLinks = page.locator(".app-shell > .sidebar .tree-link");
-  await expect(routeLinks).toHaveCount(36);
+  await expect(routeLinks).toHaveCount(56);
   const routes = await routeLinks.evaluateAll((links) =>
     links.map((link) => ({
       href: (link as HTMLAnchorElement).href,

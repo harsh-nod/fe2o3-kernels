@@ -72,9 +72,9 @@ interface SourceBundle {
 }
 
 export const advancedCoreSourceCommit =
-  "9006001157e2c3062e44088634e467b0f8963ee0";
+  "3d10825df93a86644cc5a5b006cadd45f71afb91";
 export const advancedCoreSourceTree: string | null =
-  "874a9a250f904e3229410e0d620cfcecaab3f49d";
+  "84cdb971391617f1809cee08b706ba56dad40fd4";
 
 const attentionBundle: SourceBundle = {
   rustKernel: advancedAttentionRustKernel,
@@ -86,7 +86,7 @@ const attentionBundle: SourceBundle = {
   rustReadmePath: "examples/gfx950_advanced_attention/README.md",
   rustLockPath: "examples/gfx950_advanced_attention/Cargo.lock",
   rustKernelFileSha256:
-    "225b14907ae4ed9542f4abd9b532dd501fbc99048f5ea15c94b5456066c56aec",
+    "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240",
   rustReferenceFileSha256:
     "557ca02fbea9d06865dc4d0d468e142e26175bb67291cd6dac7b91ad964eec53",
   loweringConstant: "GFX950_ADVANCED_ATTENTION_SOURCE_LOWERING_SUPPORTED_V1",
@@ -126,7 +126,7 @@ const systemsBundle: SourceBundle = {
   rustReadmePath: "examples/gfx950_advanced_systems/README.md",
   rustLockPath: "examples/gfx950_advanced_systems/Cargo.lock",
   rustKernelFileSha256:
-    "b8f01f1a6bba7e0171405ee4e6ab515fc5bef528a8e73ce912b00817b895b4b0",
+    "0211e451f562b961eea723fd4d5a6c5b188cfaab83ae2354ff8bcf36dd5056d6",
   rustReferenceFileSha256:
     "e7638564d1d5cff646ff8978c7771eddddb6d6e1422a2dcc3fc02c57a2761a05",
   loweringConstant: "GFX950_ADVANCED_SYSTEMS_SOURCE_LOWERING_SUPPORTED",
@@ -911,7 +911,7 @@ const advancedLessons = [
       "gfx950_combine_expert_ranks_v1",
     ],
     rustExcerptSha256:
-      "602cd981600e8cad37cc9e73f1dca9ecf83b250679113ef02da0a24306e136ff",
+      "c2131eeb0bf55ad7d272076655f5d3144bf61aa2ed04e3960cca3e09a854929c",
     referenceSymbols: [
       "moe_routing_reference",
       "batched_moe_routing_reference",
@@ -1117,7 +1117,7 @@ const advancedLessons = [
       "DeepSeek sparse selected-QK, stable softmax, and selected-PV teaching kernel",
     rustSymbols: ["gfx950_deepseek_sparse_attention"],
     rustExcerptSha256:
-      "124bb602771c522b38bba672e1f6fd4bc572e3ac2a943f7178443d31713bdc61",
+      "6af51078d2c1b7bcf8949937dc843c0eeba408dff16ad7c552ec89bf8917845f",
     referenceSymbols: ["deepseek_sparse_attention_reference_v1"],
     referenceExcerptSha256:
       "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",

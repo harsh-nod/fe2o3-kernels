@@ -3,6 +3,7 @@ import { modules3to5 } from "./modules-3-5";
 import { modules6to8 } from "./modules-6-8";
 import { modules9 } from "./modules-9";
 import { modules10 } from "./modules-10";
+import { modules11 } from "./modules-11";
 import type { GlossaryEntry, Lesson } from "./model";
 import { validateCurriculum } from "./validate";
 
@@ -12,6 +13,7 @@ export const curriculum = [
   ...modules6to8,
   ...modules9,
   ...modules10,
+  ...modules11,
 ];
 
 const issues = validateCurriculum(curriculum);
