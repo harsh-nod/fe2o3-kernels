@@ -1825,6 +1825,111 @@ describe("curriculum integrity", () => {
       expect(content, lab.id).toContain("BEST-KNOWN PUBLIC CANDIDATE");
       expect(content, lab.id).toContain("MODEL-DERIVED TARGET");
       expect(content, lab.id).toContain("Model impact:");
+      expect(lab.performanceStudy?.measurements.length, lab.id).toBeGreaterThan(0);
+      expect(lab.performanceStudy?.measurements, lab.id).toEqual(
+        expect.arrayContaining([expect.objectContaining({ status: "retained" })]),
+      );
+      expect(
+        lab.performanceStudy?.optimizations.map((entry) => entry.category),
+        lab.id,
+      ).toEqual([
+        "data path",
+        "software pipeline",
+        "LDS multibuffer",
+        "tile / launch",
+      ]);
+      expect(lab.performanceStudy?.theoreticalFloor, lab.id).toMatch(/floor/iu);
+      expect(lab.performanceStudy?.comparatorVerdict, lab.id).toBeTruthy();
+      expect(lab.performanceStudy?.evidencePath, lab.id).toMatch(/\.json$/u);
+      expect(lab.performanceStudy?.frontierAuditPath, lab.id).toBe(
+        "perf-evidence/gfx950-frontier-audit-2026-09-08.json",
+      );
+      const evidence = JSON.parse(
+        readFileSync(resolve(lab.performanceStudy!.evidencePath), "utf8"),
+      ) as Record<string, unknown>;
+      const kernelSource = lab.tabs.find((tab) => tab.kind === "kernel")?.code;
+      const kernelSymbol = kernelSource?.match(/pub fn ([A-Za-z0-9_]+)/u)?.[1];
+      expect(kernelSymbol, lab.id).toBeTruthy();
+      const matchingRecords = (
+        value: unknown,
+        key: "kernel" | "kernel_export",
+      ): unknown[] =>
+        Array.isArray(value)
+          ? value.filter(
+            (entry) =>
+              entry &&
+              typeof entry === "object" &&
+              (entry as Record<string, unknown>)[key] === kernelSymbol,
+          )
+          : [];
+      const scopedEvidence = [
+        ...matchingRecords(evidence.fe2o3, "kernel"),
+        ...matchingRecords(evidence.comparators, "kernel"),
+        ...matchingRecords(evidence.operators, "kernel_export"),
+        ...matchingRecords(evidence.results, "kernel"),
+        ...(kernelSymbol === "gfx950_fp8_gemm_rust" &&
+        Array.isArray(evidence.ablations)
+          ? evidence.ablations
+          : []),
+      ];
+      expect(scopedEvidence.length, lab.id).toBeGreaterThan(0);
+      const evidenceNumbers: number[] = [];
+      const collectNumbers = (value: unknown): void => {
+        if (typeof value === "number") {
+          evidenceNumbers.push(value);
+        } else if (typeof value === "string") {
+          for (const match of value.matchAll(/\d+(?:\.\d+)?/gu)) {
+            evidenceNumbers.push(Number(match[0]));
+          }
+        } else if (Array.isArray(value)) {
+          value.forEach(collectNumbers);
+        } else if (value && typeof value === "object") {
+          Object.values(value).forEach(collectNumbers);
+        }
+      };
+      collectNumbers(scopedEvidence);
+      for (const measurement of lab.performanceStudy!.measurements) {
+        const asMicroseconds = lab.performanceStudy!.unit === "ms"
+          ? measurement.value * 1_000_000
+          : measurement.value * 1_000;
+        expect(
+          evidenceNumbers.some(
+            (value) =>
+              Math.abs(value - measurement.value) < 0.000_001 ||
+              Math.abs(value - asMicroseconds) < 0.001,
+          ),
+          `${lab.id}:${measurement.label} is not backed by its evidence JSON`,
+        ).toBe(true);
+      }
+      if (lab.performanceStudy!.comparisons) {
+        const comparisonEvidence = JSON.parse(
+          readFileSync(
+            resolve(lab.performanceStudy!.comparisonEvidencePath!),
+            "utf8",
+          ),
+        ) as unknown;
+        const comparisonNumbers: number[] = [];
+        const collectComparisonNumbers = (value: unknown): void => {
+          if (typeof value === "number") {
+            comparisonNumbers.push(value);
+          } else if (Array.isArray(value)) {
+            value.forEach(collectComparisonNumbers);
+          } else if (value && typeof value === "object") {
+            Object.values(value).forEach(collectComparisonNumbers);
+          }
+        };
+        collectComparisonNumbers(comparisonEvidence);
+        for (const comparison of lab.performanceStudy!.comparisons) {
+          for (const measurement of comparison.measurements) {
+            expect(
+              comparisonNumbers.some(
+                (value) => Math.abs(value - measurement.value) < 0.000_001,
+              ),
+              `${lab.id}:${comparison.title}:${measurement.label} is not backed by its comparison evidence`,
+            ).toBe(true);
+          }
+        }
+      }
     }
     const allLabs = performanceLabs
       .map((lab) => serializedLessonContent(lab.id))
@@ -1832,7 +1937,26 @@ describe("curriculum integrity", () => {
     expect(allLabs).toContain("moonshotai/Kimi-K3/blob/f831ab66814297da540d832a5235f8e904f29d06");
     expect(allLabs).toContain("DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597");
     expect(allLabs).toContain("zai-org/GLM-5.3/blob/aca966e4e02791568aa6a4ced368624b3d897f42");
-    expect(allLabs).toContain("fe2o3 is 1.4386x slower");
+    expect(allLabs).toContain("Exact matched-contract win");
+    const frontierAudit = JSON.parse(
+      readFileSync(resolve("perf-evidence/gfx950-frontier-audit-2026-09-08.json"), "utf8"),
+    ) as {
+      summary: {
+        fully_apples_to_apples_external_comparisons: number;
+        fastest_or_sota_claims_admitted: number;
+      };
+      operators: { id: string; direct: boolean }[];
+    };
+    expect(frontierAudit.operators.map((entry) => entry.id)).toEqual(
+      performanceLabs.map((lab) => lab.id),
+    );
+    expect(frontierAudit.operators.filter((entry) => entry.direct)).toEqual([
+      expect.objectContaining({ id: "gfx950-fp8-gemm-performance-lab" }),
+    ]);
+    expect(frontierAudit.summary).toMatchObject({
+      fully_apples_to_apples_external_comparisons: 1,
+      fastest_or_sota_claims_admitted: 1,
+    });
   });
 
   it("publishes bounded production Rust gfx950 low-precision evidence", () => {
@@ -3398,7 +3522,7 @@ describe("curriculum integrity", () => {
       ],
       [
         "examples/gfx950_advanced_attention/tests/kernel_source.rs",
-        "cc2d441f06780680971723e2d85001024c3ce13d1d73185e050e924640d8af8f",
+        "28f36d4f60ca6ced321e319dc4891550ff2db657eea8f0fc947946effb989916",
       ],
       [
         "examples/gfx950_advanced_attention/tests/reference.rs",

@@ -292,7 +292,7 @@ export function searchCatalog(
       const sectionScore = matchScore(terms, entry.title, sectionBody);
       if (sectionScore !== null) {
         results.push({
-          id: `section-${section.narrativeId}`,
+          id: `section-${lesson.id}-${section.narrativeId}`,
           kind: "section",
           title: entry.title,
           context: lesson.title,

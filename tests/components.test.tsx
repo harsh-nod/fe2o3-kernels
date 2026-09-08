@@ -10,6 +10,7 @@ import { GettingStartedPage } from "../src/components/GettingStartedPage";
 import { LessonSections } from "../src/components/LessonSections";
 import { LiveKfdDebuggerPage } from "../src/components/LiveKfdDebuggerPage";
 import { ProfilerDispatchImportPage } from "../src/components/ProfilerDispatchImportPage";
+import { PerformanceStudyPanel } from "../src/components/PerformanceStudyPanel";
 import { SourceIsaAgentPage } from "../src/components/SourceIsaAgentPage";
 import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
@@ -762,6 +763,31 @@ describe("code tabs", () => {
   });
 });
 
+describe("performance study", () => {
+  it("renders measured bars, explicit decisions, and evidence boundaries", () => {
+    const study = lessons.find(
+      (lesson) => lesson.id === "gfx950-fp8-gemm-performance-lab",
+    )!.performanceStudy!;
+    render(<PerformanceStudyPanel study={study} />);
+
+    expect(screen.getByRole("list", { name: "Median latency comparison in us" }))
+      .toHaveTextContent("Direct fragment loads");
+    expect(screen.getByRole("list", {
+      name: "Single-dispatch matched comparison in us",
+    })).toHaveTextContent("hipBLASLt solution 458429");
+    expect(screen.getByRole("list", {
+      name: "Queue-hot matched comparison in us",
+    })).toHaveTextContent("2.5792 us");
+    expect(screen.getByText(/gfx950-fp8-common-hip-event-v1.json/u))
+      .toBeInTheDocument();
+    expect(screen.getByRole("table", { name: "Optimization ablation decisions" }))
+      .toHaveTextContent("LDS multibuffer");
+    expect(screen.getAllByText(/1.2284-1.2612x/u)).toHaveLength(2);
+    expect(screen.getByText(/gfx950-lowp-performance-v1.json/u))
+      .toBeInTheDocument();
+  });
+});
+
 describe("functional-correctness catalog", () => {
   it("keeps the exact fail-closed contract in an optional disclosure", async () => {
     const user = userEvent.setup();
@@ -811,6 +837,11 @@ describe("functional-correctness catalog", () => {
 });
 
 describe("search index", () => {
+  it("keeps result identities unique when lessons reuse reviewed narratives", () => {
+    const results = searchCatalog("DeepSeek sparse attention", lessons, glossary);
+    expect(new Set(results.map((result) => result.id)).size).toBe(results.length);
+  });
+
   it("ranks exact lesson title matches above glossary context", () => {
     const results = searchCatalog("flash attention", lessons, glossary);
     expect(results[0]).toMatchObject({

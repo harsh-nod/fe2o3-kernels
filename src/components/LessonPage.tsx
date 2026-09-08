@@ -19,6 +19,7 @@ import { EvidenceBadge } from "./EvidenceBadge";
 import { FunctionalCorrectnessPanel } from "./FunctionalCorrectnessPanel";
 import { KernelWritingGuide } from "./KernelWritingGuide";
 import { LessonSections } from "./LessonSections";
+import { PerformanceStudyPanel } from "./PerformanceStudyPanel";
 
 interface LessonPageProps {
   completed: Set<string>;
@@ -97,6 +98,9 @@ export function LessonPage({ completed, onToggleComplete }: LessonPageProps) {
         </>
       )}
       <LessonSections lessonId={lesson.id} sections={lesson.sections} />
+      {lesson.performanceStudy && (
+        <PerformanceStudyPanel study={lesson.performanceStudy} />
+      )}
       {hasKernelSource && <KernelWritingGuide />}
       <FunctionalCorrectnessPanel lessonId={lesson.id} />
 

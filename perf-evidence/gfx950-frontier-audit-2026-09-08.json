@@ -1,0 +1,196 @@
+{
+  "schema": "fe2o3-gfx950-frontier-audit-v2",
+  "recorded_at": "2026-09-08",
+  "host": "mi350",
+  "device": "AMD Instinct MI350X (gfx950)",
+  "site_commit_audited": "19635d0c6b22c4adea8c3964bded6d29409942b9",
+  "repository_pins": {
+    "aiter": "9b410476af86cdd35328ba054b29827a64933b4b",
+    "hipblaslt_source_audit_head": "db9797ac161263ff81f08e92838bfc418be3a12e",
+    "hipblaslt_measured_installed": "dabb6df2b9",
+    "composable_kernel": "a248467b603d51795d3ff90f67e697aaddb6f4f7",
+    "flash_linear_attention": "9d981ffef3b361ba931102b633ae2a9fd91ca6c3",
+    "vllm": "782f36cd0c7951cc1fa3c4fb3eeb916cc31780ed",
+    "pytorch": "a7014b42fb76e762dfd99653ab70a3f109373764",
+    "gpt_oss": "7b583341fe16729127f6d5b94a7b09ccae97e1a1",
+    "rccl": "99501794e180352bef5ea4e717afcf9dfd16f940",
+    "gfx950_gluon_tutorials": "4d7d632a320b25a789bbdb7a9ba8a8683dce2142"
+  },
+  "protocol_required_for_a_direct_claim": {
+    "same_device": true,
+    "same_shape_precision_layout_fusion_and_outputs": true,
+    "same_cache_state": true,
+    "same_individual_dispatch_timer": true,
+    "warmups": 1000,
+    "paired_blocks": 30,
+    "samples_per_block": 100,
+    "alternate_ab_ba_order": true,
+    "same_oracle_tolerance_and_nonfinite_policy": true
+  },
+  "summary": {
+    "tutorial_kernels": 20,
+    "fully_apples_to_apples_external_comparisons": 1,
+    "semantic_shape_candidates_pending_common_protocol": 0,
+    "fastest_or_sota_claims_admitted": 1,
+    "note": "FP8 GEMM is the sole exact external comparison. A common linked harness gives both implementations identical data, outputs, cache state, stream, HIP-event timer, warmups, run order, and oracle; fe2o3 wins all three fresh processes under both isolated-dispatch and queue-hot timing. The other 19 tutorials still have no exact public comparator."
+  },
+  "operators": [
+    {
+      "id": "gfx950-fp4-gemm-performance-lab",
+      "candidate": "AITER batched AFP4WFP4 GEMM",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/op_benchmarks/triton/bench_batched_gemm_afp4wfp4.py",
+      "direct": false,
+      "reason": "Packed MXFP4, block scales, BF16 output, and ABI differ from logical-byte E2M1 to FP32."
+    },
+    {
+      "id": "gfx950-fp8-gemm-performance-lab",
+      "candidate": "hipBLASLt exhaustive solution 458429",
+      "source": "https://github.com/ROCm/hipBLASLt/tree/dabb6df2b9",
+      "source_audit_head": "https://github.com/ROCm/hipBLASLt/blob/db9797ac161263ff81f08e92838bfc418be3a12e/clients/bench/src/client.cpp",
+      "direct": true,
+      "reason": "The linked comparison harness uses the same deterministic inputs, E4M3-to-FP32 output contract, persistent cache-hot allocations, non-default stream, HIP-event timer, 1000 warmups per implementation, alternating pair order, and independent CPU oracle. fe2o3 won all three fresh processes by 1.2284-1.2612x for one launch per interval and 1.8800-1.9935x for 100 queue-hot launches per interval.",
+      "evidence": "perf-evidence/gfx950-fp8-common-hip-event-v1.json",
+      "claim_boundary": "Exact only for batch=16, M=N=16, K=128, row-major E4M3 inputs, and FP32 output on this MI350X."
+    },
+    {
+      "id": "gfx950-fp4-attention-performance-lab",
+      "candidate": "AITER FMHA v4 gfx950 low precision",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/hsa/gfx950/fmha_v4_fwd/fmha_v4_fwd.csv",
+      "direct": false,
+      "reason": "Packed and scaled FP4 ABI, value width, head ABI, mask, and cache layout differ."
+    },
+    {
+      "id": "gfx950-fp8-attention-performance-lab",
+      "candidate": "AITER FMHA v3/v4 gfx950",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/hsa/gfx950/fmha_v3_fwd/fmha_fwd.csv",
+      "direct": false,
+      "reason": "Value dimension, ABI, scale, cache, mask, layout, and sequence contract differ."
+    },
+    {
+      "id": "gfx950-kda-decode-performance-lab",
+      "candidate": "AITER fused KDA decode",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/op_benchmarks/triton/bench_fused_kda_decode.py",
+      "direct": false,
+      "reason": "Production D128 BF16 convolution, RMSNorm, cache, and state semantics differ from the FP32 K16/V16 recurrence."
+    },
+    {
+      "id": "gfx950-kda-prefill-performance-lab",
+      "candidate": "AITER FlashKDA and FLA flash KDA",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/op_benchmarks/triton/bench_flash_kda.py",
+      "direct": false,
+      "reason": "BF16 K/V128, convolution, gating, state, chunk schedule, and long-sequence contract differ."
+    },
+    {
+      "id": "gfx950-content-sparse-performance-lab",
+      "candidate": "Composable Kernel sparse attention",
+      "source": "https://github.com/ROCm/composable_kernel/tree/a248467b603d51795d3ff90f67e697aaddb6f4f7/example/ck_tile/50_sparse_attn",
+      "direct": false,
+      "reason": "Public kernels consume sparse metadata and do not fuse content block selection, top-3 selection, gated softmax, and PV."
+    },
+    {
+      "id": "gfx950-deepseek-sparse-performance-lab",
+      "candidate": "AITER DSV4 sparse attention",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/op_benchmarks/triton/bench_sparse_attention_dsv4.py",
+      "direct": false,
+      "reason": "BF16 D512, CSR, production top-k, sink, and cache semantics differ from FP32 D128/Dv16/top-k4."
+    },
+    {
+      "id": "gfx950-compressed-hybrid-performance-lab",
+      "candidate": "AITER or CK sparse/sliding-window components",
+      "source": "https://github.com/ROCm/aiter/tree/9b410476af86cdd35328ba054b29827a64933b4b",
+      "direct": false,
+      "reason": "No public candidate matches two separately normalized branches plus the learned gate."
+    },
+    {
+      "id": "gfx950-attnres-performance-lab",
+      "candidate": "No named public gfx950 artifact identified",
+      "source": "https://github.com/ROCm/aiter/tree/9b410476af86cdd35328ba054b29827a64933b4b",
+      "direct": false,
+      "reason": "An exact four-depth FP32 B64/C16 ABI and timer wrapper must first be authored."
+    },
+    {
+      "id": "gfx950-four-branch-residual-performance-lab",
+      "candidate": "No named public gfx950 artifact identified",
+      "source": "https://github.com/ROCm/aiter/tree/9b410476af86cdd35328ba054b29827a64933b4b",
+      "direct": false,
+      "reason": "rocBLAS and hipBLASLt express pieces, not the fused branch order and output contract."
+    },
+    {
+      "id": "gfx950-mhc-performance-lab",
+      "candidate": "AITER mHC pre-op",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/op_benchmarks/triton/bench_mhc.py",
+      "direct": false,
+      "reason": "AITER includes projection and multiple outputs; its HIP path is BF16 C>=512 with 20 iterations, unlike direct FP32 C16 three-iteration mixing."
+    },
+    {
+      "id": "gfx950-moe-route-performance-lab",
+      "candidate": "AITER MoE routing",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/triton_tests/moe/test_moe_routing.py",
+      "direct": false,
+      "reason": "AITER consumes logits and does not include the FP4 projection plus dispatch boundary."
+    },
+    {
+      "id": "gfx950-moe-expert-performance-lab",
+      "candidate": "AITER fused MoE A4W4",
+      "source": "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/aiter/ops/triton/moe/moe_op_gemm_a4w4.py",
+      "direct": false,
+      "reason": "Token sorting, expert layout, packed group scales, quantization, activation, output type, and fusion boundary differ."
+    },
+    {
+      "id": "gfx950-expert-combine-performance-lab",
+      "candidate": "No standalone exact public candidate",
+      "source": "https://github.com/ROCm/aiter/tree/9b410476af86cdd35328ba054b29827a64933b4b",
+      "direct": false,
+      "reason": "Fused MoE internal reduction changes the fixed-order two-rank local-memory boundary."
+    },
+    {
+      "id": "gfx950-speculative-performance-lab",
+      "candidate": "vLLM rejection sampler",
+      "source": "https://github.com/vllm-project/vllm/blob/782f36cd0c7951cc1fa3c4fb3eeb916cc31780ed/vllm/v1/worker/gpu/spec_decode/rejection_sampler.py",
+      "direct": false,
+      "reason": "Probability rejection, emitted tokens, and KV/state updates differ from equality/threshold/all-or-nothing acceptance."
+    },
+    {
+      "id": "gfx950-ngram-performance-lab",
+      "candidate": "vLLM GPU n-gram proposer",
+      "source": "https://github.com/vllm-project/vllm/blob/782f36cd0c7951cc1fa3c4fb3eeb916cc31780ed/vllm/v1/spec_decode/ngram_proposer_gpu.py",
+      "direct": false,
+      "reason": "Suffix matching and proposed-token tensors differ from fixed FNV hash-table single-integer gather."
+    },
+    {
+      "id": "gfx950-gradient-stage-performance-lab",
+      "candidate": "hipMemcpyAsync for the literal copy; RCCL for the distributed claim",
+      "source": "https://github.com/ROCm/rccl/tree/99501794e180352bef5ea4e717afcf9dfd16f940/src/device",
+      "direct": false,
+      "reason": "The teaching kernel has no communication or reduction semantics; only the literal local copy can be compared under a common stream timer."
+    },
+    {
+      "id": "gfx950-muon-performance-lab",
+      "candidate": "PyTorch Muon",
+      "source": "https://github.com/pytorch/pytorch/blob/a7014b42fb76e762dfd99653ab70a3f109373764/torch/optim/_muon.py",
+      "direct": false,
+      "reason": "The production optimizer includes momentum, parameter update, a different Newton-Schulz schedule, and larger matrices."
+    },
+    {
+      "id": "gfx950-gpt-oss-megakernel-performance-lab",
+      "candidate": "Official GPT-OSS Triton attention, MoE, and model",
+      "source": "https://github.com/openai/gpt-oss/tree/7b583341fe16729127f6d5b94a7b09ccae97e1a1/gpt_oss/triton",
+      "direct": false,
+      "reason": "The official stack implements full component and layer contracts; fe2o3 times a bounded educational tile without the full projections, KV cache, normalization, routing, and expert dimensions."
+    }
+  ],
+  "environment": {
+    "mi350x_devices_observed_idle": 8,
+    "hipblaslt_bench": {
+      "path": "/opt/rocm/bin/hipblaslt-bench",
+      "version": "100202",
+      "git_version": "dabb6df2b9"
+    },
+    "unavailable_in_inspected_environment": [
+      "AITER Python package",
+      "vLLM Python package",
+      "FLA Python package",
+      "CK profiler"
+    ]
+  }
+}

@@ -3,12 +3,23 @@ import attentionSource from "../../examples/gfx950_advanced_attention/src/kernel
 import systemsSource from "../../examples/gfx950_advanced_systems/src/kernel.rs?raw";
 import gptOssSource from "../../examples/gfx950_gpt_oss_decode/src/kernel.rs?raw";
 import { narrativeSection } from "./narrative-registry";
-import { historicalReference, type CurriculumModule, type DiagramKind, type Lesson } from "./model";
+import {
+  historicalReference,
+  type CurriculumModule,
+  type DiagramKind,
+  type Lesson,
+  type PerformanceComparison,
+  type PerformanceMeasurement,
+  type PerformanceOptimization,
+} from "./model";
 import type { NarrativeId } from "./narrative-policy";
 
-const sourceCommit = "3d10825df93a86644cc5a5b006cadd45f71afb91";
-const sourceTree = "84cdb971391617f1809cee08b706ba56dad40fd4";
+const sourceCommit = "e5351640e3df3868205bc68eac8d5ff5556352ea";
+const sourceTree = "84015c274c74a4378002360cb54a4010e374e7e8";
 const target = "gfx950:xnack- on AMD Instinct MI350X";
+const frontierAudit = "perf-evidence/gfx950-frontier-audit-2026-09-08.json";
+const frontierAuditUrl = "https://github.com/harsh-nod/fe2o3-kernels/blob/main/perf-evidence/gfx950-frontier-audit-2026-09-08.json";
+const fp8CommonEvidence = "perf-evidence/gfx950-fp8-common-hip-event-v1.json";
 
 const sources = {
   lowp: {
@@ -108,6 +119,288 @@ interface PerformanceSpec {
   diagram: DiagramKind;
 }
 
+interface MeasurementSet {
+  unit: "us" | "ms";
+  measurements: PerformanceMeasurement[];
+}
+
+type OptimizationDecision = PerformanceOptimization["decision"];
+
+interface OptimizationDecisions {
+  dataPath: OptimizationDecision;
+  softwarePipeline: OptimizationDecision;
+  ldsMultibuffer: OptimizationDecision;
+  tileLaunch: OptimizationDecision;
+}
+
+const optimizationDecisionsBySymbol: Record<string, OptimizationDecisions> = {
+  gfx950_fp4_gemm_rust: { dataPath: "retained", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_fp8_gemm_rust: { dataPath: "retained", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_fp4_attention_rust: { dataPath: "not isolated", softwarePipeline: "not isolated", ldsMultibuffer: "not isolated", tileLaunch: "retained" },
+  gfx950_fp8_attention_rust: { dataPath: "not isolated", softwarePipeline: "not isolated", ldsMultibuffer: "not isolated", tileLaunch: "inconclusive" },
+  gfx950_kda_decode: { dataPath: "retained", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_kda_chunkwise_prefill: { dataPath: "retained", softwarePipeline: "not isolated", ldsMultibuffer: "not isolated", tileLaunch: "not isolated" },
+  gfx950_content_sparse_attention: { dataPath: "inconclusive", softwarePipeline: "not isolated", ldsMultibuffer: "not isolated", tileLaunch: "not isolated" },
+  gfx950_deepseek_sparse_attention: { dataPath: "inconclusive", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_compressed_hybrid_attention: { dataPath: "inconclusive", softwarePipeline: "not isolated", ldsMultibuffer: "not isolated", tileLaunch: "not isolated" },
+  gfx950_attnres_aggregate: { dataPath: "inconclusive", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_four_branch_residual: { dataPath: "inconclusive", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_mhc_sinkhorn_mix: { dataPath: "retained", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_moe_route_fp4_t16_e4_k2_v1: { dataPath: "retained", softwarePipeline: "not isolated", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_moe_expert_rank_fp4_fp8_v1: { dataPath: "inconclusive", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_combine_expert_ranks_v1: { dataPath: "not isolated", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_speculative_transaction_v1: { dataPath: "inconclusive", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_qwen_ngram_gather_v1: { dataPath: "retained", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_stage_gradient_shard_v1: { dataPath: "not isolated", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_muon_update_4x4_v1: { dataPath: "inconclusive", softwarePipeline: "not applicable", ldsMultibuffer: "not applicable", tileLaunch: "not isolated" },
+  gfx950_gpt_oss_120b_decode_megakernel_v1: { dataPath: "retained", softwarePipeline: "rejected", ldsMultibuffer: "rejected", tileLaunch: "not isolated" },
+};
+
+const performanceMeasurementsBySymbol: Record<string, MeasurementSet> = {
+  gfx950_fp4_gemm_rust: {
+    unit: "us",
+    measurements: [
+      { label: "Guarded fragment loads", value: 19.401, status: "baseline", note: "Same kernel contract before the exact-tile proof." },
+      { label: "Direct fragment loads", value: 7.4, status: "retained", note: "Correctness-preserving exact-tile fast path." },
+    ],
+  },
+  gfx950_fp8_gemm_rust: {
+    unit: "us",
+    measurements: [
+      { label: "Guarded fragment loads", value: 17.32, status: "baseline", note: "Same E4M3 teaching contract before the exact-tile proof." },
+      { label: "Direct fragment loads", value: 6.8, status: "retained", note: "Fastest retained fe2o3 variant in the archived campaign." },
+      { label: "8 KiB LDS transpose", value: 21.001, status: "rejected", note: "Correct, but 3.0884x slower than retained." },
+    ],
+  },
+  gfx950_fp4_attention_rust: {
+    unit: "us",
+    measurements: [
+      { label: "Prior launch mapping", value: 39.28, status: "baseline", note: "Same teaching shape and correctness gate." },
+      { label: "WG256 / grid4", value: 37.92, status: "retained", note: "3.46% lower median latency." },
+    ],
+  },
+  gfx950_fp8_attention_rust: {
+    unit: "us",
+    measurements: [
+      { label: "Prior launch mapping", value: 27.4, status: "baseline", note: "Same teaching shape and correctness gate." },
+      { label: "WG256 / grid4", value: 27.24, status: "retained", note: "0.58% movement; too small for a broader attribution." },
+    ],
+  },
+  gfx950_kda_decode: {
+    unit: "us",
+    measurements: [
+      { label: "Sequential recurrence", value: 7.96, status: "baseline", note: "Independent matrix-state reference still passes." },
+      { label: "Wave-parallel reductions", value: 6.92, status: "retained", note: "1.1570x speedup; paired CI excludes one." },
+    ],
+  },
+  gfx950_kda_chunkwise_prefill: {
+    unit: "us",
+    measurements: [
+      { label: "Sequential prefill", value: 17.88, status: "baseline", note: "Token-ordered recurrence baseline." },
+      { label: "WY/UT chunkwise C4", value: 14.16, status: "retained", note: "1.2626x speedup; paired CI excludes one." },
+    ],
+  },
+  gfx950_content_sparse_attention: {
+    unit: "us",
+    measurements: [
+      { label: "Division recurrence", value: 30.08, status: "retained", note: "Stable canonical path." },
+      { label: "Reciprocal recurrence", value: 29.92, status: "inconclusive", note: "Direction reversed across campaigns; not promoted." },
+    ],
+  },
+  gfx950_deepseek_sparse_attention: {
+    unit: "us",
+    measurements: [
+      { label: "Lane-parallel exp", value: 13.48, status: "retained", note: "Canonical selected-domain implementation." },
+      { label: "Leader broadcast, AB", value: 13.4, status: "inconclusive", note: "Forward-order result only." },
+      { label: "Leader broadcast, BA", value: 13.08, status: "inconclusive", note: "Tied in reverse order; no stable contribution." },
+    ],
+  },
+  gfx950_compressed_hybrid_attention: {
+    unit: "us",
+    measurements: [
+      { label: "Division recurrence", value: 27.6, status: "inconclusive", note: "Faster in this order, but its direction conflicts with the prior campaign." },
+      { label: "Reciprocal recurrence", value: 28.0, status: "retained", note: "Current source retained pending a repeatability campaign; no speedup is assigned." },
+    ],
+  },
+  gfx950_attnres_aggregate: {
+    unit: "us",
+    measurements: [
+      { label: "Compact fixed-depth loop", value: 5.56, status: "retained", note: "Canonical readable implementation." },
+      { label: "Explicit unroll", value: 5.6, status: "inconclusive", note: "0.7% difference is treated as a tie." },
+    ],
+  },
+  gfx950_four_branch_residual: {
+    unit: "us",
+    measurements: [
+      { label: "Fused branch loop", value: 5.72, status: "retained", note: "Canonical single-store path." },
+      { label: "Explicit branches", value: 5.64, status: "inconclusive", note: "Earlier campaign treated the variants as tied." },
+    ],
+  },
+  gfx950_mhc_sinkhorn_mix: {
+    unit: "us",
+    measurements: [
+      { label: "Scalar reductions", value: 9.76, status: "baseline", note: "Same three-iteration Sinkhorn contract." },
+      { label: "Wave16 reductions", value: 6.88, status: "retained", note: "1.4186x speedup; paired CI excludes one." },
+    ],
+  },
+  gfx950_moe_route_fp4_t16_e4_k2_v1: {
+    unit: "us",
+    measurements: [
+      { label: "Redundant lane loads", value: 21.12, status: "baseline", note: "Four lanes repeat activation/router traffic." },
+      { label: "Four-lane depth striping", value: 17.32, status: "retained", note: "1.2194x speedup and 3.800 us saved." },
+    ],
+  },
+  gfx950_moe_expert_rank_fp4_fp8_v1: {
+    unit: "us",
+    measurements: [
+      { label: "Eager MFMA, rank 0", value: 55.44, status: "retained", note: "Canonical rank-0 median." },
+      { label: "Serial MFMA, rank 0", value: 58.66, status: "inconclusive", note: "Slower on rank 0." },
+      { label: "Eager MFMA, rank 1", value: 55.6205, status: "retained", note: "Canonical rank-1 median." },
+      { label: "Serial MFMA, rank 1", value: 53.26, status: "inconclusive", note: "Rank-dependent reversal prevents promotion." },
+    ],
+  },
+  gfx950_combine_expert_ranks_v1: {
+    unit: "us",
+    measurements: [
+      { label: "Coalesced fixed-order add", value: 5.4, status: "retained", note: "Only verifier-admitted timed variant." },
+    ],
+  },
+  gfx950_speculative_transaction_v1: {
+    unit: "us",
+    measurements: [
+      { label: "Wave prefix broadcast", value: 11.12, status: "retained", note: "Canonical transaction path." },
+      { label: "Prefix recompute", value: 10.96, status: "inconclusive", note: "Reversed earlier evidence; no stable gain." },
+    ],
+  },
+  gfx950_qwen_ngram_gather_v1: {
+    unit: "us",
+    measurements: [
+      { label: "Reverse probing", value: 15.16, status: "baseline", note: "Full-key collision checks retained." },
+      { label: "Ascending probing", value: 12.88, status: "retained", note: "1.1770x speedup and 2.280 us saved." },
+    ],
+  },
+  gfx950_stage_gradient_shard_v1: {
+    unit: "us",
+    measurements: [
+      { label: "Direct coalesced copy", value: 5.48, status: "retained", note: "Only verifier-admitted timed variant." },
+    ],
+  },
+  gfx950_muon_update_4x4_v1: {
+    unit: "us",
+    measurements: [
+      { label: "Wave64 reduction", value: 6.8, status: "retained", note: "Canonical register-resident update." },
+      { label: "Wave16 broadcast", value: 6.8, status: "inconclusive", note: "Tie at timer resolution." },
+    ],
+  },
+  gfx950_gpt_oss_120b_decode_megakernel_v1: {
+    unit: "ms",
+    measurements: [
+      { label: "Serial router", value: 64.937745, status: "baseline", note: "Same bounded layer-tile contract." },
+      { label: "Held fragments", value: 1.079923, status: "rejected", note: "1.00443x slower than retained." },
+      { label: "Interleaved stores", value: 1.080123, status: "rejected", note: "1.00461x slower than retained." },
+      { label: "Fused retained path", value: 1.0751635, status: "retained", note: "1.00617x faster than component-median sum." },
+    ],
+  },
+};
+
+const performanceComparisonsBySymbol: Partial<Record<string, PerformanceComparison[]>> = {
+  gfx950_fp8_gemm_rust: [
+    {
+      title: "Single-dispatch matched comparison",
+      unit: "us",
+      protocol: "One launch per HIP event interval; 3000 paired samples per process.",
+      measurements: [
+        {
+          label: "fe2o3 direct fragments",
+          value: 6.32,
+          implementation: "fe2o3",
+          note: "Median of process medians 6.28, 6.48, and 6.32 us.",
+        },
+        {
+          label: "hipBLASLt solution 458429",
+          value: 7.92,
+          implementation: "comparator",
+          note: "Median of process medians 7.92, 7.96, and 7.92 us; fe2o3 won every process by 1.2284-1.2612x.",
+        },
+      ],
+    },
+    {
+      title: "Queue-hot matched comparison",
+      unit: "us",
+      protocol: "100 launches per HIP event interval; 300 paired intervals per process.",
+      measurements: [
+        {
+          label: "fe2o3 direct fragments",
+          value: 2.5792,
+          implementation: "fe2o3",
+          note: "Median of process medians 2.5664, 2.7092, and 2.5792 us per launch.",
+        },
+        {
+          label: "hipBLASLt solution 458429",
+          value: 5.11561,
+          implementation: "comparator",
+          note: "Median of process medians 5.1160, 5.0932, and 5.1156 us; fe2o3 won every process by 1.8800-1.9935x.",
+        },
+      ],
+    },
+  ],
+};
+
+function optimizationRows(spec: PerformanceSpec): PerformanceOptimization[] {
+  const decisions = optimizationDecisionsBySymbol[spec.symbol];
+  if (decisions === undefined) {
+    throw new Error(`Missing optimization decisions for ${spec.symbol}`);
+  }
+  const primaryCategory = spec.symbol === "gfx950_fp4_attention_rust" ||
+    spec.symbol === "gfx950_fp8_attention_rust"
+    ? "tile / launch"
+    : "data path";
+  const rows: Array<{
+    category: PerformanceOptimization["category"];
+    decision: OptimizationDecision;
+    optimization: string;
+  }> = [
+    {
+      category: "data path",
+      decision: decisions.dataPath,
+      optimization: "Change data layout, ownership, or arithmetic without changing the operator contract.",
+    },
+    {
+      category: "software pipeline",
+      decision: decisions.softwarePipeline,
+      optimization: "Overlap the next global/LDS tile load with current-tile compute.",
+    },
+    {
+      category: "LDS multibuffer",
+      decision: decisions.ldsMultibuffer,
+      optimization: "Alternate LDS buffers so producers and consumers can overlap safely.",
+    },
+    {
+      category: "tile / launch",
+      decision: decisions.tileLaunch,
+      optimization: "Sweep workgroup size, wave ownership, grid size, and tile shape.",
+    },
+  ];
+  return rows.map((row) => {
+    if (row.category === primaryCategory) {
+      return {
+        ...row,
+        optimization: spec.optimization,
+        impact: spec.ablation,
+      };
+    }
+    const measurementBoundary = row.decision === "not applicable"
+      ? "Not applicable to this fixed teaching contract; no contribution is assigned."
+      : row.decision === "rejected"
+        ? "The candidate did not pass the compiler/verifier gate; no timing contribution is admitted."
+        : "No independent before/after timing was isolated for this optimization class.";
+    return {
+      ...row,
+      impact: `${measurementBoundary} ${spec.pipeline}`,
+    };
+  });
+}
+
 function functionExcerpt(source: string, symbol: string): string {
   const position = source.indexOf(`pub fn ${symbol}(`);
   const attribute = source.lastIndexOf("#[kernel(", position);
@@ -158,6 +451,10 @@ function lesson(spec: PerformanceSpec, order: number): Lesson {
   const excerptSha256 = excerptSha256BySymbol[spec.symbol];
   if (excerptSha256 === undefined) {
     throw new Error(`Missing excerpt digest for ${spec.symbol}`);
+  }
+  const measurements = performanceMeasurementsBySymbol[spec.symbol];
+  if (measurements === undefined) {
+    throw new Error(`Missing performance measurements for ${spec.symbol}`);
   }
   return {
     id: spec.id,
@@ -242,6 +539,20 @@ function lesson(spec: PerformanceSpec, order: number): Lesson {
       },
     ],
     glossary: ["gfx950", "tile", "MFMA"],
+    performanceStudy: {
+      ...measurements,
+      ...(performanceComparisonsBySymbol[spec.symbol]
+        ? {
+          comparisons: performanceComparisonsBySymbol[spec.symbol],
+          comparisonEvidencePath: fp8CommonEvidence,
+        }
+        : {}),
+      optimizations: optimizationRows(spec),
+      theoreticalFloor: spec.bound,
+      comparatorVerdict: `${spec.comparator}: ${spec.verdict}`,
+      evidencePath: source.evidence,
+      frontierAuditPath: frontierAudit,
+    },
   };
 }
 
@@ -249,9 +560,8 @@ const kimi = "Kimi-K3 revision f831ab66814297da540d832a5235f8e904f29d06: https:/
 const deepseek = "DeepSeek-V4-Pro-0813 revision 72e1d3230f6c080a530b0a1d46f8eb4602340597: https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597/config.json";
 const glm = "GLM-5.3 revision aca966e4e02791568aa6a4ced368624b3d897f42: https://huggingface.co/zai-org/GLM-5.3/blob/aca966e4e02791568aa6a4ced368624b3d897f42/config.json";
 const gpt = "GPT-OSS official repository revision 7b583341fe16729127f6d5b94a7b09ccae97e1a1: https://github.com/openai/gpt-oss/tree/7b583341fe16729127f6d5b94a7b09ccae97e1a1";
-const aiter = "https://github.com/ROCm/aiter/tree/ad70d0880f3ec7d84f0ca4aa9bdfa48ad00d3c29";
-const fla = "https://github.com/fla-org/flash-linear-attention/tree/64efbae863fdaf76fa5359e517b31cf1d72525a1";
-const vllm = "https://github.com/vllm-project/vllm/tree/96242aa50d196993735854f03bd717496e88b7c3";
+const aiter = "https://github.com/ROCm/aiter/tree/9b410476af86cdd35328ba054b29827a64933b4b";
+const vllm = "https://github.com/vllm-project/vllm/tree/782f36cd0c7951cc1fa3c4fb3eeb916cc31780ed";
 
 const specs: PerformanceSpec[] = [
   {
@@ -264,7 +574,7 @@ const specs: PerformanceSpec[] = [
     measured: "7.400 us median, 0 error; 19.401 -> 7.400 us (2.6218x)",
     optimization: "A proof of exact row-major tile bounds removes 32 guarded fragment loads while retaining guards for tail tiles.",
     ablation: "12.001 us saved, 61.86% lower median latency.",
-    pipeline: "WG256/grid4 retained. WG128 failed barrier-convergence proof, WG512 exceeds the typed limit, double buffering is inapplicable to one K=128 phase, and an 8 KiB LDS transpose regressed to 21.001 us.",
+    pipeline: "WG256/grid4 retained. WG128 failed barrier-convergence proof, WG512 exceeds the typed limit, and double buffering is inapplicable to one K=128 phase. The retained 21.001 us LDS-transpose timing belongs only to FP8; no FP4 transpose latency is claimed.",
     bound: "10.24 ns optimistic HBM floor; measured/floor = 722.7x.",
     comparator: "hipBLASLt rocRoller MXFP4 and AITER/Gluon FP4 GEMM",
     comparatorUrl: aiter,
@@ -287,9 +597,9 @@ const specs: PerformanceSpec[] = [
     ablation: "10.520 us saved, 60.74% lower median latency.",
     pipeline: "Four Wave64 waves per workgroup and four workgroups are retained; the pretransposed 8 KiB LDS path was exact but 3.0884x slower, and one K phase leaves no load/compute phase to double-buffer.",
     bound: "10.24 ns optimistic HBM floor; measured/floor = 664.1x.",
-    comparator: "hipBLASLt exhaustive E4M3 winner, solution 458459",
-    comparatorUrl: "https://github.com/ROCm/hipBLASLt",
-    verdict: "Exact eligible comparator: hipBLASLt is faster at 4.72681 us; fe2o3 is 1.4386x slower, so this is explicitly not a fastest claim.",
+    comparator: "hipBLASLt exhaustive E4M3 winner, solution 458429",
+    comparatorUrl: "https://github.com/ROCm/hipBLASLt/tree/dabb6df2b9",
+    verdict: "Exact matched-contract win: on the same inputs, persistent allocations, stream, HIP-event timer, 1000 warmups, and alternating pair order, fe2o3 beat exhaustive-winner hipBLASLt solution 458429 in all three processes: 1.2284-1.2612x for isolated dispatch and 1.8800-1.9935x queue-hot. This claim is limited to batch-16 M16/N16/K128 E4M3-to-FP32.",
     modelTarget: "GLM-5.3 hidden 6144 and expert intermediate 2048 with E4M3 block size 128; DeepSeek-V4-Pro hidden 7168 and expert intermediate 3072 with FP8 expert compute.",
     modelSource: `${glm}; ${deepseek}`,
     modelImpact: "No model improvement is established. The next gate is parity with hipBLASLt on model-sized M/N/K before integration into either model.",
@@ -350,9 +660,9 @@ const specs: PerformanceSpec[] = [
     ablation: "Sequential 7.960 -> wave-parallel 6.920 us (1.1570x), 13.57% lower latency, 95% paired-bootstrap CI [1.1552, 1.1610].",
     pipeline: "The one-step decode recurrence has no next time tile to multibuffer; state locality and production d128 tile decomposition remain open tuning dimensions.",
     bound: "1.666 ns resource floor; measured/floor = 4153.7x.",
-    comparator: "FLA fused_recurrent_kda",
-    comparatorUrl: fla,
-    verdict: "Excluded: retained FLA campaign is B=1 with a different timing boundary; no cross-library fastest claim.",
+    comparator: "AITER fused KDA decode",
+    comparatorUrl: "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/op_benchmarks/triton/bench_fused_kda_decode.py",
+    verdict: "Excluded: AITER uses production BF16 D128 convolution, RMSNorm, cache, and recurrent-state semantics, while this tutorial is an FP32 K16/V16 recurrence. Batch size and timing boundary also differ.",
     modelTarget: "Kimi-K3 decode: 96 KDA heads, key/value dimensions 128, convolution width 4, BF16 activations and FP32 recurrent state.",
     modelSource: kimi,
     modelImpact: "The 1.1570x operator gain is measured only at K=V=16. Kimi impact remains unmeasured until d128 and the full head batch are implemented.",
@@ -371,9 +681,9 @@ const specs: PerformanceSpec[] = [
     ablation: "Sequential 17.880 -> chunkwise 14.160 us (1.2626x), 20.80% lower latency, CI [1.2606, 1.2642].",
     pipeline: "Two ordered chunks expose a software-pipeline opportunity, but no asynchronous LDS multibuffer result is claimed in this artifact.",
     bound: "3.088 ns resource floor; measured/floor = 4585.5x.",
-    comparator: "FLA chunk_kda and recurrent KDA",
-    comparatorUrl: fla,
-    verdict: "Excluded: batching and timer granularity differ from the public candidate.",
+    comparator: "AITER FlashKDA and FLA flash KDA",
+    comparatorUrl: "https://github.com/ROCm/aiter/blob/9b410476af86cdd35328ba054b29827a64933b4b/op_tests/op_benchmarks/triton/bench_flash_kda.py",
+    verdict: "Excluded: public kernels use BF16 K/V128, convolution, gating, production state, and a different chunk/long-sequence schedule. Batching and timer granularity also differ.",
     modelTarget: "Kimi-K3 prefill: 96 KDA heads with K=V=128, convolution width 4, BF16 activations and FP32 state; sweep chunk lengths used by serving rather than fixing C4.",
     modelSource: kimi,
     modelImpact: "The measured 1.2626x teaching-kernel gain is a hypothesis for production KDA, not a Kimi-K3 throughput result.",
@@ -388,12 +698,12 @@ const specs: PerformanceSpec[] = [
     shape: "E4M3 B=16, T=16, K=128, V=16, top-2 blocks and top-3 tokens",
     precision: "E4M3 inputs, FP32 selection and softmax",
     measured: "30.080 us median, output error 5.8208e-11, selected IDs exact",
-    optimization: "Fused hierarchical selection, selected-only softmax, and PV avoid a materialized dense score matrix.",
+    optimization: "Test reciprocal normalization against division inside the fused selected-only softmax and PV path.",
     ablation: "Reciprocal alternative measured 29.920 us but changed sign versus the earlier campaign; no promotion or stable contribution.",
     pipeline: "Tile selection is fixed; multi-stage LDS prefetch is unmeasured and should be tested only after expanding the token domain.",
     bound: "8.984 ns resource floor; fastest measured/floor = 3330.4x.",
-    comparator: "FlashAttention / CK dense or block-sparse attention",
-    comparatorUrl: aiter,
+    comparator: "Composable Kernel sparse attention",
+    comparatorUrl: "https://github.com/ROCm/composable_kernel/tree/a248467b603d51795d3ff90f67e697aaddb6f4f7/example/ck_tile/50_sparse_attn",
     verdict: "Excluded: public candidates do not fuse the same block selection, top-3 selection, gated softmax, and PV contract.",
     modelTarget: "GLM-5.3 DSA target: 32 index heads x 128 index dimension, top-k 2048, 64 attention heads and qk/v dimension 256.",
     modelSource: glm,
@@ -412,7 +722,7 @@ const specs: PerformanceSpec[] = [
     optimization: "Lane-parallel exponentiation keeps selected-row work distributed across Wave16 lanes.",
     ablation: "Leader-exp broadcast was 13.400 us forward and tied at 13.080 us in reverse order; rejected as order-sensitive.",
     pipeline: "Selected K/V tiles are too small for a demonstrated multibuffer benefit; top-k and dimension tuning remain production work.",
-    bound: "24.064 ns resource floor; fastest measured/floor = 540.2x.",
+    bound: "24.064 ns resource floor; retained 13.480 us median/floor = 560.2x.",
     comparator: "AITER FlashAttention v4 / DeepSeek sparse-attention implementations",
     comparatorUrl: aiter,
     verdict: "Excluded: tutorial top-4 over 16 rows does not reproduce the production index domain or scheduler.",
@@ -430,8 +740,8 @@ const specs: PerformanceSpec[] = [
     shape: "E4M3 B=16, T=16, K=128, V=16, three compressed blocks plus local-4",
     precision: "E4M3 inputs with FP32 dual softmax and learned gate",
     measured: "28.000 us median, max output error 5.9605e-8",
-    optimization: "Fuses compressed/global and local branches with one final gate and output store.",
-    ablation: "Division baseline was 27.600 us in the retained order; reciprocal candidate regressed 1.45% and was not promoted.",
+    optimization: "Test reciprocal normalization against division in the fused compressed/local branches.",
+    ablation: "Division measured 27.600 us versus the current reciprocal source at 28.000 us, but the sign conflicts with the prior GPU6 campaign. Current source is retained pending repeatability and the attributed contribution is 0%.",
     pipeline: "No stable LDS multibuffer or tile-size gain was isolated; branch overlap is a future experiment.",
     bound: "8.960 ns resource floor; fastest measured/floor = 3080.4x.",
     comparator: "FlashAttention sliding-window / block-sparse attention",
@@ -455,8 +765,8 @@ const specs: PerformanceSpec[] = [
     ablation: "Explicitly unrolled alternative measured 5.600 us; 0.7% difference is treated as a tie.",
     pipeline: "There is no reusable LDS tile at C16; production C7168 needs a vector-width and workgroup sweep.",
     bound: "4.608 ns resource floor; measured/floor = 1206.6x.",
-    comparator: "Compiler-generated fused elementwise reduction",
-    comparatorUrl: aiter,
+    comparator: "No exact public gfx950 artifact identified",
+    comparatorUrl: frontierAuditUrl,
     verdict: "No exact standalone public kernel with the same four-depth ABI and timer was identified.",
     modelTarget: "Kimi-K3 applies AttnRes every 12 layers across hidden size 7168; production tests must cover that channel extent and real stream count.",
     modelSource: kimi,
@@ -476,8 +786,8 @@ const specs: PerformanceSpec[] = [
     ablation: "Explicit branch form measured 5.640 us and tied in the earlier campaign; no stable gain is assigned.",
     pipeline: "C16 has no demonstrated software-pipeline or multibuffer opportunity; model-width vectorization is unmeasured.",
     bound: "5.120 ns resource floor; fastest measured/floor = 1101.6x.",
-    comparator: "Compiler-generated fused elementwise kernel",
-    comparatorUrl: aiter,
+    comparator: "No exact public gfx950 artifact identified",
+    comparatorUrl: frontierAuditUrl,
     verdict: "No exact public artifact with matching branch order, inputs, and timestamp protocol.",
     modelTarget: "DeepSeek-V4-Pro mHC uses four residual streams at hidden size 7168; this generic branch primitive is only a component, not an mHC replacement.",
     modelSource: deepseek,
@@ -624,7 +934,7 @@ const specs: PerformanceSpec[] = [
     pipeline: "No reuse exists at 16 elements. Production overlap must be measured with actual collective transport and optimizer work.",
     bound: "0.256 ns resource floor; measured/floor = 21406.2x.",
     comparator: "HIP copy and collective staging primitives",
-    comparatorUrl: "https://rocm.docs.amd.com/projects/rccl/en/latest/",
+    comparatorUrl: "https://github.com/ROCm/rccl/tree/99501794e180352bef5ea4e717afcf9dfd16f940",
     verdict: "Excluded: this kernel does not include a matching collective or transport boundary.",
     modelTarget: "Training-side study for Kimi-K3, DeepSeek-V4-Pro, or GLM-5.3 parameter shards at their real matrix extents; it is not an inference kernel.",
     modelSource: `${kimi}; ${deepseek}; ${glm}`,
@@ -645,7 +955,7 @@ const specs: PerformanceSpec[] = [
     pipeline: "Register-resident 4x4 work has no LDS stage; production optimizer matrices need block-size, iteration-count, and communication sweeps.",
     bound: "0.392 ns resource floor; measured/floor = 17346.9x.",
     comparator: "Distributed Muon implementations",
-    comparatorUrl: "https://github.com/pytorch/pytorch",
+    comparatorUrl: "https://github.com/pytorch/pytorch/tree/a7014b42fb76e762dfd99653ab70a3f109373764",
     verdict: "Excluded: production Muon includes larger matrices, momentum, parameter application, and distributed reduction.",
     modelTarget: "Training experiment at Kimi-K3/DeepSeek-V4-Pro hidden 7168 or GLM-5.3 hidden 6144, including optimizer state and sharded communication.",
     modelSource: `${kimi}; ${deepseek}; ${glm}`,

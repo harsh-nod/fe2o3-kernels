@@ -1977,6 +1977,38 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
   );
 });
 
+test("advanced performance labs render evidence-backed plots and tables", async ({
+  page,
+}) => {
+  await page.goto("./#/lesson/gfx950-fp8-gemm-performance-lab");
+  await expect(
+    page.getByRole("heading", { level: 2, name: "Latency and ablation evidence" }),
+  ).toBeVisible();
+  const plot = page.getByRole("list", { name: "Median latency comparison in us" });
+  await expect(plot).toContainText("Direct fragment loads");
+  await expect(plot).not.toContainText("hipBLASLt solution 458429");
+  await expect(
+    page.getByRole("list", { name: "Single-dispatch matched comparison in us" }),
+  ).toContainText("hipBLASLt solution 458429");
+  await expect(
+    page.getByRole("list", { name: "Queue-hot matched comparison in us" }),
+  ).toContainText("2.5792 us");
+  await expect(
+    page.getByRole("table", { name: "Optimization ablation decisions" }),
+  ).toContainText("software pipeline");
+  await expect(
+    page.locator(".performance-boundary-grid").getByText(/Exact matched-contract win/u),
+  )
+    .toBeVisible();
+  await expect(page.getByText(/gfx950-frontier-audit-2026-09-08.json/u))
+    .toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth,
+    ),
+  ).toBe(false);
+});
+
 test("every internal curriculum route resolves without page overflow", async ({
   page,
 }) => {

@@ -151,6 +151,65 @@ function validateLesson(
   if (lesson.tabs.length < 4 || lesson.tabs.length > 13) {
     issues.push({ path, message: "lesson must expose four to thirteen code tabs" });
   }
+  if (lesson.module === 11 && !lesson.performanceStudy) {
+    issues.push({ path, message: "performance lab is missing its plotted study" });
+  }
+  if (lesson.performanceStudy) {
+    const study = lesson.performanceStudy;
+    if (
+      study.measurements.length === 0 ||
+      study.measurements.some(
+        (entry) => !Number.isFinite(entry.value) || entry.value <= 0,
+      )
+    ) {
+      issues.push({ path, message: "performance study has no valid positive measurements" });
+    }
+    if (!study.measurements.some((entry) => entry.status === "retained")) {
+      issues.push({ path, message: "performance study has no retained measurement" });
+    }
+    const categories = new Set<string>(
+      study.optimizations.map((entry) => entry.category),
+    );
+    if (
+      study.optimizations.length !== 4 ||
+      categories.size !== 4 ||
+      !["data path", "software pipeline", "LDS multibuffer", "tile / launch"].every(
+        (category) => categories.has(category),
+      )
+    ) {
+      issues.push({ path, message: "performance study lacks the four optimization classes" });
+    }
+    if (
+      study.evidencePath.startsWith("/") ||
+      study.evidencePath.split("/").includes("..") ||
+      study.comparisonEvidencePath?.startsWith("/") ||
+      study.comparisonEvidencePath?.split("/").includes("..") ||
+      study.frontierAuditPath.startsWith("/") ||
+      study.frontierAuditPath.split("/").includes("..")
+    ) {
+      issues.push({ path, message: "performance study has an invalid evidence path" });
+    }
+    if (
+      study.comparisons?.some(
+        (comparison) =>
+          comparison.measurements.length < 2 ||
+          comparison.measurements.some(
+            (entry) => !Number.isFinite(entry.value) || entry.value <= 0,
+          ) ||
+          !comparison.measurements.some(
+            (entry) => entry.implementation === "fe2o3",
+          ) ||
+          !comparison.measurements.some(
+            (entry) => entry.implementation === "comparator",
+          ),
+      )
+    ) {
+      issues.push({ path, message: "performance comparison lacks two valid implementations" });
+    }
+    if (study.comparisons?.length && !study.comparisonEvidencePath) {
+      issues.push({ path, message: "performance comparison has no evidence path" });
+    }
+  }
   const tabKinds = new Set(lesson.tabs.map((tab) => tab.kind));
   for (const kind of ["kernel", "verus", "host", "result"] as const) {
     if (!tabKinds.has(kind)) {

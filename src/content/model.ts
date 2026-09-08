@@ -225,6 +225,53 @@ export interface Exercise {
   acceptance: string;
 }
 
+export type PerformanceMeasurementStatus =
+  | "baseline"
+  | "retained"
+  | "rejected"
+  | "inconclusive"
+  | "external";
+
+export interface PerformanceMeasurement {
+  label: string;
+  value: number;
+  status: PerformanceMeasurementStatus;
+  note: string;
+}
+
+export interface PerformanceOptimization {
+  optimization: string;
+  category: "data path" | "software pipeline" | "LDS multibuffer" | "tile / launch";
+  decision: "retained" | "rejected" | "inconclusive" | "not applicable" | "not isolated";
+  impact: string;
+}
+
+export interface PerformanceComparisonMeasurement {
+  label: string;
+  value: number;
+  implementation: "fe2o3" | "comparator";
+  note: string;
+}
+
+export interface PerformanceComparison {
+  title: string;
+  unit: "us" | "ms";
+  protocol: string;
+  measurements: PerformanceComparisonMeasurement[];
+}
+
+export interface PerformanceStudy {
+  unit: "us" | "ms";
+  measurements: PerformanceMeasurement[];
+  comparisons?: PerformanceComparison[];
+  optimizations: PerformanceOptimization[];
+  theoreticalFloor: string;
+  comparatorVerdict: string;
+  evidencePath: string;
+  comparisonEvidencePath?: string;
+  frontierAuditPath: string;
+}
+
 export interface Lesson {
   id: string;
   module: number;
@@ -241,6 +288,7 @@ export interface Lesson {
   diagram?: DiagramKind;
   exercises: Exercise[];
   glossary: string[];
+  performanceStudy?: PerformanceStudy;
 }
 
 export interface CurriculumModule {
