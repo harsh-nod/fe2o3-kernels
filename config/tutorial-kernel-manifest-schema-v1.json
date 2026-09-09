@@ -139,6 +139,19 @@
           "properties": {
             "command": { "$ref": "#/$defs/command" },
             "evidenceSha256": { "type": "null" },
+            "reasonCode": { "const": "awaiting-signed-target-matched-hardware-observation" },
+            "status": { "const": "available-authenticated-unobserved" },
+            "subjectSha256": { "type": "null" },
+            "target": { "type": "string", "pattern": "^gfx[0-9]{3}$" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["command", "evidenceSha256", "reasonCode", "status", "subjectSha256", "target"],
+          "properties": {
+            "command": { "$ref": "#/$defs/command" },
+            "evidenceSha256": { "type": "null" },
             "reasonCode": { "type": "string", "minLength": 1 },
             "status": { "const": "available-legacy-only" },
             "subjectSha256": { "type": "null" },
@@ -255,16 +268,16 @@
         "hardwareEvidenceSha256": { "$ref": "#/$defs/sha256" },
         "hostAdmissionSha256": { "$ref": "#/$defs/sha256" },
         "launchContractSha256": { "$ref": "#/$defs/sha256" },
-        "loweringIdentitySha256": { "$ref": "#/$defs/sha256" },
-        "machineRefinementSha256": { "$ref": "#/$defs/sha256" },
+        "loweringIdentitySha256": { "$ref": "#/$defs/sha256", "description": "Domain-separated InertAmdgpuLoweringReceiptV3 identity; not the raw archive-object SHA-256." },
+        "machineRefinementSha256": { "$ref": "#/$defs/sha256", "description": "Domain-separated InertCapabilityRefinementReceiptV1 machine-refinement identity; not the raw archive-object SHA-256." },
         "negativeFixtureSetSha256": { "$ref": "#/$defs/sha256" },
         "numericalPolicySha256": { "$ref": "#/$defs/sha256" },
-        "proofCheckerSha256": { "$ref": "#/$defs/sha256" },
-        "proofEvidenceSha256": { "$ref": "#/$defs/sha256" },
-        "proofObligationSetSha256": { "$ref": "#/$defs/sha256" },
+        "proofCheckerSha256": { "$ref": "#/$defs/sha256", "description": "Domain-separated AuthenticatedCompilerCapabilityEvidenceIdentityV5 derived from the exact authenticated checker-evidence bytes; not the raw archive-object SHA-256." },
+        "proofEvidenceSha256": { "$ref": "#/$defs/sha256", "description": "Domain-separated InertCapabilityResultSetV1 identity over the canonical pre-terminal result-set body; not the raw archive-object SHA-256." },
+        "proofObligationSetSha256": { "$ref": "#/$defs/sha256", "description": "Domain-separated InertCapabilityObligationSetV1 identity over the canonical pre-terminal obligation-set body; not the raw archive-object SHA-256 or property-list digest." },
         "simulatorEvidenceSha256": { "$ref": "#/$defs/sha256" },
         "sourceMirIdentitySha256": { "$ref": "#/$defs/sha256" },
-        "sourceMirToKirRefinementSha256": { "$ref": "#/$defs/sha256" },
+        "sourceMirToKirRefinementSha256": { "$ref": "#/$defs/sha256", "description": "Domain-separated InertCapabilityRefinementReceiptV1 source-MIR-to-KIR identity; not the raw archive-object SHA-256." },
         "targetCapabilityDecisionSha256": { "$ref": "#/$defs/sha256" },
         "targetIdentitySha256": { "$ref": "#/$defs/sha256" }
       }
@@ -277,8 +290,8 @@
           "required": ["checkerSha256", "evidenceSha256", "obligationSetSha256", "properties", "status"],
           "properties": {
             "checkerSha256": { "$ref": "#/$defs/sha256" },
-            "evidenceSha256": { "$ref": "#/$defs/sha256" },
-            "obligationSetSha256": { "$ref": "#/$defs/sha256" },
+            "evidenceSha256": { "$ref": "#/$defs/sha256", "description": "Exact InertCapabilityResultSetV1 typed identity." },
+            "obligationSetSha256": { "$ref": "#/$defs/sha256", "description": "Exact InertCapabilityObligationSetV1 typed identity." },
             "properties": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/requiredProperty" } },
             "status": { "const": "complete" }
           }
@@ -504,13 +517,71 @@
         "sourcePaths": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/path" } }
       }
     },
+    "qualificationHardwareTarget": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["deterministicSemanticRunnerAvailability", "reason", "target"],
+          "properties": {
+            "deterministicSemanticRunnerAvailability": { "const": "unavailable" },
+            "reason": { "type": "string", "minLength": 1 },
+            "target": { "type": "string", "pattern": "^gfx[0-9]{3}$" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["lane", "status", "target"],
+          "properties": {
+            "lane": { "type": "string", "minLength": 1 },
+            "status": { "const": "required-qualified" },
+            "target": { "type": "string", "pattern": "^gfx[0-9]{3}$" }
+          }
+        }
+      ]
+    },
+    "qualificationCoverage": {
+      "type": "object", "additionalProperties": false,
+      "required": ["fixtureIds", "lessonId"],
+      "properties": {
+        "fixtureIds": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+        "lessonId": { "$ref": "#/$defs/slug" }
+      }
+    },
+    "qualificationSuite": {
+      "oneOf": [
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["availability", "command", "coverage", "gate", "suiteId", "unavailableReason"],
+          "properties": {
+            "availability": { "const": "available" },
+            "command": { "$ref": "#/$defs/command" },
+            "coverage": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/qualificationCoverage" } },
+            "gate": { "enum": ["cpu-reference", "semantic-simulation"] },
+            "suiteId": { "$ref": "#/$defs/slug" },
+            "unavailableReason": { "type": "null" }
+          }
+        },
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["availability", "command", "coverage", "gate", "suiteId", "unavailableReason"],
+          "properties": {
+            "availability": { "const": "unavailable" },
+            "command": { "type": "null" },
+            "coverage": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/qualificationCoverage" } },
+            "gate": { "enum": ["cpu-reference", "semantic-simulation"] },
+            "suiteId": { "$ref": "#/$defs/slug" },
+            "unavailableReason": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
     "qualification": {
       "type": "object", "additionalProperties": false,
       "required": ["evidenceSchemaPath", "hardwareTargets", "suites"],
       "properties": {
         "evidenceSchemaPath": { "$ref": "#/$defs/path" },
-        "hardwareTargets": { "type": "array" },
-        "suites": { "type": "array" }
+        "hardwareTargets": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/qualificationHardwareTarget" } },
+        "suites": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/qualificationSuite" } }
       }
     }
   }

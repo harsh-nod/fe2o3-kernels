@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("GPU capability reference is truthful and responsive", async ({ page }) => {
+test("GPU capability reference is truthful and responsive", async ({ page }, testInfo) => {
   await page.goto("./#/gpu-capabilities");
 
   await expect(
@@ -30,11 +30,17 @@ test("GPU capability reference is truthful and responsive", async ({ page }) => 
   await expect(
     page.getByRole("heading", { name: "Target lowering is not machine refinement" }),
   ).toBeVisible();
-  await expect(page.getByText("available-legacy-only", { exact: true })).toBeVisible();
+  await expect(page.getByText("available-authenticated-unobserved", { exact: true })).toBeVisible();
+  await expect(page.getByText("Pending hardware", { exact: true })).toBeVisible();
+  await expect(page.getByText("Qualified simulator", { exact: true })).toBeVisible();
 
   const dimensions = await page.evaluate(() => ({
     contentWidth: document.documentElement.scrollWidth,
     viewportWidth: window.innerWidth,
   }));
   expect(dimensions.contentWidth).toBeLessThanOrEqual(dimensions.viewportWidth);
+  await page.screenshot({
+    path: testInfo.outputPath("gpu-capabilities-viewport.png"),
+    animations: "disabled",
+  });
 });

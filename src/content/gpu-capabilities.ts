@@ -194,7 +194,7 @@ const w4Obligations: CapabilityObligation[] = [
 ];
 
 export const gpuCapabilitiesPage = deepFreeze({
-  reviewedOn: "2026-09-08",
+  reviewedOn: "2026-09-09",
   issue: 272,
   title: "GPU capability pipeline",
   summary:
@@ -220,13 +220,13 @@ export const gpuCapabilitiesPage = deepFreeze({
       manifest.capabilityKernels,
       (kernel) => kernel.productionCapabilityPath.path === "canonical-capability",
     ),
-    legacyHardware: countBy(
+    pendingHardware: countBy(
       manifest.capabilityKernels,
-      (kernel) => kernel.hardwareCommand.status === "available-legacy-only",
+      (kernel) => kernel.hardwareCommand.status === "available-authenticated-unobserved",
     ),
-    legacySimulator: countBy(
+    qualifiedSimulator: countBy(
       manifest.capabilityKernels,
-      (kernel) => kernel.simulatorCommand.status === "available-legacy-only",
+      (kernel) => kernel.simulatorCommand.status === "capability-path-qualified",
     ),
   },
   pipeline: [
@@ -258,7 +258,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       current:
         "Supported direct Rust calls expand into one bounded execution view shared by ranked analysis and KIR lowering. Original MIR stays unchanged; each call instance retains its arguments, local and block origins, and return path. Authenticated workgroup scopes initialize at each call's frame-entry marker, not at root entry. Recursion and unsupported call contracts reject.",
       gate:
-        "Canonical call maps and induction reports retain expanded coordinates as inert component evidence. Production correspondence and lineage still reject those coordinates. Loop induction proofs inside expanded helpers remain unsupported. Deterministic replay is not a semantic-equivalence proof.",
+        "V6 correspondence replays original source, expanded calls, per-root induction, SSA, and exact KIR. Helper-loop bounds accept exact u32 constants or unchanged parent arguments; reassignment, ordinary aliases, and unsupported shapes reject. Original-coordinate V1 and V4/V5 evidence cannot carry expanded coordinates. Deterministic replay is not a semantic-equivalence proof.",
     },
     {
       id: "canonical-kir",
@@ -296,7 +296,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       owner: "AMDGPU model + LLVM/LLD + finalizer",
       disposition: "component-only",
       current:
-        "Lowering and replay components can bind V13 input, transformation epochs, emitted LLVM, raw object, finalized HSACO, descriptor, ABI, and resources.",
+        "Native V13 KIR-to-LLVM replay passes the independent receipt verifier for gfx942 and gfx950 in component tests, including source, target, and final-graph substitution rejection. This uses the existing generic receipt boundary; it is not machine-code execution or a hardware result.",
       gate:
         "A component test is not a fixture publication; the exact artifact chain must appear in the compiler-produced manifest evidence.",
     },
@@ -316,7 +316,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       owner: "generated host + sealed #213 verifier",
       disposition: "unavailable",
       current:
-        "The checked-in tiled GEMM runner can execute the legacy gfx942 path, but it does not possess the complete V13 capability association required for protected launch.",
+        "The manifest registers authenticated gfx942 hardware transport, but no signed target-matched observation or complete V13 capability association is published for tiled GEMM.",
       gate:
         "Static evidence, current artifact custody, dynamic buffer and launch facts, and completion ownership must join without fallback.",
     },
@@ -328,7 +328,7 @@ export const gpuCapabilitiesPage = deepFreeze({
     title: "Tiled GEMM: follow one tile through the capability pipeline",
     equation: "C[row, col] = alpha * sum_k(A[row, k] * B[k, col]) + beta * C[row, col]",
     summary:
-      "The checked-in example maps one Wave64 workgroup to a 16x16 output tile, stages BF16 fragments through two LDS buffers, accumulates in FP32, and gives each lane four disjoint stores. Its CPU tests and gfx942 runner are concrete; the manifest still classifies that GPU runner as legacy-only for issue #272.",
+      "The checked-in example maps one Wave64 workgroup to a 16x16 output tile, stages BF16 fragments through two LDS buffers, accumulates in FP32, and gives each lane four disjoint stores. Its CPU tests and gfx942 runner are concrete; authenticated hardware transport remains unobserved for issue #272.",
     runContracts: [
       {
         label: "CPU reference and source tests",
@@ -338,10 +338,10 @@ export const gpuCapabilitiesPage = deepFreeze({
           "Runs host tests and the independent safe Rust reference. It does not compile or dispatch the GPU kernel.",
       },
       {
-        label: "gfx942 end-to-end runner",
-        command: "bash examples/tiled_gemm_general_v1/run-gfx942.sh",
+        label: "gfx942 authenticated runner",
+        command: "FE2O3_TUTORIAL_HARDWARE_PROTOCOL=authenticated-v1 bash examples/tiled_gemm_general_v1/run-gfx942.sh",
         boundary:
-          "The manifest records this as available-legacy-only, not as capability-path simulator, proof, or hardware qualification.",
+          "The manifest records available-authenticated-unobserved transport. The qualification orchestrator must supply the prepared compiler transaction and hardware request; this command alone does not establish a GPU result, proof, or qualification.",
       },
     ],
     sourceExcerpt: tiledGemmKernel,
@@ -480,7 +480,7 @@ export const gpuCapabilitiesPage = deepFreeze({
     "Its neutral target closure is not evaluated and its gfx942 target decision remains legacy-only.",
     "Its required source, functional, and machine refinement evidence is still marked missing.",
     "No capability-path simulator command is published for tiled GEMM.",
-    "The gfx942 command is runnable but explicitly available-legacy-only for issue #272.",
+    "The gfx942 command is registered as available-authenticated-unobserved; no signed target-matched hardware result is published.",
     "Capability-path negative-fixture coverage for this fixture is still marked missing.",
     "Complete BF16 conversion, MFMA contraction order, exceptional-value, and finite-error equivalence remain outside the published compile-time proof claim.",
   ],

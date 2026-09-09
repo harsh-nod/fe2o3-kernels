@@ -84,9 +84,11 @@ describe("GPU capability pipeline reference", () => {
       .toBeInTheDocument();
     expect(within(pipeline).getByText(/replay is not a semantic-equivalence proof/u))
       .toBeInTheDocument();
-    expect(within(pipeline).getByText(/Production correspondence and lineage still reject/u))
+    expect(within(pipeline).getByText(/V6 correspondence replays original source/u))
       .toBeInTheDocument();
-    expect(within(pipeline).getByText(/Loop induction proofs inside expanded helpers remain unsupported/u))
+    expect(within(pipeline).getByText(/Helper-loop bounds accept exact u32 constants or unchanged parent arguments/u))
+      .toBeInTheDocument();
+    expect(within(pipeline).getByText(/it is not machine-code execution or a hardware result/u))
       .toBeInTheDocument();
   });
 
@@ -102,8 +104,8 @@ describe("GPU capability pipeline reference", () => {
     expect(sourceExcerpt).toHaveTextContent("WorkgroupPipeline");
     expect(sourceExcerpt).toHaveTextContent("matrix.multiply_accumulate");
     expect(sourceExcerpt).toHaveTextContent("get_tiled_2d_mut");
-    expect(screen.getByText("gfx942 end-to-end runner")).toBeInTheDocument();
-    expect(screen.getAllByText(/available-legacy-only/u).length).toBeGreaterThan(0);
+    expect(screen.getByText("gfx942 authenticated runner")).toBeInTheDocument();
+    expect(screen.getAllByText(/available-authenticated-unobserved/u).length).toBeGreaterThan(0);
 
     const kir = screen.getByLabelText("Canonical KIR V13 capability operations");
     expect(kir).toHaveTextContent("KernelContextIssue");
@@ -155,8 +157,8 @@ describe("GPU capability pipeline reference", () => {
       fixtures: 47,
       completeClosures: 0,
       canonicalPaths: 0,
-      legacyHardware: 47,
-      legacySimulator: 3,
+      pendingHardware: 47,
+      qualifiedSimulator: 0,
     });
     expect(gpuCapabilitiesPage.workedExample.manifestState).toEqual({
       closure: "not-produced",
@@ -165,7 +167,7 @@ describe("GPU capability pipeline reference", () => {
       neutralTarget: "not-evaluated",
       backendTarget: "legacy-only",
       simulator: "unavailable",
-      hardware: "available-legacy-only",
+      hardware: "available-authenticated-unobserved",
       negatives: "missing",
     });
     expect(JSON.stringify(gpuCapabilitiesPage)).not.toContain("KIR V12");

@@ -15,6 +15,7 @@ import thresholdSchemaDocument from "../config/tutorial-compiler-no-regression-t
 import hardwareSchemaDocument from "../config/tutorial-gfx942-hardware-evidence-schema-v1.json";
 import qualificationRecordSchemaDocument from "../config/tutorial-compiler-qualification-record-schema-v1.json";
 import manifestSchemaDocument from "../config/tutorial-kernel-manifest-schema-v1.json";
+import capabilityBatchSchemaDocument from "../config/tutorial-capability-qualification-batch-schema-v1.json";
 import manifestDocument from "../config/tutorial-kernel-manifest-v1.json";
 import { tutorialCorpusContractSha256 } from "../scripts/tutorial-corpus-contract.mjs";
 import { lessons } from "../src/content/curriculum";
@@ -96,13 +97,31 @@ type Manifest = {
     allowsLegacyFallback: boolean;
   };
   capabilityKernels: CapabilityKernel[];
-  qualification: unknown;
+  qualification: {
+    evidenceSchemaPath: string;
+    hardwareTargets: Array<Record<string, unknown>>;
+    suites: Array<{
+      suiteId: string;
+      gate: string;
+      availability: string;
+      command: unknown;
+      unavailableReason: string | null;
+      coverage: Array<{ fixtureIds: string[]; lessonId: string }>;
+    }>;
+  };
   compilerFixtures: Fixture[];
   entries: Entry[];
 };
 
 const manifest = manifestDocument as Manifest;
 const validator = resolve("scripts/validate-tutorial-compiler-corpus.mjs");
+const sharedSchemaNames = [
+  "tutorial-kernel-manifest-schema-v1.json",
+  "tutorial-semantic-expectation-schema-v1.json",
+  "tutorial-semantic-qualification-evidence-schema-v1.json",
+  "tutorial-capability-qualification-batch-schema-v1.json",
+];
+const isolatedEnvironment = { ...process.env, FE2O3_COMPILER_REPOSITORY: "" };
 const sourceIsaV2Implementation = {
   collectionBytes: 4797,
   collectionSha256: "0a5627abbf4550e209adb923f873caa68065237e21ee5219fba9272647891072",
@@ -128,7 +147,11 @@ function git(directory: string, ...arguments_: string[]) {
   return result.stdout.trimEnd();
 }
 
-function writeCompilerManifestHistory(document: Manifest, directory: string) {
+function writeCompilerManifestHistory(
+  document: Manifest,
+  directory: string,
+  mutateBaseline?: (document: Manifest) => void,
+) {
   const repository = resolve(directory, "compiler");
   mkdirSync(repository);
   git(repository, "init", "--quiet");
@@ -142,7 +165,13 @@ function writeCompilerManifestHistory(document: Manifest, directory: string) {
     compilerTree: git(repository, "rev-parse", "HEAD^{tree}"),
     status: "migration",
   };
+  mutateBaseline?.(document);
   mkdirSync(resolve(repository, "config"));
+  for (const name of sharedSchemaNames) {
+    for (const file of [name, name.replace(/\.json$/u, ".sha256")]) {
+      writeFileSync(resolve(repository, "config", file), readFileSync(resolve("config", file)));
+    }
+  }
   const bytes = `${JSON.stringify(document, null, 2)}\n`;
   writeFileSync(resolve(repository, "config/tutorial-kernel-manifest-v1.json"), bytes);
   writeFileSync(
@@ -172,6 +201,8 @@ function canonicalValue(value: unknown): unknown {
 
 function writeQualificationRecord(document: Manifest, directory: string) {
   const candidate = { commit: "1".repeat(40), tree: "2".repeat(40), worktreeClean: true };
+  document.baseline = { compilerCommit: candidate.commit, compilerTree: candidate.tree, status: "qualified" };
+  prepareSyntheticQualifiedCorpus(document);
   const requirements = new Map(
     document.compilerFixtures.map((fixture) => [
       fixture.fixtureId,
@@ -338,7 +369,7 @@ function withTemporaryCorpus(
         ...(rawMode ? ["--raw-artifacts"] : []),
         ...extraArguments,
       ],
-      { encoding: "utf8" },
+      { encoding: "utf8", env: isolatedEnvironment },
     );
   } finally {
     rmSync(directory, { force: true, recursive: true });
@@ -387,10 +418,7 @@ function prepareCapabilityPromotion(
     "machine-refinement",
     "source-mir-kir-refinement",
   ];
-  const proofObligationSetSha256 = capabilityRecordDigest(
-    "fe2o3-tutorial-capability-proof-obligations-v1",
-    proofProperties,
-  );
+  const proofObligationSetSha256 = identity("typed-proof-obligation-set");
   const proofCheckerSha256 = identity("proof-checker");
   const proofEvidenceSha256 = identity("proof-evidence");
   const negativeCategories = [
@@ -441,6 +469,9 @@ function prepareCapabilityPromotion(
   });
   const simulatorEvidenceSha256 = identity("simulator-evidence");
   Object.assign(kernel.simulatorCommand, {
+    command: structuredClone(document.qualification.suites.find((suite) =>
+      suite.gate === "semantic-simulation" && suite.availability === "available" &&
+      suite.coverage.some((coverage) => coverage.fixtureIds.includes(fixtureId)))!.command),
     evidenceSha256: simulatorEvidenceSha256,
     reasonCode: null,
     status: "capability-path-qualified",
@@ -491,6 +522,16 @@ function prepareCapabilityPromotion(
   return kernel;
 }
 
+function prepareSyntheticQualifiedCorpus(document: Manifest) {
+  // Synthetic records exercise validation only; they are never release evidence.
+  document.baseline.status = "qualified";
+  document.capabilityContract.status = "qualified";
+  document.qualification.hardwareTargets = document.qualification.hardwareTargets.map(({ target }) => ({
+    target, status: "required-qualified", lane: `synthetic-${target}`,
+  }));
+  for (const fixture of document.compilerFixtures) prepareCapabilityPromotion(document, fixture.fixtureId);
+}
+
 function qualifyTypedVecadd(
   document: Manifest,
   directory: string,
@@ -499,7 +540,7 @@ function qualifyTypedVecadd(
 ) {
   const entry = document.entries.find((candidate) => candidate.lessonId === "typed-vecadd");
   if (!entry) throw new Error("typed-vecadd manifest entry is missing");
-  document.baseline.status = "qualified";
+  prepareSyntheticQualifiedCorpus(document);
   const fixtureId = entry.compilerFixtureIds[0];
   const fixture = document.compilerFixtures.find(
     (candidate) => candidate.fixtureId === fixtureId,
@@ -689,7 +730,7 @@ describe("production compiler tutorial corpus", () => {
     expect(recordedPath).toBe("config/tutorial-kernel-manifest-v1.json");
     expect(digest(readFileSync(path))).toBe(expectedDigest);
     expect(expectedDigest).toBe(
-      "6216d17b801a841357da03e89cd93fc796d174e5419aef616c6e355f06283810",
+      "5c59716d406d29ffca814dca917f13d886900c97e31f1f7e23166b62012510ce",
     );
     expect(manifest.schema).toBe("fe2o3-tutorial-kernel-manifest-v1");
     expect(manifest.roadmapIssue).toBe(
@@ -704,19 +745,24 @@ describe("production compiler tutorial corpus", () => {
     expect(recordedSchemaPath).toBe("config/tutorial-kernel-manifest-schema-v1.json");
     expect(digest(readFileSync(schemaPath))).toBe(schemaDigest);
     expect(schemaDigest).toBe(
-      "984d1637cb9b2eb76e9a2e3312c828172dabd91b686f34e3770c434795fb033a",
+      "1f630842f53aa5a34c4339d0f7b7b5438c164281d4ef8f941567ef0d6f502e73",
     );
   });
 
   it("uses the compiler's stable domain-separated corpus identity", () => {
     expect(tutorialCorpusContractSha256(manifest)).toBe(
-      "7d31c3e24315ddaec4138526c9cc21a52b32a5a6b91392dde4a371ce9eb0b99f",
+      "878e12ff3af757ac658c3f7b8058278a962893aeb2639e46405f6844f04b7d95",
     );
     const publicationChange = structuredClone(manifest);
     publicationChange.baseline.compilerCommit = "f".repeat(40);
+    publicationChange.baseline.compilerTree = "e".repeat(40);
     publicationChange.baseline.status = "qualified";
     expect(tutorialCorpusContractSha256(publicationChange)).toBe(
       tutorialCorpusContractSha256(manifest),
+    );
+    expect(digest(JSON.stringify(publicationChange))).not.toBe(digest(JSON.stringify(manifest)));
+    expect(tutorialCorpusContractSha256(manifest)).not.toBe(
+      digest(readFileSync(resolve("config/tutorial-kernel-manifest-v1.json"))),
     );
     const corpusChange = structuredClone(manifest);
     corpusChange.compilerFixtures[0].testPath += ".hostile";
@@ -733,6 +779,40 @@ describe("production compiler tutorial corpus", () => {
     expect(result.status, result.stderr).toBe(0);
   });
 
+  it("rejects canonical-contract hashes and malformed sidecars in place of raw manifest hashes", () => {
+    for (const mutation of ["contract-hash", "extra-newline", "wrong-path", "high-bit-byte"] as const) {
+      const result = withTemporaryCorpus((document, directory) => {
+        const bytes = `${JSON.stringify(document, null, 2)}\n`;
+        const manifestPath = resolve(directory, "tutorial-kernel-manifest-v1.json");
+        const recordPath = mutation === "wrong-path" ? "config/another-manifest.json" : relative(resolve("."), manifestPath);
+        const hash = mutation === "contract-hash" ? tutorialCorpusContractSha256(document) : digest(bytes);
+        const digestPath = resolve(directory, "substituted.sha256");
+        const record = Buffer.from(`${hash}  ${recordPath}\n${mutation === "extra-newline" ? "\n" : ""}`, "ascii");
+        if (mutation === "high-bit-byte") record[0] |= 0x80;
+        writeFileSync(digestPath, record);
+        return ["--digest", digestPath];
+      });
+      expect(result.status, mutation).toBe(1);
+      expect(result.stderr, mutation).toContain("manifest digest mismatch or noncanonical digest record");
+    }
+  });
+
+  it("does not let a self-hashed site schema override the compiler's committed schema", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const repository = writeCompilerManifestHistory(document, directory);
+      const changed = structuredClone(manifestSchemaDocument);
+      changed.required = changed.required.filter((key) => key !== "capabilityKernels");
+      const schemaPath = resolve(directory, "tutorial-kernel-manifest-schema-v1.json");
+      const digestPath = schemaPath.replace(/\.json$/u, ".sha256");
+      const bytes = `${JSON.stringify(changed, null, 2)}\n`;
+      writeFileSync(schemaPath, bytes);
+      writeFileSync(digestPath, `${digest(bytes)}  ${relative(resolve("."), schemaPath)}\n`);
+      return ["--compiler-repository", repository, "--manifest-schema", schemaPath, "--manifest-schema-digest", digestPath];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("config/tutorial-kernel-manifest-schema-v1.json differs byte-for-byte from compiler");
+  });
+
   it("rejects site-only manifest drift against the compiler checkout", () => {
     const result = withTemporaryCorpus((document, directory) => {
       const repository = writeCompilerManifestHistory(document, directory);
@@ -741,6 +821,137 @@ describe("production compiler tutorial corpus", () => {
     });
     expect(result.status).toBe(1);
     expect(result.stderr).toContain("differs byte-for-byte from compiler");
+  });
+
+  it("checks every shared schema and digest in committed HEAD, not repaired worktree bytes", () => {
+    for (const name of sharedSchemaNames.flatMap((name) => [name, name.replace(/\.json$/u, ".sha256")])) {
+      const result = withTemporaryCorpus((document, directory) => {
+        const repository = writeCompilerManifestHistory(document, directory);
+        const path = resolve(repository, "config", name);
+        const original = readFileSync(path);
+        writeFileSync(path, Buffer.concat([original, Buffer.from("\n")]));
+        git(repository, "add", "config");
+        git(repository, "commit", "--quiet", "-m", "drift committed contract");
+        writeFileSync(path, original);
+        return ["--compiler-repository", repository];
+      });
+      expect(result.status, name).toBe(1);
+      expect(result.stderr, name).toContain(`config/${name} differs byte-for-byte from compiler`);
+    }
+  }, 15_000);
+
+  it("rejects missing shared contracts without any legacy schema fallback", () => {
+    const result = withTemporaryCorpus((document, directory) => {
+      const repository = writeCompilerManifestHistory(document, directory);
+      git(repository, "rm", "config/tutorial-capability-qualification-batch-schema-v1.json");
+      git(repository, "commit", "--quiet", "-m", "omit batch schema");
+      return ["--compiler-repository", repository];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("cannot resolve config/tutorial-capability-qualification-batch-schema-v1.json");
+  });
+
+  it("requires a real baseline commit owning its tree and ancestral to the selected HEAD", () => {
+    for (const mutation of ["missing-commit", "wrong-tree", "non-ancestor"] as const) {
+      const result = withTemporaryCorpus((document, directory) => {
+        const repository = writeCompilerManifestHistory(document, directory, (candidate) => {
+          if (mutation === "missing-commit") candidate.baseline.compilerCommit = "f".repeat(40);
+          if (mutation === "wrong-tree") candidate.baseline.compilerTree = "e".repeat(40);
+        });
+        if (mutation === "non-ancestor") {
+          git(repository, "checkout", "--quiet", "--orphan", "independent");
+          git(repository, "commit", "--quiet", "-m", "independent snapshot");
+        }
+        return ["--compiler-repository", repository];
+      });
+      expect(result.status, mutation).toBe(1);
+      expect(result.stderr, mutation).toContain({
+        "missing-commit": "cannot resolve measured compiler tree",
+        "wrong-tree": "baseline compiler tree differs",
+        "non-ancestor": "does not contain the measured baseline commit",
+      }[mutation]);
+    }
+  });
+
+  it("distinguishes available authenticated transport from actual qualification for all fixtures", () => {
+    for (const fixture of manifest.compilerFixtures) {
+      expect(fixture.matrix?.environment).toContain("FE2O3_TUTORIAL_HARDWARE_PROTOCOL=authenticated-v1");
+      const kernel = manifest.capabilityKernels.find((kernel) => kernel.fixtureId === fixture.fixtureId)!;
+      expect(kernel.hardwareCommand).toMatchObject({
+        status: "available-authenticated-unobserved",
+        reasonCode: "awaiting-signed-target-matched-hardware-observation",
+        evidenceSha256: null,
+        subjectSha256: null,
+      });
+      expect(kernel.simulatorCommand).toMatchObject({
+        status: "unavailable", command: null, evidenceSha256: null, subjectSha256: null,
+      });
+    }
+    for (const mutation of ["reason", "evidence", "subject", "protocol"] as const) {
+      const result = withTemporaryCorpus((document) => {
+        const record = document.capabilityKernels[0].hardwareCommand;
+        if (mutation === "reason") record.reasonCode = "claimed-hardware-run";
+        if (mutation === "evidence") record.evidenceSha256 = "a".repeat(64);
+        if (mutation === "subject") record.subjectSha256 = "b".repeat(64);
+        if (mutation === "protocol") (record.command as { environment: string[] }).environment = [];
+        return [];
+      });
+      expect(result.status, mutation).toBe(1);
+      expect(result.stderr, mutation).toContain({
+        reason: "invalid authenticated-unobserved reason",
+        evidence: "unqualified status cannot carry",
+        subject: "unqualified status cannot carry",
+        protocol: "bypasses the authenticated hardware protocol",
+      }[mutation]);
+    }
+  });
+
+  it("does not admit a qualified baseline backed by migration or legacy capability records", () => {
+    const result = withTemporaryCorpus((document) => {
+      document.baseline.status = "qualified";
+      return [];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("legacy fallback is forbidden");
+  });
+
+  it("validates closed qualification targets and exact lesson/fixture coverage", () => {
+    for (const mutation of ["extra-key", "target", "ownership", "duplicate", "omission"] as const) {
+      const result = withTemporaryCorpus((document) => {
+        const qualification = document.qualification;
+        if (mutation === "extra-key") Object.assign(qualification, { qualified: true });
+        if (mutation === "target") qualification.hardwareTargets.pop();
+        if (mutation === "ownership") qualification.suites[0].coverage[0].lessonId = "typed-vecadd";
+        if (mutation === "duplicate") qualification.suites[0].coverage.push(structuredClone(qualification.suites[0].coverage[0]));
+        if (mutation === "omission") qualification.suites = qualification.suites.filter((suite) =>
+          suite.gate !== "semantic-simulation" || !suite.coverage.some((coverage) => coverage.fixtureIds.includes("gfx942-fill-simulation")));
+        return [];
+      });
+      expect(result.status, mutation).toBe(1);
+      expect(result.stderr, mutation).toContain({
+        "extra-key": "qualification keys differ",
+        target: "hardware targets differ",
+        ownership: "crosses fixture lesson ownership",
+        duplicate: "duplicates qualification coverage",
+        omission: "omits semantic-simulation coverage",
+      }[mutation]);
+    }
+  });
+
+  it("retains every closed shared schema and its exact raw-byte digest", () => {
+    for (const name of sharedSchemaNames) {
+      const bytes = readFileSync(resolve("config", name));
+      const record = readFileSync(resolve("config", name.replace(/\.json$/u, ".sha256")), "ascii");
+      expect(record).toBe(`${digest(bytes)}  config/${name}\n`);
+      expect(JSON.parse(bytes.toString("utf8"))).toMatchObject({
+        $schema: "https://json-schema.org/draft/2020-12/schema", type: "object", additionalProperties: false,
+      });
+    }
+    expect(manifestSchemaDocument.$defs.qualification.properties.suites.items.$ref).toBe("#/$defs/qualificationSuite");
+    expect(manifestSchemaDocument.$defs.qualification.properties.hardwareTargets.items.$ref).toBe("#/$defs/qualificationHardwareTarget");
+    expect(capabilityBatchSchemaDocument.properties.manifest.required).toEqual(["corpusContractSha256", "path", "rawSha256"]);
+    expect(manifestSchemaDocument.$defs.productionEvidence.properties.proofObligationSetSha256.description)
+      .toContain("not the raw archive-object SHA-256 or property-list digest");
   });
 
   it("covers the complete semantic and operator lesson union", () => {
@@ -795,7 +1006,7 @@ describe("production compiler tutorial corpus", () => {
       siteEvidenceKind: "compiler-checked",
       classification: "legacy-compiler-produced",
       compilerFixtureIds: ["gfx942-moe-top2"],
-      requiredGates: ["production-compile", "cpu-reference", "hardware"],
+      requiredGates: ["cpu-reference", "hardware", "production-compile", "semantic-simulation"],
     });
   });
 
@@ -1119,7 +1330,7 @@ describe("production compiler tutorial corpus", () => {
         digestPath,
         "--baseline-report",
         resolve(directory, "raw-report.json"),
-      ], { encoding: "utf8" });
+      ], { encoding: "utf8", env: isolatedEnvironment });
       expect(result.status).toBe(1);
       expect(result.stderr).toContain("requires explicit --raw-artifacts");
     } finally {
@@ -1403,7 +1614,6 @@ describe("production compiler tutorial corpus", () => {
     const result = withTemporaryCorpus((document) => {
       const entry = document.entries.find((candidate) => candidate.lessonId === "typed-vecadd")!;
       entry.classification = "compiler-produced";
-      entry.requiredGates.push("semantic-simulation");
       return [];
     });
     expect(result.status).toBe(1);

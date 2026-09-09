@@ -29,9 +29,11 @@ is covered by an exact gfx942 fixture on the pre-capability route. That history
 does not establish issue #272 capability closure. Every current kernel record
 therefore says `not-produced` for closure, `legacy-only` for the production
 capability path and backend row, and `missing` for production capability
-negative coverage. Existing simulator and hardware scripts are recorded as
-`available-legacy-only`; their presence is neither capability qualification nor
-a fallback. The manifest sets `allowsLegacyFallback` to `false`.
+negative coverage. Hardware transport is registered as
+`available-authenticated-unobserved`, without a signed target-matched result.
+Capability-path simulator commands remain unavailable. Separate CPU-reference
+and simulation suites do not establish capability qualification or a fallback.
+The manifest sets `allowsLegacyFallback` to `false`.
 
 The reserved `compiler-produced` classification now means materially more than
 "a compiler emitted an artifact": the exact final optimized KIR must have a

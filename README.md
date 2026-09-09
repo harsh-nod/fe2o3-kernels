@@ -50,10 +50,11 @@ The checked-in manifest is in **migration**, not capability-qualified production
 | Production capability negative coverage | missing |
 | Legacy fallback | forbidden |
 
-Existing simulator and hardware commands are recorded as
-available-legacy-only. They remain useful evidence, but they do not establish
-the new typed capability path. The reserved compiler-produced classification
-requires a complete final KIR V13 capability closure, exact W4 final-graph analysis,
+The hardware commands are registered as `available-authenticated-unobserved`:
+the transport exists, but no signed target-matched result is published.
+Capability-path simulator commands remain unavailable; separate CPU-reference
+and simulation suites do not establish that path. The reserved `compiler-produced`
+classification requires a complete final KIR V13 capability closure, exact W4 final-graph analysis,
 target decision, artifact inspection, simulator evidence, target-matched
 hardware evidence where required, and negative fixtures. Qualification is
 atomic across the corpus.

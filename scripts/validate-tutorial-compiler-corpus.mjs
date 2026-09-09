@@ -234,10 +234,14 @@ const FIXTURE_INPUT_DIGEST_DOMAIN = Buffer.from(
   "fe2o3-tutorial-fixture-compiler-input-v1\0",
   "ascii",
 );
-const PROOF_OBLIGATION_DIGEST_DOMAIN = Buffer.from(
-  "fe2o3-tutorial-capability-proof-obligations-v1\0",
-  "ascii",
-);
+const HARDWARE_PROTOCOL_ENVIRONMENT = "FE2O3_TUTORIAL_HARDWARE_PROTOCOL=authenticated-v1";
+const UNOBSERVED_HARDWARE_REASON = "awaiting-signed-target-matched-hardware-observation";
+const CONTENT_ADDRESSED_SCHEMAS = [
+  ["tutorial-kernel-manifest-schema-v1.json", "tutorial-kernel-manifest-v1.json"],
+  ["tutorial-semantic-expectation-schema-v1.json", "tutorial-semantic-expectation-v1.json"],
+  ["tutorial-semantic-qualification-evidence-schema-v1.json", "tutorial-semantic-qualification-evidence-v1.json"],
+  ["tutorial-capability-qualification-batch-schema-v1.json", "tutorial-capability-qualification-batch-v1.json"],
+];
 const NEGATIVE_FIXTURE_DIGEST_DOMAIN = Buffer.from(
   "fe2o3-tutorial-capability-negative-fixtures-v1\0",
   "ascii",
@@ -469,8 +473,12 @@ function validateFixture(rawFixture, index, fixtureById, testIds, matrixCases) {
     }
     const arguments_ = stringArray(matrix.runnerArguments, `${label}.matrix.runnerArguments`);
     const environment = stringArray(matrix.environment, `${label}.matrix.environment`);
-    if (arguments_.length > 1 || environment.length > 1) {
+    const variantEnvironment = environment.filter((value) => value !== HARDWARE_PROTOCOL_ENVIRONMENT);
+    if (arguments_.length > 1 || variantEnvironment.length > 1) {
       fail(`${label}.matrix exceeds the v1 argument/environment bounds`);
+    }
+    if (!environment.includes(HARDWARE_PROTOCOL_ENVIRONMENT)) {
+      fail(`${label}.matrix bypasses authenticated hardware transport`);
     }
     for (const value of [...arguments_, ...environment]) {
       if (/[|\r\n]/u.test(value)) fail(`${label}.matrix contains a record delimiter`);
@@ -585,6 +593,7 @@ function validateCommandValue(value, label) {
 function validateCapabilityCommand(value, label) {
   const record = exactKeys(value, CAPABILITY_COMMAND_KEYS, label);
   const statuses = new Set([
+    "available-authenticated-unobserved",
     "available-legacy-only",
     "capability-path-qualified",
     "unavailable",
@@ -605,11 +614,19 @@ function validateCapabilityCommand(value, label) {
     return record;
   }
   validateCommandValue(record.command, `${label}.command`);
-  if (record.status === "available-legacy-only") {
+  if (record.status === "available-legacy-only" || record.status === "available-authenticated-unobserved") {
     if (record.evidenceSha256 !== null || record.subjectSha256 !== null) {
-      fail(`${label} legacy status cannot carry capability subject or evidence`);
+      fail(`${label} unqualified status cannot carry capability subject or evidence`);
     }
     string(record.reasonCode, `${label}.reasonCode`);
+    if (record.status === "available-authenticated-unobserved") {
+      if (record.reasonCode !== UNOBSERVED_HARDWARE_REASON) {
+        fail(`${label} has an invalid authenticated-unobserved reason`);
+      }
+      if (!record.command.environment.includes(HARDWARE_PROTOCOL_ENVIRONMENT)) {
+        fail(`${label} bypasses the authenticated hardware protocol`);
+      }
+    }
   } else {
     if (!SHA256.test(record.evidenceSha256)) fail(`${label} qualified status requires evidence`);
     if (!SHA256.test(record.subjectSha256)) fail(`${label} qualified status requires an exact subject`);
@@ -671,6 +688,81 @@ function expectedHardwareCommand(fixture) {
     workingDirectory: ".",
     timeoutSeconds: 1200,
   };
+}
+
+function validateQualification(value, entries, fixtureById, qualified) {
+  const qualification = exactKeys(value, ["evidenceSchemaPath", "hardwareTargets", "suites"], "qualification");
+  if (qualification.evidenceSchemaPath !== "config/tutorial-semantic-qualification-evidence-schema-v1.json") {
+    fail("qualification names the wrong semantic evidence schema");
+  }
+  if (!Array.isArray(qualification.hardwareTargets) || qualification.hardwareTargets.length === 0) {
+    fail("qualification.hardwareTargets must be a nonempty array");
+  }
+  const targets = new Set();
+  for (const [index, raw] of qualification.hardwareTargets.entries()) {
+    const label = `qualification.hardwareTargets[${index}]`;
+    const record = exactKeys(raw, qualified
+      ? ["lane", "status", "target"]
+      : ["deterministicSemanticRunnerAvailability", "reason", "target"], label);
+    if (targets.has(record.target)) fail(`${label} duplicates a hardware target`);
+    targets.add(string(record.target, `${label}.target`));
+    if (qualified) {
+      if (record.status !== "required-qualified") fail(`${label} is not required-qualified`);
+      string(record.lane, `${label}.lane`);
+    } else {
+      if (record.deterministicSemanticRunnerAvailability !== "unavailable") {
+        fail(`${label} claims hardware availability without qualification`);
+      }
+      string(record.reason, `${label}.reason`);
+    }
+  }
+  const expectedTargets = new Set([...fixtureById.values()].map((fixture) => fixture.target));
+  if (targets.size !== expectedTargets.size || [...targets].some((target) => !expectedTargets.has(target))) {
+    fail("qualification hardware targets differ from compiler fixture targets");
+  }
+  if (!Array.isArray(qualification.suites) || qualification.suites.length === 0) {
+    fail("qualification.suites must be a nonempty array");
+  }
+  const entryById = new Map(entries.map((entry) => [entry.lessonId, entry]));
+  const fixtureIds = new Set(fixtureById.keys());
+  const ids = new Set();
+  const covered = new Set();
+  for (const [index, raw] of qualification.suites.entries()) {
+    const label = `qualification.suites[${index}]`;
+    const suite = exactKeys(raw, ["availability", "command", "coverage", "gate", "suiteId", "unavailableReason"], label);
+    if (!SLUG.test(suite.suiteId) || ids.has(suite.suiteId)) fail(`${label}.suiteId is invalid or duplicated`);
+    ids.add(suite.suiteId);
+    if (!["cpu-reference", "semantic-simulation"].includes(suite.gate)) fail(`${label}.gate is invalid`);
+    if (suite.availability === "available") {
+      validateCommandValue(suite.command, `${label}.command`);
+      if (suite.unavailableReason !== null) fail(`${label} is available but carries an unavailable reason`);
+    } else if (suite.availability === "unavailable") {
+      if (suite.command !== null) fail(`${label} is unavailable but carries a command`);
+      string(suite.unavailableReason, `${label}.unavailableReason`);
+    } else fail(`${label}.availability is invalid`);
+    if (!Array.isArray(suite.coverage) || suite.coverage.length === 0) fail(`${label}.coverage must be nonempty`);
+    for (const [offset, rawCoverage] of suite.coverage.entries()) {
+      const coverageLabel = `${label}.coverage[${offset}]`;
+      const coverage = exactKeys(rawCoverage, ["fixtureIds", "lessonId"], coverageLabel);
+      const entry = entryById.get(coverage.lessonId);
+      if (!entry) fail(`${coverageLabel} names unknown lesson`);
+      const fixtures = sortedVocabulary(coverage.fixtureIds, fixtureIds, `${coverageLabel}.fixtureIds`);
+      for (const fixtureId of fixtures) {
+        if (!entry.compilerFixtureIds.includes(fixtureId)) fail(`${coverageLabel} crosses fixture lesson ownership`);
+        const key = JSON.stringify([suite.gate, coverage.lessonId, fixtureId]);
+        if (covered.has(key)) fail(`${coverageLabel} duplicates qualification coverage`);
+        covered.add(key);
+      }
+    }
+  }
+  for (const entry of entries) {
+    if (!entry.requiredGates.includes("semantic-simulation")) continue;
+    for (const fixtureId of entry.compilerFixtureIds) {
+      if (!covered.has(JSON.stringify(["semantic-simulation", entry.lessonId, fixtureId]))) {
+        fail(`qualification omits semantic-simulation coverage for ${entry.lessonId}/${fixtureId}`);
+      }
+    }
+  }
 }
 
 function validateNegativeCoverage(value, label) {
@@ -759,15 +851,8 @@ function validateProofRequirements(value, requiredProperties, label) {
   if ((proof.status === "complete") !== hasEvidence) {
     fail(`${label} status and exact proof identities are stale`);
   }
-  if (
-    proof.status === "complete" &&
-    proof.obligationSetSha256 !== canonicalRecordSha256(
-      PROOF_OBLIGATION_DIGEST_DOMAIN,
-      properties,
-    )
-  ) {
-    fail(`${label}.obligationSetSha256 is stale against properties`);
-  }
+  // This is the typed obligation-set identity, not a hash of property names.
+  // Its exact join to production evidence is checked by validateCapabilityKernel.
   return proof;
 }
 
@@ -945,12 +1030,10 @@ function validateCapabilityKernel(rawKernel, index, context) {
     fail(`${label}.simulatorCommand target does not match the compiler fixture`);
   }
   const expectedSimulator = expectedSimulatorCommands(context.root, lessonIds, fixtureId);
-  if (simulator.command === null) {
-    if (expectedSimulator.length !== 0) fail(`${label}.simulatorCommand omits the registered command`);
-  } else if (
+  if (simulator.command !== null && (
     expectedSimulator.length !== 1 ||
     JSON.stringify(simulator.command) !== JSON.stringify(expectedSimulator[0])
-  ) fail(`${label}.simulatorCommand is stale against qualification.suites`);
+  )) fail(`${label}.simulatorCommand is stale against qualification.suites`);
   const hardware = validateCapabilityCommand(kernel.hardwareCommand, `${label}.hardwareCommand`);
   if (hardware.target !== fixture.target) {
     fail(`${label}.hardwareCommand target does not match the compiler fixture`);
@@ -1064,6 +1147,10 @@ function validateManifest(document) {
   }
   const staleFixtures = fixtureIds.filter((fixtureId) => !referencedFixtures.has(fixtureId));
   if (staleFixtures.length !== 0) fail(`stale compiler fixture IDs: ${staleFixtures.join(", ")}`);
+  if (baseline.status === "qualified" && capabilityContract.status !== "qualified") {
+    fail("qualified baseline requires a qualified capability contract; legacy fallback is forbidden");
+  }
+  validateQualification(root.qualification, entries, fixtureById, baseline.status === "qualified");
 
   if (!Array.isArray(root.capabilityKernels) || root.capabilityKernels.length === 0) {
     fail("capabilityKernels must be a nonempty array");
@@ -1103,13 +1190,12 @@ function validateManifest(document) {
   return { baseline, capabilityByFixture, capabilityContract, contract, entries, fixtureById };
 }
 
-function validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot) {
-  const [expected, recordedPath, ...extra] = readFileSync(digestPath, "ascii").trimEnd().split("  ");
-  if (extra.length !== 0 || !SHA256.test(expected)) fail("manifest digest record is malformed");
+function validateDigest(manifestPath, digestBytes, manifestBytes, manifestDocument, repositoryRoot) {
   const expectedPath = relative(repositoryRoot, manifestPath).replaceAll("\\", "/");
-  if (recordedPath !== expectedPath) fail("manifest digest record names the wrong path");
   const actual = sha256(manifestBytes);
-  if (actual !== expected) fail(`manifest digest mismatch: expected ${expected}, got ${actual}`);
+  if (!digestBytes.equals(Buffer.from(`${actual}  ${expectedPath}\n`, "ascii"))) {
+    fail("manifest digest mismatch or noncanonical digest record");
+  }
   let corpusContractSha256;
   try {
     corpusContractSha256 = tutorialCorpusContractSha256(manifestDocument);
@@ -1119,20 +1205,21 @@ function validateDigest(manifestPath, digestPath, manifestBytes, manifestDocumen
   return { rawSha256: actual, corpusContractSha256 };
 }
 
-function validateManifestSchema(schemaPath, digestPath, repositoryRoot) {
+function validateContentAddressedSchema(schemaPath, digestPath, schemaIdentity, repositoryRoot) {
   const bytes = readFileSync(schemaPath);
   const schema = JSON.parse(bytes.toString("utf8"));
   if (
     schema.$schema !== "https://json-schema.org/draft/2020-12/schema" ||
-    schema.$id !== "https://harsh-nod.github.io/fe2o3-kernels/schema/tutorial-kernel-manifest-v1.json" ||
+    schema.$id !== `https://harsh-nod.github.io/fe2o3-kernels/schema/${schemaIdentity}` ||
     schema.type !== "object" ||
     schema.additionalProperties !== false
-  ) fail("tutorial kernel manifest schema identity or closed-root contract differs");
-  const [expected, recordedPath, ...extra] = readFileSync(digestPath, "ascii").trimEnd().split("  ");
-  if (extra.length !== 0 || !SHA256.test(expected)) fail("manifest schema digest record is malformed");
+  ) fail(`${schemaIdentity} schema identity or closed-root contract differs`);
+  const digestBytes = readFileSync(digestPath);
   const expectedPath = relative(repositoryRoot, schemaPath).replaceAll("\\", "/");
-  if (recordedPath !== expectedPath) fail("manifest schema digest record names the wrong path");
-  if (sha256(bytes) !== expected) fail("manifest schema digest mismatch");
+  if (!digestBytes.equals(Buffer.from(`${sha256(bytes)}  ${expectedPath}\n`, "ascii"))) {
+    fail(`${schemaIdentity} schema digest mismatch or noncanonical digest record`);
+  }
+  return { bytes, digestBytes };
 }
 
 function gitBytes(repository, arguments_, label) {
@@ -1146,7 +1233,7 @@ function gitBytes(repository, arguments_, label) {
   return result.stdout;
 }
 
-function validateCompilerManifestParity(repositoryPath, manifestBytes, digestBytes, baseline) {
+function validateCompilerManifestParity(repositoryPath, sharedFiles, baseline) {
   const repository = resolve(repositoryPath);
   let metadata;
   try {
@@ -1160,10 +1247,7 @@ function validateCompilerManifestParity(repositoryPath, manifestBytes, digestByt
   const head = gitBytes(repository, ["rev-parse", "--verify", "HEAD"], "compiler HEAD")
     .toString("ascii").trimEnd();
   if (!GIT_ID.test(head)) fail("compiler repository HEAD is malformed");
-  for (const [path, expected] of [
-    ["config/tutorial-kernel-manifest-v1.json", manifestBytes],
-    ["config/tutorial-kernel-manifest-v1.sha256", digestBytes],
-  ]) {
+  for (const [path, expected] of sharedFiles) {
     const observed = gitBytes(repository, ["show", `${head}:${path}`], path);
     if (!observed.equals(expected)) {
       fail(`site ${path} differs byte-for-byte from compiler ${head}:${path}`);
@@ -1517,20 +1601,31 @@ function main() {
   const manifest = validateManifest(manifestDocument);
   const digestPath = resolve(arguments_.digest ?? (manifestPath.endsWith(".json") ? `${manifestPath.slice(0, -5)}.sha256` : `${manifestPath}.sha256`));
   const digestBytes = readFileSync(digestPath);
-  const manifestDigests = validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot);
-  const manifestSchemaPath = resolve(
-    arguments_.manifestSchema ?? resolve(repositoryRoot, "config/tutorial-kernel-manifest-schema-v1.json"),
-  );
-  const manifestSchemaDigestPath = resolve(
-    arguments_.manifestSchemaDigest ?? resolve(repositoryRoot, "config/tutorial-kernel-manifest-schema-v1.sha256"),
-  );
-  validateManifestSchema(manifestSchemaPath, manifestSchemaDigestPath, repositoryRoot);
+  const manifestDigests = validateDigest(manifestPath, digestBytes, manifestBytes, manifestDocument, repositoryRoot);
+  const sharedFiles = new Map([
+    ["config/tutorial-kernel-manifest-v1.json", manifestBytes],
+    ["config/tutorial-kernel-manifest-v1.sha256", digestBytes],
+  ]);
+  for (const [name, identity] of CONTENT_ADDRESSED_SCHEMAS) {
+    const isManifestSchema = name === "tutorial-kernel-manifest-schema-v1.json";
+    const digestName = name.replace(/\.json$/u, ".sha256");
+    const schemaPath = resolve(
+      (isManifestSchema && arguments_.manifestSchema) || resolve(repositoryRoot, "config", name),
+    );
+    const schemaDigestPath = resolve(
+      (isManifestSchema && arguments_.manifestSchemaDigest) || resolve(repositoryRoot, "config", digestName),
+    );
+    const { bytes, digestBytes: schemaDigestBytes } = validateContentAddressedSchema(
+      schemaPath, schemaDigestPath, identity, repositoryRoot,
+    );
+    sharedFiles.set(`config/${name}`, bytes);
+    sharedFiles.set(`config/${digestName}`, schemaDigestBytes);
+  }
   const compilerRepository = arguments_.compilerRepository ?? process.env.FE2O3_COMPILER_REPOSITORY;
   if (compilerRepository) {
     validateCompilerManifestParity(
       compilerRepository,
-      manifestBytes,
-      digestBytes,
+      sharedFiles,
       manifest.baseline,
     );
   }

@@ -316,12 +316,12 @@ export function GpuCapabilitiesPage() {
             <dd>{page.manifest.canonicalPaths} / {page.manifest.fixtures}</dd>
           </div>
           <div>
-            <dt>Legacy simulator</dt>
-            <dd>{page.manifest.legacySimulator} / {page.manifest.fixtures}</dd>
+            <dt>Qualified simulator</dt>
+            <dd>{page.manifest.qualifiedSimulator} / {page.manifest.fixtures}</dd>
           </div>
           <div>
-            <dt>Legacy hardware</dt>
-            <dd>{page.manifest.legacyHardware} / {page.manifest.fixtures}</dd>
+            <dt>Pending hardware</dt>
+            <dd>{page.manifest.pendingHardware} / {page.manifest.fixtures}</dd>
           </div>
         </dl>
 
