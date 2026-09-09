@@ -1,0 +1,625 @@
+.gpu-capabilities-page {
+  width: min(100%, 1120px);
+}
+
+.gpu-capabilities-header h1 {
+  max-width: 860px;
+}
+
+.gpu-capabilities-boundary {
+  max-width: 900px !important;
+  padding: 12px 14px;
+  margin-top: 20px !important;
+  color: var(--muted) !important;
+  background: var(--amber-soft);
+  border-left: 3px solid var(--amber);
+  font-size: 0.76rem !important;
+  line-height: 1.55 !important;
+}
+
+.gpu-capabilities-boundary strong {
+  color: var(--text-strong);
+}
+
+.gpu-capabilities-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-toc a,
+.gpu-capabilities-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--accent-strong);
+  font-size: 0.72rem;
+  font-weight: 750;
+  text-decoration: none;
+}
+
+.gpu-capabilities-toc a:hover,
+.gpu-capabilities-actions a:hover,
+.gpu-capabilities-sources a:hover {
+  text-decoration: underline;
+}
+
+.gpu-capabilities-status {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 20px 0 0;
+  border-top: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.gpu-capabilities-manifest-summary {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.gpu-capabilities-status > div {
+  min-width: 0;
+  padding: 12px;
+  border-right: 1px solid var(--border);
+}
+
+.gpu-capabilities-status > div:last-child {
+  border-right: 0;
+}
+
+.gpu-capabilities-status dt,
+.gpu-capabilities-assurance dt {
+  color: var(--faint);
+  font-size: 0.61rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gpu-capabilities-status dd {
+  margin: 6px 0 0;
+  color: var(--text-strong);
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.gpu-capabilities-pipeline {
+  padding: 0;
+  margin: 22px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.gpu-capabilities-pipeline > li {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 14px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-stage-number,
+.gpu-capabilities-launch > li > span {
+  color: var(--accent-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.gpu-capabilities-pipeline header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gpu-capabilities-pipeline h3,
+.gpu-capabilities-code h3,
+.gpu-capabilities-type-list h3,
+.gpu-capabilities-assurance h3 {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 0.86rem;
+}
+
+.gpu-capabilities-pipeline p,
+.gpu-capabilities-code > p,
+.gpu-capabilities-type-list dd,
+.gpu-capabilities-assurance dd,
+.gpu-capabilities-launch p,
+.gpu-capabilities-unavailable li {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.58;
+}
+
+.gpu-capabilities-pipeline p {
+  margin: 8px 0 0;
+}
+
+.gpu-capabilities-pipeline small {
+  display: block;
+  margin-top: 8px;
+  color: var(--faint);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.62rem;
+}
+
+.gpu-capabilities-state {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 3px 7px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  font-size: 0.61rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.gpu-capabilities-state.implemented-contract {
+  color: var(--green);
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--green) 42%, var(--border));
+}
+
+.gpu-capabilities-state.component-only {
+  color: var(--blue);
+  background: var(--blue-soft);
+  border-color: color-mix(in srgb, var(--blue) 42%, var(--border));
+}
+
+.gpu-capabilities-state.unavailable {
+  color: var(--red);
+  background: var(--red-soft);
+  border-color: color-mix(in srgb, var(--red) 42%, var(--border));
+}
+
+.gpu-capabilities-gate strong {
+  margin-right: 5px;
+  color: var(--text-strong);
+}
+
+.gpu-capabilities-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px 20px;
+  margin-top: 16px;
+}
+
+.gpu-capabilities-equation {
+  padding: 12px 14px;
+  margin: 18px 0 0;
+  overflow-x: auto;
+  color: var(--text-strong);
+  background: var(--surface-2);
+  border-left: 3px solid var(--accent);
+  font-size: 0.75rem;
+}
+
+.gpu-capabilities-runs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 22px;
+  border-top: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.gpu-capabilities-runs > section {
+  min-width: 0;
+  padding: 14px;
+}
+
+.gpu-capabilities-runs > section + section {
+  border-left: 1px solid var(--border);
+}
+
+.gpu-capabilities-runs h3,
+.gpu-capabilities-ledger h3,
+.gpu-capabilities-requirements h3,
+.gpu-capabilities-example-state h3,
+.gpu-capabilities-gaps-heading {
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 0.78rem;
+}
+
+.gpu-capabilities-runs p {
+  margin: 9px 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.55;
+}
+
+.gpu-capabilities-command {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  color: var(--text-strong) !important;
+}
+
+.gpu-capabilities-command svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--accent-strong);
+}
+
+.gpu-capabilities-command code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.gpu-capabilities-code {
+  margin-top: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gpu-capabilities-code > header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 13px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--border-strong);
+}
+
+.gpu-capabilities-code > header span {
+  color: var(--faint);
+  font-size: 0.63rem;
+}
+
+.gpu-capabilities-code pre {
+  max-height: 460px;
+  padding: 16px;
+  margin: 0;
+  overflow: auto;
+  color: var(--code-text);
+  background: var(--code-bg);
+  font-size: 0.7rem;
+  line-height: 1.55;
+}
+
+.gpu-capabilities-code > p {
+  padding: 12px 14px;
+  margin: 0;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.gpu-capabilities-type-list {
+  padding-top: 26px;
+}
+
+.gpu-capabilities-type-list > dl {
+  margin: 12px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.gpu-capabilities-type-list > dl > div {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.75fr) minmax(0, 1.25fr);
+  gap: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-type-list dt,
+.gpu-capabilities-type-list dd {
+  min-width: 0;
+  margin: 0;
+}
+
+.gpu-capabilities-type-list code,
+.gpu-capabilities-table code {
+  color: var(--blue);
+  font-size: 0.67rem;
+  overflow-wrap: anywhere;
+}
+
+.gpu-capabilities-sources {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 16px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.gpu-capabilities-sources a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 14px;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px 12px;
+  color: var(--text);
+  background: var(--surface);
+  text-decoration: none;
+}
+
+.gpu-capabilities-sources code {
+  min-width: 0;
+  font-size: 0.62rem;
+  overflow-wrap: anywhere;
+}
+
+.gpu-capabilities-table-wrap {
+  margin-top: 18px;
+  overflow-x: auto;
+}
+
+.gpu-capabilities-table {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.gpu-capabilities-table th,
+.gpu-capabilities-table td {
+  padding: 11px;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+
+.gpu-capabilities-table thead th {
+  color: var(--faint);
+  background: var(--surface-2);
+  font-size: 0.61rem;
+  text-transform: uppercase;
+}
+
+.gpu-capabilities-table tbody th {
+  width: 90px;
+  color: var(--text-strong);
+}
+
+.gpu-capabilities-w4-table th:first-child,
+.gpu-capabilities-w4-table td:first-child {
+  width: 52px;
+}
+
+.gpu-capabilities-w4-table th:nth-child(2) {
+  width: 160px;
+}
+
+.gpu-capabilities-table td {
+  color: var(--muted);
+}
+
+.gpu-capabilities-assurance {
+  margin-top: 18px;
+  border-top: 1px solid var(--border-strong);
+}
+
+.gpu-capabilities-assurance > section {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.35fr) minmax(0, 1.65fr);
+  gap: 18px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-assurance > section > div > small {
+  display: block;
+  margin-top: 5px;
+  color: var(--faint);
+  font-size: 0.62rem;
+  line-height: 1.45;
+}
+
+.gpu-capabilities-assurance dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0;
+}
+
+.gpu-capabilities-ledger {
+  padding-top: 24px;
+}
+
+.gpu-capabilities-ledger > ol,
+.gpu-capabilities-target-flow {
+  padding: 0;
+  margin: 12px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.gpu-capabilities-ledger li,
+.gpu-capabilities-target-flow li {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-ledger li > span,
+.gpu-capabilities-target-flow li > span {
+  color: var(--accent-strong);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.67rem;
+  font-weight: 800;
+}
+
+.gpu-capabilities-ledger li > p,
+.gpu-capabilities-target-flow li > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.gpu-capabilities-requirements {
+  padding-top: 24px;
+}
+
+.gpu-capabilities-requirements ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+  margin: 12px 0 0;
+  list-style: none;
+  background: var(--border);
+}
+
+.gpu-capabilities-requirements li {
+  min-width: 0;
+  padding: 8px 10px;
+  color: var(--blue);
+  background: var(--surface);
+  font-size: 0.64rem;
+  overflow-wrap: anywhere;
+}
+
+.gpu-capabilities-example-state {
+  margin-top: 24px;
+}
+
+.gpu-capabilities-example-state dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 12px 0 0;
+  border-top: 1px solid var(--border);
+}
+
+.gpu-capabilities-example-state dl > div {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.8fr) minmax(0, 1.2fr);
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-example-state dl > div:nth-child(odd) {
+  border-right: 1px solid var(--border);
+}
+
+.gpu-capabilities-example-state dt {
+  color: var(--faint);
+  font-size: 0.64rem;
+}
+
+.gpu-capabilities-example-state dd {
+  min-width: 0;
+  margin: 0;
+  color: var(--text-strong);
+  font-size: 0.66rem;
+  overflow-wrap: anywhere;
+}
+
+.gpu-capabilities-gaps-heading {
+  margin-top: 26px;
+}
+
+.gpu-capabilities-assurance dd {
+  margin: 5px 0 0;
+}
+
+.gpu-capabilities-launch {
+  padding: 0;
+  margin: 18px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.gpu-capabilities-launch > li {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-launch p {
+  margin: 0;
+}
+
+.gpu-capabilities-unavailable {
+  padding: 0;
+  margin: 18px 0 0;
+  list-style: none;
+  border-top: 1px solid var(--border);
+}
+
+.gpu-capabilities-unavailable li {
+  position: relative;
+  padding: 12px 8px 12px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.gpu-capabilities-unavailable li::before {
+  position: absolute;
+  top: 18px;
+  left: 7px;
+  width: 6px;
+  height: 2px;
+  content: "";
+  background: var(--red);
+}
+
+@media (max-width: 900px) {
+  .gpu-capabilities-status,
+  .gpu-capabilities-assurance dl {
+    grid-template-columns: 1fr;
+  }
+
+  .gpu-capabilities-status > div {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .gpu-capabilities-status > div:last-child {
+    border-bottom: 0;
+  }
+
+  .gpu-capabilities-assurance > section {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .gpu-capabilities-assurance dl {
+    gap: 10px;
+  }
+
+  .gpu-capabilities-requirements ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .gpu-capabilities-type-list > dl > div,
+  .gpu-capabilities-sources,
+  .gpu-capabilities-runs,
+  .gpu-capabilities-example-state dl,
+  .gpu-capabilities-requirements ul {
+    grid-template-columns: 1fr;
+  }
+
+  .gpu-capabilities-runs > section + section,
+  .gpu-capabilities-example-state dl > div:nth-child(odd) {
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .gpu-capabilities-pipeline > li {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .gpu-capabilities-state {
+    white-space: normal;
+  }
+}

@@ -10,6 +10,7 @@ import {
   setupPaths,
 } from "../content/learning-hub";
 import { narrativeEntry } from "../content/narrative-registry";
+import { gpuCapabilitiesPage } from "../content/gpu-capabilities";
 import { operatorCookbook } from "../content/operator-cookbook";
 import { semanticEquivalencePage } from "../content/semantic-equivalence";
 import { authorFacingCode } from "./kernel-authoring";
@@ -99,6 +100,59 @@ export function searchCatalog(
   }
 
   const results: Array<SearchResult & { score: number }> = [];
+  const capabilityPageBody = [
+    "GPU capabilities KernelContext KIR V13 exact W4 Checked versus Proven safe launch dynamic precondition target closure machine refinement",
+    gpuCapabilitiesPage.summary,
+    gpuCapabilitiesPage.status.contract,
+    gpuCapabilitiesPage.status.milestone,
+    gpuCapabilitiesPage.status.corpus,
+    gpuCapabilitiesPage.status.boundary,
+    ...gpuCapabilitiesPage.pipeline.flatMap((stage) => [
+      stage.label,
+      stage.owner,
+      stage.current,
+      stage.gate,
+    ]),
+    gpuCapabilitiesPage.workedExample.title,
+    gpuCapabilitiesPage.workedExample.summary,
+    gpuCapabilitiesPage.workedExample.sourceExcerpt,
+    gpuCapabilitiesPage.workedExample.kirExcerpt,
+    ...gpuCapabilitiesPage.workedExample.typeFacts.flatMap((fact) => [
+      fact.capability,
+      fact.meaning,
+    ]),
+    ...gpuCapabilitiesPage.obligations.flatMap((obligation) => [
+      obligation.name,
+      obligation.question,
+      obligation.gemmApplication,
+    ]),
+    ...gpuCapabilitiesPage.assurance.flatMap((layer) => [
+      layer.term,
+      layer.producer,
+      layer.establishes,
+      layer.doesNotEstablish,
+    ]),
+    ...gpuCapabilitiesPage.targetFlow,
+    ...gpuCapabilitiesPage.safeLaunch,
+    ...gpuCapabilitiesPage.unavailableJoins,
+  ].join(" ");
+  const capabilityPageScore = matchScore(
+    terms,
+    gpuCapabilitiesPage.title,
+    capabilityPageBody,
+  );
+  if (capabilityPageScore !== null) {
+    results.push({
+      id: "page-gpu-capabilities",
+      kind: "page",
+      title: gpuCapabilitiesPage.title,
+      context:
+        "Tiled GEMM from ordinary Rust through KIR V13, exact W4, target and machine refinement, evidence, and safe launch",
+      href: "/gpu-capabilities",
+      lessonId: gpuCapabilitiesPage.workedExample.lessonId,
+      score: capabilityPageScore + 3,
+    });
+  }
   const launchPageBody = [
     "start here run today hardware smoke learning tracks setup paths contribution workflow",
     ...learningTracks.flatMap((track) => [

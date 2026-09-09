@@ -14,6 +14,7 @@ import baselineSchemaDocument from "../config/tutorial-compiler-baseline-report-
 import thresholdSchemaDocument from "../config/tutorial-compiler-no-regression-threshold-schema-v1.json";
 import hardwareSchemaDocument from "../config/tutorial-gfx942-hardware-evidence-schema-v1.json";
 import qualificationRecordSchemaDocument from "../config/tutorial-compiler-qualification-record-schema-v1.json";
+import manifestSchemaDocument from "../config/tutorial-kernel-manifest-schema-v1.json";
 import manifestDocument from "../config/tutorial-kernel-manifest-v1.json";
 import { tutorialCorpusContractSha256 } from "../scripts/tutorial-corpus-contract.mjs";
 import { lessons } from "../src/content/curriculum";
@@ -45,6 +46,34 @@ type Entry = {
   requiredGates: string[];
 };
 
+type CapabilityKernel = {
+  fixtureId: string;
+  kernelSymbol: string;
+  lessonIds: string[];
+  capabilityClosure: {
+    requirements: string[];
+    sha256: string | null;
+    status: "complete" | "incomplete" | "not-produced" | "unsupported";
+  };
+  productionCapabilityPath: {
+    evidence: Record<string, string> | null;
+    path: "canonical-capability" | "legacy" | "none" | string;
+    status: "complete" | "incomplete" | "legacy-only" | "unsupported" | string;
+  };
+  proofRequirements: {
+    checkerSha256: string | null;
+    evidenceSha256: string | null;
+    obligationSetSha256: string | null;
+    properties: string[];
+    status: "complete" | "missing" | "unsupported" | string;
+  };
+  requiredProperties: string[];
+  targetMatrix: Array<Record<string, unknown>>;
+  simulatorCommand: Record<string, unknown>;
+  hardwareCommand: Record<string, unknown>;
+  negativeFixtureCoverage: { cases: unknown[]; status: string };
+};
+
 type Manifest = {
   schema: string;
   roadmapIssue: string;
@@ -60,6 +89,13 @@ type Manifest = {
     allowsPipelineSelection: boolean;
     allowsFallback: boolean;
   };
+  capabilityContract: {
+    roadmapIssue: string;
+    status: "migration" | "qualified";
+    allowsExactProfileFallback: boolean;
+    allowsLegacyFallback: boolean;
+  };
+  capabilityKernels: CapabilityKernel[];
   qualification: unknown;
   compilerFixtures: Fixture[];
   entries: Entry[];
@@ -309,6 +345,152 @@ function withTemporaryCorpus(
   }
 }
 
+function capabilityRecordDigest(domain: string, value: unknown) {
+  return createHash("sha256")
+    .update(Buffer.from(`${domain}\0`, "ascii"))
+    .update(JSON.stringify(canonicalValue(value)), "ascii")
+    .digest("hex");
+}
+
+function prepareCapabilityPromotion(
+  document: Manifest,
+  fixtureId = "gfx942-fill-simulation",
+) {
+  const fixture = document.compilerFixtures.find(
+    (candidate) => candidate.fixtureId === fixtureId,
+  );
+  const kernel = document.capabilityKernels.find(
+    (candidate) => candidate.fixtureId === fixtureId,
+  );
+  if (!fixture || !kernel) throw new Error(`missing capability fixture ${fixtureId}`);
+
+  for (const entry of document.entries.filter((candidate) =>
+    candidate.compilerFixtureIds.includes(fixtureId))) {
+    entry.classification = "compiler-produced";
+    entry.requiredGates = Array.from(new Set([
+      ...entry.requiredGates,
+      "hardware",
+      "production-compile",
+      "semantic-simulation",
+    ]));
+  }
+
+  const identity = (name: string) => digest(`capability:${fixtureId}:${name}`);
+  const closureSha256 = identity("closure");
+  const finalOptimizedKirSha256 = identity("final-kir");
+  const artifactSha256 = identity("artifact");
+  const targetCapabilityDecisionSha256 = identity("target-decision");
+  const targetIdentitySha256 = identity("target-identity");
+  const proofProperties = [
+    "capability-provenance",
+    "functional-refinement",
+    "machine-refinement",
+    "source-mir-kir-refinement",
+  ];
+  const proofObligationSetSha256 = capabilityRecordDigest(
+    "fe2o3-tutorial-capability-proof-obligations-v1",
+    proofProperties,
+  );
+  const proofCheckerSha256 = identity("proof-checker");
+  const proofEvidenceSha256 = identity("proof-evidence");
+  const negativeCategories = [
+    "abi",
+    "alias",
+    "bounds",
+    "capability-forgery",
+    "capability-substitution",
+    "evidence",
+    "host-invocation",
+    "initialization",
+    "launch",
+    "raw-pointer",
+    "stale-output",
+    "synchronization",
+    "target",
+    "unsupported-operation",
+  ];
+  const negativeCases = negativeCategories.map((category, index) => ({
+    category,
+    diagnosticCode: `FE2O3-CAP-${String(index + 1).padStart(3, "0")}`,
+    failureStage: "static-analysis",
+    fixtureId: `capability-negative-${index + 1}`,
+    testPath: `tests/capability-negative/${category}.rs`,
+  }));
+  const negativeFixtureSetSha256 = capabilityRecordDigest(
+    "fe2o3-tutorial-capability-negative-fixtures-v1",
+    { cases: negativeCases, fixtureId },
+  );
+
+  kernel.capabilityClosure = {
+    ...kernel.capabilityClosure,
+    sha256: closureSha256,
+    status: "complete",
+  };
+  kernel.proofRequirements = {
+    checkerSha256: proofCheckerSha256,
+    evidenceSha256: proofEvidenceSha256,
+    obligationSetSha256: proofObligationSetSha256,
+    properties: proofProperties,
+    status: "complete",
+  };
+  kernel.targetMatrix[0].status = "requirements-derived";
+  Object.assign(kernel.targetMatrix[1], {
+    capabilityDecisionSha256: targetCapabilityDecisionSha256,
+    status: "capability-complete",
+    targetIdentitySha256,
+  });
+  const simulatorEvidenceSha256 = identity("simulator-evidence");
+  Object.assign(kernel.simulatorCommand, {
+    evidenceSha256: simulatorEvidenceSha256,
+    reasonCode: null,
+    status: "capability-path-qualified",
+    subjectSha256: finalOptimizedKirSha256,
+    target: fixture.target,
+  });
+  const hardwareEvidenceSha256 = identity("hardware-evidence");
+  Object.assign(kernel.hardwareCommand, {
+    evidenceSha256: hardwareEvidenceSha256,
+    reasonCode: null,
+    status: "capability-path-qualified",
+    subjectSha256: artifactSha256,
+    target: fixture.target,
+  });
+  kernel.negativeFixtureCoverage = {
+    cases: negativeCases,
+    status: "complete",
+  };
+  kernel.productionCapabilityPath = {
+    path: "canonical-capability",
+    status: "complete",
+    evidence: {
+      artifactSha256,
+      artifactInspectionSha256: identity("artifact-inspection"),
+      capabilityAnalysisSha256: identity("capability-analysis"),
+      capabilityClosureSha256: closureSha256,
+      compilerCommit: document.baseline.compilerCommit,
+      compilerPolicySha256: identity("compiler-policy"),
+      compilerTree: document.baseline.compilerTree,
+      finalOptimizedKirSha256,
+      hardwareEvidenceSha256,
+      hostAdmissionSha256: identity("host-admission"),
+      launchContractSha256: identity("launch-contract"),
+      loweringIdentitySha256: identity("lowering"),
+      machineRefinementSha256: identity("machine-refinement"),
+      negativeFixtureSetSha256,
+      numericalPolicySha256: identity("numerical-policy"),
+      proofCheckerSha256,
+      proofEvidenceSha256,
+      proofObligationSetSha256,
+      simulatorEvidenceSha256,
+      sourceMirIdentitySha256: identity("source-mir"),
+      sourceMirToKirRefinementSha256: identity("source-mir-kir-refinement"),
+      targetCapabilityDecisionSha256,
+      targetIdentitySha256,
+    },
+  };
+  return kernel;
+}
+
 function qualifyTypedVecadd(
   document: Manifest,
   directory: string,
@@ -507,17 +689,28 @@ describe("production compiler tutorial corpus", () => {
     expect(recordedPath).toBe("config/tutorial-kernel-manifest-v1.json");
     expect(digest(readFileSync(path))).toBe(expectedDigest);
     expect(expectedDigest).toBe(
-      "d16ad6382f1ce180867b3877212b4b414aa7560238be4caa7b58a28b5f0b41bc",
+      "6216d17b801a841357da03e89cd93fc796d174e5419aef616c6e355f06283810",
     );
     expect(manifest.schema).toBe("fe2o3-tutorial-kernel-manifest-v1");
     expect(manifest.roadmapIssue).toBe(
       "https://github.com/harsh-nod/fe2o3/issues/271",
     );
+
+    const schemaPath = resolve("config/tutorial-kernel-manifest-schema-v1.json");
+    const [schemaDigest, recordedSchemaPath] = readFileSync(
+      resolve("config/tutorial-kernel-manifest-schema-v1.sha256"),
+      "ascii",
+    ).trimEnd().split("  ");
+    expect(recordedSchemaPath).toBe("config/tutorial-kernel-manifest-schema-v1.json");
+    expect(digest(readFileSync(schemaPath))).toBe(schemaDigest);
+    expect(schemaDigest).toBe(
+      "984d1637cb9b2eb76e9a2e3312c828172dabd91b686f34e3770c434795fb033a",
+    );
   });
 
   it("uses the compiler's stable domain-separated corpus identity", () => {
     expect(tutorialCorpusContractSha256(manifest)).toBe(
-      "41629ea563720257439add111d88106cbcb84365989f1c09dab938c00e8d4b6f",
+      "7d31c3e24315ddaec4138526c9cc21a52b32a5a6b91392dde4a371ce9eb0b99f",
     );
     const publicationChange = structuredClone(manifest);
     publicationChange.baseline.compilerCommit = "f".repeat(40);
@@ -576,14 +769,14 @@ describe("production compiler tutorial corpus", () => {
     }
   });
 
-  it("resolves every compiler-produced lesson through the shared fixture registry", () => {
+  it("keeps every pre-capability compiler lesson explicit as legacy coverage", () => {
     const fixtures = new Map(
       manifest.compilerFixtures.map((fixture) => [fixture.fixtureId, fixture]),
     );
     const referenced = new Set<string>();
     expect(fixtures.size).toBe(47);
     for (const entry of manifest.entries) {
-      if (entry.classification === "compiler-produced") {
+      if (["compiler-produced", "legacy-compiler-produced"].includes(entry.classification)) {
         expect(entry.compilerFixtureIds.length, entry.lessonId).toBeGreaterThan(0);
         expect(entry.requiredGates, entry.lessonId).toContain("production-compile");
       } else {
@@ -600,10 +793,36 @@ describe("production compiler tutorial corpus", () => {
       manifest.entries.find((entry) => entry.lessonId === "moe-routing"),
     ).toMatchObject({
       siteEvidenceKind: "compiler-checked",
-      classification: "compiler-produced",
+      classification: "legacy-compiler-produced",
       compilerFixtureIds: ["gfx942-moe-top2"],
       requiredGates: ["production-compile", "cpu-reference", "hardware"],
     });
+  });
+
+  it("publishes the closed issue #272 capability schema without fallback", () => {
+    expect(manifest.capabilityContract).toMatchObject({
+      roadmapIssue: "https://github.com/harsh-nod/fe2o3/issues/272",
+      status: "migration",
+      allowsExactProfileFallback: false,
+      allowsLegacyFallback: false,
+    });
+    expect(manifestSchemaDocument.$schema).toBe(
+      "https://json-schema.org/draft/2020-12/schema",
+    );
+    expect(manifestSchemaDocument.additionalProperties).toBe(false);
+    expect(manifestSchemaDocument.required).toEqual(
+      expect.arrayContaining(["capabilityContract", "capabilityKernels"]),
+    );
+    expect(manifest.capabilityKernels).toHaveLength(manifest.compilerFixtures.length);
+    expect(manifest.entries.every((entry) => entry.classification === "legacy-compiler-produced"))
+      .toBe(true);
+    expect(manifest.capabilityKernels.every((kernel) =>
+      kernel.capabilityClosure.status === "not-produced" &&
+      kernel.proofRequirements.status === "missing" &&
+      kernel.productionCapabilityPath.path === "legacy" &&
+      kernel.productionCapabilityPath.status === "legacy-only" &&
+      kernel.negativeFixtureCoverage.status === "missing"))
+      .toBe(true);
   });
 
   it("requires the exact closed V4 optimized production route", () => {
@@ -942,6 +1161,253 @@ describe("production compiler tutorial corpus", () => {
     });
     expect(nonresolving.status).toBe(1);
     expect(nonresolving.stderr).toContain("non-resolving fixture ID");
+  });
+
+  it("rejects omitted and stale per-kernel capability status", () => {
+    const omitted = withTemporaryCorpus((document) => {
+      document.capabilityKernels.splice(0, 1);
+      return [];
+    });
+    expect(omitted.status).toBe(1);
+    expect(omitted.stderr).toContain("missing capability status");
+
+    const stale = withTemporaryCorpus((document) => {
+      document.capabilityKernels[0].capabilityClosure.status = "complete";
+      return [];
+    });
+    expect(stale.status).toBe(1);
+    expect(stale.stderr).toContain("status and identity are stale");
+
+    const invalid = withTemporaryCorpus((document) => {
+      document.capabilityKernels[0].productionCapabilityPath.status = "passed";
+      return [];
+    });
+    expect(invalid.status).toBe(1);
+    expect(invalid.stderr).toContain("productionCapabilityPath.status is unsupported");
+  });
+
+  it("rejects deletion of every issue 272 promotion axis and exact evidence identity", () => {
+    for (const axis of [
+      "capabilityClosure",
+      "productionCapabilityPath",
+      "proofRequirements",
+      "requiredProperties",
+      "targetMatrix",
+      "simulatorCommand",
+      "hardwareCommand",
+      "negativeFixtureCoverage",
+    ]) {
+      const result = withTemporaryCorpus((document) => {
+        delete (document.capabilityKernels[0] as unknown as Record<string, unknown>)[axis];
+        return [];
+      });
+      expect(result.status, axis).toBe(1);
+      expect(result.stderr, axis).toContain("keys differ");
+    }
+
+    const evidenceKeys = [
+      "artifactSha256",
+      "artifactInspectionSha256",
+      "capabilityAnalysisSha256",
+      "capabilityClosureSha256",
+      "compilerCommit",
+      "compilerPolicySha256",
+      "compilerTree",
+      "finalOptimizedKirSha256",
+      "hardwareEvidenceSha256",
+      "hostAdmissionSha256",
+      "launchContractSha256",
+      "loweringIdentitySha256",
+      "machineRefinementSha256",
+      "negativeFixtureSetSha256",
+      "numericalPolicySha256",
+      "proofCheckerSha256",
+      "proofEvidenceSha256",
+      "proofObligationSetSha256",
+      "simulatorEvidenceSha256",
+      "sourceMirIdentitySha256",
+      "sourceMirToKirRefinementSha256",
+      "targetCapabilityDecisionSha256",
+      "targetIdentitySha256",
+    ];
+    for (const key of evidenceKeys) {
+      const result = withTemporaryCorpus((document) => {
+        const kernel = prepareCapabilityPromotion(document);
+        delete (kernel.productionCapabilityPath.evidence as Record<string, string>)[key];
+        return [];
+      });
+      expect(result.status, key).toBe(1);
+      expect(result.stderr, key).toContain("productionCapabilityPath.evidence keys differ");
+    }
+  }, 30_000);
+
+  it("rejects hostile substitutions across every issue 272 promotion axis", () => {
+    const mutations: Array<{
+      expected: string;
+      name: string;
+      mutate: (kernel: CapabilityKernel) => void;
+    }> = [
+      {
+        name: "empty capability closure",
+        expected: "capabilityClosure.requirements must be a nonempty array",
+        mutate: (kernel) => { kernel.capabilityClosure.requirements = []; },
+      },
+      {
+        name: "exact-profile fallback",
+        expected: "productionCapabilityPath path and status disagree",
+        mutate: (kernel) => { kernel.productionCapabilityPath.path = "exact-profile"; },
+      },
+      {
+        name: "empty proof requirements",
+        expected: "proofRequirements.properties must be a nonempty array",
+        mutate: (kernel) => { kernel.proofRequirements.properties = []; },
+      },
+      {
+        name: "substituted proof evidence",
+        expected: "proofRequirements identities are stale",
+        mutate: (kernel) => { kernel.proofRequirements.evidenceSha256 = "f".repeat(64); },
+      },
+      {
+        name: "substituted backend target",
+        expected: "does not match the compiler fixture target",
+        mutate: (kernel) => { kernel.targetMatrix[1].target = "gfx950"; },
+      },
+      {
+        name: "substituted target identity",
+        expected: "decision is stale against production evidence",
+        mutate: (kernel) => { kernel.targetMatrix[1].targetIdentitySha256 = "f".repeat(64); },
+      },
+      {
+        name: "substituted simulator command",
+        expected: "simulatorCommand is stale against qualification.suites",
+        mutate: (kernel) => {
+          const command = kernel.simulatorCommand.command as { arguments: string[] };
+          command.arguments.push("--hostile");
+        },
+      },
+      {
+        name: "substituted simulator target",
+        expected: "simulatorCommand target does not match",
+        mutate: (kernel) => { kernel.simulatorCommand.target = "gfx950"; },
+      },
+      {
+        name: "substituted simulator evidence",
+        expected: "command evidence is stale against production evidence",
+        mutate: (kernel) => { kernel.simulatorCommand.evidenceSha256 = "f".repeat(64); },
+      },
+      {
+        name: "substituted simulator subject",
+        expected: "command evidence is stale against production evidence",
+        mutate: (kernel) => { kernel.simulatorCommand.subjectSha256 = "f".repeat(64); },
+      },
+      {
+        name: "substituted hardware command",
+        expected: "hardwareCommand is stale against the compiler fixture matrix",
+        mutate: (kernel) => {
+          const command = kernel.hardwareCommand.command as { executable: string };
+          command.executable = "examples/hostile/run-gfx942.sh";
+        },
+      },
+      {
+        name: "substituted hardware target",
+        expected: "hardwareCommand target does not match",
+        mutate: (kernel) => { kernel.hardwareCommand.target = "gfx950"; },
+      },
+      {
+        name: "substituted hardware evidence",
+        expected: "command evidence is stale against production evidence",
+        mutate: (kernel) => { kernel.hardwareCommand.evidenceSha256 = "f".repeat(64); },
+      },
+      {
+        name: "substituted hardware artifact",
+        expected: "command evidence is stale against production evidence",
+        mutate: (kernel) => { kernel.hardwareCommand.subjectSha256 = "f".repeat(64); },
+      },
+      {
+        name: "empty negative coverage",
+        expected: "complete status requires negative fixtures",
+        mutate: (kernel) => { kernel.negativeFixtureCoverage.cases = []; },
+      },
+      {
+        name: "incomplete negative categories",
+        expected: "complete negative coverage omits target",
+        mutate: (kernel) => {
+          kernel.negativeFixtureCoverage.cases = kernel.negativeFixtureCoverage.cases.filter(
+            (item) => (item as { category: string }).category !== "target",
+          );
+        },
+      },
+      {
+        name: "substituted closure identity",
+        expected: "evidence is stale against the manifest baseline or closure",
+        mutate: (kernel) => {
+          (kernel.productionCapabilityPath.evidence as Record<string, string>)
+            .capabilityClosureSha256 = "f".repeat(64);
+        },
+      },
+    ];
+
+    for (const mutation of mutations) {
+      const result = withTemporaryCorpus((document) => {
+        const kernel = prepareCapabilityPromotion(document);
+        mutation.mutate(kernel);
+        return [];
+      });
+      expect(result.status, mutation.name).toBe(1);
+      expect(result.stderr, mutation.name).toContain(mutation.expected);
+    }
+  }, 30_000);
+
+  it("rejects partial promotion and every fallback switch", () => {
+    const partial = withTemporaryCorpus((document) => {
+      prepareCapabilityPromotion(document);
+      return [];
+    });
+    expect(partial.status).toBe(1);
+    expect(partial.stderr).toContain(
+      "migration capability contract cannot publish compiler-produced entries",
+    );
+
+    for (const field of ["allowsLegacyFallback", "allowsExactProfileFallback"] as const) {
+      const result = withTemporaryCorpus((document) => {
+        document.capabilityContract[field] = true;
+        return [];
+      });
+      expect(result.status, field).toBe(1);
+      expect(result.stderr, field).toContain("closed no-fallback classification contract");
+    }
+
+    const genericFallback = withTemporaryCorpus((document) => {
+      document.productionContract.allowsFallback = true;
+      return [];
+    });
+    expect(genericFallback.status).toBe(1);
+    expect(genericFallback.stderr).toContain("pipeline selection and fallback must remain forbidden");
+  }, 10_000);
+
+  it("rejects backend assumptions in target-neutral requirements", () => {
+    const result = withTemporaryCorpus((document) => {
+      const kernel = document.capabilityKernels[0];
+      kernel.capabilityClosure.requirements = [
+        ...kernel.capabilityClosure.requirements,
+        "amd.wave64",
+      ].sort();
+      kernel.targetMatrix[0].requirements = kernel.capabilityClosure.requirements;
+      return [];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("neutral capability requirements contain an AMD assumption");
+  });
+
+  it("rejects compiler-produced classification without complete issue #272 evidence", () => {
+    const result = withTemporaryCorpus((document) => {
+      const entry = document.entries.find((candidate) => candidate.lessonId === "typed-vecadd")!;
+      entry.classification = "compiler-produced";
+      entry.requiredGates.push("semantic-simulation");
+      return [];
+    });
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("compiler-produced entry lacks required production capability evidence");
   });
 
   it("rejects forged evidence classifications", () => {

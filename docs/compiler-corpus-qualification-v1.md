@@ -1,7 +1,8 @@
 # Tutorial Compiler Corpus Qualification V1
 
-`config/tutorial-kernel-manifest-v1.json` is byte-for-byte synchronized with
-the compiler corpus contract. Its raw SHA-256 in
+`config/tutorial-kernel-manifest-v1.json` is the tutorial corpus contract that
+must become byte-for-byte synchronized with the compiler repository before
+qualification. Its raw SHA-256 in
 `config/tutorial-kernel-manifest-v1.sha256` is a historical observation of
 those exact bytes. Qualification additionally binds the stable
 `corpusContractSha256`: SHA-256 over the ASCII canonical JSON document, with
@@ -13,18 +14,42 @@ all three of `{path, sha256, corpusContractSha256}`. The manifest, not a site
 component or shell list, owns every lesson-to-fixture mapping and target
 requirement.
 
-The current state is `migration`. It contains 25 compiler-produced tutorial
-entries and 47 compiler fixtures: 10 for `gfx942` and 37 for `gfx950`.
-`moe-routing` is compiled from the ordinary attributed `moe_top2_v1` source and
-is covered by an exact gfx942 fixture. Qualification is an atomic property of
-the top-level baseline, not a mutable per-lesson label: `migration` means that
-none of the corpus is published as qualified; `qualified` requires one complete
-record covering every fixture and declared gate.
+`config/tutorial-kernel-manifest-schema-v1.json` is the closed Draft 2020-12
+shape contract, with its own byte digest. The executable validator additionally
+enforces joins that JSON Schema cannot express: one capability record per exact
+fixture and kernel symbol, exact lesson ownership, command parity with the
+suite and compile matrices, neutral/backend target ordering, baseline-bound
+evidence identities, and coherent status transitions.
 
-Site CI checks the manifest and companion digest byte-for-byte against the
+The #271 corpus state and the #272 capability state are both `migration`. It
+contains 25 `legacy-compiler-produced` tutorial entries and 47 compiler
+fixtures: 10 for `gfx942` and 37 for `gfx950`.
+`moe-routing` is compiled from the ordinary attributed `moe_top2_v1` source and
+is covered by an exact gfx942 fixture on the pre-capability route. That history
+does not establish issue #272 capability closure. Every current kernel record
+therefore says `not-produced` for closure, `legacy-only` for the production
+capability path and backend row, and `missing` for production capability
+negative coverage. Existing simulator and hardware scripts are recorded as
+`available-legacy-only`; their presence is neither capability qualification nor
+a fallback. The manifest sets `allowsLegacyFallback` to `false`.
+
+The reserved `compiler-produced` classification now means materially more than
+"a compiler emitted an artifact": the exact final optimized KIR must have a
+complete compiler-derived capability closure, final analysis and target
+decision identities, artifact inspection, simulator and target-matched
+hardware evidence, and nonempty negative-fixture coverage. The validator
+rejects that classification when any required evidence is absent, stale, or
+inconsistent. Qualification is an atomic property of the top-level baseline,
+not a mutable per-lesson label: `migration` means that none of the corpus is
+published as capability-qualified; `qualified` requires one complete record
+covering every fixture and declared gate.
+
+Site CI can check the manifest and companion digest byte-for-byte against a
 checked-out compiler repository. This prevents a site-only classification,
 fixture, compiler-input closure, gate, or publication change from manufacturing
-compiler coverage.
+compiler coverage. Until the compiler repository publishes the matching #272
+contract, the site inventory remains an explicit migration record rather than
+production capability evidence.
 
 ## Required production transaction
 

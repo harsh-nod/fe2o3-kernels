@@ -103,6 +103,28 @@ describe("Pages publication policy", () => {
     expect(pagesWorkflow).toContain("run: npm run test:e2e");
   });
 
+  it("runs the compiler corpus release gate explicitly in CI and Pages", () => {
+    const command =
+      "run: npm run validate:compiler-corpus -- --compiler-repository .evidence/fe2o3";
+
+    for (const [workflow, validateStep] of [
+      [ciWorkflow, "name: Validate content and production build"],
+      [pagesWorkflow, "name: Validate and build"],
+    ] as const) {
+      const install = workflow.indexOf("name: Install dependencies");
+      const releaseGate = workflow.indexOf(
+        "name: Enforce compiler corpus release gate",
+      );
+      const validate = workflow.indexOf(validateStep);
+
+      expect(workflow.match(/name: Enforce compiler corpus release gate/gu)).toHaveLength(1);
+      expect(workflow.match(/npm run validate:compiler-corpus/gu)).toHaveLength(1);
+      expect(releaseGate).toBeGreaterThan(install);
+      expect(releaseGate).toBeLessThan(validate);
+      expect(workflow).toContain(command);
+    }
+  });
+
   it("uses only commit-pinned actions and keeps pull requests non-deploying", () => {
     const actionUses = [
       ...pagesWorkflow.matchAll(/^\s*uses:\s*(\S+)(?:\s+#.*)?$/gmu),

@@ -13,6 +13,7 @@ import {
   Network,
   PlayCircle,
   ScanLine,
+  ShieldCheck,
   X,
 } from "lucide-react";
 import { useEffect } from "react";
@@ -108,6 +109,9 @@ export function Sidebar({
         </NavLink>
         <NavLink onClick={onNavigate} to="/semantic-equivalence">
           <GitCompareArrows size={16} /> Semantic equivalence
+        </NavLink>
+        <NavLink onClick={onNavigate} to="/gpu-capabilities">
+          <ShieldCheck size={16} /> Capability pipeline
         </NavLink>
         <NavLink onClick={onNavigate} to="/getting-started">
           <PlayCircle size={16} /> No-GPU quick start

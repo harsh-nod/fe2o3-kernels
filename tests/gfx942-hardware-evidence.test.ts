@@ -266,7 +266,7 @@ describe("gfx942 hardware evidence trust boundary", () => {
   it("accepts a complete internally bound synthetic fixture", () => {
     const result = runSynthetic();
     expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toContain("9 cases");
+    expect(result.stdout).toContain(`${gfx942Cases().length} cases`);
   });
 
   it.each([

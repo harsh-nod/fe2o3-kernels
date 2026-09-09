@@ -13,6 +13,16 @@
     "allowsPipelineSelection": false,
     "allowsFallback": false
   },
+  "capabilityContract": {
+    "schema": "fe2o3-tutorial-capability-status-v1",
+    "roadmapIssue": "https://github.com/harsh-nod/fe2o3/issues/272",
+    "status": "migration",
+    "completeClassification": "compiler-produced",
+    "legacyClassification": "legacy-compiler-produced",
+    "neutralTarget": "target-neutral",
+    "allowsLegacyFallback": false,
+    "allowsExactProfileFallback": false
+  },
   "qualification": {
     "evidenceSchemaPath": "config/tutorial-semantic-qualification-evidence-schema-v1.json",
     "hardwareTargets": [
@@ -2230,11 +2240,5813 @@
       }
     }
   ],
+  "capabilityKernels": [
+    {
+      "fixtureId": "gfx942-fill-simulation",
+      "kernelSymbol": "fill",
+      "lessonIds": [
+        "cpu-semantic-simulation",
+        "first-fill"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "execution.invocation",
+          "memory.global.write",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "execution.invocation",
+            "memory.global.write",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "scripts/run-tutorial-semantic-simulation.py",
+          "arguments": [
+            "--expectation",
+            "scripts/quickstart/fill-expectation.json",
+            "--",
+            "simulate-source",
+            "--crate",
+            "fe2o3_fill",
+            "--request",
+            "scripts/quickstart/fill-request.json",
+            "--target",
+            "gfx942",
+            "--bundle-version",
+            "7",
+            "--",
+            "--package",
+            "fe2o3-fill",
+            "--lib"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 3600
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-simulator-not-capability-qualified"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/fill/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-flash-attention",
+      "kernelSymbol": "flash_attention_general_v1",
+      "lessonIds": [
+        "flash-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx942",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/flash_attention_general_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-gemm-autoresearch",
+      "kernelSymbol": "gemm_autoresearch_v1",
+      "lessonIds": [
+        "gemm-proof-plan",
+        "gemm-tiling"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx942",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/gemm_autoresearch_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-grouped-expert-moe",
+      "kernelSymbol": "moe_grouped_expert_general_v1",
+      "lessonIds": [
+        "moe-expert-compute"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx942",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/moe_grouped_expert_general_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-moe-top2",
+      "kernelSymbol": "moe_top2_route_f32_t8_e4_k2_c4_v1",
+      "lessonIds": [
+        "moe-routing"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx942",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/moe_top2_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-row-softmax",
+      "kernelSymbol": "row_softmax_general_v1",
+      "lessonIds": [
+        "softmax-invariant"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "collective.subgroup",
+          "collective.workgroup",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "collective-participation",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "collective.subgroup",
+            "collective.workgroup",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx942",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/row_softmax_general_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-tiled-gemm",
+      "kernelSymbol": "tiled_gemm_general_v1",
+      "lessonIds": [
+        "gemm-proof-plan",
+        "gemm-tiling"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx942",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/tiled_gemm_general_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-typed-vecadd-source",
+      "kernelSymbol": "vecadd",
+      "lessonIds": [
+        "typed-vecadd"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx942",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/vecadd/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-wave64-collectives",
+      "kernelSymbol": "wave64_collectives_v1",
+      "lessonIds": [
+        "reductions-scans"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "collective.subgroup",
+          "collective.workgroup",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "collective-participation",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "collective.subgroup",
+            "collective.workgroup",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "scripts/run-tutorial-semantic-simulation.py",
+          "arguments": [
+            "--expectation",
+            "examples/wave64_collectives_v1/full-mask-expectation.json",
+            "--",
+            "simulate-source",
+            "--crate",
+            "fe2o3_wave64_collectives_v1",
+            "--request",
+            "examples/wave64_collectives_v1/full-mask-request.json",
+            "--target",
+            "gfx942",
+            "--bundle-version",
+            "7",
+            "--",
+            "--manifest-path",
+            "examples/wave64_collectives_v1/Cargo.toml",
+            "--lib"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 3600
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-simulator-not-capability-qualified"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/wave64_collectives_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx942-workgroup-collectives",
+      "kernelSymbol": "lds_publish_read_reduce_i32_v1",
+      "lessonIds": [
+        "lds-barriers-atomics"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "atomic.workgroup",
+          "barrier.workgroup",
+          "collective.subgroup",
+          "collective.workgroup",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "atomic-legality",
+        "barrier-convergence",
+        "capability-provenance",
+        "collective-participation",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "atomic.workgroup",
+            "barrier.workgroup",
+            "collective.subgroup",
+            "collective.workgroup",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx942",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "scripts/run-tutorial-semantic-simulation.py",
+          "arguments": [
+            "--expectation",
+            "examples/workgroup_sync_v1/scan-u32-expectation.json",
+            "--",
+            "simulate-source",
+            "--crate",
+            "fe2o3_workgroup_sync_v1",
+            "--request",
+            "examples/workgroup_sync_v1/scan-u32-request.json",
+            "--target",
+            "gfx942",
+            "--bundle-version",
+            "7",
+            "--",
+            "--manifest-path",
+            "examples/workgroup_sync_v1/Cargo.toml",
+            "--no-default-features",
+            "--features",
+            "lds-scan-u32-kernel",
+            "--lib"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 3600
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-simulator-not-capability-qualified"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx942",
+        "command": {
+          "executable": "examples/workgroup_sync_v1/run-gfx942.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-attnres-aggregate",
+      "kernelSymbol": "gfx950_attnres_aggregate",
+      "lessonIds": [
+        "gfx950-attnres-gr-mhc"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-attnres-aggregate-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-attnres-aggregate-explicit-reuse",
+      "kernelSymbol": "gfx950_attnres_aggregate",
+      "lessonIds": [
+        "gfx950-attnres-gr-mhc"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-gfx950.sh",
+          "arguments": [
+            "kernel-attnres-aggregate-explicit-reuse-v1"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-combine-expert-ranks",
+      "kernelSymbol": "gfx950_combine_expert_ranks_v1",
+      "lessonIds": [
+        "gfx950-advanced-moe"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "numerical.integer",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "numerical.integer",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-combine-expert-ranks-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-compressed-hybrid-attention",
+      "kernelSymbol": "gfx950_compressed_hybrid_attention",
+      "lessonIds": [
+        "gfx950-compressed-hybrid-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-compressed-hybrid-attention-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-compressed-hybrid-attention-division-baseline",
+      "kernelSymbol": "gfx950_compressed_hybrid_attention",
+      "lessonIds": [
+        "gfx950-compressed-hybrid-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-gfx950.sh",
+          "arguments": [
+            "kernel-compressed-hybrid-attention-division-baseline-v1"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-content-sparse-attention",
+      "kernelSymbol": "gfx950_content_sparse_attention",
+      "lessonIds": [
+        "gfx950-indexed-sparse-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-content-sparse-attention-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-content-sparse-attention-reciprocal-reuse",
+      "kernelSymbol": "gfx950_content_sparse_attention",
+      "lessonIds": [
+        "gfx950-indexed-sparse-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-gfx950.sh",
+          "arguments": [
+            "kernel-content-sparse-attention-reciprocal-reuse-v1"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-deepseek-sparse-attention",
+      "kernelSymbol": "gfx950_deepseek_sparse_attention",
+      "lessonIds": [
+        "gfx950-deepseek-sparse-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-deepseek-sparse-attention-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-four-branch-residual",
+      "kernelSymbol": "gfx950_four_branch_residual",
+      "lessonIds": [
+        "gfx950-attnres-gr-mhc"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-four-branch-residual-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-four-branch-residual-explicit",
+      "kernelSymbol": "gfx950_four_branch_residual",
+      "lessonIds": [
+        "gfx950-attnres-gr-mhc"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-gfx950.sh",
+          "arguments": [
+            "kernel-four-branch-residual-explicit-v1"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp4-attention",
+      "kernelSymbol": "gfx950_fp4_attention_rust",
+      "lessonIds": [
+        "gfx950-fp4-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "numerical.fp4",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "numerical.fp4",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_low_precision/run-fp4-attention-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp4-gemm",
+      "kernelSymbol": "gfx950_fp4_gemm_rust",
+      "lessonIds": [
+        "gfx950-fp4-gemm"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "numerical.fp4",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "numerical.fp4",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_low_precision/run-fp4-gemm-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp8-attention",
+      "kernelSymbol": "gfx950_fp8_attention_rust",
+      "lessonIds": [
+        "gfx950-fp8-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "numerical.fp8",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "numerical.fp8",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_low_precision/run-fp8-attention-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-fp8-gemm",
+      "kernelSymbol": "gfx950_fp8_gemm_rust",
+      "lessonIds": [
+        "gfx950-fp8-gemm"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "numerical.fp8",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "numerical.fp8",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_low_precision/run-fp8-gemm-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-decode",
+      "kernelSymbol": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "lessonIds": [
+        "gfx950-gpt-oss-120b-megakernel"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_gpt_oss_decode/run-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-held-fragments",
+      "kernelSymbol": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "lessonIds": [
+        "gfx950-gpt-oss-120b-megakernel"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+          "arguments": [
+            "held-fragments"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-interleaved-stores",
+      "kernelSymbol": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "lessonIds": [
+        "gfx950-gpt-oss-120b-megakernel"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+          "arguments": [
+            "interleaved-stores"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-materialized-attention",
+      "kernelSymbol": "gfx950_gpt_oss_120b_attention_v1",
+      "lessonIds": [
+        "gfx950-gpt-oss-120b-megakernel"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+          "arguments": [
+            "materialized-attention"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-materialized-expert",
+      "kernelSymbol": "gfx950_gpt_oss_120b_expert_v1",
+      "lessonIds": [
+        "gfx950-gpt-oss-120b-megakernel"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+          "arguments": [
+            "materialized-expert"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-materialized-router",
+      "kernelSymbol": "gfx950_gpt_oss_120b_router_v1",
+      "lessonIds": [
+        "gfx950-gpt-oss-120b-megakernel"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+          "arguments": [
+            "materialized-router"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-gpt-oss-serial-router",
+      "kernelSymbol": "gfx950_gpt_oss_120b_decode_megakernel_v1",
+      "lessonIds": [
+        "gfx950-gpt-oss-120b-megakernel"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_gpt_oss_decode/run-ablation-gfx950.sh",
+          "arguments": [
+            "serial-router"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-decode",
+      "kernelSymbol": "gfx950_kda_decode",
+      "lessonIds": [
+        "gfx950-kda-gdn-linear-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-kda-decode-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-decode-baseline",
+      "kernelSymbol": "gfx950_kda_decode",
+      "lessonIds": [
+        "gfx950-kda-gdn-linear-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-gfx950.sh",
+          "arguments": [
+            "kernel-kda-decode-baseline-v1"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-prefill",
+      "kernelSymbol": "gfx950_kda_chunkwise_prefill",
+      "lessonIds": [
+        "gfx950-kda-gdn-linear-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.write",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.write",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-kda-chunkwise-prefill-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-kda-prefill-baseline",
+      "kernelSymbol": "gfx950_kda_chunkwise_prefill",
+      "lessonIds": [
+        "gfx950-kda-gdn-linear-attention"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.write",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.write",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-gfx950.sh",
+          "arguments": [
+            "kernel-kda-prefill-baseline-v1"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-mhc-sinkhorn-mix",
+      "kernelSymbol": "gfx950_mhc_sinkhorn_mix",
+      "lessonIds": [
+        "gfx950-attnres-gr-mhc"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-mhc-sinkhorn-mix-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-mhc-sinkhorn-mix-scalar",
+      "kernelSymbol": "gfx950_mhc_sinkhorn_mix",
+      "lessonIds": [
+        "gfx950-attnres-gr-mhc"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_attention/run-gfx950.sh",
+          "arguments": [
+            "kernel-mhc-sinkhorn-mix-scalar-v1"
+          ],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-moe-expert-rank",
+      "kernelSymbol": "gfx950_moe_expert_rank_fp4_fp8_v1",
+      "lessonIds": [
+        "gfx950-advanced-moe"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-moe-expert-rank-expert-serial",
+      "kernelSymbol": "gfx950_moe_expert_rank_fp4_fp8_v1",
+      "lessonIds": [
+        "gfx950-advanced-moe"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "address-space.workgroup",
+          "barrier.workgroup",
+          "execution.invocation",
+          "matrix.multiply-accumulate",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "memory.workgroup",
+          "numerical.bf16",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch",
+          "subgroup.width.64"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "barrier-convergence",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "happens-before",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure",
+        "tensor-layout",
+        "workgroup-memory-epochs"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "address-space.workgroup",
+            "barrier.workgroup",
+            "execution.invocation",
+            "matrix.multiply-accumulate",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "memory.workgroup",
+            "numerical.bf16",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch",
+            "subgroup.width.64"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-moe-expert-rank-gfx950.sh",
+          "arguments": [],
+          "environment": [
+            "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=expert-serial"
+          ],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-moe-route",
+      "kernelSymbol": "gfx950_moe_route_fp4_t16_e4_k2_v1",
+      "lessonIds": [
+        "gfx950-advanced-moe"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "numerical.integer",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "numerical.integer",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-moe-route-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-muon-update",
+      "kernelSymbol": "gfx950_muon_update_4x4_v1",
+      "lessonIds": [
+        "gfx950-muon-optimizer"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-muon-update-broadcast16",
+      "kernelSymbol": "gfx950_muon_update_4x4_v1",
+      "lessonIds": [
+        "gfx950-muon-optimizer"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-muon-update-gfx950.sh",
+          "arguments": [],
+          "environment": [
+            "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=muon-broadcast16"
+          ],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-qwen-ngram-gather",
+      "kernelSymbol": "gfx950_qwen_ngram_gather_v1",
+      "lessonIds": [
+        "gfx950-ngram-embedding-gather"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "numerical.integer",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "numerical.integer",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-qwen-ngram-gather-reverse-probe",
+      "kernelSymbol": "gfx950_qwen_ngram_gather_v1",
+      "lessonIds": [
+        "gfx950-ngram-embedding-gather"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "numerical.integer",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "numerical.integer",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-qwen-ngram-gather-gfx950.sh",
+          "arguments": [],
+          "environment": [
+            "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=ngram-reverse-probe"
+          ],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-speculative-transaction",
+      "kernelSymbol": "gfx950_speculative_transaction_v1",
+      "lessonIds": [
+        "gfx950-speculative-mtp-verification"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "numerical.integer",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "numerical.integer",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-speculative-transaction-recompute-prefix",
+      "kernelSymbol": "gfx950_speculative_transaction_v1",
+      "lessonIds": [
+        "gfx950-speculative-mtp-verification"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "numerical.integer",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "numerical.integer",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-speculative-transaction-gfx950.sh",
+          "arguments": [],
+          "environment": [
+            "FE2O3_GFX950_SYSTEMS_ABLATION_VARIANT=speculative-recompute-prefix"
+          ],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    },
+    {
+      "fixtureId": "gfx950-stage-gradient-shard",
+      "kernelSymbol": "gfx950_stage_gradient_shard_v1",
+      "lessonIds": [
+        "gfx950-advanced-moe"
+      ],
+      "capabilityClosure": {
+        "status": "not-produced",
+        "sha256": null,
+        "requirements": [
+          "abi.kernel-entry",
+          "address-space.global",
+          "address-space.private",
+          "execution.invocation",
+          "memory.global.read",
+          "memory.global.write",
+          "memory.private",
+          "numerical.f32",
+          "numerical.integer",
+          "object.executable",
+          "resource.launch"
+        ]
+      },
+      "productionCapabilityPath": {
+        "status": "legacy-only",
+        "path": "legacy",
+        "evidence": null
+      },
+      "requiredProperties": [
+        "abi-conformance",
+        "address-bounds",
+        "alias-legality",
+        "artifact-currentness",
+        "capability-provenance",
+        "effect-legality",
+        "functional-refinement",
+        "initialized-before-read",
+        "launch-preconditions",
+        "machine-refinement",
+        "numerical-policy",
+        "output-injectivity",
+        "race-freedom",
+        "resource-legality",
+        "source-mir-kir-refinement",
+        "target-capability-closure"
+      ],
+      "proofRequirements": {
+        "status": "missing",
+        "properties": [
+          "capability-provenance",
+          "functional-refinement",
+          "machine-refinement",
+          "source-mir-kir-refinement"
+        ],
+        "obligationSetSha256": null,
+        "checkerSha256": null,
+        "evidenceSha256": null
+      },
+      "targetMatrix": [
+        {
+          "kind": "neutral",
+          "target": "target-neutral",
+          "status": "not-evaluated",
+          "requirements": [
+            "abi.kernel-entry",
+            "address-space.global",
+            "address-space.private",
+            "execution.invocation",
+            "memory.global.read",
+            "memory.global.write",
+            "memory.private",
+            "numerical.f32",
+            "numerical.integer",
+            "object.executable",
+            "resource.launch"
+          ]
+        },
+        {
+          "kind": "backend",
+          "target": "gfx950",
+          "status": "legacy-only",
+          "capabilityDecisionSha256": null,
+          "targetIdentitySha256": null
+        }
+      ],
+      "simulatorCommand": {
+        "status": "unavailable",
+        "target": "gfx950",
+        "command": null,
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "no-capability-path-simulator-command"
+      },
+      "hardwareCommand": {
+        "status": "available-legacy-only",
+        "target": "gfx950",
+        "command": {
+          "executable": "examples/gfx950_advanced_systems/run-stage-gradient-shard-gfx950.sh",
+          "arguments": [],
+          "environment": [],
+          "workingDirectory": ".",
+          "timeoutSeconds": 1200
+        },
+        "subjectSha256": null,
+        "evidenceSha256": null,
+        "reasonCode": "legacy-hardware-runner-not-capability-qualified"
+      },
+      "negativeFixtureCoverage": {
+        "status": "missing",
+        "cases": []
+      }
+    }
+  ],
   "entries": [
     {
       "lessonId": "cpu-semantic-simulation",
       "siteEvidenceKind": "runnable-now",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/fill/Cargo.toml",
       "sourcePaths": [
         "examples/fill/src/lib.rs"
@@ -2251,7 +8063,7 @@
     {
       "lessonId": "first-fill",
       "siteEvidenceKind": "runnable-now",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/fill/Cargo.toml",
       "sourcePaths": [
         "examples/fill/src/lib.rs"
@@ -2268,7 +8080,7 @@
     {
       "lessonId": "flash-attention",
       "siteEvidenceKind": "gpu-observed",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/flash_attention_general_v1/Cargo.toml",
       "sourcePaths": [
         "examples/flash_attention_general_v1/src/kernel.rs"
@@ -2285,7 +8097,7 @@
     {
       "lessonId": "gemm-proof-plan",
       "siteEvidenceKind": "source-tested",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
       "sourcePaths": [
         "examples/tiled_gemm_general_v1/src/kernel.rs"
@@ -2302,7 +8114,7 @@
     {
       "lessonId": "gemm-tiling",
       "siteEvidenceKind": "gpu-observed",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/tiled_gemm_general_v1/Cargo.toml",
       "sourcePaths": [
         "examples/tiled_gemm_general_v1/src/kernel.rs"
@@ -2320,7 +8132,7 @@
     {
       "lessonId": "gfx950-advanced-moe",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_systems/src/kernel.rs"
@@ -2340,7 +8152,7 @@
     {
       "lessonId": "gfx950-attnres-gr-mhc",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_attention/src/kernel.rs"
@@ -2361,7 +8173,7 @@
     {
       "lessonId": "gfx950-compressed-hybrid-attention",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_attention/src/kernel.rs"
@@ -2378,7 +8190,7 @@
     {
       "lessonId": "gfx950-deepseek-sparse-attention",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_attention/src/kernel.rs"
@@ -2394,7 +8206,7 @@
     {
       "lessonId": "gfx950-fp4-attention",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_low_precision/src/kernel.rs"
@@ -2410,7 +8222,7 @@
     {
       "lessonId": "gfx950-fp4-gemm",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_low_precision/src/kernel.rs"
@@ -2426,7 +8238,7 @@
     {
       "lessonId": "gfx950-fp8-attention",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_low_precision/src/kernel.rs"
@@ -2442,7 +8254,7 @@
     {
       "lessonId": "gfx950-fp8-gemm",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_low_precision/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_low_precision/src/kernel.rs"
@@ -2458,7 +8270,7 @@
     {
       "lessonId": "gfx950-gpt-oss-120b-megakernel",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_gpt_oss_decode/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_gpt_oss_decode/src/kernel.rs",
@@ -2482,7 +8294,7 @@
     {
       "lessonId": "gfx950-indexed-sparse-attention",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_attention/src/kernel.rs"
@@ -2499,7 +8311,7 @@
     {
       "lessonId": "gfx950-kda-gdn-linear-attention",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_attention/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_attention/src/kernel.rs"
@@ -2518,7 +8330,7 @@
     {
       "lessonId": "gfx950-muon-optimizer",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_systems/src/kernel.rs"
@@ -2535,7 +8347,7 @@
     {
       "lessonId": "gfx950-ngram-embedding-gather",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_systems/src/kernel.rs"
@@ -2552,7 +8364,7 @@
     {
       "lessonId": "gfx950-speculative-mtp-verification",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/gfx950_advanced_systems/Cargo.toml",
       "sourcePaths": [
         "examples/gfx950_advanced_systems/src/kernel.rs"
@@ -2569,7 +8381,7 @@
     {
       "lessonId": "lds-barriers-atomics",
       "siteEvidenceKind": "compiler-hsaco-observed",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/workgroup_sync_v1/Cargo.toml",
       "sourcePaths": [
         "examples/workgroup_sync_v1/src/kernel.rs"
@@ -2586,7 +8398,7 @@
     {
       "lessonId": "moe-expert-compute",
       "siteEvidenceKind": "gpu-observed",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/moe_grouped_expert_general_v1/Cargo.toml",
       "sourcePaths": [
         "examples/moe_grouped_expert_general_v1/src/kernel.rs"
@@ -2603,7 +8415,7 @@
     {
       "lessonId": "moe-routing",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/moe_top2_v1/Cargo.toml",
       "sourcePaths": [
         "examples/moe_top2_v1/src/kernel.rs"
@@ -2620,7 +8432,7 @@
     {
       "lessonId": "reductions-scans",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/wave64_collectives_v1/Cargo.toml",
       "sourcePaths": [
         "examples/wave64_collectives_v1/src/kernel.rs"
@@ -2637,7 +8449,7 @@
     {
       "lessonId": "softmax-invariant",
       "siteEvidenceKind": "gpu-observed",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/row_softmax_general_v1/Cargo.toml",
       "sourcePaths": [
         "examples/row_softmax_general_v1/src/kernel.rs"
@@ -2654,7 +8466,7 @@
     {
       "lessonId": "typed-vecadd",
       "siteEvidenceKind": "compiler-checked",
-      "classification": "compiler-produced",
+      "classification": "legacy-compiler-produced",
       "packageManifest": "examples/vecadd/Cargo.toml",
       "sourcePaths": [
         "examples/vecadd/src/lib.rs",

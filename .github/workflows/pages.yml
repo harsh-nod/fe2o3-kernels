@@ -42,6 +42,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Enforce compiler corpus release gate
+        run: npm run validate:compiler-corpus -- --compiler-repository .evidence/fe2o3
+
       - name: Validate and build
         env:
           FE2O3_COMPILER_REPOSITORY: .evidence/fe2o3

@@ -27,6 +27,11 @@ const GettingStartedPage = lazy(() =>
     default: module.GettingStartedPage,
   })),
 );
+const GpuCapabilitiesPage = lazy(() =>
+  import("./components/GpuCapabilitiesPage").then((module) => ({
+    default: module.GpuCapabilitiesPage,
+  })),
+);
 const LessonPage = lazy(() =>
   import("./components/LessonPage").then((module) => ({
     default: module.LessonPage,
@@ -117,6 +122,9 @@ function pageTitle(pathname: string): string {
   if (pathname === "/operators") return "Operator cookbook | fe2o3 kernels";
   if (pathname === "/semantic-equivalence") {
     return "Semantic equivalence | fe2o3 kernels";
+  }
+  if (pathname === "/gpu-capabilities") {
+    return "GPU capability pipeline | fe2o3 kernels";
   }
   if (pathname === "/architecture") return "Architecture | fe2o3 kernels";
   if (pathname === "/status") return "Implementation status | fe2o3 kernels";
@@ -216,6 +224,7 @@ export function App() {
             <Route path="/start" element={<OverviewPage />} />
             <Route path="/operators" element={<OperatorCookbookPage />} />
             <Route path="/semantic-equivalence" element={<SemanticEquivalencePage />} />
+            <Route path="/gpu-capabilities" element={<GpuCapabilitiesPage />} />
             <Route path="/getting-started" element={<GettingStartedPage />} />
             <Route
               path="/lesson/:lessonId"

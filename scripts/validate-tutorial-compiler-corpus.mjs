@@ -9,6 +9,8 @@ import { validateQualificationRecord } from "./tutorial-qualification-record.mjs
 
 const TOP_LEVEL_KEYS = [
   "baseline",
+  "capabilityContract",
+  "capabilityKernels",
   "compilerFixtures",
   "entries",
   "productionContract",
@@ -64,7 +66,13 @@ const ALLOWED_CLASSIFICATIONS = new Set([
   "compiler-produced",
   "design-only",
   "external-baseline",
+  "legacy-compiler-produced",
   "simulator-only",
+  "unsupported",
+]);
+const COMPILER_CLASSIFICATIONS = new Set([
+  "compiler-produced",
+  "legacy-compiler-produced",
 ]);
 const ALLOWED_GATES = new Set([
   "cpu-reference",
@@ -79,8 +87,159 @@ const GIT_ID = /^[0-9a-f]{40}$/u;
 const TARGET = /^gfx[0-9]{3}$/u;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/u;
 const RUST_IDENTIFIER = /^[A-Za-z_][A-Za-z0-9_]*$/u;
+const CAPABILITY_REQUIREMENT = /^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$/u;
+const CAPABILITY_REQUIREMENTS = new Set([
+  "abi.kernel-entry",
+  "address-space.global",
+  "address-space.private",
+  "address-space.workgroup",
+  "async-copy.global-to-workgroup",
+  "async-wait.completion",
+  "atomic.workgroup",
+  "barrier.workgroup",
+  "collective.subgroup",
+  "collective.workgroup",
+  "execution.invocation",
+  "matrix.multiply-accumulate",
+  "memory.global.read",
+  "memory.global.write",
+  "memory.private",
+  "memory.workgroup",
+  "numerical.bf16",
+  "numerical.f16",
+  "numerical.f32",
+  "numerical.fp4",
+  "numerical.fp8",
+  "numerical.integer",
+  "object.executable",
+  "resource.launch",
+  "subgroup.width.64",
+]);
+const REQUIRED_PROPERTIES = new Set([
+  "abi-conformance",
+  "address-bounds",
+  "alias-legality",
+  "artifact-currentness",
+  "atomic-legality",
+  "barrier-convergence",
+  "capability-provenance",
+  "collective-participation",
+  "effect-legality",
+  "functional-refinement",
+  "happens-before",
+  "initialized-before-read",
+  "launch-preconditions",
+  "machine-refinement",
+  "numerical-policy",
+  "output-injectivity",
+  "race-freedom",
+  "resource-legality",
+  "source-mir-kir-refinement",
+  "target-capability-closure",
+  "tensor-layout",
+  "workgroup-memory-epochs",
+]);
+const NEGATIVE_CATEGORIES = new Set([
+  "abi",
+  "alias",
+  "bounds",
+  "capability-forgery",
+  "capability-substitution",
+  "evidence",
+  "host-invocation",
+  "initialization",
+  "launch",
+  "raw-pointer",
+  "stale-output",
+  "synchronization",
+  "target",
+  "unsupported-operation",
+]);
+const FAILURE_STAGES = new Set([
+  "artifact-inspection",
+  "host-preparation",
+  "kir-verification",
+  "macro-authentication",
+  "mir-admission",
+  "runtime-completion",
+  "sealed-verifier",
+  "static-analysis",
+  "target-legalization",
+]);
+const CAPABILITY_EVIDENCE_KEYS = [
+  "artifactSha256",
+  "artifactInspectionSha256",
+  "capabilityAnalysisSha256",
+  "capabilityClosureSha256",
+  "compilerCommit",
+  "compilerPolicySha256",
+  "compilerTree",
+  "finalOptimizedKirSha256",
+  "hardwareEvidenceSha256",
+  "hostAdmissionSha256",
+  "launchContractSha256",
+  "loweringIdentitySha256",
+  "machineRefinementSha256",
+  "negativeFixtureSetSha256",
+  "numericalPolicySha256",
+  "proofCheckerSha256",
+  "proofEvidenceSha256",
+  "proofObligationSetSha256",
+  "simulatorEvidenceSha256",
+  "sourceMirIdentitySha256",
+  "sourceMirToKirRefinementSha256",
+  "targetCapabilityDecisionSha256",
+  "targetIdentitySha256",
+];
+const CAPABILITY_COMMAND_KEYS = [
+  "command",
+  "evidenceSha256",
+  "reasonCode",
+  "status",
+  "subjectSha256",
+  "target",
+];
+const PROOF_REQUIREMENT_KEYS = [
+  "checkerSha256",
+  "evidenceSha256",
+  "obligationSetSha256",
+  "properties",
+  "status",
+];
+const REQUIRED_PRODUCTION_PROOF_PROPERTIES = new Set([
+  "capability-provenance",
+  "functional-refinement",
+  "machine-refinement",
+  "source-mir-kir-refinement",
+]);
+const BASE_PRODUCTION_NEGATIVE_CATEGORIES = new Set([
+  "capability-forgery",
+  "capability-substitution",
+  "evidence",
+  "host-invocation",
+  "launch",
+  "stale-output",
+  "target",
+  "unsupported-operation",
+]);
+const COMMAND_KEYS = [
+  "arguments",
+  "environment",
+  "executable",
+  "timeoutSeconds",
+  "workingDirectory",
+];
+const NEUTRAL_BACKEND_TERMS = /(?:amd|amdgcn|gfx[0-9]|(?:^|[._-])hsa(?:$|[._-])|hip|hsaco|wave(?:32|64|front))/iu;
 const FIXTURE_INPUT_DIGEST_DOMAIN = Buffer.from(
   "fe2o3-tutorial-fixture-compiler-input-v1\0",
+  "ascii",
+);
+const PROOF_OBLIGATION_DIGEST_DOMAIN = Buffer.from(
+  "fe2o3-tutorial-capability-proof-obligations-v1\0",
+  "ascii",
+);
+const NEGATIVE_FIXTURE_DIGEST_DOMAIN = Buffer.from(
+  "fe2o3-tutorial-capability-negative-fixtures-v1\0",
   "ascii",
 );
 const MAX_SIDECAR_BYTES = 3 * 16 * 1024 * 1024 + 256 * 1024;
@@ -201,6 +360,13 @@ function canonicalDigestValue(value) {
     );
   }
   return value;
+}
+
+function canonicalRecordSha256(domain, value) {
+  return createHash("sha256")
+    .update(domain)
+    .update(JSON.stringify(canonicalDigestValue(value)), "ascii")
+    .digest("hex");
 }
 
 function validateCompilerInput(fixture, label) {
@@ -329,7 +495,7 @@ function validateEntry(rawEntry, index, fixtureById, referencedFixtures) {
   if (!ALLOWED_CLASSIFICATIONS.has(classification)) {
     fail(`${lessonId} has unsupported classification ${classification}`);
   }
-  if (COMPILER_EVIDENCE.has(evidence) && classification !== "compiler-produced") {
+  if (COMPILER_EVIDENCE.has(evidence) && !COMPILER_CLASSIFICATIONS.has(classification)) {
     fail(`${lessonId} cannot downgrade ${evidence} out of compiler coverage`);
   }
   const packageManifest = canonicalPath(entry.packageManifest, `${label}.packageManifest`);
@@ -345,10 +511,10 @@ function validateEntry(rawEntry, index, fixtureById, referencedFixtures) {
   }
 
   const fixtureIds = stringArray(entry.compilerFixtureIds, `${label}.compilerFixtureIds`);
-  if (classification === "compiler-produced" && fixtureIds.length === 0) {
+  if (COMPILER_CLASSIFICATIONS.has(classification) && fixtureIds.length === 0) {
     fail(`${lessonId} must resolve at least one compiler fixture`);
   }
-  if (classification !== "compiler-produced" && fixtureIds.length !== 0) {
+  if (!COMPILER_CLASSIFICATIONS.has(classification) && fixtureIds.length !== 0) {
     fail(`${lessonId} cannot claim compiler fixtures outside compiler coverage`);
   }
   for (const fixtureId of fixtureIds) {
@@ -362,16 +528,483 @@ function validateEntry(rawEntry, index, fixtureById, referencedFixtures) {
   if (gates.some((gate) => !ALLOWED_GATES.has(gate))) {
     fail(`${lessonId} contains an unsupported qualification gate`);
   }
-  if (classification === "compiler-produced" && !gates.includes("production-compile")) {
+  if (COMPILER_CLASSIFICATIONS.has(classification) && !gates.includes("production-compile")) {
     fail(`${lessonId} must require production-compile`);
   }
-  if (classification !== "compiler-produced" && gates.includes("production-compile")) {
+  if (
+    classification === "compiler-produced" &&
+    ["hardware", "semantic-simulation"].some((gate) => !gates.includes(gate))
+  ) {
+    fail(`${lessonId} compiler-produced coverage must require semantic-simulation and hardware`);
+  }
+  if (!COMPILER_CLASSIFICATIONS.has(classification) && gates.includes("production-compile")) {
     fail(`${lessonId} cannot require production-compile outside compiler coverage`);
   }
   if (gates.includes("hardware") && fixtureIds.length === 0) {
     fail(`${lessonId} cannot require hardware without an exact compiler target`);
   }
   return entry;
+}
+
+function sortedVocabulary(value, vocabulary, label, { nonempty = true } = {}) {
+  const items = stringArray(value, label, { nonempty });
+  if (JSON.stringify(items) !== JSON.stringify([...items].sort())) {
+    fail(`${label} must be sorted`);
+  }
+  const unknown = items.find((item) => !vocabulary.has(item));
+  if (unknown) fail(`${label} contains unsupported value ${unknown}`);
+  return items;
+}
+
+function nullableSha256(value, label) {
+  if (value !== null && !SHA256.test(value)) {
+    fail(`${label} must be null or a lowercase SHA-256`);
+  }
+  return value;
+}
+
+function validateCommandValue(value, label) {
+  const command = exactKeys(value, COMMAND_KEYS, label);
+  const executable = canonicalPath(command.executable, `${label}.executable`);
+  if (!executable.startsWith("scripts/") && !executable.startsWith("examples/")) {
+    fail(`${label}.executable must name a tutorial script or example runner`);
+  }
+  if (!Array.isArray(command.arguments)) fail(`${label}.arguments must be an array`);
+  command.arguments.forEach((argument, index) => string(argument, `${label}.arguments[${index}]`));
+  const environment = stringArray(command.environment, `${label}.environment`);
+  for (const assignment of environment) {
+    if (!/^[A-Za-z_][A-Za-z0-9_]*=.+$/u.test(assignment)) {
+      fail(`${label}.environment contains an invalid assignment`);
+    }
+  }
+  if (command.workingDirectory !== ".") fail(`${label}.workingDirectory must be .`);
+  integerAtLeast(command.timeoutSeconds, 1, `${label}.timeoutSeconds`);
+  return command;
+}
+
+function validateCapabilityCommand(value, label) {
+  const record = exactKeys(value, CAPABILITY_COMMAND_KEYS, label);
+  const statuses = new Set([
+    "available-legacy-only",
+    "capability-path-qualified",
+    "unavailable",
+  ]);
+  if (!statuses.has(record.status)) fail(`${label}.status is unsupported`);
+  if (!TARGET.test(string(record.target, `${label}.target`))) {
+    fail(`${label}.target is unsupported`);
+  }
+  if (record.status === "unavailable") {
+    if (
+      record.command !== null ||
+      record.evidenceSha256 !== null ||
+      record.subjectSha256 !== null
+    ) {
+      fail(`${label} unavailable status cannot carry command, subject, or evidence`);
+    }
+    string(record.reasonCode, `${label}.reasonCode`);
+    return record;
+  }
+  validateCommandValue(record.command, `${label}.command`);
+  if (record.status === "available-legacy-only") {
+    if (record.evidenceSha256 !== null || record.subjectSha256 !== null) {
+      fail(`${label} legacy status cannot carry capability subject or evidence`);
+    }
+    string(record.reasonCode, `${label}.reasonCode`);
+  } else {
+    if (!SHA256.test(record.evidenceSha256)) fail(`${label} qualified status requires evidence`);
+    if (!SHA256.test(record.subjectSha256)) fail(`${label} qualified status requires an exact subject`);
+    if (record.reasonCode !== null) fail(`${label} qualified status cannot carry an unavailability reason`);
+  }
+  return record;
+}
+
+function validateCapabilityContract(value) {
+  const contract = exactKeys(value, [
+    "allowsExactProfileFallback",
+    "allowsLegacyFallback",
+    "completeClassification",
+    "legacyClassification",
+    "neutralTarget",
+    "roadmapIssue",
+    "schema",
+    "status",
+  ], "capabilityContract");
+  if (contract.schema !== "fe2o3-tutorial-capability-status-v1") {
+    fail("capabilityContract has an unsupported schema");
+  }
+  if (contract.roadmapIssue !== "https://github.com/harsh-nod/fe2o3/issues/272") {
+    fail("capabilityContract must bind issue #272");
+  }
+  if (contract.status !== "migration" && contract.status !== "qualified") {
+    fail("capabilityContract.status must be migration or qualified");
+  }
+  if (
+    contract.completeClassification !== "compiler-produced" ||
+    contract.legacyClassification !== "legacy-compiler-produced" ||
+    contract.neutralTarget !== "target-neutral" ||
+    contract.allowsLegacyFallback !== false ||
+    contract.allowsExactProfileFallback !== false
+  ) {
+    fail("capabilityContract must preserve the closed no-fallback classification contract");
+  }
+  return contract;
+}
+
+function expectedSimulatorCommands(root, lessonIds, fixtureId) {
+  const commands = root.qualification.suites
+    .filter((suite) =>
+      suite.gate === "semantic-simulation" &&
+      suite.availability === "available" &&
+      suite.coverage.some((coverage) =>
+        lessonIds.includes(coverage.lessonId) && coverage.fixtureIds.includes(fixtureId)))
+    .map((suite) => suite.command);
+  const canonical = new Map(commands.map((command) => [JSON.stringify(command), command]));
+  return [...canonical.values()];
+}
+
+function expectedHardwareCommand(fixture) {
+  if (fixture.matrix === null) return null;
+  return {
+    executable: fixture.matrix.runnerPath,
+    arguments: fixture.matrix.runnerArguments,
+    environment: fixture.matrix.environment,
+    workingDirectory: ".",
+    timeoutSeconds: 1200,
+  };
+}
+
+function validateNegativeCoverage(value, label) {
+  const coverage = exactKeys(value, ["cases", "status"], label);
+  if (!new Set(["complete", "legacy-only", "missing"]).has(coverage.status)) {
+    fail(`${label}.status is unsupported`);
+  }
+  if (!Array.isArray(coverage.cases)) fail(`${label}.cases must be an array`);
+  const ids = new Set();
+  for (const [index, rawCase] of coverage.cases.entries()) {
+    const caseLabel = `${label}.cases[${index}]`;
+    const item = exactKeys(rawCase, [
+      "category",
+      "diagnosticCode",
+      "failureStage",
+      "fixtureId",
+      "testPath",
+    ], caseLabel);
+    if (!NEGATIVE_CATEGORIES.has(item.category)) fail(`${caseLabel}.category is unsupported`);
+    if (!/^FE2O3-[A-Z]+-[0-9]{3}$/u.test(string(item.diagnosticCode, `${caseLabel}.diagnosticCode`))) {
+      fail(`${caseLabel}.diagnosticCode is not stable`);
+    }
+    if (!FAILURE_STAGES.has(item.failureStage)) fail(`${caseLabel}.failureStage is unsupported`);
+    const id = string(item.fixtureId, `${caseLabel}.fixtureId`);
+    if (!SLUG.test(id) || ids.has(id)) fail(`${label} contains an invalid or duplicate fixtureId`);
+    ids.add(id);
+    canonicalPath(item.testPath, `${caseLabel}.testPath`);
+  }
+  if (coverage.status === "complete" && coverage.cases.length === 0) {
+    fail(`${label} complete status requires negative fixtures`);
+  }
+  if (coverage.status === "missing" && coverage.cases.length !== 0) {
+    fail(`${label} missing status cannot carry fixtures`);
+  }
+  return coverage;
+}
+
+function requiredNegativeCategories(requiredProperties) {
+  const categories = new Set(BASE_PRODUCTION_NEGATIVE_CATEGORIES);
+  if (requiredProperties.includes("abi-conformance")) categories.add("abi");
+  if (requiredProperties.includes("address-bounds")) categories.add("bounds");
+  if (
+    ["alias-legality", "output-injectivity", "race-freedom"]
+      .some((property) => requiredProperties.includes(property))
+  ) categories.add("alias");
+  if (requiredProperties.includes("initialized-before-read")) categories.add("initialization");
+  if (
+    [
+      "atomic-legality",
+      "barrier-convergence",
+      "collective-participation",
+      "happens-before",
+      "workgroup-memory-epochs",
+    ].some((property) => requiredProperties.includes(property))
+  ) categories.add("synchronization");
+  if (requiredProperties.includes("effect-legality")) categories.add("raw-pointer");
+  return [...categories].sort();
+}
+
+function validateProofRequirements(value, requiredProperties, label) {
+  const proof = exactKeys(value, PROOF_REQUIREMENT_KEYS, label);
+  if (!new Set(["complete", "missing", "unsupported"]).has(proof.status)) {
+    fail(`${label}.status is unsupported`);
+  }
+  const properties = sortedVocabulary(
+    proof.properties,
+    REQUIRED_PROPERTIES,
+    `${label}.properties`,
+  );
+  for (const property of properties) {
+    if (!requiredProperties.includes(property)) {
+      fail(`${label}.properties contains ${property} outside requiredProperties`);
+    }
+  }
+  for (const property of REQUIRED_PRODUCTION_PROOF_PROPERTIES) {
+    if (!properties.includes(property)) {
+      fail(`${label}.properties omits required production proof ${property}`);
+    }
+  }
+  for (const key of ["checkerSha256", "evidenceSha256", "obligationSetSha256"]) {
+    nullableSha256(proof[key], `${label}.${key}`);
+  }
+  const hasEvidence = proof.checkerSha256 !== null &&
+    proof.evidenceSha256 !== null &&
+    proof.obligationSetSha256 !== null;
+  if ((proof.status === "complete") !== hasEvidence) {
+    fail(`${label} status and exact proof identities are stale`);
+  }
+  if (
+    proof.status === "complete" &&
+    proof.obligationSetSha256 !== canonicalRecordSha256(
+      PROOF_OBLIGATION_DIGEST_DOMAIN,
+      properties,
+    )
+  ) {
+    fail(`${label}.obligationSetSha256 is stale against properties`);
+  }
+  return proof;
+}
+
+function validateCapabilityKernel(rawKernel, index, context) {
+  const label = `capabilityKernels[${index}]`;
+  const kernel = exactKeys(rawKernel, [
+    "capabilityClosure",
+    "fixtureId",
+    "hardwareCommand",
+    "kernelSymbol",
+    "lessonIds",
+    "negativeFixtureCoverage",
+    "productionCapabilityPath",
+    "proofRequirements",
+    "requiredProperties",
+    "simulatorCommand",
+    "targetMatrix",
+  ], label);
+  const fixtureId = string(kernel.fixtureId, `${label}.fixtureId`);
+  const fixture = context.fixtureById.get(fixtureId);
+  if (!fixture) fail(`${label} references unknown fixture ${fixtureId}`);
+  if (context.capabilityByFixture.has(fixtureId)) fail(`duplicate capability status for ${fixtureId}`);
+
+  const symbol = string(kernel.kernelSymbol, `${label}.kernelSymbol`);
+  if (fixture.compilerInput.kernelSymbols.length !== 1 || fixture.compilerInput.kernelSymbols[0] !== symbol) {
+    fail(`${label}.kernelSymbol does not match the exact compiler fixture`);
+  }
+  const lessonIds = stringArray(kernel.lessonIds, `${label}.lessonIds`, { nonempty: true });
+  if (JSON.stringify(lessonIds) !== JSON.stringify([...lessonIds].sort())) {
+    fail(`${label}.lessonIds must be sorted`);
+  }
+  const expectedLessons = context.entries
+    .filter((entry) => entry.compilerFixtureIds.includes(fixtureId))
+    .map((entry) => entry.lessonId)
+    .sort();
+  if (JSON.stringify(lessonIds) !== JSON.stringify(expectedLessons)) {
+    fail(`${label}.lessonIds are stale`);
+  }
+  const classifications = new Set(context.entries
+    .filter((entry) => lessonIds.includes(entry.lessonId))
+    .map((entry) => entry.classification));
+  if (classifications.size !== 1) fail(`${label} has conflicting lesson classifications`);
+  const [classification] = classifications;
+
+  const closure = exactKeys(
+    kernel.capabilityClosure,
+    ["requirements", "sha256", "status"],
+    `${label}.capabilityClosure`,
+  );
+  if (!new Set(["complete", "incomplete", "not-produced", "unsupported"]).has(closure.status)) {
+    fail(`${label}.capabilityClosure.status is unsupported`);
+  }
+  const requirements = stringArray(
+    closure.requirements,
+    `${label}.capabilityClosure.requirements`,
+    { nonempty: true },
+  );
+  if (JSON.stringify(requirements) !== JSON.stringify([...requirements].sort())) {
+    fail(`${label}.capabilityClosure.requirements must be sorted`);
+  }
+  for (const requirement of requirements) {
+    if (!CAPABILITY_REQUIREMENT.test(requirement)) fail(`${label} has malformed capability requirement`);
+    if (NEUTRAL_BACKEND_TERMS.test(requirement)) {
+      fail(`${label} neutral capability requirements contain an AMD assumption: ${requirement}`);
+    }
+    if (!CAPABILITY_REQUIREMENTS.has(requirement)) {
+      fail(`${label}.capabilityClosure.requirements contains unsupported value ${requirement}`);
+    }
+  }
+  nullableSha256(closure.sha256, `${label}.capabilityClosure.sha256`);
+  if ((closure.status === "complete") !== (closure.sha256 !== null)) {
+    fail(`${label}.capabilityClosure status and identity are stale`);
+  }
+
+  const production = exactKeys(
+    kernel.productionCapabilityPath,
+    ["evidence", "path", "status"],
+    `${label}.productionCapabilityPath`,
+  );
+  if (!new Set(["complete", "incomplete", "legacy-only", "unsupported"]).has(production.status)) {
+    fail(`${label}.productionCapabilityPath.status is unsupported`);
+  }
+  const expectedProductionPath = new Map([
+    ["complete", "canonical-capability"],
+    ["incomplete", "canonical-capability"],
+    ["legacy-only", "legacy"],
+    ["unsupported", "none"],
+  ]).get(production.status);
+  if (production.path !== expectedProductionPath) {
+    fail(`${label}.productionCapabilityPath path and status disagree`);
+  }
+  let evidence = null;
+  if (production.evidence !== null) {
+    evidence = exactKeys(production.evidence, CAPABILITY_EVIDENCE_KEYS, `${label}.productionCapabilityPath.evidence`);
+    for (const key of CAPABILITY_EVIDENCE_KEYS) {
+      const pattern = key === "compilerCommit" || key === "compilerTree" ? GIT_ID : SHA256;
+      if (!pattern.test(evidence[key])) fail(`${label}.productionCapabilityPath.evidence.${key} is malformed`);
+    }
+  }
+  if ((production.status === "complete") !== (evidence !== null)) {
+    fail(`${label}.productionCapabilityPath status and evidence are stale`);
+  }
+  if (evidence !== null) {
+    if (
+      evidence.compilerCommit !== context.baseline.compilerCommit ||
+      evidence.compilerTree !== context.baseline.compilerTree ||
+      evidence.capabilityClosureSha256 !== closure.sha256
+    ) fail(`${label}.productionCapabilityPath evidence is stale against the manifest baseline or closure`);
+  }
+
+  const requiredProperties = sortedVocabulary(
+    kernel.requiredProperties,
+    REQUIRED_PROPERTIES,
+    `${label}.requiredProperties`,
+  );
+  const proof = validateProofRequirements(
+    kernel.proofRequirements,
+    requiredProperties,
+    `${label}.proofRequirements`,
+  );
+  if (evidence !== null && (
+    evidence.proofCheckerSha256 !== proof.checkerSha256 ||
+    evidence.proofEvidenceSha256 !== proof.evidenceSha256 ||
+    evidence.proofObligationSetSha256 !== proof.obligationSetSha256
+  )) {
+    fail(`${label}.proofRequirements identities are stale against production evidence`);
+  }
+  if (!Array.isArray(kernel.targetMatrix) || kernel.targetMatrix.length !== 2) {
+    fail(`${label}.targetMatrix must contain exact neutral and backend rows`);
+  }
+  const neutral = exactKeys(kernel.targetMatrix[0], ["kind", "requirements", "status", "target"], `${label}.targetMatrix[0]`);
+  if (neutral.kind !== "neutral" || neutral.target !== context.capabilityContract.neutralTarget) {
+    fail(`${label}.targetMatrix[0] must be the target-neutral row`);
+  }
+  if (!new Set(["not-evaluated", "requirements-derived"]).has(neutral.status)) {
+    fail(`${label}.targetMatrix[0].status is unsupported`);
+  }
+  const neutralRequirements = sortedVocabulary(
+    neutral.requirements,
+    CAPABILITY_REQUIREMENTS,
+    `${label}.targetMatrix[0].requirements`,
+  );
+  if (JSON.stringify(neutralRequirements) !== JSON.stringify(requirements)) {
+    fail(`${label}.targetMatrix[0].requirements are stale against the closure`);
+  }
+  const backend = exactKeys(kernel.targetMatrix[1], [
+    "capabilityDecisionSha256",
+    "kind",
+    "status",
+    "target",
+    "targetIdentitySha256",
+  ], `${label}.targetMatrix[1]`);
+  if (backend.kind !== "backend" || backend.target !== fixture.target) {
+    fail(`${label}.targetMatrix[1] does not match the compiler fixture target`);
+  }
+  if (!new Set(["capability-complete", "legacy-only", "not-evaluated", "unsupported"]).has(backend.status)) {
+    fail(`${label}.targetMatrix[1].status is unsupported`);
+  }
+  nullableSha256(backend.capabilityDecisionSha256, `${label}.targetMatrix[1].capabilityDecisionSha256`);
+  nullableSha256(backend.targetIdentitySha256, `${label}.targetMatrix[1].targetIdentitySha256`);
+  const completeTarget = backend.capabilityDecisionSha256 !== null &&
+    backend.targetIdentitySha256 !== null;
+  if ((backend.status === "capability-complete") !== completeTarget) {
+    fail(`${label}.targetMatrix[1] status and target identities are stale`);
+  }
+  if (evidence !== null && (
+    evidence.targetCapabilityDecisionSha256 !== backend.capabilityDecisionSha256 ||
+    evidence.targetIdentitySha256 !== backend.targetIdentitySha256
+  )) {
+    fail(`${label}.targetMatrix[1] decision is stale against production evidence`);
+  }
+
+  const simulator = validateCapabilityCommand(kernel.simulatorCommand, `${label}.simulatorCommand`);
+  if (simulator.target !== fixture.target) {
+    fail(`${label}.simulatorCommand target does not match the compiler fixture`);
+  }
+  const expectedSimulator = expectedSimulatorCommands(context.root, lessonIds, fixtureId);
+  if (simulator.command === null) {
+    if (expectedSimulator.length !== 0) fail(`${label}.simulatorCommand omits the registered command`);
+  } else if (
+    expectedSimulator.length !== 1 ||
+    JSON.stringify(simulator.command) !== JSON.stringify(expectedSimulator[0])
+  ) fail(`${label}.simulatorCommand is stale against qualification.suites`);
+  const hardware = validateCapabilityCommand(kernel.hardwareCommand, `${label}.hardwareCommand`);
+  if (hardware.target !== fixture.target) {
+    fail(`${label}.hardwareCommand target does not match the compiler fixture`);
+  }
+  const expectedHardware = expectedHardwareCommand(fixture);
+  if (JSON.stringify(hardware.command) !== JSON.stringify(expectedHardware)) {
+    fail(`${label}.hardwareCommand is stale against the compiler fixture matrix`);
+  }
+  const negatives = validateNegativeCoverage(kernel.negativeFixtureCoverage, `${label}.negativeFixtureCoverage`);
+  const negativeFixtureSetSha256 = canonicalRecordSha256(
+    NEGATIVE_FIXTURE_DIGEST_DOMAIN,
+    { cases: negatives.cases, fixtureId },
+  );
+
+  if (classification === "compiler-produced") {
+    if (
+      closure.status !== "complete" ||
+      production.status !== "complete" ||
+      proof.status !== "complete" ||
+      neutral.status !== "requirements-derived" ||
+      backend.status !== "capability-complete" ||
+      simulator.status !== "capability-path-qualified" ||
+      hardware.status !== "capability-path-qualified" ||
+      negatives.status !== "complete"
+    ) fail(`${label} compiler-produced entry lacks required production capability evidence`);
+    const negativeCategories = new Set(negatives.cases.map((item) => item.category));
+    const missingNegativeCategories = requiredNegativeCategories(requiredProperties)
+      .filter((category) => !negativeCategories.has(category));
+    if (missingNegativeCategories.length !== 0) {
+      fail(`${label} complete negative coverage omits ${missingNegativeCategories.join(", ")}`);
+    }
+    if (
+      simulator.evidenceSha256 !== evidence.simulatorEvidenceSha256 ||
+      simulator.subjectSha256 !== evidence.finalOptimizedKirSha256 ||
+      hardware.evidenceSha256 !== evidence.hardwareEvidenceSha256 ||
+      hardware.subjectSha256 !== evidence.artifactSha256 ||
+      evidence.negativeFixtureSetSha256 !== negativeFixtureSetSha256
+    ) fail(`${label} command evidence is stale against production evidence`);
+  } else if (classification === "legacy-compiler-produced") {
+    if (
+      production.status !== "legacy-only" ||
+      closure.status === "complete" ||
+      proof.status === "complete" ||
+      backend.status !== "legacy-only" ||
+      simulator.status === "capability-path-qualified" ||
+      hardware.status === "capability-path-qualified" ||
+      negatives.status === "complete"
+    ) fail(`${label} legacy classification has stale capability-path status`);
+  } else {
+    fail(`${label} cannot exist outside compiler or legacy compiler coverage`);
+  }
+
+  context.capabilityByFixture.set(fixtureId, kernel);
+  return fixtureId;
 }
 
 function validateManifest(document) {
@@ -404,6 +1037,7 @@ function validateManifest(document) {
   if (contract.allowsPipelineSelection !== false || contract.allowsFallback !== false) {
     fail("pipeline selection and fallback must remain forbidden");
   }
+  const capabilityContract = validateCapabilityContract(root.capabilityContract);
 
   if (!Array.isArray(root.compilerFixtures) || root.compilerFixtures.length === 0) {
     fail("compilerFixtures must be a nonempty array");
@@ -430,7 +1064,43 @@ function validateManifest(document) {
   }
   const staleFixtures = fixtureIds.filter((fixtureId) => !referencedFixtures.has(fixtureId));
   if (staleFixtures.length !== 0) fail(`stale compiler fixture IDs: ${staleFixtures.join(", ")}`);
-  return { baseline, contract, entries, fixtureById };
+
+  if (!Array.isArray(root.capabilityKernels) || root.capabilityKernels.length === 0) {
+    fail("capabilityKernels must be a nonempty array");
+  }
+  const capabilityByFixture = new Map();
+  const capabilityFixtureIds = root.capabilityKernels.map((kernel, index) =>
+    validateCapabilityKernel(kernel, index, {
+      baseline,
+      capabilityByFixture,
+      capabilityContract,
+      entries,
+      fixtureById,
+      root,
+    }));
+  if (JSON.stringify(capabilityFixtureIds) !== JSON.stringify([...capabilityFixtureIds].sort())) {
+    fail("capabilityKernels must be sorted by fixtureId");
+  }
+  const missingCapabilities = fixtureIds.filter((fixtureId) => !capabilityByFixture.has(fixtureId));
+  if (missingCapabilities.length !== 0) {
+    fail(`compiler fixtures missing capability status: ${missingCapabilities.join(", ")}`);
+  }
+  const compilerProducedEntries = entries.filter(
+    (entry) => entry.classification === "compiler-produced",
+  );
+  if (
+    capabilityContract.status === "migration" &&
+    compilerProducedEntries.length !== 0
+  ) {
+    fail("migration capability contract cannot publish compiler-produced entries");
+  }
+  if (capabilityContract.status === "qualified") {
+    if (
+      baseline.status !== "qualified" ||
+      entries.some((entry) => entry.classification !== "compiler-produced")
+    ) fail("qualified capability contract requires an atomically qualified compiler-produced corpus");
+  }
+  return { baseline, capabilityByFixture, capabilityContract, contract, entries, fixtureById };
 }
 
 function validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot) {
@@ -447,6 +1117,22 @@ function validateDigest(manifestPath, digestPath, manifestBytes, manifestDocumen
     fail(`cannot compute stable corpus contract: ${error.message}`);
   }
   return { rawSha256: actual, corpusContractSha256 };
+}
+
+function validateManifestSchema(schemaPath, digestPath, repositoryRoot) {
+  const bytes = readFileSync(schemaPath);
+  const schema = JSON.parse(bytes.toString("utf8"));
+  if (
+    schema.$schema !== "https://json-schema.org/draft/2020-12/schema" ||
+    schema.$id !== "https://harsh-nod.github.io/fe2o3-kernels/schema/tutorial-kernel-manifest-v1.json" ||
+    schema.type !== "object" ||
+    schema.additionalProperties !== false
+  ) fail("tutorial kernel manifest schema identity or closed-root contract differs");
+  const [expected, recordedPath, ...extra] = readFileSync(digestPath, "ascii").trimEnd().split("  ");
+  if (extra.length !== 0 || !SHA256.test(expected)) fail("manifest schema digest record is malformed");
+  const expectedPath = relative(repositoryRoot, schemaPath).replaceAll("\\", "/");
+  if (recordedPath !== expectedPath) fail("manifest schema digest record names the wrong path");
+  if (sha256(bytes) !== expected) fail("manifest schema digest mismatch");
 }
 
 function gitBytes(repository, arguments_, label) {
@@ -796,6 +1482,8 @@ function parseArguments(arguments_) {
     };
     if (argument === "--manifest") values.manifest = next();
     else if (argument === "--digest") values.digest = next();
+    else if (argument === "--manifest-schema") values.manifestSchema = next();
+    else if (argument === "--manifest-schema-digest") values.manifestSchemaDigest = next();
     else if (argument === "--baseline-schema") values.baselineSchema = next();
     else if (argument === "--threshold-schema") values.thresholdSchema = next();
     else if (argument === "--hardware-schema") values.hardwareSchema = next();
@@ -830,6 +1518,13 @@ function main() {
   const digestPath = resolve(arguments_.digest ?? (manifestPath.endsWith(".json") ? `${manifestPath.slice(0, -5)}.sha256` : `${manifestPath}.sha256`));
   const digestBytes = readFileSync(digestPath);
   const manifestDigests = validateDigest(manifestPath, digestPath, manifestBytes, manifestDocument, repositoryRoot);
+  const manifestSchemaPath = resolve(
+    arguments_.manifestSchema ?? resolve(repositoryRoot, "config/tutorial-kernel-manifest-schema-v1.json"),
+  );
+  const manifestSchemaDigestPath = resolve(
+    arguments_.manifestSchemaDigest ?? resolve(repositoryRoot, "config/tutorial-kernel-manifest-schema-v1.sha256"),
+  );
+  validateManifestSchema(manifestSchemaPath, manifestSchemaDigestPath, repositoryRoot);
   const compilerRepository = arguments_.compilerRepository ?? process.env.FE2O3_COMPILER_REPOSITORY;
   if (compilerRepository) {
     validateCompilerManifestParity(
@@ -908,7 +1603,7 @@ function main() {
       });
     }
   }
-  console.log(`validated tutorial compiler corpus: ${manifest.entries.length} lessons, ${manifest.fixtureById.size} compiler fixtures, neutral V4 / AMD V2 / resource V3 / inspection V2`);
+  console.log(`validated tutorial compiler corpus: ${manifest.entries.length} lessons, ${manifest.fixtureById.size} compiler fixtures, ${manifest.capabilityContract.status} capability contract, neutral V4 / AMD V2 / resource V3 / inspection V2`);
 }
 
 try {

@@ -1,1336 +1,193 @@
 # fe2o3 kernels
 
-The authoritative learning workbench for
-[fe2o3](https://github.com/harsh-nod/fe2o3): write safe Rust GPU kernels, run
-the current examples, and inspect the exact evidence behind each claim. The
-curriculum starts with scalar fill and vector addition, then develops the
-contracts needed for collectives, tiled GEMM, online softmax, FlashAttention,
-MoE routing, low-precision gfx950 kernels, Kimi Delta Attention, sparse and
-hybrid attention, and GPT-OSS-style layer-tile work.
+**[Open the live curriculum](https://harsh-nod.github.io/fe2o3-kernels/)**
+| **[Follow the GPU capability pipeline](https://harsh-nod.github.io/fe2o3-kernels/#/gpu-capabilities)**
+| [Implementation status](https://harsh-nod.github.io/fe2o3-kernels/#/status)
 
-This site is evidence-led. It distinguishes what the current stack runs from
-what it verifies, what it observes in compiler or hardware tests, and what is
-still a design. It does not present advanced tutorial pseudocode as a working
-kernel.
+fe2o3-kernels is the executable curriculum and example corpus for
+[fe2o3](https://github.com/harsh-nod/fe2o3), a Rust GPU kernel compiler. It
+teaches kernel construction from indexing and ownership through workgroup
+coordination, tiled matrix operations, attention, and mixture of experts while
+keeping source, reference behavior, compiler fixtures, and evidence boundaries
+visible.
 
-## Functional reference gates
+This repository contains the learning site, ordinary Rust kernel examples,
+independent CPU references or semantic simulations, tests, and the shared
+tutorial compiler-corpus contract. The compiler and runtime live in the
+[fe2o3 repository](https://github.com/harsh-nod/fe2o3).
 
-Every tutorial kernel is organized around a safe Rust CPU reference or oracle.
-That is the learning spine of fe2o3: write the intended behavior once in safe
-host Rust, then track exactly how the GPU kernel is checked against it.
+## Runnable and bindable examples
 
-The current workbench labels each kernel's gate explicitly:
+Every tutorial kernel is presented as a runnable, bindable example rather than
+detached pseudocode:
 
-- **Proof-time source model**: Verus checks the source/model relation and
-  rejects negative fixtures before the kernel is promoted.
-- **Runtime CPU oracle**: the bounded GPU runner compares outputs, state, or
-  metadata with the safe CPU reference and fails on a mismatch.
-- **Compile-time refinement target**: promotion requires the compiler-owned
-  `SafeReferenceMirToLivePliron` join, generated per-compilation Verus replay,
-  and PLIRON structural reconciliation before KIR lowering.
+- **Runnable** means the lesson names a concrete operation that exercises the
+  example through a CPU reference, semantic simulator, production compile,
+  and/or target-specific hardware runner.
+- **Bindable** means the kernel has an identified package and source boundary
+  mapped to exact compiler fixture IDs and required gates in the shared
+  manifest.
+- **Evidence-specific** means a CPU run, compiler result, artifact inspection,
+  and hardware observation remain different claims. A runnable example is not
+  automatically hardware-qualified or proven correct.
 
-This is deliberately bounded. fe2o3 does not yet prove that arbitrary Rust CPU
-references and arbitrary GPU kernels are functionally equivalent at compile
-time. Unsupported reference MIR, tensor-component replay, finite numerical
-error replay, full model integration, LLVM/ISA behavior, launch, hardware, and
-performance remain outside the claim unless a lesson states otherwise.
+Use the exact command and compiler revision shown by a lesson. Some examples
+run without a GPU; others require the matching fe2o3 checkout, ROCm environment,
+and GPU target.
 
-## Start here
+## Current qualification status
 
-Community users should begin in the deployed workbench, not by reading this
-entire README. The home page now exposes four launch tracks:
+The checked-in manifest is in **migration**, not capability-qualified production:
 
-- **Run something first**: CPU semantic simulation, gfx942 setup gates, and
-  typed Vecadd.
-- **Write a kernel**: Fill, Vecadd, softmax, GEMM, and model operators.
-- **Understand the guarantees**: evidence labels, compiler checks, architecture,
-  Verus, artifact identity, and hardware observations.
-- **Contribute a bounded kernel**: the source/reference/runner/evidence shape
-  expected for a PR.
-
-The home page also includes a **What can I run today?** matrix with exact
-commands, expected results, environments, and boundaries. The
-`#/operators` route provides an operator cookbook for Fill, Vecadd, row
-softmax, GEMM, FlashAttention, MoE routing, Kimi Delta Attention,
-sparse/hybrid attention, residual mixing, speculative verification, N-gram
-gather, Muon update, and the GPT-OSS layer-tile megakernel.
-
-## Write a typed kernel
-
-Application source uses `#[kernel(typed)]` without a namespace hash. The
-compiler derives crate and kernel bindings from Cargo and rustc metadata:
-
-```text
-cargo fe2o3 check --all-targets
-cargo fe2o3 clippy --all-targets -- -D warnings
-cargo fe2o3 test --all-targets
-cargo fe2o3 build
-```
-
-The first three commands are authority-free host workflows; `build` is the
-production GPU compiler route. Hashes displayed in evidence records are
-compiler outputs retained for reproducibility. Kernel tabs project older
-evidence sources into the current namespace-free authoring syntax; their
-archived source links and digests continue to identify the immutable evidence
-bytes.
-
-## Start without a GPU
-
-Open the [Getting Started tutorial](https://harsh-nod.github.io/fe2o3-kernels/#/getting-started)
-for the typed result and semantic-debugger walkthrough. The executable path is
-an authority-free CPU simulation of the supported Kernel IR semantics. It does
-not load or dispatch a GPU, establish CPU/GPU equivalence, or predict
-performance.
-
-```bash
-git clone https://github.com/harsh-nod/fe2o3.git
-cd fe2o3
-git checkout --detach 308d8fa00fa41e098b2a1a47bbfea1bc29735464
-bash scripts/quickstart.sh no-gpu
-```
-
-The detached checkout is the exact compiler evidence pin recorded in
-`config/publication-gate.json`; update the command whenever that gate advances.
-
-## Audited lesson baseline
-
-Lesson evidence claims are based on one immutable fe2o3 snapshot. This pin does
-not cover the separately gated implementation-progress snapshot described
-below:
-
-| Field | Value |
+| Contract fact | Current value |
 | --- | --- |
-| Repository | `harsh-nod/fe2o3` |
-| Commit | `acb3d2752e4e50e4f4a99ebfc4b180eb79160930` |
-| Tree | `f53fdf76950e392d74c17c20e0999a7727305d49` |
-| Rust toolchain | `nightly-2026-04-03` |
-| Primary target | `gfx942:xnack-` |
-
-The lesson baseline was audited from source, documentation, test fixtures, Verus
-runners, compiler tests, direct-link tooling, and the signed evidence model.
-Commands shown in lessons that exercise fe2o3 are run from a checkout of that
-exact commit, not from this documentation repository.
-
-The deployed workbench also has an **Implementation status** reference page.
-It reports a last-audited public baseline, implementation checkpoints, a
-publication-gated snapshot, known blockers, and separate run/verify/evidence gates
-for every kernel in the curriculum. That progress view does not silently repin
-or upgrade lesson claims.
-
-The **Live KFD debugger** reference at `#/debugger/live-kfd` retains an
-independent historical milestone at compiler commit
-`ba0efc7f958e3afdf72eceeef1c37c2994fe2402`, tree
-`3a595c10a3af6f28223ed89b6029ba444c16a2af`. It documents the exact-bound V3
-agent protocol and the direct-KFD MI300X acceptance result. A current checkpoint
-at compiler commit `ba2171d19e32d957388f4e89ef510539bb2aa45e`, tree
-`2a25de725f3dc821cd65d8a2f44bf5ab2120a8f3`, adds one active gfx942 Wave64
-observation: two complete public-header ranges totaling 2,324 opaque bytes.
-Those adjacent sequential double reads are not one coherent checkpoint instant,
-and target-declared same-queue artifact correlation does not authenticate the
-code object physically loaded or executed. The page keeps decoded wave, lane,
-register, PC, and source values unavailable because public KFD publishes no
-stable inner ABI; target-memory values are also not captured. It states the
-retained ptrace/pidfd custody,
-`process_vm_readv` primary read, and EFAULT-only read-only `/proc/<pid>/mem`
-fallback. Current implementation links use this publication pin; the historical
-milestone and broader functional-proof publication record remain independently
-pinned.
-
-The CPU semantic simulation reference at `#/lesson/cpu-semantic-simulation`
-retains the arbitrary-extent compiler pin above for exact 1D workgroup scans
-from 1 through 256, then adds an independent Scan Bundle V5 qualification pin
-at compiler commit `b15cf628f628db435cf12269c507b06fbef6597e`, tree
-`f77977b6f94411acd10f8d33159196425bee1b2d`. The new gate covers all 18
-ordinary Rust type/mode/extent cases, exact persisted seeded replay, the N=65
-one-lane final logical Wave64, and the N=255 debugger's bounded inexact
-resource-exhaustion stop. Their trap-bearing Semantic MIR uses additive V11
-while V10 remains byte-for-byte closed. Generated bundles and schedule documents remain
-ephemeral test artifacts. These checks are CPU semantic/compiler evidence,
-not GPU execution, hardware validation, timing, or performance prediction.
-
-The **Agent-native source/ISA inspection** reference at
-`#/debugger/source-isa-agent` is independently pinned to compiler commit
-`8dc1ac8ec3e20801d8ec7054176fc031ce05ca25`, tree
-`50846a969869b4fe858025d8a365dbaa1df743bd`. It demonstrates the bounded typed
-JSONL protocol with a synthetic canonical missing-unit fixture. It grants no
-compiler, artifact, runtime, hardware-execution, complete-machine-coverage, or
-semantic-refinement authority. The protected 3x2 source/ISA matrix has not run,
-and issue #215 remains open.
-
-The **In-process profiler import** reference at
-`#/debugger/profiler-import` teaches the plan-bound rocprof collection and
-strict installed/forward JSON plus current 22-column CSV import contract. Its
-checked-in records are deterministic tutorial projections: two synthetic,
-unexecuted process records intentionally reuse one opaque agent handle while
-mapping to different synthetic KFD nodes. A separate bounded MI300X checkpoint
-passed the exact focused checks and frozen `generic-core` route at soft
-`nofile=1024`. It validated the sealed route with a Python target and directly
-observed sealed target, SDK core, and SDK tool mappings with no internal
-role-variable leakage. It did not directly observe interpreter, bootstrap, or
-collector-adapter mappings. The GPU-gated CLI suite covers KFD target identity,
-installed rocprof planning/import policy, and fake collector records; it did not
-run a real GPU-dispatch rocprofv3-to-import roundtrip. The exact bound
-compiler checkpoint is commit
-`a5438d82203eeb223b4ff8aa25ea6581b1f1af81`, tree
-`3a319954541af34b3d77366498e73fe4663f2044`, as recorded in
-`config/profiler-dispatch-import-tutorial.json`. This qualifies only the bounded
-importer/sealed-loader checkpoint, not the T3 profiler track. ATT remains
-unavailable because its decoder requires a mutable directory namespace for
-which no mutation-proof sealed route exists. The
-protected 3x2 source/ISA matrix has not run, and T5 distributed overlap remains
-blocked on the issue #182 typed producer. The query JSONL on the page is a
-deterministic illustrative non-wire, non-authoritative exercise, not a
-production protocol, service endpoint, or operation-availability claim.
-
-The same route now includes a row-softmax-named walkthrough of production
-`explain_regression`. Compiler milestone `50c947693c9574de8857686d5deec0f49fa74277`
-adds a bounded, kernel-neutral explanation response over exact comparable
-treatments. It projects current Archive V1 optimizer audits and joins longer
-dispatch ticks with HSACO resources, counters, positive source/IR/ISA
-occurrences, and complete structural multiplicity as evidence-linked inferred
-hypotheses. Each result retains contradictions, missing facts, and ordered next
-measurements; causal attribution stays unavailable. The walkthrough's ticks and
-HSACO metadata are deterministic protocol fixtures, not compiled row-softmax or
-hardware performance evidence.
-
-The current debugger/profiler milestone adds a separate live direct-KFD
-qualification boundary. A pure direct-KFD MI300X target completed under the
-installed ROCProfiler SDK 1.1.0 wrapper, but the collector emitted no admitted
-dispatch artifact. A bounded 5-warmup/30-measured-pair record observed 31.35%
-wrapper/process wall-time overhead for that exact target; it is not capture
-overhead and does not qualify production use. The tutorial keeps dispatch,
-code-object, clock, counter, PC, ATT, debugger, and capture-overhead conclusions
-typed unavailable.
-
-The checked-in publication gate is pinned to immutable implementation-evidence
-commit `308d8fa00fa41e098b2a1a47bbfea1bc29735464`, tree
-`aee01674fefa733731db35eae1a1705b3286179e`. Deployment requires
-`harsh-nod/fe2o3@refs/heads/main` and
-`powderluv/fe2o3@refs/heads/main` to contain that commit, and requires that
-commit object to resolve to the exact pinned tree. Either ref may advance to a
-descendant; the gate does not present the evidence commit as the current head.
-Missing ancestry, a rewritten commit, or a different tree fails closed.
-
-This snapshot contains safe Rust dynamic GEMM, row-softmax, attention, and
-grouped-expert MoE tutorial kernels. Their pinned historical qualification
-commits covered four GEMM cases, four softmax cases, two one-pass-online
-attention cases, and five MoE output widths on MI300X; those workload-selecting
-qualification routes were later deleted. Current production has one
-workload-neutral semantic MIR -> ranked PLIRON -> Kernel IR -> target pipeline
-and no workload selector or fallback. The standalone AMDGCN/PLIRON-to-LLVM and
-KIR/PLIRON bridge packages have been deleted rather than retained as alternate
-lowering paths. GFX950 Semantic MIR V6 and Kernel IR V9 are selected from the
-actual collective and LDS-transpose operations, never from an attention or
-other workload name. Under the exact `gfx950:xnack-` full-active Wave64
-profile, FP32 subgroup reduction accepts each nonzero power-of-two tile width
-through 64; unsupported widths, targets, profiles, and dynamic source lanes
-fail closed.
-
-The middle end has one fixed nine-pass analysis sequence and one live evidence
-producer: `ProductionMiddleEndEvidenceV5`. The strict V4 decoder is retained
-only so immutable historical bytes remain inspectable; it cannot produce live
-evidence or grant refinement, lowering, artifact, or launch authority. The
-caller-declared `ProductionReferenceProofV1` and `RequireReferenceEquivalent`
-API has been removed rather than retained as a dormant proof route.
-Target-aware validation first performs a bounded structural inventory before
-recursive PLIRON verification or launch-contract scanning. Malformed,
-unsupported, nested, or over-limit input fails closed as `FE2O3-TARGET-000`.
-Same-`TyCtxt` descriptor identity hardens substitution checks. Authenticated
-production projection now carries the checked index, success path, receiver
-extent, dominance, provenance, and launch mapping needed by the generic tiled
-and row-striped race proof into retained Kernel IR.
-
-The workload-neutral `PipelineProtocol` stage runs after barrier convergence
-and before workgroup-memory verification. It validates compiler-owned staged
-storage, epoch lifecycle, release-before-reuse, modulo ring slots, uniform
-dynamic bounds, and summarized prologue, steady-state, and drain regions.
-
-The current device and trusted-item surfaces also remove the exact Slice 1 LDS
-pair and publish intrinsics. The current MoE source passes its already loaded
-typed MFMA fragments directly to the matrix operation. The historical Slice 1
-source and evidence below remain immutable at their original coordinates.
-Checked tiled and row-striped recipes carry a structural index, checked success
-capability, destination physical extent, source provenance, and launch
-coordinates. Typed live validation proves supported active store maps
-injective across workgroups, lanes, and components. Raw or textual carriers
-without authenticated source custody still fail closed.
-
-This descendant also contains
-the exact protected Slice 1
-implementation and measured evidence pinned to commit
-`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`, tree
-`c65c6ab567409afaaef6ea39c8befcac21d47119`: attributed source-to-IR
-correspondence, canonical matrix Kernel IR V5 bytes, an exact compiler-owned
-descriptor and single-use inert Worker V2 handoff, an authority-free sealed
-exact-profile import, direct LLVM/LLD API finalization, generated borrowed host
-preparation, the one-shot protected lifecycle, and one bounded protected mi300x
-measurement. It also retains the separate Slice 3 and Slice 4 upstream
-LLVM/COV6 inspections and bounded Slice 1 source/model correspondence. The
-newer snapshot also adds source/oracle/formal Phase A packages for masked
-Wave64 collectives and workgroup synchronization. The latter uses a typed
-`DeviceGlobalMutPtr` kernel argument, an exclusive generated `GlobalMut` host
-capability, and an exact linear `DynamicLds` capability. Exact compiler profiles
-and opaque upstream LLVM target-machine plus in-process LLD finalization now
-exist for its fixed WG64 LDS-reduction and system-scope relaxed-atomic forms.
-The exact fixed profiles now also have typed arguments, profile-bound host
-admission, private non-Clone `Joined -> Loaded -> Completed -> Unloaded`
-lifecycles, exact COV6 packing, dynamic-LDS AQL binding, and protected harness
-vectors. Combined debug and release host/runtime suites pass. A subsequent fix
-derives the canonical layout through upstream LLVM 22
-`TargetMachine::createDataLayout()`, binds its identity into both handoffs, and
-rejects stale, missing, reordered, and substituted layouts. The normal pinned
-MI300X lifecycle then passed both exact kernels in debug and release with
-canaries, unchanged inputs, exact oracles, bounded completion, and terminal
-unload. This is a bounded observation, not compiler-origin or
-source/compiler/machine refinement authority. The dynamic GEMM Kernel, Compile
-& run, and Host tabs are byte-pinned to current dual-repository main. Other
-advanced Kernel tabs retain their separately pinned safe source milestones.
-Historical Phase A, compiler,
-finalizer, runtime, and GPU evidence remains pinned to its original commits and
-does not transfer authority to the repinned source. A later exact Wave64 increment now reaches deterministic
-in-process upstream LLVM target emission and LLD library linking with exact
-post-link metadata, resource, relocation, dependency, and machine-call checks.
-Its typed one-shot HSA lifecycle also completed one protected gfx942 observation
-over four exact masks with canaries, unchanged inputs, exact-bit outputs, and
-terminal unload. That bounded observation is not a generalized compiler or
-Verus-to-machine refinement result. Commit
-`43bd2a602b2ceb5a7079f85445dacd6dc8fe73c4` adds bounded
-source-model-to-canonical-Kernel-IR correspondence for that exact masked Wave64
-profile. The package passes 38 tests with one existing hardware test ignored,
-Verus discharges 22 positive obligations, all eight expected-negative fixtures
-are rejected, and the executable checker records 4,359 deterministic mask
-observations while symbolically checking contributor sets for every `u64` mask.
-The receipt does not hash the CPU oracle or refinement implementation, so the
-outer commit remains part of the evidence identity. KIR order is validated but
-not operationally executed, and Verus relates internal mathematical definitions
-without computing SHA-256. This result establishes no source-to-model,
-compiler, LLVM/ISA, GPU, generalized safety or race-freedom, or parity
-authority. The snapshot also carries the row-softmax V1 inert verification
-certificate and makes `examples/row_softmax_v1/src/kernel.rs` the sole ordinary
-example-owned attributed source. Complete `syn` AST structural admission runs
-before a fixed reviewed interpreter/model, while digests and the certificate
-bind the exact source, model, and authenticated 64-element memory preconditions.
-This is not Rust semantic refinement and does not establish compiler/GPU
-causality or runtime satisfaction of the preconditions. The certificate has 18
-Verus obligations and seven named negative fixtures bind exact reviewed source,
-policy, proof, compiler-profile, Kernel IR, target, and tool identities. The
-certificate itself grants no compiler, artifact, launch, or hardware authority. The
-same publication-gated snapshot now contains an exact typed 64-element row-softmax host
-adapter and a private linear HSA load/dispatch/wait/unload lifecycle. G3 binds
-the attributed source, compiler descriptor, Worker V2 handoff, OCML import
-closure, finalization, typed host mechanics, and a staged receipt for all 25
-release pins at historical commit
-`aca28306fe89c036dc0129349ef9ed685a43c7bb`, tree
-`37f1a92e0be0a4b48c5cef1b1a48327e0ea4c828`. That checkpoint remains separate
-from the later LLVM release pair: implementation commit A
-`31bf96a21c0a2bbfb55c44f9a22b7350cabcfcb1`, tree
-`293c6d39e47d64f5949d450d6041dc598aafd0fe`, and manifest commit B
-`fd89390788adc5670c54ecc2517b9720f2f80113`, tree
-`af0156687517c0e71eb0d607917964b7c375af43`. B pins
-`tools/fe2o3-llvm-link-worker/row-softmax-v1-release-manifest.txt` at SHA-256
-`9c7dc4a08f2f972b581ffa0f88bf8834d2098f21ff57b1a8594dd4dfca03759c`.
-Two fresh complete MI300X runs passed, and independent review accepted the
-evidence package. The runs reproduced the retained compiler, closure, worker,
-probe, and single retained HSACO identity, SHA-256
-`0864047320a7ade5eba29d3fbb3ef9efefcf2a1378097061010d163af461db93`.
-They did not dispatch a GPU and establish only bounded
-compiler/code-object reproducibility and operator-selected reviewed integrity,
-not runtime or GPU results, authentication, generalized memory safety or race
-freedom, or source/model/Verus-to-machine refinement. The GPU code-object path
-remains pinned upstream LLVM target-machine APIs plus in-process LLD. W0 is now
-accepted only as the bounded ancestor described below. A durable broker
-prepared-session consume foundation now exists, but it remains
-`AUTHORITY=none`; anti-rollback, key provenance, hostile same-UID resistance,
-multiwriter coordination, cross-system atomicity, and publication/runtime/GPU
-authority remain open. No production row-softmax hardware run is claimed. The
-publication-gated snapshot also
-contains exact B=1, H=1, N=8,
-D=16 FlashAttention compiler
-admission. It binds ordinary attributed source, FnAbi, compiler configuration,
-complete reachable portable MIR, semantic Kernel IR, and V3 provider identity,
-with hostile substitution coverage. G4 now carries those authenticated compiler
-inputs through a single-use Worker V2 handoff and structural finalization using
-upstream LLVM target-machine APIs plus in-process LLD. It checks the pinned OCML
-provider closure and exact gfx942:xnack-/COV6 profile, and returns an opaque,
-non-Clone receipt with deterministic raw and finalized output identities. The
-receipt exposes no bytes, replay, publication, load, or launch path. This is
-compiler-handoff and finalizer evidence only: it grants no publication, load,
-launch, runtime, GPU, numerical, performance, compiler-refinement,
-OCML-semantics, general memory-safety, race-freedom, or source/model-to-machine
-authority. It also contains no measured proof of no-COMGR linkage; that would
-require a separately measured worker manifest. A subsequent exact
-B=1, H=1, N=8, D=16 FlashAttention checkpoint adds a typed four-buffer host
-binding with shared query/key/value input leases, unique output ownership, and
-alias rejection. The opaque receipt enters a private non-Clone `Joined ->
-Loaded -> Completed -> Unloaded` lifecycle that binds reviewed HSA executable,
-kernel, group-segment, and private-segment observations. Nine compile-fail
-cases enforce the ownership and typestate boundaries, and an independent
-strict-F32 CPU oracle covers nominal, equal-score, dominant-score, causal-mask,
-exceptional-input, unchanged-input, and canary cases. At that checkpoint the
-protected MI300X test failed closed before HSA load pending W0 and W1; the
-current tip closes the bounded W0 prerequisite and adds local durable
-prepared-session consume mechanics with `AUTHORITY=none`, while real
-anti-rollback, key provenance, multiwriter coordination, publication authority,
-and subsequent linear receipt injection remain open.
-Artifact-path and raw-byte fallbacks are refused. This is host/runtime mechanics,
-compile-fail, resource-observation,
-and CPU-oracle evidence only. It grants no protected GPU dispatch or numerical
-GPU result, compiler or OCML semantics, source/model/Verus-to-machine
-refinement, general memory safety, or race freedom. A later bounded memory/effect
-checkpoint adds an exhaustive fixed-domain Rust checker plus a pinned Verus
-source for B1/H1/N8/D16 index bounds, causal reads, byte-region bounds, output
-ownership, disjoint writes, and phase ordering. Verus reports 13 verified
-obligations and the runner rejects eight named mutations. Its copyable expected-
-evidence descriptor is explicitly inert, and the checker reports no authenticated
-Verus receipt. Compiler, Kernel-IR, LLVM/ISA, logical-address, final-artifact,
-machine-safety, generalized race-freedom, and GPU-execution joins remain absent.
-Exact T=8, E=4, K=2, C=4 MoE
-routing compiler admission now
-similarly binds attributed source, FnAbi, complete reachable portable MIR,
-semantic Kernel IR, target/ABI/resources, and V3 provider identity. G5 carries
-that authenticated compiler handoff through a single-use Worker V2 exchange,
-upstream LLVM target-machine emission, in-process LLD, and exact structural
-ELF, machine, metadata, descriptor, and resource checks. The resulting
-non-Clone receipt is opaque, deterministic, and identity-only. The measured
-direct worker passed in debug and release with identical raw and finalized
-output identities. This grants no publication, load, launch, runtime, GPU
-numerical, performance, compiler-refinement, Verus-to-machine, general
-memory-safety, or race-freedom authority. The GPU device code-object path uses
-upstream LLVM target-machine APIs plus in-process LLD and exposes no COMGR or
-shell GPU linker, but no measured worker manifest proves no-COMGR linkage.
-Bounded MoE V2 is integrated at this publication-gated checkpoint. Its exact
-E4/C4/routes16/width16/tile256 compact-plan model reports 19 verified
-obligations, rejects seven expected-failure mutations, and exhaustively covers
-all 625 expert-count vectors. Its host bridge validates one caller-supplied
-routing snapshot and uploads and reads back offsets plus inverse mappings on
-gfx942. That upload/readback test is no kernel dispatch. It provides no router
-or expert GPU execution, generalized source-to-machine refinement, numerical
-or performance result, memory-safety authority, or race-freedom authority; the
-MoE rows remain Partial. The public
-snapshot also isolates the 64-connection broker-capacity test from the
-separate concurrent executable-authentication and descriptor-transfer test, so
-hosted CI exercises each bounded property without coupling their deadlines. The
-publication workflow continues to require both public refs to resolve exactly
-to the gated commit and tree before deployment. The historical audited public
-baseline remains
-`96b9890c3ad33ad8c6b4239a9b567728a176d65f`, tree
-`f911f0c693238830ad6070b2674fb863857bfec1`.
-
-The public history also records the rejected W0-B candidate
-`2e5ad53bcb20f2a46e91128a42e838d918d61581`, tree
-`892f014381cd3e34f81cb05df3b9bbda4a412478`. That candidate is not integrated,
-accepted, or public. On MI300X it crossed the static binding-wrapper, Cargo,
-rustc, backend, and kernel-collection boundaries, then failed closed because
-the broker lacked an authenticated `cargo-fe2o3` executable identity. It ran
-zero Workers and reached no artifact admission, load, dispatch, or GPU result;
-it opened no COMGR path. Review also found that its dynamically linked host
-`rust-lld` left the ELF loader and system DSOs, CRTs, archives and objects,
-search roots, and forwarded Cargo target artifacts outside the authenticated
-closure. `env_clear` reduces ambient configuration but is not dependency
-authentication. The accepted successor is rooted at ancestor commit
-`9f40bbff39156f8b5f05868377ee12a2c4f74207`, tree
-`fd05530d3728aa928090b8e7beb372eaaf22b477`. Its dedicated genuinely static
-`fe2o3-host-lld` is built from pinned upstream LLVM/LLD archives and consumed by
-descriptor-sealed `HostLinkClosureV1`. Two fresh guarded MI300X builds produced
-the same 85,597,472-byte tool with SHA-256
-`7c1a7429e93896393eb743ed54ead78ec6d492e3ed887183e67737b3872d7bf9`;
-the secure-protocol CTest and a separate real closure link slice passed. This is
-measured/no-authority evidence only. W0 grants no protected publication, broker
-or durable artifact handoff, runtime, load, launch, or GPU authority or evidence;
-it proves neither memory safety nor race freedom and establishes no
-source-to-machine or Verus-to-machine refinement.
-
-Ancestor commit
-`66393d3ca7a6805633ed94e12c707a6d22bdf1ad`, tree
-`f39f9c76d964bafe9e8a12a0b48099766490b366`, adds an inert Broker V4 protocol
-foundation. Its canonical binding, frames,
-transcript validator, replay claim, and registry interface all carry
-`AUTHORITY=none`; there is no production registry implementation or session
-capability. W1 remains the next blocker: the broker must durably and atomically
-reserve a unique session before host linking, issue an unforgeable move-only
-capability, bind completion to the exact reservation and transcript, persist
-replay exclusion across restart, and consume that capability once at durable
-publication. Device code-object linking remains pinned upstream LLVM
-target-machine APIs plus in-process LLD, with no COMGR or shell GPU linker.
-Neither W0 nor inert Broker V4 promotes a parity or tutorial evidence row.
-
-Commit `b8daeb2bc953924a424542820bed566e52d57290`, tree
-`ee06e94d6c5b5f5f447127a6c497e5a3e84ba417`, adds only an inert
-protected-service descriptor-admission foundation. It reports
-`AUTHORITY=none`. Its 27
-unit tests and two compile-fail doctests pass; two privileged/root-only
-positive tests remain ignored and were not executed. The retained descriptor
-and connection-time credential checks establish no liveness, PID-reuse
-protection, endpoint exclusivity, or storage provenance, and grant no storage,
-replay, link, publication, load, or launch authority.
-
-Commit
-`e874da2083c2a1eb192048ea5f88a053c28d0ee2`, tree
-`0e504b3be16b4dfaf3c997eefac8a6d24313e1b8`, adds an accepted reviewed
-attributed-source structural correspondence checkpoint for the exact Wave64
-kernel. An exact `syn` AST gate admits
-the complete reviewed source shape before a fixed interpreter runs. The checker
-records 17,436 observations; Verus adds 13 positive obligations and six
-expected-negative fixtures. Both paths report
-`proves_source_to_model_refinement=false`. Independent review limits the result
-to structural and model-internal/definitional correspondence: digest constants
-are not a verified SHA computation, the interpreter is fixed after AST
-admission rather than derived from source semantics, and no operational Rust
-semantics is proved. It grants no compiler, GPU, generalized safety, or parity
-authority.
-
-Ancestor commit `4aed8d4d394783362e289a558b6d94cc28ecda36` adds an accepted
-static pre-exec containment foundation
-at commit `4aed8d4d394783362e289a558b6d94cc28ecda36`, tree
-`3996f269dad3e88748c50a24c98439c1422c1e3b`, with `AUTHORITY=none`. Its
-freestanding syscall-only `_start` revalidates exact descriptor objects and
-process controls, installs exact descriptor closure, and executes a fixed
-one-element `argv` with an empty target environment. Post-exec parent-death
-coverage confirms inherited `PDEATHSIG(SIGKILL)`. Fourteen tests and the Cargo
-integration pass; three builds reproduced a 17,488-byte static executable with
-SHA-256
-`db65ee057a8a9d10f8c8e54087e46c4d34c7040b5b34e1732c42da2872b91c52`.
-The boundary still trusts the supervisor and inherited process state. A
-preattached ptrace tracer, `CAP_SYS_PTRACE`, or inherited seccomp user
-notification can invalidate checks; descriptor state is coarse, parent-start
-provenance relies on trusted procfs mount state, and target exec resets
-dumpability. It grants no broker replay, publication, link, load, launch, GPU,
-or parity authority.
-
-Commit `4639ff36c8651a859495da86ea2c75e735377440` adds the independently
-accepted bounded external anti-rollback anchor protocol, tree
-`f0d91caaf705a7542135226c20cdb794dbc4f542`, with `AUTHORITY=none`.
-Canonical fixed-width advance and recovery challenges bind an exact nonzero
-caller nonce, expected sequence, prior head, transaction, proposed head, and
-derived anchor-key identity. Strict Ed25519 verification against a
-caller-supplied pinned public-key value is required before the move-only state
-machine can produce a commit observation. Fifteen adversarial/property-style
-tests and three compile-fail doctests pass locally and on `mi300x`. Key
-provenance, durable nonce freshness, transport, persistence, a monotonic anchor
-implementation, protected-service integration, and atomic publication remain
-absent. This checkpoint changes no parity row or tutorial evidence claim.
-
-Commit `091bf3c080a516396a24650f52c8e41fddf699f6`, tree
-`ae42880843e34564fbbe408ddb5f05eab029783c`, freezes independently
-reconstructed cross-implementation vectors for both 184-byte challenges and
-all four 288-byte signed observations. It also adds a bounded,
-domain-separated transaction-digest derivation over caller-canonical bytes.
-Callers still own that canonical transaction encoding. This remains
-`AUTHORITY=none` and supplies no key provenance, nonce freshness, persistence,
-transport, anchor implementation, atomic publication, service integration,
-GPU authority, or parity claim.
-
-Commit `d9ae1e95957d28a17afdcfa1a5173d40b89e65a6`, tree
-`a7a5fe7a94331a1354679eea1977b1fa3d0c1218`, adds an independently
-accepted typed/cooperative broker lifecycle with `AUTHORITY=none`. A move-only
-permit gates formation of a reservation-bound W0 request; the reservation,
-fresh request nonce, process PID plus start time, V4 transcript, admitted host
-output, anchor transaction, and publication plan are checked as one logical
-identity. This is an in-memory state-machine foundation only. It provides no
-persistence, durable uniqueness, real anti-rollback, atomic disk publication,
-hostile-process enforcement, continuous liveness, runtime, GPU, or parity
-authority, and it still requires a compatible trusted procfs mount.
-
-Commit `c703eaa271040b7c297e0d3b9ea8cc9fa470f327`, tree
-`c75b6cb9d70c6984bb375d09f095580eb2f7581a`, isolates production-deadline
-Worker V2 application-ACK fixtures behind one exclusive process lane. The
-default 28-test and all-features 35-test suites pass on MI300X. This changes test
-harness determinism only, not production authority or tutorial evidence.
-
-Commit `f4dcafb8b95345a5203a7f2c9886f9600345405f`, tree
-`9eae0bfcbe6017fd16a02acdcb7b401f1dbd80df`, moves the exact 1,289-byte
-row-softmax source to `examples/row_softmax_v1/src/kernel.rs` and leaves the
-compiler fixture as a re-export facade. Its SHA-256 remains
-`c4e2d6bb6eebe01eb6ae7c0da1a524113819a37b4ec2d0a5167f32cc3134e6f4`.
-Complete AST admission, a fixed reviewed interpreter/model, and
-digest/certificate binding provide bounded structural evidence only. They prove
-neither Rust semantics, compiler/GPU causality, OCML/IEEE behavior, execution,
-general memory or race safety, protected dispatch, nor parity.
-
-Commit `7139ccfd01e0ab8b0fc521613ac4356134d2e0c5`, tree
-`aef7f32c4dc3fe0087006e880cb535d8c8adaf1a`, adds a descriptor-relative
-durable broker prepared-session consume and crash-recovery foundation. It stages
-exact W0 bytes, obtains a service-owned random nonce, commits Prepared before
-exposing the challenge, and re-establishes a retained-directory durability
-barrier during recovery. It remains strictly `AUTHORITY=none`: there is no
-anti-rollback, key provenance, hostile same-UID resistance, multiwriter
-coordination, cross-system atomicity, publication, runtime, GPU, or parity
-authority.
-
-Commit `5a3f057b915b0cb21c3a0ac54094fd7e5e5ce6a4`, tree
-`37dc2765f30c50f99a3fb3f5b8e56d03a511c33e`, splits hosted generic CI into
-one core job, eight rustc-codegen shards covering all 19 current Cargo test
-targets exactly once, and a fail-closed aggregate. Locked Cargo metadata is the
-authoritative target inventory. All shards and policy checks passed in isolated
-MI300X worktrees. At the later `86c4ca67a` public checkpoint, the complete `powderluv/fe2o3`
-GitHub-hosted generic run, including all eight shards and the fail-closed
-aggregate, also passed. The complete serial generic gate remains intact.
-
-Ancestor public commit `86c4ca67a673bfec966f79e6c701104db872d8ea`, tree
-`28f0ef6525290eb1be2ddcad72a785816502f547`, integrates 34 descendants of
-that sharding checkpoint. The bounded delta canonicalizes provider identities
-and paths, completes the Wave64 and workgroup MIR V3 inputs, repins the exact
-FlashAttention and MoE MIR closures, reconciles architecture and evidence
-boundaries, makes stale-artifact cleanup ownership-aware, and rebuilds each
-ROCm example before checking its generated artifacts. The hosted row-softmax
-lineage test now receives complete checkout history, and the
-authenticated-Verus fixture closure is repinned after the ordinary row-softmax
-source changed its owning verifier package. The final commits isolate temporary
-clean-CLI projects from a workflow-wide `CARGO_TARGET_DIR` while preserving the
-dedicated environment-target test, then give an already-killed orphan a bounded
-host-reaping interval before the timeout test requires `ESRCH`. A still-live
-descendant remains a hard failure. The exact clean generic-core gate passed on
-MI300X, as did all 18 runnable tests in the affected control-flow target and a
-100-run stress loop for the timeout case; the ancestor release candidate's
-gfx942 ROCm compile/artifact lanes also passed there. All 14 debug and 13 release
-reviewed-host tests passed serially with the new exact fixture, runtime-closure,
-and executable-page identities. These are compiler identity, documentation,
-test-determinism, and release-order changes only; they do not
-promote a parity row or grant source-to-machine, memory-safety, race-freedom,
-protected-runtime, or GPU authority.
-
-That ancestor starts issue #134 Wave 0 with a normative Rust-first Pliron
-architecture and proof-boundary decision, fixed-width Pliron-independent
-`KernelItemId` and `KernelInstId` V1 records, and frozen V1-V5 Kernel IR
-compatibility guards. The contracts suite passes 44 tests plus one doctest, and
-the new compatibility suite passes six focused tests alongside 67 existing
-wire tests. This is identity, compatibility, and architecture infrastructure;
-no Pliron dependency or production selector has landed, and no executable
-Pliron lowering or #135 persistent-service implementation is claimed.
-
-Public checkpoint `2f7c4fd1dfef7b9056caab0880700e3da7eeef03`, tree
-`96d4275e7efde8ef594ef34b1c28f95d3000c8dc`, advances the issue #134/#135
-compiler architecture while making the Pliron ownership limit explicit. Stable
-Pliron-independent MIR and AMDGCN models remain below compatibility dialect
-facades. Upstream Pliron v0.17.0 commit
-`2610651306ea3ba670f68d5d8b1e1159bcd521ed` is integrated through a private
-process-local identity anchor that registers and verifies contexts. Its bounded
-`PassPlan` is deliberately non-executing: generic pass execution remains
-withheld until issue #140 provides owner-aware upstream handles. There is no
-`pliron-llvm` path.
-
-The exact-byte KIR V1-V5 bridge is now opaque and context-bound. It checks the
-originating context before any operation dereference and rejects same-slot
-foreign contexts, transplanted identity markers, substitution, stale handles,
-and erased state. MIR-to-kernel and kernel-to-GPU are detached context-bound
-services rather than Pliron `Pass` implementations. Their results retain
-context identity, unsupported input and exhausted bounds remain terminal typed
-errors, and failure cannot return a result or fall back to another backend.
-
-The same checkpoint extends the `fe2o3-drm-uapi`, `fe2o3-kfd-uapi`,
-`fe2o3-kfd`, and `fe2o3-runtime-model` pure-Rust foundations through KFD 1.18
-and reviewed DRM identity UAPI bindings, strict sysfs topology discovery,
-firmware and partition observations, and device-generation Verus models. On
-MI300X, the audit, 78 focused tests, strict Clippy, warning-free rustdoc, six
-Verus obligations, four rejected proof mutations, all-eight-device topology
-discovery, and one checked gfx942 identity admission passed. The concrete
-observation is not sealed runtime authority, does not detect a GPU reset, and
-does not provide production queues, persistent execution, or a replacement for
-HIP/HSA. The ancestor generic-core and gfx942 ROCm compile gates also passed;
-at that checkpoint, the full workspace strict-Clippy run still had
-pre-existing fixture and `kernel_ir_lowering.rs` lint debt. That legacy
-lowering file was later removed from the unified production tree.
-
-Issues #134, #135, and #140 remain open. This checkpoint changes no kernel
-functionality, performance, evidence, tutorial run/verify/evidence gate,
-explanatory-source label, or cuda-oxide parity row. Device-code finalization
-remains pinned upstream LLVM target-machine APIs plus in-process LLD, with no
-COMGR path.
-
-Ancestor commit `bf3f471a97a0e64c74f5e9b13821e455c8fe2e53`, tree
-`6636f342efa8d2caf40a9bed253330972090326f`, adds an independently accepted
-point-in-time process-leader pidfd identity foundation with `AUTHORITY=none`.
-Forty-six unit tests and six compile-fail doctests pass; three privileged or
-helper fixtures remain ignored. Linux 6.12 thread-pidfd and Linux 6.13
-`PIDFD_GET_INFO` paths were not executed on the available Linux 6.6/6.8 hosts,
-and procfs fallback requires a compatible trusted procfs mount for the active
-PID namespace. This grants no endpoint exclusivity, replay, publication,
-linking, loading, launch, runtime, GPU, or parity authority.
-
-The Wave64 checkpoints, descriptor admission, static pre-exec foundation,
-external-anchor protocol, pidfd identity foundation, Worker V2 harness repair,
-ordinary row-softmax source, durable broker foundation, and CI sharding do not
-promote a parity row. The matrix remains **0 Complete / 97 Partial / 0 Missing /
-12 N/A**: normative **0/82/0/12** and supplemental **0/15/0**. All tutorial
-run/verify/evidence states and unrelated explanatory-source labels are
-unchanged.
-
-The pinned snapshot retains the production S09
-checkpoint that canonically captures the
-production rustc invocation descriptor, admits exactly
-`/proc/./self/fd/198` as the backend capability, and enforces one final managed
-codegen-backend selector. A real `cargo-fe2o3`/Worker test published a COV6
-`gfx942:xnack-` HSACO containing exactly `alpha`, decoded and bound its durable
-publication record to the inspected bytes, and retained a reproducible mi300x
-observation. These are inert observations: they prove no compiler origin and
-grant no loading, execution, or verification authority. Canonical cwd pathname
-capture does not bind that pathname to the separately pinned cwd object, and
-the scalar profile establishes no general source or output-object association.
-
-The staged tiled-GEMM facts are defined once as atomic, typed evidence records
-in [`src/content/staged-evidence.ts`](src/content/staged-evidence.ts). Claims,
-lesson tables, progress checkpoints, exact commands, source paths, and limited
-authority labels are rendered from those records and rejected if they drift.
-The earlier hardware entry records one bounded observation through a raw
-harness; it is not protected execution evidence or a source-to-HSACO result.
-The later #100 entry is a distinct bounded protected route measurement and does
-not retroactively strengthen that earlier record.
-
-The previous WG64/288-byte build-scoped fragment probe remains separate from
-both the 320-byte four-slice direct-global profile and the independent
-WG256/384-byte mutation. Four newer commits add bounded LDS Slice 1 evidence:
-canonical two-tile Kernel IR at `4c79c58de`, a Verus model reporting 93
-verified and 0 errors at
-`97373b781`, fail-closed ordinary `#[kernel(typed, ...)]` Rust source at
-`ee76cedcd`, and upstream LLVM/LLD plus final-HSACO machine inspection at
-`50902b6fc`. These are separate records, not a functional or production kernel.
-
-Slice 2 at `aba53376b` verifies one through four complete K phases with 196
-verified and 0 errors, rejects missing-reuse and accumulator-reset mutations,
-and exhaustively runs integer event models for 1, 2, and 4 phases. This is
-proof/model evidence only. It establishes no attributed multi-phase GPU source,
-protected runtime, or hardware result, and grants no authority to the later
-backend artifact.
-
-Slice 1 hardware evidence at `79ad22986` is a separate observation. An ignored
-opt-in harness generated HSACO from the canonical Kernel IR using SHA-pinned
-upstream LLVM 22 `llc`, `ld.lld`, and `llvm-objdump`, without COMGR. On MI300X,
-six cases checked 1,536 outputs, unchanged A/B values, and prefix/suffix
-canaries around A, B, and C; one hardware test passed in 33.72 seconds. This
-does not bind the IR to attributed Rust source or Verus proofs, grant publisher
-or protected launch authority, or prove general memory safety or race freedom.
-
-K32 Slice 2 backend evidence at `b94bd7d78` lowers the canonical graph to a
-real two-trip SSA loop with carried FP32 accumulators, two barriers, reused
-1,024-byte LDS, and one static loop-body BF16 MFMA. Its upstream LLVM 22 final
-artifact machine test passed; the full dialect suite passed 120 tests and
-strict Clippy passed. This remains backend and machine-shape evidence only: it
-has no attributed multi-phase source, hardware run, protected authority, or
-LLVM refinement proof.
-
-Commit `280995762` moves the exact WG64 launch contract into the general typed
-`#[kernel]` macro path. Required-only WG64 and WG256 remain compatible while
-fixed WG256 profiles reject WG64, and tiled Slice 1 no longer contains a
-handwritten frontend sidecar. Commit `dc31f23eb` then authenticates the exact
-ordinary attributed source, reachable portable MIR, trusted device items,
-FnAbi, launch contract, target, and compiler-derived 1,024-byte LDS profile to
-select only the verified canonical Slice 1 Kernel IR. Removed-barrier,
-A-index-drift, and same-spelling-helper mutations fail before selection. At
-that commit this was reviewed source-to-IR correspondence, not compiler
-refinement, and the receipt deliberately stopped before descriptor construction
-and Worker V2.
-
-Commit `1429ed6ae` adds canonical Kernel IR V5 bytes for every current matrix
-operand and profile field while leaving V1 through V4 frozen. Commit
-`7337a2b87` then carries the original source-authenticated pre-section LLVM body
-through an exact compiler descriptor into one single-use inert Worker V2
-handoff. The handoff binds source authority, V5 Kernel IR, descriptor, resources,
-LLVM body, symbol manifest, target, COV6, and envelope. It authenticates no
-compiler origin and grants no worker, linker, final-HSACO, loading, launch,
-hardware-execution, or production proof-certificate authority.
-
-Commit `89ebe69bb` adds a stable closed registry with distinct Slice 1,
-K-phase, Grid, and Edges slots. Only exact M16 N16 K16 Slice 1 admission is
-enabled; the other three slots fail closed as reserved. Slice 1 reconstructs
-canonical Kernel IR V5, independently re-lowers it with upstream
-`dialect-amdgcn`, and requires exact LLVM, descriptor, source-authority,
-resource-transcript, target, COV6, ABI, grid, WG64, 1,024-byte LDS, typed effect,
-and role-separated length bindings. The retained compiler import is non-Clone
-and authority-free: it grants no compiler-origin, finalizer, Worker V2, linker,
-publication, load, launch, hardware, numerical, or Verus proof authority.
-
-Commits `6a3f7afe9`, `bb2c2100f`, and `bfe9dfeef` complete #97 by
-implementing, admitting, and integrating the exact Slice 1 upstream LLVM
-target-machine plus LLD library API Worker V2 finalizer. The public API has no
-COMGR, shell `llc`, or shell `ld.lld` escape hatch. It closes the exact
-`gfx942:xnack-` COV6 WG64 symbol, 48-byte explicit and 304-byte complete ABI,
-1,024-byte LDS, zero-private-segment, and relocation-free artifact profile while
-retaining deterministic compiler-handoff, worker, LLVM, descriptor, and output
-lineage. The finalized receipt remains inert: it authenticates no compiler
-origin, proves no Verus or compiler/LLVM/machine refinement result, and grants no
-publication, protected load, dispatch, or launch authority.
-
-Commit `278a41afb` completes #99 with the generated exact BF16/F32 Slice 1
-host adapter. A and B are 256-element `u16` BF16-bit shared read views, C is a
-256-element `f32` unique read/write view, A/B overlap is allowed, and any C
-overlap is rejected. Preparation constructs the exact 48-byte explicit and
-304-byte complete COV6 ABI and copies the sealed import, profile, contract,
-descriptor, and role-separated length identities. It then releases the compiler
-import borrow so finalization can consume that non-Clone import while all three
-device buffers remain borrowed by the adapter. The adapter exposes no raw
-kernarg or launch operation. The final gated snapshot contains both the #97 and
-#99 increments. Subsequent runtime feature-gating maintenance makes default and
-`hardware-test-hooks` strict all-target runtime Clippy pass and adds no
-functional claim by itself.
-
-The protected implementation checkpoint at
-`c4fcb4d980cf979c0527dfa135a7b9f4fe72a811`
-completes #100 resource observation, production-adapter integration, metadata
-hardening, and protected hardware validation. Private, non-Clone states consume
-ownership in the fixed `Joined -> Loaded -> Completed -> Unloaded` order. The
-join consumes the #97 finalized artifact and #99 borrowed adapter, and no state
-exposes finalized bytes, native handles, or a generic or raw launch operation.
-
-Admission checks the exact retained context identity and the physical device,
-agent, HIP ordinal, runtime instance, `gfx942:xnack-` target, executable, and
-`tiled_gemm_lds_v1` kernel identities. It also checks the exact grid 1,
-WG64/wave64 geometry, 1,024-byte static LDS, zero private and dynamic segments,
-the 48-byte explicit plus 256-byte implicit 304-byte complete COV6 ABI, and the
-descriptor and HSA staging alignments. The finalized artifact and borrowed
-A/B/C views remain owned through the single synchronous dispatch; only a
-validated completion releases those borrows, leaving `Completed` with terminal
-unload authority and `Unloaded` as an inert identity receipt.
-
-At the pinned historical #100 checkpoint, failure before packet publication
-made the production adapter cancel the prepared dispatch and release its queue
-and kernarg before the selected kernel was released and the executable was
-unloaded. Failures after proven quiescence and dropping `Loaded` or `Completed`
-also performed one checked unload. Adapter unwind, unload failure, or ambiguous
-unload observation aborted. A post-submit queue error or completion deadline
-was process-terminal: submitted resources were retained because GPU quiescence
-was unknown, and the process aborted instead of returning
-or attempting an ordinary unload. Fake-adapter tests in
-`crates/fe2o3-host/src/generated_lds_gemm_lifecycle_tests.rs` covered
-substitution, cleanup, and terminal paths at that commit. The workload-specific
-host lifecycle and test were later removed from the unified production tree.
-
-The actual public protected route passed 1/1 in 14.36 seconds on mi300x gfx942
-with `HSA_XNACK=0`. It used Worker ID
-`fe2o3-worker-v1-sha256-6c3dfd5f784b3babe140006aba57a214a897b171860928440184fa201b6f96db`
-and LLVM build
-`upstream-llvmorg-22.1.8-ca7933e47d3a3451d81e72ac174dcb5aa28b59d1`.
-The test compared all 256 output bit patterns with the CPU reference, required A
-and B to remain unchanged, and checked all A/B/C guard canaries. It emitted:
-
-```text
-FE2O3_PROTECTED_SLICE1_WORKER_V2_OK outputs=256 max_abs_error=0 finalizer=078e9b523164b679ff7af3b4e819ad041713c53c6841399ac7cea95090f09774 unload=df2f77ee798444a9e1fe5e27f219bdf720386eb8603a9a74fccc0df8efb3921c
-```
-
-The `gemm-tiling` lesson now shows the exact current dynamic kernel, build
-script, host runner, and four-case MI300X result. The safe kernel is byte-pinned
-to `examples/tiled_gemm_general_v1/src/kernel.rs` at
-`af0fd523e3b774377a9c5192cf0511e34fa19735` and contains no unsafe block. Its
-host-only unsafe boundaries are visible and documented around external HSACO
-loading and physical ABI launch.
-
-The `gemm-proof-plan` lesson separately retains the fixed Slice 1 LDS/MFMA
-source and historical proof and protected-result evidence. That material
-describes the additional cooperative-LDS direction and does not transfer
-protected-publication authority to the executable direct-global MFMA kernel.
-
-The `gemm-proof-plan` lesson records the implementation contract from
-[fe2o3 #138](https://github.com/harsh-nod/fe2o3/issues/138). The target is one
-safe-Rust user kernel for dynamic dimensions and strides, multiple 16-wide K
-phases, M/N/K tails with zero-filled LDS slots, unconditional publish/reuse
-barriers, disjoint lane and workgroup ownership, and the runtime `alpha/beta`
-epilogue. It catalogs 15 canonical semantic mutations and assigns each an
-honest source-enforcement owner plus a required structured-Kernel-IR result.
-The current checkpoint separates three enforcement layers.
-Ten safe companion UI fixtures fail under rustc: three are fully owned by local
-Rust typestate and seven reject sealed-surface escape attempts while retaining
-dynamic verifier obligations. The other five canonical mutations remain
-well-typed and verifier-only. None of those rustc UI errors is a fe2o3 proof
-diagnostic.
-
-Independently, canonical bounded structured Kernel IR rejects all 15 mutations
-with their exact property, stage, and `0x464701xx` code, and the compiler driver
-transaction emits no artifact. This is structured-IR evidence, not source
-derivation. A separate exact mutation-oracle corpus now makes each of the 15
-safe Rust files one reversible edit of the same full baseline. Individual
-managed MI300X builds authenticate each file through optimized MIR and reject it
-at compiler preflight with the expected property, stage, `0x464701xx` code, root
-symbol, source and terminal spans, reachable call chain, and no artifact.
-
-Those compile-time failures are historical bounded
-mutation-oracle source-to-diagnostic evidence for the proposed optimized
-schedule. The exact `collected-general-gemm-v1` selector and workload-specific
-final pair remain retired. At compiler commit
-`1dd61a018bd58c4eb0a2f1d7a35ee9e453fd529e`, the dynamic GEMM and attention
-sources pass the generic ranked analysis transaction, lower through Kernel IR
-and gfx942 LLVM, emit HSACO, and execute on MI300X against safe Rust CPU
-oracles. Their checked-access and WorkgroupPipeline relations are retained
-through KIR without a workload selector. The historical
-`TILED_SOURCE_TO_IR=false`, `TILED_LOWERING=false`, and
-`TILED_PROTECTED_EXECUTION=false` flags remain archive metadata, not current
-compiler switches. Protected Worker V3 publication remains a separate boundary.
-
-Separately, the production semantic-MIR route runs a fixed target-neutral
-ranked-PLIRON safety pipeline before Kernel IR lowering: tensor layout and
-collective participation, bounds, atomic legality, global race freedom,
-hierarchy ownership, barrier convergence, workgroup-memory
-must-initialization/publication by epoch, and declared semantic refinement.
-Dialect and structural verification are prerequisites. Bounded sparse affine
-index dataflow feeds bounds and ownership, and every pass has explicit resource
-ceilings that fail closed as Incomplete. Static ranked Rust accesses reach the
-admitted fragment; checked dynamic accesses reach structural typed validation
-but do not pass the current race gate. The authenticated ownership
-subset also includes one-layer `Shifted<Index1D, N>`, constant-leader
-`GridExclusive`, and `Blocked<Index1D, 1, E>` with exact mapping parameters.
-Nested `Shifted` is rejected; dynamic `GridExclusive` and blocked mappings with
-more than one lane are Incomplete. Pass-level diagnostic cards remain PLIRON
-examples rather than source-to-machine claims.
-
-Ordinary `#[kernel]` source is safe Rust. Rust enforces borrowing, moves,
-lifetimes, and local typestate inside one invocation. Compiler-issued
-`DisjointIndex`, `Shifted`, `GridExclusive`, `Blocked`,
-`DisjointBlock`, wave/collective/LDS/matrix capabilities, and typed global
-atomic views carry GPU facts that span invocations. Unsafe functions, blocks,
-and inline assembly are rejected from ordinary roots; only the explicitly
-separate `unsafe_asm` provider/test profile is a low-level escape. Recognized
-device terminals require exact diagnostic items, canonical definition paths,
-reviewed provider identity, compiled-source verification, and pinned source
-digests. The four typed `as_atomic()` terminals are authenticated, but ordinary
-Rust core atomic operations remain explicitly unsupported. Semantic atomic IR
-retains exact kind, ordering, and scope; the compiler never derives GPU scope
-from Rust `Ordering`. Exact target capability and coherent system-allocation
-provenance remain required downstream facts.
-
-This is one exact bounded Slice 1 protected hardware observation. It does not
-authenticate compiler origin, consume a Verus certificate, establish
-MIR-to-Kernel-IR or Kernel-IR-to-LLVM/ISA refinement, generally prove
-illegal-access or race freedom, generalize GEMM, or cover protected Slice 3 or
-Slice 4. The earlier observational MI300X tiled-GEMM run remains separate.
-
-Commit `5a45239ae` adds a bounded Verus relation for the exact Slice 1 source
-model. It reports 96 verified and 0 errors for exact lengths, same-epoch LDS
-initialization, publish-barrier ordering, unique C ownership, and correspondence
-among the attributed profile, portable-MIR receipt, reviewed correspondence,
-and canonical module identities. Four targeted mutations are rejected. Clean
-MI300X validation passed 76 debug tests, 76 release tests, 7 doctests in each
-lane, strict Clippy, all six positive proof groups, and all 21 expected
-rejections. This is identity-bound source/model correspondence only. It does
-not prove rustc/MIR-to-IR semantics, LLVM, linking, emitted machine behavior,
-Worker V2 integrity, certificate consumption, loading, or launch authority.
-
-Slice 3 at `5bc57587b` adds a fixed-K16 grid/stride source model for positive
-tile-aligned M and N. Verus reports 101 verified and 0 errors for padded
-lda/ldb/ldc bounds, exact and injective workgroup-to-tile mapping, four bounded
-stores per lane, and global disjointness of C ownership. The aggregate runner
-now checks positive summaries of 73, 93, 196, and 101 obligations and requires
-12 expected negative rejections. Ordinary models exhaust 1x1 through 3x3 grids
-with representative padding and a 64x48 case with lda=33, ldb=79, and ldc=96.
-Commit `f38fe82ca` separately lowers the exact M=64, N=48, K=16, lda=33,
-ldb=79, ldc=96, 3x4-grid graph through upstream LLVM 22. The final-object test
-observes gfx942:xnack- COV6, WG64, workgroup X/Y, 1,024-byte LDS, one barrier,
-one BF16 MFMA, and no spills, scratch, calls, atomics, or COMGR. This is exact
-IR-derived machine-shape evidence, not protected execution, hardware numerics,
-or compiler refinement.
-
-Slice 4 at `f24063534` seals an exact M=17, N=19, K=18 Kernel IR graph over a
-2x2 WG64 grid. It carries FP32 accumulators across two K16 phases, zero-fills
-BF16 tails into reusable XOR4 LDS, uses unconditional publish and reuse
-barriers, and predicates C reads and writes for alpha=2 and beta=-1. Nine tests
-exhaust the valid/tail coordinate and ownership domains and reject barrier,
-access, phase, accumulator, coefficient, target, resource, and layout drift.
-Commit `35575cc32` lowers only that exact graph through upstream LLVM 22 and
-passes final gfx942:xnack- COV6 machine inspection. The object has WG64/wave64,
-1,024-byte fixed LDS, zero private segment and spills, LDS traffic, two static
-barriers, one static loop-body BF16 MFMA, and no scratch, calls, atomics, or
-COMGR. Clean current-main validation passed 5 active focused tests with 1
-intentional ignore, the exact ignored machine test, 129 active dialect tests
-with 23 intentional ignores, strict Clippy, and 362 active Kernel IR tests with
-1 intentional ignore. This remains IR-derived machine-shape evidence, not
-attributed-source lowering, protected execution, hardware numerics, or compiler
-refinement.
-
-The missing production chain is still material. Source receipt to the inert
-descriptor and Worker V2 boundary is complete in closed
-[`#85`](https://github.com/harsh-nod/fe2o3/issues/85), and canonical matrix wire
-V5 is complete in closed [`#93`](https://github.com/harsh-nod/fe2o3/issues/93).
-The sealed exact-profile registry in
-[`#96`](https://github.com/harsh-nod/fe2o3/issues/96), direct LLVM/LLD API
-finalizer in [`#97`](https://github.com/harsh-nod/fe2o3/issues/97), and generated
-host adapter in [`#99`](https://github.com/harsh-nod/fe2o3/issues/99) are
-complete. Under [`#94`](https://github.com/harsh-nod/fe2o3/issues/94), the exact
-one-shot `Joined -> Loaded -> Completed -> Unloaded` implementation in
-[`#100`](https://github.com/harsh-nod/fe2o3/issues/100) is also complete. Its
-fake-adapter suite is joined by one exact protected mi300x hardware measurement.
-That bounded result is not compiler-origin authentication, source-to-HSACO or
-Verus authority, general illegal-access or race-freedom proof, generalized
-GEMM, or protected Slice 3/4 execution.
-Exact Slice 4 lowering is complete and
-[#86](https://github.com/harsh-nod/fe2o3/issues/86) is closed. Protected Slice
-3 and Slice 4 execution remain open in
-[#88](https://github.com/harsh-nod/fe2o3/issues/88) and
-[#89](https://github.com/harsh-nod/fe2o3/issues/89), and generalized dimensions,
-strides, tails, and coefficients in
-[#90](https://github.com/harsh-nod/fe2o3/issues/90). Bounded #87 groundwork is
-integrated, but production certificate consumption remains open in
-[#91](https://github.com/harsh-nod/fe2o3/issues/91), relation extension through
-K-phase, grid, and edge profiles in [#92](https://github.com/harsh-nod/fe2o3/issues/92),
-and MIR-to-Kernel-IR semantic refinement in
-[#106](https://github.com/harsh-nod/fe2o3/issues/106). This synchronization pass
-is tracked in
-[`fe2o3-kernels#2`](https://github.com/harsh-nod/fe2o3-kernels/issues/2).
-Compiler and Verus-to-machine refinement and an IEEE BF16/F32 numerical
-contract also remain open. No production LDS GEMM source execution is claimed.
-
-The latest head also adds authenticated Verus execution V2 for Linux x86_64
-against pinned local runtime and tool snapshots. It uses `clone3` pidfds and
-ptrace-unresumable checkpoints, denies process creation with seccomp, compares
-the live executable to its backing, pins the runtime closure, baseline, and
-vDSO, and returns immutable sealed results. Its artifact policy rejects
-compressed and alternate debug sections. Package-scoped debug stripping makes
-the debug artifact reproducible, with a bounded two-root SHA-256, size, and
-Build-ID gate. On the pinned local host, debug V2 integration passed 14/14,
-release passed 13/13, and the full verifier debug/release suites plus 22 doctests
-passed. The same run on MI300X correctly failed closed against a different vDSO
-and runtime baseline.
-
-Authenticated V2 does not integrate stock Verus or Z3, establish semantic proof
-validity, guarantee exclusive measured-image execution between checkpoints,
-prove compiler refinement, or grant GPU authority.
-
-Earlier commit `027ab901bef7007d0e8da3370470556ed28baad1` remains the source
-of the exact official gfx942 A/B/C/D register maps pinned to AMD Matrix
-Instruction Calculator commit
-`2ef91896bcdc4d26624f952e5c905c787cd9bc9e`, executable XOR4 A and
-transposed-B staging, exhaustive 64-lane x 4-component goldens, exact
-source-level Rust-Verus correspondence, pinned Verus executable bytes, 23
-public proof functions covering 73 obligations, and five rejected formula
-mutations. Workflow-only descendant
-`a51c78322e264c06abdb6dc21817aced09653830` installs Rust 1.97.1 for the
-hosted Verus job and changes no proof or kernel semantics. The layout packet
-remains source-level evidence. Later tiled checkpoints and their authority
-limits are intentionally not restated here; the typed staged-evidence records
-are the canonical source rendered by the site.
-
-## Maturity labels
-
-Every technical claim uses one of five labels. A non-design claim is invalid
-unless it includes the exact fe2o3 commit and tree, at least one command, and at
-least one source path. Staged progress references additionally require explicit
-claim and limited-authority labels. Runtime claims also require a target
-identity.
-
-| Label | Meaning | Does not imply |
-| --- | --- | --- |
-| Runnable now | A current fe2o3 path builds and executes the named kernel. | Formal correctness or a fully safe host ABI. |
-| Verus model | Verus checks a source or source-model property. | Refinement from Rust/MIR through the emitted machine code. |
-| HSACO mechanics | A compiler, LLVM, linker, or code-object mechanism has focused tests. | End-to-end kernel correctness on hardware. |
-| GPU observed | A documented hardware campaign ran a pinned target and command. | A proof for all inputs, targets, or compiler versions. |
-| Design only | The lesson is an implementation and proof plan. | Compilability or runtime support in the audited stack. |
-
-The schema enforcing these rules lives in
-[`src/content/model.ts`](src/content/model.ts) and
-[`src/content/validate.ts`](src/content/validate.ts). Unit tests reject missing
-evidence and advanced lessons that claim runnable status.
-
-## Current boundary
-
-At the audited pin:
-
-The workload-specific compiler selectors, exact-profile registries/finalizers,
-generated workload host adapters, Worker V2 ownership APIs, and workload HSA
-tests described by older pinned evidence below are retired. Their exact
-commands and paths remain historical provenance at their recorded commits, not
-current replay instructions.
-
-- Scalar fill is runnable, with a legacy raw launch boundary called out in the
-  lesson.
-- Typed vector addition is the strongest current single-source runnable path.
-- Dynamic strided GEMM is an executable safe Rust tutorial source. At compiler
-  commit `1dd61a01`, its dynamic dimensions, strides, K loop, edge handling,
-  alpha/beta epilogue, MFMA, and double-buffered LDS staging compiled through
-  PLIRON, KIR, gfx942 LLVM, and HSACO; a four-workgroup MI300X run matched the
-  CPU oracle at zero maximum absolute error. This is qualification execution,
-  not protected publication or a performance claim.
-- The associated Verus models cover bounds, initialization, overflow
-  obligations, and injective ownership arguments at the modeled source level.
-- Exact ordinary attributed Rust sources now exist for one masked Wave64
-  reduction/scan profile, one LDS reduction, and a separate scoped atomic add.
-  Their CPU oracles, mutation suites, and Verus models are public. The atomic
-  source carries global address-space identity through `DeviceGlobalMutPtr`,
-  generated host admission uses an exclusive `GlobalMut`, and LDS scratch
-  consumes an exact linear `DynamicLds` capability. Historical exact-profile
-  and protected MI300X records remain pinned separately, but their
-  workload-specific compiler/finalizer/runtime routes are not current
-  production. Source/compiler/machine refinement, generalized memory safety,
-  and generalized race freedom remain open for synchronization.
-- The historical tiled-GEMM checkpoint had source-authenticated selection of the
-  canonical direct-global one-tile Kernel IR, a guarded gfx942 hardware harness
-  for separately supplied bytes, and structural Worker V2 artifact admission.
-  One exact externally supplied 6,672-byte artifact has now passed the guarded
-  MI300X run, bitwise oracle, A/B/C unchanged-value comparison, adjacent
-  canaries, and unload checks. The observation is non-authoritative and does not
-  join the Rust source to those bytes.
-- The historical LDS Slice 1 archive has canonical Kernel IR and V5 matrix wire bytes, a separate
-  Verus source model, authenticated attributed Rust source-to-IR correspondence,
-  bounded identity-bound source/model proof, an exact compiler-owned descriptor,
-  a single-use Worker V2 handoff, exact direct LLVM/LLD API finalization, an
-  inert generated host adapter, a one-shot `Joined -> Loaded -> Completed ->
-  Unloaded` lifecycle implementation, LLVM lowering, and final-HSACO
-  machine-shape evidence. That retired exact route also has one bounded
-  protected mi300x run over 256 outputs with unchanged A/B values, A/B/C guard
-  canaries, bitwise CPU-reference agreement, and terminal unload identity.
-  An independent six-case MI300X run observed the IR-derived HSACO over 1,536
-  outputs with allocation canaries. That hardware run remains independent of the
-  source-bound finalization and host-preparation records, so it is neither
-  protected source execution nor a source-to-hardware refinement result.
-- LDS Slice 2 has a bounded exact-real K-phase Verus model, executable integer
-  event models for 1, 2, and 4 phases, and an independent K32 backend/final
-  machine-shape record. It has no attributed multi-phase GPU source, runtime
-  hardware execution, protected authority, or LLVM refinement proof.
-- LDS Slice 3 has a bounded fixed-K16 Verus grid/stride model plus exact
-  upstream LLVM/LLD and COV6 machine-shape inspection for one padded 3x4 grid.
-  It has no attributed source, protected execution, hardware numerical, or
-  refinement result.
-- LDS Slice 4 has exact tail-safe two-phase Kernel IR and upstream LLVM/COV6
-  machine-shape inspection for one 17x19x18 profile, including alpha/beta and
-  predicated edge access. It has no attributed source, protected runtime or
-  hardware numerical execution, compiler refinement, or general profile.
-- `#[kernel(typed)]` is the canonical user form. The procedural attribute marks an
-  ordinary Rust function for fe2o3's frontend and generated typed API, including
-  exact WG64/WG256 launch contracts. Slice 1 now reaches canonical Kernel IR, an
-  exact descriptor, a one-shot inert final HSACO receipt, and generated typed
-  host preparation, then enters a fixed one-shot lifecycle with exact context,
-  resource, ABI, completion, and terminal-unload checks. This implementation
-  exposes no generic or raw launch. One exact bounded protected Slice 1 run has
-  passed; it does not authenticate compiler origin or establish source-to-HSACO,
-  Verus, compiler-refinement, generalized-safety, or generalized-GEMM authority.
-- `macro_rules!` is optional declarative compile-time token expansion. Vecadd
-  uses it to share a small body with Verus; it is not the GPU kernel marker,
-  creates no runtime mechanism, and proves nothing by itself. Production kernel
-  algorithms should remain ordinary attributed Rust and do not require it.
-- Tiled GEMM's exact fixed `16x16x16` Slice 1 source and historical evidence
-  remain pinned as the optimization proof plan. A dynamic safe LDS/MFMA
-  implementation and its performance evidence remain open.
-  Row softmax now displays its exact ordinary example-owned attributed source,
-  with complete AST structural admission before a fixed reviewed
-  interpreter/model and digest/certificate binding. It also has an exact typed
-  host adapter, private linear HSA lifecycle, exact
-  source/compiler/Worker/finalizer handoffs, a historical staged 25-pin
-  release receipt, and a separate A/B LLVM release pair for which two fresh
-  complete MI300X runs passed and independent review accepted the evidence
-  package. Those runs dispatched no GPU and grant no runtime,
-  authentication, refinement, generalized memory-safety, or race-freedom
-  authority. W0's measured/no-authority host-link prerequisite is accepted, and
-  a durable prepared-session consume foundation exists with `AUTHORITY=none`.
-  Anti-rollback, key provenance, hostile same-UID resistance, multiwriter and
-  cross-system coordination, publication/runtime/GPU authority, and protected
-  hardware evidence remain open.
-  FlashAttention Phase A now has exact ordinary
-  attributed B=1, H=1, N=8, D=16 causal source, an independent two-pass FP64
-  oracle, executable proof-facing models, debug/release mutation suites, and a
-  pinned Verus proof of its exact rational online recurrence. The latest public
-  snapshot also authenticates its exact attributed source, FnAbi, complete
-  reachable portable MIR, semantic Kernel IR, compiler configuration, and V3
-  provider identity. G4 carries that exact profile through a single-use Worker
-  V2 handoff, upstream LLVM target-machine APIs, in-process LLD, structural
-  checks, and an opaque deterministic finalization receipt. That receipt grants
-  no publication, load, launch, runtime, GPU, numerical, performance,
-  compiler-refinement, OCML-semantics, general memory-safety, or race-freedom
-  authority, and it contains no measured proof of no-COMGR linkage. The exact
-  profile now also has a typed four-buffer adapter that retains three input
-  leases and unique output ownership, rejects aliases, and feeds a private
-  linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource
-  observation. Nine compile-fail boundaries and an independent strict-F32 CPU
-  oracle pass. A separate pinned Verus memory/effect source verifies 13 exact
-  fixed-domain obligations and rejects eight mutations, while its public
-  expected-evidence descriptor remains inert and creates no proof receipt. The
-  historical protected gate fails closed before HSA load. The current public
-  path has accepted bounded W0 but still lacks W1 durable replay/session
-  authority and subsequent linear receipt injection. No protected GPU dispatch
-  or numerical GPU output is claimed, and
-  compiler/OCML semantics, authenticated proof consumption, source/model/Verus-
-  to-machine refinement, machine memory safety, generalized race freedom, and
-  GPU execution remain open. MoE routing
-  Phase A now has exact ordinary attributed T8/E4/K2/C4 source, an independent
-  oracle, stable capacity/permutation/inverse contracts, a 6,561-case bounded
-  corpus, debug/release mutation suites, a pinned Verus proof of the exact
-  mathematical routing policy, and separate exact compiler admission binding
-  source, FnAbi, complete reachable portable MIR, semantic Kernel IR, target,
-  ABI/resources, and V3 provider identity. G5 carries that exact profile through
-  a single-use Worker V2 handoff, upstream LLVM target-machine APIs, in-process
-  LLD, exact structural checks, and an opaque deterministic non-Clone receipt.
-  The measured direct worker passed in debug and release with identical raw and
-  finalized identities. Publication, load, launch, runtime, GPU numerical,
-  performance, compiler-refinement, Verus-to-machine, general memory-safety,
-  and race-freedom authority remain open. A separate exact bounded
-  memory/effect checkpoint verifies 16 Verus obligations over the eight-buffer
-  logical source model and rejects eight named mutations. Its expected-evidence
-  descriptor is copyable and inert: it cannot mint or join an authenticated
-  receipt and proves no compiler, logical-address, machine-memory, generalized
-  race-freedom, or GPU-execution join. The exact host-scheduled expert slice
-  now has two ordinary attributed kernels, a four-expert
-  compaction/GEMM/inverse/combine host model, an independent direct oracle,
-  debug/release canary coverage, and a pinned Verus model with 15 verified
-  obligations and six rejected mutations. This is source, host-model, oracle,
-  and bounded logical-proof evidence only: compiler admission, finalization,
-  typed runtime, protected GPU execution, numerical refinement, and
-  source/model-to-machine joins remain open. Grouped or persistent expert
-  scheduling remains separate work. The GPU device code-object path uses
-  upstream LLVM target-machine APIs plus in-process LLD with no COMGR or shell
-  GPU linker, but this is not a measured no-COMGR claim.
-- The production path described by the audited repository is Rust to Kernel IR
-  to direct LLVM/LLD to HSACO, followed by machine-effect inspection and
-  protected evidence. The #97 path uses direct LLVM target-machine and LLD
-  library APIs, never COMGR linking.
-
-### Compiler corpus migration
-
-`config/tutorial-kernel-manifest-v1.json` is the shared source of truth for 25
-compiler-produced tutorial entries and their 47 compiler fixture/test IDs. It
-requires the closed target-neutral optimizer policy V4, final optimized-graph
-verification, and no pipeline selection or fallback. MoE routing is included
-through the ordinary attributed `moe_top2_v1` source and an exact gfx942
-fixture. Site CI compares the manifest and digest byte-for-byte with the
-checked-out compiler repository.
-
-The corpus is still in migration status, and this site does not pin a final
-compiler commit or publish a measured V4 baseline. Qualification is atomic at
-the top-level baseline and requires complete evidence for every fixture. A
-qualified compile must retain one LLVM `.ll` primary output and its exact
-adjacent `.fe2o3-compiler-inspection-v2` sidecar. The bounded canonical record
-starts with `F2KIRP02` and is independently decoded as neutral policy V4, AMD
-target policy V2, AMD cost-model revision V2, resource model V3, three exact KIR
-V12 snapshots, and 16 ordered pass remarks. It is inspection-only and grants no compiler,
-publication, load, launch, hardware, numerical, performance, or formal
-compiler-correctness authority. A measured report also records peak RSS,
-diagnostic volume, optimizer work and graph growth, IR sizes, and HSACO
-register, spill, LDS, private-segment, workgroup, wave, and occupancy metadata.
-Missing occupancy and compile-only runtime remain typed unavailable, never
-zero. Reviewed integer-ceiling thresholds bind the exact baseline and reject
-fixture, manifest, target, policy, semantic-outcome, occupancy, or measured
-ceiling regressions. Gfx942 and gfx950 compile matrices, required
-simulator/reference outcomes, and the MI300X gfx942 hardware gate still need to
-be rerun together against the eventual clean compiler tree. Gfx950 remains a
-compile/simulator lane until target-matched hardware is explicitly admitted;
-it is not a release-blocking hardware claim.
-
-Verus proves the specifications encoded in its source models under their stated
-assumptions. It does not by itself prove LLVM lowering, linker behavior, the
-HSACO machine effects, the ROCm runtime, numerical error beyond the stated
-model, or physical hardware. Those gaps require compiler validation,
-code-object inspection, differential tests, canaries, and target-specific GPU
-evidence.
-
-CUDA and HIP kernels can also be analyzed or verified with external tools. The
-fe2o3 direction explored here is different: keep the kernel in Rust and bind
-explicit source proof, compiler evidence, artifact identity, and hardware
-observations to the same reviewed unit. This repository makes no claim that
-other GPU languages are inherently unverifiable.
-
-## Curriculum
-
-The documentation app contains 35 lessons across eleven modules:
-
-0. Evidence orientation and an MI300X/gfx942 setup.
-1. Fill, typed vector addition, indexing, `DisjointSlice`, launch shape, and
-   ordinary-Rust-to-`.fe2sim` CPU semantic simulation, persisted replay, and
-   compiler-bundle-bound source debugging without a GPU runtime.
-2. Verus contracts, negative tests, overflow freedom, initialization, and
-   injective writes.
-3. Bounded reduction/scan semantics, wave64, barriers, atomics, and LDS.
-4. Tiled GEMM invariants, phase ownership, numerical specifications, and proof
-   decomposition.
-5. Row-softmax runtime contracts plus exact FlashAttention Phase A source,
-   online invariants, masking, and numerical contracts.
-6. Exact MoE top-2 Phase A source, scans, permutation and capacity bounds,
-   followed by expert GEMM and deterministic-dispatch design work.
-7. Rust-to-HSACO evidence, machine-effect checks, protected evidence, and the
-   Verus trust boundary.
-8. Exercises and the contribution evidence packet for a new kernel.
-9. gfx950 FP4/FP8 GEMM and FlashAttention production Rust examples.
-10. gfx950 advanced operator kernels, including MoE, Kimi Delta Attention
-    decode/chunkwise prefill, sparse and hybrid attention, residual mixing,
-    speculative/MTP verification, N-gram gather, Muon update, and GPT-OSS
-    layer-tile work.
-
-The first screen is the launch hub: role-based learning tracks, exact runnable
-commands, setup paths, contribution checklist, compiler snapshot, and links
-into the curriculum tree. The workbench also includes lesson progress, evidence
-labels, code and exact-protocol tabs, exercises, glossary, search, architecture
-view, implementation status, operator cookbook, and light/dark themes.
-
-## Local development
-
-Prerequisites are Node.js `22.22.1` or newer and npm. Dependencies are locked in
-`package-lock.json`.
-
-```bash
+| Tutorial entries | 25 |
+| Compiler fixtures | 47 |
+| Target split | 10 gfx942, 37 gfx950 |
+| Current classification | 25 legacy-compiler-produced entries |
+| Issue #272 capability closure | not-produced for all 47 kernels |
+| Production capability path/backend | legacy-only |
+| Production capability negative coverage | missing |
+| Legacy fallback | forbidden |
+
+Existing simulator and hardware commands are recorded as
+available-legacy-only. They remain useful evidence, but they do not establish
+the new typed capability path. The reserved compiler-produced classification
+requires a complete final KIR V13 capability closure, exact W4 final-graph analysis,
+target decision, artifact inspection, simulator evidence, target-matched
+hardware evidence where required, and negative fixtures. Qualification is
+atomic across the corpus.
+
+The [GPU capabilities page](https://harsh-nod.github.io/fe2o3-kernels/#/gpu-capabilities)
+follows the runnable tiled GEMM example from ordinary Rust through canonical KIR
+V13, the exact 19-obligation W4 schedule, target lowering, machine refinement,
+simulator and hardware evidence, and safe host launch. It explains why a clean
+analysis may support `Checked` evidence but must never be relabeled `Proven`.
+Every currently unsupported or unpublished join remains visible.
+
+## Quick start
+
+Prerequisites: Node.js 22.22.1 or newer and npm.
+
+~~~bash
+git clone https://github.com/harsh-nod/fe2o3-kernels.git
+cd fe2o3-kernels
 nvm use
 npm ci
 npm run dev
-```
+~~~
 
-Vite prints the local URL. The production build uses the GitHub Pages base path
-`/fe2o3-kernels/` and hash routes so lesson links work from a static host.
+Vite prints the local curriculum URL. Start with
+[Getting Started](https://harsh-nod.github.io/fe2o3-kernels/#/getting-started)
+for an authority-free CPU semantic-simulation path, or select a kernel in the
+curriculum and follow its exact run contract.
 
-## Tests
+Run the repository validation gate:
 
-Install the Playwright Chromium binary once, then run the complete suite:
+~~~bash
+npm run validate
+~~~
 
-```bash
+For browser coverage, install Chromium once and run the desktop and mobile
+suite:
+
+~~~bash
 npx playwright install chromium
-npm run test:all
-```
-
-The gates are also available separately:
-
-```bash
-npm run lint
-npm run typecheck
-npm test
-npm run build
 npm run test:e2e
-```
+~~~
 
-Vitest validates the content schema, status labels, evidence pins, glossary,
-search, navigation, tabs, copy behavior, theme, and progress state. Playwright
-checks every internal lesson route plus the glossary and architecture pages,
-desktop and mobile navigation, keyboard search, code tabs, persisted progress,
-theme behavior, screenshots, and page-level horizontal overflow.
+`npm run validate` checks the compiler corpus, lint, TypeScript, unit tests, and
+the production site build. It validates documentation and metadata; it does not
+compile or dispatch every GPU kernel.
 
-Tutorial snippets live in `examples/`. Runnable-looking advanced snippets carry
-an explicit `DESIGN ONLY` marker. They are not compiled against fe2o3 because
-the audited frontend does not expose those end-to-end source paths; treating
-them as compile tests would create false authority.
+## Learning path
 
-## Content structure
+1. **Evidence and setup:** learn what source checks, proofs, compiler evidence,
+   simulation, artifact inspection, and GPU observations each establish.
+2. **Kernel basics:** run fill and typed vector addition; understand launch
+   shape, indexing, bounds, and disjoint writes.
+3. **Parallel execution:** work with subgroups, reductions, scans, LDS,
+   barriers, epochs, atomics, and convergence.
+4. **Tiled compute:** derive a GEMM mapping, stage tiles through LDS, accumulate
+   with matrix operations, and reason about edge predicates and injective
+   stores.
+5. **Attention:** progress from row softmax to FlashAttention, Kimi Delta
+   Attention (KDA), sparse attention, and compressed hybrid attention.
+6. **Mixture of experts:** implement top-k routing, capacity and permutation,
+   grouped expert GEMM, expert-rank execution, and deterministic combine.
+7. **Production evidence:** inspect canonical KIR, optimization and target
+   decisions, LLVM/HSACO artifacts, host admission, and target-specific results.
 
-```text
-examples/                 Snippet sources imported into lessons
-src/content/model.ts      Evidence and lesson schema
-src/content/validate.ts   Runtime schema validation
-src/content/modules-*.ts  Structured lesson content
-src/components/           Tutorial workbench views
-src/diagrams/             Code-native technical diagrams
-tests/                    Schema and interaction tests
-e2e/                      Responsive route and browser tests
-```
+### Advanced areas
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) before adding a lesson or changing a
-maturity label.
+- **GEMM:** [tiled GEMM](https://harsh-nod.github.io/fe2o3-kernels/#/lesson/gemm-tiling),
+  dynamic shapes, LDS staging, MFMA, and FP4/FP8 paths.
+- **Attention and KDA:** [KDA/GDN linear attention](https://harsh-nod.github.io/fe2o3-kernels/#/lesson/gfx950-kda-gdn-linear-attention),
+  recurrent decode, chunkwise prefill, FlashAttention, and sparse/hybrid
+  variants.
+- **MoE:** [top-2 routing](https://harsh-nod.github.io/fe2o3-kernels/#/lesson/moe-routing),
+  [expert compute](https://harsh-nod.github.io/fe2o3-kernels/#/lesson/moe-expert-compute),
+  expert-rank routing/combine, and sharded execution.
+- **gfx950:** low-precision GEMM/attention, advanced model operators, and the
+  GPT-OSS decode layer-tile example.
 
-## Deployment
+The [operator cookbook](https://harsh-nod.github.io/fe2o3-kernels/#/operators)
+is the shortest route from an operator name to its lesson, source, reference,
+run boundary, and evidence.
 
-On a push to `main`, GitHub Actions builds and deploys `dist/` only after
-authenticated Git resolution confirms that both required fe2o3 public refs
-equal the checked-in publication commit and tree. Workflow permissions are
-scoped per job, deployment is serialized, and actions are pinned to immutable
-commit SHAs.
+## Machine-readable corpus
 
-Pull requests and pushes also run lint, type checking, unit tests, the production
-build, and Chromium browser tests. A green site build is not evidence that a GPU
-claim is true; the content evidence rules remain a separate gate.
+The site does not maintain a second hand-written kernel inventory:
 
-## Honesty policy
+- [Tutorial kernel manifest](config/tutorial-kernel-manifest-v1.json) owns
+  lesson-to-fixture mappings, targets, gates, and migration state.
+- [Manifest schema](config/tutorial-kernel-manifest-schema-v1.json) is the
+  closed Draft 2020-12 shape contract.
+- [Manifest digest](config/tutorial-kernel-manifest-v1.sha256) and
+  [schema digest](config/tutorial-kernel-manifest-schema-v1.sha256) bind the
+  exact checked-in bytes.
+- [Compiler corpus qualification](docs/compiler-corpus-qualification-v1.md)
+  defines inspection sidecars, measured baselines, regression gates, and
+  target-specific evidence.
+- [Semantic correctness publication](docs/semantic-correctness-publication.md)
+  defines the bounded semantic-reference publication contract.
 
-1. Never infer a stronger status from a weaker one. A passing Verus model is not
-   a GPU run; an HSACO inspection is not a source proof.
-2. Never label an example runnable without an exact command, immutable fe2o3
-   commit and tree, source paths, and target where execution is involved.
-3. Keep expected-negative verification tests next to positive proof claims.
-4. State assumptions, trusted components, and unproved obligations in the
-   lesson itself.
-5. Downgrade stale claims when the pinned source or command can no longer be
-   reproduced. Do not silently move the lesson evidence baseline.
-6. Treat design code as explanatory material until a real frontend path,
-   compiler test, code-object check, and appropriate hardware test exist.
+Validate the closed-world corpus contract with
+`npm run validate:compiler-corpus`.
 
-## License
+## Add a kernel
 
-This tutorial site is available under the [MIT License](LICENSE). Source links
-and evidence references point to fe2o3, which retains its own licensing and
-copyright notices.
+Read [CONTRIBUTING.md](CONTRIBUTING.md) and the
+[contribution lesson](https://harsh-nod.github.io/fe2o3-kernels/#/lesson/contributing-kernel)
+before changing evidence or maturity labels.
+
+A kernel contribution should:
+
+1. Add ordinary attributed Rust source and an independent safe Rust CPU
+   reference or supported semantic model.
+2. Add positive tests plus relevant bounds, aliasing, mutation, canary, and
+   expected-negative cases.
+3. Register the package, source, exact fixture IDs, target, and required gates
+   in the shared manifest as a synchronized compiler/site change.
+4. Record only evidence that exists. State missing proof, compiler, artifact,
+   launch, hardware, numerical, and performance joins explicitly.
+5. Keep reusable source in `examples/` and structured lesson content in
+   `src/content/`; do not duplicate generated tables or long command logs.
+6. Run `npm run validate` and `npm run test:e2e`.
+
+Promotion to capability-qualified compiler-produced must satisfy the whole
+manifest contract. A local compile or successful GPU run cannot promote an
+entry by itself.
+
+## Project links
+
+- [Live curriculum](https://harsh-nod.github.io/fe2o3-kernels/)
+- [Implementation status](https://harsh-nod.github.io/fe2o3-kernels/#/status)
+- [fe2o3 compiler and runtime](https://github.com/harsh-nod/fe2o3)
+- [Compiler corpus roadmap #271](https://github.com/harsh-nod/fe2o3/issues/271)
+- [GPU capability roadmap #272](https://github.com/harsh-nod/fe2o3/issues/272)
+- [CI workflows](https://github.com/harsh-nod/fe2o3-kernels/actions)
+- [MIT License](LICENSE)
+
+The site is MIT licensed. Linked fe2o3 source and external evidence retain their
+own licensing and copyright terms.
