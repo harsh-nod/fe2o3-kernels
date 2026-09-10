@@ -194,7 +194,7 @@ const w4Obligations: CapabilityObligation[] = [
 ];
 
 export const gpuCapabilitiesPage = deepFreeze({
-  reviewedOn: "2026-09-09",
+  reviewedOn: "2026-09-10",
   issue: 272,
   title: "GPU capability pipeline",
   summary:
@@ -204,7 +204,7 @@ export const gpuCapabilitiesPage = deepFreeze({
     milestone: "Issue #272 remains in migration until the corpus promotion gate passes",
     corpus: `${countBy(manifest.capabilityKernels, (kernel) => kernel.capabilityClosure.status === "capability-complete")} of ${manifest.capabilityKernels.length} compiler fixtures have complete capability closure`,
     boundary:
-      "The compiler contains V13 capability and evidence components, but the checked-in tutorial manifest has not qualified an end-to-end capability-path kernel. A source sweep attempted all 47 fixtures and every export rejected before producing a complete bundle. Historical compiler, simulator, and GPU results remain explicitly legacy-only.",
+      "The September 10 source sweep of compiler revision 75a5778ed attempted all 47 fixtures. Every export still rejected before a complete bundle; no protected GPU run occurred. Nine fixtures reached later compiler gates after collection. Closure custody, bounded core adapters, and constant-loop lowering have new regression coverage, but none of this is end-to-end qualification. Historical compiler, simulator, and GPU results remain explicitly legacy-only.",
   },
   manifest: {
     schema: manifest.schema,
@@ -238,7 +238,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       current:
         "Private constructors, moves, borrows, brands, typestate, and attributed roots make execution roles compiler-issued rather than caller-forged.",
       gate:
-        "The production importer must recognize each ordinary Rust terminal used by an advanced kernel; unknown terminals fail closed.",
+        "The latest sweep first rejects 29 fixtures at unreviewed core helpers, including Result residual conversion and checked arithmetic. Each helper needs exact source authentication and semantic lowering; unknown terminals fail closed.",
     },
     {
       id: "semantic-mir",
@@ -246,7 +246,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       owner: "rustc-codegen-fe2o3 frontend",
       disposition: "component-only",
       current:
-        "Source and monomorphization identities describe the exact collected kernel closure and its logical argument roles.",
+        "Source and monomorphization identities describe the exact collected kernel closure and its logical argument roles. Device closure transport retains caller, operand, callee, MIR, ABI, and target custody. Authenticated FnOnce adapters and RustCall source tuples stay explicit in semantic MIR.",
       gate:
         "All advanced hierarchy, LDS, collective, matrix, and memory operations must survive one workload-neutral importer. Mutable-load correlation currently handles initial memory or one preceding store at the same invocation index; conflicting joins, aliases, barriers, and loop-carried state remain unsupported.",
     },

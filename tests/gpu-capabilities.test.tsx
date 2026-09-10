@@ -183,6 +183,16 @@ describe("GPU capability pipeline reference", () => {
     expect(JSON.stringify(gpuCapabilitiesPage)).not.toContain("KIR V12");
   });
 
+  it("keeps the source checkpoint separate from end-to-end qualification", () => {
+    expect(gpuCapabilitiesPage.reviewedOn).toBe("2026-09-10");
+    expect(gpuCapabilitiesPage.status.boundary).toContain("75a5778ed");
+    expect(gpuCapabilitiesPage.status.boundary).toContain("Every export still rejected");
+    expect(gpuCapabilitiesPage.status.boundary).toContain("no protected GPU run occurred");
+    expect(gpuCapabilitiesPage.status.boundary).toContain("none of this is end-to-end qualification");
+    expect(gpuCapabilitiesPage.manifest.completeClosures).toBe(0);
+    expect(gpuCapabilitiesPage.manifest.qualifiedSimulator).toBe(0);
+  });
+
   it("indexes V13, W4, evidence classes, and machine refinement", () => {
     for (const query of [
       "GPU capabilities target closure",
