@@ -80,11 +80,11 @@ describe("GPU capability pipeline reference", () => {
       .toBeInTheDocument();
     expect(within(pipeline).getByText(/Memory safety does not imply equivalent outputs/u))
       .toBeInTheDocument();
-    expect(within(pipeline).getByText(/Extraction still stops at the absent protected runtime installation/u))
+    expect(within(pipeline).getByText(/Extraction next stops at dynamic-launch ownership/u))
       .toBeInTheDocument();
-    expect(within(pipeline).getByText(/test-only runtime, without a production lease or receipt/u))
+    expect(within(pipeline).getByText(/root-protected runtime on mi350 in an isolated environment/u))
       .toBeInTheDocument();
-    expect(within(pipeline).getByText(/wrong-operator mutations fail verification/u))
+    expect(within(pipeline).getByText(/rejects wrong operators/u))
       .toBeInTheDocument();
     expect(within(pipeline).getByText(/operator congruence is not full IEEE value equivalence/u))
       .toBeInTheDocument();
@@ -95,6 +95,10 @@ describe("GPU capability pipeline reference", () => {
     expect(within(pipeline).getByText(/Helper-loop bounds accept exact u32 constants or unchanged parent arguments/u))
       .toBeInTheDocument();
     expect(within(pipeline).getByText(/it is not machine-code execution or a hardware result/u))
+      .toBeInTheDocument();
+    expect(within(pipeline).getByText(/Mutable-load correlation currently handles initial memory/u))
+      .toBeInTheDocument();
+    expect(within(pipeline).getByText(/Content custody is not machine equivalence/u))
       .toBeInTheDocument();
   });
 

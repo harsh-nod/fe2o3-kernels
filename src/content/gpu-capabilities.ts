@@ -204,7 +204,7 @@ export const gpuCapabilitiesPage = deepFreeze({
     milestone: "Issue #272 remains in migration until the corpus promotion gate passes",
     corpus: `${countBy(manifest.capabilityKernels, (kernel) => kernel.capabilityClosure.status === "capability-complete")} of ${manifest.capabilityKernels.length} compiler fixtures have complete capability closure`,
     boundary:
-      "The compiler contains V13 capability and evidence components, but the checked-in tutorial manifest has not qualified an end-to-end capability-path kernel. Historical compiler, simulator, and GPU results remain explicitly legacy-only.",
+      "The compiler contains V13 capability and evidence components, but the checked-in tutorial manifest has not qualified an end-to-end capability-path kernel. A source sweep attempted all 47 fixtures and every export rejected before producing a complete bundle. Historical compiler, simulator, and GPU results remain explicitly legacy-only.",
   },
   manifest: {
     schema: manifest.schema,
@@ -248,7 +248,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       current:
         "Source and monomorphization identities describe the exact collected kernel closure and its logical argument roles.",
       gate:
-        "All advanced hierarchy, LDS, collective, matrix, and memory operations must survive one workload-neutral importer.",
+        "All advanced hierarchy, LDS, collective, matrix, and memory operations must survive one workload-neutral importer. Mutable-load correlation currently handles initial memory or one preceding store at the same invocation index; conflicting joins, aliases, barriers, and loop-carried state remain unsupported.",
     },
     {
       id: "execution-view",
@@ -268,7 +268,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       current:
         "V13 has a closed execution-capability graph plus exact codecs and structural verification for context, global memory, hierarchy, synchronization, collectives, atomics, matrices, and target requirements.",
       gate:
-        "Typed vecadd matches source-level write guards and expressions and checks the CPU reference's guarded array accesses. Generated integer and IEEE operator-congruence proofs pass through the pinned controller's test-only runtime, without a production lease or receipt; wrong-operator mutations fail verification. Extraction still stops at the absent protected runtime installation; administrator provisioning is required. Memory safety does not imply equivalent outputs, and operator congruence is not full IEEE value equivalence. No tutorial fixture publishes a complete source-to-final-V13 identity through this path.",
+        "Typed vecadd now passes local CPU/GPU reference-proof execution and import through the root-protected runtime on mi350 in an isolated environment. Extraction next stops at dynamic-launch ownership: guard-aware output coverage and an authenticated launch-to-output extent relationship remain required. A production-runtime test imports matching integer and IEEE operator-congruence proofs and rejects wrong operators. Memory safety does not imply equivalent outputs, and operator congruence is not full IEEE value equivalence. No tutorial fixture publishes a complete source-to-final-V13 identity through this path.",
     },
     {
       id: "final-graph",
@@ -308,7 +308,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       current:
         "Target-specific checkers decode bounded machine forms and compare effects, synchronization, memory, and selected instruction semantics to frozen target KIR.",
       gate:
-        "Unmodeled instructions, numerical modes, or protocol steps remain unsupported; no tiled-GEMM capability-path machine receipt is published.",
+        "Opt-in worker requests can retain bounded raw LLVM checkpoints and require exact bootstrap/replay agreement. Content custody is not machine equivalence: pass occurrence, instruction-selection correspondence, and durable capture replay remain incomplete. Unmodeled instructions, numerical modes, or protocol steps remain unsupported; no tiled-GEMM capability-path machine receipt is published.",
     },
     {
       id: "launch",

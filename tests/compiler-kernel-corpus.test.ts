@@ -730,7 +730,7 @@ describe("production compiler tutorial corpus", () => {
     expect(recordedPath).toBe("config/tutorial-kernel-manifest-v1.json");
     expect(digest(readFileSync(path))).toBe(expectedDigest);
     expect(expectedDigest).toBe(
-      "5c59716d406d29ffca814dca917f13d886900c97e31f1f7e23166b62012510ce",
+      "9faa4e6ff755562024c4d067344178f3347262e4051ff7d5c5fb1d8982d27a9f",
     );
     expect(manifest.schema).toBe("fe2o3-tutorial-kernel-manifest-v1");
     expect(manifest.roadmapIssue).toBe(
@@ -751,7 +751,7 @@ describe("production compiler tutorial corpus", () => {
 
   it("uses the compiler's stable domain-separated corpus identity", () => {
     expect(tutorialCorpusContractSha256(manifest)).toBe(
-      "878e12ff3af757ac658c3f7b8058278a962893aeb2639e46405f6844f04b7d95",
+      "053ac8fc0169c59567d275c041df72d6a74fc648d2f96b7fe9a838adc23a5148",
     );
     const publicationChange = structuredClone(manifest);
     publicationChange.baseline.compilerCommit = "f".repeat(40);
