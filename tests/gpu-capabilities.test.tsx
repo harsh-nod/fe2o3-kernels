@@ -78,9 +78,15 @@ describe("GPU capability pipeline reference", () => {
     expect(within(pipeline).getByText(/Original MIR stays unchanged/u)).toBeInTheDocument();
     expect(within(pipeline).getByText(/each call's frame-entry marker/u))
       .toBeInTheDocument();
-    expect(within(pipeline).getByText(/memory safety does not imply equivalent outputs/u))
+    expect(within(pipeline).getByText(/Memory safety does not imply equivalent outputs/u))
       .toBeInTheDocument();
-    expect(within(pipeline).getByText(/Extraction stops at the missing pinned proof runtime/u))
+    expect(within(pipeline).getByText(/Extraction still stops at the absent protected runtime installation/u))
+      .toBeInTheDocument();
+    expect(within(pipeline).getByText(/test-only runtime, without a production lease or receipt/u))
+      .toBeInTheDocument();
+    expect(within(pipeline).getByText(/wrong-operator mutations fail verification/u))
+      .toBeInTheDocument();
+    expect(within(pipeline).getByText(/operator congruence is not full IEEE value equivalence/u))
       .toBeInTheDocument();
     expect(within(pipeline).getByText(/replay is not a semantic-equivalence proof/u))
       .toBeInTheDocument();

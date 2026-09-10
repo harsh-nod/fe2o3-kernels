@@ -268,7 +268,7 @@ export const gpuCapabilitiesPage = deepFreeze({
       current:
         "V13 has a closed execution-capability graph plus exact codecs and structural verification for context, global memory, hierarchy, synchronization, collectives, atomics, matrices, and target requirements.",
       gate:
-        "Typed vecadd now matches source-level write guards and expressions and checks the CPU reference's guarded array accesses. Extraction stops at the missing pinned proof runtime; memory safety does not imply equivalent outputs. Guarded-load KIR correlation has component evidence only. No tutorial fixture publishes a complete source-to-final-V13 identity through the capability path.",
+        "Typed vecadd matches source-level write guards and expressions and checks the CPU reference's guarded array accesses. Generated integer and IEEE operator-congruence proofs pass through the pinned controller's test-only runtime, without a production lease or receipt; wrong-operator mutations fail verification. Extraction still stops at the absent protected runtime installation; administrator provisioning is required. Memory safety does not imply equivalent outputs, and operator congruence is not full IEEE value equivalence. No tutorial fixture publishes a complete source-to-final-V13 identity through this path.",
     },
     {
       id: "final-graph",
