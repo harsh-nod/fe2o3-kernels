@@ -89,6 +89,7 @@ const vite = await createServer({
 try {
   const module = await vite.ssrLoadModule("/src/content/evidence-catalog.ts");
   const catalog = module.evidenceCatalog;
+  const { validateSourceEvidence } = await vite.ssrLoadModule("/scripts/source-evidence.ts");
   const commits = new Map();
   const paths = new Set();
   const sourceBytes = new Map();
@@ -134,42 +135,8 @@ try {
   for (const source of catalog.sources) {
     observedTree(source.commit, source.label);
     validatePath(source.commit, source.sourcePath, source.label);
-    if (source.fileSha256) {
-      const observed = createHash("sha256")
-        .update(pinnedSourceBytes(source.commit, source.sourcePath))
-        .digest("hex");
-      if (observed !== source.fileSha256) {
-        fail(
-          `${source.label} whole-file digest is ${observed}, required ${source.fileSha256}`,
-        );
-      }
-    }
-    if (source.displayedSha256) {
-      if (typeof source.displayedSource !== "string") {
-        fail(`${source.label} has a displayed digest without displayed source`);
-      }
-      const displayedBytes = Buffer.from(source.displayedSource, "utf8");
-      const observed = createHash("sha256").update(displayedBytes).digest("hex");
-      if (observed !== source.displayedSha256) {
-        fail(
-          `${source.label} displayed excerpt digest is ${observed}, required ${source.displayedSha256}`,
-        );
-      }
-      const pinned = pinnedSourceBytes(source.commit, source.sourcePath);
-      if (!Array.isArray(source.displayedFragments) || source.displayedFragments.length === 0) {
-        fail(`${source.label} has no displayed source fragments`);
-      }
-      if (source.displayedFragments.join("\n\n") !== source.displayedSource) {
-        fail(`${source.label} displayed fragments do not reconstruct the displayed source`);
-      }
-      for (const fragment of source.displayedFragments) {
-        if (typeof fragment !== "string" || fragment.length === 0) {
-          fail(`${source.label} has an empty displayed source fragment`);
-        }
-        if (pinned.indexOf(Buffer.from(fragment, "utf8")) < 0) {
-          fail(`${source.label} displayed fragment is absent from the pinned source file`);
-        }
-      }
+    if (source.fileSha256 || source.displayedSha256) {
+      validateSourceEvidence(source, pinnedSourceBytes(source.commit, source.sourcePath));
     }
   }
 

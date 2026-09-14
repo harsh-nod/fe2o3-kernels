@@ -1,4 +1,6 @@
 import { lessons } from "./curriculum";
+import type { CodeTab } from "./model";
+import { authorFacingCode } from "../lib/kernel-authoring";
 import { currentState } from "./current-state";
 import {
   functionalRefinementPublication,
@@ -53,25 +55,46 @@ const claims: GitEvidenceObject[] = lessons.flatMap((lesson) =>
   ),
 );
 
-const tabs: GitEvidenceSource[] = lessons.flatMap((lesson) =>
-  lesson.tabs.flatMap((tab) =>
-    tab.sourcePath && tab.sourceCommit
-      ? [{
-          label: `${lesson.id}: ${tab.label}`,
-          commit: tab.sourceCommit,
-          sourcePath: tab.sourcePath,
-          ...(tab.sourceSha256 && tab.sourceDigestScope === "displayed"
-            ? {
-                displayedSha256: tab.sourceSha256,
-                displayedSource: tab.code,
-                displayedFragments: tab.sourceFragments ?? [tab.code],
-              }
-            : tab.sourceSha256
-              ? { fileSha256: tab.sourceSha256 }
+export function tabEvidenceSource(
+  lessonId: string,
+  tab: CodeTab,
+): GitEvidenceSource | undefined {
+  const label = `${lessonId}: ${tab.label}`;
+  if (
+    tab.sourceDigestScope === "file" &&
+    (!tab.sourcePath || !/^[0-9a-f]{40}$/u.test(tab.sourceCommit ?? "") ||
+      !/^[0-9a-f]{64}$/u.test(tab.sourceSha256 ?? "") ||
+      typeof tab.code !== "string")
+  ) {
+    throw new Error(`${label} has incomplete explicit whole-file evidence`);
+  }
+  if (!tab.sourcePath || !tab.sourceCommit) return undefined;
+  return {
+    label,
+    commit: tab.sourceCommit,
+    sourcePath: tab.sourcePath,
+    ...(tab.sourceSha256 && tab.sourceDigestScope === "displayed"
+      ? {
+          displayedSha256: tab.sourceSha256,
+          displayedSource: tab.code,
+          displayedFragments: tab.sourceFragments ?? [tab.code],
+        }
+      : tab.sourceSha256
+        ? {
+            fileSha256: tab.sourceSha256,
+            ...(tab.sourceDigestScope === "file"
+              ? { displayedSource: authorFacingCode(tab).code }
               : {}),
-        }]
-      : [],
-  ),
+          }
+        : {}),
+  };
+}
+
+const tabs: GitEvidenceSource[] = lessons.flatMap((lesson) =>
+  lesson.tabs.flatMap((tab) => {
+    const source = tabEvidenceSource(lesson.id, tab);
+    return source ? [source] : [];
+  }),
 );
 
 const currentSources: GitEvidenceObject = {

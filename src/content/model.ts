@@ -201,6 +201,7 @@ export interface CodeTab {
   sourcePath?: string;
   sourceCommit?: string;
   sourceSha256?: string;
+  // Explicit file scope requires the displayed code to be the exact pinned file.
   sourceDigestScope?: "file" | "displayed";
   sourceFragments?: string[];
   evidenceId?: CodeTabEvidenceId;

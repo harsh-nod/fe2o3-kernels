@@ -1,6 +1,14 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { evidenceCatalog } from "../src/content/evidence-catalog";
+import { evidenceCatalog, tabEvidenceSource } from "../src/content/evidence-catalog";
+import { lessons } from "../src/content/curriculum";
+import type { CodeTab } from "../src/content/model";
+import { validateSourceEvidence } from "../scripts/source-evidence";
+
+const wholeFileTabs = lessons.flatMap((lesson) =>
+  lesson.tabs.filter((tab) => tab.sourceDigestScope === "file")
+    .map((tab) => ({ lessonId: lesson.id, tab })),
+);
 
 describe("evidence source digest scopes", () => {
   it("classifies displayed tab excerpts separately from whole files", () => {
@@ -56,11 +64,118 @@ describe("evidence source digest scopes", () => {
     expect(fileEvidence.length).toBeGreaterThan(0);
     expect(
       fileEvidence.every(
-        (source) =>
-          source.displayedSha256 === undefined &&
-          source.displayedSource === undefined,
+        (source) => source.displayedSha256 === undefined,
       ),
     ).toBe(true);
+    expect(fileEvidence.some((source) => source.displayedSource === undefined)).toBe(true);
+  });
+
+  it("retains exact displayed bytes for every explicit whole-file tab", () => {
+    expect(wholeFileTabs).toHaveLength(7);
+    expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
+      "examples/gfx950_advanced_attention/src/ablation.rs",
+      "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
+      "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
+      "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
+      "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
+      "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
+      "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+    ]);
+    for (const { lessonId, tab } of wholeFileTabs) {
+      const source = tabEvidenceSource(lessonId, tab)!;
+      expect(source.displayedSource).toBe(tab.code);
+      expect(source.fileSha256).toBe(tab.sourceSha256);
+      expect(source.displayedSha256).toBeUndefined();
+      expect(evidenceCatalog.sources).toContainEqual(source);
+      expect(() => validateSourceEvidence(source, Buffer.from(tab.code))).not.toThrow();
+    }
+  });
+
+  it.each(wholeFileTabs)("rejects changed whole-file display bytes: $tab.sourcePath", ({ lessonId, tab }) => {
+    const pinned = Buffer.from(tab.code);
+    for (const code of [
+      tab.code.replace("pub", "priv"),
+      tab.code.slice(1),
+      `${tab.code}\n// appended display text\n`,
+      tab.code.replace(/\n/gu, "\r\n"),
+      "",
+    ]) {
+      expect(code).not.toBe(tab.code);
+      const changed = tabEvidenceSource(lessonId, { ...tab, code })!;
+      expect(changed.fileSha256).toBe(tab.sourceSha256);
+      expect(() => validateSourceEvidence(changed, pinned)).toThrow(
+        "displayed whole file differs from the pinned source file",
+      );
+    }
+  });
+
+  it("does not silently downgrade incomplete explicit file claims", () => {
+    const { lessonId, tab } = wholeFileTabs[0];
+    for (const missing of ["sourcePath", "sourceCommit", "sourceSha256", "code"] as const) {
+      const incomplete = { ...tab, [missing]: undefined } as unknown as CodeTab;
+      expect(() => tabEvidenceSource(lessonId, incomplete)).toThrow(
+        "incomplete explicit whole-file evidence",
+      );
+    }
+    for (const invalid of [
+      { sourceCommit: "main" },
+      { sourceSha256: "invalid" },
+    ]) {
+      expect(() => tabEvidenceSource(lessonId, { ...tab, ...invalid })).toThrow(
+        "incomplete explicit whole-file evidence",
+      );
+    }
+  });
+
+  it("checks actual rendered code after the existing author-facing projection", () => {
+    const code = `#[kernel(\n    typed,\n    namespace = "${"a".repeat(64)}",\n)]\npub fn fill() {}`;
+    const tab: CodeTab = {
+      kind: "kernel", label: "legacy", language: "rust", code,
+      sourcePath: "kernel.rs", sourceCommit: "b".repeat(40),
+      sourceSha256: createHash("sha256").update(code).digest("hex"),
+      sourceDigestScope: "file",
+    };
+    const source = tabEvidenceSource("legacy", tab)!;
+    expect(source.displayedSource).not.toContain("namespace");
+    expect(() => validateSourceEvidence(source, Buffer.from(code))).toThrow(
+      "displayed whole file differs from the pinned source file",
+    );
+  });
+
+  it("keeps unspecified legacy scopes as metadata-only file claims", () => {
+    const { lessonId, tab } = wholeFileTabs[0];
+    const source = tabEvidenceSource(lessonId, {
+      ...tab,
+      sourceDigestScope: undefined,
+      code: "legacy explanatory excerpt",
+    })!;
+    expect(source.displayedSource).toBeUndefined();
+    expect(() => validateSourceEvidence(source, Buffer.from(tab.code))).not.toThrow();
+    expect(() => validateSourceEvidence(source, Buffer.from("wrong pinned file"))).toThrow(
+      "whole-file digest is",
+    );
+  });
+
+  it("keeps excerpt digest, reconstruction and pinned-fragment checks", () => {
+    const displayedSource = "first\n\nlast";
+    const source = {
+      label: "excerpt",
+      commit: "a".repeat(40),
+      sourcePath: "kernel.rs",
+      displayedSha256: createHash("sha256").update(displayedSource).digest("hex"),
+      displayedSource,
+      displayedFragments: ["first", "last"],
+    };
+    const pinned = Buffer.from("first\nmiddle\nlast\n");
+    expect(() => validateSourceEvidence(source, pinned)).not.toThrow();
+    expect(() => validateSourceEvidence({ ...source, displayedSource: "changed" }, pinned))
+      .toThrow("displayed excerpt digest is");
+    expect(() => validateSourceEvidence({ ...source, displayedFragments: ["first"] }, pinned))
+      .toThrow("displayed fragments do not reconstruct");
+    expect(() => validateSourceEvidence(source, Buffer.from("first\nmiddle\n")))
+      .toThrow("displayed fragment is absent");
+    expect(() => validateSourceEvidence({ ...source, displayedSource: undefined }, pinned))
+      .toThrow("displayed digest without displayed source");
   });
 
   it("catalogs every deterministic profiler import projection", () => {
