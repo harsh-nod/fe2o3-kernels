@@ -90,6 +90,8 @@ try {
   const module = await vite.ssrLoadModule("/src/content/evidence-catalog.ts");
   const catalog = module.evidenceCatalog;
   const { validateSourceEvidence } = await vite.ssrLoadModule("/scripts/source-evidence.ts");
+  const { validateCurriculumSourcePin, validateCurriculumEvidence } = await vite.ssrLoadModule("/scripts/curriculum-evidence.ts");
+  const { lessons } = await vite.ssrLoadModule("/src/content/curriculum.ts");
   const commits = new Map();
   const paths = new Set();
   const sourceBytes = new Map();
@@ -119,6 +121,18 @@ try {
     }
     return bytes;
   }
+
+  const curriculumPin = validateCurriculumSourcePin(JSON.parse(readFileSync(
+    new URL("../config/curriculum-source-contract.json", import.meta.url), "utf8",
+  )));
+  if (observedTree(curriculumPin.commit, "tutorial curriculum manifest") !== curriculumPin.tree) {
+    fail("tutorial curriculum manifest tree differs from its pin");
+  }
+  validatePath(curriculumPin.commit, curriculumPin.path, "tutorial curriculum manifest");
+  const curriculumEvidence = validateCurriculumEvidence(
+    pinnedSourceBytes(curriculumPin.commit, curriculumPin.path), curriculumPin.sha256, lessons,
+  );
+  console.log(`Validated compiler curriculum source obligations: ${curriculumEvidence.lessons} lessons, ${curriculumEvidence.codeTabs} code tabs (${curriculumEvidence.status}).`);
 
   for (const object of catalog.gitObjects) {
     const tree = observedTree(object.commit, object.label);

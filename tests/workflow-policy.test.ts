@@ -34,12 +34,16 @@ describe("Pages publication policy", () => {
       { cwd: process.cwd(), encoding: "utf8", stdio: "pipe" },
     );
     expect(output).toContain("publication gate self-test: passed");
+    expect(output).toContain("curriculum publication pin self-test: passed");
     const gateSource = readFileSync(
       "scripts/enforce-publication-gate.mjs",
       "utf8",
     );
     expect(gateSource).toContain('"tree mismatch"');
     expect(gateSource).toContain('"malformed Git tree"');
+    expect(gateSource).toContain("../config/curriculum-source-contract.json");
+    expect(gateSource).toContain("for (const pin of pins)");
+    expect(gateSource).toContain("const pins = requiredPublicationPins(policy,");
   });
 
   it("runs the authenticated gate before every Pages build and deploy step", () => {

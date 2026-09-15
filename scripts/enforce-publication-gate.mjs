@@ -10,6 +10,7 @@ const REQUIRED_REPOSITORIES = new Set([
   "powderluv/fe2o3",
 ]);
 const POLICY_URL = new URL("../config/publication-gate.json", import.meta.url);
+const CURRICULUM_PIN_URL = new URL("../config/curriculum-source-contract.json", import.meta.url);
 
 function fail(message) {
   throw new Error(`publication gate: ${message}`);
@@ -52,6 +53,25 @@ export function validatePolicy(policy) {
     fail("both required repositories are not present");
   }
   return policy;
+}
+
+export function requiredPublicationPins(policy, curriculumPin) {
+  validatePolicy(policy);
+  if (
+    !curriculumPin || typeof curriculumPin !== "object" || Array.isArray(curriculumPin) ||
+    Object.keys(curriculumPin).length !== 4 ||
+    !["commit", "path", "sha256", "tree"].every((key) => Object.hasOwn(curriculumPin, key)) ||
+    typeof curriculumPin.commit !== "string" || !EXACT_OBJECT_NAME.test(curriculumPin.commit) ||
+    typeof curriculumPin.tree !== "string" || !EXACT_OBJECT_NAME.test(curriculumPin.tree) ||
+    typeof curriculumPin.sha256 !== "string" || !/^[0-9a-f]{64}$/u.test(curriculumPin.sha256) ||
+    curriculumPin.path !== "config/tutorial-kernel-manifest-v1.json"
+  ) {
+    fail("curriculum source pin requires the exact compiler manifest commit, tree, path and SHA256");
+  }
+  return [
+    { commit: policy.requiredCommit, tree: policy.requiredTree },
+    { commit: curriculumPin.commit, tree: curriculumPin.tree },
+  ];
 }
 
 export function parseLsRemote(output, expectedRef) {
@@ -241,32 +261,30 @@ async function requireAuthenticatedContainment(
 async function runGate() {
   const token = requireToken(process.env.GITHUB_TOKEN);
   const policy = loadPolicy();
+  const pins = requiredPublicationPins(policy, JSON.parse(readFileSync(CURRICULUM_PIN_URL, "utf8")));
   for (const required of policy.requiredRefs) {
     const observed = resolveAuthenticated(
       required.repository,
       required.ref,
       token,
     );
-    const observedTree = await resolveAuthenticatedTree(
-      required.repository,
-      policy.requiredCommit,
-      token,
-    );
-    requireTreeMatch(
-      required.repository,
-      policy.requiredCommit,
-      observedTree,
-      policy.requiredTree,
-    );
-    await requireAuthenticatedContainment(
-      required.repository,
-      policy.requiredCommit,
-      observed,
-      token,
-    );
-    process.stdout.write(
-      `publication gate: ${required.repository}@${required.ref} = ${observed}, contains ${policy.requiredCommit}, pinned tree = ${observedTree}\n`,
-    );
+    for (const pin of pins) {
+      const observedTree = await resolveAuthenticatedTree(
+        required.repository,
+        pin.commit,
+        token,
+      );
+      requireTreeMatch(required.repository, pin.commit, observedTree, pin.tree);
+      await requireAuthenticatedContainment(
+        required.repository,
+        pin.commit,
+        observed,
+        token,
+      );
+      process.stdout.write(
+        `publication gate: ${required.repository}@${required.ref} = ${observed}, contains ${pin.commit}, pinned tree = ${observedTree}\n`,
+      );
+    }
   }
 }
 
@@ -291,6 +309,35 @@ function runSelfTest() {
     ],
   };
   validatePolicy(policy);
+  const curriculumPin = {
+    commit: "e".repeat(40), tree: "f".repeat(40),
+    path: "config/tutorial-kernel-manifest-v1.json", sha256: "1".repeat(64),
+  };
+  const pins = requiredPublicationPins(policy, curriculumPin);
+  if (JSON.stringify(pins) !== JSON.stringify([
+    { commit: policy.requiredCommit, tree: policy.requiredTree },
+    { commit: curriculumPin.commit, tree: curriculumPin.tree },
+  ])) throw new Error("self-test lost baseline or curriculum publication requirements");
+  for (const invalid of [
+    undefined, null, [], {},
+    { ...curriculumPin, commit: null }, { ...curriculumPin, tree: null },
+    { ...curriculumPin, sha256: null }, { ...curriculumPin, commit: "main" },
+    { ...curriculumPin, path: "other.json" }, { ...curriculumPin, inventory: [] },
+  ]) {
+    expectFailure(() => requiredPublicationPins(policy, invalid), "malformed curriculum source pin");
+  }
+  for (const required of policy.requiredRefs) {
+    for (const pin of pins) {
+      parseGitHubComparison({
+        status: "ahead", base_commit: { sha: pin.commit }, merge_base_commit: { sha: pin.commit },
+      }, required.repository, pin.commit, "9".repeat(40));
+      expectFailure(() => parseGitHubComparison({
+        status: "behind", base_commit: { sha: pin.commit }, merge_base_commit: { sha: "8".repeat(40) },
+      }, required.repository, pin.commit, "8".repeat(40)), `${required.repository} missing required publication pin`);
+      expectFailure(() => requireTreeMatch(required.repository, pin.commit, "7".repeat(40), pin.tree), `${required.repository} publication pin tree substitution`);
+    }
+  }
+  process.stdout.write("curriculum publication pin self-test: passed\n");
   requireToken("test-token");
   if (parseLsRemote(`${commit}\trefs/heads/main\n`, "refs/heads/main") !== commit) {
     throw new Error("self-test failed to parse a valid ref");
