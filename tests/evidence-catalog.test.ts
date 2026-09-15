@@ -109,37 +109,79 @@ describe("evidence source digest scopes", () => {
     }
   });
 
-  it("does not silently downgrade incomplete explicit file claims", () => {
-    const { lessonId, tab } = wholeFileTabs[0];
+  it.each(["file", "displayed"] as const)("does not silently downgrade incomplete explicit %s claims", (sourceDigestScope) => {
+    const { lessonId, tab: original } = wholeFileTabs[0];
+    const tab = { ...original, sourceDigestScope };
+    const scope = sourceDigestScope === "file" ? "whole-file" : "displayed";
+    const diagnostic = `incomplete explicit ${scope} evidence`;
     for (const missing of ["sourcePath", "sourceCommit", "sourceSha256", "code"] as const) {
       const incomplete = { ...tab, [missing]: undefined } as unknown as CodeTab;
-      expect(() => tabEvidenceSource(lessonId, incomplete)).toThrow(
-        "incomplete explicit whole-file evidence",
-      );
+      expect(() => tabEvidenceSource(lessonId, incomplete)).toThrow(diagnostic);
     }
     for (const invalid of [
+      { sourcePath: "" },
+      { sourcePath: " \t" },
+      { sourcePath: 1 },
       { sourceCommit: "main" },
+      { sourceCommit: null },
+      { sourceCommit: "A".repeat(40) },
       { sourceSha256: "invalid" },
+      { sourceSha256: null },
+      { sourceSha256: "A".repeat(64) },
+      { code: null },
     ]) {
-      expect(() => tabEvidenceSource(lessonId, { ...tab, ...invalid })).toThrow(
-        "incomplete explicit whole-file evidence",
+      expect(() => tabEvidenceSource(lessonId, { ...tab, ...invalid } as unknown as CodeTab)).toThrow(
+        diagnostic,
       );
     }
   });
 
-  it("checks actual rendered code after the existing author-facing projection", () => {
+  it.each(["file", "displayed"] as const)("checks actual rendered %s code after the existing author-facing projection", (sourceDigestScope) => {
     const code = `#[kernel(\n    typed,\n    namespace = "${"a".repeat(64)}",\n)]\npub fn fill() {}`;
     const tab: CodeTab = {
       kind: "kernel", label: "legacy", language: "rust", code,
       sourcePath: "kernel.rs", sourceCommit: "b".repeat(40),
       sourceSha256: createHash("sha256").update(code).digest("hex"),
-      sourceDigestScope: "file",
+      sourceDigestScope,
     };
     const source = tabEvidenceSource("legacy", tab)!;
     expect(source.displayedSource).not.toContain("namespace");
     expect(() => validateSourceEvidence(source, Buffer.from(code))).toThrow(
-      "displayed whole file differs from the pinned source file",
+      sourceDigestScope === "file"
+        ? "displayed whole file differs from the pinned source file"
+        : "displayed excerpt digest is",
     );
+    if (sourceDigestScope === "displayed") {
+      expect(source.displayedFragments).toEqual([code]);
+      const rehashed = {
+        ...source,
+        displayedSha256: createHash("sha256").update(source.displayedSource!).digest("hex"),
+      };
+      expect(() => validateSourceEvidence(rehashed, Buffer.from(code))).toThrow(
+        "displayed fragments do not reconstruct the displayed source",
+      );
+    }
+  });
+
+  it("validates explicit single and multiple fragment tabs through the catalog", () => {
+    const first = "pub fn first() {}";
+    const last = "pub fn last() {}";
+    const pinned = Buffer.from(`${first}\n// omitted\n${last}\n`);
+    for (const fragments of [[first], [first, last]]) {
+      const code = fragments.join("\n\n");
+      const tab: CodeTab = {
+        kind: "kernel", label: "excerpt", language: "rust", code,
+        sourcePath: "kernel.rs", sourceCommit: "a".repeat(40),
+        sourceDigestScope: "displayed",
+        sourceSha256: createHash("sha256").update(code).digest("hex"),
+        ...(fragments.length > 1 ? { sourceFragments: fragments } : {}),
+      };
+      const source = tabEvidenceSource("excerpt", tab)!;
+      expect(source.fileSha256).toBeUndefined();
+      expect(source.displayedSource).toBe(code);
+      expect(source.displayedFragments).toEqual(fragments);
+      expect(() => validateSourceEvidence(source, pinned)).not.toThrow();
+    }
   });
 
   it("keeps unspecified legacy scopes as metadata-only file claims", () => {

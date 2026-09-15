@@ -61,12 +61,14 @@ export function tabEvidenceSource(
 ): GitEvidenceSource | undefined {
   const label = `${lessonId}: ${tab.label}`;
   if (
-    tab.sourceDigestScope === "file" &&
-    (!tab.sourcePath || !/^[0-9a-f]{40}$/u.test(tab.sourceCommit ?? "") ||
-      !/^[0-9a-f]{64}$/u.test(tab.sourceSha256 ?? "") ||
+    (tab.sourceDigestScope === "file" || tab.sourceDigestScope === "displayed") &&
+    (typeof tab.sourcePath !== "string" || tab.sourcePath.trim().length === 0 ||
+      typeof tab.sourceCommit !== "string" || !/^[0-9a-f]{40}$/u.test(tab.sourceCommit) ||
+      typeof tab.sourceSha256 !== "string" || !/^[0-9a-f]{64}$/u.test(tab.sourceSha256) ||
       typeof tab.code !== "string")
   ) {
-    throw new Error(`${label} has incomplete explicit whole-file evidence`);
+    const scope = tab.sourceDigestScope === "file" ? "whole-file" : "displayed";
+    throw new Error(`${label} has incomplete explicit ${scope} evidence`);
   }
   if (!tab.sourcePath || !tab.sourceCommit) return undefined;
   return {
@@ -76,7 +78,7 @@ export function tabEvidenceSource(
     ...(tab.sourceSha256 && tab.sourceDigestScope === "displayed"
       ? {
           displayedSha256: tab.sourceSha256,
-          displayedSource: tab.code,
+          displayedSource: authorFacingCode(tab).code,
           displayedFragments: tab.sourceFragments ?? [tab.code],
         }
       : tab.sourceSha256
