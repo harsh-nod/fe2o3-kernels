@@ -1977,6 +1977,46 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
   );
 });
 
+test("GPT rejected variants retain whole-file source and unqualified boundaries", async ({ page }, testInfo) => {
+  expect(["desktop", "mobile"]).toContain(testInfo.project.name);
+  await page.goto("./#/lesson/gfx950-gpt-oss-120b-megakernel");
+  await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({ timeout: 120_000 });
+  const tool = page.locator(".code-tool");
+  const panel = tool.getByRole("tabpanel");
+  for (const variant of [
+    {
+      label: "BF16 LDS pipeline [COMPILER-REJECTED]",
+      file: "kernel_pipelined_attention.rs",
+      header: "//! Compiler-rejected two-stage BF16 attention-pipeline experiment.",
+      screenshot: "gfx950-gpt-oss-rejected-pipelined-attention.png",
+    },
+    {
+      label: "Scalar attention [COMPILER-REJECTED]",
+      file: "kernel_scalar_attention.rs",
+      header: "//! Safe Rust source for the scalar-attention GPT-OSS-120B gfx950 decode ablation.",
+      screenshot: "gfx950-gpt-oss-rejected-scalar-attention.png",
+    },
+  ]) {
+    const tab = tool.getByRole("tab", { name: variant.label, exact: true });
+    await tab.click();
+    await expect(tab).toHaveAttribute("aria-selected", "true");
+    await expect(panel).toContainText(variant.header);
+    await expect(panel).toContainText("use fe2o3_device::{");
+    await expect(panel).toContainText("pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(");
+    const source = readFileSync(new URL(`../examples/gfx950_gpt_oss_decode/src/${variant.file}`, import.meta.url), "utf8");
+    expect(await panel.locator("code").textContent()).toBe(source);
+    await expect(tool.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+      "href",
+      `https://github.com/harsh-nod/fe2o3/blob/3d10825df93a86644cc5a5b006cadd45f71afb91/examples/gfx950_gpt_oss_decode/src/${variant.file}`,
+    );
+    await expect(tool.locator(".code-status")).toContainText("Exact compiler-rejected Rust ablation source");
+    await expect(tool.locator(".code-status")).toContainText("no HSACO, numerical result, or latency result");
+    await expect(tool.locator(".code-status")).not.toContainText("FINAL-COMPATIBILITY");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
+    await tool.screenshot({ path: testInfo.outputPath(variant.screenshot), animations: "disabled" });
+  }
+});
+
 test("advanced performance labs render evidence-backed plots and tables", async ({
   page,
 }) => {
