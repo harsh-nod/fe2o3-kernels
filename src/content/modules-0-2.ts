@@ -652,9 +652,9 @@ const cpuSimulation: Lesson = {
       code: cpuSimulationSource,
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
-      sourceCommit: currentMilestones.workgroupScanV1.commit,
+      sourceCommit: "1e36889321e371756efcfc3ce9555703a2793209",
       sourceSha256:
-        "ed4273d0b9eda1e04e916773886f2442e0404d7ba489b25ddf94d2e7d5fc61d1",
+        "61643f24e119d7353b4bf046d616b999b4e5e017f6e642fd07b287dbf91dd4f4",
       sourceDigestScope: "displayed",
       sourceFragments: cpuSimulationSourceFragments,
       explanatory: false,
