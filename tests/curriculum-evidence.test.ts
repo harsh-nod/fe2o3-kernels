@@ -87,6 +87,96 @@ function sourceDriverFixture() {
   return { current, manifest, item, repin };
 }
 
+function wholeFileSourceDriverFixture() {
+  const value = sourceDriverFixture();
+  const tab = value.current[0].tabs[0];
+  tab.code = `// retained header: \u03bb\n${tab.code}`;
+  tab.sourceDigestScope = "file";
+  tab.sourceCommit = "d".repeat(40);
+  delete tab.sourceFragments;
+  tab.sourceSha256 = createHash("sha256").update(tab.code).digest("hex");
+  value.item.sourceRanges = [{ byteOffset: 0, byteLength: Buffer.byteLength(tab.code) }];
+  value.item.cases.forEach((row) => { row.displayedFragmentOrdinal = 0; });
+  const repin = () => {
+    Object.assign(value.manifest.curriculum.lessons[0].codeTabs[0], projectCurriculumTab(tab, 0));
+    value.repin();
+  };
+  repin();
+  return { ...value, tab, repin };
+}
+
+describe("V2 whole-file source-driver contracts", () => {
+  it("retains the complete header and UTF-8 bytes without qualifying historical source", () => {
+    const { current, manifest, item, tab } = wholeFileSourceDriverFixture();
+    expect(tab.code).toMatch(/^\/\/ retained header:/u);
+    expect(item.sourceRanges).toEqual([{ byteOffset: 0, byteLength: Buffer.byteLength(tab.code) }]);
+    expect(Buffer.byteLength(tab.code)).toBeGreaterThan(tab.code.length);
+    expect(tab.sourceCommit).not.toBe(manifest.curriculum.site.commit);
+    expect(validate(manifest, current)).toEqual({ lessons: 56, codeTabs: 306, status: "pending" });
+  });
+
+  it("rejects incomplete ranges and mixed or stale identities even after repinning", () => {
+    for (const mutate of [
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.item.sourceRanges[0].byteOffset = 1; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.item.sourceRanges[0].byteLength--; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.item.sourceRanges[0].byteLength++; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => {
+        const headerBytes = Buffer.byteLength(value.tab.code.slice(0, value.tab.code.indexOf("\n") + 1));
+        value.item.sourceRanges[0].byteOffset = headerBytes;
+        value.item.sourceRanges[0].byteLength -= headerBytes;
+      },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.item.sourceRanges.push({ ...value.item.sourceRanges[0] }); },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.item.sourceRanges = []; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.tab.sourceFragments = [value.tab.code]; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.tab.sourceFragments = []; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { Reflect.set(value.tab, "sourceFragments", null); },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.tab.sourceSha256 = "0".repeat(64); },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { delete value.tab.sourceSha256; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.tab.sourceCommit = "not-a-commit"; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { delete value.tab.sourceCommit; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.tab.code = value.tab.code.slice(value.tab.code.indexOf("\n") + 1); },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { value.item.cases[0].displayedFragmentOrdinal = 1; },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => { Reflect.set(value.item.sourceRanges[0], "byteLength", true); },
+      (value: ReturnType<typeof wholeFileSourceDriverFixture>) => {
+        value.tab.code = "\ud800";
+        value.tab.sourceSha256 = createHash("sha256").update(value.tab.code).digest("hex");
+        value.item.sourceRanges[0].byteLength = Buffer.byteLength(value.tab.code);
+      },
+    ]) {
+      const value = wholeFileSourceDriverFixture();
+      mutate(value);
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+  });
+
+  it("rejects substituted retained display hashes and byte counts", () => {
+    for (const change of [{ displayedSha256: "0".repeat(64) }, { displayedUtf8Bytes: 1 }]) {
+      const value = wholeFileSourceDriverFixture();
+      Object.assign(value.manifest.curriculum.lessons[0].codeTabs[0], change);
+      expect(() => validate(value.manifest, value.current)).toThrow("source/display binding differs");
+    }
+  });
+
+  it("binds the rendered whole file instead of certifying pre-projection bytes", () => {
+    const value = wholeFileSourceDriverFixture();
+    value.tab.code = `#[kernel(\n    typed,\n    namespace = "${"a".repeat(64)}",\n)]\npub fn first() {}\n`;
+    value.tab.sourceSha256 = createHash("sha256").update(value.tab.code).digest("hex");
+    value.item.sourceRanges[0].byteLength = Buffer.byteLength(value.tab.code);
+    value.item.cases = [value.item.cases[0]];
+    value.repin();
+    expect(() => validate(value.manifest, value.current)).toThrow("whole-file display differs");
+  });
+
+  it("does not admit whole-file source items under V1 or unknown schemas", () => {
+    for (const schema of ["fe2o3-tutorial-curriculum-obligations-v1", "fe2o3-tutorial-curriculum-obligations-v3"]) {
+      const value = wholeFileSourceDriverFixture();
+      value.manifest.curriculum.schema = schema;
+      expect(() => validate(value.manifest, value.current)).toThrow();
+    }
+  });
+});
+
 describe("V2 displayed source-driver contracts", () => {
   it("matches the Python canonical digest for DEL and supplementary Unicode", () => {
     expect(sourceItemContractSha256("unicode", {

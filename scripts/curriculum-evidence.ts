@@ -98,16 +98,28 @@ function validateSourceItem(lessonId: string, tab: CodeTab, ordinal: number, val
   exactKeys(driver, ["package", "target", "path"], `${label}.driver`);
   requireCondition(typeof driver.package === "string" && /^[a-z][a-z0-9-]*$/u.test(driver.package) && typeof driver.target === "string" && identifier.test(driver.target)
     && driver.path === `crates/${driver.package}/tests/${driver.target}.rs`, `${label} requires an exact integration-test driver`);
-  requireCondition(tab.sourceDigestScope === "displayed" && Array.isArray(tab.sourceFragments) && tab.sourceFragments.length > 0, `${label} requires exact displayed fragments`);
+  const wholeFile = tab.sourceDigestScope === "file";
+  let fragments: readonly string[];
+  if (wholeFile) {
+    requireCondition(tab.sourceFragments === undefined && digest(tab.sourceCommit, 40) && digest(tab.sourceSha256, 64), `${label} requires complete whole-file provenance without fragment metadata`);
+    const code = authorFacingCode(tab).code;
+    const bytes = Buffer.from(code, "utf8");
+    requireCondition(bytes.toString("utf8") === code && sha256(bytes) === tab.sourceSha256, `${label} whole-file display differs from its source digest or is not valid UTF-8`);
+    fragments = [code];
+  } else {
+    requireCondition(tab.sourceDigestScope === "displayed" && Array.isArray(tab.sourceFragments) && tab.sourceFragments.length > 0, `${label} requires exact displayed fragments`);
+    fragments = tab.sourceFragments;
+  }
   const ranges = array(item.sourceRanges, `${label}.sourceRanges`, 64);
-  requireCondition(ranges.length === tab.sourceFragments.length, `${label} fragment range coverage differs`);
+  requireCondition(ranges.length === fragments.length, `${label} fragment range coverage differs`);
   const intervals: [number, number][] = [];
   for (const [index, value] of ranges.entries()) {
     const range = object(value, `${label}.sourceRanges[${index}]`);
     exactKeys(range, ["byteOffset", "byteLength"], `${label}.sourceRanges[${index}]`);
     boundedInteger(range.byteOffset, 0, 4 * 1024 * 1024, "byteOffset");
     boundedInteger(range.byteLength, 1, 4 * 1024 * 1024 - range.byteOffset, "byteLength");
-    requireCondition(Buffer.byteLength(tab.sourceFragments[index]) === range.byteLength, `${label} fragment byte length differs`);
+    requireCondition(!wholeFile || range.byteOffset === 0, `${label} whole-file source range must start at zero`);
+    requireCondition(Buffer.byteLength(fragments[index]) === range.byteLength, `${label} fragment byte length differs`);
     const offset = range.byteOffset;
     const end = offset + range.byteLength;
     requireCondition(intervals.every(([start, stop]) => end <= start || offset >= stop), `${label} source ranges overlap`);
