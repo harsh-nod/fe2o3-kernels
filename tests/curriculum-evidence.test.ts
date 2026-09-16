@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { lessons } from "../src/content/curriculum";
 import type { Lesson } from "../src/content/model";
-import { projectCurriculumTab, validateCurriculumEvidence, validateCurriculumSourcePin } from "../scripts/curriculum-evidence";
+import { projectCurriculumTab, sourceItemContractSha256, validateCurriculumEvidence, validateCurriculumSourcePin } from "../scripts/curriculum-evidence";
 
 function fixture(current: readonly Lesson[] = lessons) {
   return {
@@ -28,7 +28,7 @@ function fixture(current: readonly Lesson[] = lessons) {
         })),
         codeTabs: lesson.tabs.map((tab, ordinal) => ({
           ...projectCurriculumTab(tab, ordinal),
-          sourceItem: null as string | null,
+          sourceItem: null as unknown,
           sourceItemStatus: tab.kind === "kernel" && tab.language === "rust" ? "pending" : "not-applicable",
         })),
       })),
@@ -45,6 +45,122 @@ function validate(value: unknown, current: readonly Lesson[] = lessons) {
   const { bytes, sha256 } = encoded(value);
   return validateCurriculumEvidence(bytes, sha256, current);
 }
+
+function sourceDriverFixture() {
+  const current = structuredClone(lessons);
+  const fragments = ["#[kernel]\npub fn first() {}\n", "#[kernel]\npub fn second() {}\n"];
+  current[0].tabs[0] = {
+    kind: "kernel", label: "Kernel", language: "rust", code: fragments.join("\n\n"),
+    sourcePath: "crates/source-fixture/src/lib.rs", sourceCommit: "a".repeat(40),
+    sourceDigestScope: "displayed", sourceFragments: fragments,
+    sourceSha256: createHash("sha256").update(fragments.join("\n\n")).digest("hex"),
+  };
+  const manifest = fixture(current);
+  manifest.curriculum.schema = "fe2o3-tutorial-curriculum-obligations-v2";
+  const item = {
+    kind: "source-driver",
+    compilerInput: {
+      packageManifest: "crates/source-fixture/Cargo.toml", packageManifestSha256: "a".repeat(64),
+      cargoLockPath: "Cargo.lock", cargoLockSha256: "b".repeat(64),
+      sourcePaths: [current[0].tabs[0].sourcePath], sourceClosureSha256: "c".repeat(64),
+      cargoTarget: { kind: "lib", name: "source_fixture", sourcePath: "src/lib.rs" },
+      defaultFeatures: false,
+    },
+    driver: { package: "source-driver", target: "source_test", path: "crates/source-driver/tests/source_test.rs" },
+    sourceRanges: [
+      { byteOffset: 100, byteLength: Buffer.byteLength(fragments[0]) },
+      { byteOffset: 0, byteLength: Buffer.byteLength(fragments[1]) },
+    ],
+    cases: [
+      { features: ["first"], kernelSymbol: "first", target: "gfx942", displayedFragmentOrdinal: 0, testFunction: "source_test",
+        expectation: { kind: "verified-bundle-export", bundleVersion: 1 } },
+      { features: ["second"], kernelSymbol: "second", target: "gfx950", displayedFragmentOrdinal: 1, testFunction: "refusal_test",
+        expectation: { kind: "rejected", bundleVersion: 4, diagnosticContains: "specific source refusal", outputArtifact: "absent" } },
+    ],
+    contractSha256: "",
+  };
+  const retained = manifest.curriculum.lessons[0].codeTabs[0];
+  retained.sourceItem = item;
+  retained.sourceItemStatus = "contract-bound";
+  const repin = () => { item.contractSha256 = sourceItemContractSha256(current[0].id, current[0].tabs[0], 0, item); };
+  repin();
+  return { current, manifest, item, repin };
+}
+
+describe("V2 displayed source-driver contracts", () => {
+  it("matches the Python canonical digest for DEL and supplementary Unicode", () => {
+    expect(sourceItemContractSha256("unicode", {
+      kind: "kernel", label: "\u007f\u{1f600}", language: "rust", code: "",
+    }, 0, { kind: "source-driver", note: "\u007f\u{1f600}", contractSha256: "ignored" }))
+      .toBe("8613b6b52a5e6ae7e898a53ac966f236a7612092f0b63582a21bc32cf3bdb764");
+  });
+
+  it("retains pending qualification with exact export/refusal rows and reversed source ranges", () => {
+    const { current, manifest } = sourceDriverFixture();
+    expect(validate(manifest, current)).toEqual({ lessons: 56, codeTabs: 306, status: "pending" });
+  });
+
+  it("preserves strict V1 and rejects unknown curriculum versions", () => {
+    for (const schema of ["fe2o3-tutorial-curriculum-obligations-v1", "fe2o3-tutorial-curriculum-obligations-v3"]) {
+      const { current, manifest } = sourceDriverFixture();
+      manifest.curriculum.schema = schema;
+      expect(() => validate(manifest, current)).toThrow();
+    }
+  });
+
+  it("binds source metadata, feature selection, test and outcome into the digest", () => {
+    for (const mutate of [
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].features = ["second"]; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].testFunction = "other_test"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].expectation.bundleVersion = 2; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[1].expectation.diagnosticContains = "refusal"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases.reverse(); },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.compilerInput.cargoLockSha256 = "d".repeat(64); },
+    ]) {
+      const value = sourceDriverFixture();
+      mutate(value);
+      expect(() => validate(value.manifest, value.current)).toThrow("contract digest");
+    }
+  });
+
+  it("rejects malformed rows even after their digest is recomputed", () => {
+    for (const mutate of [
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases = []; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[1].kernelSymbol = "first"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].features = ["first", "first"]; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].target = "gfx000"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].displayedFragmentOrdinal = 2; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].testFunction = "test --all"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].expectation.kind = "qualified"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[0].expectation.bundleVersion = 7; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[1].expectation.outputArtifact = "present"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.cases[1].expectation.diagnosticContains = ""; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.sourceRanges[0].byteOffset = 0; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.sourceRanges[0].byteLength--; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.sourceRanges.pop(); },
+      (value: ReturnType<typeof sourceDriverFixture>) => { Reflect.set(value.item.cases[0].expectation, "bundleVersion", true); },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.compilerInput.sourcePaths = ["other.rs"]; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.item.driver.path = "unrelated.rs"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { Reflect.set(value.item, "qualified", true); },
+    ]) {
+      const value = sourceDriverFixture();
+      mutate(value);
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+  });
+
+  it("cannot claim execution or attach a source driver to conceptual content", () => {
+    for (const mutate of [
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.manifest.curriculum.lessons[0].codeTabs[0].sourceItemStatus = "qualified"; },
+      (value: ReturnType<typeof sourceDriverFixture>) => { value.manifest.curriculum.lessons[0].role = "conceptual"; },
+    ]) {
+      const value = sourceDriverFixture();
+      mutate(value);
+      expect(() => validate(value.manifest, value.current)).toThrow();
+    }
+  });
+});
 
 describe("compiler-owned curriculum evidence", () => {
   it("binds every runtime lesson and ordered code tab without qualification", () => {

@@ -3953,7 +3953,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       explanatory: false,
-      sourceCommit: debugSimWorkgroupScanFixture.compiler.commit,
+      sourceCommit: "1e36889321e371756efcfc3ce9555703a2793209",
       sourcePath:
         "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
       sourceDigestScope: "displayed",
