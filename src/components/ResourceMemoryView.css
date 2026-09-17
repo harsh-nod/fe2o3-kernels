@@ -1,0 +1,77 @@
+.resource-memory-view {
+  min-width: 0;
+  margin-block: 1rem;
+  padding: clamp(0.75rem, 2vw, 1.4rem);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.resource-memory-view h3 { margin: 0.25rem 0; }
+.resource-memory-view p { line-height: 1.6; }
+.resource-memory-eyebrow { color: var(--accent-strong); font-weight: 700; }
+.resource-memory-controls, .resource-memory-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+.resource-memory-controls { justify-content: space-between; }
+.resource-memory-controls label { display: flex; align-items: center; gap: 0.5rem; }
+.resource-memory-controls button, .resource-memory-controls select {
+  min-height: 40px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text);
+  background: var(--surface-2);
+  font: inherit;
+}
+.resource-memory-controls button:disabled { opacity: 0.5; cursor: default; }
+.resource-memory-legend, .resource-memory-boundaries { font-size: 0.9rem; color: var(--muted); }
+.resource-memory-notice { padding: 0.7rem; border: 1px dashed var(--border-strong); }
+.resource-memory-grid {
+  --resource-columns: 8;
+  display: grid;
+  grid-template-columns: repeat(var(--resource-columns), minmax(0, 1fr));
+  gap: 0.3rem;
+}
+.resource-memory-cell {
+  display: flex;
+  min-width: 0;
+  min-height: 76px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  padding: 0.3rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+}
+.resource-memory-cell code { overflow-wrap: anywhere; font-size: 0.8rem; }
+.resource-memory-cell small { overflow-wrap: anywhere; font-size: 0.7rem; }
+.resource-memory-cell span { font-size: 0.7rem; font-weight: 700; }
+.resource-memory-cell.state-u { border-style: dashed; background: var(--surface); }
+.resource-memory-cell.state-m { border-width: 2px; border-style: dotted; }
+.resource-memory-cell[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.resource-memory-view :is(button, select, summary):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+.resource-memory-table-wrap { overflow-x: auto; margin-block: 1rem; }
+.resource-memory-view table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.resource-memory-view th, .resource-memory-view td { text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border); }
+.resource-memory-facts { display: grid; gap: 0.6rem; font-size: 0.9rem; }
+.resource-memory-facts > div { display: grid; grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr); gap: 0.6rem; }
+.resource-memory-facts dt { font-weight: 700; }
+.resource-memory-facts dd { min-width: 0; margin: 0; overflow-wrap: anywhere; }
+.resource-memory-evidence summary { cursor: pointer; padding-block: 0.5rem; }
+.resource-memory-evidence pre { max-height: 25rem; max-width: 100%; overflow: auto; padding: 0.75rem; font-size: 0.75rem; background: var(--surface-2); color: var(--text); }
+@media (max-width: 600px) {
+  .resource-memory-grid { --resource-columns: 4; }
+  .resource-memory-facts > div { grid-template-columns: minmax(0, 1fr); gap: 0.2rem; }
+}

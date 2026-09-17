@@ -10,6 +10,8 @@ import {
   Trash2,
 } from "lucide-react";
 import { useState } from "react";
+import retainedResourceCheckpoint from "../../examples/debugger_workbench_v1.json";
+import { ResourceMemoryView } from "./ResourceMemoryView";
 import {
   debuggerComparisonLinks,
   debuggerComparisonRows,
@@ -386,6 +388,21 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
   };
 
   const agentPair = fixture.agent_pairs[agentOperation];
+  // An independently retained control response supplies the selected anchor.
+  // Never reuse this memory at another cursor or for a UI-selected sibling lane.
+  const resourceAnchor = retainedResourceCheckpoint.post_write_step.result.snapshot.snapshot.anchor;
+  const resourceSite = resourceAnchor.site.kir;
+  const resourceSelected =
+    fixture.source.protocol_responses_sha256 === retainedResourceCheckpoint.source.protocol_responses_sha256 &&
+    event.cursor === resourceAnchor.cursor.event_sequence &&
+    selectedLane === resourceAnchor.scope.lane &&
+    event.scope.lane === resourceAnchor.scope.lane &&
+    event.scope.wave === resourceAnchor.scope.wave &&
+    event.scope.workgroup.every((coordinate, axis) => coordinate === resourceAnchor.scope.workgroup[axis]) &&
+    event.site.kir.function === resourceSite.function_ordinal &&
+    event.site.kir.block === resourceSite.block_ordinal &&
+    event.site.kir.point === resourceSite.point.kind &&
+    event.site.kir.operation === resourceSite.point.operation_ordinal;
 
   return (
     <section className="debugger-tutorial" aria-labelledby="debugger-workbench-heading">
@@ -575,6 +592,20 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
           watchpoints={watchpoints}
         />
       </div>
+
+      {resourceSelected ? (
+        <ResourceMemoryView
+          response={fixture.agent_pairs.memory.response}
+          expectedSnapshot={resourceAnchor}
+          title="Captured allocation bytes"
+        />
+      ) : (
+        <p className="debug-empty" role="status" data-testid="resource-checkpoint-unavailable">
+          Resource bytes unavailable for this selection. This retained raw-KIR session has one
+          memory window: cursor {resourceAnchor.cursor.event_sequence}, lane {resourceAnchor.scope.lane}.
+          It does not capture physical registers, allocation lifetime, or GPU timing.
+        </p>
+      )}
 
       <section className="debug-agent-panel" aria-labelledby="debug-agent-heading">
         <header>

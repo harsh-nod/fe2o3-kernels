@@ -639,7 +639,7 @@ test("source-to-bundle CPU simulation keeps its evidence boundary visible", asyn
     name: "State inspector",
   });
   await inspectorTabs.getByRole("tab", { name: "Memory" }).click();
-  await expect(workbench.getByText("0x11000000")).toBeVisible();
+  await expect(workbench.getByText("0x11000000", { exact: true })).toBeVisible();
 
   const agentTabs = workbench.getByRole("tablist", { name: "Agent operation" });
   await agentTabs.getByRole("tab", { name: "Memory" }).click();
