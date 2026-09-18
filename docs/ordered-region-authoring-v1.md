@@ -132,13 +132,63 @@ VGPR boundary was 40. Capacity, actual usage, lifetimes and occupancy are differ
 facts. This static inspection proves neither GPU results nor performance, and
 its retained hash joins are not source authentication or protected publication.
 
+## Preview the authored plan beside logical values
+
+The standalone development preview uses the genuine retained
+`ordered-region-source-v31-r5` source ladder and its two debugger observation
+sidecars. In this website checkout, install the pinned dependencies with
+`npm ci`, then run `npm run dev -- --host 127.0.0.1`. Open
+`http://127.0.0.1:5173/fe2o3-kernels/drafts/ordered-region-observation.html`,
+adjusting the port if Vite prints a different one.
+This HTML entry is a development-only draft, not a published lesson route or
+part of the normal production build.
+
+1. Keep **Used region result**, request case 1, and logical lane index 0 selected.
+   The left table shows the five authored bindings, `v32` through `v36`.
+   The right table shows the three actual logical SSA inputs before the entire
+   region. All are zero: zero is a retained value, not unavailable data.
+2. Select **After whole region**. The retained logical result is zero. No
+   physical `v33` contents or intermediate `v32` contents have been observed.
+3. Select request case 6 and lane index 63, then select **After whole region**.
+   The retained result is `0x0000002e (46)`. The display selects a serialized
+   lane result; it does not calculate a replacement result or scratch value.
+4. Switch to **Unused region result**. Case, lane and phase reset. These are
+   different compilations with different canonical and sidecar identities,
+   despite sharing the same whole source-file hash. The retained region result
+   is not an observation of the kernel's output-buffer bytes.
+
+Both variants retain six request cases with 64 logical lanes each. Only the
+selected lane's before/after whole-region pair is rendered. Its record indices
+are indices in that private CPU capture, not debugger cursor revisions. The
+sidecars do not serialize workgroup/wave coordinates, source-span coordinates,
+or individual XOR/ADD instruction checkpoints. Canonical roster coordinates,
+raw KIR block IDs and semantic coordinates are shown as separate identifiers;
+matching numbers in another compilation do not establish correspondence.
+
+Independent hashes pin the exact ladder and sidecar bytes, and the display
+checks their canonical, semantic and source associations. Changed or malformed
+inputs clear the prior plan and values. These checks cannot recreate the private
+compiler-owner and immutable-request borrows. They are not source authentication,
+detached-transcript admission, production resume or artifact authority. The
+producer's truncation and value-limit controls are summaries, not additional
+displayable checkpoints.
+
+Physical VGPR/SGPR/AGPR values, scratch and EXEC contents, live ranges, occupancy,
+and final-artifact mapping remain explicitly unavailable. Selecting a case,
+lane or phase neither fetches another capture nor moves an existing debugger
+session. The separate fresh `ordered-region-source-machine-join-r5` observed all
+four O0/O3 used/unused final-machine cases; it does not supply physical runtime
+values or attach a final artifact to this browser view.
+
 ## What this draft does not complete
 
 The source qualification run `ordered-region-source-v31-r4` and final native join
-`ordered-region-source-machine-join-r1` are working-tree development observations.
-The final backend library run passed 754 tests with seven explicit ignores; the
+`ordered-region-source-machine-join-r1` are earlier working-tree development observations.
+That backend library run passed 754 tests with seven explicit ignores; the
 source ladder was executed separately. These results do not attest a released
-compiler commit or change this site's publication manifest.
+compiler commit or change this site's publication manifest. The fresh r5 source
+and browser observations above are also working-tree observations, not release
+qualification.
 
 Unsupported profiles include helper/multiple/looped/divergent regions, partial
 waves, SGPRs, tuples/inouts/aliases, other instruction sequences, authored memory

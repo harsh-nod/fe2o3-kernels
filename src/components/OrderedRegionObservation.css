@@ -1,0 +1,23 @@
+.ordered-region-observation { min-width: 0; margin-block: 1.5rem; }
+.ordered-region-observation p, .ordered-region-observation dd { overflow-wrap: anywhere; line-height: 1.6; }
+.ordered-region-observation code { overflow-wrap: anywhere; }
+.ordered-region-panels { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 1rem; margin-block: 1rem; }
+.ordered-region-panels > section { min-width: 0; border: 1px solid var(--border, #94a3b8); padding: .8rem; border-radius: .5rem; }
+.ordered-region-case, .ordered-region-controls > label { display: grid; gap: .4rem; min-width: 0; margin-block: .7rem; }
+.ordered-region-observation select { min-width: 0; width: 100%; max-width: 100%; min-height: 44px; padding: .5rem; font: inherit; background: var(--surface, #fff); color: var(--text, #172033); }
+.ordered-region-controls { display: grid; gap: .6rem; }
+.ordered-region-controls fieldset { min-width: 0; margin: 0; padding: .6rem; border: 1px solid var(--border, #94a3b8); }
+.ordered-region-controls fieldset label { display: flex; align-items: center; gap: .4rem; min-height: 44px; }
+.ordered-region-table-wrap { min-width: 0; max-width: 100%; overflow-x: auto; }
+.ordered-region-observation table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+.ordered-region-observation th, .ordered-region-observation td { text-align: left; vertical-align: top; padding: .55rem; border-bottom: 1px solid var(--border, #94a3b8); }
+.ordered-region-observation dl { display: grid; grid-template-columns: minmax(9rem, 1fr) minmax(0, 3fr); gap: .65rem; }
+.ordered-region-observation dd { margin: 0; min-width: 0; }
+.ordered-region-observation dt { font-weight: 700; }
+.ordered-region-observation details { margin-block: 1rem; }
+.ordered-region-observation summary { cursor: pointer; padding-block: .5rem; }
+.ordered-region-boundary, .ordered-region-unavailable { border-left: 3px solid var(--muted, #64748b); padding-left: .8rem; }
+.ordered-region-observation :is(select, input, summary):focus-visible { outline: 3px solid var(--accent, #2563eb); outline-offset: 3px; }
+.ordered-region-draft { width: min(1200px, 100%); margin-inline: auto; padding: clamp(.7rem, 2vw, 1.5rem); box-sizing: border-box; }
+@media (max-width: 800px) { .ordered-region-panels { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 600px) { .ordered-region-observation dl { grid-template-columns: minmax(0, 1fr); } }

@@ -1,0 +1,52 @@
+import { expect, test } from "@playwright/test";
+
+test("standalone actual-source observation separates planned roles and logical checkpoints", async ({ page }) => {
+  const mutations: string[] = [];
+  page.on("request", request => { if (request.method() !== "GET") mutations.push(request.url()); });
+  await page.goto("./drafts/ordered-region-observation.html");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Draft");
+  const plan = page.getByRole("table", { name: "Authored physical role bindings" });
+  await expect(plan).toBeVisible(); await expect(plan.getByRole("row")).toHaveCount(6);
+  await expect(plan).toContainText("v32"); await expect(plan).toContainText("SSA value %12");
+  const logical = page.getByRole("table", { name: "Selected logical SSA checkpoint values" });
+  await expect(logical.getByRole("row")).toHaveCount(5);
+  await expect(logical.getByText("0x00000000 (0)", { exact: true })).toHaveCount(3);
+  await expect(logical).not.toContainText("v32");
+  const cases = page.getByRole("combobox", { name: "Retained CPU request case" });
+  await expect(cases.getByRole("option")).toHaveCount(6); await cases.selectOption("5");
+  const lanes = page.getByRole("combobox", { name: "Retained logical lane index" });
+  await expect(lanes.getByRole("option")).toHaveCount(64); await lanes.selectOption("63");
+  const after = page.getByRole("radio", { name: "After whole region" });
+  await after.focus(); await after.press("Space");
+  await expect(after).toBeFocused(); await expect(after).toBeChecked();
+  await expect(logical).toContainText("0x0000002e (46)");
+  await expect(logical.getByText("Not retained separately for this phase", { exact: true })).toHaveCount(3);
+  await expect(page.getByTestId("ordered-region-logical-selection")).toContainText("Case 6 · logical lane index 63 · after");
+  await page.getByRole("combobox", { name: "Source compilation feature" }).selectOption("1");
+  await expect(cases).toHaveValue("0"); await expect(lanes).toHaveValue("0");
+  await expect(page.getByRole("radio", { name: "Before whole region" })).toBeChecked();
+  await expect(logical).not.toContainText("0x0000002e");
+  await expect(page.getByText(/final-artifact mapping:/u)).toContainText("unavailable");
+  await expect(page.getByRole("table")).toHaveCount(2);
+  await expect(page.getByRole("row")).toHaveCount(11);
+  const dimensions = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: innerWidth }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  expect(mutations).toEqual([]);
+});
+
+test("draft selections do not enter existing resource sessions and reload resets the retained view", async ({ page }) => {
+  await page.goto("./drafts/ordered-region-observation.html");
+  await page.getByRole("combobox", { name: "Source compilation feature" }).selectOption("1");
+  await page.getByRole("combobox", { name: "Retained CPU request case" }).selectOption("5");
+  await page.getByRole("radio", { name: "After whole region" }).check();
+  await page.reload();
+  await expect(page.getByRole("combobox", { name: "Source compilation feature" })).toHaveValue("0");
+  await expect(page.getByRole("combobox", { name: "Retained CPU request case" })).toHaveValue("0");
+  await expect(page.getByRole("radio", { name: "Before whole region" })).toBeChecked();
+  await expect(page.getByTestId("retained-lds-multi-workgroup-example")).toHaveCount(0);
+  await page.goto("./#/lesson/cpu-semantic-simulation");
+  await expect(page.getByRole("region", { name: "Authored plan and recorded logical observation" })).toHaveCount(0);
+  const example = page.getByTestId("lds-multi-resource-example");
+  await example.getByRole("button", { name: "Open two-workgroup LDS example" }).click();
+  await expect(example.getByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" })).toHaveValue("0");
+});
