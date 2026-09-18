@@ -3,6 +3,7 @@ import {
   projectResourceAccessResponse, resourceAccessRangeLabel, resourceAccessScopeLabel,
   RESOURCE_ACCESS_VISIBLE_ROWS, type ResourceAccessProjection, type ResourceAccessProjectionInput,
 } from "../content/resource-access-view";
+import { resourceAccessNavigation, resourceAccessPageKey, type ResourceAccessSelection } from "../content/resource-access-navigation";
 import "./ResourceAccessView.css";
 
 export interface ResourceAccessViewProps extends ResourceAccessProjectionInput {
@@ -13,17 +14,21 @@ type Ready = Extract<ResourceAccessProjection, { status: "ready" }>;
 
 function CapturedResourcePage({ projection }: { projection: Ready }) {
   const [page, setPage] = useState(0);
-  const [scopeFilter, setScopeFilter] = useState("all");
-  const scopeLabels = projection.kind === "memory_accesses"
-    ? [...new Set(projection.rows.map((row) => resourceAccessScopeLabel(row.occurrence.scope)))] : [];
-  const rows = projection.kind === "memory_accesses"
-    ? projection.rows.filter((row) => scopeFilter === "all" || resourceAccessScopeLabel(row.occurrence.scope) === scopeFilter)
-    : projection.rows;
+  const [selection, setSelection] = useState<ResourceAccessSelection | null>(null);
+  const navigation = projection.kind === "memory_accesses" ? resourceAccessNavigation(projection, selection) : null;
+  const rows = navigation?.rows ?? projection.rows;
   const pageCount = Math.max(1, Math.ceil(rows.length / RESOURCE_ACCESS_VISIBLE_ROWS));
   const currentPage = Math.min(page, pageCount - 1);
   const start = currentPage * RESOURCE_ACCESS_VISIBLE_ROWS;
   const end = Math.min(start + RESOURCE_ACCESS_VISIBLE_ROWS, rows.length);
   const completeness = projection.completeness;
+  function selectEvent(eventSequence: number) {
+    if (!navigation) return;
+    const index = navigation.rows.findIndex((row) => row.occurrence.event_sequence === eventSequence);
+    if (index < 0) return;
+    setSelection({ ...navigation.selection, eventSequence });
+    setPage(Math.floor(index / RESOURCE_ACCESS_VISIBLE_ROWS));
+  }
   return <>
     <p className="resource-access-summary">
       Cursor {projection.anchor.cursor.event_sequence} · revision {projection.anchor.cursor.state_revision} · request {projection.requestId}
@@ -39,13 +44,48 @@ function CapturedResourcePage({ projection }: { projection: Ready }) {
     {projection.hasMorePages && <p className="resource-access-notice" role="status">
       More backend pages exist. This read-only view does not fetch them; an empty page does not mean the history is empty.
     </p>}
-    {projection.kind === "memory_accesses" && <label className="resource-access-filter">
-      Filter this captured page by logical scope
-      <select aria-label="Filter captured access rows by logical scope" value={scopeFilter} onChange={(event) => { setScopeFilter(event.target.value); setPage(0); }}>
-        <option value="all">All scopes in this captured page</option>
-        {scopeLabels.map((scope) => <option key={scope} value={scope}>{scope}</option>)}
-      </select>
-    </label>}
+    {navigation && <div className="resource-access-navigation">
+      <label className="resource-access-filter">Logical wave in this captured page
+        <select aria-label="Filter captured access rows by logical wave" value={navigation.selection.waveKey ?? "all"}
+          onChange={(event) => { setSelection({ ...navigation.selection, waveKey: event.target.value === "all" ? null : event.target.value, scopeKey: null, eventSequence: null }); setPage(0); }}>
+          <option value="all">All observed waves and scopes</option>
+          {navigation.waveOptions.map((option) => <option key={option.key} value={option.key}>{option.label}</option>)}
+        </select>
+      </label>
+      <label className="resource-access-filter">Logical lane / scope in selected wave
+        <select aria-label="Filter captured access rows by logical scope" value={navigation.selection.scopeKey ?? "all"}
+          onChange={(event) => { setSelection({ ...navigation.selection, scopeKey: event.target.value === "all" ? null : event.target.value, eventSequence: null }); setPage(0); }}>
+          <option value="all">All scopes in this captured page</option>
+          {navigation.scopeOptions.map((option) => <option key={option.key} value={option.key}>{option.label}</option>)}
+        </select>
+      </label>
+      <p>Only scopes occurring in this retained page are selectable. A missing lane is not evidence of inactivity.
+        Wave and lane numbers are logical; workgroup and wave width remain part of the selection.</p>
+      <div className="resource-access-pagination" aria-label="Retained access event navigation">
+        <button type="button" disabled={navigation.selectedIndex <= 0}
+          onClick={() => selectEvent(navigation.rows[navigation.selectedIndex - 1].occurrence.event_sequence)}>Previous retained access</button>
+        <label className="resource-access-filter">Selected retained access
+          <select aria-label="Selected retained access event" value={navigation.selected?.occurrence.event_sequence ?? "none"} disabled={navigation.rows.length === 0}
+            onChange={(event) => selectEvent(Number(event.target.value))}>
+            {!navigation.selected && <option value="none">No selected retained access</option>}
+            {navigation.rows.map((row) => <option key={row.occurrence.event_sequence} value={row.occurrence.event_sequence}>
+              Event {row.occurrence.event_sequence} — {resourceAccessScopeLabel(row.occurrence.scope)}
+            </option>)}
+          </select>
+        </label>
+        <button type="button" disabled={navigation.rows.length === 0 || navigation.selectedIndex + 1 >= navigation.rows.length}
+          onClick={() => selectEvent(navigation.rows[navigation.selectedIndex + 1].occurrence.event_sequence)}>Next retained access</button>
+      </div>
+      <div className="resource-access-selected" aria-live="polite" aria-atomic="true" data-testid="selected-retained-access">
+        {navigation.selected ? <p>Selected retained event <strong>{navigation.selected.occurrence.event_sequence}</strong>:
+          {" "}{resourceAccessScopeLabel(navigation.selected.occurrence.scope)}; {navigation.selected.access.replaceAll("_", " ")};
+          {" "}alloc#{navigation.selected.allocation.ordinal}:g{navigation.selected.allocation.generation}; byte range {resourceAccessRangeLabel(navigation.selected)}.</p>
+          : <p>No retained access is selected in this page.</p>}
+        <p>The selected checkpoint remains cursor {projection.anchor.cursor.event_sequence}, revision {projection.anchor.cursor.state_revision}.
+          Selecting an access does not restore its event, change this snapshot, or show memory bytes at that access.
+          Intermediate events and per-access source associations are unavailable here.</p>
+      </div>
+    </div>}
     <div className="resource-access-pagination" aria-label="Captured resource row pagination">
       <button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>Previous rows</button>
       <span aria-live="polite">Rows {rows.length === 0 ? 0 : start + 1}–{end} of {rows.length} in this captured page</span>
@@ -61,8 +101,9 @@ function CapturedResourcePage({ projection }: { projection: Ready }) {
         </tr>)}</tbody>
       </table> : <table aria-label="Captured memory access occurrences">
         <thead><tr><th scope="col">Event / ordinal</th><th scope="col">Logical scope</th><th scope="col">Access</th><th scope="col">Allocation</th><th scope="col">Byte range [start, end)</th><th scope="col">KIR site</th><th scope="col">CPU schedule</th></tr></thead>
-        <tbody>{projection.rows.filter((row) => scopeFilter === "all" || resourceAccessScopeLabel(row.occurrence.scope) === scopeFilter).slice(start, end).map((row) => <tr key={row.occurrence.event_sequence}>
-          <th scope="row">{row.occurrence.event_sequence} / {row.occurrence.record_ordinal}</th>
+        <tbody>{navigation!.rows.slice(start, end).map((row) => <tr key={row.occurrence.event_sequence} aria-current={navigation!.selected === row ? "true" : undefined}>
+          <th scope="row"><button type="button" aria-label={`Select retained access event ${row.occurrence.event_sequence}`}
+            onClick={() => selectEvent(row.occurrence.event_sequence)}>{row.occurrence.event_sequence} / {row.occurrence.record_ordinal}</button></th>
           <td>{resourceAccessScopeLabel(row.occurrence.scope)}</td><td>{row.access.replaceAll("_", " ")}</td>
           <td>alloc#{row.allocation.ordinal}:g{row.allocation.generation}<br />{row.address_space}</td>
           <td><code>{resourceAccessRangeLabel(row)}</code><br />{row.range.byte_len} bytes</td>
@@ -95,7 +136,7 @@ export function ResourceAccessView({ title = "Captured resource observations", .
     <h3 id={headingId}>{title}</h3>
     <p className="resource-access-provenance-label">CPU replay · simulated observation · read-only captured page</p>
     {projection.status === "ready" ? <CapturedResourcePage
-      key={`${projection.anchorKey}:${projection.contextKey}:${projection.requestId}:${projection.kind}`}
+      key={resourceAccessPageKey(projection)}
       projection={projection}
     /> : <p role="status" data-state={projection.status}>{projection.detail} No prior resource rows are shown.</p>}
   </section>;

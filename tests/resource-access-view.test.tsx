@@ -56,12 +56,19 @@ describe("resource access view", () => {
     const request = { ...retained.accessRequest, expected_snapshot: anchor, page: { max_items: 256, max_scanned: 256 } };
     render(<ResourceAccessView {...props} response={response} expectedSnapshot={anchor} expectedRequest={request} />);
     expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(65);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Selected retained access event" }), "65");
+    expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(2);
+    expect(screen.getByRole("button", { name: "Select retained access event 65" }).closest("tr")).toHaveAttribute("aria-current", "true");
+    await user.click(screen.getByRole("button", { name: "Previous retained access" }));
+    expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(65);
+    expect(screen.getByRole("combobox", { name: "Selected retained access event" })).toHaveValue("64");
     await user.click(screen.getByRole("button", { name: "Next rows" }));
     expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(2);
     expect(screen.getByRole("button", { name: "Next rows" })).toBeDisabled();
     await user.selectOptions(screen.getByRole("combobox", { name: "Filter captured access rows by logical scope" }), "Workgroup [0, 0, 0], logical wave 0, lane 1");
     expect(within(screen.getByRole("table")).getAllByRole("row")).toHaveLength(33);
     expect(screen.getByRole("button", { name: "Previous rows" })).toBeDisabled();
+    expect(screen.getByRole("combobox", { name: "Selected retained access event" })).toHaveValue("2");
     expect(screen.getByText(/Rows 1–32 of 32 in this captured page/u)).toBeInTheDocument();
   });
 

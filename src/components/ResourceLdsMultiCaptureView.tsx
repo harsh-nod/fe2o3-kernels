@@ -77,9 +77,18 @@ function CapturedMulti({ projection }: { projection: Ready }) {
       This example is independent of the raw-KIR timeline, old one-workgroup LDS example, and global assembly example.</p>
     <label className="resource-lds-multi-selector">Retained checkpoint
       <select aria-label="Retained two-workgroup LDS checkpoint" value={index} onChange={(event) => setIndex(Number(event.target.value))}>
-        {projection.checkpoints.map((item, position) => <option key={item.id} value={position}>{item.label}</option>)}
+        {projection.checkpoints.map((item, position) => <option key={item.id} value={position}>
+          {item.label} — cursor {item.expectedSnapshot.cursor.event_sequence}, revision {item.expectedSnapshot.cursor.state_revision}
+        </option>)}
       </select>
     </label>
+    <div className="resource-lds-multi-navigation" aria-label="Retained checkpoint navigation">
+      <button type="button" disabled={index === 0} onClick={() => setIndex(index - 1)}>Previous retained checkpoint</button>
+      <span aria-live="polite">Checkpoint {index + 1} of {projection.checkpoints.length}, in capture order</span>
+      <button type="button" disabled={index + 1 === projection.checkpoints.length} onClick={() => setIndex(index + 1)}>Next retained checkpoint</button>
+    </div>
+    <p>Capture order includes reverse and forward restores. Equal event cursors at different revisions remain separate checkpoints;
+      these controls do not navigate unretained events or issue debugger commands.</p>
     <CheckpointPanels key={checkpoint.anchorKey + checkpoint.id} checkpoint={checkpoint} context={projection.context} />
     <details className="resource-lds-multi-identities"><summary>Retained-byte identities and unavailable authority</summary>
       <dl>

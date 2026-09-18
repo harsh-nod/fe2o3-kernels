@@ -5,6 +5,12 @@
 .resource-access-notice { border-left: 3px solid currentColor; padding: 0.6rem 0.8rem; }
 .resource-access-filter { display: flex; flex-direction: column; gap: 0.4rem; margin-block: 1rem; max-width: 36rem; }
 .resource-access-filter select { padding: 0.45rem; font: inherit; color: inherit; background: var(--bg-secondary, #182031); border: 1px solid var(--border-color, #5f6c82); border-radius: 0.3rem; }
+.resource-access-navigation, .resource-access-filter { min-width: 0; }
+.resource-access-filter select { width: 100%; max-width: 100%; min-width: 0; }
+.resource-access-pagination .resource-access-filter { flex: 1 1 20rem; }
+.resource-access-selected { border-left: 3px solid currentColor; padding-inline-start: 0.8rem; overflow-wrap: anywhere; }
+.resource-access-table-wrap tr[aria-current="true"] { outline: 1px solid currentColor; outline-offset: -1px; }
+.resource-access-table-wrap button { padding: 0.45rem; min-height: 44px; font: inherit; border-radius: 0.3rem; }
 .resource-access-pagination { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-block: 0.8rem; }
 .resource-access-pagination button { padding: 0.4rem 0.65rem; font: inherit; border-radius: 0.3rem; }
 .resource-access-table-wrap { overflow-x: auto; }

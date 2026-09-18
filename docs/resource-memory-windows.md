@@ -404,6 +404,40 @@ milestones.
 
 ## Bounded CPU and browser diagnostic measurements
 
+### Local lane, access-event and checkpoint navigation
+
+Each recorded access page now offers logical-wave and lane/scope filters, an
+event selector, previous/next retained-access buttons, and selectable event rows.
+All options come from that already validated page (at most 256 returned rows);
+only 64 table rows are rendered at once. Wave/lane identity includes workgroup,
+logical wave width and wave number, so a lane number cannot silently select the
+same-numbered lane in another workgroup. Selecting an event moves local table
+pagination to its row. Native buttons/selects provide keyboard navigation, and
+the selected-event description is announced without moving focus.
+
+These are **local observations, not debugger execution controls**. Access event
+12 at checkpoint cursor 16080/revision 15 still uses the checkpoint's unchanged
+memory windows. No byte value or source association at event 12 is invented.
+An unlisted lane/event is unavailable in the retained page, not proven inactive;
+intermediate events and other backend pages are not fetched. An empty page with
+a continuation token remains explicitly incomplete as a view of history.
+
+Page, capture/context, source variant, target and complete snapshot identities
+fence selection state. Changing the retained access page or checkpoint resets
+wave/lane/event and row-page selections; replacing or rejecting a capture hides
+old values immediately. The two-workgroup example also has previous/next
+checkpoint buttons in **capture order**, not numeric cursor order: cursor 16078
+at revisions 9 and 13, and cursor 16080 at revisions 11 and 15, remain distinct.
+Checkpoint options display both cursor and revision. No resource-query token,
+raw trace selection, source edit or other capture is changed by these controls.
+
+This advances recorded-page navigation in #281 V1/V2. It does not complete live
+query integration, same-event memory restoration, lifecycle/reuse evidence,
+source/SSA synchronization, physical register views, or breakpoint/watchpoint
+editing. Existing capture bytes, independent hashes and release pins are unchanged.
+
+### Measurement scope
+
 The resource-query and presentation paths also have reproducible diagnostic
 scripts. These measure local CPU tooling and browser layout, not kernel GPU
 latency, bandwidth, occupancy, bank conflicts or performance prediction. They do
@@ -462,6 +496,8 @@ On 2026-09-17, the remote `mi350-2` container reported an AMD EPYC 9534 CPU,
 browser used a 1280×800 viewport, warmed development-mode Vite modules and no
 React StrictMode. These environment-specific observations are not release-mode
 capacity claims or cross-machine thresholds.
+They predate the lane/event navigation controls described above; this navigation
+addition has functional and bounded-DOM tests, not a new timing qualification.
 
 | Actual source invocations | Retained records / writes | Pages per sweep | Global page roundtrip p95 | Global full sweep p95 | Whole debugger process peak RSS |
 | --- | --- | --- | --- | --- | --- |

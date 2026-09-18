@@ -10,6 +10,59 @@ const props = { retainedUtf8, expectedSha256: "13165393fd04bb857f80886984b0e7a31
 beforeEach(() => vi.stubGlobal("crypto", webcrypto));
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 describe("retained two-workgroup LDS view", () => {
+  it("selects only retained lanes/events without moving or replacing checkpoint memory", async () => {
+    const user = userEvent.setup(), request = vi.fn(); vi.stubGlobal("fetch", request);
+    render(<ResourceLdsMultiCaptureView {...props} />);
+    const checkpoints = await screen.findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+    await user.selectOptions(checkpoints, "4");
+    const cells = screen.getByRole("group", { name: "Captured memory cells" }), before = cells.textContent;
+    const selected = screen.getByTestId("selected-retained-access");
+    expect(selected).toHaveTextContent("Selected retained event 12");
+    expect(selected).toHaveTextContent("cursor 16080, revision 15");
+    const wave = screen.getByRole("combobox", { name: "Filter captured access rows by logical wave" });
+    expect(within(wave).getAllByRole("option")).toHaveLength(2);
+    await user.selectOptions(wave, within(wave).getAllByRole("option")[1]);
+    const lanes = screen.getByRole("combobox", { name: "Filter captured access rows by logical scope" });
+    expect(within(lanes).getAllByRole("option")).toHaveLength(17);
+    await user.selectOptions(lanes, "Workgroup [0, 0, 0], logical wave 0, lane 1");
+    expect(selected).toHaveTextContent("Selected retained event 28");
+    expect(screen.getByRole("button", { name: "Previous retained access" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Next retained access" })).toBeDisabled();
+    await user.selectOptions(lanes, "all");
+    await user.click(screen.getByRole("button", { name: "Next retained access" }));
+    expect(selected).toHaveTextContent("Selected retained event 28");
+    await user.click(screen.getByRole("button", { name: "Select retained access event 60" }));
+    expect(screen.getByRole("combobox", { name: "Selected retained access event" })).toHaveValue("60");
+    expect(cells.textContent).toBe(before);
+    expect(screen.getByText("16080 / 15", { selector: "strong" })).toBeInTheDocument();
+    expect(selected).toHaveTextContent("does not restore its event");
+    await user.selectOptions(screen.getByRole("combobox", { name: "Two-workgroup retained access page" }), "1");
+    expect(screen.getByTestId("selected-retained-access")).toHaveTextContent("No retained access is selected");
+    expect(screen.getByRole("combobox", { name: "Selected retained access event" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Next retained access" })).toBeDisabled();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Two-workgroup retained access page" }), "0");
+    expect(screen.getByRole("combobox", { name: "Selected retained access event" })).toHaveValue("12");
+    expect(screen.getByRole("combobox", { name: "Filter captured access rows by logical wave" })).toHaveValue("all");
+    expect(request).not.toHaveBeenCalled();
+  });
+
+  it("navigates checkpoints in recorded order, retaining repeated cursors and resetting selections", async () => {
+    const user = userEvent.setup(); render(<ResourceLdsMultiCaptureView {...props} />);
+    await screen.findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+    expect(screen.getByRole("button", { name: "Previous retained checkpoint" })).toBeDisabled();
+    const sequence = ["16079 / 10", "16080 / 11", "16078 / 13", "16080 / 15", "31211 / 19", "32156 / 22"];
+    for (const identity of sequence) {
+      screen.getByRole("button", { name: "Next retained checkpoint" }).focus();
+      await user.keyboard("{Enter}");
+      expect(screen.getByText(identity, { selector: "strong" })).toBeInTheDocument();
+    }
+    expect(screen.getByRole("button", { name: "Next retained checkpoint" })).toBeDisabled();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Selected retained access event" }), "15147");
+    await user.click(screen.getByRole("button", { name: "Previous retained checkpoint" }));
+    expect(screen.getByRole("combobox", { name: "Selected retained access event" })).toHaveValue("16090");
+    expect(screen.getByText("Checkpoint 6 of 7, in capture order")).toBeInTheDocument();
+  });
+
   it("navigates actual current, unavailable and restored windows without backend effects", async () => {
     const user = userEvent.setup(), request = vi.fn(); vi.stubGlobal("fetch", request);
     render(<ResourceLdsMultiCaptureView {...props} />);

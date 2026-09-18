@@ -3,6 +3,8 @@
 .resource-lds-multi-panels, .resource-lds-multi-history, .resource-lds-multi-absent { min-width: 0; }
 .resource-lds-multi-selector { display: flex; flex-direction: column; gap: 0.45rem; margin-block: 1rem; max-width: 38rem; min-width: 0; }
 .resource-lds-multi-selector select { width: 100%; max-width: 100%; padding: 0.65rem; color: inherit; background: var(--bg-secondary, #182031); border: 1px solid var(--border-color, #5f6c82); border-radius: 0.3rem; font: inherit; }
+.resource-lds-multi-navigation { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.resource-lds-multi-navigation button { font: inherit; padding: 0.6rem; min-height: 44px; border-radius: 0.3rem; }
 .resource-lds-multi-notice { border-left: 3px solid currentColor; padding-inline-start: 0.8rem; }
 .resource-lds-multi-history, .resource-lds-multi-absent { margin-block-start: 1.5rem; border-top: 1px solid var(--border-color, #5f6c82); padding-block-start: 0.5rem; }
 .resource-lds-multi-identities dt { font-weight: 600; margin-block-start: 0.6rem; }
