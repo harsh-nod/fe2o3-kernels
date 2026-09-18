@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import retainedResourceCheckpoint from "../../examples/debugger_workbench_v1.json";
+import sourceResourceExample from "../../examples/resource_query_v6.json";
+import { ResourceAccessView } from "./ResourceAccessView";
 import { ResourceMemoryView } from "./ResourceMemoryView";
 import {
   debuggerComparisonLinks,
@@ -330,6 +332,7 @@ function BreakWatchEditor({
 }
 
 export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixture }) {
+  const [showSourceResources, setShowSourceResources] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const [selectedLane, setSelectedLane] = useState(fixture.events[0].scope.lane);
   const [hierarchyMode, setHierarchyMode] = useState<HierarchyMode>("thread");
@@ -606,6 +609,58 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
           It does not capture physical registers, allocation lifetime, or GPU timing.
         </p>
       )}
+
+      <section className="debug-agent-panel" aria-labelledby="assembly-resources-heading" data-testid="assembly-resource-example">
+        <header>
+          <div>
+            <p className="debug-label">Separate source-produced CPU capture</p>
+            <h2 id="assembly-resources-heading">Assembly kernel resource observations</h2>
+            <p>
+              Retained observations from the Rust <code>assembly_chain</code> kernel after its first
+              output write. These allocation, access and byte views share one exact checkpoint.
+              They are not connected to the different raw-KIR timeline above. Opening this example
+              does not compile, launch, attach, or issue a debugger request.
+            </p>
+          </div>
+          <button
+            type="button"
+            aria-expanded={showSourceResources}
+            aria-controls="assembly-resource-panels"
+            onClick={() => setShowSourceResources(!showSourceResources)}
+          >
+            {showSourceResources ? "Close assembly resource example" : "Open assembly resource example"}
+          </button>
+        </header>
+        {showSourceResources && <div id="assembly-resource-panels">
+          <ResourceAccessView
+            title="Source-produced allocation inventory"
+            response={sourceResourceExample.allocationResponse}
+            expectedRequest={sourceResourceExample.allocationRequest}
+            expectedSnapshot={sourceResourceExample.expectedSnapshot}
+            context={sourceResourceExample.context}
+            responseContext={sourceResourceExample.context}
+          />
+          <ResourceAccessView
+            title="Source-produced access page"
+            response={sourceResourceExample.accessResponse}
+            expectedRequest={sourceResourceExample.accessRequest}
+            expectedSnapshot={sourceResourceExample.expectedSnapshot}
+            context={sourceResourceExample.context}
+            responseContext={sourceResourceExample.context}
+          />
+          <ResourceMemoryView
+            title="Source-produced output bytes"
+            response={sourceResourceExample.memoryResponse}
+            expectedSnapshot={sourceResourceExample.expectedSnapshot}
+          />
+          <p>
+            The first u32 is 469; later output words remain at their initialized sentinel value at
+            this stop. The capture includes untouched canaries. CPU logical wave/lane labels do not
+            establish physical GPU state. Other query pages, final results, reverse replay and
+            stale-query checks are recorded by <code>scripts/resource-query-v6-smoke.mjs</code>.
+          </p>
+        </div>}
+      </section>
 
       <section className="debug-agent-panel" aria-labelledby="debug-agent-heading">
         <header>

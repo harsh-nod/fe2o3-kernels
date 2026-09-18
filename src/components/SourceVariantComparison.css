@@ -1,0 +1,16 @@
+.source-variant-comparison { min-width: 0; margin-block: 1.5rem; }
+.source-variant-comparison p, .source-variant-comparison dd { overflow-wrap: anywhere; }
+.source-variant-comparison pre { max-width: 100%; overflow: auto; padding: 1rem; background: var(--bg-code, #111827); color: var(--text-code, #e5e7eb); border-radius: .4rem; }
+.source-variant-comparison details { margin-block: 1rem; }
+.source-variant-comparison summary { cursor: pointer; font-weight: 600; }
+.source-variant-table-scroll { max-width: 100%; overflow-x: auto; margin-block: 1rem; }
+.source-variant-table-scroll table { width: 100%; border-collapse: collapse; }
+.source-variant-table-scroll th, .source-variant-table-scroll td { text-align: left; vertical-align: top; padding: .55rem; border-bottom: 1px solid var(--border-color, #94a3b8); }
+.source-variant-table-scroll code { overflow-wrap: anywhere; }
+.source-variant-tabs { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: 1rem; }
+.source-variant-comparison button { padding: .45rem .65rem; cursor: pointer; }
+.source-variant-tabs [aria-selected="true"], .source-variant-comparison [aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: 2px; }
+.source-variant-comparison button:focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+.source-variant-boundary, .source-variant-operation { border-left: 3px solid #64748b; padding-left: .8rem; }
+.source-variant-operation dd { margin-left: 0; }
+@media (max-width: 640px) { .source-variant-tabs { flex-direction: column; } .source-variant-comparison pre { font-size: .75rem; } }

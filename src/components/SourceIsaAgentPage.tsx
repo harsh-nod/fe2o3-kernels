@@ -12,7 +12,7 @@ import {
   ShieldAlert,
   Terminal,
 } from "lucide-react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   decodedAttSourceIsaMilestone,
   sourceIsaCharacteristicCommands,
@@ -28,6 +28,19 @@ import {
   sourceIsaCharacteristicSourceUrl,
   sourceIsaCharacteristicStructuralTarget,
 } from "../content/source-isa-agent";
+
+const RecordedSourceComparison = lazy(async () => {
+  const [{ SourceVariantComparison }, { default: evidence }] = await Promise.all([
+    import("./SourceVariantComparison"),
+    import("../../examples/ordinary_bitwise_promotion_v1.json"),
+  ]);
+  return {
+    default: function RetainedSourceComparison() {
+      return <SourceVariantComparison evidence={evidence}
+        expectedReceiptSha256="908100a406d336cfc5bc28b6c584e5830293a951cf7b3e8f9245130520603142" />;
+    },
+  };
+});
 
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
@@ -94,6 +107,7 @@ function exactJson(value: unknown): string {
 
 export function SourceIsaAgentPage() {
   const [activeView, setActiveView] = useState(0);
+  const [showSourceComparison, setShowSourceComparison] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
   return (
@@ -128,6 +142,29 @@ export function SourceIsaAgentPage() {
           </span>
         </div>
       </header>
+
+      <section className="source-isa-agent-truth" aria-labelledby="recorded-source-promotion-heading"
+        data-testid="recorded-source-promotion">
+        <header>
+          <p className="section-kicker">Separate actual source example</p>
+          <h2 id="recorded-source-promotion-heading">Inspect an actual Rust-to-assembly promotion</h2>
+          <p>
+            Compare original Rust, its generated instruction helper, and an intentional instruction edit.
+            These real source-export and CPU-case observations are separate from the synthetic
+            Characteristic archive. They do not establish a protected artifact or GPU execution.
+          </p>
+        </header>
+        <button type="button" aria-expanded={showSourceComparison}
+          aria-controls="recorded-source-promotion-content"
+          onClick={() => setShowSourceComparison((open) => !open)}>
+          {showSourceComparison ? "Close actual source comparison" : "Open actual source comparison"}
+        </button>
+        <div id="recorded-source-promotion-content">
+          {showSourceComparison && <Suspense fallback={<p role="status">Loading retained source comparison…</p>}>
+            <RecordedSourceComparison />
+          </Suspense>}
+        </div>
+      </section>
 
       <section className="source-isa-agent-truth" aria-labelledby="decoded-att-correlation-heading">
         <header>

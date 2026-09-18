@@ -1,0 +1,1032 @@
+{
+  "evidence": {
+    "schema": "fe2o3-resource-query-source-smoke-v1",
+    "source": "crates/rustc-codegen-fe2o3/tests/fixtures/assembly-authoring-v30/src/lib.rs",
+    "source_sha256": "f6cdd5fc4a937979fd5d12e7fa199fd3590fae9cb8f303b680781f9ca5b7df5e",
+    "bundle_sha256": "eea18c9fa25f483a8c978fcbb8a07dd4991f9417d1ea969d205364ed1aab2c55",
+    "bundle_identity": "cc09822a8f94839d562b09dbb963aa27b7788d5da71bd4c9a9d94f396a7cc16d",
+    "canonical_kir_digest": "9e99fb8946d568b0b8cae097d17925618b0abed23a1f4820ddc1b9e4ab7289f8",
+    "simulation_request_sha256": "1440cebfd18d500152090639c34021b319a75114b5af00f5faf1e9918f97369a",
+    "debug_requests_sha256": "fef1e368e24fc3ce4e0922bd2a7ef2d54636c59e7a0231fad973b65496db72b6",
+    "debug_responses_sha256": "aea9e0ffa792ae1b8cf97992bca0799b335e63c99641d1388d4ddbceb04f0845",
+    "expected_u32": 469,
+    "checks": [
+      "actual_admitted_source_bundle",
+      "independent_full_checkpoint_anchor",
+      "bounded_allocation_inventory",
+      "bounded_actual_memory_access_pages",
+      "first_word_and_four_word_independent_oracle",
+      "initialization_and_canaries",
+      "reverse_prewrite_bytes",
+      "no_future_accesses",
+      "same_cursor_new_revision",
+      "stale_full_anchor_and_token_rejection"
+    ],
+    "source_edited": false,
+    "hardware_observed": false,
+    "physical_registers": "not_represented",
+    "allocation_lifetime": "not_represented",
+    "curriculum_publication": "not_performed",
+    "fixture_kind": "actual_retained_source_produced_cpu_responses",
+    "projection": "one_inventory_page_and_one_access_page_at_first_postwrite_checkpoint"
+  },
+  "context": {
+    "connectionId": "recorded-resource-v6-r1",
+    "captureIdentity": "aea9e0ffa792ae1b8cf97992bca0799b335e63c99641d1388d4ddbceb04f0845",
+    "target": "gfx942:xnack-",
+    "variantIdentity": "cc09822a8f94839d562b09dbb963aa27b7788d5da71bd4c9a9d94f396a7cc16d"
+  },
+  "expectedSnapshot": {
+    "cursor": {
+      "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+      "event_sequence": 33,
+      "state_revision": 4
+    },
+    "scope": {
+      "level": "lane",
+      "workgroup": [
+        0,
+        0,
+        0
+      ],
+      "wave": 0,
+      "lane": 0,
+      "logical_workitem": [
+        0,
+        0,
+        0
+      ],
+      "active_mask": 15,
+      "wave_width": 32,
+      "interpretation": "logical_visualization"
+    },
+    "site": {
+      "kir": {
+        "function_ordinal": 0,
+        "block_ordinal": 11,
+        "point": {
+          "kind": "operation",
+          "operation_ordinal": 0
+        }
+      },
+      "source": {
+        "status": "resolved",
+        "location": {
+          "map_identity": "5777b6f9726200f820429e324ea532dfa4a77aef7004603494d975af6f0a6ada",
+          "provenance": "compiler_bundle_bound",
+          "file_identity": "58002e2371960e8c8ccd66283bde8c1cf9bd2777207d70f51f3c48e7690f530a",
+          "byte_start": 931,
+          "byte_end": 947
+        }
+      }
+    }
+  },
+  "independentAnchorResponse": {
+    "status": "ok",
+    "schema": "fe2o3-debug-response-v1",
+    "request_id": 6,
+    "operation": "step",
+    "session": {
+      "backend": "cpu_kir_simulator",
+      "execution_kind": "cpu_kir_simulation",
+      "state": "stopped",
+      "revision": 4,
+      "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "simulated": true,
+      "hardware_observed": false,
+      "performance_prediction": false
+    },
+    "result": {
+      "result": "control",
+      "stop": {
+        "reason": "step",
+        "outcome": "active",
+        "exact": true
+      },
+      "snapshot": {
+        "status": "captured",
+        "snapshot": {
+          "anchor": {
+            "cursor": {
+              "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+              "event_sequence": 33,
+              "state_revision": 4
+            },
+            "scope": {
+              "level": "lane",
+              "workgroup": [
+                0,
+                0,
+                0
+              ],
+              "wave": 0,
+              "lane": 0,
+              "logical_workitem": [
+                0,
+                0,
+                0
+              ],
+              "active_mask": 15,
+              "wave_width": 32,
+              "interpretation": "logical_visualization"
+            },
+            "site": {
+              "kir": {
+                "function_ordinal": 0,
+                "block_ordinal": 11,
+                "point": {
+                  "kind": "operation",
+                  "operation_ordinal": 0
+                }
+              },
+              "source": {
+                "status": "resolved",
+                "location": {
+                  "map_identity": "5777b6f9726200f820429e324ea532dfa4a77aef7004603494d975af6f0a6ada",
+                  "provenance": "compiler_bundle_bound",
+                  "file_identity": "58002e2371960e8c8ccd66283bde8c1cf9bd2777207d70f51f3c48e7690f530a",
+                  "byte_start": 931,
+                  "byte_end": 947
+                }
+              }
+            }
+          },
+          "stop": {
+            "reason": "step",
+            "outcome": "active",
+            "exact": true
+          },
+          "values": [
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 6
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x00000025"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 8
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0xfffffff0"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 12
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "pointer",
+                  "address_space": "global"
+                },
+                "value": {
+                  "encoding": "allocation_relative_pointer",
+                  "allocation": {
+                    "ordinal": 1,
+                    "generation": 0
+                  },
+                  "byte_offset": 0
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 16
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0xfffffff0"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 17
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0xfffffff0"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 18
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x00000015"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 19
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0xfffffff0"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 20
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0xffffffd5"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 21
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x000000ff"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 22
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x000000d5"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 23
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x00000100"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 24
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": false,
+                  "bits": 32
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x000001d5"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 25
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "index",
+                  "bits": 64
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x0000000000000000"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 26
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "index",
+                  "bits": 64
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x0000000000000006"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 27
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "bool"
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x1"
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 28
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "pointer",
+                  "address_space": "global"
+                },
+                "value": {
+                  "encoding": "allocation_relative_pointer",
+                  "allocation": {
+                    "ordinal": 1,
+                    "generation": 0
+                  },
+                  "byte_offset": 0
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 29
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "pointer",
+                  "address_space": "global"
+                },
+                "value": {
+                  "encoding": "allocation_relative_pointer",
+                  "allocation": {
+                    "ordinal": 1,
+                    "generation": 0
+                  },
+                  "byte_offset": 0
+                },
+                "provenance": "simulated_observation"
+              }
+            },
+            {
+              "path": {
+                "root": {
+                  "kind": "ssa",
+                  "function_ordinal": 0,
+                  "frame": 1,
+                  "value_ordinal": 30
+                },
+                "components": []
+              },
+              "availability": {
+                "status": "captured",
+                "value_type": {
+                  "kind": "integer",
+                  "signed": true,
+                  "bits": 64
+                },
+                "value": {
+                  "encoding": "bits",
+                  "bits": "0x0000000000000001"
+                },
+                "provenance": "simulated_observation"
+              }
+            }
+          ]
+        }
+      },
+      "events_advanced": 1
+    }
+  },
+  "allocationRequest": {
+    "schema": "fe2o3-debug-resource-request-v1",
+    "request_id": 7,
+    "expected_revision": 4,
+    "operation": "query_allocations",
+    "expected_snapshot": {
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "scope": {
+        "level": "lane",
+        "workgroup": [
+          0,
+          0,
+          0
+        ],
+        "wave": 0,
+        "lane": 0,
+        "logical_workitem": [
+          0,
+          0,
+          0
+        ],
+        "active_mask": 15,
+        "wave_width": 32,
+        "interpretation": "logical_visualization"
+      },
+      "site": {
+        "kir": {
+          "function_ordinal": 0,
+          "block_ordinal": 11,
+          "point": {
+            "kind": "operation",
+            "operation_ordinal": 0
+          }
+        },
+        "source": {
+          "status": "resolved",
+          "location": {
+            "map_identity": "5777b6f9726200f820429e324ea532dfa4a77aef7004603494d975af6f0a6ada",
+            "provenance": "compiler_bundle_bound",
+            "file_identity": "58002e2371960e8c8ccd66283bde8c1cf9bd2777207d70f51f3c48e7690f530a",
+            "byte_start": 931,
+            "byte_end": 947
+          }
+        }
+      }
+    },
+    "page": {
+      "max_items": 16,
+      "max_scanned": 16
+    }
+  },
+  "allocationResponse": {
+    "status": "ok",
+    "schema": "fe2o3-debug-resource-response-v1",
+    "request_id": 7,
+    "operation": "query_allocations",
+    "session": {
+      "backend": "cpu_kir_simulator",
+      "execution_kind": "cpu_kir_simulation",
+      "state": "stopped",
+      "revision": 4,
+      "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "simulated": true,
+      "hardware_observed": false,
+      "performance_prediction": false
+    },
+    "snapshot": {
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "scope": {
+        "level": "lane",
+        "workgroup": [
+          0,
+          0,
+          0
+        ],
+        "wave": 0,
+        "lane": 0,
+        "logical_workitem": [
+          0,
+          0,
+          0
+        ],
+        "active_mask": 15,
+        "wave_width": 32,
+        "interpretation": "logical_visualization"
+      },
+      "site": {
+        "kir": {
+          "function_ordinal": 0,
+          "block_ordinal": 11,
+          "point": {
+            "kind": "operation",
+            "operation_ordinal": 0
+          }
+        },
+        "source": {
+          "status": "resolved",
+          "location": {
+            "map_identity": "5777b6f9726200f820429e324ea532dfa4a77aef7004603494d975af6f0a6ada",
+            "provenance": "compiler_bundle_bound",
+            "file_identity": "58002e2371960e8c8ccd66283bde8c1cf9bd2777207d70f51f3c48e7690f530a",
+            "byte_start": 931,
+            "byte_end": 947
+          }
+        }
+      }
+    },
+    "page": {
+      "source_count": 1,
+      "scanned": 1,
+      "completeness": {
+        "status": "complete"
+      }
+    },
+    "result": {
+      "result": "allocations",
+      "allocations": [
+        {
+          "allocation": {
+            "ordinal": 1,
+            "generation": 0
+          },
+          "address_space": "global",
+          "access": "read_write",
+          "alignment": 4,
+          "capacity_bytes": "24",
+          "snapshot_bytes_available": true,
+          "initialization_available": true,
+          "owning_scope": "not_represented",
+          "lifetime": "not_represented",
+          "physical_base": "not_represented"
+        }
+      ]
+    },
+    "physical_registers": "not_represented"
+  },
+  "accessRequest": {
+    "schema": "fe2o3-debug-resource-request-v1",
+    "request_id": 9,
+    "expected_revision": 4,
+    "operation": "query_memory_accesses",
+    "expected_snapshot": {
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "scope": {
+        "level": "lane",
+        "workgroup": [
+          0,
+          0,
+          0
+        ],
+        "wave": 0,
+        "lane": 0,
+        "logical_workitem": [
+          0,
+          0,
+          0
+        ],
+        "active_mask": 15,
+        "wave_width": 32,
+        "interpretation": "logical_visualization"
+      },
+      "site": {
+        "kir": {
+          "function_ordinal": 0,
+          "block_ordinal": 11,
+          "point": {
+            "kind": "operation",
+            "operation_ordinal": 0
+          }
+        },
+        "source": {
+          "status": "resolved",
+          "location": {
+            "map_identity": "5777b6f9726200f820429e324ea532dfa4a77aef7004603494d975af6f0a6ada",
+            "provenance": "compiler_bundle_bound",
+            "file_identity": "58002e2371960e8c8ccd66283bde8c1cf9bd2777207d70f51f3c48e7690f530a",
+            "byte_start": 931,
+            "byte_end": 947
+          }
+        }
+      }
+    },
+    "page": {
+      "max_items": 4,
+      "max_scanned": 16,
+      "token": "resource.1.1"
+    },
+    "filter": {
+      "scope": {
+        "level": "dispatch"
+      }
+    }
+  },
+  "accessResponse": {
+    "status": "ok",
+    "schema": "fe2o3-debug-resource-response-v1",
+    "request_id": 9,
+    "operation": "query_memory_accesses",
+    "session": {
+      "backend": "cpu_kir_simulator",
+      "execution_kind": "cpu_kir_simulation",
+      "state": "stopped",
+      "revision": 4,
+      "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "simulated": true,
+      "hardware_observed": false,
+      "performance_prediction": false
+    },
+    "snapshot": {
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "scope": {
+        "level": "lane",
+        "workgroup": [
+          0,
+          0,
+          0
+        ],
+        "wave": 0,
+        "lane": 0,
+        "logical_workitem": [
+          0,
+          0,
+          0
+        ],
+        "active_mask": 15,
+        "wave_width": 32,
+        "interpretation": "logical_visualization"
+      },
+      "site": {
+        "kir": {
+          "function_ordinal": 0,
+          "block_ordinal": 11,
+          "point": {
+            "kind": "operation",
+            "operation_ordinal": 0
+          }
+        },
+        "source": {
+          "status": "resolved",
+          "location": {
+            "map_identity": "5777b6f9726200f820429e324ea532dfa4a77aef7004603494d975af6f0a6ada",
+            "provenance": "compiler_bundle_bound",
+            "file_identity": "58002e2371960e8c8ccd66283bde8c1cf9bd2777207d70f51f3c48e7690f530a",
+            "byte_start": 931,
+            "byte_end": 947
+          }
+        }
+      }
+    },
+    "page": {
+      "source_count": 33,
+      "scanned": 16,
+      "completeness": {
+        "status": "complete"
+      },
+      "next_token": "resource.1.2"
+    },
+    "result": {
+      "result": "memory_accesses",
+      "accesses": [
+        {
+          "occurrence": {
+            "record_ordinal": 31,
+            "event_sequence": 32,
+            "scope": {
+              "level": "lane",
+              "workgroup": [
+                0,
+                0,
+                0
+              ],
+              "wave": 0,
+              "lane": 0,
+              "logical_workitem": [
+                0,
+                0,
+                0
+              ],
+              "active_mask": 15,
+              "wave_width": 32,
+              "interpretation": "logical_visualization"
+            },
+            "site": {
+              "function_ordinal": 0,
+              "block_ordinal": 11,
+              "point": {
+                "kind": "operation",
+                "operation_ordinal": 0
+              }
+            },
+            "schedule": {
+              "identity": "workgroup_major_local_zyx_cooperative_v1",
+              "decision_ordinal": 0
+            }
+          },
+          "allocation": {
+            "ordinal": 1,
+            "generation": 0
+          },
+          "range": {
+            "byte_offset": "0",
+            "byte_len": "4"
+          },
+          "address_space": "global",
+          "access": "write_committed",
+          "call_frame": "not_represented",
+          "operation_occurrence": "not_represented",
+          "source_association": "not_represented"
+        }
+      ]
+    },
+    "physical_registers": "not_represented"
+  },
+  "memoryResponse": {
+    "status": "ok",
+    "schema": "fe2o3-debug-response-v1",
+    "request_id": 11,
+    "operation": "read_memory",
+    "session": {
+      "backend": "cpu_kir_simulator",
+      "execution_kind": "cpu_kir_simulation",
+      "state": "stopped",
+      "revision": 4,
+      "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+      "cursor": {
+        "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+        "event_sequence": 33,
+        "state_revision": 4
+      },
+      "simulated": true,
+      "hardware_observed": false,
+      "performance_prediction": false
+    },
+    "result": {
+      "result": "memory",
+      "snapshot": {
+        "cursor": {
+          "configuration_identity": "1c993281c3dd4f8744323925f815c410f2f5d0babab9ab422d2805a45aac6c89",
+          "event_sequence": 33,
+          "state_revision": 4
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 0,
+            "block_ordinal": 11,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "5777b6f9726200f820429e324ea532dfa4a77aef7004603494d975af6f0a6ada",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "58002e2371960e8c8ccd66283bde8c1cf9bd2777207d70f51f3c48e7690f530a",
+              "byte_start": 931,
+              "byte_end": 947
+            }
+          }
+        }
+      },
+      "memory": {
+        "allocation": {
+          "ordinal": 1,
+          "generation": 0
+        },
+        "byte_offset": 0,
+        "requested_bytes": 24,
+        "returned_bytes": 24,
+        "availability": {
+          "status": "captured",
+          "address_space": "global",
+          "bytes": "0xd5010000a5a5a5a5a5a5a5a5a5a5a5a5deadbeefcafebabe",
+          "initialized": "0xffffff",
+          "truncated": false
+        }
+      }
+    }
+  }
+}
