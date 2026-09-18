@@ -9,7 +9,7 @@ import {
   RotateCcw,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import retainedResourceCheckpoint from "../../examples/debugger_workbench_v1.json";
 import sourceResourceExample from "../../examples/resource_query_v6.json";
 import { ResourceAccessView } from "./ResourceAccessView";
@@ -24,6 +24,19 @@ import {
 
 type HierarchyMode = "thread" | "wave" | "workgroup";
 type InspectorMode = "ssa" | "memory";
+
+const RecordedLdsResources = lazy(async () => {
+  const [{ ResourceLdsCaptureView }, { default: retainedUtf8 }] = await Promise.all([
+    import("./ResourceLdsCaptureView"),
+    import("../../examples/source_lds_resource_v1.json?raw"),
+  ]);
+  return {
+    default: function RetainedLdsResources() {
+      return <ResourceLdsCaptureView retainedUtf8={retainedUtf8}
+        expectedSha256="1d1ab41c25693745d233af08f856834d123f8abbb8888f418b1cf5db4a63b494" />;
+    },
+  };
+});
 
 interface BreakpointState {
   id: number;
@@ -333,6 +346,7 @@ function BreakWatchEditor({
 
 export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixture }) {
   const [showSourceResources, setShowSourceResources] = useState(false);
+  const [showLdsResources, setShowLdsResources] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const [selectedLane, setSelectedLane] = useState(fixture.events[0].scope.lane);
   const [hierarchyMode, setHierarchyMode] = useState<HierarchyMode>("thread");
@@ -660,6 +674,35 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
             stale-query checks are recorded by <code>scripts/resource-query-v6-smoke.mjs</code>.
           </p>
         </div>}
+      </section>
+
+      <section className="debug-agent-panel" aria-labelledby="lds-resources-heading" data-testid="lds-resource-example">
+        <header>
+          <div>
+            <p className="debug-label">Separate source-produced workgroup capture</p>
+            <h2 id="lds-resources-heading">LDS reduction resource observations</h2>
+            <p>
+              Browse four retained checkpoints from an actual Rust workgroup reduction:
+              before its first scratch write, after that write, after reduction, and after
+              all output writes. The kernel has 64 workgroup invocations; the CPU debugger
+              uses 32-lane logical views. These are not physical registers or GPU timing.
+            </p>
+            <p>
+              This capture is independent of both examples above. Selecting a retained
+              checkpoint does not step a live debugger, compile, launch, or alter source.
+            </p>
+          </div>
+          <button type="button" aria-expanded={showLdsResources}
+            aria-controls="lds-resource-panels"
+            onClick={() => setShowLdsResources((open) => !open)}>
+            {showLdsResources ? "Close LDS resource example" : "Open LDS resource example"}
+          </button>
+        </header>
+        <div id="lds-resource-panels">
+          {showLdsResources && <Suspense fallback={<p role="status">Loading retained LDS checkpoints…</p>}>
+            <RecordedLdsResources />
+          </Suspense>}
+        </div>
       </section>
 
       <section className="debug-agent-panel" aria-labelledby="debug-agent-heading">

@@ -1,0 +1,10 @@
+.resource-lds-capture { min-width: 0; margin-block: 1.25rem; }
+.resource-lds-capture > p, .resource-lds-panels > p { line-height: 1.55; }
+.resource-lds-selector { display: flex; flex-direction: column; gap: 0.45rem; margin-block: 1rem; max-width: 36rem; min-width: 0; }
+.resource-lds-selector select { width: 100%; max-width: 100%; padding: 0.65rem; color: inherit; background: var(--bg-secondary, #182031); border: 1px solid var(--border-color, #5f6c82); border-radius: 0.3rem; font: inherit; }
+.resource-lds-notice { border-left: 3px solid currentColor; padding-inline-start: 0.8rem; }
+.resource-lds-panels { min-width: 0; }
+.resource-lds-identities dt { font-weight: 600; margin-block-start: 0.6rem; }
+.resource-lds-identities dd { margin-inline-start: 0; overflow-wrap: anywhere; }
+.resource-lds-capture :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 600px) { .resource-lds-selector { max-width: 100%; } }

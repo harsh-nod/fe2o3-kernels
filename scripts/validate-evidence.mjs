@@ -5,6 +5,8 @@ import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createServer } from "vite";
+import { MAX_LDS_FIXTURE_BYTES, MAX_LDS_TRANSCRIPT_BYTES, readBoundedLdsFile,
+  validateResourceLdsObservation } from "./validate-resource-query-lds-observation.mjs";
 
 const args = process.argv.slice(2);
 const repositoryIndex = args.indexOf("--repository");
@@ -294,6 +296,16 @@ try {
   if (profilerImportIssues.length > 0) {
     fail(`profiler import projection rejected: ${profilerImportIssues.join("; ")}`);
   }
+
+  // Draft retained CPU example: validate exact local bytes and pair joins without
+  // adding a curriculum maturity, compiler-source binding, or publication pin.
+  const ldsObservation = validateResourceLdsObservation(
+    readBoundedLdsFile(resolve("examples/source_lds_resource_v1.json"), MAX_LDS_FIXTURE_BYTES),
+    readBoundedLdsFile(resolve("examples/source_lds_resource_v1.requests.jsonl"), MAX_LDS_TRANSCRIPT_BYTES),
+    readBoundedLdsFile(resolve("examples/source_lds_resource_v1.responses.jsonl"), MAX_LDS_TRANSCRIPT_BYTES),
+    "1d1ab41c25693745d233af08f856834d123f8abbb8888f418b1cf5db4a63b494",
+  );
+  process.stdout.write(`retained LDS consistency: ${ldsObservation.checkpoints} checkpoints, ${ldsObservation.selected_pairs} whole pairs; no compiler or hardware authentication\n`);
 
   if (checkIssues) await validateIssues(catalog.issues);
   process.stdout.write(

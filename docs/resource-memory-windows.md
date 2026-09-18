@@ -185,6 +185,116 @@ explicitly unavailable; a retained simulator access is not a physical memory
 transaction. This source query capture and the raw-KIR memory window remain
 separate draft teaching observations with no publication-pin change.
 
+## Follow an actual workgroup reduction through LDS
+
+The separate **LDS reduction resource observations** section in the same lesson
+uses ordinary Rust `workgroup_reduce_u32` from the compiler's
+`production-ranked-bounds-device` fixture. One workgroup contains 64 invocations,
+each contributing 2. Its static workgroup allocation contains 256 scratch bytes.
+The independent CPU oracle checks the complete reduction tree and all 64 output
+words against 128, plus eight untouched trailing canary bytes.
+
+Choose **Open LDS resource example**, then use **Retained LDS checkpoint**:
+
+| Retained checkpoint | Cursor / revision | Captured byte windows |
+| --- | --- | --- |
+| Before the first LDS write | 2 / 2 | Workgroup and initialized global output |
+| After the first LDS write | 13 / 5 | Workgroup only |
+| Reduction / first global write | 15133 / 11 | Workgroup and global output |
+| Last captured operation | 16078 / 14 | Global output only |
+
+The full snapshot, not this table's cursor alone, binds each allocation inventory,
+byte window and access page. Each expected snapshot comes from a separate actual
+control response. Missing windows stay missing; selecting a checkpoint never
+substitutes another checkpoint's bytes. The last captured operation is **not** a
+post-release snapshot: it does not establish allocation release or reuse.
+
+At the first write, inspect initialization separately from storage bytes. At the
+reduction checkpoint, select **Dword (4 bytes)**: the first byte group is
+`80000000`, little-endian storage for 128. Other scratch cells retain their own
+partial sums; the whole allocation is not uniformly 128. At the last captured
+operation the global output contains 64 groups of `80000000`; **Next window**
+shows the eight trailing canary bytes `deadbeefcafebabe`.
+
+The 64-invocation kernel uses **32-lane logical debugger views** in this capture.
+That is two logical waves, not a claim about physical GPU waves, EXEC or lane
+registers. This choice retains exactly representable JSON masks; the viewer does
+not round a Wave64 mask or relabel the actual anchor.
+
+The retained reduction access page is one complete, unchanged backend page,
+not a concatenation or an all-history result. The full script checks 1,280 LDS
+accesses: 448 committed writes and 832 reads. The site's last global page holds
+14 actual rows; it does not independently display all 64 writes. Local row
+paging and scope filters never fetch new backend pages. A checkpoint's source
+association does not attribute each access row to that source span.
+
+### Reproduce the source and query observations
+
+Build the compiler tools as described in
+[Inspect the real lowering of a Rust kernel](inspect-lowered-kernels.md), using
+the pinned nightly and an existing `CARGO_TARGET_DIR`. From the compiler checkout:
+
+```sh
+lds_run=$(mktemp -d)
+node scripts/resource-query-lds-source-export.mjs "$lds_run/source"
+node scripts/resource-query-lds-v5-smoke.mjs "$lds_run/source" "$lds_run/queries"
+node --test scripts/resource-query-lds-source-export.test.mjs \
+  scripts/resource-query-lds-v5-smoke.test.mjs
+```
+
+The two child output directories must be new. The exporter runs the already-built
+`fe2o3-export-sim` on the unchanged real fixture with feature
+`workgroup_reduce_u32`, exact gfx942 target and Bundle V5. It records the actual
+arguments, logs, source/bundle hashes and dirty checkout status. It does not
+install or build the tools, authenticate a compiler closure, produce a protected
+artifact, or fall back to hand-built KIR.
+
+The query script performs a separate CPU execution before opening the actual
+bundle in the debugger. It checks initial storage, the first LDS write and
+initialization, reverse-to-prewrite restoration with no future access records,
+same-cursor/new-revision behavior, stale anchor/token rejection, the full tree,
+all final outputs and canaries. Watchpoints are explicitly removed by their
+returned IDs before replacements are installed. These are observations for this
+bounded history, not proofs about all schedules or hardware races.
+
+The site's four checkpoints retain 19 whole request/response pairs in
+[`examples/source_lds_resource_v1.json`](../examples/source_lds_resource_v1.json).
+The full, unchanged 219-command transcripts remain alongside it as
+[`source_lds_resource_v1.requests.jsonl`](../examples/source_lds_resource_v1.requests.jsonl)
+and [`source_lds_resource_v1.responses.jsonl`](../examples/source_lds_resource_v1.responses.jsonl).
+From the site checkout, verify their exact correspondence:
+
+```sh
+node scripts/validate-resource-query-lds-observation.mjs \
+  examples/source_lds_resource_v1.json \
+  examples/source_lds_resource_v1.requests.jsonl \
+  examples/source_lds_resource_v1.responses.jsonl \
+  1d1ab41c25693745d233af08f856834d123f8abbb8888f418b1cf5db4a63b494
+```
+
+That SHA-256 pins exact display-envelope bytes, not a compiler, executable subject
+or release. The context's variant identity is explicitly the **bundle file hash**.
+The 321,691-byte envelope is below its 512 KiB cap; transcripts are separately
+capped at 4 MiB each and are not loaded into the browser panel. Validation checks
+the original receipt bytes, transcript digests, whole pairs, independent controls
+and availability claims. A matching hash is consistency, not authentication.
+
+### Exercise: keep the three histories independent
+
+1. Open both actual-source examples. Select the LDS reduction checkpoint.
+2. Change the raw-KIR timeline cursor or lane above. Neither source capture changes.
+3. Select the first LDS write. The global byte window becomes unavailable; bytes
+   from the reduction checkpoint must not remain visible.
+4. Select the last captured operation. Only its global window is selectable.
+5. Close and reopen the LDS example. No debugger, compilation or launch request
+   is issued; the retained viewer starts with its initial checkpoint.
+
+Allocation owning scope, lifetime, physical base/layout, bank conflicts, physical
+registers, per-access source association and GPU timing remain unavailable. This
+adds a draft source-backed tutorial, not a curriculum maturity or publication-pin
+promotion. The raw-KIR timeline, assembly Bundle V6 example and LDS Bundle V5
+example retain separate identities and never share cursor state.
+
 ## What this window cannot establish
 
 The byte-window response alone establishes bytes and initialization only for
