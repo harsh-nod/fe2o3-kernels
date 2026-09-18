@@ -1,0 +1,104 @@
+import { expect, test } from "@playwright/test";
+
+test("two-workgroup retained state separates current storage from history", async ({ page }) => {
+  const fixtureRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes("source_lds_multi_workgroup_v1.json")) fixtureRequests.push(request.url());
+  });
+  await page.goto("./#/lesson/cpu-semantic-simulation");
+  const example = page.getByTestId("lds-multi-resource-example");
+  await expect(example.getByRole("table")).toHaveCount(0);
+  expect(fixtureRequests).toHaveLength(0);
+  await example.getByRole("button", { name: "Open two-workgroup LDS example" }).click();
+  const selector = example.getByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+  const cells = example.getByRole("group", { name: "Captured memory cells" });
+  const inventory = example.getByRole("table", { name: "Captured allocation inventory" });
+  await expect(selector).toHaveValue("0");
+  await expect(example).toContainText("16078 / 9");
+  expect(fixtureRequests.length).toBeGreaterThan(0);
+  await expect(inventory).toContainText("alloc#2:g0");
+  await expect(cells.getByRole("button")).toHaveCount(256);
+
+  await selector.focus();
+  await selector.press("ArrowDown");
+  await selector.press("Enter");
+  await expect(selector).toHaveValue("1");
+  await expect(example).toContainText("16079 / 10");
+  await expect(inventory.getByRole("row")).toHaveCount(2);
+  await expect(cells).toHaveCount(0);
+  await expect(example.getByTestId("lds-multi-unavailable-window")).toContainText("alloc#2:g0");
+  await expect(example).toContainText("No current byte window was retained");
+
+  await selector.selectOption("2");
+  await expect(example).toContainText("16080 / 11");
+  await expect(inventory).toContainText("alloc#3:g0");
+  await expect(inventory).not.toContainText("alloc#2:g0");
+  await expect(cells.getByRole("button").first()).toHaveAccessibleName(/uninitialized/u);
+  await selector.selectOption("3");
+  await expect(example).toContainText("16078 / 13");
+  await expect(inventory).toContainText("alloc#2:g0");
+  await expect(example.getByTestId("lds-multi-unavailable-window")).toContainText("alloc#3:g0");
+  await expect(example.getByTestId("lds-multi-history")).toContainText("empty page does not establish empty access history");
+
+  await selector.selectOption("4");
+  await expect(example).toContainText("16080 / 15");
+  await expect(inventory).toContainText("alloc#3:g0");
+  const history = example.getByTestId("lds-multi-history");
+  await expect(history).toContainText("WG0, alloc#2:g0");
+  await expect(history).toContainText("This allocation is absent from the current inventory");
+  await expect(history.getByRole("table").getByRole("row")).toHaveCount(17);
+  await example.getByRole("combobox", { name: "Two-workgroup retained access page" }).selectOption("1");
+  await expect(history).toContainText("continuation token");
+  await expect(history.getByRole("table")).toHaveCount(0);
+
+  await selector.selectOption("5");
+  await expect(example).toContainText("31211 / 19");
+  await example.getByRole("combobox", { name: "Memory cell size" }).selectOption("4");
+  await expect(cells.getByRole("button")).toHaveCount(64);
+  await expect(cells.getByRole("button").first()).toHaveAccessibleName(/0x80000000, initialized/u);
+  await selector.selectOption("6");
+  await expect(example).toContainText("32156 / 22");
+  await expect(example).toContainText("not a post-release snapshot");
+  await expect(example.getByRole("combobox", { name: "Memory cell size" })).toHaveValue("1");
+  await example.getByRole("combobox", { name: "Memory cell size" }).selectOption("4");
+  await expect(cells.getByRole("button")).toHaveCount(64);
+  await example.getByRole("button", { name: "Next window" }).click();
+  await expect(cells.getByRole("button")).toHaveCount(64);
+  await expect(cells.getByRole("button").last()).toHaveAccessibleName(/0x80000000, initialized/u);
+  await example.getByRole("button", { name: "Next window" }).click();
+  await expect(cells.getByRole("button")).toHaveCount(2);
+  await expect(cells).toContainText("deadbeef");
+  await expect(cells).toContainText("cafebabe");
+  const dimensions = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: innerWidth }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+  await example.getByRole("button", { name: "Close two-workgroup LDS example" }).click();
+  await expect(cells).toHaveCount(0);
+  await example.getByRole("button", { name: "Open two-workgroup LDS example" }).click();
+  await expect(selector).toHaveValue("0");
+});
+
+test("two-workgroup selection remains independent of all other debugger captures", async ({ page }) => {
+  await page.goto("./#/lesson/cpu-semantic-simulation");
+  const multi = page.getByTestId("lds-multi-resource-example");
+  await multi.getByRole("button", { name: "Open two-workgroup LDS example" }).click();
+  const selected = multi.getByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+  await selected.selectOption("4");
+  const retained = await multi.textContent();
+  const single = page.getByTestId("lds-resource-example");
+  await single.getByRole("button", { name: "Open LDS resource example" }).click();
+  const singleSelected = single.getByRole("combobox", { name: "Retained LDS checkpoint" });
+  await singleSelected.selectOption("2");
+  const assembly = page.getByTestId("assembly-resource-example");
+  await assembly.getByRole("button", { name: "Open assembly resource example" }).click();
+  const raw = page.getByRole("region", { name: "Inspect one deterministic semantic trace" });
+  await raw.getByRole("button", { name: /#9 ·/u }).click();
+  await raw.getByRole("button", { name: "Lane 1 active", exact: true }).click();
+  await raw.getByRole("button", { name: "Reverse one semantic event" }).click();
+  expect(await multi.textContent()).toBe(retained);
+  await expect(selected).toHaveValue("4");
+  const singleRetained = await single.textContent();
+  await selected.selectOption("1");
+  expect(await single.textContent()).toBe(singleRetained);
+  await expect(singleSelected).toHaveValue("2");
+  await expect(assembly.getByRole("group", { name: "Captured memory cells" })).toContainText("d5");
+});

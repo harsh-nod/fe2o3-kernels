@@ -295,6 +295,91 @@ adds a draft source-backed tutorial, not a curriculum maturity or publication-pi
 promotion. The raw-KIR timeline, assembly Bundle V6 example and LDS Bundle V5
 example retain separate identities and never share cursor state.
 
+## Separate current LDS from historical accesses across workgroups
+
+Open **two-workgroup LDS example** in the independent **LDS state across
+workgroups** section. This is a separate actual run of the same unchanged Rust
+reduction source: 128 invocations, two workgroups of 64, and 128 independently
+checked output words of 128 with eight trailing canary bytes. The capture uses
+logical debugger wave width 32, not observed physical waves.
+
+Use **Retained two-workgroup LDS checkpoint** to follow these actual stops:
+
+| Selection | Cursor / revision | Current allocation inventory |
+| --- | --- | --- |
+| WG0 last write | 16078 / 9 | Global output and WG0 LDS `2g0` |
+| WG1 global-only transition | 16079 / 10 | Global output only |
+| WG1 before its first write | 16080 / 11 | Global output and WG1 LDS `3g0` |
+| Reverse to WG0 | 16078 / 13 | Global output and restored WG0 LDS `2g0` |
+| Forward to WG1 | 16080 / 15 | Global output and restored WG1 LDS `3g0` |
+| WG1 reduction | 31211 / 19 | Global output and WG1 LDS `3g0` |
+| Last captured operation | 32156 / 22 | Global output and WG1 LDS `3g0` |
+
+These allocation ordinals belong to this capture only. The view reads them from
+the original receipt and checks every inventory against its full independent
+control anchor; it does not assume another run will issue the same IDs.
+
+Try these exercises:
+
+1. Select the global-only transition. No current byte window was retained here.
+   The separate request for the old WG0 allocation returns `not_represented`
+   with zero returned bytes; no old cells should remain on screen.
+2. Select WG1 before its first write. Its LDS storage exists, but its
+   initialization bitmap is empty. Stored zero bytes do not imply initialized
+   program values. The independently unavailable WG0 window stays unavailable.
+3. Select reverse WG0, then forward WG1. Observe the restored inventories and
+   the new revisions, even where the event cursor repeats. Queries from the
+   earlier revision are not current evidence.
+4. At forward WG1, inspect the historical WG0 access page. It names the old
+   allocation even though that allocation is absent from current memory. This
+   is valid history, not a live allocation or evidence of physical reuse.
+5. Inspect the empty retained page for WG1. Its continuation token shows that
+   more backend pages existed. An empty page is not a proof of empty history;
+   this read-only view does not follow that token.
+6. At the final checkpoint, select dword cells and advance two byte windows to
+   see `deadbeef` and `cafebabe`. The complete output has 128 words; the viewport
+   renders at most 256 bytes or 64 dwords at once.
+7. Change the raw-KIR cursor, lane, or single-workgroup LDS selection. This
+   two-workgroup selection must remain unchanged. Close and reopen it to reset
+   its retained selection without stepping, querying, compiling or launching.
+
+From the compiler checkout, reuse the built tools and export source afresh:
+
+```sh
+lds_multi_run=$(mktemp -d)
+node scripts/resource-query-lds-source-export.mjs "$lds_multi_run/source"
+node scripts/resource-query-lds-multi-workgroup-v5-smoke.mjs \
+  --compiler-repo "$(pwd)" \
+  --export-directory "$lds_multi_run/source" \
+  --output "$lds_multi_run/queries" \
+  --bin-directory /absolute/path/to/existing/target/debug
+node --test scripts/resource-query-lds-multi-workgroup-v5-smoke.test.mjs
+```
+
+Use the absolute `debug` directory containing the already-built simulator and
+debugger. The smoke refuses an existing output directory. It bounds process
+time, request/response sizes and page scans, preserves a 40 GiB disk reserve,
+and retains exact source, bundle, tool hashes and all 930 original query pairs.
+The complete smoke checks each workgroup's 1,280 LDS accesses and all final
+global writes; the browser deliberately retains only selected whole pages.
+
+The site package contains seven checkpoints and 33 unchanged whole pairs in
+[`source_lds_multi_workgroup_v1.json`](../examples/source_lds_multi_workgroup_v1.json).
+Its 222,854 bytes are pinned by SHA-256
+`13165393fd04bb857f80886984b0e7a31262209cc2546d117d650cc2179fe441`, under the
+512 KiB display cap. The full original request/response transcripts remain
+alongside it and are not browser imports. Run `npm run validate:resource-lds-multi`
+in the site checkout to check their exact correspondence independently.
+
+The global-only transition and distinct IDs establish stopped inventory
+observations, not allocation creation/release events or physical reuse. Terminal
+memory is unavailable; the last-operation snapshot still has LDS. Neither
+establishes a lifetime endpoint. Generation zero, owner, physical base/layout,
+register state, per-access source association, GPU performance, and bank-conflict
+analysis retain their existing limitations. This compiler-owned reduction
+expansion also does not qualify arbitrary source helper or loop histories.
+The example changes no curriculum or release pin.
+
 ## What this window cannot establish
 
 The byte-window response alone establishes bytes and initialization only for

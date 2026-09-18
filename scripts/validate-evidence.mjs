@@ -7,6 +7,8 @@ import { resolve } from "node:path";
 import { createServer } from "vite";
 import { MAX_LDS_FIXTURE_BYTES, MAX_LDS_TRANSCRIPT_BYTES, readBoundedLdsFile,
   validateResourceLdsObservation } from "./validate-resource-query-lds-observation.mjs";
+import { MAX_LDS_MULTI_FIXTURE_BYTES, MAX_LDS_MULTI_TRANSCRIPT_BYTES, readBoundedLdsMultiFile,
+  validateResourceLdsMultiObservation } from "./validate-resource-query-lds-multi-observation.mjs";
 
 const args = process.argv.slice(2);
 const repositoryIndex = args.indexOf("--repository");
@@ -306,6 +308,14 @@ try {
     "1d1ab41c25693745d233af08f856834d123f8abbb8888f418b1cf5db4a63b494",
   );
   process.stdout.write(`retained LDS consistency: ${ldsObservation.checkpoints} checkpoints, ${ldsObservation.selected_pairs} whole pairs; no compiler or hardware authentication\n`);
+
+  const multiObservation = validateResourceLdsMultiObservation(
+    readBoundedLdsMultiFile(resolve("examples/source_lds_multi_workgroup_v1.json"), MAX_LDS_MULTI_FIXTURE_BYTES),
+    readBoundedLdsMultiFile(resolve("examples/source_lds_multi_workgroup_v1.requests.jsonl"), MAX_LDS_MULTI_TRANSCRIPT_BYTES),
+    readBoundedLdsMultiFile(resolve("examples/source_lds_multi_workgroup_v1.responses.jsonl"), MAX_LDS_MULTI_TRANSCRIPT_BYTES),
+    "13165393fd04bb857f80886984b0e7a31262209cc2546d117d650cc2179fe441",
+  );
+  process.stdout.write(`retained two-workgroup consistency: ${multiObservation.checkpoints} checkpoints, ${multiObservation.selected_pairs} whole pairs; history is not current allocation presence\n`);
 
   if (checkIssues) await validateIssues(catalog.issues);
   process.stdout.write(

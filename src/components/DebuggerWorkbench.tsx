@@ -38,6 +38,19 @@ const RecordedLdsResources = lazy(async () => {
   };
 });
 
+const RecordedLdsMultiResources = lazy(async () => {
+  const [{ ResourceLdsMultiCaptureView }, { default: retainedUtf8 }] = await Promise.all([
+    import("./ResourceLdsMultiCaptureView"),
+    import("../../examples/source_lds_multi_workgroup_v1.json?raw"),
+  ]);
+  return {
+    default: function RetainedLdsMultiResources() {
+      return <ResourceLdsMultiCaptureView retainedUtf8={retainedUtf8}
+        expectedSha256="13165393fd04bb857f80886984b0e7a31262209cc2546d117d650cc2179fe441" />;
+    },
+  };
+});
+
 interface BreakpointState {
   id: number;
   enabled: boolean;
@@ -347,6 +360,7 @@ function BreakWatchEditor({
 export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixture }) {
   const [showSourceResources, setShowSourceResources] = useState(false);
   const [showLdsResources, setShowLdsResources] = useState(false);
+  const [showLdsMultiResources, setShowLdsMultiResources] = useState(false);
   const [eventIndex, setEventIndex] = useState(0);
   const [selectedLane, setSelectedLane] = useState(fixture.events[0].scope.lane);
   const [hierarchyMode, setHierarchyMode] = useState<HierarchyMode>("thread");
@@ -701,6 +715,36 @@ export function DebuggerWorkbench({ fixture }: { fixture: DebuggerWorkbenchFixtu
         <div id="lds-resource-panels">
           {showLdsResources && <Suspense fallback={<p role="status">Loading retained LDS checkpoints…</p>}>
             <RecordedLdsResources />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="debug-agent-panel" aria-labelledby="lds-multi-resources-heading" data-testid="lds-multi-resource-example">
+        <header>
+          <div>
+            <p className="debug-label">Separate source-produced two-workgroup capture</p>
+            <h2 id="lds-multi-resources-heading">LDS state across workgroups</h2>
+            <p>
+              Follow the same Rust reduction across two workgroups of 64 invocations.
+              Compare current allocation presence with historical accesses, then inspect
+              exact backward and forward restoration. A historical access does not mean
+              its allocation is still present at the selected stop.
+            </p>
+            <p>
+              These seven retained CPU checkpoints are independent of the other examples.
+              Navigation does not step a live debugger or establish physical reuse,
+              allocation lifetime, GPU execution, or performance.
+            </p>
+          </div>
+          <button type="button" aria-expanded={showLdsMultiResources}
+            aria-controls="lds-multi-resource-panels"
+            onClick={() => setShowLdsMultiResources((open) => !open)}>
+            {showLdsMultiResources ? "Close two-workgroup LDS example" : "Open two-workgroup LDS example"}
+          </button>
+        </header>
+        <div id="lds-multi-resource-panels">
+          {showLdsMultiResources && <Suspense fallback={<p role="status">Loading retained two-workgroup checkpoints…</p>}>
+            <RecordedLdsMultiResources />
           </Suspense>}
         </div>
       </section>
