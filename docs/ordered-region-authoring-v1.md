@@ -6,9 +6,14 @@ Use that implementation branch and its pinned toolchain. The branch is not the
 site's qualified release pin. This document adds no lesson route, capture manifest,
 publication pin or maturity claim.
 
-The ordinary compiler and debugger CLIs do not yet support this V16 region path.
-The working exercise is an opt-in compiler test over actual Rust source, followed
-by a separate unauthenticated native-code observation. No GPU is required or run.
+Ordinary tools now expose an explicit diagnostic Rust-to-raw-V16 path for CPU
+simulation and headless JSONL debugging. The separate opt-in retained-source-owner
+qualification also observes LLVM and native code through an unauthenticated test
+transport. Neither route is protected source-to-GPU admission; no GPU is required
+or run. Fresh ordinary source-export, CPU-simulation and JSONL-debugger
+qualification passed within the compiler walkthrough's
+[explicit evidence scope](https://github.com/harsh-nod/fe2o3/blob/codex/assembly-authoring-swarm-20260917/docs/ordered-region-authoring-v1.md#evidence-scope-and-further-work),
+not as a release or milestone-completion claim.
 
 ## Start with real Rust
 
@@ -49,7 +54,53 @@ internal order and unused-result retention do not make it a memory fence or
 freeze unrelated instructions. It is allowed only once, unconditionally, in
 one direct `gfx942:xnack-` wave64 root before conditional source edges.
 
-## Run the source exercise
+## Use the ordinary diagnostic tools
+
+From the compiler checkout, follow the complete
+[ordinary build, export and request walkthrough](https://github.com/harsh-nod/fe2o3/blob/codex/assembly-authoring-swarm-20260917/docs/ordered-region-authoring-v1.md#use-the-ordinary-diagnostic-tools).
+It pins `RUSTC` explicitly and finishes with a normal backend-library build plus
+the four binaries and `inspect_diagnostic_ordered_region_v16` example. Run that
+normal build after tests, and repeat it if later tests replace the backend shared
+library. Do not substitute development-only helper scripts for shipped commands.
+
+The three option forms are intentionally different:
+
+```text
+fe2o3-export-sim --diagnostic-kir-v16 ...
+fe2o3-kir-sim --diagnostic-kir-v16 PATH --request REQUEST.json
+fe2o3-debug sim --diagnostic-kir-v16 PATH --request REQUEST.json --wave-width 64 --protocol jsonl
+```
+
+The export flag is valueless; the consumers take a canonical-file path. It is not
+a new simulation bundle. Use fresh output paths. The complete request generator
+in the compiler walkthrough places the output slice first, followed by `a = 19`,
+`b = 23`, `c = 42`. Its 264-byte backing has a 64-u32 view at byte offset 4,
+initially uninitialized `a5` bytes and two four-byte guards. The independent check
+expects 46 in all 64 outputs and unchanged, still-uninitialized guards.
+
+The built inspection example accepts exactly `KIR_PATH REQUEST_PATH` and reports
+current canonical identity, operation roster ordinals, logical input/result SSA
+IDs and the declared register plan. Re-inspect after exporting: a raw block ID is
+not a roster ordinal, and historical SSA IDs need not remain current. Its small
+CPU preflight is not execution. Its source IDs, register numbers and content
+hashes are not source authentication or physical observations. Follow the
+[JSONL debugger walkthrough](https://github.com/harsh-nod/fe2o3/blob/codex/assembly-authoring-swarm-20260917/docs/ordered-region-debugger-v1.md)
+for revisions, checkpoint anchors and lossless wave64 integer handling.
+
+In separate supported concrete source copies, swapping the three data bindings
+to `c, b, a` gives 80; moving the five roles from `32..36` to `40..44` with
+unchanged data order still gives 46. Re-export from Rust rather than patching
+canonical bytes. Isolated package/crate names and source paths also affect the
+new identities, so identity differences are not attributed solely to a register
+edit. CPU equality does not prove final physical allocation or GPU equivalence.
+
+The same closed profile and four source refusals below remain. Persisted
+schedules, source-map overrides, wave32 and diagnosis V2 are not raw-V16 features;
+logical SSA/memory/resource queries are separate from those refusals. This ordinary
+CLI exercise does not update the browser's retained captures, publication pin or
+lesson routes.
+
+## Run the optional retained-source-owner qualification
 
 Run from the companion compiler checkout, not this website checkout. Install/configure
 the repository's pinned `nightly-2026-04-03` toolchain and required components first;
@@ -89,9 +140,13 @@ Do not modify retained reports to make a comparison pass.
 ## Know which level you are observing
 
 The actual source callback produces semantic MIR V31 and one genuine canonical
-KIR V16 owner. A `cfg(test)` continuation retains the original compiler bindings;
-it is not the shipping protected-admission route. The same owner feeds both the
-CPU simulator and complete-module LLVM generation.
+KIR V16 owner. A release-active private continuation retains the original
+compiler bindings; ordinary diagnostic export and the optional source qualifier
+share this construction. Only the qualifier's extra observation callbacks remain
+`cfg(test)`. Raw diagnostic files do not preserve the live private source-owner
+borrow or grant source/proof/artifact/resume authority. Their ordinary CPU route
+stops before LLVM and does not change protected compilation. The separate
+retained-owner qualification supplies both CPU admission and complete-module LLVM.
 
 The CPU result is one atomic logical operation. There is no simulated physical
 `v32` value to inspect between XOR and ADD. The browser's existing
@@ -141,7 +196,8 @@ sidecars. In this website checkout, install the pinned dependencies with
 `http://127.0.0.1:5173/fe2o3-kernels/drafts/ordered-region-observation.html`,
 adjusting the port if Vite prints a different one.
 This HTML entry is a development-only draft, not a published lesson route or
-part of the normal production build.
+part of the normal production build. It still displays the retained r5 sidecars,
+not fresh ordinary CLI exports, edited source, or a live debugger connection.
 
 1. Keep **Used region result**, request case 1, and logical lane index 0 selected.
    The left table shows the five authored bindings, `v32` through `v36`.
@@ -181,6 +237,25 @@ four O0/O3 used/unused final-machine cases; it does not supply physical runtime
 values or attach a final artifact to this browser view.
 
 ## What this draft does not complete
+
+The fresh `phase8-ordinary-source-r4` aggregate passed five exports, four source
+refusals, 30 simulations and 15 ordinary negative controls. The associated
+`phase8-ordinary-debugger-r2` passed 30 sessions and 1,020 commands across the five
+variants and six requests each. It checked selected lane 0 logical values and
+navigation, plus all 64 outputs, initialization, guards and exact write history;
+it did not inspect all-lane SSA or physical registers. The compiler's linked
+evidence section records both receipt hashes, current-owner register-plan
+inspection and retained failed client attempts. None of this replaces the
+browser's historical r5 captures or qualifies a released compiler or curriculum.
+
+The earlier `phase8-ordinary-source-r3` working-build aggregate passed five real
+exports, four expected source refusals, 30 CPU simulations and 15 ordinary
+negative controls, including isolated source edits producing 46, 80 and 46.
+The accepted edit-fixture locks retained 109 unchanged external dependency tuples;
+original source was unchanged. This remains historical source/simulator evidence,
+not a portable edit-fixture release, a GPU run or curriculum qualification. The retained
+earlier `phase8-ordinary-source-r2` aggregate failed its isolated fixture's host
+dependency preparation and must not be relabeled as a passing aggregate.
 
 The source qualification run `ordered-region-source-v31-r4` and final native join
 `ordered-region-source-machine-join-r1` are earlier working-tree development observations.
