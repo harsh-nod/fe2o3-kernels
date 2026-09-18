@@ -100,6 +100,47 @@ logical SSA/memory/resource queries are separate from those refusals. This ordin
 CLI exercise does not update the browser's retained captures, publication pin or
 lesson routes.
 
+## Exercise stepping, values and memory automatically
+
+The compiler checkout now includes a
+[portable debugger exercise](https://github.com/harsh-nod/fe2o3/blob/codex/assembly-authoring-swarm-20260917/docs/ordered-region-debugger-v1.md#reproduce-the-bounded-debugger-exercise).
+Use Linux and Node.js 22. After the ordinary walkthrough creates the exact KIR
+and request, keep its variables and run from that compiler checkout:
+
+```sh
+node "$ordered_repo/scripts/ordered-region-debugger-smoke.mjs" \
+  --debugger "$(realpath "$ordered_bin/fe2o3-debug")" \
+  --inspector "$(realpath "$ordered_bin/examples/inspect_diagnostic_ordered_region_v16")" \
+  --kir "$ordered_cli_run/used.kir" \
+  --request "$ordered_cli_run/request.json" \
+  --output "$ordered_cli_run/debugger-smoke" \
+  --result-mode used --operand-order 0,1,2 --register-plan 32,33,34,35,36
+```
+
+The output directory must be new; input paths must resolve directly to regular
+files. Allow 40 GiB free disk plus 10 MiB output headroom. The script does not
+build or export: it independently inspects the current owner and then starts a
+real JSONL debugger session. Expected arithmetic, all output words, guards and
+initialization come from the request and explicit caller options, never from
+debugger responses.
+
+For re-exported source edits, use operand order `2,1,0` for the swap or register
+plan `40,41,42,43,44` for the register edit. For the unused-result variant use its
+own KIR and `--result-mode unused`; it still observes the region result while
+expecting the first original scalar argument in output memory. The exact request
+layout above, distinct input SSA IDs and the closed XOR/ADD profile are required.
+
+Inspect `smoke.json`, the inspector's exact stdout/stderr and execution metadata,
+and `session/` request/response streams. The exercise checks lane 0 before/after,
+reverse/repeat, stale revisions/events, resource pagination and consumed-token
+refusal, plus all 64 final writes and memory bytes. Failed runs retain evidence;
+existing outputs are not overwritten. It checks neither physical register state,
+every lane's SSA values, foreign-session tokens nor instruction microsteps.
+
+These are fresh headless CPU observations, not a live connection to the browser
+preview below. They do not update its historical captures, grant source custody,
+resume compilation, admit a GPU artifact or advance the site's release pin.
+
 ## Run the optional retained-source-owner qualification
 
 Run from the companion compiler checkout, not this website checkout. Install/configure
