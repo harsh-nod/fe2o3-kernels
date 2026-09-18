@@ -496,8 +496,9 @@ On 2026-09-17, the remote `mi350-2` container reported an AMD EPYC 9534 CPU,
 browser used a 1280×800 viewport, warmed development-mode Vite modules and no
 React StrictMode. These environment-specific observations are not release-mode
 capacity claims or cross-machine thresholds.
-They predate the lane/event navigation controls described above; this navigation
-addition has functional and bounded-DOM tests, not a new timing qualification.
+They predate the lane/event navigation controls and historical access overlay
+described here. Those additions have functional and bounded-DOM tests, not a new
+timing qualification.
 
 | Actual source invocations | Retained records / writes | Pages per sweep | Global page roundtrip p95 | Global full sweep p95 | Whole debugger process peak RSS |
 | --- | --- | --- | --- | --- | --- |
@@ -539,3 +540,51 @@ Receipts also retain script, fixture/bundle and debugger-binary hashes where
 applicable. These are local diagnostic artifacts, not public release pins.
 Larger histories, many allocations, alternate capture profiles, physical
 registers/LDS and actual GPU performance remain unmeasured by this experiment.
+
+## Overlay one historical access on checkpoint storage
+
+Open the separate **two-workgroup LDS example** and select **WG1 — reduction /
+first output write**. Its checkpoint remains cursor **31211**, revision **19**.
+The selected retained access initially is event **16090**, a committed write to
+allocation 3, generation 0, byte range **[0, 4)**. The first four displayed bytes
+receive a **W** marker. They remain the storage bytes and initialization captured
+at checkpoint 31211, not values reconstructed at event 16090.
+
+Use **Next retained access**, the event selector, or the logical wave/lane filters
+to change the selected historical range. Markers follow that selected range;
+the debugger cursor and stored bytes do not change. **R/W** indicate read/write,
+and **AR/AW/AR/W** distinguish atomic read, committed atomic write and committed
+atomic read/write. These are logical access records, not physical transactions.
+The separate **I/U/M** markers continue to mean initialized, uninitialized and
+mixed checkpoint storage. A dword marker reports the exact overlapping byte
+count, such as `W · 2/4 B`, without marking every byte in that group as accessed.
+The byte detail table retains per-byte initialization and access markers.
+
+Two useful mismatch exercises use the same unchanged capture:
+
+1. Select **Forward-restored WG1**. The initial history page is for WG0's
+   allocation 2, while the current bytes belong to WG1's allocation 3. The overlay
+   reports **different allocation** and paints nothing. Select the other retained
+   access page: it is empty with more backend pages available, so it paints
+   nothing and does not imply an empty history.
+2. Select **WG1 — last captured operation**, then the WG1 access page. Event
+   **31210** accesses **[256, 260)**. It is outside the first 256-byte viewport.
+   **Next window** exposes that existing checkpoint range and its four markers;
+   another **Next window** shows the eight canary bytes without markers. The
+   selected event and its complete original range remain unchanged throughout.
+
+The optional overlay joins independently guarded access and memory responses
+only at the same full snapshot and caller-owned connection/capture/target/variant
+context, with exact allocation, generation and address space. Canonical decimal
+access ranges use lossless integer arithmetic; only the bounded existing memory
+viewport is rendered. Changed page contents invalidate a prior selected event,
+even if the request ID is reused. Checkpoint, capture and retained-page changes
+reset the shared selection. The source/global and older four-stop examples keep
+their separate selection and capture identities.
+
+Markers have text and accessible descriptions, and existing arrow/Home/End cell
+navigation remains available. Desktop/mobile tests bound the grid to 256 byte
+cells, 64 dword cells, or the smaller final viewport. Unmarked bytes, an off-window
+access, a partial capture, and a missing page never establish that no access
+occurred. There is no new fetch, capture, schema, lifetime, per-access source
+association, physical-layout inference, bank model, or GPU evidence here.

@@ -1,5 +1,43 @@
 import { expect, test } from "@playwright/test";
 
+test("historical overlays preserve bytes, keyboard focus and bounded mobile viewports", async ({ page }) => {
+  await page.goto("./#/lesson/cpu-semantic-simulation");
+  const example = page.getByTestId("lds-multi-resource-example");
+  await example.getByRole("button", { name: "Open two-workgroup LDS example" }).click();
+  const checkpoints = example.getByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+  await checkpoints.selectOption("5");
+  const cells = example.getByRole("group", { name: "Captured memory cells" });
+  const bytes = await cells.locator("code").allTextContents();
+  await expect(cells.locator("[data-access-marker]")).toHaveCount(4);
+  const first = cells.getByRole("button").first();
+  await expect(first).toHaveAccessibleDescription(/Historical access over current checkpoint storage/u);
+  await first.focus(); await first.press("ArrowRight");
+  await expect(cells.getByRole("button").nth(1)).toBeFocused();
+  const next = example.getByRole("button", { name: "Next retained access" });
+  await next.focus(); await next.press("Enter");
+  await expect(first).not.toHaveAttribute("data-access-marker");
+  await expect(cells.getByRole("button").nth(4)).toHaveAttribute("data-access-marker", "W");
+  expect(await cells.locator("code").allTextContents()).toEqual(bytes);
+  await example.getByRole("combobox", { name: "Memory cell size" }).selectOption("4");
+  await expect(cells.getByRole("button")).toHaveCount(64);
+  await expect(cells.locator("[data-access-marker]")).toHaveCount(1);
+  await expect(cells.locator("[data-access-marker]")).toContainText("W · 4/4 B");
+  await checkpoints.selectOption("4");
+  await expect(example.getByTestId("historical-access-overlay")).toHaveAttribute("data-state", "different_allocation");
+  await expect(cells.locator("[data-access-marker]")).toHaveCount(0);
+  await checkpoints.selectOption("6");
+  await example.getByRole("combobox", { name: "Two-workgroup retained access page" }).selectOption("1");
+  await expect(example.getByTestId("historical-access-overlay")).toHaveAttribute("data-state", "off_window");
+  await example.getByRole("button", { name: "Next window" }).click();
+  await expect(cells.locator("[data-access-marker]")).toHaveCount(4);
+  await expect(cells.getByRole("button")).toHaveCount(256);
+  await example.getByRole("button", { name: "Next window" }).click();
+  await expect(cells.locator("[data-access-marker]")).toHaveCount(0);
+  await expect(cells.getByRole("button")).toHaveCount(8);
+  const dimensions = await page.evaluate(() => ({ width: document.documentElement.scrollWidth, viewport: innerWidth }));
+  expect(dimensions.width).toBeLessThanOrEqual(dimensions.viewport);
+});
+
 test("recorded lane and event navigation preserves exact checkpoint bytes and revisions", async ({ page }) => {
   await page.goto("./#/lesson/cpu-semantic-simulation");
   const example = page.getByTestId("lds-multi-resource-example");

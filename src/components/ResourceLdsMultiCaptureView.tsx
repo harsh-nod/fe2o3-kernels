@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { projectResourceLdsMultiCapture, type ResourceLdsMultiCaptureProjection, type RetainedLdsMultiCheckpoint } from "../content/resource-lds-multi-capture";
 import type { ResourceMemoryContext } from "../lib/resource-memory-controller";
+import type { ResourceAccessSelection } from "../content/resource-access-navigation";
 import { ResourceAccessView } from "./ResourceAccessView";
 import { ResourceMemoryView } from "./ResourceMemoryView";
 import "./ResourceLdsMultiCaptureView.css";
@@ -14,8 +15,13 @@ type Ready = Extract<ResourceLdsMultiCaptureProjection, { status: "ready" }>;
 
 function CheckpointPanels({ checkpoint, context }: { checkpoint: RetainedLdsMultiCheckpoint; context: ResourceMemoryContext }) {
   const [memoryIndex, setMemoryIndex] = useState(0), [accessIndex, setAccessIndex] = useState(0);
+  const [accessSelection, setAccessSelection] = useState<ResourceAccessSelection | null>(null);
   const memory = checkpoint.memories[memoryIndex], access = checkpoint.accessPages[accessIndex];
   const absent = checkpoint.unavailableWindows[0];
+  const accessOverlay = access ? { memoryContext: context, selection: accessSelection, access: {
+    response: access.response, expectedRequest: access.request, expectedSnapshot: checkpoint.expectedSnapshot,
+    context, responseContext: context,
+  } } : undefined;
   return <div className="resource-lds-multi-panels">
     <p>Exact captured cursor / revision: <strong>{checkpoint.expectedSnapshot.cursor.event_sequence} / {checkpoint.expectedSnapshot.cursor.state_revision}</strong>.
       Inventory and byte windows use this full anchor. Access pages are filtered history through this cursor, not a list of currently present allocations.</p>
@@ -39,17 +45,17 @@ function CheckpointPanels({ checkpoint, context }: { checkpoint: RetainedLdsMult
       <p>LDS has 256 captured bytes. Global output has 520 bytes: two 256-byte output viewports and an 8-byte canary viewport.
         Dwords group storage bytes; uninitialized storage does not establish program values.</p>
       <ResourceMemoryView key={String(memory.request.request_id)} title="Current captured byte window"
-        response={memory.response} expectedSnapshot={checkpoint.expectedSnapshot} />
+        response={memory.response} expectedSnapshot={checkpoint.expectedSnapshot} accessOverlay={accessOverlay} />
     </div> : <p role="status">No current byte window was retained at this checkpoint. No other stop&apos;s bytes are substituted.</p>}
     {absent && <div className="resource-lds-multi-absent" data-testid="lds-multi-unavailable-window">
       <h4>Unavailable window at this checkpoint</h4>
       <p>{absent.allocationLabel} is absent from this exact inventory. Its independently paired memory query returned zero bytes.
         Absence here does not establish owning scope, a release event, or lifetime.</p>
-      <ResourceMemoryView title="Recorded unavailable byte window" response={absent.response} expectedSnapshot={checkpoint.expectedSnapshot} />
+      <ResourceMemoryView title="Recorded unavailable byte window" response={absent.response} expectedSnapshot={checkpoint.expectedSnapshot} accessOverlay={accessOverlay} />
     </div>}
     {access ? <div className="resource-lds-multi-history" data-testid="lds-multi-history">
       <label className="resource-lds-multi-selector">Historical access page through selected cursor
-        <select aria-label="Two-workgroup retained access page" value={accessIndex} onChange={(event) => setAccessIndex(Number(event.target.value))}>
+        <select aria-label="Two-workgroup retained access page" value={accessIndex} onChange={(event) => { setAccessIndex(Number(event.target.value)); setAccessSelection(null); }}>
           {checkpoint.accessPages.map((page, index) => <option key={String(page.request.request_id)} value={index}>
             WG{page.filterWorkgroup} filter — {page.allocationLabel} — request {String(page.request.request_id)}
           </option>)}
@@ -63,7 +69,8 @@ function CheckpointPanels({ checkpoint, context }: { checkpoint: RetainedLdsMult
       {access.rows === 0 && <p className="resource-lds-multi-notice">This retained page contains zero matching rows.
         {access.hasMorePages ? " It has a continuation token, so this empty page does not establish empty access history." : " This is a page result, not an allocation-lifetime fact."}</p>}
       <ResourceAccessView key={String(access.request.request_id)} title="Retained historical access page" {...access}
-        expectedRequest={access.request} expectedSnapshot={checkpoint.expectedSnapshot} context={context} responseContext={context} />
+        expectedRequest={access.request} expectedSnapshot={checkpoint.expectedSnapshot} context={context} responseContext={context}
+        selection={accessSelection} onSelectionChange={setAccessSelection} />
     </div> : <p role="status">No access page was retained for this checkpoint; access history is not inferred from its inventory.</p>}
   </div>;
 }

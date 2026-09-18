@@ -55,6 +55,10 @@
 .resource-memory-cell code { overflow-wrap: anywhere; font-size: 0.8rem; }
 .resource-memory-cell small { overflow-wrap: anywhere; font-size: 0.7rem; }
 .resource-memory-cell span { font-size: 0.7rem; font-weight: 700; }
+.resource-memory-access-overlay { padding: 0.7rem; margin-block: 0.8rem; border: 1px dashed var(--border-strong); overflow-wrap: anywhere; }
+.resource-memory-access-overlay h4 { margin-block: 0 0.4rem; }
+.resource-memory-access-overlay p { margin-block: 0.4rem; font-size: 0.9rem; }
+.resource-memory-access-marker { padding: 0.15rem; border: 1px solid var(--accent-strong); border-radius: 3px; overflow-wrap: anywhere; }
 .resource-memory-cell.state-u { border-style: dashed; background: var(--surface); }
 .resource-memory-cell.state-m { border-width: 2px; border-style: dotted; }
 .resource-memory-cell[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }

@@ -8,13 +8,24 @@ import "./ResourceAccessView.css";
 
 export interface ResourceAccessViewProps extends ResourceAccessProjectionInput {
   title?: string;
+  /** Optional caller-owned selection shared with other checkpoint panels. */
+  selection?: ResourceAccessSelection | null;
+  onSelectionChange?: (selection: ResourceAccessSelection) => void;
 }
 
 type Ready = Extract<ResourceAccessProjection, { status: "ready" }>;
 
-function CapturedResourcePage({ projection }: { projection: Ready }) {
+function CapturedResourcePage({ projection, selection: controlledSelection, onSelectionChange }: {
+  projection: Ready; selection?: ResourceAccessSelection | null;
+  onSelectionChange?: (selection: ResourceAccessSelection) => void;
+}) {
   const [page, setPage] = useState(0);
-  const [selection, setSelection] = useState<ResourceAccessSelection | null>(null);
+  const [localSelection, setLocalSelection] = useState<ResourceAccessSelection | null>(null);
+  const selection = controlledSelection === undefined ? localSelection : controlledSelection;
+  function setSelection(next: ResourceAccessSelection) {
+    if (controlledSelection === undefined) setLocalSelection(next);
+    onSelectionChange?.(next);
+  }
   const navigation = projection.kind === "memory_accesses" ? resourceAccessNavigation(projection, selection) : null;
   const rows = navigation?.rows ?? projection.rows;
   const pageCount = Math.max(1, Math.ceil(rows.length / RESOURCE_ACCESS_VISIBLE_ROWS));
@@ -129,7 +140,7 @@ function CapturedResourcePage({ projection }: { projection: Ready }) {
   </>;
 }
 
-export function ResourceAccessView({ title = "Captured resource observations", ...input }: ResourceAccessViewProps) {
+export function ResourceAccessView({ title = "Captured resource observations", selection, onSelectionChange, ...input }: ResourceAccessViewProps) {
   const headingId = useId();
   const projection = projectResourceAccessResponse(input);
   return <section className="resource-access-view" aria-labelledby={headingId}>
@@ -138,6 +149,7 @@ export function ResourceAccessView({ title = "Captured resource observations", .
     {projection.status === "ready" ? <CapturedResourcePage
       key={resourceAccessPageKey(projection)}
       projection={projection}
+      selection={selection} onSelectionChange={onSelectionChange}
     /> : <p role="status" data-state={projection.status}>{projection.detail} No prior resource rows are shown.</p>}
   </section>;
 }

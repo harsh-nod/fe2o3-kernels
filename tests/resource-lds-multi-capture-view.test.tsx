@@ -10,6 +10,59 @@ const props = { retainedUtf8, expectedSha256: "13165393fd04bb857f80886984b0e7a31
 beforeEach(() => vi.stubGlobal("crypto", webcrypto));
 afterEach(() => { vi.unstubAllGlobals(); vi.restoreAllMocks(); });
 describe("retained two-workgroup LDS view", () => {
+  it("links a real historical range to checkpoint storage with separate accessible markers", async () => {
+    const user = userEvent.setup(), request = vi.fn(); vi.stubGlobal("fetch", request);
+    render(<ResourceLdsMultiCaptureView {...props} />);
+    const checkpoints = await screen.findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+    await user.selectOptions(checkpoints, "5");
+    const cells = screen.getByRole("group", { name: "Captured memory cells" });
+    const bytes = Array.from(cells.querySelectorAll("code"), (cell) => cell.textContent);
+    expect(cells.querySelectorAll("[data-access-marker]")).toHaveLength(4);
+    expect(screen.getByTestId("historical-access-overlay")).toHaveAttribute("data-state", "ready");
+    const first = within(cells).getByRole("button", { name: "Byte offset 0, 1 byte, 0x80, initialized" });
+    expect(first).toHaveAttribute("data-access-marker", "W");
+    expect(first).toHaveAccessibleDescription(/Historical access over current checkpoint storage/u);
+    first.focus(); await user.keyboard("{ArrowRight}");
+    expect(within(cells).getAllByRole("button")[1]).toHaveFocus();
+    await user.click(screen.getByRole("button", { name: "Next retained access" }));
+    expect(first).not.toHaveAttribute("data-access-marker");
+    expect(within(cells).getAllByRole("button")[4]).toHaveAttribute("data-access-marker", "W");
+    expect(Array.from(cells.querySelectorAll("code"), (cell) => cell.textContent)).toEqual(bytes);
+    expect(first).toHaveAccessibleName("Byte offset 0, 1 byte, 0x80, initialized");
+    expect(screen.getByTestId("historical-access-overlay")).toHaveTextContent("cursor 31211, revision 19");
+    await user.selectOptions(screen.getByRole("combobox", { name: "Memory cell size" }), "4");
+    expect(within(cells).getAllByRole("button")).toHaveLength(64);
+    expect(cells.querySelectorAll("[data-access-marker]")).toHaveLength(1);
+    expect(cells.querySelector("[data-access-marker]")).toHaveTextContent("W · 4/4 B");
+    await user.selectOptions(checkpoints, "4");
+    expect(screen.getByTestId("historical-access-overlay")).toHaveAttribute("data-state", "different_allocation");
+    expect(screen.getByRole("group", { name: "Captured memory cells" }).querySelectorAll("[data-access-marker]")).toHaveLength(0);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Two-workgroup retained access page" }), "1");
+    expect(screen.getByTestId("historical-access-overlay")).toHaveAttribute("data-state", "no_selection");
+    expect(screen.getByTestId("historical-access-overlay")).toHaveTextContent("More backend pages exist");
+    expect(request).not.toHaveBeenCalled();
+  });
+
+  it("retains event selection across bounded viewports without painting other windows or canaries", async () => {
+    const user = userEvent.setup(); render(<ResourceLdsMultiCaptureView {...props} />);
+    await user.selectOptions(await screen.findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" }), "6");
+    await user.selectOptions(screen.getByRole("combobox", { name: "Two-workgroup retained access page" }), "1");
+    const overlay = screen.getByTestId("historical-access-overlay");
+    expect(overlay).toHaveAttribute("data-state", "off_window");
+    expect(overlay).toHaveTextContent("[256, 260)");
+    await user.click(screen.getByRole("button", { name: "Next window" }));
+    expect(overlay).toHaveAttribute("data-state", "ready");
+    const cells = screen.getByRole("group", { name: "Captured memory cells" });
+    expect(cells.querySelectorAll("[data-access-marker]")).toHaveLength(4);
+    expect(within(cells).getAllByRole("button")).toHaveLength(256);
+    await user.click(screen.getByRole("button", { name: "Next window" }));
+    expect(overlay).toHaveAttribute("data-state", "off_window");
+    expect(within(cells).getAllByRole("button")).toHaveLength(8);
+    expect(cells.querySelectorAll("[data-access-marker]")).toHaveLength(0);
+    expect(screen.getByRole("combobox", { name: "Selected retained access event" })).toHaveValue("31210");
+    expect(overlay).toHaveTextContent("not at the selected access event");
+  });
+
   it("selects only retained lanes/events without moving or replacing checkpoint memory", async () => {
     const user = userEvent.setup(), request = vi.fn(); vi.stubGlobal("fetch", request);
     render(<ResourceLdsMultiCaptureView {...props} />);
@@ -115,10 +168,13 @@ describe("retained two-workgroup LDS view", () => {
   });
 
   it("immediately hides prior cells for changed raw bytes or independent pins", async () => {
+    const user = userEvent.setup();
     const { rerender } = render(<ResourceLdsMultiCaptureView {...props} />);
-    await screen.findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+    await user.selectOptions(await screen.findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" }), "5");
+    expect(screen.getByTestId("historical-access-overlay")).toHaveAttribute("data-state", "ready");
     rerender(<ResourceLdsMultiCaptureView {...props} expectedSha256={"1".repeat(64)} />);
     expect(screen.queryByRole("group", { name: "Captured memory cells" })).not.toBeInTheDocument();
+    expect(screen.queryByTestId("historical-access-overlay")).not.toBeInTheDocument();
     expect(await screen.findByText(/differ from the independent SHA-256 pin/u)).toHaveAttribute("data-state", "invalid");
     rerender(<ResourceLdsMultiCaptureView {...props} retainedUtf8="{}" />);
     expect(screen.queryByRole("table")).not.toBeInTheDocument();

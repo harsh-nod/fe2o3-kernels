@@ -7,12 +7,14 @@ import {
   type ResourceMemoryProjection,
   type ResourceSnapshotAnchor,
 } from "../content/resource-memory-view";
+import { resourceMemoryAccessOverlay, resourceMemoryAccessCell, type ResourceMemoryAccessOverlayInput } from "../content/resource-memory-access-overlay";
 import "./ResourceMemoryView.css";
 
 export interface ResourceMemoryViewProps {
   response: unknown;
   expectedSnapshot: unknown;
   title?: string;
+  accessOverlay?: ResourceMemoryAccessOverlayInput;
 }
 
 function initializationLabel(cell: ResourceMemoryCell): string {
@@ -55,7 +57,7 @@ function SnapshotDetails({ anchor }: { anchor: ResourceSnapshotAnchor }) {
   );
 }
 
-function CapturedWindow({ projection }: { projection: Extract<ResourceMemoryProjection, { status: "ready" }> }) {
+function CapturedWindow({ projection, accessOverlay }: { projection: Extract<ResourceMemoryProjection, { status: "ready" }>; accessOverlay?: ResourceMemoryAccessOverlayInput }) {
   const { memory } = projection;
   const [page, setPage] = useState(0);
   const [cellBytes, setCellBytes] = useState<1 | 4>(1);
@@ -66,6 +68,8 @@ function CapturedWindow({ projection }: { projection: Extract<ResourceMemoryProj
   const visibleStart = memory.byte_offset + page * RESOURCE_MEMORY_VISIBLE_BYTES;
   const visibleEnd = Math.min(memory.byte_offset + memory.returned_bytes, visibleStart + RESOURCE_MEMORY_VISIBLE_BYTES);
   const availability = memory.availability;
+  const overlayId = useId();
+  const overlay = accessOverlay ? resourceMemoryAccessOverlay(projection, accessOverlay, page) : null;
 
   const changePage = (next: number) => {
     setPage(next);
@@ -95,6 +99,16 @@ function CapturedWindow({ projection }: { projection: Extract<ResourceMemoryProj
         {availability.status === "captured" && <> · {availability.address_space} memory</>}
         <br />Requested [{memory.byte_offset}, {memory.byte_offset + memory.requested_bytes}) bytes; returned {memory.returned_bytes} of {memory.requested_bytes} bytes.
       </p>
+      {overlay && <div id={overlayId} className="resource-memory-access-overlay" data-testid="historical-access-overlay" data-state={overlay.status} aria-live="polite" aria-atomic="true">
+        <h4>Historical access over current checkpoint storage</h4>
+        <p>{overlay.detail}</p>
+        {overlay.access && <p>Selected historical range [{overlay.access.start}, {overlay.access.end}). The complete access range is retained even when only part intersects this viewport.</p>}
+        <p>{overlay.historyNotice}</p>
+        <p>Markers: R read · W committed write · AR atomic read · AW committed atomic write · AR/W committed atomic read/write.
+          These mark byte ranges, not physical transactions. I/U/M still describe checkpoint initialization.</p>
+        <p>The bytes below remain at cursor {projection.anchor.cursor.event_sequence}, revision {projection.anchor.cursor.state_revision},
+          not at the selected access event. Selection does not move a debugger cursor, restore memory, or fetch another page.</p>
+      </div>}
       {availability.status !== "captured" ? (
         <p role="status">Memory {availability.status}: {availability.reason}. No byte values are available.</p>
       ) : (
@@ -128,18 +142,22 @@ function CapturedWindow({ projection }: { projection: Extract<ResourceMemoryProj
                 {cells.map((cell, index) => {
                   const state = initializationLabel(cell);
                   const marker = cell.initialized.every(Boolean) ? "I" : cell.initialized.some(Boolean) ? "M" : "U";
+                  const historical = resourceMemoryAccessCell(overlay, cell);
                   return (
                     <button
                       type="button"
                       key={cell.byteOffset}
                       className={`resource-memory-cell state-${marker.toLowerCase()}`}
                       aria-label={`Byte offset ${cell.byteOffset}, ${cell.byteLength} ${cell.byteLength === 1 ? "byte" : "bytes"}, ${cell.bytes}, ${state}`}
+                      aria-describedby={historical ? `${overlayId}-${cell.byteOffset} ${overlayId}` : undefined}
+                      data-access-marker={historical?.marker}
                       aria-pressed={index === selectedIndex}
                       tabIndex={index === selectedIndex ? 0 : -1}
                       onClick={() => setSelectedIndex(index)}
                       onKeyDown={(event) => navigateCell(event, index)}
                     >
                       <small>+{cell.byteOffset}</small><code>{cell.bytes.slice(2)}</code><span>{marker}{cell.byteLength < cellBytes ? ` · ${cell.byteLength} B` : ""}</span>
+                      {historical && <span id={`${overlayId}-${cell.byteOffset}`} className="resource-memory-access-marker">{historical.marker} · {historical.byteCount}/{cell.byteLength} B</span>}
                     </button>
                   );
                 })}
@@ -147,12 +165,13 @@ function CapturedWindow({ projection }: { projection: Extract<ResourceMemoryProj
               {selected && (
                 <div className="resource-memory-table-wrap">
                   <table aria-label="Selected memory cell details">
-                    <thead><tr><th scope="col">Byte offset</th><th scope="col">Captured storage byte</th><th scope="col">Initialization</th></tr></thead>
+                    <thead><tr><th scope="col">Byte offset</th><th scope="col">Captured storage byte</th><th scope="col">Initialization</th>{overlay && <th scope="col">Selected historical access</th>}</tr></thead>
                     <tbody>{selected.initialized.map((initialized, index) => (
                       <tr key={selected.byteOffset + index}>
                         <th scope="row">+{selected.byteOffset + index}</th>
                         <td><code>0x{selected.bytes.slice(2 + index * 2, 4 + index * 2)}</code></td>
                         <td>{initialized ? "Initialized" : "Uninitialized · not a program value"}</td>
+                        {overlay && <td>{resourceMemoryAccessCell(overlay, { byteOffset: selected.byteOffset + index, byteLength: 1 })?.marker ?? "Not marked · no absence claim"}</td>}
                       </tr>
                     ))}</tbody>
                   </table>
@@ -175,7 +194,7 @@ function CapturedWindow({ projection }: { projection: Extract<ResourceMemoryProj
   );
 }
 
-export function ResourceMemoryView({ response, expectedSnapshot, title = "Snapshot memory window" }: ResourceMemoryViewProps) {
+export function ResourceMemoryView({ response, expectedSnapshot, title = "Snapshot memory window", accessOverlay }: ResourceMemoryViewProps) {
   const headingId = useId();
   const projection = projectResourceMemoryResponse(response, expectedSnapshot);
   return (
@@ -188,8 +207,9 @@ export function ResourceMemoryView({ response, expectedSnapshot, title = "Snapsh
       </header>
       {projection.status === "ready" ? (
         <CapturedWindow
-          key={`${projection.anchorKey}:${JSON.stringify(projection.memory)}`}
+          key={`${projection.anchorKey}:${JSON.stringify(projection.memory)}:${accessOverlay ? JSON.stringify(accessOverlay.memoryContext) : ""}`}
           projection={projection}
+          accessOverlay={accessOverlay}
         />
       ) : (
         <p className="resource-memory-notice" role="status" data-state={projection.status}>{projection.detail}</p>
