@@ -335,10 +335,9 @@ const fill: Lesson = {
       language: "rust",
       code: fillKernel,
       sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "a58e4bc7da39c22de24881229315418e1217039b",
+      sourceCommit: currentState.compilerCommit,
       sourceSha256:
-        "827ea368df5dd7f429792e0f8a21df79d4d5508525061a844c190da25de54213",
-      sourceDigestScope: "file",
+        "e763df1ad98cafe247454bd3e6a40f39d8e0ea557f5d3080f56290476ca53766",
       explanatory: false,
       notice:
         "The current no_std library target is the source exported by the no-GPU quickstart; this tab shows the guarded kernel body.",

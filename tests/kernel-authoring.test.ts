@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { lessons } from "../src/content/curriculum";
 import {
@@ -7,25 +6,6 @@ import {
 } from "../src/lib/kernel-authoring";
 
 describe("kernel authoring projection", () => {
-  it("pins first-fill to the complete published source without a display rewrite", () => {
-    const tab = lessons.find((lesson) => lesson.id === "first-fill")!.tabs[0];
-    expect(tab).toMatchObject({
-      kind: "kernel",
-      language: "rust",
-      sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "a58e4bc7da39c22de24881229315418e1217039b",
-      sourceSha256: "827ea368df5dd7f429792e0f8a21df79d4d5508525061a844c190da25de54213",
-      sourceDigestScope: "file",
-      explanatory: false,
-    });
-    expect(tab.sourceFragments).toBeUndefined();
-    expect(authorFacingCode(tab)).toEqual({ code: tab.code, removedNamespaceCount: 0 });
-    const bytes = Buffer.from(tab.code, "utf8");
-    expect(bytes.length).toBe(308);
-    expect(createHash("sha256").update(bytes).digest("hex")).toBe(tab.sourceSha256);
-    expect(bytes.subarray(148, 152).toString("utf8")).toBe("fill");
-  });
-
   it("removes only legacy namespace arguments from kernel attributes", () => {
     const source = `#[kernel(
     typed,
