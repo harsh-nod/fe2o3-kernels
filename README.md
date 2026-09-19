@@ -65,6 +65,11 @@ use separate compiler pins and retain their qualification boundaries. The Markdo
 drafts and reference views do not add a published curriculum lesson, change
 `FE2O3_PIN`, or promote a maturity label; the standalone HTML previews remain development-only.
 
+Use **Open local resource recording** in that inspector to view your own
+[bounded paired CPU resource JSONL excerpts](docs/recorded-resource-import-v1.md).
+Imports stay local and caller-supplied/unverified; they do not execute commands,
+authenticate a producer or change the curriculum baseline.
+
 ## Write a typed kernel
 
 Application source uses `#[kernel(typed)]` without a namespace hash. The

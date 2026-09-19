@@ -111,7 +111,11 @@ interactive workbench, the selection gates above must also pass. A future
 connected-session adapter must additionally bind responses to the active
 request ID or request generation: two different allocation/range requests
 can share one snapshot. The current component does not provide that transport
-or import arbitrary captures.
+or import arbitrary captures. The separate
+[local recorded-resource importer](recorded-resource-import-v1.md) now supplies
+a bounded paired-JSONL presentation path for successful step/query excerpts.
+It keeps an independent checkpoint anchor, original request/response bytes and
+caller-supplied/unverified labels; it is not backend admission or a live transport.
 
 Rust backend admission remains the protocol authority. These browser guards
 are bounded presentation checks; they do not authenticate a producer or grant

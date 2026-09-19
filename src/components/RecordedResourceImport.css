@@ -1,0 +1,55 @@
+.recorded-resource-import {
+  min-width: 0;
+  display: grid;
+  gap: 1rem;
+  overflow-wrap: anywhere;
+}
+.recorded-resource-import p,
+.recorded-resource-import h3 { margin: 0; }
+.recorded-resource-import-files {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+}
+.recorded-resource-import label {
+  display: grid;
+  gap: .4rem;
+  min-width: 0;
+}
+.recorded-resource-import input,
+.recorded-resource-import select {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+  min-height: 2.75rem;
+}
+.recorded-resource-import select {
+  background: var(--color-bg, Canvas);
+  color: inherit;
+  border: 1px solid currentColor;
+  border-radius: .4rem;
+  padding: .35rem;
+}
+.recorded-resource-import-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.recorded-resource-import button { min-height: 2.75rem; white-space: normal; }
+.recorded-resource-import-result,
+.recorded-resource-import-result > section { display: grid; gap: 1rem; min-width: 0; }
+.recorded-resource-import-boundary {
+  border: 1px solid currentColor;
+  border-radius: .5rem;
+  padding: .85rem;
+}
+.recorded-resource-import dl { margin: 0; }
+.recorded-resource-import dt { font-weight: 650; }
+.recorded-resource-import dd { margin: .3rem 0 1rem; }
+.recorded-resource-import pre {
+  overflow: auto;
+  max-width: 100%;
+  max-height: 16rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.recorded-resource-import :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 40rem) {
+  .recorded-resource-import-actions { flex-direction: column; align-items: stretch; }
+}

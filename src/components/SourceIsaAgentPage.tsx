@@ -60,6 +60,12 @@ const RecordedProgramGuide = lazy(() =>
   })),
 );
 
+const LocalRecordedResourceImport = lazy(() =>
+  import("./RecordedResourceImport").then((module) => ({
+    default: module.RecordedResourceImport,
+  })),
+);
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -128,6 +134,7 @@ export function SourceIsaAgentPage() {
   const [showSourceComparison, setShowSourceComparison] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
+  const [showResourceImport, setShowResourceImport] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
   return (
@@ -214,6 +221,22 @@ export function SourceIsaAgentPage() {
         <div id="recorded-program-tutorial-content">
           {showProgramTutorial && <Suspense fallback={<p role="status">Loading recorded program tutorial…</p>}>
             <RecordedProgramGuide />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="local-resource-import-heading">
+        <h2 id="local-resource-import-heading">Inspect your own recorded resource queries</h2>
+        <p>Open paired local JSONL excerpts in bounded allocation, access and memory views.
+          Caller-supplied files remain unverified; no imported command is executed or uploaded.</p>
+        <button type="button" aria-expanded={showResourceImport}
+          aria-controls="local-resource-import-content"
+          onClick={() => setShowResourceImport((open) => !open)}>
+          {showResourceImport ? "Close local resource recording" : "Open local resource recording"}
+        </button>
+        <div id="local-resource-import-content">
+          {showResourceImport && <Suspense fallback={<p role="status">Loading local resource importer…</p>}>
+            <LocalRecordedResourceImport />
           </Suspense>}
         </div>
       </section>
