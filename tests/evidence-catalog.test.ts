@@ -71,8 +71,9 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(7);
+    expect(wholeFileTabs).toHaveLength(8);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
+      "examples/fill/src/lib.rs",
       "examples/gfx950_advanced_attention/src/ablation.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
