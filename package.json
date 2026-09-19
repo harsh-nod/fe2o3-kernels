@@ -13,13 +13,14 @@
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
+    "test:authoring-lab": "node --test examples/public-authoring-inspector/lab.test.mjs",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:all": "npm run validate && npm run test:e2e",
     "validate:evidence": "node scripts/validate-evidence.mjs",
     "validate:resource-lds": "node scripts/validate-resource-query-lds-observation.mjs examples/source_lds_resource_v1.json examples/source_lds_resource_v1.requests.jsonl examples/source_lds_resource_v1.responses.jsonl 1d1ab41c25693745d233af08f856834d123f8abbb8888f418b1cf5db4a63b494",
     "validate:resource-lds-multi": "node scripts/validate-resource-query-lds-multi-observation.mjs examples/source_lds_multi_workgroup_v1.json examples/source_lds_multi_workgroup_v1.requests.jsonl examples/source_lds_multi_workgroup_v1.responses.jsonl 13165393fd04bb857f80886984b0e7a31262209cc2546d117d650cc2179fe441",
-    "validate": "npm run lint && npm run typecheck && npm run test && npm run build"
+    "validate": "npm run lint && npm run typecheck && npm run test && npm run test:authoring-lab && npm run build"
   },
   "dependencies": {
     "lucide-react": "1.31.0",

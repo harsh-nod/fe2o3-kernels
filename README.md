@@ -70,6 +70,12 @@ Use **Open local resource recording** in that inspector to view your own
 Imports stay local and caller-supplied/unverified; they do not execute commands,
 authenticate a producer or change the curriculum baseline.
 
+The [instruction-edit lab](docs/public-authoring-inspector-lab-v1.md) walks through
+real Rust export, declared-register inspection, one opcode edit, independent
+output checks and logical debugger sessions. Its
+[current-host qualification](docs/public-authoring-inspector-lab-qualification-20260919.md)
+keeps public source and locally built host-tool revisions distinct.
+
 ## Write a typed kernel
 
 Application source uses `#[kernel(typed)]` without a namespace hash. The

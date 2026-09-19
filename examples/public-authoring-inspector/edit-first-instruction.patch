@@ -1,0 +1,12 @@
+diff --git a/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/ordered_program_v32.rs b/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/ordered_program_v32.rs
+--- a/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/ordered_program_v32.rs
++++ b/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/ordered_program_v32.rs
+@@ -96,7 +96,7 @@
+     let region_value = amdgpu_ordered_program! {
+         gfx942_xnack_off_wave64;
+         scratch(32); out(33); in(34) = a; in(35) = b; in(36) = c;
+-        xor(scratch, input0, input1);
++        or(scratch, input0, input1);
+         and(scratch, scratch, input2);
+         xor(out, input1, scratch);
+     };
