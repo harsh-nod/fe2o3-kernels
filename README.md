@@ -55,6 +55,12 @@ softmax, GEMM, FlashAttention, MoE routing, Kimi Delta Attention,
 sparse/hybrid attention, residual mixing, speculative verification, N-gram
 gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
+Experimental contributor drafts cover [bounded instruction-program authoring](docs/ordered-program-authoring-v1.md)
+and [recorded logical debugger observations](docs/ordered-program-debugger-v1.md).
+They use a separate compiler pin and describe their remaining qualification
+gaps. These Markdown drafts and their development-only viewer do not add a
+published curriculum route, change `FE2O3_PIN`, or promote a maturity label.
+
 ## Write a typed kernel
 
 Application source uses `#[kernel(typed)]` without a namespace hash. The

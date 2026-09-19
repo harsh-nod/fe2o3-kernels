@@ -1,0 +1,12 @@
+.program-observation { margin: 1rem auto; padding: 1rem; max-width: 76rem; overflow-wrap: anywhere; }
+.program-observation-panels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; margin-top: 1rem; }
+.program-observation-panels > section { min-width: 0; }
+.program-observation-scroll { overflow-x: auto; max-width: 100%; }
+.program-observation table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; }
+.program-observation td, .program-observation th { padding: .5rem; border: 1px solid currentColor; text-align: left; white-space: normal; overflow-wrap: anywhere; }
+.program-observation th:first-child { width: 24%; }
+.program-observation th:nth-child(2) { width: 20%; }
+.program-observation select { max-width: 100%; margin: .4rem; }
+.program-observation code { white-space: normal; overflow-wrap: anywhere; }
+.program-observation :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+@media (max-width: 800px) { .program-observation-panels { grid-template-columns: 1fr; } }
