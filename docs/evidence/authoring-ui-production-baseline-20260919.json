@@ -1,0 +1,2111 @@
+{
+  "kind": "documented-local-production-viewer-observation",
+  "measured_site_commit": "b3272c21347fbdc2ce2550c49d9e285d875a754b",
+  "full_task_receipt": {
+    "bytes": 459495,
+    "sha256": "8f6d43b46cc03cf9175db6d87aac9940c5107fdd042d2de8de9694f1b7148bd3"
+  },
+  "profile": "published-b3272c2-local-vite-production-preview-headless-chromium151-http-cache-disabled",
+  "source_census": {
+    "head": "b3272c21347fbdc2ce2550c49d9e285d875a754b",
+    "files": 493,
+    "bytes": 14231371,
+    "sha256": "55b61c48aace404b3c79e21a9d2bb1eaa9b6eacb61f95669fc549814053ce253"
+  },
+  "inputs": [
+    {
+      "name": "ordinary-navigation",
+      "path": "examples/ordinary_authoring_navigation_v1.json",
+      "bytes": 18050,
+      "sha256": "957b7a0ece3aaea5e474c3124bced44e28a73b616e8cddd0e663a8fa7380d6c1",
+      "compiler": "70b3fe0057e18e16eaa568301d2743b1ca6c252a",
+      "byte_consistency_verified": true,
+      "producer_authenticated": false
+    },
+    {
+      "name": "recorded-program",
+      "path": "examples/ordered_program_observation_v1.json",
+      "bytes": 941567,
+      "sha256": "6ae5be6ed1843aff7c84ab9d57cb5bee740d44c5f2ec254baa5270eb46fce468",
+      "compiler": "f5e81f985ff3e2771ad0f132d483f5cf74976ad6",
+      "byte_consistency_verified": true,
+      "producer_authenticated": false
+    }
+  ],
+  "limits": {
+    "repetitions": 5,
+    "contexts": 20,
+    "activeBrowsers": 1,
+    "activeContexts": 1,
+    "activePages": 1,
+    "processTree": 16,
+    "processDepth": 8,
+    "totalMs": 240000,
+    "cleanupMs": 15000,
+    "actionMs": 5000,
+    "navigationMs": 10000,
+    "launchMs": 20000,
+    "captureBytes": 1048576,
+    "responseBytes": 4194304,
+    "networkBytes": 134217728,
+    "networkRequests": 4096,
+    "outputBytes": 1048576,
+    "eventBytes": 262144,
+    "cacheGrowthBytes": 268435456,
+    "domNodes": 5000,
+    "domTextBytes": 262144
+  },
+  "viewports": [
+    {
+      "name": "desktop-1280x800-dpr1",
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "name": "narrow-390x844-dpr1",
+      "width": 390,
+      "height": 844
+    }
+  ],
+  "sample_count": 20,
+  "network": {
+    "requests": 650,
+    "decoded_body_bytes": 53865360,
+    "encoded_transfer_bytes": 10751460,
+    "blocked_websockets": 0,
+    "violations": []
+  },
+  "latency_summary": [
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/route_load_to_controls/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        392.7000000476837,
+        365.2999999523163,
+        363.89999997615814,
+        361.10000002384186,
+        367.5
+      ],
+      "p50_ms": 365.2999999523163,
+      "p95_ms": 392.7000000476837,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/route_load_to_controls/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        467.3000000715256,
+        427.39999997615814,
+        424.3000000715256,
+        419.7000000476837,
+        426
+      ],
+      "p50_ms": 426,
+      "p95_ms": 467.3000000715256,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/first_open_load_import_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        320.59999990463257,
+        321.7999999523163,
+        320.8000000715256,
+        320.39999997615814,
+        320.39999997615814
+      ],
+      "p50_ms": 320.59999990463257,
+      "p95_ms": 321.7999999523163,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/first_open_load_import_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        350,
+        356,
+        338.2000000476837,
+        337,
+        354.5
+      ],
+      "p50_ms": 350,
+      "p95_ms": 356,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/close_view/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        2.8000000715255737,
+        3.200000047683716,
+        2.700000047683716,
+        2.899999976158142,
+        2.6999999284744263
+      ],
+      "p50_ms": 2.8000000715255737,
+      "p95_ms": 3.200000047683716,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/close_view/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        18.600000023841858,
+        19.600000023841858,
+        22.800000071525574,
+        23.399999976158142,
+        20.699999928474426
+      ],
+      "p50_ms": 20.699999928474426,
+      "p95_ms": 23.399999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/warm_reopen_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        8.300000071525574,
+        9.100000023841858,
+        7.899999976158142,
+        8.800000071525574,
+        9.700000047683716
+      ],
+      "p50_ms": 8.800000071525574,
+      "p95_ms": 9.700000047683716,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/warm_reopen_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        27,
+        34.299999952316284,
+        29.899999976158142,
+        30.700000047683716,
+        32.700000047683716
+      ],
+      "p50_ms": 30.700000047683716,
+      "p95_ms": 34.299999952316284,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_range/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.9000000953674316,
+        1.7999999523162842,
+        1.899999976158142,
+        1.5999999046325684,
+        1.7999999523162842
+      ],
+      "p50_ms": 1.7999999523162842,
+      "p95_ms": 1.9000000953674316,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_range/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        20.90000009536743,
+        18.799999952316284,
+        27.100000023841858,
+        23.09999990463257,
+        24.600000023841858
+      ],
+      "p50_ms": 23.09999990463257,
+      "p95_ms": 27.100000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_constant/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        2,
+        1.899999976158142,
+        1.899999976158142,
+        1.899999976158142,
+        1.899999976158142
+      ],
+      "p50_ms": 1.899999976158142,
+      "p95_ms": 2,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_constant/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.299999952316284,
+        30.299999952316284,
+        30.399999976158142,
+        29.699999928474426,
+        30.59999990463257
+      ],
+      "p50_ms": 30.299999952316284,
+      "p95_ms": 30.59999990463257,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_or/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.6999999284744263,
+        1.7000000476837158,
+        1.7000000476837158,
+        1.7999999523162842,
+        1.600000023841858
+      ],
+      "p50_ms": 1.7000000476837158,
+      "p95_ms": 1.7999999523162842,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_or/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        31.199999928474426,
+        30.90000009536743,
+        30,
+        30.399999976158142,
+        30.300000071525574
+      ],
+      "p50_ms": 30.399999976158142,
+      "p95_ms": 31.199999928474426,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_clear/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.2999999523162842,
+        1.2000000476837158,
+        1.399999976158142,
+        1.2999999523162842,
+        1.3000000715255737
+      ],
+      "p50_ms": 1.2999999523162842,
+      "p95_ms": 1.399999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/source_clear/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        29.100000023841858,
+        27.899999976158142,
+        29.5,
+        28.799999952316284,
+        28.90000009536743
+      ],
+      "p50_ms": 28.90000009536743,
+      "p95_ms": 29.5,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/route_load_to_controls/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        362.2999999523163,
+        362.3000000715256,
+        363.2999999523163,
+        368.7999999523163,
+        362.7999999523163
+      ],
+      "p50_ms": 362.7999999523163,
+      "p95_ms": 368.7999999523163,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/route_load_to_controls/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        401,
+        421,
+        423.6999999284744,
+        425.60000002384186,
+        423.7999999523163
+      ],
+      "p50_ms": 423.6999999284744,
+      "p95_ms": 425.60000002384186,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/first_open_load_import_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        386.60000002384186,
+        416.8000000715256,
+        425.7000000476837,
+        385,
+        420.89999997615814
+      ],
+      "p50_ms": 416.8000000715256,
+      "p95_ms": 425.7000000476837,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/first_open_load_import_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        399.5,
+        435.3000000715256,
+        437.7000000476837,
+        396.7999999523163,
+        433.2999999523163
+      ],
+      "p50_ms": 433.2999999523163,
+      "p95_ms": 437.7000000476837,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/close_view/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.5,
+        1.600000023841858,
+        1.399999976158142,
+        1.5,
+        1.5
+      ],
+      "p50_ms": 1.5,
+      "p95_ms": 1.600000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/close_view/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        19.399999976158142,
+        17.299999952316284,
+        17.199999928474426,
+        24.600000023841858,
+        19.899999976158142
+      ],
+      "p50_ms": 19.399999976158142,
+      "p95_ms": 24.600000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/warm_reopen_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        63.300000071525574,
+        58.699999928474426,
+        58.799999952316284,
+        59.300000071525574,
+        61.200000047683716
+      ],
+      "p50_ms": 59.300000071525574,
+      "p95_ms": 63.300000071525574,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/warm_reopen_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        69.39999997615814,
+        63.799999952316284,
+        64.29999995231628,
+        64.39999997615814,
+        67.60000002384186
+      ],
+      "p50_ms": 64.39999997615814,
+      "p95_ms": 69.39999997615814,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_three/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.5,
+        1.399999976158142,
+        1.2999999523162842,
+        1.3000000715255737,
+        1.3000000715255737
+      ],
+      "p50_ms": 1.3000000715255737,
+      "p95_ms": 1.5,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_three/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        18.40000009536743,
+        21,
+        23.199999928474426,
+        23.40000009536743,
+        20
+      ],
+      "p50_ms": 21,
+      "p95_ms": 23.40000009536743,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_case6_three/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.6999999284744263,
+        0.6999999284744263,
+        0.6999999284744263,
+        0.7000000476837158,
+        0.6000000238418579
+      ],
+      "p50_ms": 0.6999999284744263,
+      "p95_ms": 0.7000000476837158,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_case6_three/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        27,
+        30.699999928474426,
+        31,
+        30.700000047683716,
+        30.600000023841858
+      ],
+      "p50_ms": 30.699999928474426,
+      "p95_ms": 31,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_after/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.7000000476837158,
+        0.6999999284744263,
+        0.6000000238418579,
+        0.5,
+        0.6000000238418579
+      ],
+      "p50_ms": 0.6000000238418579,
+      "p95_ms": 0.7000000476837158,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_after/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.600000023841858,
+        30.5,
+        30.899999976158142,
+        30.600000023841858,
+        30.600000023841858
+      ],
+      "p50_ms": 30.600000023841858,
+      "p95_ms": 30.899999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_reverse/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.5,
+        0.8000000715255737,
+        0.7999999523162842,
+        0.2999999523162842,
+        1
+      ],
+      "p50_ms": 0.7999999523162842,
+      "p95_ms": 1,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_reverse/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.59999990463257,
+        30.40000009536743,
+        30.399999976158142,
+        30.59999990463257,
+        30.100000023841858
+      ],
+      "p50_ms": 30.40000009536743,
+      "p95_ms": 30.59999990463257,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_repeat/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.3999999761581421,
+        0.8999999761581421,
+        0.8999999761581421,
+        0.3999999761581421,
+        0.8000000715255737
+      ],
+      "p50_ms": 0.8000000715255737,
+      "p95_ms": 0.8999999761581421,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_repeat/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.600000023841858,
+        29.5,
+        30.300000071525574,
+        30.5,
+        29.899999976158142
+      ],
+      "p50_ms": 30.300000071525574,
+      "p95_ms": 30.600000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_sixteen_unused/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.100000023841858,
+        2.5,
+        2.4000000953674316,
+        1.2999999523162842,
+        2.399999976158142
+      ],
+      "p50_ms": 2.399999976158142,
+      "p95_ms": 2.5,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_sixteen_unused/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.399999976158142,
+        29.799999952316284,
+        30.200000047683716,
+        30.699999928474426,
+        29.600000023841858
+      ],
+      "p50_ms": 30.200000047683716,
+      "p95_ms": 30.699999928474426,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_case6_sixteen_unused/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.6999999284744263,
+        1.5999999046325684,
+        1.600000023841858,
+        0.6999999284744263,
+        1.7000000476837158
+      ],
+      "p50_ms": 1.5999999046325684,
+      "p95_ms": 1.7000000476837158,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_case6_sixteen_unused/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.699999928474426,
+        30.09999990463257,
+        30.399999976158142,
+        30.699999928474426,
+        30
+      ],
+      "p50_ms": 30.399999976158142,
+      "p95_ms": 30.699999928474426,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_after_sixteen/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.5,
+        0.8000000715255737,
+        0.7999999523162842,
+        0.5,
+        0.8999999761581421
+      ],
+      "p50_ms": 0.7999999523162842,
+      "p95_ms": 0.8999999761581421,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/program_after_sixteen/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.800000071525574,
+        29.600000023841858,
+        30.200000047683716,
+        30.700000047683716,
+        29.800000071525574
+      ],
+      "p50_ms": 30.200000047683716,
+      "p95_ms": 30.800000071525574,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/route_load_to_controls/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        360.10000002384186,
+        360.7999999523163,
+        359.7000000476837,
+        360.60000002384186,
+        363.2999999523163
+      ],
+      "p50_ms": 360.60000002384186,
+      "p95_ms": 363.2999999523163,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/route_load_to_controls/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        391.6999999284744,
+        407.2999999523163,
+        397,
+        407.2000000476837,
+        408.60000002384186
+      ],
+      "p50_ms": 407.2000000476837,
+      "p95_ms": 408.60000002384186,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/first_open_load_import_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        309.89999997615814,
+        319.6999999284744,
+        319.6999999284744,
+        321.90000009536743,
+        319.90000009536743
+      ],
+      "p50_ms": 319.6999999284744,
+      "p95_ms": 321.90000009536743,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/first_open_load_import_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        327.3000000715256,
+        334.5,
+        346.39999997615814,
+        351.2000000476837,
+        334.5
+      ],
+      "p50_ms": 334.5,
+      "p95_ms": 351.2000000476837,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/close_view/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.2999999523162842,
+        2.5999999046325684,
+        2.8000000715255737,
+        3.5,
+        2.899999976158142
+      ],
+      "p50_ms": 2.8000000715255737,
+      "p95_ms": 3.5,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/close_view/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        24.799999952316284,
+        24.299999952316284,
+        24.100000023841858,
+        27.199999928474426,
+        24.200000047683716
+      ],
+      "p50_ms": 24.299999952316284,
+      "p95_ms": 27.199999928474426,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/warm_reopen_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        3.899999976158142,
+        7.900000095367432,
+        8.399999976158142,
+        10.899999976158142,
+        8.899999976158142
+      ],
+      "p50_ms": 8.399999976158142,
+      "p95_ms": 10.899999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/warm_reopen_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.299999952316284,
+        29.5,
+        29.700000047683716,
+        30.200000047683716,
+        29.799999952316284
+      ],
+      "p50_ms": 29.799999952316284,
+      "p95_ms": 30.299999952316284,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_range/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.6999999284744263,
+        1.7000000476837158,
+        1.8000000715255737,
+        1.9000000953674316,
+        1.8000000715255737
+      ],
+      "p50_ms": 1.8000000715255737,
+      "p95_ms": 1.9000000953674316,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_range/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        25.09999990463257,
+        24.5,
+        24.399999976158142,
+        28,
+        24.700000047683716
+      ],
+      "p50_ms": 24.700000047683716,
+      "p95_ms": 28,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_constant/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.8999999761581421,
+        1.899999976158142,
+        1.899999976158142,
+        2.5999999046325684,
+        2
+      ],
+      "p50_ms": 1.899999976158142,
+      "p95_ms": 2.5999999046325684,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_constant/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.5,
+        29.899999976158142,
+        30.200000047683716,
+        30,
+        29.700000047683716
+      ],
+      "p50_ms": 30,
+      "p95_ms": 30.5,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_or/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.7999999523162842,
+        1.600000023841858,
+        1.7000000476837158,
+        2,
+        1.6999999284744263
+      ],
+      "p50_ms": 1.6999999284744263,
+      "p95_ms": 2,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_or/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.399999976158142,
+        29.899999976158142,
+        30.299999952316284,
+        30.300000071525574,
+        29.899999976158142
+      ],
+      "p50_ms": 30.299999952316284,
+      "p95_ms": 30.399999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_clear/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.6000000238418579,
+        1.3000000715255737,
+        1.1999999284744263,
+        1.8000000715255737,
+        1.2999999523162842
+      ],
+      "p50_ms": 1.2999999523162842,
+      "p95_ms": 1.8000000715255737,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/source_clear/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.399999976158142,
+        29.600000023841858,
+        29.699999928474426,
+        28.800000071525574,
+        29.5
+      ],
+      "p50_ms": 29.600000023841858,
+      "p95_ms": 30.399999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/route_load_to_controls/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        360.89999997615814,
+        364.39999997615814,
+        361.90000009536743,
+        364.60000002384186,
+        363.60000002384186
+      ],
+      "p50_ms": 363.60000002384186,
+      "p95_ms": 364.60000002384186,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/route_load_to_controls/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        406.89999997615814,
+        411.60000002384186,
+        407.40000009536743,
+        412.2999999523163,
+        409.6999999284744
+      ],
+      "p50_ms": 409.6999999284744,
+      "p95_ms": 412.2999999523163,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/first_open_load_import_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        420.89999997615814,
+        422.3000000715256,
+        421,
+        424.40000009536743,
+        420.89999997615814
+      ],
+      "p50_ms": 421,
+      "p95_ms": 424.40000009536743,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/first_open_load_import_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        451.5,
+        434,
+        450.60000002384186,
+        433.5,
+        434.1999999284744
+      ],
+      "p50_ms": 434.1999999284744,
+      "p95_ms": 451.5,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/close_view/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.4000000953674316,
+        1.5,
+        1.399999976158142,
+        1.600000023841858,
+        1.5
+      ],
+      "p50_ms": 1.5,
+      "p95_ms": 1.600000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/close_view/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        24.5,
+        24.59999990463257,
+        24.5,
+        22.100000023841858,
+        23.399999976158142
+      ],
+      "p50_ms": 24.5,
+      "p95_ms": 24.59999990463257,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/warm_reopen_validate_render/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        67.59999990463257,
+        59.5,
+        68,
+        60,
+        52.89999997615814
+      ],
+      "p50_ms": 60,
+      "p95_ms": 68,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/warm_reopen_validate_render/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        72.39999997615814,
+        65.5,
+        73.39999997615814,
+        65.89999997615814,
+        57.39999997615814
+      ],
+      "p50_ms": 65.89999997615814,
+      "p95_ms": 73.39999997615814,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_three/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.3000000715255737,
+        1.399999976158142,
+        1.1999999284744263,
+        1.3000000715255737,
+        1.399999976158142
+      ],
+      "p50_ms": 1.3000000715255737,
+      "p95_ms": 1.399999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_three/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        16.300000071525574,
+        24.600000023841858,
+        14.799999952316284,
+        22.600000023841858,
+        15.100000023841858
+      ],
+      "p50_ms": 16.300000071525574,
+      "p95_ms": 24.600000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_case6_three/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.6000000238418579,
+        0.8000000715255737,
+        0.7999999523162842,
+        0.7000000476837158,
+        0.6000000238418579
+      ],
+      "p50_ms": 0.7000000476837158,
+      "p95_ms": 0.8000000715255737,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_case6_three/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        31.100000023841858,
+        30.700000047683716,
+        30.799999952316284,
+        30.600000023841858,
+        30.799999952316284
+      ],
+      "p50_ms": 30.799999952316284,
+      "p95_ms": 31.100000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_after/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.6999999284744263,
+        0.5,
+        0.6000000238418579,
+        0.6999999284744263,
+        0.6000000238418579
+      ],
+      "p50_ms": 0.6000000238418579,
+      "p95_ms": 0.6999999284744263,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_after/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.899999976158142,
+        30.299999952316284,
+        30.800000071525574,
+        30.59999990463257,
+        30.600000023841858
+      ],
+      "p50_ms": 30.600000023841858,
+      "p95_ms": 30.899999976158142,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_reverse/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.8999999761581421,
+        1,
+        1,
+        0.7999999523162842,
+        0.8000000715255737
+      ],
+      "p50_ms": 0.8999999761581421,
+      "p95_ms": 1,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_reverse/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.299999952316284,
+        30.199999928474426,
+        30.100000023841858,
+        30,
+        30.700000047683716
+      ],
+      "p50_ms": 30.199999928474426,
+      "p95_ms": 30.700000047683716,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_repeat/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.6999999284744263,
+        0.7999999523162842,
+        0.8000000715255737,
+        0.7000000476837158,
+        0.8000000715255737
+      ],
+      "p50_ms": 0.7999999523162842,
+      "p95_ms": 0.8000000715255737,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_repeat/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        29.899999976158142,
+        29.799999952316284,
+        29.899999976158142,
+        29.600000023841858,
+        30
+      ],
+      "p50_ms": 29.899999976158142,
+      "p95_ms": 30,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_sixteen_unused/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        2.399999976158142,
+        2.3000000715255737,
+        2.299999952316284,
+        2.5,
+        2.399999976158142
+      ],
+      "p50_ms": 2.399999976158142,
+      "p95_ms": 2.5,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_sixteen_unused/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30,
+        29.399999976158142,
+        29.899999976158142,
+        29.5,
+        29.899999976158142
+      ],
+      "p50_ms": 29.899999976158142,
+      "p95_ms": 30,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_case6_sixteen_unused/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        1.600000023841858,
+        1.5,
+        1.600000023841858,
+        1.5999999046325684,
+        1.600000023841858
+      ],
+      "p50_ms": 1.600000023841858,
+      "p95_ms": 1.600000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_case6_sixteen_unused/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30.100000023841858,
+        30,
+        30.100000023841858,
+        30,
+        30.200000047683716
+      ],
+      "p50_ms": 30.100000023841858,
+      "p95_ms": 30.200000047683716,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_after_sixteen/dom_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421,
+        0.8999999761581421,
+        0.9000000953674316
+      ],
+      "p50_ms": 0.8999999761581421,
+      "p95_ms": 0.9000000953674316,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/program_after_sixteen/two_frames_ready_ms",
+      "n": 5,
+      "raw_samples_ms": [
+        30,
+        30,
+        30,
+        29.899999976158142,
+        30.100000023841858
+      ],
+      "p50_ms": 30,
+      "p95_ms": 30.100000023841858,
+      "statistic": "nearest_rank; five samples make p95 the observed maximum, not an SLO"
+    }
+  ],
+  "memory_summary": [
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/route_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        7078784,
+        7036012,
+        7042084,
+        6975916,
+        6968340
+      ],
+      "p50_bytes": 7036012,
+      "p95_bytes": 7078784,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/route_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        12058624,
+        12320768,
+        12058624,
+        12058624,
+        12058624
+      ],
+      "p50_bytes": 12058624,
+      "p95_bytes": 12320768,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/route_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        154198016,
+        155828224,
+        157208576,
+        158560256,
+        159219712
+      ],
+      "p50_bytes": 157208576,
+      "p95_bytes": 159219712,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/route_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        784834560,
+        797310976,
+        798560256,
+        795873280,
+        799174656
+      ],
+      "p50_bytes": 797310976,
+      "p95_bytes": 799174656,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/first_open_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        8402532,
+        8359792,
+        8365324,
+        8309960,
+        8300008
+      ],
+      "p50_bytes": 8359792,
+      "p95_bytes": 8402532,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/first_open_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        12058624,
+        12320768,
+        12058624,
+        12320768,
+        12058624
+      ],
+      "p50_bytes": 12058624,
+      "p95_bytes": 12320768,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/first_open_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        154247168,
+        155844608,
+        157224960,
+        158650368,
+        159227904
+      ],
+      "p50_bytes": 157224960,
+      "p95_bytes": 159227904,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/first_open_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        806912000,
+        819916800,
+        818036736,
+        832405504,
+        821542912
+      ],
+      "p50_bytes": 819916800,
+      "p95_bytes": 832405504,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/warm_reopen_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        6105584,
+        6106884,
+        6102696,
+        7002596,
+        6212988
+      ],
+      "p50_bytes": 6106884,
+      "p95_bytes": 7002596,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/warm_reopen_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        12845056,
+        13631488,
+        12320768,
+        13369344,
+        14155776
+      ],
+      "p50_bytes": 13369344,
+      "p95_bytes": 14155776,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/warm_reopen_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        154279936,
+        155848704,
+        157224960,
+        158658560,
+        159227904
+      ],
+      "p50_bytes": 157224960,
+      "p95_bytes": 159227904,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/warm_reopen_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        809590784,
+        822497280,
+        823275520,
+        837959680,
+        824664064
+      ],
+      "p50_bytes": 823275520,
+      "p95_bytes": 837959680,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/selection_sequence_complete/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        6589156,
+        6588920,
+        6584976,
+        7488568,
+        6694924
+      ],
+      "p50_bytes": 6589156,
+      "p95_bytes": 7488568,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/selection_sequence_complete/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        12845056,
+        13893632,
+        12320768,
+        13369344,
+        14155776
+      ],
+      "p50_bytes": 13369344,
+      "p95_bytes": 14155776,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/selection_sequence_complete/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        154292224,
+        156082176,
+        157229056,
+        158658560,
+        159227904
+      ],
+      "p50_bytes": 157229056,
+      "p95_bytes": 159227904,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/ordinary-navigation/selection_sequence_complete/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        810999808,
+        823394304,
+        823832576,
+        840245248,
+        825520128
+      ],
+      "p50_bytes": 823832576,
+      "p95_bytes": 840245248,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/route_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        6952596,
+        6925888,
+        7002840,
+        6993052,
+        6998284
+      ],
+      "p50_bytes": 6993052,
+      "p95_bytes": 7002840,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/route_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        11796480,
+        12582912,
+        12320768,
+        12582912,
+        12058624
+      ],
+      "p50_bytes": 12320768,
+      "p95_bytes": 12582912,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/route_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        159817728,
+        161599488,
+        162267136,
+        162934784,
+        163454976
+      ],
+      "p50_bytes": 162267136,
+      "p95_bytes": 163454976,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/route_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        798875648,
+        800665600,
+        797843456,
+        801034240,
+        798179328
+      ],
+      "p50_bytes": 798875648,
+      "p95_bytes": 801034240,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/first_open_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        8562604,
+        9798648,
+        9652584,
+        11330296,
+        9651092
+      ],
+      "p50_bytes": 9652584,
+      "p95_bytes": 11330296,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/first_open_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        18243584,
+        17719296,
+        17719296,
+        17457152,
+        17457152
+      ],
+      "p50_bytes": 17719296,
+      "p95_bytes": 18243584,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/first_open_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        160210944,
+        161603584,
+        162271232,
+        162938880,
+        163459072
+      ],
+      "p50_bytes": 162271232,
+      "p95_bytes": 163459072,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/first_open_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        844931072,
+        844947456,
+        846016512,
+        852103168,
+        848449536
+      ],
+      "p50_bytes": 846016512,
+      "p95_bytes": 852103168,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/warm_reopen_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        13389576,
+        11030376,
+        10804760,
+        12454672,
+        10874960
+      ],
+      "p50_bytes": 11030376,
+      "p95_bytes": 13389576,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/warm_reopen_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        28467200,
+        28467200,
+        28467200,
+        28205056,
+        28205056
+      ],
+      "p50_bytes": 28467200,
+      "p95_bytes": 28467200,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/warm_reopen_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        160210944,
+        161607680,
+        162275328,
+        162938880,
+        163459072
+      ],
+      "p50_bytes": 162275328,
+      "p95_bytes": 163459072,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/warm_reopen_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        873439232,
+        856899584,
+        865325056,
+        870277120,
+        866689024
+      ],
+      "p50_bytes": 866689024,
+      "p95_bytes": 873439232,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/selection_sequence_complete/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        14041996,
+        11608836,
+        11371464,
+        13083660,
+        11476168
+      ],
+      "p50_bytes": 11608836,
+      "p95_bytes": 14041996,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/selection_sequence_complete/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        28729344,
+        28467200,
+        28729344,
+        28205056,
+        28205056
+      ],
+      "p50_bytes": 28467200,
+      "p95_bytes": 28729344,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/selection_sequence_complete/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        160210944,
+        161607680,
+        162275328,
+        162938880,
+        163459072
+      ],
+      "p50_bytes": 162275328,
+      "p95_bytes": 163459072,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "desktop-1280x800-dpr1/recorded-program/selection_sequence_complete/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        875057152,
+        859500544,
+        871571456,
+        876265472,
+        872632320
+      ],
+      "p50_bytes": 872632320,
+      "p95_bytes": 876265472,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/route_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        6992472,
+        7047440,
+        7007396,
+        7036532,
+        7009480
+      ],
+      "p50_bytes": 7009480,
+      "p95_bytes": 7047440,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/route_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        12058624,
+        12320768,
+        12845056,
+        12320768,
+        12058624
+      ],
+      "p50_bytes": 12320768,
+      "p95_bytes": 12845056,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/route_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        164081664,
+        164519936,
+        165212160,
+        166309888,
+        170102784
+      ],
+      "p50_bytes": 165212160,
+      "p95_bytes": 170102784,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/route_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        778223616,
+        779264000,
+        778465280,
+        778162176,
+        779001856
+      ],
+      "p50_bytes": 778465280,
+      "p95_bytes": 779264000,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/first_open_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        8326628,
+        8371132,
+        8340344,
+        8367236,
+        8334288
+      ],
+      "p50_bytes": 8340344,
+      "p95_bytes": 8371132,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/first_open_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        12058624,
+        12320768,
+        12845056,
+        12320768,
+        12058624
+      ],
+      "p50_bytes": 12320768,
+      "p95_bytes": 12845056,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/first_open_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        164089856,
+        164528128,
+        165216256,
+        168501248,
+        170110976
+      ],
+      "p50_bytes": 165216256,
+      "p95_bytes": 170110976,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/first_open_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        793030656,
+        788647936,
+        788062208,
+        788426752,
+        788135936
+      ],
+      "p50_bytes": 788426752,
+      "p95_bytes": 793030656,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/warm_reopen_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        8467768,
+        8462384,
+        8467824,
+        8460700,
+        8469436
+      ],
+      "p50_bytes": 8467768,
+      "p95_bytes": 8469436,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/warm_reopen_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        13107200,
+        12582912,
+        13107200,
+        12845056,
+        12582912
+      ],
+      "p50_bytes": 12845056,
+      "p95_bytes": 13107200,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/warm_reopen_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        164089856,
+        164528128,
+        165216256,
+        168501248,
+        170110976
+      ],
+      "p50_bytes": 165216256,
+      "p95_bytes": 170110976,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/warm_reopen_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        796176384,
+        790335488,
+        789934080,
+        790093824,
+        790589440
+      ],
+      "p50_bytes": 790335488,
+      "p95_bytes": 796176384,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/selection_sequence_complete/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        8952820,
+        6216784,
+        8953004,
+        6217028,
+        8954592
+      ],
+      "p50_bytes": 8952820,
+      "p95_bytes": 8954592,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/selection_sequence_complete/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        13107200,
+        12582912,
+        13107200,
+        12845056,
+        12582912
+      ],
+      "p50_bytes": 12845056,
+      "p95_bytes": 13107200,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/selection_sequence_complete/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        164089856,
+        164528128,
+        165216256,
+        168501248,
+        170110976
+      ],
+      "p50_bytes": 165216256,
+      "p95_bytes": 170110976,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/ordinary-navigation/selection_sequence_complete/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        797196288,
+        795152384,
+        793440256,
+        795099136,
+        793575424
+      ],
+      "p50_bytes": 795099136,
+      "p95_bytes": 797196288,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/route_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        7093184,
+        7048820,
+        7011656,
+        7062868,
+        7043692
+      ],
+      "p50_bytes": 7048820,
+      "p95_bytes": 7093184,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/route_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        12058624,
+        12320768,
+        12320768,
+        12845056,
+        12582912
+      ],
+      "p50_bytes": 12320768,
+      "p95_bytes": 12845056,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/route_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        170455040,
+        172953600,
+        173637632,
+        174137344,
+        174764032
+      ],
+      "p50_bytes": 173637632,
+      "p95_bytes": 174764032,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/route_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        778989568,
+        779046912,
+        779296768,
+        780754944,
+        779702272
+      ],
+      "p50_bytes": 779296768,
+      "p95_bytes": 780754944,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/first_open_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        8451644,
+        9487964,
+        9751980,
+        9739360,
+        11371844
+      ],
+      "p50_bytes": 9739360,
+      "p95_bytes": 11371844,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/first_open_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        18505728,
+        17719296,
+        17719296,
+        17719296,
+        17719296
+      ],
+      "p50_bytes": 17719296,
+      "p95_bytes": 18505728,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/first_open_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        170459136,
+        172957696,
+        173735936,
+        174243840,
+        174768128
+      ],
+      "p50_bytes": 173735936,
+      "p95_bytes": 174768128,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/first_open_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        805875712,
+        807882752,
+        806014976,
+        807948288,
+        811548672
+      ],
+      "p50_bytes": 807882752,
+      "p95_bytes": 811548672,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/warm_reopen_ready/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        9984628,
+        10720600,
+        10872948,
+        10883988,
+        12708092
+      ],
+      "p50_bytes": 10872948,
+      "p95_bytes": 12708092,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/warm_reopen_ready/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        19816448,
+        28729344,
+        28205056,
+        28467200,
+        20340736
+      ],
+      "p50_bytes": 28205056,
+      "p95_bytes": 28729344,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/warm_reopen_ready/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        170459136,
+        172957696,
+        173735936,
+        174252032,
+        174768128
+      ],
+      "p50_bytes": 173735936,
+      "p95_bytes": 174768128,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/warm_reopen_ready/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        813727744,
+        823328768,
+        822652928,
+        825036800,
+        815112192
+      ],
+      "p50_bytes": 822652928,
+      "p95_bytes": 825036800,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/selection_sequence_complete/renderer_isolate_used_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        10600300,
+        11321744,
+        11491176,
+        11514392,
+        13297620
+      ],
+      "p50_bytes": 11491176,
+      "p95_bytes": 13297620,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/selection_sequence_complete/renderer_isolate_total_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        20340736,
+        28729344,
+        28205056,
+        28729344,
+        20340736
+      ],
+      "p50_bytes": 28205056,
+      "p95_bytes": 28729344,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/selection_sequence_complete/node_client_rss_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        170459136,
+        172957696,
+        173735936,
+        174252032,
+        174768128
+      ],
+      "p50_bytes": 173735936,
+      "p95_bytes": 174768128,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    },
+    {
+      "name": "narrow-390x844-dpr1/recorded-program/selection_sequence_complete/complete_snapshot_reported_process_rss_sum_bytes",
+      "n": 5,
+      "raw_samples_bytes": [
+        816582656,
+        826294272,
+        825081856,
+        827596800,
+        818073600
+      ],
+      "p50_bytes": 825081856,
+      "p95_bytes": 827596800,
+      "statistic": "nearest_rank checkpoint samples, not peak usage; incomplete process RSS snapshots are excluded from aggregates"
+    }
+  ],
+  "interpretation": [
+    "Descriptive observations only. No accepted or raised import/render/replay SLO; no milestone closure.",
+    "Root-owned local Vite preview of an exactly censused production build; not deployed CDN/traffic or production hardware.",
+    "Fresh context per sample; one shared browser. Browser HTTP cache disabled. Existing OS/server file caches are not flushed.",
+    "First-open combines production lazy chunks, embedded retained strings, hash/parser validation and React DOM. Manifest-selected ResourceTiming is chunk transport, not isolated parser/import CPU.",
+    "Warm reopen reuses modules in that page. Readiness then two animation frames is not a paint-completion guarantee.",
+    "Narrow viewport is 390x844 DPR1 desktop Chromium, not a mobile-device or mobile-hardware measurement.",
+    "Selections are retained logical data navigation. Reverse/repeat timings are checkpoint selection, not debugger replay/execution latency.",
+    "No synthetic fixture is measured; synthetic unit controls cannot be treated as performance observations.",
+    "No forced GC. Heap is renderer-isolate data; OS process-tree RSS is non-atomic and shared pages can be counted twice.",
+    "Browser heap/process samples are checkpoints, not peaks. Node client RSS is separate, not browser RSS.",
+    "No physical register, lifetime, microstep, GPU, resume, edit, compilation or source ownership authority."
+  ]
+}
