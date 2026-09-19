@@ -1,0 +1,11 @@
+.authoring-navigation { margin: 1rem auto; padding: 1rem; max-width: 76rem; overflow-wrap: anywhere; }
+.authoring-navigation-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.authoring-navigation-columns > section { min-width: 0; }
+.authoring-navigation pre { padding: .75rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.authoring-navigation code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.authoring-navigation button { max-width: 100%; margin: .25rem 0; padding: .4rem; text-align: left; white-space: pre-wrap; overflow-wrap: anywhere; }
+.authoring-navigation button[aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: 2px; }
+.authoring-navigation :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.authoring-navigation mark { color: #161616; background: #ffe58a; }
+.authoring-navigation dd { margin-bottom: .6rem; }
+@media (max-width: 800px) { .authoring-navigation-columns { grid-template-columns: 1fr; } }

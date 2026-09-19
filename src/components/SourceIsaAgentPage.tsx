@@ -42,6 +42,18 @@ const RecordedSourceComparison = lazy(async () => {
   };
 });
 
+const RecordedAuthoringNavigation = lazy(async () => {
+  const [{ AuthoringNavigation }, { AUTHORING_NAVIGATION_RETAINED_INPUT }] = await Promise.all([
+    import("./AuthoringNavigation"),
+    import("../content/authoring-navigation-retained-input"),
+  ]);
+  return {
+    default: function RetainedAuthoringNavigation() {
+      return <AuthoringNavigation input={AUTHORING_NAVIGATION_RETAINED_INPUT} />;
+    },
+  };
+});
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -108,6 +120,7 @@ function exactJson(value: unknown): string {
 export function SourceIsaAgentPage() {
   const [activeView, setActiveView] = useState(0);
   const [showSourceComparison, setShowSourceComparison] = useState(false);
+  const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
   return (
@@ -162,6 +175,22 @@ export function SourceIsaAgentPage() {
         <div id="recorded-source-promotion-content">
           {showSourceComparison && <Suspense fallback={<p role="status">Loading retained source comparison…</p>}>
             <RecordedSourceComparison />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="ordinary-source-navigation-heading">
+        <h2 id="ordinary-source-navigation-heading">Navigate ordinary Rust and canonical KIR</h2>
+        <p>A separate actual-source capture lists every source-attributed operation and one exact
+          structural selection. It does not grant an editable source boundary or supply missing stages.</p>
+        <button type="button" aria-expanded={showAuthoringNavigation}
+          aria-controls="ordinary-source-navigation-content"
+          onClick={() => setShowAuthoringNavigation((open) => !open)}>
+          {showAuthoringNavigation ? "Close ordinary source navigation" : "Open ordinary source navigation"}
+        </button>
+        <div id="ordinary-source-navigation-content">
+          {showAuthoringNavigation && <Suspense fallback={<p role="status">Loading retained navigation…</p>}>
+            <RecordedAuthoringNavigation />
           </Suspense>}
         </div>
       </section>
