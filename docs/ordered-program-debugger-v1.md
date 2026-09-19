@@ -173,7 +173,17 @@ replay are refused. Diagnosis V2 reports `unsupported_schema` for V17; ordinary
 logical value/resource queries remain separate. Do not relabel this as another
 canonical version or bundle format.
 
-## Open the separate recorded-viewer draft
+## Open the recorded-viewer tutorial
+
+In the website, choose **Debugger → Cross-layer inspection → Open recorded
+program tutorial**. The existing inspector lazy-loads the guided exercise and
+the same pinned observations described above. Read the source excerpt, predict
+Case 6 independently, then browse before/after/reverse/repeat checkpoints.
+The arithmetic answer table is an independent source expectation, not a new
+memory capture. Closing and reopening the tutorial clears its local selections.
+This reference-page integration adds no curriculum lesson or maturity promotion.
+
+### Separate development entry
 
 From this website checkout, install the locked dependencies with `npm ci`, then
 start `npm run dev -- --host 127.0.0.1`. Open

@@ -16,6 +16,11 @@ controls. A separate 36-session public debugger batch supplies the
 These bounded observations do not promote this draft or qualify a release;
 earlier fixed-pair observations remain separate.
 
+For a guided read-only exercise, open **Debugger → Cross-layer inspection →
+Open recorded program tutorial** in the website. It pairs the source excerpt
+with independent arithmetic expectations and the existing retained CPU values.
+Opening it does not compile the source or issue debugger commands.
+
 ## Start with the complete source fixture
 
 Open [ordered_program_v32.rs](https://github.com/harsh-nod/fe2o3/blob/f5e81f985ff3e2771ad0f132d483f5cf74976ad6/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/ordered_program_v32.rs).

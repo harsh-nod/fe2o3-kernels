@@ -54,6 +54,12 @@ const RecordedAuthoringNavigation = lazy(async () => {
   };
 });
 
+const RecordedProgramGuide = lazy(() =>
+  import("./RecordedProgramTutorial").then((module) => ({
+    default: module.RecordedProgramTutorial,
+  })),
+);
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -121,6 +127,7 @@ export function SourceIsaAgentPage() {
   const [activeView, setActiveView] = useState(0);
   const [showSourceComparison, setShowSourceComparison] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
+  const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
   return (
@@ -191,6 +198,22 @@ export function SourceIsaAgentPage() {
         <div id="ordinary-source-navigation-content">
           {showAuthoringNavigation && <Suspense fallback={<p role="status">Loading retained navigation…</p>}>
             <RecordedAuthoringNavigation />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="recorded-program-tutorial-heading">
+        <h2 id="recorded-program-tutorial-heading">Author an instruction program and inspect recorded values</h2>
+        <p>Read the bounded Rust source shape, predict independent results, and browse retained
+          lane-zero CPU checkpoints. This separate example has no live debugger or GPU connection.</p>
+        <button type="button" aria-expanded={showProgramTutorial}
+          aria-controls="recorded-program-tutorial-content"
+          onClick={() => setShowProgramTutorial((open) => !open)}>
+          {showProgramTutorial ? "Close recorded program tutorial" : "Open recorded program tutorial"}
+        </button>
+        <div id="recorded-program-tutorial-content">
+          {showProgramTutorial && <Suspense fallback={<p role="status">Loading recorded program tutorial…</p>}>
+            <RecordedProgramGuide />
           </Suspense>}
         </div>
       </section>

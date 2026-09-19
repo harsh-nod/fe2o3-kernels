@@ -1,0 +1,47 @@
+.recorded-program-tutorial {
+  margin: 1rem auto;
+  max-width: 76rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.recorded-program-tutorial-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+.recorded-program-tutorial-columns > section { min-width: 0; }
+.recorded-program-tutorial pre {
+  max-width: 100%;
+  padding: .75rem;
+  color: var(--code-text);
+  background: var(--code-bg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.recorded-program-tutorial code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.recorded-program-tutorial li { margin-block: .65rem; }
+.recorded-program-tutorial summary {
+  padding: .5rem .25rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+.recorded-program-tutorial-table { max-width: 100%; overflow-x: auto; }
+.recorded-program-tutorial-table table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+.recorded-program-tutorial-table td,
+.recorded-program-tutorial-table th {
+  padding: .4rem;
+  border: 1px solid var(--border-strong);
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.recorded-program-tutorial-table caption { margin-block: .5rem; text-align: left; }
+.recorded-program-tutorial-boundary { border-top: 1px solid var(--border-strong); margin-top: 1rem; }
+.recorded-program-tutorial :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 900px) {
+  .recorded-program-tutorial-columns { grid-template-columns: 1fr; }
+}

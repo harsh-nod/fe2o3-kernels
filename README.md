@@ -59,9 +59,11 @@ Experimental contributor drafts cover [bounded instruction-program authoring](do
 and [recorded logical debugger observations](docs/ordered-program-debugger-v1.md).
 The existing cross-layer inspector also includes a read-only
 [ordinary Rust/KIR navigation example](docs/ordinary-authoring-navigation-v1.md).
-They use a separate compiler pin and describe their remaining qualification
-gaps. These Markdown drafts and their development-only viewer do not add a
-published curriculum route, change `FE2O3_PIN`, or promote a maturity label.
+The same inspector offers **Open recorded program tutorial** for the existing
+instruction-program capture and guided CPU-observation exercises. These examples
+use separate compiler pins and retain their qualification boundaries. The Markdown
+drafts and reference views do not add a published curriculum lesson, change
+`FE2O3_PIN`, or promote a maturity label; the standalone HTML previews remain development-only.
 
 ## Write a typed kernel
 
