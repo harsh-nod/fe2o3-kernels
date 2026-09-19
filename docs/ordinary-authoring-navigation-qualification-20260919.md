@@ -71,3 +71,22 @@ are unchanged.
 See the [navigation tutorial](ordinary-authoring-navigation-v1.md) for commands,
 byte pins and data boundaries. This establishes the implemented U1 exit only;
 it does not supply the remaining M0/V0/U0 owner agreements or close #282.
+
+## Preserved peer main and composite rerun
+
+Publication precheck detected newer site main `b829beaaf52fe99fbaabc97a1b0fcb1c0bbaffe2`.
+It was normally merged, preserving the peer's first-fill complete-source
+binding and curriculum-contract pin. Composite code commit
+`510dcb8396cdc5a267a62035219e60102ca8be90` then passed 32 focused controls,
+lint/types/build, **390 unit tests**, existing evidence validation and
+**72 desktop/mobile browser tests**. Their unchanged input census was 488 files,
+14,204,002 bytes, SHA-256
+`b94cf1bcebe485855a11b98e05f74ac29c09f5b01455f4187b555a56e4f26f43`.
+This paragraph is a later evidence-only update, outside that fingerprint.
+
+The first composite evidence run refused because its newly pinned compiler
+object was absent locally. Fetching exact public commit
+`1c0e99b1405896a8d0a5792bba0f592c9584a04c` and checking its required tree
+`ec1eb25df2acd00e51473bd5dab7f17c84daa2ac` resolved that setup failure.
+The peer pin and all validation predicates were preserved. The failed gate is
+retained separately; it is not reported as a passed test.
