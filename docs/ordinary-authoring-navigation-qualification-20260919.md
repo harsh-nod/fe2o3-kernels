@@ -90,3 +90,22 @@ object was absent locally. Fetching exact public commit
 `ec1eb25df2acd00e51473bd5dab7f17c84daa2ac` resolved that setup failure.
 The peer pin and all validation predicates were preserved. The failed gate is
 retained separately; it is not reported as a passed test.
+
+## Peer deployment revert and final composite
+
+A second publication precheck detected the peer's deliberate reverts
+`0e7b18d` and `7014d7e`: the new curriculum pin was not on compiler main and
+therefore did not meet the deployed site's publication gate. Those reverts were
+normally merged as `1cb78140ffed6f4c702c818d59dad5a3838bd6e7`. The original
+curriculum source contract remains intact; none of the navigation implementation
+or its actual capture was reverted.
+
+The final composite rerun passes **32 focused controls, 388 unit tests,
+lint/types/build, evidence validation and 72 desktop/mobile browser tests**.
+The four gates retain identical before/after input census: 488 files,
+14,204,143 bytes, SHA-256
+`2978fbe096f77faa9fe119f956a270e731a05fce0fbd1d52e8699f202c467346`.
+Aggregate command times are 195 / 32,652 / 6,000 / 46,763 ms respectively,
+not performance percentiles. This evidence-only appendix follows those runs.
+Both intervening failed publication prechecks occurred before any push; no
+force push or validation relaxation was used.
