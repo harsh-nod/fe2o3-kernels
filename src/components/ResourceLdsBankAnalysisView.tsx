@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { ldsBankProfile } from "../content/lds-bank-model";
-import { projectSelectedLdsBankAnalysis } from "../content/resource-lds-bank-analysis";
+import { projectSelectedLdsBankAnalysis, type LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
 import type { ResourceAccessProjection } from "../content/resource-access-view";
 import { resourceAccessPageKey, type ResourceAccessSelection } from "../content/resource-access-navigation";
 import "./ResourceLdsBankAnalysisView.css";
@@ -8,20 +8,26 @@ import "./ResourceLdsBankAnalysisView.css";
 interface Props {
   projection: Extract<ResourceAccessProjection, { status: "ready"; kind: "memory_accesses" }>;
   selection: ResourceAccessSelection | null;
+  targetAssumption?: LdsTargetAssumption;
 }
 
-function SelectedRangeModel({ projection, selection }: Props) {
+function SelectedRangeModel({ projection, selection, targetAssumption }: Props) {
   const inputId = useId(), explanationId = useId();
   const [base, setBase] = useState("0");
-  const profile = ldsBankProfile(projection.context.target);
-  const analysis = projectSelectedLdsBankAnalysis(projection, selection, base);
+  const target = targetAssumption === undefined ? projection.context.target : targetAssumption;
+  const profile = ldsBankProfile(target);
+  const analysis = projectSelectedLdsBankAnalysis(projection, selection, base, targetAssumption);
   return <details className="resource-lds-bank-analysis" data-testid="selected-lds-bank-analysis">
     <summary>LDS address-pattern model — assumed layout</summary>
     <p id={explanationId}>This is arithmetic for one selected retained byte range, not a GPU observation.
       The allocation base residue is assumed; its actual physical base and alignment are unavailable.
       No other access, allocation, workgroup, wave or event is grouped with this range.</p>
-    <p>Target: <code>{projection.context.target ?? "unavailable"}</code> — caller-owned context, not backend-attested.
+    <p>Target: <code>{target ?? "unavailable"}</code> — {targetAssumption === undefined
+      ? "caller-owned context, not backend-attested."
+      : "user hypothesis / unverified; not a target recorded by this capture."}
       {profile && (" " + profile.architecture + " geometry: " + profile.bankCount + " banks × 4 bytes; " + profile.periodBytes + "-byte interleave period.")}</p>
+    {targetAssumption !== undefined && <p>Original caller-owned target remains <code>{projection.context.target ?? "unavailable"}</code>.
+      This assumption changes only the arithmetic model, not captured bytes, provenance or target legality.</p>}
     {profile && <label htmlFor={inputId}>Assumed allocation-base residue (bytes, 0–{profile.periodBytes - 1})
       <input id={inputId} type="text" inputMode="numeric" maxLength={20} value={base} aria-describedby={explanationId}
         onChange={(event) => setBase(event.target.value.length <= 20 ? event.target.value : "")} />
@@ -57,6 +63,7 @@ function SelectedRangeModel({ projection, selection }: Props) {
 export function ResourceLdsBankAnalysisView(props: Props) {
   // Reset the local assumption synchronously on every complete page/row identity
   // change, including a changed target or revision. No effect/late-result window.
-  const key = JSON.stringify([resourceAccessPageKey(props.projection), props.selection]);
+  const key = JSON.stringify([resourceAccessPageKey(props.projection), props.selection,
+    props.targetAssumption === undefined ? "caller_context" : props.targetAssumption]);
   return <SelectedRangeModel key={key} {...props} />;
 }

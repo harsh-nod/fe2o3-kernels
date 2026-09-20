@@ -49,6 +49,10 @@ refuses it instead of silently skipping those records.
 4. Inspect the first captured bytes `d5 01 00 00` (little-endian 469). The last
    eight bytes are the retained canary `de ad be ef ca fe ba be`. This is imported
    CPU storage, not a new host-oracle check or physical GPU memory observation.
+   Selecting an access also marks its byte-range intersection with the selected
+   checkpoint memory window. The historical write is not a time-travel command:
+   bytes and initialization still belong to event 33, revision 4. Selecting an
+   allocation inventory or empty access page clears the access markers.
 5. Choose the reverse checkpoint: the first byte returns to `a5`. Choose the
    repeated event: it is event 33 with revision 6, not revision 4. Missing pages
    remain missing; browsing does not replay the debugger.
@@ -58,6 +62,52 @@ refuses it instead of silently skipping those records.
    replacement file also clears old data immediately. **Cancel import** stops
    the active file reader; a late hash/parser completion cannot replace a newer
    selection or restore cancelled data.
+
+## Model one imported LDS range under an explicit assumption
+
+The importer never infers a target from filenames, source labels or file digests.
+**Hypothetical target for LDS model** starts at **Unknown**. You may choose
+`gfx942` (32 banks) or `gfx950` (64 banks) for an arithmetic scenario; both use
+4-byte words. This is a **user hypothesis / unverified**, not a target observed
+by the CPU recording. Original request/response text, hashes and the unknown
+imported target remain unchanged. Global/private accesses never become LDS.
+
+Try unchanged lines 11–18 of the site's existing single-workgroup LDS transcript:
+
+```sh
+lds_import=$(mktemp -d)
+sed -n '11,18p' examples/source_lds_resource_v1.requests.jsonl > "$lds_import/requests.jsonl"
+sed -n '11,18p' examples/source_lds_resource_v1.responses.jsonl > "$lds_import/responses.jsonl"
+```
+
+Import that pair and select request 14 in **Recorded resource page**. The one
+retained write is event 12, allocation `2:g0`, range `[0, 4)`. Its four `W`
+markers overlay storage at event 13, revision 5; only those first four bytes are
+initialized. Unmarked or uninitialized bytes do not establish missing activity.
+Choose a hypothetical target and open **LDS address-pattern model — assumed
+layout**. With base residue `0`, this range touches bank 0 with four bytes. With
+residue `1`, it touches bank 0 with three bytes and bank 1 with one byte. These
+are modeled byte intersections, not physical addresses or measured conflicts.
+
+Selecting request 15 demonstrates an actual empty scanned page with more backend
+pages: no previous footprint or marker is retained. The reverse checkpoint
+(request 16) has event 11, revision 6, uninitialized storage and no retained
+access. Switching checkpoints resets the hypothesis to Unknown; replacing either
+file clears all old data immediately, even when the replacement has identical
+bytes. Changing the hypothesis resets access selection to that page's visible
+default and the modeled base to zero; it sends no debugger command.
+
+The memory overlay requires the same complete checkpoint, context, allocation,
+generation and address space. It uses only the selected access page and visible
+memory window; it does not search other pages for matching ranges. Different
+allocations and off-window ranges remain explicitly unpainted. Wave/scope filters
+are logical retained-data filters, not hardware lane or transaction groups.
+The model still covers one complete range of at most 256 bytes, at most 65 dwords
+and 64 banks. Actual allocation placement/alignment, native instructions,
+transaction phases, multicast, bank conflicts and GPU timing remain unavailable;
+this does not certify native LDS bounds or target legality. See the
+[selected LDS address-pattern model](lds-bank-analysis-v1.md) for its
+geometry sources and limitations.
 
 ## Record your own supported excerpt
 

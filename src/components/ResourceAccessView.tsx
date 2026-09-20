@@ -5,6 +5,7 @@ import {
 } from "../content/resource-access-view";
 import { resourceAccessNavigation, resourceAccessPageKey, type ResourceAccessSelection } from "../content/resource-access-navigation";
 import { ResourceLdsBankAnalysisView } from "./ResourceLdsBankAnalysisView";
+import type { LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
 import "./ResourceAccessView.css";
 
 export interface ResourceAccessViewProps extends ResourceAccessProjectionInput {
@@ -12,13 +13,16 @@ export interface ResourceAccessViewProps extends ResourceAccessProjectionInput {
   /** Optional caller-owned selection shared with other checkpoint panels. */
   selection?: ResourceAccessSelection | null;
   onSelectionChange?: (selection: ResourceAccessSelection) => void;
+  /** Separate UI-only model input; never replaces the guarded capture context. */
+  ldsTargetAssumption?: LdsTargetAssumption;
 }
 
 type Ready = Extract<ResourceAccessProjection, { status: "ready" }>;
 
-function CapturedResourcePage({ projection, selection: controlledSelection, onSelectionChange }: {
+function CapturedResourcePage({ projection, selection: controlledSelection, onSelectionChange, ldsTargetAssumption }: {
   projection: Ready; selection?: ResourceAccessSelection | null;
   onSelectionChange?: (selection: ResourceAccessSelection) => void;
+  ldsTargetAssumption?: LdsTargetAssumption;
 }) {
   const [page, setPage] = useState(0);
   const [localSelection, setLocalSelection] = useState<ResourceAccessSelection | null>(null);
@@ -98,7 +102,8 @@ function CapturedResourcePage({ projection, selection: controlledSelection, onSe
           Intermediate events and per-access source associations are unavailable here.</p>
       </div>
     </div>}
-    {projection.kind === "memory_accesses" && <ResourceLdsBankAnalysisView projection={projection} selection={selection} />}
+    {projection.kind === "memory_accesses" && <ResourceLdsBankAnalysisView projection={projection} selection={selection}
+      targetAssumption={ldsTargetAssumption} />}
     <div className="resource-access-pagination" aria-label="Captured resource row pagination">
       <button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>Previous rows</button>
       <span aria-live="polite">Rows {rows.length === 0 ? 0 : start + 1}–{end} of {rows.length} in this captured page</span>
@@ -142,7 +147,7 @@ function CapturedResourcePage({ projection, selection: controlledSelection, onSe
   </>;
 }
 
-export function ResourceAccessView({ title = "Captured resource observations", selection, onSelectionChange, ...input }: ResourceAccessViewProps) {
+export function ResourceAccessView({ title = "Captured resource observations", selection, onSelectionChange, ldsTargetAssumption, ...input }: ResourceAccessViewProps) {
   const headingId = useId();
   const projection = projectResourceAccessResponse(input);
   return <section className="resource-access-view" aria-labelledby={headingId}>
@@ -152,6 +157,7 @@ export function ResourceAccessView({ title = "Captured resource observations", s
       key={resourceAccessPageKey(projection)}
       projection={projection}
       selection={selection} onSelectionChange={onSelectionChange}
+      ldsTargetAssumption={ldsTargetAssumption}
     /> : <p role="status" data-state={projection.status}>{projection.detail} No prior resource rows are shown.</p>}
   </section>;
 }

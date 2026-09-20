@@ -2,10 +2,37 @@ import { createHash, webcrypto } from "node:crypto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { importResourceRecording, RESOURCE_IMPORT_LIMITS } from "../src/content/recorded-resource-import";
 import { mutateResourceLine, retainedResourceExcerpt, retainedResourceStreams, type MutableResourceControl } from "./fixtures/recorded-resource-import";
+import { retainedLdsImportExcerpt } from "./fixtures/recorded-lds-import";
+import { projectResourceAccessResponse } from "../src/content/resource-access-view";
+import { projectResourceMemoryResponse } from "../src/content/resource-memory-view";
+import { resourceMemoryAccessOverlay } from "../src/content/resource-memory-access-overlay";
+import { resourceAccessNavigation } from "../src/content/resource-access-navigation";
 
 beforeEach(() => vi.stubGlobal("crypto", webcrypto));
 afterEach(() => vi.unstubAllGlobals());
 const original = retainedResourceExcerpt();
+
+it("joins unchanged imported LDS access and storage without upgrading target or original provenance", async () => {
+  const excerpt = retainedLdsImportExcerpt(), recording = await importResourceRecording(excerpt.requests, excerpt.responses);
+  expect(recording.pairs.map(pair => pair.requestUtf8).join("")).toBe(excerpt.requests);
+  expect(recording.pairs.map(pair => pair.responseUtf8).join("")).toBe(excerpt.responses);
+  expect(recording.context.target).toBeNull();
+  const checkpoint = recording.checkpoints[0], pair = checkpoint.pages[1], memory = checkpoint.memories[0];
+  const access = { response: pair.response, expectedRequest: pair.request, expectedSnapshot: checkpoint.anchor,
+    context: recording.context, responseContext: recording.context };
+  const page = projectResourceAccessResponse(access);
+  if (page.status !== "ready" || page.kind !== "memory_accesses") throw new Error("Expected original LDS access");
+  const selection = resourceAccessNavigation(page, null).selection;
+  const storage = projectResourceMemoryResponse(memory.response, checkpoint.anchor);
+  const input = { access, selection, memoryContext: recording.context };
+  expect(resourceMemoryAccessOverlay(storage, input, 0)).toMatchObject({ status: "ready",
+    access: { eventSequence: 12, marker: "W", start: "0", end: "4" }, overlap: { start: "0", end: "4" } });
+  expect(resourceMemoryAccessOverlay(storage, { ...input, selection: { ...selection, eventSequence: 13 } }, 0).status).toBe("no_selection");
+  expect(resourceMemoryAccessOverlay(storage, { ...input, memoryContext: { ...recording.context, target: "gfx942" } }, 0).status).toBe("stale");
+  const reverse = recording.checkpoints[1];
+  const reverseStorage = projectResourceMemoryResponse(reverse.memories[0].response, reverse.anchor);
+  expect(resourceMemoryAccessOverlay(reverseStorage, input, 0).status).toBe("stale");
+});
 
 it("imports exact original pairs, preserving byte provenance and reverse/repeated-event identities", async () => {
   expect(createHash("sha256").update(retainedResourceStreams.requests).digest("hex"))

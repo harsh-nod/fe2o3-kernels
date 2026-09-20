@@ -5,6 +5,8 @@ import {
 } from "../content/recorded-resource-import";
 import { ResourceAccessView } from "./ResourceAccessView";
 import { ResourceMemoryView } from "./ResourceMemoryView";
+import type { ResourceAccessSelection } from "../content/resource-access-navigation";
+import type { LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
 import "./RecordedResourceImport.css";
 
 function CheckpointViews({ checkpoint, recording }: {
@@ -12,21 +14,44 @@ function CheckpointViews({ checkpoint, recording }: {
 }) {
   const [pageIndex, setPageIndex] = useState(0);
   const [memoryIndex, setMemoryIndex] = useState(0);
+  const [selection, setSelection] = useState<ResourceAccessSelection | null>(null);
+  const [targetAssumption, setTargetAssumption] = useState<LdsTargetAssumption>(null);
+  const assumptionId = useId();
   const page = checkpoint.pages[pageIndex], memory = checkpoint.memories[memoryIndex];
+  const access = page ? { response: page.response, expectedRequest: page.request,
+    expectedSnapshot: checkpoint.anchor, context: recording.context, responseContext: recording.context } : null;
+  const accessOverlay = page?.kind === "memory_accesses" && access ? {
+    access, selection, memoryContext: recording.context,
+  } : undefined;
   return <>
     <p>Independent checkpoint: request {checkpoint.control.requestId}, event {checkpoint.anchor.cursor.event_sequence},
       revision {checkpoint.anchor.cursor.state_revision}. Selecting retained data sends no debugger command.</p>
     {checkpoint.pages.length > 0 ? <section aria-label="Imported resource pages">
+      <label>Hypothetical target for LDS model
+        <select aria-label="Hypothetical target for LDS model" aria-describedby={assumptionId}
+          value={targetAssumption ?? "unknown"} onChange={event => {
+            const value = event.target.value;
+            setTargetAssumption(value === "gfx942" || value === "gfx950" ? value : null);
+            setSelection(null);
+          }}>
+          <option value="unknown">Unknown — no target assumption</option>
+          <option value="gfx942">Assume gfx942 (CDNA3, 32 banks)</option>
+          <option value="gfx950">Assume gfx950 (CDNA4, 64 banks)</option>
+        </select>
+      </label>
+      <p id={assumptionId}>User hypothesis / unverified. The imported target remains unavailable.
+        This optional choice changes only LDS arithmetic, not the recording, selected checkpoint or memory bytes.
+        It resets on checkpoint or import replacement. No GPU execution or target legality is established.</p>
       <label>Recorded resource page
         <select aria-label="Recorded resource page" value={pageIndex}
-          onChange={event => setPageIndex(Number(event.target.value))}>
+          onChange={event => { setPageIndex(Number(event.target.value)); setSelection(null); }}>
           {checkpoint.pages.map((pair, index) => <option key={pair.requestId} value={index}>
             Request {pair.requestId} — {pair.kind} ({pair.rowCount} rows)
           </option>)}
         </select>
       </label>
-      <ResourceAccessView key={page.requestId} response={page.response} expectedRequest={page.request}
-        expectedSnapshot={checkpoint.anchor} context={recording.context} responseContext={recording.context}
+      <ResourceAccessView key={JSON.stringify([page.requestId, targetAssumption])} {...access!}
+        selection={selection} onSelectionChange={setSelection} ldsTargetAssumption={targetAssumption}
         title="Caller-supplied resource page" />
     </section> : <p>No allocation or access page was retained at this checkpoint.</p>}
     {checkpoint.memories.length > 0 ? <section aria-label="Imported memory windows">
@@ -39,7 +64,7 @@ function CheckpointViews({ checkpoint, recording }: {
         </select>
       </label>
       <ResourceMemoryView key={memory.requestId} response={memory.response}
-        expectedSnapshot={checkpoint.anchor} title="Caller-supplied captured bytes" />
+        expectedSnapshot={checkpoint.anchor} accessOverlay={accessOverlay} title="Caller-supplied captured bytes" />
     </section> : <p>No memory window was retained at this checkpoint.</p>}
   </>;
 }
@@ -71,7 +96,7 @@ function ImportedViews({ recording, names }: { recording: ImportedResourceRecord
         </option>)}
       </select>
     </label>
-    <CheckpointViews key={checkpoint.anchorKey} checkpoint={checkpoint} recording={recording} />
+    <CheckpointViews key={JSON.stringify([checkpoint.anchorKey, recording.context])} checkpoint={checkpoint} recording={recording} />
     <button type="button" aria-expanded={showRaw} aria-controls={rawId}
       onClick={() => setShowRaw(value => !value)}>
       {showRaw ? "Hide original paired lines" : "Show original paired lines"}

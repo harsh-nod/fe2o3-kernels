@@ -19,6 +19,30 @@ async function open(user: ReturnType<typeof userEvent.setup>) {
 }
 
 describe("selected LDS assumed-layout UI", () => {
+  it("labels a separate target hypothesis and synchronously resets its base without rewriting context", async () => {
+    const user = userEvent.setup(), initial = props(), context = { ...retained.context, target: null };
+    const input = { ...initial, context, responseContext: context };
+    const { rerender } = render(<ResourceAccessView {...input} ldsTargetAssumption={null} />);
+    let panel = await open(user);
+    expect(within(panel).queryByRole("list")).not.toBeInTheDocument();
+    rerender(<ResourceAccessView {...input} ldsTargetAssumption="gfx942" />);
+    panel = await open(user);
+    expect(within(panel).getByText(/user hypothesis \/ unverified/u)).toBeInTheDocument();
+    expect(within(panel).getByText(/Original caller-owned target remains/u)).toHaveTextContent("unavailable");
+    expect(within(panel).getAllByRole("listitem")).toHaveLength(32);
+    fireEvent.change(within(panel).getByRole("textbox"), { target: { value: "127" } });
+    rerender(<ResourceAccessView {...input} ldsTargetAssumption="gfx950" />);
+    panel = await open(user);
+    expect(within(panel).getByRole("textbox")).toHaveValue("0");
+    expect(within(panel).getAllByRole("listitem")).toHaveLength(64);
+    rerender(<ResourceAccessView {...input} ldsTargetAssumption={null} />);
+    panel = await open(user);
+    expect(within(panel).queryByRole("list")).not.toBeInTheDocument();
+    expect(within(panel).queryByRole("textbox")).not.toBeInTheDocument();
+    rerender(<ResourceAccessView {...input} context={{ ...context, captureIdentity: "other" }} ldsTargetAssumption="gfx942" />);
+    expect(screen.queryByTestId("selected-lds-bank-analysis")).not.toBeInTheDocument();
+  });
+
   it("renders one actual retained range with keyboard-readable labels and no network effects", async () => {
     const user = userEvent.setup(), fetch = vi.fn();
     vi.stubGlobal("fetch", fetch);

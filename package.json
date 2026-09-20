@@ -13,7 +13,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
-    "test:authoring-lab": "node --test examples/public-authoring-inspector/lab.test.mjs",
+    "test:authoring-lab": "node --test examples/public-authoring-inspector/lab.test.mjs examples/guarded-assembly-body/lab.test.mjs",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:all": "npm run validate && npm run test:e2e",

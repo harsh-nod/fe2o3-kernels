@@ -119,13 +119,13 @@ function absolute(value) {
     path.isAbsolute(value) && path.resolve(value) === value && !/[\x00-\x1f\x7f]/u.test(value), "canonical absolute path");
   return value;
 }
-function directory(value) {
+export function directory(value) {
   absolute(value);
   assert.equal(fs.realpathSync(value), value, "directory may not traverse a symlink");
   assert(fs.lstatSync(value).isDirectory(), "directory required");
   return value;
 }
-function readBounded(file, limit) {
+export function readBounded(file, limit) {
   absolute(file); directory(path.dirname(file));
   const fd = fs.openSync(file, fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
   try {
@@ -144,7 +144,7 @@ function readBounded(file, limit) {
     return bytes.subarray(0, used);
   } finally { fs.closeSync(fd); }
 }
-function json(file, limit) {
+export function json(file, limit) {
   const bytes = readBounded(file, limit);
   assert(!(bytes[0] === 0xef && bytes[1] === 0xbb && bytes[2] === 0xbf), "no BOM");
   const text = new TextDecoder("utf-8", { fatal: true }).decode(bytes);

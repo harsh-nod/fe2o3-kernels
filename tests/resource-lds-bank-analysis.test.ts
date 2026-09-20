@@ -13,6 +13,34 @@ function actual(checkpoint = 4, page = 0): ReadyResourceAccessPage {
 }
 
 describe("exact selected LDS range projection", () => {
+  it("keeps an explicit user hypothesis separate from the guarded capture and its target", () => {
+    const original = actual(), page = { ...original, context: { ...original.context, target: null } };
+    const selection = resourceAccessNavigation(page, null).selection;
+    const before = JSON.stringify(page);
+    expect(projectSelectedLdsBankAnalysis(page, selection, "0", null).status).toBe("unavailable");
+    for (const [target, bankCount] of [["gfx942", 32], ["gfx950", 64]] as const) {
+      const value = projectSelectedLdsBankAnalysis(page, selection, "1", target);
+      expect(value).toMatchObject({ status: "modeled", targetProvenance: "user_hypothesis_unverified",
+        contextKey: page.contextKey, model: { profile: { target, bankCount } } });
+      if (value.status === "modeled") {
+        expect(value.model.banks[0].byteCount).toBe(3);
+        expect(value.model.banks[1].byteCount).toBe(1);
+        expect(value.selected).toBe(page.rows[0]);
+      }
+    }
+    expect(JSON.stringify(page)).toBe(before);
+    // Explicit unknown never falls back to a known caller-owned target.
+    expect(projectSelectedLdsBankAnalysis(original, null, "0", null).status).toBe("unavailable");
+  });
+
+  it("never uses a model hypothesis to repair stale selections, missing rows or non-LDS data", () => {
+    const page = actual(), selection = resourceAccessNavigation(page, null).selection;
+    expect(projectSelectedLdsBankAnalysis(page, { ...selection, pageKey: "stale" }, "0", "gfx950").status).toBe("stale");
+    expect(projectSelectedLdsBankAnalysis(page, { ...selection, eventSequence: 13 }, "0", "gfx950").status).toBe("unavailable");
+    expect(projectSelectedLdsBankAnalysis(actual(4, 1), null, "0", "gfx950").status).toBe("unavailable");
+    expect(projectSelectedLdsBankAnalysis({ ...page, rows: [{ ...page.rows[0], address_space: "global" }] }, null, "0", "gfx950").status).toBe("unavailable");
+  });
+
   it("joins only one actual retained row and preserves all unavailable facts", () => {
     const page = actual(), navigation = resourceAccessNavigation(page, null);
     const value = projectSelectedLdsBankAnalysis(page, navigation.selection, "0");
