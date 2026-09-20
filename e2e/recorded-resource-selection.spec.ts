@@ -28,6 +28,7 @@ test("imported LDS access links storage and a separate keyboard-selected hypothe
   await panel.getByLabel("Responses JSONL").setInputFiles({ name: "lds-responses.jsonl", mimeType: "application/x-ndjson", buffer: responses });
   await panel.getByRole("button", { name: "Import local recording" }).click();
   const target = panel.getByRole("combobox", { name: "Hypothetical target for LDS model" });
+  const targetDisclaimer = panel.getByText(/^User hypothesis \/ unverified\./u);
   await expect(target).toHaveValue("unknown");
   await expect(target).toHaveAccessibleDescription(/User hypothesis \/ unverified/u);
   const pages = panel.getByRole("combobox", { name: "Recorded resource page" });
@@ -69,6 +70,28 @@ test("imported LDS access links storage and a separate keyboard-selected hypothe
   for (const theme of ["light", "dark"]) {
     await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    // A clipped ancestor can hide an oversized grid without increasing the
+    // document width. Keep the actual controls and explanatory content inside
+    // the imported panel; only the separate access table may scroll sideways.
+    const panelBounds = await panel.boundingBox();
+    if (!panelBounds) throw new Error("Imported panel has no visible bounds.");
+    for (const [name, content] of [
+      ["target selector", target],
+      ["target hypothesis disclaimer", targetDisclaimer],
+      ["selected LDS model", model],
+    ] as const) {
+      await expect(content, name + " is visible in " + theme).toBeVisible();
+      const bounds = await content.boundingBox();
+      if (!bounds) throw new Error(name + " has no visible bounds.");
+      expect(bounds.x, name + " left edge in " + theme).toBeGreaterThanOrEqual(panelBounds.x - 1);
+      expect(bounds.x + bounds.width, name + " right edge in " + theme)
+        .toBeLessThanOrEqual(panelBounds.x + panelBounds.width + 1);
+      const overflow = await content.evaluate(element => ({
+        width: element.clientWidth, contentWidth: element.scrollWidth,
+      }));
+      expect(overflow.contentWidth, name + " content fits in " + theme)
+        .toBeLessThanOrEqual(overflow.width + 1);
+    }
     await panel.screenshot({ path: testInfo.outputPath("imported-lds-selection-" + theme + ".png") });
   }
   await pages.selectOption("2"); await openModel();

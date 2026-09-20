@@ -33,7 +33,12 @@
 .recorded-resource-import-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
 .recorded-resource-import button { min-height: 2.75rem; white-space: normal; }
 .recorded-resource-import-result,
-.recorded-resource-import-result > section { display: grid; gap: 1rem; min-width: 0; }
+.recorded-resource-import-result > section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  min-width: 0;
+}
 .recorded-resource-import-boundary {
   border: 1px solid currentColor;
   border-radius: .5rem;
