@@ -63,6 +63,56 @@ refuses it instead of silently skipping those records.
    the active file reader; a late hash/parser completion cannot replace a newer
    selection or restore cancelled data.
 
+## Inspect checkpoint SSA values and their recorded source location
+
+**Checkpoint SSA values and source** displays values already retained inside
+the selected operation-step response. Its checkpoint is the same one used by
+the memory windows; selecting a historical access does not move these values
+back to that access. The separate panel checks the exact control response,
+session, full anchor and each supported value before displaying any rows.
+
+To include an earlier checkpoint with fewer values, retain these unchanged
+lines from the same source-produced recording:
+
+```sh
+value_import=$(mktemp -d)
+sed -n '1p;3p;6,11p;14,18p;21p' \
+  examples/resource-query-v6/debug-requests.jsonl > "$value_import/requests.jsonl"
+sed -n '1p;3p;6,11p;14,18p;21p' \
+  examples/resource-query-v6/debug-responses.jsonl > "$value_import/responses.jsonl"
+```
+
+Request 1 has three retained SSA values. Choose request 6's checkpoint to see
+18: function 0 / frame 1 / value `%24` contains u32 `0x000001d5` (469), `%25`
+is index64 zero, and `%27` is Boolean `0x1` (true). A pointer is displayed as
+an allocation identity plus byte offset, never as a native address. Open
+**Recorded source and snapshot identity** to inspect the recorded map/file
+identities and byte span `[931, 947)`. No source text or variable names are
+inferred from those hashes, and `compiler_bundle_bound` remains an unverified
+imported claim.
+
+Select request 14, then request 18. Their event/revision pairs are `(31, 5)`
+and `(33, 6)`; the repeated event does not reuse revision 4. These particular
+checkpoints retain equal SSA values even though the earlier memory exercise
+shows different storage. Missing rows never mean zero, dead values, or absent
+execution. A recorded SSA frame number does not establish an authenticated
+dynamic helper activation, allocation generation, or physical register mapping.
+
+The inspector supports at most 64 complete scalar SSA rows. Booleans, integers
+of 1–64 bits and index32/index64 keep exact hexadecimal bits and use lossless
+integer interpretation; f16/f32/f64 show raw bits only. Allocation-relative
+pointers retain exact unsigned 64-bit identities/offsets, with generation zero
+only. Redacted and unavailable values retain their distinct recorded reasons.
+Other roots, subpaths, aggregates, wider integers, non-simulator provenance and
+larger tables are locally unsupported, not silently truncated. Malformed
+value payloads refuse this panel without changing the original importer’s
+acceptance, file hashes, raw lines or other valid panels. No previous table is
+retained after refusal, checkpoint replacement or reset.
+
+This is a useful recorded V2/V5 slice, not completion of either milestone or
+a new debugger service, live replay, watchpoint, producer-authentication or
+hardware capability.
+
 ## Model one imported LDS range under an explicit assumption
 
 The importer never infers a target from filenames, source labels or file digests.
@@ -162,8 +212,9 @@ Parsing preserves unsigned u64 values losslessly; duplicate keys, unknown
 envelope fields, floats, negative numeric literals, over-deep/large JSON,
 unpaired/reordered/duplicate IDs, mismatched configurations/source-map anchors,
 stale revisions, mismatched allocation/ranges and unpaired/reused page tokens
-refuse the whole import. Original control values are retained uninterpreted;
-the importer does not validate or visualize their value-specific payloads.
+refuse the whole import. Import acceptance retains original control values
+uninterpreted; the separate checkpoint-value panel checks only its bounded
+presentation subset and may refuse it without rejecting the import.
 
 Only generation-zero CPU resource observations and successful exact active
 operation-step checkpoints are supported. Setup, continue, termination,

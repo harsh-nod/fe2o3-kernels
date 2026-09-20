@@ -125,7 +125,8 @@ function stepAnchor(request: Row, response: Row): ResourceSnapshotAnchor {
       !integer(result.events_advanced) || !resourceSnapshotAnchorKey(snapshot.anchor)) {
     refuse("unsupported_checkpoint", "A captured exact active step anchor with exactly representable metadata is required.");
   }
-  // Values are retained verbatim but never interpreted or displayed by this importer.
+  // Import acceptance retains values verbatim. A separate optional presentation
+  // guard checks supported scalar values; its refusal does not reject this import.
   const anchor = snapshot.anchor as ResourceSnapshotAnchor;
   if (anchor.scope.level !== "lane" || anchor.cursor.event_sequence === 0 ||
       anchor.cursor.state_revision !== request.expected_revision + 1) {

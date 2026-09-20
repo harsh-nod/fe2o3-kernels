@@ -1,0 +1,24 @@
+.resource-checkpoint-values {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .8rem;
+  border: 1px solid currentColor;
+  border-radius: .5rem;
+  padding: .8rem;
+  overflow-wrap: anywhere;
+}
+.resource-checkpoint-values h4 { margin: 0; }
+.resource-checkpoint-values summary { min-height: 2.75rem; cursor: pointer; }
+.resource-checkpoint-values-table { min-width: 0; }
+.resource-checkpoint-values table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; text-align: left; }
+.resource-checkpoint-values th,
+.resource-checkpoint-values td { vertical-align: top; padding: .5rem .3rem; border-bottom: 1px solid currentColor; }
+.resource-checkpoint-values table th:first-child,
+.resource-checkpoint-values table td:first-child { white-space: normal; }
+.resource-checkpoint-values code { white-space: normal; overflow-wrap: anywhere; }
+.resource-checkpoint-values :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 40rem) {
+  .resource-checkpoint-values { padding: .5rem; }
+  .resource-checkpoint-values table { font-size: .85rem; }
+}

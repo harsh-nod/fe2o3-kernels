@@ -5,6 +5,7 @@ import {
 } from "../content/recorded-resource-import";
 import { ResourceAccessView } from "./ResourceAccessView";
 import { ResourceMemoryView } from "./ResourceMemoryView";
+import { ResourceCheckpointValuesView } from "./ResourceCheckpointValuesView";
 import type { ResourceAccessSelection } from "../content/resource-access-navigation";
 import type { LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
 import "./RecordedResourceImport.css";
@@ -26,6 +27,7 @@ function CheckpointViews({ checkpoint, recording }: {
   return <>
     <p>Independent checkpoint: request {checkpoint.control.requestId}, event {checkpoint.anchor.cursor.event_sequence},
       revision {checkpoint.anchor.cursor.state_revision}. Selecting retained data sends no debugger command.</p>
+    <ResourceCheckpointValuesView checkpoint={checkpoint} />
     {checkpoint.pages.length > 0 ? <section aria-label="Imported resource pages">
       <label>Hypothetical target for LDS model
         <select aria-label="Hypothetical target for LDS model" aria-describedby={assumptionId}
@@ -87,7 +89,7 @@ function ImportedViews({ recording, names }: { recording: ImportedResourceRecord
     </dl>
     <p>SHA-256 values describe the selected file bytes, not producer authentication.
       {recording.pairs.length} original pairs; {recording.checkpoints.length} retained checkpoints.
-      Original line text and IDs are preserved. Control values are retained but not interpreted.</p>
+      Original line text and IDs are preserved. A separate bounded panel checks supported checkpoint values for display.</p>
     <label>Imported checkpoint
       <select aria-label="Imported checkpoint" value={checkpointIndex}
         onChange={event => setCheckpointIndex(Number(event.target.value))}>
