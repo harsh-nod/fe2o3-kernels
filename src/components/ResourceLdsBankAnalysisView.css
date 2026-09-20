@@ -1,0 +1,10 @@
+.resource-lds-bank-analysis { margin: 0.8rem 0; padding: 0.8rem; border: 1px solid var(--border-strong); border-radius: 0.5rem; overflow-wrap: anywhere; }
+.resource-lds-bank-analysis summary { cursor: pointer; font-weight: 600; }
+.resource-lds-bank-analysis label { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.resource-lds-bank-analysis input { width: 5rem; max-width: 100%; color: inherit; background: var(--surface-2); border: 1px solid var(--border-strong); padding: 0.35rem; border-radius: 0.25rem; font: inherit; }
+.resource-lds-bank-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); list-style: none; padding: 0; gap: 0.3rem; }
+.resource-lds-bank-grid li { display: flex; flex-direction: column; padding: 0.3rem; border: 1px solid var(--border-strong); border-radius: 0.25rem; min-width: 0; font-size: 0.8rem; }
+.resource-lds-bank-grid li[data-touched="true"] { border-width: 2px; font-weight: 600; }
+.resource-lds-bank-notice { font-size: 0.9rem; }
+@media (min-width: 900px) { .resource-lds-bank-grid { grid-template-columns: repeat(8, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .resource-lds-bank-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

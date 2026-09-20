@@ -76,6 +76,11 @@ output checks and logical debugger sessions. Its
 [current-host qualification](docs/public-authoring-inspector-lab-qualification-20260919.md)
 keeps public source and locally built host-tool revisions distinct.
 
+The CPU simulation page offers a selected-access
+[LDS address-pattern model](docs/lds-bank-analysis-v1.md). It uses an explicit
+assumed allocation-base residue and target-specific bank geometry; it does not
+infer native conflicts or GPU timing from CPU access records.
+
 ## Write a typed kernel
 
 Application source uses `#[kernel(typed)]` without a namespace hash. The

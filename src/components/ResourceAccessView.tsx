@@ -4,6 +4,7 @@ import {
   RESOURCE_ACCESS_VISIBLE_ROWS, type ResourceAccessProjection, type ResourceAccessProjectionInput,
 } from "../content/resource-access-view";
 import { resourceAccessNavigation, resourceAccessPageKey, type ResourceAccessSelection } from "../content/resource-access-navigation";
+import { ResourceLdsBankAnalysisView } from "./ResourceLdsBankAnalysisView";
 import "./ResourceAccessView.css";
 
 export interface ResourceAccessViewProps extends ResourceAccessProjectionInput {
@@ -97,6 +98,7 @@ function CapturedResourcePage({ projection, selection: controlledSelection, onSe
           Intermediate events and per-access source associations are unavailable here.</p>
       </div>
     </div>}
+    {projection.kind === "memory_accesses" && <ResourceLdsBankAnalysisView projection={projection} selection={selection} />}
     <div className="resource-access-pagination" aria-label="Captured resource row pagination">
       <button type="button" disabled={currentPage === 0} onClick={() => setPage(currentPage - 1)}>Previous rows</button>
       <span aria-live="polite">Rows {rows.length === 0 ? 0 : start + 1}–{end} of {rows.length} in this captured page</span>
