@@ -16,14 +16,19 @@ it("keeps old LDS bytes/pin and every independent timeline selection isolated", 
   vi.stubGlobal("crypto", webcrypto); const user = userEvent.setup();
   render(<><DebuggerWorkbench fixture={debuggerWorkbenchFixture} /><ResourceLdsCaptureView retainedUtf8={oldUtf8} expectedSha256={oldPin} />
     <ResourceLdsMultiCaptureView retainedUtf8={retainedUtf8} expectedSha256="13165393fd04bb857f80886984b0e7a31262209cc2546d117d650cc2179fe441" /></>);
-  const selector = await screen.findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
+  // Keep all views mounted together, but query each view's own controls so a
+  // sibling's large memory grid does not participate in accessible-name scans.
+  const current = screen.getByTestId("retained-lds-multi-workgroup-example");
+  const old = screen.getByTestId("retained-lds-resource-example");
+  const workbench = within(screen.getByRole("region", { name: "Inspect one deterministic semantic trace" }));
+  const selector = await within(current).findByRole("combobox", { name: "Retained two-workgroup LDS checkpoint" });
   await user.selectOptions(selector, "4");
-  const current = screen.getByTestId("retained-lds-multi-workgroup-example"), text = current.textContent;
-  await user.selectOptions(await screen.findByRole("combobox", { name: "Retained LDS checkpoint" }), "2");
-  await user.click(screen.getByRole("button", { name: "Lane 1 active" }));
-  await user.click(screen.getByRole("button", { name: "Reverse one semantic event" }));
+  const text = current.textContent;
+  await user.selectOptions(await within(old).findByRole("combobox", { name: "Retained LDS checkpoint" }), "2");
+  await user.click(workbench.getByRole("button", { name: "Lane 1 active" }));
+  await user.click(workbench.getByRole("button", { name: "Reverse one semantic event" }));
   expect(current.textContent).toBe(text);
-  const old = screen.getByTestId("retained-lds-resource-example"), oldText = old.textContent;
+  const oldText = old.textContent;
   await user.selectOptions(selector, "1"); expect(old.textContent).toBe(oldText);
   expect(within(current).queryByRole("group", { name: "Captured memory cells" })).not.toBeInTheDocument();
   expect(within(old).getByRole("group", { name: "Captured memory cells" })).toBeInTheDocument();
