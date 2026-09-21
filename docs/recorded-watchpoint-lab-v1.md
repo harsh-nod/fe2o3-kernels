@@ -153,6 +153,7 @@ complete fresh-machine installation recipe, nor a reason to reuse these IDs,
 handles or expected revisions in a new live session.
 
 For the separate authoring/build tutorial, see the
+section below on saving a recorded moment, then the
 [guarded assembly-body lab](guarded-assembly-body-lab-v1.md). For explicit
 comparison of captured windows, see the
 [retained-memory comparison lab](recorded-memory-comparison-lab-v1.md).
@@ -160,9 +161,37 @@ These views do not establish hardware timing, physical-register contents,
 allocation lifetime, complete compiler/protected/target qualification or
 completion of the broader debugger milestones.
 
+## Save and reopen an exact recorded moment
+
+After importing the two fixture files, use **Download moment bookmark**.
+The downloaded JSON is a viewer-only selection, not a capture, a debugger
+request, or an executable recipe. Keep the original request and response
+files separately; the bookmark does not contain their recording bytes.
+
+1. Save the uncaptured stop, then select the later checkpoint and save it too.
+2. Change the memory cell size and open a different original pair.
+3. Select the later bookmark under **Watchpoint moment bookmark JSON** and
+   choose **Reopen moment bookmark**. The same checkpoint is selected, but
+   unsaved cell, interpretation, raw-pair and viewport choices reset.
+4. Reopen the stop bookmark. All six unavailable fields stay unavailable;
+   no memory or source from the later checkpoint appears as stop state.
+5. Save/reopen registration separately. Its earlier captured anchor remains
+   earlier inventory, never a snapshot of the watchpoint stop.
+6. Change a recording digest in a copy of the bookmark and reopen it.
+   The viewer refuses it without applying the saved selection. Oversized,
+   malformed and unsupported bookmarks also refuse. Cancelled or superseded
+   reads must not install a late selection.
+
+Bookmarks are at most 16 KiB and bind both exact file digests and byte counts,
+the local recording context and the selected moment's retained identities.
+The separate moment format does not extend the captured-resource bookmark
+format. Reopening rechecks against the recording already imported here.
+Only explicit download writes a local file; there is no upload, browser
+storage, live query, source edit, compilation or GPU action. Matching hashes
+remain byte-consistency observations, not producer or source authentication.
+
 [compiler]: https://github.com/harsh-nod/fe2o3/commit/ecdbf612265e81395531184063c2bb33b3f6062b
 [source]: https://github.com/harsh-nod/fe2o3/blob/ecdbf612265e81395531184063c2bb33b3f6062b/crates/rustc-codegen-fe2o3/tests/fixtures/assembly-authoring-v30/src/lib.rs
 [source-smoke]: https://github.com/harsh-nod/fe2o3/blob/ecdbf612265e81395531184063c2bb33b3f6062b/scripts/assembly-authoring-v30-smoke.mjs
 [resource-smoke]: https://github.com/harsh-nod/fe2o3/blob/ecdbf612265e81395531184063c2bb33b3f6062b/scripts/resource-query-v6-smoke.mjs
 [checker]: https://github.com/harsh-nod/fe2o3/blob/ecdbf612265e81395531184063c2bb33b3f6062b/scripts/resource-query-v6-watchpoint.test.mjs
-

@@ -4,6 +4,7 @@ import {
   type RecordedWatchpointObservation as RecordedWatchpointData,
 } from "../content/recorded-watchpoint-observation";
 import { ResourceMemoryView } from "./ResourceMemoryView";
+import { RecordedWatchpointBookmark } from "./RecordedWatchpointBookmark";
 import "./RecordedWatchpointObservation.css";
 
 type Moment = "registration" | "stop" | "checkpoint";
@@ -91,6 +92,8 @@ function SelectedMoment({ recording, moment }: { recording: RecordedWatchpointDa
 
 function ImportedObservation({ recording, names }: { recording: RecordedWatchpointData; names: [string, string] }) {
   const [moment, setMoment] = useState<Moment>("stop"), group = useId();
+  const [epoch, setEpoch] = useState(0), [bookmarkNotice, setBookmarkNotice] = useState("");
+  function selectMoment(next: Moment) { setMoment(next); setBookmarkNotice(""); }
   return <div className="recorded-watchpoint-result">
     <p className="recorded-watchpoint-boundary">Caller-supplied / unverified. Bounded consistency checks are for presentation only,
       not capture admission, producer authentication, source authentication or execution authority.
@@ -105,14 +108,19 @@ function ImportedObservation({ recording, names }: { recording: RecordedWatchpoi
       <legend>Select a recorded moment — no debugger action</legend>
       <ol>
         <li><label><input type="radio" name={group} value="registration" checked={moment === "registration"}
-          onChange={() => setMoment("registration")} />Registration and earlier inventory</label></li>
+          onChange={() => selectMoment("registration")} />Registration and earlier inventory</label></li>
         <li><label><input type="radio" name={group} value="stop" checked={moment === "stop"}
-          onChange={() => setMoment("stop")} />Uncaptured watch stop</label></li>
+          onChange={() => selectMoment("stop")} />Uncaptured watch stop</label></li>
         <li><label><input type="radio" name={group} value="checkpoint" checked={moment === "checkpoint"}
-          onChange={() => setMoment("checkpoint")} />Separate later checkpoint and memory</label></li>
+          onChange={() => selectMoment("checkpoint")} />Separate later checkpoint and memory</label></li>
       </ol>
     </fieldset>
-    <SelectedMoment key={moment} recording={recording} moment={moment} />
+    <RecordedWatchpointBookmark recording={recording} moment={moment} onRestore={next => {
+      setMoment(next); setEpoch(value => value + 1);
+      setBookmarkNotice("Exact saved moment reopened. Unsaved viewer choices reset; no debugger command was sent.");
+    }} />
+    {bookmarkNotice && <p role="status" aria-label="Restored watchpoint moment">{bookmarkNotice}</p>}
+    <SelectedMoment key={moment + ":" + epoch} recording={recording} moment={moment} />
   </div>;
 }
 
@@ -168,8 +176,8 @@ export function RecordedWatchpointObservation() {
   }
   return <section className="recorded-watchpoint-observation" aria-label="Local recorded watchpoint observation" aria-busy={busy}>
     <h3>Inspect a recorded watchpoint stop</h3>
-    <p>Select paired local JSONL files. Files stay in page memory: no upload, network request, storage write,
-      debugger command, compiler action or GPU execution is performed.</p>
+    <p>Select paired local JSONL files. Recording bytes stay in page memory: no upload, network request, browser storage,
+      debugger command, compiler action or GPU execution is performed. Only an explicit moment-bookmark download writes a local file.</p>
     <p>This bounded seven-pair excerpt records registration, an uncaptured watch stop and a separate later captured checkpoint.
       A stop can be exact while its bytes, scope and source remain unavailable.</p>
     <p>Limits: {WATCHPOINT_IMPORT_LIMITS.fileBytes / 1024} KiB per file,
