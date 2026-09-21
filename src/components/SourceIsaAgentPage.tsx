@@ -66,6 +66,12 @@ const LocalRecordedResourceImport = lazy(() =>
   })),
 );
 
+const RecordedMemoryGuide = lazy(() =>
+  import("./RecordedMemoryTutorial").then((module) => ({
+    default: module.RecordedMemoryTutorial,
+  })),
+);
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -135,6 +141,7 @@ export function SourceIsaAgentPage() {
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
+  const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
   return (
@@ -221,6 +228,22 @@ export function SourceIsaAgentPage() {
         <div id="recorded-program-tutorial-content">
           {showProgramTutorial && <Suspense fallback={<p role="status">Loading recorded program tutorial…</p>}>
             <RecordedProgramGuide />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="recorded-memory-tutorial-heading">
+        <h2 id="recorded-memory-tutorial-heading">Compare bytes, initialization, and missing memory</h2>
+        <p>Prepare exact retained CPU excerpts, predict changes and inspect them with the local importer.
+          Missing memory and incompatible selections remain explicit; no live command is issued.</p>
+        <button type="button" aria-expanded={showMemoryTutorial}
+          aria-controls="recorded-memory-tutorial-content"
+          onClick={() => setShowMemoryTutorial(open => !open)}>
+          {showMemoryTutorial ? "Close retained memory reference lab" : "Open retained memory reference lab"}
+        </button>
+        <div id="recorded-memory-tutorial-content">
+          {showMemoryTutorial && <Suspense fallback={<p role="status">Loading retained memory reference lab…</p>}>
+            <RecordedMemoryGuide />
           </Suspense>}
         </div>
       </section>

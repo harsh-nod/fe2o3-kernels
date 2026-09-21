@@ -70,6 +70,11 @@ Use **Open local resource recording** in that inspector to view your own
 Imports stay local and caller-supplied/unverified; they do not execute commands,
 authenticate a producer or change the curriculum baseline.
 
+Beside the importer, **Open retained memory reference lab** offers
+[three guided checkpoint-comparison exercises](docs/recorded-memory-comparison-lab-v1.md):
+changed bytes, initialization changes and actual unavailable memory. This is a
+retained-reference guide, not a live debugger or a newly qualified curriculum lesson.
+
 The [instruction-edit lab](docs/public-authoring-inspector-lab-v1.md) walks through
 real Rust export, declared-register inspection, one opcode edit, independent
 output checks and logical debugger sessions. Its

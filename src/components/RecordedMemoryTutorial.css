@@ -1,0 +1,32 @@
+.recorded-memory-tutorial {
+  min-width: 0;
+  max-width: 100%;
+  margin-block: 1rem;
+  overflow-wrap: anywhere;
+}
+.recorded-memory-tutorial > section { min-width: 0; }
+.recorded-memory-tutorial-exercise,
+.recorded-memory-tutorial-boundary {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-strong);
+}
+.recorded-memory-tutorial-prediction { border-left: 3px solid currentColor; padding-left: .75rem; }
+.recorded-memory-tutorial li { margin-block: .65rem; }
+.recorded-memory-tutorial summary { cursor: pointer; padding: .6rem .2rem; font-weight: 600; }
+.recorded-memory-tutorial pre {
+  max-width: 100%;
+  padding: .75rem;
+  color: var(--code-text);
+  background: var(--code-bg);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.recorded-memory-tutorial code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.recorded-memory-tutorial dl { min-width: 0; margin: .75rem 0; }
+.recorded-memory-tutorial dt { font-weight: 600; }
+.recorded-memory-tutorial dd { min-width: 0; margin: .25rem 0 .75rem; }
+.recorded-memory-tutorial :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 600px) {
+  .recorded-memory-tutorial ol, .recorded-memory-tutorial ul { padding-left: 1.25rem; }
+}
