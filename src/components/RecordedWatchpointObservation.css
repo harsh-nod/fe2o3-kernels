@@ -1,0 +1,60 @@
+.recorded-watchpoint-observation,
+.recorded-watchpoint-result,
+.recorded-watchpoint-moment,
+.recorded-watchpoint-moment > section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.recorded-watchpoint-observation p,
+.recorded-watchpoint-observation h3,
+.recorded-watchpoint-observation h4 { margin: 0; }
+.recorded-watchpoint-boundary {
+  border: 1px solid currentColor;
+  border-radius: .5rem;
+  padding: .85rem;
+}
+.recorded-watchpoint-files,
+.recorded-watchpoint-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  min-width: 0;
+}
+.recorded-watchpoint-files label,
+.recorded-watchpoint-moment label { display: grid; gap: .4rem; min-width: 0; }
+.recorded-watchpoint-files input,
+.recorded-watchpoint-moment select { min-width: 0; max-width: 100%; width: 100%; min-height: 2.75rem; }
+.recorded-watchpoint-moment select {
+  background: var(--color-bg, Canvas);
+  color: inherit;
+  border: 1px solid currentColor;
+  border-radius: .4rem;
+  padding: .35rem;
+}
+.recorded-watchpoint-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.recorded-watchpoint-observation button { min-height: 2.75rem; white-space: normal; }
+.recorded-watchpoint-selector { min-width: 0; margin: 0; padding: .8rem; }
+.recorded-watchpoint-selector ol { display: grid; gap: .8rem; padding-inline-start: 1.7rem; margin-block: .8rem; }
+.recorded-watchpoint-selector label { display: flex; align-items: center; gap: .65rem; min-height: 2.75rem; }
+.recorded-watchpoint-selector input { flex: 0 0 auto; width: 1.1rem; height: 1.1rem; margin: 0; }
+.recorded-watchpoint-facts { margin: 0; }
+.recorded-watchpoint-facts dt { font-weight: 650; }
+.recorded-watchpoint-facts dd { margin: .3rem 0 0; }
+.recorded-watchpoint-table-wrap { max-width: 100%; overflow-x: auto; }
+.recorded-watchpoint-table-wrap table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; }
+.recorded-watchpoint-observation .recorded-watchpoint-table-wrap table th,
+.recorded-watchpoint-observation .recorded-watchpoint-table-wrap table td { text-align: start; vertical-align: top; padding: .6rem; border-bottom: 1px solid currentColor; white-space: normal; overflow-wrap: anywhere; }
+.recorded-watchpoint-observation pre {
+  max-width: 100%;
+  max-height: 18rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.recorded-watchpoint-observation :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 40rem) {
+  .recorded-watchpoint-actions { flex-direction: column; align-items: stretch; }
+}

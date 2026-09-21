@@ -72,6 +72,12 @@ const RecordedMemoryGuide = lazy(() =>
   })),
 );
 
+const LocalRecordedWatchpoint = lazy(() =>
+  import("./RecordedWatchpointObservation").then((module) => ({
+    default: module.RecordedWatchpointObservation,
+  })),
+);
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -142,6 +148,7 @@ export function SourceIsaAgentPage() {
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
+  const [showWatchpoint, setShowWatchpoint] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
   return (
@@ -260,6 +267,25 @@ export function SourceIsaAgentPage() {
         <div id="local-resource-import-content">
           {showResourceImport && <Suspense fallback={<p role="status">Loading local resource importer…</p>}>
             <LocalRecordedResourceImport />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="recorded-watchpoint-heading">
+        <h2 id="recorded-watchpoint-heading">Separate a watchpoint stop from a later memory snapshot</h2>
+        <p>Inspect a retained first-write watchpoint observation. An uncaptured stop has no
+          observed memory or source location; a later checkpoint is a different selection.
+          Local files remain unverified and no imported debugger command is executed.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/recorded-watchpoint-lab-v1.md"
+          target="_blank" rel="noreferrer">First-write watchpoint lab and exact retained files</a></p>
+        <button type="button" aria-expanded={showWatchpoint}
+          aria-controls="recorded-watchpoint-content"
+          onClick={() => setShowWatchpoint(open => !open)}>
+          {showWatchpoint ? "Close recorded watchpoint" : "Open recorded watchpoint"}
+        </button>
+        <div id="recorded-watchpoint-content">
+          {showWatchpoint && <Suspense fallback={<p role="status">Loading recorded watchpoint viewer…</p>}>
+            <LocalRecordedWatchpoint />
           </Suspense>}
         </div>
       </section>

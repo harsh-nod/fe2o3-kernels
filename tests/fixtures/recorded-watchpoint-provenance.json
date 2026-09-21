@@ -1,0 +1,80 @@
+{
+  "schema": "fe2o3-site-recorded-watchpoint-fixture-v1",
+  "description": "Exact seven-pair excerpt of retained public CPU-debugger JSONL. Local presentation only; not a portable capture, source authentication, compiler build attestation or live hardware evidence.",
+  "compiler_repository": "https://github.com/harsh-nod/fe2o3",
+  "tested_parent": "c60cd746e63b34b9072a493744d73b87ed1defc3",
+  "published_implementation": "ecdbf612265e81395531184063c2bb33b3f6062b",
+  "tested_source_observation": {
+    "head": "c60cd746e63b34b9072a493744d73b87ed1defc3",
+    "tree": "8b65bf143f3a661703a6373f42e55c5bfe8aef99",
+    "status": " M scripts/resource-query-v6-smoke.mjs\n?? scripts/resource-query-v6-watchpoint.mjs\n?? scripts/resource-query-v6-watchpoint.test.mjs\n",
+    "files": 6334,
+    "bytes": 96272752,
+    "sha256": "23434af4581e94ff857394647bb8d27104fa3eade3794bd0a947041003a0306d",
+    "scope": "all tracked and unignored regular source filenames/bytes; modes and ignored outputs excluded; no compiler attestation"
+  },
+  "retained_task_receipt": {
+    "name": "source-watchpoint-r1/receipt.json",
+    "bytes": 72237,
+    "sha256": "4648dcb0605c20cd022769df096b0dfc7221f07b5ba260d74633c302b7157476",
+    "status": "passed"
+  },
+  "commands": [
+    "node --test scripts/resource-query-v6-watchpoint.test.mjs",
+    "node scripts/assembly-authoring-v30-smoke.mjs NEW_SOURCE_OUTPUT_DIRECTORY",
+    "node scripts/resource-query-v6-smoke.mjs SOURCE_ASSEMBLY_SMOKE_DIRECTORY NEW_OUTPUT_DIRECTORY"
+  ],
+  "files": [
+    {
+      "side": "requests",
+      "path": "tests/fixtures/recorded-watchpoint-requests.jsonl",
+      "bytes": 1862,
+      "sha256": "f7184765621758f4e57a82ff603093c1d53474b8dc68eddf69debbaf2afc608c",
+      "original_bytes": 20494,
+      "original_sha256": "cdbf3265cc8a5801b7fa5ac7333645f7db57736238d0546aadde938f9c07bc93",
+      "request_ids": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        12
+      ]
+    },
+    {
+      "side": "responses",
+      "path": "tests/fixtures/recorded-watchpoint-responses.jsonl",
+      "bytes": 14117,
+      "sha256": "4529a8186678df97fb6df4d0f306da8b93a0223d71d54600863f26a1b4dfce3f",
+      "original_bytes": 69572,
+      "original_sha256": "bdb76282c2c1c86c86bd5f45de126a274f5c2b0c414dfbb8fb338b240bcdf63d",
+      "request_ids": [
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        12
+      ]
+    }
+  ],
+  "observations": {
+    "stop": {
+      "event_sequence": 32,
+      "state_revision": 3,
+      "snapshot": "not_captured"
+    },
+    "later_checkpoint": {
+      "event_sequence": 33,
+      "state_revision": 4
+    },
+    "memory_belongs_to": "later_checkpoint_only"
+  },
+  "source_authentication": false,
+  "compiler_build_attestation": false,
+  "hardware_observed": false,
+  "performance_prediction": false,
+  "scope": "Retained source-produced CPU observation, not complete compiler/protected/target qualification; original request-ID gaps intentionally retained."
+}
