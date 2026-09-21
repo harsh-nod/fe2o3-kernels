@@ -1,4 +1,4 @@
-import { useId, useState, type KeyboardEvent } from "react";
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
 import {
   projectResourceMemoryResponse,
   resourceMemoryCells,
@@ -8,6 +8,9 @@ import {
   type ResourceSnapshotAnchor,
 } from "../content/resource-memory-view";
 import { resourceMemoryAccessOverlay, resourceMemoryAccessCell, type ResourceMemoryAccessOverlayInput } from "../content/resource-memory-access-overlay";
+import { projectResourcePointerMemoryFocus, type ResourcePointerMemoryFocus, type ResourcePointerMemoryFocusProjection } from "../content/resource-pointer-memory-navigation";
+import type { ResourceMemoryContext } from "../lib/resource-memory-controller";
+import { ResourceMemoryInterpretationView } from "./ResourceMemoryInterpretationView";
 import "./ResourceMemoryView.css";
 
 export interface ResourceMemoryViewProps {
@@ -15,6 +18,8 @@ export interface ResourceMemoryViewProps {
   expectedSnapshot: unknown;
   title?: string;
   accessOverlay?: ResourceMemoryAccessOverlayInput;
+  navigationFocus?: ResourcePointerMemoryFocus;
+  memoryContext?: ResourceMemoryContext;
 }
 
 function initializationLabel(cell: ResourceMemoryCell): string {
@@ -57,11 +62,21 @@ function SnapshotDetails({ anchor }: { anchor: ResourceSnapshotAnchor }) {
   );
 }
 
-function CapturedWindow({ projection, accessOverlay }: { projection: Extract<ResourceMemoryProjection, { status: "ready" }>; accessOverlay?: ResourceMemoryAccessOverlayInput }) {
+function CapturedWindow({ projection, accessOverlay, initialFocus }: {
+  projection: Extract<ResourceMemoryProjection, { status: "ready" }>;
+  accessOverlay?: ResourceMemoryAccessOverlayInput;
+  initialFocus?: Extract<ResourcePointerMemoryFocusProjection, { status: "ready" }>;
+}) {
   const { memory } = projection;
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(initialFocus?.page ?? 0);
   const [cellBytes, setCellBytes] = useState<1 | 4>(1);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(initialFocus?.byteWithinPage ?? 0);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const pointerNavigation = initialFocus !== undefined;
+  const initialByte = initialFocus?.byteWithinPage ?? 0;
+  useEffect(() => {
+    if (pointerNavigation) gridRef.current?.querySelectorAll<HTMLButtonElement>("button")[initialByte]?.focus();
+  }, [pointerNavigation, initialByte]);
   const cells = resourceMemoryCells(memory, page, cellBytes);
   const selected = cells[selectedIndex] ?? cells[0];
   const pageCount = Math.max(1, Math.ceil(memory.returned_bytes / RESOURCE_MEMORY_VISIBLE_BYTES));
@@ -135,10 +150,11 @@ function CapturedWindow({ projection, accessOverlay }: { projection: Extract<Res
               </div>
               <p className="resource-memory-legend">
                 <strong>I</strong> initialized · <strong>U</strong> uninitialized · <strong>M</strong> mixed.
-                Bytes appear in increasing offset order; dwords are byte groups, not decoded scalar values.
+                Bytes appear in increasing offset order; grid dwords are byte groups.
+                The separate selected-dword inspector uses only explicit interpretation choices.
               </p>
               <p aria-live="polite">Visible allocation-relative byte range [{visibleStart}, {visibleEnd}).</p>
-              <div className="resource-memory-grid" role="group" aria-label="Captured memory cells">
+              <div ref={gridRef} className="resource-memory-grid" role="group" aria-label="Captured memory cells">
                 {cells.map((cell, index) => {
                   const state = initializationLabel(cell);
                   const marker = cell.initialized.every(Boolean) ? "I" : cell.initialized.some(Boolean) ? "M" : "U";
@@ -177,6 +193,10 @@ function CapturedWindow({ projection, accessOverlay }: { projection: Extract<Res
                   </table>
                 </div>
               )}
+              <ResourceMemoryInterpretationView projection={projection} selection={selected ? {
+                anchorKey: projection.anchorKey, requestId: projection.requestId, allocation: memory.allocation,
+                page, cellBytes, byteOffset: selected.byteOffset,
+              } : null} />
             </>
           )}
         </>
@@ -194,9 +214,13 @@ function CapturedWindow({ projection, accessOverlay }: { projection: Extract<Res
   );
 }
 
-export function ResourceMemoryView({ response, expectedSnapshot, title = "Snapshot memory window", accessOverlay }: ResourceMemoryViewProps) {
+export function ResourceMemoryView({ response, expectedSnapshot, title = "Snapshot memory window", accessOverlay,
+  navigationFocus, memoryContext }: ResourceMemoryViewProps) {
   const headingId = useId();
   const projection = projectResourceMemoryResponse(response, expectedSnapshot);
+  const focus: ResourcePointerMemoryFocusProjection | null = navigationFocus === undefined ? null
+    : memoryContext === undefined ? { status: "invalid", detail: "Pointer navigation requires the current recording context. No previous byte selection is retained." }
+      : projectResourcePointerMemoryFocus(projection, navigationFocus, memoryContext);
   return (
     <section className="resource-memory-view" aria-labelledby={headingId}>
       <header>
@@ -205,11 +229,14 @@ export function ResourceMemoryView({ response, expectedSnapshot, title = "Snapsh
         <h3 id={headingId}>{title}</h3>
         <p>This read-only view displays an existing debugger response. Browser checks do not authenticate producer claims.</p>
       </header>
-      {projection.status === "ready" ? (
+      {focus !== null && focus.status !== "ready" ? (
+        <p className="resource-memory-notice" role="status" data-state={focus.status}>{focus.detail} Pointer navigation is unavailable; no previous byte selection is retained.</p>
+      ) : projection.status === "ready" ? (
         <CapturedWindow
-          key={`${projection.anchorKey}:${JSON.stringify(projection.memory)}:${accessOverlay ? JSON.stringify(accessOverlay.memoryContext) : ""}`}
+          key={`${projection.anchorKey}:${JSON.stringify(projection.memory)}:${accessOverlay ? JSON.stringify(accessOverlay.memoryContext) : ""}:${navigationFocus ? JSON.stringify(navigationFocus) : ""}:${memoryContext ? JSON.stringify(memoryContext) : ""}`}
           projection={projection}
           accessOverlay={accessOverlay}
+          initialFocus={focus?.status === "ready" ? focus : undefined}
         />
       ) : (
         <p className="resource-memory-notice" role="status" data-state={projection.status}>{projection.detail}</p>

@@ -1,0 +1,47 @@
+.resource-memory-interpretation {
+  min-width: 0;
+  max-width: 100%;
+  margin-block: 1rem;
+  padding: 0.8rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  overflow-wrap: anywhere;
+}
+.resource-memory-interpretation h4 { margin-block: 0 0.5rem; }
+.resource-memory-interpretation-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+.resource-memory-interpretation-controls label {
+  display: grid;
+  min-width: 0;
+  gap: 0.4rem;
+}
+.resource-memory-interpretation-controls select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  padding: 0.4rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text);
+  background: var(--surface-2);
+  font: inherit;
+}
+.resource-memory-interpretation dl { display: grid; gap: 0.6rem; }
+.resource-memory-interpretation dl > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 0.4rem;
+}
+.resource-memory-interpretation dt { font-weight: 700; }
+.resource-memory-interpretation dd { min-width: 0; margin: 0; }
+.resource-memory-interpretation :is(code, output) { white-space: normal; overflow-wrap: anywhere; }
+.resource-memory-interpretation-notice { font-size: 0.9rem; color: var(--muted); }
+.resource-memory-interpretation select:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 600px) {
+  .resource-memory-interpretation-controls,
+  .resource-memory-interpretation dl > div { grid-template-columns: minmax(0, 1fr); }
+}

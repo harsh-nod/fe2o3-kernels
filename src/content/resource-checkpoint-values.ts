@@ -6,6 +6,12 @@ import { resourceSnapshotAnchorKey, type ResourceSnapshotAnchor } from "./resour
 export const RESOURCE_CHECKPOINT_VALUE_LIMIT = 64;
 export const RESOURCE_CHECKPOINT_VALUE_BITS = 64;
 type Row = Record<string, unknown>;
+export interface CheckpointPointerValue {
+  readonly addressSpace: "private" | "workgroup" | "global" | "constant" | "generic";
+  readonly allocationOrdinal: string;
+  readonly generation: string;
+  readonly byteOffset: string;
+}
 export interface CheckpointValueRow {
   readonly key: string;
   readonly functionOrdinal: string;
@@ -15,6 +21,7 @@ export interface CheckpointValueRow {
   readonly typeLabel: string;
   readonly representation: string;
   readonly interpretation: string;
+  readonly pointer?: CheckpointPointerValue;
 }
 export type CheckpointValuesProjection =
   | { status: "ready"; anchor: ResourceSnapshotAnchor; requestId: number; rows: readonly CheckpointValueRow[] }
@@ -92,6 +99,8 @@ function valueRow(value: unknown): CheckpointValueRow {
     const ordinal = u64(allocation.ordinal, 1n), generation = u64(allocation.generation), offset = u64(pointer.byte_offset);
     if (generation !== "0") refuse("unsupported", "Nonzero allocation generations are outside this recorded presentation subset.");
     return { ...identity, status: "captured", typeLabel: `${type.address_space} pointer`,
+      pointer: { addressSpace: type.address_space as CheckpointPointerValue["addressSpace"],
+        allocationOrdinal: ordinal, generation, byteOffset: offset },
       representation: `alloc#${ordinal}:g${generation} + ${offset} bytes`,
       interpretation: "Allocation-relative only; not dereferenced and not a native address or bounds check." };
   }

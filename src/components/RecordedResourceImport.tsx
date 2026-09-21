@@ -9,6 +9,7 @@ import { ResourceMemoryComparisonView } from "./ResourceMemoryComparisonView";
 import { ResourceCheckpointValuesView } from "./ResourceCheckpointValuesView";
 import type { ResourceAccessSelection } from "../content/resource-access-navigation";
 import type { LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
+import { projectResourcePointerMemoryNavigation } from "../content/resource-pointer-memory-navigation";
 import "./RecordedResourceImport.css";
 
 function CheckpointViews({ checkpoint, recording }: {
@@ -18,8 +19,20 @@ function CheckpointViews({ checkpoint, recording }: {
   const [memoryIndex, setMemoryIndex] = useState(0);
   const [selection, setSelection] = useState<ResourceAccessSelection | null>(null);
   const [targetAssumption, setTargetAssumption] = useState<LdsTargetAssumption>(null);
+  const [pointerSelection, setPointerSelection] = useState<{
+    valueKey: string; selectionKey: number; memoryRequestId?: number;
+  } | null>(null);
+  const pointerSequence = useRef(0);
   const assumptionId = useId();
-  const page = checkpoint.pages[pageIndex], memory = checkpoint.memories[memoryIndex];
+  // Store a selection, not an old projection. Revalidate the exact current
+  // checkpoint, context and complete memory bytes on every render.
+  const navigation = pointerSelection ? projectResourcePointerMemoryNavigation(recording, checkpoint,
+    pointerSelection.valueKey, pointerSelection.selectionKey, pointerSelection.memoryRequestId) : null;
+  const displayedMemoryIndex = navigation?.status === "ready" ? navigation.memoryIndex : memoryIndex;
+  const page = checkpoint.pages[pageIndex], memory = checkpoint.memories[displayedMemoryIndex];
+  const selectPointer = (valueKey: string, memoryRequestId?: number) => {
+    setPointerSelection({ valueKey, memoryRequestId, selectionKey: ++pointerSequence.current });
+  };
   const access = page ? { response: page.response, expectedRequest: page.request,
     expectedSnapshot: checkpoint.anchor, context: recording.context, responseContext: recording.context } : null;
   const accessOverlay = page?.kind === "memory_accesses" && access ? {
@@ -28,7 +41,18 @@ function CheckpointViews({ checkpoint, recording }: {
   return <>
     <p>Independent checkpoint: request {checkpoint.control.requestId}, event {checkpoint.anchor.cursor.event_sequence},
       revision {checkpoint.anchor.cursor.state_revision}. Selecting retained data sends no debugger command.</p>
-    <ResourceCheckpointValuesView checkpoint={checkpoint} />
+    <ResourceCheckpointValuesView checkpoint={checkpoint} onPointerSelect={selectPointer} />
+    {navigation && <section aria-label="Pointer retained-memory navigation" data-state={navigation.status}>
+      <h4>Current SSA pointer to retained bytes</h4>
+      <p>Caller-supplied / unverified. This selects a byte already retained at this exact checkpoint,
+        not a dereference, bounds or lifetime check. Missing or uninitialized storage is not a value.</p>
+      <p role="status">{navigation.status === "ready"
+        ? `Retained request ${navigation.focus.requestId}, allocation ${navigation.focus.allocationOrdinal}:g${navigation.focus.generation}, byte offset ${navigation.focus.byteOffset}.`
+        : navigation.detail}</p>
+      {navigation.status === "ambiguous" && navigation.windows.map(window => <button type="button" key={window.requestId}
+        onClick={() => selectPointer(pointerSelection!.valueKey, window.requestId)}>Use retained request {window.requestId}</button>)}
+      <button type="button" onClick={() => { setMemoryIndex(displayedMemoryIndex); setPointerSelection(null); }}>Clear pointer selection</button>
+    </section>}
     {checkpoint.pages.length > 0 ? <section aria-label="Imported resource pages">
       <label>Hypothetical target for LDS model
         <select aria-label="Hypothetical target for LDS model" aria-describedby={assumptionId}
@@ -59,16 +83,19 @@ function CheckpointViews({ checkpoint, recording }: {
     </section> : <p>No allocation or access page was retained at this checkpoint.</p>}
     {checkpoint.memories.length > 0 ? <section aria-label="Imported memory windows">
       <label>Recorded memory window
-        <select aria-label="Recorded memory window" value={memoryIndex}
-          onChange={event => setMemoryIndex(Number(event.target.value))}>
+        <select aria-label="Recorded memory window" value={displayedMemoryIndex}
+          onChange={event => { setMemoryIndex(Number(event.target.value)); setPointerSelection(null); }}>
           {checkpoint.memories.map((pair, index) => <option key={pair.requestId} value={index}>
             Request {pair.requestId} — read_memory
           </option>)}
         </select>
       </label>
-      <ResourceMemoryView key={memory.requestId} response={memory.response}
-        expectedSnapshot={checkpoint.anchor} accessOverlay={accessOverlay} title="Caller-supplied captured bytes" />
-      <ResourceMemoryComparisonView recording={recording} checkpoint={checkpoint} memory={memory} />
+      {!navigation || navigation.status === "ready" ? <>
+        <ResourceMemoryView key={JSON.stringify([memory.requestId, pointerSelection?.selectionKey ?? null])} response={memory.response}
+          expectedSnapshot={checkpoint.anchor} accessOverlay={accessOverlay} title="Caller-supplied captured bytes"
+          navigationFocus={navigation?.status === "ready" ? navigation.focus : undefined} memoryContext={recording.context} />
+        <ResourceMemoryComparisonView recording={recording} checkpoint={checkpoint} memory={memory} />
+      </> : <p>No pointer-selected memory is displayed. Choose a matching request or clear the pointer selection to browse retained windows.</p>}
     </section> : <p>No memory window was retained at this checkpoint.</p>}
   </>;
 }

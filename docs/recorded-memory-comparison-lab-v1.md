@@ -53,6 +53,47 @@ The eight canary bytes `de ad be ef ca fe ba be` agree in these selected windows
 This is neither a whole-execution proof nor attribution of a particular writer.
 Browsing recorded reverse/repeated stops does not issue reverse execution.
 
+#### Interpret one selected dword explicitly
+
+Return to checkpoint **Request 6**, memory **Request 11**. In the captured-memory
+panel (not the comparison grid), choose **Dword (4 bytes)** and select offset 0.
+The separate **Selected dword interpretation** inspector starts at **Raw storage
+only** and **Unknown — no assumption**; no scalar is displayed by default.
+
+1. Choose **u32**, then **Assume little-endian**. Expect storage bytes
+   `0xd5010000`, interpreted bits `0x000001d5`, and scalar **469**.
+2. Choose **Assume big-endian**. The same unchanged bytes give bits `0xd5010000`
+   and scalar **3573612544**. This is an explicit presentation assumption, not
+   evidence of the capture's target or source-language type.
+3. Choose **Unknown — no assumption** or **Raw storage only**: the scalar clears.
+   Changing checkpoint or replacing either imported file resets both choices.
+
+The optional **i32** and **f32** choices reinterpret the same four bytes;
+they do not perform a source-language numeric conversion. Binary32 preserves the
+displayed bit pattern, distinguishes negative zero, and labels NaN without
+claiming signaling behavior or GPU arithmetic. Canary bytes are still raw storage,
+not typed source variables. No debugger command is issued and imported hashes do
+not change.
+
+#### Navigate from an SSA pointer to retained storage
+
+At checkpoint **Request 6**, find SSA **%12** in **Checkpoint SSA values and
+source** and activate **Show retained byte**. It selects offset 0 of retained
+memory **Request 11** and moves keyboard focus to that byte. Arrow keys can
+then inspect neighboring retained bytes. Activating the pointer again returns
+to its byte and resets the separate interpretation choices.
+
+Repeat at the reversed and repeated-event checkpoints: the matching retained
+requests are **15** and **21**, respectively. Navigation never falls back to
+bytes from another checkpoint with the same allocation address. If more than
+one current retained window contains a pointer byte, an exact request choice is
+required; absent or unreturned coverage remains unavailable.
+
+This is local navigation of an already recorded allocation-relative pointer,
+not a dereference, new memory query, pointer-bounds/lifetime proof or source-type
+inference. Uninitialized storage remains raw bytes. Manual window selection,
+checkpoint changes and file replacement clear the pointer selection.
+
 ### 2. One changed storage byte, four initialized bytes
 
 ```sh
@@ -83,6 +124,15 @@ Cells have non-color labels: **B** storage differs, **I** initialization differs
 **=** both recorded facts equal, **?** bytes not captured on both sides. Arrow keys,
 Home and End navigate cells. Unknown targets remain unknown; no LDS bank-model
 assumption is needed.
+
+For the selected-dword inspector, current **Request 13**, offset 0, with explicit
+**u32 / little-endian** choices gives **2**. Arrow to offset 4: its four zero
+storage bytes are uninitialized, so no scalar is available. Current **Request 17**
+also refuses scalar interpretation despite its zero storage. A complete selected
+four-byte cell with all four initialization bits set is required; a short final
+cell never borrows adjacent, unreturned or historical bytes. This remains a
+checkpoint-storage interpretation, not a value at a selected historical access
+or an observed watchpoint stop.
 
 ### 3. Unavailable storage and incompatible anchors
 

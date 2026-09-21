@@ -81,6 +81,11 @@ output checks and logical debugger sessions. Its
 [current-host qualification](docs/public-authoring-inspector-lab-qualification-20260919.md)
 keeps public source and locally built host-tool revisions distinct.
 
+The [guarded assembly body lab](docs/guarded-assembly-body-lab-v1.md) uses
+separate public compiler/helper pins for a checked store, 96 CPU cases and two
+diagnostic lowering refusals, freshly reproduced with a shared host target.
+Its historical native evidence is separate; no GPU or production claim follows.
+
 The CPU simulation page offers a selected-access
 [LDS address-pattern model](docs/lds-bank-analysis-v1.md). It uses an explicit
 assumed allocation-base residue and target-specific bank geometry; it does not

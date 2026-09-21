@@ -2,7 +2,9 @@ import type { ImportedResourceCheckpoint } from "../content/recorded-resource-im
 import { projectResourceCheckpointValues } from "../content/resource-checkpoint-values";
 import "./ResourceCheckpointValuesView.css";
 
-export function ResourceCheckpointValuesView({ checkpoint }: { checkpoint: ImportedResourceCheckpoint }) {
+export function ResourceCheckpointValuesView({ checkpoint, onPointerSelect }: {
+  checkpoint: ImportedResourceCheckpoint; onPointerSelect?: (valueKey: string) => void;
+}) {
   const projection = projectResourceCheckpointValues(checkpoint);
   return <section className="resource-checkpoint-values" aria-label="Imported checkpoint SSA and source" data-state={projection.status}>
     <h4>Checkpoint SSA values and source</h4>
@@ -38,7 +40,11 @@ export function ResourceCheckpointValuesView({ checkpoint }: { checkpoint: Impor
           <tbody>{projection.rows.map(row => <tr key={row.key}>
             <th scope="row">Function {row.functionOrdinal}<br />Frame {row.frame}<br />Value %{row.valueOrdinal}</th>
             <td>{row.typeLabel}<br />{row.status}</td>
-            <td><code>{row.representation}</code><br />{row.interpretation}</td>
+            <td><code>{row.representation}</code><br />{row.interpretation}
+              {row.pointer && onPointerSelect && <><br /><button type="button"
+                aria-label={`Show retained byte for SSA %${row.valueOrdinal}, function ${row.functionOrdinal}, frame ${row.frame}`}
+                onClick={() => onPointerSelect(row.key)}>Show retained byte</button></>}
+            </td>
           </tr>)}</tbody>
         </table></div>}
     </>}
