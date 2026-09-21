@@ -10,13 +10,17 @@ import { ResourceCheckpointValuesView } from "./ResourceCheckpointValuesView";
 import type { ResourceAccessSelection } from "../content/resource-access-navigation";
 import type { LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
 import { projectResourcePointerMemoryNavigation } from "../content/resource-pointer-memory-navigation";
+import { ResourceSelectionBookmark } from "./ResourceSelectionBookmark";
+import type { ResourceBookmarkSelection } from "../content/resource-selection-bookmark";
+import { resourceMemoryComparisonReference } from "../content/resource-memory-comparison";
 import "./RecordedResourceImport.css";
 
-function CheckpointViews({ checkpoint, recording }: {
+function CheckpointViews({ checkpoint, recording, viewSelection, onViewSelection }: {
   checkpoint: ImportedResourceCheckpoint; recording: ImportedResourceRecording;
+  viewSelection: ResourceBookmarkSelection; onViewSelection: (selection: ResourceBookmarkSelection) => void;
 }) {
-  const [pageIndex, setPageIndex] = useState(0);
-  const [memoryIndex, setMemoryIndex] = useState(0);
+  const pageIndex = checkpoint.pages.findIndex(pair => pair.requestId === viewSelection.pageRequestId);
+  const memoryIndex = checkpoint.memories.findIndex(pair => pair.requestId === viewSelection.memoryRequestId);
   const [selection, setSelection] = useState<ResourceAccessSelection | null>(null);
   const [targetAssumption, setTargetAssumption] = useState<LdsTargetAssumption>(null);
   const [pointerSelection, setPointerSelection] = useState<{
@@ -30,9 +34,19 @@ function CheckpointViews({ checkpoint, recording }: {
     pointerSelection.valueKey, pointerSelection.selectionKey, pointerSelection.memoryRequestId) : null;
   const displayedMemoryIndex = navigation?.status === "ready" ? navigation.memoryIndex : memoryIndex;
   const page = checkpoint.pages[pageIndex], memory = checkpoint.memories[displayedMemoryIndex];
+  const chooseMemory = (requestId: number) => onViewSelection({ ...viewSelection, memoryRequestId: requestId,
+    baseline: requestId === viewSelection.memoryRequestId ? viewSelection.baseline : null });
   const selectPointer = (valueKey: string, memoryRequestId?: number) => {
-    setPointerSelection({ valueKey, memoryRequestId, selectionKey: ++pointerSequence.current });
+    const selectionKey = ++pointerSequence.current;
+    const next = projectResourcePointerMemoryNavigation(recording, checkpoint, valueKey, selectionKey, memoryRequestId);
+    if (next.status === "ready") chooseMemory(next.focus.requestId);
+    setPointerSelection({ valueKey, memoryRequestId, selectionKey });
   };
+  const baselineCheckpoint = viewSelection.baseline
+    ? recording.checkpoints.find(item => item.control.requestId === viewSelection.baseline!.checkpointRequestId) : undefined;
+  const baselineMemory = baselineCheckpoint?.memories.find(item => item.requestId === viewSelection.baseline!.memoryRequestId);
+  const baseline = baselineCheckpoint && baselineMemory
+    ? resourceMemoryComparisonReference(recording, baselineCheckpoint, baselineMemory) : null;
   const access = page ? { response: page.response, expectedRequest: page.request,
     expectedSnapshot: checkpoint.anchor, context: recording.context, responseContext: recording.context } : null;
   const accessOverlay = page?.kind === "memory_accesses" && access ? {
@@ -51,7 +65,7 @@ function CheckpointViews({ checkpoint, recording }: {
         : navigation.detail}</p>
       {navigation.status === "ambiguous" && navigation.windows.map(window => <button type="button" key={window.requestId}
         onClick={() => selectPointer(pointerSelection!.valueKey, window.requestId)}>Use retained request {window.requestId}</button>)}
-      <button type="button" onClick={() => { setMemoryIndex(displayedMemoryIndex); setPointerSelection(null); }}>Clear pointer selection</button>
+      <button type="button" onClick={() => { if (memory) chooseMemory(memory.requestId); setPointerSelection(null); }}>Clear pointer selection</button>
     </section>}
     {checkpoint.pages.length > 0 ? <section aria-label="Imported resource pages">
       <label>Hypothetical target for LDS model
@@ -71,7 +85,11 @@ function CheckpointViews({ checkpoint, recording }: {
         It resets on checkpoint or import replacement. No GPU execution or target legality is established.</p>
       <label>Recorded resource page
         <select aria-label="Recorded resource page" value={pageIndex}
-          onChange={event => { setPageIndex(Number(event.target.value)); setSelection(null); }}>
+          onChange={event => {
+            const selected = checkpoint.pages[Number(event.target.value)];
+            if (selected) onViewSelection({ ...viewSelection, pageRequestId: selected.requestId });
+            setSelection(null);
+          }}>
           {checkpoint.pages.map((pair, index) => <option key={pair.requestId} value={index}>
             Request {pair.requestId} — {pair.kind} ({pair.rowCount} rows)
           </option>)}
@@ -84,7 +102,11 @@ function CheckpointViews({ checkpoint, recording }: {
     {checkpoint.memories.length > 0 ? <section aria-label="Imported memory windows">
       <label>Recorded memory window
         <select aria-label="Recorded memory window" value={displayedMemoryIndex}
-          onChange={event => { setMemoryIndex(Number(event.target.value)); setPointerSelection(null); }}>
+          onChange={event => {
+            const selected = checkpoint.memories[Number(event.target.value)];
+            if (selected) chooseMemory(selected.requestId);
+            setPointerSelection(null);
+          }}>
           {checkpoint.memories.map((pair, index) => <option key={pair.requestId} value={index}>
             Request {pair.requestId} — read_memory
           </option>)}
@@ -94,14 +116,22 @@ function CheckpointViews({ checkpoint, recording }: {
         <ResourceMemoryView key={JSON.stringify([memory.requestId, pointerSelection?.selectionKey ?? null])} response={memory.response}
           expectedSnapshot={checkpoint.anchor} accessOverlay={accessOverlay} title="Caller-supplied captured bytes"
           navigationFocus={navigation?.status === "ready" ? navigation.focus : undefined} memoryContext={recording.context} />
-        <ResourceMemoryComparisonView recording={recording} checkpoint={checkpoint} memory={memory} />
+        <ResourceMemoryComparisonView recording={recording} checkpoint={checkpoint} memory={memory}
+          baselineSelection={{ value: baseline, onChange: reference => onViewSelection({ ...viewSelection,
+            baseline: reference ? { checkpointRequestId: reference.checkpointRequestId, memoryRequestId: reference.memoryRequestId } : null }) }} />
       </> : <p>No pointer-selected memory is displayed. Choose a matching request or clear the pointer selection to browse retained windows.</p>}
     </section> : <p>No memory window was retained at this checkpoint.</p>}
   </>;
 }
 
 function ImportedViews({ recording, names }: { recording: ImportedResourceRecording; names: [string, string] }) {
-  const [checkpointIndex, setCheckpointIndex] = useState(0);
+  const initialSelection = (checkpoint: ImportedResourceCheckpoint): ResourceBookmarkSelection => ({
+    checkpointRequestId: checkpoint.control.requestId, pageRequestId: checkpoint.pages[0]?.requestId ?? null,
+    memoryRequestId: checkpoint.memories[0]?.requestId ?? null, baseline: null,
+  });
+  const [viewSelection, setViewSelection] = useState<ResourceBookmarkSelection>(() => initialSelection(recording.checkpoints[0]));
+  const [restoreEpoch, setRestoreEpoch] = useState(0);
+  const checkpointIndex = recording.checkpoints.findIndex(item => item.control.requestId === viewSelection.checkpointRequestId);
   const [showRaw, setShowRaw] = useState(false);
   const [pairIndex, setPairIndex] = useState(0);
   const checkpoint = recording.checkpoints[checkpointIndex], pair = recording.pairs[pairIndex];
@@ -119,15 +149,25 @@ function ImportedViews({ recording, names }: { recording: ImportedResourceRecord
     <p>SHA-256 values describe the selected file bytes, not producer authentication.
       {recording.pairs.length} original pairs; {recording.checkpoints.length} retained checkpoints.
       Original line text and IDs are preserved. A separate bounded panel checks supported checkpoint values for display.</p>
+    <ResourceSelectionBookmark recording={recording} selection={viewSelection} onRestore={restored => {
+      // The bookmark component validates every ID/anchor against this recording
+      // before this single atomic selection update. Never restore by index.
+      setViewSelection(restored); setRestoreEpoch(epoch => epoch + 1);
+      setShowRaw(false); setPairIndex(0);
+    }} />
     <label>Imported checkpoint
       <select aria-label="Imported checkpoint" value={checkpointIndex}
-        onChange={event => setCheckpointIndex(Number(event.target.value))}>
+        onChange={event => {
+          const selected = recording.checkpoints[Number(event.target.value)];
+          if (selected) setViewSelection(initialSelection(selected));
+        }}>
         {recording.checkpoints.map((item, index) => <option key={item.anchorKey} value={index}>
           Request {item.control.requestId} — event {item.anchor.cursor.event_sequence}, revision {item.anchor.cursor.state_revision}
         </option>)}
       </select>
     </label>
-    <CheckpointViews key={JSON.stringify([checkpoint.anchorKey, recording.context])} checkpoint={checkpoint} recording={recording} />
+    <CheckpointViews key={JSON.stringify([checkpoint.anchorKey, recording.context, restoreEpoch])}
+      checkpoint={checkpoint} recording={recording} viewSelection={viewSelection} onViewSelection={setViewSelection} />
     <button type="button" aria-expanded={showRaw} aria-controls={rawId}
       onClick={() => setShowRaw(value => !value)}>
       {showRaw ? "Hide original paired lines" : "Show original paired lines"}
@@ -210,8 +250,9 @@ export function RecordedResourceImport() {
   }
   return <section className="recorded-resource-import" aria-label="Local resource recording import" aria-busy={busy}>
     <h3>Inspect your recorded CPU resource queries</h3>
-    <p>Select a request JSONL file and its paired response JSONL file. Files stay in this page&apos;s memory:
-      no upload, network request, storage write, debugger command, compiler action or GPU execution is performed by the importer.</p>
+    <p>Select a request JSONL file and its paired response JSONL file. Imported files stay in this page&apos;s memory:
+      no upload, network request, automatic storage write, debugger command, compiler action or GPU execution is performed.
+      After import, the separate bookmark download is an explicit local file save of selection metadata only.</p>
     <p>Supported excerpts contain successful captured forward/reverse operation-step checkpoints followed by
       query_allocations, query_memory_accesses or read_memory pairs. Keep their original order, IDs and bytes.
       Complete sessions containing setup, termination, errors or other commands are not supported.</p>

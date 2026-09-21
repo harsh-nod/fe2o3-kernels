@@ -4,12 +4,20 @@ import { projectResourceMemoryComparison, resourceMemoryComparisonOptions, resou
   resourceMemoryComparisonReference, type ComparedStorageByte, type ResourceMemoryComparisonReference } from "../content/resource-memory-comparison";
 import "./ResourceMemoryComparisonView.css";
 
-interface Props { recording: ImportedResourceRecording; checkpoint: ImportedResourceCheckpoint; memory: ImportedResourcePair }
+interface Props {
+  recording: ImportedResourceRecording; checkpoint: ImportedResourceCheckpoint; memory: ImportedResourcePair;
+  baselineSelection?: {
+    value: ResourceMemoryComparisonReference | null;
+    onChange: (reference: ResourceMemoryComparisonReference | null) => void;
+  };
+}
 function stored(byte: ComparedStorageByte | null): string {
   return byte ? `${byte.hex} · ${byte.initialized ? "initialized" : "uninitialized storage; not a program value"}` : "Not captured";
 }
-function Comparison({ recording, checkpoint, memory }: Props) {
-  const [baseline, setBaseline] = useState<ResourceMemoryComparisonReference | null>(null);
+function Comparison({ recording, checkpoint, memory, baselineSelection }: Props) {
+  const [localBaseline, setLocalBaseline] = useState<ResourceMemoryComparisonReference | null>(null);
+  const baseline = baselineSelection ? baselineSelection.value : localBaseline;
+  const setBaseline = baselineSelection ? baselineSelection.onChange : setLocalBaseline;
   const [page, setPage] = useState(0), [cellBytes, setCellBytes] = useState<1 | 4>(4), [selectedIndex, setSelectedIndex] = useState(0);
   const noticeId = useId();
   const current = resourceMemoryComparisonReference(recording, checkpoint, memory);

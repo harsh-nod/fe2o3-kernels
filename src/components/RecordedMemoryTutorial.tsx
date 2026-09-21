@@ -10,7 +10,8 @@ export function RecordedMemoryTutorial() {
         This guide does not import anything automatically. Use <strong>Open local resource recording</strong> below
         and select each baseline yourself.</p>
       <p>Reference lab only: caller-supplied / unverified data, not a published curriculum lesson.
-        No live debugger, GPU execution, command replay, selection export or cross-compiler comparison.</p>
+        No live debugger, GPU execution, command replay, capture export or cross-compiler comparison.
+        The separate importer can save a local view bookmark; keep the original recording files to reopen it.</p>
     </header>
     <section aria-label="Prepare the retained recording files">
       <h4>Prepare the original files</h4>

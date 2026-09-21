@@ -5,8 +5,9 @@ recordings**. Open `#/debugger/source-isa-agent`, then **Open retained memory
 reference lab** and **Open local resource recording**. No recorded command is
 executed or uploaded. You choose the current window and every baseline explicitly.
 
-This is not a published curriculum lesson, live debugger, selection exporter,
-GPU test or compiler-variant comparison. All imported claims remain caller-supplied
+This is not a published curriculum lesson, live debugger, capture exporter,
+GPU test or compiler-variant comparison. Its local selection bookmark is described
+below. All imported claims remain caller-supplied
 and unverified. It does not change the curriculum pin or complete V2/V5.
 
 ## Prepare the files
@@ -93,6 +94,38 @@ This is local navigation of an already recorded allocation-relative pointer,
 not a dereference, new memory query, pointer-bounds/lifetime proof or source-type
 inference. Uninitialized storage remains raw bytes. Manual window selection,
 checkpoint changes and file replacement clear the pointer selection.
+
+#### Save and reopen an exact retained view
+
+At checkpoint **Request 6**, choose a resource page, memory **Request 11**,
+and baseline **Request 21**. In **Retained view bookmark**, activate **Download
+view bookmark**. This explicit action downloads a small local selection file;
+it does not export the capture or execute any of its commands.
+
+Change to checkpoint **Request 18**. Although its event number is also 33,
+its revision is different. Select your downloaded file at **View bookmark JSON**
+and activate **Reopen view bookmark**. The current checkpoint, resource page,
+memory window and explicitly selected comparison baseline return together.
+
+The bookmark binds the exact paired recording file hashes and byte counts,
+recording context, complete current/baseline checkpoint anchors and unique
+request IDs. It only reopens against an already imported matching recording.
+Different bytes, missing IDs or altered anchors refuse the entire restoration;
+there is no nearest-event, source-line, array-index or first-window fallback.
+File hashes describe bytes, not authenticated compiler/source provenance.
+
+Pointer focus, access-row selection, hypothetical LDS target, value interpretation,
+byte order and viewport positions are deliberately **not saved**. Reopening resets
+those presentation choices and closes the original-line panel. A pointer-selected
+retained memory window is saved, but the pointer focus or an unresolved pointer
+choice is not. Genuinely retained incompatible/unavailable baselines reopen as
+the same explicit unavailable comparison, never as invented bytes.
+
+Import the LDS pair below and try the global bookmark: expect refusal without
+changing the current LDS selection. To reopen later, first import the original
+unchanged pair, then choose the bookmark. No automatic storage, upload, fetch,
+debugger request, recapture, compilation or GPU execution occurs. Bookmark JSON
+is bounded to 16 KiB and cannot stand in for capture admission.
 
 ### 2. One changed storage byte, four initialized bytes
 

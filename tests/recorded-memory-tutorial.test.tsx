@@ -10,7 +10,8 @@ it("offers three prediction-first reference exercises without importing, fetchin
   const fetch = vi.fn(); vi.stubGlobal("fetch", fetch);
   render(<RecordedMemoryTutorial />);
   const guide = screen.getByRole("region", { name: "Guided retained-memory reference lab" });
-  expect(guide).toHaveTextContent("No live debugger, GPU execution, command replay, selection export or cross-compiler comparison");
+  expect(guide).toHaveTextContent("No live debugger, GPU execution, command replay, capture export or cross-compiler comparison");
+  expect(guide).toHaveTextContent("save a local view bookmark");
   expect(guide).toHaveTextContent("This guide does not import anything automatically");
   expect(guide).toHaveTextContent(RECORDED_MEMORY_TUTORIAL_PIN);
   expect(within(guide).queryByRole("combobox")).not.toBeInTheDocument();
