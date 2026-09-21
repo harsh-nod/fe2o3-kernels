@@ -1,0 +1,63 @@
+import { webcrypto } from "node:crypto";
+import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { afterEach, beforeEach, expect, it, vi } from "vitest";
+import { ResourceMemoryComparisonView } from "../src/components/ResourceMemoryComparisonView";
+import { comparisonWindow, recordedComparison, resizeComparisonWindow } from "./fixtures/resource-memory-comparison";
+
+beforeEach(() => vi.stubGlobal("crypto", webcrypto));
+afterEach(() => vi.unstubAllGlobals());
+it("starts with no baseline, then exposes exact actual differences through keyboard and non-color details", async () => {
+  const user = userEvent.setup(), recording = await recordedComparison(), current = comparisonWindow(recording, 11);
+  render(<ResourceMemoryComparisonView recording={recording} {...current} />);
+  expect(screen.getByRole("combobox", { name: "Baseline retained memory window" })).toHaveValue("");
+  expect(screen.queryByRole("group", { name: "Compared memory cells" })).not.toBeInTheDocument();
+  await user.selectOptions(screen.getByRole("combobox", { name: "Baseline retained memory window" }), "15");
+  expect(screen.getByRole("status")).toHaveTextContent("4 storage-byte differences; 0 initialization differences");
+  const cells = within(screen.getByRole("group", { name: "Compared memory cells" })).getAllByRole("button");
+  expect(cells).toHaveLength(6); expect(cells[0]).toHaveTextContent("B"); expect(cells[1]).toHaveTextContent("=");
+  cells[0].focus(); await user.keyboard("{ArrowRight}"); expect(cells[1]).toHaveFocus();
+  expect(screen.getByRole("table", { name: "Selected compared byte details" })).toHaveTextContent("+4");
+  await user.keyboard("{End}"); expect(cells[5]).toHaveFocus();
+  await user.keyboard("{Home}"); expect(cells[0]).toHaveFocus();
+  expect(screen.getByRole("table")).toHaveTextContent("0xa5"); expect(screen.getByRole("table")).toHaveTextContent("0xd5");
+  await user.selectOptions(screen.getByRole("combobox", { name: "Baseline retained memory window" }), "");
+  expect(screen.queryByRole("group", { name: "Compared memory cells" })).not.toBeInTheDocument();
+});
+it("resets baseline synchronously on checkpoint, memory, context and recording replacement", async () => {
+  const user = userEvent.setup(), recording = await recordedComparison(), current = comparisonWindow(recording, 11);
+  const { rerender } = render(<ResourceMemoryComparisonView recording={recording} {...current} />);
+  const selector = () => screen.getByRole("combobox", { name: "Baseline retained memory window" });
+  await user.selectOptions(selector(), "15");
+  rerender(<ResourceMemoryComparisonView recording={recording} {...comparisonWindow(recording, 21)} />);
+  expect(selector()).toHaveValue(""); expect(screen.queryByRole("table")).not.toBeInTheDocument();
+  await user.selectOptions(selector(), "11");
+  rerender(<ResourceMemoryComparisonView recording={{ ...recording, responseSha256: "c".repeat(64) }} {...comparisonWindow(recording, 21)} />);
+  expect(selector()).toHaveValue("");
+  await user.selectOptions(selector(), "11");
+  rerender(<ResourceMemoryComparisonView recording={{ ...recording, context: { ...recording.context, connectionId: "replacement" } }} {...comparisonWindow(recording, 21)} />);
+  expect(selector()).toHaveValue("");
+});
+it("renders the actual LDS initialization-only byte transitions without treating uninitialized storage as values", async () => {
+  const user = userEvent.setup(), recording = await recordedComparison("lds");
+  render(<ResourceMemoryComparisonView recording={recording} {...comparisonWindow(recording, 13)} />);
+  await user.selectOptions(screen.getByRole("combobox", { name: "Baseline retained memory window" }), "17");
+  expect(screen.getByRole("status")).toHaveTextContent("1 storage-byte differences; 4 initialization differences");
+  expect(screen.getByRole("table")).toHaveTextContent("uninitialized storage; not a program value");
+  expect(screen.getByRole("table")).toHaveTextContent("Storage equal; initialization differs");
+});
+it("paginates without exceeding 256 visible bytes and clears selection for a partial last dword", async () => {
+  const user = userEvent.setup(), recording = structuredClone(await recordedComparison());
+  resizeComparisonWindow(recording, 11, 257); resizeComparisonWindow(recording, 15, 257);
+  render(<ResourceMemoryComparisonView recording={recording} {...comparisonWindow(recording, 11)} />);
+  await user.selectOptions(screen.getByRole("combobox", { name: "Baseline retained memory window" }), "15");
+  await user.selectOptions(screen.getByRole("combobox", { name: "Comparison cell size" }), "1");
+  expect(within(screen.getByRole("group", { name: "Compared memory cells" })).getAllByRole("button")).toHaveLength(256);
+  await user.click(screen.getByRole("button", { name: "Next comparison window" }));
+  expect(within(screen.getByRole("group", { name: "Compared memory cells" })).getAllByRole("button")).toHaveLength(1);
+  expect(screen.getByRole("table")).toHaveTextContent("+256");
+  expect(screen.getByRole("button", { name: "Next comparison window" })).toBeDisabled();
+  await user.selectOptions(screen.getByRole("combobox", { name: "Baseline retained memory window" }), "21");
+  expect(screen.queryByRole("group", { name: "Compared memory cells" })).not.toBeInTheDocument();
+  expect(screen.getByRole("status")).toHaveTextContent("same recorded generation-zero allocation and exact requested byte window");
+});

@@ -113,6 +113,59 @@ This is a useful recorded V2/V5 slice, not completion of either milestone or
 a new debugger service, live replay, watchpoint, producer-authentication or
 hardware capability.
 
+## Compare two retained memory checkpoints
+
+Below the currently selected memory window, **Compare retained memory
+checkpoints** starts with **No baseline selected**. Choose another retained
+window explicitly. The current side remains the checkpoint and memory selection
+above; the baseline never follows a historical access, target hypothesis or
+nearby event automatically. Changing the current checkpoint/window, replacing
+either import file or resetting clears the baseline synchronously.
+
+Use the unchanged global excerpt from the first exercise:
+
+1. At checkpoint request 6, select baseline memory request 15. The current
+   memory request 11 is event 33/revision 4; baseline 15 is event 31/revision 5.
+   Exactly four storage bytes differ, offsets 0–3: `a5 a5 a5 a5` versus
+   `d5 01 00 00`. All 24 bytes are initialized on both sides. The eight canary
+   bytes at offsets 16–23 remain unchanged.
+2. Select baseline memory request 21. Its event is also 33, but revision 6.
+   All 24 recorded bytes and initialization bits match request 11. This shows
+   equality of these retained windows, not a new debugger replay or a proof
+   about unretained events, other allocations or GPU execution.
+3. Use arrow keys, Home and End on the compared cells. The details table keeps
+   baseline/current storage and initialization separate. `B` means raw storage
+   differs, `I` means initialization differs, `=` means both recorded facts
+   match, and `?` means a byte was not captured on both sides. Color is not
+   required. Dwords group bytes; they are not decoded scalar program values.
+
+For the unchanged LDS excerpt in the next section, keep current memory request
+13 and choose baseline 17. Both request `[0,256)` of recorded allocation `2:g0`
+in the same logical scope. Storage differs only at byte 0 (`00` versus `02`),
+but initialization differs at bytes 0–3. Bytes 1–3 therefore show an
+initialization change despite equal zero storage. The remaining 252 bytes are
+uninitialized on both sides; matching storage there is not an initialized
+program value or evidence of no access.
+
+Each response must independently match its full retained checkpoint. This
+initial comparison requires the same recording/context, configuration,
+logical scope and mask, source/site, represented frame/occurrence, allocation,
+address space and exact requested offset/length. Only cursor event/revision
+may differ. Mismatches are unavailable, not silently aligned by address, source
+line or capture order. Generation zero and matching imported identities do not
+establish lifetime, allocation reuse or producer authentication.
+
+Inputs retain the existing 4096-byte bound. At most 256 requested bytes appear
+per comparison viewport, with explicit paging and partial final cells. Only
+bytes returned by both responses contribute comparisons; missing/redacted/
+unavailable storage is never replaced with zero. Counts describe the visible
+viewport only, and partial/truncated captures never establish complete-window
+equality. Original JSONL bytes, hashes, importer acceptance and access/memory
+limits are unchanged. No new backend query, download, compiler action or
+execution occurs. This advances recorded V2/V5 inspection only; live replay,
+watchpoints, real allocation reuse, compiler-variant comparisons and the full
+milestone exits remain separate work.
+
 ## Model one imported LDS range under an explicit assumption
 
 The importer never infers a target from filenames, source labels or file digests.

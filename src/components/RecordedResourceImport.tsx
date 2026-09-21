@@ -5,6 +5,7 @@ import {
 } from "../content/recorded-resource-import";
 import { ResourceAccessView } from "./ResourceAccessView";
 import { ResourceMemoryView } from "./ResourceMemoryView";
+import { ResourceMemoryComparisonView } from "./ResourceMemoryComparisonView";
 import { ResourceCheckpointValuesView } from "./ResourceCheckpointValuesView";
 import type { ResourceAccessSelection } from "../content/resource-access-navigation";
 import type { LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
@@ -67,6 +68,7 @@ function CheckpointViews({ checkpoint, recording }: {
       </label>
       <ResourceMemoryView key={memory.requestId} response={memory.response}
         expectedSnapshot={checkpoint.anchor} accessOverlay={accessOverlay} title="Caller-supplied captured bytes" />
+      <ResourceMemoryComparisonView recording={recording} checkpoint={checkpoint} memory={memory} />
     </section> : <p>No memory window was retained at this checkpoint.</p>}
   </>;
 }

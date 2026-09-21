@@ -1,0 +1,39 @@
+.resource-memory-comparison {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .8rem;
+  border: 1px solid currentColor;
+  border-radius: .5rem;
+  padding: .8rem;
+  overflow-wrap: anywhere;
+}
+.resource-memory-comparison h4 { margin: 0; }
+.resource-memory-comparison label { min-width: 0; display: grid; gap: .4rem; }
+.resource-memory-comparison select { width: 100%; min-width: 0; max-width: 100%; min-height: 2.75rem; }
+.resource-memory-comparison button { min-height: 2.75rem; white-space: normal; }
+.resource-memory-comparison-controls,
+.resource-memory-comparison-controls > div { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; min-width: 0; }
+.resource-memory-comparison-controls > label { flex: 1 1 10rem; }
+.resource-memory-comparison-anchors { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .5rem; }
+.resource-memory-comparison-anchors dd { margin: 0; }
+.resource-memory-comparison-grid { --comparison-columns: 4; display: grid; grid-template-columns: repeat(var(--comparison-columns), minmax(0, 1fr)); gap: .4rem; }
+.resource-memory-comparison-cell { min-width: 0; display: grid; justify-items: start; gap: .25rem; padding: .5rem; text-align: left; }
+.resource-memory-comparison-cell[aria-pressed="true"] { outline: 2px solid currentColor; outline-offset: 1px; }
+.resource-memory-comparison-cell[data-marker*="B"],
+.resource-memory-comparison-cell[data-marker*="I"] { border-style: dashed; }
+.resource-memory-comparison code { white-space: normal; overflow-wrap: anywhere; }
+.resource-memory-comparison-table { min-width: 0; }
+.resource-memory-comparison table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; text-align: left; }
+.resource-memory-comparison th, .resource-memory-comparison td { padding: .45rem .25rem; vertical-align: top; border-bottom: 1px solid currentColor; }
+.resource-memory-comparison table th:first-child,
+.resource-memory-comparison table td:first-child { white-space: normal; }
+.resource-memory-comparison summary { min-height: 2.75rem; cursor: pointer; }
+.resource-memory-comparison pre { max-width: 100%; min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.resource-memory-comparison :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 40rem) {
+  .resource-memory-comparison { padding: .5rem; }
+  .resource-memory-comparison-grid { --comparison-columns: 2; }
+  .resource-memory-comparison-anchors { grid-template-columns: minmax(0, 1fr); }
+  .resource-memory-comparison table { font-size: .8rem; }
+}
