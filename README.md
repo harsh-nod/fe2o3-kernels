@@ -112,6 +112,11 @@ and recompiles original, changed and two-specialization source variants.
 Its canonical CPU qualification does not establish a physical-register helper ABI
 or an exact public kernel-to-helper call-edge projection.
 
+The separate [static call-target lab](docs/retained-call-targets-v1.md) explains
+the additive query for exact retained callees, caller kernel registrations and
+typed operand/formal bindings. Its separately recorded fresh qualification
+requires newly built tools and does not rewrite the historical const-u32 record.
+
 The [instruction-edit follow-on](docs/source-promotion-instruction-edit-lab-v1.md)
 changes a real XOR to OR, recompiles three fresh source variants, and joins
 independent CPU checks with actual O0/O3 instructions and descriptors.

@@ -173,10 +173,15 @@ The retained public observations must show two distinct scalar helper function
 instances, each with its own direct typed `256` or `512` operand—not just two
 display names or two call-site strings.
 
-Current public `Call` observations project inputs but not their exact callee
-targets. Therefore `exact_kernel_to_helper_call_edges` remains
+In the recorded Phase20 run, public `Call` observations project inputs but not
+their exact callee targets. Its `exact_kernel_to_helper_call_edges` remains
 `unavailable_in_current_public_operation_projection`. Distinct function
 instances and finite whole-kernel results do not fill that missing edge.
+
+Newly built tools with the additive `call-target` query can produce a separate
+static observation; see the [call-target follow-on](retained-call-targets-v1.md).
+That tutorial records its own fresh source/query qualification. The old
+operations projection and this historical receipt are unchanged.
 
 ## 5. Keep compilation and identity boundaries explicit
 
