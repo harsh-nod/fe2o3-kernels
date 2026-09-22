@@ -5,6 +5,11 @@ and [recorded logical-debugging tutorial](ordered-program-debugger-v1.md). It is
 not a published curriculum lesson, a qualified release, or protected
 source-to-GPU admission. `FE2O3_PIN` and the site's maturity labels are unchanged.
 
+The separate [literal-repeat lab](ordered-program-repeat-v1.md) adds one
+compile-time initialization/repetition spelling without changing this flat
+representation. Its own newer-source CPU/LLVM qualification is linked there;
+the historical pin and results below do not qualify that extension.
+
 Use the matching [compiler implementation](https://github.com/harsh-nod/fe2o3/tree/f5e81f985ff3e2771ad0f132d483f5cf74976ad6),
 its [authoring contract](https://github.com/harsh-nod/fe2o3/blob/f5e81f985ff3e2771ad0f132d483f5cf74976ad6/docs/ordered-program-authoring-v1.md),
 and its pinned toolchain, not the site's older lesson baseline. The recipes below

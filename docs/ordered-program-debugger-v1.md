@@ -8,6 +8,11 @@ V17 debugger batch. The standalone commands below remain draft reproduction
 instructions; synthetic controls and browser layout tests are separate from
 the retained source/debugger observations.
 
+For a separate ordinary-Rust profile, see the
+[explicit-initialization fault/replay lab](ordinary-source-fault-replay-v1.md).
+Its bounded CPU qualification is recorded there; terminal values remain unavailable
+and its full-session transcript is not input for this recorded program viewer.
+
 Use the matching [compiler checkout](https://github.com/harsh-nod/fe2o3/tree/f5e81f985ff3e2771ad0f132d483f5cf74976ad6),
 [V17 smoke driver](https://github.com/harsh-nod/fe2o3/blob/f5e81f985ff3e2771ad0f132d483f5cf74976ad6/scripts/ordered-program-debugger-smoke.mjs),
 and [JSONL protocol](https://github.com/harsh-nod/fe2o3/blob/f5e81f985ff3e2771ad0f132d483f5cf74976ad6/crates/fe2o3-debug-protocol/README.md).

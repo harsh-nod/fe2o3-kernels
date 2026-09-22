@@ -57,6 +57,9 @@ gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
 Experimental contributor drafts cover [bounded instruction-program authoring](docs/ordered-program-authoring-v1.md)
 and [recorded logical debugger observations](docs/ordered-program-debugger-v1.md).
+The [literal-repeat follow-on](docs/ordered-program-repeat-v1.md) describes
+compile-time repetition into the same bounded flat instruction representation;
+its finite normal-source, CPU and LLVM qualification is recorded in the lab.
 The existing cross-layer inspector also includes a read-only
 [ordinary Rust/KIR navigation example](docs/ordinary-authoring-navigation-v1.md).
 The same inspector offers **Open recorded program tutorial** for the existing
@@ -83,6 +86,10 @@ The [watchpoint/source replay walkthrough](docs/resource-watch-source-replay-v2.
 keeps the exact watch stop, immediate write and later/reversed/repeated source
 checkpoints distinct. The [const/watch/native qualification record](docs/const-watch-native-qualification-20260922.md)
 records the tested source versions and remaining milestone boundaries.
+
+The separate [ordinary-source fault/replay lab](docs/ordinary-source-fault-replay-v1.md)
+explains explicit input-initialization diagnostics, uncaptured terminal stops and
+prior-checkpoint replay. It records bounded CPU qualification and adds no viewer.
 
 Beside the importer, **Open retained memory reference lab** offers
 [three guided checkpoint-comparison exercises](docs/recorded-memory-comparison-lab-v1.md):
