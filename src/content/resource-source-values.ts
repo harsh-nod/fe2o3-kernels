@@ -30,7 +30,9 @@ export type ResourceSourceValuesProjection = {
   readonly checkpointRequestId: number;
   readonly stackRequestId: number;
   readonly sourceRequestIds: readonly number[];
-  readonly stackFrame: { readonly frame: 1; readonly functionOrdinal: number; readonly blockOrdinal: number;
+  readonly stackFrameCount: 1 | 2;
+  readonly totalSsaValueCount: number;
+  readonly stackFrame: { readonly frame: 1 | 2; readonly functionOrdinal: number; readonly blockOrdinal: number;
     readonly nextOperation: number; readonly valueCount: number };
   readonly rows: readonly ResourceSourceValueRow[];
 } | { readonly status: "invalid" | "stale" | "unsupported" | "unavailable"; readonly detail: string };
@@ -181,19 +183,38 @@ export function projectResourceSourceValues(checkpoint: ImportedResourceCheckpoi
     const result = exact(stack.response.result, ["result", "snapshot", "frames"]);
     need(result.result === "stack", "Expected a captured stack result.");
     same(resourceSnapshotAnchorKey(result.snapshot), checkpoint.anchorKey, "The stack is not from the exact independent checkpoint.");
-    need(Array.isArray(result.frames) && result.frames.length === 1, "Only a complete single top-level frame is supported.", "unsupported");
-    const frame = exact(result.frames[0], ["frame", "function_ordinal", "block_ordinal", "next_operation", "values"]);
-    same(frame.frame, 1, "Expected explicitly selected frame 1."); same(frame.function_ordinal, functionOrdinal, "Stack function differs from the recorded current operation.");
-    same(frame.block_ordinal, anchor.site.kir.block_ordinal, "Stack block differs from the recorded current operation.");
-    need(integer(frame.next_operation), "This stack frame has no available next operation.", "unsupported");
-    const stackValues = exact(frame.values, ["status", "value_count"]);
-    need(stackValues.status === "captured" && integer(stackValues.value_count), "Stack values were not completely retained.", "unsupported");
-    same(stackValues.value_count, checkpointValues.rows.length, "The selected complete SSA table and stack value count differ.");
-    for (const row of checkpointValues.rows) {
-      same(row.frame, String(frame.frame), "A retained SSA value belongs to another stack frame.");
-      same(row.functionOrdinal, String(functionOrdinal), "A retained SSA value belongs to another function.");
-    }
-    const refined = { cursor: anchor.cursor, scope: anchor.scope, site: anchor.site, frame: 1, occurrence: 1 };
+    need(Array.isArray(result.frames) && (result.frames.length === 1 || result.frames.length === 2),
+      "Only a complete root frame or root plus current helper frame is supported.", "unsupported");
+    need(result.frames.length <= stackPage.limit, "The retained stack exceeds the requested page.");
+    const stackFrameCount = result.frames.length as 1 | 2;
+    let totalSsaValueCount = 0;
+    const frames = result.frames.map((raw, index) => {
+      const rawFrame = object(raw);
+      const item = exact(rawFrame, ["frame", "function_ordinal", "block_ordinal", "values",
+        ...(Object.hasOwn(rawFrame, "next_operation") ? ["next_operation"] : [])]);
+      same(item.frame, index + 1, "The retained stack frame identities are not contiguous.");
+      need(integer(item.function_ordinal) && integer(item.block_ordinal), "Invalid recorded stack coordinates.");
+      if (Object.hasOwn(item, "next_operation")) need(integer(item.next_operation), "Invalid recorded next operation.");
+      const values = exact(item.values, ["status", "value_count"]);
+      need(values.status === "captured" && integer(values.value_count, 0, 64),
+        "Stack values were not completely retained within the scalar budget.", "unsupported");
+      const ssaRows = checkpointValues.rows.filter(row => row.frame === String(item.frame));
+      same(ssaRows.length, values.value_count, "A frame's complete SSA table and stack value count differ.");
+      for (const row of ssaRows) same(row.functionOrdinal, String(item.function_ordinal),
+        "A retained SSA value belongs to another function.");
+      totalSsaValueCount += values.value_count;
+      return item;
+    });
+    same(totalSsaValueCount, checkpointValues.rows.length, "The complete stack does not account for every retained SSA value.");
+    if (stackFrameCount === 2) need(frames[0].function_ordinal !== frames[1].function_ordinal,
+      "Recursive or repeated same-function frames are outside this bounded helper profile.", "unsupported");
+    const frame = frames[stackFrameCount - 1], selectedFrame = stackFrameCount;
+    same(frame.function_ordinal, functionOrdinal, "Selected stack function differs from the recorded current operation.");
+    same(frame.block_ordinal, anchor.site.kir.block_ordinal, "Selected stack block differs from the recorded current operation.");
+    need(integer(frame.next_operation), "This selected stack frame has no available next operation.", "unsupported");
+    const stackValues = object(frame.values);
+    need(integer(stackValues.value_count, 0, 64), "Invalid selected stack value count.");
+    const refined = { cursor: anchor.cursor, scope: anchor.scope, site: anchor.site, frame: selectedFrame, occurrence: 1 };
     const expectedSourceKey = resourceSnapshotAnchorKey(refined);
     need(expectedSourceKey !== null, "The expected explicit frame refinement is invalid.");
     const rows: ResourceSourceValueRow[] = [], identities = new Set<string>(), sourceRequestIds: number[] = [];
@@ -204,13 +225,13 @@ export function projectResourceSourceValues(checkpoint: ImportedResourceCheckpoi
       exact(response, ["status", "schema", "request_id", "operation", "session", "snapshot", "values",
         ...(Object.hasOwn(response, "next_cursor") ? ["next_cursor"] : [])]);
       same(request.scope, { level: "dispatch" }, "Source query scope differs from the supported stack selection.");
-      same(request.frame, 1, "Source values require the explicitly retained frame 1.");
+      same(request.frame, selectedFrame, "Source values require the explicitly retained current stack frame.");
       same(request.selector, { selector: "all" }, "The supported source query retains all variables, not a changed selector.");
       const page = exact(request.page, ["limit", ...(index === 0 ? [] : ["cursor"])]);
       need(integer(page.limit, 1, 64), "Invalid source-variable page limit."); pageLimit ??= page.limit;
       same(page.limit, pageLimit, "Source-variable page limit changed.");
       if (index > 0) same(page.cursor, cursor, "Source-variable page cursor is missing, stale or incompatible.");
-      same(resourceSnapshotAnchorKey(response.snapshot), expectedSourceKey, "Source values do not carry this exact stop plus the explicit frame1 refinement.");
+      same(resourceSnapshotAnchorKey(response.snapshot), expectedSourceKey, "Source values do not carry this exact stop plus the explicit current-frame refinement.");
       sourceAnchor ??= response.snapshot as ResourceSnapshotAnchor;
       need(Array.isArray(response.values) && response.values.length <= pageLimit, "Source-variable page exceeds its requested limit.");
       need(index === 0 || response.values.length > 0, "A continuation cursor must have retained remaining rows.");
@@ -232,8 +253,8 @@ export function projectResourceSourceValues(checkpoint: ImportedResourceCheckpoi
     }
     need(sourceAnchor !== null, "Missing source-variable anchor.");
     return { status: "ready", checkpointAnchor: anchor, sourceAnchor, checkpointRequestId: checkpoint.control.requestId,
-      stackRequestId: stackPair.requestId, sourceRequestIds, rows,
-      stackFrame: { frame: 1, functionOrdinal, blockOrdinal: anchor.site.kir.block_ordinal, nextOperation: frame.next_operation, valueCount: stackValues.value_count } };
+      stackRequestId: stackPair.requestId, sourceRequestIds, rows, stackFrameCount, totalSsaValueCount,
+      stackFrame: { frame: selectedFrame, functionOrdinal, blockOrdinal: anchor.site.kir.block_ordinal, nextOperation: frame.next_operation, valueCount: stackValues.value_count } };
   } catch (error) {
     if (error instanceof Refusal) return { status: error.status, detail: error.message };
     throw error;

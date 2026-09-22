@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { expect, test, type Locator, type Page } from "@playwright/test";
 
-// Actual forthcoming capture only. Missing files or hash mismatches must fail;
+// Actual retained capture only. Missing files or hash mismatches must fail;
 // do not replace them with generated responses or skip this evidence test.
 const directory = "examples/source-variable-resource-v2";
 interface Cursor { event_sequence: number; state_revision: number }

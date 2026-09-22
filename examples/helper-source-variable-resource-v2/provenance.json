@@ -1,0 +1,209 @@
+{
+  "schema": "recorded-source-variable-resource-provenance-v1",
+  "classification": "retained_cpu_debugger_observation_not_authenticated_producer_evidence",
+  "profile": "exact_two_frames_selected_current_helper_frame2_all_frame_ssa",
+  "captured_utc": "2026-09-22",
+  "compiler": {
+    "repository": "harsh-nod/fe2o3",
+    "base_commit": "dc48d876cd5434e5d8e409a53177f8d43fe5a839",
+    "dirty_candidate": true,
+    "source_census": {
+      "files": 6542,
+      "bytes": 99469985,
+      "sha256": "6723b922a0e1b0263b85cfd2854bef067e186f7b07ba74132c1817de0c06f5e7"
+    },
+    "source_census_unchanged_across_capture": true,
+    "toolchain": "nightly-2026-04-03-x86_64-unknown-linux-gnu",
+    "capture_script": "scripts/resource-helper-source-values-v2-smoke.mjs",
+    "source": "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
+    "source_sha256": "1c34832c031f2e84f27f022ccdea6b9cdf7966dfc1bbf186f441a236bc068425",
+    "feature": "debug_helper",
+    "fresh_tools_directory": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase19-r3/debug",
+    "export_target": "gfx942",
+    "bundle_version": 6
+  },
+  "capture_prerequisite": {
+    "matched_normal_consumer": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase19-normal-client-r2/fe2o3-source-bitselect-headless-consumer",
+    "bytes": 54784,
+    "sha256": "100fdda2d7febc771d40d1cfa6fc2b3c61a34bc6a0d321d007f2e490dd9d6516",
+    "observation": "The outer command ran this matched direct-rustc normal consumer before the capture driver; the earlier failed Cargo-client dylib-collision attempt supplied no capture evidence."
+  },
+  "retained_files": [
+    {
+      "path": "receipt.json",
+      "bytes": 12567,
+      "sha256": "aae1d08b4666a7d516afdb94d08edf6421d1de569333a3a9d9b1e7f7786f2350"
+    },
+    {
+      "path": "resource-helper-source-values.requests.jsonl",
+      "bytes": 3047,
+      "sha256": "e1af7f06a1a5dc2529eb26cbbaae5583fad2795ba0d27f74847f62c3e884e60a"
+    },
+    {
+      "path": "resource-helper-source-values.responses.jsonl",
+      "bytes": 26766,
+      "sha256": "36ac595290e317f8710b5f3822e5d3a768b29f62834910e4d55bf72c6a3314f9"
+    }
+  ],
+  "retained_remote_evidence": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/debug-requests.jsonl",
+      "bytes": 6752,
+      "sha256": "1fd3781a60a4c82297d729307d473fd13ca89bf1a27a5045f518dd21d9275136"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/debug-responses.jsonl",
+      "bytes": 44473,
+      "sha256": "3f9a227be75543ed35d9535f5be2096927fe2a0f4915f16d539868e1935a66df"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/observations.json",
+      "bytes": 22701,
+      "sha256": "a5b0a6e6cac47bc58924a2bbc7a63c6cc7334d5ea596c01bafc6208348567398"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/independent-result.json",
+      "bytes": 193,
+      "sha256": "774aecda5e748dc9979efe091cb5d3d82e62ff7c9df24319b1205d40a46dad0d"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/simulate.stdout",
+      "bytes": 1102,
+      "sha256": "90e5ac57b8e648e99501c9696bca1004e075ec62957f84baa17b417b73e908f9"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/helper-request.json",
+      "bytes": 441,
+      "sha256": "2ad6eb76bab86475ace29fbbeae87d80106d9225d33c1a399b7533a8d047e81c"
+    }
+  ],
+  "command_receipt": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-capture-r2/receipt.json",
+    "bytes": 36573,
+    "sha256": "d1c91e5d426fb48f8d397fc5b63a9d9b5f7a27f6ec6aef7a93c8851a6fb679d7"
+  },
+  "observed": {
+    "checkpoints": 3,
+    "successful_excerpt_pairs": 15,
+    "full_interaction_pairs": 29,
+    "excerpt_jsonl_bytes": 29813,
+    "excerpt_request_ids": [
+      9,
+      10,
+      11,
+      12,
+      13,
+      17,
+      18,
+      19,
+      20,
+      21,
+      24,
+      25,
+      26,
+      27,
+      28
+    ],
+    "source_variables_per_checkpoint": 2,
+    "complete_pages_per_checkpoint": 2,
+    "source_page_limit": 1,
+    "source_parameters_captured": 1,
+    "variables_not_represented": 1,
+    "stack_frames": 2,
+    "selected_source_frame": 2,
+    "caller_function_ordinal": 0,
+    "helper_function_ordinal": 1,
+    "caller_ssa_counts": [
+      2,
+      2,
+      2
+    ],
+    "helper_ssa_counts": [
+      2,
+      1,
+      2
+    ],
+    "all_ssa_counts": [
+      4,
+      3,
+      4
+    ],
+    "event_revision": [
+      [
+        3,
+        3
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        5
+      ]
+    ],
+    "caller_ssa_unchanged_across_reverse": true,
+    "helper_ssa_row_set_changed_on_reverse": true,
+    "all_ssa_restored_on_repeat": true,
+    "source_rows_unchanged_across_stops": true,
+    "memory_bytes_per_checkpoint": 24,
+    "memory_allocation_ordinal": 1,
+    "memory_allocation_generation": 0,
+    "memory_unchanged_across_stops": true,
+    "actual_read_only_refusals": [
+      {
+        "request_id": 14,
+        "status": "unavailable",
+        "reason": "frame_unavailable",
+        "case": "frame3"
+      },
+      {
+        "request_id": 15,
+        "status": "error",
+        "code": "invalid_cursor",
+        "case": "helper_page_cursor_with_frame1"
+      },
+      {
+        "request_id": 16,
+        "status": "error",
+        "code": "invalid_cursor",
+        "case": "changed_selector_with_prior_page_cursor"
+      },
+      {
+        "request_id": 22,
+        "status": "error",
+        "code": "stale_revision",
+        "case": "prior_expected_revision"
+      },
+      {
+        "request_id": 23,
+        "status": "error",
+        "code": "invalid_cursor",
+        "case": "prior_stop_page_cursor"
+      }
+    ],
+    "refusal_session_states_unchanged": true,
+    "independent_complete_cpu_simulation": {
+      "arithmetic": "f32(1)+f32(1)=f32(2)",
+      "result_bits": "0x40000000",
+      "output_words": 4,
+      "tail_canary_unchanged": true
+    }
+  },
+  "limits": {
+    "browser_import_is_local_read_only": true,
+    "original_lines_preserved": true,
+    "source_to_ssa_mapping": false,
+    "general_locals_reconstructed": false,
+    "dynamic_helper_activation": false,
+    "loop_iteration_identity": false,
+    "allocation_reuse": false,
+    "output_write_attributed": false,
+    "register_lifetime_proof": false,
+    "producer_authenticated": false,
+    "production_qualified": false,
+    "hardware_observed": false,
+    "performance_prediction": false
+  },
+  "browser_qualification": "Separate site tests; capture receipt alone does not qualify the UI."
+}

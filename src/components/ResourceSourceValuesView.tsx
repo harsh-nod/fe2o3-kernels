@@ -30,7 +30,11 @@ export function ResourceSourceValuesView({ checkpoint, stackPair, sourcePages }:
             The stack&apos;s next operation can differ from this recorded operation.</dd>
           <dt>Checkpoint frame / occurrence</dt><dd>Not represented / not represented.</dd>
           <dt>Source-variable frame / occurrence</dt><dd>{projection.sourceAnchor.frame} / {projection.sourceAnchor.occurrence}.</dd>
-          <dt>SSA value count</dt><dd>{projection.stackFrame.valueCount} retained whole SSA values; no named-variable correspondence inferred.</dd>
+          <dt>Complete captured stack</dt><dd>{projection.stackFrameCount} frame{projection.stackFrameCount === 1 ? "" : "s"}; selected current frame {projection.stackFrame.frame}.
+            Source variables belong only to this explicitly selected frame.</dd>
+          <dt>SSA value count</dt><dd>{projection.stackFrame.valueCount} retained whole SSA values in the selected frame;
+            {projection.totalSsaValueCount} across the complete captured stack. The separate SSA table retains all frames;
+            no named-variable correspondence inferred.</dd>
         </dl>
       </details>
       {projection.rows.length === 0 ? <p role="status">No source-variable rows were returned by the complete retained query. This is not evidence that the source has no variables.</p>

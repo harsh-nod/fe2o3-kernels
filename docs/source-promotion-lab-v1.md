@@ -203,6 +203,14 @@ SHA cannot authorize the edited file. The acceptance harness requires default
 and edited source/semantic/Kernel IR/LLVM identities to differ, edited/repeat
 observations to agree, and the kernel interface descriptors to remain equal.
 
+### Separate follow-on: change an instruction
+
+The [instruction-edit lab](source-promotion-instruction-edit-lab-v1.md) changes
+the last XOR to OR while keeping the low-register plan. That edit intentionally
+changes the formula and requires a different independent oracle, fresh normal
+exports and separate native observations. The register-only and prefix results
+below do not qualify that follow-on exercise.
+
 ## 5. Check the whole kernel and resulting machine code
 
 The checked-in [normal-entry machine ladder][machine] provides the concrete

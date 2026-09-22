@@ -7,6 +7,12 @@ execute imported requests, or reconstruct locals from assembly instructions.
 This tutorial describes the supported workflow and acceptance checks, not a
 claim that a particular capture or qualification run has passed.
 
+For a complete root-plus-current-helper stack, use the separate
+[ordinary helper lab](resource-helper-source-values-v2.md). It retains source
+variables for helper frame 2 and SSA values for both frames. The commands below
+remain the original single-root-frame exercise; do not substitute a helper
+recording for its source fixture or expected values.
+
 Every browser import remains **caller-supplied / unverified**. A retained
 `compiler_bundle_bound` source label is an input claim, not browser-authenticated
 source provenance. SHA-256 values identify selected file bytes, not their
@@ -125,6 +131,7 @@ The supported refinement is deliberately narrow:
 | Independent successful operation-step control | Original unframed cursor, logical scope, KIR site, and source association |
 | Complete stack and memory query | Exactly the same unframed checkpoint anchor |
 | Source Variable V2 pages selecting frame 1 | The same cursor, scope, site, and source association, plus explicit `frame: 1` and legacy `occurrence: 1` |
+| Separate helper lab, selecting current frame 2 | The same unframed checkpoint relationship, plus explicit `frame: 2` and legacy `occurrence: 1`; complete stack/SSA data still includes the suspended caller |
 
 The source anchor is not identical to the unframed control anchor. Neither is
 modified or stripped to force equality. Legacy occurrence 1 is not an
@@ -141,10 +148,13 @@ session in their original, strictly increasing request-ID order:
   a KIR operation site. Do not take the source query's own anchor as independent
   evidence of the selected checkpoint.
 - V1 `inspect_stack` uses dispatch selection and one complete page. This
-  profile supports exactly one top-level frame, frame 1, in the checkpoint's
-  function and block, with an available next operation. Its captured value
-  count and every retained checkpoint SSA root's function/frame must agree.
-  A partial or multi-frame stack is unsupported here.
+  single-frame exercise selects frame 1 in the checkpoint's function and block,
+  with an available next operation. Its captured value count and every retained
+  checkpoint SSA root's function/frame must agree. The separate helper exercise
+  permits exactly the root plus one nonrecursive current helper and accounts for
+  every frame's SSA rows; only current helper frame 2 supplies named variables.
+  Partial stacks, deeper/repeated-function stacks and arbitrary frame selection
+  remain unsupported.
 - V2 `inspect_source_variables` uses dispatch selection, explicit frame 1,
   `selector: { selector: "all" }`, and the exact stopped revision. The script
   uses page limit 2. Keep that limit fixed and retain every response and every

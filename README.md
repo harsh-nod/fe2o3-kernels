@@ -75,6 +75,10 @@ adds complete recorded source-variable pages beside separate SSA and memory
 observations. Missing locals stay unavailable; matching names or bits do not
 establish a source-to-SSA mapping.
 
+The [helper-frame source-value walkthrough](docs/resource-helper-source-values-v2.md)
+uses a real CPU recording to keep caller/helper frames, source-variable pages,
+SSA rows and reverse/repeat checkpoints distinct.
+
 Beside the importer, **Open retained memory reference lab** offers
 [three guided checkpoint-comparison exercises](docs/recorded-memory-comparison-lab-v1.md):
 changed bytes, initialization changes and actual unavailable memory. This is a
@@ -96,6 +100,12 @@ publishing a bounded bitselect region, editing its declared registers, and
 preserving a supported live Rust prefix through fresh compilation and independent
 CPU checks. It distinguishes source publication from protected compilation
 continuation and hardware qualification.
+
+The [instruction-edit follow-on](docs/source-promotion-instruction-edit-lab-v1.md)
+changes a real XOR to OR, recompiles three fresh source variants, and joins
+independent CPU checks with actual O0/O3 instructions and descriptors.
+See the [dated qualification record](docs/helper-instruction-qualification-20260922.md)
+for exact evidence and remaining limits.
 
 The CPU simulation page offers a selected-access
 [LDS address-pattern model](docs/lds-bank-analysis-v1.md). It uses an explicit

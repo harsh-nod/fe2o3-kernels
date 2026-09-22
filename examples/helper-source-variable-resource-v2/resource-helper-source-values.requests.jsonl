@@ -1,0 +1,15 @@
+{"schema":"fe2o3-debug-request-v1","request_id":9,"expected_revision":2,"operation":"step","direction":"forward","granularity":"operation","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":10,"expected_revision":3,"operation":"inspect_stack","scope":{"level":"dispatch"},"page":{"limit":16}}
+{"schema":"fe2o3-debug-source-variable-request-v2","request_id":11,"expected_revision":3,"operation":"inspect_source_variables","scope":{"level":"dispatch"},"frame":2,"selector":{"selector":"all"},"page":{"limit":1}}
+{"schema":"fe2o3-debug-source-variable-request-v2","request_id":12,"expected_revision":3,"operation":"inspect_source_variables","scope":{"level":"dispatch"},"frame":2,"selector":{"selector":"all"},"page":{"limit":1,"cursor":{"query_identity":"a4a5c05ad545ad99d7f705d62a5ab20a4e6e46ab625a536b6356072f661b8aa4","position":1}}}
+{"schema":"fe2o3-debug-request-v1","request_id":13,"expected_revision":3,"operation":"read_memory","allocation":{"ordinal":1,"generation":0},"byte_offset":0,"byte_len":24}
+{"schema":"fe2o3-debug-request-v1","request_id":17,"expected_revision":3,"operation":"step","direction":"reverse","granularity":"operation","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":18,"expected_revision":4,"operation":"inspect_stack","scope":{"level":"dispatch"},"page":{"limit":16}}
+{"schema":"fe2o3-debug-source-variable-request-v2","request_id":19,"expected_revision":4,"operation":"inspect_source_variables","scope":{"level":"dispatch"},"frame":2,"selector":{"selector":"all"},"page":{"limit":1}}
+{"schema":"fe2o3-debug-source-variable-request-v2","request_id":20,"expected_revision":4,"operation":"inspect_source_variables","scope":{"level":"dispatch"},"frame":2,"selector":{"selector":"all"},"page":{"limit":1,"cursor":{"query_identity":"8066180256a301af5e85501d002bcb3f84d3332cfb33ac324c1c910f1e4dc516","position":1}}}
+{"schema":"fe2o3-debug-request-v1","request_id":21,"expected_revision":4,"operation":"read_memory","allocation":{"ordinal":1,"generation":0},"byte_offset":0,"byte_len":24}
+{"schema":"fe2o3-debug-request-v1","request_id":24,"expected_revision":4,"operation":"step","direction":"forward","granularity":"operation","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":25,"expected_revision":5,"operation":"inspect_stack","scope":{"level":"dispatch"},"page":{"limit":16}}
+{"schema":"fe2o3-debug-source-variable-request-v2","request_id":26,"expected_revision":5,"operation":"inspect_source_variables","scope":{"level":"dispatch"},"frame":2,"selector":{"selector":"all"},"page":{"limit":1}}
+{"schema":"fe2o3-debug-source-variable-request-v2","request_id":27,"expected_revision":5,"operation":"inspect_source_variables","scope":{"level":"dispatch"},"frame":2,"selector":{"selector":"all"},"page":{"limit":1,"cursor":{"query_identity":"4578a5f6d52bc67498f155237e4196e095833916706a247b23250aa043e61e21","position":1}}}
+{"schema":"fe2o3-debug-request-v1","request_id":28,"expected_revision":5,"operation":"read_memory","allocation":{"ordinal":1,"generation":0},"byte_offset":0,"byte_len":24}

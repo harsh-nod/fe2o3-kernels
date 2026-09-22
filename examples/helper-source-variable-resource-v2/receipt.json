@@ -1,0 +1,412 @@
+{
+  "status": "passed",
+  "purpose": "existing-public-ordinary-helper-source-variable-resource-qualification",
+  "source": "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
+  "source_sha256": "1c34832c031f2e84f27f022ccdea6b9cdf7966dfc1bbf186f441a236bc068425",
+  "inputs": [
+    {
+      "path": "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/src/lib.rs",
+      "bytes": 29738,
+      "sha256": "1c34832c031f2e84f27f022ccdea6b9cdf7966dfc1bbf186f441a236bc068425"
+    },
+    {
+      "path": "crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/Cargo.toml",
+      "bytes": 2332,
+      "sha256": "1bfb8a9e35d4013f3376bf456ed4ad62fe333833e5a40847774fdb5e6cb5f13f"
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 9409,
+      "sha256": "35068f0f925c3b81d34a599263f9a39aec369582bed17b076ee03cfe78a282f5"
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 94838,
+      "sha256": "cd3913faa7680f8f9163f7bf46cbf394d5436a6f8e152aef3e6950dfb1f28e36"
+    }
+  ],
+  "export_args": [
+    "--crate",
+    "fe2o3_production_ranked_bounds_fixture",
+    "--output",
+    "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/helper-v6.fe2sim",
+    "--target",
+    "gfx942",
+    "--bundle-version",
+    "6",
+    "--target-dir",
+    "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase19-helper-source-values-r2/export-target",
+    "--",
+    "--manifest-path",
+    "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase19/crates/rustc-codegen-fe2o3/tests/fixtures/production-ranked-bounds-device/Cargo.toml",
+    "--package",
+    "fe2o3-production-ranked-bounds-fixture",
+    "--features",
+    "debug_helper",
+    "--lib",
+    "--offline"
+  ],
+  "bundle_sha256": "8b62083dc862b9d214b4868e1ea6124ea0cfa20cfca2ba96002d3b10e2d36000",
+  "bundle_identity": "3549cfcaf95508f95bc6c24ae9c0576c0e5b4c393a585c93f80b87b42f8f09d8",
+  "canonical_kir_digest": "3e84cd2e5155d331ff21ea45484733873cb35a2c429bcad0196bd168db27f476",
+  "request_sha256": "2ad6eb76bab86475ace29fbbeae87d80106d9225d33c1a399b7533a8d047e81c",
+  "independent_result": {
+    "arithmetic": "f32(1)+f32(1)=f32(2)",
+    "result_bits": "0x40000000",
+    "output_words": 4,
+    "tail_canary_unchanged": true,
+    "hardware_observed": false,
+    "performance_prediction": false
+  },
+  "independent_simulation_sha256": "90e5ac57b8e648e99501c9696bca1004e075ec62957f84baa17b417b73e908f9",
+  "tools": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase19-r3/debug/fe2o3-export-sim",
+      "bytes": 736480,
+      "sha256": "bd5c148cdd3c5ad69b1fc12c4690ef447a4d890c8a4e27063bda5dd8a54ab504"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase19-r3/debug/fe2o3-author",
+      "bytes": 8303856,
+      "sha256": "e3d9291c9fc896b9ec08c93ced528e72f32c856dc22a31a88494bb53e0e5bdba"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase19-r3/debug/fe2o3-kir-sim",
+      "bytes": 12149928,
+      "sha256": "d6e7620f2ee7247af6b0cace4a0a810d945a18ff9e11b8ecca65f4b07f22d2b3"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase19-r3/debug/fe2o3-debug",
+      "bytes": 59702896,
+      "sha256": "3939113237be72e4cf8d02be0a397e8642e124971ae95b365a181c4f58ca2d7c"
+    }
+  ],
+  "checkpoints": [
+    {
+      "control_request_id": 9,
+      "source_variable_request_ids": [
+        11,
+        12
+      ],
+      "checkpoint_anchor": {
+        "cursor": {
+          "configuration_identity": "78a537c4562b4a591f02e85fcc1f18d2fe722b4528e11dcbc13821a66ac7eb04",
+          "event_sequence": 3,
+          "state_revision": 3
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 1,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "8f5f2668aba1d91421af04f4778b15fb43c4ad6c728e5f9992c29d6a010df7b5",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "1edad3876a3d0c6ddcc290121783ac48847d493d6b0e41daafefcf3d72057c92",
+              "byte_start": 17993,
+              "byte_end": 18004
+            }
+          }
+        }
+      },
+      "source_variable_anchor": {
+        "cursor": {
+          "configuration_identity": "78a537c4562b4a591f02e85fcc1f18d2fe722b4528e11dcbc13821a66ac7eb04",
+          "event_sequence": 3,
+          "state_revision": 3
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 1,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "8f5f2668aba1d91421af04f4778b15fb43c4ad6c728e5f9992c29d6a010df7b5",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "1edad3876a3d0c6ddcc290121783ac48847d493d6b0e41daafefcf3d72057c92",
+              "byte_start": 17993,
+              "byte_end": 18004
+            }
+          }
+        },
+        "frame": 2,
+        "occurrence": 1
+      }
+    },
+    {
+      "control_request_id": 17,
+      "source_variable_request_ids": [
+        19,
+        20
+      ],
+      "checkpoint_anchor": {
+        "cursor": {
+          "configuration_identity": "78a537c4562b4a591f02e85fcc1f18d2fe722b4528e11dcbc13821a66ac7eb04",
+          "event_sequence": 2,
+          "state_revision": 4
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 1,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "8f5f2668aba1d91421af04f4778b15fb43c4ad6c728e5f9992c29d6a010df7b5",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "1edad3876a3d0c6ddcc290121783ac48847d493d6b0e41daafefcf3d72057c92",
+              "byte_start": 17993,
+              "byte_end": 18004
+            }
+          }
+        }
+      },
+      "source_variable_anchor": {
+        "cursor": {
+          "configuration_identity": "78a537c4562b4a591f02e85fcc1f18d2fe722b4528e11dcbc13821a66ac7eb04",
+          "event_sequence": 2,
+          "state_revision": 4
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 1,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "8f5f2668aba1d91421af04f4778b15fb43c4ad6c728e5f9992c29d6a010df7b5",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "1edad3876a3d0c6ddcc290121783ac48847d493d6b0e41daafefcf3d72057c92",
+              "byte_start": 17993,
+              "byte_end": 18004
+            }
+          }
+        },
+        "frame": 2,
+        "occurrence": 1
+      }
+    },
+    {
+      "control_request_id": 24,
+      "source_variable_request_ids": [
+        26,
+        27
+      ],
+      "checkpoint_anchor": {
+        "cursor": {
+          "configuration_identity": "78a537c4562b4a591f02e85fcc1f18d2fe722b4528e11dcbc13821a66ac7eb04",
+          "event_sequence": 3,
+          "state_revision": 5
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 1,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "8f5f2668aba1d91421af04f4778b15fb43c4ad6c728e5f9992c29d6a010df7b5",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "1edad3876a3d0c6ddcc290121783ac48847d493d6b0e41daafefcf3d72057c92",
+              "byte_start": 17993,
+              "byte_end": 18004
+            }
+          }
+        }
+      },
+      "source_variable_anchor": {
+        "cursor": {
+          "configuration_identity": "78a537c4562b4a591f02e85fcc1f18d2fe722b4528e11dcbc13821a66ac7eb04",
+          "event_sequence": 3,
+          "state_revision": 5
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 1,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "8f5f2668aba1d91421af04f4778b15fb43c4ad6c728e5f9992c29d6a010df7b5",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "1edad3876a3d0c6ddcc290121783ac48847d493d6b0e41daafefcf3d72057c92",
+              "byte_start": 17993,
+              "byte_end": 18004
+            }
+          }
+        },
+        "frame": 2,
+        "occurrence": 1
+      }
+    }
+  ],
+  "excerpts": [
+    {
+      "path": "resource-helper-source-values.requests.jsonl",
+      "bytes": 3047,
+      "sha256": "e1af7f06a1a5dc2529eb26cbbaae5583fad2795ba0d27f74847f62c3e884e60a"
+    },
+    {
+      "path": "resource-helper-source-values.responses.jsonl",
+      "bytes": 26766,
+      "sha256": "36ac595290e317f8710b5f3822e5d3a768b29f62834910e4d55bf72c6a3314f9"
+    }
+  ],
+  "raw_line_preservation": true,
+  "source_variable_paging": "complete_limit1",
+  "refusal_request_ids": [
+    14,
+    15,
+    16,
+    22,
+    23
+  ],
+  "memory_observation": "initial_output_and_canary_bytes_unchanged_no_write_attribution",
+  "stack_profile": "exact_two_frames_selected_current_helper_frame2_all_frame_ssa",
+  "source_to_ssa_mapping": "not_supplied",
+  "dynamic_helper_activation": "not_represented",
+  "allocation_reuse": "not_represented",
+  "source_authentication": false,
+  "hardware_observed": false,
+  "performance_prediction": false
+}
