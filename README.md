@@ -79,6 +79,11 @@ The [helper-frame source-value walkthrough](docs/resource-helper-source-values-v
 uses a real CPU recording to keep caller/helper frames, source-variable pages,
 SSA rows and reverse/repeat checkpoints distinct.
 
+The [watchpoint/source replay walkthrough](docs/resource-watch-source-replay-v2.md)
+keeps the exact watch stop, immediate write and later/reversed/repeated source
+checkpoints distinct. The [const/watch/native qualification record](docs/const-watch-native-qualification-20260922.md)
+records the tested source versions and remaining milestone boundaries.
+
 Beside the importer, **Open retained memory reference lab** offers
 [three guided checkpoint-comparison exercises](docs/recorded-memory-comparison-lab-v1.md):
 changed bytes, initialization changes and actual unavailable memory. This is a
@@ -101,11 +106,23 @@ preserving a supported live Rust prefix through fresh compilation and independen
 CPU checks. It distinguishes source publication from protected compilation
 continuation and hardware qualification.
 
+The [const-u32 helper lab](docs/const-u32-helper-promotion-v1.md) starts from one
+ordinary bitwise operation, generates a scalar const-generic assembly helper,
+and recompiles original, changed and two-specialization source variants.
+Its canonical CPU qualification does not establish a physical-register helper ABI
+or an exact public kernel-to-helper call-edge projection.
+
 The [instruction-edit follow-on](docs/source-promotion-instruction-edit-lab-v1.md)
 changes a real XOR to OR, recompiles three fresh source variants, and joins
 independent CPU checks with actual O0/O3 instructions and descriptors.
 See the [dated qualification record](docs/helper-instruction-qualification-20260922.md)
 for exact evidence and remaining limits.
+
+The separate [final-native comparison lab](docs/final-native-comparison-v1.md)
+explains a 14-artifact read-only view of that source edit, four complete HSACOs,
+exact instruction/descriptor bytes and declared versus encoded capacities.
+The viewer passed actual-capsule and desktop/mobile checks; the retained native
+observations do not establish hardware execution or source/proof authority.
 
 The CPU simulation page offers a selected-access
 [LDS address-pattern model](docs/lds-bank-analysis-v1.md). It uses an explicit

@@ -1,0 +1,213 @@
+{
+  "kind": "retained_actual_capture",
+  "recorded_on": "2026-09-22",
+  "host": "mi350",
+  "compiler_base_commit": "bcb4dbb77cd4d944feec1d215c4b2963f6fabb73",
+  "compiler_source_census": {
+    "files": 6561,
+    "bytes": 99789345,
+    "sha256": "e1d48a1a29dc3c44e1746deae2db4032ede02ae330017284ab3378e0ab1fdaa6"
+  },
+  "original_capture_directory": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-capture-actual-r1",
+  "capture_supervisor_receipt": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-capture-r1/receipt.json",
+    "bytes": 36572,
+    "sha256": "1d69ab267ecd033a76789d0058c6db11854abf4d65c04f692e8b3629d92977b9",
+    "status": "command-passed"
+  },
+  "baseline_receipt": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-baseline-actual-r1/receipt.json",
+    "bytes": 14368,
+    "sha256": "d69536cfa592aa2d81acca67e17e033988fedf717084b4aabd68abca047acf98"
+  },
+  "source": {
+    "path": "crates/rustc-codegen-fe2o3/tests/fixtures/assembly-authoring-v30/src/lib.rs",
+    "sha256": "f6cdd5fc4a937979fd5d12e7fa199fd3590fae9cb8f303b680781f9ca5b7df5e"
+  },
+  "bundle_sha256": "d351463825f487833f6e8dc5ccfaf80fd6a7b8b0754f7efbb43945e8c5e60129",
+  "bundle_identity": "d33767cb6ebce576387053bfebf2253b49e4683b99c849bfca229a26df41492d",
+  "canonical_kir_digest": "36d3e045a8d667351aec7fec33a943a8cfbe1d5d528723657d861497633bd59a",
+  "retained_files": [
+    {
+      "path": "receipt.json",
+      "bytes": 22064,
+      "sha256": "d6d58a1d6acf73921e7b475d8e24fef8eea6ce55a90c0982d30243156fbdb6a1"
+    },
+    {
+      "path": "debug-requests.jsonl",
+      "bytes": 10372,
+      "sha256": "d899a766ecb5025478ea75333f9f863adcd51fb8693283a58d0697835972be51"
+    },
+    {
+      "path": "debug-responses.jsonl",
+      "bytes": 76625,
+      "sha256": "59c2d3d7839c5e8f2b51a6a18004eedc63e10312b11a561112d822868e9a295b"
+    },
+    {
+      "path": "watchpoint.requests.jsonl",
+      "bytes": 1862,
+      "sha256": "ecbd8eb168a1855a73c8ec0729422d7a3ec540d35cbcf467181da5148add7ff0"
+    },
+    {
+      "path": "watchpoint.responses.jsonl",
+      "bytes": 14121,
+      "sha256": "7ed636b312ee0f5d22ef029845a277d0ef69d535d52eb6a5a7640637606b33af"
+    },
+    {
+      "path": "resource-watch-source-values.requests.jsonl",
+      "bytes": 6951,
+      "sha256": "01d419509f19868ef562dcff6cb97060271300fa4ce6aafa989652dc2143a65f"
+    },
+    {
+      "path": "resource-watch-source-values.responses.jsonl",
+      "bytes": 57363,
+      "sha256": "ed9354d371bc84521fe04c5d7e3f97c892efb1fe008d76ec68f855f5ff05039b"
+    }
+  ],
+  "full_pairs": 41,
+  "watchpoint_request_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    10
+  ],
+  "source_request_ids": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40
+  ],
+  "watch_stop": {
+    "request_id": 5,
+    "event": 32,
+    "revision": 3,
+    "snapshot": "unavailable_not_captured",
+    "scope": "unavailable_not_captured",
+    "source_query_request_id": 6,
+    "source_values": "unavailable_checkpoint_not_captured"
+  },
+  "immediate_postwrite": {
+    "request_id": 7,
+    "event": 33,
+    "revision": 4,
+    "lane": 0,
+    "ssa_count": 18,
+    "next_operation": "absent",
+    "source_query_request_id": 9,
+    "source_values": "unavailable_checkpoint_not_captured"
+  },
+  "source_checkpoints": [
+    {
+      "control_request_id": 11,
+      "event": 34,
+      "revision": 5,
+      "lane": 1,
+      "count": 1,
+      "ssa_count": 3,
+      "source_count": 12,
+      "source_pages": 6
+    },
+    {
+      "control_request_id": 21,
+      "event": 31,
+      "revision": 6,
+      "lane": 0,
+      "count": 2,
+      "ssa_count": 18,
+      "source_count": 12,
+      "source_pages": 6
+    },
+    {
+      "control_request_id": 32,
+      "event": 34,
+      "revision": 7,
+      "lane": 1,
+      "count": 2,
+      "ssa_count": 3,
+      "source_count": 12,
+      "source_pages": 6
+    }
+  ],
+  "refusals": [
+    {
+      "request_id": 6,
+      "status": "unavailable",
+      "reason": "checkpoint_not_captured"
+    },
+    {
+      "request_id": 9,
+      "status": "unavailable",
+      "reason": "checkpoint_not_captured"
+    },
+    {
+      "request_id": 20,
+      "status": "error",
+      "reason": "invalid_cursor"
+    },
+    {
+      "request_id": 30,
+      "status": "error",
+      "reason": "stale_revision"
+    },
+    {
+      "request_id": 31,
+      "status": "error",
+      "reason": "invalid_cursor"
+    }
+  ],
+  "independent_cpu_result": {
+    "expected_u32": 469,
+    "output_words": 4,
+    "tail_canary_unchanged": true,
+    "hardware_observed": false
+  },
+  "raw_line_preservation": true,
+  "source_authentication": false,
+  "hardware_observed": false,
+  "performance_prediction": false,
+  "frame_identity": "static_stack_depth_not_dynamic_activation",
+  "source_to_ssa_mapping": "not_supplied",
+  "allocation_reuse": "not_represented",
+  "site_actual_tests_and_browser_qualification": {
+    "status": "passed",
+    "validation_source_sha256": "5fbb7038a6bdffcbc5cb46a03239896ccd18f7a6ac0054e19086ea8b1d0299a1",
+    "validation_receipt_sha256": "e26a96c4b014a4a5b510ceca8a47a6edda43e65af7e4020823404b982cc2e0f2",
+    "vitest_tests": 985,
+    "node_controls": 21,
+    "browser_source_sha256": "55a169dea25d77918913be899083d5d6519795d8de7bc824a246ade51a1ad705",
+    "browser_receipt_sha256": "7483dc75afe8f60cb17e2373a031fbcbb401e8f361fde757a522f2dad76ee633",
+    "browser_cases": 152,
+    "browser_skipped": 0,
+    "browser_unexpected": 0,
+    "browser_flaky": 0,
+    "browser_retried": 0,
+    "visual_review": "desktop_light_dark_source_screenshots_inspected_mobile_layout_automated"
+  },
+  "notice": "Recorded byte provenance and task-local observations, not production admission or source authentication. Paths in this document are not fetched by the local panel. Only the seven retained files are imported; source/tool/stage/closure claims require separate review."
+}

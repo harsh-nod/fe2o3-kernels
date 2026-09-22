@@ -13,6 +13,12 @@ with complete retained binaries. It does not extend the publisher's eligibility
 grammar or qualify arbitrary instruction changes. Historical register-only or
 live-prefix results do not qualify this edit.
 
+The separate [final-native comparison lab](final-native-comparison-v1.md)
+explains how a read-only view joins the exact source/LLVM/report bytes with
+all four complete payloads and keeps declared high-water distinct from encoded
+capacity. Its exporter, full-site and desktop/mobile checks are qualified
+separately from the completed compiler/native run below.
+
 ## Recorded run and evidence boundary
 
 The run used compiler base `dc48d876cd5434e5d8e409a53177f8d43fe5a839`

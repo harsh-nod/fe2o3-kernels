@@ -6,6 +6,12 @@ inspection → Open ordinary source navigation**. It is separate from the
 synthetic Characteristic archive and does not change the curriculum baseline,
 maturity labels or `FE2O3_PIN`.
 
+For a separate source-authoring follow-on, the
+[const-u32 helper lab](const-u32-helper-promotion-v1.md) materializes one actual
+bitwise operation as a scalar const-generic assembly helper, then explicitly
+compiles new source variants. It uses a fresh compiler export, not this viewer's
+historical bundle, and does not add editing or compilation to this read-only UI.
+
 The compiler capture was produced at
 [70b3fe0057e18e16eaa568301d2743b1ca6c252a](https://github.com/harsh-nod/fe2o3/commit/70b3fe0057e18e16eaa568301d2743b1ca6c252a)
 with the existing pinned nightly and `gfx942:xnack-` diagnostic profile.

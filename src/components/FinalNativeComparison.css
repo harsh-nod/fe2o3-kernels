@@ -1,0 +1,13 @@
+.final-native-comparison { margin-block: 1.5rem; min-width: 0; }
+.final-native-scroll { overflow-x: auto; max-width: 100%; margin-block: 1rem; }
+.final-native-comparison table { border-collapse: collapse; width: 100%; }
+.final-native-comparison th, .final-native-comparison td { text-align: left; padding: .6rem; border-bottom: 1px solid currentColor; vertical-align: top; }
+.final-native-comparison button { cursor: pointer; padding: .35rem .6rem; }
+.final-native-comparison button[aria-pressed="true"] { font-weight: 700; outline: 2px solid currentColor; outline-offset: 2px; }
+.final-native-comparison pre { overflow-x: auto; max-height: 28rem; }
+.final-native-comparison code, .final-native-comparison dd { overflow-wrap: anywhere; }
+.final-native-comparison details { margin-block: .8rem; }
+.final-native-comparison dl > div { margin-block: .5rem; }
+.final-native-comparison dd { margin-inline-start: 1rem; }
+.final-native-boundary { padding-inline-start: .75rem; border-inline-start: 3px solid currentColor; }
+@media (max-width: 600px) { .final-native-comparison th, .final-native-comparison td { padding: .4rem; } }

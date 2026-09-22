@@ -42,6 +42,19 @@ const RecordedSourceComparison = lazy(async () => {
   };
 });
 
+const RecordedFinalNativeComparison = lazy(async () => {
+  const [{ FinalNativeComparison }, { default: evidence }] = await Promise.all([
+    import("./FinalNativeComparison"),
+    import("../../examples/source_instruction_native_comparison_v1.json"),
+  ]);
+  return {
+    default: function RetainedFinalNativeComparison() {
+      return <FinalNativeComparison evidence={evidence}
+        expectedJoinSha256="5230415719fa0c7c81473d5fea338d5f3a85c7a3a9a91fd55c3900e20165d162" />;
+    },
+  };
+});
+
 const RecordedAuthoringNavigation = lazy(async () => {
   const [{ AuthoringNavigation }, { AUTHORING_NAVIGATION_RETAINED_INPUT }] = await Promise.all([
     import("./AuthoringNavigation"),
@@ -81,6 +94,12 @@ const LocalRecordedWatchpoint = lazy(() =>
 const LocalRecordedOccurrences = lazy(() =>
   import("./RecordedRuntimeOccurrences").then((module) => ({
     default: module.RecordedRuntimeOccurrences,
+  })),
+);
+
+const LocalRecordedWatchSource = lazy(() =>
+  import("./RecordedWatchSourceObservation").then((module) => ({
+    default: module.RecordedWatchSourceObservation,
   })),
 );
 
@@ -150,11 +169,13 @@ function exactJson(value: unknown): string {
 export function SourceIsaAgentPage() {
   const [activeView, setActiveView] = useState(0);
   const [showSourceComparison, setShowSourceComparison] = useState(false);
+  const [showFinalNativeComparison, setShowFinalNativeComparison] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
   const [showWatchpoint, setShowWatchpoint] = useState(false);
+  const [showWatchSource, setShowWatchSource] = useState(false);
   const [showOccurrences, setShowOccurrences] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
@@ -210,6 +231,23 @@ export function SourceIsaAgentPage() {
         <div id="recorded-source-promotion-content">
           {showSourceComparison && <Suspense fallback={<p role="status">Loading retained source comparison…</p>}>
             <RecordedSourceComparison />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="final-native-comparison-heading">
+        <h2 id="final-native-comparison-heading">Compare source with final native bytes</h2>
+        <p>Inspect retained source, LLVM, and complete native payloads for an intentional XOR-to-OR edit
+          at O0 and O3. Declared registers and encoded descriptor capacity are separate observations,
+          not runtime register values, hardware execution, or a correctness proof.</p>
+        <button type="button" aria-expanded={showFinalNativeComparison}
+          aria-controls="final-native-comparison-content"
+          onClick={() => setShowFinalNativeComparison((open) => !open)}>
+          {showFinalNativeComparison ? "Close final native comparison" : "Open final native comparison"}
+        </button>
+        <div id="final-native-comparison-content">
+          {showFinalNativeComparison && <Suspense fallback={<p role="status">Checking retained native bytes…</p>}>
+            <RecordedFinalNativeComparison />
           </Suspense>}
         </div>
       </section>
@@ -293,6 +331,25 @@ export function SourceIsaAgentPage() {
         <div id="recorded-watchpoint-content">
           {showWatchpoint && <Suspense fallback={<p role="status">Loading recorded watchpoint viewer…</p>}>
             <LocalRecordedWatchpoint />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="recorded-watch-source-heading">
+        <h2 id="recorded-watch-source-heading">Follow source values across a watchpoint replay</h2>
+        <p>Keep the uncaptured watch stop, immediate post-write state and later source
+          checkpoints distinct. Imported CPU observations do not execute debugger controls
+          or establish source-to-SSA, physical-register or dynamic-activation identities.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/resource-watch-source-replay-v2.md"
+          target="_blank" rel="noreferrer">Watchpoint and source replay lab with exact retained files</a></p>
+        <button type="button" aria-expanded={showWatchSource}
+          aria-controls="recorded-watch-source-content"
+          onClick={() => setShowWatchSource(open => !open)}>
+          {showWatchSource ? "Close recorded watch/source replay" : "Open recorded watch/source replay"}
+        </button>
+        <div id="recorded-watch-source-content">
+          {showWatchSource && <Suspense fallback={<p role="status">Loading recorded watch/source replay…</p>}>
+            <LocalRecordedWatchSource />
           </Suspense>}
         </div>
       </section>

@@ -1,0 +1,22 @@
+.recorded-watch-source { min-width: 0; max-width: 100%; }
+.recorded-watch-source *, .recorded-watch-source *::before, .recorded-watch-source *::after { box-sizing: border-box; }
+.recorded-watch-source p, .recorded-watch-source dd, .recorded-watch-source dt, .recorded-watch-source code { overflow-wrap: anywhere; }
+.watch-source-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr)); gap: .8rem; }
+.watch-source-inputs label, .watch-source-inputs input, .watch-source-moment select { display: block; min-width: 0; max-width: 100%; width: 100%; }
+.watch-source-inputs small { display: block; }
+.watch-source-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-block: 1rem; }
+.watch-source-result, .watch-source-moment, .watch-source-result details, .watch-source-result fieldset { min-width: 0; max-width: 100%; }
+.watch-source-result fieldset { margin-block: 1rem; }
+.watch-source-result fieldset > label { display: flex; align-items: flex-start; gap: .45rem; margin-block: .6rem; overflow-wrap: anywhere; }
+.watch-source-result fieldset > label input { flex: 0 0 auto; margin-block-start: .25rem; }
+.watch-source-boundary { border-inline-start: .25rem solid currentColor; padding-inline-start: .8rem; }
+.watch-source-moment { border-block-start: 1px solid currentColor; padding-block: 1rem; }
+.watch-source-result pre { max-width: 100%; min-width: 0; overflow-x: auto; white-space: pre; padding: .75rem; border: 1px solid currentColor; }
+.watch-source-file-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 23rem), 1fr)); gap: .9rem; }
+.watch-source-file-facts > div { min-width: 0; }
+.watch-source-file-facts dd { margin-inline-start: 0; }
+@media (max-width: 40rem) {
+  .watch-source-actions { flex-direction: column; align-items: stretch; }
+  .watch-source-actions button { white-space: normal; }
+  .watch-source-inputs input { font-size: .9rem; }
+}

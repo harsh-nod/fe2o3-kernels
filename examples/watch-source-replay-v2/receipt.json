@@ -1,0 +1,802 @@
+{
+  "status": "passed",
+  "purpose": "existing-public-watchpoint-source-variable-resource-qualification",
+  "source": "crates/rustc-codegen-fe2o3/tests/fixtures/assembly-authoring-v30/src/lib.rs",
+  "source_sha256": "f6cdd5fc4a937979fd5d12e7fa199fd3590fae9cb8f303b680781f9ca5b7df5e",
+  "source_receipt": {
+    "bytes": 14368,
+    "sha256": "d69536cfa592aa2d81acca67e17e033988fedf717084b4aabd68abca047acf98",
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-baseline-actual-r1/receipt.json"
+  },
+  "bundle_sha256": "d351463825f487833f6e8dc5ccfaf80fd6a7b8b0754f7efbb43945e8c5e60129",
+  "bundle_identity": "d33767cb6ebce576387053bfebf2253b49e4683b99c849bfca229a26df41492d",
+  "canonical_kir_digest": "36d3e045a8d667351aec7fec33a943a8cfbe1d5d528723657d861497633bd59a",
+  "request_sha256": "1440cebfd18d500152090639c34021b319a75114b5af00f5faf1e9918f97369a",
+  "independent_result": {
+    "expected_u32": 469,
+    "output_words": 4,
+    "tail_canary_unchanged": true,
+    "hardware_observed": false
+  },
+  "stages": [
+    {
+      "name": "inspection",
+      "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase20-r2/debug/fe2o3-author",
+      "args": [
+        "inspect"
+      ],
+      "code": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "inspection.stdout",
+        "bytes": 2229,
+        "sha256": "edaabf89453a150c3f87e3fb8ff37248a371b30791bb24a2f6ca732b47cebca1"
+      },
+      "stderr": {
+        "path": "inspection.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "simulation",
+      "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase20-r2/debug/fe2o3-kir-sim",
+      "args": [
+        "--bundle-v6",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-baseline-actual-r1/base-v6.fe2sim",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-baseline-actual-r1/base-request.json"
+      ],
+      "code": 0,
+      "signal": null,
+      "error": null,
+      "stdout": {
+        "path": "simulation.stdout",
+        "bytes": 1155,
+        "sha256": "ed4539cfcda9de5fd859bf155f76c244874dacd88a551a5dd5d7da9082273fd8"
+      },
+      "stderr": {
+        "path": "simulation.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "selected_input_pins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/crates/rustc-codegen-fe2o3/tests/fixtures/assembly-authoring-v30/src/lib.rs",
+      "bytes": 957,
+      "sha256": "f6cdd5fc4a937979fd5d12e7fa199fd3590fae9cb8f303b680781f9ca5b7df5e",
+      "identity": [
+        "66307",
+        "172114171",
+        "957",
+        "33204",
+        "1790105657023930543",
+        "1790105657023930543",
+        "1"
+      ],
+      "cap": 262144
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-baseline-actual-r1/receipt.json",
+      "bytes": 14368,
+      "sha256": "d69536cfa592aa2d81acca67e17e033988fedf717084b4aabd68abca047acf98",
+      "identity": [
+        "66307",
+        "116964403",
+        "14368",
+        "33204",
+        "1790107458273496012",
+        "1790107458273496012",
+        "1"
+      ],
+      "cap": 1048576
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/Cargo.toml",
+      "bytes": 9409,
+      "sha256": "35068f0f925c3b81d34a599263f9a39aec369582bed17b076ee03cfe78a282f5",
+      "identity": [
+        "66307",
+        "172108443",
+        "9409",
+        "33204",
+        "1790105656822934738",
+        "1790105656822934738",
+        "1"
+      ],
+      "cap": 1048576
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/Cargo.lock",
+      "bytes": 94838,
+      "sha256": "cd3913faa7680f8f9163f7bf46cbf394d5436a6f8e152aef3e6950dfb1f28e36",
+      "identity": [
+        "66307",
+        "172108442",
+        "94838",
+        "33204",
+        "1790105656822934738",
+        "1790105656822934738",
+        "1"
+      ],
+      "cap": 1048576
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/rust-toolchain.toml",
+      "bytes": 160,
+      "sha256": "49eeb550dd57841add3be3442177e78f6f0668ffc4f31739ce78d75f8129b154",
+      "identity": [
+        "66307",
+        "172115420",
+        "160",
+        "33204",
+        "1790105657046930063",
+        "1790105657046930063",
+        "1"
+      ],
+      "cap": 1048576
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/crates/rustc-codegen-fe2o3/tests/fixtures/assembly-authoring-v30/Cargo.toml",
+      "bytes": 393,
+      "sha256": "0254d3c916651f91eb137b4de773dc1a98434f976ab4bb58b0c18f6f847086c9",
+      "identity": [
+        "66307",
+        "172114169",
+        "393",
+        "33204",
+        "1790105657023930543",
+        "1790105657023930543",
+        "1"
+      ],
+      "cap": 1048576
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/scripts/resource-watch-source-values-v2-smoke.mjs",
+      "bytes": 48631,
+      "sha256": "c896c752b232254896882759322af90fa011b61b14ec331c767447b1f1cebb89",
+      "identity": [
+        "66307",
+        "172134802",
+        "48631",
+        "33204",
+        "1790107087327193051",
+        "1790107087327193051",
+        "1"
+      ],
+      "cap": 262144
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/scripts/resource-query-v6-watchpoint.mjs",
+      "bytes": 7229,
+      "sha256": "c86587cfb60f32f5c35efa3f0c90f63429259f46ef28883e85b8519783cf69c7",
+      "identity": [
+        "66307",
+        "172115572",
+        "7229",
+        "33204",
+        "1790105657054929896",
+        "1790105657054929896",
+        "1"
+      ],
+      "cap": 262144
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase20/scripts/resource-query-v6-watchpoint.mjs",
+      "bytes": 7229,
+      "sha256": "c86587cfb60f32f5c35efa3f0c90f63429259f46ef28883e85b8519783cf69c7",
+      "identity": [
+        "66307",
+        "172115572",
+        "7229",
+        "33204",
+        "1790105657054929896",
+        "1790105657054929896",
+        "1"
+      ],
+      "cap": 262144
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-baseline-actual-r1/base-v6.fe2sim",
+      "bytes": 35576,
+      "sha256": "d351463825f487833f6e8dc5ccfaf80fd6a7b8b0754f7efbb43945e8c5e60129",
+      "identity": [
+        "66307",
+        "116964359",
+        "35576",
+        "33152",
+        "1790107442226827851",
+        "1790107442226827851",
+        "1"
+      ],
+      "cap": 8388608
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase20-watch-source-baseline-actual-r1/base-request.json",
+      "bytes": 528,
+      "sha256": "1440cebfd18d500152090639c34021b319a75114b5af00f5faf1e9918f97369a",
+      "identity": [
+        "66307",
+        "116964379",
+        "528",
+        "33204",
+        "1790107442273826879",
+        "1790107442273826879",
+        "1"
+      ],
+      "cap": 65536
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase20-r2/debug/fe2o3-author",
+      "bytes": 8365816,
+      "sha256": "b9aad939f8135f474d5122cff1260ceb4acca2400be1f929a9d4feb6ab1f8d00",
+      "identity": [
+        "66307",
+        "172126790",
+        "8365816",
+        "33277",
+        "1790106006368717999",
+        "1790106006383717689",
+        "2"
+      ],
+      "cap": 536870912
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase20-r2/debug/fe2o3-kir-sim",
+      "bytes": 12149928,
+      "sha256": "d6e7620f2ee7247af6b0cace4a0a810d945a18ff9e11b8ecca65f4b07f22d2b3",
+      "identity": [
+        "66307",
+        "172126812",
+        "12149928",
+        "33277",
+        "1790106006018725219",
+        "1790106006029724992",
+        "2"
+      ],
+      "cap": 536870912
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase20-r2/debug/fe2o3-debug",
+      "bytes": 59703904,
+      "sha256": "e31d0bc34182e2321d30f71b46e3a74c26e960ddb5078c2e97662de62b1111e4",
+      "identity": [
+        "66307",
+        "172126817",
+        "59703904",
+        "33277",
+        "1790106006279719835",
+        "1790106006326718865",
+        "2"
+      ],
+      "cap": 536870912
+    }
+  ],
+  "limits": {
+    "source": 262144,
+    "json": 1048576,
+    "bundle": 8388608,
+    "tool": 536870912,
+    "inputBytes": 2147483648,
+    "line": 65536,
+    "requests": 262144,
+    "responses": 4194304,
+    "stderr": 65536,
+    "excerpt": 262144,
+    "retained": 8388608,
+    "failureReserve": 65536,
+    "commands": 128,
+    "pages": 32,
+    "values": 64,
+    "stageMs": 30000,
+    "debuggerMs": 120000,
+    "replyMs": 15000,
+    "drainMs": 10000,
+    "totalMs": 180000
+  },
+  "full_pairs": 41,
+  "watchpoint_request_ids": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    7,
+    10
+  ],
+  "source_request_ids": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40
+  ],
+  "excerpts": [
+    {
+      "path": "watchpoint.requests.jsonl",
+      "bytes": 1862,
+      "sha256": "ecbd8eb168a1855a73c8ec0729422d7a3ec540d35cbcf467181da5148add7ff0"
+    },
+    {
+      "path": "watchpoint.responses.jsonl",
+      "bytes": 14121,
+      "sha256": "7ed636b312ee0f5d22ef029845a277d0ef69d535d52eb6a5a7640637606b33af"
+    },
+    {
+      "path": "resource-watch-source-values.requests.jsonl",
+      "bytes": 6951,
+      "sha256": "01d419509f19868ef562dcff6cb97060271300fa4ce6aafa989652dc2143a65f"
+    },
+    {
+      "path": "resource-watch-source-values.responses.jsonl",
+      "bytes": 57363,
+      "sha256": "ed9354d371bc84521fe04c5d7e3f97c892efb1fe008d76ec68f855f5ff05039b"
+    }
+  ],
+  "refusals": [
+    {
+      "request_id": 6,
+      "status": "unavailable",
+      "reason": "checkpoint_not_captured"
+    },
+    {
+      "request_id": 9,
+      "status": "unavailable",
+      "reason": "checkpoint_not_captured"
+    },
+    {
+      "request_id": 20,
+      "status": "error",
+      "reason": "invalid_cursor"
+    },
+    {
+      "request_id": 30,
+      "status": "error",
+      "reason": "stale_revision"
+    },
+    {
+      "request_id": 31,
+      "status": "error",
+      "reason": "invalid_cursor"
+    }
+  ],
+  "watchpoint_source_query_request_id": 6,
+  "immediate_checkpoint_source_query_request_id": 9,
+  "immediate_checkpoint_anchor": {
+    "cursor": {
+      "configuration_identity": "14c456f56641704ed686d3d8f2d64ed9376097366492a3613318006b877da264",
+      "event_sequence": 33,
+      "state_revision": 4
+    },
+    "scope": {
+      "level": "lane",
+      "workgroup": [
+        0,
+        0,
+        0
+      ],
+      "wave": 0,
+      "lane": 0,
+      "logical_workitem": [
+        0,
+        0,
+        0
+      ],
+      "active_mask": 15,
+      "wave_width": 32,
+      "interpretation": "logical_visualization"
+    },
+    "site": {
+      "kir": {
+        "function_ordinal": 0,
+        "block_ordinal": 11,
+        "point": {
+          "kind": "operation",
+          "operation_ordinal": 0
+        }
+      },
+      "source": {
+        "status": "resolved",
+        "location": {
+          "map_identity": "eaa01546cbaf906a8ef6a168baecb275aefdaeda5e715ce6e6fdeebc80bbd103",
+          "provenance": "compiler_bundle_bound",
+          "file_identity": "caeef6ab260010d823ad231d794e0c0497e9f83296fc77bfbcbe3798c4114f87",
+          "byte_start": 931,
+          "byte_end": 947
+        }
+      }
+    }
+  },
+  "raw_transcripts": [
+    {
+      "path": "debug-requests.jsonl",
+      "bytes": 10372,
+      "sha256": "d899a766ecb5025478ea75333f9f863adcd51fb8693283a58d0697835972be51"
+    },
+    {
+      "path": "debug-responses.jsonl",
+      "bytes": 76625,
+      "sha256": "59c2d3d7839c5e8f2b51a6a18004eedc63e10312b11a561112d822868e9a295b"
+    }
+  ],
+  "observations": {
+    "path": "observations.json",
+    "bytes": 61922,
+    "sha256": "fd420c5a967d6529fe176c37418828007d733e67e421493d81d3ddf619dc1056"
+  },
+  "independent_result_file": {
+    "path": "independent-result.json",
+    "bytes": 110,
+    "sha256": "6a3c167327ef2b3b98c25a4f3640facba47015ca4b62f960d651e1f9b49933ff"
+  },
+  "debugger_stderr": {
+    "path": "debug-stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "checkpoints": [
+    {
+      "control_request_id": 11,
+      "checkpoint_anchor": {
+        "cursor": {
+          "configuration_identity": "14c456f56641704ed686d3d8f2d64ed9376097366492a3613318006b877da264",
+          "event_sequence": 34,
+          "state_revision": 5
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 1,
+          "logical_workitem": [
+            1,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 0,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "eaa01546cbaf906a8ef6a168baecb275aefdaeda5e715ce6e6fdeebc80bbd103",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "caeef6ab260010d823ad231d794e0c0497e9f83296fc77bfbcbe3798c4114f87",
+              "byte_start": 377,
+              "byte_end": 402
+            }
+          }
+        }
+      },
+      "source_anchor": {
+        "cursor": {
+          "configuration_identity": "14c456f56641704ed686d3d8f2d64ed9376097366492a3613318006b877da264",
+          "event_sequence": 34,
+          "state_revision": 5
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 1,
+          "logical_workitem": [
+            1,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 0,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "eaa01546cbaf906a8ef6a168baecb275aefdaeda5e715ce6e6fdeebc80bbd103",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "caeef6ab260010d823ad231d794e0c0497e9f83296fc77bfbcbe3798c4114f87",
+              "byte_start": 377,
+              "byte_end": 402
+            }
+          }
+        },
+        "frame": 1,
+        "occurrence": 1
+      },
+      "source_request_ids": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "ssa_count": 3,
+      "source_count": 12
+    },
+    {
+      "control_request_id": 21,
+      "checkpoint_anchor": {
+        "cursor": {
+          "configuration_identity": "14c456f56641704ed686d3d8f2d64ed9376097366492a3613318006b877da264",
+          "event_sequence": 31,
+          "state_revision": 6
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 0,
+            "block_ordinal": 11,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "eaa01546cbaf906a8ef6a168baecb275aefdaeda5e715ce6e6fdeebc80bbd103",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "caeef6ab260010d823ad231d794e0c0497e9f83296fc77bfbcbe3798c4114f87",
+              "byte_start": 931,
+              "byte_end": 947
+            }
+          }
+        }
+      },
+      "source_anchor": {
+        "cursor": {
+          "configuration_identity": "14c456f56641704ed686d3d8f2d64ed9376097366492a3613318006b877da264",
+          "event_sequence": 31,
+          "state_revision": 6
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 0,
+          "logical_workitem": [
+            0,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 0,
+            "block_ordinal": 11,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "eaa01546cbaf906a8ef6a168baecb275aefdaeda5e715ce6e6fdeebc80bbd103",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "caeef6ab260010d823ad231d794e0c0497e9f83296fc77bfbcbe3798c4114f87",
+              "byte_start": 931,
+              "byte_end": 947
+            }
+          }
+        },
+        "frame": 1,
+        "occurrence": 1
+      },
+      "source_request_ids": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "ssa_count": 18,
+      "source_count": 12
+    },
+    {
+      "control_request_id": 32,
+      "checkpoint_anchor": {
+        "cursor": {
+          "configuration_identity": "14c456f56641704ed686d3d8f2d64ed9376097366492a3613318006b877da264",
+          "event_sequence": 34,
+          "state_revision": 7
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 1,
+          "logical_workitem": [
+            1,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 0,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "eaa01546cbaf906a8ef6a168baecb275aefdaeda5e715ce6e6fdeebc80bbd103",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "caeef6ab260010d823ad231d794e0c0497e9f83296fc77bfbcbe3798c4114f87",
+              "byte_start": 377,
+              "byte_end": 402
+            }
+          }
+        }
+      },
+      "source_anchor": {
+        "cursor": {
+          "configuration_identity": "14c456f56641704ed686d3d8f2d64ed9376097366492a3613318006b877da264",
+          "event_sequence": 34,
+          "state_revision": 7
+        },
+        "scope": {
+          "level": "lane",
+          "workgroup": [
+            0,
+            0,
+            0
+          ],
+          "wave": 0,
+          "lane": 1,
+          "logical_workitem": [
+            1,
+            0,
+            0
+          ],
+          "active_mask": 15,
+          "wave_width": 32,
+          "interpretation": "logical_visualization"
+        },
+        "site": {
+          "kir": {
+            "function_ordinal": 0,
+            "block_ordinal": 0,
+            "point": {
+              "kind": "operation",
+              "operation_ordinal": 0
+            }
+          },
+          "source": {
+            "status": "resolved",
+            "location": {
+              "map_identity": "eaa01546cbaf906a8ef6a168baecb275aefdaeda5e715ce6e6fdeebc80bbd103",
+              "provenance": "compiler_bundle_bound",
+              "file_identity": "caeef6ab260010d823ad231d794e0c0497e9f83296fc77bfbcbe3798c4114f87",
+              "byte_start": 377,
+              "byte_end": 402
+            }
+          }
+        },
+        "frame": 1,
+        "occurrence": 1
+      },
+      "source_request_ids": [
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "ssa_count": 3,
+      "source_count": 12
+    }
+  ],
+  "raw_line_preservation": true,
+  "watchpoint_snapshot": "unavailable_not_captured",
+  "values_at_watchpoint_stop": "not_supplied",
+  "immediate_postwrite_source_values": "unavailable_checkpoint_not_captured",
+  "source_and_memory_belong_to": "distinct_cross_invocation_operation_checkpoints_only",
+  "source_checkpoint_lanes": [
+    1,
+    0,
+    1
+  ],
+  "source_control_counts": [
+    1,
+    2,
+    2
+  ],
+  "frame_identity": "static_stack_depth_not_dynamic_activation",
+  "source_to_ssa_mapping": "not_supplied",
+  "allocation_reuse": "not_represented",
+  "dynamic_helper_activation": "not_represented",
+  "source_authentication": false,
+  "hardware_observed": false,
+  "performance_prediction": false,
+  "elapsed_ms": 124
+}
