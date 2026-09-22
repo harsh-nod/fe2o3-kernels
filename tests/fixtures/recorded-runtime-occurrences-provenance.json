@@ -1,0 +1,225 @@
+{
+  "schema": "retained-runtime-occurrence-lab-provenance-v1",
+  "capture": {
+    "kind": "actual_ordinary_rust_cpu_run",
+    "host": "mi350",
+    "firstGuardSampleUtc": "2026-09-21T23:51:53.450Z",
+    "lastGuardSampleUtc": "2026-09-21T23:52:15.578Z",
+    "runnerCheckout": "9d4387d2e30a92e9c2d0eea1117f1986d1dd16cf",
+    "runnerCheckoutMeaning": "clean runner and source dependency checkout; not a rebuild attestation for retained executables",
+    "runId": "2b84054494b97c9b6467f82c7989e5dee08d1ec127c7a3e9da6f518da84c4669",
+    "receipt": {
+      "bytes": 220199,
+      "sha256": "85c967336810e178817fb4ed80419a81b741201ba65cc8d5ea246c642747df10"
+    },
+    "stages": [
+      {
+        "name": "git-head",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "git-status",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "rustc-version",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "cache-before-lock",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "lock",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "cache-before-export",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "export",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "cache-after-export",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "observe",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "inspect",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "operations-0",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      },
+      {
+        "name": "cache-after-observer",
+        "code": 0,
+        "signal": null,
+        "reason": null
+      }
+    ],
+    "guard": {
+      "samples": 30,
+      "peakChargedBytes": 49641075061,
+      "limits": {
+        "whole_root_bytes": 51539607552,
+        "free_disk_bytes": 42949672960,
+        "available_ram_bytes": 68719476736,
+        "total_ms": 600000,
+        "scope_end_utc": "2026-09-22T00:30:00.000Z"
+      },
+      "firstFailure": null
+    }
+  },
+  "source": {
+    "bytes": 718,
+    "sha256": "8dde544187f900e690a74bc550bca6c00ce75f48149b867d39f27d9841875725",
+    "utf8": "#![no_std]\n\nuse fe2o3_device::{DisjointSlice, kernel, thread};\n\n#[inline(never)]\nfn mix(value: u32, salt: u32) -> u32 {\n    (value ^ salt) & 0xffff\n}\n\n/// Acceptance fixture, not an alternate frontend or authored-assembly kernel.\n#[kernel(typed, launch(required = [64, 1, 1], max = [64, 1, 1]), control_flow(loop_bounds(3)))]\npub fn loop_helper(mut out: DisjointSlice<u32>, seed: u32, salt: u32, rounds: u32) {\n    let trips = rounds % 4;\n    let mut iteration = 0_u32;\n    let mut value = seed;\n    while iteration < trips {\n        value = mix(value, salt ^ iteration);\n        iteration += 1;\n    }\n    let index = thread::index_1d();\n    if let Some(output) = out.get_mut(index) {\n        *output = value;\n    }\n}\n",
+    "fileIdentity": "e2eb7cc4098bc8f33e5dd6adafb787b3f360337b568c473aaf174a414ce2d1e7"
+  },
+  "report": {
+    "bytes": 39809,
+    "sha256": "e0ab244eaf7fb0667b635dbe48408c1c51226ae5c38eb7766f1eab8aceb55c5c"
+  },
+  "bundle": {
+    "bytes": 38358,
+    "sha256": "73bd318be3af7bf1b98d093fc4bf95ca98ec4055b168b696d0a7a7abc5a57c75"
+  },
+  "sameRunEvidence": {
+    "sourceCensus": {
+      "bytes": 4739,
+      "sha256": "a2f9ff448f635219b219d666767ba10ad8221e067788fe4dfd071aeba267861e"
+    },
+    "inspection": {
+      "bytes": 2230,
+      "sha256": "cebf4d3030403ec425be327b203f719acc46ed124c2a85ca76bbd47bd46af1b9"
+    },
+    "operationPage": {
+      "bytes": 17468,
+      "sha256": "b15dafcb794f485a77aa344a8342bedfc7210b259dc9d7450715f81aac9c544d"
+    }
+  },
+  "selectedRetainedTools": [
+    {
+      "role": "fe2o3-export-sim",
+      "bytes": 736480,
+      "sha256": "9162800f2bfb66a3b891a4f3b26a4c51316a3a0d9732ea4e5232511fe213a28b"
+    },
+    {
+      "role": "fe2o3-author",
+      "bytes": 8303584,
+      "sha256": "e3150d10e34781d1189971226ef8372f228930d8b5ddb267e92c93ca03b9e480"
+    },
+    {
+      "role": "fe2o3-rustc-extract",
+      "bytes": 209064,
+      "sha256": "adaf7de2946f051548758915b4be39ecd832a1b61162330cf93a7dbcc1c724bd"
+    },
+    {
+      "role": "librustc_codegen_fe2o3.so",
+      "bytes": 225216336,
+      "sha256": "99e19079a4105c5699b71e40546378cecc820429a2f1b327ad5e3648ebc93598"
+    },
+    {
+      "role": "observer",
+      "bytes": 9829832,
+      "sha256": "8d20d2c570ce10312045ede4a7199bd352eb6f98e75abd06792b44af6ca55f29"
+    },
+    {
+      "role": "rustc",
+      "bytes": 645760,
+      "sha256": "08dfef109ad22d90556dbd2f964543cd93843dcd75a2e9792c173667392a1950"
+    },
+    {
+      "role": "rustc_driver",
+      "bytes": 152936640,
+      "sha256": "a0aa61a461841224222b0064f9d77a84fe6d3410745d3d96ceaade6ee679cade"
+    },
+    {
+      "role": "cargo",
+      "bytes": 42375992,
+      "sha256": "c9ad606cb1dbb4a65aa27c80be88ed61eb2b811b6450eeec6794f60ed78b94a3"
+    },
+    {
+      "role": "node",
+      "bytes": 124819136,
+      "sha256": "e6ec2c188d83d813f81f2de8aea084d74dce603ac1abedd0a30ad941b10087b2"
+    }
+  ],
+  "observations": {
+    "contextualRuns": 6,
+    "optOutRuns": 6,
+    "rowsPerCase": [
+      116,
+      116,
+      180,
+      180,
+      308,
+      308
+    ],
+    "helperActivationsPerCase": [
+      0,
+      0,
+      4,
+      4,
+      12,
+      12
+    ],
+    "runtimeCallCoordinate": [
+      0,
+      1,
+      1
+    ],
+    "authoringCallCoordinate": [
+      0,
+      3,
+      1
+    ],
+    "optOutEquality": "producer_reported_only; opt-out rows are absent"
+  },
+  "authority": {
+    "sourceAuthenticated": false,
+    "compilerResumeAuthority": false,
+    "hardwareObserved": false,
+    "performancePrediction": false,
+    "freshToolBuild": false,
+    "authenticatedRuntimeClosure": false,
+    "portableDebuggerSession": false
+  },
+  "limitations": [
+    "Selected tool bytes were measured before and after; dependencies and full runtime closure are not authenticated.",
+    "Same-run source census attribution is not source-to-SSA ownership.",
+    "Only the raw observer stdout is imported. The separate operation page does not create source maps for runtime rows.",
+    "Rows contain no checkpoint memory, full call stacks, physical VGPR state or GPU timestamps.",
+    "This provenance summary is not a signature. The full receipt and binary bundle are retained on the capture host, not embedded in the site.",
+    "The lab accepts one exact byte-pinned recording; matching hashes do not authenticate its producer."
+  ]
+}

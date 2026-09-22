@@ -1,0 +1,64 @@
+.recorded-runtime-occurrences,
+.runtime-occurrence-result,
+.runtime-occurrence-case,
+.runtime-occurrence-selection,
+.runtime-occurrence-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.recorded-runtime-occurrences p,
+.recorded-runtime-occurrences h3,
+.recorded-runtime-occurrences h4 { margin: 0; }
+.recorded-runtime-occurrences label { display: grid; gap: .4rem; min-width: 0; }
+.recorded-runtime-occurrences select,
+.recorded-runtime-occurrences input { width: 100%; min-width: 0; max-width: 100%; min-height: 2.75rem; }
+.recorded-runtime-occurrences select {
+  color: inherit;
+  background: var(--surface, Canvas);
+  border: 1px solid currentColor;
+  border-radius: .4rem;
+  padding: .4rem;
+}
+.runtime-occurrence-controls,
+.runtime-occurrence-provenance {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: 1rem;
+  min-width: 0;
+}
+.runtime-occurrence-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .65rem 1rem;
+  margin: 0;
+}
+.runtime-occurrence-facts > div,
+.runtime-occurrence-provenance > div { min-width: 0; overflow-wrap: anywhere; }
+.runtime-occurrence-facts dt,
+.runtime-occurrence-provenance dt { font-weight: 650; }
+.runtime-occurrence-facts dd,
+.runtime-occurrence-provenance dd { margin: .2rem 0 0; }
+.runtime-occurrence-provenance { margin: 0; }
+.runtime-occurrence-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+.recorded-runtime-occurrences button { min-height: 2.75rem; white-space: normal; }
+.runtime-occurrence-boundary,
+.runtime-occurrence-row { border: 1px solid currentColor; border-radius: .5rem; padding: .85rem; }
+.runtime-occurrence-row { gap: .65rem; scroll-margin-top: 6rem; }
+.runtime-occurrence-row .runtime-occurrence-boundary { padding: .6rem; }
+.recorded-runtime-occurrences pre {
+  max-width: 100%;
+  max-height: 20rem;
+  margin: 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.recorded-runtime-occurrences :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 40rem) {
+  .runtime-occurrence-actions { flex-direction: column; align-items: stretch; }
+  .runtime-occurrence-row { padding: .65rem; font-size: .88rem; }
+  .runtime-occurrence-facts { gap: .5rem .65rem; }
+}

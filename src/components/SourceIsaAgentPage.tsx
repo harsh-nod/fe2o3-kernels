@@ -78,6 +78,12 @@ const LocalRecordedWatchpoint = lazy(() =>
   })),
 );
 
+const LocalRecordedOccurrences = lazy(() =>
+  import("./RecordedRuntimeOccurrences").then((module) => ({
+    default: module.RecordedRuntimeOccurrences,
+  })),
+);
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -149,6 +155,7 @@ export function SourceIsaAgentPage() {
   const [showResourceImport, setShowResourceImport] = useState(false);
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
   const [showWatchpoint, setShowWatchpoint] = useState(false);
+  const [showOccurrences, setShowOccurrences] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
   return (
@@ -286,6 +293,25 @@ export function SourceIsaAgentPage() {
         <div id="recorded-watchpoint-content">
           {showWatchpoint && <Suspense fallback={<p role="status">Loading recorded watchpoint viewer…</p>}>
             <LocalRecordedWatchpoint />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="recorded-occurrences-heading">
+        <h2 id="recorded-occurrences-heading">Follow repeated operations and helper calls</h2>
+        <p>Browse actual retained CPU rows from an ordinary Rust loop. Keep cases, logical
+          invocations, activations and operation attempts distinct. These rows do not
+          contain checkpoint memory, physical registers or a live debugger connection.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/recorded-runtime-occurrence-lab-v1.md"
+          target="_blank" rel="noreferrer">Loop and helper occurrence lab and exact retained file</a></p>
+        <button type="button" aria-expanded={showOccurrences}
+          aria-controls="recorded-occurrences-content"
+          onClick={() => setShowOccurrences(open => !open)}>
+          {showOccurrences ? "Close recorded occurrences" : "Open recorded occurrences"}
+        </button>
+        <div id="recorded-occurrences-content">
+          {showOccurrences && <Suspense fallback={<p role="status">Loading recorded occurrences…</p>}>
+            <LocalRecordedOccurrences />
           </Suspense>}
         </div>
       </section>
