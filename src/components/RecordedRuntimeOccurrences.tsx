@@ -106,11 +106,19 @@ function InvocationView({ recording, selected, invocation }: {
   const attempts = selected.attempts.filter(item => item.invocation === invocation &&
     (activation === "all" || item.activation === Number(activation)));
   const chosenAttempt = attempts.find(item => item.key === attempt);
-  const rows = selected.rows.filter(row => row.invocation === invocation &&
+  const invocationRows = selected.rows.filter(row => row.invocation === invocation);
+  const rows = invocationRows.filter(row =>
     (activation === "all" || row.activation === Number(activation)) &&
     (attempt === "all" || (chosenAttempt && row.activation === chosenAttempt.activation && row.attempt === chosenAttempt.attempt)) &&
     (phase === "all" || row.phase === phase));
   const row = rows[position];
+  const navigationHelper = helper ?? helpers.find(item => row &&
+    (row.activation === item.activation || row.ordinal === item.callBeforeRow || row.ordinal === item.callAfterRow));
+  function jumpToRecordedOrdinal(ordinal: number) {
+    const targetPosition = invocationRows.findIndex(item => item.ordinal === ordinal);
+    if (!Number.isSafeInteger(ordinal) || targetPosition < 0) return;
+    setActivation("all"); setAttempt("all"); setPhase("all"); setPosition(targetPosition);
+  }
   return <div className="runtime-occurrence-selection">
     <p aria-label="Helper occurrence count">{helpers.length} helper activations for this invocation.
       {helpers.length === 0 && " No helper activation was recorded in this zero-round case."}</p>
@@ -142,6 +150,22 @@ function InvocationView({ recording, selected, invocation }: {
         </select>
       </label>
     </div>
+    {navigationHelper && <div className="runtime-occurrence-selection runtime-occurrence-boundary"
+      role="group" aria-label="Recorded helper/caller boundary navigation">
+      <p>Recorded boundaries for helper activation {navigationHelper.activation}, case {selected.index},
+        logical invocation {invocation}. Each jump clears the activation, operation-attempt and phase filters.
+        This changes the displayed row only; it is not live stepping or a full call stack.</p>
+      <div className="runtime-occurrence-actions">
+        {[
+          { label: "Jump to recorded caller before", ordinal: navigationHelper.callBeforeRow },
+          { label: "Jump to recorded caller after", ordinal: navigationHelper.callAfterRow },
+          { label: "Jump to recorded helper first", ordinal: navigationHelper.firstRow },
+          { label: "Jump to recorded helper last", ordinal: navigationHelper.lastRow },
+        ].map(target => <button key={target.label} type="button"
+          disabled={!invocationRows.some(item => item.ordinal === target.ordinal)}
+          onClick={() => jumpToRecordedOrdinal(target.ordinal)}>{target.label}</button>)}
+      </div>
+    </div>}
     <div className="runtime-occurrence-actions" aria-label="Recorded row scrubber">
       <button type="button" disabled={!row || position === 0} onClick={() => setPosition(value => value - 1)}>Previous recorded row</button>
       <button type="button" disabled={!row || position + 1 >= rows.length} onClick={() => setPosition(value => value + 1)}>Next recorded row</button>

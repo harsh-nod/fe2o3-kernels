@@ -52,6 +52,23 @@ A row is before-operation, after-operation or write-committed. Only a write-comm
 
 A schedule decision ordinal orders recorded CPU decisions; it is not a timestamp or GPU cycle count. An activation token is not a complete call stack, source iteration variable or authenticated debugger frame ID. Logical invocation indices here do not describe physical lanes or wave residency.
 
+## Navigate a helper's caller boundary
+
+Choose the rounds-3 canonical case and logical invocation 0, then select an observed helper activation. The **Recorded helper/caller boundary navigation** group identifies that helper activation, case and invocation. It also appears when the selected row belongs to that helper or is its exact recorded caller-before/after row.
+
+Follow the four recorded boundaries:
+
+1. **Jump to recorded caller before** selects the caller's before-operation row for this helper occurrence.
+2. **Jump to recorded helper first** selects this helper activation's first recorded row.
+3. **Jump to recorded helper last** selects this helper activation's last recorded row.
+4. **Jump to recorded caller after** selects the matching caller after-operation row.
+
+Each jump clears the activation, operation-attempt and phase filters, but stays in the same case and logical invocation. The selected row's original ordinal is preserved; it is not renumbered to its position in a filtered list. The resulting row retains the same helper-instance navigation, so you can move between these boundaries without reconstructing the relationship yourself.
+
+Repeat with another helper activation and with the seeded-71 case. The seeded recording can place an invocation's rows at a nonzero original ordinal. Filtered views can leave gaps between displayed ordinals; neither fact means events were invented or lost. Return to rounds 0: it has no helper activation and must not display a helper/caller navigation group. Unrelated root rows also have no such group.
+
+These buttons change only the displayed recorded row. They do not run code, step a live process, create a checkpoint, recover a full call stack or map the raw runtime BlockId to an authoring roster position. Use the raw-file view to inspect the unchanged recording and the selected-row projection to inspect the current occurrence.
+
 ## What the lab can and cannot tell you
 
 The importer rejects malformed or duplicate-key JSON, wrong hashes, missing/extra cases, out-of-order attempts, mismatched before/after sites, ambiguous helper/caller joins, missing helper operations and inconsistent committed writes. These are recording-consistency checks, not proof that arbitrary kernels are correct.
@@ -77,3 +94,9 @@ Receipt: 220,199 bytes, SHA256 `85c967336810e178817fb4ed80419a81b741201ba65cc8d5
 The browser accepts at most 512 KiB, six cases, 1,024 rows per case and 4,096 total rows. It displays one selected row at a time. Matching hashes establish byte consistency, not who produced a file or whether it is trusted.
 
 This is a bounded loop/helper visualization increment toward V2/V5. It does not complete the full replay, hardware or curriculum milestones.
+
+## Related authoring lab
+
+The [source-promotion lab](source-promotion-lab-v1.md) covers a separate bounded
+Rust-to-ordered-assembly authoring workflow. This viewer's loop/helper recording
+is not a trace of that bitselect kernel, and navigation never compiles it.

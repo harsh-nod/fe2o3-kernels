@@ -25,6 +25,7 @@ it("starts empty with explicit local-file, import and cancellation controls", ()
   expect(screen.getByRole("status")).toHaveTextContent("No runtime occurrence is displayed");
   expect(screen.getByText(/at most 512 KiB/u)).toBeInTheDocument();
   expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+  expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
   expect(screen.queryByRole("region", { name: "Selected recorded row" })).not.toBeInTheDocument();
 });
 
@@ -37,6 +38,7 @@ it("imports exact retained bytes, defaults to the zero-round truth, and has no n
   expect(within(cases).getAllByRole("option")).toHaveLength(6);
   expect(screen.getByLabelText("Helper occurrence count")).toHaveTextContent("0 helper activations");
   expect(screen.getByLabelText("Helper occurrence count")).toHaveTextContent("No helper activation was recorded");
+  expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
   expect(screen.getByRole("combobox", { name: "Logical invocation (report-local)" })).toHaveValue("0");
   expect(row()).toHaveTextContent("Before operation");
   expect(screen.getByLabelText("Filtered row count")).toHaveTextContent("original ordinal 0");
@@ -110,6 +112,8 @@ it("shows the full original file verbatim and resets all selections on same-byte
   const user = userEvent.setup(); render(<RecordedRuntimeOccurrences />); await imported(user);
   await user.selectOptions(screen.getByRole("combobox", { name: "Recorded occurrence case" }), "5");
   await user.selectOptions(screen.getByRole("combobox", { name: "Logical invocation (report-local)" }), "2");
+  await user.selectOptions(screen.getByRole("combobox", { name: "Activation (report-local)" }), "4");
+  await user.click(screen.getByRole("button", { name: "Jump to recorded caller after" }));
   await user.click(screen.getByRole("button", { name: "Show original occurrence report" }));
   expect(screen.getByLabelText("Original occurrence report").textContent).toBe(raw);
   await user.click(screen.getByRole("button", { name: "Import recorded occurrences" }));
@@ -117,8 +121,10 @@ it("shows the full original file verbatim and resets all selections on same-byte
   expect(screen.getByRole("combobox", { name: "Logical invocation (report-local)" })).toHaveValue("0");
   expect(screen.queryByLabelText("Original occurrence report")).not.toBeInTheDocument();
   expect(screen.getByLabelText("Filtered row count")).toHaveTextContent("original ordinal 0");
+  expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
   await user.upload(screen.getByLabelText("Occurrence report JSON"), file(raw, "same-bytes-new-file.json"));
   expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+  expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
   await user.click(screen.getByRole("button", { name: "Import recorded occurrences" }));
   expect(await screen.findByRole("combobox", { name: "Recorded occurrence case" })).toHaveValue("0");
 });
@@ -127,6 +133,7 @@ it("clears stale data before refusing replacement bytes and resets selection and
   const user = userEvent.setup(); render(<RecordedRuntimeOccurrences />); await imported(user);
   await user.upload(screen.getByLabelText("Occurrence report JSON"), file("{}\n", "wrong.json"));
   expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+  expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
   await user.click(screen.getByRole("button", { name: "Import recorded occurrences" }));
   expect(await screen.findByRole("alert")).toHaveTextContent("Import refused");
   expect(screen.queryByRole("region", { name: "Selected recorded row" })).not.toBeInTheDocument();
@@ -152,6 +159,7 @@ it("refuses oversize files before reading and rejects malformed UTF-8 or a BOM",
     await user.click(screen.getByRole("button", { name: "Import recorded occurrences" }));
     expect(await screen.findByRole("alert")).toHaveTextContent("Import refused");
     expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
   }
 });
 
@@ -175,6 +183,7 @@ it("cancels the actual pending FileReader rather than only hiding its result", a
   expect(aborts).toBe(1);
   expect(screen.getByRole("status")).toHaveTextContent("Import cancelled");
   expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+  expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
 });
 
 it("ignores a cancelled parser's late success after a newer import and selection", async () => {
@@ -193,8 +202,14 @@ it("ignores a cancelled parser's late success after a newer import and selection
   await user.click(screen.getByRole("button", { name: "Import recorded occurrences" }));
   const cases = await screen.findByRole("combobox", { name: "Recorded occurrence case" });
   await user.selectOptions(cases, "4");
+  await user.selectOptions(screen.getByRole("combobox", { name: "Activation (report-local)" }), "4");
+  await user.click(screen.getByRole("button", { name: "Jump to recorded caller after" }));
+  const jumpedSelection = screen.getByLabelText("Filtered row count").textContent;
   await act(async () => { resolveOld(ready); await Promise.resolve(); });
   expect(cases).toHaveValue("4");
+  expect(screen.getByLabelText("Filtered row count").textContent).toBe(jumpedSelection);
+  expect(screen.getByRole("group", { name: "Recorded helper/caller boundary navigation" }))
+    .toHaveTextContent("helper activation 4, case 4");
   expect(screen.queryByRole("alert")).not.toBeInTheDocument();
 });
 
@@ -210,6 +225,7 @@ it("reset ignores a late parser failure and leaves no previous selection", async
   await act(async () => { rejectOld(new Error("old rejected import")); await Promise.resolve(); });
   expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+  expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
   expect(screen.getByRole("status")).toHaveTextContent("Reset complete");
 });
 
@@ -226,3 +242,66 @@ it("unmount aborts pending parser work and discards its later resolution", async
   view.unmount(); expect(signal.aborted).toBe(true);
   await act(async () => { resolveOld(ready); await Promise.resolve(); });
 });
+
+it.each([[4, 0], [4, 3], [5, 0], [5, 3]])(
+  "jumps exact repeated helper/caller boundaries in case %i, invocation %i without live effects",
+  async (caseIndex, invocation) => {
+    const user = userEvent.setup(), data = await projected(), fetch = vi.fn();
+    const storage = vi.spyOn(Storage.prototype, "setItem");
+    vi.stubGlobal("fetch", fetch);
+    render(<RecordedRuntimeOccurrences />); await imported(user);
+    const cases = screen.getByRole("combobox", { name: "Recorded occurrence case" });
+    await user.selectOptions(cases, String(caseIndex));
+    const invocations = screen.getByRole("combobox", { name: "Logical invocation (report-local)" });
+    await user.selectOptions(invocations, String(invocation));
+    const selected = data.cases[caseIndex];
+    const localRows = selected.rows.filter(item => item.invocation === invocation);
+    const afterRows = localRows.filter(item => item.phase === "after_operation");
+    expect(afterRows.some((item, index) => index > 0 && item.ordinal > afterRows[index - 1].ordinal + 1)).toBe(true);
+    if (caseIndex === 5) expect(localRows[0].ordinal).toBeGreaterThan(0);
+    const helpers = selected.helpers.filter(item => item.invocation === invocation);
+    expect(helpers).toHaveLength(3);
+    expect(new Set(helpers.map(item => item.callBeforeRow)).size).toBe(3);
+    for (const helper of helpers) {
+      await user.selectOptions(screen.getByRole("combobox", { name: "Activation (report-local)" }), String(helper.activation));
+      await user.selectOptions(screen.getByRole("combobox", { name: "Operation attempt (report-local)" }), helper.attemptKeys[1]);
+      await user.selectOptions(screen.getByRole("combobox", { name: "Recorded row phase" }), "write_committed");
+      expect(screen.queryByRole("region", { name: "Selected recorded row" })).not.toBeInTheDocument();
+      const targets = [
+        ["Jump to recorded caller before", helper.callBeforeRow],
+        ["Jump to recorded helper last", helper.lastRow],
+        ["Jump to recorded caller after", helper.callAfterRow],
+        ["Jump to recorded helper first", helper.firstRow],
+      ] as const;
+      for (const [label, ordinal] of targets) {
+        const navigation = screen.getByRole("group", { name: "Recorded helper/caller boundary navigation" });
+        expect(navigation).toHaveTextContent("helper activation " + helper.activation + ", case " + caseIndex);
+        expect(navigation).toHaveTextContent("logical invocation " + invocation);
+        expect(navigation).toHaveTextContent("Each jump clears the activation, operation-attempt and phase filters");
+        expect(navigation).toHaveTextContent("not live stepping or a full call stack");
+        await user.click(within(navigation).getByRole("button", { name: label }));
+        expect(cases).toHaveValue(String(caseIndex)); expect(invocations).toHaveValue(String(invocation));
+        for (const name of ["Activation (report-local)", "Operation attempt (report-local)", "Recorded row phase"])
+          expect(screen.getByRole("combobox", { name })).toHaveValue("all");
+        const position = localRows.findIndex(item => item.ordinal === ordinal);
+        expect(position).toBeGreaterThanOrEqual(0);
+        expect(screen.getByLabelText("Filtered row count")).toHaveTextContent(
+          "Filtered row " + (position + 1) + " of " + localRows.length + "; original ordinal " + ordinal + ".");
+        expect(screen.getByLabelText("Filtered row position")).toHaveValue(String(position));
+        expect(screen.getByRole("group", { name: "Recorded helper/caller boundary navigation" }))
+          .toHaveTextContent("helper activation " + helper.activation + ", case " + caseIndex);
+        expect(screen.queryByLabelText("Selected row projection")).not.toBeInTheDocument();
+        await user.click(screen.getByRole("button", { name: "Show selected row projection" }));
+        const projection = JSON.parse(screen.getByLabelText("Selected row projection").textContent!);
+        expect(projection.caseIndex).toBe(caseIndex);
+        expect(projection.row).toEqual(localRows[position]);
+        expect(screen.getAllByRole("region", { name: "Selected recorded row" })).toHaveLength(1);
+      }
+    }
+    await user.selectOptions(invocations, String(invocation === 0 ? 3 : 0));
+    expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
+    await user.selectOptions(cases, caseIndex === 4 ? "0" : "1");
+    expect(screen.queryByRole("group", { name: "Recorded helper/caller boundary navigation" })).not.toBeInTheDocument();
+    expect(fetch).not.toHaveBeenCalled(); expect(storage).not.toHaveBeenCalled();
+  },
+);
