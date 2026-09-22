@@ -1,0 +1,107 @@
+{
+  "schema": "recorded-source-variable-resource-provenance-v1",
+  "classification": "retained_cpu_debugger_observation_not_authenticated_producer_evidence",
+  "captured_utc": "2026-09-22",
+  "compiler": {
+    "repository": "harsh-nod/fe2o3",
+    "base_commit": "431fa35b6795e5170ae74858da8b2416002a8717",
+    "dirty_candidate": true,
+    "source_census": {
+      "files": 6534,
+      "bytes": 99331107,
+      "sha256": "1572a464d3b0065ae6a7ef49f74fa0ed3d2e34e9901cbe2b06023a7a295e4920"
+    },
+    "toolchain": "nightly-2026-04-03-x86_64-unknown-linux-gnu",
+    "capture_script": "scripts/resource-source-values-v2-smoke.mjs",
+    "source": "crates/rustc-codegen-fe2o3/tests/fixtures/assembly-authoring-v30/src/lib.rs",
+    "source_sha256": "f6cdd5fc4a937979fd5d12e7fa199fd3590fae9cb8f303b680781f9ca5b7df5e"
+  },
+  "retained_files": [
+    {
+      "path": "receipt.json",
+      "bytes": 10324,
+      "sha256": "8ed284c44e573a5533df0af9391af02f62004834e1af0e732ddb28181942df50"
+    },
+    {
+      "path": "resource-source-values.requests.jsonl",
+      "bytes": 6944,
+      "sha256": "ef16169d9749291264e79c8b47ba4930f43d0c202bca5bed10f804308f2ee015"
+    },
+    {
+      "path": "resource-source-values.responses.jsonl",
+      "bytes": 53598,
+      "sha256": "738d5f65115608c5273a51512dab9bcd51662c4253daba8b428ef43cc1bf54ce"
+    }
+  ],
+  "retained_remote_evidence": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase18-source-values-r1/debug-requests.jsonl",
+      "bytes": 9155,
+      "sha256": "36ac1e53f02fe310ef59c59ece781736f896bcb124b31faa251358c41090bd09"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase18-source-values-r1/debug-responses.jsonl",
+      "bytes": 60785,
+      "sha256": "2a46458738cf6118ead2d029d67d25c9da8e9a70ad06f4647c23b6d002c313fd"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase18-source-values-r1/observations.json",
+      "bytes": 38681,
+      "sha256": "c2712ce2c560e0fe60b163b2830f956f009df367c3307f4f23beb553ccee76cb"
+    }
+  ],
+  "command_receipt": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase18-source-values-capture-r1/receipt.json",
+    "bytes": 30831,
+    "sha256": "7e4e60ae26ab640749ffb7b417822e3151ca44cf0e1b66f3fd269984a6e74b20"
+  },
+  "source_export_command_receipt": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase18-source-assembly-export-r1/receipt.json",
+    "bytes": 27153,
+    "sha256": "6d9b82265a79e7ada0c54cb968e4365ace60f01b436714e592d05d9ae390eaeb"
+  },
+  "observed": {
+    "checkpoints": 3,
+    "successful_pairs": 27,
+    "source_variables_per_checkpoint": 12,
+    "complete_pages_per_checkpoint": 6,
+    "source_parameters_captured": 2,
+    "variables_not_represented": 10,
+    "memory_bytes_per_checkpoint": 24,
+    "actual_read_only_refusals": 4,
+    "forward_reverse_repeat": true,
+    "ssa_counts": [
+      4,
+      3,
+      4
+    ],
+    "event_revision": [
+      [
+        3,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        3,
+        4
+      ]
+    ]
+  },
+  "limits": {
+    "browser_import_is_local_read_only": true,
+    "original_lines_preserved": true,
+    "source_to_ssa_mapping": false,
+    "general_locals_reconstructed": false,
+    "dynamic_helper_activation": false,
+    "allocation_reuse": false,
+    "output_write_attributed": false,
+    "producer_authenticated": false,
+    "production_qualified": false,
+    "hardware_observed": false,
+    "performance_prediction": false
+  },
+  "browser_qualification": "Separate site tests; capture receipt alone does not qualify the UI."
+}

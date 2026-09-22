@@ -70,6 +70,11 @@ Use **Open local resource recording** in that inspector to view your own
 Imports stay local and caller-supplied/unverified; they do not execute commands,
 authenticate a producer or change the curriculum baseline.
 
+The [source-variable checkpoint walkthrough](docs/resource-source-values-v2.md)
+adds complete recorded source-variable pages beside separate SSA and memory
+observations. Missing locals stay unavailable; matching names or bits do not
+establish a source-to-SSA mapping.
+
 Beside the importer, **Open retained memory reference lab** offers
 [three guided checkpoint-comparison exercises](docs/recorded-memory-comparison-lab-v1.md):
 changed bytes, initialization changes and actual unavailable memory. This is a
@@ -85,6 +90,12 @@ The [guarded assembly body lab](docs/guarded-assembly-body-lab-v1.md) uses
 separate public compiler/helper pins for a checked store, 96 CPU cases and two
 diagnostic lowering refusals, freshly reproduced with a shared host target.
 Its historical native evidence is separate; no GPU or production claim follows.
+
+The [Rust-to-assembly promotion lab](docs/source-promotion-lab-v1.md) covers
+publishing a bounded bitselect region, editing its declared registers, and
+preserving a supported live Rust prefix through fresh compilation and independent
+CPU checks. It distinguishes source publication from protected compilation
+continuation and hardware qualification.
 
 The CPU simulation page offers a selected-access
 [LDS address-pattern model](docs/lds-bank-analysis-v1.md). It uses an explicit

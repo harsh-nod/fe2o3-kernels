@@ -36,7 +36,7 @@ pub fn choose_bits(mut output: DisjointSlice<u32>, a: u32, b: u32, mask: u32) {
 
 The selected profile is exactly `gfx942:xnack-`, wave64, with required and
 maximum launch bounds `[64, 1, 1]`. The kernel must be the sole sealed,
-local, nongeneric root. Its first top-level immutable initializer must be the
+local, nongeneric root. Its sole eligible top-level immutable initializer must be the
 direct typed-`u32` expression shown above, reading three distinct immutable
 formal parameters at ordinals 1, 2 and 3.
 
@@ -46,6 +46,45 @@ compiler snapshot or hand-written identity record does not select a region.
 Aliases, multiple eligible initializers, unsupported effects and ambiguous
 source attribution are refused. This lab does not broaden support to gfx950
 or arbitrary expressions.
+
+### Optional: preserve a live Rust prefix
+
+The selected initializer need not be the first statement. For a bounded
+surrounding-source exercise, keep the same kernel signature and attributes and
+use this body:
+
+```rust
+let tag = a | mask;
+let selected = b ^ ((a ^ b) & mask);
+let index = thread::index_1d();
+if let Some(slot) = output.get_mut(index) {
+    *slot = selected ^ tag;
+}
+```
+
+Only the `selected` initializer is replaced. The live `tag` computation and
+checked output path remain ordinary Rust, with their original bytes preserved
+outside the replacement. The later register-only edit must preserve those same
+prefix and suffix bytes as well.
+
+At most eight preceding immutable, plain `u32` bindings are eligible. Each must
+be one direct AND, OR or XOR of the original immutable formal operands `a`,
+`b`, and `mask`; no operand may depend on an earlier local. Binding names
+cannot shadow any formal, another prefix binding, or the selected result.
+Aliases, nested prefix expressions, mutable bindings, calls, macros, branches,
+memory effects, source normalization and a second eligible bitselect remain
+outside this profile. The current semantic/Kernel IR join must still identify
+exactly the three selected contiguous operations in the entry block.
+
+This HIR grammar is necessary, not sufficient. Optimized MIR can reuse an
+earlier identical expression such as `a ^ b`, removing the selected inner
+operator's exact source attribution. The bounded publisher then refuses with
+`source-boundary exact HIR operator/semantic span absent` during eligibility,
+before publication is attempted. Matching values, a similar instruction, or a
+hand-written source location cannot replace the missing join. Keep the failure
+and original source; do not weaken attribution checks to force a candidate.
+The eight-binding limit is a source boundary, not a promise that eight machine
+instructions survive optimization.
 
 ## 2. Ask the public Rust API to publish a candidate
 
@@ -125,8 +164,10 @@ let selected = fe2o3_device::amdgpu_ordered_program! {
 
 The three ordered operations implement the original bitselect. The rest of the
 kernel still computes the thread index and writes `selected` through the
-original checked output path. This is a Rust source file containing a typed
-ordered region, not a detached machine-code blob.
+original checked output path. In the optional prefix example, that unchanged
+path instead writes `selected ^ tag`; the promotion does not discard the prefix
+effect. This is a Rust source file containing a typed ordered region, not a
+detached machine-code blob.
 
 First compile the unedited candidate through the existing ordinary source-input
 path. This establishes a new typed/semantic/Kernel IR ownership chain from the
@@ -200,6 +241,31 @@ object, retain it as well. Never relabel an old producer's results as checks of
 the current candidate. Native inspection is not a proof of physical register
 lifetimes, protected finalizer admission or hardware correctness.
 
+### Qualify the optional prefix separately
+
+The prefix ladder must obtain its initial candidate through the same separately
+built normal-library consumer. It then compiles default, register-edited and
+repeated candidates in three fresh callbacks. Its expected 90 whole-kernel
+simulations use this independent oracle, not the prefix-free result above:
+
+```rust
+((a & mask) | (b & !mask)) ^ (a | mask)
+```
+
+Require complete outputs, initialization, canaries, unchanged inputs, and exact
+prefix/suffix source retention. The ladder also has 17 direct public-API control
+sessions: one eight-binding publication and 16 specific refusals, including the
+nine-binding limit and a retained attribution-collision case. Those controls
+run in the backend test process; they are not 17 external normal-consumer runs.
+The eight-binding positive checks publication only, not a fresh compilation or
+native qualification of that particular eight-binding kernel.
+
+Native checks for the live-prefix candidates must consume that run's
+`positive/prefix-default.ll` and `positive/prefix-edited.ll` at O0 and O3.
+Do not substitute the prefix-free LLVM or historical reports. These are
+acceptance requirements; this tutorial does not assert that the new prefix
+ladder, its controls, or its native artifacts have passed qualification.
+
 For recorded helper/caller navigation, see the separate
 [recorded occurrence lab](recorded-runtime-occurrence-lab-v1.md). Its loop/helper
 recording is a different fixture, not an execution trace of this bitselect.
@@ -268,6 +334,7 @@ and `--test-threads=1` on the freshly built, measured backend test harness.
 | --- | --- | --- |
 | `headless::actual_source_bitselect_headless_ladder` | `FE2O3_TEST_SOURCE_BITSELECT_ROUNDTRIP_OUTPUT` | Five promotion cases and a separate fresh positive callback. |
 | `machine::headless_machine::actual_source_headless_machine_ladder` | `FE2O3_TEST_SOURCE_HEADLESS_MACHINE_OUTPUT`, plus `FE2O3_TEST_SOURCE_HEADLESS_CONSUMER` pointing to the new normal positive consumer | Normal public entry, default/edit/repeat, independent simulator and three refusals. |
+| `machine::headless_machine::prefix::actual_source_headless_prefix_ladder` | `FE2O3_TEST_SOURCE_HEADLESS_PREFIX_OUTPUT`, plus `FE2O3_TEST_SOURCE_HEADLESS_CONSUMER` pointing to the new normal positive consumer | Live prefix, normal publication, three fresh candidates/90 simulations, and 17 direct public-API controls. |
 | `headless::live_failures::actual_source_bitselect_live_failure_ladder` | `FE2O3_TEST_SOURCE_HEADLESS_LIVE_OUTPUT` | Test-only repeated-callback and postpublication source-change controls. |
 | `headless::live_failures::actual_source_bitselect_post_callback_fatal_ladder` | `FE2O3_TEST_SOURCE_HEADLESS_FATAL_OUTPUT` | Two genuine rustc fatal outcomes after inner callbacks. |
 
@@ -289,6 +356,7 @@ fault probes are absent from normal builds and are not public author controls.
 | --- | --- |
 | Duplicate/out-of-range register roles or invalid/same source paths | Checked plan/request construction. |
 | Wrong target/launch, ambiguous initializer or stale original | Actual source eligibility and retained-source checks. |
+| More than eight prefix bindings, an unsupported prefix, or selected operator attribution lost during optimization | Typed-HIR eligibility and the current source/semantic/Kernel IR join, before publication. |
 | Mismatched register plan, wrong output or stale edited file | Fresh candidate checks and independent whole-kernel oracle. |
 | Unexpected native instructions, physical operands or insufficient descriptor capacity | Separate inspection of the actual new native artifact. |
 | Existing candidate, late source mutation or caught rustc fatal | Typed publication/failure handling; inspect retained files. |
@@ -317,3 +385,7 @@ resume, automatic kernel launch or evidence of a hardware run.
 [consumer]: https://github.com/harsh-nod/fe2o3/tree/main/crates/rustc-codegen-fe2o3/tests/fixtures/source-bitselect-headless-consumer
 [positive-consumer]: https://github.com/harsh-nod/fe2o3/blob/main/crates/rustc-codegen-fe2o3/tests/fixtures/source-bitselect-headless-consumer/src/bin/promote_once.rs
 [machine]: https://github.com/harsh-nod/fe2o3/blob/main/crates/rustc-codegen-fe2o3/src/production_rustc_driver_v1/source_bitselect_headless_machine_v1_tests.rs
+
+
+Dated test results and their limits are recorded in the
+[September 22 qualification](source-values-qualification-20260922.md).

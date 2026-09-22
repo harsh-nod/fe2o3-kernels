@@ -1,0 +1,23 @@
+.resource-source-values { min-width: 0; margin-block: 1rem; border-left: 3px solid var(--border-color, #94a3b8); padding-left: .8rem; }
+.resource-source-values p, .resource-source-values dd, .resource-source-values code { overflow-wrap: anywhere; }
+.resource-source-values dd { margin-left: 0; margin-bottom: .65rem; }
+.resource-source-values summary { cursor: pointer; }
+.resource-source-values summary:focus-visible { outline: 3px solid var(--color-focus, #2563eb); outline-offset: 3px; }
+.resource-source-values-scroll { max-width: 100%; overflow-x: auto; }
+.resource-source-values table { width: 100%; min-width: 0; border-collapse: collapse; table-layout: fixed; }
+.resource-source-values th, .resource-source-values td { padding: .55rem; text-align: left; vertical-align: top; overflow-wrap: anywhere; border-bottom: 1px solid var(--border-color, #94a3b8); }
+.resource-source-values th { text-transform: none; }
+.resource-source-values table th:first-child, .resource-source-values summary, .resource-source-values code { white-space: normal; }
+.resource-source-values td details, .resource-source-values th details { margin-block: .35rem; font-weight: normal; }
+.source-value-field-label { display: none; }
+@media (max-width: 640px) {
+  .resource-source-values { padding-left: .5rem; }
+  /* Keep real table headers available to assistive technology, while presenting
+     each bounded variable as a readable, labelled row on narrow screens. */
+  .resource-source-values thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .resource-source-values tbody { display: block; }
+  .resource-source-values tbody tr { display: grid; grid-template-columns: minmax(0, 1fr); margin-block: .75rem; border: 1px solid var(--border-color, #94a3b8); }
+  .resource-source-values th, .resource-source-values td { display: block; min-width: 0; padding: .6rem; font-size: .9rem; }
+  .resource-source-values td:last-child { border-bottom: 0; }
+  .source-value-field-label { display: block; margin-bottom: .35rem; font-weight: 600; }
+}

@@ -7,6 +7,7 @@ import { ResourceAccessView } from "./ResourceAccessView";
 import { ResourceMemoryView } from "./ResourceMemoryView";
 import { ResourceMemoryComparisonView } from "./ResourceMemoryComparisonView";
 import { ResourceCheckpointValuesView } from "./ResourceCheckpointValuesView";
+import { ResourceSourceValuesView } from "./ResourceSourceValuesView";
 import type { ResourceAccessSelection } from "../content/resource-access-navigation";
 import type { LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
 import { projectResourcePointerMemoryNavigation } from "../content/resource-pointer-memory-navigation";
@@ -56,6 +57,8 @@ function CheckpointViews({ checkpoint, recording, viewSelection, onViewSelection
     <p>Independent checkpoint: request {checkpoint.control.requestId}, event {checkpoint.anchor.cursor.event_sequence},
       revision {checkpoint.anchor.cursor.state_revision}. Selecting retained data sends no debugger command.</p>
     <ResourceCheckpointValuesView checkpoint={checkpoint} onPointerSelect={selectPointer} />
+    <ResourceSourceValuesView checkpoint={checkpoint} stackPair={checkpoint.sourceStack ?? null}
+      sourcePages={checkpoint.sourceVariables ?? []} />
     {navigation && <section aria-label="Pointer retained-memory navigation" data-state={navigation.status}>
       <h4>Current SSA pointer to retained bytes</h4>
       <p>Caller-supplied / unverified. This selects a byte already retained at this exact checkpoint,
@@ -254,7 +257,9 @@ export function RecordedResourceImport() {
       no upload, network request, automatic storage write, debugger command, compiler action or GPU execution is performed.
       After import, the separate bookmark download is an explicit local file save of selection metadata only.</p>
     <p>Supported excerpts contain successful captured forward/reverse operation-step checkpoints followed by
-      query_allocations, query_memory_accesses or read_memory pairs. Keep their original order, IDs and bytes.
+      query_allocations, query_memory_accesses or read_memory pairs. Optional complete inspect_stack and
+      Source Variable V2 inspect_source_variables pages may accompany the same checkpoint.
+      Keep their original order, IDs and bytes.
       Complete sessions containing setup, termination, errors or other commands are not supported.</p>
     <p>Limits: {RESOURCE_IMPORT_LIMITS.fileBytes / 1024} KiB per file, 64 KiB per line, 128 pairs,
       32 checkpoints. Memory windows are at most 4096 bytes, with 256 visible bytes;

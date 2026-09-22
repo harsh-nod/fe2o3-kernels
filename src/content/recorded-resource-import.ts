@@ -2,6 +2,7 @@
  * No producer is authenticated and no imported request is executed. */
 import { parseProgramJson, programSha256 } from "./ordered-program-observation.mjs";
 import { projectResourceAccessResponse } from "./resource-access-view";
+import { projectResourceSourceValues } from "./resource-source-values";
 import { projectResourceMemoryResponse, resourceSnapshotAnchorKey, type ResourceSnapshotAnchor } from "./resource-memory-view";
 import type { ResourceMemoryContext } from "../lib/resource-memory-controller";
 
@@ -10,7 +11,7 @@ export const RESOURCE_IMPORT_LIMITS = Object.freeze({
 });
 type Row = Record<string, unknown>;
 export interface ImportedResourcePair {
-  readonly kind: "checkpoint" | "allocations" | "memory_accesses" | "memory";
+  readonly kind: "checkpoint" | "allocations" | "memory_accesses" | "memory" | "stack" | "source_variables";
   readonly requestId: number;
   readonly line: number;
   readonly request: unknown;
@@ -26,6 +27,8 @@ export interface ImportedResourceCheckpoint {
   readonly control: ImportedResourcePair;
   readonly pages: readonly ImportedResourcePair[];
   readonly memories: readonly ImportedResourcePair[];
+  readonly sourceStack?: ImportedResourcePair;
+  readonly sourceVariables?: readonly ImportedResourcePair[];
 }
 export interface ImportedResourceRecording {
   readonly requestSha256: string;
@@ -187,7 +190,8 @@ export async function importResourceRecording(requestUtf8: string, responseUtf8:
     captureIdentity: responseSha256, target: null, variantIdentity: null,
   };
   const checkpoints: { anchor: ResourceSnapshotAnchor; anchorKey: string; control: ImportedResourcePair;
-    pages: ImportedResourcePair[]; memories: ImportedResourcePair[] }[] = [];
+    pages: ImportedResourcePair[]; memories: ImportedResourcePair[]; sourceStack?: ImportedResourcePair;
+    sourceVariables: ImportedResourcePair[] }[] = [];
   const pairs: ImportedResourcePair[] = [];
   const tokens = new Map<string, string>();
   const consumed = new Set<string>();
@@ -219,7 +223,7 @@ export async function importResourceRecording(requestUtf8: string, responseUtf8:
       }
       if (checkpoints.length >= RESOURCE_IMPORT_LIMITS.checkpoints) refuse("checkpoint_limit", "At most 32 checkpoints may be imported.");
       const pair: ImportedResourcePair = { ...base, kind: "checkpoint" };
-      checkpoints.push({ anchor, anchorKey, control: pair, pages: [], memories: [] });
+      checkpoints.push({ anchor, anchorKey, control: pair, pages: [], memories: [], sourceVariables: [] });
       pairs.push(pair);
       continue;
     }
@@ -230,7 +234,14 @@ export async function importResourceRecording(requestUtf8: string, responseUtf8:
       refuse("stale_request", "Resource request revision does not match the preceding independent checkpoint.");
     }
     let pair: ImportedResourcePair;
-    if (request.operation === "read_memory") {
+    if (request.operation === "inspect_stack") {
+      if (checkpoint.sourceStack) refuse("duplicate_stack", "Retain one complete stack for source-variable frame refinement.");
+      pair = { ...base, kind: "stack" };
+      checkpoint.sourceStack = pair;
+    } else if (request.operation === "inspect_source_variables") {
+      pair = { ...base, kind: "source_variables" };
+      checkpoint.sourceVariables.push(pair);
+    } else if (request.operation === "read_memory") {
       exact(request, ["schema", "request_id", "expected_revision", "operation", "allocation", "byte_offset", "byte_len"]);
       const allocation = exact(request.allocation, ["ordinal", "generation"]);
       if (request.schema !== "fe2o3-debug-request-v1" || !integer(allocation.ordinal, 1) || allocation.generation !== 0 ||
@@ -265,12 +276,18 @@ export async function importResourceRecording(requestUtf8: string, responseUtf8:
       }
       pair = { ...base, kind: projection.kind, rowCount: projection.rows.length }; checkpoint.pages.push(pair);
     } else {
-      refuse("unsupported_operation", "This importer accepts only step checkpoint, query_allocations, query_memory_accesses and read_memory pairs.");
+      refuse("unsupported_operation", "Use step checkpoints, resource queries, read_memory, and complete same-stop stack/source-variable pairs.");
     }
     pairs.push(pair);
   }
   if (!checkpoints.length || checkpoints.some(checkpoint => !checkpoint.pages.length && !checkpoint.memories.length)) {
     refuse("empty_checkpoint", "Every retained checkpoint must include at least one supported resource response.");
+  }
+  for (const checkpoint of checkpoints) {
+    if (checkpoint.sourceStack || checkpoint.sourceVariables.length) {
+      const projection = projectResourceSourceValues(checkpoint, checkpoint.sourceStack ?? null, checkpoint.sourceVariables);
+      if (projection.status !== "ready") refuse("source_values_refused", projection.detail);
+    }
   }
   aborted(signal);
   return frozen({ requestSha256, responseSha256, requestBytes: requests.bytes, responseBytes: responses.bytes,
