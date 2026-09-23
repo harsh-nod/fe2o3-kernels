@@ -2,6 +2,7 @@
 import { isCpuObservedCommand, parseCpuObservedCommand, requireObservedSelection, validateCpuObservedReply,
   observedOwner, type CpuObservedContext } from "./cpu-observed-protocol";
 import { collectCpuObservedQueries, type CpuObservedCollection, type CpuObservedSelection } from "./cpu-observed-collection";
+import { CPU_DECLARED_TARGET_BYTES, joinDeclaredTarget } from "./cpu-declared-target";
 import { parseProgramJson } from "../content/ordered-program-observation.mjs";
 import { CPU_LIVE_QUERY_LIMITS, captureCpuCheckpoint, collectCpuQueries, cpuQueryPair, cpuQueryRequestSchema,
   cpuResourceProjection, isCpuQueryOperation, selectCpuInventory, validateCpuQueryReply, validateCpuStack,
@@ -254,7 +255,9 @@ function bindings(command: CpuCommand, result: Row, current: CpuSessionView): vo
 /** Selected correlation/binding checks, not a new complete Rust payload validator. */
 export function decodeCpuBridgeReply(text: string, expected: CpuReplyExpectation): CpuBridgeReply {
   try {
-    const wrapper = exact(parseProgramJson(text, CPU_BRIDGE_LIMITS.responseBytes),
+    const target = expected.command.text === "target";
+    if (target) requireValue(text.length <= CPU_DECLARED_TARGET_BYTES);
+    const wrapper = exact(parseProgramJson(text, target ? CPU_DECLARED_TARGET_BYTES : CPU_BRIDGE_LIMITS.responseBytes),
       ["schema", "status", "connection_id", "bridge_session", "sequence", "session", "response_json", "closed"]);
     requireValue(wrapper.schema === RESPONSE_SCHEMA && wrapper.status === "ok" && wrapper.closed === false);
     requireValue(identity(wrapper.connection_id) === expected.connectionId);
@@ -263,7 +266,7 @@ export function decodeCpuBridgeReply(text: string, expected: CpuReplyExpectation
     requireValue(cpuDecimal(wrapper.sequence) === expected.sequence);
     requireValue(typeof wrapper.response_json === "string" && wrapper.response_json.length > 0 &&
       !/[\r\n]/u.test(wrapper.response_json));
-    const response = row(parseProgramJson(wrapper.response_json, CPU_BRIDGE_LIMITS.protocolBytes));
+    const response = row(parseProgramJson(wrapper.response_json, target ? CPU_DECLARED_TARGET_BYTES - 1 : CPU_BRIDGE_LIMITS.protocolBytes));
     const status = response.status;
     requireValue(status === "ok" || status === "unavailable" || status === "error");
     if (isCpuObservedCommand(expected.command)) {
@@ -401,7 +404,8 @@ export class CpuDebugSession {
     this.collectionLease = null; this.clearQueries(); this.observedOwner = null;
     if (this.connection) this.connection.view = null;
   }
-  private async exchange(connection: Connection, route: string, body: Row, generation: number): Promise<{ response: Response; text: string }> {
+  private async exchange(connection: Connection, route: string, body: Row, generation: number,
+    responseCap: number = CPU_BRIDGE_LIMITS.responseBytes): Promise<{ response: Response; text: string }> {
     const aborter = new AbortController(); this.pending = aborter;
     const timer = setTimeout(() => aborter.abort(), CPU_BRIDGE_LIMITS.timeoutMs);
     try {
@@ -415,7 +419,7 @@ export class CpuDebugSession {
       const remaining = this.collectionLease ? CPU_LIVE_QUERY_LIMITS.responseBytes - this.collectionBytes
         : CPU_BRIDGE_LIMITS.responseBytes;
       requireValue(remaining > 0);
-      const text = await responseText(response, aborter.signal, Math.min(CPU_BRIDGE_LIMITS.responseBytes, remaining));
+      const text = await responseText(response, aborter.signal, Math.min(responseCap, CPU_BRIDGE_LIMITS.responseBytes, remaining));
       if (this.collectionLease) this.collectionBytes += new TextEncoder().encode(text).byteLength;
       requireValue(generation === this.generation && !aborter.signal.aborted);
       // Never turn an echoed secret into rendered raw data or a diagnostic string.
@@ -494,7 +498,7 @@ export class CpuDebugSession {
     const result = await this.exchange(connection, "/v1/command", {
       schema: REQUEST_SCHEMA, action: "command", bridge_session: previous.bridgeSession,
       sequence, expected_revision: previous.session.revision, command: command.text,
-    }, generation);
+    }, generation, command.text === "target" ? CPU_DECLARED_TARGET_BYTES : CPU_BRIDGE_LIMITS.responseBytes);
     try {
       const view = decodeCpuBridgeReply(result.text, { connectionId: connection.connectionId,
         bridgeSession: previous.bridgeSession, sequence, previous: previous.session, command, queryContext, observedContext });
@@ -535,6 +539,21 @@ export class CpuDebugSession {
       this.collection = result; return result;
     } catch (error) { this.clearQueries(); throw error; }
     finally { if (this.collectionLease === lease) this.collectionLease = null; }
+  }
+  /** One explicit read; never appended to the six-call observation collector. */
+  async inspectDeclaredTarget(collection: CpuObservedCollection): Promise<CpuBridgeReply> {
+    if (this.collectionLease || !this.ready || !this.connection || this.observedResult !== collection)
+      throw new CpuBridgeError("command_refused", "not_sent");
+    const connection = this.connection;
+    const reply = await this.command("target");
+    try {
+      requireValue(this.connection === connection && connection.view === reply && this.ready);
+      if (reply.response.status === "ok") {
+        joinDeclaredTarget(collection, reply);
+        this.observedResult = collection;
+      }
+      return reply;
+    } catch (error) { this.clearQueries(); throw error; }
   }
   async collectObserved(selection?: CpuObservedSelection): Promise<CpuObservedCollection> {
     if (this.collectionLease || !this.ready || !this.connection)

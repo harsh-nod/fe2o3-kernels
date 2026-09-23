@@ -67,6 +67,7 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
   const [endpoint, setEndpoint] = useState(""), [reply, setReply] = useState<CpuBridgeReply | null>(null);
   const [queryCollection, setQueryCollection] = useState<CpuLiveQueryCollection | null>(null);
   const [observedCollection, setObservedCollection] = useState<CpuObservedCollection | null>(null);
+  const [targetReply, setTargetReply] = useState<CpuBridgeReply | null>(null);
   const [fields, setFields] = useState<Fields>({ ...EMPTY_FIELDS });
   const [count, setCount] = useState("1"), [budget, setBudget] = useState("1024");
   const [phase, setPhase] = useState("before"), [access, setAccess] = useState("write");
@@ -74,7 +75,7 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
   const password = useRef<HTMLInputElement | null>(null), endpointInput = useRef<HTMLInputElement | null>(null);
   const generation = useRef(0), heading = useId();
   useEffect(() => () => { generation.current++; client.dispose(); }, [client]);
-  function clearVisible() { generation.current++; setReply(null); setQueryCollection(null); setObservedCollection(null); setBusy(false); }
+  function clearVisible() { generation.current++; setReply(null); setQueryCollection(null); setObservedCollection(null); setTargetReply(null); setBusy(false); }
   function replaceConnection() {
     clearVisible(); client.invalidate();
     setNotice(client.needsCleanup
@@ -114,6 +115,19 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
       if (current === generation.current) {
         setQueryCollection(next); setReply(next.replies.at(-1) ?? null);
         setNotice("Bounded checkpoint queries completed. Availability and omitted pages remain explicit.");
+      }
+    } catch (error) { if (current === generation.current) fail(error); }
+    finally { if (current === generation.current) setBusy(false); }
+  }
+  async function inspectTarget(collection: CpuObservedCollection) {
+    clearVisible(); const current = generation.current;
+    setBusy(true); setNotice("Reading one explicit owner-bound bundle target. Prior derived values are hidden.");
+    try {
+      const next = await client.inspectDeclaredTarget(collection);
+      if (current === generation.current) {
+        setReply(next);
+        if (client.observationCollection === collection) { setObservedCollection(collection); setTargetReply(next); }
+        setNotice("Target query completed. A content declaration is not a hardware observation.");
       }
     } catch (error) { if (current === generation.current) fail(error); }
     finally { if (current === generation.current) setBusy(false); }
@@ -234,5 +248,6 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
     busy={busy} remainingCommands={client.remainingCommands} onRefresh={selection => void collectQueries(selection)} />
     <LiveCpuObservedPanel collection={observedCollection === client.observationCollection ? observedCollection : null}
       checkpoint={client.queryCheckpoint} busy={busy} enabled={enabled} remainingCommands={client.remainingCommands}
-      onRefresh={selection => void collectObserved(selection)} /></>;
+      onRefresh={selection => void collectObserved(selection)} targetReply={targetReply}
+      onInspectTarget={collection => void inspectTarget(collection)} /></>;
 }

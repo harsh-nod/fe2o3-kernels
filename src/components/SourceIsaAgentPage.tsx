@@ -64,6 +64,15 @@ const LocalRepeatNativeImport = lazy(() =>
   })),
 );
 
+const LocalSameExportNativeImport = lazy(() =>
+  import("./RepeatNativeImport").then(module => ({
+    default: function SameExportOriginNativePreview() {
+      return <module.RepeatNativeImport
+        expectedJoinSha256="7c93ef31321a2b47d470724ecc982e35571981bf3f6eef9c00861a20fb85d115" />;
+    },
+  })),
+);
+
 const RecordedAuthoringNavigation = lazy(async () => {
   const [{ AuthoringNavigation }, { AUTHORING_NAVIGATION_RETAINED_INPUT }] = await Promise.all([
     import("./AuthoringNavigation"),
@@ -192,6 +201,7 @@ export function SourceIsaAgentPage() {
   const [showSourceComparison, setShowSourceComparison] = useState(false);
   const [showFinalNativeComparison, setShowFinalNativeComparison] = useState(false);
   const [showRepeatNativeImport, setShowRepeatNativeImport] = useState(false);
+  const [showSameExportNative, setShowSameExportNative] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
@@ -294,6 +304,29 @@ export function SourceIsaAgentPage() {
         <div id="repeat-native-import-content">
           {showRepeatNativeImport && <Suspense fallback={<p role="status">Loading local repeat-native preview…</p>}>
             <LocalRepeatNativeImport />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="same-export-native-heading">
+        <h2 id="same-export-native-heading">Compare same-export origin and native captures</h2>
+        <p>This separate fixed capture pairs four compiler-origin reports with eight retained native cases.
+          Upload its capsule, select a case, then upload that label’s origin report. No file is loaded
+          automatically, and reported identity consistency is not producer or source authentication.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/examples/source_repeat_native_origin_comparison_v1.json"
+          target="_blank" rel="noreferrer">Download same-export native capsule (GitHub)</a>
+          {" · "}<a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/same-export-origin-native-v1.md"
+          target="_blank" rel="noreferrer">Four origin files, exact pins, and interpretation</a></p>
+        <p>The historical preview above remains a different capture. Whole-region macro spans and declared
+          descriptors do not establish per-instruction ancestry, physical register values or lifetimes.</p>
+        <button type="button" aria-expanded={showSameExportNative}
+          aria-controls="same-export-native-content"
+          onClick={() => setShowSameExportNative(open => !open)}>
+          {showSameExportNative ? "Close same-export origin/native preview" : "Open same-export origin/native preview"}
+        </button>
+        <div id="same-export-native-content">
+          {showSameExportNative && <Suspense fallback={<p role="status">Loading same-export origin/native preview…</p>}>
+            <LocalSameExportNativeImport />
           </Suspense>}
         </div>
       </section>

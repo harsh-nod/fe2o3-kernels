@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { LiveCpuObservedBankView } from "./LiveCpuObservedBankView";
 import type { CpuBridgeReply } from "../lib/cpu-debug-session";
 import type { CpuLiveCheckpoint } from "../lib/cpu-live-query-collection";
 import { observedCollectionKey, validateObservedSelection, type CpuObservedCollection, type CpuObservedSelection } from "../lib/cpu-observed-collection";
@@ -12,6 +13,8 @@ export interface LiveCpuObservedPanelProps {
   busy: boolean;
   remainingCommands: number;
   onRefresh: (selection?: CpuObservedSelection) => void;
+  targetReply?: CpuBridgeReply | null;
+  onInspectTarget?: (collection: CpuObservedCollection) => void;
 }
 function text(value: unknown): string {
   if (typeof value === "string" || typeof value === "bigint" || typeof value === "number") return String(value);
@@ -70,7 +73,7 @@ function Frames({ collection, checkpoint }: { collection: CpuObservedCollection;
     <p>Named source bindings remain separate. No name-to-SSA correspondence or physical register mapping is inferred.</p>
   </section>;
 }
-function Collected({ collection, checkpoint, enabled, busy, remainingCommands, onRefresh }: LiveCpuObservedPanelProps & { collection: CpuObservedCollection }) {
+function Collected({ collection, checkpoint, enabled, busy, remainingCommands, onRefresh, targetReply = null, onInspectTarget }: LiveCpuObservedPanelProps & { collection: CpuObservedCollection }) {
   const previous = collection.selection;
   const [selected, setSelected] = useState(() => previous ? stable({ allocation: previous.allocation,
     storage_slot: previous.storageSlot, generation: previous.generation }) : "");
@@ -144,6 +147,8 @@ function Collected({ collection, checkpoint, enabled, busy, remainingCommands, o
             return <tr key={String(occurrence.event_sequence)}><th scope="row">{text(occurrence.event_sequence)}</th>
               <td>{text(row.access)} {text(row.range)}</td><td>{text(row.origin)}</td></tr>; })}</tbody></table>}
       </section>
+      {onInspectTarget && <LiveCpuObservedBankView collection={collection} targetReply={targetReply}
+        enabled={enabled && !busy} remainingCommands={remainingCommands} onInspectTarget={onInspectTarget} />}
       <section aria-label="Observed storage bytes"><h4>Exact current memory window</h4><p>{availability(collection.memory)}</p>
         {memory && <><p>Bytes <code>{text(memory.bytes)}</code></p><p>Initialization mask <code>{text(memory.initialized)}</code></p>
           <p>Uninitialized bytes are not valid values. These are current checkpoint bytes, not bytes reconstructed at a historical access.</p></>}

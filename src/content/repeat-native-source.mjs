@@ -1,4 +1,5 @@
 // Closed selected-source/LLVM integrity joins, not re-execution of historical producers.
+import { validateRepeatSourceProfile } from './repeat-native-source-profile.mjs';
 import { check, keys, rows, integer, text, digest, same, flags, pin, ledger,
   matchArtifact, requirePin, receiptRoot, count, declaredProgram, declaredSteps, stage, EMIT_FALSE, SOURCE_FALSE,
   LABELS, COUNTS, PLAN, CONSTRAINTS } from './repeat-native-core.mjs';
@@ -179,6 +180,7 @@ export function validateRepeatSourceJoin(source, llvm, join, artifacts) {
     digest(refusal.source_sha256); const retained = sourcePins.get(refusal.source_path);
     check(retained && retained.sha256 === refusal.source_sha256 && retained.bytes > 0 && retained.bytes <= 65536, 'Refusal source pin differs.');
   });
+  validateRepeatSourceProfile(source, sourceRoot, sourcePins);
   keys(llvm, ['schema', 'status', 'authority', 'source_capture', 'lowerer', 'fresh_lowerer_calls',
     'retained_simulations_revalidated', 'fresh_simulations', 'retained_frontend_refusals_revalidated', 'stages',
     'variants', 'selected_pins', 'selected_pin_bytes', 'selected_inputs_unchanged', 'limits', ...EMIT_FALSE, ...LLVM_EXTRA_FALSE, 'accounting']);

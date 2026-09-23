@@ -1,5 +1,6 @@
 /** Versioned observed-query command and reply contract, separate from legacy V1. */
 import type { CpuBridgeReply, CpuCommand, CpuSessionView } from "./cpu-debug-session";
+import { validateCpuDeclaredTargetReply } from "./cpu-declared-target";
 import { allocationDescriptor, binding, completeness, coverage, decimal, enumValue, error, frozen, hex,
   invocation, missing, need, object, origin, owner, range, same, site, stable, storageIdentity, uint, vector,
   type ObservedRow } from "./cpu-observed-validation";
@@ -8,7 +9,7 @@ export interface CpuObservedContext {
   readonly runtime: CpuBridgeReply | null;
   readonly inventory: CpuBridgeReply | null;
 }
-const COMMANDS = ["runtime", "storage", "lifecycle", "storageaccess", "storagememory"] as const;
+const COMMANDS = ["runtime", "storage", "lifecycle", "storageaccess", "storagememory", "target"] as const;
 export function isCpuObservedCommand(command: CpuCommand): boolean {
   return COMMANDS.includes(command.text.split(" ")[0] as typeof COMMANDS[number]);
 }
@@ -16,7 +17,9 @@ export function parseCpuObservedCommand(text: string): CpuCommand | null {
   const [name, ...args] = text.split(" ");
   if (!COMMANDS.includes(name as typeof COMMANDS[number])) return null;
   let body: ObservedRow;
-  if (["runtime", "storage", "lifecycle"].includes(name)) {
+  if (name === "target") {
+    need(args.length === 0); body = { operation: "inspect_declared_target" };
+  } else if (["runtime", "storage", "lifecycle"].includes(name)) {
     need(args.length === 0);
     const operation = name === "runtime" ? "inspect_current_record" :
       name === "storage" ? "query_allocations" : "query_allocation_lifecycle";
@@ -42,6 +45,7 @@ export function observedInventoryRows(reply: CpuBridgeReply | null): ObservedRow
 export function requireObservedSelection(command: CpuCommand, context: CpuObservedContext): void {
   if (command.text === "runtime") return;
   need(context.runtime?.response.status === "ok");
+  if (command.text === "target") { need(context.owner); same(binding(context.runtime.response.binding).owner, context.owner); return; }
   const watermark = object(context.runtime.response.allocation_watermark, ["availability"], ["through_sequence", "reason"]);
   need(watermark.availability === "available");
   if (command.text === "storage" || command.text === "lifecycle") return;
@@ -181,7 +185,7 @@ function validatePage(value: unknown, count: number): ObservedRow {
   } else need(scanned === total);
   return page;
 }
-function validateAccess(value: unknown): ObservedRow {
+export function validateObservedAccess(value: unknown): ObservedRow {
   const row = object(value, ["occurrence", "invocation", "allocation", "range", "address_space", "access", "origin"]);
   const full = invocation(row.invocation); storageIdentity(row.allocation); range(row.range);
   enumValue(row.address_space, ["private", "workgroup", "global", "constant", "generic"]);
@@ -247,7 +251,7 @@ function validateResource(row: ObservedRow, command: CpuCommand, current: CpuSes
     const descriptor = selectedDescriptor(command, context);
     let previous = 0n;
     for (const item of result.accesses) {
-      const access = validateAccess(item), occurrence = object(access.occurrence, ["record_ordinal", "event_sequence", "scope", "site", "schedule"]),
+      const access = validateObservedAccess(item), occurrence = object(access.occurrence, ["record_ordinal", "event_sequence", "scope", "site", "schedule"]),
         sequence = uint(occurrence.event_sequence); same(access.allocation, command.body.allocation);
       need(access.address_space === descriptor.address_space); withinDescriptor(access.range, descriptor);
       need(sequence > previous && sequence <= uint(page.scanned) && through > 0n); previous = sequence;
@@ -270,6 +274,7 @@ export function validateCpuObservedReply(command: CpuCommand, reply: CpuBridgeRe
   context: CpuObservedContext): void {
   const parsed = parseCpuObservedCommand(command.text); need(parsed); same(parsed.body, command.body); need(parsed.operation === command.operation);
   same(reply.session, previous);
+  if (command.text === "target") { validateCpuDeclaredTargetReply(reply, previous, context); return; }
   const row = reply.response as ObservedRow;
   need(row.schema === (command.text === "runtime" ? "fe2o3-debug-runtime-observation-response-v1" : "fe2o3-debug-resource-response-v2"));
   need(uint(row.request_id) === BigInt(reply.sequence) + 1n);

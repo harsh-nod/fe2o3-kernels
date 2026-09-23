@@ -130,6 +130,18 @@ preserving a supported live Rust prefix through fresh compilation and independen
 CPU checks. It distinguishes source publication from protected compilation
 continuation and hardware qualification.
 
+The [saved local-order recipe lab](docs/saved-local-order-recipes-v1.md) retains
+Rust as the source of meaning, saves either of two checked canonical orders,
+and exercises fresh Create/Replay, exact/advisory constraints and explicit
+rebinding after edits. Its ordinary example qualification is separate from
+native code generation and hardware execution.
+
+The [same-export origin/native lab](docs/same-export-origin-native-v1.md) joins
+whole-region compiler origins to eight exact native captures. The
+[declared-target LDS lab](docs/declared-target-bank-lab-v1.md) separately reads
+one CPU debugger stop and models one retained access under explicit bank-layout
+assumptions. Neither preview supplies captured physical register values.
+
 The [const-u32 helper lab](docs/const-u32-helper-promotion-v1.md) starts from one
 ordinary bitwise operation, generates a scalar const-generic assembly helper,
 and recompiles original, changed and two-specialization source variants.

@@ -1,0 +1,8 @@
+.live-cpu-observed-bank { min-width: 0; max-width: 100%; }
+.live-cpu-observed-bank p, .live-cpu-observed-bank dd { overflow-wrap: anywhere; }
+.live-cpu-observed-bank dl { margin-inline: 0; }
+.live-cpu-observed-bank dd { margin-inline-start: 0; }
+.live-cpu-observed-bank label { display: block; min-width: 0; }
+.live-cpu-observed-bank input, .live-cpu-observed-bank select {
+  box-sizing: border-box; min-width: 0; max-width: 100%; width: 100%;
+}

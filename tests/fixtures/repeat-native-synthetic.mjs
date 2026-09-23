@@ -103,7 +103,8 @@ function nativeCase(label, repetitions, optimization, llvm) {
     derivation_identity: H(label + optimization), boundary_value_or_lifetime_proof: false, repetitions, unique_sequence_matches: 1 };
   return { selected, wrapper: { machine_observation: machine, mutation_controls: clone(MUTATIONS), retained_payload: payload } };
 }
-export function repeatFixture(edits = []) {
+export function repeatFixture(edits = [], profile = 'legacy') {
+  if (!['legacy', 'origin-v1'].includes(profile)) throw new Error('Closed synthetic export profile.');
   const sourcePins = ledger(), llvmPins = ledger(), nativePins = ledger();
   const sourceTool = sourcePins.add(fakePin('/synthetic/source-tool', 'tool'));
   const sources = LABELS.map((label, index) => artifact('source/' + label,
@@ -117,8 +118,24 @@ export function repeatFixture(edits = []) {
       kir_path: kir.path, kir_file_sha256: kir.sha256, exported, inspection: inspection(exported, repetitions),
       simulations: expectedSimulationRows(repetitions) };
   });
+  if (profile === 'origin-v1') {
+    for (const label of LABELS) sourcePins.add(fakePin(sourceRoot + '/' + label + '.origin.json', 'synthetic sidecar pin only'));
+    for (const name of ['ordered-repeat-source-smoke.mjs', 'ordered-repeat-origin-v1.mjs'])
+      sourcePins.add(fakePin('/synthetic/compiler/scripts/' + name, 'synthetic helper pin only'));
+  }
   const sourceStages = sourceStageLabels().map((label, at) => {
-    const s = stage(label, sourceTool.path, []); if (at >= 128) s.code = 1;
+    let args = [];
+    if (label.endsWith('-export')) {
+      const name = label.slice(0, -'-export'.length), negative = name.startsWith('refuse-');
+      const sourceLabel = name === 'repeat' ? 'fifteen' : name;
+      args = ['--diagnostic-kir-v17', '--crate', 'fe2o3_assembly_authoring_v30_fixture',
+        '--output', sourceRoot + '/' + name + '.kir', '--target', 'gfx942',
+        '--target-dir', sourceRoot + '/' + name + '-extraction',
+        ...(profile === 'origin-v1' && !negative ? ['--diagnostic-ordered-origin-v1', sourceRoot + '/' + name + '.origin.json'] : []),
+        '--', '--manifest-path', sourceRoot + '/' + sourceLabel + '-source/Cargo.toml', '--lib', '--offline',
+        ...(negative ? ['--message-format=json'] : [])];
+    }
+    const s = stage(label, sourceTool.path, args); if (at >= 128) s.code = 1;
     for (const stream of ['stdout', 'stderr']) sourcePins.add(fakePin(sourceRoot + '/' + label + '.' + stream));
     return s;
   });

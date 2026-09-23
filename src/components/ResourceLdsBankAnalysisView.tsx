@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { LdsBankFootprint } from "./LdsBankFootprint";
 import { ldsBankProfile } from "../content/lds-bank-model";
 import { projectSelectedLdsBankAnalysis, type LdsTargetAssumption } from "../content/resource-lds-bank-analysis";
 import type { ResourceAccessProjection } from "../content/resource-access-view";
@@ -39,11 +40,7 @@ function SelectedRangeModel({ projection, selection, targetAssumption }: Props) 
         {" "}The selected checkpoint remains {analysis.checkpointEvent}, revision {analysis.checkpointRevision}.</p>
       <p>Model rule: floor((assumed base residue + byte offset) / 4) modulo {analysis.model.profile.bankCount}.
         {" "}These indices name modeled banks only. Changing the assumption changes no captured data.</p>
-      <ul className="resource-lds-bank-grid" aria-label="Modeled LDS bank footprint">
-        {analysis.model.banks.map((bank) => <li key={bank.bank} data-touched={bank.byteCount !== 0 ? "true" : "false"}>
-          <span>Bank {bank.bank}</span><span>{bank.distinctWords} words · {bank.byteCount} bytes</span>
-        </li>)}
-      </ul>
+      <LdsBankFootprint banks={analysis.model.banks} />
       <p>{analysis.model.words.length} distinct modeled dwords touched; at most 65 for the 256-byte range cap.
         Several distinct words may map to one modeled bank; this is not a measured or predicted conflict.</p>
       {(analysis.partialCapture || analysis.morePages) && <p className="resource-lds-bank-notice">

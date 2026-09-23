@@ -1,5 +1,9 @@
 # Follow real calls and storage lifetimes from ordinary Rust
 
+The optional [declared-target bank lab](declared-target-bank-lab-v1.md) adds one
+explicit same-stop target query and a bounded model for one retained LDS access.
+It does not infer hardware transactions or bank conflicts.
+
 Actual integrated source/HTTP/browser results and retained failure boundaries are
 recorded in the [dated qualification](runtime-identity-storage-qualification-20260923.md).
 
