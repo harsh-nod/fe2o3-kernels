@@ -178,6 +178,7 @@ function exactDynamicGemmKernelTab() {
     sourcePath: workgroupPipelineSource.primarySourcePath,
     sourceCommit: workgroupPipelineSource.commit,
     sourceSha256: workgroupPipelineSource.primarySourceSha256,
+    sourceDigestScope: "file" as const,
     evidenceId: workgroupPipelineSource.id,
     explanatory: false,
     notice:
@@ -745,6 +746,7 @@ const gemmAutoresearch: Lesson = {
       sourceCommit: annotatedKernelCommit,
       sourceSha256:
         "3199202452896fa59e0e3f7f5e7f6e656636af039d4bf5b0718febc5edf8f9d0",
+      sourceDigestScope: "file",
       explanatory: false,
       notice:
         "Current annotated safe Rust edit surface. Its executable statements match the MI300X campaign winner; the added comments expose the fixed evaluator contract and wave-tile ownership.",
@@ -1014,6 +1016,7 @@ const flash: Lesson = {
       sourceCommit: annotatedKernelCommit,
       sourceSha256:
         "f160e1391e1b354657049b5b11d745428fbbfb8fb6e5e2fceb4143ac93e7b00b",
+      sourceDigestScope: "file",
       explanatory: false,
       notice:
         "Current annotated safe Rust source. Its executable statements match the qualified 1dd61a01 snapshot; comments now identify whole-launch validation, checked ownership, online FP32 softmax, and the double-buffer protocol.",
