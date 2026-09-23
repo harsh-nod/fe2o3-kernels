@@ -1,6 +1,7 @@
 // Closed final-payload joins. Instruction offsets come from the report, never a byte search.
 import { parseProgramJson } from './ordered-program-observation.mjs';
 import { buildDeclaredRegisterUseGrid } from './final-native-register-roles.mjs';
+import { buildOrderedRoleLiveness } from './ordered-role-liveness.mjs';
 import { check, keys, rows, integer, text, digest, same, flags, pin, ledger, requirePin, matchArtifact,
   receiptRoot, stage, sha256, hex, LABELS, COUNTS, OPTS, PLAN, CONSTRAINTS, LLVM_BUILD, NATIVE_FALSE } from './repeat-native-core.mjs';
 export const NATIVE_LIMITS = { calls: 4, cases: 8, command_ms: 180000, wall_ms: 1140000,
@@ -154,6 +155,11 @@ export async function validateRepeatNativeJoin(join, origin, artifacts) {
         semanticSha256: source.exported.semantic_identity, canonicalKirSha256: source.exported.canonical_sha256,
         kirFileSha256: source.kir_file_sha256, sourceInventorySha256: source.exported.retained_source_inventory,
         sourcePreflightSha256: source.exported.retained_source_preflight,
+        logicalLiveness: buildOrderedRoleLiveness({
+          descriptors: source.inspection.declared_program.descriptors.slice(0, source.inspection.declared_program.count),
+          inputValueIds: source.inspection.input_value_ids, resultValueId: source.inspection.result_value_id,
+          coordinate: [source.inspection.coordinate.function_ordinal, source.inspection.coordinate.block_ordinal,
+            source.inspection.coordinate.operation_ordinal], rawBlockId: source.inspection.raw_block_id }),
         originBinding: { canonicalBytes: source.inspection.canonical.bytes,
           target: source.inspection.declared_target, waveWidth: source.inspection.declared_wave_width,
           declaredSourceIds: { ...source.inspection.declared_source_ids },

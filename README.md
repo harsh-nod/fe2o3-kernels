@@ -57,6 +57,11 @@ gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
 Experimental contributor drafts cover [bounded instruction-program authoring](docs/ordered-program-authoring-v1.md)
 and [recorded logical debugger observations](docs/ordered-program-debugger-v1.md).
+The [complete-body const builder](docs/complete-body-const-builder-v1.md) prepares
+bounded block-graph metadata; it does not yet admit or execute a source kernel.
+The [logical lifetime walkthrough](docs/ordered-role-liveness-v1.md) shows
+instruction-level def/use intervals from retained source/native cases, separately
+from physical register allocation and hardware observations.
 The [literal-repeat follow-on](docs/ordered-program-repeat-v1.md) describes
 compile-time repetition into the same bounded flat instruction representation;
 its finite normal-source, CPU and LLVM qualification is recorded in the lab.

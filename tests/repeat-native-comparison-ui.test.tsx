@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RepeatNativeComparison } from "../src/components/RepeatNativeComparison";
 import * as comparison from "../src/content/repeat-native-comparison.mjs";
 import { buildDeclaredRegisterUseGrid } from "../src/content/final-native-register-roles.mjs";
+import { buildOrderedRoleLiveness } from "../src/content/ordered-role-liveness.mjs";
 
 // Mocked UI/state controls only. The separate profile suites validate whole artifacts.
 function ready(): Extract<comparison.RepeatNativeProjection, { status: "ready" }> {
@@ -27,6 +28,8 @@ function ready(): Extract<comparison.RepeatNativeProjection, { status: "ready" }
           source: "// synthetic " + label + "\n", sourceSha256: "4".repeat(64), semanticSha256: "5".repeat(64),
           canonicalKirSha256: "6".repeat(64), kirFileSha256: "7".repeat(64),
           sourceInventorySha256: "8".repeat(64), sourcePreflightSha256: "9".repeat(64),
+          logicalLiveness: buildOrderedRoleLiveness({ descriptors: [8, ...Array(repetitions).fill(201)],
+            inputValueIds: [1, 2, 3], resultValueId: 4, coordinate: [0, 0, 0], rawBlockId: 0 }),
           originBinding: { canonicalBytes: 1014, target: "gfx942:xnack-" as const, waveWidth: 64 as const,
             declaredSourceIds: { frontend_unit: "a".repeat(64), function: "b".repeat(64),
               contract: "c".repeat(64), statement: "d".repeat(64) },

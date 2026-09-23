@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { HighlightedCode } from "./HighlightedCode";
 import { FinalNativeRegisterRoles } from "./FinalNativeRegisterRoles";
 import { OrderedOriginImport } from "./OrderedOriginImport";
+import { OrderedRoleLiveness } from "./OrderedRoleLiveness";
 import { projectRepeatNativeComparison, type RepeatNativeProjection } from "../content/repeat-native-comparison.mjs";
 import "./FinalNativeComparison.css";
 
@@ -15,6 +16,10 @@ type Ready = Extract<RepeatNativeProjection, { status: "ready" }>;
 function RepeatReady({ projection }: { projection: Ready }) {
   const [selected, setSelected] = useState(0);
   const current = projection.cases[selected];
+  const logicalSelectionIdentity = JSON.stringify([projection.joinSha256, current.id, current.optimization,
+    current.sourceSha256, current.semanticSha256, current.canonicalKirSha256, current.kirFileSha256,
+    current.sourceInventorySha256, current.sourcePreflightSha256, current.originBinding,
+    current.llvmSha256, current.reportSha256, current.hsacoSha256, current.payloadPath]);
   return <>
     <p className="final-native-boundary">
       {projection.kind === "synthetic_test_only" ? "Synthetic test data. " : "Retained source and native code-object observations. "}
@@ -74,6 +79,8 @@ function RepeatReady({ projection }: { projection: Ready }) {
         ] as const).map(([label, value]) => <div key={label}><dt>{label}</dt><dd><code>{value}</code></dd></div>)}
       </dl></details>
     </section>
+    <OrderedRoleLiveness model={current.logicalLiveness} selectionIdentity={logicalSelectionIdentity}
+      caseLabel={current.label + " " + current.optimization} />
     <OrderedOriginImport selectionIdentity={projection.joinSha256 + ":" + current.id}
       caseLabel={current.label + " " + current.optimization} selected={current}
       synthetic={projection.kind === "synthetic_test_only"} />
