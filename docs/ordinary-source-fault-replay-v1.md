@@ -275,6 +275,90 @@ importers accept their own bounded profiles. Do not feed this whole fault
 session to them or weaken their validation. No Phase22 UI/browser rerun is
 claimed for these Markdown-only additions.
 
+## Optional browser exercise for the historical R3 recording
+
+The sections above describe the Phase22 producer/Markdown-only increment.
+This later additive exercise applies only to a site checkout/deployment that
+contains the new optional fault/source panel. The separate
+[viewer qualification](evidence/fault-source-viewer-20260923.md) records its
+browser and import checks; it does not establish a public deployment or relabel
+historical R3 evidence as a W4 or current-build capture.
+
+Use the [historical canonical four-file example](../examples/source-fault-replay-v2/README.md)
+and its exact hashes. Its producer evidence is the dated compiler record's
+[ordinary-source fault and prior checkpoint section](https://github.com/harsh-nod/fe2o3/blob/main/docs/evidence/authoring-repeat-fault-20260922.md#ordinary-source-fault-and-prior-checkpoint).
+Download original raw files, not rendered/pretty-printed copies:
+
+- [receipt.json](../examples/source-fault-replay-v2/receipt.json)
+- [debug-requests.jsonl](../examples/source-fault-replay-v2/debug-requests.jsonl)
+- [debug-responses.jsonl](../examples/source-fault-replay-v2/debug-responses.jsonl)
+- [uninitialized.stderr](../examples/source-fault-replay-v2/uninitialized.stderr)
+
+Preserve their exact bytes and LF endings. Do not combine the canonical and
+mirror runs. Open the Source/ISA agent page at
+#/debugger/source-isa-agent, then **Open recorded fault/source replay**. If that
+control is absent, this optional viewer is not in the selected build; the
+existing resource/helper/watchpoint importers must not be broadened to accept
+this full terminal session.
+
+Select the four files in **Fault capture receipt JSON**,
+**Fault session requests JSONL**, **Fault session responses JSONL**, and
+**Standalone uninitialized diagnostic**. Press **Import fault/source recording**.
+This is local file inspection only: no upload, network fetch, persistence,
+compiler invocation, debugger action or GPU execution.
+
+1. Keep **Terminal fault — values unavailable** selected first. In this
+   historical recording it is event 22 / revision 2, Fault / Failed.
+   Source, SSA, stack and memory remain unavailable. No prior values, source
+   location, lane or typed fault range should appear at the terminal.
+2. Select **Prior captured checkpoint**, event 21 / revision 3. Inspect the
+   separate source-variable table (six rows: a/b captured pointer bindings,
+   four not_represented) and SSA table (13 rows). Source spans/bindings are
+   retained; a Rust source body is not among these four files and is not fetched.
+   Equal names or scalar bits do not create a source-to-SSA mapping.
+3. Use **Memory window at selected checkpoint** for the three original
+   16/16/24-byte windows. On retained memory request 15, choose **Byte** in
+   **Memory cell size** to see the first uninitialized byte. Stored bytes are
+   not valid program values when their initialization bit is clear.
+   These windows belong to the earlier checkpoint, never the terminal fault.
+4. An SSA pointer's **Show retained byte for SSA ...** button selects an
+   already-retained byte at the same checkpoint. It does not dereference,
+   issue another query, infer a variable/argument mapping or identify the
+   failed range.
+5. Select **Repeated prior checkpoint**, still event 21 but revision 5.
+   The exact source/SSA/stack/memory contents agree; the original cursors and
+   revision remain distinct records. The old-revision SSA query is
+   stale_revision with state_changed=false and no values. With current memory
+   request 30, choose request 15 in **Baseline retained memory window**:
+   the complete matching 16-byte windows have zero storage and initialization
+   differences. This compares retained facts, not allocation lifetime or
+   execution causality.
+6. Select **Final failed completion — values unavailable**. Event 22 /
+   revision 7 is Completed / Failed, not successful completion. Prior tables,
+   memory cells, pointer selection and comparison clear. Return to
+   **Terminal fault — values unavailable** to inspect the original fault stop
+   with no earlier values substituted.
+7. Inspect **Selected moment original pairs** and the separate
+   **Original standalone diagnostic** if desired, then press
+   **Reset fault/source files**. All imported files and values clear.
+   File replacement and cancellation also discard old display state.
+
+The example's numeric request/event IDs are historical observations, not live
+selectors. This is a closed 44-pair R3 profile; it reuses exactly 18 original
+successful resource pairs without weakening the existing importer. All terminal
+refusals and the stale query remain separately checked.
+
+This four-file join validates selected bytes and bounded structure, not the
+complete capture run or source authentication. Bundle, source body, request
+inputs, positive result, tools, compiler closure and other stage artifacts
+are not imported or independently checked here. The standalone typed
+execution_uninitialized_read error belongs to a separate execution; neither
+its prose nor raw block ordinal supplies a canonical typed debugger fault
+range. Frame one is static depth, source-binding generations are not resource
+generations, and recorded allocation generation zero establishes no reuse.
+No terminal snapshot, dynamic activation, native result, proof or performance
+claim is added; broad V2 remains open.
+
 ## Bounds and fresh-reproduction requirements
 
 The driver bounds the capture to five minutes, at most 128 public pairs,

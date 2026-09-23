@@ -1,0 +1,648 @@
+{
+  "schema": "fe2o3-source-fault-replay-observation-v1",
+  "status": "passed",
+  "claims": {
+    "source_authentication": false,
+    "compiler_closure_attestation": false,
+    "proof_authority": false,
+    "production_resume": false,
+    "hardware_execution": false,
+    "physical_register_values": false,
+    "performance_prediction": false,
+    "terminal_values_captured": false,
+    "allocation_reuse_observed": false
+  },
+  "source_files": [
+    "examples/vecadd/src/lib.rs",
+    "examples/vecadd/src/vecadd_body.rs",
+    "examples/vecadd/Cargo.toml",
+    "Cargo.toml",
+    "Cargo.lock",
+    "rust-toolchain.toml"
+  ],
+  "bundle": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/vecadd-v6.fe2sim",
+    "bytes": 27924,
+    "sha256": "4f609143ad7b7feaa5a74daad4ddc70c65ea2099c795ad52a5a75b1a66a92aaf",
+    "identity": [
+      "66307",
+      "173152933",
+      "33152",
+      "1",
+      "27924",
+      "1790117974617667716",
+      "1790117974617667716"
+    ]
+  },
+  "bundle_identity": "ad162014861826e1df4d508fcf44a0ca97a73e9d87e02fb542209471d3cd87cf",
+  "canonical_kir_digest": "43f82fba02952908a7ce39f4b642cc4ce835d0167010f9158e649b97402d9ff8",
+  "source_map_identity": "94f6f4e5d53778d1b923e5079c3777fe0179bc733116dc76924164f893dcb7ff",
+  "positive": {
+    "checked_output_words": 4,
+    "checked_canary_bytes": 8,
+    "input_bytes_and_initialization_unchanged": true
+  },
+  "standalone_diagnostic": {
+    "schema": "fe2o3-simulation-error-v1",
+    "status": "error",
+    "stage": "execution",
+    "kind": "execution_uninitialized_read",
+    "message": "simulation execution failed: UninitializedRead { allocation: 1, offset: 0, bytes: 4 } at vecadd, bb2, op Some(2) for global [0, 0, 0]",
+    "invocation": {
+      "global": [
+        0,
+        0,
+        0
+      ],
+      "workgroup": [
+        0,
+        0,
+        0
+      ],
+      "local": [
+        0,
+        0,
+        0
+      ],
+      "workgroup_size": [
+        256,
+        1,
+        1
+      ],
+      "workgroup_count": [
+        1,
+        1,
+        1
+      ],
+      "launch_extent": [
+        4,
+        1,
+        1
+      ]
+    },
+    "site": {
+      "function": "vecadd",
+      "function_bytes": 6,
+      "function_truncated": false,
+      "block": 2,
+      "operation": 2
+    }
+  },
+  "standalone_and_debugger_are_separate_executions": true,
+  "transcript": {
+    "pairs": 44,
+    "request_bytes": 10184,
+    "response_bytes": 69406,
+    "configuration_identity": "c3f8e4a8f34da2e605ff2dc1be094cf325b680d02775a8fc10af4a2c53bbacf2"
+  },
+  "raw_transcripts": [
+    {
+      "path": "debug-requests.jsonl",
+      "bytes": 10184,
+      "sha256": "0f9ad2fdd8b084504a022ce859e308d9e6579be03ad12b1eecf01f78a0668e1e"
+    },
+    {
+      "path": "debug-responses.jsonl",
+      "bytes": 69406,
+      "sha256": "9c569caee68dd88d42aa12f36c5ea8a011cf5a4d034d8d6640addc423cdd5c22"
+    }
+  ],
+  "observations": {
+    "path": "observations.json",
+    "bytes": 41495,
+    "sha256": "8754e2b6a68e26876033b751f4129e7bc2e28904fb04a84d71ac1da00b2cfffb"
+  },
+  "debugger_stderr": {
+    "path": "debug-stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "stages": [
+    {
+      "name": "export",
+      "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-export-sim",
+      "args": [
+        "--crate",
+        "fe2o3_vecadd",
+        "--output",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/vecadd-v6.fe2sim",
+        "--bundle-version",
+        "6",
+        "--target",
+        "gfx942",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-extraction-r3",
+        "--",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/examples/vecadd/Cargo.toml",
+        "--lib",
+        "--offline"
+      ],
+      "stdin_bytes": 0,
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "code": 0,
+      "signal": null,
+      "reason": null,
+      "elapsed_ms": 16487,
+      "stdout": {
+        "path": "export.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "export.stderr",
+        "bytes": 5521,
+        "sha256": "a65a90d0353ffdf7c7f8681a69f4195c5ea7def5c91e82c5ac4a6eb74c86b90a"
+      }
+    },
+    {
+      "name": "inspection",
+      "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-author",
+      "args": [
+        "inspect"
+      ],
+      "stdin_bytes": 27924,
+      "stdin_sha256": "4f609143ad7b7feaa5a74daad4ddc70c65ea2099c795ad52a5a75b1a66a92aaf",
+      "code": 0,
+      "signal": null,
+      "reason": null,
+      "elapsed_ms": 6,
+      "stdout": {
+        "path": "inspection.stdout",
+        "bytes": 2229,
+        "sha256": "29cca4219eaea5df3b24fecbe72fee716f2daac0cbb6443603dcc83534ee567d"
+      },
+      "stderr": {
+        "path": "inspection.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "operations-0",
+      "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-author",
+      "args": [
+        "operations",
+        "--bundle-identity",
+        "ad162014861826e1df4d508fcf44a0ca97a73e9d87e02fb542209471d3cd87cf",
+        "--start",
+        "0",
+        "--limit",
+        "64"
+      ],
+      "stdin_bytes": 27924,
+      "stdin_sha256": "4f609143ad7b7feaa5a74daad4ddc70c65ea2099c795ad52a5a75b1a66a92aaf",
+      "code": 0,
+      "signal": null,
+      "reason": null,
+      "elapsed_ms": 7,
+      "stdout": {
+        "path": "operations-0.stdout",
+        "bytes": 16188,
+        "sha256": "b8e86ea850818c5f22a5bc9c25eab74782220c12d5bd9b8e18159ab08b2d559b"
+      },
+      "stderr": {
+        "path": "operations-0.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "positive",
+      "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-kir-sim",
+      "args": [
+        "--bundle-v6",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/vecadd-v6.fe2sim",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/positive-request.json"
+      ],
+      "stdin_bytes": 0,
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "code": 0,
+      "signal": null,
+      "reason": null,
+      "elapsed_ms": 8,
+      "stdout": {
+        "path": "positive.stdout",
+        "bytes": 1348,
+        "sha256": "fc5f93af012144cce97751a632dbdfa51b9daeaaeeebd7190029e0678eea19af"
+      },
+      "stderr": {
+        "path": "positive.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "name": "uninitialized",
+      "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-kir-sim",
+      "args": [
+        "--bundle-v6",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/vecadd-v6.fe2sim",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/uninitialized-request.json"
+      ],
+      "stdin_bytes": 0,
+      "stdin_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "code": 1,
+      "signal": null,
+      "reason": null,
+      "elapsed_ms": 8,
+      "stdout": {
+        "path": "uninitialized.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "uninitialized.stderr",
+        "bytes": 504,
+        "sha256": "91c3b2ba7237afca178616723db569e901b5eecee342dca86c1e19d81d71684f"
+      }
+    }
+  ],
+  "selected_input_and_artifact_pins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/examples/vecadd/src/lib.rs",
+      "bytes": 369,
+      "sha256": "60ea857d0aaba57e05fc30691b15908c188e449c789c39abd27abf4c35b017e2",
+      "identity": [
+        "66307",
+        "172240442",
+        "33204",
+        "1",
+        "369",
+        "1790111870336839612",
+        "1790111870336839612"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/examples/vecadd/src/vecadd_body.rs",
+      "bytes": 702,
+      "sha256": "268ead7f7fc59f8b79ce8d4919d5ff2015da16c8a3db0185954f47e2dadc34f8",
+      "identity": [
+        "66307",
+        "172240444",
+        "33204",
+        "1",
+        "702",
+        "1790111870336839612",
+        "1790111870336839612"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/examples/vecadd/Cargo.toml",
+      "bytes": 335,
+      "sha256": "68de605d3af20f4a4b181b0cbac91af3994546b85ab6d4f135689e306a1dbe99",
+      "identity": [
+        "66307",
+        "172240438",
+        "33204",
+        "1",
+        "335",
+        "1790111870336839612",
+        "1790111870336839612"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/Cargo.toml",
+      "bytes": 9409,
+      "sha256": "35068f0f925c3b81d34a599263f9a39aec369582bed17b076ee03cfe78a282f5",
+      "identity": [
+        "66307",
+        "172233650",
+        "33204",
+        "1",
+        "9409",
+        "1790111870110844288",
+        "1790111870110844288"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/Cargo.lock",
+      "bytes": 94838,
+      "sha256": "cd3913faa7680f8f9163f7bf46cbf394d5436a6f8e152aef3e6950dfb1f28e36",
+      "identity": [
+        "66307",
+        "172233649",
+        "33204",
+        "1",
+        "94838",
+        "1790111870110844288",
+        "1790111870110844288"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/rust-toolchain.toml",
+      "bytes": 160,
+      "sha256": "49eeb550dd57841add3be3442177e78f6f0668ffc4f31739ce78d75f8129b154",
+      "identity": [
+        "66307",
+        "172240634",
+        "33204",
+        "1",
+        "160",
+        "1790111870340839529",
+        "1790111870340839529"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/scripts/resource-source-fault-replay-v2-smoke.mjs",
+      "bytes": 53180,
+      "sha256": "3f1b90f9336f0f31f37d34aaaade490a276c1a9d94c76da87fd2c8b0dad6032f",
+      "identity": [
+        "66307",
+        "172249230",
+        "33204",
+        "1",
+        "53180",
+        "1790117920388762641",
+        "1790117920388762641"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/scripts/const-u32-helper-source-smoke.mjs",
+      "bytes": 35234,
+      "sha256": "3eb511c108f44656d0c977a2ca101b02c07d98ca2d745c765f97b4dd19101260",
+      "identity": [
+        "66307",
+        "172240683",
+        "33204",
+        "1",
+        "35234",
+        "1790111870342839488",
+        "1790111870342839488"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/scripts/ordered-program-source-native.mjs",
+      "bytes": 55571,
+      "sha256": "936ca5a7e4762bad202adbd9c5b83946088de5f2398304ac12648a8934951025",
+      "identity": [
+        "66307",
+        "172240748",
+        "33204",
+        "1",
+        "55571",
+        "1790111870345839426",
+        "1790111870345839426"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/scripts/ordered-program-worker-prototype.mjs",
+      "bytes": 41525,
+      "sha256": "58ca67749a8ee1521e4e14ab9bd72aaae3dc057a86b1d8964ea8b70dcac6ec06",
+      "identity": [
+        "66307",
+        "172240750",
+        "33204",
+        "1",
+        "41525",
+        "1790111870345839426",
+        "1790111870345839426"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/scripts/assembly-region-worker-prototype.mjs",
+      "bytes": 33167,
+      "sha256": "5942ebdb64d681ab33088ee05f92cd2a1ae64eb8727bf3f60b7aeda3d08244dc",
+      "identity": [
+        "66307",
+        "172240643",
+        "33204",
+        "1",
+        "33167",
+        "1790111870340839529",
+        "1790111870340839529"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase22/scripts/authoring-navigation-v1-process.mjs",
+      "bytes": 3416,
+      "sha256": "94856b3dd82f8bbdf87b9571630597320969c0c94d0656d0031067fae63bb833",
+      "identity": [
+        "66307",
+        "172240651",
+        "33204",
+        "1",
+        "3416",
+        "1790111870340839529",
+        "1790111870340839529"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/cargo",
+      "bytes": 42375992,
+      "sha256": "c9ad606cb1dbb4a65aa27c80be88ed61eb2b811b6450eeec6794f60ed78b94a3",
+      "identity": [
+        "66307",
+        "110264078",
+        "33261",
+        "1",
+        "42375992",
+        "1785913068904526836",
+        "1785913069007524634"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "bytes": 645760,
+      "sha256": "08dfef109ad22d90556dbd2f964543cd93843dcd75a2e9792c173667392a1950",
+      "identity": [
+        "66307",
+        "110264162",
+        "33261",
+        "1",
+        "645760",
+        "1785913072055459442",
+        "1785913075062395128"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node",
+      "bytes": 124819136,
+      "sha256": "e6ec2c188d83d813f81f2de8aea084d74dce603ac1abedd0a30ad941b10087b2",
+      "identity": [
+        "66307",
+        "110400159",
+        "33261",
+        "1",
+        "124819136",
+        "1778683847000000000",
+        "1789954548543927406"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-export-sim",
+      "bytes": 736480,
+      "sha256": "bd5c148cdd3c5ad69b1fc12c4690ef447a4d890c8a4e27063bda5dd8a54ab504",
+      "identity": [
+        "66307",
+        "172801726",
+        "33277",
+        "2",
+        "736480",
+        "1790112961830464471",
+        "1790112961837464331"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-author",
+      "bytes": 8546064,
+      "sha256": "9b5e8739a5c47a43a1bdd477b197d7ea94804fad967ab9fecdce49414a4ad971",
+      "identity": [
+        "66307",
+        "172801721",
+        "33277",
+        "2",
+        "8546064",
+        "1790112962295455170",
+        "1790112962307454930"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-kir-sim",
+      "bytes": 12149928,
+      "sha256": "d6e7620f2ee7247af6b0cace4a0a810d945a18ff9e11b8ecca65f4b07f22d2b3",
+      "identity": [
+        "66307",
+        "172801727",
+        "33277",
+        "2",
+        "12149928",
+        "1790112962043460211",
+        "1790112962053460011"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase22-r1/debug/fe2o3-debug",
+      "bytes": 59708104,
+      "sha256": "ed25a90d2ff5fdea2d620cb4cc2db0a12507df1322ba76db645b1ee18d53385e",
+      "identity": [
+        "66307",
+        "172801697",
+        "33277",
+        "2",
+        "59708104",
+        "1790112962764445788",
+        "1790112962810444869"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/vecadd-v6.fe2sim",
+      "bytes": 27924,
+      "sha256": "4f609143ad7b7feaa5a74daad4ddc70c65ea2099c795ad52a5a75b1a66a92aaf",
+      "identity": [
+        "66307",
+        "173152933",
+        "33152",
+        "1",
+        "27924",
+        "1790117974617667716",
+        "1790117974617667716"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/positive-request.json",
+      "bytes": 774,
+      "sha256": "2daa6d8a87b131a62a181a8e339cecdcb04a6db1c7b025a7afd78c2e9dd03196",
+      "identity": [
+        "66307",
+        "173152945",
+        "33152",
+        "1",
+        "774",
+        "1790117974664666767",
+        "1790117974664666767"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/uninitialized-request.json",
+      "bytes": 774,
+      "sha256": "f8f9713372b8596f626509ac22e7b4b30fba4b2cb396050d9b19ba0df3bb4985",
+      "identity": [
+        "66307",
+        "173152946",
+        "33152",
+        "1",
+        "774",
+        "1790117974664666767",
+        "1790117974664666767"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/debug-requests.jsonl",
+      "bytes": 10184,
+      "sha256": "0f9ad2fdd8b084504a022ce859e308d9e6579be03ad12b1eecf01f78a0668e1e",
+      "identity": [
+        "66307",
+        "173152952",
+        "33152",
+        "1",
+        "10184",
+        "1790117974707665899",
+        "1790117974707665899"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-actual-r3/debug-responses.jsonl",
+      "bytes": 69406,
+      "sha256": "9c569caee68dd88d42aa12f36c5ea8a011cf5a4d034d8d6640addc423cdd5c22",
+      "identity": [
+        "66307",
+        "173152953",
+        "33152",
+        "1",
+        "69406",
+        "1790117974707665899",
+        "1790117974707665899"
+      ]
+    }
+  ],
+  "limits": {
+    "source": 1048576,
+    "bundle": 4194304,
+    "json": 1048576,
+    "tool": 536870912,
+    "selectedInputBytes": 2147483648,
+    "inputReads": 4294967296,
+    "line": 65536,
+    "commands": 128,
+    "requests": 262144,
+    "responses": 8388608,
+    "stderr": 65536,
+    "sourcePages": 32,
+    "sourceValues": 64,
+    "ssaValues": 64,
+    "stream": 1048576,
+    "stages": 16,
+    "observationBytes": 67108864,
+    "failureReserve": 65536,
+    "exportMs": 180000,
+    "stageMs": 30000,
+    "replyMs": 15000,
+    "drainMs": 10000,
+    "debuggerMs": 90000,
+    "totalMs": 300000,
+    "freeBytes": 42949672960,
+    "ramBytes": 68719476736,
+    "cargoJobs": 2,
+    "maxEvents": 65536
+  },
+  "compiler_scratch": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase22w2-fault-source-extraction-r3",
+    "initial_directory_identity": [
+      "66307",
+      "173152518",
+      "16832"
+    ],
+    "accounting": "separate_root_supervisor_budget_not_part_of_64MiB_observation_bound",
+    "full_compiler_closure_pinning": "required_from_outer_supervisor_not_attested_here"
+  },
+  "retained_observation_bytes_before_receipt": 176347,
+  "raw_line_preservation": true,
+  "source_variables": [
+    "queried",
+    "queried"
+  ],
+  "elapsed_ms": 16812
+}

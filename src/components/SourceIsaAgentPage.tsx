@@ -103,6 +103,12 @@ const LocalRecordedWatchSource = lazy(() =>
   })),
 );
 
+const LocalRecordedFaultSource = lazy(() =>
+  import("./RecordedFaultSourceReplay").then((module) => ({
+    default: module.RecordedFaultSourceReplay,
+  })),
+);
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -176,6 +182,7 @@ export function SourceIsaAgentPage() {
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
   const [showWatchpoint, setShowWatchpoint] = useState(false);
   const [showWatchSource, setShowWatchSource] = useState(false);
+  const [showFaultSource, setShowFaultSource] = useState(false);
   const [showOccurrences, setShowOccurrences] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
@@ -350,6 +357,25 @@ export function SourceIsaAgentPage() {
         <div id="recorded-watch-source-content">
           {showWatchSource && <Suspense fallback={<p role="status">Loading recorded watch/source replay…</p>}>
             <LocalRecordedWatchSource />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="recorded-fault-source-heading">
+        <h2 id="recorded-fault-source-heading">Inspect an uncaptured fault and its prior checkpoint</h2>
+        <p>Keep terminal source, SSA and memory unavailable while exploring separately retained
+          earlier source bindings and initialized storage. The standalone simulator diagnostic
+          belongs to a separate execution; selecting recorded moments runs no debugger command.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/ordinary-source-fault-replay-v1.md"
+          target="_blank" rel="noreferrer">Ordinary-source initializedness and reverse-replay lab</a></p>
+        <button type="button" aria-expanded={showFaultSource}
+          aria-controls="recorded-fault-source-content"
+          onClick={() => setShowFaultSource(open => !open)}>
+          {showFaultSource ? "Close recorded fault/source replay" : "Open recorded fault/source replay"}
+        </button>
+        <div id="recorded-fault-source-content">
+          {showFaultSource && <Suspense fallback={<p role="status">Loading recorded fault/source replay…</p>}>
+            <LocalRecordedFaultSource />
           </Suspense>}
         </div>
       </section>
