@@ -1,0 +1,34 @@
+.historical-hardware {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+  gap: .8rem;
+  padding: 1rem;
+  border: 1px solid currentColor;
+  border-radius: .6rem;
+  overflow-wrap: anywhere;
+}
+.historical-hardware p, .historical-hardware h3, .historical-hardware h4 { margin: 0; }
+.historical-hardware label, .historical-hardware-result, .historical-hardware section {
+  display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; gap: .7rem;
+}
+.historical-hardware input, .historical-hardware select {
+  max-width: 100%; width: 100%; min-width: 0; box-sizing: border-box;
+}
+.historical-hardware-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.historical-hardware button, .historical-hardware summary { min-height: 2.75rem; white-space: normal; cursor: pointer; }
+.historical-hardware button { max-width: 100%; overflow-wrap: anywhere; }
+.historical-hardware-boundary { border-left: .25rem solid currentColor; padding-left: .65rem; }
+.historical-hardware dl { margin: 0; min-width: 0; }
+.historical-hardware dt { font-weight: 650; margin-top: .5rem; }
+.historical-hardware dd { margin: .2rem 0 .6rem; min-width: 0; }
+.historical-hardware code { white-space: normal; overflow-wrap: anywhere; }
+.historical-hardware-table { min-width: 0; overflow-x: auto; }
+.historical-hardware table { width: 100%; min-width: 0; table-layout: fixed; border-collapse: collapse; text-align: left; }
+.historical-hardware th, .historical-hardware td { vertical-align: top; padding: .5rem .3rem; border-bottom: 1px solid currentColor; white-space: normal; }
+.historical-hardware th:first-child, .historical-hardware td:first-child { white-space: normal; }
+.historical-hardware :focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+@media (max-width: 40rem) {
+  .historical-hardware { padding: .6rem; }
+  .historical-hardware table { font-size: .85rem; }
+}

@@ -9,6 +9,7 @@ import {
   Terminal,
   TriangleAlert,
 } from "lucide-react";
+import { lazy, Suspense, useState } from "react";
 import { debuggerComparisonLinks } from "../content/debugger-workbench";
 import {
   activeOpaqueCheckpointV1Milestone,
@@ -26,6 +27,10 @@ import {
 import { currentSourceUrl, currentState } from "../content/current-state";
 import { GpuDebugProfilerWorkbench } from "./GpuDebugProfilerWorkbench";
 
+const LocalHistoricalHardwareResources = lazy(() =>
+  import("./HistoricalHardwareResources").then(module => ({ default: module.HistoricalHardwareResources })),
+);
+
 const truthIcons = {
   declared: ShieldCheck,
   observed: Eye,
@@ -34,6 +39,7 @@ const truthIcons = {
 } as const;
 
 export function LiveKfdDebuggerPage() {
+  const [showHistorical, setShowHistorical] = useState(false);
   return (
     <article className="lesson-page live-kfd-page">
       <header className="lesson-header live-kfd-header">
@@ -197,6 +203,21 @@ export function LiveKfdDebuggerPage() {
       </section>
 
       <GpuDebugProfilerWorkbench />
+
+      <section className="live-kfd-limits" aria-label="Optional historical hardware capture">
+        <h2>Historical resource capture, not a live connection</h2>
+        <p>Inspect one bounded local file of reported wave-scoped registers. Uploaded claims
+          stay untrusted and never change the existing backend views or CPU debugger.</p>
+        <button type="button" aria-expanded={showHistorical} aria-controls="historical-hardware-import"
+          onClick={() => setShowHistorical(open => !open)}>
+          {showHistorical ? "Close historical hardware capture" : "Open historical hardware capture"}
+        </button>
+        <div id="historical-hardware-import">
+          {showHistorical && <Suspense fallback={<p role="status">Loading historical capture importer…</p>}>
+            <LocalHistoricalHardwareResources />
+          </Suspense>}
+        </div>
+      </section>
 
       <section className="live-kfd-limits" aria-labelledby="live-kfd-limits-heading">
         <header>
