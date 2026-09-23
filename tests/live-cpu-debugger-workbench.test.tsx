@@ -117,7 +117,7 @@ describe("opt-in live CPU debugger panel", () => {
     expect(screen.getByRole("button", { name: "Connect CPU debugger" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Read CPU stack" })).toBeDisabled();
     await user.click(screen.getByRole("button", { name: "Disconnect CPU debugger" }));
-    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("bridge confirmed cleanup"));
+    await waitFor(() => expect(within(screen.getByRole("region", { name: "Live local CPU debugger" })).getByRole("status")).toHaveTextContent("bridge confirmed cleanup"));
     const cleanupCall = bridge.calls.at(-1)!;
     expect(cleanupCall.url).toBe(SYNTHETIC_ENDPOINT + "/v1/disconnect");
     expect(new Headers(cleanupCall.init.headers).get("X-Fe2o3-Bridge-Token")).toBe(SYNTHETIC_SECRET);
@@ -136,7 +136,7 @@ describe("opt-in live CPU debugger panel", () => {
     }} />);
     await enter(user); await user.click(screen.getByRole("button", { name: "Connect CPU debugger" }));
     await user.click(screen.getByRole("button", { name: "Disconnect CPU debugger" }));
-    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("bridge confirmed cleanup"));
+    await waitFor(() => expect(within(screen.getByRole("region", { name: "Live local CPU debugger" })).getByRole("status")).toHaveTextContent("bridge confirmed cleanup"));
     release(); await Promise.resolve();
     expect(screen.queryByRole("region", { name: "Current validated CPU response" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Read CPU memory" })).toBeDisabled();
@@ -149,7 +149,7 @@ describe("opt-in live CPU debugger panel", () => {
     await enter(user); await user.click(screen.getByRole("button", { name: "Connect CPU debugger" }));
     await screen.findByRole("region", { name: "Current validated CPU response" });
     await user.click(screen.getByRole("button", { name: "Read CPU state" }));
-    await waitFor(() => expect(screen.getByRole("status")).toHaveTextContent("outcome may be unknown"));
+    await waitFor(() => expect(within(screen.getByRole("region", { name: "Live local CPU debugger" })).getByRole("status")).toHaveTextContent("outcome may be unknown"));
     expect(screen.queryByRole("region", { name: "Current validated CPU response" })).not.toBeInTheDocument();
     expect(storage).not.toHaveBeenCalled();
     expect(JSON.stringify([...log.mock.calls, ...error.mock.calls])).not.toContain(SYNTHETIC_SECRET);

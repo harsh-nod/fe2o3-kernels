@@ -1,3 +1,4 @@
+import type { DeclaredRegisterUseGrid } from "./final-native-register-roles.mjs";
 export const FINAL_NATIVE_LIMITS: Readonly<{ artifactBytes: number; sourceBytes: number; reportBytes: number;
   payloadBytes: number; totalBytes: number; payloads: 4; artifacts: 14 }>;
 export interface FinalNativeInstruction {
@@ -9,6 +10,7 @@ export interface FinalNativeCase {
   readonly source: string; readonly sourceSha256: string; readonly semanticSha256: string;
   readonly canonicalKirSha256: string; readonly llvm: string; readonly llvmSha256: string;
   readonly hsacoSha256: string; readonly hsacoBytes: number; readonly program: readonly FinalNativeInstruction[];
+  readonly registerGrid: DeclaredRegisterUseGrid;
   readonly staticInstructions: number; readonly declaredVgprHighWater: 6; readonly encodedVgprCapacity: number;
   readonly architectedVgprBoundary: number; readonly descriptorOffset: number; readonly descriptorSha256: string;
   readonly resource1: number; readonly resource3: number; readonly llvmBuildClaim: string; readonly workerBuildClaim: string;

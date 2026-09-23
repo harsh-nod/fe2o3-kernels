@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FinalNativeComparison } from "../src/components/FinalNativeComparison";
 import * as comparison from "../src/content/final-native-comparison.mjs";
+import { buildDeclaredRegisterUseGrid } from "../src/content/final-native-register-roles.mjs";
 
 // Component state/accessibility controls use a deliberately mocked projection.
 // Complete byte/schema validation is covered independently in the adapter tests.
@@ -30,6 +31,11 @@ function ready(): Extract<comparison.FinalNativeProjection, { status: "ready" }>
           bytesHex: profile === "default" ? "01090a2a" : "01090a28",
           registers: ["VGPR5", "VGPR1", "VGPR4"], fileOffset: 104 },
       ],
+      registerGrid: buildDeclaredRegisterUseGrid([4, 5, 0, 1, 2], [
+        { output: 4, inputs: [0, 1], fileOffset: 96 },
+        { output: 4, inputs: [4, 2], fileOffset: 100 },
+        { output: 5, inputs: [1, 4], fileOffset: 104 },
+      ]),
       staticInstructions: 3, declaredVgprHighWater: 6 as const, encodedVgprCapacity: optimization === "O0" ? 24 : 8,
       architectedVgprBoundary: 8, descriptorOffset: 0, descriptorSha256: "8".repeat(64),
       resource1: optimization === "O0" ? 2 : 0, resource3: 1,

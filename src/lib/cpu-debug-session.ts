@@ -1,4 +1,7 @@
 /** Opt-in loopback CPU transport. No source files, executable paths or shell input. */
+import { isCpuObservedCommand, parseCpuObservedCommand, requireObservedSelection, validateCpuObservedReply,
+  observedOwner, type CpuObservedContext } from "./cpu-observed-protocol";
+import { collectCpuObservedQueries, type CpuObservedCollection, type CpuObservedSelection } from "./cpu-observed-collection";
 import { parseProgramJson } from "../content/ordered-program-observation.mjs";
 import { CPU_LIVE_QUERY_LIMITS, captureCpuCheckpoint, collectCpuQueries, cpuQueryPair, cpuQueryRequestSchema,
   cpuResourceProjection, isCpuQueryOperation, selectCpuInventory, validateCpuQueryReply, validateCpuStack,
@@ -58,6 +61,7 @@ export interface CpuReplyExpectation {
   readonly previous: CpuSessionView | null;
   readonly command: CpuCommand;
   readonly queryContext?: CpuLiveQueryContext;
+  readonly observedContext?: CpuObservedContext;
 }
 const CODES = ["invalid_request", "authentication_failed", "session_exists", "session_unavailable",
   "stale_session", "stale_sequence", "stale_revision", "command_refused", "resource_limit",
@@ -158,6 +162,8 @@ export function parseCpuCommand(text: string): CpuCommand {
   if (typeof text !== "string" || !/^[a-z0-9 ]+$/u.test(text) ||
       new TextEncoder().encode(text).byteLength > CPU_BRIDGE_LIMITS.commandBytes)
     throw new CpuBridgeError("invalid_command", "not_sent");
+  try { const observed = parseCpuObservedCommand(text); if (observed) return observed; }
+  catch { throw new CpuBridgeError("invalid_command", "not_sent"); }
   const words = text.trim().split(/ +/u), [name, ...args] = words;
   let body: Row | undefined;
   if (name === "allocations" && text === "allocations") body = { operation: "query_allocations",
@@ -260,6 +266,16 @@ export function decodeCpuBridgeReply(text: string, expected: CpuReplyExpectation
     const response = row(parseProgramJson(wrapper.response_json, CPU_BRIDGE_LIMITS.protocolBytes));
     const status = response.status;
     requireValue(status === "ok" || status === "unavailable" || status === "error");
+    if (isCpuObservedCommand(expected.command)) {
+      requireValue(expected.previous !== null && expected.observedContext !== undefined);
+      const current = session(response.session, false);
+      same(current, session(wrapper.session, true)); same(current, expected.previous);
+      const reply = freeze({ connectionId: expected.connectionId, bridgeSession, sequence: expected.sequence,
+        session: current, response, responseJson: wrapper.response_json,
+        responseBytes: new TextEncoder().encode(text).byteLength });
+      validateCpuObservedReply(expected.command, reply, expected.previous, expected.observedContext);
+      return reply;
+    }
     if (isCpuQueryOperation(expected.command.operation)) {
       requireValue(expected.previous !== null && expected.queryContext !== undefined);
       requireValue(response.schema === cpuQueryRequestSchema(expected.command.operation).replace("request", "response") &&
@@ -359,13 +375,22 @@ export class CpuDebugSession {
   private collection: CpuLiveQueryCollection | null = null;
   private collectionLease: object | null = null;
   private collectionBytes = 0;
+  private observedOwner: CpuObservedContext["owner"] = null;
+  private observedRuntime: CpuBridgeReply | null = null;
+  private observedInventory: CpuBridgeReply | null = null;
+  private observedResult: CpuObservedCollection | null = null;
+  get observationCollection(): CpuObservedCollection | null { return this.observedResult; }
+  private clearObserved(): void { this.observedRuntime = null; this.observedInventory = null; this.observedResult = null; }
+  private observedContext(): CpuObservedContext {
+    return { owner: this.observedOwner, runtime: this.observedRuntime, inventory: this.observedInventory };
+  }
   get queryCheckpoint(): CpuLiveCheckpoint | null { return this.checkpoint; }
   get queryCollection(): CpuLiveQueryCollection | null { return this.collection; }
   get remainingCommands(): number {
     return this.connection?.view ? Math.max(0, CPU_BRIDGE_LIMITS.maxSequence - Number(this.connection.view.sequence)) : 0;
   }
   private clearQueries(): void {
-    this.checkpoint = null; this.sourceStack = null; this.inventory = null; this.collection = null;
+    this.checkpoint = null; this.sourceStack = null; this.inventory = null; this.collection = null; this.clearObserved();
   }
   constructor(private readonly fetcher: CpuFetch = (input, init) => globalThis.fetch(input, init)) {}
   get needsCleanup(): boolean { return this.connection !== null; }
@@ -373,7 +398,7 @@ export class CpuDebugSession {
   /** Input replacement drops all live values; captured old credentials remain cleanup-only. */
   invalidate(): void {
     this.generation++; this.pending?.abort(); this.pending = null;
-    this.collectionLease = null; this.clearQueries();
+    this.collectionLease = null; this.clearQueries(); this.observedOwner = null;
     if (this.connection) this.connection.view = null;
   }
   private async exchange(connection: Connection, route: string, body: Row, generation: number): Promise<{ response: Response; text: string }> {
@@ -403,7 +428,7 @@ export class CpuDebugSession {
       // Abort that exact fetch as well; clearing its timer must not orphan it.
       aborter.abort();
       if (generation === this.generation) {
-        connection.view = null; this.clearQueries();
+        connection.view = null; this.clearQueries(); this.observedOwner = null;
         if (error instanceof CpuBridgeError && error.backendClosed === true) {
           connection.secret = ""; if (this.connection === connection) this.connection = null;
         }
@@ -424,7 +449,7 @@ export class CpuDebugSession {
     const connectionId = Array.from(nonce, byte => byte.toString(16).padStart(2, "0")).join("");
     identity(connectionId);
     const connection: Connection = { endpoint, secret, connectionId, view: null };
-    this.connection = connection; this.clearQueries(); const generation = ++this.generation;
+    this.connection = connection; this.clearQueries(); this.observedOwner = null; const generation = ++this.generation;
     const { text } = await this.exchange(connection, "/v1/connect", {
       schema: REQUEST_SCHEMA, action: "connect", connection_id: connectionId,
     }, generation);
@@ -444,7 +469,12 @@ export class CpuDebugSession {
     const command = parseCpuCommand(text), previous = this.connection.view, connection = this.connection;
     const sequence = (BigInt(previous.sequence) + 1n).toString();
     if (BigInt(sequence) > BigInt(CPU_BRIDGE_LIMITS.maxSequence)) throw new CpuBridgeError("resource_limit", "not_sent");
-    if (isCpuQueryOperation(command.operation)) {
+    const observed = isCpuObservedCommand(command);
+    if (observed) {
+      try { requireObservedSelection(command, this.observedContext()); }
+      catch { throw new CpuBridgeError("command_refused", "not_sent"); }
+    }
+    if (!observed && isCpuQueryOperation(command.operation)) {
       if (!this.checkpoint) throw new CpuBridgeError("command_refused", "not_sent");
       if (command.operation === "inspect_source_variables" && !this.sourceStack)
         throw new CpuBridgeError("command_refused", "not_sent");
@@ -455,6 +485,9 @@ export class CpuDebugSession {
     }
     if (command.operation === "step" || command.operation === "continue" || MUTATIONS.has(command.operation)) this.clearQueries();
     else this.collection = null;
+    this.observedResult = null;
+    if (!observed) this.clearObserved();
+    const observedContext = this.observedContext();
     const queryContext = this.checkpoint ? { checkpoint: this.checkpoint, stack: this.sourceStack, inventory: this.inventory } : undefined;
     const generation = ++this.generation;
     connection.view = null;
@@ -464,9 +497,16 @@ export class CpuDebugSession {
     }, generation);
     try {
       const view = decodeCpuBridgeReply(result.text, { connectionId: connection.connectionId,
-        bridgeSession: previous.bridgeSession, sequence, previous: previous.session, command, queryContext });
+        bridgeSession: previous.bridgeSession, sequence, previous: previous.session, command, queryContext, observedContext });
       requireValue(generation === this.generation && this.connection === connection);
       connection.view = view;
+      if (observed) {
+        if (command.text === "runtime") {
+          const owner = observedOwner(view); if (owner) this.observedOwner = owner;
+          this.observedRuntime = view.response.status === "ok" ? view : null; this.observedInventory = null;
+        } else if (view.response.status !== "ok") this.clearObserved();
+        else if (command.text === "storage") this.observedInventory = view;
+      }
       if (command.operation === "step") this.checkpoint = captureCpuCheckpoint(command, view, previous.session);
       if (this.checkpoint && command.operation === "inspect_stack") {
         this.sourceStack = null;
@@ -475,10 +515,10 @@ export class CpuDebugSession {
           try { validateCpuStack(this.checkpoint, pair); this.sourceStack = pair; } catch { /* No partial frame authority. */ }
         }
       }
-      if (this.checkpoint && command.operation === "query_allocations")
+      if (!observed && this.checkpoint && command.operation === "query_allocations")
         this.inventory = cpuResourceProjection(this.checkpoint, cpuQueryPair(command, view, previous.session, this.checkpoint));
       return view;
-    } catch (error) { connection.view = null; this.clearQueries(); throw error; }
+    } catch (error) { connection.view = null; this.clearQueries(); this.observedOwner = null; throw error; }
   }
   async collectQueries(selection?: CpuLiveQuerySelection): Promise<CpuLiveQueryCollection> {
     if (this.collectionLease || !this.ready || !this.checkpoint)
@@ -493,6 +533,20 @@ export class CpuDebugSession {
         () => this.collectionLease === lease && this.checkpoint === checkpoint, parseCpuCommand);
       requireValue(this.collectionLease === lease && this.checkpoint === checkpoint);
       this.collection = result; return result;
+    } catch (error) { this.clearQueries(); throw error; }
+    finally { if (this.collectionLease === lease) this.collectionLease = null; }
+  }
+  async collectObserved(selection?: CpuObservedSelection): Promise<CpuObservedCollection> {
+    if (this.collectionLease || !this.ready || !this.connection)
+      throw new CpuBridgeError("command_refused", "not_sent");
+    if (this.remainingCommands < (selection ? 6 : 4)) throw new CpuBridgeError("resource_limit", "not_sent");
+    const connection = this.connection, lease = {};
+    this.collectionLease = lease; this.collectionBytes = 0; this.collection = null; this.clearObserved();
+    try {
+      const result = await collectCpuObservedQueries(selection, text => this.sendCommand(text, lease),
+        () => this.collectionLease === lease && this.connection === connection);
+      requireValue(this.collectionLease === lease && this.connection === connection);
+      this.observedResult = result; return result;
     } catch (error) { this.clearQueries(); throw error; }
     finally { if (this.collectionLease === lease) this.collectionLease = null; }
   }

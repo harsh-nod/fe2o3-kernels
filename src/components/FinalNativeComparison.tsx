@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { HighlightedCode } from "./HighlightedCode";
+import { FinalNativeRegisterRoles } from "./FinalNativeRegisterRoles";
 import { projectFinalNativeComparison, type FinalNativeProjection } from "../content/final-native-comparison.mjs";
 import "./FinalNativeComparison.css";
 
@@ -50,6 +51,7 @@ function NativeReady({ projection }: { projection: Ready }) {
       </table></div>
       <p>All three contiguous slices match their reported full-file offsets. Reported implicit reads: EXEC;
         no implicit writes. This is byte consistency against a retained observer report, not new disassembly.</p>
+      <FinalNativeRegisterRoles grid={current.registerGrid} />
       <p>Descriptor: 64 bytes at payload offset {current.descriptorOffset}. Resource words:
         <code> compute_pgm_rsrc1=0x{current.resource1.toString(16)}</code>,
         <code> compute_pgm_rsrc3=0x{current.resource3.toString(16)}</code>.</p>

@@ -1,0 +1,11 @@
+.live-cpu-observed-panel { border: 1px solid var(--border-color, #777); border-radius: .5rem; margin-block: 1.5rem; padding: 1rem; min-width: 0; }
+.live-cpu-observed-panel section { margin-block: 1rem; min-width: 0; }
+.live-cpu-observed-panel table { border-collapse: collapse; width: 100%; min-width: 0; max-width: 100%; display: block; overflow-x: auto; }
+.live-cpu-observed-panel th, .live-cpu-observed-panel td { text-align: left; vertical-align: top; padding: .5rem; border-bottom: 1px solid var(--border-color, #777); overflow-wrap: anywhere; }
+.live-cpu-observed-panel code, .live-cpu-observed-facts dd { overflow-wrap: anywhere; word-break: break-word; }
+.live-cpu-observed-facts { display: grid; grid-template-columns: minmax(8rem, 1fr) minmax(0, 3fr); gap: .5rem; }
+.live-cpu-observed-facts dd { margin: 0; }
+.live-cpu-observed-panel fieldset { display: flex; flex-wrap: wrap; gap: .75rem; min-width: 0; }
+.live-cpu-observed-panel label { display: flex; flex-direction: column; max-width: 100%; gap: .3rem; }
+.live-cpu-observed-panel select, .live-cpu-observed-panel input { max-width: 100%; }
+@media (max-width: 640px) { .live-cpu-observed-facts { display: block; } .live-cpu-observed-facts dt { margin-top: .5rem; } }

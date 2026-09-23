@@ -118,6 +118,32 @@ liveness, allocation correctness or runtime physical-register values.
 The formulas are this profile's retained interpretation, not a generic decoder
 for every AMD target or wave mode.
 
+### Declared roles versus static instruction uses
+
+The selected case also shows a five-row role/use grid. Scratch is `v4`,
+output is `v5`, and inputs are `v0`, `v1`, `v2`. The first instruction
+writes scratch, the second reads and writes scratch, and the third reads
+scratch and writes output. A keyboard-accessible role button highlights
+that role without changing the selected source/LLVM/payload case.
+
+These explicit effects use the closed opcode semantics whose physical
+operands have already matched the retained report and complete payload.
+The displayed columns retain the same whole-file offsets as the instruction
+table. EXEC's implicit read is stated separately; no runtime EXEC value is
+available.
+
+Every declared role remains in the grid even if it has no explicit use in a
+presentation input. Both real source variants in this capsule use all five
+roles; unused-role tests are synthetic controls, not additional native cases.
+An empty cell does not mean free, dead, safe to overwrite, or uninitialized.
+The undeclared gap `v3` and other whole-kernel capacity have no allocation
+status here. There are no inferred live ranges, dynamic physical values or
+instruction microsteps.
+
+This addition uses the same fourteen-artifact owner, capsule schema, parser
+caps and no-authority boundary. The historical viewer qualification below
+does not by itself qualify this later grid; its integration tests are separate.
+
 ## 4. Inspect exact complete-file byte offsets
 
 The selected program keeps these operands in both source variants:

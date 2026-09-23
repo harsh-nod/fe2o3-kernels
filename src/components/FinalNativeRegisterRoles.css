@@ -1,0 +1,7 @@
+.final-native-register-roles { margin-block: 1rem; min-width: 0; }
+.final-native-register-roles caption { text-align: left; margin-block: .5rem; font-weight: 600; }
+.final-native-register-offset { display: block; font-size: .85em; font-weight: 400; }
+.final-native-register-roles tr[data-selected="true"] td { outline: 1px solid currentColor; outline-offset: -2px; }
+.final-native-register-roles td[data-use="read-write"] { font-weight: 700; }
+.final-native-register-roles td[data-use="none"] { font-style: italic; }
+.final-native-register-selection { min-height: 1.5em; }

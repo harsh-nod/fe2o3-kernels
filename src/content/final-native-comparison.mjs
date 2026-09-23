@@ -1,6 +1,7 @@
 // Read-only integrity projection of retained source/native observations.
 // No compiler, decoder, filesystem, network, execution or authority is supplied.
 import { parseProgramJson } from './ordered-program-observation.mjs';
+import { buildDeclaredRegisterUseGrid } from './final-native-register-roles.mjs';
 
 export const FINAL_NATIVE_LIMITS = Object.freeze({ artifactBytes: 262144, sourceBytes: 65536,
   reportBytes: 65536, payloadBytes: 65536, totalBytes: 2097152, payloads: 4, artifacts: 14 });
@@ -381,6 +382,9 @@ async function nativeRows(report, profile, summary, selectedPayloads, join, ledg
       source: sourceText, sourceSha256: summary.source_sha256, semanticSha256: summary.semantic_sha256,
       canonicalKirSha256: summary.canonical_kir_sha256, llvm: llvmText, llvmSha256: summary.llvm_sha256,
       hsacoSha256: retained.sha256, hsacoBytes: retained.bytes, program, staticInstructions,
+      registerGrid: buildDeclaredRegisterUseGrid(report.register_plan, program.map((instruction, at) => ({
+        output: declared(profile)[at].output, inputs: declared(profile)[at].inputs, fileOffset: instruction.fileOffset,
+      }))),
       declaredVgprHighWater: 6, encodedVgprCapacity: capacity, architectedVgprBoundary: boundary,
       descriptorOffset: offset, descriptorSha256: descriptor.sha256,
       resource1: rsrc1, resource3: rsrc3, llvmBuildClaim: report.llvm_build_claim, workerBuildClaim: report.worker_build_claim });

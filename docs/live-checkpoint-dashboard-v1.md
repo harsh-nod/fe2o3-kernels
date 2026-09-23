@@ -9,6 +9,11 @@ The dashboard adds explicit read-only queries to the
 guide's safe setup, secret handling, basic execution controls or cleanup.
 Recorded viewers remain separate.
 
+For opt-in actual call identities and allocation reuse, see
+[runtime/storage observations](runtime-storage-observations-v1.md) and the
+[ordinary Rust source lab](runtime-observations-source-lab-v1.md). Those
+observations have independent coverage and qualification boundaries.
+
 Fresh normal-source/CPU, live HTTP checks in both compiler forks, and separate
 actual desktop/mobile dashboard sessions passed for this bounded profile.
 The [dated qualification](live-checkpoint-dashboard-qualification-20260923.md)
