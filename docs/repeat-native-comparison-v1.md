@@ -1,5 +1,9 @@
 # Inspect bounded repeated instruction regions
 
+The [optional whole-region origin viewer](ordered-origin-viewer-v1.md) displays
+a separate report, checks its exact shared identities, and clears it on native
+variant changes. The retained example deliberately shows a real mismatch.
+
 The separate [source-origin lab](ordered-program-origin-lab-v1.md) explains
 new whole-region compiler reports. Those captures are not automatically joined
 to this retained native profile; matching source bytes alone are insufficient.

@@ -1,5 +1,9 @@
 # Lab: inspect an ordered assembly region's source origin
 
+The [optional whole-region origin viewer](ordered-origin-viewer-v1.md) displays
+a separate report, checks its exact shared identities, and clears it on native
+variant changes. The retained example deliberately shows a real mismatch.
+
 The normal exporter can now produce an opt-in, bounded source-origin report
 beside raw diagnostic KIR V17. It identifies the **whole ordered region**, not
 each instruction's macro-expansion ancestry. The
@@ -154,15 +158,15 @@ authority, and is not source or compiler-execution authentication.
 The [LLVM](https://github.com/harsh-nod/fe2o3/blob/main/docs/ordered-repeat-llvm-observation-v1.md) and
 [native comparison](https://github.com/harsh-nod/fe2o3/blob/main/docs/ordered-repeat-native-observation-v1.md) guides cover separate
 captures. Do not attach this new report to historical native evidence by label,
-coordinate, repeat count or equal bytes. An eventual viewer handoff must check
-the actual shared identity bindings and preserve unavailable fields.
+coordinate, repeat count or equal bytes. The optional viewer checks the actual
+shared identity bindings and preserves unavailable fields.
 
 ## Relation to the local comparison viewer
 
 The [repeat-native comparison lab](repeat-native-comparison-v1.md) remains a
 separate local, retained-evidence viewer with its own fixed integrity join and
-23-artifact profile. This tutorial does not add origin JSON as an upload format
-or change that profile. Its current native capsules are not automatically joined
-to these fresh origin reports. No network, GPU launch, proof or compilation is
-triggered by that viewer's file import. Origin-to-viewer integration needs a
-separate exact shared-identity adapter and per-variant stale-selection handling.
+23-artifact profile. The [optional origin importer](ordered-origin-viewer-v1.md)
+accepts a separate origin report without changing that capsule profile. Its
+current historical native capsules do not match these fresh origin reports:
+the viewer shows the exact mismatch and clears origins on variant changes.
+No network, GPU launch, proof or compilation is triggered by origin-file import.

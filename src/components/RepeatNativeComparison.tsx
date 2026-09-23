@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { HighlightedCode } from "./HighlightedCode";
 import { FinalNativeRegisterRoles } from "./FinalNativeRegisterRoles";
+import { OrderedOriginImport } from "./OrderedOriginImport";
 import { projectRepeatNativeComparison, type RepeatNativeProjection } from "../content/repeat-native-comparison.mjs";
 import "./FinalNativeComparison.css";
 
@@ -73,6 +74,9 @@ function RepeatReady({ projection }: { projection: Ready }) {
         ] as const).map(([label, value]) => <div key={label}><dt>{label}</dt><dd><code>{value}</code></dd></div>)}
       </dl></details>
     </section>
+    <OrderedOriginImport selectionIdentity={projection.joinSha256 + ":" + current.id}
+      caseLabel={current.label + " " + current.optimization} selected={current}
+      synthetic={projection.kind === "synthetic_test_only"} />
     <details><summary>Repeat comparison integrity and limitations</summary>
       <p>Independently selected join SHA-256: <code>{projection.joinSha256}</code>.</p>
       <p>Source receipt SHA-256: <code>{projection.sourceReceiptSha256}</code>.

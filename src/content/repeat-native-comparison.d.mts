@@ -1,3 +1,4 @@
+import type { OrderedOriginBinding } from "./ordered-origin-observation.mjs";
 import type { DeclaredRegisterUseGrid } from "./final-native-register-roles.mjs";
 import type { FinalNativeInstruction } from "./final-native-comparison.mjs";
 export const REPEAT_NATIVE_LIMITS: Readonly<{ chunkBytes: 65536; receiptBytes: 524288; artifactBytes: 65536;
@@ -12,6 +13,7 @@ export interface RepeatNativeCase {
   readonly source: string; readonly sourceSha256: string; readonly semanticSha256: string;
   readonly canonicalKirSha256: string; readonly kirFileSha256: string;
   readonly sourceInventorySha256: string; readonly sourcePreflightSha256: string;
+  readonly originBinding: OrderedOriginBinding;
   readonly llvm: string; readonly llvmSha256: string; readonly reportSha256: string;
   readonly payloadPath: string; readonly hsacoSha256: string; readonly hsacoBytes: number;
   readonly program: readonly FinalNativeInstruction[]; readonly registerGrid: DeclaredRegisterUseGrid;

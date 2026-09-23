@@ -1,0 +1,5 @@
+.ordered-origin-import { min-width: 0; margin-block: 1.5rem; padding-block: .75rem; border-block-start: 1px solid currentColor; }
+.ordered-origin-import label { display: block; }
+.ordered-origin-import input { display: block; box-sizing: border-box; min-width: 0; max-width: 100%; margin-block: .5rem; }
+.ordered-origin-import p, .ordered-origin-import dd, .ordered-origin-import code { overflow-wrap: anywhere; }
+.ordered-origin-import [data-state="mismatch"] { border-inline-start: 3px solid currentColor; padding-inline-start: .75rem; }
