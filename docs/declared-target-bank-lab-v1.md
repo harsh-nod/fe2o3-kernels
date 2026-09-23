@@ -39,6 +39,6 @@ Physical base addresses, participating hardware lanes, shared native transaction
 
 Each declared-target protocol line including LF and its complete HTTP wrapper is limited to 4096 bytes. The existing collection byte/row/page limits remain independent. These are parser and request-profile limits, not an allocator/RSS guarantee.
 
-The checked-in target-view client/component/browser tests use explicitly synthetic transport fixtures to exercise correlation, clearing, bounds and responsive layout. They are not ordinary-source execution or hardware qualification. A separate fresh actual CLI/HTTP receipt must pin the selected ordinary-source bundle, request, binary, independent inspector identities and exact command/reply bytes before claiming such readback was observed.
+The checked-in target-view client/component/browser tests use explicitly synthetic transport fixtures to exercise correlation, clearing, bounds and responsive layout. They are not ordinary-source execution or hardware qualification. The separate [actual desktop/mobile qualification](declared-target-bank-qualification-20260923.md) now records 112 real HTTP requests across two fresh CPU sessions, with exact selected input pins, full cursor/producer joins, independent bank arithmetic and cleared stale state. Its actual workgroup witness does not turn the synthetic controls into source execution or establish hardware behavior.
 
 This is a one-access arithmetic adapter. It does not prove absence of races or bank conflicts and does not close the hardware visualization milestone.
