@@ -92,6 +92,13 @@ owner-started loopback bridge. Its dated qualification separates ordinary-Rust
 preparation from the assembly-kernel live checks; opening recorded examples
 does not establish or advance a live connection.
 
+The additive [live checkpoint dashboard walkthrough](docs/live-checkpoint-dashboard-v1.md)
+uses the ordinary Rust assembly-chain fixture to inspect separate named source
+values, SSA values, allocation inventory and initialized memory at one accepted
+CPU checkpoint. Queries and refreshes are explicit; historical access overlays
+are not event-time memory. Its qualification is separate from the earlier
+basic live-controls report and from recorded examples.
+
 The [watchpoint/source replay walkthrough](docs/resource-watch-source-replay-v2.md)
 keeps the exact watch stop, immediate write and later/reversed/repeated source
 checkpoints distinct. The [const/watch/native qualification record](docs/const-watch-native-qualification-20260922.md)

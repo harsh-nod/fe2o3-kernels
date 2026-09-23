@@ -1,0 +1,22 @@
+.live-cpu-checkpoint-dashboard { display: grid; gap: 1rem; min-width: 0; max-width: 100%; }
+.live-cpu-checkpoint-dashboard *, .live-cpu-checkpoint-dashboard section, .live-cpu-checkpoint-dashboard fieldset { box-sizing: border-box; min-width: 0; }
+.live-cpu-checkpoint-dashboard p, .live-cpu-checkpoint-dashboard dd, .live-cpu-checkpoint-dashboard code { overflow-wrap: anywhere; }
+.live-cpu-checkpoint-dashboard dd { margin-inline-start: 0; }
+.live-cpu-checkpoint-dashboard button { white-space: normal; min-height: 2.75rem; max-width: 100%; }
+.live-cpu-query-table table { width: 100%; table-layout: fixed; border-collapse: collapse; }
+.live-cpu-query-table th, .live-cpu-query-table td { text-align: start; vertical-align: top; padding: .6rem; overflow-wrap: anywhere; border-bottom: 1px solid var(--border, #8d8d8d); }
+.live-cpu-query-table th { text-transform: none; }
+.live-cpu-query-field { display: none; }
+.live-cpu-query-selection { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.live-cpu-query-selection p { grid-column: 1 / -1; }
+.live-cpu-query-selection label { display: grid; gap: .35rem; }
+.live-cpu-query-selection input, .live-cpu-query-selection select { width: 100%; max-width: 100%; }
+.live-cpu-checkpoint-dashboard .live-cpu-query-overlay { display: flex; align-items: center; gap: .5rem; }
+.live-cpu-checkpoint-dashboard .live-cpu-query-overlay input { width: auto; flex: 0 0 auto; }
+@media (max-width: 640px) {
+  .live-cpu-query-selection { grid-template-columns: minmax(0, 1fr); }
+  .live-cpu-query-table table, .live-cpu-query-table tbody, .live-cpu-query-table tr, .live-cpu-query-table td, .live-cpu-query-table th { display: block; width: 100%; }
+  .live-cpu-query-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .live-cpu-query-table tr { margin-block: .75rem; border: 1px solid var(--border, #8d8d8d); }
+  .live-cpu-query-field { display: block; font-weight: 600; margin-block-end: .25rem; }
+}

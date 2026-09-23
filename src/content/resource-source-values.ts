@@ -1,7 +1,7 @@
 /** Read-only presentation checks, not Rust admission or producer authentication.
  * The framed query is an explicit refinement of a retained unframed checkpoint.
  * Never use equal values or names as a source-variable-to-SSA correspondence. */
-import type { ImportedResourceCheckpoint } from "./recorded-resource-import";
+import type { ResourceCheckpointObservation } from "./resource-checkpoint-observation";
 import { projectResourceCheckpointValues } from "./resource-checkpoint-values";
 import { resourceSnapshotAnchorKey, type ResourceSnapshotAnchor } from "./resource-memory-view";
 
@@ -147,7 +147,7 @@ function variable(value: unknown, functionOrdinal: number): ResourceSourceValueR
     scopeDepth: row.scope_depth, generation, ...availability(row.availability, generation) };
 }
 
-export function projectResourceSourceValues(checkpoint: ImportedResourceCheckpoint,
+export function projectResourceSourceValues(checkpoint: ResourceCheckpointObservation,
   stackPair: ResourceSourceValuePair | null, sourcePages: readonly ResourceSourceValuePair[]): ResourceSourceValuesProjection {
   if (stackPair === null && sourcePages.length === 0) return { status: "unavailable", detail: "No source-variable query was retained for this checkpoint." };
   try {

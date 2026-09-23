@@ -15,6 +15,14 @@ transcript. See [qualification and remaining coverage](#qualification-and-remain
 for the exact distinction. Use matching compiler/site checkouts; an older
 recorded viewer is not an equivalent live connection.
 
+**Next lesson:** the additive [live checkpoint dashboard](live-checkpoint-dashboard-v1.md)
+uses the ordinary Rust assembly-chain fixture for source-variable, inventory,
+retained-access and initialized-memory views. Keep this guide's safe setup and
+cleanup rules, but use that lesson's own request and required workgroup.
+Statements below about the initial panel lacking inventory or Source Variable V2
+describe these original basic controls; the follow-up adds separate explicit
+queries. It does not extend this guide's historical qualification claims.
+
 ## What runs where?
 
 | Part | Its job |

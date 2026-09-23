@@ -1,6 +1,6 @@
 /** Bounded presentation checks, not Rust admission or producer authentication.
  * Read only the selected control snapshot; never join historical access rows. */
-import type { ImportedResourceCheckpoint } from "./recorded-resource-import";
+import type { ResourceCheckpointObservation } from "./resource-checkpoint-observation";
 import { resourceSnapshotAnchorKey, type ResourceSnapshotAnchor } from "./resource-memory-view";
 
 export const RESOURCE_CHECKPOINT_VALUE_LIMIT = 64;
@@ -131,7 +131,7 @@ function valueRow(value: unknown): CheckpointValueRow {
   return { ...identity, status: "captured", typeLabel: label, representation: bits.bits, interpretation: interpreted };
 }
 
-export function projectResourceCheckpointValues(checkpoint: ImportedResourceCheckpoint): CheckpointValuesProjection {
+export function projectResourceCheckpointValues(checkpoint: ResourceCheckpointObservation): CheckpointValuesProjection {
   try {
     const expectedKey = resourceSnapshotAnchorKey(checkpoint.anchor);
     if (expectedKey === null || expectedKey !== checkpoint.anchorKey) refuse("stale", "The independent checkpoint anchor changed.");

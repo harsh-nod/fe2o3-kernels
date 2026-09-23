@@ -1,5 +1,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 import { CpuBridgeError, CpuDebugSession, type CpuBridgeReply, type CpuFetch } from "../lib/cpu-debug-session";
+import type { CpuLiveQueryCollection, CpuLiveQuerySelection } from "../lib/cpu-live-query-collection";
+import { LiveCpuCheckpointDashboard } from "./LiveCpuCheckpointDashboard";
 import "./LiveCpuDebuggerWorkbench.css";
 
 type Fields = Record<"function" | "block" | "operation" | "allocation" | "generation" | "offset" | "length" | "breakId" | "watchId", string>;
@@ -61,6 +63,7 @@ function Reply({ reply }: { reply: CpuBridgeReply }) {
 export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {}) {
   const [client] = useState(() => new CpuDebugSession(fetcher));
   const [endpoint, setEndpoint] = useState(""), [reply, setReply] = useState<CpuBridgeReply | null>(null);
+  const [queryCollection, setQueryCollection] = useState<CpuLiveQueryCollection | null>(null);
   const [fields, setFields] = useState<Fields>({ ...EMPTY_FIELDS });
   const [count, setCount] = useState("1"), [budget, setBudget] = useState("1024");
   const [phase, setPhase] = useState("before"), [access, setAccess] = useState("write");
@@ -68,14 +71,14 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
   const password = useRef<HTMLInputElement | null>(null), endpointInput = useRef<HTMLInputElement | null>(null);
   const generation = useRef(0), heading = useId();
   useEffect(() => () => { generation.current++; client.dispose(); }, [client]);
-  function clearVisible() { generation.current++; setReply(null); setBusy(false); }
+  function clearVisible() { generation.current++; setReply(null); setQueryCollection(null); setBusy(false); }
   function replaceConnection() {
     clearVisible(); client.invalidate();
     setNotice(client.needsCleanup
       ? "Connection input changed. Live values cleared; Disconnect still targets the captured old connection. Cleanup is required before reconnecting."
       : "Connection input changed. No debugger request has been sent.");
   }
-  function editField(name: keyof Fields, value: string) { setReply(null); setFields(previous => ({ ...previous, [name]: value })); }
+  function editField(name: keyof Fields, value: string) { setReply(null); setQueryCollection(null); setFields(previous => ({ ...previous, [name]: value })); }
   function fail(error: unknown) {
     const failure = error instanceof CpuBridgeError ? error : new CpuBridgeError("transport_failed", "unknown");
     setNotice(failure.code + ": " + failure.message);
@@ -100,6 +103,18 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
     } catch (error) { if (current === generation.current) fail(error); }
     finally { if (current === generation.current) setBusy(false); }
   }
+  async function collectQueries(selection?: CpuLiveQuerySelection) {
+    clearVisible(); const current = generation.current;
+    setBusy(true); setNotice("Collecting one bounded live CPU checkpoint view. No execution or filter mutation.");
+    try {
+      const next = await client.collectQueries(selection);
+      if (current === generation.current) {
+        setQueryCollection(next); setReply(next.replies.at(-1) ?? null);
+        setNotice("Bounded checkpoint queries completed. Availability and omitted pages remain explicit.");
+      }
+    } catch (error) { if (current === generation.current) fail(error); }
+    finally { if (current === generation.current) setBusy(false); }
+  }
   async function disconnect() {
     clearVisible(); const current = generation.current;
     setBusy(true); setNotice("Live state cleared. Requesting bounded cleanup of the captured connection…");
@@ -120,7 +135,7 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
     return <label>{label}<input inputMode="numeric" autoComplete="off" maxLength={20} value={fields[name]}
       onChange={event => editField(name, event.target.value)} /></label>;
   }
-  return <section className="live-cpu-debugger" aria-labelledby={heading}>
+  return <><section className="live-cpu-debugger" aria-labelledby={heading}>
     <h3 id={heading}>Live local CPU debugger</h3>
     <p className="live-cpu-boundary">Opt-in connection to a separately started local CPU bridge.
       These controls send real bounded debugger requests; the recorded examples elsewhere remain independent.
@@ -147,9 +162,9 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
       <legend>Live CPU execution controls</legend>
       <div className="live-cpu-fields">
         <label>Operation step count<input inputMode="numeric" maxLength={2} value={count}
-          onChange={event => { setReply(null); setCount(event.target.value); }} /></label>
+          onChange={event => { setReply(null); setQueryCollection(null); setCount(event.target.value); }} /></label>
         <label>Continue event budget<input inputMode="numeric" maxLength={5} value={budget}
-          onChange={event => { setReply(null); setBudget(event.target.value); }} /></label>
+          onChange={event => { setReply(null); setQueryCollection(null); setBudget(event.target.value); }} /></label>
       </div>
       <p>Steps are operation-granularity (1..64); continue is bounded to 1..65536 events.
         Logical CPU state is not a hardware wave/register observation.</p>
@@ -167,7 +182,7 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
         Source resolves a location only; it does not read source files or query source variables.</p>
       <div className="live-cpu-fields">{field("function", "Function ordinal")}{field("block", "Block roster ordinal")}
         {field("operation", "Operation ordinal")}
-        <label>Breakpoint phase<select value={phase} onChange={event => { setReply(null); setPhase(event.target.value); }}>
+        <label>Breakpoint phase<select value={phase} onChange={event => { setReply(null); setQueryCollection(null); setPhase(event.target.value); }}>
           <option value="before">Before operation</option><option value="after">After operation</option></select></label>
         {field("breakId", "Breakpoint ID to remove")}
       </div>
@@ -184,7 +199,7 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
         Offset is allocation-relative, length is 1..4096 bytes, and watch timing is after_commit.</p>
       <div className="live-cpu-fields">{field("allocation", "Allocation ordinal")}{field("generation", "Allocation generation")}
         {field("offset", "Allocation byte offset")}{field("length", "Memory byte length")}
-        <label>Watchpoint access<select value={access} onChange={event => { setReply(null); setAccess(event.target.value); }}>
+        <label>Watchpoint access<select value={access} onChange={event => { setReply(null); setQueryCollection(null); setAccess(event.target.value); }}>
           {["read", "write", "atomic", "any"].map(value => <option key={value}>{value}</option>)}</select></label>
         {field("watchId", "Watchpoint ID to remove")}
       </div>
@@ -199,5 +214,6 @@ export function LiveCpuDebuggerWorkbench({ fetcher }: { fetcher?: CpuFetch } = {
       Source, stack, memory and snapshot unavailability remain backend-owned facts. No source-to-SSA, dynamic-frame,
       lifetime/reuse, protected-proof or compiler-authentication claim is made.</p>
     {reply && <Reply reply={reply} />}
-  </section>;
+  </section><LiveCpuCheckpointDashboard checkpoint={client.queryCheckpoint} collection={queryCollection}
+    busy={busy} remainingCommands={client.remainingCommands} onRefresh={selection => void collectQueries(selection)} /></>;
 }
