@@ -1,5 +1,9 @@
 # Inspect bounded repeated instruction regions
 
+The separate [source-origin lab](ordered-program-origin-lab-v1.md) explains
+new whole-region compiler reports. Those captures are not automatically joined
+to this retained native profile; matching source bytes alone are insufficient.
+
 This optional local developer preview is a separate **23-artifact** profile. It
 does not change the existing 14-artifact, four-case source/native comparison.
 No example is loaded automatically, and opening the panel does not compile,
