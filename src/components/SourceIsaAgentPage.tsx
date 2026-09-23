@@ -55,6 +55,15 @@ const RecordedFinalNativeComparison = lazy(async () => {
   };
 });
 
+const LocalRepeatNativeImport = lazy(() =>
+  import("./RepeatNativeImport").then(module => ({
+    default: function HistoricalRepeatNativePreview() {
+      return <module.RepeatNativeImport
+        expectedJoinSha256="7b13ad313fc51715c45f387ea1258e85365a2a526b66ba88002350fea04c4661" />;
+    },
+  })),
+);
+
 const RecordedAuthoringNavigation = lazy(async () => {
   const [{ AuthoringNavigation }, { AUTHORING_NAVIGATION_RETAINED_INPUT }] = await Promise.all([
     import("./AuthoringNavigation"),
@@ -182,6 +191,7 @@ export function SourceIsaAgentPage() {
   const [activeView, setActiveView] = useState(0);
   const [showSourceComparison, setShowSourceComparison] = useState(false);
   const [showFinalNativeComparison, setShowFinalNativeComparison] = useState(false);
+  const [showRepeatNativeImport, setShowRepeatNativeImport] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
@@ -262,6 +272,28 @@ export function SourceIsaAgentPage() {
         <div id="final-native-comparison-content">
           {showFinalNativeComparison && <Suspense fallback={<p role="status">Checking retained native bytes…</p>}>
             <RecordedFinalNativeComparison />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="repeat-native-import-heading">
+        <h2 id="repeat-native-import-heading">Preview a local bounded repeat/native capsule</h2>
+        <p>Separately import eight retained cases for a declared 1-, 2-, or 15-add region.
+          This optional developer preview checks one fixed historical content pin, not producer
+          authentication or fresh execution. No capsule is loaded or fetched automatically.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/examples/source_repeat_native_comparison_v1.json"
+          target="_blank" rel="noreferrer">Download retained repeat-native example (GitHub)</a>
+          {" "}and choose the saved JSON file in the local preview.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/repeat-native-comparison-v1.md"
+          target="_blank" rel="noreferrer">Repeat-region interpretation, bounds, and limitations</a></p>
+        <button type="button" aria-expanded={showRepeatNativeImport}
+          aria-controls="repeat-native-import-content"
+          onClick={() => setShowRepeatNativeImport(open => !open)}>
+          {showRepeatNativeImport ? "Close local repeat-native preview" : "Open local repeat-native preview"}
+        </button>
+        <div id="repeat-native-import-content">
+          {showRepeatNativeImport && <Suspense fallback={<p role="status">Loading local repeat-native preview…</p>}>
+            <LocalRepeatNativeImport />
           </Suspense>}
         </div>
       </section>
