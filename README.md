@@ -86,6 +86,12 @@ The [helper-frame source-value walkthrough](docs/resource-helper-source-values-v
 uses a real CPU recording to keep caller/helper frames, source-variable pages,
 SSA rows and reverse/repeat checkpoints distinct.
 
+The separate [live local CPU debugger walkthrough](docs/live-cpu-debugger-v1.md)
+describes an opt-in connection to one fixed, normal-source bundle through an
+owner-started loopback bridge. Its dated qualification separates ordinary-Rust
+preparation from the assembly-kernel live checks; opening recorded examples
+does not establish or advance a live connection.
+
 The [watchpoint/source replay walkthrough](docs/resource-watch-source-replay-v2.md)
 keeps the exact watch stop, immediate write and later/reversed/repeated source
 checkpoints distinct. The [const/watch/native qualification record](docs/const-watch-native-qualification-20260922.md)

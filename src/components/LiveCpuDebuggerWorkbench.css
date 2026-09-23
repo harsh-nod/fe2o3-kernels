@@ -1,0 +1,18 @@
+.live-cpu-debugger { display: grid; gap: 1rem; min-width: 0; margin-block: 1rem; }
+.live-cpu-debugger * { box-sizing: border-box; }
+.live-cpu-debugger p, .live-cpu-debugger dd, .live-cpu-debugger code { overflow-wrap: anywhere; }
+.live-cpu-debugger form, .live-cpu-debugger fieldset, .live-cpu-reply, .live-cpu-memory { display: grid; gap: .75rem; min-width: 0; }
+.live-cpu-debugger label { display: grid; gap: .35rem; min-width: 0; }
+.live-cpu-debugger input, .live-cpu-debugger select { min-width: 0; width: 100%; max-width: 100%; }
+.live-cpu-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.live-cpu-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.live-cpu-actions button { white-space: normal; min-height: 2.75rem; }
+.live-cpu-boundary { border-inline-start: .25rem solid var(--accent, #6d77c5); padding-inline-start: .8rem; }
+.live-cpu-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.live-cpu-facts div, .live-cpu-debugger details { min-width: 0; }
+.live-cpu-facts dd { margin-inline-start: 0; }
+.live-cpu-debugger pre { max-width: 100%; max-height: 24rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .live-cpu-fields, .live-cpu-facts { grid-template-columns: minmax(0, 1fr); }
+  .live-cpu-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
+}

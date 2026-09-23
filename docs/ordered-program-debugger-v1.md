@@ -260,3 +260,12 @@ captures remain unchanged and cannot be relabeled as V17. These drafts advance n
 [#280](https://github.com/harsh-nod/fe2o3/issues/280),
 [#281](https://github.com/harsh-nod/fe2o3/issues/281), and
 [#282](https://github.com/harsh-nod/fe2o3/issues/282), not their full milestones.
+
+## Separate optional live CPU walkthrough
+
+For explicit browser commands to an owner-started local CPU debugger, see
+[Debug an ordinary Rust kernel through a live local CPU session](live-cpu-debugger-v1.md).
+That guide starts from a fresh ordinary Rust export and fixed input hashes.
+Its [dated qualification](live-cpu-debugger-qualification-20260923.md) separates
+the ordinary-Rust preparation from the assembly-kernel live HTTP/browser checks.
+Neither the retained viewer nor the historical batch above supplies that evidence.

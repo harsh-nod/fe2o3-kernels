@@ -109,6 +109,12 @@ const LocalRecordedFaultSource = lazy(() =>
   })),
 );
 
+const LocalLiveCpuDebugger = lazy(() =>
+  import("./LiveCpuDebuggerWorkbench").then((module) => ({
+    default: module.LiveCpuDebuggerWorkbench,
+  })),
+);
+
 const truthRows = [
   ["Fixture provenance", "synthetic / self-claimed", "The archive demonstrates the protocol; it was not produced by a protected compiler run."],
   ["Archive authenticity", "false", "Canonical structure and identity do not authenticate who produced the archive."],
@@ -183,6 +189,7 @@ export function SourceIsaAgentPage() {
   const [showWatchpoint, setShowWatchpoint] = useState(false);
   const [showWatchSource, setShowWatchSource] = useState(false);
   const [showFaultSource, setShowFaultSource] = useState(false);
+  const [showLiveCpu, setShowLiveCpu] = useState(false);
   const [showOccurrences, setShowOccurrences] = useState(false);
   const selected = sourceIsaCharacteristicPlanes[activeView];
 
@@ -376,6 +383,22 @@ export function SourceIsaAgentPage() {
         <div id="recorded-fault-source-content">
           {showFaultSource && <Suspense fallback={<p role="status">Loading recorded fault/source replay…</p>}>
             <LocalRecordedFaultSource />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="live-cpu-heading">
+        <h2 id="live-cpu-heading">Connect a separate local CPU debugger</h2>
+        <p>This opt-in panel sends real bounded requests only after an explicit connection
+          to your separately started loopback bridge. Recorded examples remain local,
+          immutable and independent. No GPU or source-edit route is added.</p>
+        <button type="button" aria-expanded={showLiveCpu} aria-controls="live-cpu-content"
+          onClick={() => setShowLiveCpu(open => !open)}>
+          {showLiveCpu ? "Close live CPU debugger" : "Open live CPU debugger"}
+        </button>
+        <div id="live-cpu-content">
+          {showLiveCpu && <Suspense fallback={<p role="status">Loading opt-in CPU debugger…</p>}>
+            <LocalLiveCpuDebugger />
           </Suspense>}
         </div>
       </section>
