@@ -191,6 +191,7 @@ const expertCompute: Lesson = {
       sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
       sourceSha256:
         "a4af47e5ab3cad6a16d4b0cd2fc9028d0660469a75914474a7fc0d984934bd0a",
+      sourceDigestScope: "file",
       explanatory: false,
       notice:
         "Current annotated kernel source; comments expose launch validation, wave ownership, the typed MFMA tile, and disjoint output commit. Historical execution evidence remains pinned separately.",

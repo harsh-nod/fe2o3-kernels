@@ -71,9 +71,11 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(8);
+    expect(wholeFileTabs).toHaveLength(12);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
+      "examples/flash_attention_general_v1/src/kernel.rs",
+      "examples/gemm_autoresearch_v1/src/kernel.rs",
       "examples/gfx950_advanced_attention/src/ablation.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
@@ -81,6 +83,8 @@ describe("evidence source digest scopes", () => {
       "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+      "examples/moe_grouped_expert_general_v1/src/kernel.rs",
+      "examples/tiled_gemm_general_v1/src/kernel.rs",
     ]);
     for (const { lessonId, tab } of wholeFileTabs) {
       const source = tabEvidenceSource(lessonId, tab)!;
