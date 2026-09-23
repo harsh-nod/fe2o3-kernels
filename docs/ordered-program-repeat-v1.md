@@ -4,6 +4,12 @@ This follow-on to the [flat instruction-program lab](ordered-program-authoring-v
 adds a shorter source spelling for repeated instructions. It does not add a GPU
 loop, branch instruction or scheduling pass.
 
+For a different compile-time choice, the
+[constant-selection lab](ordered-program-select-v1.md) keeps two flat
+alternatives together and validates both, including the inactive one.
+Its fresh normal-source/CPU qualification is separate; selection cannot be
+nested inside this repeat spelling and does not inherit the results below.
+
 The bounded normal-source/CPU and ordinary LLVM acceptance runs passed in both
 compiler forks. These results cover the profile below, not general control-flow
 authoring or final native execution. Use matching tools built from source

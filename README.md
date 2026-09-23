@@ -60,6 +60,10 @@ and [recorded logical debugger observations](docs/ordered-program-debugger-v1.md
 The [literal-repeat follow-on](docs/ordered-program-repeat-v1.md) describes
 compile-time repetition into the same bounded flat instruction representation;
 its finite normal-source, CPU and LLVM qualification is recorded in the lab.
+The [constant-selection lab](docs/ordered-program-select-v1.md) explains
+choosing between two independently checked flat programs with a concrete bool.
+Its finite normal-source/CPU qualification passed in both forks; it adds no
+runtime branch and does not reuse repeat evidence or change curriculum pins.
 The existing cross-layer inspector also includes a read-only
 [ordinary Rust/KIR navigation example](docs/ordinary-authoring-navigation-v1.md).
 The same inspector offers **Open recorded program tutorial** for the existing
