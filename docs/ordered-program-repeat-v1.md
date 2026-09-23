@@ -191,11 +191,70 @@ controls are not extra kernel executions.
 
 The [dated evidence](https://github.com/harsh-nod/fe2o3/blob/main/docs/evidence/authoring-repeat-fault-20260922.md#final-publication-qualification)
 holds exact receipt/tool/input pins. Results for other authoring features must
-not be counted as repeat evidence. Native inspection, GPU execution and
-performance each still need separate evidence; no native count or native
-qualification is claimed for this repeat profile.
+not be counted as repeat evidence. That original source/LLVM report makes no
+native-inspection claim; the separate dated native observation is described
+below. GPU execution and performance remain unqualified.
 
 No new source/proof authentication, physical helper ABI, general control-flow
 or memory support, protected publication or milestone completion follows from
 this bounded acceptance. General M2 and U2 acceptance remain open. Curriculum
 pins and maturity labels remain unchanged.
+
+## Follow the repeated program into final native instructions
+
+The source and LLVM results above remain their original bounded qualification.
+A separate [repeat-native workflow](https://github.com/harsh-nod/fe2o3/blob/main/docs/ordered-repeat-native-observation-v1.md)
+adds final-machine inspection without changing the source macro, normal emitter
+or protected worker. The separate
+[dated native qualification](https://github.com/harsh-nod/fe2o3/blob/main/docs/evidence/authoring-repeat-native-20260923.md)
+records actual build/run identities, passed checks and their limits.
+
+Start with a complete successful source-acceptance capture and its matching
+four-output LLVM observation. Preserve their exact original repository,
+receipt, source/tool and output paths. The native driver must live in that
+original repository's `scripts/`; copying receipts to another worktree or
+rewriting paths is not supported. A new checkout must first produce new matching
+source and LLVM captures. Keep canonical and mirror observations separate.
+
+Follow the compiler guide to configure the standalone observer with its
+allowlisted worker, explicit LLVM22/static LLD SDK and independently reviewed
+claims. Build the separate `ordered-repeat-source-candidate` target in a new
+directory, run its shape controls, and independently pin the resulting binary.
+Then invoke `scripts/ordered-repeat-native-observation.mjs` with both original
+receipt paths/hashes/sizes, the original repository, selected observer
+path/hash/size, reviewed build claims and a fresh output directory. The compiler
+guide lists the complete 13-flag command; no browser action runs it.
+
+The source-to-native driver rechecks the previous 120 complete CPU results and
+eight frontend refusals, but does not run new simulations. It makes four real
+native invocations for one, two, fifteen and repeated fifteen; each builds O0
+and O3 and retains a complete HSACO. Successful observation therefore requires
+eight native compilation cases, not eight GPU executions.
+
+Inspect each count as a single ordered assembly unit:
+
+| Count | Exact authored final sequence | Expected e32 little-endian bytes |
+| --- | --- | --- |
+| 1 | MOV, ADD | `2203427e`, `21474268` |
+| 2 | MOV, ADD, ADD | `2203427e`, twice `21474268` |
+| 15 | MOV followed by fifteen ADDs | `2203427e`, fifteen times `21474268` |
+
+These are independent expected literals, not a claim about unobserved output.
+The decoder must actually report MOV operands VGPR33/VGPR34, ADD operands
+VGPR33/VGPR33/VGPR35, exact contiguous four-byte sites and a unique sequence.
+The join checks their bytes at the decoder's ELF file offsets in each complete
+retained payload. Extra ADDs, gaps, duplicates, wrong counts/registers/constraints
+or wide encodings cannot silently match.
+
+The final descriptor must cover declared high-water 37. Its encoded capacity
+and architected boundary are not an exact 37-register usage claim, occupancy
+estimate, physical value trace or proof of register lifetime. The surrounding
+Rust's store/indexing still passes through LLVM; matching instructions is not
+independent proof of the whole compiled kernel or memory-address calculation.
+
+The repeated fifteen case must genuinely compile again and match its prior
+same-optimization whole payload. This finite equality is not a general
+determinism promise. The native lane adds neither runtime loops/scheduling nor
+per-instruction debugger snapshots, source-to-SSA links, GPU results, protected
+proof, production resume or blanket milestone completion. Keep the original
+CPU, LLVM, native-codegen and hardware evidence categories distinct.
