@@ -12,6 +12,10 @@ the ordinary Rust/KIR boundary shown by [ordinary source navigation](ordinary-au
 but requires a fresh compiler export; that viewer's historical capture is not
 an input to the new compilation.
 
+The [native compilation follow-on](source-helper-native-v30.md) adds a separate
+2026-09-24 normal-driver and O0/O3 worker qualification. The historical source/CPU
+record below remains unchanged and does not acquire native or hardware authority.
+
 ## 1. Inspect the actual ordinary Rust operation
 
 Start from the unchanged compiler fixture:

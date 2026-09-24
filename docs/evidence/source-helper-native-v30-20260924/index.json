@@ -1,0 +1,100 @@
+{
+  "schema": "source-helper-native-documentation-evidence-v1",
+  "compiler_publication": "ed69ea8c845a5d13adbaceedf1b6b3321217d6ed",
+  "source_authentication": false,
+  "protected_authority": false,
+  "hardware_observed": false,
+  "milestone_completion": false,
+  "records": [
+    {
+      "name": "public-source.json",
+      "source_path": "phase28-helper-public-v30-r4/receipt.json",
+      "source_bytes": 410379,
+      "source_sha256": "7c419ab2dc2e8d555f5dc34e47243d2862e0714a5c5737fadf92a35fd295cd14",
+      "retained_bytes": 410379,
+      "retained_sha256": "7c419ab2dc2e8d555f5dc34e47243d2862e0714a5c5737fadf92a35fd295cd14",
+      "normalization": "none"
+    },
+    {
+      "name": "normal-driver.json",
+      "source_path": "phase28-helper-generated-ladder-v30-r2/observation.json",
+      "source_bytes": 38570,
+      "source_sha256": "6d5b36d38ce88926c86db738f1ede8200cd257dd19d79937674b335732e09b08",
+      "retained_bytes": 38571,
+      "retained_sha256": "df861492b4eb1844da7ea2bce352376aedf7aedab9e4c60ee1ca345dc248c919",
+      "normalization": "append-one-final-newline"
+    },
+    {
+      "name": "default256-o0.json",
+      "source_path": "phase28-helper-native-default256-o0-r2/observation.json",
+      "source_bytes": 116588,
+      "source_sha256": "8cb0a864761296ca9a71be028eddc8e87ade7ed302f268265d10ac22c5517dcf",
+      "retained_bytes": 116588,
+      "retained_sha256": "8cb0a864761296ca9a71be028eddc8e87ade7ed302f268265d10ac22c5517dcf",
+      "normalization": "none"
+    },
+    {
+      "name": "default256-o3.json",
+      "source_path": "phase28-helper-native-default256-o3-r2/observation.json",
+      "source_bytes": 24130,
+      "source_sha256": "daab89489048e90f0bff9ed4236c612c78dbefceb5282a4d9a921385aa72d1af",
+      "retained_bytes": 24130,
+      "retained_sha256": "daab89489048e90f0bff9ed4236c612c78dbefceb5282a4d9a921385aa72d1af",
+      "normalization": "none"
+    },
+    {
+      "name": "edited512-o0.json",
+      "source_path": "phase28-helper-native-edited512-o0-r2/observation.json",
+      "source_bytes": 116577,
+      "source_sha256": "336375827c67ff57c0860019ddc209b702dbb74a485504f6a6d6fb08ece6744c",
+      "retained_bytes": 116577,
+      "retained_sha256": "336375827c67ff57c0860019ddc209b702dbb74a485504f6a6d6fb08ece6744c",
+      "normalization": "none"
+    },
+    {
+      "name": "edited512-o3.json",
+      "source_path": "phase28-helper-native-edited512-o3-r2/observation.json",
+      "source_bytes": 24119,
+      "source_sha256": "2b7f570c4d0de2af37607d60d7c2e2bc9dd3a85a29be8f13c6a82fc4d443984c",
+      "retained_bytes": 24119,
+      "retained_sha256": "2b7f570c4d0de2af37607d60d7c2e2bc9dd3a85a29be8f13c6a82fc4d443984c",
+      "normalization": "none"
+    },
+    {
+      "name": "repeat-o0.json",
+      "source_path": "phase28-helper-native-repeat-o0-r2/observation.json",
+      "source_bytes": 116562,
+      "source_sha256": "2bdc4be1c71cba6fd92c7ce2625ad212eeff0f761cc42614c5439960fbd5fcd5",
+      "retained_bytes": 116562,
+      "retained_sha256": "2bdc4be1c71cba6fd92c7ce2625ad212eeff0f761cc42614c5439960fbd5fcd5",
+      "normalization": "none"
+    },
+    {
+      "name": "repeat-o3.json",
+      "source_path": "phase28-helper-native-repeat-o3-r2/observation.json",
+      "source_bytes": 24104,
+      "source_sha256": "ddd49135e12488cdcc8a9dcdaf424ede9c2cd9fada441a5c3aa89759c793d62f",
+      "retained_bytes": 24104,
+      "retained_sha256": "ddd49135e12488cdcc8a9dcdaf424ede9c2cd9fada441a5c3aa89759c793d62f",
+      "normalization": "none"
+    },
+    {
+      "name": "two-o0.json",
+      "source_path": "phase28-helper-native-two-o0-r2/observation.json",
+      "source_bytes": 153597,
+      "source_sha256": "7ff9eac7217af78c5fe92abc05858609a4ec88d7fb5ba3475803ceeac9696e65",
+      "retained_bytes": 153597,
+      "retained_sha256": "7ff9eac7217af78c5fe92abc05858609a4ec88d7fb5ba3475803ceeac9696e65",
+      "normalization": "none"
+    },
+    {
+      "name": "two-o3.json",
+      "source_path": "phase28-helper-native-two-o3-r2/observation.json",
+      "source_bytes": 27233,
+      "source_sha256": "7fe7d35d1b382b0989f6294c9782d32dba916a738ae0b3c118903e58d5a3e55d",
+      "retained_bytes": 27233,
+      "retained_sha256": "7fe7d35d1b382b0989f6294c9782d32dba916a738ae0b3c118903e58d5a3e55d",
+      "normalization": "none"
+    }
+  ]
+}

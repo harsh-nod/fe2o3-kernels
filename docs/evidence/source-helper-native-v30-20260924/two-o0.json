@@ -1,0 +1,6064 @@
+{
+  "actual_llvm_bytes_unchanged": true,
+  "code_object_version": 6,
+  "derivation_identity": "6bee60286c1aa0d7970a9f79886d7c2cccd6ea3054270585b6f38305fff6d8b5",
+  "grants_artifact_or_launch_authority": false,
+  "hardware_observed": false,
+  "kernel_descriptor": "bitwise_chain.kd",
+  "kernel_entry": "bitwise_chain",
+  "label": "two",
+  "llvm": {
+    "declared_intrinsics": [
+      "llvm.amdgcn.workgroup.id.x",
+      "llvm.amdgcn.workitem.id.x"
+    ],
+    "defined_function_count": 3,
+    "helpers": [
+      {
+        "llvm_noinline": false,
+        "one_i32_argument_and_i32_result": true,
+        "specialization_u32": 512,
+        "symbol": "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009",
+        "vor_uses_argument_and_constant_and_is_returned": true
+      },
+      {
+        "llvm_noinline": false,
+        "one_i32_argument_and_i32_result": true,
+        "specialization_u32": 256,
+        "symbol": "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99",
+        "vor_uses_argument_and_constant_and_is_returned": true
+      }
+    ],
+    "instruction_count": 26,
+    "kernel_component_count": 4,
+    "root_expression_and_guard_semantics_reproved_here": false
+  },
+  "llvm_build_id": "rocm7.2.1-packages-sha256:eb02c62693d6697017195f0abf5ebcf7e58f60e4d2acf8356de2e944bceec540",
+  "llvm_symbol_storage_verified_after_worker": true,
+  "milestone_completion": false,
+  "native": {
+    "all_six_live_source_operations_qualified": false,
+    "analyzer_identity": "f763df810fd82d430268c5573a84644ece7ea693262bde52fe061e0d1412c72b",
+    "blocks": [
+      {
+        "first_file_offset": 2580,
+        "function": "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009",
+        "instruction_count": 4,
+        "ordinal": 0,
+        "successors": []
+      },
+      {
+        "first_file_offset": 2560,
+        "function": "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99",
+        "instruction_count": 4,
+        "ordinal": 0,
+        "successors": []
+      },
+      {
+        "first_file_offset": 2816,
+        "function": "bitwise_chain",
+        "instruction_count": 57,
+        "ordinal": 0,
+        "successors": [
+          1
+        ]
+      },
+      {
+        "first_file_offset": 3148,
+        "function": "bitwise_chain",
+        "instruction_count": 18,
+        "ordinal": 1,
+        "successors": [
+          2
+        ]
+      },
+      {
+        "first_file_offset": 3280,
+        "function": "bitwise_chain",
+        "instruction_count": 48,
+        "ordinal": 2,
+        "successors": [
+          3,
+          4
+        ]
+      },
+      {
+        "first_file_offset": 3564,
+        "function": "bitwise_chain",
+        "instruction_count": 1,
+        "ordinal": 3,
+        "successors": [
+          6
+        ]
+      },
+      {
+        "first_file_offset": 3568,
+        "function": "bitwise_chain",
+        "instruction_count": 15,
+        "ordinal": 4,
+        "successors": [
+          5,
+          7
+        ]
+      },
+      {
+        "first_file_offset": 3652,
+        "function": "bitwise_chain",
+        "instruction_count": 5,
+        "ordinal": 5,
+        "successors": [
+          7
+        ]
+      },
+      {
+        "first_file_offset": 3688,
+        "function": "bitwise_chain",
+        "instruction_count": 1,
+        "ordinal": 6,
+        "successors": [
+          4
+        ]
+      },
+      {
+        "first_file_offset": 3692,
+        "function": "bitwise_chain",
+        "instruction_count": 7,
+        "ordinal": 7,
+        "successors": []
+      }
+    ],
+    "descriptor_sha256": "cfffb39c920d4968b1e63171106cec456515173fce25a680bb7866ee5be84fab",
+    "direct_calls": 2,
+    "functions": [
+      {
+        "code_bytes": 20,
+        "direct_callees": [],
+        "file_offset": 2580,
+        "symbol": "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009"
+      },
+      {
+        "code_bytes": 20,
+        "direct_callees": [],
+        "file_offset": 2560,
+        "symbol": "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99"
+      },
+      {
+        "code_bytes": 916,
+        "direct_callees": [
+          "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009",
+          "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99"
+        ],
+        "file_offset": 2816,
+        "symbol": "bitwise_chain"
+      }
+    ],
+    "instructions": [
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00008cbf",
+        "explicit_definitions": 0,
+        "file_offset": 2580,
+        "function": "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_WAITCNT_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "ff02027e00020000",
+        "explicit_definitions": 1,
+        "file_offset": 2584,
+        "function": "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "512"
+          }
+        ],
+        "register_operands": [
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00030028",
+        "explicit_definitions": 1,
+        "file_offset": 2592,
+        "function": "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_OR_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "VGPR0",
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 4,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1e1d80be",
+        "explicit_definitions": 0,
+        "file_offset": 2596,
+        "function": "__fe2o3_internal_helper_v1_f0_106f1c3b25de452fa5fb3fdc1e8fbbe9c788b26af36c6caef9050958aac39009",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 12,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_SETPC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR30_SGPR31",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR30_SGPR31"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00008cbf",
+        "explicit_definitions": 0,
+        "file_offset": 2560,
+        "function": "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_WAITCNT_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "ff02027e00010000",
+        "explicit_definitions": 1,
+        "file_offset": 2564,
+        "function": "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "256"
+          }
+        ],
+        "register_operands": [
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00030028",
+        "explicit_definitions": 1,
+        "file_offset": 2572,
+        "function": "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_OR_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "VGPR0",
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 4,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1e1d80be",
+        "explicit_definitions": 0,
+        "file_offset": 2576,
+        "function": "__fe2o3_internal_helper_v1_f1_61ccb1038535a4f89b6e9b6d641d70df3f671b3990426cd35965799eed242d99",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 12,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_SETPC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR30_SGPR31",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR30_SGPR31"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "8000a0be",
+        "explicit_definitions": 1,
+        "file_offset": 2816,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR32",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR32"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0a008ebe",
+        "explicit_definitions": 1,
+        "file_offset": 2820,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR14",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR10",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR14",
+          "SGPR10"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad20e000100",
+        "explicit_definitions": 1,
+        "file_offset": 2824,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR14",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR14",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "09008dbe",
+        "explicit_definitions": 1,
+        "file_offset": 2832,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR13",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR13",
+          "SGPR9"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad20d020100",
+        "explicit_definitions": 1,
+        "file_offset": 2836,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR13",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR13",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "08008cbe",
+        "explicit_definitions": 1,
+        "file_offset": 2844,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR12",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR12",
+          "SGPR8"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad20c040100",
+        "explicit_definitions": 1,
+        "file_offset": 2848,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR12",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "2"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR12",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "06018abe",
+        "explicit_definitions": 1,
+        "file_offset": 2856,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR10_SGPR11",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR6_SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR10_SGPR11",
+          "SGPR6_SGPR7"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad20a060100",
+        "explicit_definitions": 1,
+        "file_offset": 2860,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR10",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "3"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR10",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 2868,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad20b080100",
+        "explicit_definitions": 1,
+        "file_offset": 2872,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR11",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "4"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR11",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad2040a0100",
+        "explicit_definitions": 1,
+        "file_offset": 2880,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "5"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR4",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 2888,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad2050c0100",
+        "explicit_definitions": 1,
+        "file_offset": 2892,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "6"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR5",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "020186be",
+        "explicit_definitions": 1,
+        "file_offset": 2900,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR6_SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR6_SGPR7",
+          "SGPR2_SGPR3"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad2060e0100",
+        "explicit_definitions": 1,
+        "file_offset": 2904,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR6",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "7"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR6",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 2912,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad207100100",
+        "explicit_definitions": 1,
+        "file_offset": 2916,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "8"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR7",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000184be",
+        "explicit_definitions": 1,
+        "file_offset": 2924,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR4_SGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR4_SGPR5",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000089d2040b0100",
+        "explicit_definitions": 1,
+        "file_offset": 2928,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "5"
+          }
+        ],
+        "register_operands": [
+          "SGPR0",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010089d2040d0100",
+        "explicit_definitions": 1,
+        "file_offset": 2936,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "6"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad204120100",
+        "explicit_definitions": 1,
+        "file_offset": 2944,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "9"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR4",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 2952,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad205140100",
+        "explicit_definitions": 1,
+        "file_offset": 2956,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "10"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR5",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00033e7e",
+        "explicit_definitions": 1,
+        "file_offset": 2964,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR31",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR31",
+          "VGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0040d9d31f010018",
+        "explicit_definitions": 1,
+        "file_offset": 2968,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR31",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR0",
+          "VGPR31"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "800006c000000000",
+        "explicit_definitions": 1,
+        "file_offset": 2976,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 1,
+        "memory_access": 1,
+        "memory_width": 8,
+        "opcode": "S_LOAD_DWORDX2_IMM_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR2_SGPR3",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "7fc08cbf",
+        "explicit_definitions": 0,
+        "file_offset": 2984,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_WAITCNT_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "49279"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad202160100",
+        "explicit_definitions": 1,
+        "file_offset": 2988,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "11"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR2",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 2996,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad203180100",
+        "explicit_definitions": 1,
+        "file_offset": 3000,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "12"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR3",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "800006c008000000",
+        "explicit_definitions": 1,
+        "file_offset": 3008,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 1,
+        "memory_access": 1,
+        "memory_width": 8,
+        "opcode": "S_LOAD_DWORDX2_IMM_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "8"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR2_SGPR3",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000402c010000000",
+        "explicit_definitions": 1,
+        "file_offset": 3016,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 1,
+        "memory_access": 1,
+        "memory_width": 4,
+        "opcode": "S_LOAD_DWORD_IMM_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR16",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "16"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR16",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000202c014000000",
+        "explicit_definitions": 1,
+        "file_offset": 3024,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 1,
+        "memory_access": 1,
+        "memory_width": 4,
+        "opcode": "S_LOAD_DWORD_IMM_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "20"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR8",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "7fc08cbf",
+        "explicit_definitions": 0,
+        "file_offset": 3032,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_WAITCNT_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "49279"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "10080888",
+        "explicit_definitions": 1,
+        "file_offset": 3036,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_XOR_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR16",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR8",
+          "SGPR16",
+          "SGPR8"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "ff0089beff000000",
+        "explicit_definitions": 1,
+        "file_offset": 3040,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "255"
+          }
+        ],
+        "register_operands": [
+          "SGPR9"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "08091186",
+        "explicit_definitions": 1,
+        "file_offset": 3048,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_AND_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR17",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR17",
+          "SGPR8",
+          "SGPR9"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "980192be",
+        "explicit_definitions": 1,
+        "file_offset": 3052,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR18_SGPR19",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "24"
+          }
+        ],
+        "register_operands": [
+          "SGPR18_SGPR19"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000088be",
+        "explicit_definitions": 1,
+        "file_offset": 3056,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR8",
+          "SGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080be",
+        "explicit_definitions": 1,
+        "file_offset": 3060,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0",
+          "SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "120089be",
+        "explicit_definitions": 1,
+        "file_offset": 3064,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR18",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR9",
+          "SGPR18"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "130081be",
+        "explicit_definitions": 1,
+        "file_offset": 3068,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR19",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "SGPR19"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "08090880",
+        "explicit_definitions": 1,
+        "file_offset": 3072,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_ADD_U32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR8",
+          "SGPR8",
+          "SGPR9"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00010082",
+        "explicit_definitions": 1,
+        "file_offset": 3076,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "SCC"
+        ],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_ADDC_U32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0",
+          "SGPR0",
+          "SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000089be",
+        "explicit_definitions": 1,
+        "file_offset": 3080,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR9",
+          "SGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad2081a0100",
+        "explicit_definitions": 1,
+        "file_offset": 3084,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "13"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR8",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 3092,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad2091c0100",
+        "explicit_definitions": 1,
+        "file_offset": 3096,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "14"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR9",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "c12194be",
+        "explicit_definitions": 1,
+        "file_offset": 3104,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [
+          "EXEC",
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_SAVEEXEC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18446744073709551615"
+          }
+        ],
+        "register_operands": [
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0140d9d304010018",
+        "explicit_definitions": 1,
+        "file_offset": 3108,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR1",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1401febe",
+        "explicit_definitions": 1,
+        "file_offset": 3116,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "001c80be",
+        "explicit_definitions": 1,
+        "file_offset": 3120,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_GETPC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00ff0080ccfdffff",
+        "explicit_definitions": 1,
+        "file_offset": 3124,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_ADD_U32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "4294966732"
+          }
+        ],
+        "register_operands": [
+          "SGPR0",
+          "SGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "01ff0182ffffffff",
+        "explicit_definitions": 1,
+        "file_offset": 3132,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "SCC"
+        ],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_ADDC_U32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "4294967295"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1102007e",
+        "explicit_definitions": 1,
+        "file_offset": 3140,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR17",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "SGPR17"
+        ]
+      },
+      {
+        "block_ordinal": 0,
+        "branch_kind": 3,
+        "branch_target_file_offset": 2560,
+        "bytes_hex": "001e9ebe",
+        "explicit_definitions": 1,
+        "file_offset": 3144,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_SWAPPC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR30_SGPR31",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR30_SGPR31",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1f40d8d300010018",
+        "explicit_definitions": 1,
+        "file_offset": 3148,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR31",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR31",
+          "AGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0e0089d204010100",
+        "explicit_definitions": 1,
+        "file_offset": 3156,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR14",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR14",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0d0089d204030100",
+        "explicit_definitions": 1,
+        "file_offset": 3164,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR13",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": [
+          "SGPR13",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0c0089d204050100",
+        "explicit_definitions": 1,
+        "file_offset": 3172,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR12",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "2"
+          }
+        ],
+        "register_operands": [
+          "SGPR12",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0a0089d204070100",
+        "explicit_definitions": 1,
+        "file_offset": 3180,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR10",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "3"
+          }
+        ],
+        "register_operands": [
+          "SGPR10",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0b0089d204090100",
+        "explicit_definitions": 1,
+        "file_offset": 3188,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR11",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "4"
+          }
+        ],
+        "register_operands": [
+          "SGPR11",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "080089d2041b0100",
+        "explicit_definitions": 1,
+        "file_offset": 3196,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR8",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "13"
+          }
+        ],
+        "register_operands": [
+          "SGPR8",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "090089d2041d0100",
+        "explicit_definitions": 1,
+        "file_offset": 3204,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR9",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "14"
+          }
+        ],
+        "register_operands": [
+          "SGPR9",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "060089d2040f0100",
+        "explicit_definitions": 1,
+        "file_offset": 3212,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR6",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "7"
+          }
+        ],
+        "register_operands": [
+          "SGPR6",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "070089d204110100",
+        "explicit_definitions": 1,
+        "file_offset": 3220,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "8"
+          }
+        ],
+        "register_operands": [
+          "SGPR7",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "040089d204130100",
+        "explicit_definitions": 1,
+        "file_offset": 3228,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "9"
+          }
+        ],
+        "register_operands": [
+          "SGPR4",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "050089d204150100",
+        "explicit_definitions": 1,
+        "file_offset": 3236,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "10"
+          }
+        ],
+        "register_operands": [
+          "SGPR5",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0240d9d300010018",
+        "explicit_definitions": 1,
+        "file_offset": 3244,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR2",
+          "VGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "001c80be",
+        "explicit_definitions": 1,
+        "file_offset": 3252,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_GETPC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00ff00805cfdffff",
+        "explicit_definitions": 1,
+        "file_offset": 3256,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_ADD_U32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "4294966620"
+          }
+        ],
+        "register_operands": [
+          "SGPR0",
+          "SGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "01ff0182ffffffff",
+        "explicit_definitions": 1,
+        "file_offset": 3264,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "SCC"
+        ],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_ADDC_U32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "4294967295"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1002007e",
+        "explicit_definitions": 1,
+        "file_offset": 3272,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR16",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "SGPR16"
+        ]
+      },
+      {
+        "block_ordinal": 1,
+        "branch_kind": 3,
+        "branch_target_file_offset": 2580,
+        "bytes_hex": "001e9ebe",
+        "explicit_definitions": 1,
+        "file_offset": 3276,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_SWAPPC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR30_SGPR31",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR30_SGPR31",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0140d8d302010018",
+        "explicit_definitions": 1,
+        "file_offset": 3280,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR1",
+          "AGPR2"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "060089d204050100",
+        "explicit_definitions": 1,
+        "file_offset": 3288,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR6",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "2"
+          }
+        ],
+        "register_operands": [
+          "SGPR6",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "040089d204170100",
+        "explicit_definitions": 1,
+        "file_offset": 3296,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "11"
+          }
+        ],
+        "register_operands": [
+          "SGPR4",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "050089d204190100",
+        "explicit_definitions": 1,
+        "file_offset": 3304,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "12"
+          }
+        ],
+        "register_operands": [
+          "SGPR5",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0003047e",
+        "explicit_definitions": 1,
+        "file_offset": 3312,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR2",
+          "VGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0040d8d300010018",
+        "explicit_definitions": 1,
+        "file_offset": 3316,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "AGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010015d101050200",
+        "explicit_definitions": 1,
+        "file_offset": 3324,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_XOR_B32_e64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR1",
+          "VGPR1",
+          "VGPR2"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0340d9d301010018",
+        "explicit_definitions": 1,
+        "file_offset": 3332,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR3",
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "800080be",
+        "explicit_definitions": 1,
+        "file_offset": 3340,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "8002047e",
+        "explicit_definitions": 1,
+        "file_offset": 3344,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR2"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0203027e",
+        "explicit_definitions": 1,
+        "file_offset": 3348,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR1",
+          "VGPR2"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000087be",
+        "explicit_definitions": 1,
+        "file_offset": 3352,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR7",
+          "SGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "860081be",
+        "explicit_definitions": 1,
+        "file_offset": 3356,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "6"
+          }
+        ],
+        "register_operands": [
+          "SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0601868e",
+        "explicit_definitions": 1,
+        "file_offset": 3360,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_LSHL_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR6_SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR6_SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR6_SGPR7",
+          "SGPR6_SGPR7",
+          "SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0103047e",
+        "explicit_definitions": 1,
+        "file_offset": 3364,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR2",
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "070081be",
+        "explicit_definitions": 1,
+        "file_offset": 3368,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "SGPR7"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "020014d101040200",
+        "explicit_definitions": 1,
+        "file_offset": 3372,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_OR_B32_e64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR2",
+          "SGPR1",
+          "VGPR2"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "060081be",
+        "explicit_definitions": 1,
+        "file_offset": 3380,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR6",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "SGPR6"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000014d101000200",
+        "explicit_definitions": 1,
+        "file_offset": 3384,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_OR_B32_e64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "SGPR1",
+          "VGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0203027e",
+        "explicit_definitions": 1,
+        "file_offset": 3392,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR1",
+          "VGPR2"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0200e9d000050000",
+        "explicit_definitions": 1,
+        "file_offset": 3396,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_CMP_LT_U64_e64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0_VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR2_SGPR3",
+          "VGPR0_VGPR1",
+          "SGPR2_SGPR3"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "820081be",
+        "explicit_definitions": 1,
+        "file_offset": 3404,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "2"
+          }
+        ],
+        "register_operands": [
+          "SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0470047e",
+        "explicit_definitions": 1,
+        "file_offset": 3408,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B64_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR2_VGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR4_SGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR2_VGPR3",
+          "SGPR4_SGPR5"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000008d200030804",
+        "explicit_definitions": 1,
+        "file_offset": 3412,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_LSHL_ADD_U64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0_VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0_VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR2_VGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0_VGPR1",
+          "VGPR0_VGPR1",
+          "SGPR1",
+          "VGPR2_VGPR3"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0440d9d301010018",
+        "explicit_definitions": 1,
+        "file_offset": 3420,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR4",
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0540d9d300010018",
+        "explicit_definitions": 1,
+        "file_offset": 3428,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR5",
+          "VGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000000d180020900",
+        "explicit_definitions": 1,
+        "file_offset": 3436,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_CNDMASK_B32_e64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "SGPR2_SGPR3"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0002027e",
+        "explicit_definitions": 1,
+        "file_offset": 3444,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_MOV_B32_e32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR1",
+          "SGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0640d9d301010018",
+        "explicit_definitions": 1,
+        "file_offset": 3448,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR6",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR6",
+          "VGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0740d9d300010018",
+        "explicit_definitions": 1,
+        "file_offset": 3456,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR7",
+          "VGPR0"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "c12194be",
+        "explicit_definitions": 1,
+        "file_offset": 3464,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [
+          "EXEC",
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_SAVEEXEC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18446744073709551615"
+          }
+        ],
+        "register_operands": [
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0440d8d301010018",
+        "explicit_definitions": 1,
+        "file_offset": 3468,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "AGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1401febe",
+        "explicit_definitions": 1,
+        "file_offset": 3476,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0140d8d306010018",
+        "explicit_definitions": 1,
+        "file_offset": 3480,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR6",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR1",
+          "AGPR6"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0040d8d307010018",
+        "explicit_definitions": 1,
+        "file_offset": 3488,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR7",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "AGPR7"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "810180be",
+        "explicit_definitions": 1,
+        "file_offset": 3496,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": [
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0000edd000010000",
+        "explicit_definitions": 1,
+        "file_offset": 3500,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_CMP_NE_U64_e64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR0_VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0_SGPR1",
+          "VGPR0_VGPR1",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "7e0182be",
+        "explicit_definitions": 1,
+        "file_offset": 3508,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR2_SGPR3",
+          "EXEC"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "02008086",
+        "explicit_definitions": 1,
+        "file_offset": 3512,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_AND_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0_SGPR1",
+          "SGPR2_SGPR3",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "00028288",
+        "explicit_definitions": 1,
+        "file_offset": 3516,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_XOR_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR2_SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR2_SGPR3",
+          "SGPR0_SGPR1",
+          "SGPR2_SGPR3"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad2021e0100",
+        "explicit_definitions": 1,
+        "file_offset": 3520,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "15"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR2",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 3528,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad203200100",
+        "explicit_definitions": 1,
+        "file_offset": 3532,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "16"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR3",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "c12194be",
+        "explicit_definitions": 1,
+        "file_offset": 3540,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [
+          "EXEC",
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_SAVEEXEC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18446744073709551615"
+          }
+        ],
+        "register_operands": [
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0140d9d304010018",
+        "explicit_definitions": 1,
+        "file_offset": 3544,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR1",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1401febe",
+        "explicit_definitions": 1,
+        "file_offset": 3552,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0001febe",
+        "explicit_definitions": 1,
+        "file_offset": 3556,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 2,
+        "branch_kind": 1,
+        "branch_target_file_offset": 3568,
+        "bytes_hex": "010088bf",
+        "explicit_definitions": 0,
+        "file_offset": 3560,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 4,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_CBRANCH_EXECZ_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 3,
+        "branch_kind": 2,
+        "branch_target_file_offset": 3688,
+        "bytes_hex": "1e0082bf",
+        "explicit_definitions": 0,
+        "file_offset": 3564,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 12,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_BRANCH_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "30"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "c12194be",
+        "explicit_definitions": 1,
+        "file_offset": 3568,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [
+          "EXEC",
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_SAVEEXEC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18446744073709551615"
+          }
+        ],
+        "register_operands": [
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0440d8d301010018",
+        "explicit_definitions": 1,
+        "file_offset": 3572,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "AGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1401febe",
+        "explicit_definitions": 1,
+        "file_offset": 3580,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000089d2041f0100",
+        "explicit_definitions": 1,
+        "file_offset": 3584,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "15"
+          }
+        ],
+        "register_operands": [
+          "SGPR0",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010089d204210100",
+        "explicit_definitions": 1,
+        "file_offset": 3592,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "16"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "002180be",
+        "explicit_definitions": 1,
+        "file_offset": 3600,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [
+          "EXEC",
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_SAVEEXEC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0_SGPR1",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "7e008086",
+        "explicit_definitions": 1,
+        "file_offset": 3604,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_AND_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "SGPR0_SGPR1",
+          "EXEC",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad200220100",
+        "explicit_definitions": 1,
+        "file_offset": 3608,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "17"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR0",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010080bf",
+        "explicit_definitions": 0,
+        "file_offset": 3616,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_NOP_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "04008ad201240100",
+        "explicit_definitions": 1,
+        "file_offset": 3620,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_WRITELANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": 0,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "SGPR1",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "c12194be",
+        "explicit_definitions": 1,
+        "file_offset": 3628,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [
+          "EXEC",
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_SAVEEXEC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18446744073709551615"
+          }
+        ],
+        "register_operands": [
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0140d9d304010018",
+        "explicit_definitions": 1,
+        "file_offset": 3632,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_WRITE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "AGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "AGPR1",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1401febe",
+        "explicit_definitions": 1,
+        "file_offset": 3640,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "7e00fe88",
+        "explicit_definitions": 1,
+        "file_offset": 3644,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_XOR_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "EXEC",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 4,
+        "branch_kind": 1,
+        "branch_target_file_offset": 3692,
+        "bytes_hex": "0a0088bf",
+        "explicit_definitions": 0,
+        "file_offset": 3648,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 4,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_CBRANCH_EXECZ_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "10"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 5,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0140d8d304010018",
+        "explicit_definitions": 1,
+        "file_offset": 3652,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR1",
+          "AGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 5,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0040d8d305010018",
+        "explicit_definitions": 1,
+        "file_offset": 3660,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR5",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0",
+          "AGPR5"
+        ]
+      },
+      {
+        "block_ordinal": 5,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0240d8d303010018",
+        "explicit_definitions": 1,
+        "file_offset": 3668,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR3",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR2",
+          "AGPR3"
+        ]
+      },
+      {
+        "block_ordinal": 5,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "008070dc00027f00",
+        "explicit_definitions": 0,
+        "file_offset": 3676,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 2,
+        "memory_access": 2,
+        "memory_width": 4,
+        "opcode": "GLOBAL_STORE_DWORD_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR0_VGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR2",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR0_VGPR1",
+          "VGPR2"
+        ]
+      },
+      {
+        "block_ordinal": 5,
+        "branch_kind": 2,
+        "branch_target_file_offset": 3692,
+        "bytes_hex": "010082bf",
+        "explicit_definitions": 0,
+        "file_offset": 3684,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 12,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_BRANCH_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "1"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 6,
+        "branch_kind": 2,
+        "branch_target_file_offset": 3568,
+        "bytes_hex": "e1ff82bf",
+        "explicit_definitions": 0,
+        "file_offset": 3688,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 12,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_BRANCH_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "65505"
+          }
+        ],
+        "register_operands": []
+      },
+      {
+        "block_ordinal": 7,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "c12194be",
+        "explicit_definitions": 1,
+        "file_offset": 3692,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [
+          "EXEC",
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_SAVEEXEC_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18446744073709551615"
+          }
+        ],
+        "register_operands": [
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 7,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "0440d8d301010018",
+        "explicit_definitions": 1,
+        "file_offset": 3696,
+        "function": "bitwise_chain",
+        "implicit_reads": [
+          "EXEC"
+        ],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_ACCVGPR_READ_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "AGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "VGPR4",
+          "AGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 7,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "1401febe",
+        "explicit_definitions": 1,
+        "file_offset": 3704,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_MOV_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR20_SGPR21",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "SGPR20_SGPR21"
+        ]
+      },
+      {
+        "block_ordinal": 7,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000089d204230100",
+        "explicit_definitions": 1,
+        "file_offset": 3708,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR0",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "17"
+          }
+        ],
+        "register_operands": [
+          "SGPR0",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 7,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "010089d204250100",
+        "explicit_definitions": 1,
+        "file_offset": 3716,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "V_READLANE_B32_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "VGPR4",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "18"
+          }
+        ],
+        "register_operands": [
+          "SGPR1",
+          "VGPR4"
+        ]
+      },
+      {
+        "block_ordinal": 7,
+        "branch_kind": 0,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "7e00fe87",
+        "explicit_definitions": 1,
+        "file_offset": 3724,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [
+          "SCC"
+        ],
+        "mc_flags": 0,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_OR_B64_vi",
+        "operands": [
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "EXEC",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          },
+          {
+            "kind": 1,
+            "register": "SGPR0_SGPR1",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": [
+          "EXEC",
+          "EXEC",
+          "SGPR0_SGPR1"
+        ]
+      },
+      {
+        "block_ordinal": 7,
+        "branch_kind": 4,
+        "branch_target_file_offset": 0,
+        "bytes_hex": "000081bf",
+        "explicit_definitions": 0,
+        "file_offset": 3728,
+        "function": "bitwise_chain",
+        "implicit_reads": [],
+        "implicit_writes": [],
+        "mc_flags": 12,
+        "memory_access": 0,
+        "memory_width": 0,
+        "opcode": "S_ENDPGM_vi",
+        "operands": [
+          {
+            "kind": 2,
+            "register": "",
+            "tied_to": -1,
+            "value_u64_decimal": "0"
+          }
+        ],
+        "register_operands": []
+      }
+    ],
+    "native_helper_argument_result_flow_qualified": false,
+    "native_root_value_guard_store_semantics_qualified": false,
+    "observed_v_or_b32_sites": 4,
+    "retained_native_helper_calls_required": false,
+    "returns": 3,
+    "toolchain_identity": "30ae0a6a42cd617d9cdec8c0c9d1722bb88eaba18389f3d4b426bd0e9b0640a7"
+  },
+  "native_semantics_qualified": false,
+  "optimization": "O0",
+  "ordinary_worker_llvm_object_lld_completed": true,
+  "output_bytes": 6992,
+  "output_path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-native-two-o0-r2/output.hsaco",
+  "output_sha256": "ae30d1f4e81238e4f161451303bc8c88fcc8506896440b2994a04d61ccf0e9f4",
+  "physical_helper_abi_qualified": false,
+  "post_link_checks": [
+    "post_link.check=target status=ok arch=gfx942 code_object_version=6 e_flags=0x64c",
+    "post_link.check=exports status=ok symbols=[bitwise_chain,bitwise_chain.kd]",
+    "post_link.check=unresolved status=ok symbols=[]",
+    "post_link.check=metadata status=ok kernels=1 target=amdgcn-amd-amdhsa--gfx942%3Axnack-",
+    "post_link.kernel name=bitwise_chain symbol=bitwise_chain.kd kernarg_size=280 group_size=0 private_size=0 kernarg_align=8 wavefront_size=64 max_workgroup_size=64 reqd_workgroup_size=[64,1,1]"
+  ],
+  "protected_finalizer_admitted": false,
+  "record_hash_authenticates_source_custody": false,
+  "retained_input_hashes_rechecked": true,
+  "retained_inputs": [
+    {
+      "bytes": 38570,
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-generated-ladder-v30-r2/observation.json",
+      "sha256": "6d5b36d38ce88926c86db738f1ede8200cd257dd19d79937674b335732e09b08"
+    },
+    {
+      "bytes": 3257,
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-generated-ladder-v30-r2/two/two.llvm/canonical.ll",
+      "sha256": "48b92f7d66080a341598a317c394c3510e2cbc2794c0c4cb5f5f8b24249fa91d"
+    },
+    {
+      "bytes": 10470,
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-generated-ladder-v30-r2/two/two.handoff/handoff-v2.bin",
+      "sha256": "fd97795cf9d89e28e1132b712761ab9040d7ff9dc41f0175096d6aa690a4b8be"
+    },
+    {
+      "bytes": 934,
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-generated-ladder-v30-r2/two/two.handoff/descriptor-v1.bin",
+      "sha256": "fd3b829bbd630ea4a7171faa0ffe30b5233b41eaa95d0837a45866a9335a840e"
+    },
+    {
+      "bytes": 794,
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-public-v30-r4/two-source/src/lib.rs",
+      "sha256": "0826434799ff9d749970d32d8cc6c2355f1195ed3ab14ab897720c4e736c3cb5"
+    },
+    {
+      "bytes": 541,
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-public-v30-r4/two-source/Cargo.toml",
+      "sha256": "2533a8fa12cea03dca4e9b9b06ad22c42f0b5059b80d3609d684561d8c31a602"
+    },
+    {
+      "bytes": 34117,
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-helper-public-v30-r4/two-source/Cargo.lock",
+      "sha256": "9bf11fb0a153731eb050c921ce9b2fc6a2cae5df818938f63520c232f0e1606b"
+    }
+  ],
+  "schema": "fe2o3-helper-source-native-observation-v30",
+  "synthetic_request_identity_fields": true,
+  "target": "gfx942:xnack-",
+  "typed_handoff_redecoded_here": false,
+  "worker_build_id": "fe2o3-worker-v1-sha256-f5fee9cf41ca39587c47114f112b70681084dba62dd61e3cc79484ed66c7646d"
+}

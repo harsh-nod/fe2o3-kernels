@@ -171,6 +171,10 @@ and recompiles original, changed and two-specialization source variants.
 Its canonical CPU qualification does not establish a physical-register helper ABI
 or an exact public kernel-to-helper call-edge projection.
 
+The [native helper continuation](docs/source-helper-native-v30.md) follows fresh
+edited source through normal LLVM/handoff/descriptor construction and eight
+O0/O3 worker observations. It retains helper ABI and GPU qualification limits.
+
 The separate [static call-target lab](docs/retained-call-targets-v1.md) explains
 the additive query for exact retained callees, caller kernel registrations and
 typed operand/formal bindings. Its separately recorded fresh qualification
