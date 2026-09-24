@@ -1,0 +1,106 @@
+{
+  "schema": "fe2o3-physical-entry-checked-source-command-v20",
+  "feature": "physical-entry-one-v20",
+  "observations": [
+    {
+      "stage": "llvm",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "physical-entry-one-v20",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-physical-public-checked-r1-one/llvm-target"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "08b91d3271dff9560bfea32051e5c322e38e6dbcc0ff56c1317267fecf4f4cf7",
+      "output": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-physical-public-checked-r1-one/canonical.ll",
+        "bytes": 2092,
+        "sha256": "a581d847453767d832fee1a068a02eeb8e7871f91f8db4ddc0258f44cfab4c89"
+      }
+    },
+    {
+      "stage": "handoff",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "physical-entry-one-v20",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-physical-public-checked-r1-one/handoff-target"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1443dad75feb390a9f72242416e0892dc8c1a66e07d67d4d839f21a53a174ea4",
+      "output": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-physical-public-checked-r1-one/handoff-v2.bin",
+        "bytes": 10563,
+        "sha256": "3f12ab1243dff45f61a57f6ca82736d085553b8ce2c7d4a5734e4ed5154610d9"
+      }
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+      "bytes": 6506,
+      "sha256": "f9f8125be9151a6cc7508f28f592d139816de8e0e446b6b0b1529617e6dc634c"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+      "bytes": 24577,
+      "sha256": "ab763613d4e00be655783706836584f15ed7def4fa25d28225ad94c2241e0bc3"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/physical_entry_v20.rs",
+      "bytes": 10657,
+      "sha256": "1347ad8de9e41addc7270e609efd0827fe2095774a8facb751f37ca800103f00"
+    }
+  ],
+  "binaryPins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-rustc-extract",
+      "bytes": 227000,
+      "sha256": "931e1d8d0ec8cb7ff33dac8743553ed9127a0ad79981e0cf45eaccdd0620760b"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/librustc_codegen_fe2o3.so",
+      "bytes": 258111984,
+      "sha256": "f457f2e906562aee9e949c6b9a5e4b2c5b169a7472cf6e559f53d302b83719d0"
+    }
+  ],
+  "source_unchanged": true,
+  "actual_cargo_rustc_wrapper": true,
+  "compiler_closure_attestation": "unavailable",
+  "normal_worker_handoff": true,
+  "ranked_formal_descriptor_continuation": "observed normal checked source to inert LLVM/handoff",
+  "runtime_abi_conditions_discharged": false,
+  "runtime_abi_conditions": "kernarg immutable throughout execution and output disjoint from kernarg; output minimum 512 bytes",
+  "cpu_simulation_run": false,
+  "source_custody_exported": false,
+  "protected_finalizer_admitted": false,
+  "native_llvm_executed": false,
+  "hardware_observed": false,
+  "grants_artifact_or_launch_authority": false
+}

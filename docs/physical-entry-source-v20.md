@@ -1,9 +1,10 @@
 # Lab: author the complete physical instruction body
 
-This experimental lesson is tied to compiler commit
+Sections 1–4 of this experimental lesson are tied to compiler commit
 [90de8eaf2ef445e0d470793fb2a74169eec9175b](https://github.com/harsh-nod/fe2o3/commit/90de8eaf2ef445e0d470793fb2a74169eec9175b),
 not the site's older curriculum baseline. It does not change FE2O3_PIN,
-maturity labels or the accepted milestone ledger.
+maturity labels or the accepted milestone ledger. Section 5 documents a later
+checked continuation with its own implementation and evidence pins.
 
 Start with [the complete scalar-fill source](../examples/physical-entry-v20.rs).
 Unlike the [scalar-helper lesson](source-helper-native-v30.md), v(8) really
@@ -107,6 +108,100 @@ All six native inspections passed; O0/O3 bytes matched within each source.
 No extra prologue/tail was observed. The checker also rejected 246 native
 mutations, 66 sidecar mutations and 12 worker-input mutations across those runs.
 
+## 5. Continue through checked analysis and normal inert handoff
+
+This later continuation is tied to compiler implementation
+[a2d4fea57411a981b172d904ddfce2356a0ed19e](https://github.com/harsh-nod/fe2o3/commit/a2d4fea57411a981b172d904ddfce2356a0ed19e).
+Sections 1–4 and their native-inspection table
+retain the earlier 90de8eaf snapshot; they are not new native results for this
+continuation.
+
+In the matching later compiler checkout, use the same pinned toolchain and
+wrapper/backend setup, but select the checked command and fresh directories:
+
+```sh
+node scripts/physical-entry-checked-v20.mjs one /absolute/new-checked-one
+node scripts/physical-entry-checked-v20.mjs diamond /absolute/new-checked-diamond
+node scripts/physical-entry-checked-v20.mjs registers /absolute/new-checked-registers
+node scripts/physical-entry-checked-v20.mjs missing-wait /absolute/new-checked-refusal
+```
+
+Each command runs separate ordinary Cargo sessions for LLVM and handoff.
+Successful cases retain canonical.ll and handoff-v2.bin plus source/binary
+hashes, logs and a receipt. The same five negative cases in section 2 require
+their specific refusal in both routes and no output file. The public script
+does not run CPU simulation, native LLVM compilation or a GPU.
+
+The real path is authenticated Rust → MIR37 → authored KIR20 →
+ranked/formal checks → canonical LLVM and normal inert descriptor/handoff.
+The original canonical SSA and CFG remain the executable, including the
+diamond's four blocks, authored waits, EXEC handling and termination. The
+ranked graph is a separate **safety-analysis projection**: its analysis
+operations and guard representation can differ from the physical instruction
+graph. It is not a rewritten executable, a numerical-equivalence theorem or
+an assembly-to-Rust round trip. Exact source/canonical replay and the retained
+memory report tie that projection to the original owner.
+
+The combined report keeps both the actual guarded output store and all six
+authored kernarg loads. It records each load's source occurrence, operation,
+offset, width, results and explicit LGKM-ready occurrence. The explicit
+kernarg prefix must cover 32 bytes with alignment 8; the six slot
+offset/width pairs are 0/8, 8/8, 16/4, 20/4, 24/4 and 28/4.
+Kernarg must remain immutable throughout execution, and output must be
+disjoint from kernarg. These are unresolved runtime obligations, not facts
+proved about a supplied host allocation.
+
+The output report conservatively requires 512 bytes for the declared
+128-invocation launch envelope. CPU tests with shorter logical lengths
+exercise masking; they do not weaken that formal allocation requirement.
+The typed preparation retains both sets of conditions through descriptor
+construction. Export explicitly demotes it to inert LLVM/handoff bytes:
+those files do not serialize the full combined proof, reconstruct the owner
+or certify runtime pointer validity. Protected finalization, native-output
+admission and host launch remain unavailable for this preparation.
+
+### Reproduce and inspect the checked evidence
+
+The new, separate opt-in source ladder exercises owner observation plus
+normal LLVM and handoff routes:
+
+```text
+FE2O3_TEST_PHYSICAL_PRODUCTION_OUTPUT_V20=ABS_NEW_CHECKED_LADDER
+PINNED_CARGO test --offline --locked -p rustc-codegen-fe2o3 --lib
+  production_rustc_driver_v1::gfx942_physical_entry_production_v20_tests::actual_physical_entry_production_ladder
+  -- --exact --ignored --nocapture --test-threads=1
+```
+
+As in section 3, the first line denotes an environment setting; preserve
+the pinned compiler/backend environment and bounded external supervision.
+
+The retained checked ladder passed 24 isolated source sessions: the three
+positive and five negative fixtures each take three routes. It observed
+576 CPU cases, 15 exact source refusals, 54 actual-owner ABI mutation refusals
+and 12 budget-denial controls. ABI negatives include foreign identities,
+missing/reordered kernarg reads or wait sites, dropping either runtime
+condition, wrong slot mapping, loss of the exclusive output-slice contract
+and dropping the validated source launch. Budget controls reject missing
+storage receipts and one-short storage/work without a replacement ledger.
+The source-owned stages share the cumulative canonical ledger; existing
+semantic and ranked analysis allocation domains remain separately bounded.
+
+All eight public commands also passed their two-route expectations. Their
+receipts explicitly say cpu_simulation_run=false; the 576 CPU cases belong
+to the separate ladder, not those commands. Within each ladder source
+identity, the normal LLVM/handoff bytes match the corresponding checked-owner
+outputs. Separate Cargo invocations have separate source identities: matching
+LLVM text does not make their descriptor/handoff hashes interchangeable.
+
+The [nine-record checked evidence index](evidence/physical-entry-checked-v20-20260924/index.json)
+pins the new ladder and all eight public receipts, plus the enclosing gate's
+original receipt hash and unchanged source census. That gate ran on a dirty
+working tree based on 34a2db6c8d44d4e2f00978be64e2b997c19a59c5;
+the census, not that base commit alone, identifies its tested source.
+The publication commit above identifies the later retained implementation,
+not a claim that the gate was rerun from a clean checkout of that commit.
+No native functional execution or GPU observation occurred in this gate.
+
 ## Evidence and what remains unchecked
 
 The [15-record index](evidence/physical-entry-source-v20-20260924/index.json)
@@ -120,8 +215,9 @@ The snapshots are inert documentation, not browser-importable captures,
 source custody, protected artifacts or launch authority. Native compilation
 and full instruction inspection are not native functional execution.
 
-This snapshot still lacks normal production ranked/formal descriptor
-continuation, protected finalization and host/runtime proof discharge. General
+The earlier snapshot was pre-ranked only; section 5 adds the observed normal
+ranked/formal descriptor continuation. Protected finalization and host/runtime
+proof discharge remain unavailable for that preparation. General
 global input loads, loops, LDS, barriers, atomics and matrix instructions are
 outside this V20 profile. CPU tests do not establish arbitrary memory safety,
 race freedom, occupancy/performance or GPU correctness. M2/M3/M6/U4 are not

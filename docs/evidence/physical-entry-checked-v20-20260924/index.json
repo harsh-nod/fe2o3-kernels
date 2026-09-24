@@ -1,0 +1,119 @@
+{
+  "schema": "fe2o3-physical-entry-checked-v20-documentation-evidence-v1",
+  "compiler_publication": "a2d4fea57411a981b172d904ddfce2356a0ed19e",
+  "compiler_publication_status": "functional commit identified; observed gate predates commit",
+  "inert_documentation_only": true,
+  "source_custody_exported": false,
+  "grants_artifact_or_launch_authority": false,
+  "gate": {
+    "source": "logs/phase28-resume-r9-compiler-physical-checked-source-public-r1/receipt.json",
+    "source_bytes": 30449,
+    "source_sha256": "8531f3d27144a3472ea2c44fafaca0f05c5ac7564ea4de76dbf1e9bf226883f1",
+    "receipt_retained": false,
+    "summary_is_selected_fields_not_full_receipt": true,
+    "status": "command-passed",
+    "started": "2026-09-24T07:40:08.778Z",
+    "finished": "2026-09-24T07:47:23.621Z",
+    "exit_code": 0,
+    "signal": null,
+    "errors": [],
+    "source_base_commit": "34a2db6c8d44d4e2f00978be64e2b997c19a59c5",
+    "source_tree_clean": false,
+    "source_before": {
+      "files": 7376,
+      "bytes": 109435341,
+      "sha256": "be176b02b7c4d92e221e3665d466a7dbba99cb1bbcd811cf02ceff6adab99b65"
+    },
+    "source_after": {
+      "files": 7376,
+      "bytes": 109435341,
+      "sha256": "be176b02b7c4d92e221e3665d466a7dbba99cb1bbcd811cf02ceff6adab99b65"
+    },
+    "hardware_observed": false,
+    "production_qualified": false
+  },
+  "records": [
+    {
+      "name": "checked-source-ladder.json",
+      "source": "phase28-physical-checked-source-ladder-r1/observation.json",
+      "source_bytes": 96265,
+      "source_sha256": "540eba5096c0dbdbba583412589b66a54ae0a252a04c4271c66db4299c3dbac1",
+      "retained_bytes": 96266,
+      "retained_sha256": "0661de8233f57de1af6c13fd05bc03cd2bebcbafab0aa4e2113a9226c22d624a",
+      "normalization": "append-one-final-newline"
+    },
+    {
+      "name": "public-one.json",
+      "source": "phase28-physical-public-checked-r1-one/receipt.json",
+      "source_bytes": 4543,
+      "source_sha256": "b5104dc1a5c804695185eb44d0e7a3687953b9df754b17cd147ae430af222d62",
+      "retained_bytes": 4543,
+      "retained_sha256": "b5104dc1a5c804695185eb44d0e7a3687953b9df754b17cd147ae430af222d62",
+      "normalization": "none"
+    },
+    {
+      "name": "public-diamond.json",
+      "source": "phase28-physical-public-checked-r1-diamond/receipt.json",
+      "source_bytes": 4571,
+      "source_sha256": "2aac07a7617c395aaf5aee353e4a3dfba430d0be3b28a5aa34b41c67b2006530",
+      "retained_bytes": 4571,
+      "retained_sha256": "2aac07a7617c395aaf5aee353e4a3dfba430d0be3b28a5aa34b41c67b2006530",
+      "normalization": "none"
+    },
+    {
+      "name": "public-registers.json",
+      "source": "phase28-physical-public-checked-r1-registers/receipt.json",
+      "source_bytes": 4585,
+      "source_sha256": "78d30a8502cb8b85ae774a928ec0311e170fc3018fc61b2dc069e8877cca5e8d",
+      "retained_bytes": 4585,
+      "retained_sha256": "78d30a8502cb8b85ae774a928ec0311e170fc3018fc61b2dc069e8877cca5e8d",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-launch.json",
+      "source": "phase28-physical-public-checked-r1-wrong-launch/receipt.json",
+      "source_bytes": 4228,
+      "source_sha256": "8a237e82cf9a05e46d75918a2c96c9cc811de016f3e74d7f94326c8fad1e32aa",
+      "retained_bytes": 4228,
+      "retained_sha256": "8a237e82cf9a05e46d75918a2c96c9cc811de016f3e74d7f94326c8fad1e32aa",
+      "normalization": "none"
+    },
+    {
+      "name": "public-foreign-input.json",
+      "source": "phase28-physical-public-checked-r1-foreign-input/receipt.json",
+      "source_bytes": 4247,
+      "source_sha256": "d59672749d98ab03bf090eadfca02e8d1aafedf82b2b487e035a5459f2084b9e",
+      "retained_bytes": 4247,
+      "retained_sha256": "d59672749d98ab03bf090eadfca02e8d1aafedf82b2b487e035a5459f2084b9e",
+      "normalization": "none"
+    },
+    {
+      "name": "public-undefined-merge.json",
+      "source": "phase28-physical-public-checked-r1-undefined-merge/receipt.json",
+      "source_bytes": 4223,
+      "source_sha256": "b618d83e5d80d306ca837bf0cf9dc8be2f6a630de1993e7645298f3cd3b54316",
+      "retained_bytes": 4223,
+      "retained_sha256": "b618d83e5d80d306ca837bf0cf9dc8be2f6a630de1993e7645298f3cd3b54316",
+      "normalization": "none"
+    },
+    {
+      "name": "public-missing-wait.json",
+      "source": "phase28-physical-public-checked-r1-missing-wait/receipt.json",
+      "source_bytes": 4176,
+      "source_sha256": "bb46141dd500cab0faee4fa4032402d9e70e732c66947407f96f48e3ebec3660",
+      "retained_bytes": 4176,
+      "retained_sha256": "bb46141dd500cab0faee4fa4032402d9e70e732c66947407f96f48e3ebec3660",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-carry.json",
+      "source": "phase28-physical-public-checked-r1-wrong-carry/receipt.json",
+      "source_bytes": 4157,
+      "source_sha256": "27e981ae060c34871ba0e8d8a4537a6cdd5f39ff9b778021a85ea5683001e309",
+      "retained_bytes": 4157,
+      "retained_sha256": "27e981ae060c34871ba0e8d8a4537a6cdd5f39ff9b778021a85ea5683001e309",
+      "normalization": "none"
+    }
+  ],
+  "compiler_functional_tree": "a029b5d11b8f719f8de18bb2498c6263a68bdbe9"
+}
