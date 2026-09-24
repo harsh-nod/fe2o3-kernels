@@ -85,7 +85,7 @@ describe("bounded composition source-promotion lesson", () => {
   });
 
   it("pins separate historical results without closing milestone exits", () => {
-    const pin = "a9b636ec4475a15e13187d78d53692d7e6b834e4";
+    const pin = "936e4578f983655d5aee33891de83891f484ff4c";
     expect(lesson).toContain("Compiler implementation commit: `" + pin + "`.");
     expect(lesson).toContain("/blob/" + pin + "/docs/ordered-composition-qualification-20260924.md");
     expect(lesson).not.toContain("pending immutable");
@@ -113,7 +113,7 @@ describe("bounded composition source-promotion lesson", () => {
       "whole-kernel functional equivalence", "runtime host-buffer",
       "seven original finite source profiles, not freshly",
       "not qualify\nan arbitrary new request or user run",
-      "Freshly promoted source has not yet passed its own normal/native",
+      "The later section 8 qualification passed the fresh promoted",
     ]) expect(lesson).toContain(phrase);
     expect(lesson).not.toContain("neither is asserted passed here");
   });
@@ -133,5 +133,35 @@ describe("bounded composition source-promotion lesson", () => {
       expect(text.slice(offset)).toContain("ordered-composition-promotion-v1.md");
       expect(text.slice(offset)).toContain("historical observations");
     }
+  });
+
+  it("retains the exact explicit finite source edit before fresh publication", () => {
+    const dynamic = "#[kernel(typed, launch(required = [64, 1, 1], max = [64, 1, 1]))]";
+    const finite = "#[kernel(typed, launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [2, 1, 1]))]";
+    expect(publish.toString().split(dynamic)).toHaveLength(2);
+    expect(publish.toString()).not.toContain("max_grid");
+    const seed = publish.toString().replace(dynamic, finite);
+    expect(Buffer.byteLength(seed)).toBe(2072);
+    expect(hash(seed)).toBe("5b6452ffb6276f912d1fd0b1ccb40bfce98b0531ec53920a4475a7f39e75cae7");
+    expect(lesson).toContain("<!-- finite-seed-launch -->\n```rust\n" + finite + "\n```");
+    expect(lesson).toContain("before promotion");
+    expect(lesson).toContain("Do not patch the generated candidate");
+  });
+
+  it("separates fresh promoted normal/native evidence from ABI, runtime and milestone authority", () => {
+    for (const phrase of [
+      "**23 workload children**", "**128 CPU cases**", "**6/6**",
+      "**42 LLVM**", "**108 metadata**", "**66 decoded-machine**",
+      "canonical V17, canonical LLVM, descriptor",
+      "O0 retains a helper call; O3 inlines it", "512-byte writable-output",
+      "2,200 tests with 247 existing ignored tests",
+      "all\nfourteen HSACOs were byte-identical",
+      "No GPU execution", "Full physical helper argument/result transport",
+      "2b91e1b35768f0e0de4a3b7e37bc5e29cbf82469ee1f3f2fa548751ad4b69d46",
+      "0843395619b697cef25747ea6608418396bde58fb967fc85f5e852aaab97f1bf",
+      "a462cf4fa58bebf0c778d2f837f309ba548cefc3961a0f2b05ef9c39e4cded68",
+      "/blob/936e4578f983655d5aee33891de83891f484ff4c/docs/ordered-composition-promoted-qualification-20260924.md",
+    ]) expect(lesson).toContain(phrase);
+    expect(lesson).not.toContain("Freshly promoted source has not yet passed");
   });
 });

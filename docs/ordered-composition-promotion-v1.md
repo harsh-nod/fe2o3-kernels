@@ -6,10 +6,10 @@ explicit source-edit workflow. It is separate from the
 [scalar const-u32 helper materializer](const-u32-helper-promotion-v1.md).
 Their earlier observations do not qualify this new path.
 
-Compiler implementation commit: `a9b636ec4475a15e13187d78d53692d7e6b834e4`.
+Compiler implementation commit: `936e4578f983655d5aee33891de83891f484ff4c`.
 Recorded qualification: **source publisher, public library driver, actual extractor
-binary, ordinary finite-grid LLVM/handoff and the latest ordinary static native
-matrix passed their separate gates**.
+binary, ordinary finite-grid LLVM/handoff, freshly promoted normal/native outputs,
+and original-profile static compatibility passed their separate gates**.
 The source copies below are exact fixtures; their hashes alone are not receipts.
 No browser source write, new UI route or automatic compiler command is added.
 
@@ -106,7 +106,8 @@ The promotion fixture has **no finite maximum grid**. Its diagnostic and CPU
 exercise is not a normal ranked/formal handoff success. The separate composition
 fixture has an explicit `ordered-composition-finite-grid` option with
 `max_grid = [2,1,1]`; that normal path needs its own source, conditional-memory
-and driver qualification. Do not infer a finite grid from this lab's CPU cases.
+and driver qualification. Do not infer a finite grid from this lab's CPU cases. Section 8 makes a separate,
+explicit prepublication source change for the newly qualified normal path.
 
 ## 3. Select from an actual fresh diagnostic
 
@@ -246,6 +247,76 @@ timeout, arbitrary compiler failure or absent final JSON is not a passing
 negative control. A historical receipt alone is not source custody, compiler
 custody, proof, protected artifact or launch authority.
 
+## 8. Continue a freshly promoted candidate through normal compilation
+
+The later qualification at `936e4578f983655d5aee33891de83891f484ff4c` completed this ladder for
+three **freshly promoted candidates**, separately from the seven original
+composition profiles below. First make the maximum grid an explicit part of the
+ordinary source **before promotion**. The retained fixture itself stays unchanged.
+
+Replace its single kernel attribute with:
+
+<!-- finite-seed-launch -->
+```rust
+#[kernel(typed, launch(required = [64, 1, 1], max = [64, 1, 1], max_grid = [2, 1, 1]))]
+```
+
+This exact one-attribute source change produces a 2,072-byte seed with SHA-256
+`5b6452ffb6276f912d1fd0b1ccb40bfce98b0531ec53920a4475a7f39e75cae7`.
+It is not a post-compilation override: new source means new frontend admission.
+Do not patch the generated candidate, canonical graph, LLVM or descriptor to
+supply a missing bound.
+
+Repeat the explicit create-new copy, preserving edit, and MoveInput2 edit from
+sections 4–5 against that actual finite source. The completed exercise used
+four genuine package identities and fresh compilation sessions for the original
+and each candidate. Copy and preserve can have identical source bytes while
+still having distinct fresh owners; equal hashes do not merge those owners.
+
+The completed parent observed **23 workload children**: 13 actual extractor
+invocations and ten ordinary frontend sessions. It retained three publications,
+six source refusals, and each graph's canonical V17, canonical LLVM, descriptor
+V1, worker LLVM and handoff V2. The four graphs passed **128 CPU cases**:
+four scalar triples, lengths 0/13/64/129, grids 64/128, an eight-byte output view
+offset, canaries and initialization bits. Copy/preserve use `(a ^ b) & c`;
+the intentional edit uses `c`. Twelve candidate descriptor mutations and
+three cross-candidate prefix mismatches were refused.
+
+### Compare each candidate's static native output
+
+The separate promoted profile observes v8 scratch, v9 output and v10/v11/v12
+inputs at O0 and O3. All **6/6** actual static cases passed, with **42 LLVM**,
+**108 metadata** and **66 decoded-machine** mutation controls. A minimum
+architectural capacity of thirteen covers v12; it is not an exact allocation or
+a claim that the surrounding compiler uses no accumulator registers.
+
+O0 retains a helper call; O3 inlines it. Those shapes need different transport
+checks. Matching the authored instruction words does **not** prove that source
+arguments reach the correct physical inputs or that the returned value reaches
+the final store. Full physical helper argument/result transport, root
+guard/address correctness and GPU behavior remain unqualified by this exercise.
+
+The original observer also passed a fresh **14/14** compatibility run; all
+fourteen HSACOs were byte-identical to its earlier R7 output. Neither that result
+nor the old seven-profile matrix substitutes for the six new candidate cases.
+
+| New completed gate | Receipt SHA-256 | Report SHA-256 |
+| --- | --- | --- |
+| Fresh promoted source / normal outputs | `b2ecfb606c2a6631974079c8f4d25ae192bede131be8065abc042ca98e2a964a` | `2b91e1b35768f0e0de4a3b7e37bc5e29cbf82469ee1f3f2fa548751ad4b69d46` |
+| Promoted static native matrix | `81b6aace043ce9de9028db79e596eb807879254cebd90142fd4cf9116dd0c356` | `0843395619b697cef25747ea6608418396bde58fb967fc85f5e852aaab97f1bf` |
+| Original-profile compatibility R8 | `d37cbbec50d9ededea6a7b3e4d3706ece42a45febf3327ee1c4581acae9beb2b` | `a462cf4fa58bebf0c778d2f837f309ba548cefc3961a0f2b05ef9c39e4cded68` |
+
+The [fresh promoted qualification](https://github.com/harsh-nod/fe2o3/blob/936e4578f983655d5aee33891de83891f484ff4c/docs/ordered-composition-promoted-qualification-20260924.md)
+records each gate's actual source snapshot and limitations. The final whole-backend
+regression passed 2,200 tests with 247 existing ignored tests; ignored cases are
+not counted as executed. The final native observer rebuild was byte-identical
+to the observers used above and passed its separate pure controls.
+
+The checked ordinary owner still carries an unresolved **512-byte writable-output**
+requirement. Runtime pointer, extent and permission conditions need their own
+discharge. These diagnostic records do not permit launch, reconstruct an owner,
+or establish full native functional equivalence. **No GPU execution** occurred.
+
 ## Exact source copies and dated qualification
 
 These two files are copied byte for byte, including their feature-selected
@@ -257,7 +328,7 @@ negative cases, from the compiler fixture directory at the implementation commit
 | `examples/ordered-composition/composition.rs` | 5334 | `03f54f05cd0f0666a1740dbd2fbaae1e705ede2511fd7349e22be0122d238915` |
 
 These source hashes establish retained bytes only. The dated
-[compiler qualification report](https://github.com/harsh-nod/fe2o3/blob/a9b636ec4475a15e13187d78d53692d7e6b834e4/docs/ordered-composition-qualification-20260924.md)
+[compiler qualification report](https://github.com/harsh-nod/fe2o3/blob/936e4578f983655d5aee33891de83891f484ff4c/docs/ordered-composition-qualification-20260924.md)
 records the separate producers and retained evidence. This lesson does not embed
 the raw root receipts or confer authority through their hashes.
 
@@ -270,12 +341,13 @@ the raw root receipts or confer authority through their hashes.
 | Fresh ordinary normal path R7 | 36 real rustc sessions on the merged source: 7 finite shapes × observation/LLVM/handoff, 7 dynamic-launch and 8 malformed-source refusals; 21 descriptor mutations | `5cbd40515467b3648420bc30fa1b52ab36508678fdc0bf7a39bd002e5f276daa` |
 | Static native R7 / outer actual-R4 | 14/14 ordinary LLVM/LLD/MC cases; 252 metadata and 154 decoded-observation mutation refusals | `7b0c6f2fd5f9039adb8d417ae656e245ee2dd6a214bb42e90b9bf6f12400f329` |
 
-For the publisher/library/CLI fresh promoted callbacks, identities were observed
-live; separately retained fresh promoted canonical files are not claimed.
+For the earlier publisher/library/CLI fresh promoted callbacks, identities were
+observed live; those historical gates did not retain separate candidate canonical
+files. The later section 8 ladder retains its own fresh files and evidence.
 These are historical gates on their recorded
 source snapshots, not a claim that every gate used the final publication commit.
 The merged-source regression also passed; its boundaries are recorded in the
-[implementation status](https://github.com/harsh-nod/fe2o3/blob/a9b636ec4475a15e13187d78d53692d7e6b834e4/docs/assembly-authoring-implementation-status.md).
+[implementation status](https://github.com/harsh-nod/fe2o3/blob/936e4578f983655d5aee33891de83891f484ff4c/docs/assembly-authoring-implementation-status.md).
 
 The historical R6 static native matrix was incomplete: 13 of 14 cases joined
 authored instruction intervals, while two calls to one helper at O0 hit a
@@ -294,8 +366,9 @@ its completed outer actual-R4 receipt is in the table above.
 These static checks do not prove physical helper argument/result ABI transport,
 whole-kernel functional equivalence, dynamic execution order or runtime host-buffer
 conditions. These are the seven original finite source profiles, not freshly
-promoted candidates. Freshly promoted source has not yet passed its own normal/native
-ladder in the evidence recorded here. Normal LLVM/handoff, static native analysis
+promoted candidates. The later section 8 qualification passed the fresh promoted
+normal/native ladder using separate source owners and retained artifacts.
+Normal LLVM/handoff, static native analysis
 and hardware execution remain separate; **no GPU execution is claimed by this
 lesson**.
 
