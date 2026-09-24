@@ -72,6 +72,11 @@ still creates no queue, dispatch or physical sample and does not establish
 attached-debugger acceptance or cleanup.
 The [complete-body const builder](docs/complete-body-const-builder-v1.md) prepares
 bounded block-graph metadata; it does not yet admit or execute a source kernel.
+The separate [complete-body source tutorial](docs/complete-body-source-v19.md)
+and [logical CPU debugger tutorial](docs/complete-body-debug-v19.md) cover the
+qualified bounded source/CPU/native-static continuation. Their
+[dated evidence](docs/complete-body-source-qualification-20260924.md) does not
+claim a V19 browser adapter, GPU execution or whole-milestone completion.
 The [logical lifetime walkthrough](docs/ordered-role-liveness-v1.md) shows
 instruction-level def/use intervals from retained source/native cases, separately
 from physical register allocation and hardware observations.

@@ -1,0 +1,104 @@
+{
+  "schema": "fe2o3-complete-body-source-command-v19",
+  "feature": "complete-body-diamond-v19",
+  "observations": [
+    {
+      "stage": "llvm",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "complete-body-diamond-v19",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-diamond-r1/llvm-target"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1fe4d0993a1376965f91bf5799b076cf7f59641bd422de6bc4d4e81352bc5b65",
+      "output": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-diamond-r1/canonical.ll",
+        "bytes": 2525,
+        "sha256": "4630b87ddbf23c44a7fb07b7f9cd554f7bf7703c8f1332abf467244386fc6c3e"
+      }
+    },
+    {
+      "stage": "handoff",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "complete-body-diamond-v19",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-diamond-r1/handoff-target"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "7d84c78e959cd9dea852316741a4ae1e4dada201ad303d47382224ca1716644f",
+      "output": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-diamond-r1/handoff-v2.bin",
+        "bytes": 11034,
+        "sha256": "9095298657945ba797300b959a233f4cc0d4402342fb2e2689f95ace9e3e8d8b"
+      },
+      "same_executable_llvm_text": true
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+      "bytes": 6202,
+      "sha256": "a8bf8adc7e2e9cfda326bf219bbd0b517d283dc8dba6244e780be368b601e3b4"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+      "bytes": 23721,
+      "sha256": "2824cb18bcbaa5cb58fd90673d87adba58df9c144af51833be37f1815ee4ac57"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/complete_body_v19.rs",
+      "bytes": 3338,
+      "sha256": "3fb330e7193918e3e587445fdc82fd5d5dd3ca664063fbc9781664a67f2bb26c"
+    }
+  ],
+  "binaryPins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-rustc-extract",
+      "bytes": 217952,
+      "sha256": "18aa04bd5907f59d6702bae3699b799dee457038720984955e40d0da6d4afdb6"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/librustc_codegen_fe2o3.so",
+      "bytes": 256398776,
+      "sha256": "aaa0759b9643199c350e93c0ed5e7e25e74f4fae839f72c1597fef9744acb5b0"
+    }
+  ],
+  "source_unchanged": true,
+  "actual_cargo_rustc_wrapper": true,
+  "compiler_closure_attestation": "unavailable",
+  "exact_canonical_handoff_decode": "covered separately by Rust qualification ladder",
+  "cpu_simulation_run": false,
+  "formal_bounds_scope": "conservative LaunchEnvelope",
+  "protected_finalizer_admitted": false,
+  "native_llvm_executed": false,
+  "hardware_observed": false,
+  "grants_artifact_or_launch_authority": false
+}

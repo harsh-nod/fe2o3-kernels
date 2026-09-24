@@ -1,0 +1,64 @@
+{
+  "schema": "fe2o3-complete-body-v19-qualification-checklist-v1",
+  "kind": "pending_non_evidence_template",
+  "status": "pending",
+  "compiler_commit": null,
+  "compiler_tree": null,
+  "rustc_version_output_sha256": null,
+  "source_file_pins": [],
+  "binary_pins": [],
+  "source_ladder": {
+    "status": "pending",
+    "receipt_path": null,
+    "receipt_bytes": null,
+    "receipt_sha256": null,
+    "observed_sessions": null,
+    "observed_cpu_cases": null,
+    "observed_exact_refusals": null
+  },
+  "public_source_commands": {
+    "one": null,
+    "diamond": null
+  },
+  "public_debug_commands": {
+    "one": null,
+    "diamond": null
+  },
+  "intended_assertions": {
+    "source_ladder_sessions": 21,
+    "source_ladder_cpu_cases": 384,
+    "source_ladder_exact_refusals": 15,
+    "debug_selectors": [
+      0,
+      1,
+      4294967295
+    ],
+    "debug_grid": [
+      128,
+      1,
+      1
+    ],
+    "debug_workgroup": [
+      64,
+      1,
+      1
+    ],
+    "debug_output_bytes": 520,
+    "debug_written_words": 128,
+    "debug_trailing_canary_words": 2
+  },
+  "boundaries": {
+    "successful_capture_retained": false,
+    "compiler_closure_attestation": "unavailable",
+    "exported_source_authentication": false,
+    "exported_compiler_authentication": false,
+    "physical_register_capture": false,
+    "source_map_available": false,
+    "website_v19_adapter": false,
+    "native_llvm_executed": false,
+    "hardware_observed": false,
+    "protected_finalizer_admitted": false,
+    "grants_artifact_or_launch_authority": false
+  },
+  "publication_instructions": "This template is not a retained result. Keep failures and populate a separate dated qualification record only from actual command receipts and exact files. Separate canonical identity from raw-file SHA-256. Link the immutable compiler commit and actual artifacts; never use placeholder hashes or earlier V17/native-fixture evidence."
+}

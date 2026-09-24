@@ -1,0 +1,283 @@
+{
+  "schema": "fe2o3-complete-body-source-debug-command-v19",
+  "feature": "complete-body-one-v19",
+  "metadata": {
+    "artifact_or_launch_authority": false,
+    "canonical_bytes": 1019,
+    "canonical_identity": "a48249183fbf8640c9620f585d2a06fbbb32def237d17daf356266182e969f4a",
+    "exported_compiler_authentication": false,
+    "exported_source_authentication": false,
+    "hardware_observed": false,
+    "kernel": "assembly_one",
+    "schema": "fe2o3-diagnostic-kir-v19-observation",
+    "semantic_mir_v36": "d42a1ee28103a596844a184b4ed6edfd6f28b692775a8a0b095ae03d5766d0e1"
+  },
+  "kir": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/diagnostic-v19.kir",
+    "bytes": 1019,
+    "sha256": "1bf48d77302689bf514f4236ede0a408cc1bfbd5be9cc2ab7fc1c8458af02965"
+  },
+  "sourcePins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+      "bytes": 6202,
+      "sha256": "a8bf8adc7e2e9cfda326bf219bbd0b517d283dc8dba6244e780be368b601e3b4"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+      "bytes": 23721,
+      "sha256": "2824cb18bcbaa5cb58fd90673d87adba58df9c144af51833be37f1815ee4ac57"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/complete_body_v19.rs",
+      "bytes": 3338,
+      "sha256": "3fb330e7193918e3e587445fdc82fd5d5dd3ca664063fbc9781664a67f2bb26c"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/scripts/complete-body-debug-source-v19.mjs",
+      "bytes": 16332,
+      "sha256": "d3e8de8836529ca485ed0f0d6688a762f4fa1328599916c252198af527560052"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/scripts/ordered-region-debugger-client.mjs",
+      "bytes": 30622,
+      "sha256": "8c65fdd473ba732f1ff9418e0e06e1a022eb68677fd048e7d2d8dd45e414e989"
+    }
+  ],
+  "binaryPins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-rustc-extract",
+      "bytes": 217952,
+      "sha256": "18aa04bd5907f59d6702bae3699b799dee457038720984955e40d0da6d4afdb6"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/librustc_codegen_fe2o3.so",
+      "bytes": 256398776,
+      "sha256": "aaa0759b9643199c350e93c0ed5e7e25e74f4fae839f72c1597fef9744acb5b0"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-kir-sim",
+      "bytes": 12509016,
+      "sha256": "4a291547925248109404d6fb992cd3e004117f345efd2e3223f489e2a5fb8f36"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-debug",
+      "bytes": 61824568,
+      "sha256": "c6fa1701c134732ce1011a48876b96d926cadea4ba6a80a9b243f24afa26f4a2"
+    }
+  ],
+  "requests": [
+    {
+      "selector": 0,
+      "expectedValue": 19,
+      "request": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-0-request.json",
+        "bytes": 1690,
+        "sha256": "8a7f86d1b2e880e1401cf518f59778f36aa1f39a014ab16f401a389811b9795c"
+      },
+      "result": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-0-cpu.json",
+        "bytes": 2379,
+        "sha256": "643233386b8e4aaf7c7876a82f26ac9de2d7dbf6583fe5cdfe8b6194d6f0fdd7"
+      },
+      "initialized_output_and_canaries_match": true,
+      "logical_forward_reverse_observed": true,
+      "configuration": "f43519170d0bd63f6258f08c7f5e1f050e7c68826e4b30dee635a43092b55402"
+    },
+    {
+      "selector": 1,
+      "expectedValue": 19,
+      "request": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-1-request.json",
+        "bytes": 1690,
+        "sha256": "c39b9534ad9d550279a4482e75f615c9a7306559e8950f9ffb0beeb17ab52fcf"
+      },
+      "result": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-1-cpu.json",
+        "bytes": 2379,
+        "sha256": "ff5a2f1d728d2429bc53715d57f8cb92a64bef81bcf5f76014a30f44e81a20b1"
+      },
+      "initialized_output_and_canaries_match": true,
+      "logical_forward_reverse_observed": true,
+      "configuration": "4439c8a05f4376ccb16f4667e7586a6f0fd437741ba5dab8123dc982874b9f0e"
+    },
+    {
+      "selector": 4294967295,
+      "expectedValue": 19,
+      "request": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-4294967295-request.json",
+        "bytes": 1690,
+        "sha256": "171bf18a05e27c4aee569ba77b31cddd86426bc1f124c3b5113f4c4c708dc734"
+      },
+      "result": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-4294967295-cpu.json",
+        "bytes": 2379,
+        "sha256": "f6170d764c7ec39fd9485de426a61f2f7cdbbf525bd0d92e28c8d6feaf6d6920"
+      },
+      "initialized_output_and_canaries_match": true,
+      "logical_forward_reverse_observed": true,
+      "configuration": "eb632e75302bb57336f73b56b87de587a8e0487bc41e37983a653db7f63f472b"
+    }
+  ],
+  "observations": [
+    {
+      "stage": "sysroot",
+      "command": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "args": [
+        "--print",
+        "sysroot"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "257f4991fbf7ad5108d7c7d18430f8afa7b8cb2ef06af6378cfeaa5e5ce6ab9e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "source",
+      "command": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/cargo",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "complete-body-one-v19",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/source-target"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "6518c8c8166d3a7435407f607758b090f2c78568c1b81a890f1a14f306129b14"
+    },
+    {
+      "stage": "selector-0-cpu",
+      "command": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-kir-sim",
+      "args": [
+        "--diagnostic-kir-v19",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/diagnostic-v19.kir",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-0-request.json",
+        "--output",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-0-cpu.json"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "selector-0-debug",
+      "command": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-debug",
+      "args": [
+        "sim",
+        "--diagnostic-kir-v19",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/diagnostic-v19.kir",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-0-request.json",
+        "--protocol",
+        "jsonl",
+        "--wave-width",
+        "64"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "56bdda096b01855f18e547c5283b06357a44680bcaefe394d6f1fc2a72289226",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "selector-1-cpu",
+      "command": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-kir-sim",
+      "args": [
+        "--diagnostic-kir-v19",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/diagnostic-v19.kir",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-1-request.json",
+        "--output",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-1-cpu.json"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "selector-1-debug",
+      "command": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-debug",
+      "args": [
+        "sim",
+        "--diagnostic-kir-v19",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/diagnostic-v19.kir",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-1-request.json",
+        "--protocol",
+        "jsonl",
+        "--wave-width",
+        "64"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "5672e8d00d7a3a213aba6288e154f5d65d0bc0d50b36ee42951874ece5c48d92",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "selector-4294967295-cpu",
+      "command": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-kir-sim",
+      "args": [
+        "--diagnostic-kir-v19",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/diagnostic-v19.kir",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-4294967295-request.json",
+        "--output",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-4294967295-cpu.json"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "stage": "selector-4294967295-debug",
+      "command": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-debug",
+      "args": [
+        "sim",
+        "--diagnostic-kir-v19",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/diagnostic-v19.kir",
+        "--request",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1/selector-4294967295-request.json",
+        "--protocol",
+        "jsonl",
+        "--wave-width",
+        "64"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "4beb0648ba60f0afeb588d1abfb8e9ae438565d8ecf9145e4a9f5a496881b4a5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "actual_cargo_rustc_wrapper": true,
+  "source_unchanged": true,
+  "raw_canonical_bytes_preserved": true,
+  "cpu_simulation_run": true,
+  "logical_debugger_forward_reverse": true,
+  "compiler_closure_attestation": "unavailable",
+  "exported_source_authentication": false,
+  "exported_compiler_authentication": false,
+  "physical_register_values": "unavailable",
+  "source_variable_map": "unavailable",
+  "persisted_schedule": "unavailable",
+  "runtime_observations": "unavailable",
+  "diagnosis_v2": "unavailable",
+  "protected_finalizer_admitted": false,
+  "native_llvm_executed": false,
+  "hardware_observed": false,
+  "grants_artifact_or_launch_authority": false
+}

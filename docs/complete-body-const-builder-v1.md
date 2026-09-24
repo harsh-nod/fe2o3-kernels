@@ -3,9 +3,15 @@
 Use this experimental API to prepare a small, inspectable block graph at compile time,
 without a heap or a compiler-crate dependency in device code. It is useful for sharing
 one bounded description with host tooling and checking numeric-format compatibility.
-It does **not** create a kernel: there is no complete-body source marker, normal-source
-admission, renderer, simulator, LLVM continuation, or launch API for these packed values.
-For a source kernel you can export and observe today, use the separate
+It does **not** create a kernel: these packed values alone are not a complete-body
+source marker, normal-source owner, renderer result, simulator input, LLVM
+continuation, or launch owner.
+The separate [complete-body source recipe](complete-body-source-v19.md) and
+[logical-debugging recipe](complete-body-debug-v19.md) describe the newer V19
+continuation; its bounded source ladder has a separate
+[qualification record](complete-body-source-qualification-20260924.md). Do not
+infer that packing alone enters that route. For earlier independently qualified source
+kernels, use the separate
 [ordered-program tutorial](ordered-program-authoring-v1.md) or
 [literal-repeat lab](ordered-program-repeat-v1.md), with their own compiler pins and limits.
 
@@ -160,7 +166,7 @@ The `fe2o3-device` API itself remains `no_std`; only the separate host parity
 fixture depends on compiler-side types.
 
 Keep the layers distinct: packed grammar → separate CFG/initialization/resource
-model → **not yet an admitted complete-body source kernel**. A successful
+model → **not itself an admitted complete-body source kernel**. A successful
 packing result is useful data, not permission to resume compilation from it.
 There is no arbitrary ISA-to-Rust round trip, physical-lifetime observation,
 protected proof, or native/performance qualification implied by this tutorial.

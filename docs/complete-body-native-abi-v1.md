@@ -1,7 +1,12 @@
 # Follow a complete assembly body through LLVM and native ABI checks
 
 This contributor walkthrough demonstrates the bounded renderer and native
-checker. It is not yet the ordinary authenticated whole-body source route,
+checker. It is separate from the [V19 source recipe](complete-body-source-v19.md)
+and [logical-debugger recipe](complete-body-debug-v19.md). Their bounded
+source ladder has its own [qualification record](complete-body-source-qualification-20260924.md);
+the public scripts and four actual-source canonical-prefix native checks are
+qualified there. Descriptor-bearing worker-module native qualification and
+functional execution remain separate. This fixture is not the authenticated whole-body source route,
 a runnable GPU lesson or M2 acceptance. The
 [qualification record](https://github.com/harsh-nod/fe2o3/blob/main/docs/evidence/complete-body-native-abi-20260923.md)
 records five plans at O0/O3 and 352 negative checks without GPU execution.
@@ -121,6 +126,6 @@ physical-register lifetime measurement or stopped-wave debugging. The
 evidence boundaries.
 
 This documentation does not advance a curriculum compiler pin or label the
-example compiler-produced. The normal source/canonical-owner integration,
+example compiler-produced. The newer normal-source/canonical-owner route and its separately scoped qualification,
 small and tiled optimization lessons, hardware cells and measured curriculum
 cost gates remain separate work.

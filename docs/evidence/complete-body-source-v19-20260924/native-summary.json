@@ -1,0 +1,136 @@
+{
+  "status": "passed",
+  "source_observation": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-source-actual-r7/observation.json",
+    "bytes": 77983,
+    "sha256": "33eaf977a1b04ef2864a0d0d7fb11f96ad009f6982c54a1d4548111923daa17b"
+  },
+  "native_calls": 4,
+  "negative_checks": 138,
+  "entry_syntax_cases": 64,
+  "entry_relation_cases": 12,
+  "rows": [
+    {
+      "feature": "complete-body-one-v19",
+      "entry": "assembly_one",
+      "profile": "one",
+      "level": "O0",
+      "llvm_sha256": "3e4583f53812fb02b101151d37d2155771173423ac3a684bbd9720a70f6ec11b",
+      "hsaco_bytes": 5720,
+      "hsaco_sha256": "b97f27dc600707ae0d9604c48dfe6f74103458c83466e1a0dd80920617911db1",
+      "report_bytes": 43200,
+      "report_sha256": "afd3471d3bdc4fb266f4ea3d6cf8859194c2c4c18299a9d2a5d51578577923e1",
+      "counts": {
+        "llvm_mutation_refusals": 19,
+        "native_mutation_refusals": 6,
+        "metadata_mutation_refusals": 3,
+        "descriptor_mutation_refusals": 2,
+        "selector_mutation_refusals": 2
+      },
+      "selector": {
+        "copy_offsets": [],
+        "destination_sgpr": 22,
+        "kernarg_byte_offset": 28,
+        "kernarg_pointer_sgpr": 4,
+        "load_offset": 2608,
+        "load_ready": true
+      },
+      "retained_source_entry_join": true,
+      "entry_join_basis": "pinned actual source observer assertions and exact unchanged retained bytes; not portable source authority"
+    },
+    {
+      "feature": "complete-body-one-v19",
+      "entry": "assembly_one",
+      "profile": "one",
+      "level": "O3",
+      "llvm_sha256": "3e4583f53812fb02b101151d37d2155771173423ac3a684bbd9720a70f6ec11b",
+      "hsaco_bytes": 5400,
+      "hsaco_sha256": "ee938d6e6d4e5a58c19a4e39aee3518bebab35bbf85ae3a6547a659cdd7b9a9f",
+      "report_bytes": 30147,
+      "report_sha256": "0874f3a926d4e88e3d6806917c6ec75b7bfebfe71b3748f4980b4dd92f6d1c8d",
+      "counts": {
+        "llvm_mutation_refusals": 19,
+        "native_mutation_refusals": 6,
+        "metadata_mutation_refusals": 3,
+        "descriptor_mutation_refusals": 2,
+        "selector_mutation_refusals": 2
+      },
+      "selector": {
+        "copy_offsets": [
+          2348
+        ],
+        "destination_sgpr": 22,
+        "kernarg_byte_offset": 28,
+        "kernarg_pointer_sgpr": 0,
+        "load_offset": 2304,
+        "load_ready": true
+      },
+      "retained_source_entry_join": true,
+      "entry_join_basis": "pinned actual source observer assertions and exact unchanged retained bytes; not portable source authority"
+    },
+    {
+      "feature": "complete-body-diamond-v19",
+      "entry": "assembly_diamond",
+      "profile": "output_diamond",
+      "level": "O0",
+      "llvm_sha256": "4630b87ddbf23c44a7fb07b7f9cd554f7bf7703c8f1332abf467244386fc6c3e",
+      "hsaco_bytes": 5824,
+      "hsaco_sha256": "acb1d69a91d64d0a871edf541760ea285b6f05c518a454d63a4fbf3b6e14784d",
+      "report_bytes": 49311,
+      "report_sha256": "c23286d4680b23c5da048e76ba9c717bbee4daf66fef6518b131f94c776812ad",
+      "counts": {
+        "llvm_mutation_refusals": 22,
+        "native_mutation_refusals": 8,
+        "metadata_mutation_refusals": 3,
+        "descriptor_mutation_refusals": 2,
+        "selector_mutation_refusals": 2
+      },
+      "selector": {
+        "copy_offsets": [],
+        "destination_sgpr": 22,
+        "kernarg_byte_offset": 28,
+        "kernarg_pointer_sgpr": 4,
+        "load_offset": 2608,
+        "load_ready": true
+      },
+      "retained_source_entry_join": true,
+      "entry_join_basis": "pinned actual source observer assertions and exact unchanged retained bytes; not portable source authority"
+    },
+    {
+      "feature": "complete-body-diamond-v19",
+      "entry": "assembly_diamond",
+      "profile": "output_diamond",
+      "level": "O3",
+      "llvm_sha256": "4630b87ddbf23c44a7fb07b7f9cd554f7bf7703c8f1332abf467244386fc6c3e",
+      "hsaco_bytes": 5440,
+      "hsaco_sha256": "48156355db65012979a156f1e6dd20c1b470f4af18b973af9e8a7fd81189b9bc",
+      "report_bytes": 36258,
+      "report_sha256": "b8b1bee61430c46c243683d6644b829918004269016954ecaf362a8a0d111457",
+      "counts": {
+        "llvm_mutation_refusals": 22,
+        "native_mutation_refusals": 8,
+        "metadata_mutation_refusals": 3,
+        "descriptor_mutation_refusals": 2,
+        "selector_mutation_refusals": 2
+      },
+      "selector": {
+        "copy_offsets": [
+          2348
+        ],
+        "destination_sgpr": 22,
+        "kernarg_byte_offset": 28,
+        "kernarg_pointer_sgpr": 0,
+        "load_offset": 2304,
+        "load_ready": true
+      },
+      "retained_source_entry_join": true,
+      "entry_join_basis": "pinned actual source observer assertions and exact unchanged retained bytes; not portable source authority"
+    }
+  ],
+  "compiled_scope": "unchanged canonical executable LLVM prefix; descriptor-bearing handoff separately decoded and byte-joined by retained Rust source observer",
+  "native_compilation": true,
+  "native_functional_execution": false,
+  "hardware_execution": false,
+  "source_authentication_granted_by_harness": false,
+  "protected_finalizer_admission": false
+}

@@ -1,0 +1,839 @@
+{
+  "schema": "task-phase28-command-observation-v1",
+  "status": "command-passed",
+  "authority": "none",
+  "configuration": {
+    "schema": "task-phase28-command-request-v1",
+    "label": "compiler-source-v19-public-r1",
+    "repo": "compiler",
+    "command": [
+      "/bin/bash",
+      "-euc",
+      "cargo build --offline --locked -p rustc-codegen-fe2o3 --lib --bin fe2o3-rustc-extract\ncargo build --offline --locked -p fe2o3-kir-sim-cli -p fe2o3-debug-cli\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-source-v19.mjs one /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-one-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-source-v19.mjs diamond /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-diamond-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-source-v19.mjs wrong-launch /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-wrong-launch-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-source-v19.mjs reserved-register /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-reserved-register-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-source-v19.mjs foreign-input /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-foreign-input-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-source-v19.mjs undefined-merge /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-undefined-merge-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-source-v19.mjs dynamic-grid /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-source-dynamic-grid-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-debug-source-v19.mjs one /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-one-r1\n/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node scripts/complete-body-debug-source-v19.mjs diamond /home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-complete-body-public-debug-diamond-r1"
+    ],
+    "environment": {
+      "CARGO_TARGET_DIR": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1",
+      "RUSTC": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustc"
+    },
+    "inputs": [],
+    "timeout_ms": 1200000,
+    "head": "ce6b769d83fd82918ceee23ca6a5756bdeeb91c5",
+    "source": {
+      "files": 7208,
+      "bytes": 107560580,
+      "sha256": "217a30aed5f579381a9461007bf1f6cf729ab146cab7918f27538e01d245fee2"
+    }
+  },
+  "request": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/requests/compiler-source-v19-public-r1.json",
+    "bytes": 2778,
+    "sha256": "c9a8018f2621f3fe7d35e63fd39cebcacc332cb954b82a81c5302a8a2d07f20a"
+  },
+  "started": "2026-09-24T03:11:11.829Z",
+  "invocation": {
+    "executable": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node",
+    "argv": [
+      "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/run.mjs",
+      "compiler-source-v19-public-r1",
+      "c9a8018f2621f3fe7d35e63fd39cebcacc332cb954b82a81c5302a8a2d07f20a"
+    ],
+    "cwd": "/home/harmenon",
+    "outer_wrapper_observed": false
+  },
+  "production_qualified": false,
+  "hardware_observed": false,
+  "source_authenticated": false,
+  "source_before": {
+    "files": 7208,
+    "bytes": 107560580,
+    "sha256": "217a30aed5f579381a9461007bf1f6cf729ab146cab7918f27538e01d245fee2"
+  },
+  "source_after": {
+    "files": 7208,
+    "bytes": 107560580,
+    "sha256": "217a30aed5f579381a9461007bf1f6cf729ab146cab7918f27538e01d245fee2"
+  },
+  "tools_before": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/run.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/run.mjs",
+      "bytes": 6334,
+      "mode": 436,
+      "sha256": "c3d3487fa4e81d43ecc219d2bb86c869b46279113bc5f2abfb016624e06c3e4d",
+      "identity": [
+        "66307",
+        "170179714",
+        "6334",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/model.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/model.mjs",
+      "bytes": 5379,
+      "mode": 436,
+      "sha256": "53ad8093c86a8448092943ae6c7d19d2e600cff67c94aea0f2ad3029d63334ce",
+      "identity": [
+        "66307",
+        "170179715",
+        "5379",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/io.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/io.mjs",
+      "bytes": 6811,
+      "mode": 436,
+      "sha256": "7b7aa7a07f08a7c1ed084262cd5177bb72149bac9e962a0ac7bbe7d187ad235a",
+      "identity": [
+        "66307",
+        "170179716",
+        "6811",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/test.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/test.mjs",
+      "bytes": 2743,
+      "mode": 436,
+      "sha256": "c2b909fe05ca299d8fc83f7980ab19ba0ef4430a23472d2b7c8579042a487d85",
+      "identity": [
+        "66307",
+        "170179717",
+        "2743",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node",
+      "bytes": 124819136,
+      "mode": 493,
+      "sha256": "e6ec2c188d83d813f81f2de8aea084d74dce603ac1abedd0a30ad941b10087b2",
+      "identity": [
+        "66307",
+        "110400159",
+        "124819136",
+        "33261",
+        "1778683847000000000",
+        "1789954548543927406"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/git-install/bin/git",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/git-install/bin/git",
+      "bytes": 4596424,
+      "mode": 493,
+      "sha256": "a8d65edc05141f3a1e807c2511eb3fa95be934b9faea3bd3c00e3ca22ee81e77",
+      "identity": [
+        "66307",
+        "110400157",
+        "4596424",
+        "33261",
+        "1789936963000000000",
+        "1789953990521968799"
+      ]
+    },
+    {
+      "path": "/bin/bash",
+      "resolved": "/usr/bin/bash",
+      "bytes": 1446024,
+      "mode": 493,
+      "sha256": "bc5945feb8bd26203ebfafea5ce1878bb2e32cb8fb50ab7ae395cfb1e1aaaef1",
+      "identity": [
+        "66307",
+        "119931890",
+        "1446024",
+        "33261",
+        "1711874463000000000",
+        "1776464459173273739"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.cargo/bin/rustc",
+      "resolved": "/home/harmenon/.cargo/bin/rustup",
+      "bytes": 20838840,
+      "mode": 493,
+      "sha256": "4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10",
+      "identity": [
+        "66307",
+        "110263610",
+        "20838840",
+        "33261",
+        "1785913056605781369",
+        "1785913056605781369"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.cargo/bin/rustup",
+      "resolved": "/home/harmenon/.cargo/bin/rustup",
+      "bytes": 20838840,
+      "mode": 493,
+      "sha256": "4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10",
+      "identity": [
+        "66307",
+        "110263610",
+        "20838840",
+        "33261",
+        "1785913056605781369",
+        "1785913056605781369"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/cargo",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/cargo",
+      "bytes": 42375992,
+      "mode": 493,
+      "sha256": "c9ad606cb1dbb4a65aa27c80be88ed61eb2b811b6450eeec6794f60ed78b94a3",
+      "identity": [
+        "66307",
+        "110264078",
+        "42375992",
+        "33261",
+        "1785913068904526836",
+        "1785913069007524634"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "bytes": 645760,
+      "mode": 493,
+      "sha256": "08dfef109ad22d90556dbd2f964543cd93843dcd75a2e9792c173667392a1950",
+      "identity": [
+        "66307",
+        "110264162",
+        "645760",
+        "33261",
+        "1785913072055459442",
+        "1785913075062395128"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustfmt",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustfmt",
+      "bytes": 5281712,
+      "mode": 493,
+      "sha256": "a9137d0c198ceb6c72193d517d3c9007b3ec7a90d3d10ec6889773eca48261b4",
+      "identity": [
+        "66307",
+        "110264169",
+        "5281712",
+        "33261",
+        "1785913075145393352",
+        "1785913075245391214"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "bytes": 152936640,
+      "mode": 420,
+      "sha256": "a0aa61a461841224222b0064f9d77a84fe6d3410745d3d96ceaade6ee679cade",
+      "identity": [
+        "66307",
+        "110264182",
+        "152936640",
+        "33188",
+        "1785913073495428643",
+        "1785913075062395128"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "bytes": 152936640,
+      "mode": 420,
+      "sha256": "a0aa61a461841224222b0064f9d77a84fe6d3410745d3d96ceaade6ee679cade",
+      "identity": [
+        "66307",
+        "110268881",
+        "152936640",
+        "33188",
+        "1785913079574298623",
+        "1785913080088287629"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/libLLVM.so.22.1-rust-1.96.0-nightly",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/libLLVM.so.22.1-rust-1.96.0-nightly",
+      "bytes": 199520544,
+      "mode": 420,
+      "sha256": "8af284bb5ae923ac175ddb3f7b9ad16f1f733f7f5f2779e0c9e8c68ef9ba162b",
+      "identity": [
+        "66307",
+        "110264200",
+        "199520544",
+        "33188",
+        "1785913074936397822",
+        "1785913075062395128"
+      ]
+    },
+    {
+      "path": "/usr/bin/du",
+      "resolved": "/usr/bin/du",
+      "bytes": 100872,
+      "mode": 493,
+      "sha256": "860235f0294d9c2185140f4ebab8301d5db8357fb195f7b79ad3b94b495763c7",
+      "identity": [
+        "66307",
+        "119934622",
+        "100872",
+        "33261",
+        "1769175004000000000",
+        "1782512227236217535"
+      ]
+    },
+    {
+      "path": "/usr/bin/flock",
+      "resolved": "/usr/bin/flock",
+      "bytes": 23024,
+      "mode": 493,
+      "sha256": "487fc764723f08f70a630c517b6847165efab683d42a62f03956320a150cf801",
+      "identity": [
+        "66307",
+        "119937466",
+        "23024",
+        "33261",
+        "1772812854000000000",
+        "1782512230492577839"
+      ]
+    }
+  ],
+  "tools_after": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/run.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/run.mjs",
+      "bytes": 6334,
+      "mode": 436,
+      "sha256": "c3d3487fa4e81d43ecc219d2bb86c869b46279113bc5f2abfb016624e06c3e4d",
+      "identity": [
+        "66307",
+        "170179714",
+        "6334",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/model.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/model.mjs",
+      "bytes": 5379,
+      "mode": 436,
+      "sha256": "53ad8093c86a8448092943ae6c7d19d2e600cff67c94aea0f2ad3029d63334ce",
+      "identity": [
+        "66307",
+        "170179715",
+        "5379",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/io.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/io.mjs",
+      "bytes": 6811,
+      "mode": 436,
+      "sha256": "7b7aa7a07f08a7c1ed084262cd5177bb72149bac9e962a0ac7bbe7d187ad235a",
+      "identity": [
+        "66307",
+        "170179716",
+        "6811",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/test.mjs",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-resume-r7-runner/test.mjs",
+      "bytes": 2743,
+      "mode": 436,
+      "sha256": "c2b909fe05ca299d8fc83f7980ab19ba0ef4430a23472d2b7c8579042a487d85",
+      "identity": [
+        "66307",
+        "170179717",
+        "2743",
+        "33204",
+        "1790216460218111152",
+        "1790216460218111152"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/node",
+      "bytes": 124819136,
+      "mode": 493,
+      "sha256": "e6ec2c188d83d813f81f2de8aea084d74dce603ac1abedd0a30ad941b10087b2",
+      "identity": [
+        "66307",
+        "110400159",
+        "124819136",
+        "33261",
+        "1778683847000000000",
+        "1789954548543927406"
+      ]
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/git-install/bin/git",
+      "resolved": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/tools/git-install/bin/git",
+      "bytes": 4596424,
+      "mode": 493,
+      "sha256": "a8d65edc05141f3a1e807c2511eb3fa95be934b9faea3bd3c00e3ca22ee81e77",
+      "identity": [
+        "66307",
+        "110400157",
+        "4596424",
+        "33261",
+        "1789936963000000000",
+        "1789953990521968799"
+      ]
+    },
+    {
+      "path": "/bin/bash",
+      "resolved": "/usr/bin/bash",
+      "bytes": 1446024,
+      "mode": 493,
+      "sha256": "bc5945feb8bd26203ebfafea5ce1878bb2e32cb8fb50ab7ae395cfb1e1aaaef1",
+      "identity": [
+        "66307",
+        "119931890",
+        "1446024",
+        "33261",
+        "1711874463000000000",
+        "1776464459173273739"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.cargo/bin/rustc",
+      "resolved": "/home/harmenon/.cargo/bin/rustup",
+      "bytes": 20838840,
+      "mode": 493,
+      "sha256": "4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10",
+      "identity": [
+        "66307",
+        "110263610",
+        "20838840",
+        "33261",
+        "1785913056605781369",
+        "1785913056605781369"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.cargo/bin/rustup",
+      "resolved": "/home/harmenon/.cargo/bin/rustup",
+      "bytes": 20838840,
+      "mode": 493,
+      "sha256": "4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10",
+      "identity": [
+        "66307",
+        "110263610",
+        "20838840",
+        "33261",
+        "1785913056605781369",
+        "1785913056605781369"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/cargo",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/cargo",
+      "bytes": 42375992,
+      "mode": 493,
+      "sha256": "c9ad606cb1dbb4a65aa27c80be88ed61eb2b811b6450eeec6794f60ed78b94a3",
+      "identity": [
+        "66307",
+        "110264078",
+        "42375992",
+        "33261",
+        "1785913068904526836",
+        "1785913069007524634"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustc",
+      "bytes": 645760,
+      "mode": 493,
+      "sha256": "08dfef109ad22d90556dbd2f964543cd93843dcd75a2e9792c173667392a1950",
+      "identity": [
+        "66307",
+        "110264162",
+        "645760",
+        "33261",
+        "1785913072055459442",
+        "1785913075062395128"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustfmt",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/bin/rustfmt",
+      "bytes": 5281712,
+      "mode": 493,
+      "sha256": "a9137d0c198ceb6c72193d517d3c9007b3ec7a90d3d10ec6889773eca48261b4",
+      "identity": [
+        "66307",
+        "110264169",
+        "5281712",
+        "33261",
+        "1785913075145393352",
+        "1785913075245391214"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "bytes": 152936640,
+      "mode": 420,
+      "sha256": "a0aa61a461841224222b0064f9d77a84fe6d3410745d3d96ceaade6ee679cade",
+      "identity": [
+        "66307",
+        "110264182",
+        "152936640",
+        "33188",
+        "1785913073495428643",
+        "1785913075062395128"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib/librustc_driver-7bb70639c3ace5a4.so",
+      "bytes": 152936640,
+      "mode": 420,
+      "sha256": "a0aa61a461841224222b0064f9d77a84fe6d3410745d3d96ceaade6ee679cade",
+      "identity": [
+        "66307",
+        "110268881",
+        "152936640",
+        "33188",
+        "1785913079574298623",
+        "1785913080088287629"
+      ]
+    },
+    {
+      "path": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/libLLVM.so.22.1-rust-1.96.0-nightly",
+      "resolved": "/home/harmenon/.rustup/toolchains/nightly-2026-04-03-x86_64-unknown-linux-gnu/lib/libLLVM.so.22.1-rust-1.96.0-nightly",
+      "bytes": 199520544,
+      "mode": 420,
+      "sha256": "8af284bb5ae923ac175ddb3f7b9ad16f1f733f7f5f2779e0c9e8c68ef9ba162b",
+      "identity": [
+        "66307",
+        "110264200",
+        "199520544",
+        "33188",
+        "1785913074936397822",
+        "1785913075062395128"
+      ]
+    },
+    {
+      "path": "/usr/bin/du",
+      "resolved": "/usr/bin/du",
+      "bytes": 100872,
+      "mode": 493,
+      "sha256": "860235f0294d9c2185140f4ebab8301d5db8357fb195f7b79ad3b94b495763c7",
+      "identity": [
+        "66307",
+        "119934622",
+        "100872",
+        "33261",
+        "1769175004000000000",
+        "1782512227236217535"
+      ]
+    },
+    {
+      "path": "/usr/bin/flock",
+      "resolved": "/usr/bin/flock",
+      "bytes": 23024,
+      "mode": 493,
+      "sha256": "487fc764723f08f70a630c517b6847165efab683d42a62f03956320a150cf801",
+      "identity": [
+        "66307",
+        "119937466",
+        "23024",
+        "33261",
+        "1772812854000000000",
+        "1782512230492577839"
+      ]
+    }
+  ],
+  "inputs_before": [],
+  "inputs_after": [],
+  "resources": [
+    {
+      "at": "2026-09-24T03:11:11.830Z",
+      "root_bytes": 212154115934,
+      "output_bytes": 0,
+      "free_bytes": 1396173180928,
+      "available_ram_bytes": 3097524953088
+    },
+    {
+      "at": "2026-09-24T03:11:23.694Z",
+      "root_bytes": 212154031127,
+      "output_bytes": 1331,
+      "free_bytes": 1396173266944,
+      "available_ram_bytes": 3097170292736
+    },
+    {
+      "at": "2026-09-24T03:11:34.847Z",
+      "root_bytes": 212154770868,
+      "output_bytes": 33744,
+      "free_bytes": 1395915218944,
+      "available_ram_bytes": 3096257011712
+    },
+    {
+      "at": "2026-09-24T03:11:46.070Z",
+      "root_bytes": 212122087040,
+      "output_bytes": 34870,
+      "free_bytes": 1396214788096,
+      "available_ram_bytes": 3097508954112
+    },
+    {
+      "at": "2026-09-24T03:11:57.270Z",
+      "root_bytes": 212281773898,
+      "output_bytes": 35076,
+      "free_bytes": 1396044042240,
+      "available_ram_bytes": 3096816545792
+    },
+    {
+      "at": "2026-09-24T03:12:08.457Z",
+      "root_bytes": 212449688166,
+      "output_bytes": 35076,
+      "free_bytes": 1395875749888,
+      "available_ram_bytes": 3097253253120
+    },
+    {
+      "at": "2026-09-24T03:12:19.642Z",
+      "root_bytes": 212666485981,
+      "output_bytes": 35076,
+      "free_bytes": 1395657154560,
+      "available_ram_bytes": 3096744869888
+    },
+    {
+      "at": "2026-09-24T03:12:30.810Z",
+      "root_bytes": 212887703535,
+      "output_bytes": 35227,
+      "free_bytes": 1395443142656,
+      "available_ram_bytes": 3098032037888
+    },
+    {
+      "at": "2026-09-24T03:12:41.991Z",
+      "root_bytes": 213104546733,
+      "output_bytes": 35227,
+      "free_bytes": 1395226284032,
+      "available_ram_bytes": 3097301929984
+    },
+    {
+      "at": "2026-09-24T03:12:53.144Z",
+      "root_bytes": 213301947975,
+      "output_bytes": 35227,
+      "free_bytes": 1395022553088,
+      "available_ram_bytes": 3097492901888
+    },
+    {
+      "at": "2026-09-24T03:13:04.343Z",
+      "root_bytes": 213466229477,
+      "output_bytes": 35227,
+      "free_bytes": 1394856710144,
+      "available_ram_bytes": 3097531285504
+    },
+    {
+      "at": "2026-09-24T03:13:15.561Z",
+      "root_bytes": 213682850664,
+      "output_bytes": 35382,
+      "free_bytes": 1394642612224,
+      "available_ram_bytes": 3097772199936
+    },
+    {
+      "at": "2026-09-24T03:13:26.738Z",
+      "root_bytes": 213903579094,
+      "output_bytes": 35382,
+      "free_bytes": 1394423836672,
+      "available_ram_bytes": 3099125444608
+    },
+    {
+      "at": "2026-09-24T03:13:37.952Z",
+      "root_bytes": 214120881703,
+      "output_bytes": 35382,
+      "free_bytes": 1394204311552,
+      "available_ram_bytes": 3098415669248
+    },
+    {
+      "at": "2026-09-24T03:13:49.168Z",
+      "root_bytes": 214318986885,
+      "output_bytes": 35533,
+      "free_bytes": 1394000625664,
+      "available_ram_bytes": 3099074973696
+    },
+    {
+      "at": "2026-09-24T03:14:00.368Z",
+      "root_bytes": 214546747095,
+      "output_bytes": 35533,
+      "free_bytes": 1393834774528,
+      "available_ram_bytes": 3098411855872
+    },
+    {
+      "at": "2026-09-24T03:14:11.537Z",
+      "root_bytes": 214703131628,
+      "output_bytes": 35533,
+      "free_bytes": 1393617768448,
+      "available_ram_bytes": 3098368294912
+    },
+    {
+      "at": "2026-09-24T03:14:22.726Z",
+      "root_bytes": 214920459618,
+      "output_bytes": 35689,
+      "free_bytes": 1393404563456,
+      "available_ram_bytes": 3099609882624
+    },
+    {
+      "at": "2026-09-24T03:14:33.962Z",
+      "root_bytes": 215137177816,
+      "output_bytes": 35689,
+      "free_bytes": 1393183870976,
+      "available_ram_bytes": 3098952503296
+    },
+    {
+      "at": "2026-09-24T03:14:45.181Z",
+      "root_bytes": 215335276785,
+      "output_bytes": 35689,
+      "free_bytes": 1392986804224,
+      "available_ram_bytes": 3098991554560
+    },
+    {
+      "at": "2026-09-24T03:14:56.409Z",
+      "root_bytes": 215540219918,
+      "output_bytes": 35689,
+      "free_bytes": 1392810065920,
+      "available_ram_bytes": 3098739433472
+    },
+    {
+      "at": "2026-09-24T03:15:07.590Z",
+      "root_bytes": 215719426711,
+      "output_bytes": 35841,
+      "free_bytes": 1392598720512,
+      "available_ram_bytes": 3097953193984
+    },
+    {
+      "at": "2026-09-24T03:15:18.813Z",
+      "root_bytes": 215932798784,
+      "output_bytes": 35841,
+      "free_bytes": 1392392724480,
+      "available_ram_bytes": 3099060236288
+    },
+    {
+      "at": "2026-09-24T03:15:30.031Z",
+      "root_bytes": 216143888178,
+      "output_bytes": 35841,
+      "free_bytes": 1392168423424,
+      "available_ram_bytes": 3098032979968
+    },
+    {
+      "at": "2026-09-24T03:15:41.249Z",
+      "root_bytes": 216330748577,
+      "output_bytes": 35995,
+      "free_bytes": 1391983792128,
+      "available_ram_bytes": 3098811166720
+    },
+    {
+      "at": "2026-09-24T03:15:52.467Z",
+      "root_bytes": 216511360915,
+      "output_bytes": 35995,
+      "free_bytes": 1391794675712,
+      "available_ram_bytes": 3098408693760
+    },
+    {
+      "at": "2026-09-24T03:16:03.692Z",
+      "root_bytes": 216714829820,
+      "output_bytes": 35995,
+      "free_bytes": 1391601741824,
+      "available_ram_bytes": 3098404085760
+    },
+    {
+      "at": "2026-09-24T03:16:14.906Z",
+      "root_bytes": 216910514443,
+      "output_bytes": 36146,
+      "free_bytes": 1391403905024,
+      "available_ram_bytes": 3099211202560
+    },
+    {
+      "at": "2026-09-24T03:16:26.101Z",
+      "root_bytes": 217108558816,
+      "output_bytes": 36146,
+      "free_bytes": 1391213789184,
+      "available_ram_bytes": 3097933672448
+    },
+    {
+      "at": "2026-09-24T03:16:37.343Z",
+      "root_bytes": 217288601255,
+      "output_bytes": 36313,
+      "free_bytes": 1391026647040,
+      "available_ram_bytes": 3099394621440
+    },
+    {
+      "at": "2026-09-24T03:16:48.589Z",
+      "root_bytes": 217502531119,
+      "output_bytes": 36313,
+      "free_bytes": 1390801846272,
+      "available_ram_bytes": 3098489778176
+    },
+    {
+      "at": "2026-09-24T03:16:55.644Z",
+      "root_bytes": 217574800473,
+      "output_bytes": 36484,
+      "free_bytes": 1390722412544,
+      "available_ram_bytes": 3099686752256
+    }
+  ],
+  "resource_probe_retries": [],
+  "command": {
+    "code": 0,
+    "signal": null,
+    "reason": null,
+    "direct_exit": {
+      "code": 0,
+      "signal": null
+    },
+    "close_event": {
+      "code": 0,
+      "signal": null
+    },
+    "drain_abandoned": false,
+    "signals": [],
+    "leader_start_ticks": "47392723",
+    "elapsed_ms": 341243,
+    "streams": {
+      "stdout": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase28-resume-r7-compiler-source-v19-public-r1/command.stdout",
+        "bytes": 1408,
+        "sha256": "ff373ba3b2261bee628702914e5cd22eda0bb23325cf59084064566b661bac67"
+      },
+      "stderr": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase28-resume-r7-compiler-source-v19-public-r1/command.stderr",
+        "bytes": 35076,
+        "sha256": "ce7f81586f3c4f6cc3acdf732c41dc11bfe7d6c99193f5bc259842daa2ed6e4e"
+      }
+    }
+  },
+  "errors": [],
+  "observation_limits": {
+    "sampled_resource_guards": true,
+    "synchronous_probe_delay_possible": true,
+    "outer_timeout_required": true,
+    "stream_cap_bytes_each": 8388608,
+    "descendant_quiescence_proved": false,
+    "transitive_build_attestation": false,
+    "failure_post_observations_guaranteed": false
+  },
+  "finished": "2026-09-24T03:16:56.857Z"
+}
