@@ -95,6 +95,9 @@ const RecordedCompleteBodyV19 = lazy(() =>
   import("./CompleteBodyDebugV19").then(module => ({ default: module.CompleteBodyDebugWorkbenchV19 })),
 );
 
+const LivePhysicalEntryV20 = lazy(() =>
+  import("./LivePhysicalCpuDebugV20").then(module => ({ default: module.LivePhysicalCpuDebugV20 })),
+);
 const RecordedPhysicalEntryV20 = lazy(() =>
   import("./PhysicalEntryDebugV20").then(module => ({ default: module.PhysicalEntryDebugWorkbenchV20 })),
 );
@@ -214,6 +217,7 @@ export function SourceIsaAgentPage() {
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showCompleteBodyV19, setShowCompleteBodyV19] = useState(false);
   const [showPhysicalEntryV20, setShowPhysicalEntryV20] = useState(false);
+  const [showLivePhysicalV20, setShowLivePhysicalV20] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
   const [showWatchpoint, setShowWatchpoint] = useState(false);
@@ -400,6 +404,20 @@ export function SourceIsaAgentPage() {
         <div id="complete-body-debug-v19-content">
           {showCompleteBodyV19 && <Suspense fallback={<p role="status">Loading V19 recorded CPU viewer…</p>}>
             <RecordedCompleteBodyV19 />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="live-physical-v20-heading">
+        <h2 id="live-physical-v20-heading">Connect to local V20 CPU observations</h2>
+        <p>Opt-in, separately versioned bridge. Navigation reads recorded CPU states; it does not resume a kernel or expose hardware registers.</p>
+        <button type="button" aria-expanded={showLivePhysicalV20} aria-controls="live-physical-v20-content"
+          onClick={() => setShowLivePhysicalV20(open => !open)}>
+          {showLivePhysicalV20 ? "Close V20 live CPU workbench" : "Open V20 live CPU workbench"}
+        </button>
+        <div id="live-physical-v20-content">
+          {showLivePhysicalV20 && <Suspense fallback={<p role="status">Loading opt-in V20 CPU connection…</p>}>
+            <LivePhysicalEntryV20 />
           </Suspense>}
         </div>
       </section>
