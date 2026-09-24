@@ -1,0 +1,78 @@
+{
+  "schema": "fe2o3-site-v19-recorded-byte-provenance-v1",
+  "kind": "retained_public_diagnostic",
+  "captured_date_utc": "2026-09-24",
+  "scope": "entry / first logical event / reverse-restored entry only",
+  "source_command": "node scripts/complete-body-debug-source-v19.mjs <one|diamond> <new-absolute-output>",
+  "debugger_selector": "--diagnostic-kir-v19",
+  "public_gate_receipt_sha256": "7f371f02546baf4bceabd5a6e967f226cc06c9f098a861e482b23c7e715a49fc",
+  "source_authenticated": false,
+  "hardware_observed": false,
+  "full_program_stepping_qualified": false,
+  "site_adapter_tests_executed": false,
+  "pins": [
+    {
+      "file": "one-export.json",
+      "bytes": 451,
+      "sha256": "72fde8cff38ca49967b682f1c7ddb9816ff66cb7ac526fd7507348c3415744b2",
+      "origin": "export-observation.json",
+      "run": "phase28-complete-body-public-debug-one-r1"
+    },
+    {
+      "file": "one-selector-0.responses.jsonl",
+      "bytes": 6254,
+      "sha256": "56bdda096b01855f18e547c5283b06357a44680bcaefe394d6f1fc2a72289226",
+      "origin": "selector-0-debug.stdout",
+      "run": "phase28-complete-body-public-debug-one-r1"
+    },
+    {
+      "file": "one-selector-1.responses.jsonl",
+      "bytes": 6254,
+      "sha256": "5672e8d00d7a3a213aba6288e154f5d65d0bc0d50b36ee42951874ece5c48d92",
+      "origin": "selector-1-debug.stdout",
+      "run": "phase28-complete-body-public-debug-one-r1"
+    },
+    {
+      "file": "one-selector-4294967295.responses.jsonl",
+      "bytes": 6254,
+      "sha256": "4beb0648ba60f0afeb588d1abfb8e9ae438565d8ecf9145e4a9f5a496881b4a5",
+      "origin": "selector-4294967295-debug.stdout",
+      "run": "phase28-complete-body-public-debug-one-r1"
+    },
+    {
+      "file": "diamond-export.json",
+      "bytes": 455,
+      "sha256": "24831389c5737590d40c64bdad4b4f92d0a9141a0deba605cd8833cd8dccc406",
+      "origin": "export-observation.json",
+      "run": "phase28-complete-body-public-debug-diamond-r1"
+    },
+    {
+      "file": "diamond-selector-0.responses.jsonl",
+      "bytes": 6254,
+      "sha256": "1e654bd38c30298272f2757b2aec3502563adcd9b53c77911c24e93c2b183bc3",
+      "origin": "selector-0-debug.stdout",
+      "run": "phase28-complete-body-public-debug-diamond-r1"
+    },
+    {
+      "file": "diamond-selector-1.responses.jsonl",
+      "bytes": 6254,
+      "sha256": "ec5ba58ca571826f6b8a85a465db2899329fa58943e61804dc7401e75b82b735",
+      "origin": "selector-1-debug.stdout",
+      "run": "phase28-complete-body-public-debug-diamond-r1"
+    },
+    {
+      "file": "diamond-selector-4294967295.responses.jsonl",
+      "bytes": 6254,
+      "sha256": "e1aa7e19eb8a7c6e26eaa9765f951704fe527448c4c8392550392a82ae9d749a",
+      "origin": "selector-4294967295-debug.stdout",
+      "run": "phase28-complete-body-public-debug-diamond-r1"
+    },
+    {
+      "file": "requests.jsonl",
+      "bytes": 595,
+      "sha256": "9250bec8bfe5d21c03a6312ffa3a50135b469ea2962843d23ca8ef9ae375d82b",
+      "origin": "selector-*-debug-requests.jsonl",
+      "run": "identical in all six retained sessions"
+    }
+  ]
+}

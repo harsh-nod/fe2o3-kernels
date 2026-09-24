@@ -1,0 +1,11 @@
+{
+  "artifact_or_launch_authority": false,
+  "canonical_bytes": 1019,
+  "canonical_identity": "a48249183fbf8640c9620f585d2a06fbbb32def237d17daf356266182e969f4a",
+  "exported_compiler_authentication": false,
+  "exported_source_authentication": false,
+  "hardware_observed": false,
+  "kernel": "assembly_one",
+  "schema": "fe2o3-diagnostic-kir-v19-observation",
+  "semantic_mir_v36": "d42a1ee28103a596844a184b4ed6edfd6f28b692775a8a0b095ae03d5766d0e1"
+}

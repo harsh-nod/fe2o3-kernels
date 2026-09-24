@@ -1,0 +1,11 @@
+{
+  "artifact_or_launch_authority": false,
+  "canonical_bytes": 1185,
+  "canonical_identity": "5dab25afa17fac130c865f6d9a9cac292c37c0168fd8e498c41c8be1cb33d36d",
+  "exported_compiler_authentication": false,
+  "exported_source_authentication": false,
+  "hardware_observed": false,
+  "kernel": "assembly_diamond",
+  "schema": "fe2o3-diagnostic-kir-v19-observation",
+  "semantic_mir_v36": "a725b8299f15f200f12a3e2d71cd300b837e76034eada1713f6771b951c202d3"
+}

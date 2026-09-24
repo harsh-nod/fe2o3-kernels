@@ -131,6 +131,25 @@ function valueRow(value: unknown): CheckpointValueRow {
   return { ...identity, status: "captured", typeLabel: label, representation: bits.bits, interpretation: interpreted };
 }
 
+/** Scalar-row presentation only. The caller must validate its own checkpoint/session.
+ * This does not authenticate a producer or relax the legacy anchor projector. */
+export function projectResourceScalarValues(values: unknown):
+  | { status: "ready"; rows: readonly CheckpointValueRow[] }
+  | { status: "invalid" | "stale" | "unsupported"; detail: string } {
+  try {
+    if (!Array.isArray(values)) refuse("invalid", "Snapshot values are not an array.");
+    if (values.length > RESOURCE_CHECKPOINT_VALUE_LIMIT)
+      refuse("unsupported", "This checkpoint exceeds the 64-value display budget; no partial or previous table is shown.");
+    const rows = values.map(valueRow);
+    if (new Set(rows.map(row => row.key)).size !== rows.length)
+      refuse("invalid", "Duplicate recorded function/frame/value identity.");
+    return { status: "ready", rows };
+  } catch (error) {
+    if (error instanceof ProjectionRefusal) return { status: error.status, detail: error.message };
+    throw error;
+  }
+}
+
 export function projectResourceCheckpointValues(checkpoint: ResourceCheckpointObservation): CheckpointValuesProjection {
   try {
     const expectedKey = resourceSnapshotAnchorKey(checkpoint.anchor);

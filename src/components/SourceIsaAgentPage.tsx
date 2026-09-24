@@ -91,6 +91,10 @@ const RecordedProgramGuide = lazy(() =>
   })),
 );
 
+const RecordedCompleteBodyV19 = lazy(() =>
+  import("./CompleteBodyDebugV19").then(module => ({ default: module.CompleteBodyDebugWorkbenchV19 })),
+);
+
 const LocalRecordedResourceImport = lazy(() =>
   import("./RecordedResourceImport").then((module) => ({
     default: module.RecordedResourceImport,
@@ -204,6 +208,7 @@ export function SourceIsaAgentPage() {
   const [showSameExportNative, setShowSameExportNative] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
+  const [showCompleteBodyV19, setShowCompleteBodyV19] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
   const [showWatchpoint, setShowWatchpoint] = useState(false);
@@ -375,6 +380,21 @@ export function SourceIsaAgentPage() {
         <div id="recorded-memory-tutorial-content">
           {showMemoryTutorial && <Suspense fallback={<p role="status">Loading retained memory reference lab…</p>}>
             <RecordedMemoryGuide />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="complete-body-debug-v19-heading">
+        <h2 id="complete-body-debug-v19-heading">Browse complete-body V19 CPU checkpoints</h2>
+        <p>Read the public command's entry / one-event / restore transcript.
+          Logical values are recorded; CFG edges, source maps and physical registers are not inferred.</p>
+        <button type="button" aria-expanded={showCompleteBodyV19} aria-controls="complete-body-debug-v19-content"
+          onClick={() => setShowCompleteBodyV19(open => !open)}>
+          {showCompleteBodyV19 ? "Close V19 recorded CPU viewer" : "Open V19 recorded CPU viewer"}
+        </button>
+        <div id="complete-body-debug-v19-content">
+          {showCompleteBodyV19 && <Suspense fallback={<p role="status">Loading V19 recorded CPU viewer…</p>}>
+            <RecordedCompleteBodyV19 />
           </Suspense>}
         </div>
       </section>

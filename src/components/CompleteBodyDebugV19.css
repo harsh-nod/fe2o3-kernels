@@ -1,0 +1,7 @@
+.complete-body-debug-v19 { margin-block: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: .75rem; }
+.complete-body-debug-v19 label { display: block; margin-block: .8rem; }
+.complete-body-debug-v19 select, .complete-body-debug-v19 input[type="file"] { display: block; max-width: 100%; margin-block: .3rem; }
+.complete-body-debug-v19 pre { overflow: auto; max-height: 22rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.complete-body-debug-v19 code { overflow-wrap: anywhere; }
+.complete-body-debug-v19 button { margin: .3rem .5rem .3rem 0; }
+.complete-body-debug-v19 ol { padding-inline-start: 1.5rem; }

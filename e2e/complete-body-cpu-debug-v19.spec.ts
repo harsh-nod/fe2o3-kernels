@@ -1,0 +1,33 @@
+import { expect, test } from "@playwright/test";
+
+test("V19 recorded viewer preserves first-event values and missing restored state without live commands", async ({ page }, testInfo) => {
+  const mutations: string[] = [], failures: string[] = [];
+  page.on("request", request => { if (request.method() !== "GET") mutations.push(request.url()); });
+  page.on("pageerror", error => failures.push(error.message));
+  await page.goto("./#/debugger/source-isa-agent");
+  const open = page.getByRole("button", { name: "Open V19 recorded CPU viewer" });
+  await open.focus(); await open.press("Enter");
+  const viewer = page.getByRole("region", { name: "Complete-body V19: recorded CPU checkpoints", exact: true });
+  const phase = viewer.getByRole("combobox", { name: "Recorded V19 checkpoint" });
+  await expect(phase).toHaveValue("0");
+  await expect(viewer.getByRole("table")).toHaveCount(0);
+  await phase.selectOption("1");
+  const values = viewer.getByRole("table", { name: "Selected checkpoint SSA values" });
+  await expect(values).toContainText("0x00000013");
+  await expect(values).toContainText("alloc#1:g0 + 0 bytes");
+  await expect(viewer.getByText("18446744073709551615", { exact: true })).toBeVisible();
+  await phase.selectOption("2");
+  await expect(values).toHaveCount(0);
+  await expect(viewer.getByText(/Snapshot unavailable: not_captured/u)).toBeVisible();
+  await viewer.getByRole("combobox", { name: "Retained V19 command session" }).selectOption("4");
+  await expect(phase).toHaveValue("0");
+  await phase.selectOption("1");
+  await expect(values).toContainText("0x00000001");
+  await expect(viewer.getByText(/No hardware register capture/u)).toBeVisible();
+  await viewer.screenshot({ path: testInfo.outputPath("complete-body-v19-first-event.png") });
+  await page.getByRole("button", { name: "Close V19 recorded CPU viewer" }).click();
+  await expect(viewer).toHaveCount(0);
+  await page.getByRole("button", { name: "Open V19 recorded CPU viewer" }).click();
+  await expect(phase).toHaveValue("0");
+  expect(mutations).toEqual([]); expect(failures).toEqual([]);
+});

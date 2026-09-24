@@ -1,0 +1,19 @@
+/** Exact retained public byte streams. Hashes are consistency pins, not authority. */
+import { COMPLETE_BODY_DEBUG_SELECTOR_V19, type CompleteBodyDebugInputV19 } from "./complete-body-debug-v19";
+import requests from "../../examples/complete-body-debug-v19/requests.jsonl?raw";
+import oneMetadata from "../../examples/complete-body-debug-v19/one-export.json?raw";
+import oneSelector0 from "../../examples/complete-body-debug-v19/one-selector-0.responses.jsonl?raw";
+import oneSelector1 from "../../examples/complete-body-debug-v19/one-selector-1.responses.jsonl?raw";
+import oneSelector4294967295 from "../../examples/complete-body-debug-v19/one-selector-4294967295.responses.jsonl?raw";
+import diamondMetadata from "../../examples/complete-body-debug-v19/diamond-export.json?raw";
+import diamondSelector0 from "../../examples/complete-body-debug-v19/diamond-selector-0.responses.jsonl?raw";
+import diamondSelector1 from "../../examples/complete-body-debug-v19/diamond-selector-1.responses.jsonl?raw";
+import diamondSelector4294967295 from "../../examples/complete-body-debug-v19/diamond-selector-4294967295.responses.jsonl?raw";
+export const COMPLETE_BODY_DEBUG_RETAINED_V19: readonly { readonly label: string; readonly input: CompleteBodyDebugInputV19 }[] = [
+  { label: "one / selector 0", input: { selector: COMPLETE_BODY_DEBUG_SELECTOR_V19, requestsUtf8: requests, responsesUtf8: oneSelector0, metadataUtf8: oneMetadata, expected: { requests: "9250bec8bfe5d21c03a6312ffa3a50135b469ea2962843d23ca8ef9ae375d82b", responses: "56bdda096b01855f18e547c5283b06357a44680bcaefe394d6f1fc2a72289226", metadata: "72fde8cff38ca49967b682f1c7ddb9816ff66cb7ac526fd7507348c3415744b2" } } },
+  { label: "one / selector 1", input: { selector: COMPLETE_BODY_DEBUG_SELECTOR_V19, requestsUtf8: requests, responsesUtf8: oneSelector1, metadataUtf8: oneMetadata, expected: { requests: "9250bec8bfe5d21c03a6312ffa3a50135b469ea2962843d23ca8ef9ae375d82b", responses: "5672e8d00d7a3a213aba6288e154f5d65d0bc0d50b36ee42951874ece5c48d92", metadata: "72fde8cff38ca49967b682f1c7ddb9816ff66cb7ac526fd7507348c3415744b2" } } },
+  { label: "one / selector 4294967295", input: { selector: COMPLETE_BODY_DEBUG_SELECTOR_V19, requestsUtf8: requests, responsesUtf8: oneSelector4294967295, metadataUtf8: oneMetadata, expected: { requests: "9250bec8bfe5d21c03a6312ffa3a50135b469ea2962843d23ca8ef9ae375d82b", responses: "4beb0648ba60f0afeb588d1abfb8e9ae438565d8ecf9145e4a9f5a496881b4a5", metadata: "72fde8cff38ca49967b682f1c7ddb9816ff66cb7ac526fd7507348c3415744b2" } } },
+  { label: "diamond / selector 0", input: { selector: COMPLETE_BODY_DEBUG_SELECTOR_V19, requestsUtf8: requests, responsesUtf8: diamondSelector0, metadataUtf8: diamondMetadata, expected: { requests: "9250bec8bfe5d21c03a6312ffa3a50135b469ea2962843d23ca8ef9ae375d82b", responses: "1e654bd38c30298272f2757b2aec3502563adcd9b53c77911c24e93c2b183bc3", metadata: "24831389c5737590d40c64bdad4b4f92d0a9141a0deba605cd8833cd8dccc406" } } },
+  { label: "diamond / selector 1", input: { selector: COMPLETE_BODY_DEBUG_SELECTOR_V19, requestsUtf8: requests, responsesUtf8: diamondSelector1, metadataUtf8: diamondMetadata, expected: { requests: "9250bec8bfe5d21c03a6312ffa3a50135b469ea2962843d23ca8ef9ae375d82b", responses: "ec5ba58ca571826f6b8a85a465db2899329fa58943e61804dc7401e75b82b735", metadata: "24831389c5737590d40c64bdad4b4f92d0a9141a0deba605cd8833cd8dccc406" } } },
+  { label: "diamond / selector 4294967295", input: { selector: COMPLETE_BODY_DEBUG_SELECTOR_V19, requestsUtf8: requests, responsesUtf8: diamondSelector4294967295, metadataUtf8: diamondMetadata, expected: { requests: "9250bec8bfe5d21c03a6312ffa3a50135b469ea2962843d23ca8ef9ae375d82b", responses: "e1aa7e19eb8a7c6e26eaa9765f951704fe527448c4c8392550392a82ae9d749a", metadata: "24831389c5737590d40c64bdad4b4f92d0a9141a0deba605cd8833cd8dccc406" } } },
+];

@@ -1,5 +1,5 @@
 import type { ImportedResourceCheckpoint } from "../content/recorded-resource-import";
-import { projectResourceCheckpointValues } from "../content/resource-checkpoint-values";
+import { projectResourceCheckpointValues, type CheckpointValueRow } from "../content/resource-checkpoint-values";
 import "./ResourceCheckpointValuesView.css";
 
 export function ResourceCheckpointValuesView({ checkpoint, onPointerSelect }: {
@@ -34,10 +34,23 @@ export function ResourceCheckpointValuesView({ checkpoint, onPointerSelect }: {
           </> : `Unavailable: ${projection.anchor.site?.source.status === "unavailable" ? projection.anchor.site.source.reason : "not supplied"}`}</dd>
         </dl>
       </details>
-      {projection.rows.length === 0 ? <p role="status">No value rows were retained at this checkpoint; this does not establish that no values exist.</p>
+      <ResourceCheckpointValueRows rows={projection.rows} onPointerSelect={onPointerSelect} />
+    </>}
+    <p>At most 64 whole SSA values, scalar bit widths at most 64. Unsupported rows make this table unavailable;
+      no rows are silently dropped. A recorded frame number is not an authenticated dynamic helper activation.
+      No variable-name mapping, physical registers, dereference, new memory read or execution is inferred.</p>
+  </section>;
+}
+
+/** Reused presentation only; rows come from the closed scalar projector. */
+export function ResourceCheckpointValueRows({ rows, onPointerSelect }: {
+  rows: readonly CheckpointValueRow[]; onPointerSelect?: (valueKey: string) => void;
+}) {
+  return <>
+      {rows.length === 0 ? <p role="status">No value rows were retained at this checkpoint; this does not establish that no values exist.</p>
         : <div className="resource-checkpoint-values-table"><table aria-label="Selected checkpoint SSA values">
           <thead><tr><th scope="col">Recorded SSA identity</th><th scope="col">Type / availability</th><th scope="col">Recorded representation / interpretation</th></tr></thead>
-          <tbody>{projection.rows.map(row => <tr key={row.key}>
+          <tbody>{rows.map(row => <tr key={row.key}>
             <th scope="row">Function {row.functionOrdinal}<br />Frame {row.frame}<br />Value %{row.valueOrdinal}</th>
             <td>{row.typeLabel}<br />{row.status}</td>
             <td><code>{row.representation}</code><br />{row.interpretation}
@@ -47,9 +60,5 @@ export function ResourceCheckpointValuesView({ checkpoint, onPointerSelect }: {
             </td>
           </tr>)}</tbody>
         </table></div>}
-    </>}
-    <p>At most 64 whole SSA values, scalar bit widths at most 64. Unsupported rows make this table unavailable;
-      no rows are silently dropped. A recorded frame number is not an authenticated dynamic helper activation.
-      No variable-name mapping, physical registers, dereference, new memory read or execution is inferred.</p>
-  </section>;
+  </>;
 }
