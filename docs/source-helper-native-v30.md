@@ -122,3 +122,7 @@ bypasses LLVM IR nor supplies an assembly-to-Rust decompiler. For the separate
 CPU debugging experience, see the
 [recorded complete-body debugger lesson](complete-body-cpu-viewer-v19.md);
 its logical SSA views are not captured physical register values.
+
+For explicit physical registers and the complete instruction body, continue to
+the [physical-entry source lab](physical-entry-source-v20.md). That profile has
+its own source, CPU and native-static checks; helper evidence does not qualify it.

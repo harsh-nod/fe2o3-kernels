@@ -1,0 +1,71 @@
+{
+  "schema": "fe2o3-physical-entry-source-command-v20",
+  "feature": "physical-entry-undefined-merge-v20",
+  "observations": [
+    {
+      "stage": "diagnostic",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "physical-entry-undefined-merge-v20",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-physical-public-source-r1-undefined-merge/diagnostic-target"
+      ],
+      "status": 101,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "af3f4a7b2a1f0e997945be2e979d79193e22163dbc5af8c674594b6ad529816b",
+      "exact_source_refusal": "physical-entry reads an undefined physical register"
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+      "bytes": 6484,
+      "sha256": "85b6d7ca528610b1a03c75cace5ac8b8a839757577d0ed349e4fcd6894583a0b"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+      "bytes": 24517,
+      "sha256": "c84b11228567d5b82d2d3f52bcc96bfe855b60e04636bca19c9253690f500a5f"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/physical_entry_v20.rs",
+      "bytes": 10657,
+      "sha256": "1347ad8de9e41addc7270e609efd0827fe2095774a8facb751f37ca800103f00"
+    }
+  ],
+  "binaryPins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-rustc-extract",
+      "bytes": 227000,
+      "sha256": "931e1d8d0ec8cb7ff33dac8743553ed9127a0ad79981e0cf45eaccdd0620760b"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/librustc_codegen_fe2o3.so",
+      "bytes": 257119944,
+      "sha256": "7b61b07f60f9dec403704b700a75c3322a87b988044d8d300218dc1d07f8fb57"
+    }
+  ],
+  "source_unchanged": true,
+  "actual_cargo_rustc_wrapper": true,
+  "compiler_closure_attestation": "unavailable",
+  "normal_worker_handoff": false,
+  "ranked_formal_descriptor_continuation": "unavailable; pre-ranked diagnostic route",
+  "cpu_simulation_run": false,
+  "source_custody_exported": false,
+  "protected_finalizer_admitted": false,
+  "native_llvm_executed": false,
+  "hardware_observed": false,
+  "grants_artifact_or_launch_authority": false
+}

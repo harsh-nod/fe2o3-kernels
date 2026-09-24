@@ -1,0 +1,147 @@
+{
+  "schema": "fe2o3-physical-entry-source-v20-documentation-evidence-v1",
+  "compiler_publication": "90de8eaf2ef445e0d470793fb2a74169eec9175b",
+  "inert_documentation_only": true,
+  "source_custody_exported": false,
+  "grants_artifact_or_launch_authority": false,
+  "native_matrix_stdout_sha256": "b483bd846583d3719e309f6caa7712c9963e1b9024cb781418324ded9ba54663",
+  "native_matrix_stdout_bytes": 238408,
+  "native_record_framing": "Six complete top-level JSON records separated by one newline; exact slices include their final newline and concatenate to original stdout.",
+  "records": [
+    {
+      "name": "source-ladder.json",
+      "source": "phase28-physical-source-ladder-r3/observation.json",
+      "source_bytes": 61135,
+      "source_sha256": "7ef9512e2285ea0c0bfd170f6f724425ff9b41583e61d952e9b7880b39db1783",
+      "retained_bytes": 61136,
+      "retained_sha256": "6db63d82bfd7038185fb0dfc26e64b047e0174c66933c65fde821a82c0abfb88",
+      "normalization": "append-one-final-newline"
+    },
+    {
+      "name": "public-one.json",
+      "source": "phase28-physical-public-source-r1-one/receipt.json",
+      "source_bytes": 3804,
+      "source_sha256": "60fbb3bf8f2cff75cf5ae06bea83293d07a1813a3bd10d5ae7c02d16aa295639",
+      "retained_bytes": 3804,
+      "retained_sha256": "60fbb3bf8f2cff75cf5ae06bea83293d07a1813a3bd10d5ae7c02d16aa295639",
+      "normalization": "none"
+    },
+    {
+      "name": "public-diamond.json",
+      "source": "phase28-physical-public-source-r1-diamond/receipt.json",
+      "source_bytes": 3828,
+      "source_sha256": "c64f4d78ed395464d023155724b8353e0b45e3d9c2e45c069f57834dda0938ad",
+      "retained_bytes": 3828,
+      "retained_sha256": "c64f4d78ed395464d023155724b8353e0b45e3d9c2e45c069f57834dda0938ad",
+      "normalization": "none"
+    },
+    {
+      "name": "public-registers.json",
+      "source": "phase28-physical-public-source-r1-registers/receipt.json",
+      "source_bytes": 3840,
+      "source_sha256": "1a1ced9db2aed2bf70dafaf1130bcc8a766bcf72ab181cbd72c77b63bc1b7043",
+      "retained_bytes": 3840,
+      "retained_sha256": "1a1ced9db2aed2bf70dafaf1130bcc8a766bcf72ab181cbd72c77b63bc1b7043",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-launch.json",
+      "source": "phase28-physical-public-source-r1-wrong-launch/receipt.json",
+      "source_bytes": 3067,
+      "source_sha256": "5ed77f8e6b6bb55e9d7ed394cf9a3984288d5976db80a55b601a4bdf1b231ed9",
+      "retained_bytes": 3067,
+      "retained_sha256": "5ed77f8e6b6bb55e9d7ed394cf9a3984288d5976db80a55b601a4bdf1b231ed9",
+      "normalization": "none"
+    },
+    {
+      "name": "public-foreign-input.json",
+      "source": "phase28-physical-public-source-r1-foreign-input/receipt.json",
+      "source_bytes": 3077,
+      "source_sha256": "24b6c9a41a54bc69b7a9b3fa76fd3959edebae9c6455c705e26ed71599c8c887",
+      "retained_bytes": 3077,
+      "retained_sha256": "24b6c9a41a54bc69b7a9b3fa76fd3959edebae9c6455c705e26ed71599c8c887",
+      "normalization": "none"
+    },
+    {
+      "name": "public-undefined-merge.json",
+      "source": "phase28-physical-public-source-r1-undefined-merge/receipt.json",
+      "source_bytes": 3066,
+      "source_sha256": "031ad3da851df9397bc8635ae47ac612c9f4a2446b3b19c9b5e15a7c34979215",
+      "retained_bytes": 3066,
+      "retained_sha256": "031ad3da851df9397bc8635ae47ac612c9f4a2446b3b19c9b5e15a7c34979215",
+      "normalization": "none"
+    },
+    {
+      "name": "public-missing-wait.json",
+      "source": "phase28-physical-public-source-r1-missing-wait/receipt.json",
+      "source_bytes": 3041,
+      "source_sha256": "2defb99008eff998be92a1264a72d4b42e208e053d3b1ca77cb1273e411bf93a",
+      "retained_bytes": 3041,
+      "retained_sha256": "2defb99008eff998be92a1264a72d4b42e208e053d3b1ca77cb1273e411bf93a",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-carry.json",
+      "source": "phase28-physical-public-source-r1-wrong-carry/receipt.json",
+      "source_bytes": 3031,
+      "source_sha256": "bf5da18be7e47a73398af6e348c4007e51872851f0cac46c9c8112dd2ccceb50",
+      "retained_bytes": 3031,
+      "retained_sha256": "bf5da18be7e47a73398af6e348c4007e51872851f0cac46c9c8112dd2ccceb50",
+      "normalization": "none"
+    },
+    {
+      "name": "one-o0.json",
+      "source": "native-matrix-stdout-frame-0",
+      "source_bytes": 36425,
+      "source_sha256": "af237c5ed6ed3cef0638c40c408a45860f1ba398f585e21f2e1a63f301f39db4",
+      "retained_bytes": 36425,
+      "retained_sha256": "af237c5ed6ed3cef0638c40c408a45860f1ba398f585e21f2e1a63f301f39db4",
+      "normalization": "none"
+    },
+    {
+      "name": "one-o3.json",
+      "source": "native-matrix-stdout-frame-1",
+      "source_bytes": 36425,
+      "source_sha256": "243a464e1bb29c2f495cce8af572211684f839ecd36b1a50251fabcffb8efdf7",
+      "retained_bytes": 36425,
+      "retained_sha256": "243a464e1bb29c2f495cce8af572211684f839ecd36b1a50251fabcffb8efdf7",
+      "normalization": "none"
+    },
+    {
+      "name": "diamond-o0.json",
+      "source": "native-matrix-stdout-frame-2",
+      "source_bytes": 41375,
+      "source_sha256": "7939e0e1f581536a30aaf234edb9f57fa752444ea2cf956a0012e785d09f69c9",
+      "retained_bytes": 41375,
+      "retained_sha256": "7939e0e1f581536a30aaf234edb9f57fa752444ea2cf956a0012e785d09f69c9",
+      "normalization": "none"
+    },
+    {
+      "name": "diamond-o3.json",
+      "source": "native-matrix-stdout-frame-3",
+      "source_bytes": 41375,
+      "source_sha256": "373c2c81ebaa90562984ff655eb901b824c55f63f4e8d026e6d4be431291936e",
+      "retained_bytes": 41375,
+      "retained_sha256": "373c2c81ebaa90562984ff655eb901b824c55f63f4e8d026e6d4be431291936e",
+      "normalization": "none"
+    },
+    {
+      "name": "registers-o0.json",
+      "source": "native-matrix-stdout-frame-4",
+      "source_bytes": 41404,
+      "source_sha256": "04898f5af6d63faaca8efdfc895d23db04af6ac8df3737fae65e68ea70430e15",
+      "retained_bytes": 41404,
+      "retained_sha256": "04898f5af6d63faaca8efdfc895d23db04af6ac8df3737fae65e68ea70430e15",
+      "normalization": "none"
+    },
+    {
+      "name": "registers-o3.json",
+      "source": "native-matrix-stdout-frame-5",
+      "source_bytes": 41404,
+      "source_sha256": "1c9fec89876805f84b5022b0a4049c65058fd0ceb59391e918ad8f504f9ea76f",
+      "retained_bytes": 41404,
+      "retained_sha256": "1c9fec89876805f84b5022b0a4049c65058fd0ceb59391e918ad8f504f9ea76f",
+      "normalization": "none"
+    }
+  ]
+}

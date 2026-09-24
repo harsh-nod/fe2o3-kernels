@@ -175,6 +175,10 @@ The [native helper continuation](docs/source-helper-native-v30.md) follows fresh
 edited source through normal LLVM/handoff/descriptor construction and eight
 O0/O3 worker observations. It retains helper ABI and GPU qualification limits.
 
+The [physical instruction-body lab](docs/physical-entry-source-v20.md) gives
+authors actual register, setup, wait, bounds-mask and termination control. It
+retains source/CPU and native-static evidence separately from GPU execution.
+
 The separate [static call-target lab](docs/retained-call-targets-v1.md) explains
 the additive query for exact retained callees, caller kernel registrations and
 typed operand/formal bindings. Its separately recorded fresh qualification
