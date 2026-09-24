@@ -240,6 +240,7 @@ export function SourceIsaAgentPage() {
         <div className="lesson-title-row">
           <div>
             <h1>Agent-native source/ISA inspection</h1>
+            <p><a href="#/debugger/lds-cpu-recording-v22">Recorded two-wave LDS CPU debugger (V22)</a></p>
             <p className="lesson-summary">
               Follow one compiler fact across semantic layers without turning
               sparse correlation into machine-state or execution authority.

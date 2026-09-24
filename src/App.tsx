@@ -42,6 +42,11 @@ const ProfilerDispatchImportPage = lazy(() =>
     default: module.ProfilerDispatchImportPage,
   })),
 );
+const PhysicalLdsRecordingPage = lazy(() =>
+  import("./components/PhysicalLdsRecordingPage").then((module) => ({
+    default: module.PhysicalLdsRecordingPage,
+  })),
+);
 const SourceIsaAgentPage = lazy(() =>
   import("./components/SourceIsaAgentPage").then((module) => ({
     default: module.SourceIsaAgentPage,
@@ -130,6 +135,7 @@ function pageTitle(pathname: string): string {
   if (pathname === "/debugger/profiler-import") {
     return "In-process profiler import | fe2o3 kernels";
   }
+  if (pathname === "/debugger/lds-cpu-recording-v22") return "Recorded two-wave LDS CPU debugger | fe2o3 kernels";
   if (pathname === "/debugger/source-isa-agent") {
     return "Agent-native source/ISA inspection | fe2o3 kernels";
   }
@@ -229,6 +235,7 @@ export function App() {
             <Route path="/debugger/live-kfd" element={<LiveKfdDebuggerPage />} />
             <Route path="/debugger/profiler-import" element={<ProfilerDispatchImportPage />} />
             <Route path="/debugger/source-isa-agent" element={<SourceIsaAgentPage />} />
+            <Route path="/debugger/lds-cpu-recording-v22" element={<PhysicalLdsRecordingPage />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </Suspense>

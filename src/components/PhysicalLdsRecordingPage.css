@@ -1,0 +1,22 @@
+.lds-recording { max-width: 1120px; margin: 0 auto; padding: 1rem; }
+.lds-recording section { margin-block: 1.5rem; }
+.lds-recording p { line-height: 1.6; }
+.lds-recording code, .lds-recording dd { overflow-wrap: anywhere; }
+.lds-recording pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 22rem; overflow: auto; }
+.lds-recording button, .lds-recording select, .lds-recording input { font: inherit; }
+.lds-recording button { padding: .3rem .55rem; cursor: pointer; }
+.lds-recording button:focus-visible, .lds-recording input:focus-visible, .lds-recording select:focus-visible { outline: 3px solid #448bdf; outline-offset: 2px; }
+.lds-actions, .lds-files { display: flex; gap: .6rem; flex-wrap: wrap; margin-block: .6rem; }
+.lds-files label { display: flex; flex-direction: column; min-width: 14rem; flex: 1; }
+.lds-waves { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,350px),1fr)); gap: 1rem; }
+.lds-lanes { display: grid; grid-template-columns: repeat(8,1fr); gap: .2rem; }
+.lds-lanes .lds-arrived { background: #12614a; color: #fff; }
+.lds-lanes button[aria-pressed=true] { outline: 3px solid #db982d; }
+.lds-table-scroll { overflow: auto; max-height: 34rem; }
+.lds-recording table { width: 100%; border-collapse: collapse; }
+.lds-recording th, .lds-recording td { text-align: left; padding: .45rem; border-bottom: 1px solid #8886; }
+.lds-recording tr[aria-selected=true] { background: #4d87aa28; }
+.lds-memory { display: grid; grid-template-columns: repeat(16,minmax(1.5rem,1fr)); gap: .2rem; max-width: 40rem; font-family: monospace; }
+.lds-memory span { text-align: center; padding: .2rem; border: 1px solid #8886; }
+.lds-uninitialized { background: #8c65222b; }
+@media(max-width:520px) { .lds-memory { grid-template-columns: repeat(8,1fr); } }
