@@ -21,7 +21,7 @@ describe("typed V20 CPU debugger tutorial boundaries", () => {
     for (const text of [
       "fe2o3-debug sim", "--diagnostic-kir-v20", "--request", "--protocol jsonl",
       "--wave-width 64", "client requests only", "not a captured response",
-      "does not add a V20 browser adapter", "this loader cannot authenticate source custody",
+      "browses the retained sessions without re-executing them", "this loader cannot authenticate source custody",
     ]) expect(lesson.replace(/\s+/gu, " ")).toContain(text);
   });
 

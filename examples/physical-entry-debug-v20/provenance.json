@@ -1,0 +1,64 @@
+{
+  "schema": "fe2o3-kernels-recorded-physical-v20-provenance-v1",
+  "origin": "Unchanged retained public CLI JSONL from root-qualified source session; not browser execution.",
+  "report": {
+    "path": "phase28-physical-cpu-debug-actual-source-r2/report.json",
+    "bytes": 33470,
+    "sha256": "74f10e8bf82fd91219da6f2453976e9823bce8afdaf44130d3d272d2fe44ed11"
+  },
+  "compilerPublication": {
+    "commit": "dbfb61e7186e5fa37dd9d544d85de29c7a1080eb",
+    "tree": "f49a2fc98386e443440c5b11cd9f0345f47db063",
+    "repositories": ["harsh-nod/fe2o3", "powderluv/fe2o3"],
+    "note": "Published implementation; retained qualification producer snapshots remain unchanged."
+  },
+  "sourceAuthentication": false,
+  "hardwareObserved": false,
+  "replayAuthority": false,
+  "recordings": [
+    {
+      "name": "one-selector0",
+      "requests": {
+        "bytes": 20896,
+        "sha256": "764d309b73660b87e8944489378a934d708d272f4b9e613e34e0091817c88488"
+      },
+      "responses": {
+        "bytes": 132575,
+        "sha256": "4090b19ca681c06d63387b367503f2f382cc6aad906c1ee2ce642dbcee322bbf"
+      }
+    },
+    {
+      "name": "diamond-selector0",
+      "requests": {
+        "bytes": 21717,
+        "sha256": "1c0c1d29f5104dba26eab1aa119d8efd501c86abe4edff13df9476760bc559e3"
+      },
+      "responses": {
+        "bytes": 138133,
+        "sha256": "e079054ad066e8c427d4fc6b8cb62f73056bada03553a2172f4bd7dc535fc833"
+      }
+    },
+    {
+      "name": "diamond-selector1",
+      "requests": {
+        "bytes": 21717,
+        "sha256": "e9de5da7766ed81e200f15965d494ae33b323136c89b8f80b4cf8d644f6bceeb"
+      },
+      "responses": {
+        "bytes": 138133,
+        "sha256": "e1d22934fef941348e00859cea51c90a540a603f56c3033d302d6474c1758e85"
+      }
+    },
+    {
+      "name": "registers-selector1",
+      "requests": {
+        "bytes": 21717,
+        "sha256": "19de2f04ea0aa00a40d4edd0036a4343cdd574d0ca0a2c88cf761a10cca316cd"
+      },
+      "responses": {
+        "bytes": 138133,
+        "sha256": "48a308e8a0f991face8311578472fa9270ba08eca6b1255e2ee7624d55bdb3b3"
+      }
+    }
+  ]
+}

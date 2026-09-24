@@ -1,0 +1,12 @@
+.physical-debug-v20 { min-width: 0; }
+.physical-debug-v20 label { display: block; margin-block: .75rem; }
+.physical-debug-v20 select, .physical-debug-v20 input[type="file"] { max-width: 100%; }
+.physical-debug-v20 select { width: min(100%, 48rem); }
+.physical-debug-v20 form { display: grid; gap: .5rem; }
+.physical-debug-v20-controls { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .75rem; }
+.physical-debug-v20 code { overflow-wrap: anywhere; }
+.physical-debug-v20 pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 24rem; overflow: auto; }
+.physical-debug-v20-scroll { max-height: 24rem; max-width: 100%; overflow: auto; }
+.physical-debug-v20 table { width: 100%; border-collapse: collapse; }
+.physical-debug-v20 th, .physical-debug-v20 td { padding: .5rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border-color, currentColor); }
+.physical-debug-v20 :focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }

@@ -183,6 +183,8 @@ The [authored global-copy lab](docs/physical-global-copy-source-v21.md) adds a
 readonly input load, explicit readiness wait and masked output store. The
 [typed CPU-debugger lab](docs/physical-entry-cpu-debug-v20.md) separately explains
 V20 symbolic SSA and bounded forward/reverse observation, not hardware stepping.
+The [V20 recording viewer](docs/physical-entry-cpu-viewer-v20.md) displays those
+retained sessions and bounded local imports without executing commands.
 
 The separate [static call-target lab](docs/retained-call-targets-v1.md) explains
 the additive query for exact retained callees, caller kernel registrations and

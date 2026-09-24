@@ -95,6 +95,10 @@ const RecordedCompleteBodyV19 = lazy(() =>
   import("./CompleteBodyDebugV19").then(module => ({ default: module.CompleteBodyDebugWorkbenchV19 })),
 );
 
+const RecordedPhysicalEntryV20 = lazy(() =>
+  import("./PhysicalEntryDebugV20").then(module => ({ default: module.PhysicalEntryDebugWorkbenchV20 })),
+);
+
 const LocalRecordedResourceImport = lazy(() =>
   import("./RecordedResourceImport").then((module) => ({
     default: module.RecordedResourceImport,
@@ -209,6 +213,7 @@ export function SourceIsaAgentPage() {
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showCompleteBodyV19, setShowCompleteBodyV19] = useState(false);
+  const [showPhysicalEntryV20, setShowPhysicalEntryV20] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
   const [showWatchpoint, setShowWatchpoint] = useState(false);
@@ -395,6 +400,21 @@ export function SourceIsaAgentPage() {
         <div id="complete-body-debug-v19-content">
           {showCompleteBodyV19 && <Suspense fallback={<p role="status">Loading V19 recorded CPU viewer…</p>}>
             <RecordedCompleteBodyV19 />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="physical-entry-debug-v20-heading">
+        <h2 id="physical-entry-debug-v20-heading">Browse physical-entry V20 CPU recordings</h2>
+        <p>Inspect recorded forward/reverse observations, symbolic unavailable SSA and logical output bytes.
+          No commands are sent; this is not a live session, physical-register capture or resumable execution.</p>
+        <button type="button" aria-expanded={showPhysicalEntryV20} aria-controls="physical-entry-debug-v20-content"
+          onClick={() => setShowPhysicalEntryV20(open => !open)}>
+          {showPhysicalEntryV20 ? "Close V20 recorded CPU viewer" : "Open V20 recorded CPU viewer"}
+        </button>
+        <div id="physical-entry-debug-v20-content">
+          {showPhysicalEntryV20 && <Suspense fallback={<p role="status">Loading V20 recorded CPU viewer…</p>}>
+            <RecordedPhysicalEntryV20 />
           </Suspense>}
         </div>
       </section>

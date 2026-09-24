@@ -5,7 +5,8 @@ also published to powderluv/fe2o3 main. Focused typed V20 CPU-debugger tests
 and separate actual-source CLI qualification passed on the retained snapshots.
 No native or hardware execution is claimed by this debugger lesson.
 The existing [V19 CPU viewer](complete-body-cpu-viewer-v19.md) remains a separate
-profile; this lesson does not add a V20 browser adapter.
+profile. The separate [V20 recorded CPU viewer](physical-entry-cpu-viewer-v20.md)
+browses the retained sessions without re-executing them.
 
 The debugger executes the admitted canonical V20 body in the existing CPU
 engine once, captures bounded observations, and navigates those records.
