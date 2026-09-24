@@ -98,6 +98,9 @@ const RecordedCompleteBodyV19 = lazy(() =>
 const LivePhysicalEntryV20 = lazy(() =>
   import("./LivePhysicalCpuDebugV20").then(module => ({ default: module.LivePhysicalCpuDebugV20 })),
 );
+const RecordedGlobalCopyV21 = lazy(() =>
+  import("./PhysicalGlobalCopyDebugV21").then(module => ({ default: module.PhysicalGlobalCopyWorkbenchV21 })),
+);
 const RecordedPhysicalEntryV20 = lazy(() =>
   import("./PhysicalEntryDebugV20").then(module => ({ default: module.PhysicalEntryDebugWorkbenchV20 })),
 );
@@ -217,6 +220,7 @@ export function SourceIsaAgentPage() {
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showCompleteBodyV19, setShowCompleteBodyV19] = useState(false);
   const [showPhysicalEntryV20, setShowPhysicalEntryV20] = useState(false);
+  const [showGlobalCopyV21, setShowGlobalCopyV21] = useState(false);
   const [showLivePhysicalV20, setShowLivePhysicalV20] = useState(false);
   const [showResourceImport, setShowResourceImport] = useState(false);
   const [showMemoryTutorial, setShowMemoryTutorial] = useState(false);
@@ -418,6 +422,21 @@ export function SourceIsaAgentPage() {
         <div id="live-physical-v20-content">
           {showLivePhysicalV20 && <Suspense fallback={<p role="status">Loading opt-in V20 CPU connection…</p>}>
             <LivePhysicalEntryV20 />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="global-copy-debug-v21-heading">
+        <h2 id="global-copy-debug-v21-heading">Browse V21 input, readiness and output recordings</h2>
+        <p>Inspect actual recorded pending/ready SSA and separate input/output bytes, including partial output masks.
+          This is read-only presentation, not a live V21 connection or hardware register view.</p>
+        <button type="button" aria-expanded={showGlobalCopyV21} aria-controls="global-copy-debug-v21-content"
+          onClick={() => setShowGlobalCopyV21(open => !open)}>
+          {showGlobalCopyV21 ? "Close V21 recorded CPU viewer" : "Open V21 recorded CPU viewer"}
+        </button>
+        <div id="global-copy-debug-v21-content">
+          {showGlobalCopyV21 && <Suspense fallback={<p role="status">Loading V21 recorded CPU viewer…</p>}>
+            <RecordedGlobalCopyV21 />
           </Suspense>}
         </div>
       </section>

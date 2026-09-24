@@ -1,0 +1,171 @@
+{
+  "schema": "fe2o3-retained-physical-global-copy-debug-v21-provenance",
+  "status": "actual-qualified-command-output",
+  "report": {
+    "path": "phase28-global-copy-cpu-debug-cli-source-r2/report.json",
+    "bytes": 28344,
+    "sha256": "c75e81d345805893adeb3b6f1842b882ad4de257504f7a92fb5653a00cb62c59"
+  },
+  "gate": {
+    "path": "logs/phase28-resume-r11-compiler-global-copy-cpu-cli-source-v21-r2/receipt.json",
+    "bytes": 71926,
+    "sha256": "ab3b199347b601ae81480eb3c66a575104817571a1820bd187a4c4e1a956bf20"
+  },
+  "recordings": [
+    {
+      "name": "one-grid64-output129",
+      "path": "examples/physical-global-copy-debug-v21/one-grid64-output129.json",
+      "container": {
+        "bytes": 119008,
+        "sha256": "8adfcba95e10618e75113cba4eb542e866d7346134eccc1dbcf1f18d8d9c613f"
+      },
+      "requests": {
+        "bytes": 9900,
+        "sha256": "1b54acbf614d1cba361e16940ed70f34345c52e415bcb82655e90f2261a3bf3c"
+      },
+      "responses": {
+        "bytes": 91404,
+        "sha256": "f8ddc1bcde2262e0a67a5ffb00cb6b7c05fe8c0b77553eaac40307ffdaca0960"
+      },
+      "simulationRequest": {
+        "bytes": 2953,
+        "sha256": "9f993df350ea47b101e05d4e4853f96771f3b8d13e6f0f8493b781342214fc5e"
+      },
+      "sourceLabel": "physical-global-copy-one-v21",
+      "sourceSessionReport": {
+        "bytes": 28344,
+        "sha256": "c75e81d345805893adeb3b6f1842b882ad4de257504f7a92fb5653a00cb62c59"
+      }
+    },
+    {
+      "name": "one-grid128-output129",
+      "path": "examples/physical-global-copy-debug-v21/one-grid128-output129.json",
+      "container": {
+        "bytes": 119017,
+        "sha256": "8a29a350bba994e0b249c8134bc5ba45765f39ccc35500ecc989cb24ed122650"
+      },
+      "requests": {
+        "bytes": 9900,
+        "sha256": "56887a42359e434a504ac2586fb8c48a7dd9352505d5d312449b66806c6b6081"
+      },
+      "responses": {
+        "bytes": 91412,
+        "sha256": "e27cb57fbf4137ce8d8344588b07a6b93acd0622cfa8325cab3b638c335d1fd5"
+      },
+      "simulationRequest": {
+        "bytes": 2954,
+        "sha256": "c9e23022980d91f8ee66b56104208537c05e96c6499baf5f9814809897ef83f8"
+      },
+      "sourceLabel": "physical-global-copy-one-v21",
+      "sourceSessionReport": {
+        "bytes": 28344,
+        "sha256": "c75e81d345805893adeb3b6f1842b882ad4de257504f7a92fb5653a00cb62c59"
+      }
+    },
+    {
+      "name": "registers-grid64-output129",
+      "path": "examples/physical-global-copy-debug-v21/registers-grid64-output129.json",
+      "container": {
+        "bytes": 119026,
+        "sha256": "38c7299164373f5d2a48947ceadcaf1375ef50129ad7086885c58f4f553ddeb4"
+      },
+      "requests": {
+        "bytes": 9900,
+        "sha256": "20b105ef1c9d7b245917f47c392b96d5131b48fc26cec2e36d1a7668ca971afd"
+      },
+      "responses": {
+        "bytes": 91404,
+        "sha256": "54018873bd1e5b87f0f25bcf7cb6d34b80d30b46e380635d64a5d782035e2d04"
+      },
+      "simulationRequest": {
+        "bytes": 2959,
+        "sha256": "1281749efff637e4a1cd18587fe02348060baf4d38777de611f32ec1d5b9c0c1"
+      },
+      "sourceLabel": "physical-global-copy-registers-v21",
+      "sourceSessionReport": {
+        "bytes": 28344,
+        "sha256": "c75e81d345805893adeb3b6f1842b882ad4de257504f7a92fb5653a00cb62c59"
+      }
+    },
+    {
+      "name": "registers-grid128-output129",
+      "path": "examples/physical-global-copy-debug-v21/registers-grid128-output129.json",
+      "container": {
+        "bytes": 119035,
+        "sha256": "f976e8516b9277b7e97c4848fd02379d35e9780f579b698442d6fcf030c06655"
+      },
+      "requests": {
+        "bytes": 9900,
+        "sha256": "c9161829696dc586d963f52806081e0c6269e13343c49b7ceec70c63d8977d6b"
+      },
+      "responses": {
+        "bytes": 91412,
+        "sha256": "592795e82d4c85f818fd091faf5c24264b0f2237b1d948fdcd574f1e3338a0b0"
+      },
+      "simulationRequest": {
+        "bytes": 2960,
+        "sha256": "601e920c57e115c174c8209b8695be3bad812ebb4da19f99ac90488ac2733b36"
+      },
+      "sourceLabel": "physical-global-copy-registers-v21",
+      "sourceSessionReport": {
+        "bytes": 28344,
+        "sha256": "c75e81d345805893adeb3b6f1842b882ad4de257504f7a92fb5653a00cb62c59"
+      }
+    },
+    {
+      "name": "one-grid128-output0",
+      "path": "examples/physical-global-copy-debug-v21/one-grid128-output0.json",
+      "container": {
+        "bytes": 119015,
+        "sha256": "47387a8bc4f33412380eb4635ab3155c56596f71e0d6cde5eddcc5a5f0935089"
+      },
+      "requests": {
+        "bytes": 9900,
+        "sha256": "75eaa3f42d22f35016ad20952908aba5805745637c6e82c5f92821b4f6907fdf"
+      },
+      "responses": {
+        "bytes": 91412,
+        "sha256": "1cd9dd247c8cb36fa175f803852e6659f0a40af01201c3f61bf7d69f0c7df8f6"
+      },
+      "simulationRequest": {
+        "bytes": 2952,
+        "sha256": "07cd41854aa97a6ad31b9bf84cd5fd0a690e22ddb426449449efca19182052a3"
+      },
+      "sourceLabel": "physical-global-copy-one-v21",
+      "sourceSessionReport": {
+        "bytes": 28344,
+        "sha256": "c75e81d345805893adeb3b6f1842b882ad4de257504f7a92fb5653a00cb62c59"
+      }
+    },
+    {
+      "name": "one-grid128-output33",
+      "path": "examples/physical-global-copy-debug-v21/one-grid128-output33.json",
+      "container": {
+        "bytes": 119016,
+        "sha256": "2cfa0b4cffa4b514194bfb3b6500f2ec32aa2ffeafccfcc66fbd72f9c08c5479"
+      },
+      "requests": {
+        "bytes": 9900,
+        "sha256": "37bd91f71a17f671bc7eec8433877c9dbb5e1a0d0d9782d975a95c8388d76ebe"
+      },
+      "responses": {
+        "bytes": 91412,
+        "sha256": "6430b6c14c0e76ee85e8d400b3a30f8eb2af7e4d70e92f6f4ed4dffa166eb24a"
+      },
+      "simulationRequest": {
+        "bytes": 2953,
+        "sha256": "fe34b8b919c3b6971b7652b0b321083c6588a928abfffd646f420a5eb13a19ac"
+      },
+      "sourceLabel": "physical-global-copy-one-v21",
+      "sourceSessionReport": {
+        "bytes": 28344,
+        "sha256": "c75e81d345805893adeb3b6f1842b882ad4de257504f7a92fb5653a00cb62c59"
+      }
+    }
+  ],
+  "source_custody": false,
+  "hardware_observed": false,
+  "runtime_authority": false,
+  "protected_authority": false,
+  "resumable_execution": false
+}
