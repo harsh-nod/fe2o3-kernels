@@ -1,0 +1,130 @@
+{
+  "schema": "fe2o3-physical-global-copy-native-v21-documentation-evidence-v1",
+  "compiler_publication": "dbfb61e7186e5fa37dd9d544d85de29c7a1080eb",
+  "compiler_functional_tree": "f49a2fc98386e443440c5b11cd9f0345f47db063",
+  "compiler_publication_status": "published on both compiler main branches; historical gate snapshots retained",
+  "inert_documentation_only": true,
+  "source_custody_exported": false,
+  "grants_artifact_or_launch_authority": false,
+  "gate": {
+    "source": "logs/phase28-resume-r10-native-global-copy-source-matrix-r1/receipt.json",
+    "source_bytes": 108498,
+    "source_sha256": "d43943b2efe3053402782d553889c58070738fb745e59a8a67c8d2283c2a57b3",
+    "receipt_retained": false,
+    "summary_is_selected_fields_not_full_receipt": true,
+    "status": "command-passed",
+    "started": "2026-09-24T08:37:47.335Z",
+    "finished": "2026-09-24T08:37:54.003Z",
+    "exit_code": 0,
+    "signal": null,
+    "errors": [],
+    "monitored_repository": "site",
+    "source_base_commit": "8e093fc8ffbe87fa5c0ffe77f1ddf37c14902cd4",
+    "source_tree_clean": false,
+    "source_before": {
+      "files": 886,
+      "bytes": 21858208,
+      "sha256": "e9997aacd1b2740687a5c98c121df69cb9676c914d9937109040f9d2be1688d5"
+    },
+    "source_after": {
+      "files": 886,
+      "bytes": 21858208,
+      "sha256": "e9997aacd1b2740687a5c98c121df69cb9676c914d9937109040f9d2be1688d5"
+    },
+    "hardware_observed": false,
+    "production_qualified": false
+  },
+  "gate_source_census_scope": "site repository selected by supervisor; compiler/LLVM/sidecar inputs are independently pinned, not this census",
+  "matrix_stdout": {
+    "source": "logs/phase28-resume-r10-native-global-copy-source-matrix-r1/command.stdout",
+    "source_bytes": 199402,
+    "source_sha256": "e73b10d2b06ead351ec6d9f5cd81e31eca022ab56c8bc46a54c555a9f78d8abe",
+    "retained": false,
+    "framing": "four exact native report object slices; separate leading/trailing SDK verification objects excluded"
+  },
+  "selected_inputs": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-global-copy-abi-r1/physical-global-copy-canonical-candidate",
+      "bytes": 107818552,
+      "sha256": "6ebca999c3798d9e20b8854b8673a3ba272889292049163d8bb445d96255ab6e"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-ladder-r1/observation.json",
+      "bytes": 69383,
+      "sha256": "9fd28b0903c04e8670679e03ab43a3558c5e9e84b4f165a845c1725be916e7e3"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-ladder-r1/physical-global-copy-one-v21.diagnostic/canonical-v21.bin",
+      "bytes": 3193,
+      "sha256": "fe9968152946eca83c05c34d6b291df5ca2f41c4d38c9d337579c8899dac7ccb"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-ladder-r1/physical-global-copy-one-v21.diagnostic/canonical.ll",
+      "bytes": 2294,
+      "sha256": "55616967379c7230aebc6fca6254822a6ec5af1290b2c75cf87d169368294ed2"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-ladder-r1/physical-global-copy-one-v21.diagnostic/native-observation-input-v21.txt",
+      "bytes": 922,
+      "sha256": "f815633c509e8cb974475dc1b20b59f4e5c5a5b9d129b8668dd454eb89195fc9"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-ladder-r1/physical-global-copy-registers-v21.diagnostic/canonical-v21.bin",
+      "bytes": 3211,
+      "sha256": "1de197520a41a76e9104cb8b27223a0985a12b34df97c4c6ef6f1de185817a98"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-ladder-r1/physical-global-copy-registers-v21.diagnostic/canonical.ll",
+      "bytes": 2303,
+      "sha256": "4ed2beb937ff7af706d075036411b391fa56306775fcecd15a42dd436ceb172e"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-ladder-r1/physical-global-copy-registers-v21.diagnostic/native-observation-input-v21.txt",
+      "bytes": 930,
+      "sha256": "b1bbd957752aa369157cfa92e8044c130b4c3f13921ca4318b8dd23d07ea5183"
+    }
+  ],
+  "selected_inputs_are_partial": true,
+  "records": [
+    {
+      "name": "one-o0.json",
+      "source": "logs/phase28-resume-r10-native-global-copy-source-matrix-r1/command.stdout",
+      "source_byte_offset": 275,
+      "source_bytes": 49683,
+      "source_sha256": "a113dfae318f054b668708de86b8874b2232a1a0c92df2583f9a3f36514f9304",
+      "retained_bytes": 49684,
+      "retained_sha256": "d6844f7f794896650833ce8001ba5a010642ccc3ae693a62dea30e8acec992ff",
+      "normalization": "append-one-final-newline"
+    },
+    {
+      "name": "one-o3.json",
+      "source": "logs/phase28-resume-r10-native-global-copy-source-matrix-r1/command.stdout",
+      "source_byte_offset": 49959,
+      "source_bytes": 49683,
+      "source_sha256": "2f561314c3e4549344bd52d35974259708f97bad97bf14b0a7ad340986d9d8e7",
+      "retained_bytes": 49684,
+      "retained_sha256": "42bd259c175c4f593c41350941f9749af3a1bc2342d9e02dd05c36edeae8e050",
+      "normalization": "append-one-final-newline"
+    },
+    {
+      "name": "registers-o0.json",
+      "source": "logs/phase28-resume-r10-native-global-copy-source-matrix-r1/command.stdout",
+      "source_byte_offset": 99643,
+      "source_bytes": 49741,
+      "source_sha256": "7e9503e993c3181f6cdb6a0af7665ba3f4547298a5de4067706cf13af0d1fd6c",
+      "retained_bytes": 49742,
+      "retained_sha256": "f0813d86688b93bb1ff89f875fbaeda17c2d168b74172ed9e3b159f510fd59bb",
+      "normalization": "append-one-final-newline"
+    },
+    {
+      "name": "registers-o3.json",
+      "source": "logs/phase28-resume-r10-native-global-copy-source-matrix-r1/command.stdout",
+      "source_byte_offset": 149385,
+      "source_bytes": 49741,
+      "source_sha256": "9d84ab3df96ed94fe106d5d354a938a0bdb53bc1f528a53fb1296483a6f3b666",
+      "retained_bytes": 49742,
+      "retained_sha256": "876c056a5f64c8d6b1134aebbefad8a5292a06e2c6b52fb02a66e751c40d064f",
+      "normalization": "append-one-final-newline"
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+{"schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"operation":"discover_capabilities"}
+{"schema":"fe2o3-debug-request-v1","request_id":2,"expected_revision":0,"operation":"step","direction":"forward","granularity":"event","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":3,"expected_revision":1,"operation":"step","direction":"reverse","granularity":"event","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":4,"expected_revision":2,"operation":"terminate"}

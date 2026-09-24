@@ -210,7 +210,7 @@ describe("physical-entry checked continuation documentation", () => {
       "safety-analysis projection", "original canonical SSA and CFG remain the executable",
       "not serialize the full combined proof", "512 bytes", "unresolved runtime obligations",
       "576 CPU cases", "54 actual-owner ABI mutation refusals", "12 budget-denial controls",
-      "V20 files currently refuse", "M2/M3/M6/U4 are not",
+      "At that earlier snapshot", "physical-entry-cpu-debug-v20.md", "M2/M3/M6/U4 are not",
     ]) expect(lesson).toContain(text);
     expect(lesson).not.toContain("This snapshot still lacks normal production ranked/formal descriptor");
     const earlier = JSON.parse(readFileSync("docs/evidence/physical-entry-source-v20-20260924/source-ladder.json", "utf8"));

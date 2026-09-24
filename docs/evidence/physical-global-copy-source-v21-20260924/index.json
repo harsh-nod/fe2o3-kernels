@@ -1,0 +1,128 @@
+{
+  "schema": "fe2o3-physical-global-copy-source-v21-documentation-evidence-v1",
+  "compiler_publication": "dbfb61e7186e5fa37dd9d544d85de29c7a1080eb",
+  "compiler_publication_status": "published on both compiler main branches; historical gate snapshots retained",
+  "inert_documentation_only": true,
+  "source_custody_exported": false,
+  "grants_artifact_or_launch_authority": false,
+  "gate": {
+    "source": "logs/phase28-resume-r10-compiler-global-copy-source-native-consumer-r1/receipt.json",
+    "source_bytes": 28928,
+    "source_sha256": "54683ef6298972003abbca2c970e41f9d4ab3a90202f896d45d79a1d04a9d9ac",
+    "receipt_retained": false,
+    "summary_is_selected_fields_not_full_receipt": true,
+    "status": "command-passed",
+    "started": "2026-09-24T08:22:41.425Z",
+    "finished": "2026-09-24T08:28:16.715Z",
+    "exit_code": 0,
+    "signal": null,
+    "errors": [],
+    "source_base_commit": "a2d4fea57411a981b172d904ddfce2356a0ed19e",
+    "source_tree_clean": false,
+    "source_before": {
+      "files": 7454,
+      "bytes": 110211318,
+      "sha256": "fb2e8d2d36633c78b7953ff62d05515ab99a0ce4588e5775c2df67b800a3b7fc"
+    },
+    "source_after": {
+      "files": 7454,
+      "bytes": 110211318,
+      "sha256": "fb2e8d2d36633c78b7953ff62d05515ab99a0ce4588e5775c2df67b800a3b7fc"
+    },
+    "hardware_observed": false,
+    "production_qualified": false
+  },
+  "records": [
+    {
+      "name": "source-ladder.json",
+      "source": "phase28-global-copy-source-ladder-r1/observation.json",
+      "source_bytes": 69383,
+      "source_sha256": "9fd28b0903c04e8670679e03ab43a3558c5e9e84b4f165a845c1725be916e7e3",
+      "retained_bytes": 69384,
+      "retained_sha256": "923b1e65ac5168168f1d91cf1be92c1f5b9b85382163aecb63646969c508a9ae",
+      "normalization": "append-one-final-newline"
+    },
+    {
+      "name": "public-one.json",
+      "source": "phase28-global-copy-public-source-r1-one/receipt.json",
+      "source_bytes": 3840,
+      "source_sha256": "320f34b0f8852c155ae0e4e426423552fb0bae9217f615381d84868b29ecc63e",
+      "retained_bytes": 3840,
+      "retained_sha256": "320f34b0f8852c155ae0e4e426423552fb0bae9217f615381d84868b29ecc63e",
+      "normalization": "none"
+    },
+    {
+      "name": "public-registers.json",
+      "source": "phase28-global-copy-public-source-r1-registers/receipt.json",
+      "source_bytes": 3876,
+      "source_sha256": "320ab5fac99badcd0a93f73c0905194b9f6cd47937f15499597720d80b80fff1",
+      "retained_bytes": 3876,
+      "retained_sha256": "320ab5fac99badcd0a93f73c0905194b9f6cd47937f15499597720d80b80fff1",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-launch.json",
+      "source": "phase28-global-copy-public-source-r1-wrong-launch/receipt.json",
+      "source_bytes": 3100,
+      "source_sha256": "ef499fbf8447c1e9be7c4ceb7647fa4318cfeb72e4018024f4f0f3688a208203",
+      "retained_bytes": 3100,
+      "retained_sha256": "ef499fbf8447c1e9be7c4ceb7647fa4318cfeb72e4018024f4f0f3688a208203",
+      "normalization": "none"
+    },
+    {
+      "name": "public-missing-lgkm.json",
+      "source": "phase28-global-copy-public-source-r1-missing-lgkm/receipt.json",
+      "source_bytes": 3086,
+      "source_sha256": "0cbecde44756c586dec081cc64403d272a31caa5eada7b207e638846a22d8cde",
+      "retained_bytes": 3086,
+      "retained_sha256": "0cbecde44756c586dec081cc64403d272a31caa5eada7b207e638846a22d8cde",
+      "normalization": "none"
+    },
+    {
+      "name": "public-missing-vm.json",
+      "source": "phase28-global-copy-public-source-r1-missing-vm/receipt.json",
+      "source_bytes": 3070,
+      "source_sha256": "9f8d1d2ee61ad3460ff662d6be319cb53dde6c0af710dc75f269cf00610214ad",
+      "retained_bytes": 3070,
+      "retained_sha256": "9f8d1d2ee61ad3460ff662d6be319cb53dde6c0af710dc75f269cf00610214ad",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-carry.json",
+      "source": "phase28-global-copy-public-source-r1-wrong-carry/receipt.json",
+      "source_bytes": 3065,
+      "source_sha256": "c821a4f5a5f2d227474f3b839e66bbe1f95feb93a8fa82aadacf9a7bbf74f6da",
+      "retained_bytes": 3065,
+      "retained_sha256": "c821a4f5a5f2d227474f3b839e66bbe1f95feb93a8fa82aadacf9a7bbf74f6da",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-store.json",
+      "source": "phase28-global-copy-public-source-r1-wrong-store/receipt.json",
+      "source_bytes": 3078,
+      "source_sha256": "66a5bb5bbe7f94156e3482f2d9268a9221c7658a49b07ca09869cd9247bc33c6",
+      "retained_bytes": 3078,
+      "retained_sha256": "66a5bb5bbe7f94156e3482f2d9268a9221c7658a49b07ca09869cd9247bc33c6",
+      "normalization": "none"
+    },
+    {
+      "name": "public-wrong-offset.json",
+      "source": "phase28-global-copy-public-source-r1-wrong-offset/receipt.json",
+      "source_bytes": 3071,
+      "source_sha256": "5f261cfae515f60e09333a8a6beb02716db659d4ac2618eb71f850ee14bb2f37",
+      "retained_bytes": 3071,
+      "retained_sha256": "5f261cfae515f60e09333a8a6beb02716db659d4ac2618eb71f850ee14bb2f37",
+      "normalization": "none"
+    },
+    {
+      "name": "public-reserved-register.json",
+      "source": "phase28-global-copy-public-source-r1-reserved-register/receipt.json",
+      "source_bytes": 3121,
+      "source_sha256": "fb0613f061d0a87de3ebf97935b7b791730f29fdcc63552054fa3b382c04d418",
+      "retained_bytes": 3121,
+      "retained_sha256": "fb0613f061d0a87de3ebf97935b7b791730f29fdcc63552054fa3b382c04d418",
+      "normalization": "none"
+    }
+  ],
+  "compiler_functional_tree": "f49a2fc98386e443440c5b11cd9f0345f47db063"
+}

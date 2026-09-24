@@ -179,6 +179,11 @@ The [physical instruction-body lab](docs/physical-entry-source-v20.md) gives
 authors actual register, setup, wait, bounds-mask and termination control. It
 retains source/CPU and native-static evidence separately from GPU execution.
 
+The [authored global-copy lab](docs/physical-global-copy-source-v21.md) adds a
+readonly input load, explicit readiness wait and masked output store. The
+[typed CPU-debugger lab](docs/physical-entry-cpu-debug-v20.md) separately explains
+V20 symbolic SSA and bounded forward/reverse observation, not hardware stepping.
+
 The separate [static call-target lab](docs/retained-call-targets-v1.md) explains
 the additive query for exact retained callees, caller kernel registrations and
 typed operand/formal bindings. Its separately recorded fresh qualification

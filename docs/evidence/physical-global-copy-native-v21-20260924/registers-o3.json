@@ -1,0 +1,1713 @@
+{
+  "authored_instructions": 24,
+  "canonical_claimed_bytes": 3211,
+  "canonical_claimed_sha256": "54fa064c5cd12c2ca5343d97f48a9e969c0c00e596a62fb7232043f6f8bd263f",
+  "canonical_owner_admission": false,
+  "code_object_version": 6,
+  "compiler_prologue_instructions": 0,
+  "compiler_tail_instructions": 0,
+  "decoded_cfg": [
+    {
+      "first_offset": 2304,
+      "instructions": 24,
+      "ordinal": 0,
+      "successors": []
+    }
+  ],
+  "descriptor": {
+    "bytes": 64,
+    "code_properties": 8,
+    "file_offset": 2240,
+    "kernarg_preload": 0,
+    "rsrc1": 11468994,
+    "rsrc2": 132,
+    "rsrc3": 5,
+    "sgpr_capacity": 32,
+    "sha256": "4ffc82765e57a8463eb0347f0414d12b4fb3a5847f5231b9c984fbb8b280b7e0",
+    "vgpr_capacity": 24
+  },
+  "entry": "physical_global_copy_registers",
+  "entry_bytes": 128,
+  "expectation_bytes": 930,
+  "expectation_refusals": [
+    {
+      "accepted": false,
+      "mutation": "missing_final_lf",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "extra_trailing_record",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "unknown_header",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "old_v20_header",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "non_ascii_control",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "noncanonical_digest",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "wrong_llvm_digest",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "duplicate_record",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "unknown_step_descriptor",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "physical_destination_out_of_range",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "entry_terminator_encoding_drift",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    },
+    {
+      "accepted": false,
+      "mutation": "noncanonical_decimal",
+      "phase": "bounded_inert_expectation_parser_or_content_join"
+    }
+  ],
+  "expectation_sha256": "b1bbd957752aa369157cfa92e8044c130b4c3f13921ca4318b8dd23d07ea5183",
+  "expectations_are_inert": true,
+  "expected_sgpr_minimum": 20,
+  "expected_vgpr_minimum": 23,
+  "external_same_source_owner_join_required": true,
+  "general_hazard_model_qualified": false,
+  "hardware_execution": false,
+  "host_input_output_disjointness_proved": false,
+  "hsaco_bytes": 5576,
+  "hsaco_sha256": "e98a9023024d6170d3bee20769b8160557ce41ea986fb923f6c423ff6f4acf0b",
+  "initialized_input_proved": false,
+  "input_refusals": [
+    {
+      "accepted": false,
+      "mutation": "missing_launch",
+      "phase": "ordinary_worker_input_validation"
+    },
+    {
+      "accepted": false,
+      "mutation": "wrong_cpu",
+      "phase": "ordinary_worker_input_validation"
+    }
+  ],
+  "live_rust_source_abi_qualified": false,
+  "llvm_bytes": 2303,
+  "llvm_function_shell": "ordinary",
+  "llvm_sha256": "4ed2beb937ff7af706d075036411b391fa56306775fcecd15a42dd436ceb172e",
+  "maximum_workgroups_premise": [
+    2,
+    1,
+    1
+  ],
+  "metadata_arguments": [
+    {
+      "address_space": "global",
+      "kind": "global_buffer",
+      "name": "input_data",
+      "offset": 0,
+      "size": 8
+    },
+    {
+      "address_space": "",
+      "kind": "by_value",
+      "name": "input_length",
+      "offset": 8,
+      "size": 8
+    },
+    {
+      "address_space": "global",
+      "kind": "global_buffer",
+      "name": "output_data",
+      "offset": 16,
+      "size": 8
+    },
+    {
+      "address_space": "",
+      "kind": "by_value",
+      "name": "output_length",
+      "offset": 24,
+      "size": 8
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_block_count_x",
+      "name": "",
+      "offset": 32,
+      "size": 4
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_block_count_y",
+      "name": "",
+      "offset": 36,
+      "size": 4
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_block_count_z",
+      "name": "",
+      "offset": 40,
+      "size": 4
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_group_size_x",
+      "name": "",
+      "offset": 44,
+      "size": 2
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_group_size_y",
+      "name": "",
+      "offset": 46,
+      "size": 2
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_group_size_z",
+      "name": "",
+      "offset": 48,
+      "size": 2
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_remainder_x",
+      "name": "",
+      "offset": 50,
+      "size": 2
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_remainder_y",
+      "name": "",
+      "offset": 52,
+      "size": 2
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_remainder_z",
+      "name": "",
+      "offset": 54,
+      "size": 2
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_global_offset_x",
+      "name": "",
+      "offset": 72,
+      "size": 8
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_global_offset_y",
+      "name": "",
+      "offset": 80,
+      "size": 8
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_global_offset_z",
+      "name": "",
+      "offset": 88,
+      "size": 8
+    },
+    {
+      "address_space": "",
+      "kind": "hidden_grid_dims",
+      "name": "",
+      "offset": 96,
+      "size": 2
+    }
+  ],
+  "milestone_completion": false,
+  "native_functional_execution": false,
+  "native_mutation_refusals": [
+    {
+      "accepted": false,
+      "changed_payload_sha256": "4fdc5e3688e1cb7ba91369d458bf81452a211d3281569d0b63a28caf891f2d98",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_0_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "d56809f334b8024973b0c32568a9f5ab70dabd395a1b55b27bbb408279f2ded9",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_1_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "e80ae5e93209d075414e5bafb49cc1de176c8a490f8f85de7f00d8f38190d230",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_2_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "edd01f15179c7e4965d92f13525736c9f21eff45f8dadb19b48a092156e47f8f",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_3_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "e3884c0db9961b38eb99389b53c0a3f7e35c881cae7afb95284c2d87457a86f7",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_4_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "945f28d700feefc3a8a9008f6123d66cfcc0d70654b40fa8f417fb603afb8e77",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_5_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "a600a172f2331a024a8c0423014d4c7ca866e4b93ebba9acd9b5816e2343793f",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_6_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "9cb904b07c99277d474a64e7ab218a837a05d545a37591b43c2145f4763f074b",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_7_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "af0d24cb2e829d52784b5054f3afe8ec8b42be627a8997abff389309de853584",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_8_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "0ce3c83b2008fe8456d2b6abbc2d674e48331d5380f376aed7677e1ad79ce345",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_9_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "d440d43e5276ab8453b3307d958d38850d20eae8d15cf3d383ad9e917860c2aa",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_10_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "eb1a311370a54738f8318e704386fce260875eb8088825376836eaa955c214cf",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_11_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "9f6904c79eaa875196d7df2e7e7f9d895720f87b1fe710715bfc96efbf220b55",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_12_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "f8752b650b49e3fb3c93ca1fa9a5c7d1ce56bd51f088c5959a846f9a70eea081",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_13_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "66b4fa74131304112d3fc8b668428d4f1740f869b852648f8ef79c464c092865",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_14_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "9c71e147b8e62b6c5e46a3da30199158365da418022169ce04650a31e9007afb",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_15_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "ba2d9ba517f260da7872d46187fa72b1a83cc9121cca9fe83560aecdd4d4110b",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_16_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "cb9463c2c87ed6297c009972ab340b677bb85173556330b1822052fc0df3b6be",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_17_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "8278f9111e465d9d61ff111b7fd76e6fb9a2ebb9727fe5964345b1eeb8324767",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_18_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "8bd3bbf0a0e3aa760ce0a8c04a54bb7f4830a10224b5e99df992a909f3fda7a0",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_19_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "24ca415ff90b381a21ee4c6b27adb13c4fb3646a6edaa645d5ed9d830fb24346",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_20_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical complete entry census: no prologue or hidden tail"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "588921df172060f86eaf924e80518339c754b852f180ce915dfb232ff7582d5b",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_21_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "b4fe00f45a0bed79245fc2f9aafc431ffd7beec2c47d4ac46b585e39b41e100d",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_22_removed",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "59c3503a23c017c01ccaab8f6eafa47ca5974e384af483326156d95f7bf9ef06",
+      "fresh_payload_hash": true,
+      "mutation": "instruction_23_removed",
+      "phase": "existing_machine_decoder",
+      "reason": "gfx942 physical machine-effect: reachable fallthrough exits symbol physical_global_copy_registers"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "9b8cb1c3bc2120155e44beb2a50b096ebfff170af69a9b9e948e3c1f4d40dbc3",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_offset_0",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "e3fccc093f4e1a0296000623e8a5945209c117b32a54059ca5ba2e1a38fe8167",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_origin_base_0",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "b554e88551f1741aa190a5d0cfba16b91edf9805d4cd64eea403db61ad1588da",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_offset_1",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "90a942ae5db7df7384fe1421e02ff6d954009f3d2fcb0ae1a20a369579355f6a",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_origin_base_1",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "cdf02ae07b47913f94cd66187a906f2863aa5334db0425369aa362582e66f8c6",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_offset_2",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "3a8d4f3959cb9f120b10875ba8671645d9deaaf6af660d5fcf8d911d434f1d07",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_origin_base_2",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "6ca3f4a501691fb9d2967a31c4595f47cd11ab94b3d84bddf29c08e857c8d6a9",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_offset_3",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "ce5fd29fd4e722f38e3252558fdf63af1c56ab6fbf50fe8fa2038b374a3acdce",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_origin_base_3",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "d0a48d0bb829fee4cf3e8b7cf9f7ba941151243fa354a6ca580d33d40a615f74",
+      "fresh_payload_hash": true,
+      "mutation": "index_workgroup_origin_5",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "99ab8c176c24c28cda44d5020a534531e13eac6afe396dda6932599c1f5e84bd",
+      "fresh_payload_hash": true,
+      "mutation": "index_shift_5",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "d757daad4de9ecbe129d579614f47c4e80d169b198d7c774bb2e68ff6860b5f1",
+      "fresh_payload_hash": true,
+      "mutation": "index_lane_origin_6",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "ddc70d20223b46297f178d00d55a687b9b243278f48f67cf5e1a943781cfb3c5",
+      "fresh_payload_hash": true,
+      "mutation": "pointer_high_origin_8",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "810ca505cb35b067cf0bd227def41d3531277be6ecf4f4abb6a181c3300e873a",
+      "fresh_payload_hash": true,
+      "mutation": "index_64bit_scale_9",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "75144087a2b5a359a0a3c236843ffc0f4c80e0140dd62b6b0d7b801739b12b96",
+      "fresh_payload_hash": true,
+      "mutation": "pointer_low_carry_source_10",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "641276a4a3c601e37221b7a11e87b2427fb966b00d16adae18fd41354e0ef682",
+      "fresh_payload_hash": true,
+      "mutation": "pointer_high_carry_source_11",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "4c702227bc9801a7ebb197dfd35f6588832f9e57d8f320affa7d18ce0120ee9f",
+      "fresh_payload_hash": true,
+      "mutation": "load_destination_12",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "69f0c8dfc48b31b832a40fe29cdb4d32e3d8c23bbdf3ceba393689a8920dba9c",
+      "fresh_payload_hash": true,
+      "mutation": "load_address_pair_12",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "856cf1dcf43b79abed43b4606614b1d6d0216d542bf7d48e0740bf3dc20756b2",
+      "fresh_payload_hash": true,
+      "mutation": "load_sgpr_off_origin_12",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "ba0d27a492e226d050b1729da2c1d7b9f983f584c25e371b88b57c5a7609feb9",
+      "fresh_payload_hash": true,
+      "mutation": "load_offset_12",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "7c5200949cf1a04511335bdfac26999d3b1007e75cf1fed72a2f13a9abd568ca",
+      "fresh_payload_hash": true,
+      "mutation": "load_cache_policy_12",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "b650a283e66eacac457f258a272557fca77ad8e264f40f233cc6aeac5112e422",
+      "fresh_payload_hash": true,
+      "mutation": "vm_wait_one_pending_13",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "8448cbb8851ee02e7ca1498767b0bd563594eb73c16716d3ca25907b7dc8dea7",
+      "fresh_payload_hash": true,
+      "mutation": "pointer_high_origin_14",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "22880725fb8be2ce57fee35b89d4624970efdc16e7af4e32d003d9f80d764f8b",
+      "fresh_payload_hash": true,
+      "mutation": "index_64bit_scale_15",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "0b0b4da004f2dec88ffe1f687c879f52da70ed0ef9d63b2eda6378332de108dd",
+      "fresh_payload_hash": true,
+      "mutation": "pointer_low_carry_source_16",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "87467064bc7e8738bff850ca0d8126658f0b2723d4061bf06c757fb1777fce4f",
+      "fresh_payload_hash": true,
+      "mutation": "pointer_high_carry_source_17",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "7ec3f1b476c5ee67fa1b1aedbb104000200421eb58e851ad717bbe14b9d8b1bb",
+      "fresh_payload_hash": true,
+      "mutation": "bounds_length_origin_18",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "8bd3bbf0a0e3aa760ce0a8c04a54bb7f4830a10224b5e99df992a909f3fda7a0",
+      "fresh_payload_hash": true,
+      "mutation": "exec_mask_removed_19",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical exact opcode/definitions/implicit state/effect"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "460ddf12b07b2f87ae8eb3830834208ab69ab85357b200ebb4cc9f29e9d89ed6",
+      "fresh_payload_hash": true,
+      "mutation": "store_actual_load_register_20",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "9dcea5df0e5a896f5fd2b5f42eabaaf104947e7c7e603f18e71606991d0d45a8",
+      "fresh_payload_hash": true,
+      "mutation": "store_output_address_20",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical register/tuple/operand order"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "200248e9e18c727335be87589fc47c38189685e3f9eb533f557a21f8b9524134",
+      "fresh_payload_hash": true,
+      "mutation": "vm_wait_one_pending_21",
+      "phase": "physical_complete_entry_relation",
+      "reason": "physical immediate operand/stray edge"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "9d5c4521d61f304546df38b658934111a01213685bb1a10f79117a65fd43169f",
+      "fresh_payload_hash": true,
+      "mutation": "missing_kernarg_enable",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "1a3ec5819e12d07f8a18ba650fe8fae2a54b742d6ac648995c5827b3de96684b",
+      "fresh_payload_hash": true,
+      "mutation": "extra_dispatch_pointer",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "08a06efc323af35bf305a47929e129825fbbf48d0f2772d09606d614862c4aab",
+      "fresh_payload_hash": true,
+      "mutation": "zero_user_sgpr_count",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "f34f4b6e5a7aee17c7ebf0a65fa12c52b4308a68423f29fb39f92a7711966735",
+      "fresh_payload_hash": true,
+      "mutation": "extra_user_sgpr_count",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "28e0faf477929925a3af899852be1672496521205ac47086a3a5280b03081e7a",
+      "fresh_payload_hash": true,
+      "mutation": "missing_workgroup_x",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "1e68dbd06154101eb14726a2b86b7b638b52674940a6bbbfa2c09da9095335bb",
+      "fresh_payload_hash": true,
+      "mutation": "workitem_y_enabled",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "076f9536e7e43d90a947c74b0675f38871defed9d4da4691d06dfc331dac3129",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_preload_enabled",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "1f9dd89362ea766a8ac79d255ef91200049ca68f40b2a86f81343b192118df4e",
+      "fresh_payload_hash": true,
+      "mutation": "scratch_enabled",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "9cc2731c6e61611b74d80cbb0b2937ccc8ff623e72a9aa9b43154dba22661330",
+      "fresh_payload_hash": true,
+      "mutation": "kernarg_extent_changed",
+      "phase": "existing_machine_decoder",
+      "reason": "gfx942 physical machine-effect: kernel descriptor disagrees with metadata: physical_global_copy_registers"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "78973f1432c88032f7888bda6c145ccd66bdaaaac77710c57810cb331565905c",
+      "fresh_payload_hash": true,
+      "mutation": "reserved_descriptor_field",
+      "phase": "existing_machine_decoder",
+      "reason": "gfx942 physical machine-effect: kernel descriptor reserved bytes changed: physical_global_copy_registers"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "ffcc477fcd94782241fbb50964d30d0409cea4453652531b9438b1b8019e8abb",
+      "fresh_payload_hash": true,
+      "mutation": "vgpr_capacity_too_small",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "2d7b827f65b44a4645aa2221910a3baad29d1653c46fd76ad615704aa0bf6c8c",
+      "fresh_payload_hash": true,
+      "mutation": "sgpr_capacity_too_small",
+      "phase": "physical_entry_descriptor_relation",
+      "reason": "exact entry inputs/resources/reserved fields differ"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "3ecb8ce08c18dcc6eed4a1346c04e58a10ed1f4c714592d54d582422900cc0ce",
+      "mutation": "input_data",
+      "phase": "physical_argument_metadata_relation"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "893962968c2f0f1440bdb539141c8446b986d6f04149765f3f7b057282baf912",
+      "mutation": "input_length",
+      "phase": "physical_argument_metadata_relation"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "e902872a1b0f23f4425000bbd6a4ddef1347ce1d84fa4d573bd2fb8640e2c60f",
+      "mutation": "output_data",
+      "phase": "physical_argument_metadata_relation"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "b2902f72518a18ee02f16970cff62dec350541b02c6c91d362b907e2bc3957bd",
+      "mutation": "output_length",
+      "phase": "physical_argument_metadata_relation"
+    },
+    {
+      "accepted": false,
+      "changed_payload_sha256": "0706965d13506d3e2f49474cd401d649b85162aa3fad3c20c9b60b31ac81234e",
+      "mutation": "hidden_grid_dims",
+      "phase": "physical_argument_metadata_relation"
+    }
+  ],
+  "optimization": "O3",
+  "outputs": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-source-native-r1-registers-o3",
+  "owner_contract_accepted": false,
+  "post_link_checks": [
+    "post_link.check=target status=ok arch=gfx942 code_object_version=6 e_flags=0x64c",
+    "post_link.check=exports status=ok symbols=[physical_global_copy_registers,physical_global_copy_registers.kd]",
+    "post_link.check=unresolved status=ok symbols=[]",
+    "post_link.check=metadata status=ok kernels=1 target=amdgcn-amd-amdhsa--gfx942%3Axnack-",
+    "post_link.kernel name=physical_global_copy_registers symbol=physical_global_copy_registers.kd kernarg_size=288 group_size=0 private_size=0 kernarg_align=8 wavefront_size=64 max_workgroup_size=64 reqd_workgroup_size=[64,1,1]"
+  ],
+  "protected_finalizer_admission": false,
+  "runtime_input_bounds_proved": false,
+  "runtime_output_bounds_proved": false,
+  "runtime_pointer_validity_proved": false,
+  "schema": "private-canonical-physical-global-copy-native-observation-v21-r1",
+  "source_authentication": false,
+  "synthetic_worker_identity_fields": true,
+  "target": "gfx942:xnack-",
+  "trace": [
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "000206c000000000",
+      "explicit_definitions": 1,
+      "file_offset": 2304,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 1,
+      "memory_access": 1,
+      "memory_width": 8,
+      "opcode": "S_LOAD_DWORDX2_IMM_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "SGPR8_SGPR9",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR0_SGPR1",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "SGPR8_SGPR9",
+        "SGPR0_SGPR1"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "800206c008000000",
+      "explicit_definitions": 1,
+      "file_offset": 2312,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 1,
+      "memory_access": 1,
+      "memory_width": 8,
+      "opcode": "S_LOAD_DWORDX2_IMM_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "SGPR10_SGPR11",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR0_SGPR1",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "8"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "SGPR10_SGPR11",
+        "SGPR0_SGPR1"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "000306c010000000",
+      "explicit_definitions": 1,
+      "file_offset": 2320,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 1,
+      "memory_access": 1,
+      "memory_width": 8,
+      "opcode": "S_LOAD_DWORDX2_IMM_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "SGPR12_SGPR13",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR0_SGPR1",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "16"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "SGPR12_SGPR13",
+        "SGPR0_SGPR1"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "800306c018000000",
+      "explicit_definitions": 1,
+      "file_offset": 2328,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 1,
+      "memory_access": 1,
+      "memory_width": 8,
+      "opcode": "S_LOAD_DWORDX2_IMM_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "SGPR14_SGPR15",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR0_SGPR1",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "24"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "SGPR14_SGPR15",
+        "SGPR0_SGPR1"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "7fc08cbf",
+      "explicit_definitions": 0,
+      "file_offset": 2336,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "S_WAITCNT_vi",
+      "operands": [
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "49279"
+        }
+      ],
+      "register_operands": []
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "0286108e",
+      "explicit_definitions": 1,
+      "file_offset": 2340,
+      "implicit_reads": [],
+      "implicit_writes": [
+        "SCC"
+      ],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "S_LSHL_B32_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "SGPR16",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR2",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "6"
+        }
+      ],
+      "register_operands": [
+        "SGPR16",
+        "SGPR2"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "10000468",
+      "explicit_definitions": 1,
+      "file_offset": 2344,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_ADD_U32_e32_gfx9",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR2",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR16",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR0",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR2",
+        "SGPR16",
+        "VGPR0"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "8002067e",
+      "explicit_definitions": 1,
+      "file_offset": 2348,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_MOV_B32_e32_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR3",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR3"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "0902087e",
+      "explicit_definitions": 1,
+      "file_offset": 2352,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_MOV_B32_e32_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR4",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR9",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR4",
+        "SGPR9"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "06008fd282040200",
+      "explicit_definitions": 1,
+      "file_offset": 2356,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_LSHLREV_B64_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR6_VGPR7",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "2"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR2_VGPR3",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR6_VGPR7",
+        "VGPR2_VGPR3"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "080c0c32",
+      "explicit_definitions": 1,
+      "file_offset": 2364,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [
+        "VCC"
+      ],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_ADD_CO_U32_e32_gfx9",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR6",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR8",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR6",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR6",
+        "SGPR8",
+        "VGPR6"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "040f0e38",
+      "explicit_definitions": 1,
+      "file_offset": 2368,
+      "implicit_reads": [
+        "EXEC",
+        "VCC"
+      ],
+      "implicit_writes": [
+        "VCC"
+      ],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_ADDC_CO_U32_e32_gfx9",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR7",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR4",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR7",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR7",
+        "VGPR4",
+        "VGPR7"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "008050dc06007f16",
+      "explicit_definitions": 1,
+      "file_offset": 2372,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 1,
+      "memory_access": 1,
+      "memory_width": 4,
+      "opcode": "GLOBAL_LOAD_DWORD_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR22",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR6_VGPR7",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR22",
+        "VGPR6_VGPR7"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "700f8cbf",
+      "explicit_definitions": 0,
+      "file_offset": 2380,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "S_WAITCNT_vi",
+      "operands": [
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "3952"
+        }
+      ],
+      "register_operands": []
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "0d020a7e",
+      "explicit_definitions": 1,
+      "file_offset": 2384,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_MOV_B32_e32_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR5",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR13",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR5",
+        "SGPR13"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "0a008fd282040200",
+      "explicit_definitions": 1,
+      "file_offset": 2388,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_LSHLREV_B64_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR10_VGPR11",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "2"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR2_VGPR3",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR10_VGPR11",
+        "VGPR2_VGPR3"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "0c141432",
+      "explicit_definitions": 1,
+      "file_offset": 2396,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [
+        "VCC"
+      ],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_ADD_CO_U32_e32_gfx9",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR10",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR12",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR10",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR10",
+        "SGPR12",
+        "VGPR10"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "05171638",
+      "explicit_definitions": 1,
+      "file_offset": 2400,
+      "implicit_reads": [
+        "EXEC",
+        "VCC"
+      ],
+      "implicit_writes": [
+        "VCC"
+      ],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_ADDC_CO_U32_e32_gfx9",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR11",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR5",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR11",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR11",
+        "VGPR5",
+        "VGPR11"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "0e04d87d",
+      "explicit_definitions": 0,
+      "file_offset": 2404,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [
+        "VCC"
+      ],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "V_CMP_GT_U64_e32_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "SGPR14_SGPR15",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR2_VGPR3",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "SGPR14_SGPR15",
+        "VGPR2_VGPR3"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "6a2092be",
+      "explicit_definitions": 1,
+      "file_offset": 2408,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [
+        "EXEC",
+        "SCC"
+      ],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "S_AND_SAVEEXEC_B64_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "SGPR18_SGPR19",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VCC",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "SGPR18_SGPR19",
+        "VCC"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "008070dc0a167f00",
+      "explicit_definitions": 0,
+      "file_offset": 2412,
+      "implicit_reads": [
+        "EXEC"
+      ],
+      "implicit_writes": [],
+      "mc_flags": 2,
+      "memory_access": 2,
+      "memory_width": 4,
+      "opcode": "GLOBAL_STORE_DWORD_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "VGPR10_VGPR11",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "VGPR22",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "VGPR10_VGPR11",
+        "VGPR22"
+      ]
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "700f8cbf",
+      "explicit_definitions": 0,
+      "file_offset": 2420,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "S_WAITCNT_vi",
+      "operands": [
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "3952"
+        }
+      ],
+      "register_operands": []
+    },
+    {
+      "branch_kind": 0,
+      "branch_target": 0,
+      "bytes_hex": "1201febe",
+      "explicit_definitions": 1,
+      "file_offset": 2424,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 0,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "S_MOV_B64_vi",
+      "operands": [
+        {
+          "kind": 1,
+          "register": "EXEC",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        },
+        {
+          "kind": 1,
+          "register": "SGPR18_SGPR19",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": [
+        "EXEC",
+        "SGPR18_SGPR19"
+      ]
+    },
+    {
+      "branch_kind": 4,
+      "branch_target": 0,
+      "bytes_hex": "000081bf",
+      "explicit_definitions": 0,
+      "file_offset": 2428,
+      "implicit_reads": [],
+      "implicit_writes": [],
+      "mc_flags": 12,
+      "memory_access": 0,
+      "memory_width": 0,
+      "opcode": "S_ENDPGM_vi",
+      "operands": [
+        {
+          "kind": 2,
+          "register": "",
+          "tied_to": -1,
+          "value_u64_decimal": "0"
+        }
+      ],
+      "register_operands": []
+    }
+  ],
+  "upstream_revision": "f58b06dce1f9c15707c5f808fd002e18c2accf7e",
+  "wave_width": 64,
+  "workgroup": [
+    64,
+    1,
+    1
+  ]
+}

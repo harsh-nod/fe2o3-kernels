@@ -137,7 +137,7 @@ describe("physical-entry source and native diagnostic lesson", () => {
 
   it("links an actual source example and keeps pipeline and debugger limitations", () => {
     const lesson = readFileSync("docs/physical-entry-source-v20.md", "utf8");
-    for (const text of ["90de8eaf2ef445e0d470793fb2a74169eec9175b", "576 CPU cases", "side-effecting inline-assembly", "not an LLVM bypass", "V20 files currently refuse", "M2/M3/M6/U4 are not"]) {
+    for (const text of ["90de8eaf2ef445e0d470793fb2a74169eec9175b", "576 CPU cases", "side-effecting inline-assembly", "not an LLVM bypass", "At that earlier snapshot", "physical-entry-cpu-debug-v20.md", "M2/M3/M6/U4 are not"]) {
       expect(lesson).toContain(text);
     }
     const example = readFileSync("examples/physical-entry-v20.rs", "utf8");

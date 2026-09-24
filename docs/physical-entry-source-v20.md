@@ -223,7 +223,12 @@ outside this V20 profile. CPU tests do not establish arbitrary memory safety,
 race freedom, occupancy/performance or GPU correctness. M2/M3/M6/U4 are not
 closed by these results.
 
-For debugger visualizations use the separate
-[complete-body CPU viewer lesson](complete-body-cpu-viewer-v19.md).
-V20 files currently refuse debugger loading; do not reinterpret them as V19,
-invent physical register captures from logical SSA, or claim hardware stepping.
+At that earlier snapshot, V20 files refused debugger loading. The separate
+[typed V20 CPU-debugger lesson](physical-entry-cpu-debug-v20.md) tracks the newer
+bounded CLI and its own qualification; it does not add hardware stepping or
+a V20 browser adapter. For browser visualizations use the distinct
+[complete-body V19 CPU viewer](complete-body-cpu-viewer-v19.md). Do not reinterpret
+V20 bytes as V19 or invent physical register captures from logical SSA.
+
+The separate [global-copy lesson](physical-global-copy-source-v21.md) introduces
+the new V21 readonly-load/wait profile; it does not widen the V20 contract above.

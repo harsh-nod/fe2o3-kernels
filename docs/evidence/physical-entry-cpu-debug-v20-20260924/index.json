@@ -1,0 +1,56 @@
+{
+  "schema": "fe2o3-physical-entry-cpu-debug-v20-documentation-evidence-v1",
+  "compiler_publication": "dbfb61e7186e5fa37dd9d544d85de29c7a1080eb",
+  "compiler_functional_tree": "f49a2fc98386e443440c5b11cd9f0345f47db063",
+  "compiler_publication_status": "published on both compiler main branches; historical gate snapshots retained",
+  "inert_documentation_only": true,
+  "source_custody_exported": false,
+  "grants_artifact_or_launch_authority": false,
+  "gate": {
+    "source": "logs/phase28-resume-r10-compiler-physical-cpu-debug-cli-r3/receipt.json",
+    "source_bytes": 21147,
+    "source_sha256": "dcd0567a06c408fd1721caa5ab8ab92cafb9552c1abbb4be6e984c1fa9cbd727",
+    "receipt_retained": false,
+    "summary_is_selected_fields_not_full_receipt": true,
+    "status": "command-passed",
+    "started": "2026-09-24T08:35:56.813Z",
+    "finished": "2026-09-24T08:36:17.537Z",
+    "exit_code": 0,
+    "signal": null,
+    "errors": [],
+    "monitored_repository": "compiler",
+    "source_base_commit": "a2d4fea57411a981b172d904ddfce2356a0ed19e",
+    "source_tree_clean": false,
+    "source_before": {
+      "files": 7462,
+      "bytes": 110295880,
+      "sha256": "7a58babd92f05ca3c554ef389d4c0b507ecde7ff16c0e00d0fabc264894614ef"
+    },
+    "source_after": {
+      "files": 7462,
+      "bytes": 110295880,
+      "sha256": "7a58babd92f05ca3c554ef389d4c0b507ecde7ff16c0e00d0fabc264894614ef"
+    },
+    "hardware_observed": false,
+    "production_qualified": false
+  },
+  "qualification": {
+    "reader_tests": 3,
+    "admission_tests": 3,
+    "cli_tests": 11,
+    "debugger_tests": 4,
+    "actual_source_input_test": "ignored in this gate; separately qualified by the actual-input packet",
+    "hardware_execution": false
+  },
+  "records": [
+    {
+      "name": "focused-tests.stdout",
+      "source": "logs/phase28-resume-r10-compiler-physical-cpu-debug-cli-r3/command.stdout",
+      "source_bytes": 9157,
+      "source_sha256": "0f5d4338316db90b3e5d22864656277b3ebb65b816e82b372b26e2cd3d94f50c",
+      "retained_bytes": 9157,
+      "retained_sha256": "0f5d4338316db90b3e5d22864656277b3ebb65b816e82b372b26e2cd3d94f50c",
+      "normalization": "none"
+    }
+  ]
+}

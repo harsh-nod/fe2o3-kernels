@@ -1,0 +1,122 @@
+{
+  "schema": "fe2o3-physical-global-copy-checked-source-command-v21",
+  "feature": "physical-global-copy-one-v21",
+  "observations": [
+    {
+      "stage": "llvm",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "physical-global-copy-one-v21",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-public-checked-r1-one/llvm-target"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "bff1e7afbd21516515a7995db63e53b21a695cdb3ca74bb4d507e13e1c352499",
+      "output": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-public-checked-r1-one/canonical.ll",
+        "bytes": 2294,
+        "sha256": "55616967379c7230aebc6fca6254822a6ec5af1290b2c75cf87d169368294ed2"
+      }
+    },
+    {
+      "stage": "handoff",
+      "args": [
+        "check",
+        "--release",
+        "--locked",
+        "--offline",
+        "-Zbuild-std=core",
+        "--lib",
+        "--manifest-path",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+        "--no-default-features",
+        "--features",
+        "physical-global-copy-one-v21",
+        "--target",
+        "amdgcn-amd-amdhsa",
+        "--target-dir",
+        "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-public-checked-r1-one/handoff-target"
+      ],
+      "status": 0,
+      "signal": null,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "9fd2e51fce3bdff6e58cec20f6b9a8a6c0a870a1434c597b1eea03718b0d3405",
+      "output": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-global-copy-public-checked-r1-one/handoff-v2.bin",
+        "bytes": 9103,
+        "sha256": "12f8383429ab1ddadcebd629be28bf3bc0f99df0f98b99dad1259535c0ff340e"
+      },
+      "diagnostic_relation": {
+        "canonical_identity": "9cc1c890fc4195d9f09de3c9ab2556d8ea07f2bad4676aa100f3862a0e3141ff",
+        "canonical_llvm_sha256": "55616967379c7230aebc6fca6254822a6ec5af1290b2c75cf87d169368294ed2",
+        "descriptor_sha256": "068c154b77348eb15ef656f6e85e573a767774b93e69fc02802968b2da2c55b8",
+        "grants_artifact_or_launch_authority": false,
+        "handoff_sha256": "12f8383429ab1ddadcebd629be28bf3bc0f99df0f98b99dad1259535c0ff340e",
+        "hardware_observed": false,
+        "host_admitted": false,
+        "native_llvm_executed": false,
+        "protected_finalizer_admitted": false,
+        "runtime_conditions_discharged": false,
+        "schema": "fe2o3-physical-global-copy-inert-handoff-relation-v21",
+        "source_custody_exported": false
+      }
+    }
+  ],
+  "sourcePins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/Cargo.toml",
+      "bytes": 6882,
+      "sha256": "894f6e4b78f4c8db7c8f62ced50775dcf3c915375536b7094e918950fb69fc4c"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/lib.rs",
+      "bytes": 25591,
+      "sha256": "05c287254f1b6ebcaed6c73f720607b9856be418ffe2528256afd13ed32ca5a8"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/candidates/milestones-phase28/crates/rustc-codegen-fe2o3/tests/fixtures/production-extraction-device/src/physical_global_copy_v21.rs",
+      "bytes": 12196,
+      "sha256": "023a5ab2c8b9513a171f82aac882a71f17fce2ebe1da31d019e23f0cd39ee70a"
+    }
+  ],
+  "binaryPins": [
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/fe2o3-rustc-extract",
+      "bytes": 235288,
+      "sha256": "bb84e00d301efc61cbdca1eb37b2d56347ddfd05665c1f416d5256179d4f4643"
+    },
+    {
+      "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/target-milestones-phase28-v19-r1/debug/librustc_codegen_fe2o3.so",
+      "bytes": 260033848,
+      "sha256": "95a674c35032de0e1be82614e0bf7a95bba455108090ee1e3628a74f0f468dea"
+    }
+  ],
+  "source_unchanged": true,
+  "actual_cargo_rustc_wrapper": true,
+  "compiler_closure_attestation": "unavailable",
+  "normal_worker_handoff": true,
+  "ranked_formal_descriptor_continuation": "observed normal checked source to inert LLVM/handoff",
+  "runtime_abi_conditions_discharged": false,
+  "runtime_abi_conditions": "input full-EXEC 128-u32 prefix readable/initialized; both global minima 512 bytes; input/output and output/kernarg disjoint; kernarg live/readable/immutable32B aligned8",
+  "public_handoff_relation": "observed diagnostic hashes match unchanged canonical LLVM and serialized inert handoff",
+  "diagnostic_relation_authenticates_compiler_or_source": false,
+  "cpu_simulation_run": false,
+  "source_custody_exported": false,
+  "protected_finalizer_admitted": false,
+  "native_llvm_executed": false,
+  "hardware_observed": false,
+  "grants_artifact_or_launch_authority": false
+}

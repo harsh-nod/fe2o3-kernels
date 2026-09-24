@@ -1,0 +1,70 @@
+{
+  "schema": "fe2o3-physical-entry-actual-cpu-debug-v20-documentation-evidence-v1",
+  "compiler_publication": "dbfb61e7186e5fa37dd9d544d85de29c7a1080eb",
+  "compiler_functional_tree": "f49a2fc98386e443440c5b11cd9f0345f47db063",
+  "compiler_publication_status": "published on both compiler main branches; historical gate snapshots retained",
+  "inert_documentation_only": true,
+  "source_custody_exported": false,
+  "grants_artifact_or_launch_authority": false,
+  "gate": {
+    "source": "logs/phase28-resume-r10-compiler-physical-cpu-debug-actual-source-r2/receipt.json",
+    "source_bytes": 35611,
+    "source_sha256": "cafaaeb2169910469f5d0d2ceb316e297b3003cba19aa206e2f5ee33a9c04cc9",
+    "receipt_retained": false,
+    "summary_is_selected_fields_not_full_receipt": true,
+    "status": "command-passed",
+    "started": "2026-09-24T08:54:14.417Z",
+    "finished": "2026-09-24T08:54:23.237Z",
+    "exit_code": 0,
+    "signal": null,
+    "errors": [],
+    "monitored_repository": "compiler",
+    "source_base_commit": "a2d4fea57411a981b172d904ddfce2356a0ed19e",
+    "source_tree_clean": false,
+    "source_before": {
+      "files": 7477,
+      "bytes": 110417496,
+      "sha256": "b2cee0e6e821ea4945e4da382bfafb41f84c9e5e0084e1129bb167cc8e1807ab"
+    },
+    "source_after": {
+      "files": 7477,
+      "bytes": 110417496,
+      "sha256": "b2cee0e6e821ea4945e4da382bfafb41f84c9e5e0084e1129bb167cc8e1807ab"
+    },
+    "hardware_observed": false,
+    "production_qualified": false
+  },
+  "qualification": {
+    "ignored_loader_sessions": 4,
+    "public_jsonl_sessions": 4,
+    "transactional_refusals": 40,
+    "bootstrap_refusals": 5,
+    "pure_qualifier_tests": 6,
+    "ordinary_cli_tests": 11,
+    "same_actual_source_artifacts": true,
+    "source_custody_recovered_from_bytes": false,
+    "hardware_execution": false,
+    "resumable_execution": false
+  },
+  "source_record": "../physical-entry-checked-v20-20260924/checked-source-ladder.json",
+  "records": [
+    {
+      "name": "report.json",
+      "source": "phase28-physical-cpu-debug-actual-source-r2/report.json",
+      "source_bytes": 33470,
+      "source_sha256": "74f10e8bf82fd91219da6f2453976e9823bce8afdaf44130d3d272d2fe44ed11",
+      "retained_bytes": 33470,
+      "retained_sha256": "74f10e8bf82fd91219da6f2453976e9823bce8afdaf44130d3d272d2fe44ed11",
+      "normalization": "none"
+    }
+  ],
+  "request_example": {
+    "path": "examples/physical-entry-cpu-debug-v20-request.json",
+    "source": "phase28-physical-cpu-debug-actual-source-r2/one-selector0.request.json",
+    "source_bytes": 1610,
+    "source_sha256": "6644593ace688fee8fe714198d9f39717a5093f8ce26b03fd25314c002ddb5a3",
+    "normalization": "none",
+    "kernel": "physical_one",
+    "not_an_output_or_authority": true
+  }
+}
