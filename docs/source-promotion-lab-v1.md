@@ -397,3 +397,11 @@ resume, automatic kernel launch or evidence of a hardware run.
 
 Dated test results and their limits are recorded in the
 [September 22 qualification](source-values-qualification-20260922.md).
+
+## Separate composition-to-helper lab
+
+The [ordered-composition promotion lab](ordered-composition-promotion-v1.md)
+starts with authored ordered regions, explicitly creates a new body-local helper
+candidate, and requires fresh source compilation after typed edits. It is a
+bounded sibling workflow, not a general round trip or qualification of this
+lesson’s historical observations. Its final revision and result rows are pending.

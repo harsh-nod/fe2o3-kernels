@@ -342,3 +342,11 @@ The original milestones in [#280](https://github.com/harsh-nod/fe2o3/issues/280)
 [#281](https://github.com/harsh-nod/fe2o3/issues/281), and
 [#282](https://github.com/harsh-nod/fe2o3/issues/282) remain broader than this draft.
 No milestone or maturity level is promoted by adding these instructions.
+
+## Separate composition-to-helper lab
+
+The [ordered-composition promotion lab](ordered-composition-promotion-v1.md)
+starts with authored ordered regions, explicitly creates a new body-local helper
+candidate, and requires fresh source compilation after typed edits. It is a
+bounded sibling workflow, not a general round trip or qualification of this
+lesson’s historical observations. Its final revision and result rows are pending.

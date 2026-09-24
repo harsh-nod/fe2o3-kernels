@@ -1,0 +1,17 @@
+{
+  "schema": "fe2o3-empty-queue-local-summary-v1",
+  "historical_local_retirement_observed": true,
+  "packet_incapable": true,
+  "valid_packet_publications": 0,
+  "doorbell_stores": 0,
+  "zero_gpu_fd_fence": true,
+  "attached_debugger": null,
+  "loaded_success": null,
+  "event_acknowledged": null,
+  "ttmp_readback": null,
+  "sampler_exclusion": null,
+  "historical_only": true,
+  "source_or_launch_authority": false,
+  "physical_capture": false,
+  "gpu_dispatch": false
+}

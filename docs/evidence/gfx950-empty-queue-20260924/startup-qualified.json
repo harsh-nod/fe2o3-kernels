@@ -1,0 +1,12 @@
+{
+  "schema": "fe2o3-debugger-startup-qualified-v1",
+  "nonce": "976660edb3e3956704d6df888201c83b",
+  "build_pins_sha256": "360aba03fe9bd236b9c6aa2e4585e1f40cfc55c88efe71bffa7bd51fe06ebe9f",
+  "outer_sha256": "f958ac9e4c93358812c535fe29a91206802143f3dff24a4cbcd72a52366fd841",
+  "summary_sha256": "ca0dc3304e5f2f304d2db008bc75d04fdbabbcbe2f94a2208a98ad3600d5c4a3",
+  "closure_review_required": true,
+  "debugger_acceptance": false,
+  "runtime_acceptance": false,
+  "physical_capture": false,
+  "complete_import_history": false
+}

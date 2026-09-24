@@ -97,3 +97,10 @@ successor does not change its behavior or transfer evidence between commands.
 This tutorial adds no browser importer, command launcher, stopped-wave view,
 physical-register visualization, GPU execution evidence, FE2O3_PIN change,
 curriculum maturity promotion or milestone-completion claim.
+
+## Separate empty-queue successor
+
+The [empty-queue lifecycle lesson](gfx950-empty-queue-lifecycle-v1.md) covers a
+later packet-incapable create/retire run, fresh debugger batch startup and
+separate static one-stop artifacts. It does not change this no-queue command or
+its historical limits, and it still contains no actual GPU stop or capture.

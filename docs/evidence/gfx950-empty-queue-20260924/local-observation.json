@@ -1,0 +1,38 @@
+{
+  "schema": "fe2o3-gfx950-empty-queue-local-observation-v1",
+  "profile": "fe2o3.gfx950.empty-queue-local.v1",
+  "status": "local_retired",
+  "process_id": 3914487,
+  "trace": {
+    "last_returned": "local_retired",
+    "native_effects": "local_retired",
+    "zero_gpu_fd_fence": true
+  },
+  "facts": {
+    "artifact_sha256": "d10b592732d91cf4c0d4289890fdd0a5328e84cb8208817eaabac4c62c1a34c6",
+    "artifact_bytes": 5536,
+    "trap_sha256": "4ffea893ee53e018a629c19254855721882444517155251f1f45dd3519bc81fe",
+    "trap_bytes": 1116,
+    "mapped_backing_bytes": "16384",
+    "metadata_retained_bytes": "5744",
+    "closure_sha256": "9bff3c5b2aa163f364c45d3fe6e3106c0662aebb4040bce2e02fa28f56696107",
+    "queue_backing_bytes": "190296064",
+    "projected_native_bytes": "190316544",
+    "projected_logical_bytes": "190327824"
+  },
+  "failure": null,
+  "completion_requires_exit_zero": true,
+  "valid_packet_publications": 0,
+  "doorbell_stores": 0,
+  "invalid_ring_initialization_required_on_create": true,
+  "attached_debugger": null,
+  "loaded_success": null,
+  "event_acknowledged": null,
+  "ttmp_readback": null,
+  "sampler_exclusion": null,
+  "kernel_dispatched": false,
+  "physical_capture": false,
+  "family_cleanup_established": false,
+  "proc_snapshot_proves_general_exclusion": false,
+  "source_or_launch_authority": false
+}
