@@ -57,6 +57,9 @@ gather, Muon update, and the GPT-OSS layer-tile megakernel.
 
 Experimental contributor drafts cover [bounded instruction-program authoring](docs/ordered-program-authoring-v1.md)
 and [recorded logical debugger observations](docs/ordered-program-debugger-v1.md).
+The [complete-body native ABI walkthrough](docs/complete-body-native-abi-v1.md)
+shows bounded assembly rendering, actual O0/O3 ABI checks and their source-ownership limits.
+
 The [gfx950 artifact/device walkthrough](docs/gfx950-checked-artifact-v1.md)
 checks real immutable artifacts against a checked MI350 device without loading
 code, launching a kernel or claiming stopped-register capture.
