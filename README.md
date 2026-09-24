@@ -66,6 +66,10 @@ code, launching a kernel or claiming stopped-register capture.
 The [inactive gfx950 debug preparation walkthrough](docs/gfx950-cold-debug-preparation-v1.md)
 then covers explicit, real VM/mapping preparation in a disposable process,
 without trap/runtime activation, queue creation, dispatch or register capture.
+The separate [no-queue registration walkthrough](docs/gfx950-noqueue-registration-v1.md)
+records actual metadata registration in a supervised standalone process. It
+still creates no queue, dispatch or physical sample and does not establish
+attached-debugger acceptance or cleanup.
 The [complete-body const builder](docs/complete-body-const-builder-v1.md) prepares
 bounded block-graph metadata; it does not yet admit or execute a source kernel.
 The [logical lifetime walkthrough](docs/ordered-role-liveness-v1.md) shows

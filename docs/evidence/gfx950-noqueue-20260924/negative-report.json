@@ -1,0 +1,443 @@
+{
+  "schema": "task-gfx950-noqueue-qualification-v1",
+  "mode": "negative",
+  "status": "passed",
+  "results": [
+    {
+      "name": "ambient-environment",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "process_isolation_snapshot",
+          "reason": "nonisolated_environment"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2749578,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2749578,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47163961",
+        "elapsed_ms": 5004,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/ambient-environment.stdout",
+            "bytes": 403,
+            "sha256": "77f3581960cbf0a1d3cf20fbe89d44ce389575e4df8a62bf05833eacee207a47"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/ambient-environment.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    },
+    {
+      "name": "missing-activation-ack",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "arguments",
+          "reason": "closed_grammar_and_explicit_effect_acknowledgments"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2750036,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2750036,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47164462",
+        "elapsed_ms": 5003,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/missing-activation-ack.stdout",
+            "bytes": 413,
+            "sha256": "f0228c6649337642645eeed61c97119ad86e0fa6a355741deca1b656bfb81b3d"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/missing-activation-ack.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    },
+    {
+      "name": "artifact-size",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "artifact_file",
+          "reason": "expected_size_mismatch"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2751947,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2751947,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47164962",
+        "elapsed_ms": 5004,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/artifact-size.stdout",
+            "bytes": 389,
+            "sha256": "4e4c69ab20aee2cb42797a6d1bd3e017f088702539cb0ba3a63af18b896e7de1"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/artifact-size.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    },
+    {
+      "name": "artifact-digest",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "artifact_pin",
+          "reason": "sha256_mismatch"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2752454,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2752454,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47165462",
+        "elapsed_ms": 5004,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/artifact-digest.stdout",
+            "bytes": 381,
+            "sha256": "30e8f2cc7d9136ece43768436c4508ce1e0bc4cd8b2b66cd1e6d1a34cf39179f"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/artifact-digest.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    },
+    {
+      "name": "kernel-selection",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "artifact_admission",
+          "reason": "normal_kernel_selection_refused"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2752920,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2752920,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47165963",
+        "elapsed_ms": 5005,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/kernel-selection.stdout",
+            "bytes": 403,
+            "sha256": "870ccaefbc0cca7e5eff765f8e12edafbb814b10de9ccc0c7ce5d462d1024d29"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/kernel-selection.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    },
+    {
+      "name": "node-selection",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "device_selection",
+          "reason": "exact_identity_or_profile_mismatch"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2753502,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2753502,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47166463",
+        "elapsed_ms": 5025,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/node-selection.stdout",
+            "bytes": 404,
+            "sha256": "8249d3c71204f3eada9dc295dde280a8a38c29ffd5dfddd9cdc357929084e057"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/node-selection.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    },
+    {
+      "name": "gpu-selection",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "device_selection",
+          "reason": "exact_identity_or_profile_mismatch"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2753987,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2753987,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47166966",
+        "elapsed_ms": 5025,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/gpu-selection.stdout",
+            "bytes": 404,
+            "sha256": "8249d3c71204f3eada9dc295dde280a8a38c29ffd5dfddd9cdc357929084e057"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/gpu-selection.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    },
+    {
+      "name": "profile-selection",
+      "result": {
+        "failure": {
+          "native_effects": "not_attempted",
+          "phase": "device_selection",
+          "reason": "exact_identity_or_profile_mismatch"
+        },
+        "schema": "diagnostic-gfx950-debug-metadata-noqueue-v1",
+        "status": "refused",
+        "usage": "observe_gfx950_debug_metadata_noqueue_v1 --allow-vm-mapping --retain-until-process-exit --acknowledge-isolated-noqueue-activation HSACO BYTES SHA256 KERNEL NODE UNIQUE_ID GPU_ID DEVICE_PROFILE_SHA256"
+      },
+      "process": {
+        "code": 1,
+        "signal": null,
+        "reason": "nonzero direct exit",
+        "direct_exit": {
+          "code": 1,
+          "signal": null
+        },
+        "close_event": {
+          "code": 1,
+          "signal": null
+        },
+        "drain_abandoned": false,
+        "signals": [
+          {
+            "signal": "SIGTERM",
+            "child_pid": 2754581,
+            "result": "group_absent"
+          },
+          {
+            "signal": "SIGKILL",
+            "child_pid": 2754581,
+            "result": "group_absent"
+          }
+        ],
+        "leader_start_ticks": "47167468",
+        "elapsed_ms": 5025,
+        "streams": {
+          "stdout": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/profile-selection.stdout",
+            "bytes": 404,
+            "sha256": "8249d3c71204f3eada9dc295dde280a8a38c29ffd5dfddd9cdc357929084e057"
+          },
+          "stderr": {
+            "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-gfx950-noqueue-negative-r1/profile-selection.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      }
+    }
+  ],
+  "boundaries": {
+    "registration_only": false,
+    "queue_or_dispatch": false,
+    "physical_capture": false,
+    "trap_execution_qualified": false,
+    "cleanup_acknowledged": false,
+    "source_or_artifact_authority": false,
+    "direct_children_reaped": true,
+    "descendant_quiescence_proved": false,
+    "general_external_injection_exclusion_proved": false
+  },
+  "supervision": "fresh exec, no inherited GPU FDs, exact reviewed standalone/dependencies, empty environment, bounded owned process group"
+}
