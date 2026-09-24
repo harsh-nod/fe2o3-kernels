@@ -119,3 +119,11 @@ actual dispatch, same-client current GPU stop, and bounded physical read/capture
 remain separate work. No queue publication, protected artifact admission,
 curriculum maturity or milestone acceptance is promoted. **V4 remains open**;
 original accepted exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+## Separate one-stop CPU-only continuation
+
+The [one-stop ownership and CPU checks](gfx950-one-stop-cpu-v1.md) explain the
+new packet-capable target without running it. That separate CPU/static evidence
+does not change this historical packet-incapable empty-queue result, transfer
+native acceptance, or supply a native replay command. An actual same-client GPU
+stop and physical capture remain unqualified.

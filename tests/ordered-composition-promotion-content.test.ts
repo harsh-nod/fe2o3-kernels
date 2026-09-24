@@ -85,17 +85,37 @@ describe("bounded composition source-promotion lesson", () => {
   });
 
   it("pins separate historical results without closing milestone exits", () => {
-    const pin = "634ec52439fb6ae8329d0cc6ba52be41fdee3739";
+    const pin = "a9b636ec4475a15e13187d78d53692d7e6b834e4";
     expect(lesson).toContain("Compiler implementation commit: `" + pin + "`.");
     expect(lesson).toContain("/blob/" + pin + "/docs/ordered-composition-qualification-20260924.md");
     expect(lesson).not.toContain("pending immutable");
     expect(lesson).toContain("static native matrix was incomplete");
-    expect(lesson).toContain("no GPU execution is");
+    expect(lesson).toContain("no GPU execution is claimed");
     for (const sha of ["2108c7a836295fc3d554b08b360eec8fa091983d016d897751f106f1d56122bf", "993251eaa4307c1ebe842c79727f09eec59721917eb557d79c7a7602ec44b700", "7f4852d86291905c11c4fc93805bfdb94301e199970a0c5e2b6fe144db706579", "b1d52c1ca5cc7a2a5a9b8784f70624768b8c76b3ecc51db9a4967ba468b23805"]) expect(lesson).toContain(sha);
+    for (const sha of ["5cbd40515467b3648420bc30fa1b52ab36508678fdc0bf7a39bd002e5f276daa", "7b0c6f2fd5f9039adb8d417ae656e245ee2dd6a214bb42e90b9bf6f12400f329", "19d99e0aa43d76e07946c46c947eeb08c01bc200c6e1c3058e07763262e848a8", "bf029c7ba32601ffd461895bf5fa479dc8863003029242da97289c11ec088434"]) expect(lesson).toContain(sha);
+    expect(lesson).toContain("Historical ordinary normal path R6");
+    expect(lesson).toContain("Fresh ordinary normal path R7");
+    expect(lesson).toContain("36 real rustc sessions on the merged source");
+    expect(lesson).toContain("Static native R7 / outer actual-R4");
     expect(lesson).toContain("No browser source write, new UI route");
     expect(lesson).toContain("M2/M3/M6/U4");
     expect(lesson).toContain("6/18");
     expect(lesson).toContain("no `FE2O3_PIN` or maturity level is changed");
+  });
+
+  it("keeps the fresh static pass distinct from the failed history and promoted-source authority", () => {
+    for (const phrase of [
+      "historical R6 static native matrix was incomplete", "13 of 14 cases",
+      "exit-2 failure remains evidence", "fresh R7 matrix passed **14/14**",
+      "two actual decoded direct-call sites", "one unique helper graph edge",
+      "252 metadata / 154 decoded",
+      "do not prove physical helper argument/result ABI transport",
+      "whole-kernel functional equivalence", "runtime host-buffer",
+      "seven original finite source profiles, not freshly",
+      "not qualify\nan arbitrary new request or user run",
+      "Freshly promoted source has not yet passed its own normal/native",
+    ]) expect(lesson).toContain(phrase);
+    expect(lesson).not.toContain("neither is asserted passed here");
   });
 
   it("adds only sibling links while preserving each previous lesson byte for byte", () => {

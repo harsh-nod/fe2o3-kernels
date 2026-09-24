@@ -6,9 +6,10 @@ explicit source-edit workflow. It is separate from the
 [scalar const-u32 helper materializer](const-u32-helper-promotion-v1.md).
 Their earlier observations do not qualify this new path.
 
-Compiler implementation commit: `634ec52439fb6ae8329d0cc6ba52be41fdee3739`.
+Compiler implementation commit: `a9b636ec4475a15e13187d78d53692d7e6b834e4`.
 Recorded qualification: **source publisher, public library driver, actual extractor
-binary and ordinary finite-grid LLVM/handoff passed their separate gates**.
+binary, ordinary finite-grid LLVM/handoff and the latest ordinary static native
+matrix passed their separate gates**.
 The source copies below are exact fixtures; their hashes alone are not receipts.
 No browser source write, new UI route or automatic compiler command is added.
 
@@ -168,7 +169,9 @@ The extractor binary exposes the same explicit action via
 `FE2O3_EXTRACT_DIAGNOSTIC_ORDERED_COMPOSITION_DIRECTORY_V1`. Merely selecting
 diagnostics does not write source. Empty requests, a request in another output
 mode and conflicting diagnostic selectors refuse. **Library-driver and actual
-extractor-binary qualifications are separate**; neither is asserted passed here.
+extractor-binary qualifications are separate**. Their historical public-library R1
+and extractor-CLI R2 gates passed, as recorded below; those results do not qualify
+an arbitrary new request or user run.
 
 ## 5. Choose an intentional typed edit
 
@@ -254,7 +257,7 @@ negative cases, from the compiler fixture directory at the implementation commit
 | `examples/ordered-composition/composition.rs` | 5334 | `03f54f05cd0f0666a1740dbd2fbaae1e705ede2511fd7349e22be0122d238915` |
 
 These source hashes establish retained bytes only. The dated
-[compiler qualification report](https://github.com/harsh-nod/fe2o3/blob/634ec52439fb6ae8329d0cc6ba52be41fdee3739/docs/ordered-composition-qualification-20260924.md)
+[compiler qualification report](https://github.com/harsh-nod/fe2o3/blob/a9b636ec4475a15e13187d78d53692d7e6b834e4/docs/ordered-composition-qualification-20260924.md)
 records the separate producers and retained evidence. This lesson does not embed
 the raw root receipts or confer authority through their hashes.
 
@@ -263,20 +266,38 @@ the raw root receipts or confer authority through their hashes.
 | Source publisher R7 | 9 sessions, 3 publications, 2 fresh compilations and 128 CPU invocations | `2108c7a836295fc3d554b08b360eec8fa091983d016d897751f106f1d56122bf` |
 | Public library action R1 | 17 children, 3 fresh callbacks and 96 CPU invocations | `993251eaa4307c1ebe842c79727f09eec59721917eb557d79c7a7602ec44b700` |
 | Actual extractor CLI R2 | 17 binary invocations plus 3 fresh callbacks, 96 CPU invocations | `7f4852d86291905c11c4fc93805bfdb94301e199970a0c5e2b6fe144db706579` |
-| Ordinary normal path R6 | 36 real rustc sessions, 7 finite variants, 21 descriptor mutations | `b1d52c1ca5cc7a2a5a9b8784f70624768b8c76b3ecc51db9a4967ba468b23805` |
+| Historical ordinary normal path R6 | 36 real rustc sessions, 7 finite variants, 21 descriptor mutations | `b1d52c1ca5cc7a2a5a9b8784f70624768b8c76b3ecc51db9a4967ba468b23805` |
+| Fresh ordinary normal path R7 | 36 real rustc sessions on the merged source: 7 finite shapes × observation/LLVM/handoff, 7 dynamic-launch and 8 malformed-source refusals; 21 descriptor mutations | `5cbd40515467b3648420bc30fa1b52ab36508678fdc0bf7a39bd002e5f276daa` |
+| Static native R7 / outer actual-R4 | 14/14 ordinary LLVM/LLD/MC cases; 252 metadata and 154 decoded-observation mutation refusals | `7b0c6f2fd5f9039adb8d417ae656e245ee2dd6a214bb42e90b9bf6f12400f329` |
 
-Fresh callback identities were observed live; separately retained fresh
-canonical files are not claimed. These are historical gates on their recorded
+For the publisher/library/CLI fresh promoted callbacks, identities were observed
+live; separately retained fresh promoted canonical files are not claimed.
+These are historical gates on their recorded
 source snapshots, not a claim that every gate used the final publication commit.
 The merged-source regression also passed; its boundaries are recorded in the
-[implementation status](https://github.com/harsh-nod/fe2o3/blob/634ec52439fb6ae8329d0cc6ba52be41fdee3739/docs/assembly-authoring-implementation-status.md).
+[implementation status](https://github.com/harsh-nod/fe2o3/blob/a9b636ec4475a15e13187d78d53692d7e6b834e4/docs/assembly-authoring-implementation-status.md).
 
-The static native matrix was incomplete: 13 of 14 cases joined authored
-instruction intervals, while two calls to one helper at O0 hit a duplicate-edge
-refusal. That failed gate remains evidence, not a pass. Freshly promoted source
-has not yet passed a fresh ordinary native matrix. Normal LLVM/handoff, static
-native analysis and hardware execution remain separate; **no GPU execution is
-claimed by this lesson**.
+The historical R6 static native matrix was incomplete: 13 of 14 cases joined
+authored instruction intervals, while two calls to one helper at O0 hit a
+duplicate-edge refusal. Its exit-2 failure remains evidence, not a retroactive
+pass. The retained incomplete report has SHA-256
+`bf029c7ba32601ffd461895bf5fa479dc8863003029242da97289c11ec088434`.
+
+The fresh R7 matrix passed **14/14** cases with a newly built repeated-call
+observer. The two-calls/O0 case now retains two actual decoded direct-call sites
+and one unique helper graph edge. Each case passed 18 metadata and 11 decoded
+mutation refusals: **252 metadata / 154 decoded** in total. The completed R7
+report has SHA-256
+`19d99e0aa43d76e07946c46c947eeb08c01bc200c6e1c3058e07763262e848a8`;
+its completed outer actual-R4 receipt is in the table above.
+
+These static checks do not prove physical helper argument/result ABI transport,
+whole-kernel functional equivalence, dynamic execution order or runtime host-buffer
+conditions. These are the seven original finite source profiles, not freshly
+promoted candidates. Freshly promoted source has not yet passed its own normal/native
+ladder in the evidence recorded here. Normal LLVM/handoff, static native analysis
+and hardware execution remain separate; **no GPU execution is claimed by this
+lesson**.
 
 This is a bounded authoring/composition/source-edit slice. M2/M3/M6/U4 and the
 broader milestone exits are not closed by this lesson. Accepted exits remain
