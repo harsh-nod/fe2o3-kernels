@@ -1,5 +1,10 @@
 # Follow a tiled region without losing its source owner
 
+> Historical checkpoint: the results below belong to compiler `1b2e5dd364e63c5d107115f379e9c21a6a84236e`.
+> The later [same-owner BF16 normal continuation](tiled-region-normal-continuation-v1.md)
+> qualifies a separate two-session contributor gate at `2af2a8d7dc75d8edac3da50325c91ea1911f8324`;
+> it does not change the earlier source-only, numerical or native claims.
+
 This contributor checkpoint separates three boundaries: source-owned inspection,
 logical CPU behavior and debugger/native execution. The first P0 BF16 inspection
 path now passes its genuine four-session source core. Control-flow shape
