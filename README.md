@@ -63,6 +63,9 @@ shows bounded assembly rendering, actual O0/O3 ABI checks and their source-owner
 The [gfx950 artifact/device walkthrough](docs/gfx950-checked-artifact-v1.md)
 checks real immutable artifacts against a checked MI350 device without loading
 code, launching a kernel or claiming stopped-register capture.
+The [inactive gfx950 debug preparation walkthrough](docs/gfx950-cold-debug-preparation-v1.md)
+then covers explicit, real VM/mapping preparation in a disposable process,
+without trap/runtime activation, queue creation, dispatch or register capture.
 The [complete-body const builder](docs/complete-body-const-builder-v1.md) prepares
 bounded block-graph metadata; it does not yet admit or execute a source kernel.
 The [logical lifetime walkthrough](docs/ordered-role-liveness-v1.md) shows
