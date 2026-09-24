@@ -80,3 +80,7 @@ or importer is provided here. For usable logical CPU recordings, see the
 not gfx950 hardware samples. **V4 remains open** and accepted exits remain
 **M1/V1/V2/U1/U2/U3 (6/18)**. No global `FE2O3_PIN`, maturity level or support
 claim changes.
+
+The [source-owned tiled inspection checkpoint](tiled-region-inspection-checkpoint-v1.md)
+separates the newer source-role, static transport and disabled debugger-package
+results from still-unqualified tiled and live-GPU workflows.

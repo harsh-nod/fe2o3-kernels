@@ -375,3 +375,7 @@ lesson**.
 This is a bounded authoring/composition/source-edit slice. M2/M3/M6/U4 and the
 broader milestone exits are not closed by this lesson. Accepted exits remain
 **6/18**; no `FE2O3_PIN` or maturity level is changed.
+
+The [source-owned tiled inspection checkpoint](tiled-region-inspection-checkpoint-v1.md)
+separates the newer source-role, static transport and disabled debugger-package
+results from still-unqualified tiled and live-GPU workflows.
