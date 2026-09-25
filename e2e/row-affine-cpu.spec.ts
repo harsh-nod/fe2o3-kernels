@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 
 const source = readFileSync(new URL("../examples/row_affine_u32.rs", import.meta.url), "utf8");
 const revision = "2f4adb9f41317bfa647b0c96d8f12b13d0830aba";
-const qualificationRevision = "2f4adb9f41317bfa647b0c96d8f12b13d0830aba";
+const qualificationRevision = "13e424bdef9f0cb9d0a073c86d8bebc8f190741a";
 const command = "cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_row_affine_source_matches_oracle_and_replay -- --ignored --exact --test-threads=1";
 const paths = [
   "examples/workgroup_sync_v1/README.md",

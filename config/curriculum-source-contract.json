@@ -1,6 +1,6 @@
 {
-  "commit": "caa19de7a0da582f7be6c0db2486b25a2d7690fd",
-  "tree": "8c4bfabcf7a77e9b935ffc940a27e2a209de5719",
+  "commit": "8bb1c25a3aa8df23c7fff1e2f24e3bc9f286c2a7",
+  "tree": "553f7137ff78231fd027573917231aa6c39750e8",
   "path": "config/tutorial-kernel-manifest-v1.json",
-  "sha256": "482deea04836606bdaeccc24cd20ddfabd1d419e292be3c014aa6060e8625a04"
+  "sha256": "8ac095b8759378457f67ee25aea822b71ffd3affd1cddb6f78fc95a46bddf70f"
 }

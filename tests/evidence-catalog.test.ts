@@ -281,7 +281,7 @@ describe("evidence source digest scopes", () => {
     expect(tab.sourceFragments).toBeUndefined();
     const claim = lesson.claims.find((candidate) => candidate.label === "SIMT row affine reduction and CPU replay")!;
     expect(claim.reference).toMatchObject({
-      commit: "2f4adb9f41317bfa647b0c96d8f12b13d0830aba", tree: "41addad381d55cca997fda1d911c0e4b92585143",
+      commit: "13e424bdef9f0cb9d0a073c86d8bebc8f190741a", tree: "ce5f8f94072d63ecb75cbacc38ea9816dcee16e7",
       commands: ["cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_row_affine_source_matches_oracle_and_replay -- --ignored --exact --test-threads=1"],
       sourcePaths: ["examples/workgroup_sync_v1/README.md","examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs","examples/workgroup_sync_v1/src/row_affine_oracle.rs","examples/workgroup_sync_v1/tests/row_affine.rs","crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs","crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1/row_affine_v1.rs","scripts/ci-local.sh","scripts/tests/ci-local-test-gate.sh"],
     });

@@ -646,8 +646,8 @@ const cpuSimulation: Lesson = {
       detail:
         "The ordinary Rust SIMT row kernel exports through the production compiler as authority-free Bundle V5. An independent u128 oracle checks 86 cases, including masked tails, empty rows, strided padding, wrapping arithmetic and output canaries. Both gfx942 and gfx950 CPU profiles run two requested scheduling modes, with execution and exact persisted replay: 688 successful runs, 20 simulator refusal checks and 2 stale schedule-binding checks. The curriculum binds this exact SIMT source; tile and mixed variants, native artifact and generated-host admission, and direct-KFD GPU validation remain pending on gfx942/mi300x and gfx950/mi350. This gate does not qualify row Trace V2 or debugger CLI execution, authenticate protected compiler execution, exhaust schedules, or predict performance.",
       reference: qualificationReference(
-        "2f4adb9f41317bfa647b0c96d8f12b13d0830aba",
-        "41addad381d55cca997fda1d911c0e4b92585143",
+        "13e424bdef9f0cb9d0a073c86d8bebc8f190741a",
+        "ce5f8f94072d63ecb75cbacc38ea9816dcee16e7",
         ["cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_row_affine_source_matches_oracle_and_replay -- --ignored --exact --test-threads=1"],
         [
           "examples/workgroup_sync_v1/README.md",
