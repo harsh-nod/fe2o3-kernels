@@ -3,6 +3,7 @@ import { currentState } from "./current-state";
 import { semanticMilestoneLessonBoundary } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
 import cpuSimulationSource from "../../examples/cpu_simulation_source.rs?raw";
+import rowAffineSource from "../../examples/row_affine_u32.rs?raw";
 import aggregateSimulationRequest from "../../examples/aggregate_simulation_request_v1.json?raw";
 import sourceSimulationRequest from "../../examples/source_simulation_request.json?raw";
 import sourceSimulationResult from "../../examples/source_simulation_result.json?raw";
@@ -639,6 +640,31 @@ const cpuSimulation: Lesson = {
         },
       ),
     },
+    {
+      kind: "runnable-now",
+      label: "SIMT row affine reduction and CPU replay",
+      detail:
+        "The ordinary Rust SIMT row kernel exports through the production compiler as authority-free Bundle V5. An independent u128 oracle checks 86 cases, including masked tails, empty rows, strided padding, wrapping arithmetic and output canaries. Both gfx942 and gfx950 CPU profiles run two requested scheduling modes, with execution and exact persisted replay: 688 successful runs, 20 simulator refusal checks and 2 stale schedule-binding checks. The curriculum binds this exact SIMT source; tile and mixed variants, native artifact and generated-host admission, and direct-KFD GPU validation remain pending on gfx942/mi300x and gfx950/mi350. This gate does not qualify row Trace V2 or debugger CLI execution, authenticate protected compiler execution, exhaust schedules, or predict performance.",
+      reference: qualificationReference(
+        "2f4adb9f41317bfa647b0c96d8f12b13d0830aba",
+        "41addad381d55cca997fda1d911c0e4b92585143",
+        ["cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_row_affine_source_matches_oracle_and_replay -- --ignored --exact --test-threads=1"],
+        [
+          "examples/workgroup_sync_v1/README.md",
+          "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
+          "examples/workgroup_sync_v1/src/row_affine_oracle.rs",
+          "examples/workgroup_sync_v1/tests/row_affine.rs",
+          "crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs",
+          "crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1/row_affine_v1.rs",
+          "scripts/ci-local.sh",
+          "scripts/tests/ci-local-test-gate.sh",
+        ],
+        {
+          target: "gfx942/gfx950 CPU semantic profiles; GPU validation pending",
+          note: "Qualification covers CPU observation only, not completed SIMT/tile pairs or hardware evidence.",
+        },
+      ),
+    },
   ],
   sections: [
     narrativeSection("cpu-semantic-simulation/pipeline"),
@@ -938,6 +964,17 @@ Portable workgroup reductions at 9176b9c27
       explanatory: true,
       notice:
         "These are assertions from the pinned production integration and qualification contracts, not a retained live hardware capture.",
+    },
+    {
+      kind: "kernel",
+      label: "SIMT row",
+      language: "rust",
+      code: rowAffineSource,
+      sourcePath: "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
+      sourceCommit: "2f4adb9f41317bfa647b0c96d8f12b13d0830aba",
+      sourceSha256: "07adc0c50f24e51cb3d6c6bcb6cc1c8c6ff2a772c45ee2153435601eca2f39df",
+      sourceDigestScope: "file",
+      notice: "Exact SIMT source tested through Bundle V5 CPU execution and replay. Tile/mixed implementations and native/KFD GPU validation remain pending.",
     },
   ],
   diagram: "simulation",

@@ -71,7 +71,7 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(12);
+    expect(wholeFileTabs).toHaveLength(13);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
       "examples/flash_attention_general_v1/src/kernel.rs",
@@ -85,6 +85,7 @@ describe("evidence source digest scopes", () => {
       "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
       "examples/moe_grouped_expert_general_v1/src/kernel.rs",
       "examples/tiled_gemm_general_v1/src/kernel.rs",
+      "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
     ]);
     for (const { lessonId, tab } of wholeFileTabs) {
       const source = tabEvidenceSource(lessonId, tab)!;
@@ -264,6 +265,37 @@ describe("evidence source digest scopes", () => {
         "crates/fe2o3-semantic-import/tests/fixtures/rocprofv3-current-schema-fixture-v1.txt",
       ]),
     );
+  });
+
+  it("binds the SIMT row source without claiming tile or GPU qualification", () => {
+    const lesson = lessons.find((candidate) => candidate.id === "cpu-semantic-simulation")!;
+    const tab = lesson.tabs[6];
+    expect(tab).toMatchObject({
+      label: "SIMT row", kind: "kernel", sourceDigestScope: "file",
+      sourceCommit: "2f4adb9f41317bfa647b0c96d8f12b13d0830aba",
+      sourcePath: "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
+      sourceSha256: "07adc0c50f24e51cb3d6c6bcb6cc1c8c6ff2a772c45ee2153435601eca2f39df",
+    });
+    expect(Buffer.byteLength(tab.code)).toBe(2668);
+    expect(tab.code.indexOf("row_affine_sum_u32_v1")).toBe(885);
+    expect(tab.sourceFragments).toBeUndefined();
+    const claim = lesson.claims.find((candidate) => candidate.label === "SIMT row affine reduction and CPU replay")!;
+    expect(claim.reference).toMatchObject({
+      commit: "2f4adb9f41317bfa647b0c96d8f12b13d0830aba", tree: "41addad381d55cca997fda1d911c0e4b92585143",
+      commands: ["cargo test --locked -p rustc-codegen-fe2o3 --test production_neutral_workgroup_reduce_driver_v1 ordinary_row_affine_source_matches_oracle_and_replay -- --ignored --exact --test-threads=1"],
+      sourcePaths: ["examples/workgroup_sync_v1/README.md","examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs","examples/workgroup_sync_v1/src/row_affine_oracle.rs","examples/workgroup_sync_v1/tests/row_affine.rs","crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1.rs","crates/rustc-codegen-fe2o3/tests/production_neutral_workgroup_reduce_driver_v1/row_affine_v1.rs","scripts/ci-local.sh","scripts/tests/ci-local-test-gate.sh"],
+    });
+    expect(claim.detail).toContain("688 successful runs");
+    expect(claim.detail).toContain("20 simulator refusal checks and 2 stale schedule-binding checks");
+    expect(claim.detail).toContain("tile and mixed variants");
+    expect(claim.detail).toContain("gfx942/mi300x and gfx950/mi350");
+    expect(claim.detail).toContain("does not qualify row Trace V2 or debugger CLI execution");
+    expect(claim.detail).toContain("or predict performance");
+    expect(evidenceCatalog.gitObjects).toContainEqual(expect.objectContaining({
+      label: "cpu-semantic-simulation: SIMT row affine reduction and CPU replay",
+      commit: claim.reference!.commit, tree: claim.reference!.tree,
+      sourcePaths: claim.reference!.sourcePaths,
+    }));
   });
 
   it("catalogs the exact Scan Bundle V5 qualification sources", () => {
