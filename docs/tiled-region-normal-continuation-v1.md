@@ -139,3 +139,9 @@ coverage, tiled editing and fresh edited-tile qualification remain unfinished.
 
 Accepted exits remain **M1/V1/V2/U1/U2/U3 (6/18)**; **M2/U4/V4 remain open**.
 This extension changes no `FE2O3_PIN`, live route or lab maturity.
+
+## Later source-CPU observation (2026-09-25)
+
+The separate [genuine Rust-source BF16 CPU tutorial](bf16-source-cpu-observation-v1.md)
+follows the unchanged graph into bounded numerical CPU observation. It does not change this historical checkpoint
+or turn its earlier numerical/native statements into results of the later run.

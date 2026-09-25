@@ -103,3 +103,9 @@ overlap focused configurations and belong to their exact recorded snapshots.
 
 Accepted exits remain **M1/V1/V2/U1/U2/U3 (6/18)**. M2/U4/V4 remain open.
 No global FE2O3_PIN, lab maturity, live route, GPU result or support claim changes.
+
+## Later source-CPU observation (2026-09-25)
+
+The separate [genuine Rust-source BF16 CPU tutorial](bf16-source-cpu-observation-v1.md)
+follows the unchanged graph into bounded numerical CPU observation. It does not change this historical checkpoint
+or turn its earlier numerical/native statements into results of the later run.
