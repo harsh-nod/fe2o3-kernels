@@ -366,3 +366,100 @@ The CLI binary gate is not the full CLI integration suite; 189 backend tests
 and five CLI binary tests remained ignored, apart from the separately selected
 genuine source test. Broad accepted exits remain **6/18**. No global compiler
 pin, route maturity or milestone acceptance is changed by this appendix.
+
+## Later postflight candidate and retained source preparation (2026-09-26)
+
+[Compiler checkpoint 84e5026188e8a41ba5118334dc75bb2e8618613d](https://github.com/harsh-nod/fe2o3/blob/84e5026188e8a41ba5118334dc75bb2e8618613d/docs/bf16-helper-postflight-preparation-qualification-20260926.md)
+qualifies the next CPU/source boundary. Unlike the R8 in-Final proxy above,
+the new borrowed candidate is observed only after the enclosing preparation,
+canonical-facts and all three dense-pass postflights succeed. The R19, routing
+and R8 sections remain historical records; this appendix does not rewrite
+their claims or move the site's global compiler pin.
+
+### Check the original floor before trusting a prepared result
+
+The strict entry scope records the true incoming storage before reserving
+generic callback/result frames. Its retained owner/capture/inventory requirement
+is compared with that original floor: a large callback cannot hide a one-byte
+incoming deficit. This protects the real owner and original ledger before
+nested source queries or preparation begin.
+
+The actual Final payload remains private and inert until all enclosing
+postflights finish. The candidate then rejoins the same immutable owner,
+inventory, source Call, canonical rows and function-qualified Return mappings.
+A fresh checked source query also completes before the external observer.
+An earlier pass result or a detached tensor description cannot stand in for
+that completed path.
+
+The separately borrowed rich source view retains scalar-definition tables and
+argument/allocation provenance alongside enum-payload dominance, allocations
+and constants. Tables remain inside the callback; the old four-input
+preparation API preserves its algorithm charge sequence and original drop
+boundary. Callbacks remain higher-ranked and return only Copy + 'static values.
+Checks retain original ledger identity, protected storage, monotone work/peak,
+sticky denials, callback surplus and owned-only refunds. These are logical
+resource checks, not native allocator or RSS enforcement.
+
+### Read the fresh R10 qualification
+
+The strict entry change passed 1,861 lowerer library tests. The combined
+candidate/rich-source gate passed 2,446 backend tests, backend/extractor build
+and the explicitly selected genuine parent test. The default backend suite
+left 189 ignored tests unrun; the genuine parent was selected separately.
+
+The parent starts five fresh Rust source sessions: Identity, Swap01, wrong
+source launch, observer error and observer panic. Identity and Swap01 together
+retain 36 positive numerical runs and 32 request refusals, followed by two
+unchanged normal-route refusals. The wrong-launch session retains its source
+refusal; error/panic sessions retain their callback-failure controls. Actual
+compiler-produced owners and the original exact work/storage/floor probes
+remain in use. Synthetic fixtures do not substitute for those source sessions.
+
+A lossless comparison against R8 preserves JSON key/type distinctions and
+number tokens. Numerics, masks, refusals, storage and peak storage are unchanged.
+The 1,632,943,151-byte logical peak remains below the unchanged 2 GiB limit.
+Only generation paths, dependency digests/independently rehashed byte totals
+and uniform per-observation cumulative-work increments changed:
+50,688,702 for Identity/error/panic and 50,688,837 for Swap01.
+Those increments include explicitly prepaid negative-control ledgers; they
+are not a kernel runtime performance measurement. The dependency closure
+remains 459 files, now 352,670,356 bytes, 182 bytes larger than R8.
+
+Retained R10 evidence:
+
+- Entry lowerer receipt SHA-256:
+  `e3bdd2053ffa0edcadd4cbca9ed230451393e5a7d2887393c89cb06a3da9eca1`.
+- Combined backend/build/genuine receipt SHA-256:
+  `45d7b9a1545a133196d9052eef819ec8e1e3eb4f6b34b75025a944b123525189`.
+- Fresh observation: 281,064 bytes, SHA-256
+  `e6a0a0813150c834b67c0553b77b5c0baeca7a4bda5503acbe559858d5b3102d`.
+- Independent lossless comparison: 9,913 bytes, SHA-256
+  `5156aae6d0dd5430844af997dc510eb25eb464c09b073bee6269f88280d5c5a5`.
+
+The first combined R9 attempt passed its backend tests but failed a stale
+nested-refund expectation. The damaged inner candidate reservation must remain
+charged, while an intact outer entry scope may refund only its own reservation.
+The corrected test measures the actual entry frame using paired direct/wrapped
+source refusals with the same callback type, rather than guessing ABI bytes.
+Its floor-erosion check now asserts that exact subtraction and unchanged
+ledger/work/peak/denials. Two additional bounded probes are prepaid on the
+original account; no phase or per-probe limit was raised. The failed R9 attempt
+remains retained, not relabeled as a success.
+
+### Do not promote a checked helper candidate into a complete kernel
+
+This remains model/proxy qualification, not a complete-root recipe or an
+admission token. At this R10 checkpoint, separately metered Option and induction
+preparation are not qualified. Complete root integration must also retain
+assertion/CFG facts, consume actual final effects without an unmetered legacy
+rerun, and map the proxy to its generated ranked coordinate. Real input reads,
+the Option-guarded output store, bounds and control flow must remain attached;
+one tensor row cannot replace them.
+
+Full source-to-ranked correspondence/attachment and formal/target/LLVM
+continuation remain open. Normal helper compilation still deliberately
+refuses; nominal-pending, RawEmpty and attachment guards are unchanged.
+This adds no ordinary admission, native helper execution, GPU launch,
+physical register capture or public activation. It supplies no new live route
+or global compiler pin. Broad accepted exits remain
+**M1/V1/V2/U1/U2/U3 (6/18)**; this appendix closes no milestone.
