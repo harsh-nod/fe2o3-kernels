@@ -109,6 +109,11 @@ The [helper-frame source-value walkthrough](docs/resource-helper-source-values-v
 uses a real CPU recording to keep caller/helper frames, source-variable pages,
 SSA rows and reverse/repeat checkpoints distinct.
 
+The [genuine Rust BF16 helper CPU tutorial](docs/bf16-helper-source-cpu-observation-v1.md)
+follows a source-owned helper through two CPU frames, exact matrix values,
+return permutations and output canaries. It is a contributor qualification
+workflow, not normal helper compilation or GPU execution.
+
 The separate [live local CPU debugger walkthrough](docs/live-cpu-debugger-v1.md)
 describes an opt-in connection to one fixed, normal-source bundle through an
 owner-started loopback bridge. Its dated qualification separates ordinary-Rust
