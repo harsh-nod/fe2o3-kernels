@@ -664,3 +664,97 @@ need one complete unverified root recipe and mandatory verification.
 There is no new public source-custody or ready-token authority, detached-input
 promotion, nominal LLVM continuation, GPU launch or debugger capture.
 Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Actual reference origins: preserve the source-call association
+
+The [source-origin checkpoint](https://github.com/harsh-nod/fe2o3/blob/e9f8ff94ca3b5664d4a9c8e4c15a8c117dfe310d/docs/bf16-actual-root-reference-origins-qualification-20260926.md)
+continues the same private actual-input connector. This is not a new authoring
+API, executable assembly syntax or launch command. The global compiler pin and
+route maturity are unchanged, and the complete nominal-helper route remains refused.
+
+#### Follow a reference, not a count
+
+The real fixture's out.get_mut(thread::index_1d()) creates an accessor result.
+A later conditional store uses a reference obtained from that result. The new
+stage retains which actual source call produced each guard and propagates that
+origin through the source's reference-flow graph.
+
+This non-executable sketch separates source identities from later use sites:
+
+~~~text
+same retained source/input owner and original ledger
+  -> existing prefix, index, cached view and guarded-access template
+  -> source Call ordinal + block + callee + destination + guard index
+  -> shared-borrow seeds first, then checked-call seeds
+  -> original ordered reference-origin FIFO
+  -> later dereference/store use-site projection is still pending
+~~~
+
+The source-call ordinal counts all Call terminators, not only accessors.
+An intervening unrelated call advances the source ordinal without advancing
+the guard's vector index. Counts, copied inputs and equal guard payloads are not source
+custody. Associations and origin rows stay in the same pending assembly rather
+than being reconstructed or spliced from another owner.
+
+An accessor's source block is not the later store's semantic use site.
+semantic_site remains None, and there is no operation insertion cursor here.
+The next stage must project actual statement/terminator memory uses; complete
+bounds/effects, guards/CFG/assertions and one unverified root recipe still need
+mandatory verification before ordinary nominal-helper admission.
+
+#### What the new checks catch
+
+Component controls reject missing, duplicated, reordered and mismatched
+associations, including equal-count source substitutions. They distinguish an
+accessor's source ordinal from its guard index, refuse unavailable Some values
+and multiply defined seeds, reject excluded accessor families, and preserve
+foreign-ledger and occupied-owner refusals. These inert controls do not
+establish new nominal source admission.
+
+The genuine oracle independently rescans real source calls and definitions,
+checks every association and propagated origin, and compares the exact FIFO
+order. It does not invoke the production association or origin helpers.
+Shared-borrow seeds precede checked-call seeds. Partial associations, nested
+tables and consumed FIFO entries remain outer-owned through postflights;
+payloads are dropped before accepted credits are refunded.
+
+Logical short-budget controls are not injected allocator/OOM failures.
+Genuine callback error/panic controls happen after preparation, not at every
+allocation point.
+
+#### Keep the measurements at their actual scope
+
+The regression passed 331 model tests and 2,683 backend tests (189 ignored),
+plus the backend/extractor build. Five current actual Rust sessions cover
+Identity, Swap01, wrong launch and callback error/panic. Positive cases contain
+one association, two origins and two FIFO entries from one seed. Wrong launch
+emits no new preparation or accepted-frame rows.
+
+Fixed test-only telemetry measures three accepted frame classes independently
+for each S3, S4 and S5A observer. It changes no runtime layout or closure capture.
+The historical S4 probe measures its own S4 graph frames; old S3 frame values
+cannot stand in for that different scope. Every current positive case has
+77 telemetry rows; historical S4 has 56. The new five-run origin work is
+1,550,028 logical units for Identity/error/panic or 1,550,208 for Swap01.
+These are not GPU timings or a performance improvement.
+
+All 181 comparison controls passed. The direct R22-to-R23 comparison changes 132 fields within its strict 138-path policy: 96 work fields and 36 provenance fields. Every old storage/peak, kernel numerical result, mask, refusal and admission field remains exact. Independently measured same-scope frame differences explain 3,120 added S3 work units; S4 adds 4,608 from its own frame differences and the complete source-call association pass. Adding the measured five-run origin work gives 1,557,756 additional units for Identity/error/panic, or 1,557,936 for Swap01. No unexplained residual is accepted.
+
+Historical zero-work calibration has 47 changes within the separate fixed-cache 143-path policy, including a measured 1,116 dependency-byte increase and five metadata digests derived from two fixed Cargo cache fields. Its kernel numerical, work and storage results are unchanged. The full comparison rehashes all three complete 459-file dependency trees, all 455 current selected inputs and the complete 8,468-file current source roster. Its actual schedule is 10,484 reads and 1,237,630,855 content-plus-EOF bytes, within unchanged 11,000-read /1,280 MiB limits.
+
+All 38 ordinary observation bodies and 52 artifacts are byte-identical to S4.
+This preserves ordinary routes; it does not admit the nominal helper.
+
+| Completed evidence | SHA-256 |
+| --- | --- |
+| Current genuine source | d8ebc77107c608c49e6d6be40f415ffd5819868586339c6eab6eb955902a0c0c |
+| Historical scoped source | 5f7f6b467b0194e08e3049d205d26615f66fccf9588f889105132ac1adc76aef |
+| Full source restoration | 80eb53e87b6f9acae152a2ef49b0540b97ce777b4b3a33f2e163be299f3fb83f |
+| 181 comparison controls | 498cd797b2ffff7fc79390136b6032bb710c926c024e794668c3ffb18669f52a |
+| Ordinary ladders | 25deb1df8462f16d5984a035bd0b9c2daaba1970cf3036aab2919d3b28d809d7 |
+| Direct/historical lossless comparison | 60a71385c4f75a9ce6718b7016f501694e8c8741fda2e7500a00d9ed03a92da0 |
+
+No public source-custody or ready-token authority, checked memory-use sites,
+complete nominal recipe, edited-input promotion, nominal LLVM continuation,
+GPU launch or debugger capture is supplied. Accepted broad exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
