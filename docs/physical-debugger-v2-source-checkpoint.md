@@ -117,3 +117,46 @@ for the exact completed package/build receipt pins and limitations.
 This tutorial adds no activation, GPU-observed badge, live UI route or global
 FE2O3_PIN change. Accepted exits remain M1/V1/V2/U1/U2/U3 (6/18);
 V4 and the full tiled/physical curriculum remain open.
+
+## Later private attempt: startup refusal, not capture (2026-09-26)
+
+A later exact private debugger build passed MI2 startup and loaded-file review.
+Its controller and owned process-scope helpers passed separate CPU and benign
+process qualifications. Those prerequisites permitted one bounded native
+attempt; they did not predict a successful physical observation.
+
+That attempt **failed during debugger setup** with `Changed`. The controller
+had spawned its debugger child but had not sent any MI command. Source review
+narrows the refusal to child/executable identity, scope membership or exact
+argument checks. The retained diagnostic does not identify which check failed.
+Do not label it a GPU trap failure or invent a specific startup race.
+
+The controller produced no capture report. Its subsequent empty-report framing
+error is secondary to the setup refusal. A missing record cannot be rendered as
+zero register values, empty memory, a passed canary check or a captured wave.
+The fixed expected-value oracle remains separate from actual sample bytes.
+
+Cleanup must also be read at the correct level. The controller reported
+incomplete stream cleanup because the failure occurred before reader startup;
+no reader could deliver the required EOF events. Independent inner and outer
+scope receipts nevertheless establish that the owned family was reaped and
+the exact scope disappeared. Root independently rechecked the three recorded
+process identities, retained receipts and file pins. This proves cleanup of
+that attempt, **not physical capture success** or host-global absence of GPU
+activity. Conservative unknown native-attempt/GPU-dispatch fields stay unknown.
+
+Retained evidence:
+
+- Failed root receipt: 95,650 bytes, SHA-256
+  `43199b35fdddcdb93b439ef1396999a502eca6c2d1b9a84d1be1c99ae5fce447`.
+- Same-generation wrapper audit: 17,052 bytes, SHA-256
+  `9d840563a780e7a17620a3f0e28e37d6dd2d1701013e0dd270f5b6ddd5df555f`.
+- Independent root cleanup audit: 1,275 bytes, SHA-256
+  `13803ed2bc6e89b6d43ac28304bf1743e1aa628a4df9cb6778842a1781499306`.
+
+The next implementation step is fixed stage/substage diagnostics that preserve
+the original refusal and already-observed facts. Missing startup evidence is
+not a reason to disable identity checks, increase timeouts or automatically
+retry. Any changed controller requires its own source/build/process
+qualification. The public package remains disabled; this appendix enables no
+capture command, live UI, runtime binding or new milestone acceptance.

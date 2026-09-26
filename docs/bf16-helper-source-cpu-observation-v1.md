@@ -321,3 +321,48 @@ call, and an ordinary array result must not inherit the input accumulator's
 capability. LLVM emission, native helper execution and physical register
 capture remain unqualified. Accepted broad exits remain
 **M1/V1/V2/U1/U2/U3 (6/18)**; this appendix closes no milestone.
+
+## Later genuine dense propagation and ranked candidate (2026-09-26)
+
+[Compiler checkpoint 97edb07a644dc0af11b9fd0824761bc603dbc9d6](https://github.com/harsh-nod/fe2o3/blob/97edb07a644dc0af11b9fd0824761bc603dbc9d6/docs/bf16-helper-dense-proxy-qualification-20260926.md)
+now exercises the actual source-preparation, C1, C2 and C3 path together.
+This is a newer qualification; the historical R19 and routing appendices above
+retain their original evidence boundaries.
+
+The real source-derived enum, allocation, provenance and constant preparation
+uses the original account. Initial and repeated dense propagation plus final
+replay each visit the actual helper call once. Source Move operands are consumed
+only after complete authentication. Four function-qualified return rows retain
+Identity/Swap01 order; the ordinary [f32; 4] result still gains no accumulator
+provenance.
+
+During the actual Final callback, a borrowed proxy describes one ranked
+TensorLayout candidate with the exact zero-filled gfx942 BF16/F32 Wave64
+contract, 64 lanes and four logical arguments. Existing callback success,
+error, panic and resource-denial/floor probes execute inside that proxy scope.
+This does not yet expose postflight-ready output: later replay blocks and
+outer cleanup checks may still fail.
+
+The fresh R8 report is 281,039 bytes, SHA-256
+`90afe14b280f2e3cfb20ae28124e9c58e14b3df6c0a2523b5196f682a6c239a2`.
+Identity and Swap01 each passed 18 numerical positives and 16 request refusals;
+wrong-launch and callback error/panic sessions passed too. The completed gate
+also passed 404 CLI binary tests and 2,424 backend tests. Its receipt SHA-256 is
+`1a947a2c01aa5ac4d51eefface719f2b7b62354679401de07da95b222bd17c76`.
+A lossless comparison with R7 found only generation paths/digests and 8,768
+additional cumulative work units; numerical bytes, masks, refusals and the
+1,632,943,151-byte logical peak were unchanged under the same 2 GiB limit.
+
+For kernel authors, the next boundary is important: **one tensor row is not a
+complete kernel**. The actual input reads, Option-guarded output store, bounds,
+CFG and source mappings must accompany it. CFG expansion can change ranked
+coordinates; source block indices cannot stand in for a verified mapping.
+Driver postflight, complete metered root projection, distinct nominal
+correspondence and formal/target/LLVM continuation remain open.
+
+Normal helper compilation still deliberately refuses. This adds no native
+helper execution, physical register capture, live UI route or launch authority.
+The CLI binary gate is not the full CLI integration suite; 189 backend tests
+and five CLI binary tests remained ignored, apart from the separately selected
+genuine source test. Broad accepted exits remain **6/18**. No global compiler
+pin, route maturity or milestone acceptance is changed by this appendix.
