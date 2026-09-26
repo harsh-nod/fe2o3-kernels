@@ -191,3 +191,67 @@ publication fails, without resetting the positive deadline, accepting a partial
 report or issuing another target command. It still needs separate qualification.
 Public capture stays disabled. This adds no live route, activation command,
 global compiler pin change or milestone exit; accepted broad exits remain 6/18.
+
+## Later qualified diagnostic: preserve publication failures (2026-09-26)
+
+The [qualified compiler checkpoint e934c1437457efc01c0c311e73026e862943041a](https://github.com/harsh-nod/fe2o3/blob/e934c1437457efc01c0c311e73026e862943041a/docs/physical-debugger-publication-deadline-20260926.md)
+adds the failure-only diagnostic proposed above. It passed 141 Rust tests
+(58 library and 83 controller), 35 Node controls (31 public-package and four
+source-preservation checks), strict package Clippy and build. This is historical
+CPU package qualification, not a successful physical capture.
+
+If normal report publication fails, the diagnostic preserves the original
+fixed refusal/status, already-retained command/record counts, stream completion
+and bounded hexadecimal suffixes. Its fixed 4,096-byte stack buffer permits at
+most 4,097 bytes including the line ending, with at most 256 retained bytes
+from each stdout/stderr/command suffix. Arbitrary bytes are hex-encoded, not
+rendered as terminal control sequences; checked growth has a fixed fallback.
+
+The failure branch performs no new child reads, process queries, hashing,
+parsing, debugger commands, spawning or teardown. The successful publication
+path, original deadlines, cleanup protocol and public-disabled state are
+unchanged. Bounded content is not a global stderr write-latency guarantee.
+
+CPU qualification receipt: 100,865 bytes, SHA-256
+`9d48d01aa078c9dd555163ac5ca14e66bc72b4f254d57f7672aba59b39ccd3e6`.
+That CPU change alone established no new native attempt or captured bytes.
+The earlier attempt's producer capture and GPU dispatch remain unknown;
+independent cleanup is still not capture success.
+
+### Fresh bounded attempt: a retained refusal, not a capture
+
+The later [compiler native diagnostic record](https://github.com/harsh-nod/fe2o3/blob/27ba44e2616945481557f4555f67327aabbab043/docs/gfx950-publication-diagnostic-native-observation-20260926.md)
+records a separately coordinated single attempt. Normal report publication
+again failed with `Deadline` and emitted zero capture-report bytes. This time
+the bounded diagnostic retained `original_protocol_result=refused(Incomplete)`.
+Its retained stdout suffix includes
+`fixed owned one-stop native relation refused (15)`.
+
+This is additional failure evidence, not a diagnosis of the compiler, controller,
+debugger or GPU cause. The retained suffix is truncated; a consumed command is
+not proof of command completion. Do not infer successful capture from the
+relation number, record count or zero-valued unavailable fields. No accepted
+physical observation or GPU dispatch success is established; producer capture
+and GPU dispatch remain unknown.
+
+Root independently rejoined the owned-family receipts and terminal
+acknowledgement, then verified all five retained process IDs and the exact
+scope were absent. The family owner reaped the adopted inferior; controller-side
+reaping was not claimed. This establishes cleanup of that attempt, not rollback,
+physical capture or host-global GPU quiescence.
+
+| Retained artifact | Bytes | SHA-256 |
+| --- | --- | --- |
+| Failed native receipt | 272,124 | `81e881850e7843dc83ef04b530317c8fd4369a609a991343f06c0bc62d35ba1c` |
+| Same-generation terminal audit | 17,437 | `2f21c44121a459e8e54ab54f1ec1c8f9a90ae0b6635393c83075024384317a99` |
+| Independent cleanup audit | 670 | `fa609a6bdb32972f5ba695b8b364edff570b063c32cc81f91d5c055522476fea` |
+| Retained controller stderr | 2,206 | `dd607bf9ca059ea92e633d563c6c48b5ab197a5bddf91737b05eb068ff00b121` |
+
+Visualizers must retain unavailable state instead of zero-filled registers,
+fabricated memory, passed canaries or historical bytes rebound to a new stop
+identity. The expected-value oracle never fills missing actual sample bytes.
+The next step is source-bound diagnosis of this retained refusal, with fresh
+qualification for any implementation change; there is no automatic retry or
+public capture activation. This appendix adds no live route, GPU-observed badge
+or global compiler pin change. Accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).

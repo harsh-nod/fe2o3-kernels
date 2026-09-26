@@ -86,3 +86,169 @@ does not qualify inline assembly, physical register allocation, native helper
 execution, edited-source promotion or GPU execution. No public debugger
 activation, route maturity or global compiler pin changes. Accepted broad
 exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+## Later development seam: complete root preparation and retained effects (2026-09-26)
+
+The [shared ordinary preparation checkpoint ebc14db4b3c0227dbc2be8d0b82052abc84e2e84](https://github.com/harsh-nod/fe2o3/blob/ebc14db4b3c0227dbc2be8d0b82052abc84e2e84/docs/bf16-shared-root-recipe-qualification-20260926.md)
+and [retained-effects checkpoint 1d8ef2462d141ad257e59807ab8727fc297ed1c5](https://github.com/harsh-nod/fe2o3/blob/1d8ef2462d141ad257e59807ab8727fc297ed1c5/docs/bf16-helper-retained-effects-qualification-20260926.md)
+are qualified CPU implementation steps, not nominal normal admission.
+Earlier qualified assertion results above remain historical evidence; the
+fresh R15 evidence below qualifies the retained-effects implementation.
+
+### Follow the complete source table, not just one tensor operation
+
+The existing final candidate ties the actual helper Call, Matrix, Return and
+four scalar components to one immutable source owner. It is a tensor-only
+candidate, not the surrounding kernel's complete memory behavior.
+
+The distinct retained-effects entry follows the same actual source preparation,
+canonical facts, real consumer and three-pass dense driver. It copies every
+source-indexed row from that driver's completed Final table into prepaid outer
+storage. The driver, facts and source scopes finish their postflights; the exact
+candidate must be rejoined before the observer receives a borrowed view of the
+function, candidate and complete effects table. The enclosing entry postflight
+still follows the external callback.
+
+| Final field | What the retained view contains | What it does not grant |
+| --- | --- | --- |
+| `layout` | The actual optional fixed tensor layout and binding | A complete root recipe or detached tensor authority |
+| `global_read` | The actual optional allocation contract for a source read | Independently proved bounds or a ready-to-use access certificate |
+| `transpose_workgroup` | The actual optional workgroup transpose access and format | Evidence that a GPU executed a transpose |
+| `read_view` | The actual optional view, row and column payload | Permission to invent missing reads or bypass source access matching |
+
+Absent fields and default/unreached rows remain present as rows. The closed
+copy accepts only the current fixed tensor-layout variant, refusing an
+unsupported layout representation instead of cloning an arbitrary payload.
+Source block indices are not ranked coordinates: CFG expansion can create
+different blocks and operations, so later source-to-ranked correspondence must
+record the actual generated positions.
+
+The original work/storage ledger pays for the retained table, checked capacity,
+copy work and scoped frames before allocation or reconstruction. A replacement
+ledger, eroded retained-owner floor or ignored sticky denial must refuse.
+Partial tables, callback captures and panic payloads drop before only the scope's
+own storage is refunded; callback-owned surplus must survive. These qualified
+logical-accounting checks are not guarantees about allocator overhead, RSS or
+native machine-stack limits.
+
+### Keep the two kinds of test evidence separate
+
+The genuine observer derives the two BF16 fragment-load blocks from the actual
+Identity/Swap01 source intrinsics. It checks `global_read` presence/absence at
+those exact source rows, plus the source owner, function, Call/Matrix/Return and
+component associations. It does not independently compare the allocation-contract
+payload against a separately derived source contract. The actual fixture has
+zero layout, transpose and read-view entries.
+
+Synthetic controls compare equality of all four copied payload fields,
+including nonempty `read_view` and `transpose_workgroup` values. They also
+exercise wrong shapes, incomplete/repeated capture, capacity/resource shortfalls,
+sticky denials, foreign ledgers and error/panic cleanup. Synthetic payload
+equality is not positive genuine read-view or transpose coverage.
+A printed observer line cannot replace a completed fresh qualification gate.
+
+### Prepare a root recipe, then verify it
+
+The shared ordinary-path core now splits complete root preparation from
+verification. Preparation retains the existing input reads, conditional output
+writes, guards, source rows, reference expressions and expanded CFG in an
+explicitly **unverified prepared recipe**. The ordinary wrapper immediately
+continues through its existing verifier, keeping preparation locals alive
+through that continuation. Moving this boundary does not skip verification.
+
+The source-bound prepared assertion mask keeps the actual function/type
+association, moves its allocation and retains the established refusal order.
+Authenticated induction decisions must not silently rewrite the nominal
+observer's immutable base mask. A future strict adapter needs separately paid
+overlay storage and source-bound inputs.
+
+This ordinary preparation core is not an original-meter nominal recipe driver.
+The retained Final table is not already connected to that core. A safe next
+implementation must account all root/CFG allocations and connect rich Option
+dominance, checked references, complete conditional writes and the actual
+candidate placement. Do not invoke an unmetered legacy path behind a metered
+facade, fabricate memory/access certificates or treat matching block numbers
+as source correspondence.
+
+For this R15 checkpoint, a subsequent actual-facts reservation-context hook remains unqualified. R15
+does not qualify that new seam, an authenticated checked-reference graph,
+the full nominal root recipe or normal helper admission.
+
+### Read the completed gates and their limits
+
+The ordinary preparation checkpoint passed 331 model and 2,544 backend tests
+and backend/extractor build. Its fresh 36-session normal-composition ladder
+retained seven finite checked owners, seven public LLVM sessions, seven inert
+handoffs, seven dynamic-source refusals and eight invalid-source refusals.
+A separate two-session direct-BF16 ladder retained normal handoff and wrong-launch
+refusal. These 36+2 sessions qualify ordinary behavior, not nominal helper
+compilation. The source-ladder receipt is 80,228 bytes, SHA-256
+`6c434dfccb9c18e4b31db6415262f94694b10527c604b4d9c15d2a74053e90a1`.
+
+The retained-effects regression passed 331 model and 2,557 backend tests,
+with 189 ignored, plus backend/extractor build. Its receipt is 50,796 bytes,
+SHA-256 `54181d44d9ebff7a89f61a3e4daa82dc41ad9d62315037d0c5449259b1a9f508`.
+This is not a whole-backend strict-Clippy claim.
+
+R15 completed five fresh actual Rust sessions: Identity, Swap01, wrong launch,
+callback error and callback panic. The two positive variants retain 36 positive
+CPU numerical cases, 32 request refusals and two unchanged normal refusals;
+the other sessions retain the two callback controls and wrong-launch refusal.
+Its completed receipt is 271,741 bytes, SHA-256
+`b7d6f6e11b995dd3ac55d1d078048b281f40c0aefba0b8785884a9fb96e96298`.
+The observation is 281,064 bytes, SHA-256
+`82c289410d064875b6a00a17aa308422144cceee74a32ad2701b9255a194e25f`.
+
+The lossless R14-to-R15 comparison passed 28 controls and exactly 132 allowlisted
+changes: 96 cumulative-work fields, 25 generation paths, six dependency digests
+and five artifact digests. Its receipt is 91,670 bytes, SHA-256
+`c1f5b7d8af43aad8c224b1a805a2a9769d47cba3f0c24cd4f41b8cbe4aafec75`.
+Both complete 459-file dependency directories were enumerated and all 918 files
+rehashed. Numeric lexemes, masks, refusal payloads, normal/authority flags,
+storage and peak fields remain unchanged. The logical peak is still
+1,632,943,151 bytes; no storage/peak override or resource-cap increase exists.
+
+Each affected stderr retains four assertion rows at lines 17/41/43/45 and five
+retained-effect rows at 16/40/42/44/46. Four pairs are followed by exactly one
+retained-only row; wrong launch has neither. Source ordering identifies the
+last row with the one-short-storage probe: the early retention observer finishes,
+but a later stage refuses before assertion output. The parent requires a storage
+error, no work denial and incoming-floor restoration. The exact later failing
+allocation was not instrumented. Duplicate rows are preserved, not collapsed
+into extra successful sessions. The 19-block roots still have zero assertions;
+this is not positive actual assertion coverage.
+
+Cumulative work increases by 25,727,151 for Identity/error/panic and 25,727,219
+for Swap01, including prepaid negative controls. These are accounting deltas,
+not GPU timings. Per-entry costs derived by subtracting the source-level
+precharges are consistency inferences, not instrumented measurements.
+
+These checks can expose stale or foreign source associations, omitted effect
+fields, changed ordinary refusal behavior and incorrect resource ownership.
+They do not establish nominal normal admission, formal memory safety, nominal
+LLVM continuation, native helper execution, GPU execution or edited-source
+promotion. Normal helper compilation remains refused until the missing
+connections and checks are implemented and qualified.
+
+No activation, public authoring command, global compiler pin or route maturity
+changes are part of this tutorial. Accepted broad exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
+
+### Later original-ledger context checkpoint
+
+The [separate recipe-context checkpoint 27ba44e2616945481557f4555f67327aabbab043](https://github.com/harsh-nod/fe2o3/blob/27ba44e2616945481557f4555f67327aabbab043/docs/bf16-recipe-resource-context-qualification-20260926.md)
+qualifies the later context with fresh R16 evidence, not by reusing R15.
+It passed 331 model tests, 2,572 backend tests, build, five real-source sessions,
+36+2 normal-compilation sessions and 40 lossless-comparison controls.
+All 38 normal observation bodies and 52 output artifacts match the preceding
+ordinary compiler checkpoint exactly.
+
+The context borrows actual canonical facts and the original ledger. It does not
+refund storage: the outer owner drops retained payloads after nested postflights,
+then releases only its own credits. Callback surplus survives; foreign ledgers,
+masked facts and lost custody refuse. Actual materialization observations cover
+19 source blocks, not a checked-reference certificate or assertion mask.
+
+No checked-origin graph or complete nominal kernel recipe is supplied by this
+context. Normal helper admission, source-to-ranked placement and the remaining
+formal/target/LLVM connections stay open. Accepted broad exits remain 6/18.
