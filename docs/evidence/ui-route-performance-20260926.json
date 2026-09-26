@@ -1,0 +1,568 @@
+{
+  "schema": "fe2o3-public-ui-route-measurement-summary-v1",
+  "campaign": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/campaign-candidate.json",
+    "bytes": 33930,
+    "sha256": "223df7e9d7f377dbd76a5707503abc06f0f70c7fe30fee8d3d908849117a9bff"
+  },
+  "outer": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/logs/phase28-resume-r19-site-ui-current-production-campaign-r6/receipt.json",
+    "bytes": 1441073,
+    "sha256": "2d9cce57577ac918a561590ef40e76cd05c83b6bde40c2ae15aa035381acacf8"
+  },
+  "site_head": "36e8e130b07fef92f7a2b1e1f47642f8814775dd",
+  "series_complete": true,
+  "raw_pairs": 280,
+  "measured_pairs": 240,
+  "root_review_passed": true,
+  "accepted_performance_budgets": false,
+  "whole_family_cleanup_proved": false,
+  "hardware_observed": false,
+  "cells": [
+    {
+      "cell": "navigation-desktop",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/navigation-desktop/candidate-report.json",
+        "bytes": 188756,
+        "sha256": "87b7ce2426c7988e091dcb70a707bfac18d55965eb547213add472426c8ef168"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 347.7999999523163,
+          "p95": 348,
+          "max": 348
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 49,
+          "p95": 49.199999928474426,
+          "max": 49.200000047683716
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 48.700000047683716,
+          "p95": 49,
+          "max": 49
+        }
+      },
+      "network": {
+        "requests": 1155,
+        "responses": 1155,
+        "decoded_response_bytes": 77082810,
+        "encoded_response_bytes": 77377615,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 5014408,
+          "p50": 5021920,
+          "p95": 5048192,
+          "max": 5925528
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 5014408,
+          "p50": 5021920,
+          "p95": 5048192,
+          "max": 5925528
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": -2384188,
+          "p50": 1265560,
+          "p95": 1266580,
+          "max": 1268088
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 6037296,
+          "p50": 6074516,
+          "p95": 6115496,
+          "max": 6529040
+        }
+      }
+    },
+    {
+      "cell": "navigation-narrow",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/navigation-narrow/candidate-report.json",
+        "bytes": 188684,
+        "sha256": "9894c08c0342921881607b848f7f04f0d72c25bed1aa73cfcda80cc7682ae626"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 347.89999997615814,
+          "p95": 348.1999999284744,
+          "max": 348.2000000476837
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 49.09999990463257,
+          "p95": 49.200000047683716,
+          "max": 49.200000047683716
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 48.800000071525574,
+          "p95": 49,
+          "max": 49
+        }
+      },
+      "network": {
+        "requests": 1155,
+        "responses": 1155,
+        "decoded_response_bytes": 77082810,
+        "encoded_response_bytes": 77377615,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 5014176,
+          "p50": 5022048,
+          "p95": 6978532,
+          "max": 7003560
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 5014176,
+          "p50": 5022048,
+          "p95": 6978532,
+          "max": 7003560
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": -2397488,
+          "p50": 1266880,
+          "p95": 1267992,
+          "max": 1267996
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 6041960,
+          "p50": 6072800,
+          "p95": 7573816,
+          "max": 7575380
+        }
+      }
+    },
+    {
+      "cell": "program-desktop",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/program-desktop/candidate-report.json",
+        "bytes": 186504,
+        "sha256": "f7665ad0d087f8b22a8df0f76c9172d010f43cdb8dda075f220dc540ee1cb964"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 381.2999999523163,
+          "p95": 381.40000009536743,
+          "max": 381.40000009536743
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 49,
+          "p95": 49.200000047683716,
+          "max": 50.199999928474426
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 46.60000002384186,
+          "p95": 47.299999952316284,
+          "max": 47.5
+        }
+      },
+      "network": {
+        "requests": 1120,
+        "responses": 1120,
+        "decoded_response_bytes": 113236270,
+        "encoded_response_bytes": 113522220,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 7620240,
+          "p50": 8765504,
+          "p95": 10100312,
+          "max": 10675204
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 7620240,
+          "p50": 8765504,
+          "p95": 10100312,
+          "max": 10675204
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": -1406692,
+          "p50": 1152496,
+          "p95": 5335156,
+          "max": 5447060
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 9944952,
+          "p50": 10542416,
+          "p95": 11755344,
+          "max": 14459568
+        }
+      }
+    },
+    {
+      "cell": "program-narrow",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/program-narrow/candidate-report.json",
+        "bytes": 186269,
+        "sha256": "8b22554583b20ab0f7320500b3bf14c3b5916d26c4c4fe26b59c241309fe9870"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 381.3000000715256,
+          "p95": 381.60000002384186,
+          "max": 431.2999999523163
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 49.10000002384186,
+          "p95": 81.89999997615814,
+          "max": 98.20000004768372
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 47.299999952316284,
+          "p95": 48.200000047683716,
+          "max": 48.300000071525574
+        }
+      },
+      "network": {
+        "requests": 1120,
+        "responses": 1120,
+        "decoded_response_bytes": 113236270,
+        "encoded_response_bytes": 113522220,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 7571584,
+          "p50": 8767892,
+          "p95": 10001252,
+          "max": 10582592
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 7571584,
+          "p50": 8767892,
+          "p95": 10001252,
+          "max": 10582592
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": -1458548,
+          "p50": 1178208,
+          "p95": 1280040,
+          "max": 1296620
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 10101084,
+          "p50": 10674584,
+          "p95": 11790184,
+          "max": 12495924
+        }
+      }
+    },
+    {
+      "cell": "v22-one-desktop",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/v22-one-desktop/candidate-report.json",
+        "bytes": 182714,
+        "sha256": "d666f037ff695c75af90633e02cd0664479f0f242935fe9aba73ecbd7059be36"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 282.7000000476837,
+          "p95": 314.7000000476837,
+          "max": 316.60000002384186
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 265.6999999284744,
+          "p95": 282.39999997615814,
+          "max": 282.39999997615814
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 49.10000002384186,
+          "p95": 49.39999997615814,
+          "max": 49.40000009536743
+        }
+      },
+      "network": {
+        "requests": 980,
+        "responses": 980,
+        "decoded_response_bytes": 75580015,
+        "encoded_response_bytes": 75830020,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 18283136,
+          "p50": 18454076,
+          "p95": 19744344,
+          "max": 19774756
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 23963448,
+          "p50": 24145552,
+          "p95": 25367064,
+          "max": 25533472
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": 18860376,
+          "p50": 19341596,
+          "p95": 19807996,
+          "max": 19994516
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 47048660,
+          "p50": 47677308,
+          "p95": 48582284,
+          "max": 48952584
+        }
+      }
+    },
+    {
+      "cell": "v22-one-narrow",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/v22-one-narrow/candidate-report.json",
+        "bytes": 182723,
+        "sha256": "ba1911977264e92e7589e9d294c491573eeade96e29b9cd2e5c30a63a7f570ad"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 281.60000002384186,
+          "p95": 298.2000000476837,
+          "max": 298.2999999523163
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 265.60000002384186,
+          "p95": 282.2000000476837,
+          "max": 282.3000000715256
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 48.700000047683716,
+          "p95": 49.09999990463257,
+          "max": 49.09999990463257
+        }
+      },
+      "network": {
+        "requests": 980,
+        "responses": 980,
+        "decoded_response_bytes": 75580015,
+        "encoded_response_bytes": 75830020,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 18286024,
+          "p50": 18406256,
+          "p95": 22292848,
+          "max": 23446228
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 24032480,
+          "p50": 24103452,
+          "p95": 27920292,
+          "max": 31012268
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": -24239552,
+          "p50": 19273344,
+          "p95": 20014976,
+          "max": 20662316
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 10839552,
+          "p50": 47538764,
+          "p95": 48192420,
+          "max": 49153712
+        }
+      }
+    },
+    {
+      "cell": "v22-registers-desktop",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/v22-registers-desktop/candidate-report.json",
+        "bytes": 182560,
+        "sha256": "50226945f524d1542d2a75fc73b37e47fb8825c3a88b5f18ac5d8bf2415b6de8"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 281.39999997615814,
+          "p95": 298.2000000476837,
+          "max": 311.6999999284744
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 249.10000002384186,
+          "p95": 281.89999997615814,
+          "max": 282.3000000715256
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 49,
+          "p95": 49.200000047683716,
+          "max": 49.300000071525574
+        }
+      },
+      "network": {
+        "requests": 980,
+        "responses": 980,
+        "decoded_response_bytes": 75580015,
+        "encoded_response_bytes": 75830020,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 18137244,
+          "p50": 18295072,
+          "p95": 25977376,
+          "max": 32834396
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 23829628,
+          "p50": 24029436,
+          "p95": 31621020,
+          "max": 40418496
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": -13043276,
+          "p50": 17310656,
+          "p95": 18073932,
+          "max": 18916432
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 10786568,
+          "p50": 45399996,
+          "p95": 46167708,
+          "max": 50135144
+        }
+      }
+    },
+    {
+      "cell": "v22-registers-narrow",
+      "report": {
+        "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-site-ui-performance-r6/v22-registers-narrow/candidate-report.json",
+        "bytes": 182843,
+        "sha256": "e78f2091c6d88a203626d32ca90f33a8991886d1074915ca9cc57093d8f8d001"
+      },
+      "distributions": {
+        "first_open_ms": {
+          "count": 30,
+          "p50": 281.39999997615814,
+          "p95": 298.10000002384186,
+          "max": 298.10000002384186
+        },
+        "warm_open_ms": {
+          "count": 30,
+          "p50": 265.39999997615814,
+          "p95": 282.5,
+          "max": 314
+        },
+        "bounded_interaction_ms": {
+          "count": 30,
+          "p50": 48.799999952316284,
+          "p95": 49.10000002384186,
+          "max": 49.10000002384186
+        }
+      },
+      "network": {
+        "requests": 980,
+        "responses": 980,
+        "decoded_response_bytes": 75580015,
+        "encoded_response_bytes": 75830020,
+        "refusal": null
+      },
+      "browser_version": "151.0.7922.34",
+      "heap_checkpoint_deltas_bytes": {
+        "staged_to_cold": {
+          "count": 30,
+          "min": 18051476,
+          "p50": 18355072,
+          "p95": 26055484,
+          "max": 26081284
+        },
+        "shell_to_cold": {
+          "count": 30,
+          "min": 23801572,
+          "p50": 24027504,
+          "p95": 31717428,
+          "max": 31727668
+        },
+        "staged_to_warm": {
+          "count": 30,
+          "min": -20643012,
+          "p50": 17358468,
+          "p95": 18070908,
+          "max": 18603184
+        },
+        "shell_to_final_clear": {
+          "count": 30,
+          "min": 10792540,
+          "p50": 45583208,
+          "p95": 46383836,
+          "max": 47441236
+        }
+      }
+    }
+  ],
+  "root_audit": {
+    "path": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr/phase28-drafts/site-ui-r6-root-audit-r1/audit.json",
+    "bytes": 9573,
+    "sha256": "f438cba51295187affe70090aa8694dcd8c9d4535a20162cd1171502186c842b"
+  },
+  "measured_source": {
+    "files": 1029,
+    "bytes": 24972149,
+    "sha256": "10b3a33a3b9d8e8472e9268ec1385a539b98a6513c30b679ecd19911d41dc3e4"
+  },
+  "timing": "action capture listener to exact expected DOM plus two animation frames; not paint",
+  "heap": "signed CDP Runtime.getHeapUsage checkpoint differences; not peak heap or RSS",
+  "calibration_pairs_per_cell": 5,
+  "measured_pairs_per_cell": 30,
+  "host_global_quiescence_proved": false,
+  "isolated_parser_measured": false,
+  "worst_11mib_class_measured": false
+}
