@@ -275,3 +275,49 @@ new qualification.
 These historical pins are not automatically evidence for a later merged tree.
 This lesson changes no global compiler pin, route, lab maturity, public API or
 milestone acceptance by itself.
+
+## Later routing and capability checkpoint (2026-09-26)
+
+The implementation at [123a2c59c759e506215e091162352975a75ca0e7](https://github.com/harsh-nod/fe2o3/commit/123a2c59c759e506215e091162352975a75ca0e7)
+adds source-bound nominal helper routing and two capability prerequisites.
+This appendix does not rewrite the first R19 qualification above or move the
+site's global compiler pin.
+
+The normal defined-call resolver now distinguishes the authenticated tensor
+helper from a scalar helper, even when its physical effect set is empty.
+The real sparse facts, source call, canonical owner and inventory stay together
+under the original ledger. Six whole-route boundary probes and four isolated
+custody probes exercise the genuine Identity/Swap01 frontend path. Normal
+helper continuation still stops at an explicit incomplete-capability refusal.
+
+Caller authentication (C1) shares the direct-MFMA operand matcher and checks the
+original context, A, B and input-accumulator origins. Return association (C3)
+keeps the actual caller Call, helper Matrix and helper Return together with
+four function-qualified component rows. A transported Return operand need not
+have the raw Matrix result's value ID. The returned **[f32; 4] array** does not
+acquire accumulator provenance.
+
+The fresh R6 genuine helper report is 281,039 bytes, SHA-256
+`424d6190de69162cdb8a01058ca2c17f0d3df22cd616da2956f44101faa2243c`.
+It retains 18 numerical positives and 16 request refusals for each source
+variant. A lossless comparison with the preceding N2a report found only
+83,943,541 additional work units in affected sessions; numerical bytes, masks,
+refusals and the 1,632,943,151-byte logical peak were unchanged. The actual
+source run qualifies routing and real-facts construction, **not a genuine
+combined C1/C2/C3 positive**. The C1/C3 additions separately passed synthetic
+origin, mapping and accounting controls within 2,381 backend test executions;
+189 ignored tests were not run by that backend command.
+
+Read the [compiler checkpoint and completed receipt pins](https://github.com/harsh-nod/fe2o3/blob/123a2c59c759e506215e091162352975a75ca0e7/docs/bf16-helper-routing-capability-qualification-20260926.md)
+before attributing evidence to a source version. Its gates bind their exact
+recorded source censuses, not an arbitrary later checkout. The latest genuine
+source run preceded C1/C3 integration.
+
+Remaining implementation is metered source-derived preparation, dense
+capability propagation and final replay (C2), genuine combined and mutated-source
+controls (C4), then ranked custody and formal/target continuation (N3).
+Source-level Move operands must be consumed only once after a complete checked
+call, and an ordinary array result must not inherit the input accumulator's
+capability. LLVM emission, native helper execution and physical register
+capture remain unqualified. Accepted broad exits remain
+**M1/V1/V2/U1/U2/U3 (6/18)**; this appendix closes no milestone.
