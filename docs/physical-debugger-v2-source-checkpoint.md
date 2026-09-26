@@ -298,3 +298,35 @@ memory or a GPU-observed badge. Successful cleanup is not capture success.
 There is no live visualization route, activation command, global compiler pin
 change or new milestone exit here. Accepted exits remain
 M1/V1/V2/U1/U2/U3 (6/18).
+
+## Private maintenance rebuild and static measurement (2026-09-26)
+
+The [rebuilt debugger checkpoint](https://github.com/harsh-nod/fe2o3/blob/cc69a2e09c867a30990e48f8d7005db67bec0f80/docs/physical-debugger-maintenance-rebuild-qualification-20260926.md)
+passed preparation, configuration, bootstrap and full GDB build. Its debugger
+is 199,543,392 bytes. Separate source/object checks passed 87 controls and
+measured an 8,728-byte adapter with a 14,488-byte logical reservation, including
+the separate 256-byte maintenance scratch under the unchanged 65,536-byte cap.
+The build and layout checks did not launch GDB or a GPU target.
+
+The closed evidence decoder passed 24 new controls with 31 inherited
+derivation controls. Six source-only startup-routing controls also passed.
+Actual two-pass static measurement read 290 keys and reserved 790,136,768 bytes
+under the unchanged 1 GiB cumulative cap. It checked 78 data files, nine
+directories, 54 generated/source Python pairs and 80 static candidates. Only
+the debugger candidate changed content; 54 Python candidates changed paths
+only and 25 candidates were unchanged. All 16 library aliases and the
+interpreter target were unchanged. Static candidates are not a loaded closure.
+
+New startup observations, actual helper/controller qualification and a fresh
+coordinated native capture are still required. Public physical-v3 gates remain
+disabled, physical-v2 remains unchanged, and PROFILE=None remains public.
+A successful build or cleanup is not a successful native capture. Visualizers
+must keep unavailable data unavailable. No register or stopped-wave capture
+is claimed. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+Retained static receipt:
+`021835baf750603ddacf5d4680f8f720f8bf1d8a0657d68242139390d7ad9a55`.
+Retained actual derivation receipt:
+`91a2d05acfe3eb5aba5e5d4b43fb13c0ee8f5a1bf0ec6cbe9a66b83653f8af0c`.
+The global compiler pin remains unchanged; these links identify the later
+source/static checkpoint without replacing earlier failure evidence.

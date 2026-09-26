@@ -298,3 +298,39 @@ in one complete unverified root recipe before verification.
 Normal helper admission remains refused. This does not add nominal LLVM
 continuation, edited-source promotion, a new public command or a global
 compiler pin change. Accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Complete graph for the supported source profile
+
+The [supported-profile checkpoint](https://github.com/harsh-nod/fe2o3/blob/cc69a2e09c867a30990e48f8d7005db67bec0f80/docs/bf16-complete-profile-graph-qualification-20260926.md)
+adds a private immutable completion loan. It rejoins the actual function,
+callable inventory and checked source call by identity. Completeness applies
+only to the unchanged closed profile: general GridLeader recovery is still
+refused. A cloned owner, row count or caller boolean cannot construct the loan.
+
+The completion wrapper and both lexical views are prepaid on the original
+ledger. A separate 64-unit rejoin charge applies; retained payloads and credits
+survive error, unwind and all enclosing postflights. Conservative overlapping
+frame charges are intentional, not a peak-budget relaxation.
+
+Qualification passed 331 model tests, 2,605 backend tests (189 ignored), build,
+five fresh actual Rust sessions and 38 normal sessions. All 38 observation
+bodies and 52 artifacts remain byte-identical. The lossless R16–R19 comparison
+rehashes both 459-file dependency closures and changes exactly 132 report
+fields under the existing policy. Actual graph semantics, positions and peaks
+match R18. Owned credits are 33,912; total added logical work is 59,912,529 for
+Identity/error/panic and 59,912,900 for Swap01. These include prepaid negative
+controls and are not GPU timings.
+
+Normal helper admission remains refused. Actual index/value namespace,
+guarded-access appends, checked origins and semantic sites must still join the
+complete unverified root recipe before mandatory verification. This completion
+loan alone grants no launch, edited-source promotion or nominal LLVM
+continuation. Actual fixtures still contain zero enum edges and no positive
+assertion examples. Broad accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+Retained normal receipt:
+`e332e21c16a2ea93930050b9886b941f45c2f373028f802d1fbc6006647910cb`.
+Retained lossless comparison:
+`652a436c781ffe80b408a3c8a514c3a1734ff0dffbd7da9c6cc1c2245ac3097d`.
+The global compiler pin is unchanged; this is an explicitly linked later
+checkpoint, not a silent replacement of earlier tutorial evidence.
