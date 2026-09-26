@@ -334,3 +334,115 @@ Retained lossless comparison:
 `652a436c781ffe80b408a3c8a514c3a1734ff0dffbd7da9c6cc1c2245ac3097d`.
 The global compiler pin is unchanged; this is an explicitly linked later
 checkpoint, not a silent replacement of earlier tutorial evidence.
+
+### Shared invocation and index preparation: preserve the real namespace
+
+The [shared invocation/index checkpoint](https://github.com/harsh-nod/fe2o3/blob/6588fd2c56c9996f18d0c80ec4a61e87adeadc73/docs/bf16-shared-invocation-index-qualification-20260926.md)
+shares the ordinary invocation-seeding and index-propagation algorithms.
+This is a compiler-internal development checkpoint, not a new runnable
+kernel-authoring syntax or a public API.
+
+#### Follow the existing operation stream
+
+The ordinary helper borrows the actual operation stream and actual
+`next_value`, including operations already emitted by earlier strided reads.
+It does not reset, copy or rebase that namespace. Source-block seed order,
+FIFO edge order, diagnostic text and the established refusal points remain
+part of the behavior being preserved.
+
+This internal model illustrates the existing nonzero-namespace component
+control; it is not executable Rust, assembly or a launch command:
+
+```text
+before:       existing %80 = IndexConstant 17; next_value = 81
+ThreadIndex:  append InvocationIndex %81;       next_value = 82
+alias edges:  reuse %81 at each destination;    next_value = 82
+after:        keep %80 and %81 in order;        next_value = 82
+```
+
+Aliases reuse the same value; they do not allocate another SSA identifier.
+Equal duplicate capabilities do not enqueue again, while conflicting
+capabilities refuse. The shared ordinary path preserves the real nonzero
+namespace, not just the number of resulting rows.
+
+The order of partial effects matters. For an invocation seed, operation
+reservation, value allocation, operation append and diagnostic emission
+precede scalar-custody refusal. A later failure can therefore leave an
+already-emitted operation and diagnostic in the partial state. Checked
+transforms likewise emit their operations and diagnostics before a duplicate
+checked-predicate refusal or a destination-capability conflict. Extraction
+must not move those refusals earlier or erase the partial state. Existing
+alias-cycle and conflict regressions still call the same shared assignment
+implementation through a test-only adapter.
+
+#### Keep local paid data separate from root authority
+
+The paid component produces **UNJOINED local component data** with a separate
+operation stream beginning at value zero and launch extent zero. Those IDs
+are not IDs in the actual root namespace. Do not splice that local stream
+into the ordinary stream or turn its rows into an access witness.
+
+This narrow component supports ThreadIndex seeds, aliases and authenticated
+enum-payload edge data. It rejects GridLeader seeds and the other transform
+families; their existing ordinary behavior is not removed. Its raw
+function, scalar, dominance and edge inputs do not authenticate a matching
+source owner, complete graph or guarded-access vector. A completion bit
+describes local data completion only. There is no public ready constructor,
+detached authority token, access certificate or root admission.
+
+Work and storage are charged on the original ledger before bounded scans,
+table growth and FIFO growth. An outer pending owner is installed before
+fallible preparation and retains partial rows, emitted operations and
+consumed FIFO entries. Retry, owner replacement, foreign ledgers and sticky
+denial cannot be used to discard accounting history. Component controls keep
+that owner alive across injected error and panic; payload disposal precedes
+release of only its accepted credits. This is logical accounting, not native
+allocator, RSS or machine-stack enforcement.
+
+A future root connector must keep the actual operation allocator, source
+owner and retained payload joined through every enclosing postflight.
+The component controls do not claim that this production connector already
+exists. The actual guarded-access appends, reference origins, semantic
+dereference sites, retained Final effects and ranked placement still need
+one complete unverified root recipe before mandatory verification.
+
+#### Read the separate kinds of evidence
+
+The regression passed 331 model tests and 2,617 backend tests, with 189 ignored,
+plus backend/extractor build. Its 12 new component tests compare shared
+ordinary behavior against frozen original algorithms and exercise the narrow
+paid-data path. They are not twelve compiled or launched kernels.
+
+R20 completed five actual Rust sessions: Identity, Swap01, wrong launch,
+callback error and callback panic. They preserve the established source
+observation route; this is **not a new S2 genuine hook** and does not exercise
+the paid local component as an admitted root. The source fixture still has
+zero enum edges and zero assertion terminators. Positive component controls
+must not be presented as positive genuine coverage of those features.
+
+The required publication checks comprise 67 strict comparison controls and
+38 normal sessions, covering all 38 observation bodies and 52 artifacts.
+Counts alone are not qualification; read the completed preservation evidence:
+
+The completed run passed all 67 comparison controls. The strict R19-to-R20 parity gate reread both 459-file dependency closures (352,670,356 bytes each) and compared 2,868 report leaves. Exactly 36 fields changed: 25 generation paths, six dependency digests and five artifact digests. Work, numeric lexemes, masks, refusals, storage, peaks and all 372 graph rows/positions remain unchanged.
+
+All 38 normal sessions completed: all 38 observation bodies and 52 artifacts match the predecessor byte-for-byte. The closed artifact roster contains 45 report-bound outputs and seven additional worker files. These are existing ordinary composition and direct-BF16 ladders, not admission of the nominal BF16 helper root.
+
+| Evidence | Receipt SHA-256 |
+| --- | --- |
+| Shared-index regression | `a2b923ac90c5bb14761a01c4a2897243bc3b2b2a3ddf8bc011284ba9516b4a69` |
+| Five fresh source sessions | `1ba149efa0ee6a85af79591a897db79269977edca808f16929d49215ff6fb5eb` |
+| Strict R19-to-R20 parity | `38e20b32ce23cba4c11d9e351569a99a98ef7cc50d5b3439a7a4c3e78df85ce3` |
+| Ordinary normal ladders | `d76b915291e3ee9c77892409c04757b14ca194a31cd4cd89fd222984cf34c351` |
+
+These controls can catch value-ID collisions or renumbering, reordered
+propagation, changed partial-emission/refusal behavior, and lost or
+misattributed resource ownership. They do not independently prove the shared
+algorithm, complete nominal-kernel memory safety or native correctness.
+
+Normal helper admission remains refused. No public ready constructor,
+detached authority token, access certificate or root admission is added.
+This checkpoint adds no nominal LLVM continuation, edited-source promotion,
+GPU execution, launch authority or debugger capability. The global compiler
+pin and route maturity are unchanged; this is an explicitly linked later
+checkpoint. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
