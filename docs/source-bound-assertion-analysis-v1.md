@@ -803,3 +803,79 @@ The global compiler pin and route maturity are unchanged. Complete block
 emission, defined-call routing, mandatory verification and normal nominal-helper
 continuation remain open. No ready-token authority or public capture gate is
 added. Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Actual source-use qualification: distinguish data from a compiled kernel
+
+The [actual-source checkpoint](https://github.com/harsh-nod/fe2o3/blob/fa631dba8bfabac97b113c97973faebdc077201a/docs/bf16-actual-source-use-qualification-20260926.md)
+supersedes the earlier checkpoint's pending real-source observer qualification.
+The older section remains historical evidence. This is still private compiler
+infrastructure, not a new public authoring command.
+
+#### Inspect the source occurrence and its owner
+
+Five fresh Rust sessions now enter the source-use and borrowed-local factories
+through actual retained owners. The independent source oracle checks occurrences
+and local decisions. It does not substitute aggregate counts for full comparison.
+
+Keep the source block, statement or terminator, and operand ordinal together.
+Those coordinates are not emitted operation indices. A missing reference origin
+is still data, not proof that an access is checked. The two factories use separate
+single-visit assemblies; do not chain them on one started owner.
+
+These checks can catch substituted source occurrences, changed local decisions,
+stale or foreign owners, unpaid preparation and incorrect cleanup. They do not
+establish complete bounds, race freedom, a complete kernel recipe or GPU behavior.
+Guard semantic sites and the real operation cursor still need implementation.
+
+#### Understand an explained diagnostic peak
+
+The test-only rich-lifetime trace records entry, accepted header, callback,
+physical drops and refund boundaries. The comparison derives the complete
+same-generic-instance header sizes from source and checks which interval
+dominates the peak. It checks the outside intervals too.
+
+Three inherited initial-graph diagnostic peak pairs per reached case differ by
+16 bytes. That difference is explained by the source-derived live-header formula;
+it is not an arbitrary tolerance. Every report storage/peak field and all other
+inherited diagnostics remain exact. The report peak is 1,632,953,983 logical
+bytes, not measured RSS. Historical headers are reconstructed from the same
+generic-instance formula, not represented as newly observed historical events.
+
+The host test ABI is distinct from the GPU target. The same pinned toolchain and
+selected configuration are checked, without claiming a hermetic Cargo environment.
+A trace line alone is not a completed qualification receipt.
+
+#### Read the completed checks
+
+The regression passed 331 model tests and 2,780 backend tests, with 189 ignored.
+All 306 comparison controls, five real Rust sessions and strict actual comparison
+passed. All 38 ordinary observation bodies and 52 artifacts remain byte-identical
+to the previous qualified normal checkpoint.
+
+The comparison rehashes both full 459-file dependency trees, all 714 selected
+inputs and the 8,479-file implementation snapshot. The complete 8,478-file parent
+aggregate is reconstructed independently. No unrelated whole historical source
+inverse is claimed. The unchanged strict 138-field policy allows only documented
+provenance/work changes; the new diagnostic relation grants no admission.
+
+Completed strict comparison:
+`cd8fc5439b107f0cf41ad654efcc6c64f7f3bd5badace6826ee87c1e39e94481`.
+Completed ordinary comparison:
+`5de5a0a1e20bdb71602cb2bf77136ed6ed7e34690406283a20190243215d7858`.
+
+#### Keep debugger startup separate from visualization capture
+
+The parallel private debugger startup passed two commands and 14 records without
+starting an inferior. Process census and cleanup checks passed; controller CPU
+checks passed 151 tests, strict Clippy and build. This is not a stopped-wave
+capture, target dispatch or successful full native command sequence.
+
+The historical-evidence adapter and complete current dependency revalidation,
+native family build/replay and a fresh bounded native attempt remain pending.
+No public capture gate, global compiler pin or route maturity changes here.
+
+Source-bound bounds preparation, authentic producer state, complete block
+emission, source-to-ranked correspondence and mandatory verification/normal
+continuation remain open. No new nominal LLVM continuation, GPU execution,
+edited-source promotion or ready-token authority is supplied.
+Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
