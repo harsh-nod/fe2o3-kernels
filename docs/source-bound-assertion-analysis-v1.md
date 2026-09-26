@@ -446,3 +446,118 @@ This checkpoint adds no nominal LLVM continuation, edited-source promotion,
 GPU execution, launch authority or debugger capability. The global compiler
 pin and route maturity are unchanged; this is an explicitly linked later
 checkpoint. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Actual retained-input root prefix and indices: one assembly owner
+
+The [actual root-prefix checkpoint](https://github.com/harsh-nod/fe2o3/blob/897b9915ccbc310831af08d45f56f956ed0ac78e/docs/bf16-actual-root-prefix-indices-qualification-20260926.md)
+adds a private connector for the prefix and invocation/index stages described
+above. This later checkpoint does not retroactively turn the earlier UNJOINED
+component into a root recipe. It is compiler-internal work, not a new runnable
+kernel-authoring syntax, public API or assembly launch command.
+
+#### Connect actual retained inputs, not matching copies
+
+A non-cloneable borrowed view carries the actual retained owner, ranked inputs
+and reference bindings. Its lifetime-bound callback keeps that view from
+escaping. The preparation factory checks the owner against both retained
+canonical facts and checked emission data, then checks the complete selected
+source/launch/kernel-binding roster.
+
+Equal-valued cloned inputs can satisfy an isolated content-validation control,
+but cannot construct or replace this private input view. The constructor is
+owned by the pipeline and currently reached through genuine test routing;
+there is no ordinary nominal-helper admission route.
+
+The pending assembly owns the real operation stream and value-ID allocator.
+Layout and reference-prefix operations are prepared first; the shared
+invocation seed and index propagation then append in that same namespace.
+No zero-based UNJOINED component is spliced, renumbered or promoted into it.
+The ordinary extraction preserves source-rank order, constant/axis order and
+the existing partial-emission/refusal ordering.
+
+This non-executable sketch describes the current actual observation, not a
+source API, Rust program or launch command:
+
+```text
+actual retained inputs -> ExecutionLayout; next_value = 0
+same pending assembly  -> InvocationIndex %0; next_value = 1
+observed result        -> 2 operations, 1 assigned local, 1 FIFO entry
+still missing         -> actual guarded accesses and the complete root recipe
+```
+
+The current source graph can contain alias edges without an alias being
+traversed from this particular invocation seed. The observed zero processed
+index edges is not a claim that the complete source graph has no aliases.
+
+#### Keep ownership and accounting attached
+
+Prefix operations, reference-value IDs, rank scratch, index tables and consumed
+FIFO entries remain in an outer pending owner across all nested callbacks and
+postflights. The independent oracle's scratch is outer-owned too. Successful,
+partial-error and panic paths must dispose of payloads before releasing only
+their accepted credits; occupied owners and foreign ledgers refuse.
+
+Work and storage stay on the original ledger. The genuine oracle independently
+rescans the supported-profile source graph and checks every prefix operation,
+value ID, index row and FIFO entry without invoking the shared emitter,
+seeding, propagation or assignment routines. Summary counts alone do not
+establish those joins. This is logical resource accounting, not native
+allocator, RSS or machine-stack enforcement.
+
+Fourteen new unit controls cover the shared prefix, actual namespace and
+connector. Nonempty references are covered by inert component fixtures only.
+The actual frontend still refuses nonempty reference bindings before retained
+source preparation. Error and panic lifetime injections occur after complete
+prefix/index preparation; they do not cover every possible allocation point.
+
+#### Separate actual observations from remaining qualification
+
+The regression passed 331 model tests and 2,631 backend tests, with 189 ignored,
+plus backend/extractor build. Five fresh actual Rust sessions cover Identity,
+Swap01, wrong launch, callback error and callback panic.
+
+Each of the four prepared cases reports one root, zero references and reserved
+reference values, two operations, next value ID one, 31 locals, one assignment,
+zero processed index edges and one FIFO entry. Wrong launch refuses before
+this preparation and emits no root-prefix diagnostic. These sessions do not
+admit or execute the nominal helper as a GPU kernel.
+
+Nine preparation/control runs consume 1,911,195 logical work units for
+Identity/error/panic and 1,911,519 for Swap01. Accepted handoff frames add
+15,040 work/storage units: 10,832 for the consuming continuation and 4,208 for
+the borrowed-input view. These are measured logical debits, not GPU timings
+or a performance improvement.
+
+The consuming frame is retained during materialization and reverification;
+the view frame begins after the retained owner exists. Original-ledger and
+separately prepaid boundary-probe ledgers have different peak scopes.
+Comparison must join each scope separately; a single blanket peak offset
+would be incorrect.
+
+All 38 ordinary sessions passed: 36 composition and two direct-BF16 sessions. Their 38 observation bodies and 52 artifacts are byte-identical to the preceding S2 checkpoint. This is preservation of existing ordinary routes, not admission of the nominal helper.
+
+All 88 comparison controls and the separate cumulative R16-to-R21 and direct R20-to-R21 lossless comparisons passed. The checker reread all three 459-file dependency closures (352,670,356 bytes each), the complete 8,461-file compiled-source roster, and all 350 genuine-session request inputs. Both comparisons observe 232 differences within the exact 238-path policy; numerical results, masks, refusals and admission fields remain unchanged. Direct measured work increases are 1,926,235 for Identity/error/panic and 1,926,559 for Swap01; cumulative increases are 61,838,764 and 61,839,459. Callback floors increase by both accepted frames (15,040), while original-ledger replay peaks increase only by the consuming frame (10,832), from 1,632,943,151 to 1,632,953,983. The three separately prepaid graph probes retain their historical peaks of 817,434,912 or 817,435,488. All other storage remains exact; no blanket peak override is accepted.
+
+| Evidence | Receipt SHA-256 |
+| --- | --- |
+| Actual-prefix regression | `2f43d6fdaf60ceb36172b132d44d46d59854877c5fc182501da98d5caa5948ad` |
+| Five fresh source sessions | `550250c21fa206a282751939568af57a70bd9b43b65513d9fc2b7f634b269be8` |
+| Ordinary preservation | `c86648d9c895d53f92861d4e239e8810a463d5328d98ba6538b957a31bfa88f9` |
+| Strict comparison | `fa0374eab14def6cdd586765ba74c37b77ad6015aaf87bc720a5a7c77cd691bd` |
+
+For kernel authors, this work can catch value-ID collisions or resets, lost
+prefix operations, reordered FIFO propagation, stale/foreign owner joins,
+incorrect reference-input associations and premature resource refunds.
+It does not independently prove the shared algorithms, complete nominal-kernel
+memory safety or native correctness.
+
+Actual guarded-access appends, reference origins and dereference sites,
+CFG/assertion handling, complete Final effects, bounds/reference-write checks,
+launch/placement and mandatory verification still need one complete unverified
+root recipe. Normal helper admission remains refused.
+
+This checkpoint does not add public source-custody or ready-token authority,
+detached/edited-input promotion, nominal LLVM continuation, GPU execution,
+launch authority or debugger capture. The global compiler pin and route
+maturity are unchanged. Accepted broad exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
