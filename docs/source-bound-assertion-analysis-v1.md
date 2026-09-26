@@ -561,3 +561,106 @@ detached/edited-input promotion, nominal LLVM continuation, GPU execution,
 launch authority or debugger capture. The global compiler pin and route
 maturity are unchanged. Accepted broad exits remain
 M1/V1/V2/U1/U2/U3 (6/18).
+
+### Actual guarded-access preparation: preserve the same assembly
+
+The [guarded-access checkpoint](https://github.com/harsh-nod/fe2o3/blob/13a86af6283a24f9b78a844fd84fd0cac6a5a89a/docs/bf16-actual-guarded-access-qualification-20260926.md)
+continues the private actual-input connector above through the existing
+identity mutable-access operation. It is not a new source API, runnable
+assembly syntax or launch command. The complete nominal-helper route remains
+refused; the global compiler pin and route maturity are unchanged.
+
+#### Follow the authored access without losing its owner
+
+The real BF16 fixture contains `out.get_mut(thread::index_1d())` followed by a
+conditional store through the returned reference. At this checkpoint the
+compiler prepares the accessor's view, index and predicate data. It has not
+yet joined the later store's semantic use site.
+
+This non-executable sketch describes the measured intermediate state:
+
+```text
+same actual retained owner
+  -> ExecutionLayout; InvocationIndex %0
+  -> ViewInSpace %1; next_value = 2
+  -> one cached view, one guarded-access template, one predicate
+  -> reference origins and actual dereference/store sites still pending
+```
+
+The operations and IDs belong to the same pending assembly and original work
+ledger. No independently prepared zero-based graph is promoted or renumbered
+into it. Only the existing identity accessor is supported here; other producer
+families have not been enabled by this checkpoint.
+
+The accessor call and the memory-use site are different. The template keeps
+`semantic_site = None` until the real dereference/store is projected.
+Its proposed output extent is not whole-slice equivalence. Counts, copied
+inputs and matching values cannot establish source custody or readiness.
+
+#### Refusal and lifetime checks
+
+The paid path keeps incomplete operations, cached views, comparisons, indices
+and predicates in the outer pending owner through postflights. It drops those
+payloads before releasing their accepted storage credits. Occupied payloads
+including nonzero capacity, foreign ledgers and retries refuse.
+
+The shared ordinary path preserves its existing allocation, diagnostic,
+partial-emission and late-refusal ordering. New component tests cover short
+work/storage budgets, cache conflicts, writable-access metadata and late
+destination failures. They do not inject allocator/OOM failures. Genuine
+callback error/panic controls occur after completed preparation, not at every
+allocation point.
+
+An independent genuine-source oracle rescans actual calls and compares every
+access/cache/predicate field and the emitted operation/ID sequence without
+calling the shared normalizer or emission helpers. Summary counts alone are
+not this verification.
+
+#### Read the evidence at its actual scope
+
+The regression passed 331 model tests and 2,654 backend tests (189 ignored),
+plus a backend/extractor build. Eighteen new component tests and five new
+genuine-observer tests accompany five fresh actual Rust sessions.
+
+Prepared cases contain three operations, next value ID two, one view, one
+guarded access and one predicate. Wrong launch refuses before preparation.
+Nine guarded-access observation/control runs debit 2,026,119 logical work
+units, or 2,026,443 for Swap01. These are accounting measurements, not GPU
+timings or a performance improvement.
+
+All 141 comparison controls passed. The cumulative R16 and direct R20
+comparisons each observe 232 changed fields; the separate direct R21 comparison
+observes 132, within the unchanged 238-path policy. Numerical results, masks,
+refusals and admission fields remain unchanged; direct R21 storage is exact.
+
+Independently measured accepted-frame changes explain the entire S3 increase:
+six times (1,648 + 16 + 16), or 10,080. Direct R21 work increases by 2,036,199
+for Identity/error/panic and 2,036,523 for Swap01. Canonical calibration changes
+only qualified provenance, including five metadata digests derived from two
+fixed Cargo cache fields. No source-path, numerical or arbitrary hash override
+is accepted.
+
+The comparisons rehash the complete 8,465-file source roster and all 389
+genuine-session inputs, plus three complete dependency closures for cumulative
+checking and two for direct R21. Each closure contains 459 files and
+352,670,356 bytes. Cumulative checking uses 10,435 reads and 1,243,303,089
+content-plus-EOF bytes; direct R21 uses 9,963 reads and 890,579,220 bytes.
+Both fit their unchanged 11,000-read / 1,280 MiB limits.
+
+All 38 ordinary sessions passed: 36 composition and two direct-BF16 sessions.
+All 38 observation bodies and 52 artifacts are byte-identical to S3.
+This preserves ordinary routes; it does not admit the nominal helper.
+
+| Completed evidence | SHA-256 |
+| --- | --- |
+| Ordinary ladders | `05ea729725cd2be5277d091bcc1a007abdd8b8816015221c4a4c706992ba18a5` |
+| Comparison controls | `71fe3ba0e2b8077e07fcc682539b5b75243825ca3bc183444c9c96b6442dc19d` |
+| Cumulative R16 / direct R20 | `dc519fc3a8ed4cb95b8ba5738ccbb8fbd50066eb8c9b546a435962ff9b35b418` |
+| Direct R21 | `6ffc8bee869451f22124add1b172cd24133da580fa0471ebecd7f0c902b01d28` |
+
+Reference-origin joins, actual memory-use sites, guards/CFG/assertions,
+complete effects, bounds/reference-write checks and launch/placement still
+need one complete unverified root recipe and mandatory verification.
+There is no new public source-custody or ready-token authority, detached-input
+promotion, nominal LLVM continuation, GPU launch or debugger capture.
+Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
