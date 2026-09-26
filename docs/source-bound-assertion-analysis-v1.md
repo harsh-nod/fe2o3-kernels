@@ -252,3 +252,49 @@ masked facts and lost custody refuse. Actual materialization observations cover
 No checked-origin graph or complete nominal kernel recipe is supplied by this
 context. Normal helper admission, source-to-ranked placement and the remaining
 formal/target/LLVM connections stay open. Accepted broad exits remain 6/18.
+
+### Later initial-graph and reference-origin checkpoint
+
+The [source-bound graph/origin checkpoint](https://github.com/harsh-nod/fe2o3/blob/660c2b41aa69295e174141f0d9dc81c856bce36a/docs/bf16-initial-graph-reference-origin-qualification-20260926.md)
+qualifies the next preparation stages with fresh R18 evidence. The initial
+capability graph borrows the actual source owner, inventory, checked call,
+rich tables and canonical facts on the original ledger. Graph storage stays
+in an outer pending owner through error, panic and enclosing postflights;
+cleanup releases only its own credits.
+
+The reference-origin algorithm is shared with the ordinary path, preserving
+shared-borrow seed order, guarded-call order, definition/Option checks and
+FIFO propagation. Its paid result is still UNJOINED intermediate data.
+A guard count, matching source coordinates or a graph observation cannot
+authenticate the actual guarded-access vector. There is no ready constructor.
+
+Qualification passed 331 model tests, 2,598 backend tests (189 ignored),
+backend/extractor build, five actual Rust sessions and 55 comparison controls.
+The separate ordinary ladders passed 38 sessions; all 38 observation bodies
+and 52 artifacts match the preceding checkpoint exactly.
+The lossless R16-to-R18 comparison rehashed both 459-file dependency closures.
+Exactly 132 report fields changed: 96 work fields, 25 generation paths,
+six dependency digests and five artifact digests. Numerical results, masks,
+refusals, storage and peaks are unchanged. Logical work increases include
+prepaid negative controls; they are not GPU timings.
+
+| Completed evidence | SHA-256 |
+| --- | --- |
+| Merged regression | `f9543053b78616b3f91b81cfe6ce7ff57afec7bdd026b888b0fad9c864d6e5d5` |
+| Five fresh Rust sessions | `033aee8a73f182d6c8920e012589cd6cf88ea4ed35a1ebdbf1b504801d0291bf` |
+| Normal ladders | `3cee55d18cbc785903adfc1e0d4763ead462cbd852678069061f6f004685d644` |
+| Lossless comparison | `a19c066c5c61cc3d094f8323eb47938489224b30474d3d593fb9b75e85b4a070` |
+
+For authors, these checks catch stale source associations, graph-order changes,
+wrong origin propagation and incorrect resource ownership. They do not yet
+establish complete nominal-kernel memory safety or native correctness.
+The actual fixtures have ten alias edges and zero enum edges; they do not
+provide positive enum or actual assertion coverage.
+
+The remaining connection must bind each actual successful access append to
+its exact source call/destination, share index/value/operation ownership,
+and join real dereference sites, Final effects, expanded CFG and placement
+in one complete unverified root recipe before verification.
+Normal helper admission remains refused. This does not add nominal LLVM
+continuation, edited-source promotion, a new public command or a global
+compiler pin change. Accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).

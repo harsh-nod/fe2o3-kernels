@@ -255,3 +255,46 @@ qualification for any implementation change; there is no automatic retry or
 public capture activation. This appendix adds no live route, GPU-observed badge
 or global compiler pin change. Accepted exits remain
 M1/V1/V2/U1/U2/U3 (6/18).
+
+## Disabled host-entry maintenance checkpoint (2026-09-26)
+
+The [separate physical-v3 checkpoint](https://github.com/harsh-nod/fe2o3/blob/660c2b41aa69295e174141f0d9dc81c856bce36a/docs/physical-debugger-host-maintenance-qualification-20260926.md)
+adds source-reviewed maintenance for repeated host-entry commits while leaving
+physical-v2 unchanged. Selection, capture and publication remain false;
+the public controller retains PROFILE=None and the V2 wire format is unchanged.
+
+Maintenance arms only after the initial host-entry commit and checked flush.
+It retains actual native process/top-target references and checks the same
+owner, exact pushed target stack, running host, unloaded runtime and absence
+of GPU/callback/resume state before and after the existing commit effect.
+It emits no new output row and adds no resume, event acknowledgement or sample.
+MI input, resume, callback, runtime acknowledgement, stop, disappearance,
+rejection or unwind retires the epoch.
+
+Exceptional retirement may retain bounded strong references until debugger
+destruction and delay target close. CPU mocks do not prove unchanged native
+close timing. The separate 256-byte maintenance scratch remains subject to
+actual layout measurement under the unchanged 65,536-byte native storage cap.
+
+The relocated package passed 73 Node controls, the parent's strict C++
+publication/output/resource checks, and 100 maintenance CPU groups with
+481 checks using extracted actual helper bodies. The source verifiers checked
+both 63-file stages and the pinned API header. The new selected-source cap is
+2,144 KiB; physical-v2 keeps its 2,112-KiB cap. These are source payload limits,
+not whole-process I/O, runtime memory or activation permission.
+
+| Completed evidence | SHA-256 |
+| --- | --- |
+| Source and CPU build | `e6a56b0bda7aaa389a895c647759f2803269556b1e26fe07f83de0320c441be4` |
+| Public CPU probe | `67f1ec7a4d116d5e7b584cbbceb15e09d1d8dfcdd90d6ed07546e21863af2253` |
+
+This is not a successful native capture or proof that maintenance caused the
+earlier refusal (15). A changed active debugger still needs its own full build,
+measured layout, artifact derivation, startup/loaded-file qualification,
+controller/family binding, replay and fresh coordinated native attempt.
+
+A visualizer must preserve unavailable data, not zero registers, oracle-filled
+memory or a GPU-observed badge. Successful cleanup is not capture success.
+There is no live visualization route, activation command, global compiler pin
+change or new milestone exit here. Accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
