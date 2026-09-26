@@ -876,12 +876,13 @@ const softmax: Lesson = {
       language: "rust",
       code: rowSoftmaxKernel,
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: annotatedKernelCommit,
+      sourceCommit: "bfa616c996fa529da67f2f6c32e7829213914e3e",
       sourceSha256:
-        "8b4775baafb5ebc3e92ebb249e8362d06a64c33dbba96028802a529ec3b003c3",
+        "b7f65c16395ea89c590aaee800167a9dceea620e55765044f423eadf9360e04d",
+      sourceDigestScope: "file",
       explanatory: false,
       notice:
-        "Current annotated kernel source; the three numerical passes and disjoint row ownership are now explicit. Historical execution evidence remains pinned separately.",
+        "Exact whole-file compiler source at bfa616c9. This source association does not qualify a SIMT/tile pair; historical GPU execution evidence remains pinned separately.",
     },
     {
       language: "rust",

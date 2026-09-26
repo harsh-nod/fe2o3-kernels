@@ -1387,9 +1387,14 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   ).toBeVisible();
 });
 
-test("row softmax shows dynamic source and GPU qualification", async ({
+test("row softmax shows exact source and historical GPU qualification", async ({
   page,
-}) => {
+  context,
+}, testInfo) => {
+  const source = readFileSync(new URL("../examples/row_softmax_general_v1/src/kernel.rs", import.meta.url), "utf8");
+  const errors: string[] = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("./#/lesson/softmax-invariant");
   await expect(
     page.getByRole("heading", {
@@ -1400,13 +1405,20 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByRole("tabpanel")).toContainText(
     "pub fn row_softmax_general_v1",
   );
+  const lessonCode = page.getByLabel("Lesson code");
+  expect(await lessonCode.getByRole("tabpanel").locator("code").textContent()).toBe(source);
   await expect(page.getByText(/Explanatory source/u)).toHaveCount(0);
   await expect(
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/bfa616c996fa529da67f2f6c32e7829213914e3e/examples/row_softmax_general_v1/src/kernel.rs",
   );
+  await expect(lessonCode.locator(".code-status")).toContainText("does not qualify a SIMT/tile pair");
+  await lessonCode.getByRole("button", { name: "Copy code", exact: true }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(source);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  await lessonCode.screenshot({ path: testInfo.outputPath("softmax-source.png"), animations: "disabled" });
   await expect(page.getByText(/One wave owns one dynamic row/u)).toBeVisible();
 
   await page.getByRole("button", { name: "Show proof details" }).click();
@@ -1421,6 +1433,9 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByRole("tabpanel")).toContainText("fn launch_case");
   await expect(page.getByText(/ordinary host FFI boundaries/u)).toBeVisible();
   await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "Historical dynamic row softmax qualification on MI300X/gfx942",
+  );
   await expect(page.getByRole("tabpanel")).toContainText("PASS single-column");
   await expect(page.getByRole("tabpanel")).toContainText("PASS maximum-width");
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -1429,6 +1444,9 @@ test("row softmax shows dynamic source and GPU qualification", async ({
   await expect(page.getByRole("tabpanel")).toContainText(
     "not a proof for every input or a performance claim",
   );
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+  expect(errors).toEqual([]);
+  await page.screenshot({ path: testInfo.outputPath("softmax-historical-evidence.png"), fullPage: true, animations: "disabled" });
 });
 
 test("Wave 2 lessons expose exact source and bounded latest status", async ({

@@ -4731,11 +4731,17 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
+      sourceCommit: "bfa616c996fa529da67f2f6c32e7829213914e3e",
       sourceSha256:
-        "8b4775baafb5ebc3e92ebb249e8362d06a64c33dbba96028802a529ec3b003c3",
+        "b7f65c16395ea89c590aaee800167a9dceea620e55765044f423eadf9360e04d",
+      sourceDigestScope: "file",
       explanatory: false,
     });
+    const source = readFileSync("examples/row_softmax_general_v1/src/kernel.rs", "utf8");
+    expect(kernel?.code).toBe(source);
+    expect(Buffer.byteLength(source)).toBe(3979);
+    expect(kernel?.notice).toContain("does not qualify a SIMT/tile pair");
+    expect(kernel?.notice).toContain("historical GPU execution evidence remains pinned separately");
     expect(
       createHash("sha256")
         .update(kernel?.code ?? "")
