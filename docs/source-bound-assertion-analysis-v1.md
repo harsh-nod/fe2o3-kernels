@@ -879,3 +879,64 @@ emission, source-to-ranked correspondence and mandatory verification/normal
 continuation remain open. No new nominal LLVM continuation, GPU execution,
 edited-source promotion or ready-token authority is supplied.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Bounds preparation: exact source guards before continuation
+
+The [bounds component checkpoint](https://github.com/harsh-nod/fe2o3/blob/da9793fe559f7de56d32c78e077037639e0a4455/docs/bf16-bounds-components-qualification-20260926.md)
+adds private source scanning, extent tracking and fixed-array guard sessions.
+These are compiler components, not a new public authoring API.
+
+#### Read a guard from its actual source
+
+A fixed-array query selects the original BoundsCheck Assert by source block.
+It does not accept a caller-supplied replacement index, bound or condition.
+The existing exact unsigned index < nonzero literal-extent comparison, stable
+definition, dominance and address-escape checks still apply. Swapped operands,
+late or duplicate definitions, escaped values and mismatched messages refuse.
+
+Matching the helper is only one step. The surrounding collector still checks
+the unique success predecessor and rejects an entry-block success target.
+Do not treat a helper result as proof of a complete safe memory access.
+
+Source coordinates remain distinct from emitted operation indices. Equal-content
+foreign source/type/graph loans and foreign resource ledgers are not interchangeable.
+A failed prepared guard session cannot be retried as a fresh successful session.
+
+#### Preserve state even when an expression refuses
+
+Suppose the left operand of a comparison materializes an argument slot or a
+constant operation, but the right operand is unsupported. The original compiler
+may retain that left-side mutation. Resuming with empty slots, a reset value
+counter or a guessed next argument would change compilation.
+
+The extent component therefore takes authentic producer state rather than
+inventing an empty roster. Wiring the complete source-ordered producer into the
+actual bounds factory remains work in progress. The eager fixed-guard component
+also still needs the collector's lazy first-use event and joint ownership of its
+proof, extent and operation storage.
+
+#### Exercise refusals and resource limits
+
+The new controls cover changed source occurrences, stale loans, wrong bounds
+messages, duplicate/late/escaped definitions, projection/equality precharges,
+one-short work/storage budgets, sticky failure and drop-before-refund cleanup.
+Their independent oracle is the frozen original helper, not the new implementation.
+
+Thirty source-scan, 34 extent and 21 fixed-guard controls passed: 85 new tests.
+The full suite passed 331 model and 2,865 backend tests, with 189 ignored.
+All 38 normal observation bodies and 52 artifacts were unchanged.
+These logical resource checks do not measure process RSS or GPU performance.
+
+Regression receipt:
+`048bbef5179abe42c9ae65ccce21a8a29d1cf82cdd1d6c2559d71832e932e161`.
+Normal comparison receipt: `b6410a81a846e5e4d946e609a468a9830bfb285026ca29243d292bfd7658756e`.
+
+The historical debugger-evidence adapter has separately passed 107 controls and
+an actual retained-evidence run. It does not prove current target execution or
+stopped-wave capture. The current-build consumer has now passed 59 focused CPU controls and its
+full source inverse. Current family composition, replay and native qualification
+remain separate work; no public capture gate changes here.
+
+Complete bounds-factory admission, full operation streams and mandatory normal
+continuation are still pending. No global compiler pin or route maturity changes.
+Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
