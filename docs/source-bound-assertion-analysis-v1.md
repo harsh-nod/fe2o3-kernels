@@ -758,3 +758,48 @@ No public source-custody or ready-token authority, checked memory-use sites,
 complete nominal recipe, edited-input promotion, nominal LLVM continuation,
 GPU launch or debugger capture is supplied. Accepted broad exits remain
 M1/V1/V2/U1/U2/U3 (6/18).
+
+### Source-use and borrowed-local components: what is still pending
+
+The [component checkpoint](https://github.com/harsh-nod/fe2o3/blob/8b20da0620702352275371526d80e588f2ba8aa2/docs/bf16-source-use-local-contract-components-20260926.md)
+adds private source-occurrence selection and borrowed local contracts on the
+original ledger. This is compiler infrastructure, not a new authoring API or
+an executable assembly tutorial.
+
+A source occurrence is identified by its block, statement or terminator, and
+operand ordinal. It is not an emitted operation index. The selector preserves
+the real access kind, atomic contract and source provenance. Borrowed local
+decisions retain the ordinary immutable predicate: non-entry local, exactly one
+definition, an available assignment, and no escape. Allocation and provenance
+fallback order remain unchanged.
+
+Each new factory extends a single-visit pending assembly. The factories are
+separate paths; they must not be called sequentially on the same started owner.
+A missing origin is data, not proof of a checked access. Guard semantic sites
+remain unassigned, and calls, tail calls and drops remain incomplete here.
+Paid emit/bind helpers do not yet form a complete actual-source operation stream.
+
+The completed component qualification passed 331 model tests and 2,723 backend
+tests, with 189 ignored, plus builds and 17 existing telemetry controls.
+All 38 ordinary observation bodies and 52 artifacts are byte-identical to the
+published source-origin checkpoint. These tests preserve ordinary behavior;
+the new actual-source factories still require separate real-source qualification.
+The independent source oracle and its actual per-scope measurements are pending,
+not inferred from the component or ordinary-path tests.
+
+Completed regression receipt:
+`5425d43b6fc3cfca6e625e9bd04b83102d7a9baf53d55b816a7f2eb11593796f`.
+Ordinary-ladder receipt:
+`841e2202810a80be75fb38cd4c9bea44996e6860a24f8e26293b81c80560f941`.
+Lossless ordinary readback:
+`016005cc76a6aee210dcbb2f998bcc0fd057b03908f95fc0164d45e35611a403`.
+
+In the debugger lane, the private diagnostic build/static checks and 153
+captured-evidence decoder controls passed. No debugger startup, target execution
+or new physical capture is claimed. Helper profiles, operational controls,
+startup/loaded-closure observation and a bounded native attempt remain pending.
+
+The global compiler pin and route maturity are unchanged. Complete block
+emission, defined-call routing, mandatory verification and normal nominal-helper
+continuation remain open. No ready-token authority or public capture gate is
+added. Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
