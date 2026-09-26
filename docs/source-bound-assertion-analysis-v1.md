@@ -940,3 +940,49 @@ remain separate work; no public capture gate changes here.
 Complete bounds-factory admission, full operation streams and mandatory normal
 continuation are still pending. No global compiler pin or route maturity changes.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Operand preparation: preserve changes made before refusal
+
+The [uniform operand checkpoint](https://github.com/harsh-nod/fe2o3/blob/541c1c4d7d52e8711b5aee28943fe6bb4072a6e0/docs/bf16-uniform-operand-qualification-20260926.md)
+shares the existing operand decisions with a private metered component. It does
+not add a new public authoring API or admit complete kernels by itself.
+
+When a left operand assigns an argument slot or emits a constant operation,
+a later unsupported right operand does not undo that earlier change. Likewise,
+a successful operation-vector reservation remains owned if SSA allocation then
+fails. Resetting the counter or rebuilding empty slots would change the compiler's
+behavior. The component therefore borrows the caller's actual slots, counter,
+operation vector and SSA allocator.
+
+Constant lookup still occurs first. Projection work is prepaid only when that
+lookup misses. New argument conversion, counter advancement and slot installation
+are prepaid together. The outer caller retains partial physical state and accepted
+credits through postflight, then drops payloads before refunding storage.
+
+Thirteen new controls passed, including an independent frozen original-helper
+oracle, one-short work/storage limits, malformed origins, partial mutations and
+unwind cleanup. Independent review corrected the separate nested constant-helper
+frame accounting before qualification. These are logical source-resource checks,
+not measurements of native stack, RSS or GPU performance.
+
+Full regression passed 331 model and 2,878 backend tests (189 ignored), build
+and 83 JavaScript controls. Both ordinary-source ladders passed, with all
+38 observation bodies and 52 artifacts unchanged.
+Regression receipt:
+`69fb48571ca1641f97f323df12a1eb7ca5958cc6a106255b64fe8d2eb4563441`.
+Normal comparison:
+`b7df8a534a4702f22898ed39ebd19054955674d733de2db727ff292378e1769d`.
+
+The complete current debugger family has separately passed 33 Rust and 299 Node
+CPU controls. Its first run exposed a stale expected startup digest; a test-only
+correction replaced that digest, preserved every runtime byte and reran the
+complete suite. Three historical startup suites remain explicitly historical.
+CPU receipt: `86e8c6482b2ad7625621c7fdc5d986794fedab87664d0e25c6652f9056a1acfd`.
+CPU qualification is not a native build, stopped-wave capture or visualization
+execution. Build, deployment, replay and native qualification remain separate.
+
+Authentic preceding and later argument producers, the final extent-count rule,
+lazy joint ownership, complete operation streams and mandatory continuation remain
+unfinished. The separate preparation-policy refactor is not in this checkpoint.
+No global compiler pin, public capture gate or route maturity changes.
+Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
