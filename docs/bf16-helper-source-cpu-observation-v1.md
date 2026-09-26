@@ -534,3 +534,13 @@ nominal-pending, RawEmpty and attachment guards are unchanged. This adds no
 ordinary admission, native helper execution, GPU launch, physical capture or
 public debugger activation. No global compiler pin or route maturity changes.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**; this adds no milestone exit.
+
+## Later source-bound assertion checkpoint (2026-09-26)
+
+The [source-bound assertion lesson](source-bound-assertion-analysis-v1.md)
+explains the next original-ledger boundary and its actual R14 observations.
+The full shared evaluator and same-source immutable decision scope are now
+qualified, but these genuine roots contain zero assertion terminators.
+Positive assertion coverage comes from component controls, not those sessions.
+Complete root recipe and normal formal/target/LLVM continuation remain open.
+The historical sections above retain their original source and evidence.

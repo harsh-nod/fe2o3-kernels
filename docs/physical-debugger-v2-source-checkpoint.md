@@ -160,3 +160,34 @@ not a reason to disable identity checks, increase timeouts or automatically
 retry. Any changed controller requires its own source/build/process
 qualification. The public package remains disabled; this appendix enables no
 capture command, live UI, runtime binding or new milestone acceptance.
+
+## Later readiness attempt: report-publication deadline (2026-09-26)
+
+The [published compiler record](https://github.com/harsh-nod/fe2o3/blob/db351c0df32173d2423235eab2812bac5ccf50a6/docs/physical-debugger-publication-deadline-20260926.md)
+records a fresh private attempt after bounded initial command-line readiness
+and independently qualified controller/family prerequisites. It failed during
+raw-report publication with Deadline and produced zero capture-report bytes.
+This does not prove the earlier setup refusal repeated; the original protocol
+result was not retained by that publication-error path.
+
+For a visualizer, missing capture bytes must remain unavailable, not zero
+registers, an empty memory image or passed canaries. Producer capture and
+GPU dispatch remain unknown. A publication failure cannot authorize reuse of
+historical bytes under a new stop identity.
+
+Root independently rejoined the complete owned-family cleanup receipts and
+terminal acknowledgement, then verified the scope and all five retained
+process IDs were absent. The family owner reaped an adopted inferior that the
+controller did not claim to reap. This is cleanup, not physical capture or
+rollback. The failed attempt was preserved without automatic retry.
+
+Native receipt: 232,123 bytes, SHA-256
+`9663f1bad0e4ceff58d9c28fba39d5337756b4fb5ecfc77afb7dfce81e57eeb1`.
+Independent cleanup: 699 bytes, SHA-256
+`f26693798f4ae476d4c85caf817c20d84df5acd615c181cbaab6671cbe99d2c7`.
+
+The next diagnostic fix retains a bounded failure-only description when normal
+publication fails, without resetting the positive deadline, accepting a partial
+report or issuing another target command. It still needs separate qualification.
+Public capture stays disabled. This adds no live route, activation command,
+global compiler pin change or milestone exit; accepted broad exits remain 6/18.
