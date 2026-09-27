@@ -1035,3 +1035,47 @@ Lazy proof ownership, one joint bounds driver, remaining argument producers,
 authentic handoff and production routing remain open. No global compiler pin,
 public capture gate or route-maturity change is made here.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Lazy first-use proofs and read-only debugger replay
+
+The [lazy-proof checkpoint](https://github.com/harsh-nod/fe2o3/blob/03ad28883fa8bd615baf71c54fe88508a5752ce3/docs/bf16-lazy-fixed-proof-qualification-20260926.md)
+keeps proof construction at the first fixed-bound event. Literal and non-fixed
+cases do not eagerly build it. Canonical shape and length checks precede index
+lookup, and the original preparation loan is consumed once.
+
+Pending, Building and Ready states retain partial proof buffers and candidates
+across later refusal. The retained-push adapter admits frame, work and exact
+reservation before moving the caller's candidate. A failed component cannot
+restart. A successful guard view is DATA, not a complete bounds operation or
+authenticated whole-kernel continuation.
+
+Twenty-six new controls passed. Full regression passed 331 model and 2,942
+backend tests (189 ignored), backend build and 83 JavaScript controls. Both
+ordinary ladders passed; all 38 lossless observation bodies and 52 artifacts
+match the previous checkpoint exactly. Regression receipt:
+`b6e603ed3582f5a4f0780839843f60c3a44dfb863ee237323351c7535f8277e3`.
+Normal comparison:
+`6dcd44c2f2fcc07c8f6faeee3fd3efe5e59962f8a2793f58cb700690cac31e45`.
+
+The [debugger deployment replay](https://github.com/harsh-nod/fe2o3/blob/03ad28883fa8bd615baf71c54fe88508a5752ce3/docs/debugger-readonly-replay-qualification-20260926.md)
+has now passed 30 controls and actual read-only validation of 27 products,
+38 runtime sources and 16 startup import modules. It accepted 93 benign records
+and 310 startup records. Replay receipt:
+`83a84030a13676d2c36793c980325b25f4201d078aba492bf649c34ef0b7b70f`.
+
+The explicit driver charged 14,029,167 bytes and 526 reads including EOF under
+its unchanged limits. Other validators retain separate original ledgers;
+this is not a combined 512 MiB claim. Module-loader I/O is separate, and
+cooperative deadline checks still need the finite outer supervisor.
+
+No scope owner, controller, debugger, target or GPU was invoked. The replay did
+not create a current process census, native lease or physical capture. A fresh
+native run still needs coordinated writer quiescence, exact process-generation
+binding, cleanup acknowledgement and accepted postflight.
+
+The enclosing compiler factory still needs physical proof-payload retention
+through postflight and drop before refund. Authentic argument initialization,
+earlier producer chronology, the joint bounds driver, remaining writers and
+production routing remain open. This checkpoint adds no public authoring API,
+global compiler pin or public capture gate.
+Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
