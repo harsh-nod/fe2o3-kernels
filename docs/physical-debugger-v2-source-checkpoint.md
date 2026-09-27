@@ -371,3 +371,33 @@ A visualizer must retain unavailable data, never invent register values,
 memory or passed canaries from the expected-value oracle. No capture success,
 live UI route, activation command, public gate change or global compiler pin
 change is added here. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+## Disabled scratch debug-type anchor (2026-09-27)
+
+The [type-anchor checkpoint](https://github.com/harsh-nod/fe2o3/blob/889d52a22f14daa85e87590e85ff999864589f71/docs/debugger-disabled-type-anchor-qualification-20260927.md)
+adds a 213-byte internal const-pointer identity function marked used to retain
+the complete scratch debug type. It adds no runtime call, owner field, mutable
+API, resume, acknowledgement or captured sample. Public gates remain disabled.
+
+Contributor qualification passed all 45 source controls, exact forward/reverse
+patch and source/API checks, strict C++ builds, 264 maintenance groups / 1,033
+checks and six first-poison groups. Old/new owner sizes remained 1,992 bytes.
+The complete selected source is 2,194,926 bytes under the unchanged 2,195,456-byte
+cap, leaving 530 bytes. Full compiler regression passed 356 model and 3,054
+backend tests (189 ignored), plus backend/extractor build.
+
+Publication build receipt:
+`3d2e29fa7968f707d628594cceb0607f554dba92732d2fa3d18f5ed2972ecc76`.
+Publication CPU receipt:
+`000f42da869eb831421d077fb695fa219595364e8035b1cf8dd3e6c163a0e72c`.
+
+The separate private observable debugger has four completed compile phases and
+a qualified complete build-custody handoff. Actual nine-type layout and current
+startup remain unqualified at this checkpoint. A historical build-input pin was
+incorrectly checked against the debugger artifact limit; that metadata-domain
+correction is separate from product layout and cannot supply a missing type size.
+
+A visualizer must keep unavailable data unavailable. Neither the anchor nor
+build/CPU success supplies register, memory or canary observations. There is no
+live route, capture command, native lease, global compiler pin change or new
+milestone exit. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
