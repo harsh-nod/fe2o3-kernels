@@ -1123,3 +1123,44 @@ A successor still needs actual-body controls, full debugger build and layout
 checks, deployment/replay binding, a fresh coordinated bounded attempt and
 accepted cleanup/postflight. The public capture gate and global compiler pin
 remain unchanged. Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Retained analysis and proof payloads before factory integration
+
+The [retention checkpoint](https://github.com/harsh-nod/fe2o3/blob/20fa1338ce815a4dde2ee33c4a13931780ebbd47/docs/bf16-retained-payload-prerequisites-qualification-20260927.md)
+provides three opaque model-preparation owners and a lifetime-free lazy-proof
+retirement bridge. This is internal compiler groundwork, not a new public
+authoring API or a complete production route.
+
+The preparation owners retain intermediate vectors and staged boxes through
+refusal or unwind. Their private fields cannot be cloned, reset or extracted.
+Only completed DATA can be borrowed; retry closes that borrow while retaining
+the physical payload. Original returning APIs and dynamic debit order are
+unchanged. The fixed-storage inventory follows the existing model policy;
+it does not claim a new native-stack bound or per-instruction work proof.
+
+The retirement bridge moves checked rows, cache storage and side tables into an
+opaque payload without keeping source/resource loans. It installs that payload
+before returning an error or resuming the same panic object. The caller still
+must retain the owner and accepted credits through postflight, drop the owner,
+then refund. These components alone do not authenticate that enclosing lifecycle.
+
+All 48 new controls passed: 25 retained-model and 23 retirement controls.
+Full regression passed 356 model and 2,980 backend tests (189 ignored), backend
+build and 83 JavaScript controls. Both ordinary compilation ladders passed;
+all 38 lossless observation bodies and 52 artifacts match the preceding
+argument-initialization checkpoint exactly.
+
+Regression receipt:
+`5d56ce6638ca1c3ef7b4b1406e17a76e229276da6aa92ff72ec1650fcacd730b`.
+Normal-comparison receipt:
+`baec6bb9110ca2f6e56a90bcd835b33cd3b651c8c49dc2fde6566b4119ac5f5b`.
+
+The same-pending authentic factory connection and genuine observation are still
+being implemented. An independent fixed-query oracle must retain its own partial
+storage; missing fixed-query coverage is a gap, not successful proof coverage.
+The original Option-first prelude, remaining writers, joint bounds driver,
+mandatory verification and production routing remain open. Component fixtures
+are not whole-factory qualification or native GPU evidence.
+
+The public capture gate and global compiler pin remain unchanged.
+Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
