@@ -1243,3 +1243,31 @@ Next come original query-driver controls, exact nonempty cache/checked-row DATA
 and then the same-source/Budget genuine connector. Later production stages
 remain open. No public capture gate or global compiler pin change is made;
 accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Independent original fixed-query execution
+
+The [query-driver checkpoint](https://github.com/harsh-nod/fe2o3/blob/648a4885ad84817ea4e157bf72edb9668673cfc7/docs/original-fixed-query-driver-qualification-20260927.md)
+adds test-only original query execution and retained nonempty payloads. Production
+routing remains unchanged. Closed schedules admit at most 32 query ordinals:
+empty schedules do not prepare, the first query constructs once, and later
+queries reuse the caches.
+
+All 13 controls passed, including repeated query results, original source
+identity, exact unsigned width/extent data, original-discovered one-short debit
+refusals, and same-Box post-query panic retention. A source-rejected argument
+overwrite is checked before the rich callback; a separate temporary-local late
+definition reaches and tests the query rejection. Full regression passed 356
+model and 3,033 backend tests (189 ignored), plus backend/extractor build.
+
+Regression receipt:
+`e0631416e4fd17e3a6dd681fc66a2075cf0dde028c6ead22a6433e063f1edb34`.
+Publication receipt:
+`9bced215c5070113a49740b9f0dd60e717b7aa642e947ed577c5df3cf6f59fa4`.
+
+These are synthetic component schedules, not the authentic source-classifier
+connector. Allocation identity snapshots are not complete cache contents.
+Separate comparison budgets are not one authentic Budget. Exact bounded
+nonempty DATA and allocation preservation are next, then the authentic
+source/Budget connector and later production stages. Logical accounting is not
+physical stack or RSS. No public capture activation or global compiler pin
+change; accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
