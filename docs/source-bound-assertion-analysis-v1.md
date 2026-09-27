@@ -1164,3 +1164,46 @@ are not whole-factory qualification or native GPU evidence.
 
 The public capture gate and global compiler pin remain unchanged.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Authentic source-factory proof retirement
+
+The [authentic retirement checkpoint](https://github.com/harsh-nod/fe2o3/blob/a1ec243fa821d1028e78b1b87da3d5030783a323/docs/bf16-authentic-proof-retirement-qualification-20260927.md)
+connects the proof payload to the original pending owner. It uses the actual root
+CFG, canonical facts, recipe context and original Budget, preserving the existing
+callback interface. This is internal compiler groundwork, not a new public API
+or a complete ordinary compilation route.
+
+The payload is installed before return/error or resuming the same panic object.
+It survives nested source/context postflights and the pending-credit check.
+The pending owner is then dropped before refund to the original counter.
+An occupied slot fails before admission; it cannot be silently replaced.
+
+Five genuine observer modes cover Empty, Error, Panic, Reentry and Prefix.
+The prefix oracle independently classifies source terminators and records source
+coordinates. It stops BEFORE visit at the first unsupported fixed-query candidate.
+That is a coverage boundary, not a successful fixed proof or a fixed-query
+refusal. Genuine nonempty/partial proof coverage remains open; component fixtures
+do not establish that whole-factory behavior.
+
+All 30 new controls passed. Full regression passed 356 model and 3,010 backend
+tests (189 ignored), backend build and 83 JavaScript controls. Five genuine
+compilation sessions passed the numerical and refusal checks. Both ordinary
+compilation ladders passed: 38 lossless observation bodies and 52 artifacts
+match the preceding retained-payload checkpoint exactly.
+
+Accepted frame accounting records the checked 101,516-byte total, while the
+direct whole-observer work measurement includes entry prework. Inner callback
+counters are not substituted for the whole measurement. These are logical
+resource policies, not native stack/RSS or native GPU measurements.
+
+Regression receipt:
+`57a30bccca8122f61532e7a6a4ff685c4028ffc5f25192b09fdb0b9addb4109b`.
+Genuine-source receipt:
+`ececc3c4d997af10d24f1eab430ae18219759ff8dd08e927d3ab4a05759271dd`.
+Normal-comparison receipt:
+`46700cb6e94958bafbca110293bf6d1e3c127484eff2c5ed1df7cbd389322c8f`.
+
+The independent original fixed-query oracle, Option-first prelude, later writers,
+joint bounds driver, mandatory verification and production routing remain open.
+The public capture gate and global compiler pin remain unchanged.
+Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
