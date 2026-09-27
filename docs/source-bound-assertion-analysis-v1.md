@@ -1271,3 +1271,30 @@ nonempty DATA and allocation preservation are next, then the authentic
 source/Budget connector and later production stages. Logical accounting is not
 physical stack or RSS. No public capture activation or global compiler pin
 change; accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Complete bounded original-query DATA
+
+The [complete-content checkpoint](https://github.com/harsh-nod/fe2o3/blob/bd10f4032fdd864207a6c6226e0d7b1f6a833fbc/docs/original-fixed-query-content-qualification-20260927.md)
+adds test-only comparisons of full checked rows and cache keys, values and
+insertion order. Production routing remains unchanged. The closed observation
+admits at most 32 checked rows and 128 total checked entries, plus 128 entries
+per strict cache. Oversized, legacy and owned-side contents refuse explicitly;
+matching refusals never establish DATA equality.
+
+All 21 new controls passed. Live, retired and final postflight content reads
+preserve the same owned allocations, saved errors and same-Box panic payloads
+until postflight completes. Destruction precedes credit refund. Full regression
+passed 356 model and 3,054 backend tests (189 ignored), plus backend/extractor
+build. The 34 added accounting rows are source-logical, not physical stack or RSS.
+
+Regression receipt:
+`25cc97d2c25a6ad46be34683bc608d85bc5a82c0b2e3b1d86620d0ffcb797e06`.
+Publication receipt:
+`f32c6d1ac775edc0912ed512313605455bb1c95209619c91e86047f9fc1f5d17`.
+
+Independent component runs still use separate budgets. The authentic
+same-source/shared-Budget connector remains open, as do later production stages.
+Unavailable constructor-partial state is not reconstructed. Real fixed-query
+zero-cache contents are currently empty; seeded storage controls do not establish
+real query coverage. No public capture activation or global compiler pin change;
+accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
