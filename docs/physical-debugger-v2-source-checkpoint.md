@@ -330,3 +330,44 @@ Retained actual derivation receipt:
 `91a2d05acfe3eb5aba5e5d4b43fb13c0ee8f5a1bf0ec6cbe9a66b83653f8af0c`.
 The global compiler pin remains unchanged; these links identify the later
 source/static checkpoint without replacing earlier failure evidence.
+
+## Disabled loaded-maintenance source checkpoint (2026-09-27)
+
+The [physical-v4 compiler checkpoint](https://github.com/harsh-nod/fe2o3/blob/223c6225986bdd38208317c2caeb264e611e7344/docs/debugger-loaded-maintenance-source-qualification-20260927.md)
+adds a separate disabled overlay for first-loaded-acknowledgement maintenance
+and first-failure diagnostics. Physical-v3 is unchanged. All three source
+availability functions and all four manifest authority flags remain false.
+
+The owned maintenance epoch retains strong target references from the first
+loaded-success acknowledgement until the first subsequent callback. It preserves
+the original acknowledgement/flush order and adds no resume, acknowledgement,
+stop, capture or retry. Exceptional teardown can delay the final target close;
+CPU mocks do not establish arbitrary native teardown equivalence.
+
+Contributor checks passed both exact 63-file source stages, the API header,
+forward/reverse patch checks, 41 JavaScript controls and two strict C++ builds.
+The CPU programs passed 264 real-helper groups with 1,033 checks and six
+first-failure groups. Old/new owner sizes were both 1,992 bytes. Selected source
+is 2,194,713 bytes under the unchanged 2,195,456-byte cap; this is not a runtime
+memory or whole-process I/O cap.
+
+Actual public-package build receipt:
+`db644c80183b906fcdd24c0b0048305c288ea9096a843aafd41d42e522d0d6ee`.
+Actual public-package CPU receipt:
+`299c631a440c684bcea627046a0d9e0191c3eea86bbafaf550a3b16382564fe8`.
+
+A separate private debugger completed all four compile phases. Its executable
+is 199,593,392 bytes, SHA-256
+`d02e69f25ae1690bf424d3fa44a7c458a34c2d9445055bff093f071fcf717ed4`.
+Those phases did not execute GDB or a target. The private active-source build
+does not enable the disabled public package or prove physical capture.
+
+Actual compiled scratch/layout measurement, complete build-custody handoff,
+fresh startup/loaded-runtime closure, controller/family/replay qualification
+and a separately bounded native attempt remain required. The earlier
+commit-site-7 native failure remains a failure; no old lease is reused.
+
+A visualizer must retain unavailable data, never invent register values,
+memory or passed canaries from the expected-value oracle. No capture success,
+live UI route, activation command, public gate change or global compiler pin
+change is added here. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
