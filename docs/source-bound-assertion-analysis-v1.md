@@ -986,3 +986,52 @@ lazy joint ownership, complete operation streams and mandatory continuation rema
 unfinished. The separate preparation-policy refactor is not in this checkpoint.
 No global compiler pin, public capture gate or route maturity changes.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Shared preparation policy and retained direct comparisons
+
+The [policy/comparison checkpoint](https://github.com/harsh-nod/fe2o3/blob/b53cce7fee8c0cdaa9f6c6b7f453d702944dcfae/docs/bf16-policy-direct-comparison-qualification-20260926.md)
+adds private components for allocation policy and source-ordered comparison
+preparation. It does not complete whole-kernel admission or add a public API.
+
+The shared allocation policy preserves the ordinary method bodies through item
+macros, without adding runtime wrapper calls to their existing callers.
+Checked length, fitting capacity, debit order and reservation behavior remain
+unchanged. Ordinary growth stays amortized; paid growth stays exact. The sealed
+assertion adapter adds its own strict-owner and denial checks. Future callers
+must still admit their concrete generic frames.
+
+Direct comparisons visit actual blocks and statements in source order, then
+evaluate the left operand before the right. Earlier argument slots, counter
+advances, operations and SSA changes remain when a later step refuses.
+Duplicate predicates retain both physical payloads. Conflicting predicates and
+allocation failures retain their pending candidate, and the owner becomes
+terminal. The enclosing factory must keep these buffers through postflight,
+then drop payloads before refunding credits.
+
+Thirteen policy controls and twenty-five comparison controls passed. The full
+regression passed 331 model and 2,916 backend tests (189 ignored), build and
+83 JavaScript controls. Both ordinary compilation ladders passed: all
+38 lossless observation bodies and 52 artifacts match the preceding checkpoint.
+Regression receipt:
+`f17410b02a30ff6d0d3e65891e12a012dcb06bbccca5a396127892cdd645a970`.
+Normal comparison:
+`eed65c7bf4f9f19e965d823a3fd11619eee8b713d5b563c6877701ebdb3f4687`.
+
+These are selected-source logical work/storage checks, not native stack, RSS or
+GPU measurements. The successful component view is DATA, not an authenticated
+all-producer continuation. Function and budget/work identity alone do not
+authenticate a supplied owned-credit counter or every input roster.
+
+The debugger's separate staged path has now passed 39 controls and actual
+admission over all 184 CPU-qualified input roles. Its scope owner and 26 companion
+modules were built and deployed with exact copy checks: 27 products total.
+Build receipt:
+`e0bbbeb63445bc1c5a43b73533a48a94273e3c9614e11677112ff2f035f8583f`.
+The actual read/copy debit was 283,603,604 bytes under the unchanged 536,870,912-byte
+cap. No scope owner, launcher, debugger, target or GPU dispatch was invoked.
+Read-only replay and fresh native capture remain separate, pending qualifications.
+
+Lazy proof ownership, one joint bounds driver, remaining argument producers,
+authentic handoff and production routing remain open. No global compiler pin,
+public capture gate or route-maturity change is made here.
+Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
