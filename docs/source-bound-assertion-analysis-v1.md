@@ -1207,3 +1207,39 @@ The independent original fixed-query oracle, Option-first prelude, later writers
 joint bounds driver, mandatory verification and production routing remain open.
 The public capture gate and global compiler pin remain unchanged.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Independent original constructor retention
+
+The [original-constructor checkpoint](https://github.com/harsh-nod/fe2o3/blob/11e43b08c68dd1efc4acb246124218669770d31c/docs/original-fixed-constructor-retention-qualification-20260927.md)
+adds test-only retained construction for the independent original fixed-proof
+oracle. It leaves the production constructor unchanged. Original constructor
+and debit-sequence copies provide the expectation; candidate lazy-owner output
+does not provide expected data.
+
+Partial checked-row storage and caches remain owned before each later fallible
+checkpoint. Retirement preserves them through postflight, before destruction
+and refund to the original Budget. Error and same-Box panic paths follow that
+ordering. Occupied slots refuse without replacement; repeated preparation is
+terminal.
+
+All ten new controls passed, including each positive original debit with a
+one-short budget, exact refusal priority and closed checkpoint panic custody.
+Full regression passed 356 model and 3,020 backend tests (189 ignored), plus
+backend/extractor build. Root verified seven original inverses, three additive
+registration inverses and 56 source spans.
+
+Regression receipt:
+`1532dee9a08a6a5b352723e0e95bc222f8e718f18cfe53ad65116d16d95f576c`.
+Publication receipt:
+`80a3c7bb23dd46ca66392d5ef6199952cd2e421931e45eff69cedb580017992c`.
+
+This is constructor coverage with empty query caches, not original query
+execution or genuine nonempty proof comparison. Separate component comparison
+budgets must not be described as one authentic Budget. Checkpoint panics do not
+cover arbitrary meter unwind or allocator overcapacity. Logical typed frame
+charges do not measure physical stack or RSS.
+
+Next come original query-driver controls, exact nonempty cache/checked-row DATA
+and then the same-source/Budget genuine connector. Later production stages
+remain open. No public capture gate or global compiler pin change is made;
+accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
