@@ -1079,3 +1079,47 @@ earlier producer chronology, the joint bounds driver, remaining writers and
 production routing remain open. This checkpoint adds no public authoring API,
 global compiler pin or public capture gate.
 Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Authentic argument initialization and loaded-runtime commit diagnosis
+
+The [argument-initialization checkpoint](https://github.com/harsh-nod/fe2o3/blob/88d3df97ec0cde7047e03f9fa3f56c9cb97fe7b1/docs/bf16-root-argument-initialization-qualification-20260927.md)
+uses the original root source, owner, graph and recipe-credit counter. The same
+pending prefix initializes index slots, then slice slots, then the argument
+counter. Refusal or unwind leaves a terminal owner; initialization cannot restart.
+
+Fifteen new controls passed. Full regression passed 331 model and 2,957 backend
+tests (189 ignored), backend build and 83 JavaScript controls. The genuine-source
+CPU ladder passed five actual rustc sessions and 36 positive numerical runs.
+Identity, swapped-input, error and panic sessions each produced the actual
+initialization marker once, before later writers.
+
+Both ordinary ladders passed; all 38 lossless observation bodies and 52 artifacts
+match the preceding checkpoint exactly. Regression receipt:
+`730715d7b653bbdf4cd4579f5353733acfd48e5b66a5ec7bdf9cd518b9791ca2`.
+Genuine-source receipt:
+`9ac648203bdbb3a6e1a507c8adccd70ed4cd422c30cfd8e64a205e0376e10615`.
+Normal comparison:
+`784ee5b801c1cdae3ce0420587a9cb5c5f0258753001886b849f9f7254b5a8d1`.
+
+This is internal preparation DATA, not a public authoring API or full production
+route. It does not establish that the ordinary Option-first prelude or later
+writers ran. Physical retention through factory postflight, drop before refund,
+the joint bounds driver and final mandatory verification remain open.
+
+The [fresh debugger attempt](https://github.com/harsh-nod/fe2o3/blob/88d3df97ec0cde7047e03f9fa3f56c9cb97fe7b1/docs/debugger-commit-boundary-diagnosis-20260927.md)
+refused at commit-site 7 after the runtime loaded. No stopped-wave capture was
+accepted. GDB issued a maintenance commit after the loaded ACK retired the
+unloaded-entry epoch. That commit has real forward-progress effects; the guard
+must not be skipped or the old epoch rearmed. A separately authenticated
+loaded-host maintenance transition is being implemented.
+
+Selected-family cleanup passed: the four selected process generations and owned
+cgroup were absent. Root separately verified the unchanged source and 1,009
+input/17 tool bindings. This is manual postflight evidence, not a passed native
+receipt, global quiescence or reusable capture authority. Failed native receipt:
+`a3c5de301d7c2e052205f38d04af7bd56ad2dda572ca90f98da626c7d9f187b3`.
+
+A successor still needs actual-body controls, full debugger build and layout
+checks, deployment/replay binding, a fresh coordinated bounded attempt and
+accepted cleanup/postflight. The public capture gate and global compiler pin
+remain unchanged. Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
