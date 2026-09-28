@@ -1334,3 +1334,36 @@ The Option-first prelude, later writers, joint bounds driver and ordinary
 production route remain open. Logical resource accounting does not measure
 physical stack or RSS. Public capture and the global compiler pin are unchanged;
 accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Source-ordered Option preparation before enum analysis
+
+The next private compiler checkpoint retains Option producers and dominance on
+the same authenticated source and original resource Budget, stopping at
+`BeforeEnumV1`. Read the
+[pinned implementation and qualification](https://github.com/harsh-nod/fe2o3/blob/f47a7a8ad5365cd50249dc60a58e4f930a1447b2/docs/option-first-preparation-qualification-20260928.md).
+This is an internal compiler checkpoint, not a new public kernel-authoring API.
+
+Inside this intrinsic-analysis suffix, the order is retired intrinsic prefix,
+index/leader/predicate/edge preparation, Option producers, and Option dominance.
+The pending owner retains partial and completed model allocations through
+postflight. Destruction precedes refund to the original budget. Immutable views
+cannot escape as owned proof, and sticky resource denials remain denials.
+
+All 12 new controls passed, along with 356 model and 3,196 backend tests
+(197 ignored), builds and five actual Rust-source sessions. The two positive
+sources completed 36 numerical helper runs. Every eligible session compared
+nonempty Option data against the unchanged original APIs in Compare,
+CallbackError and CallbackPanic modes: one producer, one authenticated
+Some-region/block pair, and positive dominance work. The real invalid-caller
+control refused before callback entry. Wrong launch did not enter this hook.
+
+The full regression/source receipt is
+`3acb9662acf50ca4a960c2e5492503c2c507b276296358956ddd1a911be3ff8f`;
+the complete source report is
+`07419034ac2c045d5dce3209ee8bbf2c814dbf6bae049301192a669a8880774f`.
+
+This is not the complete outer root chronology. Earlier constants/entry-prefix
+work, retained enum/scalar continuation, later argument writers, joint bounds,
+genuine nonempty Fixed proofs and production routing remain open. No native
+capture or public gate is enabled; accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
