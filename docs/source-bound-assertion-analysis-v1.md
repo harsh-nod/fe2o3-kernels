@@ -1508,3 +1508,28 @@ actual root-entry preparation and the existing pre-capability owners on one
 physical budget. Whole-root predecessors, argument writers, joint bounds and
 production admission remain open. No GPU execution is implied; accepted exits
 remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Keep constant-analysis ownership separate from loop proofs
+
+The [retained constant-analysis checkpoint](https://github.com/harsh-nod/fe2o3/blob/74160065e8be19c36c5c84528134b39ae508ccaa/docs/retained-constant-analysis-qualification-20260928.md)
+implements the early constant component without changing the original scan or
+iterative alias resolver. Definitions, visited states, resolved values and the
+reusable alias path belong to the pending owner before fallible preparation.
+A completed loan is tied to the original function and resource ledger.
+
+For a code-reading exercise, follow a constant through copy/move aliases, then
+compare a cycle, a duplicate definition and a mutable-address escape. A value
+that cannot safely be resolved stays unknown; this is not permission to invent
+a constant. Inspect the one-short resource tests and check that earlier partial
+data survives the failure and is dropped before its credits are released.
+
+All 12 component controls passed, with 356 model tests, 3,349 backend tests
+(197 ignored), authority/policy checks and builds. The independent oracle uses
+the unchanged old API, not candidate output. Full regression receipt:
+`d6d6e546d7dc5075f17500bffbc2a523dafb653efc0c4c67a02d953893784701`.
+
+This checkpoint does not connect the entire genuine capability driver or prove
+loop bounds. Those require their own source-owned joins and qualification.
+It does not validate arbitrary edited assembly, establish production admission,
+or add a public kernel-authoring API. Public gates and the global compiler pin
+remain unchanged; accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
