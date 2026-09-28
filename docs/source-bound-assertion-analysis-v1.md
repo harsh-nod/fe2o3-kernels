@@ -1367,3 +1367,56 @@ work, retained enum/scalar continuation, later argument writers, joint bounds,
 genuine nonempty Fixed proofs and production routing remain open. No native
 capture or public gate is enabled; accepted exits remain
 M1/V1/V2/U1/U2/U3 (6/18).
+
+### Following enum, scalar and origin-analysis preparation
+
+These stages explain how the compiler checks Rust-derived information before
+a later assembly-authoring continuation can rely on it. They are private
+implementation checkpoints, not additional public authoring APIs.
+
+The qualified source-ordered checkpoint now reaches `BeforeScalarV1`:
+Option preparation runs first, then retained enum analysis. The same pending
+owner keeps partial and completed allocations through checked postflight;
+destruction happens before resource credits are refunded. Read the
+[pinned enum implementation and qualification](https://github.com/harsh-nod/fe2o3/blob/c23ae965b1d7d35376a6c0cb075d05d9a489eace/docs/option-enum-preparation-qualification-20260928.md).
+
+All 13 enum controls passed, with 356 model and 3,209 backend tests
+(197 ignored), builds and five actual Rust-source sessions. Eligible sessions
+executed the real enum analyzer in Compare, CallbackError and CallbackPanic
+modes and compared complete data against unchanged original APIs. The two
+positive sources completed 36 numerical helper runs. Analyzer invocation does
+not establish genuine nonempty enum availability; that remains separate work.
+
+The next two dependencies are qualified as isolated components:
+
+- [Retained scalar inventory](https://github.com/harsh-nod/fe2o3/blob/5d05fe941523d4ccb82ae1f1976f8f6a3d82eeda/docs/retained-scalar-inventory-qualification-20260928.md)
+  keeps definition counts, block assignments, address-escape information and
+  partial candidates attached on failure. All 13 controls passed; full regression
+  passed 356 model and 3,222 backend tests (197 ignored), plus builds.
+- [Retained exact-origin FIFO worklist](https://github.com/harsh-nod/fe2o3/blob/43edfa3bf5587dbf145f2dc85f409e4ebd5bc787/docs/retained-origin-worklist-qualification-20260928.md)
+  preserves original queue order, successor order, conflicts and partial updates.
+  All 11 controls passed; full regression passed 356 model and 3,233 backend tests
+  (197 ignored), plus builds. Its origins and edges remain caller-owned.
+
+Neither component yet establishes the genuine continuation that joins it to the
+authenticated source. Lexical address/ledger checks are not durable authority.
+Logical resource accounting is not measured native stack, allocator capacity or
+RSS. No GPU execution or native debugger capture is established by these tests.
+
+For a code-reading exercise, follow an Option-producing call through the pinned
+enum checkpoint, then inspect the scalar and FIFO failure controls. Distinguish
+three outcomes: a semantic conflict, an exhausted resource budget, and callback
+failure after successful preparation. Check that partial allocations remain
+owned until postflight in each case. A positive component test is not permission
+to feed arbitrary edited intermediate data into a production compilation route.
+
+Qualification receipts, respectively:
+
+- Enum: `48468d97aac89ebcf2030f693789c2ad25a8913155febf11028f47c1bb1570a6`.
+- Scalar: `2e33325b3fd92bf966024543f4ac208801ea1c0a70bf25d141efd0480774aaca`.
+- FIFO: `3b78019f35bfc8fa5ffc70469b80e27e87de06380a9e533c0688dbf37118dea5`.
+
+Earlier root constants/entry work, carrier/provenance and capability integration,
+genuine nonempty Fixed coverage, argument writers, joint bounds and production
+admission remain open. Public gates and the global compiler pin are unchanged;
+accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
