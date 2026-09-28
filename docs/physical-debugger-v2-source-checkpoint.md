@@ -401,3 +401,40 @@ A visualizer must keep unavailable data unavailable. Neither the anchor nor
 build/CPU success supplies register, memory or canary observations. There is no
 live route, capture command, native lease, global compiler pin change or new
 milestone exit. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+## Actual nine-type debugger layout (2026-09-28)
+
+The [actual-object layout checkpoint](https://github.com/harsh-nod/fe2o3/blob/2ef4196907c0e80f912d5318a9ea1eb3a884c961/docs/debugger-observable-layout-qualification-20260927.md)
+supersedes the preceding missing-layout limitation. All nine required types
+were measured in the built adapter object, including member offsets and type
+references; no missing size was inferred. All 152 controls passed.
+
+| Observed type | Bytes |
+| --- | ---: |
+| workspace | 1,936 |
+| runtime_root | 40 |
+| owner | 1,992 |
+| physical_snapshot | 536 |
+| snapshot_publication | 1,552 |
+| sha256 | 184 |
+| loaded_maintenance_scratch | 624 |
+| native_adapter | 8,760 |
+| owned_checkpoint_breakpoint | 232 |
+
+The logical adapter reservation is 15,144 bytes under the unchanged 65,536-byte
+cap. This is not total process memory or a measurement of every descendant
+allocation. Static readelf inspection is not debugger startup or GPU capture.
+
+Actual layout receipt:
+`021eb18660b6e2867ab8f24c154a1cc5edd7e42e853e0eea21de61e5d32ea16a`.
+Complete layout report:
+`1b6c4fe2615d37902b33a446a0f9d35415fbc5dfbe28e25add98eed9f2a10b73`.
+The separately qualified four-phase build-custody decoder retains all nine
+records / 2,543 selected-and-observed input pairs; historical build provenance
+does not substitute for current runtime revalidation.
+
+Current startup and native capture remain unqualified in this checkpoint.
+When the viewer lacks a qualified register, memory or lane observation, keep
+unavailable data unavailable; measured C++ object layout cannot populate those
+views. Public gates remain disabled, and this update does not change the global
+compiler pin. Accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.

@@ -1298,3 +1298,39 @@ Unavailable constructor-partial state is not reconstructed. Real fixed-query
 zero-cache contents are currently empty; seeded storage controls do not establish
 real query coverage. No public capture activation or global compiler pin change;
 accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Authentic same-source fixed-query comparison
+
+The [genuine comparison checkpoint](https://github.com/harsh-nod/fe2o3/blob/2ef4196907c0e80f912d5318a9ea1eb3a884c961/docs/original-fixed-query-genuine-qualification-20260928.md)
+connects independent original queries and the candidate to the same authenticated
+source and original resource Budget. The original owner stays alive while the
+candidate runs. Complete bounded checked rows and ordered cache data remain
+observable through postflight; payload destruction precedes credit refund.
+Unavailable or refused data is not equality.
+
+All 15 new controls passed, alongside 356 model / 3,174 backend tests and
+backend/extractor builds. Five genuine Rust compilation sessions passed; the
+identity and swapped-return cases completed 36 positive numerical CPU runs.
+These source prefixes contain zero Fixed queries. The original-query-panic
+observation therefore skips, and this does not qualify genuine nonempty proof
+comparison. An additional Rust array-bounds fixture was rejected with
+`BF16 semantic Assert is unavailable` before nominal-owner materialization.
+It remains a failed experiment, not a positive proof or emitted-kernel test.
+
+This is useful when reading compiler diagnostics: distinguish a source that
+reaches a checker from a source rejected before that checker. Passing an empty
+query set cannot establish behavior for nonempty queries. Likewise, independent
+helper CPU results are not ordinary production admission or GPU observations.
+
+Regression receipt:
+`1990b8b3081201061f4414f7892e6c21f016c44c6d80445bf49ae78a351be799`.
+Genuine-source receipt:
+`6201a5c2880b4b9f036e40df65a86e9d79991f67a28a5a06eb1bec713bdb7390`.
+Fresh integration qualification on the concurrently updated main passed 356 model
+and 3,184 backend tests, builds and the five-session ladder:
+`eff86f458e847e6d93bb0f227987497995ec70deec6f03c7f047baeab6f4e581`.
+
+The Option-first prelude, later writers, joint bounds driver and ordinary
+production route remain open. Logical resource accounting does not measure
+physical stack or RSS. Public capture and the global compiler pin are unchanged;
+accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
