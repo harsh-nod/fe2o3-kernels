@@ -84,3 +84,42 @@ claim changes.
 The [source-owned tiled inspection checkpoint](tiled-region-inspection-checkpoint-v1.md)
 separates the newer source-role, static transport and disabled debugger-package
 results from still-unqualified tiled and live-GPU workflows.
+
+## 5. Separate startup inputs from captured debugger state
+
+The newer [startup input-closure qualification](https://github.com/harsh-nod/fe2o3/blob/a2663d4116357c94078a42ecd20fd0ddfe5028b5/docs/debugger-startup-input-closure-qualification-20260928.md)
+has passed on mi350. It does **not** establish debugger startup, a loaded-file
+closure, physical lane/register values, or a visualization recording.
+
+Its fresh generation passed 28 graph and 88 selector/reader controls, rebuilt
+three helpers, and passed 55 supervisor tests, 16 process-census tests, 277
+JavaScript tests and 16 Python tests. Five benign supervision cases exercised
+normal completion, timeout, double-fork descendants, stdout held by a descendant,
+and failed execution. Root checked all 60 request/ownership/release/cleanup
+records; all five owned cgroups were absent afterward.
+
+The complete input check read and revalidated 1,024 named files with all 879
+duties retained. Three exact symlink rules fix the prior refusal without
+allowing arbitrary aliases. Selected payloads totaled 1,798,580,929 bytes;
+the separate outer ledger charged 1,801,031,093 inclusive bytes and 29,285
+calls. This does not change the inner 512 MiB artifact bound or measure total
+process RSS.
+
+For a review exercise, distinguish these three questions:
+
+1. Did every selected input match its complete pinned content and identity?
+2. Which files did the actual debugger load during a separately qualified start?
+3. Which stopped-wave registers and memory did the same-client adapter actually
+   capture, and how are those samples tied to the source and program counter?
+
+Only the first question is established by this checkpoint. A file list or
+successful CPU test cannot populate a physical register heatmap. Similarly,
+a manager reporting cleanup is not proof that child processes were reaped;
+the supervision records check those facts separately.
+
+Complete-selection receipt:
+`c1a155f7ba8afc3138e323f3c96231efabdd519ceeb76f0f0fd58ec0885c2ec6`.
+No GDB, attach, inferior, dispatch or physical sampler ran in these gates.
+The associated coordination expires at 2026-09-28 21:30 UTC; these historical
+receipts do not extend it. This lesson adds no native replay command.
+V4 remains open, and accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).

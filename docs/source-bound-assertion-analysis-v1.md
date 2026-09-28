@@ -1470,3 +1470,41 @@ writers, joint bounds, genuine nonempty Fixed coverage and ordinary production
 admission remain open. No GPU run or native debugger recording is established.
 Public gates and the global compiler pin remain unchanged; accepted exits remain
 M1/V1/V2/U1/U2/U3 (6/18).
+
+### Follow original-order capability propagation
+
+The [retained FIFO component](https://github.com/harsh-nod/fe2o3/blob/c816f7c8d9d1bc038e81ef26c76e48da67e3a3fa/docs/retained-capability-fifo-qualification-20260928.md)
+and [two-pass nominal driver](https://github.com/harsh-nod/fe2o3/blob/a2663d4116357c94078a42ecd20fd0ddfe5028b5/docs/retained-capability-driver-qualification-20260928.md)
+are now compiled implementation checkpoints. They do not add a public kernel
+authoring API or establish the genuine Rust-source connection.
+
+The FIFO keeps duplicate visits. A changed existing capability must requeue
+a block even if no new key was inserted. Raw CFG edges are charged before
+deduplication; sorted successor merges are all prepaid before mutation.
+Partial entry tables, queue, scratch and visit trace remain attached on failure.
+
+For a code-reading exercise, follow the diamond fixture with visit order
+`[0, 1, 2, 3, 4, 4]`. Explain why block 4 appears twice, then inspect the
+one-short resource controls. Check that a failed merge cannot mutate its row,
+and that retained data is destroyed before its resource credits are released.
+The oracle compares complete data against the original HashMap/VecDeque
+algorithm; matching a visit count alone would not establish equivalence.
+
+The driver retains both pass owners and executes owner discovery, initial FIFO,
+actual payload scanning, repeated FIFO, source-index final replay and read
+binding. Its nominal block calls the unchanged checked query, and consumes
+operands only after successful postflight. This describes implemented source:
+the 11 driver helper/source tests do not exercise successful full-driver
+execution through the genuine compiler owner.
+
+FIFO qualification passed 3,326 backend tests; driver qualification passed
+3,337, each with 356 model tests and 197 ignored backend tests, plus builds
+and authority/policy controls. Their receipts are
+`7edc2a419cd60b0410a54fe3abc392375188663666533dc0499dca5ee5a0ea56`
+and `3b064ab0103eb33ca04e13e230c9c39d1885a002e7c075e170ee4b9b4dfef715`.
+
+The genuine join still needs constants in their original early position,
+actual root-entry preparation and the existing pre-capability owners on one
+physical budget. Whole-root predecessors, argument writers, joint bounds and
+production admission remain open. No GPU execution is implied; accepted exits
+remain M1/V1/V2/U1/U2/U3 (6/18).
