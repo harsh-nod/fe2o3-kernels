@@ -235,3 +235,7 @@ also passed, in distinct invocations. R4 evidence above is retained unchanged.
 See the [compiler qualification record](https://github.com/harsh-nod/fe2o3/blob/955d05b09bc0d94a615f4fd20b3071ef1ca559fc/docs/bf16-source-cpu-qualification-20260925.md)
 for exact run/source pins and the two unchanged repository-wide preflight
 failures. This is not a claim of a passing complete generic CI or GPU execution.
+
+For the separate later helper-frame profile, see
+[Observe a real Rust BF16 helper across CPU call frames](bf16-helper-source-cpu-observation-v1.md).
+Its genuine helper evidence does not rewrite the root-only qualifications above.

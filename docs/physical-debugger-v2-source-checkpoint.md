@@ -117,3 +117,287 @@ for the exact completed package/build receipt pins and limitations.
 This tutorial adds no activation, GPU-observed badge, live UI route or global
 FE2O3_PIN change. Accepted exits remain M1/V1/V2/U1/U2/U3 (6/18);
 V4 and the full tiled/physical curriculum remain open.
+
+## Later private attempt: startup refusal, not capture (2026-09-26)
+
+A later exact private debugger build passed MI2 startup and loaded-file review.
+Its controller and owned process-scope helpers passed separate CPU and benign
+process qualifications. Those prerequisites permitted one bounded native
+attempt; they did not predict a successful physical observation.
+
+That attempt **failed during debugger setup** with `Changed`. The controller
+had spawned its debugger child but had not sent any MI command. Source review
+narrows the refusal to child/executable identity, scope membership or exact
+argument checks. The retained diagnostic does not identify which check failed.
+Do not label it a GPU trap failure or invent a specific startup race.
+
+The controller produced no capture report. Its subsequent empty-report framing
+error is secondary to the setup refusal. A missing record cannot be rendered as
+zero register values, empty memory, a passed canary check or a captured wave.
+The fixed expected-value oracle remains separate from actual sample bytes.
+
+Cleanup must also be read at the correct level. The controller reported
+incomplete stream cleanup because the failure occurred before reader startup;
+no reader could deliver the required EOF events. Independent inner and outer
+scope receipts nevertheless establish that the owned family was reaped and
+the exact scope disappeared. Root independently rechecked the three recorded
+process identities, retained receipts and file pins. This proves cleanup of
+that attempt, **not physical capture success** or host-global absence of GPU
+activity. Conservative unknown native-attempt/GPU-dispatch fields stay unknown.
+
+Retained evidence:
+
+- Failed root receipt: 95,650 bytes, SHA-256
+  `43199b35fdddcdb93b439ef1396999a502eca6c2d1b9a84d1be1c99ae5fce447`.
+- Same-generation wrapper audit: 17,052 bytes, SHA-256
+  `9d840563a780e7a17620a3f0e28e37d6dd2d1701013e0dd270f5b6ddd5df555f`.
+- Independent root cleanup audit: 1,275 bytes, SHA-256
+  `13803ed2bc6e89b6d43ac28304bf1743e1aa628a4df9cb6778842a1781499306`.
+
+The next implementation step is fixed stage/substage diagnostics that preserve
+the original refusal and already-observed facts. Missing startup evidence is
+not a reason to disable identity checks, increase timeouts or automatically
+retry. Any changed controller requires its own source/build/process
+qualification. The public package remains disabled; this appendix enables no
+capture command, live UI, runtime binding or new milestone acceptance.
+
+## Later readiness attempt: report-publication deadline (2026-09-26)
+
+The [published compiler record](https://github.com/harsh-nod/fe2o3/blob/db351c0df32173d2423235eab2812bac5ccf50a6/docs/physical-debugger-publication-deadline-20260926.md)
+records a fresh private attempt after bounded initial command-line readiness
+and independently qualified controller/family prerequisites. It failed during
+raw-report publication with Deadline and produced zero capture-report bytes.
+This does not prove the earlier setup refusal repeated; the original protocol
+result was not retained by that publication-error path.
+
+For a visualizer, missing capture bytes must remain unavailable, not zero
+registers, an empty memory image or passed canaries. Producer capture and
+GPU dispatch remain unknown. A publication failure cannot authorize reuse of
+historical bytes under a new stop identity.
+
+Root independently rejoined the complete owned-family cleanup receipts and
+terminal acknowledgement, then verified the scope and all five retained
+process IDs were absent. The family owner reaped an adopted inferior that the
+controller did not claim to reap. This is cleanup, not physical capture or
+rollback. The failed attempt was preserved without automatic retry.
+
+Native receipt: 232,123 bytes, SHA-256
+`9663f1bad0e4ceff58d9c28fba39d5337756b4fb5ecfc77afb7dfce81e57eeb1`.
+Independent cleanup: 699 bytes, SHA-256
+`f26693798f4ae476d4c85caf817c20d84df5acd615c181cbaab6671cbe99d2c7`.
+
+The next diagnostic fix retains a bounded failure-only description when normal
+publication fails, without resetting the positive deadline, accepting a partial
+report or issuing another target command. It still needs separate qualification.
+Public capture stays disabled. This adds no live route, activation command,
+global compiler pin change or milestone exit; accepted broad exits remain 6/18.
+
+## Later qualified diagnostic: preserve publication failures (2026-09-26)
+
+The [qualified compiler checkpoint e934c1437457efc01c0c311e73026e862943041a](https://github.com/harsh-nod/fe2o3/blob/e934c1437457efc01c0c311e73026e862943041a/docs/physical-debugger-publication-deadline-20260926.md)
+adds the failure-only diagnostic proposed above. It passed 141 Rust tests
+(58 library and 83 controller), 35 Node controls (31 public-package and four
+source-preservation checks), strict package Clippy and build. This is historical
+CPU package qualification, not a successful physical capture.
+
+If normal report publication fails, the diagnostic preserves the original
+fixed refusal/status, already-retained command/record counts, stream completion
+and bounded hexadecimal suffixes. Its fixed 4,096-byte stack buffer permits at
+most 4,097 bytes including the line ending, with at most 256 retained bytes
+from each stdout/stderr/command suffix. Arbitrary bytes are hex-encoded, not
+rendered as terminal control sequences; checked growth has a fixed fallback.
+
+The failure branch performs no new child reads, process queries, hashing,
+parsing, debugger commands, spawning or teardown. The successful publication
+path, original deadlines, cleanup protocol and public-disabled state are
+unchanged. Bounded content is not a global stderr write-latency guarantee.
+
+CPU qualification receipt: 100,865 bytes, SHA-256
+`9d48d01aa078c9dd555163ac5ca14e66bc72b4f254d57f7672aba59b39ccd3e6`.
+That CPU change alone established no new native attempt or captured bytes.
+The earlier attempt's producer capture and GPU dispatch remain unknown;
+independent cleanup is still not capture success.
+
+### Fresh bounded attempt: a retained refusal, not a capture
+
+The later [compiler native diagnostic record](https://github.com/harsh-nod/fe2o3/blob/27ba44e2616945481557f4555f67327aabbab043/docs/gfx950-publication-diagnostic-native-observation-20260926.md)
+records a separately coordinated single attempt. Normal report publication
+again failed with `Deadline` and emitted zero capture-report bytes. This time
+the bounded diagnostic retained `original_protocol_result=refused(Incomplete)`.
+Its retained stdout suffix includes
+`fixed owned one-stop native relation refused (15)`.
+
+This is additional failure evidence, not a diagnosis of the compiler, controller,
+debugger or GPU cause. The retained suffix is truncated; a consumed command is
+not proof of command completion. Do not infer successful capture from the
+relation number, record count or zero-valued unavailable fields. No accepted
+physical observation or GPU dispatch success is established; producer capture
+and GPU dispatch remain unknown.
+
+Root independently rejoined the owned-family receipts and terminal
+acknowledgement, then verified all five retained process IDs and the exact
+scope were absent. The family owner reaped the adopted inferior; controller-side
+reaping was not claimed. This establishes cleanup of that attempt, not rollback,
+physical capture or host-global GPU quiescence.
+
+| Retained artifact | Bytes | SHA-256 |
+| --- | --- | --- |
+| Failed native receipt | 272,124 | `81e881850e7843dc83ef04b530317c8fd4369a609a991343f06c0bc62d35ba1c` |
+| Same-generation terminal audit | 17,437 | `2f21c44121a459e8e54ab54f1ec1c8f9a90ae0b6635393c83075024384317a99` |
+| Independent cleanup audit | 670 | `fa609a6bdb32972f5ba695b8b364edff570b063c32cc81f91d5c055522476fea` |
+| Retained controller stderr | 2,206 | `dd607bf9ca059ea92e633d563c6c48b5ab197a5bddf91737b05eb068ff00b121` |
+
+Visualizers must retain unavailable state instead of zero-filled registers,
+fabricated memory, passed canaries or historical bytes rebound to a new stop
+identity. The expected-value oracle never fills missing actual sample bytes.
+The next step is source-bound diagnosis of this retained refusal, with fresh
+qualification for any implementation change; there is no automatic retry or
+public capture activation. This appendix adds no live route, GPU-observed badge
+or global compiler pin change. Accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
+
+## Disabled host-entry maintenance checkpoint (2026-09-26)
+
+The [separate physical-v3 checkpoint](https://github.com/harsh-nod/fe2o3/blob/660c2b41aa69295e174141f0d9dc81c856bce36a/docs/physical-debugger-host-maintenance-qualification-20260926.md)
+adds source-reviewed maintenance for repeated host-entry commits while leaving
+physical-v2 unchanged. Selection, capture and publication remain false;
+the public controller retains PROFILE=None and the V2 wire format is unchanged.
+
+Maintenance arms only after the initial host-entry commit and checked flush.
+It retains actual native process/top-target references and checks the same
+owner, exact pushed target stack, running host, unloaded runtime and absence
+of GPU/callback/resume state before and after the existing commit effect.
+It emits no new output row and adds no resume, event acknowledgement or sample.
+MI input, resume, callback, runtime acknowledgement, stop, disappearance,
+rejection or unwind retires the epoch.
+
+Exceptional retirement may retain bounded strong references until debugger
+destruction and delay target close. CPU mocks do not prove unchanged native
+close timing. The separate 256-byte maintenance scratch remains subject to
+actual layout measurement under the unchanged 65,536-byte native storage cap.
+
+The relocated package passed 73 Node controls, the parent's strict C++
+publication/output/resource checks, and 100 maintenance CPU groups with
+481 checks using extracted actual helper bodies. The source verifiers checked
+both 63-file stages and the pinned API header. The new selected-source cap is
+2,144 KiB; physical-v2 keeps its 2,112-KiB cap. These are source payload limits,
+not whole-process I/O, runtime memory or activation permission.
+
+| Completed evidence | SHA-256 |
+| --- | --- |
+| Source and CPU build | `e6a56b0bda7aaa389a895c647759f2803269556b1e26fe07f83de0320c441be4` |
+| Public CPU probe | `67f1ec7a4d116d5e7b584cbbceb15e09d1d8dfcdd90d6ed07546e21863af2253` |
+
+This is not a successful native capture or proof that maintenance caused the
+earlier refusal (15). A changed active debugger still needs its own full build,
+measured layout, artifact derivation, startup/loaded-file qualification,
+controller/family binding, replay and fresh coordinated native attempt.
+
+A visualizer must preserve unavailable data, not zero registers, oracle-filled
+memory or a GPU-observed badge. Successful cleanup is not capture success.
+There is no live visualization route, activation command, global compiler pin
+change or new milestone exit here. Accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
+
+## Private maintenance rebuild and static measurement (2026-09-26)
+
+The [rebuilt debugger checkpoint](https://github.com/harsh-nod/fe2o3/blob/cc69a2e09c867a30990e48f8d7005db67bec0f80/docs/physical-debugger-maintenance-rebuild-qualification-20260926.md)
+passed preparation, configuration, bootstrap and full GDB build. Its debugger
+is 199,543,392 bytes. Separate source/object checks passed 87 controls and
+measured an 8,728-byte adapter with a 14,488-byte logical reservation, including
+the separate 256-byte maintenance scratch under the unchanged 65,536-byte cap.
+The build and layout checks did not launch GDB or a GPU target.
+
+The closed evidence decoder passed 24 new controls with 31 inherited
+derivation controls. Six source-only startup-routing controls also passed.
+Actual two-pass static measurement read 290 keys and reserved 790,136,768 bytes
+under the unchanged 1 GiB cumulative cap. It checked 78 data files, nine
+directories, 54 generated/source Python pairs and 80 static candidates. Only
+the debugger candidate changed content; 54 Python candidates changed paths
+only and 25 candidates were unchanged. All 16 library aliases and the
+interpreter target were unchanged. Static candidates are not a loaded closure.
+
+New startup observations, actual helper/controller qualification and a fresh
+coordinated native capture are still required. Public physical-v3 gates remain
+disabled, physical-v2 remains unchanged, and PROFILE=None remains public.
+A successful build or cleanup is not a successful native capture. Visualizers
+must keep unavailable data unavailable. No register or stopped-wave capture
+is claimed. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+Retained static receipt:
+`021835baf750603ddacf5d4680f8f720f8bf1d8a0657d68242139390d7ad9a55`.
+Retained actual derivation receipt:
+`91a2d05acfe3eb5aba5e5d4b43fb13c0ee8f5a1bf0ec6cbe9a66b83653f8af0c`.
+The global compiler pin remains unchanged; these links identify the later
+source/static checkpoint without replacing earlier failure evidence.
+
+## Disabled loaded-maintenance source checkpoint (2026-09-27)
+
+The [physical-v4 compiler checkpoint](https://github.com/harsh-nod/fe2o3/blob/223c6225986bdd38208317c2caeb264e611e7344/docs/debugger-loaded-maintenance-source-qualification-20260927.md)
+adds a separate disabled overlay for first-loaded-acknowledgement maintenance
+and first-failure diagnostics. Physical-v3 is unchanged. All three source
+availability functions and all four manifest authority flags remain false.
+
+The owned maintenance epoch retains strong target references from the first
+loaded-success acknowledgement until the first subsequent callback. It preserves
+the original acknowledgement/flush order and adds no resume, acknowledgement,
+stop, capture or retry. Exceptional teardown can delay the final target close;
+CPU mocks do not establish arbitrary native teardown equivalence.
+
+Contributor checks passed both exact 63-file source stages, the API header,
+forward/reverse patch checks, 41 JavaScript controls and two strict C++ builds.
+The CPU programs passed 264 real-helper groups with 1,033 checks and six
+first-failure groups. Old/new owner sizes were both 1,992 bytes. Selected source
+is 2,194,713 bytes under the unchanged 2,195,456-byte cap; this is not a runtime
+memory or whole-process I/O cap.
+
+Actual public-package build receipt:
+`db644c80183b906fcdd24c0b0048305c288ea9096a843aafd41d42e522d0d6ee`.
+Actual public-package CPU receipt:
+`299c631a440c684bcea627046a0d9e0191c3eea86bbafaf550a3b16382564fe8`.
+
+A separate private debugger completed all four compile phases. Its executable
+is 199,593,392 bytes, SHA-256
+`d02e69f25ae1690bf424d3fa44a7c458a34c2d9445055bff093f071fcf717ed4`.
+Those phases did not execute GDB or a target. The private active-source build
+does not enable the disabled public package or prove physical capture.
+
+Actual compiled scratch/layout measurement, complete build-custody handoff,
+fresh startup/loaded-runtime closure, controller/family/replay qualification
+and a separately bounded native attempt remain required. The earlier
+commit-site-7 native failure remains a failure; no old lease is reused.
+
+A visualizer must retain unavailable data, never invent register values,
+memory or passed canaries from the expected-value oracle. No capture success,
+live UI route, activation command, public gate change or global compiler pin
+change is added here. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+## Disabled scratch debug-type anchor (2026-09-27)
+
+The [type-anchor checkpoint](https://github.com/harsh-nod/fe2o3/blob/889d52a22f14daa85e87590e85ff999864589f71/docs/debugger-disabled-type-anchor-qualification-20260927.md)
+adds a 213-byte internal const-pointer identity function marked used to retain
+the complete scratch debug type. It adds no runtime call, owner field, mutable
+API, resume, acknowledgement or captured sample. Public gates remain disabled.
+
+Contributor qualification passed all 45 source controls, exact forward/reverse
+patch and source/API checks, strict C++ builds, 264 maintenance groups / 1,033
+checks and six first-poison groups. Old/new owner sizes remained 1,992 bytes.
+The complete selected source is 2,194,926 bytes under the unchanged 2,195,456-byte
+cap, leaving 530 bytes. Full compiler regression passed 356 model and 3,054
+backend tests (189 ignored), plus backend/extractor build.
+
+Publication build receipt:
+`3d2e29fa7968f707d628594cceb0607f554dba92732d2fa3d18f5ed2972ecc76`.
+Publication CPU receipt:
+`000f42da869eb831421d077fb695fa219595364e8035b1cf8dd3e6c163a0e72c`.
+
+The separate private observable debugger has four completed compile phases and
+a qualified complete build-custody handoff. Actual nine-type layout and current
+startup remain unqualified at this checkpoint. A historical build-input pin was
+incorrectly checked against the debugger artifact limit; that metadata-domain
+correction is separate from product layout and cannot supply a missing type size.
+
+A visualizer must keep unavailable data unavailable. Neither the anchor nor
+build/CPU success supplies register, memory or canary observations. There is no
+live route, capture command, native lease, global compiler pin change or new
+milestone exit. Accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
