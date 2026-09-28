@@ -1420,3 +1420,53 @@ Earlier root constants/entry work, carrier/provenance and capability integration
 genuine nonempty Fixed coverage, argument writers, joint bounds and production
 admission remain open. Public gates and the global compiler pin are unchanged;
 accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Following real provenance into allocation contracts
+
+The preceding sections retain their historical qualification boundaries. The
+newer private Rust-source checkpoint now reaches `BeforeCapabilitiesV1`:
+Option → enum → scalar inventory → local provenance → allocation contracts.
+This is not a new public kernel-authoring API or an ordinary compilation route.
+
+Read the pinned [provenance checkpoint](https://github.com/harsh-nod/fe2o3/blob/7f383faf446c46dddd5910fe5a7274e1f095b70e/docs/option-enum-scalar-provenance-preparation-qualification-20260928.md)
+and [allocation checkpoint and limits](https://github.com/harsh-nod/fe2o3/blob/c5751cb7129c14245016388140e2c6b25638bab7/docs/option-enum-scalar-provenance-allocation-preparation-qualification-20260928.md).
+These connect actual retained analysis results to the same original compiler
+owner and resource budget. Earlier owners and partial allocation results survive
+checked postflight; their destruction precedes credit release.
+
+For a code-reading exercise, locate the private
+`with_nominal_option_enum_scalar_provenance_allocation_before_capabilities_v1`
+entry and its genuine observer in the pinned compiler. Trace the exact retained
+`allocation_origins` slice into the allocation component. Then follow the
+independent oracle: it recomputes original scalar and provenance data before
+computing original allocation contracts. It does not use candidate origins to
+manufacture the expected result.
+
+Inspect three failures in the accompanying controls:
+
+- A source ownership claim disagrees with Rust's ABI pointer provenance. Earlier
+  analyses complete, but allocation preparation refuses before callback.
+- Work or storage runs out partway through preparation. Partial results remain
+  owned, and the first resource denial remains visible.
+- The callback returns an error or panics after successful preparation. The
+  pending owner remains through checked postflight and is dropped before refund.
+
+Full allocation qualification passed 14 component and 17 checkpoint controls,
+356 model tests and 3,315 backend tests (197 ignored), builds and five actual
+Rust-source sessions. Two positive kernels completed 36 numerical helper runs.
+Every eligible session ran Compare, CallbackError and CallbackPanic. Each had
+31 allocation rows, four contracts, two writable contracts and zero singleton
+contracts, matching the independent original analysis. Nonempty singleton
+coverage is synthetic here, not a genuine Rust-source observation.
+
+Full allocation receipt:
+`9ddee3f3b47ad8da7dd87872629683c4d6b21c71087518d32c54eaa648108e36`.
+The earlier genuine provenance receipt is
+`67f9192344e45c93a48e7cb2fcf9b25baf6f6007940f5598ce79b9185bc85b05`.
+
+This demonstrates preservation of Rust-derived facts, not validation of arbitrary
+edited assembly. Capability preparation, earlier constant analysis, argument
+writers, joint bounds, genuine nonempty Fixed coverage and ordinary production
+admission remain open. No GPU run or native debugger recording is established.
+Public gates and the global compiler pin remain unchanged; accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
