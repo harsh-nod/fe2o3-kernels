@@ -162,3 +162,107 @@ views or a visualization recording. Runtime acceptance and physical capture
 remain false. This historical run does not extend its finite coordination
 window; this lesson supplies no native replay command. V4 remains open and
 accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+## 7. Review loaded-file records without replaying startup
+
+The inert loaded-file review component first passed 173 CPU controls against
+the complete retained records of section 6. Its portable review APIs and
+selection planner are now [published in the compiler repository](https://github.com/harsh-nod/fe2o3/tree/ce1ec08a9420c2e923fac7ed42960a4cd8586192/tools/debugger/loaded-profile).
+The pinned [publication qualification note](https://github.com/harsh-nod/fe2o3/blob/ce1ec08a9420c2e923fac7ed42960a4cd8586192/docs/portable-loaded-debugger-review-qualification-20260929.md)
+records 32 fixture-free API/admission controls and the preserved 173 profile
+and 77 planner historical controls. This remains a historical, read-only review
+profile, not a live debugger adapter or permission to repeat the native startup.
+
+From the fe2o3 repository root, run the fixture-free API/admission checks:
+
+~~~sh
+node --test tools/debugger/loaded-profile/portable-api.test.mjs
+~~~
+
+Those 32 controls require no historical archive and do not claim historical
+startup semantic coverage. To run the preserved historical suites, supply an
+explicit manifest for all 76 complete source-pinned fixture files:
+
+~~~sh
+FE2O3_LOADED_REVIEW_FIXTURES=/absolute/path/fixtures.json \
+  node --test tools/debugger/loaded-profile/historical-profile-controls.mjs \
+  tools/debugger/loaded-profile/historical-selection-controls.mjs
+~~~
+
+The [pinned fixture contract](https://github.com/harsh-nod/fe2o3/blob/ce1ec08a9420c2e923fac7ed42960a4cd8586192/tools/debugger/loaded-profile/README.md)
+defines the exact ordered roles, immutable content pins and bounded fixture reader.
+Missing fixtures fail; there is no silent skip or fallback to historical host
+paths, and no raw host archive is bundled in the repository. The 76 fixture
+contents are hash-checked; the supplied manifest is bounded, parsed and
+identity-checked rather than source-hash-checked by the fixture reader.
+Both commands are CPU-only controls, not a startup replay or physical capture.
+Earlier stage limits and the expired native coordination remain unchanged.
+
+For a kernel author, the useful question is: "Which recorded source, cache and
+mapped-library paths were associated with this debugger startup?" Answering it
+helps separate an artifact-selection problem from a kernel-state question.
+It cannot tell you the value of a VGPR, which lane diverged, whether an LDS bank
+conflict occurred, or what a stopped wave would do next.
+
+The pure entry consumes 72 complete, individually pinned retained records,
+including both successful gate observations and the preserved failed-attempt
+readback. It also checks the complete original 1,024 before/after selected
+identities; it does not replace the 879 historical duties. No operational file
+is opened by the pure checker. A successful review says the supplied historical
+bytes and their joins were accepted, not that the files are still unchanged now.
+
+This API sketch describes an owned-buffer review, not an installed CLI or a
+filesystem reader:
+
+~~~javascript
+const profile = reviewLoadedStartup(retainedInputBuffers);
+
+// Each named role keeps its full observation and all module/map references.
+const cacheAbsences = profile.rows.filter(row => !row.observation.exists);
+const namedAliases = profile.named_aliases;
+
+console.assert(cacheAbsences.length === 23);
+console.assert(namedAliases.length === 1);
+console.assert(profile.physical_files_reread === false);
+console.assert(profile.limitations.runtime_acceptance === false);
+console.assert(profile.limitations.physical_capture === false);
+~~~
+
+The accepted historical profile retains 193 named file roles: 170 present,
+23 absent, and 398,626,885 present-file bytes. It preserves 104 initial Python
+modules, 50 mapped ELF paths, all initial/collection/final map references,
+123 newly observed present files relative to static candidates, and 37 static
+candidates not observed. Those 37 candidates retain their independent duties;
+absence from this particular startup is not permission to delete them.
+
+For a review exercise, pick a module with a source path and a cached path.
+Follow each named path back to its module references, then distinguish any
+mapped ELF references. An absent cache path remains an absence observation,
+not a zero-byte readable file. A present cache path does not prove that its
+bytecode executed. A module snapshot does not establish complete import
+history. Likewise, retain the named sitecustomize alias and its recorded target
+identity; do not silently collapse it into a different selected input.
+
+The checker refuses incomplete rosters, changed complete pins, inconsistent
+pre/post records, unrecognized alias identities, broken module/map/cache
+lineage and attempts to promote startup evidence to runtime acceptance.
+A pin refusal alone does not identify which deeper semantic check would also
+fail. The negative controls establish refusal, not exhaustive branch coverage.
+
+Pure-review qualification receipt:
+
+~~~text
+7269304a46332efe72bdc176aad4feccceb8c1035dd5bd19fc7c2720beb8ea22
+~~~
+
+The failed first startup remains failed; the accepted retry does not erase it.
+Reviewing retained bytes does not extend the expired startup coordination or
+perform a fresh native action. Integrating observed files into a future input
+selection must preserve every old duty and count all added readable, absent,
+alias, source and reader roles under a separately reviewed finite gate. This
+lesson changes no input limit and provides no native replay command.
+
+Complete import history, cache-execution provenance, runtime acceptance and
+physical capture remain false. There is no physical register heatmap, LDS bank
+view or new visualization recording. V4 remains open and accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).

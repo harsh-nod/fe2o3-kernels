@@ -1533,3 +1533,79 @@ loop bounds. Those require their own source-owned joins and qualification.
 It does not validate arbitrary edited assembly, establish production admission,
 or add a public kernel-authoring API. Public gates and the global compiler pin
 remain unchanged; accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Retain early induction state without granting a loop proof
+
+The [retained induction-analysis checkpoint](https://github.com/harsh-nod/fe2o3/blob/41fc1167f1a94810482fcf51024215d6361ca4cf/docs/retained-induction-analysis-qualification-20260928.md)
+adds an inert owner for the original complete-CFG V1 u32 induction analysis.
+It keeps the CFG, inventory, each real reachability traversal's visited buffers,
+certificates, completed report and full owning error attached to one pending
+object. The original six analysis bodies retain their semantics, local work
+counts and refusal order.
+
+For a kernel author, this distinction matters when interpreting a loop analysis:
+an available report, a nonempty certificate set, permission to transform code,
+and a kernel that actually ran are different results. Consider an unsigned
+counter with a strict upper-bound guard versus an inclusive guard at the largest
+u32 value. They do not justify the same no-overflow assumption. This example
+explains the question to ask; it is not evidence that either Rust source has
+passed the genuine compiler route.
+
+Read the new component beside its independent old-API oracle. Compare the
+ordinary guarded fixture with an expected-overflow case, a zero step, another
+definition of the induction local, an alias, and changed assertion operands.
+An empty certificate set is not a proof. A resource refusal is not a semantic
+counterexample either: it says the bounded analysis did not produce an accepted
+result. The controls compare complete reports, not just certificate counts.
+
+The compiler-side API has an explicit ownership boundary. This is a schematic
+non-executable pseudocode for already-admitted model inputs, not a standalone
+kernel or public kernel-authoring command:
+
+~~~text
+let mut retained = RetainedSemanticU32InductionV1::new();
+let prepared = retained.prepare_into(source, function, limits, &mut meter);
+
+match prepared {
+    Ok(()) => {
+        let report = retained.completed_for(source, function)
+            .expect("the same completed source and function");
+        assert!(!report.grants_authority());
+        assert!(!report.authorizes_compiler_transform());
+        // Inspect report.certificates() and the full report as DATA.
+    }
+    Err(_) => {
+        // The non-Copy owning error and partial allocations remain in retained.
+        let _detail = retained.failure();
+    }
+}
+
+// A genuine caller must finish checked postflight while retained is alive.
+drop(retained);
+// Only the enclosing owner may then release the corresponding accepted credits.
+~~~
+
+The owner is one-shot. A failed preparation is not a request to retry on the
+same object, and a detached but equal source is not the original source loan.
+The generic caller-supplied meter is not proof of canonical physical Budget
+identity or sticky-denial custody. A future genuine adapter must establish
+those facts and keep the pending owner through checked postflight, including
+error and panic paths, before destruction and credit release. Reported logical
+work and retained resource charges do not measure native stack or process RSS.
+
+All 12 component controls passed. Full qualification passed 368 model tests,
+3,349 backend tests (197 ignored), 227 serial authority-package tests,
+nine policy controls and builds. Regression receipt:
+
+~~~text
+4441b7c5a871058c85b6c3706375e19aed04834813fccefab8db86a725608092
+~~~
+
+This checkpoint does not establish a genuine Rust loop certificate. It does not
+implement the V2 SSA/reachable-scope mode, complete the whole-root source order,
+reach ordinary production admission, or validate arbitrary edited assembly.
+The existing constant, capability, argument-writer and bounds stages still need
+their own correctly ordered joins; moving constants later would not preserve
+the original pipeline. No GPU execution or debugger capture is implied.
+Public gates and the global compiler pin are unchanged; accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
