@@ -67,9 +67,14 @@ with request_path.open("x") as output:
 PY
   "$tools/fe2o3-kir-sim" --diagnostic-kir-v18 "$out/$order.kir" \
     --request "$out/$order.request.json" --output "$out/$order.result.json"
+  # This fixture is an independent-oracle-checked answer for this fixed input,
+  # not an oracle for arbitrary replacement inputs or a cross-order comparison.
+  python3 "$recorded/verify-result.py" \
+    "$out/$order.inventory.json" "$out/$order.request.json" \
+    "$out/$order.result.json" "$recorded/$order-case-debug.request.json" \
+    "$recorded/$order-case-debug.result.json"
 done
 
-# Compare outputs with the selected order's independent oracle.
 # Start an interactive JSONL session; do not substitute allocation IDs from
 # an older transcript for pointers discovered in this session.
 "$tools/fe2o3-debug" sim --diagnostic-kir-v18 "$out/blocked.kir" \

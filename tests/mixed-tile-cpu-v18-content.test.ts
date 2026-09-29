@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { expect, it } from "vitest";
 import { lessons } from "../src/content/curriculum";
+
 import {
   mixedTileCpuV18,
   mixedTileCpuV18Claim,
@@ -113,6 +118,7 @@ it("keeps the runnable recipe on the ordinary V18 route with inventory-derived I
   expect(workflow).toContain("--no-default-features --features mixed-tile-u32-kernel");
   expect(workflow).toContain('request["kernel"] = kernel["id"]');
   expect(workflow).toContain("--diagnostic-kir-v18");
+  expect(workflow).toContain('python3 "$recorded/verify-result.py"');
   expect(workflow).not.toContain("FE2O3_CONTEXT_PROTOCOL_SOURCE");
   expect(workflow).not.toContain("--bundle-v5");
   const narrative = JSON.stringify(mixedTileCpuV18);
@@ -120,5 +126,31 @@ it("keeps the runnable recipe on the ordinary V18 route with inventory-derived I
     "requires Wave64", "persisted schedule record/replay",
     "pending curriculum binding", "native SIMT/tile obligations"]) {
     expect(narrative).toContain(text);
+  }
+});
+
+it("runs the fixed-input result checker and refuses changed output or false authority", () => {
+  const path = (name: string) => fileURLToPath(new URL(directory + name, import.meta.url));
+  const temporary = mkdtempSync(join(tmpdir(), "mixed-tile-result-"));
+  const check = (result: string) => spawnSync("python3", [
+    path("verify-result.py"), path("blocked.inventory.json"),
+    path("blocked-case-debug.request.json"), result,
+    path("blocked-case-debug.request.json"), path("blocked-case-debug.result.json"),
+  ], { encoding: "utf8", timeout: 10_000 });
+  try {
+    expect(check(path("blocked-case-debug.result.json")).status).toBe(0);
+    const changed = document("blocked-case-debug.result.json");
+    changed.shared_buffers[1].buffer.bytes = "0x00";
+    const changedPath = join(temporary, "changed.json");
+    writeFileSync(changedPath, JSON.stringify(changed));
+    const rejected = check(changedPath);
+    expect(rejected.status).not.toBe(0);
+    expect(rejected.stderr).toContain("exact input/output bytes and initialization");
+    const falseAuthority = document("blocked-case-debug.result.json");
+    falseAuthority.hardware_observed = true;
+    writeFileSync(changedPath, JSON.stringify(falseAuthority));
+    expect(check(changedPath).stderr).toContain("hardware_observed");
+  } finally {
+    rmSync(temporary, { recursive: true, force: true });
   }
 });
