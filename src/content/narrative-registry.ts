@@ -384,7 +384,6 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
-  "cpu-semantic-simulation/mixed-tile-v18": mixedTileCpuV18,
   "cpu-semantic-simulation/pipeline": {
     "sectionId": "pipeline",
     "title": "Keep one production lowering",
@@ -436,6 +435,7 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "cpu-semantic-simulation/mixed-tile-v18": mixedTileCpuV18,
   "cpu-semantic-simulation/evidence-boundary": {
     "sectionId": "evidence-boundary",
     "title": "Read the result as an exact observation",
