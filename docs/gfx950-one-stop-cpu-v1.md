@@ -266,3 +266,56 @@ Complete import history, cache-execution provenance, runtime acceptance and
 physical capture remain false. There is no physical register heatmap, LDS bank
 view or new visualization recording. V4 remains open and accepted exits remain
 M1/V1/V2/U1/U2/U3 (6/18).
+
+## 8. Plan complete input reads without authorizing them
+
+The [portable graph and resource-planning APIs](https://github.com/harsh-nod/fe2o3/tree/c7b1a12f62368c7b3b222dad5fc7cf6ce4bdf537/tools/debugger/loaded-operational-graph)
+make the next review step available as CPU-only code. From the fe2o3 repository
+root, run its fixture-free controls:
+
+~~~sh
+node --test tools/debugger/loaded-operational-graph/graph-policy.test.mjs
+~~~
+
+All 44 fixture-free controls passed on mi350. A separate root-owned integration
+gate passed 13 additional historical controls. The historical seed, inactive
+driver and raw execution receipts are not bundled with this portable package;
+running the command above does not run those 13 controls.
+
+Use `compileOperationalGraph(Buffer)` to check named claims, complete content
+pins, identity observations, imports, unresolved roles and output names. It
+parses supplied bytes; it does not open those named files. Keep each named path
+and all its roles, even when two paths have equal hashes. An independently
+selected alias target retains its own charge. A recorded absence is a separate
+metadata obligation, not a zero-byte readable file.
+
+For a small accounting exercise, consider a 100,000-byte readable file. With
+exact chunks of at most 65,536 bytes, one pass budgets two payload reads and one
+EOF probe: three content-provider calls and 100,001 inclusive reserved bytes.
+Two independently selected readable names of that size need six calls and
+200,002 inclusive reserved bytes per pass, before metadata checks. Repeating
+the pass doubles those figures. These are logical provider-call envelopes,
+not measured filesystem syscall counts.
+
+`exactReadEnvelope(entries, aliases, passes)` computes that structural
+accounting. `proposeResourcePolicy(Buffer, options)` adds the fixed historical
+profile phases; it requires the exact historical 1,173-name shape and is not a
+generic operational supervisor. Its controlled-read subtotal excludes actual
+module-loader IO, fixture metadata, resource probes, request reads and any extra
+repository scan. A logical memory envelope is not a process RSS bound.
+
+For the review exercise, identify which obligations are unresolved before
+reading and which observations can exist only afterward. Do not replace a
+changed historical pin with current bytes merely to make a review pass. That
+mismatch requires an explicit refusal and a separately reviewed successor.
+
+Even an empty unresolved list leaves `qualified`, `execution_authority`,
+`complete_operational_graph` and `root_cap_change_approved` false. Increasing
+an input-count limit alone does not supply exact-read enforcement, currentness
+guards, output ownership or scheduling. The read-only adapter and bounded
+exclusive evidence writer still need separate qualification.
+
+This is not a live visualization or a native replay command. It does not
+capture VGPR values, LDS banks or stopped-wave state, and it does not extend
+the expired native coordination. V4 remains open; accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18). No global compiler pin or public support gate changes.
