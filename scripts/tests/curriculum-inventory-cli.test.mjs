@@ -47,6 +47,10 @@ function withFixture(run) {
         "CLI qualification requires these candidate files to be committed before the test");
     }
     symlinkSync(dependencies, join(site, "node_modules"), "dir");
+    // The tracked directory-only ignore does not cover this fixture symlink.
+    appendFileSync(join(site, ".git", "info", "exclude"), "\n/node_modules\n");
+    assert.equal(git(site, ["status", "--porcelain=v1", "--untracked-files=all"]), "",
+      "the shared-dependency fixture must start with clean source");
     const cache = join(directory, "cache");
     const outputs = join(directory, "outputs");
     mkdirSync(cache);
