@@ -4,13 +4,27 @@ import type { NarrativeRegistryEntry } from "./narrative-registry";
 // Unregistered draft. Do not attach it to the lesson before the requirements
 // below are met by retained public-CLI evidence at one exact compiler revision.
 export const mixedTileCpuV18PublicationRequirements = [
-  "Expose actual canonical kernel IDs and argument ABI through production CLI metadata discovery.",
   "Bind a public source crate, its exact displayed source, and independent per-order oracle.",
   "Qualify the same source path through both exports, metadata discovery, request construction, simulator, and debugger.",
   "Retain exact compiler/source/KIR/request identities and measured debugger hierarchy and memory responses.",
-  "Replace draft command inputs with the qualified public example paths and exact inventory syntax.",
+  "Replace draft command inputs with the qualified public example paths and inventory-derived requests.",
   "Add a separate qualification reference without advancing historical global or existing lesson pins.",
 ] as const;
+
+export const mixedTileCpuV18FixtureEvidence = {
+  compilerRef: "68ff11563da032044e03f5f5a3ac91251b257cba",
+  sourceSha256: "144c3db2cd1461feaf860c103d790b98a7221d20c7fea0421459df1ad2ce171f",
+  batch: "v18-e3-cli-inventory-mir0-68ff11563da032044e03f5f5a3ac91251b257cba-20260929200841-820606",
+  summarySha256: "18d4d5c74c9d10675f24c6e6b6d223d2045cd19eb9f1706b9b933912936b65e9",
+  blockedResponsesSha256: "735fe52851126ac3b38aefbfdef15a833f8f552c4a72a8da0e28126abcf9c78e",
+  stripedResponsesSha256: "7a576be07579c3b61815051af07608467eaf1c76d2a5871d6d3aee08e36f7d46",
+  sourceRoute: "production-ranked-bounds-fixture with genuine external Rust source",
+  ordinaryPublicExampleQualified: false,
+  inventories: 2,
+  simulations: 52,
+  debuggerSessions: 2,
+  negativeControls: 10,
+} as const;
 
 export const mixedTileCpuV18Draft: NarrativeRegistryEntry = {
   sectionId: "mixed-tile-v18",
@@ -20,7 +34,7 @@ export const mixedTileCpuV18Draft: NarrativeRegistryEntry = {
       type: "callout",
       tone: "boundary",
       title: "Unpublished CPU diagnostic draft",
-      text: "The source and command shapes below are prepared for qualification, not a recorded successful run. Canonical metadata discovery, the complete public example, and retained simulator/debugger output must be qualified before this section is registered in the lesson.",
+      text: "A genuine-source fixture completed the public export, inventory, simulator, and debugger workflow at compiler 68ff11563da032044e03f5f5a3ac91251b257cba. The ordinary standalone example-crate route remains pending. This section stays unregistered until that public example and its displayed commands are separately qualified; the fixture result is not a substitute.",
     },
     {
       type: "paragraph",
@@ -44,7 +58,7 @@ export const mixedTileCpuV18Draft: NarrativeRegistryEntry = {
       type: "steps",
       items: [
         "Build the public exporter, extractor, simulator, and debugger from one qualified compiler checkout. Export both orders from the same source path, with fresh output destinations.",
-        "Read the canonical kernel IDs and parameter ABI through the production metadata command. Bind the request to the measured kernel ID, not an assumed spelling of mixed_tile_probe. This command is still pending in the draft.",
+        "Read the canonical kernel IDs and parameter ABI with fe2o3-kir-sim inspect --diagnostic-kir-v18. Bind the request to the measured kernel ID, not an assumed spelling of mixed_tile_probe.",
         "Construct a request with a 64-lane workgroup, a read-only u32 input, a u64 base scalar, and a read-write u32 output. Preserve exact allocation bounds and initialization state. The exported ABI, rather than the Rust spelling usize, determines the scalar request type.",
         "Run each canonical file with its matching request and compare exact bytes, initialization bits, unchanged input, and canaries with that order's oracle.",
         "Open the same file and request in the JSONL debugger. Discover capabilities, step by operation, inspect the dispatch/workgroup/wave/lane hierarchy, and obtain allocation identities from captured logical pointer values before reading memory.",
@@ -72,7 +86,25 @@ export const mixedTileCpuV18Draft: NarrativeRegistryEntry = {
     },
     {
       type: "paragraph",
-      text: "The publication record will include the measured canonical identity and kernel ID for each order, the actual simulator target profile, and a retained hierarchy/memory excerpt from the public debugger. No sample responses or success totals are included here because that end-to-end qualification has not yet been recorded.",
+      text: "The retained fixture run exported both orders from the same source path into fresh files, read two public inventories, passed 52 exact-byte/initialization oracle simulations, completed two 15-command debugger sessions, and checked 10 refusal or unavailable controls. Its simulator reported amdgpu_64_little_endian_v1 with 64-bit indices, separately from the declared gfx942 source profile. Each inventory retained 15 storage-layout rows, a measured mixed_tile_probe kernel ID, and the read-only u32 slice / u64 / read-write u32 slice ABI. Metadata inspection itself reported simulator_admission=not_checked.",
+    },
+    {
+      type: "paragraph",
+      text: "At debugger revision 1, inspecting the workgroup revealed logical Wave64 and lane scopes. Captured pointers identified allocation 2 at byte offset 12 as the output view. Reading 52 bytes included three prefix canaries, eight output elements, and two suffix canaries. The output bytes initially matched the canary pattern but had clear initialization bits. After completion and one reverse operation to a retained snapshot, all eight outputs were initialized and both canary regions were unchanged. This distinguishes an unwritten output from a legitimate value without pretending to inspect physical GPU registers.",
+    },
+    {
+      type: "table",
+      headers: ["Measured fixture observation", "Blocked", "Striped"],
+      rows: [
+        ["Canonical identity", "575b85d985374111b3ac76a14f0bbc33102a71967adfd267d845f4ab4a6aec7b", "9337cafc22ff5e0d7b25e7b779d8d81db4facf80f939375c1ccf3bb944a460a1"],
+        ["Output initialization before execution", "0xff0f000000f00f", "0xff0f000000f00f"],
+        ["Output initialization after completion snapshot", "0xffffffffffff0f", "0xffffffffffff0f"],
+        ["First output, hexadecimal u32", "0xffffffcc", "0x0000158c"],
+      ],
+    },
+    {
+      type: "paragraph",
+      text: "The measured memory example uses the fixture's boundary-value input sequence, not the standalone README's input 1..65. Different first outputs are expected for the weighted per-lane algorithm. Both orders retained the same source and pending identity while their canonical and schedule identities differed. The public-example qualification must record its own identities and results; these hashes and transcripts must not be transferred to it.",
     },
   ],
 };
@@ -112,7 +144,7 @@ pub fn mixed_tile_probe(
     label: "Public CLI workflow",
     language: "bash",
     explanatory: true,
-    notice: "Draft command shapes. Public example paths, inventory syntax, and requests must be supplied by the qualified example before publication.",
+    notice: "Public command syntax; the standalone example paths and inventory-derived requests remain pending qualification before publication.",
     code: String.raw`# Run from the qualified fe2o3 compiler workspace.
 cargo build --locked -p rustc-codegen-fe2o3 \
   --bin fe2o3-export-sim --bin fe2o3-rustc-extract
@@ -131,9 +163,14 @@ for order in blocked striped; do
     -- --manifest-path "$KERNEL_MANIFEST"
 done
 
-# Pending: public inventory of each canonical file, followed by request
-# construction using its measured kernel ID and ABI. No guessed kernel ID.
-# Each order's request below must come from that qualified workflow.
+for order in blocked striped; do
+  "$FE2O3_BIN/fe2o3-kir-sim" inspect \
+    --diagnostic-kir-v18 "$OUTPUT_DIR/$order.kir" \
+    --output "$OUTPUT_DIR/$order.inventory.json"
+done
+
+# Pending: bind the standalone example's requests to these actual inventories.
+# Do not guess kernel IDs or label the emitted u64 base as an index scalar.
 for order in blocked striped; do
   "$FE2O3_BIN/fe2o3-kir-sim" \
     --diagnostic-kir-v18 "$OUTPUT_DIR/$order.kir" \
@@ -145,5 +182,59 @@ done
   --diagnostic-kir-v18 "$OUTPUT_DIR/blocked.kir" \
   --request "$OUTPUT_DIR/blocked.request.json" \
   --protocol jsonl --wave-width 64`,
+  },
+  {
+    kind: "host",
+    label: "Recorded CPU observations",
+    language: "json",
+    explanatory: true,
+    notice: "Selected fields from the retained blocked fixture debugger responses at 68ff1156, not complete protocol messages or results from the pending standalone example.",
+    code: String.raw`{
+  "request_id": 4,
+  "result": {
+    "result": "scopes",
+    "scopes": [
+      {"scope": {"level": "workgroup", "workgroup": [0, 0, 0]}, "state": "running"},
+      {"scope": {
+        "level": "wave", "workgroup": [0, 0, 0], "wave": 0,
+        "active_mask": 18446744073709551615, "wave_width": 64,
+        "interpretation": "logical_visualization"
+      }, "state": "running"}
+    ]
+  }
+}
+{
+  "request_id": 10,
+  "status": "unavailable",
+  "unavailable": {
+    "capability": "source_sites",
+    "reason": "requires_authenticated_map",
+    "state_changed": false,
+    "detail": "source stepping requires an exact-KIR bound source map"
+  }
+}
+{
+  "request_id": 11,
+  "status": "unavailable",
+  "unavailable": {
+    "capability": "register_values",
+    "reason": "not_represented",
+    "state_changed": false,
+    "detail": "CPU KIR simulation does not expose hardware registers"
+  }
+}
+{
+  "request_id": 14,
+  "memory": {
+    "allocation": {"ordinal": 2, "generation": 0},
+    "byte_offset": 0, "requested_bytes": 52, "returned_bytes": 52,
+    "availability": {
+      "status": "captured", "address_space": "global",
+      "bytes": "0x5700d0da5700d0da5700d0daccffffffb0010080faffff7f92010000fd060080ccffffffab060080faffff7f5700d0da5700d0da",
+      "initialized": "0xffffffffffff0f",
+      "truncated": false
+    }
+  }
+}`,
   },
 ];
