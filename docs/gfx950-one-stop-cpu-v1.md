@@ -319,3 +319,117 @@ This is not a live visualization or a native replay command. It does not
 capture VGPR values, LDS banks or stopped-wave state, and it does not extend
 the expired native coordination. V4 remains open; accepted exits remain
 M1/V1/V2/U1/U2/U3 (6/18). No global compiler pin or public support gate changes.
+
+## 9. Exercise the bounded adapter without activating host reads
+
+The [portable CPU adapter](https://github.com/harsh-nod/fe2o3/tree/1a5999f6e1c5f2363bc2d525af65e84c46502ce6/tools/debugger/loaded-cpu-adapter)
+adds explicit Buffer/provider APIs around the reviewed reader. This link pins
+the published compiler component; it is not a new global compiler pin or an
+operational replay command.
+
+From the fe2o3 repository root, its fixture-free control command is:
+
+~~~sh
+node --test tools/debugger/loaded-cpu-adapter/adapter-controls.test.mjs
+~~~
+
+Root qualification passed 76 fixture-free adapter controls and 10 separate
+external historical controls. The combined installed reader, profile, graph and
+adapter suite passed 202 controls; the 10 historical controls passed separately.
+The successful CPU receipt SHA-256 is
+`1789ce1fd0cb0e0eea3787799e023a1a0e5110753b965250d4e241f61f068a41`.
+This qualifies those component controls, not the complete operational workflow.
+The default command does not run the 10 historical controls or load their
+76-role fixture archive. Missing historical configuration/data must fail, not
+skip. The host-specific plan, historical seed and raw receipts are not bundled
+with this portable package.
+
+### Separate the three read phases
+
+`executeAdapterPlan(planBuffer, { provider, guard, now })` accepts an explicit
+bounded plan and caller-supplied provider, guard and clock. It admits both reader
+protocols before invoking the operational provider. Importing the module does
+not call that provider; Node's own module-loader IO is a separate domain.
+
+| Phase | Planned read | If precheck refuses |
+| --- | --- | --- |
+| precheck | One complete selected-graph pass | failed |
+| historical | Two immediate complete historical passes | not-started |
+| postcheck | One complete selected-graph pass | not-started |
+
+Every phase keeps its own byte/content/metadata ceilings and deadline, including
+phases that never start. Attempted reservations remain charged when a guard
+denies a provider call. A stale complete pin, changed named/target/descriptor
+identity or wrong ownership must refuse; do not refresh the historical pin to
+make the operation pass. An absence stays a bounded metadata obligation, not
+an empty readable file. This protects input provenance, not kernel arithmetic.
+
+Read the primary failure separately from cleanup. The first reader, provider,
+phase-clock or guard failure remains primary even when a later descriptor close
+fails. The cleanup report still retains possibly live descriptors. Once a guard
+expires, only cleanup of an already-owned descriptor may proceed; no fresh read
+or write is authorized. A failed phase has bounded diagnostics, not a fabricated
+complete observation array.
+
+### Try serialization only, entirely in memory
+
+The following executable module body can be supplied to
+`node --input-type=module` from the fe2o3 repository root. It exercises only the
+reviewed `encodeBoundedEvidence` API. Every failure string is synthetic: this is
+not a reader or publication acceptance test, and no host input read occurs.
+
+<!-- loaded-adapter-memory-example:start -->
+~~~javascript
+import assert from "node:assert/strict";
+import { encodeBoundedEvidence } from "./tools/debugger/loaded-cpu-adapter/adapter-writer.mjs";
+
+// Synthetic data: no reader, filesystem provider, guard or publication ran.
+const synthetic = {
+  example: "serialization only; no host input read",
+  first_failure: { phase: "precheck", code: "synthetic-stale-pin" },
+  cleanup_errors: [{ message: "synthetic close failure" }],
+  qualified: false,
+};
+const bytes = encodeBoundedEvidence(synthetic, 1024);
+assert.deepEqual(JSON.parse(bytes), synthetic);
+assert.throws(() => encodeBoundedEvidence(synthetic, 8));
+~~~
+<!-- loaded-adapter-memory-example:end -->
+
+The 1,024-byte bound allows this tiny record; the eight-byte bound refuses.
+Changing a JSON field to `qualified: true` would not create authority.
+
+### Keep publication and currentness explicit
+
+`publishExclusiveEvidence` needs an admitted output specification, a writer
+provider and a current guard. Serialization is bounded before writer IO.
+Publication exclusively creates a new temporary leaf, then atomically
+hard-links it to a separate final name without replacing an existing target.
+There is no overwrite-capable rename or automatic unlink. Even success retains
+the temporary link for root-owned cleanup; partial or displaced custody remains
+reported after failure.
+
+Temporary and final names each need their own selected reservation: a 64 MiB
+body can require 128 MiB of conservative named reservations before external
+receipts and streams. Root must bind a private output directory. Directory
+identity bracketing is not atomic ancestor-path exclusion or a writer-exclusion
+proof. Acceptance checks currentness after descriptor cleanup, and the command
+result retains post-publication guard state.
+
+The serialized record describes publication intent, not proof of its own
+publication. Root must inspect actual command status and read the real output
+completely. Expiry forbids new evidence writes; an external timeout or kill can
+prevent cleanup or any durable report. Unwritten evidence is not available
+evidence.
+
+The explicit `runFilesystemAdapter` entry remains unactivated in this lesson.
+Final individually pinned source/import/runtime/launcher inputs, the complete
+request Buffers, current CPU-only policy, exact cap/resource/output bindings,
+external timeout and readback still belong to root. A successful synthetic
+example or accepted count value supplies none of those prerequisites.
+
+This is not a live visualization and performs no GDB, attach, inferior launch,
+GPU dispatch or physical capture. It supplies no VGPR heatmap, LDS-bank sample
+or native replay command and does not renew the expired native coordination.
+V4 remains open; accepted exits remain M1/V1/V2/U1/U2/U3 (6/18). No public support
+gate, global compiler pin or maturity claim changes.
