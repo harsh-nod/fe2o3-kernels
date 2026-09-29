@@ -1,4 +1,5 @@
 import type { LessonBlock, NarrativeLessonSection } from "./model";
+import { mixedTileCpuV18 } from "./mixed-tile-cpu-v18";
 import { narrativeFingerprint } from "./narrative-fingerprint";
 import {
   narrativeFingerprints,
@@ -383,6 +384,7 @@ const narrativeRegistry = deepFreeze({
       }
     ]
   },
+  "cpu-semantic-simulation/mixed-tile-v18": mixedTileCpuV18,
   "cpu-semantic-simulation/pipeline": {
     "sectionId": "pipeline",
     "title": "Keep one production lowering",

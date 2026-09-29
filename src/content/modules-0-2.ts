@@ -1,4 +1,5 @@
 import { narrativeSection } from "./narrative-registry";
+import { mixedTileCpuV18Claim, mixedTileCpuV18Tabs } from "./mixed-tile-cpu-v18";
 import { currentState } from "./current-state";
 import { semanticMilestoneLessonBoundary } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
@@ -665,9 +666,11 @@ const cpuSimulation: Lesson = {
         },
       ),
     },
+    mixedTileCpuV18Claim,
   ],
   sections: [
     narrativeSection("cpu-semantic-simulation/pipeline"),
+    narrativeSection("cpu-semantic-simulation/mixed-tile-v18"),
     narrativeSection("cpu-semantic-simulation/evidence-boundary"),
     narrativeSection("cpu-semantic-simulation/testing-is-not-proof"),
   ],
@@ -976,6 +979,7 @@ Portable workgroup reductions at 9176b9c27
       sourceDigestScope: "file",
       notice: "Exact SIMT source tested through Bundle V5 CPU execution and replay. Tile/mixed implementations and native/KFD GPU validation remain pending.",
     },
+    ...mixedTileCpuV18Tabs,
   ],
   diagram: "simulation",
   exercises: [

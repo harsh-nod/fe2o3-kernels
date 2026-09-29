@@ -1,0 +1,15 @@
+{"schema":"fe2o3-debug-request-v1","request_id":1,"expected_revision":0,"operation":"discover_capabilities"}
+{"schema":"fe2o3-debug-request-v1","request_id":2,"expected_revision":0,"operation":"step","direction":"forward","granularity":"operation","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":3,"expected_revision":1,"operation":"inspect_scope","scope":{"level":"dispatch"},"include_children":true,"page":{"limit":64}}
+{"schema":"fe2o3-debug-request-v1","request_id":4,"expected_revision":1,"operation":"inspect_scope","scope":{"level":"workgroup","workgroup":[0,0,0]},"include_children":true,"page":{"limit":64}}
+{"schema":"fe2o3-debug-request-v1","request_id":5,"expected_revision":1,"operation":"inspect_scope","scope":{"level":"wave","workgroup":[0,0,0],"wave":0},"include_children":true,"page":{"limit":64}}
+{"schema":"fe2o3-debug-request-v1","request_id":6,"expected_revision":1,"operation":"inspect_scope","scope":{"level":"lane","workgroup":[0,0,0],"wave":0,"lane":0},"include_children":true,"page":{"limit":64}}
+{"schema":"fe2o3-debug-request-v1","request_id":7,"expected_revision":1,"operation":"inspect_values","scope":{"level":"lane","workgroup":[0,0,0],"wave":0,"lane":0},"selector":{"selector":"all"},"page":{"limit":64}}
+{"schema":"fe2o3-debug-request-v1","request_id":8,"expected_revision":1,"operation":"read_memory","allocation":{"ordinal":2,"generation":0},"byte_offset":0,"byte_len":52}
+{"schema":"fe2o3-debug-request-v1","request_id":9,"expected_revision":1,"operation":"read_memory","allocation":{"ordinal":1,"generation":0},"byte_offset":0,"byte_len":52}
+{"schema":"fe2o3-debug-request-v1","request_id":10,"expected_revision":1,"operation":"step","direction":"forward","granularity":"source","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":11,"expected_revision":1,"operation":"inspect_values","scope":{"level":"lane","workgroup":[0,0,0],"wave":0,"lane":0},"selector":{"selector":"roots","roots":["register"]},"page":{"limit":64}}
+{"schema":"fe2o3-debug-request-v1","request_id":12,"expected_revision":1,"operation":"continue","max_events":1000000}
+{"schema":"fe2o3-debug-request-v1","request_id":13,"expected_revision":2,"operation":"step","direction":"reverse","granularity":"operation","count":1}
+{"schema":"fe2o3-debug-request-v1","request_id":14,"expected_revision":3,"operation":"read_memory","allocation":{"ordinal":2,"generation":0},"byte_offset":0,"byte_len":52}
+{"schema":"fe2o3-debug-request-v1","request_id":15,"expected_revision":3,"operation":"terminate"}
