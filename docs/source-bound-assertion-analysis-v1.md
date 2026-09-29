@@ -1298,3 +1298,238 @@ Unavailable constructor-partial state is not reconstructed. Real fixed-query
 zero-cache contents are currently empty; seeded storage controls do not establish
 real query coverage. No public capture activation or global compiler pin change;
 accepted broad exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Authentic same-source fixed-query comparison
+
+The [genuine comparison checkpoint](https://github.com/harsh-nod/fe2o3/blob/2ef4196907c0e80f912d5318a9ea1eb3a884c961/docs/original-fixed-query-genuine-qualification-20260928.md)
+connects independent original queries and the candidate to the same authenticated
+source and original resource Budget. The original owner stays alive while the
+candidate runs. Complete bounded checked rows and ordered cache data remain
+observable through postflight; payload destruction precedes credit refund.
+Unavailable or refused data is not equality.
+
+All 15 new controls passed, alongside 356 model / 3,174 backend tests and
+backend/extractor builds. Five genuine Rust compilation sessions passed; the
+identity and swapped-return cases completed 36 positive numerical CPU runs.
+These source prefixes contain zero Fixed queries. The original-query-panic
+observation therefore skips, and this does not qualify genuine nonempty proof
+comparison. An additional Rust array-bounds fixture was rejected with
+`BF16 semantic Assert is unavailable` before nominal-owner materialization.
+It remains a failed experiment, not a positive proof or emitted-kernel test.
+
+This is useful when reading compiler diagnostics: distinguish a source that
+reaches a checker from a source rejected before that checker. Passing an empty
+query set cannot establish behavior for nonempty queries. Likewise, independent
+helper CPU results are not ordinary production admission or GPU observations.
+
+Regression receipt:
+`1990b8b3081201061f4414f7892e6c21f016c44c6d80445bf49ae78a351be799`.
+Genuine-source receipt:
+`6201a5c2880b4b9f036e40df65a86e9d79991f67a28a5a06eb1bec713bdb7390`.
+Fresh integration qualification on the concurrently updated main passed 356 model
+and 3,184 backend tests, builds and the five-session ladder:
+`eff86f458e847e6d93bb0f227987497995ec70deec6f03c7f047baeab6f4e581`.
+
+The Option-first prelude, later writers, joint bounds driver and ordinary
+production route remain open. Logical resource accounting does not measure
+physical stack or RSS. Public capture and the global compiler pin are unchanged;
+accepted broad exits remain **M1/V1/V2/U1/U2/U3 (6/18)**.
+
+### Source-ordered Option preparation before enum analysis
+
+The next private compiler checkpoint retains Option producers and dominance on
+the same authenticated source and original resource Budget, stopping at
+`BeforeEnumV1`. Read the
+[pinned implementation and qualification](https://github.com/harsh-nod/fe2o3/blob/f47a7a8ad5365cd50249dc60a58e4f930a1447b2/docs/option-first-preparation-qualification-20260928.md).
+This is an internal compiler checkpoint, not a new public kernel-authoring API.
+
+Inside this intrinsic-analysis suffix, the order is retired intrinsic prefix,
+index/leader/predicate/edge preparation, Option producers, and Option dominance.
+The pending owner retains partial and completed model allocations through
+postflight. Destruction precedes refund to the original budget. Immutable views
+cannot escape as owned proof, and sticky resource denials remain denials.
+
+All 12 new controls passed, along with 356 model and 3,196 backend tests
+(197 ignored), builds and five actual Rust-source sessions. The two positive
+sources completed 36 numerical helper runs. Every eligible session compared
+nonempty Option data against the unchanged original APIs in Compare,
+CallbackError and CallbackPanic modes: one producer, one authenticated
+Some-region/block pair, and positive dominance work. The real invalid-caller
+control refused before callback entry. Wrong launch did not enter this hook.
+
+The full regression/source receipt is
+`3acb9662acf50ca4a960c2e5492503c2c507b276296358956ddd1a911be3ff8f`;
+the complete source report is
+`07419034ac2c045d5dce3209ee8bbf2c814dbf6bae049301192a669a8880774f`.
+
+This is not the complete outer root chronology. Earlier constants/entry-prefix
+work, retained enum/scalar continuation, later argument writers, joint bounds,
+genuine nonempty Fixed proofs and production routing remain open. No native
+capture or public gate is enabled; accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
+
+### Following enum, scalar and origin-analysis preparation
+
+These stages explain how the compiler checks Rust-derived information before
+a later assembly-authoring continuation can rely on it. They are private
+implementation checkpoints, not additional public authoring APIs.
+
+The qualified source-ordered checkpoint now reaches `BeforeScalarV1`:
+Option preparation runs first, then retained enum analysis. The same pending
+owner keeps partial and completed allocations through checked postflight;
+destruction happens before resource credits are refunded. Read the
+[pinned enum implementation and qualification](https://github.com/harsh-nod/fe2o3/blob/c23ae965b1d7d35376a6c0cb075d05d9a489eace/docs/option-enum-preparation-qualification-20260928.md).
+
+All 13 enum controls passed, with 356 model and 3,209 backend tests
+(197 ignored), builds and five actual Rust-source sessions. Eligible sessions
+executed the real enum analyzer in Compare, CallbackError and CallbackPanic
+modes and compared complete data against unchanged original APIs. The two
+positive sources completed 36 numerical helper runs. Analyzer invocation does
+not establish genuine nonempty enum availability; that remains separate work.
+
+The next two dependencies are qualified as isolated components:
+
+- [Retained scalar inventory](https://github.com/harsh-nod/fe2o3/blob/5d05fe941523d4ccb82ae1f1976f8f6a3d82eeda/docs/retained-scalar-inventory-qualification-20260928.md)
+  keeps definition counts, block assignments, address-escape information and
+  partial candidates attached on failure. All 13 controls passed; full regression
+  passed 356 model and 3,222 backend tests (197 ignored), plus builds.
+- [Retained exact-origin FIFO worklist](https://github.com/harsh-nod/fe2o3/blob/43edfa3bf5587dbf145f2dc85f409e4ebd5bc787/docs/retained-origin-worklist-qualification-20260928.md)
+  preserves original queue order, successor order, conflicts and partial updates.
+  All 11 controls passed; full regression passed 356 model and 3,233 backend tests
+  (197 ignored), plus builds. Its origins and edges remain caller-owned.
+
+Neither component yet establishes the genuine continuation that joins it to the
+authenticated source. Lexical address/ledger checks are not durable authority.
+Logical resource accounting is not measured native stack, allocator capacity or
+RSS. No GPU execution or native debugger capture is established by these tests.
+
+For a code-reading exercise, follow an Option-producing call through the pinned
+enum checkpoint, then inspect the scalar and FIFO failure controls. Distinguish
+three outcomes: a semantic conflict, an exhausted resource budget, and callback
+failure after successful preparation. Check that partial allocations remain
+owned until postflight in each case. A positive component test is not permission
+to feed arbitrary edited intermediate data into a production compilation route.
+
+Qualification receipts, respectively:
+
+- Enum: `48468d97aac89ebcf2030f693789c2ad25a8913155febf11028f47c1bb1570a6`.
+- Scalar: `2e33325b3fd92bf966024543f4ac208801ea1c0a70bf25d141efd0480774aaca`.
+- FIFO: `3b78019f35bfc8fa5ffc70469b80e27e87de06380a9e533c0688dbf37118dea5`.
+
+Earlier root constants/entry work, carrier/provenance and capability integration,
+genuine nonempty Fixed coverage, argument writers, joint bounds and production
+admission remain open. Public gates and the global compiler pin are unchanged;
+accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Following real provenance into allocation contracts
+
+The preceding sections retain their historical qualification boundaries. The
+newer private Rust-source checkpoint now reaches `BeforeCapabilitiesV1`:
+Option → enum → scalar inventory → local provenance → allocation contracts.
+This is not a new public kernel-authoring API or an ordinary compilation route.
+
+Read the pinned [provenance checkpoint](https://github.com/harsh-nod/fe2o3/blob/7f383faf446c46dddd5910fe5a7274e1f095b70e/docs/option-enum-scalar-provenance-preparation-qualification-20260928.md)
+and [allocation checkpoint and limits](https://github.com/harsh-nod/fe2o3/blob/c5751cb7129c14245016388140e2c6b25638bab7/docs/option-enum-scalar-provenance-allocation-preparation-qualification-20260928.md).
+These connect actual retained analysis results to the same original compiler
+owner and resource budget. Earlier owners and partial allocation results survive
+checked postflight; their destruction precedes credit release.
+
+For a code-reading exercise, locate the private
+`with_nominal_option_enum_scalar_provenance_allocation_before_capabilities_v1`
+entry and its genuine observer in the pinned compiler. Trace the exact retained
+`allocation_origins` slice into the allocation component. Then follow the
+independent oracle: it recomputes original scalar and provenance data before
+computing original allocation contracts. It does not use candidate origins to
+manufacture the expected result.
+
+Inspect three failures in the accompanying controls:
+
+- A source ownership claim disagrees with Rust's ABI pointer provenance. Earlier
+  analyses complete, but allocation preparation refuses before callback.
+- Work or storage runs out partway through preparation. Partial results remain
+  owned, and the first resource denial remains visible.
+- The callback returns an error or panics after successful preparation. The
+  pending owner remains through checked postflight and is dropped before refund.
+
+Full allocation qualification passed 14 component and 17 checkpoint controls,
+356 model tests and 3,315 backend tests (197 ignored), builds and five actual
+Rust-source sessions. Two positive kernels completed 36 numerical helper runs.
+Every eligible session ran Compare, CallbackError and CallbackPanic. Each had
+31 allocation rows, four contracts, two writable contracts and zero singleton
+contracts, matching the independent original analysis. Nonempty singleton
+coverage is synthetic here, not a genuine Rust-source observation.
+
+Full allocation receipt:
+`9ddee3f3b47ad8da7dd87872629683c4d6b21c71087518d32c54eaa648108e36`.
+The earlier genuine provenance receipt is
+`67f9192344e45c93a48e7cb2fcf9b25baf6f6007940f5598ce79b9185bc85b05`.
+
+This demonstrates preservation of Rust-derived facts, not validation of arbitrary
+edited assembly. Capability preparation, earlier constant analysis, argument
+writers, joint bounds, genuine nonempty Fixed coverage and ordinary production
+admission remain open. No GPU run or native debugger recording is established.
+Public gates and the global compiler pin remain unchanged; accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
+
+### Follow original-order capability propagation
+
+The [retained FIFO component](https://github.com/harsh-nod/fe2o3/blob/c816f7c8d9d1bc038e81ef26c76e48da67e3a3fa/docs/retained-capability-fifo-qualification-20260928.md)
+and [two-pass nominal driver](https://github.com/harsh-nod/fe2o3/blob/a2663d4116357c94078a42ecd20fd0ddfe5028b5/docs/retained-capability-driver-qualification-20260928.md)
+are now compiled implementation checkpoints. They do not add a public kernel
+authoring API or establish the genuine Rust-source connection.
+
+The FIFO keeps duplicate visits. A changed existing capability must requeue
+a block even if no new key was inserted. Raw CFG edges are charged before
+deduplication; sorted successor merges are all prepaid before mutation.
+Partial entry tables, queue, scratch and visit trace remain attached on failure.
+
+For a code-reading exercise, follow the diamond fixture with visit order
+`[0, 1, 2, 3, 4, 4]`. Explain why block 4 appears twice, then inspect the
+one-short resource controls. Check that a failed merge cannot mutate its row,
+and that retained data is destroyed before its resource credits are released.
+The oracle compares complete data against the original HashMap/VecDeque
+algorithm; matching a visit count alone would not establish equivalence.
+
+The driver retains both pass owners and executes owner discovery, initial FIFO,
+actual payload scanning, repeated FIFO, source-index final replay and read
+binding. Its nominal block calls the unchanged checked query, and consumes
+operands only after successful postflight. This describes implemented source:
+the 11 driver helper/source tests do not exercise successful full-driver
+execution through the genuine compiler owner.
+
+FIFO qualification passed 3,326 backend tests; driver qualification passed
+3,337, each with 356 model tests and 197 ignored backend tests, plus builds
+and authority/policy controls. Their receipts are
+`7edc2a419cd60b0410a54fe3abc392375188663666533dc0499dca5ee5a0ea56`
+and `3b064ab0103eb33ca04e13e230c9c39d1885a002e7c075e170ee4b9b4dfef715`.
+
+The genuine join still needs constants in their original early position,
+actual root-entry preparation and the existing pre-capability owners on one
+physical budget. Whole-root predecessors, argument writers, joint bounds and
+production admission remain open. No GPU execution is implied; accepted exits
+remain M1/V1/V2/U1/U2/U3 (6/18).
+
+### Keep constant-analysis ownership separate from loop proofs
+
+The [retained constant-analysis checkpoint](https://github.com/harsh-nod/fe2o3/blob/74160065e8be19c36c5c84528134b39ae508ccaa/docs/retained-constant-analysis-qualification-20260928.md)
+implements the early constant component without changing the original scan or
+iterative alias resolver. Definitions, visited states, resolved values and the
+reusable alias path belong to the pending owner before fallible preparation.
+A completed loan is tied to the original function and resource ledger.
+
+For a code-reading exercise, follow a constant through copy/move aliases, then
+compare a cycle, a duplicate definition and a mutable-address escape. A value
+that cannot safely be resolved stays unknown; this is not permission to invent
+a constant. Inspect the one-short resource tests and check that earlier partial
+data survives the failure and is dropped before its credits are released.
+
+All 12 component controls passed, with 356 model tests, 3,349 backend tests
+(197 ignored), authority/policy checks and builds. The independent oracle uses
+the unchanged old API, not candidate output. Full regression receipt:
+`d6d6e546d7dc5075f17500bffbc2a523dafb653efc0c4c67a02d953893784701`.
+
+This checkpoint does not connect the entire genuine capability driver or prove
+loop bounds. Those require their own source-owned joins and qualification.
+It does not validate arbitrary edited assembly, establish production admission,
+or add a public kernel-authoring API. Public gates and the global compiler pin
+remain unchanged; accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).

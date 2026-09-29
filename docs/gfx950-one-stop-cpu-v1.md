@@ -84,3 +84,81 @@ claim changes.
 The [source-owned tiled inspection checkpoint](tiled-region-inspection-checkpoint-v1.md)
 separates the newer source-role, static transport and disabled debugger-package
 results from still-unqualified tiled and live-GPU workflows.
+
+## 5. Separate startup inputs from captured debugger state
+
+The newer [startup input-closure qualification](https://github.com/harsh-nod/fe2o3/blob/a2663d4116357c94078a42ecd20fd0ddfe5028b5/docs/debugger-startup-input-closure-qualification-20260928.md)
+has passed on mi350. It does **not** establish debugger startup, a loaded-file
+closure, physical lane/register values, or a visualization recording.
+
+Its fresh generation passed 28 graph and 88 selector/reader controls, rebuilt
+three helpers, and passed 55 supervisor tests, 16 process-census tests, 277
+JavaScript tests and 16 Python tests. Five benign supervision cases exercised
+normal completion, timeout, double-fork descendants, stdout held by a descendant,
+and failed execution. Root checked all 60 request/ownership/release/cleanup
+records; all five owned cgroups were absent afterward.
+
+The complete input check read and revalidated 1,024 named files with all 879
+duties retained. Three exact symlink rules fix the prior refusal without
+allowing arbitrary aliases. Selected payloads totaled 1,798,580,929 bytes;
+the separate outer ledger charged 1,801,031,093 inclusive bytes and 29,285
+calls. This does not change the inner 512 MiB artifact bound or measure total
+process RSS.
+
+For a review exercise, distinguish these three questions:
+
+1. Did every selected input match its complete pinned content and identity?
+2. Which files did the actual debugger load during a separately qualified start?
+3. Which stopped-wave registers and memory did the same-client adapter actually
+   capture, and how are those samples tied to the source and program counter?
+
+Only the first question is established by this checkpoint. A file list or
+successful CPU test cannot populate a physical register heatmap. Similarly,
+a manager reporting cleanup is not proof that child processes were reaped;
+the supervision records check those facts separately.
+
+Complete-selection receipt:
+`c1a155f7ba8afc3138e323f3c96231efabdd519ceeb76f0f0fd58ec0885c2ec6`.
+No GDB, attach, inferior, dispatch or physical sampler ran in these gates.
+The associated coordination expires at 2026-09-28 21:30 UTC; these historical
+receipts do not extend it. This lesson adds no native replay command.
+V4 remains open, and accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+## 6. Inspect an actual supervised debugger startup
+
+The separate [supervised startup checkpoint](https://github.com/harsh-nod/fe2o3/blob/a8bbcf6165c41c71368ded8cadb7f071b16537ab/docs/debugger-supervised-startup-qualification-20260928.md)
+did run the custom GDB through its fixed MI2 startup and exit. It did not attach
+to an inferior, launch a kernel, dispatch GPU work or sample physical state.
+Earlier input-only statements above remain the boundaries of their own gates.
+
+The first native attempt started and exited GDB, but failed its outer
+post-process census at the unchanged inspected-byte limit. Its failure remains
+preserved and is not accepted startup evidence. A fresh coordinated SSH-quiet
+retry passed without widening limits or stopping unrelated processes.
+Process churn is a possible explanation for the first refusal, not an
+attributed or proven cause.
+
+The accepted retry joined the actual owner, release, child reaping, stream EOF
+and cgroup cleanup records. It observed 193 named file entries: 170 present
+files totaling 398,626,885 bytes and 23 absent paths. Complete present-file bytes
+and identity were revalidated. It saw 104 initial Python modules and 50 mapped
+ELF paths, with 123 newly observed files relative to the static candidates and
+37 static candidates not observed.
+
+For an inspection exercise, distinguish a module's source path, its cache path
+and a mapped ELF object. Preserve aliases and absent entries in the review.
+A cache filename does not prove execution of that cache, and a startup
+snapshot is not complete import history. A static candidate that was not
+observed must not silently disappear from its independent input duties.
+
+Accepted startup receipt:
+`f5bafcaf01ad08faadf40985059a20773de65447ffbae57369d160f9801f82e7`.
+Failed first-attempt receipt:
+`ee1b7a38bd83cee5d0fa7eed55d31556eb9903c91c2adced5f5109538c85205d`.
+
+Loaded-file profile review and separately qualified same-client physical capture
+remain open. Startup success does not populate register heatmaps, LDS bank
+views or a visualization recording. Runtime acceptance and physical capture
+remain false. This historical run does not extend its finite coordination
+window; this lesson supplies no native replay command. V4 remains open and
+accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
