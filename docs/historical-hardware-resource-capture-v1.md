@@ -165,3 +165,39 @@ hardware capture. The file remains untrusted when imported.
 
 The [dated qualification](historical-hardware-resource-qualification-20260923.md)
 separates this actual negative transport from synthetic positive rendering.
+
+## Inspect reported EXEC bits without inventing lane values
+
+The historical panel also decodes a single available predicate register named
+exactly `exec` when its checked value is exactly 64 bits. It shows bits 0–63 as
+wave lane-enable bits, retaining the same whole-file and reported stop/artifact/
+scope binding as the register table. Bit 0 is lane 0; bit 63 is lane 63. This is
+a bit interpretation of one reported mask, not 64 independent register samples.
+
+The all-zero mask is valid reported data: every bit is clear. An unavailable
+capture, missing EXEC row, unavailable value or unsupported width does not
+become zero. Multiple rows named `exec` are ambiguous even when their values
+match; the bit projection refuses without selecting one. The complete bounded
+roster is checked, including rows beyond the current register-table page.
+The existing table retains its own checked rows when only the bit projection
+is unavailable; the unchanged whole-record parser still refuses malformed
+input and inconsistent stop/evidence bindings.
+
+For a reading exercise, a reported mask of `0x8000000000000001` sets only bits
+0 and 63. A zero bit is displayed as disabled, not unavailable. No missing
+workitem, divergence cause, branch history, instruction outcome or workitem
+coordinate is inferred. Grid geometry does not rewrite any reported EXEC bit.
+This view cannot authenticate the mask or establish that its stop remains
+current.
+
+Replacing, resetting or cancelling a selection clears the mask with the
+existing capture. Late file reads or digests cannot restore earlier bits.
+The grid is a passive local presentation with at most 64 cells, no live requests
+and no register or memory writes. Synthetic projection and component controls
+cover bit order, zero/unavailable distinction, ambiguous names and selection
+lifetime; source-only authored controls are not a successful hardware capture.
+
+The schema, input limits and checked gfx942:xnack- Wave64 target remain unchanged.
+No gfx950 acceptance, per-lane VGPR values, LDS window, source/PC mapping,
+capture authority, native coordination or V4 completion follows. The separate
+logical CPU/V22 recording importers are neither changed nor reused.

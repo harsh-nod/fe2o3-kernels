@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef, useState } from "react";
-import { HARDWARE_RESOURCE_LIMITS, parseHardwareResourceCapture, type HardwareCapture,
+import { HARDWARE_RESOURCE_LIMITS, type HardwareCapture,
   type HardwareProjection, type HardwareRegister } from "../content/hardware-resource-capture";
 import { readHardwareResourceFile } from "../content/hardware-resource-file";
+import { parseHardwareResourceExecCapture, type HardwareExecView } from "../content/hardware-resource-exec";
 import { programSha256 } from "../content/ordered-program-observation.mjs";
 import "./HistoricalHardwareResources.css";
 
@@ -50,7 +51,38 @@ function RegisterRows({ projection }: { projection: HardwareProjection }) {
   </section>;
 }
 
-function CaptureView({ capture, sha256 }: { capture: HardwareCapture; sha256: string }) {
+function ExecLanes({ view }: { view: HardwareExecView }) {
+  return <section aria-label="Historical reported EXEC mask">
+    <h4>Reported EXEC lane-enable bits</h4>
+    <p>Historical EXEC claim / caller-supplied / untrusted. This decodes one reported predicate mask,
+      not 64 independently captured register values or an authenticated physical stop.</p>
+    {view.status === "unavailable" ? <p role="status">
+      EXEC bit view unavailable: {view.reason}{view.reportedReason ? " / " + view.reportedReason : ""}.
+      No zero mask or lane bits are substituted.
+    </p> : <>
+      <p>Reported mask: <code>{view.maskHex}</code>. {view.enabledLanes} of 64 EXEC bits set.
+        A reported zero bit is disabled, not unavailable; an all-zero mask is valid reported data.</p>
+      <ol className="historical-exec-lanes" aria-label="Historical reported EXEC bits">
+        {view.lanes.map(cell => <li key={cell.lane} data-enabled={cell.enabled}
+          aria-label={"Lane " + cell.lane + ": EXEC bit " + (cell.enabled ? "set (1)" : "clear (0)")}>
+          <span>Lane {cell.lane}</span><strong>{cell.enabled ? "1" : "0"}</strong>
+          <span>{cell.enabled ? "enabled" : "disabled"}</span>
+        </li>)}
+      </ol>
+      <details><summary>EXEC register and observation identities</summary>
+        <dl>
+          <dt>Reported register identity</dt><dd><code>{view.registerIdentity}</code></dd>
+          <dt>Reported evidence identity</dt><dd><code>{view.evidenceIdentity}</code></dd>
+        </dl>
+      </details>
+    </>}
+    <p>Bit 0 is wave lane 0 and bit 63 is wave lane 63. No workitem coordinates, divergence cause,
+      VGPR values, LDS samples, source/PC mapping or gfx950 support are inferred.
+      These bits do not authorize a live query or resume.</p>
+  </section>;
+}
+
+function CaptureView({ capture, exec, sha256 }: { capture: HardwareCapture; exec: HardwareExecView; sha256: string }) {
   const projection = capture.status === "captured" ? capture.projection : null;
   return <div className="historical-hardware-result">
     <p className="historical-hardware-boundary">Historical / caller-supplied / untrusted.
@@ -93,6 +125,7 @@ function CaptureView({ capture, sha256 }: { capture: HardwareCapture; sha256: st
           </dl>
         </details>
       </section>
+      <ExecLanes key={"exec:" + sha256 + projection.bindingKey} view={exec} />
       <RegisterRows key={sha256 + projection.bindingKey} projection={projection} />
       <section aria-label="Unavailable hardware capture fields">
         <h4>Unavailable stays unavailable</h4>
@@ -112,7 +145,7 @@ export function HistoricalHardwareResources() {
   const id = useId(), input = useRef<HTMLInputElement>(null), generation = useRef(0);
   const active = useRef<AbortController | null>(null);
   const [file, setFile] = useState<File | null>(null), [busy, setBusy] = useState(false);
-  const [result, setResult] = useState<{ capture: HardwareCapture; sha256: string; ticket: number } | null>(null);
+  const [result, setResult] = useState<{ capture: HardwareCapture; exec: HardwareExecView; sha256: string; ticket: number } | null>(null);
   const [message, setMessage] = useState("No historical hardware capture selected."), [error, setError] = useState(false);
   useEffect(() => () => { generation.current++; active.current?.abort(); }, []);
   function clear() {
@@ -135,10 +168,10 @@ export function HistoricalHardwareResources() {
     try {
       const raw = await readHardwareResourceFile(file, controller.signal);
       if (controller.signal.aborted || ticket !== generation.current) return;
-      const capture = parseHardwareResourceCapture(raw);
+      const { capture, exec } = parseHardwareResourceExecCapture(raw);
       const sha256 = await programSha256(raw);
       if (controller.signal.aborted || ticket !== generation.current) return;
-      setResult({ capture, sha256, ticket }); setMessage("Imported locally. Historical claims remain untrusted.");
+      setResult({ capture, exec, sha256, ticket }); setMessage("Imported locally. Historical claims remain untrusted.");
     } catch {
       if (controller.signal.aborted || ticket !== generation.current) return;
       setError(true); setMessage("Historical capture refused. Expected the bounded closed V1 one-record profile.");
@@ -162,7 +195,7 @@ export function HistoricalHardwareResources() {
     <p role={error ? "alert" : "status"}>{message}</p>
     <p>Closed V1 JSON plus final LF: at most 2 MiB, 1,024 checked register rows, 64 displayed rows per page.
       Available scalar/predicate values are at most 64 bits; no wide values are truncated.</p>
-    {result && <CaptureView key={result.ticket + ":" + result.sha256} capture={result.capture} sha256={result.sha256} />}
+    {result && <CaptureView key={result.ticket + ":" + result.sha256} capture={result.capture} exec={result.exec} sha256={result.sha256} />}
     <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/historical-hardware-resource-capture-v1.md">
       Historical capture format and limits
     </a></p>

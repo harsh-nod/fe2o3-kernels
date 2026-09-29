@@ -32,3 +32,18 @@
   .historical-hardware { padding: .6rem; }
   .historical-hardware table { font-size: .85rem; }
 }
+
+/* EXEC bits are not a replicated scalar-value grid; text and border style carry the state. */
+.historical-exec-lanes {
+  display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: .35rem;
+  padding: 0; margin: 0; list-style: none; min-width: 0;
+}
+.historical-exec-lanes li {
+  display: grid; gap: .15rem; min-width: 0; padding: .35rem;
+  border: 1px dashed currentColor; border-radius: .25rem; text-align: center; font-size: .8rem;
+}
+.historical-exec-lanes li[data-enabled="true"] { border: 2px solid currentColor; font-weight: 650; }
+.historical-exec-lanes strong { font-size: 1rem; }
+@media (max-width: 40rem) {
+  .historical-exec-lanes { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
