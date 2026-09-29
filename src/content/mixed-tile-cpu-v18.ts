@@ -186,7 +186,7 @@ done
   {
     kind: "host",
     label: "Recorded CPU observations",
-    language: "json",
+    language: "text",
     explanatory: true,
     notice: "Selected fields from the retained blocked fixture debugger responses at 68ff1156, not complete protocol messages or results from the pending standalone example.",
     code: String.raw`{
