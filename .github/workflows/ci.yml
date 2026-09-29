@@ -39,6 +39,14 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: npm run validate:evidence -- --repository .evidence/fe2o3 --check-issues
 
+      - name: Validate current compiler against the real runtime curriculum
+        env:
+          FE2O3_CURRICULUM_COMPILER_REPOSITORY: ${{ github.workspace }}/.evidence/fe2o3
+          TMPDIR: ${{ runner.temp }}
+        run: |
+          node --test scripts/tests/curriculum-inventory-files.test.mjs scripts/tests/curriculum-inventory-cli.test.mjs
+          node scripts/validate-current-curriculum.mjs --compiler-repository "$FE2O3_CURRICULUM_COMPILER_REPOSITORY"
+
       - name: Validate content and production build
         run: npm run validate
 
