@@ -43,8 +43,8 @@ function withFixture(run) {
       "scripts/curriculum-inventory-files.mjs", "scripts/tests/curriculum-inventory-cli.test.mjs",
       "scripts/validate-current-curriculum.mjs",
     ]) {
-      assert.deepEqual(readFileSync(join(site, relative)), readFileSync(join(siteRoot, relative)),
-        "CLI qualification requires these candidate files to be committed before the test");
+      assert.ok(readFileSync(join(site, relative)).equals(readFileSync(join(siteRoot, relative))),
+        `CLI qualification requires committed candidate bytes for ${relative}`);
     }
     symlinkSync(dependencies, join(site, "node_modules"), "dir");
     // The tracked directory-only ignore does not cover this fixture symlink.
@@ -216,6 +216,27 @@ test("current compiler wrapper validates the real Vite projection through the ac
     assert.equal(typeof summary.inventoryComplete, "boolean");
     assert.equal(existsSync(output), false, "the wrapper must not retain its temporary projection");
   });
+});
+
+test("real wrapper refuses newly displayed kernels without a matching source contract", () => {
+  for (const kind of ["kernel", "reference"]) {
+    withFixture(({ site, output, checkCurrent, commitFixture }) => {
+      const relative = "src/content/curriculum.ts";
+      // A clean committed lesson change must not bypass the gate by claiming
+      // that an attributed Rust kernel is only reference material.
+      appendFileSync(join(site, relative), `\nlessons[0].tabs.push({
+        kind: ${JSON.stringify(kind)}, label: "Unregistered ordinary kernel", language: "rust",
+        code: "#[kernel(typed)]\\nfn unregistered_inventory_kernel() {}\\n"
+      });\n`);
+      commitFixture(relative);
+      const result = checkCurrent();
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr, /code-tab coverage differs/u);
+      assert.equal(result.stdout, "", "unregistered source must not emit a success summary");
+      assert.equal(existsSync(output), false);
+      assert.equal(git(site, ["status", "--porcelain=v1", "--untracked-files=all"]), "");
+    });
+  }
 });
 
 test("wrapper refuses synthetic consumer protocol faults and cleans real Vite scratch", () => {
