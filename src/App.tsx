@@ -3,6 +3,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -142,21 +143,11 @@ function pageTitle(pathname: string): string {
   return "Lesson | fe2o3 kernels";
 }
 
-export function App() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const { completed, toggle, prune } = useProgress();
-  const { theme, toggleTheme } = useTheme();
+function RouteFocus() {
   const location = useLocation();
-  const routeAnnouncement = pageTitle(location.pathname).replace(" | ", ", ");
 
-  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
-  const closeSearch = useCallback(() => setSearchOpen(false), []);
-
-  useEffect(() => {
-    const title = pageTitle(location.pathname);
-    document.title = title;
-
+  // Suspense cancels layout effects while route content is hidden.
+  useLayoutEffect(() => {
     const frame = window.requestAnimationFrame(() => {
       if (location.hash) {
         const target = document.getElementById(location.hash.slice(1));
@@ -172,6 +163,24 @@ export function App() {
     });
     return () => window.cancelAnimationFrame(frame);
   }, [location.hash, location.pathname]);
+
+  return null;
+}
+
+export function App() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { completed, toggle, prune } = useProgress();
+  const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const routeAnnouncement = pageTitle(location.pathname).replace(" | ", ", ");
+
+  const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+  const closeSearch = useCallback(() => setSearchOpen(false), []);
+
+  useEffect(() => {
+    document.title = pageTitle(location.pathname);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -217,6 +226,7 @@ export function App() {
       </Suspense>
       <main id="main-content" className="main-content" tabIndex={-1}>
         <Suspense fallback={<p className="route-loading" role="status">Loading content...</p>}>
+          <RouteFocus />
           <Routes>
             <Route path="/" element={<OverviewPage />} />
             <Route path="/start" element={<OverviewPage />} />
