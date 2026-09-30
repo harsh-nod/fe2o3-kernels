@@ -71,7 +71,7 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(14);
+    expect(wholeFileTabs).toHaveLength(16);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
       "examples/flash_attention_general_v1/src/kernel.rs",
@@ -86,7 +86,9 @@ describe("evidence source digest scopes", () => {
       "examples/moe_grouped_expert_general_v1/src/kernel.rs",
       "examples/row_softmax_general_v1/src/kernel.rs",
       "examples/tiled_gemm_general_v1/src/kernel.rs",
+      "examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs",
       "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
+      "examples/workgroup_sync_v1/src/mixed_tile_oracle.rs",
     ]);
     for (const { lessonId, tab } of wholeFileTabs) {
       const source = tabEvidenceSource(lessonId, tab)!;
