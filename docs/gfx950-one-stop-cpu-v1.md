@@ -433,3 +433,124 @@ GPU dispatch or physical capture. It supplies no VGPR heatmap, LDS-bank sample
 or native replay command and does not renew the expired native coordination.
 V4 remains open; accepted exits remain M1/V1/V2/U1/U2/U3 (6/18). No public support
 gate, global compiler pin or maturity claim changes.
+
+## 10. Bind the request, process and report separately
+
+The static Node launch layer has passed 61 fixture-free controls: 53 launch
+controls and eight pure fresh-fixture preparation controls. The root CPU receipt
+is `a128239a741b6234aa3ce5082607d07954bc5e283ac27cc19f222e23a09eceee`.
+The root also invoked the exact reviewed CLI from its draft qualification tree
+on a fresh CPU-only fixture: exit zero, complete readback of all six output roles,
+and one passing opt-in real-filesystem control. That actual-CLI receipt is
+`e35f1367ea4fe387b3ee8bd4cef7c908cb1bc20a67c118f670068939c4c2ad9c`;
+the independent root readback digest is
+`6bad1f1af49df83d3634e7e38f12a28ed02b62f476c765e882b430b5d3cea18e`.
+This qualifies the actual draft-path request → read → adapter → report seam.
+A later root-owned installed-path gate passed 263 combined fixture-free controls,
+including the same 61 launcher controls, then ran the actual installed entry:
+exit zero and one passing installed opt-in readback control. Its CLI receipt is
+`d4eb928db788112ef7e24f16b92f77708f12db4fbfd8ec275bfe2cec49fce06c`.
+Root completely read all six roles and 12 named regular files totaling 425,112
+bytes; all 28 selected runtime/source/terminal domains retained their identities.
+That separate complete-readback digest is
+`fd3e3e4fb9e8cef5289eb728cf7be05e806c64a457b6fc1e2d3ca3908d648fbd`.
+The earlier draft-path facts remain their own history. The immutable
+[static CPU launch package](https://github.com/harsh-nod/fe2o3/tree/9aa6d199484529b83b9a5831b4c01e00565dd206/tools/debugger/loaded-static-node)
+and [qualification note](https://github.com/harsh-nod/fe2o3/blob/9aa6d199484529b83b9a5831b4c01e00565dd206/docs/static-node-loaded-launch-qualification-20260929.md)
+identify the same compiler commit. These source links do not claim a fresh
+actual-CLI run of the linked commit. Section 9 keeps its own earlier
+published component boundary.
+
+In the selected installed source tree containing `tools/debugger/loaded-static-node`,
+the fixture-free command is:
+
+~~~sh
+node --test tools/debugger/loaded-static-node/launch-controls.test.mjs \
+  tools/debugger/loaded-static-node/launch-fixture-controls.test.mjs
+~~~
+
+This command uses in-memory providers and synthetic metadata. It does not open
+a historical input roster, launch the fixed CLI, or execute a kernel. Root qualified it in the selected installed compiler checkout; the immutable source links above identify that separate
+publication stage without refreshing those historical qualification receipts. Missing
+opt-in filesystem configuration must fail, not skip or discover an old host path.
+
+### Keep bootstrap authority outside the request
+
+`admitStaticLaunchRequest(requestBuffer, bootstrapBuffer, fixedContext)` takes
+complete Buffers. The externally selected bootstrap binds the request's whole
+content pin, six identity fields and ownership before reading it. The request
+cannot grant its own read scope, increase its own cap, choose an import, supply
+a command or inject an environment. The fixed CLI accepts one canonical base64
+bootstrap argument and no extra Node flags.
+
+The selected graph, reader plan, immutable historical-protocol digest, policies
+and exact static import map must agree. Every named graph entry, independently
+unselected alias target and terminal pin must agree on content and kind.
+Request-name overlap with the graph or an alias target is refused, avoiding a
+circular request self-pin. Equal hashes do not erase independently named roles;
+an absent path remains a metadata obligation rather than an empty file.
+
+For a kernel author, this catches a wrong or changed selected artifact, conflicting
+alias-target evidence, stale metadata and incomplete request bindings before
+interpreting a debugging result. It does not prove that the kernel's instructions,
+register allocation or arithmetic are correct.
+
+### Follow three independently bounded stages
+
+| Stage | What is bound | What refusal leaves |
+| --- | --- | --- |
+| request bootstrap | Exact chunks, EOF, whole hash, named/descriptor/owner brackets | No adapter dispatch |
+| fixed adapter | The precheck, two-pass historical-form read and postcheck from section 9 | Later phases not-started |
+| report | Bounded serialization and exact-or-refuse writes to prebound FD 1 | Possibly partial capture, not accepted publication |
+
+The final bootstrap guard/resource ledger includes the last pre-dispatch check,
+including its refusal. The report's elapsed origin starts at its first check,
+not before the adapter runs, while the absolute UTC scope stays unchanged.
+A separate report stage is not permission to renew an expired scope.
+
+The first request, adapter or guard failure remains primary when cleanup or
+reporting also fails. Attempted reservations survive denial. A short or throwing
+stream write is not retried and may leave an unknown partial capture. Descriptor
+cleanup after denial does not authorize another input read or output write.
+
+### Qualify a fresh filesystem seam separately
+
+The root-owned fixture harness prepares a 65,537-byte target, its exact relative
+alias, an observed empty file and a separate absent name. It reads individually
+pinned runtime/source/terminal inputs before and after the child, including all
+six identity fields and ownership; restored bytes with changed mtime/ctime refuse.
+It creates a new private output directory, opens stdout before binding its
+identity as FD 1, and launches only the fixed Node entry with exactly
+`LANG=C`, `LC_ALL=C` and `PATH=/usr/bin:/bin`. Do not add a shell redirection
+that replaces the bound descriptor afterward.
+
+That opt-in qualification harness has now passed on the fresh synthetic fixture;
+it is not a production debugger launcher. Root completely read 12 named regular
+files totaling 451,889 bytes, including provenance and fixture data as well as
+the six output roles. The alias link text was exactly `target.bin`, the absent
+name was observed absent, and all 28 selected runtime/source/terminal domains
+retained their exact before/after identities. The regular empty file and empty
+stderr were observed files, not missing-evidence substitutes.
+
+Harness setup, Node/ELF loader, resource probes, inherited descriptors,
+watchdog and complete readback are separate from the package's content-provider
+budget. Polling captures is not a hard per-write cap or an independent child RSS
+limit. A private-directory identity bracket is not global writer exclusion.
+
+Keep six output roles explicit: reader-observation-temporary,
+reader-observation-final, outer-receipt, outer-stdout, outer-stderr and
+root-readback. The retained temporary and final evidence must be read completely,
+along with captures and the outer receipt; root also checks the final result.
+The serialized summary is intent, not proof of its own later write or readback.
+An exit code alone does not replace those complete observations. Scope expiry,
+an uncertain close or external kill can leave evidence unwritten or unavailable.
+
+The synthetic harness never refreshes stale historical pins or activates the
+historical operation. All fourteen operational evidence obligations remain
+external. Source-qualified controls, an actual fresh-fixture CLI run and
+repository publication must retain their separate receipts and source pins.
+
+No GDB, attach, inferior, GPU dispatch or physical capture is provided here.
+This does not produce a VGPR heatmap, LDS-bank sample or live visualization and
+does not renew expired native coordination. V4 remains open; accepted exits
+remain M1/V1/V2/U1/U2/U3 (6/18). No global compiler pin or public support gate changes.
