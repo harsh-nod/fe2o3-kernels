@@ -139,11 +139,20 @@ function validateSourceItem(lessonId: string, tab: CodeTab, ordinal: number, val
     boundedInteger(row.displayedFragmentOrdinal, 0, ranges.length - 1, "displayedFragmentOrdinal");
     requireCondition(typeof row.testFunction === "string" && identifier.test(row.testFunction), `${label} requires an exact test function`);
     const expectation = object(row.expectation, `${label} expectation`);
-    requireCondition(expectation.kind === "verified-bundle-export" || expectation.kind === "rejected", `${label} has an unsupported expectation`);
-    exactKeys(expectation, expectation.kind === "rejected" ? ["kind", "bundleVersion", "diagnosticContains", "outputArtifact"] : ["kind", "bundleVersion"], `${label} expectation`);
-    boundedInteger(expectation.bundleVersion, 1, 6, "bundleVersion");
-    if (expectation.kind === "rejected") {
-      requireCondition(nonempty(expectation.diagnosticContains) && expectation.diagnosticContains.length <= 512 && expectation.outputArtifact === "absent", `${label} requires an exact refusal and absent artifact`);
+    if (expectation.kind === "diagnostic-kir-export-v1") {
+      exactKeys(expectation, ["kind", "canonicalKirVersion", "diagnosticTileOrders", "authority"], `${label} expectation`);
+      boundedInteger(expectation.canonicalKirVersion, 18, 18, "canonicalKirVersion");
+      const orders = array(expectation.diagnosticTileOrders, `${label} diagnosticTileOrders`, 2);
+      requireCondition(orders.length > 0 && isDeepStrictEqual(orders, ["blocked", "striped"].filter((order) => orders.includes(order))),
+        `${label} diagnostic tile orders must be a nonempty unique canonical-order subset`);
+      requireCondition(expectation.authority === "observation_only", `${label} diagnostic KIR grants observation-only authority`);
+    } else {
+      requireCondition(expectation.kind === "verified-bundle-export" || expectation.kind === "rejected", `${label} has an unsupported expectation`);
+      exactKeys(expectation, expectation.kind === "rejected" ? ["kind", "bundleVersion", "diagnosticContains", "outputArtifact"] : ["kind", "bundleVersion"], `${label} expectation`);
+      boundedInteger(expectation.bundleVersion, 1, 6, "bundleVersion");
+      if (expectation.kind === "rejected") {
+        requireCondition(nonempty(expectation.diagnosticContains) && expectation.diagnosticContains.length <= 512 && expectation.outputArtifact === "absent", `${label} requires an exact refusal and absent artifact`);
+      }
     }
   }
   requireCondition(digest(item.contractSha256, 64) && item.contractSha256 === sourceItemContractSha256(lessonId, tab, ordinal, item), `${label} contract digest differs`);
@@ -180,7 +189,16 @@ export function projectCurriculumTab(tab: CodeTab, ordinal: number) {
 export function validateCurriculumEvidence(bytes: Uint8Array, expectedSha256: string, lessons: readonly Lesson[]) {
   requireCondition(bytes.length <= 4 * 1024 * 1024, "manifest exceeds its byte bound");
   requireCondition(digest(expectedSha256, 64) && sha256(bytes) === expectedSha256, "manifest blob SHA256 differs from its pin");
-  const manifest = object(JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)), "manifest");
+  const parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes),
+    function (this: ObjectValue, key: string, value: unknown, context?: { source?: unknown }) {
+      if (key === "canonicalKirVersion" && Object.hasOwn(this, "kind") && this.kind === "diagnostic-kir-export-v1") {
+        requireCondition(context && Object.hasOwn(context, "source") && typeof context.source === "string",
+          "diagnostic canonicalKirVersion requires JSON.parse source context");
+        requireCondition(context.source === "18", "diagnostic canonicalKirVersion must use the JSON integer token 18");
+      }
+      return value;
+    });
+  const manifest = object(parsed, "manifest");
   requireCondition(manifest.schema === "fe2o3-tutorial-kernel-source-contract-v1", "unsupported compiler manifest schema");
   const curriculum = object(manifest.curriculum, "manifest.curriculum");
   exactKeys(curriculum, ["schema", "site", "status", "lessons"], "curriculum");

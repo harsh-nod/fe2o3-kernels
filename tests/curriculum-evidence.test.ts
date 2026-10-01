@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { lessons } from "../src/content/curriculum";
 import type { Lesson } from "../src/content/model";
 import { projectCurriculumTab, sourceItemContractSha256, validateCurriculumEvidence, validateCurriculumSourcePin } from "../scripts/curriculum-evidence";
@@ -104,6 +104,186 @@ function wholeFileSourceDriverFixture() {
   repin();
   return { ...value, tab, repin };
 }
+
+
+function diagnosticSourceDriverFixture(orders = ["blocked", "striped"], wholeFile = false) {
+  const value = wholeFile ? wholeFileSourceDriverFixture() : sourceDriverFixture();
+  const expectation: Record<string, unknown> = {
+    kind: "diagnostic-kir-export-v1", canonicalKirVersion: 18,
+    diagnosticTileOrders: orders, authority: "observation_only",
+  };
+  Reflect.set(value.item.cases[0], "expectation", expectation);
+  value.repin();
+  return { ...value, expectation };
+}
+
+describe("V2 diagnostic KIR source-driver expectations", () => {
+  it("accepts only observation-only V18 source contracts without qualification", () => {
+    for (const orders of [["blocked"], ["striped"], ["blocked", "striped"]]) {
+      for (const wholeFile of [false, true]) {
+        const value = diagnosticSourceDriverFixture(orders, wholeFile);
+        const before = structuredClone(value.manifest);
+        expect(validate(value.manifest, value.current)).toEqual({ lessons: 56, codeTabs: 311, status: "pending" });
+        expect(value.manifest).toEqual(before);
+        expect(value.manifest.curriculum.lessons[0].codeTabs[0].sourceItemStatus).toBe("contract-bound");
+        expect(value.manifest.curriculum.lessons[0].variants.every((variant) =>
+          variant.status === "pending" && variant.sourceItems.length === 0)).toBe(true);
+      }
+    }
+  });
+
+  it("preserves exact legacy bundle V1 through V6 and refuses diagnostic fields there", () => {
+    for (const bundleVersion of [1, 2, 3, 4, 5, 6]) {
+      const value = sourceDriverFixture();
+      value.item.cases.forEach((row) => { row.expectation.bundleVersion = bundleVersion; });
+      value.repin();
+      expect(validate(value.manifest, value.current).status).toBe("pending");
+    }
+    for (const ordinal of [0, 1]) {
+      for (const bundleVersion of [0, 7, 18, true, "1", 1.5, null]) {
+        const value = sourceDriverFixture();
+        Reflect.set(value.item.cases[ordinal].expectation, "bundleVersion", bundleVersion);
+        value.repin();
+        expect(() => validate(value.manifest, value.current)).toThrow("bundleVersion must be a bounded integer");
+      }
+      for (const [key, field] of Object.entries({
+        canonicalKirVersion: 18, diagnosticTileOrders: ["blocked"], authority: "observation_only",
+      })) {
+        const value = sourceDriverFixture();
+        Reflect.set(value.item.cases[ordinal].expectation, key, field);
+        value.repin();
+        expect(() => validate(value.manifest, value.current)).toThrow("missing or unknown fields");
+      }
+    }
+  });
+
+  it("rejects missing, additional and malformed expectation shapes after repinning", () => {
+    for (const key of ["kind", "canonicalKirVersion", "diagnosticTileOrders", "authority"]) {
+      const value = diagnosticSourceDriverFixture();
+      Reflect.deleteProperty(value.expectation, key);
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+    for (const additional of [
+      { bundleVersion: 1 }, { bundleVersion: 18 }, { qualified: true },
+      { outputArtifact: "present" }, { diagnosticContains: "text" },
+    ]) {
+      const value = diagnosticSourceDriverFixture();
+      Object.assign(value.expectation, additional);
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow("missing or unknown fields");
+    }
+    for (const shape of [undefined, null, true, [], "diagnostic-kir-export-v1"]) {
+      const value = diagnosticSourceDriverFixture();
+      Reflect.set(value.item.cases[0], "expectation", shape);
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+  });
+
+  it("rejects every version, order or authority substitution even with a new digest", () => {
+    const invalid: Record<string, unknown[]> = {
+      kind: [true, null, "diagnostic-kir-export-v2", "verified-bundle-export", "rejected"],
+      canonicalKirVersion: [true, false, null, "18", 17, 19, 18.5, -18],
+      diagnosticTileOrders: [
+        [], null, true, "blocked", ["blocked", "blocked"], ["striped", "striped"],
+        ["striped", "blocked"], ["blocked", "striped", "blocked"], ["unknown"],
+        ["Blocked"], ["blocked "], ["blocked", 1], [true], [["blocked"]],
+      ],
+      authority: [true, null, "observation-only", "source_authenticated", "verified", "qualified", "native"],
+    };
+    for (const [key, fields] of Object.entries(invalid)) {
+      for (const field of fields) {
+        const value = diagnosticSourceDriverFixture();
+        value.expectation[key] = field;
+        value.repin();
+        expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+      }
+    }
+  });
+
+  it("binds valid order changes and expectation kind changes into the source digest", () => {
+    for (const orders of [["blocked"], ["striped"]]) {
+      const value = diagnosticSourceDriverFixture();
+      value.expectation.diagnosticTileOrders = orders;
+      expect(() => validate(value.manifest, value.current)).toThrow("contract digest");
+    }
+    const value = diagnosticSourceDriverFixture();
+    Reflect.set(value.item.cases[0], "expectation", { kind: "verified-bundle-export", bundleVersion: 1 });
+    expect(() => validate(value.manifest, value.current)).toThrow("contract digest");
+  });
+
+  it("cannot promote diagnostic metadata into execution or attach it to conceptual content", () => {
+    for (const mutate of [
+      (value: ReturnType<typeof diagnosticSourceDriverFixture>) => { value.manifest.curriculum.status = "qualified"; },
+      (value: ReturnType<typeof diagnosticSourceDriverFixture>) => { value.manifest.curriculum.lessons[0].variants[0].status = "qualified"; },
+      (value: ReturnType<typeof diagnosticSourceDriverFixture>) => { value.manifest.curriculum.lessons[0].variants[0].sourceItems = ["diagnostic"]; },
+      (value: ReturnType<typeof diagnosticSourceDriverFixture>) => { value.manifest.curriculum.lessons[0].codeTabs[0].sourceItemStatus = "qualified"; },
+      (value: ReturnType<typeof diagnosticSourceDriverFixture>) => { value.manifest.curriculum.lessons[0].role = "conceptual"; },
+    ]) {
+      const value = diagnosticSourceDriverFixture();
+      mutate(value);
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+  });
+
+
+  it("rejects non-integer raw tokens despite valid blob and normalized source digests", () => {
+    for (const kindLast of [false, true]) {
+      const value = diagnosticSourceDriverFixture();
+      if (kindLast) {
+        const kind = value.expectation.kind;
+        Reflect.deleteProperty(value.expectation, "kind");
+        value.expectation.kind = kind;
+        value.repin();
+      }
+      const text = encoded(value.manifest).bytes.toString("utf8");
+      const token = '"canonicalKirVersion":18';
+      expect(text.split(token)).toHaveLength(2);
+      for (const replacement of [
+        '"canonicalKirVersion":18.0',
+        '"canonicalKirVersion":18e0',
+        '"canonicalKirVersion":1.8e1',
+        '"canonicalKir\\u0056ersion":18.0',
+        '"canonicalKirVersion":18,"canonicalKirVersion":18e0',
+      ]) {
+        const raw = text.replace(token, replacement);
+        expect(JSON.parse(raw)).toEqual(value.manifest);
+        const bytes = Buffer.from(raw, "utf8");
+        const sha256 = createHash("sha256").update(bytes).digest("hex");
+        expect(() => validateCurriculumEvidence(bytes, sha256, value.current))
+          .toThrow("diagnostic canonicalKirVersion must use the JSON integer token 18");
+      }
+    }
+  });
+
+  it("refuses diagnostic expectations without source context while preserving legacy parsing", () => {
+    const diagnostic = diagnosticSourceDriverFixture();
+    const legacy = sourceDriverFixture();
+    const parse = JSON.parse;
+    const withoutSource = vi.spyOn(JSON, "parse").mockImplementation((text, reviver) =>
+      parse(text, reviver ? function (this: unknown, key: string, value: unknown) {
+        return reviver.call(this, key, value);
+      } : undefined));
+    try {
+      expect(() => validate(diagnostic.manifest, diagnostic.current))
+        .toThrow("diagnostic canonicalKirVersion requires JSON.parse source context");
+      expect(validate(legacy.manifest, legacy.current).status).toBe("pending");
+    } finally {
+      withoutSource.mockRestore();
+    }
+  });
+
+  it("keeps V1 and unknown curriculum schemas from admitting diagnostic source items", () => {
+    for (const schema of ["fe2o3-tutorial-curriculum-obligations-v1", "fe2o3-tutorial-curriculum-obligations-v3"]) {
+      const value = diagnosticSourceDriverFixture();
+      value.manifest.curriculum.schema = schema;
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+  });
+});
 
 describe("V2 whole-file source-driver contracts", () => {
   it("retains the complete header and UTF-8 bytes without qualifying historical source", () => {
