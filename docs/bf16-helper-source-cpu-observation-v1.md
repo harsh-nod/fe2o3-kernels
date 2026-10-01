@@ -544,3 +544,10 @@ qualified, but these genuine roots contain zero assertion terminators.
 Positive assertion coverage comes from component controls, not those sessions.
 Complete root recipe and normal formal/target/LLVM continuation remain open.
 The historical sections above retain their original source and evidence.
+
+## Generated source publication
+
+The [generated BF16 source tutorial](bf16-generated-source-promotion-v1.md)
+follows compiler-published Identity and Swap01 helpers into separate fresh Rust
+compilations and CPU comparisons. It preserves the normal BF16 refusal and
+public-driver gap; the historical qualifications above remain unchanged.
