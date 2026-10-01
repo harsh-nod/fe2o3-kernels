@@ -1,0 +1,786 @@
+{
+  "schema": "fe2o3-recorded-viewer-performance-summary-v2",
+  "measured_utc_date": "2026-10-01",
+  "status": "Completed current eight-cell recorded-viewer measurement; scoped named viewer regression targets adopted by the root integrator.",
+  "site_head": "0e4569be83163b25a290d3ccb5e7945cf4997245",
+  "source_census": {
+    "files": 1075,
+    "bytes": 25327528,
+    "sha256": "9a64929e4025df7da3b5474fee4d29b15f0395153a1f296a56a3299e86f5a846"
+  },
+  "build": {
+    "receipt": {
+      "path": "logs/phase28-resume-r48-site-current-ui-build-r1/receipt.json",
+      "bytes": 1338552,
+      "sha256": "c389140b5db5cb91bf9c307bc1c8917883a434a73c762d3e664cadf93010bb95"
+    },
+    "validation": {
+      "unit_test_files": 177,
+      "unit_tests": 2118,
+      "authoring_lab_tests": 21,
+      "source_obligations": "56 lessons, 307 code tabs; pending status retained"
+    },
+    "elapsed_ms": 41407
+  },
+  "method": {
+    "host": "mi350",
+    "browser": "Chromium headless 151.0.7922.34",
+    "gpu_disabled": true,
+    "production_preview": true,
+    "route_shell_loaded_before_timing": true,
+    "fresh_context_per_pair": true,
+    "device_scale_factor": 1,
+    "theme": "light",
+    "locale": "en-US",
+    "timezone": "UTC",
+    "calibration_pairs_per_cell": 5,
+    "measured_pairs_per_cell": 30,
+    "total_raw_pairs": 280,
+    "total_measured_pairs": 240,
+    "percentile": "nearest-rank; p50 rank15 and p95 rank29 of30 measured samples",
+    "latency_array_columns": [
+      "p50",
+      "p95",
+      "max"
+    ],
+    "latency_unit": "milliseconds",
+    "timing": "In-page capture listener for the actual click/change action to the expected identity-bound semantic DOM and two further animation frames; not paint.",
+    "warm": "Close/clear, restage if V22, and reopen/reimport in the same context.",
+    "v22_first_repeat": "Four files selected before timing; whole import includes read/decompress/validate/project/render as reached by the real UI. No isolated parser stage measurement.",
+    "interaction": {
+      "navigation": "Select exact retained BitOr attribution candidate",
+      "program": "Select exact recorded checkpoint showing19 after previously showing23",
+      "v22": "Next index page: exact rows65..128 after initial rows1..64"
+    },
+    "heap": "Runtime.getHeapUsage usedSize at discrete checkpoints; signed subtraction, no forced-GC or peak/RSS interpretation.",
+    "heap_array_columns": [
+      "min",
+      "p50",
+      "p95",
+      "max",
+      "negative_samples"
+    ],
+    "heap_unit": "bytes",
+    "heap_distribution_count": 30,
+    "heap_delta_definitions": {
+      "staged_to_cold": "cold_ready.usedSize - staged.usedSize",
+      "staged_to_warm": "warm_ready.usedSize - warm_staged.usedSize",
+      "shell_to_cold": "cold_ready.usedSize - shell.usedSize",
+      "shell_to_final_clear": "final_clear.usedSize - shell.usedSize"
+    },
+    "source_method_pins": [
+      {
+        "path": "phase28-site-ui-performance-tools-r48/page-meter.mjs",
+        "bytes": 4320,
+        "sha256": "359c7fd410dc29c8c8cdd479c7c20ca161350052de5ec7b741681cd68c7f714a"
+      },
+      {
+        "path": "phase28-site-ui-performance-tools-r48/policy.mjs",
+        "bytes": 6834,
+        "sha256": "ef30c4a2f81063a85e97129be952bebbdd21d59c9701fa006e9633a5ebf7e553"
+      },
+      {
+        "path": "phase28-site-ui-performance-tools-r48/run.mjs",
+        "bytes": 11238,
+        "sha256": "43807babebea022a2898ac404e5f9a799ef53e1b64321a1c786fdc8bb02d4875"
+      },
+      {
+        "path": "phase28-site-ui-performance-tools-r48/workflows.mjs",
+        "bytes": 6454,
+        "sha256": "825472b3aaa88afdb09aad42f786be31e7abc986a8964816dbd9d6a7f385eed0"
+      }
+    ]
+  },
+  "fixtures": {
+    "small": [
+      {
+        "path": "examples/ordinary_authoring_navigation_v1.json",
+        "bytes": 18050,
+        "sha256": "957b7a0ece3aaea5e474c3124bced44e28a73b616e8cddd0e663a8fa7380d6c1"
+      },
+      {
+        "path": "examples/ordered_program_observation_v1.json",
+        "bytes": 941567,
+        "sha256": "6ae5be6ed1843aff7c84ab9d57cb5bee740d44c5f2ec254baa5270eb46fce468"
+      }
+    ],
+    "small_combined_bytes": 959617,
+    "v22": [
+      {
+        "id": "one-output129",
+        "stored_bytes": 317494,
+        "expanded_index": {
+          "bytes": 3366608,
+          "sha256": "2267da3f43ce2c7ac6f9474fef3ddd2153236050790c0dbddec98b95152f79ce"
+        },
+        "expanded_aggregate_bytes": 3605669,
+        "index_rows": 8833,
+        "protocol_pairs": 88,
+        "files": [
+          {
+            "path": "diagnostics/physical-lds-v22/one-output129.index.gzip",
+            "bytes": 78433,
+            "sha256": "c359ea696bf292b811bfdaf6d779d8d21c83f9001e91b11297a93552d6f58dac"
+          },
+          {
+            "path": "diagnostics/physical-lds-v22/one-output129.request.json",
+            "bytes": 2956,
+            "sha256": "32cbeed3bd1ec15c52865ce6a7545f6fa3582349b85e909a8941fb848fa130ce"
+          },
+          {
+            "path": "diagnostics/physical-lds-v22/one-output129.requests.jsonl",
+            "bytes": 18579,
+            "sha256": "563f3ad0588ab9043214729de08ee8bee5ab3356eab5f99a20b59d8c84faab99"
+          },
+          {
+            "path": "diagnostics/physical-lds-v22/one-output129.responses.jsonl",
+            "bytes": 217526,
+            "sha256": "8bc446a61703317370e9cc5f806bb816b11aef24fd6a15c7d7cdb54cf7bbfc99"
+          }
+        ],
+        "evidence_class": "retained genuine public V22 CPU recording; not fresh execution; not maximum-cap fixture"
+      },
+      {
+        "id": "registers-output13",
+        "stored_bytes": 316208,
+        "expanded_index": {
+          "bytes": 3315627,
+          "sha256": "50c5b457cc28515d697ac62b75f21047d5b34228d3162841449504deaea55706"
+        },
+        "expanded_aggregate_bytes": 3554682,
+        "index_rows": 8718,
+        "protocol_pairs": 88,
+        "files": [
+          {
+            "path": "diagnostics/physical-lds-v22/registers-output13.index.gzip",
+            "bytes": 77153,
+            "sha256": "b80a69c8acf6bcdec32501db56d65c65e2aa0863541b2a01607e60c73f515bb2"
+          },
+          {
+            "path": "diagnostics/physical-lds-v22/registers-output13.request.json",
+            "bytes": 2961,
+            "sha256": "40ca44a29af56bf4b8f547c67fca9a0fa01a9370f2e4caef67b31a8d25ad198b"
+          },
+          {
+            "path": "diagnostics/physical-lds-v22/registers-output13.requests.jsonl",
+            "bytes": 18576,
+            "sha256": "5688d94dbf46a0dee13741a8ebffb52e000b4f50dbba53356c14ebff16eec7c5"
+          },
+          {
+            "path": "diagnostics/physical-lds-v22/registers-output13.responses.jsonl",
+            "bytes": 217518,
+            "sha256": "c2599766e119e26b5586e344c9eb4e9ed6da3884c19658bf9c2a758a2ab7d2cd"
+          }
+        ],
+        "evidence_class": "retained genuine public V22 CPU recording; not fresh execution; not maximum-cap fixture"
+      }
+    ]
+  },
+  "cells": [
+    {
+      "id": "navigation-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          347.90000000596046,
+          348.10000002384186,
+          348.19999998807907
+        ],
+        "warm_open_ms": [
+          49,
+          49.20000001788139,
+          49.30000001192093
+        ],
+        "bounded_interaction_ms": [
+          48.79999998211861,
+          49,
+          49
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          4996064,
+          5021828,
+          5059100,
+          5927572,
+          0
+        ],
+        "staged_to_warm": [
+          -2362760,
+          1265524,
+          1282748,
+          1302700,
+          1
+        ],
+        "shell_to_cold": [
+          4996064,
+          5021828,
+          5059100,
+          5927572,
+          0
+        ],
+        "shell_to_final_clear": [
+          6040356,
+          6072244,
+          6152104,
+          6547744,
+          0
+        ]
+      },
+      "requests": 1155,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/navigation-desktop/candidate-report.json",
+        "bytes": 188730,
+        "sha256": "ac28023c7cf7ea185fb9e9fa5c2f493e05176606330401f0335b79bf200cf922"
+      }
+    },
+    {
+      "id": "navigation-narrow",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          347.80000001192093,
+          348.09999999403954,
+          348.10000002384186
+        ],
+        "warm_open_ms": [
+          49,
+          49.20000001788139,
+          49.20000001788139
+        ],
+        "bounded_interaction_ms": [
+          48.89999997615814,
+          49,
+          49.099999994039536
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          5016932,
+          5022452,
+          5048116,
+          5062028,
+          0
+        ],
+        "staged_to_warm": [
+          1263784,
+          1266916,
+          1268060,
+          1306912,
+          0
+        ],
+        "shell_to_cold": [
+          5016932,
+          5022452,
+          5048116,
+          5062028,
+          0
+        ],
+        "shell_to_final_clear": [
+          6035280,
+          6071972,
+          6110916,
+          6151100,
+          0
+        ]
+      },
+      "requests": 1155,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/navigation-narrow/candidate-report.json",
+        "bytes": 188858,
+        "sha256": "701822e680f546e7c9b74d6550178277ff6d09099114fc1dcc5855b2f959d63a"
+      }
+    },
+    {
+      "id": "program-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          381.2000000178814,
+          381.40000000596046,
+          381.5
+        ],
+        "warm_open_ms": [
+          49,
+          97.90000000596046,
+          98
+        ],
+        "bounded_interaction_ms": [
+          46.39999997615814,
+          47.400000005960464,
+          47.599999994039536
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          7569604,
+          8849608,
+          10055764,
+          10575728,
+          0
+        ],
+        "staged_to_warm": [
+          -1546360,
+          1133704,
+          1328064,
+          5271616,
+          2
+        ],
+        "shell_to_cold": [
+          7569604,
+          8849608,
+          10055764,
+          10575728,
+          0
+        ],
+        "shell_to_final_clear": [
+          10197352,
+          10621756,
+          12296956,
+          14377676,
+          0
+        ]
+      },
+      "requests": 1120,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/program-desktop/candidate-report.json",
+        "bytes": 186473,
+        "sha256": "0b891cfbf83adfcb61242ed1cb67d240ed0c6cfe1330cd5226de9f56e110d034"
+      }
+    },
+    {
+      "id": "program-narrow",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          381.30000001192093,
+          398.19999998807907,
+          431.40000000596046
+        ],
+        "warm_open_ms": [
+          49,
+          82.09999999403954,
+          98.39999997615814
+        ],
+        "bounded_interaction_ms": [
+          47.30000001192093,
+          48.599999994039536,
+          48.599999994039536
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          7518284,
+          8670120,
+          10141608,
+          10447700,
+          0
+        ],
+        "staged_to_warm": [
+          -1426588,
+          1152484,
+          1522972,
+          1820412,
+          1
+        ],
+        "shell_to_cold": [
+          7518284,
+          8670120,
+          10141608,
+          10447700,
+          0
+        ],
+        "shell_to_final_clear": [
+          10108704,
+          10590936,
+          12702032,
+          13417756,
+          0
+        ]
+      },
+      "requests": 1120,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/program-narrow/candidate-report.json",
+        "bytes": 186614,
+        "sha256": "926a4c2e481c772bab57ce623ce0564a5032d8639834e3e454c179d22c71654d"
+      }
+    },
+    {
+      "id": "v22-one-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          281.40000000596046,
+          298.30000001192093,
+          312.2000000178814
+        ],
+        "warm_open_ms": [
+          265.5,
+          282,
+          282.30000001192093
+        ],
+        "bounded_interaction_ms": [
+          49,
+          49.20000001788139,
+          49.30000001192093
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          18259220,
+          18487504,
+          18751688,
+          22388156,
+          0
+        ],
+        "staged_to_warm": [
+          18762848,
+          19476204,
+          20691188,
+          23195828,
+          0
+        ],
+        "shell_to_cold": [
+          24030908,
+          24172280,
+          24369184,
+          28106876,
+          0
+        ],
+        "shell_to_final_clear": [
+          47041640,
+          47855408,
+          51536004,
+          52940684,
+          0
+        ]
+      },
+      "requests": 980,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/v22-one-desktop/candidate-report.json",
+        "bytes": 182768,
+        "sha256": "a2826c5c9fddf74777a8cc86e456f73bb73def49b2c8fb6afd385904dfa84447"
+      }
+    },
+    {
+      "id": "v22-one-narrow",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          281.59999999403954,
+          314.80000001192093,
+          328.09999999403954
+        ],
+        "warm_open_ms": [
+          265.69999998807907,
+          282.40000000596046,
+          284.09999999403954
+        ],
+        "bounded_interaction_ms": [
+          48.900000005960464,
+          49.099999994039536,
+          49.19999998807907
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          18351712,
+          18409608,
+          21413132,
+          21982944,
+          0
+        ],
+        "staged_to_warm": [
+          -20946452,
+          19197936,
+          19777508,
+          19932988,
+          2
+        ],
+        "shell_to_cold": [
+          24025780,
+          24129040,
+          26995540,
+          27637820,
+          0
+        ],
+        "shell_to_final_clear": [
+          10100568,
+          47441392,
+          48233940,
+          48325984,
+          0
+        ]
+      },
+      "requests": 980,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/v22-one-narrow/candidate-report.json",
+        "bytes": 182987,
+        "sha256": "3b1a2a4cf0618bdbfb8de3cdee60e2a10e7ec1ea7b80d7ba5abc89c5b29599fd"
+      }
+    },
+    {
+      "id": "v22-registers-desktop",
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          281.5,
+          298.2999999821186,
+          299.10000002384186
+        ],
+        "warm_open_ms": [
+          251,
+          265.7000000178814,
+          301.59999999403954
+        ],
+        "bounded_interaction_ms": [
+          49,
+          49.20000001788139,
+          49.30000001192093
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          18089748,
+          18296568,
+          26007724,
+          26073416,
+          0
+        ],
+        "staged_to_warm": [
+          -12987112,
+          17069492,
+          17993456,
+          18340796,
+          11
+        ],
+        "shell_to_cold": [
+          23800480,
+          23993652,
+          31632312,
+          31679260,
+          0
+        ],
+        "shell_to_final_clear": [
+          10786444,
+          45102208,
+          46075724,
+          46279184,
+          0
+        ]
+      },
+      "requests": 980,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/v22-registers-desktop/candidate-report.json",
+        "bytes": 182796,
+        "sha256": "d6e6a121692995a40423364987f7076ff449845c1635e433390677e1f3ed8760"
+      }
+    },
+    {
+      "id": "v22-registers-narrow",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "latency_ms": {
+        "first_open_ms": [
+          281.59999999403954,
+          298.30000001192093,
+          298.69999998807907
+        ],
+        "warm_open_ms": [
+          265.69999998807907,
+          282.30000001192093,
+          282.5
+        ],
+        "bounded_interaction_ms": [
+          48.900000005960464,
+          49.10000002384186,
+          49.20000001788139
+        ]
+      },
+      "signed_heap_checkpoint_deltas": {
+        "staged_to_cold": [
+          18067828,
+          18265624,
+          26033360,
+          26045196,
+          0
+        ],
+        "staged_to_warm": [
+          -20044480,
+          17210228,
+          18644756,
+          22452428,
+          8
+        ],
+        "shell_to_cold": [
+          23814752,
+          23960828,
+          31678176,
+          31685844,
+          0
+        ],
+        "shell_to_final_clear": [
+          10052248,
+          45262796,
+          46629256,
+          51103856,
+          0
+        ]
+      },
+      "requests": 980,
+      "network_refusal": null,
+      "report": {
+        "path": "phase28-site-ui-performance-r48/v22-registers-narrow/candidate-report.json",
+        "bytes": 183056,
+        "sha256": "6e0394f7b49ffc067cfc082d47b590af570391de8b6dff7121ec39c04c792325"
+      }
+    }
+  ],
+  "campaign": {
+    "elapsed_ms": 339247.083425,
+    "total_requests": 8470,
+    "retained_artifact_bytes": 2186668,
+    "direct_preview_and_browser_identities_absent": true,
+    "direct_identity_count": 9,
+    "receipt": {
+      "path": "logs/phase28-resume-r48-site-eight-cell-current-performance-r1/receipt.json",
+      "bytes": 1449982,
+      "sha256": "80fdba739a635865b86a71418c37e15e08107cd6533340082d3754b939ef99ae"
+    },
+    "campaign": {
+      "path": "phase28-site-ui-performance-r48/campaign-candidate.json",
+      "bytes": 33984,
+      "sha256": "8b51a786810a2cd870cf225d27a14540fd57c6e9902ae6b7cd449917f71a77ba"
+    },
+    "profile": {
+      "path": "phase28-site-ui-performance-tools-r48/PROFILE.json",
+      "bytes": 298184,
+      "sha256": "ad439c5bceeaa38398b07ce6188348ada7d19d7864475fe63326f6169f8bbf19"
+    },
+    "authorization": {
+      "path": "phase28-site-ui-performance-authorization-r48.json",
+      "bytes": 405,
+      "sha256": "7a4009840831e1f59270582edfb1099bab59eac87bfcfa21ab2625c157f790bc"
+    },
+    "source_review": {
+      "path": "phase28-drafts/current-site-ui-measurement-independent-r48-r1/REVIEW.json",
+      "bytes": 13612,
+      "sha256": "c66bb2a492c7e07b1672c70fca8c0d3795516b7834a6a736cdb324979a85faee"
+    }
+  },
+  "evidence_inputs": [
+    {
+      "path": "phase28-drafts/site-eight-cell-current-performance-audit-root-r48-r1/AUDIT.json",
+      "bytes": 56764,
+      "sha256": "848c1c10515ef8a55d381e100fd9f5abdd4e3604fdcbedb2def24d9036d834c0"
+    },
+    {
+      "path": "phase28-drafts/site-current-ui-build-audit-root-r48-r1/AUDIT.json",
+      "bytes": 1596,
+      "sha256": "a25cf6c2d807a78533ea4ac9a881961c60dbe81fe9a06d5c5a273c21ab455db3"
+    },
+    {
+      "path": "phase28-drafts/current-site-ui-measurement-bound-root-r48-r1/FIXTURES.json",
+      "bytes": 4054,
+      "sha256": "f407091b813dc97ae7dc1967c1e9983cd8c2b80bd3f0818e63e658a9056aec13"
+    },
+    {
+      "path": "phase28-drafts/current-site-ui-measurement-bound-root-r48-r1/INPUTS.json",
+      "bytes": 16895,
+      "sha256": "378ef19de01913b45d7d1c40ddf061fe76f3244fa57de77fa116aab48e275362"
+    }
+  ],
+  "private_receipt_root": "/home/harmenon/fe2o3-authoring-280-282-mi350.4VZ42zNr",
+  "limitations": [
+    "Fresh browser measurement of retained recordings; not fresh kernel execution or hardware behavior.",
+    "No isolated parser/decode timing, maximum valid importer fixture or universal worst11MiB-class qualification.",
+    "No real reverse-replay, live memory-query, backend-to-render or debugger-command latency measured.",
+    "No paint guarantee, peak heap, peak RSS, leak-freedom, full accessibility or all-route coverage.",
+    "Root observed the selected direct browser/preview identities absent. This is not proof of escaped-descendant or complete process-family cleanup.",
+    "A scoped owned-job/process check is not host-global quiescence or a hard operating-system resource quota.",
+    "The September26 historical report and its flags are unchanged; its measurements are not relabeled current."
+  ],
+  "claims": {
+    "paint": false,
+    "isolated_parser": false,
+    "peak_heap": false,
+    "peak_rss": false,
+    "reverse_replay": false,
+    "hardware": false,
+    "global_quiescence": false,
+    "whole_family_cleanup": false,
+    "maximum_valid_import": false,
+    "milestone_closure": false,
+    "accepted_budget": true,
+    "live_memory_query": false,
+    "source_authentication": false,
+    "protected_proof_authority": false,
+    "accepted_budget_scope": "Only the explicitly enumerated measured viewer workloads and signed checkpoints; other contract, live, scale and peak-memory rows remain open."
+  },
+  "milestones": {
+    "accepted_count": 6,
+    "total_count": 18,
+    "accepted": [
+      "M1",
+      "V1",
+      "V2",
+      "U1",
+      "U2",
+      "U3"
+    ],
+    "V0_closed": false,
+    "V5_closed": false,
+    "M0_closed": false,
+    "U0_closed": false
+  },
+  "budget_adoption": {
+    "state": "adopted-for-named-viewer-regression-workloads",
+    "scope": "Only these exact fixtures, viewport settings, method and current measured source. No adoption on behalf of other issue owners.",
+    "latency_p95_ms": {
+      "small_first_open": 500,
+      "small_warm_open": 100,
+      "small_bounded_interaction": 100,
+      "exact_v22_whole_first_import": 1000,
+      "exact_v22_whole_repeat_import": 1000,
+      "exact_v22_next_index_page": 100
+    },
+    "heap_signed_checkpoint_upper_bound_bytes": 134217728,
+    "heap_scope": "Upper bound on each of the four published signed checkpoint differences, not absolute process memory, peak heap, RSS or leak-freedom; negative differences retained.",
+    "v22_additive_boundary": "A new named whole-import/reimport workload budget. It does not replace the prior proposed isolated-parser1000ms target or apply the bounded-page100ms target to whole import.",
+    "comparison": "Every observed cell p95 and every observed signed checkpoint maximum meets these named targets on this measured build. No universal SLA, peak-memory bound, isolated-parser result, or other-owner approval is inferred.",
+    "adopted": true,
+    "adopter": "Root in its compiler integration and viewer implementation roles only",
+    "adopted_at": "2026-10-01T00:58:12.206Z",
+    "adoption_timing": "Recorded after this measurement. Existing small-fixture targets retained; V22 whole-import/reimport is a separately named additive initial regression target, not retrospective reinterpretation of the parser or bounded-page targets."
+  }
+}

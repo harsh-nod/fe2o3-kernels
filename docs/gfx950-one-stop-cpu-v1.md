@@ -162,3 +162,395 @@ views or a visualization recording. Runtime acceptance and physical capture
 remain false. This historical run does not extend its finite coordination
 window; this lesson supplies no native replay command. V4 remains open and
 accepted exits remain M1/V1/V2/U1/U2/U3 (6/18).
+
+## 7. Review loaded-file records without replaying startup
+
+The inert loaded-file review component first passed 173 CPU controls against
+the complete retained records of section 6. Its portable review APIs and
+selection planner are now [published in the compiler repository](https://github.com/harsh-nod/fe2o3/tree/ce1ec08a9420c2e923fac7ed42960a4cd8586192/tools/debugger/loaded-profile).
+The pinned [publication qualification note](https://github.com/harsh-nod/fe2o3/blob/ce1ec08a9420c2e923fac7ed42960a4cd8586192/docs/portable-loaded-debugger-review-qualification-20260929.md)
+records 32 fixture-free API/admission controls and the preserved 173 profile
+and 77 planner historical controls. This remains a historical, read-only review
+profile, not a live debugger adapter or permission to repeat the native startup.
+
+From the fe2o3 repository root, run the fixture-free API/admission checks:
+
+~~~sh
+node --test tools/debugger/loaded-profile/portable-api.test.mjs
+~~~
+
+Those 32 controls require no historical archive and do not claim historical
+startup semantic coverage. To run the preserved historical suites, supply an
+explicit manifest for all 76 complete source-pinned fixture files:
+
+~~~sh
+FE2O3_LOADED_REVIEW_FIXTURES=/absolute/path/fixtures.json \
+  node --test tools/debugger/loaded-profile/historical-profile-controls.mjs \
+  tools/debugger/loaded-profile/historical-selection-controls.mjs
+~~~
+
+The [pinned fixture contract](https://github.com/harsh-nod/fe2o3/blob/ce1ec08a9420c2e923fac7ed42960a4cd8586192/tools/debugger/loaded-profile/README.md)
+defines the exact ordered roles, immutable content pins and bounded fixture reader.
+Missing fixtures fail; there is no silent skip or fallback to historical host
+paths, and no raw host archive is bundled in the repository. The 76 fixture
+contents are hash-checked; the supplied manifest is bounded, parsed and
+identity-checked rather than source-hash-checked by the fixture reader.
+Both commands are CPU-only controls, not a startup replay or physical capture.
+Earlier stage limits and the expired native coordination remain unchanged.
+
+For a kernel author, the useful question is: "Which recorded source, cache and
+mapped-library paths were associated with this debugger startup?" Answering it
+helps separate an artifact-selection problem from a kernel-state question.
+It cannot tell you the value of a VGPR, which lane diverged, whether an LDS bank
+conflict occurred, or what a stopped wave would do next.
+
+The pure entry consumes 72 complete, individually pinned retained records,
+including both successful gate observations and the preserved failed-attempt
+readback. It also checks the complete original 1,024 before/after selected
+identities; it does not replace the 879 historical duties. No operational file
+is opened by the pure checker. A successful review says the supplied historical
+bytes and their joins were accepted, not that the files are still unchanged now.
+
+This API sketch describes an owned-buffer review, not an installed CLI or a
+filesystem reader:
+
+~~~javascript
+const profile = reviewLoadedStartup(retainedInputBuffers);
+
+// Each named role keeps its full observation and all module/map references.
+const cacheAbsences = profile.rows.filter(row => !row.observation.exists);
+const namedAliases = profile.named_aliases;
+
+console.assert(cacheAbsences.length === 23);
+console.assert(namedAliases.length === 1);
+console.assert(profile.physical_files_reread === false);
+console.assert(profile.limitations.runtime_acceptance === false);
+console.assert(profile.limitations.physical_capture === false);
+~~~
+
+The accepted historical profile retains 193 named file roles: 170 present,
+23 absent, and 398,626,885 present-file bytes. It preserves 104 initial Python
+modules, 50 mapped ELF paths, all initial/collection/final map references,
+123 newly observed present files relative to static candidates, and 37 static
+candidates not observed. Those 37 candidates retain their independent duties;
+absence from this particular startup is not permission to delete them.
+
+For a review exercise, pick a module with a source path and a cached path.
+Follow each named path back to its module references, then distinguish any
+mapped ELF references. An absent cache path remains an absence observation,
+not a zero-byte readable file. A present cache path does not prove that its
+bytecode executed. A module snapshot does not establish complete import
+history. Likewise, retain the named sitecustomize alias and its recorded target
+identity; do not silently collapse it into a different selected input.
+
+The checker refuses incomplete rosters, changed complete pins, inconsistent
+pre/post records, unrecognized alias identities, broken module/map/cache
+lineage and attempts to promote startup evidence to runtime acceptance.
+A pin refusal alone does not identify which deeper semantic check would also
+fail. The negative controls establish refusal, not exhaustive branch coverage.
+
+Pure-review qualification receipt:
+
+~~~text
+7269304a46332efe72bdc176aad4feccceb8c1035dd5bd19fc7c2720beb8ea22
+~~~
+
+The failed first startup remains failed; the accepted retry does not erase it.
+Reviewing retained bytes does not extend the expired startup coordination or
+perform a fresh native action. Integrating observed files into a future input
+selection must preserve every old duty and count all added readable, absent,
+alias, source and reader roles under a separately reviewed finite gate. This
+lesson changes no input limit and provides no native replay command.
+
+Complete import history, cache-execution provenance, runtime acceptance and
+physical capture remain false. There is no physical register heatmap, LDS bank
+view or new visualization recording. V4 remains open and accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18).
+
+## 8. Plan complete input reads without authorizing them
+
+The [portable graph and resource-planning APIs](https://github.com/harsh-nod/fe2o3/tree/c7b1a12f62368c7b3b222dad5fc7cf6ce4bdf537/tools/debugger/loaded-operational-graph)
+make the next review step available as CPU-only code. From the fe2o3 repository
+root, run its fixture-free controls:
+
+~~~sh
+node --test tools/debugger/loaded-operational-graph/graph-policy.test.mjs
+~~~
+
+All 44 fixture-free controls passed on mi350. A separate root-owned integration
+gate passed 13 additional historical controls. The historical seed, inactive
+driver and raw execution receipts are not bundled with this portable package;
+running the command above does not run those 13 controls.
+
+Use `compileOperationalGraph(Buffer)` to check named claims, complete content
+pins, identity observations, imports, unresolved roles and output names. It
+parses supplied bytes; it does not open those named files. Keep each named path
+and all its roles, even when two paths have equal hashes. An independently
+selected alias target retains its own charge. A recorded absence is a separate
+metadata obligation, not a zero-byte readable file.
+
+For a small accounting exercise, consider a 100,000-byte readable file. With
+exact chunks of at most 65,536 bytes, one pass budgets two payload reads and one
+EOF probe: three content-provider calls and 100,001 inclusive reserved bytes.
+Two independently selected readable names of that size need six calls and
+200,002 inclusive reserved bytes per pass, before metadata checks. Repeating
+the pass doubles those figures. These are logical provider-call envelopes,
+not measured filesystem syscall counts.
+
+`exactReadEnvelope(entries, aliases, passes)` computes that structural
+accounting. `proposeResourcePolicy(Buffer, options)` adds the fixed historical
+profile phases; it requires the exact historical 1,173-name shape and is not a
+generic operational supervisor. Its controlled-read subtotal excludes actual
+module-loader IO, fixture metadata, resource probes, request reads and any extra
+repository scan. A logical memory envelope is not a process RSS bound.
+
+For the review exercise, identify which obligations are unresolved before
+reading and which observations can exist only afterward. Do not replace a
+changed historical pin with current bytes merely to make a review pass. That
+mismatch requires an explicit refusal and a separately reviewed successor.
+
+Even an empty unresolved list leaves `qualified`, `execution_authority`,
+`complete_operational_graph` and `root_cap_change_approved` false. Increasing
+an input-count limit alone does not supply exact-read enforcement, currentness
+guards, output ownership or scheduling. The read-only adapter and bounded
+exclusive evidence writer still need separate qualification.
+
+This is not a live visualization or a native replay command. It does not
+capture VGPR values, LDS banks or stopped-wave state, and it does not extend
+the expired native coordination. V4 remains open; accepted exits remain
+M1/V1/V2/U1/U2/U3 (6/18). No global compiler pin or public support gate changes.
+
+## 9. Exercise the bounded adapter without activating host reads
+
+The [portable CPU adapter](https://github.com/harsh-nod/fe2o3/tree/1a5999f6e1c5f2363bc2d525af65e84c46502ce6/tools/debugger/loaded-cpu-adapter)
+adds explicit Buffer/provider APIs around the reviewed reader. This link pins
+the published compiler component; it is not a new global compiler pin or an
+operational replay command.
+
+From the fe2o3 repository root, its fixture-free control command is:
+
+~~~sh
+node --test tools/debugger/loaded-cpu-adapter/adapter-controls.test.mjs
+~~~
+
+Root qualification passed 76 fixture-free adapter controls and 10 separate
+external historical controls. The combined installed reader, profile, graph and
+adapter suite passed 202 controls; the 10 historical controls passed separately.
+The successful CPU receipt SHA-256 is
+`1789ce1fd0cb0e0eea3787799e023a1a0e5110753b965250d4e241f61f068a41`.
+This qualifies those component controls, not the complete operational workflow.
+The default command does not run the 10 historical controls or load their
+76-role fixture archive. Missing historical configuration/data must fail, not
+skip. The host-specific plan, historical seed and raw receipts are not bundled
+with this portable package.
+
+### Separate the three read phases
+
+`executeAdapterPlan(planBuffer, { provider, guard, now })` accepts an explicit
+bounded plan and caller-supplied provider, guard and clock. It admits both reader
+protocols before invoking the operational provider. Importing the module does
+not call that provider; Node's own module-loader IO is a separate domain.
+
+| Phase | Planned read | If precheck refuses |
+| --- | --- | --- |
+| precheck | One complete selected-graph pass | failed |
+| historical | Two immediate complete historical passes | not-started |
+| postcheck | One complete selected-graph pass | not-started |
+
+Every phase keeps its own byte/content/metadata ceilings and deadline, including
+phases that never start. Attempted reservations remain charged when a guard
+denies a provider call. A stale complete pin, changed named/target/descriptor
+identity or wrong ownership must refuse; do not refresh the historical pin to
+make the operation pass. An absence stays a bounded metadata obligation, not
+an empty readable file. This protects input provenance, not kernel arithmetic.
+
+Read the primary failure separately from cleanup. The first reader, provider,
+phase-clock or guard failure remains primary even when a later descriptor close
+fails. The cleanup report still retains possibly live descriptors. Once a guard
+expires, only cleanup of an already-owned descriptor may proceed; no fresh read
+or write is authorized. A failed phase has bounded diagnostics, not a fabricated
+complete observation array.
+
+### Try serialization only, entirely in memory
+
+The following executable module body can be supplied to
+`node --input-type=module` from the fe2o3 repository root. It exercises only the
+reviewed `encodeBoundedEvidence` API. Every failure string is synthetic: this is
+not a reader or publication acceptance test, and no host input read occurs.
+
+<!-- loaded-adapter-memory-example:start -->
+~~~javascript
+import assert from "node:assert/strict";
+import { encodeBoundedEvidence } from "./tools/debugger/loaded-cpu-adapter/adapter-writer.mjs";
+
+// Synthetic data: no reader, filesystem provider, guard or publication ran.
+const synthetic = {
+  example: "serialization only; no host input read",
+  first_failure: { phase: "precheck", code: "synthetic-stale-pin" },
+  cleanup_errors: [{ message: "synthetic close failure" }],
+  qualified: false,
+};
+const bytes = encodeBoundedEvidence(synthetic, 1024);
+assert.deepEqual(JSON.parse(bytes), synthetic);
+assert.throws(() => encodeBoundedEvidence(synthetic, 8));
+~~~
+<!-- loaded-adapter-memory-example:end -->
+
+The 1,024-byte bound allows this tiny record; the eight-byte bound refuses.
+Changing a JSON field to `qualified: true` would not create authority.
+
+### Keep publication and currentness explicit
+
+`publishExclusiveEvidence` needs an admitted output specification, a writer
+provider and a current guard. Serialization is bounded before writer IO.
+Publication exclusively creates a new temporary leaf, then atomically
+hard-links it to a separate final name without replacing an existing target.
+There is no overwrite-capable rename or automatic unlink. Even success retains
+the temporary link for root-owned cleanup; partial or displaced custody remains
+reported after failure.
+
+Temporary and final names each need their own selected reservation: a 64 MiB
+body can require 128 MiB of conservative named reservations before external
+receipts and streams. Root must bind a private output directory. Directory
+identity bracketing is not atomic ancestor-path exclusion or a writer-exclusion
+proof. Acceptance checks currentness after descriptor cleanup, and the command
+result retains post-publication guard state.
+
+The serialized record describes publication intent, not proof of its own
+publication. Root must inspect actual command status and read the real output
+completely. Expiry forbids new evidence writes; an external timeout or kill can
+prevent cleanup or any durable report. Unwritten evidence is not available
+evidence.
+
+The explicit `runFilesystemAdapter` entry remains unactivated in this lesson.
+Final individually pinned source/import/runtime/launcher inputs, the complete
+request Buffers, current CPU-only policy, exact cap/resource/output bindings,
+external timeout and readback still belong to root. A successful synthetic
+example or accepted count value supplies none of those prerequisites.
+
+This is not a live visualization and performs no GDB, attach, inferior launch,
+GPU dispatch or physical capture. It supplies no VGPR heatmap, LDS-bank sample
+or native replay command and does not renew the expired native coordination.
+V4 remains open; accepted exits remain M1/V1/V2/U1/U2/U3 (6/18). No public support
+gate, global compiler pin or maturity claim changes.
+
+## 10. Bind the request, process and report separately
+
+The static Node launch layer has passed 61 fixture-free controls: 53 launch
+controls and eight pure fresh-fixture preparation controls. The root CPU receipt
+is `a128239a741b6234aa3ce5082607d07954bc5e283ac27cc19f222e23a09eceee`.
+The root also invoked the exact reviewed CLI from its draft qualification tree
+on a fresh CPU-only fixture: exit zero, complete readback of all six output roles,
+and one passing opt-in real-filesystem control. That actual-CLI receipt is
+`e35f1367ea4fe387b3ee8bd4cef7c908cb1bc20a67c118f670068939c4c2ad9c`;
+the independent root readback digest is
+`6bad1f1af49df83d3634e7e38f12a28ed02b62f476c765e882b430b5d3cea18e`.
+This qualifies the actual draft-path request → read → adapter → report seam.
+A later root-owned installed-path gate passed 263 combined fixture-free controls,
+including the same 61 launcher controls, then ran the actual installed entry:
+exit zero and one passing installed opt-in readback control. Its CLI receipt is
+`d4eb928db788112ef7e24f16b92f77708f12db4fbfd8ec275bfe2cec49fce06c`.
+Root completely read all six roles and 12 named regular files totaling 425,112
+bytes; all 28 selected runtime/source/terminal domains retained their identities.
+That separate complete-readback digest is
+`fd3e3e4fb9e8cef5289eb728cf7be05e806c64a457b6fc1e2d3ca3908d648fbd`.
+The earlier draft-path facts remain their own history. The immutable
+[static CPU launch package](https://github.com/harsh-nod/fe2o3/tree/9aa6d199484529b83b9a5831b4c01e00565dd206/tools/debugger/loaded-static-node)
+and [qualification note](https://github.com/harsh-nod/fe2o3/blob/9aa6d199484529b83b9a5831b4c01e00565dd206/docs/static-node-loaded-launch-qualification-20260929.md)
+identify the same compiler commit. These source links do not claim a fresh
+actual-CLI run of the linked commit. Section 9 keeps its own earlier
+published component boundary.
+
+In the selected installed source tree containing `tools/debugger/loaded-static-node`,
+the fixture-free command is:
+
+~~~sh
+node --test tools/debugger/loaded-static-node/launch-controls.test.mjs \
+  tools/debugger/loaded-static-node/launch-fixture-controls.test.mjs
+~~~
+
+This command uses in-memory providers and synthetic metadata. It does not open
+a historical input roster, launch the fixed CLI, or execute a kernel. Root qualified it in the selected installed compiler checkout; the immutable source links above identify that separate
+publication stage without refreshing those historical qualification receipts. Missing
+opt-in filesystem configuration must fail, not skip or discover an old host path.
+
+### Keep bootstrap authority outside the request
+
+`admitStaticLaunchRequest(requestBuffer, bootstrapBuffer, fixedContext)` takes
+complete Buffers. The externally selected bootstrap binds the request's whole
+content pin, six identity fields and ownership before reading it. The request
+cannot grant its own read scope, increase its own cap, choose an import, supply
+a command or inject an environment. The fixed CLI accepts one canonical base64
+bootstrap argument and no extra Node flags.
+
+The selected graph, reader plan, immutable historical-protocol digest, policies
+and exact static import map must agree. Every named graph entry, independently
+unselected alias target and terminal pin must agree on content and kind.
+Request-name overlap with the graph or an alias target is refused, avoiding a
+circular request self-pin. Equal hashes do not erase independently named roles;
+an absent path remains a metadata obligation rather than an empty file.
+
+For a kernel author, this catches a wrong or changed selected artifact, conflicting
+alias-target evidence, stale metadata and incomplete request bindings before
+interpreting a debugging result. It does not prove that the kernel's instructions,
+register allocation or arithmetic are correct.
+
+### Follow three independently bounded stages
+
+| Stage | What is bound | What refusal leaves |
+| --- | --- | --- |
+| request bootstrap | Exact chunks, EOF, whole hash, named/descriptor/owner brackets | No adapter dispatch |
+| fixed adapter | The precheck, two-pass historical-form read and postcheck from section 9 | Later phases not-started |
+| report | Bounded serialization and exact-or-refuse writes to prebound FD 1 | Possibly partial capture, not accepted publication |
+
+The final bootstrap guard/resource ledger includes the last pre-dispatch check,
+including its refusal. The report's elapsed origin starts at its first check,
+not before the adapter runs, while the absolute UTC scope stays unchanged.
+A separate report stage is not permission to renew an expired scope.
+
+The first request, adapter or guard failure remains primary when cleanup or
+reporting also fails. Attempted reservations survive denial. A short or throwing
+stream write is not retried and may leave an unknown partial capture. Descriptor
+cleanup after denial does not authorize another input read or output write.
+
+### Qualify a fresh filesystem seam separately
+
+The root-owned fixture harness prepares a 65,537-byte target, its exact relative
+alias, an observed empty file and a separate absent name. It reads individually
+pinned runtime/source/terminal inputs before and after the child, including all
+six identity fields and ownership; restored bytes with changed mtime/ctime refuse.
+It creates a new private output directory, opens stdout before binding its
+identity as FD 1, and launches only the fixed Node entry with exactly
+`LANG=C`, `LC_ALL=C` and `PATH=/usr/bin:/bin`. Do not add a shell redirection
+that replaces the bound descriptor afterward.
+
+That opt-in qualification harness has now passed on the fresh synthetic fixture;
+it is not a production debugger launcher. Root completely read 12 named regular
+files totaling 451,889 bytes, including provenance and fixture data as well as
+the six output roles. The alias link text was exactly `target.bin`, the absent
+name was observed absent, and all 28 selected runtime/source/terminal domains
+retained their exact before/after identities. The regular empty file and empty
+stderr were observed files, not missing-evidence substitutes.
+
+Harness setup, Node/ELF loader, resource probes, inherited descriptors,
+watchdog and complete readback are separate from the package's content-provider
+budget. Polling captures is not a hard per-write cap or an independent child RSS
+limit. A private-directory identity bracket is not global writer exclusion.
+
+Keep six output roles explicit: reader-observation-temporary,
+reader-observation-final, outer-receipt, outer-stdout, outer-stderr and
+root-readback. The retained temporary and final evidence must be read completely,
+along with captures and the outer receipt; root also checks the final result.
+The serialized summary is intent, not proof of its own later write or readback.
+An exit code alone does not replace those complete observations. Scope expiry,
+an uncertain close or external kill can leave evidence unwritten or unavailable.
+
+The synthetic harness never refreshes stale historical pins or activates the
+historical operation. All fourteen operational evidence obligations remain
+external. Source-qualified controls, an actual fresh-fixture CLI run and
+repository publication must retain their separate receipts and source pins.
+
+No GDB, attach, inferior, GPU dispatch or physical capture is provided here.
+This does not produce a VGPR heatmap, LDS-bank sample or live visualization and
+does not renew expired native coordination. V4 remains open; accepted exits
+remain M1/V1/V2/U1/U2/U3 (6/18). No global compiler pin or public support gate changes.
