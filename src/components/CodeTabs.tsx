@@ -78,9 +78,7 @@ export function CodeTabs({
     const next =
       (currentVisibleIndex + delta + visibleTabs.length) % visibleTabs.length;
     const nextSourceIndex = visibleTabs[next].sourceIndex;
-    const tab = event.currentTarget.querySelector<HTMLButtonElement>(
-      `#code-tab-${nextSourceIndex}`,
-    );
+    const tab = event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next];
     if (tab) selectTab(nextSourceIndex, tab);
   };
 
