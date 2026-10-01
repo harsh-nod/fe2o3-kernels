@@ -1,6 +1,7 @@
 import advancedAttentionSource from "../../examples/gfx950_advanced_attention/gfx950_advanced_attention.hip?raw";
 import advancedAttentionAblation from "../../examples/gfx950_advanced_attention/src/ablation.rs?raw";
 import advancedAttentionRustKernel from "../../examples/gfx950_advanced_attention/src/kernel.rs?raw";
+import advancedAttentionBaseline from "../../examples/gfx950_advanced_attention/src/kda_baseline.rs?raw";
 import advancedAttentionRustReference from "../../examples/gfx950_advanced_attention/src/reference.rs?raw";
 import advancedAttentionRustContract from "../../examples/gfx950_advanced_attention/src/lib.rs?raw";
 import advancedAttentionBuild from "../../examples/gfx950_advanced_attention/build_and_test.sh?raw";
@@ -184,6 +185,7 @@ interface AdvancedLessonSpec {
   };
   glossary: string[];
   variantSources?: VariantSourceSpec[];
+  additionalTabs?: CodeTab[];
 }
 
 interface VariantSourceSpec {
@@ -558,6 +560,7 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   ];
   const performance = advancedPerformanceTabFor(spec.id);
   if (performance) tabs.push(performance);
+  tabs.push(...(spec.additionalTabs ?? []));
   return tabs;
 }
 
@@ -985,6 +988,18 @@ const advancedLessons = [
     bundle: "attention",
     sourceRole:
       "exact matrix-state KDA decode and WY/UT chunkwise-prefill teaching kernels",
+    additionalTabs: [{
+      kind: "kernel",
+      label: "Baseline source [SOURCE-ONLY]",
+      language: "rust",
+      code: advancedAttentionBaseline,
+      sourcePath: "examples/gfx950_advanced_attention/src/kda_baseline.rs",
+      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceSha256: "44a5f7b196b4a62bf197cb694290b7a71db8f2d9c168b3fa3b018c725eae2455",
+      sourceDigestScope: "file",
+      explanatory: false,
+      notice: "Exact whole-file compiler-fixture source. The declarations are separate feature-selected alternatives: kernel-kda-decode-baseline-v1 or kernel-kda-prefill-baseline-v1, with default features disabled, never both together. Source association only: this tab records no fresh site-local build, simulation, artifact, generated-host, KFD or hardware result and qualifies no SIMT/tile pair. Historical evidence in the other tabs retains its original source pins.",
+    }],
     rustSymbols: ["gfx950_kda_decode", "gfx950_kda_chunkwise_prefill"],
     rustExcerptSha256:
       "2f6be28d762205ac3dc82434e9151748da69b4587d3fb13feecf1b0b99f468c0",

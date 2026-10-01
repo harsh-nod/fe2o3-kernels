@@ -1,9 +1,11 @@
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { evidenceCatalog, tabEvidenceSource } from "../src/content/evidence-catalog";
 import { lessons } from "../src/content/curriculum";
 import type { CodeTab } from "../src/content/model";
 import { validateSourceEvidence } from "../scripts/source-evidence";
+import { authorFacingCode } from "../src/lib/kernel-authoring";
 
 const wholeFileTabs = lessons.flatMap((lesson) =>
   lesson.tabs.filter((tab) => tab.sourceDigestScope === "file")
@@ -71,12 +73,13 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(16);
+    expect(wholeFileTabs).toHaveLength(17);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
       "examples/flash_attention_general_v1/src/kernel.rs",
       "examples/gemm_autoresearch_v1/src/kernel.rs",
       "examples/gfx950_advanced_attention/src/ablation.rs",
+      "examples/gfx950_advanced_attention/src/kda_baseline.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
@@ -98,6 +101,55 @@ describe("evidence source digest scopes", () => {
       expect(evidenceCatalog.sources).toContainEqual(source);
       expect(() => validateSourceEvidence(source, Buffer.from(tab.code))).not.toThrow();
     }
+  });
+
+  it("appends independently pinned KDA baseline source without changing historical tabs", () => {
+    const lesson = lessons.find((candidate) => candidate.id === "gfx950-kda-gdn-linear-attention")!;
+    expect(lesson.tabs).toHaveLength(7);
+    expect(lesson.tabs.slice(0, 6).map((tab) => [
+      tab.label,
+      createHash("sha256").update(authorFacingCode(tab).code).digest("hex"),
+    ])).toEqual([
+      ["Rust kernel", "2f6be28d762205ac3dc82434e9151748da69b4587d3fb13feecf1b0b99f468c0"],
+      ["Safe CPU reference", "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d"],
+      ["Proof obligations", "395429340c6942b667dfe421a8ed268b77c0bcd3d084eef4e27860568e3257e2"],
+      ["Run and inspect", "97213f2e63ecd3f271637ebfe147627a34194b2840528827bd06ab85885b1cf4"],
+      ["Evidence record", "2dd641759e7231648f1b4a68581e0d36d4244089445ba96a6c88c03ffadc477c"],
+      ["Performance", "d60da3b81b34709cab02880581cd5da27850e60f308a8a260dd982eb42f35653"],
+    ]);
+    expect(lesson.tabs.slice(0, 2).map((tab) => tab.sourceCommit)).toEqual([
+      "3d10825df93a86644cc5a5b006cadd45f71afb91",
+      "3d10825df93a86644cc5a5b006cadd45f71afb91",
+    ]);
+    const tab = lesson.tabs[6];
+    expect(tab).toMatchObject({
+      kind: "kernel",
+      label: "Baseline source [SOURCE-ONLY]",
+      language: "rust",
+      sourcePath: "examples/gfx950_advanced_attention/src/kda_baseline.rs",
+      sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+      sourceSha256: "44a5f7b196b4a62bf197cb694290b7a71db8f2d9c168b3fa3b018c725eae2455",
+      sourceDigestScope: "file",
+      explanatory: false,
+    });
+    const source = readFileSync(`${process.cwd()}/${tab.sourcePath}`, "utf8");
+    expect(tab.code).toBe(source);
+    expect(Buffer.byteLength(source)).toBe(10258);
+    expect(createHash("sha256").update(source).digest("hex")).toBe(tab.sourceSha256);
+    expect(tab.sourceFragments).toBeUndefined();
+    expect(tab.evidenceId).toBeUndefined();
+    expect(tab.notice).toContain("Source association only");
+    expect(tab.notice).toContain("qualifies no SIMT/tile pair");
+    for (const [feature, symbol] of [
+      ["kernel-kda-decode-baseline-v1", "gfx950_kda_decode"],
+      ["kernel-kda-prefill-baseline-v1", "gfx950_kda_chunkwise_prefill"],
+    ]) {
+      expect(tab.code).toContain(`#[cfg(feature = "${feature}")]`);
+      expect(tab.code.split(`pub fn ${symbol}(`)).toHaveLength(2);
+      expect(tab.notice).toContain(feature);
+    }
+    expect(tab.notice).toContain("default features disabled, never both together");
+    expect(() => validateSourceEvidence(tabEvidenceSource(lesson.id, tab)!, Buffer.from(source))).not.toThrow();
   });
 
   it.each(wholeFileTabs)("rejects changed whole-file display bytes: $tab.sourcePath", ({ lessonId, tab }) => {
