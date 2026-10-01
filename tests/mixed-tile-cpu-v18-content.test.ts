@@ -351,7 +351,7 @@ it("selects captured workflow inputs through hashed logical roles without assumi
     const preflight = spawnSync("bash", [join(historical, "workflow.sh")], {
       cwd: temporary, encoding: "utf8", timeout: 10_000,
       env: { ...process.env, PATH: temporary + ":" + process.env.PATH,
-        TUTORIALS: fileURLToPath(new URL("../", import.meta.url)), CARGO_TARGET_DIR: target,
+        TUTORIALS: process.cwd(), CARGO_TARGET_DIR: target,
         MIXED_TILE_CAPTURE_DIR: fresh, MIXED_TILE_CAPTURE_RECEIPT: join(fresh, capture.collector.path) },
     });
     expect(preflight.status).not.toBe(0);
@@ -362,7 +362,7 @@ it("selects captured workflow inputs through hashed logical roles without assumi
     const dirty = spawnSync("bash", [join(historical, "workflow.sh")], {
       cwd: temporary, encoding: "utf8", timeout: 10_000,
       env: { ...process.env, PATH: temporary + ":" + process.env.PATH,
-        TUTORIALS: fileURLToPath(new URL("../", import.meta.url)), CARGO_TARGET_DIR: target,
+        TUTORIALS: process.cwd(), CARGO_TARGET_DIR: target,
         MIXED_TILE_CAPTURE_DIR: fresh, MIXED_TILE_CAPTURE_RECEIPT: join(fresh, capture.collector.path) },
     });
     expect(dirty.status).not.toBe(0);
