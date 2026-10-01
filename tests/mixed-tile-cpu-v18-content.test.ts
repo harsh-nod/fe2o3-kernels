@@ -8,6 +8,11 @@ import { gunzipSync } from "node:zlib";
 import { expect, it } from "vitest";
 import { lessons } from "../src/content/curriculum";
 import { associateDebuggerRecords, readMixedTileCpuSummary } from "../src/content/mixed-tile-cpu-evidence";
+import {
+  narrativeRegistrySnapshot,
+  resolveNarrativeEntry,
+  validateNarrativeRegistry,
+} from "../src/content/narrative-registry";
 
 import {
   mixedTileCpuV18,
@@ -38,6 +43,13 @@ const stageLog = (entry: { path: string; encoding: string; rawBytes: number; raw
 };
 
 it("registers the real attributed kernel without replacing existing source tabs or historical pins", () => {
+  const narrativeId = "cpu-semantic-simulation/mixed-tile-v18";
+  expect(resolveNarrativeEntry(narrativeId)).toEqual(mixedTileCpuV18);
+  const changed = narrativeRegistrySnapshot();
+  changed[narrativeId].title += " (unreviewed)";
+  expect(validateNarrativeRegistry(changed)).toEqual([
+    narrativeId + ": canonical narrative text drift",
+  ]);
   const lesson = lessons.find((item) => item.id === "cpu-semantic-simulation")!;
   expect(lesson.tabs[6].label).toBe("SIMT row");
   expect(lesson.tabs[7]).toEqual(mixedTileCpuV18Tabs[0]);
