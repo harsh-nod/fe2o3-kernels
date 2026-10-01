@@ -3822,6 +3822,10 @@ tr:last-child td {
   color: var(--text-strong);
 }
 
+.code-tabs button:focus-visible {
+  outline-offset: -3px;
+}
+
 .code-tabs button.active {
   color: var(--accent-strong);
   background: var(--surface);

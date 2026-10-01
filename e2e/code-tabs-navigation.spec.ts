@@ -19,12 +19,16 @@ async function assertSelectedTab(page: Page, list: Locator, index: number, previ
       width: bounds.width, listWidth: list.clientWidth, left: bounds.left, start,
       focused: document.activeElement?.matches(":focus-visible"),
       outline: document.activeElement ? getComputedStyle(document.activeElement).outlineWidth : "0px",
+      outlineOffset: document.activeElement ? getComputedStyle(document.activeElement).outlineOffset : "0px",
       scrollY: window.scrollY, pageWidth: document.documentElement.scrollWidth,
     };
   });
   expect(state.contained, JSON.stringify(state)).toBe(true);
   expect(state.focused).toBe(true);
   expect(Number.parseFloat(state.outline)).toBeGreaterThan(0);
+  if (!focusTarget) {
+    expect(Number.parseFloat(state.outline) + Number.parseFloat(state.outlineOffset)).toBeLessThanOrEqual(0);
+  }
   expect(state.scrollY).toBe(previousY);
   expect(state.pageWidth).toBeLessThanOrEqual(viewport.width);
 }
@@ -62,7 +66,7 @@ for (const theme of ["light", "dark"] as const) {
             await assertSelectedTab(page, list, index, previousY);
           }
         }
-        await list.screenshot({ path: testInfo.outputPath(`${lesson}-${theme}-${proofDetails ? "proof" : "ordinary"}-tabs.png`) });
+        await code.screenshot({ path: testInfo.outputPath(`${lesson}-${theme}-${proofDetails ? "proof" : "ordinary"}-tabs.png`) });
       }
       await list.locator("#" + ordinaryIds.at(-1)).click();
       let toggle = code.getByRole("button", { name: "Hide proof details", exact: true });
