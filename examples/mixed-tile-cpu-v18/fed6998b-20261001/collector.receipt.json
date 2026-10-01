@@ -1,0 +1,5263 @@
+{
+  "actualStage": {
+    "batch": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/scoped-tile-ordinary-fed6998b-20261001-r1",
+    "batchExit": 0,
+    "exit": 0,
+    "finishUtc": "2026-10-01T05:40:04Z",
+    "runner": {
+      "bytes": 6514,
+      "identity": [
+        64513,
+        221821669,
+        33204,
+        1002,
+        1,
+        6514,
+        1790831264549051201,
+        1790831264549051201
+      ],
+      "measurementFinishedUtc": "2026-10-01T05:49:25.016480+00:00",
+      "measurementStartedUtc": "2026-10-01T05:49:25.016346+00:00",
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/run-scoped-tile-ordinary-source-fed6998b-owned-session-v3-20261001.sh",
+      "role": "reviewed stage runner",
+      "sha256": "1649fa0cdee2eaa87c1aee3181ba2c00474217dc5edb39ae55a916f2f8e4073a",
+      "timing": "post-run measurement only"
+    },
+    "stage": "01-public-mixed-cpu-cli",
+    "startUtc": "2026-10-01T05:35:49Z",
+    "supervisor": {
+      "bytes": 6154,
+      "identity": [
+        64513,
+        221821666,
+        33204,
+        1002,
+        1,
+        6154,
+        1790831264549051201,
+        1790831264549051201
+      ],
+      "measurementFinishedUtc": "2026-10-01T05:49:25.016552+00:00",
+      "measurementStartedUtc": "2026-10-01T05:49:25.016483+00:00",
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/owned-session-supervisor-v3-20261001.py",
+      "role": "reviewed owned-process supervisor",
+      "sha256": "759e65de1acd85cf5e580f13119fae4fef63aff8b8426a8625df693d89d16f4c",
+      "timing": "post-run measurement only"
+    }
+  },
+  "archiveDirectory": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/ordinary-cpu-cli-fed6998b-20261001-r1-artifacts",
+  "archiveFileBytes": 666550,
+  "archiveFileCount": 243,
+  "archiveRoster": [
+    {
+      "bytes": 1287,
+      "path": "blocked-0.request.json",
+      "sha256": "627a39af6d3a2040523eb77a0ffe73dce62644962741dca87667998857b22668"
+    },
+    {
+      "bytes": 2059,
+      "path": "blocked-0.result.json",
+      "sha256": "efc0b35afc4794fdcb2cf769c55de87b2c774e7f7f1423991396f2ca0f59c00d"
+    },
+    {
+      "bytes": 1295,
+      "path": "blocked-1.request.json",
+      "sha256": "903985da2b17283071296cc74ddb1f981ac04c6caeef356aef7917722931745f"
+    },
+    {
+      "bytes": 2067,
+      "path": "blocked-1.result.json",
+      "sha256": "2f4d8538f0dcf17de4faa489e610835007e03cb28a0c7728ea8223e1d3b68897"
+    },
+    {
+      "bytes": 3007,
+      "path": "blocked-10.request.json",
+      "sha256": "103453b2ba1b0051b3fba85c38a1ff6741941c0e83acfdadccb8371f6f865498"
+    },
+    {
+      "bytes": 3779,
+      "path": "blocked-10.result.json",
+      "sha256": "c39fb381a2352094861fcd2c962753336cb2fde4963e3ff4f6a72ae66f1da3bb"
+    },
+    {
+      "bytes": 3017,
+      "path": "blocked-11.request.json",
+      "sha256": "1099d4813bacf0beb5b3e670acf1ac54f4d478f25c78ef12977bddb01e833b5e"
+    },
+    {
+      "bytes": 3789,
+      "path": "blocked-11.result.json",
+      "sha256": "5f9877e87fc4bc6ef52f0ca27bee385fcfbf951daf44efc32fb2d21a208b9b44"
+    },
+    {
+      "bytes": 3025,
+      "path": "blocked-12.request.json",
+      "sha256": "cb31dde3c043c1007a356809412b4ec70829ad73690b363123302192caa41eaf"
+    },
+    {
+      "bytes": 3797,
+      "path": "blocked-12.result.json",
+      "sha256": "5f80d7b30f0f04931112bc854925fc80b3883d04b30a66f441037b1292b9ac75"
+    },
+    {
+      "bytes": 3603,
+      "path": "blocked-13.request.json",
+      "sha256": "274bcd7d0a114770d1720eadc29ebe970c4679a08be7f80ebbd10751c4e7c946"
+    },
+    {
+      "bytes": 4378,
+      "path": "blocked-13.result.json",
+      "sha256": "d5fa21ce09e5991bd211b014c4ea06daea419fcc909b15a6a8fcd933487ad99e"
+    },
+    {
+      "bytes": 3603,
+      "path": "blocked-14.request.json",
+      "sha256": "9c4247fb2a431e018117539ec29843fa12a09d7be029bd8c9abe62beffb9cb1d"
+    },
+    {
+      "bytes": 4378,
+      "path": "blocked-14.result.json",
+      "sha256": "e9b128dcc91c394426c937c37c689dac154b4d76d79df1004a2f7cfec053f35f"
+    },
+    {
+      "bytes": 3603,
+      "path": "blocked-15.request.json",
+      "sha256": "a9a3bf83dc9d423337c3a3c127f72e845a01df69b744ad53daa7ae4cf6f40cd7"
+    },
+    {
+      "bytes": 4378,
+      "path": "blocked-15.result.json",
+      "sha256": "e1a208db46e8fcd11d6431286818227f057dce589cfc720c56c284f01ef0292d"
+    },
+    {
+      "bytes": 3603,
+      "path": "blocked-16.request.json",
+      "sha256": "6ad484bfa7b581ab9aa1afa4cdd44e01fec2b80b315c8b43840669738c4da0ef"
+    },
+    {
+      "bytes": 4378,
+      "path": "blocked-16.result.json",
+      "sha256": "e4bc0302a240c81731d2a5127ef0e50e1e8b656b28bf4df648a0b633864b80e4"
+    },
+    {
+      "bytes": 3603,
+      "path": "blocked-17.request.json",
+      "sha256": "c439fc8f63cb765e6d3601bd4fcadba3ba63db6be55c6a4b031ba781fd33ce55"
+    },
+    {
+      "bytes": 4378,
+      "path": "blocked-17.result.json",
+      "sha256": "de6aa267f326b78d77d7505213c7ab8011053ef055944f11c32e097ea00a5419"
+    },
+    {
+      "bytes": 3603,
+      "path": "blocked-18.request.json",
+      "sha256": "00f182f4023b26f1728ff36cedc11546f25a9082b7026b96481209ffff0f8cfc"
+    },
+    {
+      "bytes": 4378,
+      "path": "blocked-18.result.json",
+      "sha256": "cf0488f003c3d4a675633a344c6b3c998f1e0c6a75c5c5b1dbd4187b1ce70e4c"
+    },
+    {
+      "bytes": 3016,
+      "path": "blocked-19.request.json",
+      "sha256": "c9b7630c2f59a7c1a9c8b8b0727d0811d43ca5e5aa1be4639275ff20657c56f3"
+    },
+    {
+      "bytes": 3791,
+      "path": "blocked-19.result.json",
+      "sha256": "d115019c3ae0eef5c021d7f7078bcf20d68943849305cd179162613b99618283"
+    },
+    {
+      "bytes": 1305,
+      "path": "blocked-2.request.json",
+      "sha256": "2a13f520e556b9be195ed474d18fbe3d309f073fb66ecf3f8694cba8af399aa3"
+    },
+    {
+      "bytes": 2077,
+      "path": "blocked-2.result.json",
+      "sha256": "73099bee32f89cf675f80941a00b935841a2df6c1e652ea41fdb3b63cc1cc61f"
+    },
+    {
+      "bytes": 2457,
+      "path": "blocked-20.request.json",
+      "sha256": "ce3f445f2f1e2581a81ed124680fcc99789ddec6ac55c55c69f2722badaa56fb"
+    },
+    {
+      "bytes": 3232,
+      "path": "blocked-20.result.json",
+      "sha256": "d01894f939646635a09fa67d6320e4c0f8435f3e1389a21c81ecd326d84f38e2"
+    },
+    {
+      "bytes": 2449,
+      "path": "blocked-21.request.json",
+      "sha256": "e272a26dc15c2c6376381319bda8900bed74aa8d2fb58538afa78a94adbd09cf"
+    },
+    {
+      "bytes": 3224,
+      "path": "blocked-21.result.json",
+      "sha256": "132af087e53bbf4f90ce773bd83fecc801428a4043e281539b5447bf8f774261"
+    },
+    {
+      "bytes": 1865,
+      "path": "blocked-22.request.json",
+      "sha256": "d02a1b810188566c607b5ef74c9d5891b941dcbb89c1dbc8de7a8d48e2b058ac"
+    },
+    {
+      "bytes": 2640,
+      "path": "blocked-22.result.json",
+      "sha256": "9f6dad38fa35d9096af9dbddf97c56db454ba0b57cd35ad9722c1bd872bcaea2"
+    },
+    {
+      "bytes": 1881,
+      "path": "blocked-23.request.json",
+      "sha256": "ab4b5f24323b75098c3750416871ae0e91705ada9844e25c7a2634ce6b47af1c"
+    },
+    {
+      "bytes": 2656,
+      "path": "blocked-23.result.json",
+      "sha256": "7e515043b829e2e2628417680512b7f90f9c9b8690140a7a652f6422a9501c12"
+    },
+    {
+      "bytes": 3603,
+      "path": "blocked-24.request.json",
+      "sha256": "68868ab4cde873573c3297f31ed4d8d6d00da469019c5f4fed5ed0f9772af011"
+    },
+    {
+      "bytes": 4378,
+      "path": "blocked-24.result.json",
+      "sha256": "0912d8e60b48ed84aef05ac9f907826bf1fb93f12e260fd1b854e0ecb030d7b8"
+    },
+    {
+      "bytes": 1367,
+      "path": "blocked-25.request.json",
+      "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+    },
+    {
+      "bytes": 2139,
+      "path": "blocked-25.result.json",
+      "sha256": "b20897fa90f80e73a48e1d8b9d66cf378c578a7c6616f682930e719716a33316"
+    },
+    {
+      "bytes": 1313,
+      "path": "blocked-3.request.json",
+      "sha256": "8feef5e493651c50ea5e72b322ffc5473de3820c9e2e4a3a411262fc5afd038c"
+    },
+    {
+      "bytes": 2085,
+      "path": "blocked-3.result.json",
+      "sha256": "0e9f16462945c3a9915530c89ff863c47ea4de98b2a039ce0beb0cf3677da38b"
+    },
+    {
+      "bytes": 1854,
+      "path": "blocked-4.request.json",
+      "sha256": "39d8c1041dcab2f6e16fbfce464115c02e946686f9e8ba93f55a089c8ce460f7"
+    },
+    {
+      "bytes": 2626,
+      "path": "blocked-4.result.json",
+      "sha256": "e82e4124ff615841b64cc7012f75d13df3b3c52e2038c4c5d6b980f168b2d7a2"
+    },
+    {
+      "bytes": 1864,
+      "path": "blocked-5.request.json",
+      "sha256": "4fa84cd46513c4664b9546dd9d09b68a86d1bab4758466c9db5cdcfdeb545868"
+    },
+    {
+      "bytes": 2636,
+      "path": "blocked-5.result.json",
+      "sha256": "0c942408fbb39d352b284c493e1470b5046a2acb0d0cd91f9dd67f1993d3d37c"
+    },
+    {
+      "bytes": 1872,
+      "path": "blocked-6.request.json",
+      "sha256": "d24b9759fd0b891971554455b835cd7ddf2ddd2e9a248a851e636d910bfe6760"
+    },
+    {
+      "bytes": 2644,
+      "path": "blocked-6.result.json",
+      "sha256": "e14a58372358b36f5503362fedc593f6c16ad2c0be40b9ce52cc724d90b7f36b"
+    },
+    {
+      "bytes": 2431,
+      "path": "blocked-7.request.json",
+      "sha256": "8b61e64877c2b5170f4a8b69881378d349854f6a9df2fa35275d8e1fbb3899bf"
+    },
+    {
+      "bytes": 3203,
+      "path": "blocked-7.result.json",
+      "sha256": "56f03a8f593a40e78cae368eed0287c691b57c1ecac89441e8dc3a6415df45f2"
+    },
+    {
+      "bytes": 2441,
+      "path": "blocked-8.request.json",
+      "sha256": "bf1d7bc23b2c342395831e2cdd31c6a24bae135191c5b7932f54126529ce762a"
+    },
+    {
+      "bytes": 3213,
+      "path": "blocked-8.result.json",
+      "sha256": "e95e987e8f301c5256d608a78132a539802e3ba816dfa22fed5caa9990722df5"
+    },
+    {
+      "bytes": 2449,
+      "path": "blocked-9.request.json",
+      "sha256": "f8135e2204718b7da4b72970f6433dc3e3d15b81332fb90f46bc4cebfe199cee"
+    },
+    {
+      "bytes": 3221,
+      "path": "blocked-9.result.json",
+      "sha256": "c0ca3fdf1e1dc2b3d544c69b6f5cc7559804c40ae9dc112a8c8dc4575923b807"
+    },
+    {
+      "bytes": 2518,
+      "path": "blocked-debug.requests.jsonl",
+      "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-debug.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 58770,
+      "path": "blocked-debug.stdout",
+      "sha256": "2164484a675e3a17ce0ca30b7e7df5c1004757ae13d354ad2456b17817d554f1"
+    },
+    {
+      "bytes": 5408,
+      "path": "blocked-export.stderr",
+      "sha256": "1c87345e008d22abcf1eca2d360e843377fb1de6f7a7f9023637be95cf73ef7e"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-export.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 226,
+      "path": "blocked-forbidden-schedule.stderr",
+      "sha256": "784e988242302cadd9c3c4981cc2b30fe0d9c1b2e37150a4408bdde52bc4d1be"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-forbidden-schedule.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-inventory.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-inventory.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-0.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-10.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-10.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-11.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-11.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-12.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-12.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-13.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-13.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-14.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-14.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-15.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-15.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-16.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-16.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-17.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-17.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-18.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-18.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-19.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-19.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-20.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-20.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-21.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-21.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-22.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-22.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-23.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-23.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-24.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-24.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-25.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-25.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-3.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-4.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-4.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-5.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-5.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-6.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-6.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-7.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-7.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-8.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-8.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-9.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-sim-9.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 220,
+      "path": "blocked-wave32.stderr",
+      "sha256": "6e6a26cb3f6e42cd072ce19fa46894b553195df6e8395f5c668533b8b00333a2"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-wave32.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1369,
+      "path": "blocked-wrong-base.json",
+      "sha256": "b91b4bc92ae6afaae5fdbef407b2c61370a915638959deb23ad87852ad397daa"
+    },
+    {
+      "bytes": 159,
+      "path": "blocked-wrong-base.stderr",
+      "sha256": "9c5a156e34a500daecede2d10c6bbc947a6234c2b6f3a8f4aac63b24f3a1e389"
+    },
+    {
+      "bytes": 0,
+      "path": "blocked-wrong-base.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1748,
+      "path": "blocked.inventory.json",
+      "sha256": "7c1b24955b952ac044f330fdb936ec5ce017d75633cf29486748ce08ac8d5ee3"
+    },
+    {
+      "bytes": 4766,
+      "path": "blocked.kir",
+      "sha256": "0dee3a153e52828b3ad43d8a27c02cfc5d563b8781507601ea5ca0ff8cb79316"
+    },
+    {
+      "bytes": 37243,
+      "path": "build-public-clis.stderr",
+      "sha256": "2363eda1940ba5e458fd7498ebeeb6f52a01256f1395310adc9263e8b8238fe3"
+    },
+    {
+      "bytes": 173088,
+      "path": "build-public-clis.stdout",
+      "sha256": "57ad2cc6e0166a36cc3365a6700dfc53d6f092894fc509d47e8b4fc5e909b684"
+    },
+    {
+      "bytes": 1287,
+      "path": "striped-0.request.json",
+      "sha256": "627a39af6d3a2040523eb77a0ffe73dce62644962741dca87667998857b22668"
+    },
+    {
+      "bytes": 2059,
+      "path": "striped-0.result.json",
+      "sha256": "aed1176ab87aa4a92ccf3377ea1cc464f80a7aac5dca4b570639e59feb7ef7c3"
+    },
+    {
+      "bytes": 1295,
+      "path": "striped-1.request.json",
+      "sha256": "903985da2b17283071296cc74ddb1f981ac04c6caeef356aef7917722931745f"
+    },
+    {
+      "bytes": 2067,
+      "path": "striped-1.result.json",
+      "sha256": "a14cc6593b6bb8c7761e551ad8e5c7c0bbdfeaba970c3ac60297d885779f1ce9"
+    },
+    {
+      "bytes": 3007,
+      "path": "striped-10.request.json",
+      "sha256": "103453b2ba1b0051b3fba85c38a1ff6741941c0e83acfdadccb8371f6f865498"
+    },
+    {
+      "bytes": 3779,
+      "path": "striped-10.result.json",
+      "sha256": "653cfadbe7757b9ac023b93cdb4679521e352b1f1feab108ec0bcad52617306e"
+    },
+    {
+      "bytes": 3017,
+      "path": "striped-11.request.json",
+      "sha256": "1099d4813bacf0beb5b3e670acf1ac54f4d478f25c78ef12977bddb01e833b5e"
+    },
+    {
+      "bytes": 3789,
+      "path": "striped-11.result.json",
+      "sha256": "3029c5b4ab2b92e6c8380d0ff3290ba1066c9c587fb26c33bf9990c2662fae3e"
+    },
+    {
+      "bytes": 3025,
+      "path": "striped-12.request.json",
+      "sha256": "cb31dde3c043c1007a356809412b4ec70829ad73690b363123302192caa41eaf"
+    },
+    {
+      "bytes": 3797,
+      "path": "striped-12.result.json",
+      "sha256": "7c183b18a85296e272cc639f43e05daf447f656d149ec4a48a0a2361380c1f2b"
+    },
+    {
+      "bytes": 3603,
+      "path": "striped-13.request.json",
+      "sha256": "274bcd7d0a114770d1720eadc29ebe970c4679a08be7f80ebbd10751c4e7c946"
+    },
+    {
+      "bytes": 4378,
+      "path": "striped-13.result.json",
+      "sha256": "50a9184352d6988e9486f420c10c7e6b781ad9e8b1bda3ad86330467b5548cc1"
+    },
+    {
+      "bytes": 3603,
+      "path": "striped-14.request.json",
+      "sha256": "9c4247fb2a431e018117539ec29843fa12a09d7be029bd8c9abe62beffb9cb1d"
+    },
+    {
+      "bytes": 4378,
+      "path": "striped-14.result.json",
+      "sha256": "d31d8a777eb55c59cebefbc11b74c6256d2b1cbe1448219cc406137a4a476548"
+    },
+    {
+      "bytes": 3603,
+      "path": "striped-15.request.json",
+      "sha256": "a9a3bf83dc9d423337c3a3c127f72e845a01df69b744ad53daa7ae4cf6f40cd7"
+    },
+    {
+      "bytes": 4378,
+      "path": "striped-15.result.json",
+      "sha256": "73656c3d792f85117e8e1e459fb23c97288bd1967a8737f4111461769f044010"
+    },
+    {
+      "bytes": 3603,
+      "path": "striped-16.request.json",
+      "sha256": "6ad484bfa7b581ab9aa1afa4cdd44e01fec2b80b315c8b43840669738c4da0ef"
+    },
+    {
+      "bytes": 4378,
+      "path": "striped-16.result.json",
+      "sha256": "62102bfd81cf715af3cc95561bbf3e6a228da82a5e2d8f172e6f50a49c872d32"
+    },
+    {
+      "bytes": 3603,
+      "path": "striped-17.request.json",
+      "sha256": "c439fc8f63cb765e6d3601bd4fcadba3ba63db6be55c6a4b031ba781fd33ce55"
+    },
+    {
+      "bytes": 4378,
+      "path": "striped-17.result.json",
+      "sha256": "e33271cef133bdf7226122f25d4426a2640ca375c65f1cd07c0b67b3d4060001"
+    },
+    {
+      "bytes": 3603,
+      "path": "striped-18.request.json",
+      "sha256": "00f182f4023b26f1728ff36cedc11546f25a9082b7026b96481209ffff0f8cfc"
+    },
+    {
+      "bytes": 4378,
+      "path": "striped-18.result.json",
+      "sha256": "24700d130d7529790f3a8208664927eba4005cdd50d081f059ec89d0224cc22b"
+    },
+    {
+      "bytes": 3016,
+      "path": "striped-19.request.json",
+      "sha256": "c9b7630c2f59a7c1a9c8b8b0727d0811d43ca5e5aa1be4639275ff20657c56f3"
+    },
+    {
+      "bytes": 3791,
+      "path": "striped-19.result.json",
+      "sha256": "a06d5246d6663ab1b7fdee043f8aa1abfe6517f99e1890c54e04b85862fd6a30"
+    },
+    {
+      "bytes": 1305,
+      "path": "striped-2.request.json",
+      "sha256": "2a13f520e556b9be195ed474d18fbe3d309f073fb66ecf3f8694cba8af399aa3"
+    },
+    {
+      "bytes": 2077,
+      "path": "striped-2.result.json",
+      "sha256": "2eb413746f2e2f61e395154e844a2aa1e2c5a25d38e491b41eba9b2175d985d3"
+    },
+    {
+      "bytes": 2457,
+      "path": "striped-20.request.json",
+      "sha256": "ce3f445f2f1e2581a81ed124680fcc99789ddec6ac55c55c69f2722badaa56fb"
+    },
+    {
+      "bytes": 3232,
+      "path": "striped-20.result.json",
+      "sha256": "2c16daa53b8bcda09b79e77068b5cbbd9c72beca198ae815147ba4b3be81ed52"
+    },
+    {
+      "bytes": 2449,
+      "path": "striped-21.request.json",
+      "sha256": "e272a26dc15c2c6376381319bda8900bed74aa8d2fb58538afa78a94adbd09cf"
+    },
+    {
+      "bytes": 3224,
+      "path": "striped-21.result.json",
+      "sha256": "f010a3b29c8eee32d28d61afcff332cf0f18951951a07ca2bf484124f3e1dca8"
+    },
+    {
+      "bytes": 1865,
+      "path": "striped-22.request.json",
+      "sha256": "d02a1b810188566c607b5ef74c9d5891b941dcbb89c1dbc8de7a8d48e2b058ac"
+    },
+    {
+      "bytes": 2640,
+      "path": "striped-22.result.json",
+      "sha256": "bb208129f874fad552a802416541eb3c21359d70e0518dd8028b4daabd315599"
+    },
+    {
+      "bytes": 1881,
+      "path": "striped-23.request.json",
+      "sha256": "ab4b5f24323b75098c3750416871ae0e91705ada9844e25c7a2634ce6b47af1c"
+    },
+    {
+      "bytes": 2656,
+      "path": "striped-23.result.json",
+      "sha256": "b2dcced6570b4d5bc154401248d43aba1b8f7f491511a3d208a3b33bd3197c5f"
+    },
+    {
+      "bytes": 3603,
+      "path": "striped-24.request.json",
+      "sha256": "68868ab4cde873573c3297f31ed4d8d6d00da469019c5f4fed5ed0f9772af011"
+    },
+    {
+      "bytes": 4378,
+      "path": "striped-24.result.json",
+      "sha256": "0fdc051eaa9595b871be55279ae7bfb87d0d5241cbc3e4de7e13a9183363799d"
+    },
+    {
+      "bytes": 1367,
+      "path": "striped-25.request.json",
+      "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+    },
+    {
+      "bytes": 2139,
+      "path": "striped-25.result.json",
+      "sha256": "e8b40f6cb719f783fe5c5cd9fda9883b3b7bc3404942b971ac67c2585fd8e9fe"
+    },
+    {
+      "bytes": 1313,
+      "path": "striped-3.request.json",
+      "sha256": "8feef5e493651c50ea5e72b322ffc5473de3820c9e2e4a3a411262fc5afd038c"
+    },
+    {
+      "bytes": 2085,
+      "path": "striped-3.result.json",
+      "sha256": "dae3322929baf18e3811548018c7d35ee2dab22c176978a7f287eac4e832109f"
+    },
+    {
+      "bytes": 1854,
+      "path": "striped-4.request.json",
+      "sha256": "39d8c1041dcab2f6e16fbfce464115c02e946686f9e8ba93f55a089c8ce460f7"
+    },
+    {
+      "bytes": 2626,
+      "path": "striped-4.result.json",
+      "sha256": "b778a696515499c1a951dcf1a3ddadc27c97770620790ec7b838f770c441eb56"
+    },
+    {
+      "bytes": 1864,
+      "path": "striped-5.request.json",
+      "sha256": "4fa84cd46513c4664b9546dd9d09b68a86d1bab4758466c9db5cdcfdeb545868"
+    },
+    {
+      "bytes": 2636,
+      "path": "striped-5.result.json",
+      "sha256": "b51e2bd0fc331d14de8c5f65d7c156348a927a45c098532cd961a1acf80f619d"
+    },
+    {
+      "bytes": 1872,
+      "path": "striped-6.request.json",
+      "sha256": "d24b9759fd0b891971554455b835cd7ddf2ddd2e9a248a851e636d910bfe6760"
+    },
+    {
+      "bytes": 2644,
+      "path": "striped-6.result.json",
+      "sha256": "25654c7b89b6957a55ae0c38888a85e6bbae5c9a87bdf217cf398cd5b9485d62"
+    },
+    {
+      "bytes": 2431,
+      "path": "striped-7.request.json",
+      "sha256": "8b61e64877c2b5170f4a8b69881378d349854f6a9df2fa35275d8e1fbb3899bf"
+    },
+    {
+      "bytes": 3203,
+      "path": "striped-7.result.json",
+      "sha256": "f8a1ccdc28be09a8376250ec097472be09cae69887043d18745f8ac53e818481"
+    },
+    {
+      "bytes": 2441,
+      "path": "striped-8.request.json",
+      "sha256": "bf1d7bc23b2c342395831e2cdd31c6a24bae135191c5b7932f54126529ce762a"
+    },
+    {
+      "bytes": 3213,
+      "path": "striped-8.result.json",
+      "sha256": "b8a7317c5b0b0f80a25a86dd1398ffdea0307035379727abd0d9e0e9d16a1034"
+    },
+    {
+      "bytes": 2449,
+      "path": "striped-9.request.json",
+      "sha256": "f8135e2204718b7da4b72970f6433dc3e3d15b81332fb90f46bc4cebfe199cee"
+    },
+    {
+      "bytes": 3221,
+      "path": "striped-9.result.json",
+      "sha256": "cdd8f099bfbfd130e3339381a51eb2336162ab3667f5efeaa6af44844b6f3c0d"
+    },
+    {
+      "bytes": 2518,
+      "path": "striped-debug.requests.jsonl",
+      "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-debug.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 64748,
+      "path": "striped-debug.stdout",
+      "sha256": "9f0849420dddc7f0c88b2949613a63e90bdf3f603bc5561586c796681097346b"
+    },
+    {
+      "bytes": 1917,
+      "path": "striped-export.stderr",
+      "sha256": "4065ed0499709565095e9e3b4bb861bbd7a2306f3e98a6a368a3951d273699cb"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-export.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 226,
+      "path": "striped-forbidden-schedule.stderr",
+      "sha256": "784e988242302cadd9c3c4981cc2b30fe0d9c1b2e37150a4408bdde52bc4d1be"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-forbidden-schedule.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-inventory.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-inventory.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-0.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-10.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-10.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-11.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-11.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-12.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-12.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-13.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-13.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-14.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-14.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-15.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-15.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-16.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-16.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-17.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-17.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-18.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-18.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-19.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-19.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-20.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-20.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-21.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-21.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-22.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-22.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-23.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-23.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-24.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-24.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-25.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-25.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-3.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-4.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-4.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-5.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-5.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-6.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-6.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-7.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-7.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-8.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-8.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-9.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-sim-9.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 220,
+      "path": "striped-wave32.stderr",
+      "sha256": "6e6a26cb3f6e42cd072ce19fa46894b553195df6e8395f5c668533b8b00333a2"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-wave32.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1369,
+      "path": "striped-wrong-base.json",
+      "sha256": "b91b4bc92ae6afaae5fdbef407b2c61370a915638959deb23ad87852ad397daa"
+    },
+    {
+      "bytes": 159,
+      "path": "striped-wrong-base.stderr",
+      "sha256": "9c5a156e34a500daecede2d10c6bbc947a6234c2b6f3a8f4aac63b24f3a1e389"
+    },
+    {
+      "bytes": 0,
+      "path": "striped-wrong-base.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1748,
+      "path": "striped.inventory.json",
+      "sha256": "bb192cc587944f60e8ffdfa4adc40c2b9833e6237224959483272c003e1dc5dc"
+    },
+    {
+      "bytes": 4766,
+      "path": "striped.kir",
+      "sha256": "c9886c9036c96cd80d16fab1fb3ade16f7d88c01d3d389e6c22b1babdbafa8ee"
+    },
+    {
+      "bytes": 1484,
+      "path": "summary.json",
+      "sha256": "016bec1530bf00d33c8a20dd9b4acca35446398ba0a3ad40e720beba1b2c6d32"
+    }
+  ],
+  "archiveRosterSha256": "63e80d57d306466d75c04291ccdad0d626e934d698c6105cdf96f3f47ea4aeef",
+  "authority": "none",
+  "collectionFinishedUtc": "2026-10-01T05:49:25.343161+00:00",
+  "collectorSha256": "ff846e92e126cf4f52236095fc6bab19a6d7636ab00553bd635a217d4c0a743f",
+  "currentBackend": {
+    "bytes": 615626608,
+    "identity": [
+      64513,
+      223877692,
+      33216,
+      1002,
+      2,
+      615626608,
+      1790832535262758224,
+      1790832535694755674
+    ],
+    "measurementFinishedUtc": "2026-10-01T05:49:25.016325+00:00",
+    "measurementStartedUtc": "2026-10-01T05:49:24.605735+00:00",
+    "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-target/debug/librustc_codegen_fe2o3.so",
+    "role": "current backend cache; no claim this diagnostic loaded it",
+    "sha256": "b097b8e3300f53843a7e6b04a81c37fea253f0bf875ddfd476d89a1c70feeff7",
+    "timing": "post-run measurement only"
+  },
+  "currentTools": [
+    {
+      "bytes": 51125064,
+      "identity": [
+        64513,
+        223878375,
+        33216,
+        1002,
+        2,
+        51125064,
+        1790833131763574960,
+        1790833131793574799
+      ],
+      "measurementFinishedUtc": "2026-10-01T05:49:24.305482+00:00",
+      "measurementStartedUtc": "2026-10-01T05:49:24.269939+00:00",
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-target/debug/fe2o3-kir-sim",
+      "role": "path retained in actual Cargo JSON",
+      "sha256": "2be3ea82a2f53b123c1be1cbddcccae06b0443b06e72f37b8668f85c2f669bdd",
+      "timing": "post-run measurement only"
+    },
+    {
+      "bytes": 432041656,
+      "identity": [
+        64513,
+        223878370,
+        33216,
+        1002,
+        2,
+        432041656,
+        1790833131359577121,
+        1790833131525576233
+      ],
+      "measurementFinishedUtc": "2026-10-01T05:49:24.591074+00:00",
+      "measurementStartedUtc": "2026-10-01T05:49:24.305586+00:00",
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-target/debug/fe2o3-debug",
+      "role": "path retained in actual Cargo JSON",
+      "sha256": "91022da37586327dd22e64db8971f1b49f472a331a5ebfc1dbcd3f700097a1c8",
+      "timing": "post-run measurement only"
+    },
+    {
+      "bytes": 12629496,
+      "identity": [
+        64513,
+        223877753,
+        33216,
+        1002,
+        1,
+        12629496,
+        1790832550110670552,
+        1790832550112670540
+      ],
+      "measurementFinishedUtc": "2026-10-01T05:49:24.601355+00:00",
+      "measurementStartedUtc": "2026-10-01T05:49:24.592182+00:00",
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-target/debug/deps/production_scoped_tile_cpu_driver_v1-5dc6c48d23c30e24",
+      "role": "path emitted by successful Cargo test stage",
+      "sha256": "832c3e4e7f36cd84a3fc1cd5f4099a1fbae6ed31497abad890066258629af803",
+      "timing": "post-run measurement only"
+    },
+    {
+      "bytes": 5214000,
+      "identity": [
+        64513,
+        223877754,
+        33216,
+        1002,
+        2,
+        5214000,
+        1790832550963665514,
+        1790832550981665408
+      ],
+      "measurementFinishedUtc": "2026-10-01T05:49:24.605300+00:00",
+      "measurementStartedUtc": "2026-10-01T05:49:24.601374+00:00",
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-target/debug/fe2o3-export-sim",
+      "role": "current profile sibling; not pre-run tool attestation",
+      "sha256": "4e66bed9f97b1c25baae9a90bfdae82e20c2e9f7d60c605820e25bd9fd65edf2",
+      "timing": "post-run measurement only"
+    },
+    {
+      "bytes": 481600,
+      "identity": [
+        64513,
+        223877744,
+        33216,
+        1002,
+        2,
+        481600,
+        1790832550677667203,
+        1790832550703667050
+      ],
+      "measurementFinishedUtc": "2026-10-01T05:49:24.605719+00:00",
+      "measurementStartedUtc": "2026-10-01T05:49:24.605308+00:00",
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-target/debug/fe2o3-rustc-extract",
+      "role": "current profile sibling; not pre-run tool attestation",
+      "sha256": "be8c3259193a56803eb08519bcbe552bccaec02f1540259fdb57bb31d92ee5c8",
+      "timing": "post-run measurement only"
+    }
+  ],
+  "debuggerEvidence": [
+    {
+      "files": {
+        "debuggerRepliesRaw": {
+          "bytes": 58770,
+          "path": "blocked-debug.stdout",
+          "sha256": "2164484a675e3a17ce0ca30b7e7df5c1004757ae13d354ad2456b17817d554f1"
+        },
+        "debuggerRequestsRaw": {
+          "bytes": 2518,
+          "path": "blocked-debug.requests.jsonl",
+          "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+        },
+        "inventory": {
+          "bytes": 1748,
+          "path": "blocked.inventory.json",
+          "sha256": "7c1b24955b952ac044f330fdb936ec5ce017d75633cf29486748ce08ac8d5ee3"
+        },
+        "kir": {
+          "bytes": 4766,
+          "path": "blocked.kir",
+          "sha256": "0dee3a153e52828b3ad43d8a27c02cfc5d563b8781507601ea5ca0ff8cb79316"
+        },
+        "request": {
+          "bytes": 1367,
+          "path": "blocked-25.request.json",
+          "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+        },
+        "result": {
+          "bytes": 2139,
+          "path": "blocked-25.result.json",
+          "sha256": "b20897fa90f80e73a48e1d8b9d66cf378c578a7c6616f682930e719716a33316"
+        }
+      },
+      "order": "blocked",
+      "selection": {
+        "basis": "successful source-bound test selects ordinal 25 for debug::run; not filename-count inference",
+        "harnessPath": "crates/rustc-codegen-fe2o3/tests/production_scoped_tile_cpu_driver_v1.rs",
+        "kind": "frozen-production-test-case-ordinal",
+        "ordinal": 25,
+        "sourceHead": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+        "test": "ordinary_mixed_tile_source_executes_public_cpu_cli_paths"
+      }
+    },
+    {
+      "files": {
+        "debuggerRepliesRaw": {
+          "bytes": 64748,
+          "path": "striped-debug.stdout",
+          "sha256": "9f0849420dddc7f0c88b2949613a63e90bdf3f603bc5561586c796681097346b"
+        },
+        "debuggerRequestsRaw": {
+          "bytes": 2518,
+          "path": "striped-debug.requests.jsonl",
+          "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+        },
+        "inventory": {
+          "bytes": 1748,
+          "path": "striped.inventory.json",
+          "sha256": "bb192cc587944f60e8ffdfa4adc40c2b9833e6237224959483272c003e1dc5dc"
+        },
+        "kir": {
+          "bytes": 4766,
+          "path": "striped.kir",
+          "sha256": "c9886c9036c96cd80d16fab1fb3ade16f7d88c01d3d389e6c22b1babdbafa8ee"
+        },
+        "request": {
+          "bytes": 1367,
+          "path": "striped-25.request.json",
+          "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+        },
+        "result": {
+          "bytes": 2139,
+          "path": "striped-25.result.json",
+          "sha256": "e8b40f6cb719f783fe5c5cd9fda9883b3b7bc3404942b971ac67c2585fd8e9fe"
+        }
+      },
+      "order": "striped",
+      "selection": {
+        "basis": "successful source-bound test selects ordinal 25 for debug::run; not filename-count inference",
+        "harnessPath": "crates/rustc-codegen-fe2o3/tests/production_scoped_tile_cpu_driver_v1.rs",
+        "kind": "frozen-production-test-case-ordinal",
+        "ordinal": 25,
+        "sourceHead": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+        "test": "ordinary_mixed_tile_source_executes_public_cpu_cli_paths"
+      }
+    }
+  ],
+  "excludedDirectories": [
+    "export-target"
+  ],
+  "hostOracleGate": "Six host-oracle tests have a separate receipt; not counted or attested here.",
+  "originalDirectory": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777",
+  "originalFileIdentities": [
+    {
+      "bytes": 1287,
+      "identity": [
+        64513,
+        223384904,
+        33152,
+        1002,
+        1,
+        1287,
+        1790833197779220073,
+        1790833197779220073
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-0.request.json",
+      "sha256": "627a39af6d3a2040523eb77a0ffe73dce62644962741dca87667998857b22668"
+    },
+    {
+      "bytes": 2059,
+      "identity": [
+        64513,
+        223384907,
+        33152,
+        1002,
+        1,
+        2059,
+        1790833197796219982,
+        1790833197796219982
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-0.result.json",
+      "sha256": "efc0b35afc4794fdcb2cf769c55de87b2c774e7f7f1423991396f2ca0f59c00d"
+    },
+    {
+      "bytes": 1295,
+      "identity": [
+        64513,
+        223384908,
+        33152,
+        1002,
+        1,
+        1295,
+        1790833197801219955,
+        1790833197801219955
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-1.request.json",
+      "sha256": "903985da2b17283071296cc74ddb1f981ac04c6caeef356aef7917722931745f"
+    },
+    {
+      "bytes": 2067,
+      "identity": [
+        64513,
+        223384912,
+        33152,
+        1002,
+        1,
+        2067,
+        1790833197816219874,
+        1790833197817219868
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-1.result.json",
+      "sha256": "2f4d8538f0dcf17de4faa489e610835007e03cb28a0c7728ea8223e1d3b68897"
+    },
+    {
+      "bytes": 3007,
+      "identity": [
+        64513,
+        223384945,
+        33152,
+        1002,
+        1,
+        3007,
+        1790833198035218691,
+        1790833198035218691
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-10.request.json",
+      "sha256": "103453b2ba1b0051b3fba85c38a1ff6741941c0e83acfdadccb8371f6f865498"
+    },
+    {
+      "bytes": 3779,
+      "identity": [
+        64513,
+        223384948,
+        33152,
+        1002,
+        1,
+        3779,
+        1790833198062218545,
+        1790833198062218545
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-10.result.json",
+      "sha256": "c39fb381a2352094861fcd2c962753336cb2fde4963e3ff4f6a72ae66f1da3bb"
+    },
+    {
+      "bytes": 3017,
+      "identity": [
+        64513,
+        223384949,
+        33152,
+        1002,
+        1,
+        3017,
+        1790833198069218507,
+        1790833198069218507
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-11.request.json",
+      "sha256": "1099d4813bacf0beb5b3e670acf1ac54f4d478f25c78ef12977bddb01e833b5e"
+    },
+    {
+      "bytes": 3789,
+      "identity": [
+        64513,
+        223384952,
+        33152,
+        1002,
+        1,
+        3789,
+        1790833198094218372,
+        1790833198094218372
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-11.result.json",
+      "sha256": "5f9877e87fc4bc6ef52f0ca27bee385fcfbf951daf44efc32fb2d21a208b9b44"
+    },
+    {
+      "bytes": 3025,
+      "identity": [
+        64513,
+        223384953,
+        33152,
+        1002,
+        1,
+        3025,
+        1790833198102218329,
+        1790833198102218329
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-12.request.json",
+      "sha256": "cb31dde3c043c1007a356809412b4ec70829ad73690b363123302192caa41eaf"
+    },
+    {
+      "bytes": 3797,
+      "identity": [
+        64513,
+        223384956,
+        33152,
+        1002,
+        1,
+        3797,
+        1790833198127218194,
+        1790833198127218194
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-12.result.json",
+      "sha256": "5f80d7b30f0f04931112bc854925fc80b3883d04b30a66f441037b1292b9ac75"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223384957,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833198135218151,
+        1790833198135218151
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-13.request.json",
+      "sha256": "274bcd7d0a114770d1720eadc29ebe970c4679a08be7f80ebbd10751c4e7c946"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223384960,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833198178217919,
+        1790833198178217919
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-13.result.json",
+      "sha256": "d5fa21ce09e5991bd211b014c4ea06daea419fcc909b15a6a8fcd933487ad99e"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223384961,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833198188217864,
+        1790833198188217864
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-14.request.json",
+      "sha256": "9c4247fb2a431e018117539ec29843fa12a09d7be029bd8c9abe62beffb9cb1d"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223384964,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833198225217665,
+        1790833198226217659
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-14.result.json",
+      "sha256": "e9b128dcc91c394426c937c37c689dac154b4d76d79df1004a2f7cfec053f35f"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223384965,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833198232217627,
+        1790833198232217627
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-15.request.json",
+      "sha256": "a9a3bf83dc9d423337c3a3c127f72e845a01df69b744ad53daa7ae4cf6f40cd7"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223384968,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833198258217486,
+        1790833198259217481
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-15.result.json",
+      "sha256": "e1a208db46e8fcd11d6431286818227f057dce589cfc720c56c284f01ef0292d"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223384969,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833198265217449,
+        1790833198265217449
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-16.request.json",
+      "sha256": "6ad484bfa7b581ab9aa1afa4cdd44e01fec2b80b315c8b43840669738c4da0ef"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223384972,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833198290217314,
+        1790833198291217308
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-16.result.json",
+      "sha256": "e4bc0302a240c81731d2a5127ef0e50e1e8b656b28bf4df648a0b633864b80e4"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223384973,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833198299217265,
+        1790833198299217265
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-17.request.json",
+      "sha256": "c439fc8f63cb765e6d3601bd4fcadba3ba63db6be55c6a4b031ba781fd33ce55"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223384976,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833198323217135,
+        1790833198323217135
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-17.result.json",
+      "sha256": "de6aa267f326b78d77d7505213c7ab8011053ef055944f11c32e097ea00a5419"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223384977,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833198332217087,
+        1790833198332217087
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-18.request.json",
+      "sha256": "00f182f4023b26f1728ff36cedc11546f25a9082b7026b96481209ffff0f8cfc"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223384980,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833198356216957,
+        1790833198357216952
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-18.result.json",
+      "sha256": "cf0488f003c3d4a675633a344c6b3c998f1e0c6a75c5c5b1dbd4187b1ce70e4c"
+    },
+    {
+      "bytes": 3016,
+      "identity": [
+        64513,
+        223384981,
+        33152,
+        1002,
+        1,
+        3016,
+        1790833198365216909,
+        1790833198365216909
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-19.request.json",
+      "sha256": "c9b7630c2f59a7c1a9c8b8b0727d0811d43ca5e5aa1be4639275ff20657c56f3"
+    },
+    {
+      "bytes": 3791,
+      "identity": [
+        64513,
+        223384984,
+        33152,
+        1002,
+        1,
+        3791,
+        1790833198408216676,
+        1790833198408216676
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-19.result.json",
+      "sha256": "d115019c3ae0eef5c021d7f7078bcf20d68943849305cd179162613b99618283"
+    },
+    {
+      "bytes": 1305,
+      "identity": [
+        64513,
+        223384913,
+        33152,
+        1002,
+        1,
+        1305,
+        1790833197824219830,
+        1790833197824219830
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-2.request.json",
+      "sha256": "2a13f520e556b9be195ed474d18fbe3d309f073fb66ecf3f8694cba8af399aa3"
+    },
+    {
+      "bytes": 2077,
+      "identity": [
+        64513,
+        223384916,
+        33152,
+        1002,
+        1,
+        2077,
+        1790833197841219739,
+        1790833197842219733
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-2.result.json",
+      "sha256": "73099bee32f89cf675f80941a00b935841a2df6c1e652ea41fdb3b63cc1cc61f"
+    },
+    {
+      "bytes": 2457,
+      "identity": [
+        64513,
+        223384985,
+        33152,
+        1002,
+        1,
+        2457,
+        1790833198419216617,
+        1790833198419216617
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-20.request.json",
+      "sha256": "ce3f445f2f1e2581a81ed124680fcc99789ddec6ac55c55c69f2722badaa56fb"
+    },
+    {
+      "bytes": 3232,
+      "identity": [
+        64513,
+        223384988,
+        33152,
+        1002,
+        1,
+        3232,
+        1790833198458216406,
+        1790833198459216401
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-20.result.json",
+      "sha256": "d01894f939646635a09fa67d6320e4c0f8435f3e1389a21c81ecd326d84f38e2"
+    },
+    {
+      "bytes": 2449,
+      "identity": [
+        64513,
+        223384989,
+        33152,
+        1002,
+        1,
+        2449,
+        1790833198462216384,
+        1790833198462216384
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-21.request.json",
+      "sha256": "e272a26dc15c2c6376381319bda8900bed74aa8d2fb58538afa78a94adbd09cf"
+    },
+    {
+      "bytes": 3224,
+      "identity": [
+        64513,
+        223384992,
+        33152,
+        1002,
+        1,
+        3224,
+        1790833198502216168,
+        1790833198503216163
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-21.result.json",
+      "sha256": "132af087e53bbf4f90ce773bd83fecc801428a4043e281539b5447bf8f774261"
+    },
+    {
+      "bytes": 1865,
+      "identity": [
+        64513,
+        223384993,
+        33152,
+        1002,
+        1,
+        1865,
+        1790833198516216093,
+        1790833198516216093
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-22.request.json",
+      "sha256": "d02a1b810188566c607b5ef74c9d5891b941dcbb89c1dbc8de7a8d48e2b058ac"
+    },
+    {
+      "bytes": 2640,
+      "identity": [
+        64513,
+        223384996,
+        33152,
+        1002,
+        1,
+        2640,
+        1790833198541215958,
+        1790833198541215958
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-22.result.json",
+      "sha256": "9f6dad38fa35d9096af9dbddf97c56db454ba0b57cd35ad9722c1bd872bcaea2"
+    },
+    {
+      "bytes": 1881,
+      "identity": [
+        64513,
+        223384997,
+        33152,
+        1002,
+        1,
+        1881,
+        1790833198549215915,
+        1790833198549215915
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-23.request.json",
+      "sha256": "ab4b5f24323b75098c3750416871ae0e91705ada9844e25c7a2634ce6b47af1c"
+    },
+    {
+      "bytes": 2656,
+      "identity": [
+        64513,
+        223385000,
+        33152,
+        1002,
+        1,
+        2656,
+        1790833198578215758,
+        1790833198578215758
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-23.result.json",
+      "sha256": "7e515043b829e2e2628417680512b7f90f9c9b8690140a7a652f6422a9501c12"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385001,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833198582215736,
+        1790833198582215736
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-24.request.json",
+      "sha256": "68868ab4cde873573c3297f31ed4d8d6d00da469019c5f4fed5ed0f9772af011"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385004,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833198624215509,
+        1790833198625215504
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-24.result.json",
+      "sha256": "0912d8e60b48ed84aef05ac9f907826bf1fb93f12e260fd1b854e0ecb030d7b8"
+    },
+    {
+      "bytes": 1367,
+      "identity": [
+        64513,
+        223385005,
+        33152,
+        1002,
+        1,
+        1367,
+        1790833198635215450,
+        1790833198635215450
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-25.request.json",
+      "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+    },
+    {
+      "bytes": 2139,
+      "identity": [
+        64513,
+        223385008,
+        33152,
+        1002,
+        1,
+        2139,
+        1790833198653215353,
+        1790833198653215353
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-25.result.json",
+      "sha256": "b20897fa90f80e73a48e1d8b9d66cf378c578a7c6616f682930e719716a33316"
+    },
+    {
+      "bytes": 1313,
+      "identity": [
+        64513,
+        223384917,
+        33152,
+        1002,
+        1,
+        1313,
+        1790833197846219712,
+        1790833197846219712
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-3.request.json",
+      "sha256": "8feef5e493651c50ea5e72b322ffc5473de3820c9e2e4a3a411262fc5afd038c"
+    },
+    {
+      "bytes": 2085,
+      "identity": [
+        64513,
+        223384920,
+        33152,
+        1002,
+        1,
+        2085,
+        1790833197862219625,
+        1790833197862219625
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-3.result.json",
+      "sha256": "0e9f16462945c3a9915530c89ff863c47ea4de98b2a039ce0beb0cf3677da38b"
+    },
+    {
+      "bytes": 1854,
+      "identity": [
+        64513,
+        223384921,
+        33152,
+        1002,
+        1,
+        1854,
+        1790833197869219587,
+        1790833197869219587
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-4.request.json",
+      "sha256": "39d8c1041dcab2f6e16fbfce464115c02e946686f9e8ba93f55a089c8ce460f7"
+    },
+    {
+      "bytes": 2626,
+      "identity": [
+        64513,
+        223384924,
+        33152,
+        1002,
+        1,
+        2626,
+        1790833197887219490,
+        1790833197887219490
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-4.result.json",
+      "sha256": "e82e4124ff615841b64cc7012f75d13df3b3c52e2038c4c5d6b980f168b2d7a2"
+    },
+    {
+      "bytes": 1864,
+      "identity": [
+        64513,
+        223384925,
+        33152,
+        1002,
+        1,
+        1864,
+        1790833197891219469,
+        1790833197891219469
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-5.request.json",
+      "sha256": "4fa84cd46513c4664b9546dd9d09b68a86d1bab4758466c9db5cdcfdeb545868"
+    },
+    {
+      "bytes": 2636,
+      "identity": [
+        64513,
+        223384928,
+        33152,
+        1002,
+        1,
+        2636,
+        1790833197910219366,
+        1790833197910219366
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-5.result.json",
+      "sha256": "0c942408fbb39d352b284c493e1470b5046a2acb0d0cd91f9dd67f1993d3d37c"
+    },
+    {
+      "bytes": 1872,
+      "identity": [
+        64513,
+        223384929,
+        33152,
+        1002,
+        1,
+        1872,
+        1790833197914219344,
+        1790833197914219344
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-6.request.json",
+      "sha256": "d24b9759fd0b891971554455b835cd7ddf2ddd2e9a248a851e636d910bfe6760"
+    },
+    {
+      "bytes": 2644,
+      "identity": [
+        64513,
+        223384932,
+        33152,
+        1002,
+        1,
+        2644,
+        1790833197932219247,
+        1790833197932219247
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-6.result.json",
+      "sha256": "e14a58372358b36f5503362fedc593f6c16ad2c0be40b9ce52cc724d90b7f36b"
+    },
+    {
+      "bytes": 2431,
+      "identity": [
+        64513,
+        223384933,
+        33152,
+        1002,
+        1,
+        2431,
+        1790833197936219225,
+        1790833197936219225
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-7.request.json",
+      "sha256": "8b61e64877c2b5170f4a8b69881378d349854f6a9df2fa35275d8e1fbb3899bf"
+    },
+    {
+      "bytes": 3203,
+      "identity": [
+        64513,
+        223384936,
+        33152,
+        1002,
+        1,
+        3203,
+        1790833197958219107,
+        1790833197959219101
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-7.result.json",
+      "sha256": "56f03a8f593a40e78cae368eed0287c691b57c1ecac89441e8dc3a6415df45f2"
+    },
+    {
+      "bytes": 2441,
+      "identity": [
+        64513,
+        223384937,
+        33152,
+        1002,
+        1,
+        2441,
+        1790833197969219047,
+        1790833197969219047
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-8.request.json",
+      "sha256": "bf1d7bc23b2c342395831e2cdd31c6a24bae135191c5b7932f54126529ce762a"
+    },
+    {
+      "bytes": 3213,
+      "identity": [
+        64513,
+        223384940,
+        33152,
+        1002,
+        1,
+        3213,
+        1790833197991218929,
+        1790833197992218923
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-8.result.json",
+      "sha256": "e95e987e8f301c5256d608a78132a539802e3ba816dfa22fed5caa9990722df5"
+    },
+    {
+      "bytes": 2449,
+      "identity": [
+        64513,
+        223384941,
+        33152,
+        1002,
+        1,
+        2449,
+        1790833198002218869,
+        1790833198002218869
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-9.request.json",
+      "sha256": "f8135e2204718b7da4b72970f6433dc3e3d15b81332fb90f46bc4cebfe199cee"
+    },
+    {
+      "bytes": 3221,
+      "identity": [
+        64513,
+        223384944,
+        33152,
+        1002,
+        1,
+        3221,
+        1790833198026218739,
+        1790833198027218734
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-9.result.json",
+      "sha256": "c0ca3fdf1e1dc2b3d544c69b6f5cc7559804c40ae9dc112a8c8dc4575923b807"
+    },
+    {
+      "bytes": 2518,
+      "identity": [
+        64513,
+        223385011,
+        33152,
+        1002,
+        1,
+        2518,
+        1790833199408211275,
+        1790833199408211275
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-debug.requests.jsonl",
+      "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385010,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198656215337,
+        1790833198656215337
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-debug.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 58770,
+      "identity": [
+        64513,
+        223385009,
+        33152,
+        1002,
+        1,
+        58770,
+        1790833199409211269,
+        1790833199409211269
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-debug.stdout",
+      "sha256": "2164484a675e3a17ce0ca30b7e7df5c1004757ae13d354ad2456b17817d554f1"
+    },
+    {
+      "bytes": 5408,
+      "identity": [
+        64513,
+        223384328,
+        33152,
+        1002,
+        1,
+        5408,
+        1790833197729220343,
+        1790833197729220343
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-export.stderr",
+      "sha256": "1c87345e008d22abcf1eca2d360e843377fb1de6f7a7f9023637be95cf73ef7e"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384327,
+        33152,
+        1002,
+        1,
+        0,
+        1790833131866574408,
+        1790833131866574408
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-export.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 226,
+      "identity": [
+        64513,
+        223385016,
+        33152,
+        1002,
+        1,
+        226,
+        1790833199454211026,
+        1790833199454211026
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-forbidden-schedule.stderr",
+      "sha256": "784e988242302cadd9c3c4981cc2b30fe0d9c1b2e37150a4408bdde52bc4d1be"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385015,
+        33152,
+        1002,
+        1,
+        0,
+        1790833199452211037,
+        1790833199452211037
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-forbidden-schedule.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384902,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197766220144,
+        1790833197766220144
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-inventory.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384901,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197766220144,
+        1790833197766220144
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-inventory.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384906,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197779220073,
+        1790833197779220073
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384905,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197779220073,
+        1790833197779220073
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-0.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384910,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197802219949,
+        1790833197802219949
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384909,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197802219949,
+        1790833197802219949
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384947,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198036218685,
+        1790833198036218685
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-10.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384946,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198036218685,
+        1790833198036218685
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-10.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384951,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198069218507,
+        1790833198069218507
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-11.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384950,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198069218507,
+        1790833198069218507
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-11.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384955,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198102218329,
+        1790833198102218329
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-12.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384954,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198102218329,
+        1790833198102218329
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-12.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384959,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198135218151,
+        1790833198135218151
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-13.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384958,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198135218151,
+        1790833198135218151
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-13.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384963,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198189217859,
+        1790833198189217859
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-14.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384962,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198189217859,
+        1790833198189217859
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-14.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384967,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198232217627,
+        1790833198232217627
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-15.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384966,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198232217627,
+        1790833198232217627
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-15.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384971,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198266217443,
+        1790833198266217443
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-16.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384970,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198266217443,
+        1790833198266217443
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-16.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384975,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198299217265,
+        1790833198299217265
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-17.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384974,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198299217265,
+        1790833198299217265
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-17.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384979,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198332217087,
+        1790833198332217087
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-18.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384978,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198332217087,
+        1790833198332217087
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-18.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384983,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198366216903,
+        1790833198366216903
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-19.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384982,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198365216909,
+        1790833198365216909
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-19.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384915,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197824219830,
+        1790833197824219830
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384914,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197824219830,
+        1790833197824219830
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384987,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198419216617,
+        1790833198419216617
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-20.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384986,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198419216617,
+        1790833198419216617
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-20.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384991,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198462216384,
+        1790833198462216384
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-21.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384990,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198462216384,
+        1790833198462216384
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-21.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384995,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198516216093,
+        1790833198516216093
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-22.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384994,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198516216093,
+        1790833198516216093
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-22.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384999,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198549215915,
+        1790833198549215915
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-23.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384998,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198549215915,
+        1790833198549215915
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-23.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385003,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198582215736,
+        1790833198582215736
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-24.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385002,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198582215736,
+        1790833198582215736
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-24.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385007,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198635215450,
+        1790833198635215450
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-25.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385006,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198635215450,
+        1790833198635215450
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-25.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384919,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197846219712,
+        1790833197846219712
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384918,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197846219712,
+        1790833197846219712
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-3.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384923,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197869219587,
+        1790833197869219587
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-4.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384922,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197869219587,
+        1790833197869219587
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-4.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384927,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197891219469,
+        1790833197891219469
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-5.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384926,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197891219469,
+        1790833197891219469
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-5.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384931,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197914219344,
+        1790833197914219344
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-6.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384930,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197914219344,
+        1790833197914219344
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-6.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384935,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197936219225,
+        1790833197936219225
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-7.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384934,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197936219225,
+        1790833197936219225
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-7.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384939,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197969219047,
+        1790833197969219047
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-8.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384938,
+        33152,
+        1002,
+        1,
+        0,
+        1790833197969219047,
+        1790833197969219047
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-8.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384943,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198002218869,
+        1790833198002218869
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-9.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384942,
+        33152,
+        1002,
+        1,
+        0,
+        1790833198002218869,
+        1790833198002218869
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-sim-9.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 220,
+      "identity": [
+        64513,
+        223385018,
+        33152,
+        1002,
+        1,
+        220,
+        1790833199466210961,
+        1790833199466210961
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-wave32.stderr",
+      "sha256": "6e6a26cb3f6e42cd072ce19fa46894b553195df6e8395f5c668533b8b00333a2"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385017,
+        33152,
+        1002,
+        1,
+        0,
+        1790833199463210978,
+        1790833199463210978
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-wave32.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1369,
+      "identity": [
+        64513,
+        223385012,
+        33152,
+        1002,
+        1,
+        1369,
+        1790833199441211096,
+        1790833199441211096
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-wrong-base.json",
+      "sha256": "b91b4bc92ae6afaae5fdbef407b2c61370a915638959deb23ad87852ad397daa"
+    },
+    {
+      "bytes": 159,
+      "identity": [
+        64513,
+        223385014,
+        33152,
+        1002,
+        1,
+        159,
+        1790833199447211064,
+        1790833199447211064
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-wrong-base.stderr",
+      "sha256": "9c5a156e34a500daecede2d10c6bbc947a6234c2b6f3a8f4aac63b24f3a1e389"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385013,
+        33152,
+        1002,
+        1,
+        0,
+        1790833199441211096,
+        1790833199441211096
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked-wrong-base.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1748,
+      "identity": [
+        64513,
+        223384903,
+        33152,
+        1002,
+        1,
+        1748,
+        1790833197770220122,
+        1790833197771220117
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked.inventory.json",
+      "sha256": "7c1b24955b952ac044f330fdb936ec5ce017d75633cf29486748ce08ac8d5ee3"
+    },
+    {
+      "bytes": 4766,
+      "identity": [
+        64513,
+        223384898,
+        33152,
+        1002,
+        1,
+        4766,
+        1790833197686220576,
+        1790833197714220424
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/blocked.kir",
+      "sha256": "0dee3a153e52828b3ad43d8a27c02cfc5d563b8781507601ea5ca0ff8cb79316"
+    },
+    {
+      "bytes": 37243,
+      "identity": [
+        64513,
+        223384326,
+        33152,
+        1002,
+        1,
+        37243,
+        1790833131793574799,
+        1790833131793574799
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/build-public-clis.stderr",
+      "sha256": "2363eda1940ba5e458fd7498ebeeb6f52a01256f1395310adc9263e8b8238fe3"
+    },
+    {
+      "bytes": 173088,
+      "identity": [
+        64513,
+        223384325,
+        33152,
+        1002,
+        1,
+        173088,
+        1790833131793574799,
+        1790833131793574799
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/build-public-clis.stdout",
+      "sha256": "57ad2cc6e0166a36cc3365a6700dfc53d6f092894fc509d47e8b4fc5e909b684"
+    },
+    {
+      "bytes": 1287,
+      "identity": [
+        64513,
+        223385025,
+        33152,
+        1002,
+        1,
+        1287,
+        1790833200659204516,
+        1790833200659204516
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-0.request.json",
+      "sha256": "627a39af6d3a2040523eb77a0ffe73dce62644962741dca87667998857b22668"
+    },
+    {
+      "bytes": 2059,
+      "identity": [
+        64513,
+        223385028,
+        33152,
+        1002,
+        1,
+        2059,
+        1790833200676204425,
+        1790833200676204425
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-0.result.json",
+      "sha256": "aed1176ab87aa4a92ccf3377ea1cc464f80a7aac5dca4b570639e59feb7ef7c3"
+    },
+    {
+      "bytes": 1295,
+      "identity": [
+        64513,
+        223385029,
+        33152,
+        1002,
+        1,
+        1295,
+        1790833200682204392,
+        1790833200682204392
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-1.request.json",
+      "sha256": "903985da2b17283071296cc74ddb1f981ac04c6caeef356aef7917722931745f"
+    },
+    {
+      "bytes": 2067,
+      "identity": [
+        64513,
+        223385032,
+        33152,
+        1002,
+        1,
+        2067,
+        1790833200697204311,
+        1790833200697204311
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-1.result.json",
+      "sha256": "a14cc6593b6bb8c7761e551ad8e5c7c0bbdfeaba970c3ac60297d885779f1ce9"
+    },
+    {
+      "bytes": 3007,
+      "identity": [
+        64513,
+        223385065,
+        33152,
+        1002,
+        1,
+        3007,
+        1790833200947202961,
+        1790833200947202961
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-10.request.json",
+      "sha256": "103453b2ba1b0051b3fba85c38a1ff6741941c0e83acfdadccb8371f6f865498"
+    },
+    {
+      "bytes": 3779,
+      "identity": [
+        64513,
+        223385068,
+        33152,
+        1002,
+        1,
+        3779,
+        1790833200972202825,
+        1790833200973202820
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-10.result.json",
+      "sha256": "653cfadbe7757b9ac023b93cdb4679521e352b1f1feab108ec0bcad52617306e"
+    },
+    {
+      "bytes": 3017,
+      "identity": [
+        64513,
+        223385069,
+        33152,
+        1002,
+        1,
+        3017,
+        1790833200981202777,
+        1790833200981202777
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-11.request.json",
+      "sha256": "1099d4813bacf0beb5b3e670acf1ac54f4d478f25c78ef12977bddb01e833b5e"
+    },
+    {
+      "bytes": 3789,
+      "identity": [
+        64513,
+        223385072,
+        33152,
+        1002,
+        1,
+        3789,
+        1790833201008202631,
+        1790833201008202631
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-11.result.json",
+      "sha256": "3029c5b4ab2b92e6c8380d0ff3290ba1066c9c587fb26c33bf9990c2662fae3e"
+    },
+    {
+      "bytes": 3025,
+      "identity": [
+        64513,
+        223385073,
+        33152,
+        1002,
+        1,
+        3025,
+        1790833201014202598,
+        1790833201014202598
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-12.request.json",
+      "sha256": "cb31dde3c043c1007a356809412b4ec70829ad73690b363123302192caa41eaf"
+    },
+    {
+      "bytes": 3797,
+      "identity": [
+        64513,
+        223385076,
+        33152,
+        1002,
+        1,
+        3797,
+        1790833201040202458,
+        1790833201040202458
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-12.result.json",
+      "sha256": "7c183b18a85296e272cc639f43e05daf447f656d149ec4a48a0a2361380c1f2b"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385077,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833201047202420,
+        1790833201047202420
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-13.request.json",
+      "sha256": "274bcd7d0a114770d1720eadc29ebe970c4679a08be7f80ebbd10751c4e7c946"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385080,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833201091202182,
+        1790833201091202182
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-13.result.json",
+      "sha256": "50a9184352d6988e9486f420c10c7e6b781ad9e8b1bda3ad86330467b5548cc1"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385081,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833201101202128,
+        1790833201101202128
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-14.request.json",
+      "sha256": "9c4247fb2a431e018117539ec29843fa12a09d7be029bd8c9abe62beffb9cb1d"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385084,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833201141201912,
+        1790833201141201912
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-14.result.json",
+      "sha256": "d31d8a777eb55c59cebefbc11b74c6256d2b1cbe1448219cc406137a4a476548"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385085,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833201145201891,
+        1790833201145201891
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-15.request.json",
+      "sha256": "a9a3bf83dc9d423337c3a3c127f72e845a01df69b744ad53daa7ae4cf6f40cd7"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385088,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833201169201761,
+        1790833201176201723
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-15.result.json",
+      "sha256": "73656c3d792f85117e8e1e459fb23c97288bd1967a8737f4111461769f044010"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385089,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833201188201658,
+        1790833201188201658
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-16.request.json",
+      "sha256": "6ad484bfa7b581ab9aa1afa4cdd44e01fec2b80b315c8b43840669738c4da0ef"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385092,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833201212201529,
+        1790833201212201529
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-16.result.json",
+      "sha256": "62102bfd81cf715af3cc95561bbf3e6a228da82a5e2d8f172e6f50a49c872d32"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385093,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833201221201480,
+        1790833201221201480
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-17.request.json",
+      "sha256": "c439fc8f63cb765e6d3601bd4fcadba3ba63db6be55c6a4b031ba781fd33ce55"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385096,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833201248201334,
+        1790833201248201334
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-17.result.json",
+      "sha256": "e33271cef133bdf7226122f25d4426a2640ca375c65f1cd07c0b67b3d4060001"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385097,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833201255201296,
+        1790833201255201296
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-18.request.json",
+      "sha256": "00f182f4023b26f1728ff36cedc11546f25a9082b7026b96481209ffff0f8cfc"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385100,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833201280201161,
+        1790833201281201156
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-18.result.json",
+      "sha256": "24700d130d7529790f3a8208664927eba4005cdd50d081f059ec89d0224cc22b"
+    },
+    {
+      "bytes": 3016,
+      "identity": [
+        64513,
+        223385101,
+        33152,
+        1002,
+        1,
+        3016,
+        1790833201288201118,
+        1790833201288201118
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-19.request.json",
+      "sha256": "c9b7630c2f59a7c1a9c8b8b0727d0811d43ca5e5aa1be4639275ff20657c56f3"
+    },
+    {
+      "bytes": 3791,
+      "identity": [
+        64513,
+        223385104,
+        33152,
+        1002,
+        1,
+        3791,
+        1790833201328200902,
+        1790833201329200896
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-19.result.json",
+      "sha256": "a06d5246d6663ab1b7fdee043f8aa1abfe6517f99e1890c54e04b85862fd6a30"
+    },
+    {
+      "bytes": 1305,
+      "identity": [
+        64513,
+        223385033,
+        33152,
+        1002,
+        1,
+        1305,
+        1790833200704204273,
+        1790833200704204273
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-2.request.json",
+      "sha256": "2a13f520e556b9be195ed474d18fbe3d309f073fb66ecf3f8694cba8af399aa3"
+    },
+    {
+      "bytes": 2077,
+      "identity": [
+        64513,
+        223385036,
+        33152,
+        1002,
+        1,
+        2077,
+        1790833200719204192,
+        1790833200720204187
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-2.result.json",
+      "sha256": "2eb413746f2e2f61e395154e844a2aa1e2c5a25d38e491b41eba9b2175d985d3"
+    },
+    {
+      "bytes": 2457,
+      "identity": [
+        64513,
+        223385105,
+        33152,
+        1002,
+        1,
+        2457,
+        1790833201342200826,
+        1790833201342200826
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-20.request.json",
+      "sha256": "ce3f445f2f1e2581a81ed124680fcc99789ddec6ac55c55c69f2722badaa56fb"
+    },
+    {
+      "bytes": 3232,
+      "identity": [
+        64513,
+        223385108,
+        33152,
+        1002,
+        1,
+        3232,
+        1790833201381200615,
+        1790833201382200610
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-20.result.json",
+      "sha256": "2c16daa53b8bcda09b79e77068b5cbbd9c72beca198ae815147ba4b3be81ed52"
+    },
+    {
+      "bytes": 2449,
+      "identity": [
+        64513,
+        223385109,
+        33152,
+        1002,
+        1,
+        2449,
+        1790833201385200594,
+        1790833201385200594
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-21.request.json",
+      "sha256": "e272a26dc15c2c6376381319bda8900bed74aa8d2fb58538afa78a94adbd09cf"
+    },
+    {
+      "bytes": 3224,
+      "identity": [
+        64513,
+        223385112,
+        33152,
+        1002,
+        1,
+        3224,
+        1790833201424200383,
+        1790833201424200383
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-21.result.json",
+      "sha256": "f010a3b29c8eee32d28d61afcff332cf0f18951951a07ca2bf484124f3e1dca8"
+    },
+    {
+      "bytes": 1865,
+      "identity": [
+        64513,
+        223385113,
+        33152,
+        1002,
+        1,
+        1865,
+        1790833201428200361,
+        1790833201428200361
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-22.request.json",
+      "sha256": "d02a1b810188566c607b5ef74c9d5891b941dcbb89c1dbc8de7a8d48e2b058ac"
+    },
+    {
+      "bytes": 2640,
+      "identity": [
+        64513,
+        223385116,
+        33152,
+        1002,
+        1,
+        2640,
+        1790833201453200227,
+        1790833201454200221
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-22.result.json",
+      "sha256": "bb208129f874fad552a802416541eb3c21359d70e0518dd8028b4daabd315599"
+    },
+    {
+      "bytes": 1881,
+      "identity": [
+        64513,
+        223385117,
+        33152,
+        1002,
+        1,
+        1881,
+        1790833201461200183,
+        1790833201461200183
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-23.request.json",
+      "sha256": "ab4b5f24323b75098c3750416871ae0e91705ada9844e25c7a2634ce6b47af1c"
+    },
+    {
+      "bytes": 2656,
+      "identity": [
+        64513,
+        223385120,
+        33152,
+        1002,
+        1,
+        2656,
+        1790833201495199999,
+        1790833201495199999
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-23.result.json",
+      "sha256": "b2dcced6570b4d5bc154401248d43aba1b8f7f491511a3d208a3b33bd3197c5f"
+    },
+    {
+      "bytes": 3603,
+      "identity": [
+        64513,
+        223385121,
+        33152,
+        1002,
+        1,
+        3603,
+        1790833201505199945,
+        1790833201505199945
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-24.request.json",
+      "sha256": "68868ab4cde873573c3297f31ed4d8d6d00da469019c5f4fed5ed0f9772af011"
+    },
+    {
+      "bytes": 4378,
+      "identity": [
+        64513,
+        223385124,
+        33152,
+        1002,
+        1,
+        4378,
+        1790833201547199718,
+        1790833201547199718
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-24.result.json",
+      "sha256": "0fdc051eaa9595b871be55279ae7bfb87d0d5241cbc3e4de7e13a9183363799d"
+    },
+    {
+      "bytes": 1367,
+      "identity": [
+        64513,
+        223385125,
+        33152,
+        1002,
+        1,
+        1367,
+        1790833201558199659,
+        1790833201558199659
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-25.request.json",
+      "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+    },
+    {
+      "bytes": 2139,
+      "identity": [
+        64513,
+        223385128,
+        33152,
+        1002,
+        1,
+        2139,
+        1790833201577199556,
+        1790833201577199556
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-25.result.json",
+      "sha256": "e8b40f6cb719f783fe5c5cd9fda9883b3b7bc3404942b971ac67c2585fd8e9fe"
+    },
+    {
+      "bytes": 1313,
+      "identity": [
+        64513,
+        223385037,
+        33152,
+        1002,
+        1,
+        1313,
+        1790833200727204149,
+        1790833200727204149
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-3.request.json",
+      "sha256": "8feef5e493651c50ea5e72b322ffc5473de3820c9e2e4a3a411262fc5afd038c"
+    },
+    {
+      "bytes": 2085,
+      "identity": [
+        64513,
+        223385040,
+        33152,
+        1002,
+        1,
+        2085,
+        1790833200743204063,
+        1790833200743204063
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-3.result.json",
+      "sha256": "dae3322929baf18e3811548018c7d35ee2dab22c176978a7f287eac4e832109f"
+    },
+    {
+      "bytes": 1854,
+      "identity": [
+        64513,
+        223385041,
+        33152,
+        1002,
+        1,
+        1854,
+        1790833200749204030,
+        1790833200749204030
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-4.request.json",
+      "sha256": "39d8c1041dcab2f6e16fbfce464115c02e946686f9e8ba93f55a089c8ce460f7"
+    },
+    {
+      "bytes": 2626,
+      "identity": [
+        64513,
+        223385044,
+        33152,
+        1002,
+        1,
+        2626,
+        1790833200771203911,
+        1790833200772203906
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-4.result.json",
+      "sha256": "b778a696515499c1a951dcf1a3ddadc27c97770620790ec7b838f770c441eb56"
+    },
+    {
+      "bytes": 1864,
+      "identity": [
+        64513,
+        223385045,
+        33152,
+        1002,
+        1,
+        1864,
+        1790833200782203852,
+        1790833200782203852
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-5.request.json",
+      "sha256": "4fa84cd46513c4664b9546dd9d09b68a86d1bab4758466c9db5cdcfdeb545868"
+    },
+    {
+      "bytes": 2636,
+      "identity": [
+        64513,
+        223385048,
+        33152,
+        1002,
+        1,
+        2636,
+        1790833200805203728,
+        1790833200806203722
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-5.result.json",
+      "sha256": "b51e2bd0fc331d14de8c5f65d7c156348a927a45c098532cd961a1acf80f619d"
+    },
+    {
+      "bytes": 1872,
+      "identity": [
+        64513,
+        223385049,
+        33152,
+        1002,
+        1,
+        1872,
+        1790833200815203674,
+        1790833200815203674
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-6.request.json",
+      "sha256": "d24b9759fd0b891971554455b835cd7ddf2ddd2e9a248a851e636d910bfe6760"
+    },
+    {
+      "bytes": 2644,
+      "identity": [
+        64513,
+        223385052,
+        33152,
+        1002,
+        1,
+        2644,
+        1790833200836203560,
+        1790833200836203560
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-6.result.json",
+      "sha256": "25654c7b89b6957a55ae0c38888a85e6bbae5c9a87bdf217cf398cd5b9485d62"
+    },
+    {
+      "bytes": 2431,
+      "identity": [
+        64513,
+        223385053,
+        33152,
+        1002,
+        1,
+        2431,
+        1790833200848203495,
+        1790833200848203495
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-7.request.json",
+      "sha256": "8b61e64877c2b5170f4a8b69881378d349854f6a9df2fa35275d8e1fbb3899bf"
+    },
+    {
+      "bytes": 3203,
+      "identity": [
+        64513,
+        223385056,
+        33152,
+        1002,
+        1,
+        3203,
+        1790833200872203366,
+        1790833200873203360
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-7.result.json",
+      "sha256": "f8a1ccdc28be09a8376250ec097472be09cae69887043d18745f8ac53e818481"
+    },
+    {
+      "bytes": 2441,
+      "identity": [
+        64513,
+        223385057,
+        33152,
+        1002,
+        1,
+        2441,
+        1790833200881203317,
+        1790833200881203317
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-8.request.json",
+      "sha256": "bf1d7bc23b2c342395831e2cdd31c6a24bae135191c5b7932f54126529ce762a"
+    },
+    {
+      "bytes": 3213,
+      "identity": [
+        64513,
+        223385060,
+        33152,
+        1002,
+        1,
+        3213,
+        1790833200905203187,
+        1790833200905203187
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-8.result.json",
+      "sha256": "b8a7317c5b0b0f80a25a86dd1398ffdea0307035379727abd0d9e0e9d16a1034"
+    },
+    {
+      "bytes": 2449,
+      "identity": [
+        64513,
+        223385061,
+        33152,
+        1002,
+        1,
+        2449,
+        1790833200914203139,
+        1790833200914203139
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-9.request.json",
+      "sha256": "f8135e2204718b7da4b72970f6433dc3e3d15b81332fb90f46bc4cebfe199cee"
+    },
+    {
+      "bytes": 3221,
+      "identity": [
+        64513,
+        223385064,
+        33152,
+        1002,
+        1,
+        3221,
+        1790833200937203015,
+        1790833200937203015
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-9.result.json",
+      "sha256": "cdd8f099bfbfd130e3339381a51eb2336162ab3667f5efeaa6af44844b6f3c0d"
+    },
+    {
+      "bytes": 2518,
+      "identity": [
+        64513,
+        223385134,
+        33152,
+        1002,
+        1,
+        2518,
+        1790833202422194990,
+        1790833202422194990
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-debug.requests.jsonl",
+      "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385133,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201579199546,
+        1790833201579199546
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-debug.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 64748,
+      "identity": [
+        64513,
+        223385132,
+        33152,
+        1002,
+        1,
+        64748,
+        1790833202422194990,
+        1790833202422194990
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-debug.stdout",
+      "sha256": "9f0849420dddc7f0c88b2949613a63e90bdf3f603bc5561586c796681097346b"
+    },
+    {
+      "bytes": 1917,
+      "identity": [
+        64513,
+        223385020,
+        33152,
+        1002,
+        1,
+        1917,
+        1790833200614204759,
+        1790833200614204759
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-export.stderr",
+      "sha256": "4065ed0499709565095e9e3b4bb861bbd7a2306f3e98a6a368a3951d273699cb"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385019,
+        33152,
+        1002,
+        1,
+        0,
+        1790833199474210918,
+        1790833199474210918
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-export.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 226,
+      "identity": [
+        64513,
+        223385139,
+        33152,
+        1002,
+        1,
+        226,
+        1790833202467194747,
+        1790833202467194747
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-forbidden-schedule.stderr",
+      "sha256": "784e988242302cadd9c3c4981cc2b30fe0d9c1b2e37150a4408bdde52bc4d1be"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385138,
+        33152,
+        1002,
+        1,
+        0,
+        1790833202466194753,
+        1790833202466194753
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-forbidden-schedule.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385023,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200647204581,
+        1790833200647204581
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-inventory.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223384895,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200647204581,
+        1790833200647204581
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-inventory.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385027,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200660204511,
+        1790833200660204511
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-0.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385026,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200660204511,
+        1790833200660204511
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-0.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385031,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200682204392,
+        1790833200682204392
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385030,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200682204392,
+        1790833200682204392
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385067,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200948202955,
+        1790833200948202955
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-10.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385066,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200947202961,
+        1790833200947202961
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-10.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385071,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200981202777,
+        1790833200981202777
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-11.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385070,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200981202777,
+        1790833200981202777
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-11.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385075,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201014202598,
+        1790833201014202598
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-12.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385074,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201014202598,
+        1790833201014202598
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-12.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385079,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201047202420,
+        1790833201047202420
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-13.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385078,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201047202420,
+        1790833201047202420
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-13.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385083,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201101202128,
+        1790833201101202128
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-14.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385082,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201101202128,
+        1790833201101202128
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-14.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385087,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201145201891,
+        1790833201145201891
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-15.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385086,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201145201891,
+        1790833201145201891
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-15.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385091,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201188201658,
+        1790833201188201658
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-16.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385090,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201188201658,
+        1790833201188201658
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-16.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385095,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201222201475,
+        1790833201222201475
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-17.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385094,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201221201480,
+        1790833201221201480
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-17.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385099,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201255201296,
+        1790833201255201296
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-18.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385098,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201255201296,
+        1790833201255201296
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-18.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385103,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201289201113,
+        1790833201289201113
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-19.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385102,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201288201118,
+        1790833201288201118
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-19.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385035,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200704204273,
+        1790833200704204273
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385034,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200704204273,
+        1790833200704204273
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385107,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201342200826,
+        1790833201342200826
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-20.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385106,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201342200826,
+        1790833201342200826
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-20.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385111,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201385200594,
+        1790833201385200594
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-21.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385110,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201385200594,
+        1790833201385200594
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-21.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385115,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201428200361,
+        1790833201428200361
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-22.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385114,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201428200361,
+        1790833201428200361
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-22.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385119,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201461200183,
+        1790833201461200183
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-23.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385118,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201461200183,
+        1790833201461200183
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-23.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385123,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201505199945,
+        1790833201505199945
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-24.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385122,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201505199945,
+        1790833201505199945
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-24.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385127,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201558199659,
+        1790833201558199659
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-25.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385126,
+        33152,
+        1002,
+        1,
+        0,
+        1790833201558199659,
+        1790833201558199659
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-25.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385039,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200727204149,
+        1790833200727204149
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385038,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200727204149,
+        1790833200727204149
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-3.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385043,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200749204030,
+        1790833200749204030
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-4.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385042,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200749204030,
+        1790833200749204030
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-4.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385047,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200782203852,
+        1790833200782203852
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-5.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385046,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200782203852,
+        1790833200782203852
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-5.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385051,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200815203674,
+        1790833200815203674
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-6.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385050,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200815203674,
+        1790833200815203674
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-6.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385055,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200848203495,
+        1790833200848203495
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-7.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385054,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200848203495,
+        1790833200848203495
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-7.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385059,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200881203317,
+        1790833200881203317
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-8.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385058,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200881203317,
+        1790833200881203317
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-8.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385063,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200914203139,
+        1790833200914203139
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-9.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385062,
+        33152,
+        1002,
+        1,
+        0,
+        1790833200914203139,
+        1790833200914203139
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-sim-9.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 220,
+      "identity": [
+        64513,
+        223385142,
+        33152,
+        1002,
+        1,
+        220,
+        1790833202480194677,
+        1790833202480194677
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-wave32.stderr",
+      "sha256": "6e6a26cb3f6e42cd072ce19fa46894b553195df6e8395f5c668533b8b00333a2"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385140,
+        33152,
+        1002,
+        1,
+        0,
+        1790833202476194699,
+        1790833202476194699
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-wave32.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1369,
+      "identity": [
+        64513,
+        223385135,
+        33152,
+        1002,
+        1,
+        1369,
+        1790833202455194812,
+        1790833202455194812
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-wrong-base.json",
+      "sha256": "b91b4bc92ae6afaae5fdbef407b2c61370a915638959deb23ad87852ad397daa"
+    },
+    {
+      "bytes": 159,
+      "identity": [
+        64513,
+        223385137,
+        33152,
+        1002,
+        1,
+        159,
+        1790833202460194785,
+        1790833202460194785
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-wrong-base.stderr",
+      "sha256": "9c5a156e34a500daecede2d10c6bbc947a6234c2b6f3a8f4aac63b24f3a1e389"
+    },
+    {
+      "bytes": 0,
+      "identity": [
+        64513,
+        223385136,
+        33152,
+        1002,
+        1,
+        0,
+        1790833202455194812,
+        1790833202455194812
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped-wrong-base.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1748,
+      "identity": [
+        64513,
+        223385024,
+        33152,
+        1002,
+        1,
+        1748,
+        1790833200651204560,
+        1790833200651204560
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped.inventory.json",
+      "sha256": "bb192cc587944f60e8ffdfa4adc40c2b9833e6237224959483272c003e1dc5dc"
+    },
+    {
+      "bytes": 4766,
+      "identity": [
+        64513,
+        223385022,
+        33152,
+        1002,
+        1,
+        4766,
+        1790833200571204992,
+        1790833200599204841
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/striped.kir",
+      "sha256": "c9886c9036c96cd80d16fab1fb3ade16f7d88c01d3d389e6c22b1babdbafa8ee"
+    },
+    {
+      "bytes": 1484,
+      "identity": [
+        64513,
+        223385143,
+        33152,
+        1002,
+        1,
+        1484,
+        1790833202488194634,
+        1790833202488194634
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/pair-next-20260925-scratch/fe2o3-scoped-tile-cli-ordinary-279091-1790832950329052777/summary.json",
+      "sha256": "016bec1530bf00d33c8a20dd9b4acca35446398ba0a3ad40e720beba1b2c6d32"
+    }
+  ],
+  "otherGates": "This archive is not a full generic-core, native or hardware qualification.",
+  "schema": "fe2o3-task-ordinary-cpu-cli-archive-v1",
+  "sourceMeasurementAfterCollection": {
+    "P": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/tile-observer-public-20261001",
+    "head": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+    "measurementFinishedUtc": "2026-10-01T05:49:25.342455+00:00",
+    "measurementStartedUtc": "2026-10-01T05:49:25.067031+00:00",
+    "sourceFingerprintSha256": "2adaff541220a371b191ecfc1bc1099f19a3b5d1bc5f11cf27f1bf76ce3909d0",
+    "timing": "post-run collection; stage before/after guards are retained separately",
+    "tree": "e2c75f82ffa7f108c4c8191599d4392efc75e026"
+  },
+  "sourceMeasurementBeforeCollection": {
+    "P": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/tile-observer-public-20261001",
+    "head": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+    "measurementFinishedUtc": "2026-10-01T05:49:24.235624+00:00",
+    "measurementStartedUtc": "2026-10-01T05:49:23.960979+00:00",
+    "sourceFingerprintSha256": "2adaff541220a371b191ecfc1bc1099f19a3b5d1bc5f11cf27f1bf76ce3909d0",
+    "timing": "post-run collection; stage before/after guards are retained separately",
+    "tree": "e2c75f82ffa7f108c4c8191599d4392efc75e026"
+  },
+  "summary": {
+    "authority": "observation_only",
+    "debugger_sessions": [
+      {
+        "commands": 15,
+        "complete": true,
+        "configuration_identity": "7afd6baded3ba38e0e227f34f575990df795a7dba07b9dcccda33ed10a24e51f",
+        "measured_output_allocation": {
+          "generation": 0,
+          "ordinal": 2
+        },
+        "order": "blocked"
+      },
+      {
+        "commands": 15,
+        "complete": true,
+        "configuration_identity": "5c071b3ad0ebdc3ad89996b8d622d742ee93405aa49405a37842c47ea7dbf8f0",
+        "measured_output_allocation": {
+          "generation": 0,
+          "ordinal": 2
+        },
+        "order": "striped"
+      }
+    ],
+    "fixture_source_injection": false,
+    "full_simt_tile_pair_qualified": false,
+    "hardware_observed": false,
+    "host_oracle_unit_tests": "separate CI gate",
+    "inventories": 2,
+    "negative_controls": 10,
+    "orders": [
+      {
+        "bytes": 4766,
+        "canonical": "a58177f9bea89f254338746e3f871bea254f9d4fae6d6fdcb26ad1342d2e2e2b",
+        "pending": "4e70ec311fa253c879e84279f4dbe867bd412bbd1f7a680d3e776149455594d6",
+        "schedule": "2d855fb38db2d691c06b0fefc96d94267ef81365e1ae2ac41577b376d2536f93",
+        "source": "b7fd35bdc6cc337ee482a5d2792d8b6d2bf54d33ae2ae0042e3b844711bb2274"
+      },
+      {
+        "bytes": 4766,
+        "canonical": "7e1cd6d19d36bc14a8633319751cc8ecc6b910f03051a7f7c89544338a0fe22a",
+        "pending": "4e70ec311fa253c879e84279f4dbe867bd412bbd1f7a680d3e776149455594d6",
+        "schedule": "07b3edd6df9c92f9861cc9e1dbca2c7006b012466427d1c913414280fc8d03aa",
+        "source": "b7fd35bdc6cc337ee482a5d2792d8b6d2bf54d33ae2ae0042e3b844711bb2274"
+      }
+    ],
+    "performance_prediction": false,
+    "schema": "fe2o3-scoped-tile-cli-test-v1",
+    "simulations": 52,
+    "source_feature": "mixed-tile-u32-kernel",
+    "source_manifest": "examples/workgroup_sync_v1/Cargo.toml"
+  },
+  "terminalEvidence": [
+    {
+      "bytes": 126830,
+      "identity": [
+        64513,
+        221877757,
+        33152,
+        1002,
+        1,
+        126830,
+        1790833204589183278,
+        1790833204589183278
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/scoped-tile-ordinary-fed6998b-20261001-r1/01-public-mixed-cpu-cli.log",
+      "sha256": "f2d186fbdcac1b096723743cb9070a027489f2be0ed1bcdf17ab2a1cf412f3bf"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        64513,
+        221877758,
+        33152,
+        1002,
+        1,
+        2,
+        1790833204590183273,
+        1790833204590183273
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/scoped-tile-ordinary-fed6998b-20261001-r1/01-public-mixed-cpu-cli.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "bytes": 2725,
+      "identity": [
+        64513,
+        221877756,
+        33152,
+        1002,
+        1,
+        2725,
+        1790833710021383921,
+        1790833710021383921
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/scoped-tile-ordinary-fed6998b-20261001-r1/batch.log",
+      "sha256": "a72989ac280f72ee3dfa9a30128d9fa2d1667f1c8cc6dc88c20d60c69540f3de"
+    },
+    {
+      "bytes": 2,
+      "identity": [
+        64513,
+        221877761,
+        33152,
+        1002,
+        1,
+        2,
+        1790833710022383916,
+        1790833710022383916
+      ],
+      "path": "/home/harsh/work/fe2o3-issue275-paired-20260917.sp9wFtRZ/validation/scoped-tile-ordinary-fed6998b-20261001-r1/batch.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "toolProvenanceLimitation": "Hashes measured only after the successful stage, not retroactive proof of bytes executed."
+}

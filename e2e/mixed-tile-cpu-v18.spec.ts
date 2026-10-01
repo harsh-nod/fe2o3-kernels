@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 const source = readFileSync(new URL("../examples/mixed_tile_u32.rs", import.meta.url), "utf8");
 const oracle = readFileSync(new URL("../examples/mixed_tile_oracle.rs", import.meta.url), "utf8");
 const workflow = readFileSync(new URL("../examples/mixed-tile-cpu-v18/workflow.sh", import.meta.url), "utf8");
-const revision = "ae162efd2bc8df7a061108a126333c378ac980d9";
+const revision = "fed6998b1a5eaf2530e94664a1ede650382a8990";
 
 function viewportWidth(page: Page) {
   const viewport = page.viewportSize();

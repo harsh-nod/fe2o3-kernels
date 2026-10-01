@@ -1,0 +1,276 @@
+{
+  "schema": "fe2o3-mixed-tile-cpu-capture-index-v1",
+  "authority": "none",
+  "source": {
+    "commit": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+    "tree": "e2c75f82ffa7f108c4c8191599d4392efc75e026",
+    "fingerprintSha256": "2adaff541220a371b191ecfc1bc1099f19a3b5d1bc5f11cf27f1bf76ce3909d0",
+    "kernel": {
+      "path": "examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs",
+      "bytes": 1247,
+      "sha256": "e8aad7f11d63371e7d97e915dcbb5e35a6f44b885750a621696895f7d8810ee5",
+      "displayPath": "examples/mixed_tile_u32.rs"
+    },
+    "oracle": {
+      "path": "examples/workgroup_sync_v1/src/mixed_tile_oracle.rs",
+      "bytes": 3084,
+      "sha256": "e7f6db79016e7fa1f559294c292817802c0466b608f060448e5e5e58601230cf",
+      "displayPath": "examples/mixed_tile_oracle.rs"
+    },
+    "manifest": {
+      "path": "examples/workgroup_sync_v1/Cargo.toml",
+      "bytes": 1484,
+      "sha256": "cb88a0ee783f9070b4d90ec42b3b7c32d92c7e7d9d2003c945369c503d4972ef"
+    },
+    "harness": {
+      "path": "crates/rustc-codegen-fe2o3/tests/production_scoped_tile_cpu_driver_v1.rs",
+      "bytes": 17600,
+      "sha256": "e5cc077b39fef41d408049c4b03d55c70869d49ead5afc3ed2ae059454146566"
+    }
+  },
+  "summary": {
+    "path": "summary.json",
+    "bytes": 1484,
+    "sha256": "016bec1530bf00d33c8a20dd9b4acca35446398ba0a3ad40e720beba1b2c6d32"
+  },
+  "collector": {
+    "path": "collector.receipt.json",
+    "bytes": 166827,
+    "sha256": "b441a066cf23b5232d2e8111e36f3f68c700338619894bdce62c3d07703e54fb"
+  },
+  "cliStage": {
+    "log": {
+      "path": "cli-stage.log.gz",
+      "bytes": 18936,
+      "sha256": "e34bc4caf35b414692bad167b66d3abd351be285bb2bdaea044d188c78e54a59",
+      "encoding": "gzip",
+      "rawBytes": 126830,
+      "rawSha256": "f2d186fbdcac1b096723743cb9070a027489f2be0ed1bcdf17ab2a1cf412f3bf"
+    },
+    "exit": {
+      "path": "cli-stage.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "startUtc": "2026-10-01T05:35:49Z",
+    "finishUtc": "2026-10-01T05:40:04Z"
+  },
+  "hostOracle": {
+    "tests": 6,
+    "compilerCommit": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+    "log": {
+      "path": "host-oracle.log.gz",
+      "bytes": 8340,
+      "sha256": "f460a2994a90574c231311c79529744c1bbf2eedb157a256e2054d3eb6f56a5e",
+      "encoding": "gzip",
+      "rawBytes": 59382,
+      "rawSha256": "39f39711ba28559eba467d3baab118af559217619c17481429682a06ebb1207f"
+    },
+    "exit": {
+      "path": "host-oracle.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "command": "cargo test --locked --manifest-path examples/workgroup_sync_v1/Cargo.toml --no-default-features --test mixed_tile -- --test-threads=1",
+    "scope": "Separate host-oracle test stage; not included in the CLI summary count."
+  },
+  "debuggerEvidence": [
+    {
+      "files": {
+        "debuggerRepliesRaw": {
+          "bytes": 58770,
+          "path": "blocked-debug.stdout",
+          "sha256": "2164484a675e3a17ce0ca30b7e7df5c1004757ae13d354ad2456b17817d554f1"
+        },
+        "debuggerRequestsRaw": {
+          "bytes": 2518,
+          "path": "blocked-debug.requests.jsonl",
+          "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+        },
+        "inventory": {
+          "bytes": 1748,
+          "path": "blocked.inventory.json",
+          "sha256": "7c1b24955b952ac044f330fdb936ec5ce017d75633cf29486748ce08ac8d5ee3"
+        },
+        "kir": {
+          "bytes": 4766,
+          "path": "blocked.kir",
+          "sha256": "0dee3a153e52828b3ad43d8a27c02cfc5d563b8781507601ea5ca0ff8cb79316"
+        },
+        "request": {
+          "bytes": 1367,
+          "path": "blocked-25.request.json",
+          "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+        },
+        "result": {
+          "bytes": 2139,
+          "path": "blocked-25.result.json",
+          "sha256": "b20897fa90f80e73a48e1d8b9d66cf378c578a7c6616f682930e719716a33316"
+        }
+      },
+      "order": "blocked",
+      "selection": {
+        "basis": "successful source-bound test selects ordinal 25 for debug::run; not filename-count inference",
+        "harnessPath": "crates/rustc-codegen-fe2o3/tests/production_scoped_tile_cpu_driver_v1.rs",
+        "kind": "frozen-production-test-case-ordinal",
+        "ordinal": 25,
+        "sourceHead": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+        "test": "ordinary_mixed_tile_source_executes_public_cpu_cli_paths"
+      }
+    },
+    {
+      "files": {
+        "debuggerRepliesRaw": {
+          "bytes": 64748,
+          "path": "striped-debug.stdout",
+          "sha256": "9f0849420dddc7f0c88b2949613a63e90bdf3f603bc5561586c796681097346b"
+        },
+        "debuggerRequestsRaw": {
+          "bytes": 2518,
+          "path": "striped-debug.requests.jsonl",
+          "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+        },
+        "inventory": {
+          "bytes": 1748,
+          "path": "striped.inventory.json",
+          "sha256": "bb192cc587944f60e8ffdfa4adc40c2b9833e6237224959483272c003e1dc5dc"
+        },
+        "kir": {
+          "bytes": 4766,
+          "path": "striped.kir",
+          "sha256": "c9886c9036c96cd80d16fab1fb3ade16f7d88c01d3d389e6c22b1babdbafa8ee"
+        },
+        "request": {
+          "bytes": 1367,
+          "path": "striped-25.request.json",
+          "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+        },
+        "result": {
+          "bytes": 2139,
+          "path": "striped-25.result.json",
+          "sha256": "e8b40f6cb719f783fe5c5cd9fda9883b3b7bc3404942b971ac67c2585fd8e9fe"
+        }
+      },
+      "order": "striped",
+      "selection": {
+        "basis": "successful source-bound test selects ordinal 25 for debug::run; not filename-count inference",
+        "harnessPath": "crates/rustc-codegen-fe2o3/tests/production_scoped_tile_cpu_driver_v1.rs",
+        "kind": "frozen-production-test-case-ordinal",
+        "ordinal": 25,
+        "sourceHead": "fed6998b1a5eaf2530e94664a1ede650382a8990",
+        "test": "ordinary_mixed_tile_source_executes_public_cpu_cli_paths"
+      }
+    }
+  ],
+  "retainedArchive": {
+    "fileCount": 243,
+    "bytes": 666550,
+    "rosterSha256": "63e80d57d306466d75c04291ccdad0d626e934d698c6105cdf96f3f47ea4aeef",
+    "note": "The full 243-file archive remains in the qualification record; only the indexed tutorial subset and stage receipts are copied here."
+  },
+  "artifacts": [
+    {
+      "path": "blocked-25.request.json",
+      "bytes": 1367,
+      "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+    },
+    {
+      "path": "blocked-25.result.json",
+      "bytes": 2139,
+      "sha256": "b20897fa90f80e73a48e1d8b9d66cf378c578a7c6616f682930e719716a33316"
+    },
+    {
+      "path": "blocked-debug.requests.jsonl",
+      "bytes": 2518,
+      "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+    },
+    {
+      "path": "blocked-debug.stdout",
+      "bytes": 58770,
+      "sha256": "2164484a675e3a17ce0ca30b7e7df5c1004757ae13d354ad2456b17817d554f1"
+    },
+    {
+      "path": "blocked.inventory.json",
+      "bytes": 1748,
+      "sha256": "7c1b24955b952ac044f330fdb936ec5ce017d75633cf29486748ce08ac8d5ee3"
+    },
+    {
+      "path": "blocked.kir",
+      "bytes": 4766,
+      "sha256": "0dee3a153e52828b3ad43d8a27c02cfc5d563b8781507601ea5ca0ff8cb79316"
+    },
+    {
+      "path": "cli-stage.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "cli-stage.log.gz",
+      "bytes": 18936,
+      "sha256": "e34bc4caf35b414692bad167b66d3abd351be285bb2bdaea044d188c78e54a59",
+      "encoding": "gzip",
+      "rawBytes": 126830,
+      "rawSha256": "f2d186fbdcac1b096723743cb9070a027489f2be0ed1bcdf17ab2a1cf412f3bf"
+    },
+    {
+      "path": "collector.receipt.json",
+      "bytes": 166827,
+      "sha256": "b441a066cf23b5232d2e8111e36f3f68c700338619894bdce62c3d07703e54fb"
+    },
+    {
+      "path": "host-oracle.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "host-oracle.log.gz",
+      "bytes": 8340,
+      "sha256": "f460a2994a90574c231311c79529744c1bbf2eedb157a256e2054d3eb6f56a5e",
+      "encoding": "gzip",
+      "rawBytes": 59382,
+      "rawSha256": "39f39711ba28559eba467d3baab118af559217619c17481429682a06ebb1207f"
+    },
+    {
+      "path": "striped-25.request.json",
+      "bytes": 1367,
+      "sha256": "4e96db4f3cb0c7abe18d414ebdbd31ccffc747962d3e150ab1ef80e48d4dfae8"
+    },
+    {
+      "path": "striped-25.result.json",
+      "bytes": 2139,
+      "sha256": "e8b40f6cb719f783fe5c5cd9fda9883b3b7bc3404942b971ac67c2585fd8e9fe"
+    },
+    {
+      "path": "striped-debug.requests.jsonl",
+      "bytes": 2518,
+      "sha256": "63239b62ef0f824a27b2ae727339cc001b1e7d48f0e5f74279b1d30a091b0bc6"
+    },
+    {
+      "path": "striped-debug.stdout",
+      "bytes": 64748,
+      "sha256": "9f0849420dddc7f0c88b2949613a63e90bdf3f603bc5561586c796681097346b"
+    },
+    {
+      "path": "striped.inventory.json",
+      "bytes": 1748,
+      "sha256": "bb192cc587944f60e8ffdfa4adc40c2b9833e6237224959483272c003e1dc5dc"
+    },
+    {
+      "path": "striped.kir",
+      "bytes": 4766,
+      "sha256": "c9886c9036c96cd80d16fab1fb3ade16f7d88c01d3d389e6c22b1babdbafa8ee"
+    },
+    {
+      "path": "summary.json",
+      "bytes": 1484,
+      "sha256": "016bec1530bf00d33c8a20dd9b4acca35446398ba0a3ad40e720beba1b2c6d32"
+    }
+  ],
+  "toolProvenanceLimitation": "Hashes measured only after the successful stage, not retroactive proof of bytes executed.",
+  "scope": "Source-bound CPU diagnostic execution only. This index does not assert generic-core release qualification, native or KFD execution, authenticated source maps, performance prediction, or completed SIMT/tile tutorial pairs.",
+  "historical": {
+    "directory": "..",
+    "compilerCommit": "ae162efd2bc8df7a061108a126333c378ac980d9",
+    "summarySha256": "a24a67fa0fbfda70909a0747c086668bee131885f34e3026830f45d06c4bc738"
+  }
+}

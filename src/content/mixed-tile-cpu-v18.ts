@@ -4,21 +4,29 @@ import type { NarrativeRegistryEntry } from "./narrative-registry";
 import source from "../../examples/mixed_tile_u32.rs?raw";
 import oracle from "../../examples/mixed_tile_oracle.rs?raw";
 import workflow from "../../examples/mixed-tile-cpu-v18/workflow.sh?raw";
+import summary from "../../examples/mixed-tile-cpu-v18/fed6998b-20261001/summary.json?raw";
+import capture from "../../examples/mixed-tile-cpu-v18/fed6998b-20261001/index.json";
+import { readMixedTileCpuSummary } from "./mixed-tile-cpu-evidence";
+
+const observed = readMixedTileCpuSummary(summary);
 
 export const mixedTileCpuV18Evidence = {
-  compilerRef: "ae162efd2bc8df7a061108a126333c378ac980d9",
-  sourceSha256: "e8aad7f11d63371e7d97e915dcbb5e35a6f44b885750a621696895f7d8810ee5",
-  oracleSha256: "e7f6db79016e7fa1f559294c292817802c0466b608f060448e5e5e58601230cf",
-  batch: "v18-public-example-cli-mir0-ae162efd2bc8df7a061108a126333c378ac980d9-20260929203358-887257",
-  summarySha256: "a24a67fa0fbfda70909a0747c086668bee131885f34e3026830f45d06c4bc738",
-  blockedResponsesSha256: "624936067e9cab1d522542b3c636bb73e6070c243299eaaaec45e611832b9b24",
-  stripedResponsesSha256: "50d54fda2a67962cb76e2b632b8895e5e95005cd227741045b983da76e367a7f",
+  compilerRef: capture.source.commit,
+  compilerTree: capture.source.tree,
+  sourceSha256: capture.source.kernel.sha256,
+  oracleSha256: capture.source.oracle.sha256,
+  captureDirectory: "fed6998b-20261001",
+  captureIndexSha256: "fc93a0c69c14c644f7a671da3dd6422ed4c0389e509f2cd677e27bf064c05523",
+  batch: "scoped-tile-ordinary-fed6998b-20261001-r1",
+  summarySha256: capture.summary.sha256,
+  blockedResponsesSha256: capture.debuggerEvidence[0].files.debuggerRepliesRaw.sha256,
+  stripedResponsesSha256: capture.debuggerEvidence[1].files.debuggerRepliesRaw.sha256,
   fixtureSourceInjection: false,
-  hostOracleTests: 6,
-  inventories: 2,
-  simulations: 52,
-  debuggerSessions: 2,
-  negativeControls: 10,
+  hostOracleTests: capture.hostOracle.tests,
+  inventories: observed.inventories,
+  simulations: observed.simulations,
+  debuggerSessions: observed.debuggerSessions,
+  negativeControls: observed.negativeControls,
 } as const;
 
 export const mixedTileCpuV18: NarrativeRegistryEntry = {
@@ -29,7 +37,7 @@ export const mixedTileCpuV18: NarrativeRegistryEntry = {
       type: "callout",
       tone: "info",
       title: "An ordinary crate, two measured CPU executions",
-      text: "The opt-in mixed-tile-u32-kernel example completed the public exporter, metadata inventory, simulator, and JSONL debugger workflow at compiler ae162efd2bc8df7a061108a126333c378ac980d9. Both orders used the same ordinary Cargo manifest and shared export target directory, with fresh canonical outputs and no source-injection fixture. This is CPU diagnostic evidence, not a completed native SIMT/tile pair.",
+      text: "The opt-in mixed-tile-u32-kernel example completed the public exporter, metadata inventory, simulator, and JSONL debugger workflow at compiler fed6998b1a5eaf2530e94664a1ede650382a8990. Both orders used the same ordinary Cargo manifest and shared export target directory, with fresh canonical outputs and no source-injection fixture. This is CPU diagnostic evidence, not a completed native SIMT/tile pair.",
     },
     {
       type: "paragraph",
@@ -71,7 +79,7 @@ export const mixedTileCpuV18: NarrativeRegistryEntry = {
     },
     {
       type: "paragraph",
-      text: "The qualification passed six independent host-oracle tests, two public inventories, 52 exact-byte/initialization simulations, two complete 15-command debugger sessions, and ten refusal or unavailable controls. Cases cover empty input, lengths around 64 and 192, shifted and overflowing 64-bit bases, short outputs, and multiple workgroups. The simulator reported amdgpu_64_little_endian_v1 with 64-bit indices, separately from the gfx942 source profile.",
+      text: `The qualification passed ${capture.hostOracle.tests} independent host-oracle tests in a separate stage, ${observed.inventories} public inventories, ${observed.simulations} exact-byte/initialization simulations, ${observed.debuggerSessions} complete debugger sessions (${observed.sessions.map((session) => session.order + ": " + session.commands + " commands").join(", ")}), and ${observed.negativeControls} refusal or unavailable controls. Cases cover empty input, lengths around 64 and 192, shifted and overflowing 64-bit bases, short outputs, and multiple workgroups. The simulator reported amdgpu_64_little_endian_v1 with 64-bit indices, separately from the gfx942 source profile.`,
     },
     {
       type: "paragraph",
@@ -81,7 +89,7 @@ export const mixedTileCpuV18: NarrativeRegistryEntry = {
       type: "table",
       headers: ["Measured ordinary-crate observation", "Blocked", "Striped"],
       rows: [
-        ["Canonical KIR identity", "b3521f1d58a6ff1d73bfd818c596fa55dd43ba4c1b801d6e2a062fd92bb66dac", "0601648b09e63ac2ccc58e32efbd388c6d54185f31cc0ccf6aeb7631f928b0ce"],
+        ["Canonical KIR identity", "a58177f9bea89f254338746e3f871bea254f9d4fae6d6fdcb26ad1342d2e2e2b", "7e1cd6d19d36bc14a8633319751cc8ecc6b910f03051a7f7c89544338a0fe22a"],
         ["Canonical bytes / storage-layout rows", "4,766 / 15", "4,766 / 15"],
         ["Initial output-view initialization", "0xff0f000000f00f", "0xff0f000000f00f"],
         ["Final captured initialization", "0xffffffffffff0f", "0xffffffffffff0f"],
@@ -92,6 +100,10 @@ export const mixedTileCpuV18: NarrativeRegistryEntry = {
     {
       type: "paragraph",
       text: "Both orders retained the same source-semantic and pending identity while their canonical and schedule identities differed. The recorded input repeats selected wrapping-boundary values; it is not the README's separate 1..=65 example. The Public CLI workflow tab reuses this recorded boundary input while discovering the fresh export's kernel ID. Raw request and response files remain byte-exact, including 64-bit active masks.",
+    },
+    {
+      type: "paragraph",
+      text: "The retained index binds the exact compiler source, CLI-stage receipts, separate host-oracle result, and copied files. Tool hashes were measured after the run; they are not a pre-run execution attestation. Earlier ae162efd captures remain unchanged and are not relabeled as this qualification.",
     },
     {
       type: "callout",
@@ -108,9 +120,10 @@ export const mixedTileCpuV18Claim: Claim = {
   detail: "The ordinary mixed-tile-u32-kernel crate passed two fresh raw V18 exports, two inventories, 52 oracle simulations and two complete debugger sessions, with ten refusal/unavailable controls. Both orders are independently checked algorithms, not a cross-order equivalence claim. Native SIMT/tile pairs remain pending.",
   reference: qualificationReference(
     mixedTileCpuV18Evidence.compilerRef,
-    "24517b56b080037732cabfb37cec85d6c139ca47",
+    mixedTileCpuV18Evidence.compilerTree,
     [
       "cargo test --locked --manifest-path examples/workgroup_sync_v1/Cargo.toml --no-default-features --test mixed_tile",
+      "cargo test --locked -p rustc-codegen-fe2o3 --test production_scoped_tile_cpu_driver_v1 ordinary_mixed_tile_source_executes_public_cpu_cli_paths -- --ignored --exact --test-threads=1",
       "fe2o3-export-sim --diagnostic-kir-v18 --diagnostic-tile-order blocked --crate fe2o3_workgroup_sync_v1 --target gfx942 --target-dir target/mixed-tile-export --output blocked.kir -- --manifest-path examples/workgroup_sync_v1/Cargo.toml --no-default-features --features mixed-tile-u32-kernel",
       "fe2o3-kir-sim inspect --diagnostic-kir-v18 blocked.kir --output blocked.inventory.json",
       "fe2o3-kir-sim --diagnostic-kir-v18 blocked.kir --request blocked.request.json --output blocked.result.json",
@@ -121,6 +134,7 @@ export const mixedTileCpuV18Claim: Claim = {
       "examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs",
       "examples/workgroup_sync_v1/src/mixed_tile_oracle.rs",
       "examples/workgroup_sync_v1/tests/mixed_tile.rs",
+      "crates/rustc-codegen-fe2o3/tests/production_scoped_tile_cpu_driver_v1.rs",
       "docs/diagnostic-scoped-tile-v18.md",
     ],
     {
@@ -168,7 +182,7 @@ export const mixedTileCpuV18Tabs: CodeTab[] = [
     label: "Recorded mixed CPU observations",
     language: "text",
     explanatory: true,
-    notice: "Selected exact fields from ordinary-crate debugger responses at ae162efd. Complete byte-exact requests and responses are retained under examples/mixed-tile-cpu-v18.",
+    notice: "Selected exact fields from ordinary-crate debugger responses at fed6998b. Byte-exact requests, responses and source-bound receipts are retained under examples/mixed-tile-cpu-v18/fed6998b-20261001.",
     code: String.raw`workgroup [0,0,0]
   wave 0: width=64, active_mask=18446744073709551615
   interpretation=logical_visualization
