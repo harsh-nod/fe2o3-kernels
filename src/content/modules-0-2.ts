@@ -11,6 +11,7 @@ import sourceSimulationResult from "../../examples/source_simulation_result.json
 import sourceSimulationSchedule from "../../examples/source_simulation_schedule_v1.json?raw";
 import currentMilestones from "../../config/debugger-profiler-current-milestones.json";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
+import currentFillKernel from "../../examples/fill/src/lib.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import safeCpuReferences from "../../examples/verus_vecadd/src/reference.rs?raw";
@@ -335,15 +336,15 @@ const fill: Lesson = {
   tabs: completeReferenceTabs(
     {
       language: "rust",
-      code: fillKernel,
+      code: currentFillKernel,
       sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "7a536e0a001202ac0bb9d8647c5395661f8fa1ec",
+      sourceCommit: "f84c2a59ba34c3e4c12e316cc9b30f14342e36cf",
       sourceSha256:
-        "827ea368df5dd7f429792e0f8a21df79d4d5508525061a844c190da25de54213",
+        "66593042d32204a35d4371de11387466c6eb553b54a24d21e370f47b3ee4789e",
       sourceDigestScope: "file",
       explanatory: false,
       notice:
-        "Exact no_std library source at 7a536e0a. The recorded no-GPU execution remains pinned to its historical revision; it does not qualify this refreshed source.",
+        "Exact whole-file source at f84c2a59, with default features and no selected features. The reference-proof feature is opt-in and is not selected by this fixture. Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed, and no SIMT/tile pair is qualified. The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins.",
     },
     {
       language: "rust",

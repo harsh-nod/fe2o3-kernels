@@ -152,6 +152,53 @@ describe("evidence source digest scopes", () => {
     expect(() => validateSourceEvidence(tabEvidenceSource(lesson.id, tab)!, Buffer.from(source))).not.toThrow();
   });
 
+  it("refreshes only the fill source binding while preserving historical evidence", () => {
+    const lesson = lessons.find((candidate) => candidate.id === "first-fill")!;
+    expect(lesson.tabs).toHaveLength(5);
+    expect(lesson.tabs.slice(1).map((tab) => [
+      tab.label,
+      createHash("sha256").update(authorFacingCode(tab).code).digest("hex"),
+    ])).toEqual([
+      ["Safe CPU reference", "5fd27aaa8e84786e83438ac7c0800a599c41704286131599dab2bb8a21b8c989"],
+      ["Verus proof", "ecc01851ba9887d26c41da73d5de1ca360a3a2714269245dc5eb11a09dd49bf9"],
+      ["Host", "5543996a4b1ad515666f04d1b5f2ee980d01e2bd63910010eb4b7c9b83370093"],
+      ["Expected result", "83873eed61a2391112dd3cb7dccd480b81ead7a949d0d873aef0e36a1b63edc3"],
+    ]);
+    expect(lesson.tabs[1].sourceCommit).toBe("308d8fa00fa41e098b2a1a47bbfea1bc29735464");
+    const tab = lesson.tabs[0];
+    expect(tab).toMatchObject({
+      kind: "kernel",
+      label: "Kernel",
+      language: "rust",
+      sourcePath: "examples/fill/src/lib.rs",
+      sourceCommit: "f84c2a59ba34c3e4c12e316cc9b30f14342e36cf",
+      sourceSha256: "66593042d32204a35d4371de11387466c6eb553b54a24d21e370f47b3ee4789e",
+      sourceDigestScope: "file",
+      explanatory: false,
+    });
+    const source = readFileSync(tab.sourcePath!, "utf8");
+    expect(tab.code).toBe(source);
+    expect(Buffer.byteLength(source)).toBe(680);
+    expect(createHash("sha256").update(source).digest("hex")).toBe(tab.sourceSha256);
+    expect(source.indexOf("fill_reference")).toBe(152);
+    expect(source.indexOf("pub fn fill(") + "pub fn ".length).toBe(520);
+    expect(tab.sourceFragments).toBeUndefined();
+    expect(tab.evidenceId).toBeUndefined();
+    expect(tab.notice).toContain("default features and no selected features");
+    expect(tab.notice).toContain("reference-proof feature is opt-in");
+    expect(tab.notice).toContain("Source association only");
+    expect(tab.notice).toContain("no SIMT/tile pair is qualified");
+    expect(tab.notice).toContain("7a536e0a retain their independent historical pins");
+    expect(() => validateSourceEvidence(tabEvidenceSource(lesson.id, tab)!, Buffer.from(source))).not.toThrow();
+
+    const historical = readFileSync("examples/fill_kernel.rs", "utf8");
+    expect(Buffer.byteLength(historical)).toBe(308);
+    expect(createHash("sha256").update(historical).digest("hex"))
+      .toBe("827ea368df5dd7f429792e0f8a21df79d4d5508525061a844c190da25de54213");
+    const proof = lessons.find((candidate) => candidate.id === "verus-contracts")!;
+    expect(proof.tabs[0].code).toBe(historical);
+  });
+
   it.each(wholeFileTabs)("rejects changed whole-file display bytes: $tab.sourcePath", ({ lessonId, tab }) => {
     const pinned = Buffer.from(tab.code);
     for (const code of [
