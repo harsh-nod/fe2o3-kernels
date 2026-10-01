@@ -215,3 +215,51 @@ test('request writer creates once with private permissions and never replaces a 
     assert.throws(() => writeRequest(path.join(directory, 'large.json'), Buffer.alloc(REQUEST_LIMIT + 1)));
   });
 });
+
+test('public Cargo lesson binds the published implementation and keeps earlier evidence separate', () => {
+  const text = lesson();
+  const evidence = JSON.parse(load('cargo-evidence.json'));
+  assert.equal(evidence.schema, 'fe2o3-bf16-cargo-tutorial-evidence-v1');
+  assert.equal(evidence.implementation_commit, 'd125dd02b91f60756c052f5d9f734d24731765cc');
+  assert(text.includes('/commit/' + evidence.implementation_commit));
+  assert(text.includes('scripts/bf16-source-workflow.mjs'));
+  for (const option of ['--repo', '--extractor', '--cargo', '--rustc', '--work', '--deadline'])
+    assert(text.includes(option));
+  assert(text.includes('cargo-evidence.json'));
+  assert.equal(JSON.parse(load('public-evidence.json')).implementation_commit,
+    '89e06d9619ef89302e1399906b293a86f6f4d6ad');
+});
+test('Cargo evidence has five actual actions and two exact freshly admitted candidate orders', () => {
+  const e = JSON.parse(load('cargo-evidence.json'));
+  assert.deepEqual(e.actions, ['inspect', 'publish-identity', 'publish-swap01', 'admit-identity', 'admit-swap01']);
+  assert.equal(e.source_publications, 2);
+  assert.equal(e.fresh_nominal_source_admissions, 2);
+  for (const [index, order] of ['identity', 'swap01'].entries()) {
+    const row = e.candidates[index];
+    assert.equal(row.order, order);
+    assert(matches(load(order + '.rs'), [order, row.bytes, row.sha256]));
+    assert.deepEqual(row.return_permutation, index === 0 ? [0, 1, 2, 3] : [1, 0, 2, 3]);
+  }
+});
+test('Cargo evidence does not promote source inspection to executable qualification', () => {
+  const e = JSON.parse(load('cargo-evidence.json'));
+  assert.equal(e.normal_ranked_refusal, 'BF16 nominal source-ranked projection');
+  assert.equal(e.normal_ranked_admissions, 0);
+  assert.equal(e.kernel_artifacts, 0);
+  for (const flag of ['cpu_numerical_replay', 'native_execution', 'complete_runtime_census',
+    'whole_compiler_memory_bound', 'unprovisioned_clean_checkout'])
+    assert.equal(e[flag], false);
+  assert.deepEqual(e.milestones_closed, []);
+  assert.equal(e.extractor_profile, 'debug');
+  for (const p of [e.outer_receipt, e.root_audit, e.workflow_report]) {
+    assert(Number.isSafeInteger(p.bytes) && p.bytes > 0);
+    assert.match(p.sha256, /^[0-9a-f]{64}$/);
+  }
+});
+test('Cargo lesson states current request cwd, fresh reports and outer-supervisor boundary', () => {
+  const text = lesson().replace(/\s+/g, ' ');
+  for (const value of ['original_path: "src/lib.rs"', 'different working directory',
+    'previously absent report', 'outer supervisor', 'inherited process group',
+    'no CPU numerical replay', 'debug build', 'whole-compiler memory limits'])
+    assert(text.includes(value), value);
+});

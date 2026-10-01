@@ -1,0 +1,81 @@
+{
+  "schema": "fe2o3-bf16-cargo-tutorial-evidence-v1",
+  "implementation_commit": "d125dd02b91f60756c052f5d9f734d24731765cc",
+  "tested_source": {
+    "base_commit": "ad34e99f162c5ffd2f66dbc8b307899b7b0cd1c9",
+    "files": 9757,
+    "bytes": 136947818,
+    "sha256": "b3a5aee6820ad78dc4bfd0070e1d662ec826c1504bf0507e5675946424d87247",
+    "relation": "Tested tree contains the subsequently committed eighteen-file implementation; intervening base update was documentation only."
+  },
+  "target": "gfx942:xnack-",
+  "wave_width": 64,
+  "extractor_profile": "debug",
+  "actions": [
+    "inspect",
+    "publish-identity",
+    "publish-swap01",
+    "admit-identity",
+    "admit-swap01"
+  ],
+  "source_publications": 2,
+  "fresh_nominal_source_admissions": 2,
+  "normal_ranked_admissions": 0,
+  "normal_ranked_refusal": "BF16 nominal source-ranked projection",
+  "kernel_artifacts": 0,
+  "cpu_numerical_replay": false,
+  "native_execution": false,
+  "complete_runtime_census": false,
+  "whole_compiler_memory_bound": false,
+  "unprovisioned_clean_checkout": false,
+  "outer_receipt": {
+    "bytes": 48293,
+    "sha256": "23d6545ea40d23f70ada22f810b613fa5dc3c7c56fdb6949b50fbca3c0bb29cd"
+  },
+  "root_audit": {
+    "bytes": 16176,
+    "sha256": "03f10d000f164089aa67051946c0bda7f3720c866bdd5d695eb02c00a2f07f91"
+  },
+  "workflow_report": {
+    "bytes": 5986,
+    "sha256": "5412970bedeb37fc470e656f2bc29880c243ec31c6ed06700ed0e8e372936eeb"
+  },
+  "candidates": [
+    {
+      "order": "identity",
+      "bytes": 4381,
+      "sha256": "cf90e7f1e7f7031bc4845af0f80d52423d5c6e5e56c06e7e487953e30faa785d",
+      "return_permutation": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "order": "swap01",
+      "bytes": 4377,
+      "sha256": "f6a51a0d339eeae1c1aebeebb4e87bb44244a9a1f22dccc7412ae300148dfd86",
+      "return_permutation": [
+        1,
+        0,
+        2,
+        3
+      ]
+    }
+  ],
+  "resources_at_workflow_report": {
+    "entries": 624,
+    "target_bytes": 361337292,
+    "evidence_bytes": 155901
+  },
+  "selected_read_bytes": 87931096,
+  "earlier_independent_run": {
+    "outer_receipt": {
+      "bytes": 48293,
+      "sha256": "d1f2f5ed77f7e569a0adff4a40ab9310f96567d13fd7614f6bfa35dea6f03fe8"
+    },
+    "not_combined_with_this_run": true
+  },
+  "milestones_closed": []
+}
