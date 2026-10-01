@@ -1,0 +1,133 @@
+{
+  "schema": "fe2o3-bf16-public-source-tutorial-evidence-v1",
+  "implementation_commit": "89e06d9619ef89302e1399906b293a86f6f4d6ad",
+  "qualified_operation": "Actual direct fe2o3-rustc-extract wrapper invocation with fresh retained rustc arguments; not the complete Cargo wrapper pipeline.",
+  "tested_source": {
+    "base_commit": "9f7f1cbf3c12ca98609f7183cf5858b9ec08baae",
+    "files": 9708,
+    "bytes": 136378600,
+    "sha256": "65cb667a72b1ffedbc850715bd3d1923ea939ff77500c8c0f005eeb62c7ee94a",
+    "relation": "Tested tree included the subsequently committed public source-driver changes. This is not a claim that later source edits were requalified."
+  },
+  "positive": {
+    "totals": {
+      "direct_children": 13,
+      "public_cli_calls": 3,
+      "successful_inspections": 1,
+      "publications": 2,
+      "expected_cli_refusals": 0,
+      "fresh_candidates": 2,
+      "fresh_frontend_sessions": 2,
+      "positive_cpu_requests": 36,
+      "negative_cpu_requests": 32,
+      "complete_sidecars": 2,
+      "raw_sidecar_bytes": 210880
+    },
+    "root_receipt": {
+      "bytes": 170130,
+      "sha256": "eccc73fb6cfd1efac9b605ab7b8d2daa6c5d9a853116b5cb45e6581eb2d83797"
+    },
+    "parent_receipt": {
+      "bytes": 107628,
+      "sha256": "1df17e109d195c9503cd0f394e2986d462f1f5ae2c859db98dc23d37ee2c2658"
+    },
+    "root_audit": {
+      "bytes": 8744,
+      "sha256": "d0717812241a0cbe8c53d94c483f5b3be056e4c247c8dc9f9254e0ab3e305d0d"
+    }
+  },
+  "negative": {
+    "totals": {
+      "direct_children": 9,
+      "public_cli_calls": 5,
+      "successful_inspections": 1,
+      "publications": 0,
+      "expected_cli_refusals": 4,
+      "fresh_candidates": 0,
+      "fresh_frontend_sessions": 0,
+      "positive_cpu_requests": 0,
+      "negative_cpu_requests": 0,
+      "complete_sidecars": 0,
+      "raw_sidecar_bytes": 0
+    },
+    "cases": [
+      "malformed request JSON",
+      "stale MIR selector",
+      "existing candidate path",
+      "request without source-output mode"
+    ],
+    "existing_candidate": "original bytes and inode preserved; report retains may_have_created_candidate",
+    "root_receipt": {
+      "bytes": 172954,
+      "sha256": "58e16583ba4730aa67ec153b1e24aae5ea624790cec736093bcef4c8b9faf69a"
+    },
+    "parent_receipt": {
+      "bytes": 59671,
+      "sha256": "9b8e78636e712f629afd1b11de3665433ff57b963a7c548a23bd722c0c4fe5c5"
+    },
+    "root_audit": {
+      "bytes": 4401,
+      "sha256": "28313d9ad0e6fb680ba7d878ff6fcbb7e889b970e68f291bfebf643d1db02f64"
+    }
+  },
+  "examples": [
+    {
+      "file": "public-inspection.example.json",
+      "published_example": {
+        "bytes": 1268,
+        "sha256": "9fc899470962f5f347c04d515e7dffb729f0c33038aa51d4e340fe61a0acf80d"
+      },
+      "original_record": {
+        "bytes": 1136,
+        "sha256": "3a3f7f603bb845ebfcda921ba8a99b801785844f6eda739a3fcac9cf1dc254f5"
+      },
+      "transform": "Parsed and reserialized with two-space indentation and final LF; illustrative data only, not exact original wire or reusable current authority."
+    },
+    {
+      "file": "public-identity-request.example.json",
+      "published_example": {
+        "bytes": 576,
+        "sha256": "a2a74ae2d043a5146ad3cf6b5e9060487da911191fa7e9af0a5c8a4588599c61"
+      },
+      "original_record": {
+        "bytes": 539,
+        "sha256": "290e2fa93e92bf739510c5b6d7815108b20e9823cf94f81749f086ca65b330b0"
+      },
+      "transform": "Parsed and reserialized with two-space indentation and final LF; illustrative data only, not exact original wire or reusable current authority."
+    },
+    {
+      "file": "public-swap01-request.example.json",
+      "published_example": {
+        "bytes": 570,
+        "sha256": "a4146b2919cb68cb820355070c71ad5d347690a14fcbc5ee097bef2c7cc3494e"
+      },
+      "original_record": {
+        "bytes": 533,
+        "sha256": "6e88157eb2520e5d213c0ede8db27231363e309f795d92073216e164a4dc27dc"
+      },
+      "transform": "Parsed and reserialized with two-space indentation and final LF; illustrative data only, not exact original wire or reusable current authority."
+    }
+  ],
+  "source_candidates": [
+    {
+      "order": "identity",
+      "bytes": 4381,
+      "sha256": "cf90e7f1e7f7031bc4845af0f80d52423d5c6e5e56c06e7e487953e30faa785d"
+    },
+    {
+      "order": "swap01",
+      "bytes": 4377,
+      "sha256": "f6a51a0d339eeae1c1aebeebb4e87bb44244a9a1f22dccc7412ae300148dfd86"
+    }
+  ],
+  "limits": {
+    "selection_is_compiler_custody": false,
+    "candidate_compiled_by_public_action": false,
+    "cpu_replay_is_public_command": false,
+    "normal_ranked_admission": false,
+    "gpu_observed": false,
+    "physical_register_control": false,
+    "whole_action_memory_qualified": false,
+    "milestones_closed": []
+  }
+}

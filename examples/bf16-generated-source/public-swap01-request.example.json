@@ -1,0 +1,11 @@
+{
+  "schema": "fe2o3-bf16-tile-source-promotion-request-v1",
+  "semantic_sha256": "cfcc49c95c7eff362e486d09a07d1424779530b3257b7d328294cb342ccf07e8",
+  "canonical_sha256": "e086f121b99c6e1847633b4cc9c2755f86a666229602ea724463113351e424bc",
+  "mir_sha256": "a9f19f39f9e3d888c876c1e0b2850a0035938f4b3fe601721a25ccb2c22653e1",
+  "original_sha256": "fcb26135ad4f931bb8dda63d631639a34dd8461e7801c22a1f6a383e0e735a3e",
+  "original_path": "original/src/lib.rs",
+  "candidate_path": "swap01/src/lib.rs",
+  "helper_name": "__fe2o3_bf16_tile_swap01",
+  "return_order": "swap01"
+}
