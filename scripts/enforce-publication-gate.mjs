@@ -153,7 +153,7 @@ export function requireToken(token) {
 
 export function parseGitResult(result, repository, ref) {
   if (result.error) {
-    fail(`git failed for ${repository}: ${result.error.message}`);
+    fail(`git failed for ${repository}`);
   }
   if (result.status !== 0) {
     fail(`git exited ${String(result.status)} for ${repository}`);
@@ -171,27 +171,35 @@ function loadPolicy() {
   return validatePolicy(parsed);
 }
 
-function resolveAuthenticated(repository, ref, token) {
+export function resolveAuthenticated(repository, ref, token, runGit = spawnSync, environment = process.env) {
+  requireToken(token);
   const basicCredential = Buffer.from(`x-access-token:${token}`, "utf8").toString(
     "base64",
   );
-  const result = spawnSync(
-    "git",
-    [
-      "-c",
-      `http.extraHeader=Authorization: Basic ${basicCredential}`,
-      "ls-remote",
-      "--exit-code",
-      "--refs",
-      `https://github.com/${repository}.git`,
-      ref,
-    ],
-    {
-      encoding: "utf8",
-      timeout: 60_000,
-      maxBuffer: 1024 * 1024,
-    },
-  );
+  let result;
+  try {
+    result = runGit(
+      "git",
+      [
+        "--config-env=http.extraHeader=FE2O3_PUBLICATION_AUTH_HEADER",
+        "ls-remote",
+        "--exit-code",
+        "--refs",
+        `https://github.com/${repository}.git`,
+        ref,
+      ],
+      {
+        encoding: "utf8",
+        timeout: 60_000,
+        maxBuffer: 1024 * 1024,
+        // Keep Git's inherited configuration and precedence, without secret argv.
+        // This does not hide the environment from same-UID process inspection.
+        env: { ...environment, FE2O3_PUBLICATION_AUTH_HEADER: `Authorization: Basic ${basicCredential}` },
+      },
+    );
+  } catch {
+    fail(`git failed for ${repository}`);
+  }
   return parseGitResult(result, repository, ref);
 }
 
@@ -339,6 +347,25 @@ function runSelfTest() {
   }
   process.stdout.write("curriculum publication pin self-test: passed\n");
   requireToken("test-token");
+  const authenticationEnvironment = Object.freeze({ GIT_CONFIG_COUNT: "0" });
+  const authenticationResult = resolveAuthenticated(
+    "harsh-nod/fe2o3", "refs/heads/main", "test-token",
+    (command, arguments_, options) => {
+      const encoded = Buffer.from("x-access-token:test-token").toString("base64");
+      if (command !== "git" ||
+          arguments_[0] !== "--config-env=http.extraHeader=FE2O3_PUBLICATION_AUTH_HEADER" ||
+          arguments_.some((argument) => argument.includes("test-token") || argument.includes(encoded)) ||
+          options.env.GIT_CONFIG_COUNT !== "0" ||
+          options.env.FE2O3_PUBLICATION_AUTH_HEADER !== `Authorization: Basic ${encoded}` ||
+          options.env === authenticationEnvironment ||
+          Object.hasOwn(authenticationEnvironment, "FE2O3_PUBLICATION_AUTH_HEADER")) {
+        throw new Error("self-test changed credential transport or inherited configuration");
+      }
+      return { status: 0, stdout: `${commit}\trefs/heads/main\n` };
+    }, authenticationEnvironment,
+  );
+  if (authenticationResult !== commit) throw new Error("self-test changed authenticated ref parsing");
+  process.stdout.write("publication credential transport self-test: passed\n");
   if (parseLsRemote(`${commit}\trefs/heads/main\n`, "refs/heads/main") !== commit) {
     throw new Error("self-test failed to parse a valid ref");
   }
