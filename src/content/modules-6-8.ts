@@ -1,4 +1,5 @@
 import { currentState } from "./current-state";
+import { currentMoeKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
 import moeTop2Kernel from "../../examples/moe_top2_v1/src/kernel.rs?raw";
 import moeTop2Proof from "../../examples/moe_top2_v1/verus/moe_top2_v1.rs?raw";
@@ -126,7 +127,7 @@ cargo test -p fe2o3-hsa-runtime \\
       notice:
         "Evidence boundary: this combines fixed source/model proof, bounded logical memory/effect proof, typed ownership/lifecycle, compile-fail, and CPU-oracle evidence. It does not establish authenticated proof consumption, compiled Rust or machine semantics, generalized machine memory safety or race freedom, protected GPU dispatch, expert computation, or a numerical GPU result.",
     },
-  ),
+  ).concat(currentMoeKernelTab),
   diagram: "moe",
   exercises: [
     {

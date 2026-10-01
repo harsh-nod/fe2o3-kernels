@@ -1,4 +1,5 @@
 import { currentState } from "./current-state";
+import { currentWaveKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
@@ -366,7 +367,7 @@ const collectives: Lesson = {
       notice:
         "Evidence boundary: this is a source/model result, not a GPU result.",
     },
-  ),
+  ).concat(currentWaveKernelTab),
   diagram: "reduction",
   exercises: [
     {
@@ -604,6 +605,7 @@ const gemmMapping: Lesson = {
       language: "text",
       code: dynamicGemmResult,
     },
+    scalarGemmKernelTab,
   ],
   diagram: "gemm-scalar",
   exercises: [

@@ -73,7 +73,7 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(17);
+    expect(wholeFileTabs).toHaveLength(20);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
       "examples/flash_attention_general_v1/src/kernel.rs",
@@ -87,8 +87,11 @@ describe("evidence source digest scopes", () => {
       "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
       "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
       "examples/moe_grouped_expert_general_v1/src/kernel.rs",
+      "examples/moe_top2_v1/src/kernel.rs",
       "examples/row_softmax_general_v1/src/kernel.rs",
+      "examples/scalar_gemm_v1/src/kernel.rs",
       "examples/tiled_gemm_general_v1/src/kernel.rs",
+      "examples/wave64_collectives_v1/src/kernel.rs",
       "examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs",
       "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
       "examples/workgroup_sync_v1/src/mixed_tile_oracle.rs",
@@ -100,6 +103,46 @@ describe("evidence source digest scopes", () => {
       expect(source.displayedSha256).toBeUndefined();
       expect(evidenceCatalog.sources).toContainEqual(source);
       expect(() => validateSourceEvidence(source, Buffer.from(tab.code))).not.toThrow();
+    }
+  });
+
+  it.each([
+    ["moe-routing", 5, "moe_top2_v1", "kernel_current.rs",
+      "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
+      "8b8b3477b7d9670b7a0356b05ff2aaab2aaec9f0b919bf26c4c46215d1a81eb4", 7332],
+    ["reductions-scans", 5, "wave64_collectives_v1", "kernel_current.rs",
+      "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
+      "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d", 2384],
+    ["gemm-tiling", 7, "scalar_gemm_v1", "kernel.rs",
+      "6399ee2cf8456c6237a89d5507f50c1872602269",
+      "b3a21a1fdd7f6fbede2437551500cabddb4500d4a07371f821a2c9a8ab620b21", 1818],
+  ] as const)("appends independently pinned current source: %s", (
+    lessonId, ordinal, example, snapshot, commit, digest, size,
+  ) => {
+    const lesson = lessons.find((candidate) => candidate.id === lessonId)!;
+    expect(lesson.tabs).toHaveLength(ordinal + 1);
+    const tab = lesson.tabs[ordinal];
+    const source = readFileSync(`${process.cwd()}/examples/${example}/src/${snapshot}`, "utf8");
+    expect(tab).toMatchObject({
+      kind: "kernel", language: "rust", sourceDigestScope: "file", explanatory: false,
+      sourcePath: `examples/${example}/src/kernel.rs`,
+      sourceCommit: commit, sourceSha256: digest,
+    });
+    expect(tab.code).toBe(source);
+    expect(authorFacingCode(tab).code).toBe(source);
+    expect(Buffer.byteLength(source)).toBe(size);
+    expect(createHash("sha256").update(source).digest("hex")).toBe(digest);
+    expect(tab.sourceFragments).toBeUndefined();
+    expect(tab.evidenceId).toBeUndefined();
+    expect(tab.notice).toContain("Source association only");
+    expect(tab.notice).toContain("qualifies no SIMT/tile pair");
+    expect(tab.notice).toContain("remain pending");
+    if (snapshot === "kernel_current.rs") {
+      const historical = readFileSync(`${process.cwd()}/examples/${example}/src/kernel.rs`, "utf8");
+      expect(lesson.tabs[0].code).toBe(historical);
+      expect(lesson.tabs[0].evidenceId).toBeDefined();
+      expect(source).not.toBe(historical);
+      expect(lesson.tabs[0].sourceCommit).not.toBe(commit);
     }
   });
 
