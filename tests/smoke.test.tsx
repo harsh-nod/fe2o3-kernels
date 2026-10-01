@@ -172,6 +172,9 @@ describe("application shell", () => {
       ),
     ).toBeInTheDocument();
 
+    await waitFor(() => {
+      expect(document.getElementById("main-content")).toHaveFocus();
+    });
     const index = document.querySelector(".operator-index");
     expect(index).not.toBeNull();
     const fillLink = within(index as HTMLElement).getByRole("link", {
@@ -179,6 +182,7 @@ describe("application shell", () => {
     });
     expect(fillLink).toHaveAttribute("href", "#/operators?status=current#fill");
     fillLink.focus();
+    expect(fillLink).toHaveFocus();
     await user.keyboard("{Enter}");
 
     const fill = document.getElementById("fill");
