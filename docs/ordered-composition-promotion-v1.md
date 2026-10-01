@@ -379,3 +379,62 @@ broader milestone exits are not closed by this lesson. Accepted exits remain
 The [source-owned tiled inspection checkpoint](tiled-region-inspection-checkpoint-v1.md)
 separates the newer source-role, static transport and disabled debugger-package
 results from still-unqualified tiled and live-GPU workflows.
+
+## 9. Promote a bounded literal repeat
+
+Compiler implementation `a209ae259299069479570cff7726cec7ff0b448e` extends
+the root-region publisher to one literal `init` plus `repeat(N)`, with
+`N` from 1 through 15 and at most sixteen expanded instructions. The
+[exact two-copy input](../examples/ordered-composition/repeat-2.rs)
+contains this region:
+
+```rust
+    let value = fe2o3_device::amdgpu_ordered_program! {
+        gfx942_xnack_off_wave64;
+        scratch(8); out(9); in(10) = a; in(11) = b; in(12) = c;
+        init { mov(out, input0); }
+        repeat(2) { add(out, out, input1); }
+    };
+```
+
+Select the actual region and create a new helper candidate as in sections 3–6.
+With no edit, the generated helper contains the **flat expanded instructions**:
+one move followed by two additions. It does not reconstruct the repeat syntax,
+a generic family or the original generator. Changing the literal to 1 or 15
+requires a new source selection and fresh compilation.
+
+For a copied candidate, use the independent wrapping-u32 oracle
+`a + N * b`. The intentional MoveInput2 edit from section 5 instead uses
+`c`. Ancestry does not justify comparing that edited candidate to the old
+formula or keeping old proof/capture identities.
+
+This is an exact source profile: a direct qualified macro in the kernel root,
+three direct u32 formal inputs, canonical decimal count, one initialization
+block and one nonnested repeat. Unsupported comments inside the selected macro,
+aliases, captures, nested repeats, const expressions and conditional generation
+refuse. Other bytes in the original file remain unchanged. Source grammar
+acceptance for promotion is narrower than general macro compilation.
+
+The dated qualification exercised counts 1, 2 and 15: six create-new
+publications and six independently compiled candidates, plus a fresh
+source-spelling refusal. Thirteen genuine frontend sessions checked 384 CPU
+cases and 288 deliberately wrong result expectations. The Rust adapters checked
+whole backing buffers, initialization, tails and canaries; the retained frames
+contain aggregate result digests, not standalone raw-buffer captures.
+
+These are **private live compiler-callback checks**, not a new qualification of
+the public library action, extractor CLI, normal ranked/LLVM handoff, native
+output or GPU execution for repeated candidates. The earlier section 8
+results remain specific to its separate flat-source profiles. The repeat
+campaign used its recorded pre-integration source snapshot; later combined-tree
+debug and optimized regressions are separate evidence, not a replay of that
+campaign. No milestone or site publication pin is advanced by this extension.
+
+The three complete repeat inputs are copied byte for byte from that implementation
+commit. These pins identify tutorial source, not compiler or execution authority.
+
+| Literal count | Source bytes | SHA-256 |
+| --- | ---: | --- |
+| 1 | 640 | `897b9b77fe1070673616be9441836fb1f913233f3c7f4a7681cb0cd32def451d` |
+| 2 | 640 | `976152b24bcdb5594007aa539144139c7f1af6b38e43413d890c1e01791c0b74` |
+| 15 | 641 | `7f1639d4675d081b85460490def32597225a9623bef2df25befe1e5335328275` |
