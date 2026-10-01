@@ -274,3 +274,33 @@ The separate acceptance report retains exact source/tool/output pins and
 distinguishes ordinary example execution from the test-only actual-`L` observer.
 The eight ordinary processes add no simulation or proof counts. Historical
 feasibility results are not reused as qualification for this release entry point.
+
+## Read the replay timing evidence
+
+The [compiler observation report](https://github.com/harsh-nod/fe2o3/blob/5642c7f847f395afde27c5b7aee1e8b50e945204/docs/recipe-and-const-observation-20261001.md)
+adds a separate test-build performance exercise for this positive source profile.
+It does not replace the ordinary release-example qualification above or change
+the site's pinned lesson baseline.
+
+Open the report and its linked numerical record, then check:
+
+1. Find the independent ordinary Replay output: 15,326 bytes. Every warm sample
+   must match its complete output identity; a fast result with different bytes
+   is not a successful replay.
+2. Separate the first five calibration calls from the thirty measured calls.
+   Sort only the measured nanoseconds and select ranks 15, 29 and 30. The recorded
+   p50, p95 and maximum are 94.105939, 94.760289 and 94.804949 ms.
+3. Compare p95 with the named 500 ms target, then read the timer boundary.
+   This series reuses one active frontend but creates and consumes a fresh
+   transaction each time. It is not the latency of the command-line Replay
+   invocation in this lab.
+4. Find the unavailable memory result. The 128 MiB retained-owner target is
+   still unqualified; neither a small recipe file nor a small returned output
+   accounts for all simultaneously live compiler objects.
+
+The same report includes three source-attributed const-provider observations
+for the [bounded instruction-program walkthrough](ordered-program-authoring-v1.md).
+They are inclusive provider intervals, not isolated helper costs or a warm
+generation percentile series. Reading these records is a read-only exercise:
+it does not compile, launch a GPU, promote the draft program lesson, or establish
+completion of the broader small and tiled kernel workflows.
