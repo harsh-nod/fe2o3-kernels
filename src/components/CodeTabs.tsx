@@ -6,13 +6,26 @@ import {
   Info,
   ShieldCheck,
 } from "lucide-react";
-import { useState, type KeyboardEvent } from "react";
+import { useLayoutEffect, useRef, useState, type KeyboardEvent } from "react";
 import { sourceUrl, type CodeTab } from "../content/model";
 import { authorFacingCode } from "../lib/kernel-authoring";
 import { HighlightedCode } from "./HighlightedCode";
 
 function isProofDetail(tab: CodeTab): boolean {
   return tab.kind === "spec" || tab.kind === "verus";
+}
+
+function revealTab(tab: HTMLButtonElement) {
+  const list = tab.parentElement!;
+  const start = list.getBoundingClientRect().left + list.clientLeft;
+  const end = start + list.clientWidth;
+  const bounds = tab.getBoundingClientRect();
+  // Oversized labels keep their leading edge visible; other tabs move only as needed.
+  if (bounds.width > list.clientWidth || bounds.left < start) {
+    list.scrollLeft += bounds.left - start;
+  } else if (bounds.right > end) {
+    list.scrollLeft += bounds.right - end;
+  }
 }
 
 export function CodeTabs({
@@ -24,6 +37,7 @@ export function CodeTabs({
 }) {
   const [active, setActive] = useState(0);
   const [copied, setCopied] = useState(false);
+  const tabListRef = useRef<HTMLDivElement>(null);
   const [showProofDetails, setShowProofDetails] = useState(
     proofDetailsInitiallyOpen,
   );
@@ -40,10 +54,21 @@ export function CodeTabs({
   const authoringProjection = authorFacingCode(current);
   const isAuthoringProjection = authoringProjection.removedNamespaceCount > 0;
 
+  useLayoutEffect(() => {
+    const selected = tabListRef.current?.querySelector<HTMLButtonElement>('[aria-selected="true"]');
+    if (selected) revealTab(selected);
+  }, [currentEntry.sourceIndex, showProofDetails]);
+
   const copy = async () => {
     await navigator.clipboard.writeText(authoringProjection.code);
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1400);
+  };
+
+  const selectTab = (sourceIndex: number, tab: HTMLButtonElement) => {
+    setActive(sourceIndex);
+    tab.focus({ preventScroll: true });
+    revealTab(tab);
   };
 
   const handleKeys = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -53,8 +78,10 @@ export function CodeTabs({
     const next =
       (currentVisibleIndex + delta + visibleTabs.length) % visibleTabs.length;
     const nextSourceIndex = visibleTabs[next].sourceIndex;
-    setActive(nextSourceIndex);
-    document.getElementById(`code-tab-${nextSourceIndex}`)?.focus();
+    const tab = event.currentTarget.querySelector<HTMLButtonElement>(
+      `#code-tab-${nextSourceIndex}`,
+    );
+    if (tab) selectTab(nextSourceIndex, tab);
   };
 
   return (
@@ -81,7 +108,7 @@ export function CodeTabs({
           </button>
         </div>
       )}
-      <div className="code-tabs" role="tablist" onKeyDown={handleKeys}>
+      <div className="code-tabs" role="tablist" ref={tabListRef} onKeyDown={handleKeys}>
         {visibleTabs.map(({ tab, sourceIndex }) => (
           <button
             id={`code-tab-${sourceIndex}`}
@@ -91,7 +118,7 @@ export function CodeTabs({
             aria-controls="lesson-code-panel"
             tabIndex={currentEntry.sourceIndex === sourceIndex ? 0 : -1}
             className={currentEntry.sourceIndex === sourceIndex ? "active" : ""}
-            onClick={() => setActive(sourceIndex)}
+            onClick={(event) => selectTab(sourceIndex, event.currentTarget)}
             key={`${tab.kind}:${tab.label}:${sourceIndex}`}
           >
             {tab.label}
