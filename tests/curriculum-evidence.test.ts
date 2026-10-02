@@ -123,7 +123,7 @@ describe("V2 diagnostic KIR source-driver expectations", () => {
       for (const wholeFile of [false, true]) {
         const value = diagnosticSourceDriverFixture(orders, wholeFile);
         const before = structuredClone(value.manifest);
-        expect(validate(value.manifest, value.current)).toEqual({ lessons: 56, codeTabs: 311, status: "pending" });
+        expect(validate(value.manifest, value.current)).toEqual({ lessons: 56, codeTabs: 317, status: "pending" });
         expect(value.manifest).toEqual(before);
         expect(value.manifest.curriculum.lessons[0].codeTabs[0].sourceItemStatus).toBe("contract-bound");
         expect(value.manifest.curriculum.lessons[0].variants.every((variant) =>
@@ -292,7 +292,7 @@ describe("V2 whole-file source-driver contracts", () => {
     expect(item.sourceRanges).toEqual([{ byteOffset: 0, byteLength: Buffer.byteLength(tab.code) }]);
     expect(Buffer.byteLength(tab.code)).toBeGreaterThan(tab.code.length);
     expect(tab.sourceCommit).not.toBe(manifest.curriculum.site.commit);
-    expect(validate(manifest, current)).toEqual({ lessons: 56, codeTabs: 311, status: "pending" });
+    expect(validate(manifest, current)).toEqual({ lessons: 56, codeTabs: 317, status: "pending" });
   });
 
   it("rejects incomplete ranges and mixed or stale identities even after repinning", () => {
@@ -367,7 +367,7 @@ describe("V2 displayed source-driver contracts", () => {
 
   it("retains pending qualification with exact export/refusal rows and reversed source ranges", () => {
     const { current, manifest } = sourceDriverFixture();
-    expect(validate(manifest, current)).toEqual({ lessons: 56, codeTabs: 311, status: "pending" });
+    expect(validate(manifest, current)).toEqual({ lessons: 56, codeTabs: 317, status: "pending" });
   });
 
   it("preserves strict V1 and rejects unknown curriculum versions", () => {
@@ -434,7 +434,7 @@ describe("V2 displayed source-driver contracts", () => {
 
 describe("compiler-owned curriculum evidence", () => {
   it("binds every runtime lesson and ordered code tab without qualification", () => {
-    expect(validate(fixture())).toEqual({ lessons: 56, codeTabs: 311, status: "pending" });
+    expect(validate(fixture())).toEqual({ lessons: 56, codeTabs: 317, status: "pending" });
   });
 
   it("accepts a historical site snapshot without requiring current-site HEAD equality", () => {

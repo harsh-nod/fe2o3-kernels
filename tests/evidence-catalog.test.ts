@@ -73,7 +73,7 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(20);
+    expect(wholeFileTabs).toHaveLength(22);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
       "examples/flash_attention_general_v1/src/kernel.rs",
@@ -91,7 +91,9 @@ describe("evidence source digest scopes", () => {
       "examples/row_softmax_general_v1/src/kernel.rs",
       "examples/scalar_gemm_v1/src/kernel.rs",
       "examples/tiled_gemm_general_v1/src/kernel.rs",
+      "examples/vecadd/src/lib.rs",
       "examples/wave64_collectives_v1/src/kernel.rs",
+      "examples/workgroup_sync_v1/src/kernel.rs",
       "examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs",
       "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
       "examples/workgroup_sync_v1/src/mixed_tile_oracle.rs",
@@ -107,17 +109,23 @@ describe("evidence source digest scopes", () => {
   });
 
   it.each([
-    ["moe-routing", 5, "moe_top2_v1", "kernel_current.rs",
+    ["moe-routing", 5, "moe_top2_v1", "kernel_current.rs", "kernel.rs",
       "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
       "8b8b3477b7d9670b7a0356b05ff2aaab2aaec9f0b919bf26c4c46215d1a81eb4", 7332],
-    ["reductions-scans", 5, "wave64_collectives_v1", "kernel_current.rs",
+    ["reductions-scans", 5, "wave64_collectives_v1", "kernel_current.rs", "kernel.rs",
       "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
       "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d", 2384],
-    ["gemm-tiling", 7, "scalar_gemm_v1", "kernel.rs",
+    ["gemm-tiling", 7, "scalar_gemm_v1", "kernel.rs", "kernel.rs",
       "6399ee2cf8456c6237a89d5507f50c1872602269",
       "b3a21a1fdd7f6fbede2437551500cabddb4500d4a07371f821a2c9a8ab620b21", 1818],
+    ["typed-vecadd", 5, "vecadd", "lib_current.rs", "lib.rs",
+      "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
+      "60ea857d0aaba57e05fc30691b15908c188e449c789c39abd27abf4c35b017e2", 369],
+    ["lds-barriers-atomics", 5, "workgroup_sync_v1", "kernel_current.rs", "kernel.rs",
+      "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
+      "b0074b426ef8ad0b9eea91e933e76dd03240852ce4ce976ccc89c1f2c7f1b515", 2626],
   ] as const)("appends independently pinned current source: %s", (
-    lessonId, ordinal, example, snapshot, commit, digest, size,
+    lessonId, ordinal, example, snapshot, sourceFilename, commit, digest, size,
   ) => {
     const lesson = lessons.find((candidate) => candidate.id === lessonId)!;
     expect(lesson.tabs).toHaveLength(ordinal + 1);
@@ -125,7 +133,7 @@ describe("evidence source digest scopes", () => {
     const source = readFileSync(`${process.cwd()}/examples/${example}/src/${snapshot}`, "utf8");
     expect(tab).toMatchObject({
       kind: "kernel", language: "rust", sourceDigestScope: "file", explanatory: false,
-      sourcePath: `examples/${example}/src/kernel.rs`,
+      sourcePath: `examples/${example}/src/${sourceFilename}`,
       sourceCommit: commit, sourceSha256: digest,
     });
     expect(tab.code).toBe(source);
@@ -143,6 +151,17 @@ describe("evidence source digest scopes", () => {
       expect(lesson.tabs[0].evidenceId).toBeDefined();
       expect(source).not.toBe(historical);
       expect(lesson.tabs[0].sourceCommit).not.toBe(commit);
+    }
+    if (snapshot === "lib_current.rs") {
+      expect(lesson.tabs[0].code).toBe(
+        readFileSync(`${process.cwd()}/examples/vecadd_kernel.rs`, "utf8"),
+      );
+      expect(lesson.tabs[0].sourcePath).toBe("examples/vecadd/src/vecadd_body.rs");
+      expect(lesson.tabs[3].code).toBe(
+        readFileSync(`${process.cwd()}/examples/vecadd_application_boundary.rs`, "utf8"),
+      );
+      expect(lesson.tabs[3].sourcePath).toBe("examples/vecadd/src/main.rs");
+      expect(lesson.tabs[0].code).not.toBe(source);
     }
   });
 

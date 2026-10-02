@@ -1,5 +1,5 @@
 import { currentState } from "./current-state";
-import { currentWaveKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
+import { currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
@@ -474,7 +474,7 @@ const synchronization: Lesson = {
       notice:
         "Evidence boundary: this is a source/model result, not a GPU result.",
     },
-  ),
+  ).concat(currentWorkgroupKernelTab),
   diagram: "memory",
   exercises: [
     {

@@ -1,6 +1,8 @@
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
 import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.rs?raw";
 import scalarGemmKernel from "../../examples/scalar_gemm_v1/src/kernel.rs?raw";
+import vecaddKernel from "../../examples/vecadd/src/lib_current.rs?raw";
+import workgroupKernel from "../../examples/workgroup_sync_v1/src/kernel_current.rs?raw";
 import type { CodeTab } from "./model";
 
 const notice =
@@ -29,6 +31,32 @@ export const currentWaveKernelTab: CodeTab = {
   sourcePath: "examples/wave64_collectives_v1/src/kernel.rs",
   sourceCommit: "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
   sourceSha256: "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice,
+};
+
+export const currentVecaddKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Current source [SOURCE-ONLY]",
+  language: "rust",
+  code: vecaddKernel,
+  sourcePath: "examples/vecadd/src/lib.rs",
+  sourceCommit: "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
+  sourceSha256: "60ea857d0aaba57e05fc30691b15908c188e449c789c39abd27abf4c35b017e2",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice,
+};
+
+export const currentWorkgroupKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Current source [SOURCE-ONLY]",
+  language: "rust",
+  code: workgroupKernel,
+  sourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
+  sourceCommit: "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
+  sourceSha256: "b0074b426ef8ad0b9eea91e933e76dd03240852ce4ce976ccc89c1f2c7f1b515",
   sourceDigestScope: "file",
   explanatory: false,
   notice,

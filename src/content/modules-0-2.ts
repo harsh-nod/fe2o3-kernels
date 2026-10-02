@@ -1,6 +1,7 @@
 import { narrativeSection } from "./narrative-registry";
 import { mixedTileCpuV18Claim, mixedTileCpuV18Tabs } from "./mixed-tile-cpu-v18";
 import { currentState } from "./current-state";
+import { currentVecaddKernelTab } from "./current-kernel-sources";
 import { semanticMilestoneLessonBoundary } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
 import cpuSimulationSource from "../../examples/cpu_simulation_source.rs?raw";
@@ -514,7 +515,7 @@ run-to-run noise. These values do not describe the current fail-closed Worker V3
 application path and do not grant present-day GPU run authority.`,
       ),
     },
-  ),
+  ).concat(currentVecaddKernelTab),
   diagram: "memory",
   exercises: [
     {
