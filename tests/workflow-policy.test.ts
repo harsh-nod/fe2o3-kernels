@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import publicationGate from "../config/publication-gate.json";
+import packageMetadata from "../package.json";
 
 const pagesWorkflow = readFileSync(
   ".github/workflows/pages.yml",
@@ -15,6 +16,22 @@ const pagesProductionContext =
   "if: github.repository == 'harsh-nod/fe2o3-kernels' && github.ref == 'refs/heads/main'";
 
 describe("Pages publication policy", () => {
+  it("includes script and authoring tests in the production validation chain", () => {
+    expect(packageMetadata.scripts["test:scripts"]).toBe(
+      "node --test scripts/*.test.mjs scripts/tests/*.test.mjs",
+    );
+    expect(packageMetadata.scripts.validate.split(" && ")).toEqual([
+      "npm run lint",
+      "npm run typecheck",
+      "npm run test",
+      "npm run test:scripts",
+      "npm run test:authoring-lab",
+      "npm run build",
+    ]);
+    expect(pagesWorkflow).toMatch(/^\s*run: npm run validate\s*$/mu);
+    expect(ciWorkflow).toMatch(/^\s*run: npm run validate\s*$/mu);
+  });
+
   it("pins one exact compiler object contained by both public refs", () => {
     expect(publicationGate).toEqual({
       requiredCommit: "308d8fa00fa41e098b2a1a47bbfea1bc29735464",
