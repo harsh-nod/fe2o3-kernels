@@ -2542,6 +2542,16 @@ describe("curriculum integrity", () => {
       if (advancedPerformanceLessonIds.includes(lessonId)) {
         expectedTabKinds.push("performance");
       }
+      if (lessonId === "gfx950-kda-gdn-linear-attention") {
+        expectedTabKinds.push("kernel");
+        expect(advanced?.tabs.at(-1)).toMatchObject({
+          label: "Baseline source [SOURCE-ONLY]",
+          sourcePath: "examples/gfx950_advanced_attention/src/kda_baseline.rs",
+          sourceCommit: "6399ee2cf8456c6237a89d5507f50c1872602269",
+          sourceSha256: "44a5f7b196b4a62bf197cb694290b7a71db8f2d9c168b3fa3b018c725eae2455",
+          sourceDigestScope: "file",
+        });
+      }
       expect(advanced?.tabs.map((tab) => tab.kind)).toEqual(expectedTabKinds);
 
       const kernel = advanced?.tabs.find((tab) => tab.kind === "kernel");
