@@ -2,12 +2,16 @@ import { expect, test } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("../examples/fill_kernel.rs", import.meta.url), "utf8");
-const revision = "7a536e0a001202ac0bb9d8647c5395661f8fa1ec";
+const source = readFileSync(new URL("../examples/fill/src/lib.rs", import.meta.url), "utf8");
+const historicalSource = readFileSync(new URL("../examples/fill_kernel.rs", import.meta.url), "utf8");
+const revision = "f84c2a59ba34c3e4c12e316cc9b30f14342e36cf";
 
 test("fill preserves exact source and historical execution boundaries", async ({ page, context }, testInfo) => {
-  expect(Buffer.byteLength(source)).toBe(308);
+  expect(Buffer.byteLength(source)).toBe(680);
   expect(createHash("sha256").update(source).digest("hex"))
+    .toBe("66593042d32204a35d4371de11387466c6eb553b54a24d21e370f47b3ee4789e");
+  expect(Buffer.byteLength(historicalSource)).toBe(308);
+  expect(createHash("sha256").update(historicalSource).digest("hex"))
     .toBe("827ea368df5dd7f429792e0f8a21df79d4d5508525061a844c190da25de54213");
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("./#/lesson/first-fill");
@@ -15,7 +19,11 @@ test("fill preserves exact source and historical execution boundaries", async ({
   await expect(code).toBeVisible();
   expect(await code.textContent()).toBe(source);
   await expect(page.locator(".code-status")).toContainText(
-    "The recorded no-GPU execution remains pinned to its historical revision",
+    "Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed",
+  );
+  await expect(page.locator(".code-status")).toContainText("no SIMT/tile pair is qualified");
+  await expect(page.locator(".code-status")).toContainText(
+    "The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins",
   );
   await expect(page.locator(".code-status")).not.toContainText("Current authoring syntax.");
   await expect(page.getByRole("link", { name: "Source", exact: true }))
@@ -39,10 +47,12 @@ test("fill preserves exact source and historical execution boundaries", async ({
 
   await page.goto("./#/lesson/verus-contracts");
   await expect(code).toBeVisible();
-  expect(await code.textContent()).toBe(source);
+  expect(await code.textContent()).toBe(historicalSource);
   await expect(page.locator(".code-status")).toContainText("Explanatory source.");
   await expect(page.locator(".code-status")).not.toContainText("Current authoring syntax.");
   await expect(page.getByLabel("Lesson code").getByRole("link", { name: "Source", exact: true }))
     .toHaveCount(0);
+  await page.getByRole("button", { name: "Copy code", exact: true }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(historicalSource);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

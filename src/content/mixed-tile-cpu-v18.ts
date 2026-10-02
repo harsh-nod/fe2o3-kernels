@@ -139,7 +139,7 @@ export const mixedTileCpuV18Claim: Claim = {
     ],
     {
       target: "gfx942 source profile; CPU semantic execution only",
-      note: "Raw V18 observation-only qualification. No fixture source injection, protected authority, native launch, hardware timing, performance prediction, or completed tutorial pair.",
+      note: "Pinned published WIP revision, not compiler main. Raw V18 observation-only qualification. No fixture source injection, protected authority, native launch, hardware timing, performance prediction, or completed tutorial pair.",
     },
   ),
 };
@@ -155,7 +155,7 @@ export const mixedTileCpuV18Tabs: CodeTab[] = [
     sourceSha256: mixedTileCpuV18Evidence.sourceSha256,
     sourceDigestScope: "file",
     explanatory: false,
-    notice: "Exact ordinary source qualified through raw V18 CPU export, simulation and debugging. Native artifact, KFD execution and complete tutorial-pair qualification remain pending.",
+    notice: "Pinned published WIP revision, not compiler main. Exact ordinary source qualified through raw V18 CPU export, simulation and debugging. Native artifact, KFD execution and complete tutorial-pair qualification remain pending.",
   },
   {
     kind: "reference",

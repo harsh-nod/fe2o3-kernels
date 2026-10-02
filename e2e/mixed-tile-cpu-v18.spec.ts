@@ -130,6 +130,7 @@ test("ordinary mixed tile tutorial binds source, checked CLI results and logical
       await expect(code).toContainText("state=terminated");
     }
     if (label === "Mixed tile source") {
+      await expect(lessonCode.locator(".code-status")).toContainText("Pinned published WIP revision, not compiler main.");
       await expect(lessonCode.getByRole("link", { name: "Source", exact: true })).toHaveAttribute("href",
         "https://github.com/harsh-nod/fe2o3/blob/" + revision + "/examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs");
       await expect(lessonCode.locator(".code-status")).toContainText("Native artifact, KFD execution");
