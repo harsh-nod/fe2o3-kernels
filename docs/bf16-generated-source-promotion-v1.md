@@ -1,5 +1,13 @@
 # Publish BF16 helper source and verify a fresh compilation
 
+Status update, 2026-10-01: bounded basic assembly authoring (M2) is accepted in the
+[compiler acceptance crosswalk](https://github.com/harsh-nod/fe2o3/blob/8b382d7c4c812b3fcfcbd70191ee401cc1905132/docs/evidence/basic-assembly-m2-acceptance-20261001.md).
+The shared ledger is now **7/18: M1, M2, V1, V2, U1, U2, U3**. Older status
+counts below describe their recorded checkpoints. This acceptance does not
+qualify normal BF16 compilation, protected production publication, general
+instruction coverage or physical debugger capture. This lesson's source,
+compiler and evidence pins remain unchanged.
+
 Follow one Rust matrix expression into a compiler-published helper, then check
 that helper in a fresh Rust compilation. Identity preserves the returned
 component order; Swap01 deliberately changes it. The CPU comparison checks
@@ -175,6 +183,82 @@ The existing file retained its bytes and inode. Its failure conservatively
 reported `may_have_created_candidate`. The
 [public evidence summary](../examples/bf16-generated-source/public-evidence.json)
 records the exact audit and receipt hashes, tested source census and limits.
+
+
+## Run the five-action Cargo workflow
+
+The [public Cargo implementation](https://github.com/harsh-nod/fe2o3/commit/d125dd02b91f60756c052f5d9f734d24731765cc)
+adds a complete public source-action sequence: one original inspection, two
+source publications, and two fresh generated-source inspections. It uses real
+Cargo wrapper invocations; you do not reconstruct rustc arguments or set
+Cargo's primary-package marker.
+
+Follow the [Cargo setup and workflow guide](https://github.com/harsh-nod/fe2o3/blob/d125dd02b91f60756c052f5d9f734d24731765cc/docs/bf16-cargo-source-workflow.md)
+in the compiler repository first. It covers the pinned nightly, rustc-dev,
+rust-src, matching extractor/backend libraries, and dependency provisioning.
+The workflow is offline after that setup; this is not evidence of an
+unprovisioned clean-checkout build.
+
+With the guide's `BF16_REPO`, `BF16_EXTRACTOR`, `BF16_CARGO`, `BF16_RUSTC`
+and `BF16_SYSROOT` set to your actual checkout and matching build, run:
+
+~~~bash
+BF16_RUN_PARENT="$(mktemp -d)"
+BF16_DEADLINE="$(date -u -d '+25 minutes' +%Y-%m-%dT%H:%M:%S.000Z)"
+
+LD_LIBRARY_PATH="$BF16_REPO/target/release:$BF16_SYSROOT/lib" \
+node "$BF16_REPO/scripts/bf16-source-workflow.mjs" \
+  --repo "$BF16_REPO" \
+  --extractor "$BF16_EXTRACTOR" \
+  --cargo "$BF16_CARGO" \
+  --rustc "$BF16_RUSTC" \
+  --work "$BF16_RUN_PARENT/run" \
+  --deadline "$BF16_DEADLINE"
+~~~
+
+Use an outer supervisor that owns the inherited process group for
+qualification, as required by the compiler guide. The helper alone does not
+guarantee descendant cleanup after parent death. It retains failure records
+and never retries, overwrites a candidate, or deletes an earlier attempt.
+
+The script creates an original package plus separate Identity and Swap01
+packages under the new work directory. A single fresh Cargo target directory
+is shared by all five actions. Every action must produce a previously absent
+report; a cached action that skips its callback fails the workflow.
+Generated candidates must match their publication's complete bytes, length,
+device and inode, then their fresh admission must match the requested order.
+
+This workflow constructs requests relative to the original package's working
+directory: `original_path: "src/lib.rs"` and
+`candidate_path: "identity/src/lib.rs"` or `"swap01/src/lib.rs"`.
+The earlier lesson's manual request helper uses a different working directory
+and `original/src/lib.rs`; do not mix those request layouts.
+
+Two separately retained runs completed all five actual Cargo actions on
+MI350. The second run qualified the published code after a non-overlapping
+documentation update. It observed Identity `[0, 1, 2, 3]` and Swap01
+`[1, 0, 2, 3]`, each through its own fresh frontend. The
+[Cargo evidence summary](../examples/bf16-generated-source/cargo-evidence.json)
+pins that exact tested source census and retained reports. The qualified
+extractor was a debug build; the commands above document how to build and
+select a matching release extractor, not a separate release-executable replay.
+
+Read `PASSED.json` only after the command exits zero. The two
+`admit-*/observation.json` reports have
+`status: "nominal_source_admitted_normal_ranked_refused"`:
+fresh source was admitted and a nominal pre-ranked representation materialized,
+but normal compilation still refused at
+`BF16 nominal source-ranked projection`. This workflow performs no CPU
+numerical replay, produces no kernel artifact, and launches no GPU kernel.
+It does not replace the earlier independent CPU campaigns or close any
+milestone. Canonical identities in the reports are diagnostic copies, not
+reusable compiler ownership or SHA-256 hashes of serialized IR.
+
+The source/report/request caps are 64 KiB/16 KiB/8 KiB. There are at most five
+direct Cargo actions, five minutes per action, 30 minutes total, an explicit
+absolute deadline, 8 MiB per stream, 128 MiB of non-target evidence and a
+separate 500 MiB target tree. These sampled bounds are not filesystem quotas,
+whole-compiler memory limits, or a complete dependency/runtime inventory.
 
 ## Check the lesson without claiming a replay
 

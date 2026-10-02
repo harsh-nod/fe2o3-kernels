@@ -1,5 +1,13 @@
 # Lab: a guarded assembly body with a compiler-owned ABI
 
+Status update, 2026-10-01: bounded basic assembly authoring (M2) is accepted in the
+[compiler acceptance crosswalk](https://github.com/harsh-nod/fe2o3/blob/8b382d7c4c812b3fcfcbd70191ee401cc1905132/docs/evidence/basic-assembly-m2-acceptance-20261001.md).
+The shared ledger is now **7/18: M1, M2, V1, V2, U1, U2, U3**. Older status
+counts below describe their recorded checkpoints. This acceptance does not
+qualify normal BF16 compilation, protected production publication, general
+instruction coverage or physical debugger capture. This lesson's source,
+compiler and evidence pins remain unchanged.
+
 Experimental contributor exercise for Linux, Node.js 22 or newer, gfx942:xnack-,
 Wave64 and workgroup 64×1×1. It supplements the
 [instruction-edit lab](public-authoring-inspector-lab-v1.md), but uses the

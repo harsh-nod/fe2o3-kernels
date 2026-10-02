@@ -1,5 +1,13 @@
 # Lab: author, inspect, change one instruction, and check again
 
+Status update, 2026-10-01: bounded basic assembly authoring (M2) is accepted in the
+[compiler acceptance crosswalk](https://github.com/harsh-nod/fe2o3/blob/8b382d7c4c812b3fcfcbd70191ee401cc1905132/docs/evidence/basic-assembly-m2-acceptance-20261001.md).
+The shared ledger is now **7/18: M1, M2, V1, V2, U1, U2, U3**. Older status
+counts below describe their recorded checkpoints. This acceptance does not
+qualify normal BF16 compilation, protected production publication, general
+instruction coverage or physical debugger capture. This lesson's source,
+compiler and evidence pins remain unchanged.
+
 This Linux/Node.js 22 lab uses existing public diagnostic tools to compile an
 actual Rust instruction program, inspect its declared registers/instructions,
 check every output and guard, make a real source edit, and repeat the normal
