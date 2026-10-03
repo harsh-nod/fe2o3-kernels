@@ -103,6 +103,10 @@ const sourceAssociationRecords = deepFreeze({
   source: CodeTab;
 }>);
 
+export const sourceAssociationLessonIds = Object.freeze(
+  Object.values(sourceAssociationRecords).map((record) => record.lessonId),
+);
+
 export function isSourceAssociationId(value: unknown): value is SourceAssociationId {
   return typeof value === "string" && hasOwn(sourceAssociationRecords, value);
 }

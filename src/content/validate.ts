@@ -1,6 +1,7 @@
 import { currentState } from "./current-state";
 import {
   isSourceAssociationId,
+  sourceAssociationLessonIds,
   sourceAssociationRecord,
 } from "./current-kernel-sources";
 import { validateDebugSimMilestone } from "./debug-sim-milestone";
@@ -45,8 +46,7 @@ import {
 const exactObjectName = /^[0-9a-f]{40}$/;
 const exactSha256 = /^[0-9a-f]{64}$/;
 const promotedAlgorithmLessonIds = new Set([
-  "reductions-scans",
-  "lds-barriers-atomics",
+  ...sourceAssociationLessonIds,
   "gemm-tiling",
   "gemm-proof-plan",
 ]);
