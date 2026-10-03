@@ -1,4 +1,5 @@
 import { act, cleanup, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { useSyncExternalStore } from "react";
 import { createPath, Router, type Navigator } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -9,6 +10,7 @@ const lesson = vi.hoisted(() => ({
   release: () => {},
   revision: 0,
   listeners: new Set<() => void>(),
+  activate: vi.fn(),
 }));
 
 vi.mock("../src/components/Topbar", () => ({ Topbar: () => null }));
@@ -21,6 +23,7 @@ vi.mock("../src/components/LessonPage", () => ({
       <>
         <h1 id="first-section">First section</h1>
         <h2 id="second-section">Second section</h2>
+        <button onClick={lesson.activate}>Load recording</button>
       </>
     );
   },
@@ -92,6 +95,7 @@ describe("route focus through lazy loading and Suspense", () => {
     lesson.pending = null;
     lesson.revision = 0;
     lesson.listeners.clear();
+    lesson.activate.mockClear();
     frames = new Map();
     nextFrame = 0;
     scrolled = [];
@@ -209,6 +213,45 @@ describe("route focus through lazy loading and Suspense", () => {
       expect(scrolled).toEqual([]);
     },
   );
+
+  it.each(["", "#first-section", "#missing-section"])(
+    "preserves keyboard focus chosen before the queued route frame for hash %j",
+    async (hash) => {
+      const user = userEvent.setup();
+      suspendLesson();
+      renderRoute(`/lesson/example${hash}`);
+      await revealLesson();
+      expect(frames.size).toBe(1);
+
+      const load = screen.getByRole("button", { name: "Load recording" });
+      load.focus();
+      expect(load).toHaveFocus();
+      flushFrames();
+
+      expect(load).toHaveFocus();
+      expect(scrolled).toEqual([]);
+      expect(window.scrollTo).not.toHaveBeenCalled();
+      await user.keyboard("{Enter}");
+      expect(lesson.activate).toHaveBeenCalledExactlyOnceWith(expect.anything());
+    },
+  );
+
+  it("still focuses the destination when the navigation initiator retains focus", async () => {
+    const view = renderRoute();
+    await revealLesson();
+    flushFrames();
+    const load = screen.getByRole("button", { name: "Load recording" });
+    load.focus();
+
+    view.navigate("/lesson/another#second-section");
+    expect(frames.size).toBe(1);
+    expect(load).toHaveFocus();
+    flushFrames();
+
+    const heading = screen.getByRole("heading", { name: "Second section" });
+    expect(scrolled.at(-1)).toBe(heading);
+    expect(heading).toHaveFocus();
+  });
 
   it("cancels a queued focus when the application unmounts", async () => {
     const view = renderRoute();
