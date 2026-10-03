@@ -148,7 +148,11 @@ function RouteFocus() {
 
   // Suspense cancels layout effects while route content is hidden.
   useLayoutEffect(() => {
+    const focusAtCommit = document.activeElement;
     const frame = window.requestAnimationFrame(() => {
+      // Do not overwrite focus chosen after the route became interactive.
+      const active = document.activeElement;
+      if (active !== focusAtCommit && active !== document.body) return;
       if (location.hash) {
         const target = document.getElementById(location.hash.slice(1));
         if (target) {
