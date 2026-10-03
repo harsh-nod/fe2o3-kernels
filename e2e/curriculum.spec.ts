@@ -1508,7 +1508,6 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
   await expect(page.getByRole("tab", { name: "Kernel", exact: true })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByRole("tab", { name: "Current source [SOURCE-ONLY]", exact: true })).toHaveCount(0);
-  await expect(page.getByRole("tabpanel")).toContainText("qualifies no SIMT/tile pair");
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "No host launch is available for this design lesson",
@@ -1519,6 +1518,9 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "do not transfer hardware authority to the current source",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "no fresh execution or completed SIMT/tile pair is claimed",
   );
 
   await page.goto("./#/lesson/lds-barriers-atomics");
