@@ -141,7 +141,8 @@ describe("evidence source digest scopes", () => {
     expect(Buffer.byteLength(source)).toBe(size);
     expect(createHash("sha256").update(source).digest("hex")).toBe(digest);
     expect(tab.sourceFragments).toBeUndefined();
-    expect(tab.evidenceId).toBeUndefined();
+    expect(tab.evidenceId).toBe(lessonId === "reductions-scans"
+      ? "wave64-collectives-current-source-v1" : undefined);
     expect(tab.notice).toContain("Source association only");
     expect(tab.notice).toContain("qualifies no SIMT/tile pair");
     expect(tab.notice).toContain("remain pending");

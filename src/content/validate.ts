@@ -1,4 +1,8 @@
 import { currentState } from "./current-state";
+import {
+  isSourceAssociationId,
+  sourceAssociationRecord,
+} from "./current-kernel-sources";
 import { validateDebugSimMilestone } from "./debug-sim-milestone";
 import {
   debuggerProtocolRequests,
@@ -273,6 +277,25 @@ function validateLesson(
         path: tabPath,
         message: "real source tab lacks exact path, commit, or SHA-256",
       });
+    }
+    if (isSourceAssociationId(tab.evidenceId)) {
+      const association = sourceAssociationRecord(tab.evidenceId);
+      const source = association.source;
+      if (
+        lesson.id !== association.lessonId ||
+        tab.kind !== source.kind || tab.language !== source.language ||
+        tab.sourcePath !== source.sourcePath ||
+        tab.sourceCommit !== source.sourceCommit ||
+        tab.sourceSha256 !== source.sourceSha256 ||
+        tab.sourceDigestScope !== "file" || tab.explanatory !== false ||
+        tab.sourceFragments !== undefined || tab.code !== source.code
+      ) {
+        issues.push({
+          path: tabPath,
+          message: "code tab does not match its exact source-only association",
+        });
+      }
+      continue;
     }
     if (tab.evidenceId) {
       const evidence = isStagedEvidenceId(tab.evidenceId)

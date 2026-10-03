@@ -4899,7 +4899,7 @@ describe("curriculum integrity", () => {
           sourceSha256: "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d",
           sourceDigestScope: "file", explanatory: false,
         });
-        expect(kernel?.evidenceId).toBeUndefined();
+        expect(kernel?.evidenceId).toBe("wave64-collectives-current-source-v1");
         expect(sourceMilestoneRecord(profile.evidenceId)).toMatchObject({
           commit: profile.sourceCommit,
           primarySourceSha256: profile.sha256,
@@ -5038,7 +5038,7 @@ describe("curriculum integrity", () => {
       }),
     ).toContainEqual(
       expect.objectContaining({
-        message: "real source tab does not match its exact source milestone",
+        message: "code tab does not match its exact source-only association",
       }),
     );
     expect(

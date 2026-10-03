@@ -104,7 +104,10 @@ export type SourceMilestoneId =
 export type CodeTabEvidenceId =
   | StagedEvidenceId
   | CompletedIssue94IncrementId
-  | SourceMilestoneId;
+  | SourceMilestoneId
+  | SourceAssociationId;
+
+export type SourceAssociationId = "wave64-collectives-current-source-v1";
 
 export interface StagedEvidenceReference extends EvidenceReferenceBase {
   scope: "staged-progress";

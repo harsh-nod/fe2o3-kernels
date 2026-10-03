@@ -3,7 +3,8 @@ import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.
 import scalarGemmKernel from "../../examples/scalar_gemm_v1/src/kernel.rs?raw";
 import vecaddKernel from "../../examples/vecadd/src/lib_current.rs?raw";
 import workgroupKernel from "../../examples/workgroup_sync_v1/src/kernel_current.rs?raw";
-import type { CodeTab } from "./model";
+import type { CodeTab, SourceAssociationId } from "./model";
+import { deepFreeze, hasOwn } from "./registry";
 
 const notice =
   "Source association only; this exact whole-file snapshot qualifies no SIMT/tile pair. " +
@@ -31,6 +32,7 @@ export const currentWaveKernelTab: CodeTab = {
   sourcePath: "examples/wave64_collectives_v1/src/kernel.rs",
   sourceCommit: "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
   sourceSha256: "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d",
+  evidenceId: "wave64-collectives-current-source-v1",
   sourceDigestScope: "file",
   explanatory: false,
   notice,
@@ -74,3 +76,25 @@ export const scalarGemmKernelTab: CodeTab = {
   explanatory: false,
   notice,
 };
+
+// These links authenticate source bytes only. The existing tab owns the identity;
+// no execution claim or second curriculum/source inventory is created here.
+const sourceAssociationRecords = deepFreeze({
+  "wave64-collectives-current-source-v1": {
+    lessonId: "reductions-scans",
+    authority: "source-association-only",
+    source: currentWaveKernelTab,
+  },
+} satisfies Record<SourceAssociationId, {
+  lessonId: string;
+  authority: "source-association-only";
+  source: CodeTab;
+}>);
+
+export function isSourceAssociationId(value: unknown): value is SourceAssociationId {
+  return typeof value === "string" && hasOwn(sourceAssociationRecords, value);
+}
+
+export function sourceAssociationRecord(id: SourceAssociationId) {
+  return sourceAssociationRecords[id];
+}
