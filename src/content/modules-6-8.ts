@@ -1,7 +1,6 @@
 import { currentState } from "./current-state";
 import { currentMoeKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
-import moeTop2Kernel from "../../examples/moe_top2_v1/src/kernel.rs?raw";
 import moeTop2Proof from "../../examples/moe_top2_v1/verus/moe_top2_v1.rs?raw";
 import moeTop2Reference from "../../examples/moe_top2_v1/src/oracle.rs?raw";
 import moeExpertKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel.rs?raw";
@@ -35,7 +34,6 @@ import {
   stagedEvidenceOrder,
 } from "./staged-evidence";
 
-const moeTop2Source = sourceMilestoneRecord("moe-top2-source-v1");
 const moeTop2Verus = sourceMilestoneRecord("moe-top2-verus-v1");
 const qualificationCommit = "af0fd523e3b774377a9c5192cf0511e34fa19735";
 const qualificationTree = "37ec6083aba26f3057bb21f3a51c619c17bceb49";
@@ -64,15 +62,7 @@ const moeRouting: Lesson = {
     narrativeSection("moe-routing/composed-reference"),
   ],
   tabs: completeReferenceTabs(
-    {
-      language: "rust",
-      code: moeTop2Kernel,
-      sourcePath: moeTop2Source.primarySourcePath,
-      sourceCommit: moeTop2Source.commit,
-      sourceSha256: moeTop2Source.primarySourceSha256,
-      evidenceId: moeTop2Source.id,
-      explanatory: false,
-    },
+    currentMoeKernelTab,
     {
       language: "rust",
       code: moeTop2Reference,
@@ -121,13 +111,13 @@ cargo test -p fe2o3-hsa-runtime \\
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, opaque deterministic upstream LLVM/LLD finalization, and T8/E4/K2/C4 typed host/runtime mechanics are public. The eight-buffer binding retains logits shared read-only and seven unique read-write outputs, rejects every alias pair, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Five binder tests, five lifecycle tests, nine compile-fail boundaries, and the independent routing oracle pass on MI300X. Commit d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b adds a separate exact bounded logical memory/effect model: Verus verifies 16 obligations and all eight pinned mutations fail at their named postconditions. Its copyable expected-evidence descriptor remains inert and cannot mint or join an authenticated receipt. The protected test fails closed before HSA load pending W0 authenticated HostLinkClosureV1, W1 broker cargo-fe2o3 executable identity, and subsequent receipt injection. Remaining gaps: protected GPU output and seven-buffer oracle comparison, authenticated proof consumption, IEEE FP32/compiler/logical-address refinement, exact expert compiler/finalizer/runtime/protected execution, and source/model-to-machine refinement. The logical model does not establish generalized machine memory safety or race freedom. No functional hardware result is claimed. No protected GPU dispatch occurred.",
+        "Historical archive only: separately pinned checkpoints contain exact ordinary attributed source, an independent oracle, debug/release tests, a 6,561-case bounded corpus, executable models, a pinned Verus proof of the mathematical routing policy, exact compiler admission, opaque deterministic upstream LLVM/LLD finalization, and T8/E4/K2/C4 typed host/runtime mechanics. The eight-buffer binding retains logits shared read-only and seven unique read-write outputs, rejects every alias pair, and enters a private linear join/load/dispatch-wait/unload lifecycle with reviewed HSA resource observation. Five binder tests, five lifecycle tests, nine compile-fail boundaries, and the independent routing oracle pass on MI300X. Commit d9ee4d09a97e59982b5e9ccf2e3877fff84fab5b adds a separate exact bounded logical memory/effect model: Verus verifies 16 obligations and all eight pinned mutations fail at their named postconditions. Its copyable expected-evidence descriptor remains inert and cannot mint or join an authenticated receipt. The protected test fails closed before HSA load pending W0 authenticated HostLinkClosureV1, W1 broker cargo-fe2o3 executable identity, and subsequent receipt injection. Remaining gaps: protected GPU output and seven-buffer oracle comparison, authenticated proof consumption, IEEE FP32/compiler/logical-address refinement, exact expert compiler/finalizer/runtime/protected execution, and source/model-to-machine refinement. The logical model does not establish generalized machine memory safety or race freedom. No functional hardware result is claimed. No protected GPU dispatch occurred. The primary Kernel tab is a current source association only; these historical results do not transfer to it, and no fresh execution or completed SIMT/tile pair is claimed.",
       ),
       explanatory: true,
       notice:
         "Evidence boundary: this combines fixed source/model proof, bounded logical memory/effect proof, typed ownership/lifecycle, compile-fail, and CPU-oracle evidence. It does not establish authenticated proof consumption, compiled Rust or machine semantics, generalized machine memory safety or race freedom, protected GPU dispatch, expert computation, or a numerical GPU result.",
     },
-  ).concat(currentMoeKernelTab),
+  ),
   diagram: "moe",
   exercises: [
     {

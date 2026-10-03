@@ -109,7 +109,7 @@ describe("evidence source digest scopes", () => {
   });
 
   it.each([
-    ["moe-routing", 5, "moe_top2_v1", "kernel_current.rs", "kernel.rs",
+    ["moe-routing", 0, "moe_top2_v1", "kernel_current.rs", "kernel.rs",
       "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
       "8b8b3477b7d9670b7a0356b05ff2aaab2aaec9f0b919bf26c4c46215d1a81eb4", 7332],
     ["reductions-scans", 0, "wave64_collectives_v1", "kernel_current.rs", "kernel.rs",
@@ -121,14 +121,14 @@ describe("evidence source digest scopes", () => {
     ["typed-vecadd", 5, "vecadd", "lib_current.rs", "lib.rs",
       "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
       "60ea857d0aaba57e05fc30691b15908c188e449c789c39abd27abf4c35b017e2", 369],
-    ["lds-barriers-atomics", 5, "workgroup_sync_v1", "kernel_current.rs", "kernel.rs",
+    ["lds-barriers-atomics", 0, "workgroup_sync_v1", "kernel_current.rs", "kernel.rs",
       "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
       "b0074b426ef8ad0b9eea91e933e76dd03240852ce4ce976ccc89c1f2c7f1b515", 2626],
   ] as const)("exposes independently pinned current source: %s", (
     lessonId, ordinal, example, snapshot, sourceFilename, commit, digest, size,
   ) => {
     const lesson = lessons.find((candidate) => candidate.id === lessonId)!;
-    expect(lesson.tabs).toHaveLength(lessonId === "reductions-scans" ? 5 : ordinal + 1);
+    expect(lesson.tabs).toHaveLength(ordinal === 0 ? 5 : ordinal + 1);
     const tab = lesson.tabs[ordinal];
     const source = readFileSync(`${process.cwd()}/examples/${example}/src/${snapshot}`, "utf8");
     expect(tab).toMatchObject({
@@ -141,31 +141,32 @@ describe("evidence source digest scopes", () => {
     expect(Buffer.byteLength(source)).toBe(size);
     expect(createHash("sha256").update(source).digest("hex")).toBe(digest);
     expect(tab.sourceFragments).toBeUndefined();
-    expect(tab.evidenceId).toBe(lessonId === "reductions-scans"
-      ? "wave64-collectives-current-source-v1" : undefined);
+    expect(tab.evidenceId).toBe({
+      "reductions-scans": "wave64-collectives-current-source-v1",
+      "lds-barriers-atomics": "workgroup-sync-current-source-v1",
+      "moe-routing": "moe-top2-current-source-v1",
+      "gemm-tiling": undefined,
+      "typed-vecadd": undefined,
+    }[lessonId]);
     expect(tab.notice).toContain("Source association only");
     expect(tab.notice).toContain("qualifies no SIMT/tile pair");
     expect(tab.notice).toContain("remain pending");
     if (snapshot === "kernel_current.rs") {
       const historical = readFileSync(`${process.cwd()}/examples/${example}/src/kernel.rs`, "utf8");
       expect(source).not.toBe(historical);
-      if (lessonId === "reductions-scans") {
-        expect(tab.label).toBe("Kernel");
-        expect(lesson.tabs.some((entry) => entry.code === historical)).toBe(false);
-        expect(Buffer.byteLength(historical)).toBe(2400);
-        expect(createHash("sha256").update(historical).digest("hex")).toBe(
-          "7c6ead1e7c01a61a8f31a010c9e8cb9bd1c21a905ba61e9d90c6c077c748ffd4",
-        );
-        expect(lesson.claims.find((claim) => claim.label === "Historical masked Wave64 source and model"))
-          .toMatchObject({
-            kind: "source-model-verified",
-            reference: { commit: "af0fd523e3b774377a9c5192cf0511e34fa19735" },
-          });
-      } else {
-        expect(lesson.tabs[0].code).toBe(historical);
-        expect(lesson.tabs[0].evidenceId).toBeDefined();
-        expect(lesson.tabs[0].sourceCommit).not.toBe(commit);
-      }
+      expect(tab.label).toBe("Kernel");
+      expect(lesson.tabs.some((entry) => entry.code === historical)).toBe(false);
+      const archived = lesson.claims.find((claim) =>
+        claim.reference?.scope === "source-milestone",
+      );
+      expect(archived?.label).toBe({
+        "reductions-scans": "Historical masked Wave64 source and model",
+        "lds-barriers-atomics": "Historical LDS and scoped-atomic sources and model",
+        "moe-routing": "Historical deterministic MoE top-2 source",
+        "gemm-tiling": undefined,
+        "typed-vecadd": undefined,
+      }[lessonId]);
+      expect(archived?.reference?.commit).toBe("af0fd523e3b774377a9c5192cf0511e34fa19735");
     }
     if (snapshot === "lib_current.rs") {
       expect(lesson.tabs[0].code).toBe(

@@ -22,7 +22,6 @@ import gemmAutoresearchRejected from "../../examples/gemm_autoresearch_v1/experi
 import gemmAutoresearchKernel from "../../examples/gemm_autoresearch_v1/src/kernel.rs?raw";
 import gemmAutoresearchReference from "../../examples/gemm_autoresearch_v1/src/reference.rs?raw";
 import wave64CollectivesReference from "../../examples/wave64_collectives_v1/src/oracle.rs?raw";
-import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
 import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/contract.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import {
@@ -418,15 +417,7 @@ const synchronization: Lesson = {
     narrativeSection("lds-barriers-atomics/final-observable-effect"),
   ],
   tabs: completeReferenceTabs(
-    {
-      language: "rust",
-      code: workgroupSyncKernel,
-      sourcePath: synchronizationSource.primarySourcePath,
-      sourceCommit: synchronizationSource.commit,
-      sourceSha256: synchronizationSource.primarySourceSha256,
-      evidenceId: synchronizationSource.id,
-      explanatory: false,
-    },
+    currentWorkgroupKernelTab,
     {
       language: "rust",
       code: workgroupSyncReference,
@@ -453,19 +444,19 @@ const synchronization: Lesson = {
       code: noHost,
       explanatory: true,
       notice:
-        "Typed compiler-profile-bound host/runtime mechanics are public for both exact synchronization kernels. After canonical target-machine layout binding replaced the stale spelling, both passed the normal protected MI300X lifecycle in debug and release.",
+        "Historical archive only: the separately pinned compiler-profile-bound host/runtime checkpoints covered both exact synchronization kernels and the protected MI300X lifecycle in debug and release. They do not establish a current host launch or transfer execution evidence to the primary Kernel tab.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model are public. Separately pinned historical checkpoints contain exact compiler profiles, opaque direct upstream LLVM/LLD finalizer receipts, typed argument admission, private one-shot host/runtime lifecycles, exact dynamic-LDS dispatch binding, and one bounded protected MI300X observation for each profile in debug and release. Those observations do not transfer to the current safe source. Remaining gaps: source/compiler/machine refinement, generalized illegal-access safety, and generalized race freedom. The hardware result is exact-profile evidence only.",
+        "Historical archive only: exact separate LDS and scoped-atomic sources, CPU oracles, deterministic tests, and the bounded Verus model remain pinned to their original evidence. Separately pinned historical checkpoints contain exact compiler profiles, opaque direct upstream LLVM/LLD finalizer receipts, typed argument admission, private one-shot host/runtime lifecycles, exact dynamic-LDS dispatch binding, and one bounded protected MI300X observation for each profile in debug and release. Those observations do not transfer to the current safe source. Remaining gaps: source/compiler/machine refinement, generalized illegal-access safety, and generalized race freedom. The hardware result is exact-profile evidence only. The primary Kernel tab is a current source association only; no fresh execution or completed SIMT/tile pair is claimed.",
       ),
       explanatory: true,
       notice:
         "Evidence boundary: this is a source/model result, not a GPU result.",
     },
-  ).concat(currentWorkgroupKernelTab),
+  ),
   diagram: "memory",
   exercises: [
     {

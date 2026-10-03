@@ -1532,8 +1532,10 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/workgroup_sync_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/302aabc3ed80fe39d5655fbb39fca7cb5859bd9c/examples/workgroup_sync_v1/src/kernel.rs",
   );
+  await expect(page.getByRole("tab", { name: "Current source [SOURCE-ONLY]", exact: true })).toHaveCount(0);
+  await expect(page.getByText(/Source association only; this exact whole-file snapshot/)).toBeVisible();
   await expect(
     page.getByRole("link", { name: "Exact separate scoped_atomic.rs source" }),
   ).toHaveAttribute(
@@ -1549,6 +1551,27 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "exact-profile evidence only",
+  );
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "no fresh execution or completed SIMT/tile pair is claimed",
+  );
+
+  await page.goto("./#/lesson/moe-routing");
+  await page.getByRole("tab", { name: "Kernel", exact: true }).click();
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "pub fn moe_top2_route_f32_t8_e4_k2_c4_v1",
+  );
+  await expect(page.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
+    "href",
+    "https://github.com/harsh-nod/fe2o3/blob/5e35bd967e3e038cc6399c46ed8cb89db82405cd/examples/moe_top2_v1/src/kernel.rs",
+  );
+  await expect(page.getByRole("tab", { name: "Current source [SOURCE-ONLY]", exact: true })).toHaveCount(0);
+  await expect(page.getByText(/Source association only; this exact whole-file snapshot/)).toBeVisible();
+  await page.getByRole("tab", { name: "Expected result" }).click();
+  await expect(page.getByRole("tabpanel")).toContainText("Historical archive only");
+  await expect(page.getByRole("tabpanel")).toContainText("No protected GPU dispatch occurred");
+  await expect(page.getByRole("tabpanel")).toContainText(
+    "no fresh execution or completed SIMT/tile pair is claimed",
   );
 });
 

@@ -3,7 +3,9 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { curriculum, lessons } from "../src/content/curriculum";
 import {
+  currentMoeKernelTab,
   currentWaveKernelTab,
+  currentWorkgroupKernelTab,
   isSourceAssociationId,
   sourceAssociationRecord,
 } from "../src/content/current-kernel-sources";
@@ -16,48 +18,107 @@ import {
 import { validateCurriculum } from "../src/content/validate";
 import { validateSourceEvidence } from "../scripts/source-evidence";
 
-const id = "wave64-collectives-current-source-v1";
+const cases = [
+  {
+    id: "wave64-collectives-current-source-v1",
+    lessonId: "reductions-scans",
+    tab: currentWaveKernelTab,
+    example: "wave64_collectives_v1",
+    size: 2384,
+    historicalId: "wave64-collectives-source-v1",
+    historicalLabel: "Historical masked Wave64 source and model",
+    historicalSize: 2400,
+    historicalDigest: "7c6ead1e7c01a61a8f31a010c9e8cb9bd1c21a905ba61e9d90c6c077c748ffd4",
+    claim: "source-model-verified",
+    authority: "source-model-only",
+  },
+  {
+    id: "workgroup-sync-current-source-v1",
+    lessonId: "lds-barriers-atomics",
+    tab: currentWorkgroupKernelTab,
+    example: "workgroup_sync_v1",
+    size: 2626,
+    historicalId: "workgroup-sync-source-v1",
+    historicalLabel: "Historical LDS and scoped-atomic sources and model",
+    historicalSize: 2832,
+    historicalDigest: "991542b783a144598be967ae1671609b2a02a812ca084c3bf6358a9f70968105",
+    claim: "source-model-verified",
+    authority: "source-model-only",
+  },
+  {
+    id: "moe-top2-current-source-v1",
+    lessonId: "moe-routing",
+    tab: currentMoeKernelTab,
+    example: "moe_top2_v1",
+    size: 7332,
+    historicalId: "moe-top2-source-v1",
+    historicalLabel: "Historical deterministic MoE top-2 source",
+    historicalSize: 7364,
+    historicalDigest: "0e4570bd52866dd23b8b00d83983aadc818c77580de8f7f5e2982e12a57e20e2",
+    claim: "source-tested",
+    authority: "source-tested-only",
+  },
+] as const;
+const historicalCommit = "af0fd523e3b774377a9c5192cf0511e34fa19735";
 const associationIssue = "code tab does not match its exact source-only association";
 
-function changedKernel(mutate: (tab: CodeTab) => void) {
+function changedKernel(lessonId: string, mutate: (tab: CodeTab) => void) {
   const changed = structuredClone(curriculum);
   const lesson = changed.flatMap((module) => module.lessons)
-    .find((entry) => entry.id === "reductions-scans")!;
+    .find((entry) => entry.id === lessonId)!;
   mutate(lesson.tabs[0]);
   return validateCurriculum(changed);
 }
 
-describe("source-only tab associations", () => {
+describe.each(cases)("source-only tab association: $lessonId", (entry) => {
   it("reuses the immutable exact tab identity without execution authority", () => {
-    const association = sourceAssociationRecord(id);
-    expect(association.source).toBe(currentWaveKernelTab);
+    const association = sourceAssociationRecord(entry.id);
+    expect(association.source).toBe(entry.tab);
+    expect(association.lessonId).toBe(entry.lessonId);
     expect(association.authority).toBe("source-association-only");
     expect(Object.isFrozen(association)).toBe(true);
     expect(Object.isFrozen(association.source)).toBe(true);
-    expect(isSourceAssociationId(id)).toBe(true);
+    expect(isSourceAssociationId(entry.id)).toBe(true);
     expect(isSourceAssociationId("toString")).toBe(false);
-    expect(isSourceMilestoneId(id)).toBe(false);
+    expect(isSourceMilestoneId(entry.id)).toBe(false);
     expect(validateCurriculum(curriculum)).toEqual([]);
 
-    const bytes = readFileSync("examples/wave64_collectives_v1/src/kernel_current.rs");
-    expect(Buffer.byteLength(bytes)).toBe(2384);
+    const bytes = readFileSync(`examples/${entry.example}/src/kernel_current.rs`);
+    expect(Buffer.byteLength(bytes)).toBe(entry.size);
     expect(Buffer.from(association.source.code).equals(bytes)).toBe(true);
     expect(createHash("sha256").update(bytes).digest("hex")).toBe(
       association.source.sourceSha256,
     );
     expect(association.source.notice).toContain("qualifies no SIMT/tile pair");
     expect(association.source.notice).toContain("remain pending");
-    expect(sourceMilestoneRecord("wave64-collectives-source-v1")).toMatchObject({
-      claim: "source-model-verified",
-      authority: "source-model-only",
-      commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
-      primarySourceSha256: "7c6ead1e7c01a61a8f31a010c9e8cb9bd1c21a905ba61e9d90c6c077c748ffd4",
+
+    const historical = readFileSync(`examples/${entry.example}/src/kernel.rs`);
+    expect(historical.byteLength).toBe(entry.historicalSize);
+    expect(createHash("sha256").update(historical).digest("hex")).toBe(entry.historicalDigest);
+    const record = sourceMilestoneRecord(entry.historicalId);
+    expect(record).toMatchObject({
+      claim: entry.claim,
+      authority: entry.authority,
+      commit: historicalCommit,
+      tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
+      primarySourcePath: `examples/${entry.example}/src/kernel.rs`,
+      primarySourceSha256: entry.historicalDigest,
     });
-    const lesson = lessons.find((entry) => entry.id === "reductions-scans")!;
-    expect(lesson.tabs[0]).toEqual(currentWaveKernelTab);
+    expect(record.claimLabel).toBe(entry.historicalLabel);
+    expect(record.detail).toContain("no longer the active instructional Kernel tab");
+    expect(record.detail).toContain("inherits no execution evidence");
+    const lesson = lessons.find((lesson) => lesson.id === entry.lessonId)!;
+    expect(lesson.tabs[0]).toEqual(entry.tab);
+    expect(lesson.tabs).toHaveLength(5);
+    expect(lesson.tabs.filter((tab) => tab.kind === "kernel")).toEqual([entry.tab]);
+    expect(lesson.tabs.some((tab) => tab.code === historical.toString())).toBe(false);
     expect(lesson.claims.find((claim) =>
-      claim.reference?.scope === "source-milestone",
-    )?.reference?.commit).toBe("af0fd523e3b774377a9c5192cf0511e34fa19735");
+      claim.reference?.scope === "source-milestone"
+      && claim.reference.evidenceId === entry.historicalId,
+    )?.reference?.commit).toBe(historicalCommit);
+    expect(lesson.tabs.find((tab) => tab.kind === "result")?.code).toContain(
+      "no fresh execution or completed SIMT/tile pair is claimed",
+    );
   });
 
   it.each([
@@ -69,22 +130,29 @@ describe("source-only tab associations", () => {
     ["fragment", (tab: CodeTab) => { tab.sourceFragments = [tab.code]; }],
     ["explanatory", (tab: CodeTab) => { tab.explanatory = true; }],
   ] as const)("rejects changed source association %s", (_name, mutate) => {
-    expect(changedKernel(mutate)).toContainEqual(
+    expect(changedKernel(entry.lessonId, mutate)).toContainEqual(
       expect.objectContaining({ message: associationIssue }),
     );
   });
 
   it("requires the association and rejects historical evidence substitution", () => {
-    expect(changedKernel((tab) => { delete tab.evidenceId; })).toContainEqual(
-      expect.objectContaining({
+    expect(changedKernel(entry.lessonId, (tab) => { delete tab.evidenceId; }))
+      .toContainEqual(expect.objectContaining({
         message: "promoted algorithm kernel lacks exact source provenance",
-      }),
-    );
-    expect(changedKernel((tab) => {
-      tab.evidenceId = "wave64-collectives-source-v1";
+      }));
+    expect(changedKernel(entry.lessonId, (tab) => {
+      tab.evidenceId = entry.historicalId;
     })).toContainEqual(expect.objectContaining({
       message: "code tab source commit does not match its evidence",
     }));
+  });
+
+  it("rejects another lesson's otherwise valid source-only identity", () => {
+    for (const other of cases.filter((candidate) => candidate.id !== entry.id)) {
+      expect(changedKernel(entry.lessonId, (tab) => {
+        Object.assign(tab, other.tab);
+      })).toContainEqual(expect.objectContaining({ message: associationIssue }));
+    }
   });
 
   it.each(["source-tested", "source-model-verified", "gpu-observed"] as const)(
@@ -92,14 +160,14 @@ describe("source-only tab associations", () => {
     (kind) => {
       const changed = structuredClone(curriculum);
       const lesson = changed.flatMap((module) => module.lessons)
-        .find((entry) => entry.id === "reductions-scans")!;
+        .find((lesson) => lesson.id === entry.lessonId)!;
       const forged = structuredClone(lesson.claims[0]) as Claim;
       forged.kind = kind;
       const reference = forged.reference as unknown as Record<string, unknown>;
-      reference.evidenceId = id;
+      reference.evidenceId = entry.id;
       reference.claim = kind;
       reference.authority = "source-association-only";
-      reference.commit = currentWaveKernelTab.sourceCommit;
+      reference.commit = entry.tab.sourceCommit;
       lesson.claims.push(forged);
       expect(validateCurriculum(changed)).toContainEqual(expect.objectContaining({
         message: "source milestone has no recognized evidence id",
@@ -108,9 +176,9 @@ describe("source-only tab associations", () => {
   );
 
   it("checks displayed bytes against the source blob even with unchanged pins", () => {
-    const pinned = readFileSync("examples/wave64_collectives_v1/src/kernel_current.rs");
-    const changed = { ...currentWaveKernelTab, code: currentWaveKernelTab.code + "\n" };
-    const source = tabEvidenceSource("reductions-scans", changed)!;
+    const pinned = readFileSync(`examples/${entry.example}/src/kernel_current.rs`);
+    const changed = { ...entry.tab, code: entry.tab.code + "\n" };
+    const source = tabEvidenceSource(entry.lessonId, changed)!;
     expect(() => validateSourceEvidence(source, pinned)).toThrow(
       "displayed whole file differs from the pinned source file",
     );

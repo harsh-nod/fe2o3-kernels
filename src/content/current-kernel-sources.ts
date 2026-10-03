@@ -13,7 +13,8 @@ const notice =
 
 export const currentMoeKernelTab: CodeTab = {
   kind: "kernel",
-  label: "Current source [SOURCE-ONLY]",
+  label: "Kernel",
+  evidenceId: "moe-top2-current-source-v1",
   language: "rust",
   code: moeKernel,
   sourcePath: "examples/moe_top2_v1/src/kernel.rs",
@@ -53,7 +54,8 @@ export const currentVecaddKernelTab: CodeTab = {
 
 export const currentWorkgroupKernelTab: CodeTab = {
   kind: "kernel",
-  label: "Current source [SOURCE-ONLY]",
+  label: "Kernel",
+  evidenceId: "workgroup-sync-current-source-v1",
   language: "rust",
   code: workgroupKernel,
   sourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
@@ -84,6 +86,16 @@ const sourceAssociationRecords = deepFreeze({
     lessonId: "reductions-scans",
     authority: "source-association-only",
     source: currentWaveKernelTab,
+  },
+  "workgroup-sync-current-source-v1": {
+    lessonId: "lds-barriers-atomics",
+    authority: "source-association-only",
+    source: currentWorkgroupKernelTab,
+  },
+  "moe-top2-current-source-v1": {
+    lessonId: "moe-routing",
+    authority: "source-association-only",
+    source: currentMoeKernelTab,
   },
 } satisfies Record<SourceAssociationId, {
   lessonId: string;

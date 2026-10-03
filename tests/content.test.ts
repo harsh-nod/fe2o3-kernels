@@ -4863,6 +4863,10 @@ describe("curriculum integrity", () => {
       {
         lessonId: "reductions-scans",
         evidenceId: "wave64-collectives-source-v1",
+        historicalLabel: "Historical masked Wave64 source and model",
+        currentEvidenceId: "wave64-collectives-current-source-v1",
+        currentCommit: "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
+        currentDigest: "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d",
         sourcePath: "examples/wave64_collectives_v1/src/kernel.rs",
         bundledPath: "examples/wave64_collectives_v1/src/kernel.rs",
         sha256:
@@ -4872,6 +4876,10 @@ describe("curriculum integrity", () => {
       {
         lessonId: "lds-barriers-atomics",
         evidenceId: "workgroup-sync-source-v1",
+        historicalLabel: "Historical LDS and scoped-atomic sources and model",
+        currentEvidenceId: "workgroup-sync-current-source-v1",
+        currentCommit: "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
+        currentDigest: "b0074b426ef8ad0b9eea91e933e76dd03240852ce4ce976ccc89c1f2c7f1b515",
         sourcePath: "examples/workgroup_sync_v1/src/kernel.rs",
         bundledPath: "examples/workgroup_sync_v1/src/kernel.rs",
         sha256:
@@ -4881,6 +4889,10 @@ describe("curriculum integrity", () => {
       {
         lessonId: "moe-routing",
         evidenceId: "moe-top2-source-v1",
+        historicalLabel: "Historical deterministic MoE top-2 source",
+        currentEvidenceId: "moe-top2-current-source-v1",
+        currentCommit: "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
+        currentDigest: "8b8b3477b7d9670b7a0356b05ff2aaab2aaec9f0b919bf26c4c46215d1a81eb4",
         sourcePath: "examples/moe_top2_v1/src/kernel.rs",
         bundledPath: "examples/moe_top2_v1/src/kernel.rs",
         sha256:
@@ -4892,32 +4904,25 @@ describe("curriculum integrity", () => {
     for (const profile of profiles) {
       const lesson = lessons.find((entry) => entry.id === profile.lessonId);
       const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
-      if (profile.lessonId === "reductions-scans") {
-        expect(kernel).toMatchObject({
-          label: "Kernel", sourcePath: profile.sourcePath,
-          sourceCommit: "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
-          sourceSha256: "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d",
-          sourceDigestScope: "file", explanatory: false,
-        });
-        expect(kernel?.evidenceId).toBe("wave64-collectives-current-source-v1");
-        expect(sourceMilestoneRecord(profile.evidenceId)).toMatchObject({
-          commit: profile.sourceCommit,
-          primarySourceSha256: profile.sha256,
-          claimLabel: "Historical masked Wave64 source and model",
-        });
-      } else {
-        expect(kernel).toMatchObject({
-          sourcePath: profile.sourcePath,
-          sourceCommit: profile.sourceCommit,
-          sourceSha256: profile.sha256,
-          evidenceId: profile.evidenceId,
-          explanatory: false,
-        });
-      }
+      expect(kernel).toMatchObject({
+        label: "Kernel", sourcePath: profile.sourcePath,
+        sourceCommit: profile.currentCommit,
+        sourceSha256: profile.currentDigest,
+        sourceDigestScope: "file", explanatory: false,
+        evidenceId: profile.currentEvidenceId,
+      });
+      const record = sourceMilestoneRecord(profile.evidenceId);
+      expect(record).toMatchObject({
+        commit: profile.sourceCommit,
+        primarySourceSha256: profile.sha256,
+      });
+      expect(record.claimLabel).toBe(profile.historicalLabel);
       const bundled = readFileSync(profile.bundledPath, "utf8");
-      expect(kernel?.code).toBe(profile.lessonId === "reductions-scans"
-        ? readFileSync("examples/wave64_collectives_v1/src/kernel_current.rs", "utf8")
-        : bundled);
+      expect(kernel?.code).toBe(readFileSync(
+        profile.bundledPath.replace("/kernel.rs", "/kernel_current.rs"), "utf8",
+      ));
+      expect(lesson?.tabs.some((tab) => tab.code === bundled)).toBe(false);
+      expect(lesson?.tabs).toHaveLength(5);
       expect(createHash("sha256").update(bundled).digest("hex")).toBe(
         profile.sha256,
       );

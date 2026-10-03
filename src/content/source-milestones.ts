@@ -162,9 +162,9 @@ const sourceMilestoneRecords = deepFreeze({
     lessonId: "lds-barriers-atomics",
     claim: "source-model-verified",
     authority: "source-model-only",
-    claimLabel: "Current safe LDS and scoped-atomic sources",
+    claimLabel: "Historical LDS and scoped-atomic sources and model",
     detail:
-      "Current public main contains separate ordinary safe attributed Rust files for one fixed LDS reduction and one scoped global atomic add, checked CPU oracles, deterministic mutation tests, and a pinned Verus model. Compiler-issued invocation, LDS, collective, atomic, and disjoint-output capabilities remove user unsafe without granting compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
+      "This immutable af0fd523 checkpoint contains separate ordinary safe attributed Rust files for one fixed LDS reduction and one scoped global atomic add, checked CPU oracles, deterministic mutation tests, and a pinned Verus model. Its 2832-byte primary source and separate scoped-atomic source remain archived with their original identities; the primary source is no longer the active instructional Kernel tab. The current 2626-byte source has its own exact association and inherits no execution evidence. Compiler-issued invocation, LDS, collective, atomic, and disjoint-output capabilities remove user unsafe without granting compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
     commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
     tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
     commands: [
@@ -234,9 +234,9 @@ const sourceMilestoneRecords = deepFreeze({
     lessonId: "moe-routing",
     claim: "source-tested",
     authority: "source-tested-only",
-    claimLabel: "Current safe deterministic MoE top-2 source",
+    claimLabel: "Historical deterministic MoE top-2 source",
     detail:
-      "Current public main contains ordinary safe attributed Rust for exact T8/E4/K2/C4 finite-FP32 routing, lower-expert tie breaking, stable-prefix capacity dropping, exclusive offsets, permutation, inverse mapping, and sentinel tails. An independent oracle, debug/release tests, a 6,561-case bounded corpus, executable proof-facing models, and hostile mutations are public. Compiler-issued disjoint-output capabilities remove user unsafe. This grants no Verus, compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
+      "This immutable af0fd523 checkpoint contains ordinary safe attributed Rust for exact T8/E4/K2/C4 finite-FP32 routing, lower-expert tie breaking, stable-prefix capacity dropping, exclusive offsets, permutation, inverse mapping, and sentinel tails. An independent oracle, debug/release tests, a 6,561-case bounded corpus, executable proof-facing models, and hostile mutations remain pinned to that checkpoint. Its 7364-byte source remains archived with its original identity; it is no longer the active instructional Kernel tab. The current 7332-byte source has its own exact association and inherits no execution evidence. Compiler-issued disjoint-output capabilities remove user unsafe. This grants no Verus, compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
     commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
     tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
     commands: [
