@@ -138,9 +138,9 @@ const sourceMilestoneRecords = deepFreeze({
     lessonId: "reductions-scans",
     claim: "source-model-verified",
     authority: "source-model-only",
-    claimLabel: "Current safe masked Wave64 source and model",
+    claimLabel: "Historical masked Wave64 source and model",
     detail:
-      "Current public main contains ordinary safe attributed Rust for one fixed masked Wave64 reduction plus inclusive and exclusive scans, a checked CPU oracle, deterministic mutation tests, and the pinned Verus model. The kernel uses compiler-issued capabilities and contains no unsafe block. This source/model record grants no compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
+      "This immutable af0fd523 checkpoint contains ordinary safe attributed Rust for one fixed masked Wave64 reduction plus inclusive and exclusive scans, a checked CPU oracle, deterministic mutation tests, and the pinned Verus model. Its 2400-byte source remains archived with its original commit and SHA-256; it is no longer the active instructional Kernel tab. The current 2384-byte source has its own exact association and inherits no execution evidence. This historical source/model record grants no compiler-refinement, artifact, host-launch, runtime, or hardware authority.",
     commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
     tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
     commands: [

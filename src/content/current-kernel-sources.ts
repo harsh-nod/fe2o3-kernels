@@ -25,7 +25,7 @@ export const currentMoeKernelTab: CodeTab = {
 
 export const currentWaveKernelTab: CodeTab = {
   kind: "kernel",
-  label: "Current source [SOURCE-ONLY]",
+  label: "Kernel",
   language: "rust",
   code: waveKernel,
   sourcePath: "examples/wave64_collectives_v1/src/kernel.rs",

@@ -21,7 +21,6 @@ import gemmAutoresearchProgram from "../../examples/gemm_autoresearch_v1/program
 import gemmAutoresearchRejected from "../../examples/gemm_autoresearch_v1/experiments/double_buffer.rs?raw";
 import gemmAutoresearchKernel from "../../examples/gemm_autoresearch_v1/src/kernel.rs?raw";
 import gemmAutoresearchReference from "../../examples/gemm_autoresearch_v1/src/reference.rs?raw";
-import wave64CollectivesKernel from "../../examples/wave64_collectives_v1/src/kernel.rs?raw";
 import wave64CollectivesReference from "../../examples/wave64_collectives_v1/src/oracle.rs?raw";
 import workgroupSyncKernel from "../../examples/workgroup_sync_v1/src/kernel.rs?raw";
 import workgroupSyncReference from "../../examples/workgroup_sync_v1/src/contract.rs?raw";
@@ -319,15 +318,7 @@ const collectives: Lesson = {
     narrativeSection("reductions-scans/contribution-domain"),
   ],
   tabs: completeReferenceTabs(
-    {
-      language: "rust",
-      code: wave64CollectivesKernel,
-      sourcePath: collectivesSource.primarySourcePath,
-      sourceCommit: collectivesSource.commit,
-      sourceSha256: collectivesSource.primarySourceSha256,
-      evidenceId: collectivesSource.id,
-      explanatory: false,
-    },
+    currentWaveKernelTab,
     {
       language: "rust",
       code: wave64CollectivesReference,
@@ -355,19 +346,19 @@ const collectives: Lesson = {
       code: noHost,
       explanatory: true,
       notice:
-        "This current safe source/model record does not inherit the separately pinned typed host/runtime or protected gfx942 observation; see Implementation status for those historical evidence boundaries.",
+        "No current host launch is claimed. The retained source/model, typed host/runtime, and protected gfx942 observations keep their separate historical identities; see Implementation status.",
     },
     {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "This current safe source/model record remains independently reviewable. Separately pinned historical checkpoints contain exact compiler admission, direct upstream LLVM/LLD finalization, a typed one-shot runtime, and one protected four-mask gfx942 observation. Compiler and Verus-to-machine refinement remain open; those observations do not transfer hardware authority to the current source.",
+        "The archived source/model record remains independently reviewable at its original commit and digest. Separately pinned historical checkpoints contain exact compiler admission, direct upstream LLVM/LLD finalization, a typed one-shot runtime, and one protected four-mask gfx942 observation. Compiler and Verus-to-machine refinement remain open; those observations do not transfer hardware authority to the current source. The primary Kernel tab is a current source association only; no fresh execution or completed SIMT/tile pair is claimed.",
       ),
       explanatory: true,
       notice:
         "Evidence boundary: this is a source/model result, not a GPU result.",
     },
-  ).concat(currentWaveKernelTab),
+  ),
   diagram: "reduction",
   exercises: [
     {

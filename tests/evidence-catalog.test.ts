@@ -112,7 +112,7 @@ describe("evidence source digest scopes", () => {
     ["moe-routing", 5, "moe_top2_v1", "kernel_current.rs", "kernel.rs",
       "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
       "8b8b3477b7d9670b7a0356b05ff2aaab2aaec9f0b919bf26c4c46215d1a81eb4", 7332],
-    ["reductions-scans", 5, "wave64_collectives_v1", "kernel_current.rs", "kernel.rs",
+    ["reductions-scans", 0, "wave64_collectives_v1", "kernel_current.rs", "kernel.rs",
       "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
       "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d", 2384],
     ["gemm-tiling", 7, "scalar_gemm_v1", "kernel.rs", "kernel.rs",
@@ -124,11 +124,11 @@ describe("evidence source digest scopes", () => {
     ["lds-barriers-atomics", 5, "workgroup_sync_v1", "kernel_current.rs", "kernel.rs",
       "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
       "b0074b426ef8ad0b9eea91e933e76dd03240852ce4ce976ccc89c1f2c7f1b515", 2626],
-  ] as const)("appends independently pinned current source: %s", (
+  ] as const)("exposes independently pinned current source: %s", (
     lessonId, ordinal, example, snapshot, sourceFilename, commit, digest, size,
   ) => {
     const lesson = lessons.find((candidate) => candidate.id === lessonId)!;
-    expect(lesson.tabs).toHaveLength(ordinal + 1);
+    expect(lesson.tabs).toHaveLength(lessonId === "reductions-scans" ? 5 : ordinal + 1);
     const tab = lesson.tabs[ordinal];
     const source = readFileSync(`${process.cwd()}/examples/${example}/src/${snapshot}`, "utf8");
     expect(tab).toMatchObject({
@@ -147,10 +147,24 @@ describe("evidence source digest scopes", () => {
     expect(tab.notice).toContain("remain pending");
     if (snapshot === "kernel_current.rs") {
       const historical = readFileSync(`${process.cwd()}/examples/${example}/src/kernel.rs`, "utf8");
-      expect(lesson.tabs[0].code).toBe(historical);
-      expect(lesson.tabs[0].evidenceId).toBeDefined();
       expect(source).not.toBe(historical);
-      expect(lesson.tabs[0].sourceCommit).not.toBe(commit);
+      if (lessonId === "reductions-scans") {
+        expect(tab.label).toBe("Kernel");
+        expect(lesson.tabs.some((entry) => entry.code === historical)).toBe(false);
+        expect(Buffer.byteLength(historical)).toBe(2400);
+        expect(createHash("sha256").update(historical).digest("hex")).toBe(
+          "7c6ead1e7c01a61a8f31a010c9e8cb9bd1c21a905ba61e9d90c6c077c748ffd4",
+        );
+        expect(lesson.claims.find((claim) => claim.label === "Historical masked Wave64 source and model"))
+          .toMatchObject({
+            kind: "source-model-verified",
+            reference: { commit: "af0fd523e3b774377a9c5192cf0511e34fa19735" },
+          });
+      } else {
+        expect(lesson.tabs[0].code).toBe(historical);
+        expect(lesson.tabs[0].evidenceId).toBeDefined();
+        expect(lesson.tabs[0].sourceCommit).not.toBe(commit);
+      }
     }
     if (snapshot === "lib_current.rs") {
       expect(lesson.tabs[0].code).toBe(

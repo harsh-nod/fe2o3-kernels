@@ -4892,15 +4892,32 @@ describe("curriculum integrity", () => {
     for (const profile of profiles) {
       const lesson = lessons.find((entry) => entry.id === profile.lessonId);
       const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
-      expect(kernel).toMatchObject({
-        sourcePath: profile.sourcePath,
-        sourceCommit: profile.sourceCommit,
-        sourceSha256: profile.sha256,
-        evidenceId: profile.evidenceId,
-        explanatory: false,
-      });
+      if (profile.lessonId === "reductions-scans") {
+        expect(kernel).toMatchObject({
+          label: "Kernel", sourcePath: profile.sourcePath,
+          sourceCommit: "5e35bd967e3e038cc6399c46ed8cb89db82405cd",
+          sourceSha256: "3f7064730fdb52aa815cace2bcfd9a666628302506b14771c05487c95922eb4d",
+          sourceDigestScope: "file", explanatory: false,
+        });
+        expect(kernel?.evidenceId).toBeUndefined();
+        expect(sourceMilestoneRecord(profile.evidenceId)).toMatchObject({
+          commit: profile.sourceCommit,
+          primarySourceSha256: profile.sha256,
+          claimLabel: "Historical masked Wave64 source and model",
+        });
+      } else {
+        expect(kernel).toMatchObject({
+          sourcePath: profile.sourcePath,
+          sourceCommit: profile.sourceCommit,
+          sourceSha256: profile.sha256,
+          evidenceId: profile.evidenceId,
+          explanatory: false,
+        });
+      }
       const bundled = readFileSync(profile.bundledPath, "utf8");
-      expect(kernel?.code).toBe(bundled);
+      expect(kernel?.code).toBe(profile.lessonId === "reductions-scans"
+        ? readFileSync("examples/wave64_collectives_v1/src/kernel_current.rs", "utf8")
+        : bundled);
       expect(createHash("sha256").update(bundled).digest("hex")).toBe(
         profile.sha256,
       );

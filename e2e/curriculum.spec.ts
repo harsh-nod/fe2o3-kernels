@@ -1504,8 +1504,11 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/af0fd523e3b774377a9c5192cf0511e34fa19735/examples/wave64_collectives_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/5e35bd967e3e038cc6399c46ed8cb89db82405cd/examples/wave64_collectives_v1/src/kernel.rs",
   );
+  await expect(page.getByRole("tab", { name: "Kernel", exact: true })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tab", { name: "Current source [SOURCE-ONLY]", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("tabpanel")).toContainText("qualifies no SIMT/tile pair");
   await page.getByRole("tab", { name: "Host" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "No host launch is available for this design lesson",
