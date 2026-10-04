@@ -757,6 +757,7 @@ const gemmAutoresearch: Lesson = {
       sourceCommit: gemmAutoresearchCommit,
       sourceSha256:
         "1f18f3eb2f5e3e403fff06265794ff108edab3c2d2861a2c0071c61dca07042a",
+      sourceDigestScope: "file",
       explanatory: false,
       notice:
         "This exact candidate passed correctness but was rejected by the fixed score. It is retained so the negative result remains reproducible.",
