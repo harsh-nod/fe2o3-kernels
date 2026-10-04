@@ -73,10 +73,11 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(22);
+    expect(wholeFileTabs).toHaveLength(24);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
       "examples/flash_attention_general_v1/src/kernel.rs",
+      "examples/gemm_autoresearch_v1/experiments/double_buffer.rs",
       "examples/gemm_autoresearch_v1/src/kernel.rs",
       "examples/gfx950_advanced_attention/src/ablation.rs",
       "examples/gfx950_advanced_attention/src/kda_baseline.rs",
@@ -92,12 +93,24 @@ describe("evidence source digest scopes", () => {
       "examples/scalar_gemm_v1/src/kernel.rs",
       "examples/tiled_gemm_general_v1/src/kernel.rs",
       "examples/vecadd/src/lib.rs",
+      "examples/vecadd/src/lib.rs",
       "examples/wave64_collectives_v1/src/kernel.rs",
       "examples/workgroup_sync_v1/src/kernel.rs",
       "examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs",
       "examples/workgroup_sync_v1/src/kernel_row_affine_u32.rs",
       "examples/workgroup_sync_v1/src/mixed_tile_oracle.rs",
     ]);
+    const comparison = lessons.find((lesson) => lesson.id === "gemm-autoresearch")!.tabs[2];
+    const vecadd = lessons.find((lesson) => lesson.id === "typed-vecadd")!;
+    expect(wholeFileTabs).toContainEqual({ lessonId: "gemm-autoresearch", tab: comparison });
+    expect(wholeFileTabs).toContainEqual({ lessonId: "typed-vecadd", tab: vecadd.tabs[0] });
+    expect(comparison).toMatchObject({
+      kind: "comparison", sourceDigestScope: "file",
+      sourcePath: "examples/gemm_autoresearch_v1/experiments/double_buffer.rs",
+    });
+    expect(comparison.code).toBe(readFileSync(
+      `${process.cwd()}/examples/gemm_autoresearch_v1/experiments/double_buffer.rs`, "utf8",
+    ));
     for (const { lessonId, tab } of wholeFileTabs) {
       const source = tabEvidenceSource(lessonId, tab)!;
       expect(source.displayedSource).toBe(tab.code);
@@ -169,15 +182,23 @@ describe("evidence source digest scopes", () => {
       expect(archived?.reference?.commit).toBe("af0fd523e3b774377a9c5192cf0511e34fa19735");
     }
     if (snapshot === "lib_current.rs") {
-      expect(lesson.tabs[0].code).toBe(
-        readFileSync(`${process.cwd()}/examples/vecadd_kernel.rs`, "utf8"),
+      expect(lesson.tabs[0].code).toBe(source);
+      expect(lesson.tabs[0]).toMatchObject({
+        kind: "kernel", sourcePath: "examples/vecadd/src/lib.rs",
+        sourceCommit: commit, sourceSha256: digest, sourceDigestScope: "file",
+      });
+      const conceptual = lessons.find((candidate) => candidate.id === "memory-race-proof")!.tabs[0];
+      const conceptualSource = readFileSync(
+        `${process.cwd()}/examples/vecadd_kernel.rs`, "utf8",
       );
-      expect(lesson.tabs[0].sourcePath).toBe("examples/vecadd/src/vecadd_body.rs");
+      expect(conceptual.code).toBe(conceptualSource);
+      expect(conceptual.code).not.toBe(source);
+      expect(conceptual.sourceDigestScope).toBeUndefined();
       expect(lesson.tabs[3].code).toBe(
         readFileSync(`${process.cwd()}/examples/vecadd_application_boundary.rs`, "utf8"),
       );
       expect(lesson.tabs[3].sourcePath).toBe("examples/vecadd/src/main.rs");
-      expect(lesson.tabs[0].code).not.toBe(source);
+      expect(lesson.tabs[3].kind).toBe("host");
     }
   });
 
