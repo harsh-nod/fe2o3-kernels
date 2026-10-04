@@ -4,6 +4,8 @@ import { describe, expect, it } from "vitest";
 import { curriculum, lessons } from "../src/content/curriculum";
 import {
   currentMoeKernelTab,
+  currentVecaddKernelSource,
+  currentVecaddKernelTab,
   currentWaveKernelTab,
   currentWorkgroupKernelTab,
   isSourceAssociationId,
@@ -61,6 +63,26 @@ const cases = [
 ] as const;
 const historicalCommit = "af0fd523e3b774377a9c5192cf0511e34fa19735";
 const associationIssue = "code tab does not match its exact source-only association";
+
+it("uses the exact current vecadd source for both positive kernel displays", () => {
+  const lesson = lessons.find((entry) => entry.id === "typed-vecadd")!;
+  const bytes = readFileSync("examples/vecadd/src/lib_current.rs");
+  expect(lesson.tabs).toHaveLength(6);
+  expect(lesson.tabs[0]).toEqual({ kind: "kernel", label: "Kernel", ...currentVecaddKernelSource });
+  expect(lesson.tabs[5]).toEqual(currentVecaddKernelTab);
+  for (const tab of [lesson.tabs[0], lesson.tabs[5]]) {
+    expect(Buffer.from(tab.code).equals(bytes)).toBe(true);
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe(tab.sourceSha256);
+    expect(tab.sourcePath).toBe("examples/vecadd/src/lib.rs");
+    expect(tab.sourceDigestScope).toBe("file");
+    expect(tab.sourceFragments).toBeUndefined();
+    expect(tab.code).toContain('include!("vecadd_body.rs")');
+    expect(tab.notice).toContain("qualifies no SIMT/tile pair");
+    expect(tab.notice).toContain("remain pending");
+  }
+  expect(lesson.tabs[3].kind).toBe("host");
+  expect(lesson.tabs[3].sourcePath).toBe("examples/vecadd/src/main.rs");
+});
 
 function changedKernel(lessonId: string, mutate: (tab: CodeTab) => void) {
   const changed = structuredClone(curriculum);

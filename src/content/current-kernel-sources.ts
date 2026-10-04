@@ -39,9 +39,7 @@ export const currentWaveKernelTab: CodeTab = {
   notice,
 };
 
-export const currentVecaddKernelTab: CodeTab = {
-  kind: "kernel",
-  label: "Current source [SOURCE-ONLY]",
+export const currentVecaddKernelSource: Omit<CodeTab, "kind" | "label"> = {
   language: "rust",
   code: vecaddKernel,
   sourcePath: "examples/vecadd/src/lib.rs",
@@ -50,6 +48,12 @@ export const currentVecaddKernelTab: CodeTab = {
   sourceDigestScope: "file",
   explanatory: false,
   notice,
+};
+
+export const currentVecaddKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Current source [SOURCE-ONLY]",
+  ...currentVecaddKernelSource,
 };
 
 export const currentWorkgroupKernelTab: CodeTab = {

@@ -1,7 +1,7 @@
 import { narrativeSection } from "./narrative-registry";
 import { mixedTileCpuV18Claim, mixedTileCpuV18Tabs } from "./mixed-tile-cpu-v18";
 import { currentState } from "./current-state";
-import { currentVecaddKernelTab } from "./current-kernel-sources";
+import { currentVecaddKernelSource, currentVecaddKernelTab } from "./current-kernel-sources";
 import { semanticMilestoneLessonBoundary } from "./semantic-correctness-milestone";
 import compilerBoundsKernel from "../../examples/compiler_bounds.rs?raw";
 import cpuSimulationSource from "../../examples/cpu_simulation_source.rs?raw";
@@ -462,11 +462,7 @@ const vecadd: Lesson = {
     narrativeSection("typed-vecadd/typed-arithmetic-contract"),
   ],
   tabs: completeReferenceTabs(
-    {
-      language: "rust",
-      code: vecaddKernel,
-      sourcePath: "examples/vecadd/src/vecadd_body.rs",
-    },
+    currentVecaddKernelSource,
     {
       language: "rust",
       code: safeCpuReferences,
