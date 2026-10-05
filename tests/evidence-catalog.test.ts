@@ -249,17 +249,21 @@ describe("evidence source digest scopes", () => {
       label: "Kernel",
       language: "rust",
       sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "f84c2a59ba34c3e4c12e316cc9b30f14342e36cf",
-      sourceSha256: "66593042d32204a35d4371de11387466c6eb553b54a24d21e370f47b3ee4789e",
+      sourceCommit: "b9378bdbee0dd1e284a1c31b25c3614c5c2039fe",
+      sourceSha256: "21b26bbd0d54f8966bade4ed80e2cb2457e89ecf13e9469eb0c9c030e3a8f6f3",
       sourceDigestScope: "file",
       explanatory: false,
     });
     const source = readFileSync(tab.sourcePath!, "utf8");
     expect(tab.code).toBe(source);
-    expect(Buffer.byteLength(source)).toBe(680);
+    expect(Buffer.byteLength(source)).toBe(552);
     expect(createHash("sha256").update(source).digest("hex")).toBe(tab.sourceSha256);
-    expect(source.indexOf("fill_reference")).toBe(152);
-    expect(source.indexOf("pub fn fill(") + "pub fn ".length).toBe(520);
+    expect(source).toContain('include!("reference.rs");');
+    expect(source).not.toContain("pub fn fill_reference(");
+    const reference = readFileSync("examples/fill/src/reference.rs", "utf8");
+    expect(createHash("sha256").update(reference).digest("hex"))
+      .toBe("c54f0823cdbc5800d88e7fd7d53620260d378179d38b0e40cfd8764ce895f07d");
+    expect(source.indexOf("pub fn fill(") + "pub fn ".length).toBe(392);
     expect(tab.sourceFragments).toBeUndefined();
     expect(tab.evidenceId).toBeUndefined();
     expect(tab.notice).toContain("default features and no selected features");

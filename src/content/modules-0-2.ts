@@ -339,13 +339,13 @@ const fill: Lesson = {
       language: "rust",
       code: currentFillKernel,
       sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "f84c2a59ba34c3e4c12e316cc9b30f14342e36cf",
+      sourceCommit: "b9378bdbee0dd1e284a1c31b25c3614c5c2039fe",
       sourceSha256:
-        "66593042d32204a35d4371de11387466c6eb553b54a24d21e370f47b3ee4789e",
+        "21b26bbd0d54f8966bade4ed80e2cb2457e89ecf13e9469eb0c9c030e3a8f6f3",
       sourceDigestScope: "file",
       explanatory: false,
       notice:
-        "Exact whole-file source at f84c2a59, with default features and no selected features. The reference-proof feature is opt-in and is not selected by this fixture. Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed, and no SIMT/tile pair is qualified. The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins.",
+        "Exact whole-file source at b9378bdb, with default features and no selected features. The reference-proof feature is opt-in and is not selected by this fixture. Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed, and no SIMT/tile pair is qualified. The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins.",
     },
     {
       language: "rust",
