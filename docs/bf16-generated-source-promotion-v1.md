@@ -291,3 +291,33 @@ emission, native execution, GPU launch, whole-action memory bounds or milestone
 completion. See the separate
 [earlier helper observation lesson](bf16-helper-source-cpu-observation-v1.md)
 for its historical evidence; this example does not replace it.
+
+## Later private engineering result — 2026-10-06
+
+A separate bounded engineering campaign now reaches the existing ordinary-v2
+Worker from two fresh real-rustc frontends: Identity and Swap01, with two Worker
+calls each. Each frontend completed the same-owner checked-output → LLVM →
+descriptor → handoff chain, complete retained-byte replay, mandatory source-first
+refusals and owner cleanup. The two exact 44-field reports joined their raw
+stdout bytes. The enclosing task-local family also completed its terminal
+acknowledgement and cleanup; the exact cgroup was subsequently observed absent.
+
+This result is narrower than normal compilation. The word “ordinary” refers
+to the Worker entrypoint, not public BF16 admission. The commands above remain
+unchanged and still end at the documented normal-ranked refusal. The private
+ignored test is not a new tutorial command or permission to reuse its scope.
+Raw formal analysis still retains eight guarded-access reasons, one bounds
+requirement and two alias duties per frontend. No numerical replay, GPU run,
+artifact publication, load or launch was qualified by this campaign; its
+reported HSACO identities are not independently retained artifact bytes.
+
+The selected historical compiler ELF SHA256 is
+`43f202092d7a77ddca73a476490a622e9757669b9c589fc2cccc17eeea7deec2`.
+The complete raw-evidence manifest is
+`bf16-engineering-pair-complete-actual-root-r75-r9`, SHA256
+`2870b2b3f21e3786fc0058af9602c84ba618d6ec9912938e2fa73055f09ba8c4`;
+the independent readback is SHA256
+`69c3f0e9b6900939ab8de0ce49e9449272cfcd4cc8012a1336c830f7aaba40d8`.
+Production integration and exact target/layout/resource/ISA and numerical
+qualification remain separate, including authored gfx950 support. This
+private observation does not close M4 or the broader tutorial milestone.
