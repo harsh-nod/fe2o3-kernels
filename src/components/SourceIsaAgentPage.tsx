@@ -57,6 +57,19 @@ const RecordedFinalNativeComparison = lazy(async () => {
   };
 });
 
+const RecordedLinkedRegionLines = lazy(async () => {
+  const [{ LinkedRegionLines }, { default: evidence }] = await Promise.all([
+    import("./LinkedRegionLines"),
+    import("../../examples/linked_region_lines_v1.json"),
+  ]);
+  return {
+    default: function RetainedLinkedRegionLines() {
+      return <LinkedRegionLines evidence={evidence}
+        expectedCapsuleSha256="7f8d78c87c7e191d2185fc5b8bc36d7d000e067800c9bb1392b4e31f323c4db5" />;
+    },
+  };
+});
+
 const LocalRepeatNativeImport = lazy(() =>
   import("./RepeatNativeImport").then(module => ({
     default: function HistoricalRepeatNativePreview() {
@@ -216,6 +229,7 @@ export function SourceIsaAgentPage() {
   const [activeView, setActiveView] = useState(0);
   const [showSourceComparison, setShowSourceComparison] = useState(false);
   const [showFinalNativeComparison, setShowFinalNativeComparison] = useState(false);
+  const [showLinkedLines, setShowLinkedLines] = useState(false);
   const [showRepeatNativeImport, setShowRepeatNativeImport] = useState(false);
   const [showSameExportNative, setShowSameExportNative] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
@@ -303,6 +317,24 @@ export function SourceIsaAgentPage() {
         <div id="final-native-comparison-content">
           {showFinalNativeComparison && <Suspense fallback={<p role="status">Checking retained native bytes…</p>}>
             <RecordedFinalNativeComparison />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="linked-region-lines-heading">
+        <h2 id="linked-region-lines-heading">Connect a source line to a whole linked region</h2>
+        <p>A separate retained CPU-linked observation joins exact source, emitted LLVM, O0/O3 ELF bytes
+          and DWARF line rows. Linked-image addresses are not runtime GPU addresses; no identity
+          relationship to the older comparison above is inferred.</p>
+        <p><a href="https://github.com/harsh-nod/fe2o3-kernels/blob/main/docs/linked-region-lines-v1.md"
+          target="_blank" rel="noreferrer">Whole-region line lesson, identities and limitations</a></p>
+        <button type="button" aria-expanded={showLinkedLines} aria-controls="linked-region-lines-content"
+          onClick={() => setShowLinkedLines(open => !open)}>
+          {showLinkedLines ? "Close whole-region linked lines" : "Open whole-region linked lines"}
+        </button>
+        <div id="linked-region-lines-content">
+          {showLinkedLines && <Suspense fallback={<p role="status">Loading retained linked-line evidence…</p>}>
+            <RecordedLinkedRegionLines />
           </Suspense>}
         </div>
       </section>

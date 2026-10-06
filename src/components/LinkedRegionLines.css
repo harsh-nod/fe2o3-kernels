@@ -1,0 +1,11 @@
+.linked-region-lines { margin-block: 1rem; min-width: 0; }
+.linked-region-lines .linked-lines-scroll { overflow-x: auto; max-width: 100%; }
+.linked-region-lines table { width: 100%; border-collapse: collapse; }
+.linked-region-lines th, .linked-region-lines td { text-align: left; padding: .6rem; vertical-align: top; border-bottom: 1px solid currentColor; }
+.linked-region-lines code, .linked-region-lines dd { overflow-wrap: anywhere; }
+.linked-region-lines pre { overflow: auto; max-height: 28rem; white-space: pre; }
+.linked-region-lines mark { color: inherit; background: transparent; text-decoration: underline; text-decoration-style: double; }
+.linked-region-lines .linked-lines-boundary { border-inline-start: .25rem solid currentColor; padding-inline-start: .75rem; }
+.linked-region-lines button[aria-pressed="true"] { font-weight: bold; text-decoration: underline; }
+.linked-region-lines button:focus-visible, .linked-region-lines summary:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.linked-region-lines dd { margin-inline-start: 1rem; }
