@@ -26,10 +26,24 @@ The small [lab helper](../examples/public-authoring-inspector/lab.mjs) creates
 six ordinary simulation requests and checks local outputs using independent
 BigInt arithmetic. It does not run a compiler/debugger, read private receipts,
 construct Kernel IR, authenticate a producer or produce a new capture schema.
-Its result checks join canonical identities to inspection; the separate KIR
-file check is length-only, not a canonical digest check. Keep each export,
-inspection and result together; same-size file substitution needs additional
-byte pinning such as the retained qualification runner performs.
+Its result checks join canonical identities to inspection, and its file checker
+now binds the actual bounded KIR bytes to that same identity using the exact V17
+policy-1 domain-separated hash (not raw file SHA-256). Same-size substitution,
+truncation and a mismatched selected inspection refuse before result checking.
+This is byte/report consistency, not KIR decoding, producer authentication or
+fresh admission: changing both bytes and all claimed identities is not evidence
+of correctness. Keep each export, inspection and result together and retain the
+normal compiler/simulator checks and source custody.
+
+The [retained byte vectors](../examples/public-authoring-inspector/canonical-v17-vectors.json)
+come from the separate published instruction-edit capture: two actual 993-byte
+V17 exports, independently pinned raw and canonical identities. They test this
+hash boundary only; they are not the 1,397-byte exports from the September 19 lab
+qualification. That [historical qualification](public-authoring-inspector-lab-qualification-20260919.md)
+records the then-length-only helper and its additional runner byte pinning; its
+36 stages are not relabeled as a fresh execution of this helper. Existing pure
+schema/oracle tests remain synthetic. No capture, release pin or maturity label
+is promoted by these byte-consistency controls.
 
 ## 1. Understand the complete kernel
 

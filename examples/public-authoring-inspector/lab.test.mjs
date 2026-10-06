@@ -1,7 +1,12 @@
-// Pure synthetic controls only. These do not run or authenticate a compiler.
+// Synthetic schema controls plus retained real canonical-byte vectors.
+// These do not run or authenticate a compiler, admit KIR or create execution evidence.
 import assert from "node:assert/strict";
 import test from "node:test";
-import { CASES, checkInspection, checkResult, expectedWord, makeRequest } from "./lab.mjs";
+import { createHash } from "node:crypto";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { CASES, LIMITS, checkCanonicalBytes, checkFiles, checkInspection, checkResult, expectedWord, makeRequest } from "./lab.mjs";
 
 function inspection(variant = "original") {
   return {
@@ -94,4 +99,125 @@ test("wrong wave/target/bindings/padding and output counts refuse explicitly", (
   }
   const partial = output(); partial.counts.invocations_executed = 63;
   assert.throws(() => checkResult("original", 5, makeRequest(5), partial, inspection()), /invocations_executed/u);
+});
+
+const retained = JSON.parse(fs.readFileSync(new URL("./canonical-v17-vectors.json", import.meta.url), "utf8"));
+const knownVectors = [
+  ["default", "c8c7099621ed88bca7fffb51bc10edbccb556cc0638ebe0dffa69cbfdbfac26c",
+    "bd24d1fc942ca247fc258f3f29af3c64fdee65a624731188a1c1ce6da30877de"],
+  ["edited", "1bc1158210e003f30fee45a2fddf33d2b4dcf550fa32399967d0164089cb3675",
+    "57fcb93e5af78855f44da324572f38fdcbdbaa41a886d4b556a1446e0c11f63e"],
+];
+function retainedBytes(index = 0) { return Buffer.from(retained.rows[index].base64, "base64"); }
+function retainedIdentity(index = 0) { return { ...retained.rows[index].canonical }; }
+function independentFraming(bytes, { domain = "FE2O3/VERIFIED-CANONICAL-KERNEL-IR/V17\0",
+  policy = 1, length = bytes.length, bigEndian = false } = {}) {
+  const d = Buffer.from(domain, "utf8"), prefix = Buffer.alloc(4), p = Buffer.alloc(2), n = Buffer.alloc(8);
+  if (bigEndian) { prefix.writeUInt32BE(d.length); p.writeUInt16BE(policy); n.writeBigUInt64BE(BigInt(length)); }
+  else { prefix.writeUInt32LE(d.length); p.writeUInt16LE(policy); n.writeBigUInt64LE(BigInt(length)); }
+  return createHash("sha256").update(Buffer.concat([prefix, d, p, n, bytes])).digest("hex");
+}
+test("two retained real V17 exports match separately retained raw and canonical identities", () => {
+  assert.equal(retained.provenance.capture, "phase19b-instruction-native-join-r1");
+  const published = fs.readFileSync(new URL("../source_instruction_native_comparison_v1.json", import.meta.url));
+  assert.equal(published.length, 503416);
+  assert.equal(createHash("sha256").update(published).digest("hex"),
+    "0b4a9689524965929d1e9b102d7802e737e068293f74fa28d0148ab49238cc04");
+  const sourceRows = JSON.parse(JSON.parse(published).join.utf8).source_variants;
+  assert.equal(retained.rows.length, 2);
+  for (let index = 0; index < 2; index++) {
+    const bytes = retainedBytes(index), identity = retainedIdentity(index);
+    const [label, raw, canonical] = knownVectors[index];
+    assert.equal(retained.rows[index].label, label);
+    assert.equal(bytes.length, 993);
+    assert.equal(bytes.toString("base64"), retained.rows[index].base64);
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), raw);
+    assert.equal(retained.rows[index].raw_sha256, raw);
+    assert.deepEqual(identity, { wire_version: 17, bytes: 993, sha256: canonical });
+    const sourceRow = sourceRows.find(row => row.label === label);
+    assert.equal(sourceRow.canonical_kir_sha256, canonical);
+    assert.equal(sourceRow.canonical_kir_bytes, bytes.length);
+    assert.equal(sourceRow.kir_file_sha256, raw);
+    assert.equal(checkCanonicalBytes(bytes, identity), undefined);
+  }
+});
+test("same-size cross-variant substitution and first/middle/last byte changes refuse", () => {
+  assert.equal(retainedBytes(0).length, retainedBytes(1).length);
+  assert.throws(() => checkCanonicalBytes(retainedBytes(1), retainedIdentity(0)), /canonical file identity/u);
+  assert.throws(() => checkCanonicalBytes(retainedBytes(0), retainedIdentity(1)), /canonical file identity/u);
+  for (const offset of [0, 496, 992]) {
+    const bytes = retainedBytes(); bytes[offset] ^= 1;
+    assert.throws(() => checkCanonicalBytes(bytes, retainedIdentity()), /canonical file identity/u);
+  }
+});
+test("changed or malformed report digest never falls back to length or raw SHA", () => {
+  for (const sha256 of ["f".repeat(64), knownVectors[0][1], knownVectors[1][2]]) {
+    assert.throws(() => checkCanonicalBytes(retainedBytes(), { ...retainedIdentity(), sha256 }),
+      /canonical file identity/u);
+  }
+  for (const sha256 of ["0".repeat(64), "A".repeat(64), "g".repeat(64), "", null]) {
+    assert.throws(() => checkCanonicalBytes(retainedBytes(), { ...retainedIdentity(), sha256 }),
+      /SHA-256 shape/u);
+  }
+});
+test("domain terminator, version domain, policy, length framing and endian are exact", () => {
+  const bytes = retainedBytes();
+  assert.equal(independentFraming(bytes), knownVectors[0][2]);
+  for (const options of [
+    { domain: "FE2O3/VERIFIED-CANONICAL-KERNEL-IR/V17" },
+    { domain: "FE2O3/VERIFIED-CANONICAL-KERNEL-IR/V18\0" },
+    { policy: 2 }, { length: bytes.length + 1 }, { bigEndian: true },
+  ]) {
+    const sha256 = independentFraming(bytes, options);
+    assert.notEqual(sha256, knownVectors[0][2]);
+    assert.throws(() => checkCanonicalBytes(bytes, { ...retainedIdentity(), sha256 }), /canonical file identity/u);
+  }
+});
+test("only exact V17 fields, bounded positive lengths and Buffer inputs are accepted", () => {
+  for (const wire_version of [16, 18, "17", null]) {
+    assert.throws(() => checkCanonicalBytes(retainedBytes(), { ...retainedIdentity(), wire_version }),
+      /wire version/u);
+  }
+  for (const bytes of [0, -1, 1.5, "993", LIMITS.kir + 1, Number.MAX_SAFE_INTEGER + 1]) {
+    assert.throws(() => checkCanonicalBytes(retainedBytes(), { ...retainedIdentity(), bytes }));
+  }
+  assert.throws(() => checkCanonicalBytes(new Uint8Array(retainedBytes()), retainedIdentity()), /Buffer/u);
+  assert.throws(() => checkCanonicalBytes(Buffer.alloc(LIMITS.kir + 1), retainedIdentity()), /file bound/u);
+  assert.throws(() => checkCanonicalBytes(retainedBytes(), { ...retainedIdentity(), policy: 1 }), /field roster/u);
+  const missing = retainedIdentity(); delete missing.sha256;
+  assert.throws(() => checkCanonicalBytes(retainedBytes(), missing), /field roster/u);
+});
+test("truncated, appended and malformed selected bytes refuse without decoding or admission", () => {
+  const bytes = retainedBytes(), identity = retainedIdentity();
+  for (const length of [0, 1, 55, 56, 64, bytes.length - 1]) {
+    assert.throws(() => checkCanonicalBytes(bytes.subarray(0, length), identity), /file bound|file length/u);
+  }
+  assert.throws(() => checkCanonicalBytes(Buffer.concat([bytes, Buffer.from([0])]), identity), /file length/u);
+  assert.throws(() => checkCanonicalBytes(Buffer.alloc(bytes.length), identity), /file identity/u);
+  const wrongWire = Buffer.from(bytes); wrongWire[8] = 18;
+  assert.throws(() => checkCanonicalBytes(wrongWire, identity), /file identity/u);
+});
+test("existing file-check route binds bytes before checking its synthetic result fixtures", () => {
+  // Real retained bytes plus deliberately synthetic schema/oracle controls.
+  // This is route coverage, not a new source-produced lesson or CPU observation.
+  const root = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), "fe2o3-lab-byte-binding-"));
+  try {
+    fs.mkdirSync(path.join(root, "cases"));
+    const report = inspection(); report.canonical = retainedIdentity();
+    fs.writeFileSync(path.join(root, "original-inspection.json"), JSON.stringify(report), { flag: "wx" });
+    fs.writeFileSync(path.join(root, "original.kir"), retainedBytes(), { flag: "wx" });
+    for (let index = 0; index < CASES.length; index++) {
+      fs.writeFileSync(path.join(root, "cases", "case-" + (index + 1) + ".json"),
+        JSON.stringify(makeRequest(index)), { flag: "wx" });
+      const result = output("original", index);
+      result.kir = { sha256: report.canonical.sha256, canonical_bytes: report.canonical.bytes };
+      fs.writeFileSync(path.join(root, "original-case-" + (index + 1) + ".json"),
+        JSON.stringify(result), { flag: "wx" });
+    }
+    assert.deepEqual(checkFiles("original", root).words, CASES.map((_value, index) => expectedWord("original", index)));
+    // Missing results cannot mask the earlier byte-identity refusal.
+    fs.unlinkSync(path.join(root, "original-case-1.json"));
+    fs.writeFileSync(path.join(root, "original.kir"), retainedBytes(1));
+    assert.throws(() => checkFiles("original", root), /canonical file identity/u);
+  } finally { fs.rmSync(root, { recursive: true, force: true }); }
 });

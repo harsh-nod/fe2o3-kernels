@@ -2,6 +2,7 @@
 // Tutorial input/oracle helper only. No compiler, debugger, subprocess, network,
 // source authentication, production admission or hardware action.
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -36,6 +37,27 @@ function same(actual, expected, message) {
   // Both inputs are bounded parsed JSON. Ignore null-vs-default object prototypes,
   // not values, unknown fields, array length or numeric representations.
   assert.equal(JSON.stringify(actual), JSON.stringify(expected), message);
+}
+// Exact byte/report consistency only; not a KIR decoder or producer admission.
+// Framing is canonical_kir_v17.rs identity policy 1 (including the domain NUL),
+// unchanged at the lesson's compiler pin and current compiler source.
+export function checkCanonicalBytes(bytes, canonical) {
+  assert(Buffer.isBuffer(bytes), "canonical file bytes must be a Buffer");
+  exact(canonical, ["wire_version", "sha256", "bytes"]);
+  assert.equal(canonical.wire_version, 17, "canonical wire version must be 17");
+  natural(canonical.bytes, LIMITS.kir);
+  assert(canonical.bytes > 0 && bytes.length > 0 && bytes.length <= LIMITS.kir,
+    "canonical file bound");
+  digest(canonical.sha256);
+  assert.equal(bytes.length, canonical.bytes, "canonical file length");
+  const domain = Buffer.from("FE2O3/VERIFIED-CANONICAL-KERNEL-IR/V17\0", "utf8");
+  const domainLength = Buffer.alloc(4), policy = Buffer.alloc(2), length = Buffer.alloc(8);
+  domainLength.writeUInt32LE(domain.length);
+  policy.writeUInt16LE(1);
+  length.writeBigUInt64LE(BigInt(bytes.length));
+  const actual = createHash("sha256").update(domainLength).update(domain)
+    .update(policy).update(length).update(bytes).digest("hex");
+  assert.equal(actual, canonical.sha256, "canonical file identity differs from selected inspection");
 }
 export function makeRequest(index) {
   natural(index, CASES.length - 1);
@@ -160,12 +182,11 @@ function prepare(destination) {
   }
   console.log("Created six bounded simulation requests. No compiler or simulator was run.");
 }
-function checkFiles(variant, root) {
+export function checkFiles(variant, root) {
   variantName(variant); directory(root); directory(path.join(root, "cases"));
   const inspection = checkInspection(variant, json(path.join(root, variant + "-inspection.json"), LIMITS.inspection));
   const kir = readBounded(path.join(root, variant + ".kir"), LIMITS.kir);
-  assert.equal(kir.length, inspection.canonical.bytes, "canonical file length");
-  // Do not equate file SHA-256 with the compiler's canonical identity domain.
+  checkCanonicalBytes(kir, inspection.canonical);
   const words = CASES.map((_inputs, index) => checkResult(variant, index,
     json(path.join(root, "cases", "case-" + (index + 1) + ".json"), LIMITS.request),
     json(path.join(root, variant + "-case-" + (index + 1) + ".json"), LIMITS.result), inspection));
