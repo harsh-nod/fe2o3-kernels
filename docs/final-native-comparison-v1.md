@@ -321,3 +321,32 @@ Later documentation/publication policy checks are separate.
 This qualifies only the stated read-only comparison. It neither closes broad
 authoring/debugger/multi-level milestones nor changes the curriculum baseline,
 proof authority or hardware availability.
+
+## Combined resource-view regression — 2026-10-06
+
+`e2e/v3-supported-profiles.spec.ts` now checks the CPU source comparison,
+retained final-native comparison, and same-export origin/liveness comparison
+on the same page. Its positive inputs are eight independently pinned retained
+fixtures. It checks all source variants, all four final-native cases and all
+eight same-export cases; selecting a new case clears only that view's state.
+
+Wrong-export origins, an incompatible historical capture and an internally
+rehashed changed join are negative cases. An unavailable integrity API must
+hide unchecked rows. The tests also require no mutation requests and no network
+requests after the initial lazy-loading boundary.
+
+Validation on MI350: TypeScript and ESLint passed; the combined test plus five
+related suites passed all 18 desktop/mobile observations with one worker and
+no retries. Reproduce with:
+
+```sh
+npm run typecheck
+npm run lint
+npm run test:e2e -- e2e/v3-supported-profiles.spec.ts e2e/same-export-origin-native.spec.ts e2e/final-native-comparison.spec.ts e2e/source-variant-comparison.spec.ts e2e/ordered-role-liveness.spec.ts e2e/final-native-register-roles.spec.ts --project=desktop --project=mobile --workers=1 --retries=0
+```
+
+This validates the supported read-only views together, not physical register
+lifetimes, full macro frames, fine instruction source spans, current live GPU
+debugging, or the entire compiler-resource milestone. Those capability gaps
+remain explicit; separate CPU allocation/reuse records are not physical
+register-allocation evidence.
