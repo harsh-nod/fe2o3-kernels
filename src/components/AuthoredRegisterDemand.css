@@ -1,0 +1,11 @@
+.authored-register-demand { margin-block: 1.25rem; min-width: 0; border-inline-start: 3px solid currentColor; padding-inline-start: .75rem; }
+.authored-demand-scroll { overflow-x: auto; max-width: 100%; }
+.authored-register-demand table { width: max-content; min-width: 100%; }
+.authored-register-demand caption { text-align: left; padding-block: .5rem; }
+.authored-register-demand td { text-align: center; min-width: 4rem; }
+.authored-register-demand [data-selected="true"] { outline: 2px solid currentColor; outline-offset: -2px; }
+.authored-register-demand [data-demand="D"], .authored-register-demand [data-demand="R"] { font-weight: 700; }
+.authored-demand-cell-label { display: block; font-size: .75rem; }
+.authored-demand-selection { min-height: 3em; }
+.authored-register-demand pre { max-width: 100%; overflow-x: auto; }
+@media (max-width: 600px) { .authored-register-demand { padding-inline-start: .4rem; } }

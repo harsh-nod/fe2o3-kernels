@@ -43,14 +43,16 @@ const RecordedSourceComparison = lazy(async () => {
 });
 
 const RecordedFinalNativeComparison = lazy(async () => {
-  const [{ FinalNativeComparison }, { default: evidence }] = await Promise.all([
+  const [{ FinalNativeComparison }, { default: evidence }, { default: authoredEvidence }] = await Promise.all([
     import("./FinalNativeComparison"),
     import("../../examples/source_instruction_native_comparison_v1.json"),
+    import("../../examples/authored_register_demand_v1.json"),
   ]);
+  const authoredDemand = { evidence: authoredEvidence, expectedSha256: "39ab4d99bef9a04ac6f2f55b727b63148173ce27d7471066dde819fe264bd30e" };
   return {
     default: function RetainedFinalNativeComparison() {
       return <FinalNativeComparison evidence={evidence}
-        expectedJoinSha256="5230415719fa0c7c81473d5fea338d5f3a85c7a3a9a91fd55c3900e20165d162" />;
+        expectedJoinSha256="5230415719fa0c7c81473d5fea338d5f3a85c7a3a9a91fd55c3900e20165d162" authoredDemand={authoredDemand} />;
     },
   };
 });

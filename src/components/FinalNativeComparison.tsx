@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { HighlightedCode } from "./HighlightedCode";
 import { FinalNativeRegisterRoles } from "./FinalNativeRegisterRoles";
+import { AuthoredRegisterDemand, type AuthoredDemandEvidence } from "./AuthoredRegisterDemand";
 import { projectFinalNativeComparison, type FinalNativeProjection } from "../content/final-native-comparison.mjs";
 import "./FinalNativeComparison.css";
 
@@ -8,10 +9,14 @@ export interface FinalNativeComparisonProps {
   evidence: unknown;
   /** Caller-selected display-integrity pin; never a trusted compiler identity. */
   expectedJoinSha256: string;
+  /** Optional separately pinned diagnostic plan; does not change the native profile. */
+  authoredDemand?: AuthoredDemandEvidence;
 }
 type Ready = Extract<FinalNativeProjection, { status: "ready" }>;
 
-function NativeReady({ projection }: { projection: Ready }) {
+function NativeReady({ projection, nativeEvidence, authoredDemand }: {
+  projection: Ready; nativeEvidence: unknown; authoredDemand?: AuthoredDemandEvidence;
+}) {
   const [selected, setSelected] = useState(0);
   const current = projection.cases[selected];
   return <>
@@ -52,6 +57,9 @@ function NativeReady({ projection }: { projection: Ready }) {
       <p>All three contiguous slices match their reported full-file offsets. Reported implicit reads: EXEC;
         no implicit writes. This is byte consistency against a retained observer report, not new disassembly.</p>
       <FinalNativeRegisterRoles grid={current.registerGrid} />
+      {authoredDemand && <AuthoredRegisterDemand nativeEvidence={nativeEvidence}
+        expectedNativeJoin={projection.joinSha256} demand={authoredDemand}
+        profile={current.profile} optimization={current.optimization} />}
       <p>Descriptor: 64 bytes at payload offset {current.descriptorOffset}. Resource words:
         <code> compute_pgm_rsrc1=0x{current.resource1.toString(16)}</code>,
         <code> compute_pgm_rsrc3=0x{current.resource3.toString(16)}</code>.</p>
@@ -80,7 +88,7 @@ function NativeReady({ projection }: { projection: Ready }) {
   </>;
 }
 
-export function FinalNativeComparison({ evidence, expectedJoinSha256 }: FinalNativeComparisonProps) {
+export function FinalNativeComparison({ evidence, expectedJoinSha256, authoredDemand }: FinalNativeComparisonProps) {
   const [completed, setCompleted] = useState<{
     evidence: unknown; expected: string; projection: FinalNativeProjection;
   } | null>(null);
@@ -97,6 +105,6 @@ export function FinalNativeComparison({ evidence, expectedJoinSha256 }: FinalNat
     <h3>Source instruction edit → retained final-native bytes</h3>
     {projection === null ? <p role="status">Checking whole-payload integrity; no previous native case is shown.</p>
       : projection.status !== "ready" ? <p role="status" data-state={projection.status}>{projection.detail} No native comparison is shown.</p>
-        : <NativeReady key={projection.joinSha256} projection={projection} />}
+        : <NativeReady key={projection.joinSha256} projection={projection} nativeEvidence={evidence} authoredDemand={authoredDemand} />}
   </section>;
 }
