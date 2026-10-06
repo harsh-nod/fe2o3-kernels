@@ -1,3 +1,6 @@
+#![cfg_attr(target_arch = "amdgpu", no_std)]
+#![cfg_attr(target_arch = "amdgpu", no_main)]
+
 use fe2o3_device::{DisjointSlice, kernel, thread};
 
 include!("vecadd_body.rs");
@@ -11,6 +14,7 @@ pub fn vecadd(a: &[f32], b: &[f32], mut c: DisjointSlice<f32>) {
     vecadd_kernel_body!(thread, (), production_f32_add, a, b, c);
 }
 
+#[cfg(not(target_arch = "amdgpu"))]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     Err(std::io::Error::new(
         std::io::ErrorKind::Unsupported,
@@ -19,10 +23,27 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     .into())
 }
 
+#[cfg(target_arch = "amdgpu")]
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo<'_>) -> ! {
+    loop {}
+}
+
 #[cfg(test)]
 mod tests {
     const KERNEL_SOURCE: &str = include_str!("main.rs");
     const SHARED_BODY: &str = include_str!("vecadd_body.rs");
+
+    #[test]
+    fn host_application_keeps_explicit_unsupported_boundary() {
+        let error = super::main().unwrap_err();
+        let error = error.downcast_ref::<std::io::Error>().unwrap();
+        assert_eq!(error.kind(), std::io::ErrorKind::Unsupported);
+        assert_eq!(
+            error.to_string(),
+            "the production Worker V3 application verifier is not wired for fe2o3-vecadd",
+        );
+    }
 
     #[allow(dead_code)]
     fn generated_v3_arguments_typecheck<'allocation>(

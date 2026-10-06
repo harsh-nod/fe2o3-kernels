@@ -51,6 +51,13 @@ const sourceContractSchema = "fe2o3-tutorial-curriculum-obligations-v2";
 const sourceContractDomain = "fe2o3-tutorial-displayed-source-contract-v1\0";
 const identifier = /^[A-Za-z_][A-Za-z0-9_]*$/u;
 
+function relativeSourcePath(value: unknown): value is string {
+  return typeof value === "string" && value.length > 0 && value.length <= 4096
+    && !/[\\\\\x00-\x1f\x7f]/u.test(value)
+    && value.split("/").every((part) => part.length > 0 && part !== "." && part !== "..")
+    && !/^[A-Za-z]:/u.test(value);
+}
+
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical);
   if (value !== null && typeof value === "object") {
@@ -91,13 +98,33 @@ function validateSourceItem(lessonId: string, tab: CodeTab, ordinal: number, val
   }
   requireCondition(nonempty(input.packageManifest) && nonempty(input.cargoLockPath) && typeof input.defaultFeatures === "boolean", `${label} has incomplete compiler inputs`);
   requireCondition(nonempty(tab.sourcePath) && isDeepStrictEqual(input.sourcePaths, [tab.sourcePath]), `${label} must bind its exact displayed source path`);
+  const cases = array(item.cases, `${label}.cases`, 256);
+  requireCondition(cases.length > 0, `${label} requires source cases`);
+  const cpuOnly = cases.every((value) =>
+    object(object(value, `${label} case`).expectation, `${label} expectation`).kind === "original-source-cpu");
   const target = object(input.cargoTarget, `${label}.cargoTarget`);
   exactKeys(target, ["kind", "name", "sourcePath"], `${label}.cargoTarget`);
-  requireCondition(target.kind === "lib" && typeof target.name === "string" && identifier.test(target.name) && nonempty(target.sourcePath), `${label} requires an exact library target`);
+  requireCondition(typeof target.name === "string" && relativeSourcePath(target.sourcePath)
+    && ((target.kind === "lib" && identifier.test(target.name))
+      || (cpuOnly && target.kind === "bin" && /^[A-Za-z_][A-Za-z0-9_-]*$/u.test(target.name))),
+    `${label} requires an exact library target or explicit CPU binary target`);
+  requireCondition(tab.kind !== "host" || (cpuOnly && target.kind === "bin"),
+    `${label} host source requires an explicit-bin CPU contract`);
   const driver = object(item.driver, `${label}.driver`);
-  exactKeys(driver, ["package", "target", "path"], `${label}.driver`);
-  requireCondition(typeof driver.package === "string" && /^[a-z][a-z0-9-]*$/u.test(driver.package) && typeof driver.target === "string" && identifier.test(driver.target)
-    && driver.path === `crates/${driver.package}/tests/${driver.target}.rs`, `${label} requires an exact integration-test driver`);
+  const libraryDriver = Object.hasOwn(driver, "testFilter");
+  exactKeys(driver, libraryDriver ? ["package", "target", "path", "testFilter"] : ["package", "target", "path"], `${label}.driver`);
+  requireCondition(typeof driver.package === "string" && /^[a-z][a-z0-9-]*$/u.test(driver.package)
+    && typeof driver.target === "string" && identifier.test(driver.target) && relativeSourcePath(driver.path),
+    `${label} requires an exact test driver`);
+  if (libraryDriver) {
+    requireCondition(cpuOnly && driver.target === "lib" && typeof driver.testFilter === "string"
+      && driver.testFilter.length <= 4096 && /^(?:[A-Za-z_][A-Za-z0-9_]*::)+[A-Za-z_][A-Za-z0-9_]*$/u.test(driver.testFilter)
+      && driver.path.startsWith(`crates/${driver.package}/src/`) && driver.path.endsWith("_tests.rs"),
+      `${label} requires an exact CPU library test filter and source leaf`);
+  } else {
+    requireCondition(driver.path === `crates/${driver.package}/tests/${driver.target}.rs`,
+      `${label} requires an exact integration-test driver`);
+  }
   const wholeFile = tab.sourceDigestScope === "file";
   let fragments: readonly string[];
   if (wholeFile) {
@@ -125,8 +152,6 @@ function validateSourceItem(lessonId: string, tab: CodeTab, ordinal: number, val
     requireCondition(intervals.every(([start, stop]) => end <= start || offset >= stop), `${label} source ranges overlap`);
     intervals.push([offset, end]);
   }
-  const cases = array(item.cases, `${label}.cases`, 256);
-  requireCondition(cases.length > 0, `${label} requires source cases`);
   const symbols = new Set<string>();
   for (const value of cases) {
     const row = object(value, `${label} case`);
@@ -139,7 +164,21 @@ function validateSourceItem(lessonId: string, tab: CodeTab, ordinal: number, val
     boundedInteger(row.displayedFragmentOrdinal, 0, ranges.length - 1, "displayedFragmentOrdinal");
     requireCondition(typeof row.testFunction === "string" && identifier.test(row.testFunction), `${label} requires an exact test function`);
     const expectation = object(row.expectation, `${label} expectation`);
-    if (expectation.kind === "diagnostic-kir-export-v1") {
+    if (libraryDriver) {
+      requireCondition(typeof driver.testFilter === "string" && driver.testFilter.endsWith(`::${row.testFunction}`),
+        `${label} CPU library driver differs from its exact test function`);
+    }
+    if (expectation.kind === "original-source-cpu") {
+      exactKeys(expectation, ["kind", "tileLayout", "requestPath", "requestSha256", "requestBytes",
+        "expectationPath", "expectationSha256", "expectationBytes"], `${label} expectation`);
+      requireCondition(expectation.tileLayout === "blocked" || expectation.tileLayout === "striped",
+        `${label} has an unsupported CPU tile layout`);
+      for (const inputKind of ["request", "expectation"]) {
+        requireCondition(relativeSourcePath(expectation[`${inputKind}Path`])
+          && digest(expectation[`${inputKind}Sha256`], 64), `${label} requires an exact CPU input path and digest`);
+        boundedInteger(expectation[`${inputKind}Bytes`], 1, 16 * 1024 * 1024, `${inputKind}Bytes`);
+      }
+    } else if (expectation.kind === "diagnostic-kir-export-v1") {
       exactKeys(expectation, ["kind", "canonicalKirVersion", "diagnosticTileOrders", "authority"], `${label} expectation`);
       boundedInteger(expectation.canonicalKirVersion, 18, 18, "canonicalKirVersion");
       const orders = array(expectation.diagnosticTileOrders, `${label} diagnosticTileOrders`, 2);
@@ -254,7 +293,8 @@ export function validateCurriculumEvidence(bytes: Uint8Array, expectedSha256: st
       const requiresItem = binding.role === "executable" && tab.kind === "kernel" && tab.language === "rust";
       let sourceItemStatus = requiresItem ? "pending" : "not-applicable";
       let sourceItem: unknown = null;
-      if (sourceItemsAllowed && requiresItem && retainedTab.sourceItem !== null && retainedTab.sourceItem !== undefined) {
+      const canBindHost = binding.role === "executable" && tab.kind === "host" && tab.language === "rust";
+      if (sourceItemsAllowed && (requiresItem || canBindHost) && retainedTab.sourceItem !== null && retainedTab.sourceItem !== undefined) {
         covered.add(validateSourceItem(label, tab, ordinal, retainedTab.sourceItem));
         sourceItem = retainedTab.sourceItem;
         sourceItemStatus = "contract-bound";

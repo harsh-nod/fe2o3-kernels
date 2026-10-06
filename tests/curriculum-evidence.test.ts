@@ -106,6 +106,148 @@ function wholeFileSourceDriverFixture() {
 }
 
 
+
+function originalCpuSourceDriverFixture() {
+  const value = wholeFileSourceDriverFixture();
+  const previousPath = value.tab.sourcePath;
+  value.tab.kind = "host";
+  value.tab.label = "Host";
+  value.tab.sourcePath = "crates/source-fixture/src/main.rs";
+  value.tab.code = '#![cfg_attr(target_arch = "amdgpu", no_std)]\n#[kernel(typed)]\npub fn first() {}\n';
+  value.tab.sourceSha256 = createHash("sha256").update(value.tab.code).digest("hex");
+  value.item.compilerInput.sourcePaths = [value.tab.sourcePath];
+  value.item.compilerInput.cargoTarget = { kind: "bin", name: "source-fixture", sourcePath: "src/main.rs" };
+  value.manifest.entries[0].sourcePaths = value.manifest.entries[0].sourcePaths.map((path) =>
+    path === previousPath ? value.tab.sourcePath! : path);
+  value.item.sourceRanges = [{ byteOffset: 0, byteLength: Buffer.byteLength(value.tab.code) }];
+  value.item.cases.splice(1);
+  const driver: Record<string, unknown> = {
+    package: "source-driver", target: "lib", path: "crates/source-driver/src/source_cpu_tests.rs",
+    testFilter: "source_driver::source_test",
+  };
+  const expectation: Record<string, unknown> = {
+    kind: "original-source-cpu", tileLayout: "blocked",
+    requestPath: "config/cpu/request.json", requestSha256: "1".repeat(64), requestBytes: 123,
+    expectationPath: "config/cpu/expectation.json", expectationSha256: "2".repeat(64), expectationBytes: 456,
+  };
+  Reflect.set(value.item, "driver", driver);
+  Reflect.set(value.item.cases[0], "expectation", expectation);
+  value.repin();
+  return { ...value, driver, expectation };
+}
+
+describe("V2 original-source CPU contracts", () => {
+  it("binds an explicit host binary and exact library driver without qualification", () => {
+    for (const layout of ["blocked", "striped"]) {
+      const value = originalCpuSourceDriverFixture();
+      value.expectation.tileLayout = layout;
+      value.repin();
+      const before = structuredClone(value.manifest);
+      expect(validate(value.manifest, value.current).status).toBe("pending");
+      expect(value.manifest).toEqual(before);
+      expect(value.manifest.curriculum.lessons[0].codeTabs[0].sourceItemStatus).toBe("contract-bound");
+      expect(value.manifest.curriculum.lessons[0].variants.every((variant) =>
+        variant.status === "pending" && variant.sourceItems.length === 0)).toBe(true);
+    }
+  });
+
+  it("keeps legacy integration drivers and kernel library CPU contracts separate", () => {
+    const value = originalCpuSourceDriverFixture();
+    value.tab.kind = "kernel";
+    const previousPath = value.tab.sourcePath;
+    value.tab.sourcePath = "crates/source-fixture/src/lib.rs";
+    value.manifest.entries[0].sourcePaths = value.manifest.entries[0].sourcePaths.map((path) =>
+      path === previousPath ? value.tab.sourcePath! : path);
+    value.item.compilerInput.cargoTarget = { kind: "lib", name: "source_fixture", sourcePath: "src/lib.rs" };
+    value.item.compilerInput.sourcePaths = [value.tab.sourcePath];
+    value.repin();
+    expect(validate(value.manifest, value.current).status).toBe("pending");
+    Reflect.deleteProperty(value.driver, "testFilter");
+    value.driver.target = "source_test";
+    value.driver.path = "crates/source-driver/tests/source_test.rs";
+    value.repin();
+    expect(validate(value.manifest, value.current).status).toBe("pending");
+    const legacy = sourceDriverFixture();
+    expect(validate(legacy.manifest, legacy.current).status).toBe("pending");
+  });
+
+  it("rejects incomplete or malformed CPU pins even after repinning the contract", () => {
+    for (const key of Object.keys(originalCpuSourceDriverFixture().expectation)) {
+      const value = originalCpuSourceDriverFixture();
+      delete value.expectation[key];
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+    const mutants: Record<string, unknown[]> = {
+      kind: ["verified-bundle-export", "original-source-cpu-v2", null],
+      tileLayout: ["Blocked", "unknown", true],
+      requestPath: ["/absolute", "../escape", "a/../b", "a//b", "a\\b", "C:/drive", ""],
+      expectationPath: ["./input", "a/\u0000", false],
+      requestSha256: ["a".repeat(63), "A".repeat(64), true],
+      expectationSha256: ["z".repeat(64), null],
+      requestBytes: [0, -1, 1.5, true, "1", 16 * 1024 * 1024 + 1],
+      expectationBytes: [0, null, 16 * 1024 * 1024 + 1],
+    };
+    for (const [key, values] of Object.entries(mutants)) for (const mutant of values) {
+      const value = originalCpuSourceDriverFixture();
+      value.expectation[key] = mutant;
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+    for (const extra of [{ qualified: true }, { bundleVersion: 6 }, { authority: "source_authenticated" }]) {
+      const value = originalCpuSourceDriverFixture();
+      Object.assign(value.expectation, extra);
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow("missing or unknown fields");
+    }
+  });
+
+  it("refuses substituted drivers, binary identities and non-CPU host contracts", () => {
+    for (const [key, values] of Object.entries({
+      target: ["source_test", "bin", null], path: ["crates/source-driver/tests/source_test.rs",
+        "crates/other/src/source_cpu_tests.rs", "crates/source-driver/src/../source_cpu_tests.rs"],
+      testFilter: ["source_test", "module::other", "module::*", null, "a".repeat(4097)],
+    })) for (const mutant of values) {
+      const value = originalCpuSourceDriverFixture();
+      value.driver[key] = mutant;
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+    for (const mutant of [
+      { kind: "lib", name: "source_fixture", sourcePath: "src/lib.rs" },
+      { kind: "bin", name: "../other", sourcePath: "src/main.rs" },
+      { kind: "bin", name: "source-fixture", sourcePath: "../main.rs" },
+    ]) {
+      const value = originalCpuSourceDriverFixture();
+      value.item.compilerInput.cargoTarget = mutant;
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+    for (const host of [false, true]) {
+      const value = wholeFileSourceDriverFixture();
+      if (host) value.tab.kind = "host";
+      else value.item.compilerInput.cargoTarget.kind = "bin";
+      value.repin();
+      expect(() => validate(value.manifest, value.current)).toThrow(/^curriculum evidence:/u);
+    }
+  });
+
+  it("binds request and oracle identities and does not accept stale source digests", () => {
+    for (const [key, field] of Object.entries({ requestSha256: "3".repeat(64),
+      expectationSha256: "4".repeat(64), tileLayout: "striped" })) {
+      const value = originalCpuSourceDriverFixture();
+      value.expectation[key] = field;
+      expect(() => validate(value.manifest, value.current)).toThrow("contract digest differs");
+      value.repin();
+      expect(validate(value.manifest, value.current).status).toBe("pending");
+    }
+    const value = originalCpuSourceDriverFixture();
+    value.tab.code += "// unpinned source change\n";
+    value.item.sourceRanges[0].byteLength = Buffer.byteLength(value.tab.code);
+    value.repin();
+    expect(() => validate(value.manifest, value.current)).toThrow("whole-file display differs");
+  });
+});
 function diagnosticSourceDriverFixture(orders = ["blocked", "striped"], wholeFile = false) {
   const value = wholeFile ? wholeFileSourceDriverFixture() : sourceDriverFixture();
   const expectation: Record<string, unknown> = {

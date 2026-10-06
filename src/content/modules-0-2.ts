@@ -489,9 +489,10 @@ const vecadd: Lesson = {
       language: "rust",
       code: vecaddApplicationBoundary,
       sourcePath: "examples/vecadd/src/main.rs",
-      sourceCommit: currentState.compilerCommit,
+      sourceCommit: "a89ba14820cafc7dfe6c147a653a6106e6ccbe52",
       sourceSha256:
-        "f97d7b6c1d51072a78bae7392a16ca0dd23ebdc2d3219e29334e557f7e47d246",
+        "ce5ce9c97483f9ed93de1cfe7135f9dbaad54f5ea613f57540595b86b225c7b2",
+      sourceDigestScope: "file",
       explanatory: false,
       notice:
         "The default generated Arguments binding uses direct-KFD read and read-write capabilities over retained host borrows. The application entry point remains unavailable until the production Worker V3 verifier is wired; this test grants no artifact, load, or dispatch authority.",
