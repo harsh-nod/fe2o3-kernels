@@ -237,7 +237,7 @@ describe("community getting started tutorial", () => {
     );
     expect(
       createHash("sha256")
-        .update(readFileSync("examples/vecadd_application_boundary.rs"))
+        .update(readFileSync("examples/getting_started_v1/vecadd_application_boundary.rs"))
         .digest("hex"),
     ).toBe(vecaddBinding?.sha256);
     expect(gettingStartedFixture).toMatchObject({

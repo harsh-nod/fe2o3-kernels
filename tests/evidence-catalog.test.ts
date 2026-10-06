@@ -73,7 +73,7 @@ describe("evidence source digest scopes", () => {
   });
 
   it("retains exact displayed bytes for every explicit whole-file tab", () => {
-    expect(wholeFileTabs).toHaveLength(24);
+    expect(wholeFileTabs).toHaveLength(25);
     expect(wholeFileTabs.map(({ tab }) => tab.sourcePath).sort()).toEqual([
       "examples/fill/src/lib.rs",
       "examples/flash_attention_general_v1/src/kernel.rs",
@@ -94,6 +94,7 @@ describe("evidence source digest scopes", () => {
       "examples/tiled_gemm_general_v1/src/kernel.rs",
       "examples/vecadd/src/lib.rs",
       "examples/vecadd/src/lib.rs",
+      "examples/vecadd/src/main.rs",
       "examples/wave64_collectives_v1/src/kernel.rs",
       "examples/workgroup_sync_v1/src/kernel.rs",
       "examples/workgroup_sync_v1/src/kernel_mixed_tile_u32.rs",

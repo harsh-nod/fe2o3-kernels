@@ -52,9 +52,12 @@ const sourceContractDomain = "fe2o3-tutorial-displayed-source-contract-v1\0";
 const identifier = /^[A-Za-z_][A-Za-z0-9_]*$/u;
 
 function relativeSourcePath(value: unknown): value is string {
-  return typeof value === "string" && value.length > 0 && value.length <= 4096
-    && !/[\\\\\x00-\x1f\x7f]/u.test(value)
-    && value.split("/").every((part) => part.length > 0 && part !== "." && part !== "..")
+  if (typeof value !== "string" || value.length === 0 || value.length > 4096) return false;
+  for (let index = 0; index < value.length; index++) {
+    const code = value.charCodeAt(index);
+    if (code < 32 || code === 127 || code === 92) return false;
+  }
+  return value.split("/").every((part) => part.length > 0 && part !== "." && part !== "..")
     && !/^[A-Za-z]:/u.test(value);
 }
 

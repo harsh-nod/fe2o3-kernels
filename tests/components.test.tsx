@@ -16,7 +16,7 @@ import { curriculum, glossary, lessons } from "../src/content/curriculum";
 import { debuggerWorkbenchFixture } from "../src/content/debugger-workbench";
 import { currentSourceUrl, currentState } from "../src/content/current-state";
 import { liveWorkbenchBackends } from "../src/content/live-kfd-debugger";
-import type { LessonSection } from "../src/content/model";
+import { sourceUrl, type LessonSection } from "../src/content/model";
 import { narrativeEntry } from "../src/content/narrative-registry";
 import { stagedEvidenceRecord } from "../src/content/staged-evidence";
 import { validateCurriculum } from "../src/content/validate";
@@ -678,6 +678,19 @@ describe("agent-native source/ISA tutorial", () => {
 });
 
 describe("code tabs", () => {
+  it("retains the archived link for a projected historical kernel", () => {
+    const tab = lessons.flatMap((lesson) => lesson.tabs).find((candidate) =>
+      candidate.sourcePath && authorFacingCode(candidate).removedNamespaceCount > 0)!;
+    expect(tab).toBeDefined();
+    render(<CodeTabs tabs={[tab]} />);
+    expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute("title", "Open archived source");
+    expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
+      "href", sourceUrl(tab.sourcePath!, tab.sourceCommit),
+    );
+    expect(screen.getByRole("tabpanel").textContent).toBe(authorFacingCode(tab).code);
+    expect(tab.code).toMatch(/\bnamespace\s*=/u);
+  });
+
   it("switches with arrow keys and copies the active source", async () => {
     const user = userEvent.setup();
     const writeText = vi
@@ -694,7 +707,10 @@ describe("code tabs", () => {
     expect(panel).not.toHaveTextContent(/\bnamespace\s*=/u);
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "title",
-      "Open archived source",
+      "Open pinned source",
+    );
+    expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
+      "href", sourceUrl(tabs[0].sourcePath!, tabs[0].sourceCommit),
     );
     await user.click(screen.getByRole("button", { name: "Copy code" }));
     expect(writeText).toHaveBeenCalledWith(authoringKernel.code);
