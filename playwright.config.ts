@@ -1,5 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const previewMode = process.env.FE2O3_E2E_PREVIEW;
+if (previewMode !== undefined && previewMode !== "1") throw new Error("FE2O3_E2E_PREVIEW accepts only the explicit value 1");
+const productionPreview = previewMode === "1";
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -18,8 +22,10 @@ export default defineConfig({
     { name: "mobile", use: { ...devices["Pixel 7"] } },
   ],
   webServer: {
-    command: "npm run dev -- --host 127.0.0.1 --port 4173",
+    command: productionPreview
+      ? `"${process.execPath}" node_modules/vite/bin/vite.js preview --host 127.0.0.1 --port 4173 --strictPort`
+      : "npm run dev -- --host 127.0.0.1 --port 4173",
     url: "http://127.0.0.1:4173/fe2o3-kernels/",
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !productionPreview && !process.env.CI,
   },
 });
