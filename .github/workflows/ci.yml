@@ -48,6 +48,11 @@ jobs:
       - name: Run browser tests
         run: npm run test:e2e
 
+      - name: Run built panel browser tests
+        env:
+          FE2O3_E2E_PREVIEW: "1"
+        run: npm run test:e2e -- e2e/authored-register-demand.spec.ts e2e/linked-region-lines.spec.ts --project=desktop --project=mobile --workers=1 --retries=0
+
       - name: Upload Playwright report on failure
         if: failure()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

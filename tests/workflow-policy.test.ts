@@ -137,3 +137,69 @@ describe("Pages publication policy", () => {
     expect(ciWorkflow).not.toContain("actions/deploy-pages");
   });
 });
+
+describe("Built-panel publication validation", () => {
+  const command = "npm run test:e2e -- e2e/authored-register-demand.spec.ts e2e/linked-region-lines.spec.ts --project=desktop --project=mobile --workers=1 --retries=0";
+  const step = `      - name: Run built panel browser tests
+        env:
+          FE2O3_E2E_PREVIEW: "1"
+        run: ${command}
+
+`;
+  const cases = [
+    { name: "CI", workflow: ciWorkflow, build: "Validate content and production build", boundary: "Upload Playwright report on failure" },
+    { name: "Pages", workflow: pagesWorkflow, build: "Validate and build", boundary: "Configure Pages" },
+  ];
+
+  function requireBuiltPanelGate(workflow: string, build: string, boundary: string) {
+    const steps = workflow.split(/^ {6}- name: /mu).slice(1);
+    const named = (name: string) => steps.filter(value => value.startsWith(name + "\n"));
+    const selected = named("Run built panel browser tests");
+    if (selected.length !== 1 || selected[0].trimEnd() !== step.replace("      - name: ", "").trimEnd())
+      throw new Error("built-panel gate: exact required preview step differs");
+    const original = named("Run browser tests");
+    if (original.length !== 1 || original[0].trimEnd() !== "Run browser tests\n        run: npm run test:e2e")
+      throw new Error("built-panel gate: original full development suite differs");
+    const built = named(build);
+    if (built.length !== 1 || built[0].trimEnd() !== build + "\n        run: npm run validate")
+      throw new Error("built-panel gate: successful production build must remain required");
+    const position = (name: string) => workflow.indexOf("      - name: " + name + "\n");
+    if (!(position(build) >= 0 && position(build) < position("Run browser tests")
+      && position("Run browser tests") < position("Run built panel browser tests")
+      && position("Run built panel browser tests") < position(boundary)))
+      throw new Error("built-panel gate: build/test/publication order differs");
+  }
+
+  it.each(cases)("$name requires the focused built route after the unchanged full suite", ({ workflow, build, boundary }) => {
+    expect(() => requireBuiltPanelGate(workflow, build, boundary)).not.toThrow();
+    expect(workflow.match(/FE2O3_E2E_PREVIEW:/gu)).toHaveLength(1);
+  });
+
+  it.each(cases)("$name rejects omission, weakened preview and failure suppression", ({ workflow, build, boundary }) => {
+    for (const changed of [
+      workflow.replace(step, ""),
+      workflow.replace('          FE2O3_E2E_PREVIEW: "1"\n', ""),
+      workflow.replace('FE2O3_E2E_PREVIEW: "1"', 'FE2O3_E2E_PREVIEW: "0"'),
+      workflow.replace("      - name: Run built panel browser tests\n", "      - name: Run built panel browser tests\n        continue-on-error: true\n"),
+      workflow.replace("      - name: Run built panel browser tests\n", "      - name: Run built panel browser tests\n        if: false\n"),
+      workflow.replace(command, command.replace("--retries=0", "--retries=1")),
+      workflow.replace(step, step + step),
+    ]) {
+      expect(changed).not.toBe(workflow);
+      expect(() => requireBuiltPanelGate(changed, build, boundary)).toThrow(/^built-panel gate:/u);
+    }
+  });
+
+  it.each(cases)("$name rejects testing before build or after the publication boundary", ({ workflow, build, boundary }) => {
+    const without = workflow.replace(step, "");
+    for (const changed of [
+      without.replace("      - name: " + build + "\n", step + "      - name: " + build + "\n"),
+      without + "\n" + step,
+      workflow.replace("        run: npm run validate\n", "        run: echo build omitted\n"),
+      workflow.replace("        run: npm run test:e2e\n", "        run: echo full suite omitted\n"),
+    ]) {
+      expect(changed).not.toBe(workflow);
+      expect(() => requireBuiltPanelGate(changed, build, boundary)).toThrow(/^built-panel gate:/u);
+    }
+  });
+});
