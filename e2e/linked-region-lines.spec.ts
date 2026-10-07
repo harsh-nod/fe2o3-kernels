@@ -52,13 +52,17 @@ async function visibleFocus(target: Locator) {
       const scroll = element.closest(".authored-demand-scroll, .linked-lines-scroll");
       const outer = scroll?.getBoundingClientRect();
       return { visible: element.matches(":focus-visible"), outline: parseFloat(style.outlineWidth),
+        outlineOffset: parseFloat(style.outlineOffset),
+        marginStart: parseFloat(style.scrollMarginBlockStart), marginEnd: parseFloat(style.scrollMarginBlockEnd),
         outlineStyle: style.outlineStyle, left: box.left, right: box.right, top: box.top, bottom: box.bottom,
         width: innerWidth, height: innerHeight, contained: !outer || (box.left >= outer.left && box.right <= outer.right) };
     });
     expect(state.visible).toBe(true); expect(state.outline).toBeGreaterThan(0);
     expect(state.outlineStyle).not.toBe("none"); expect(state.contained).toBe(true);
     expect(state.left).toBeGreaterThanOrEqual(0); expect(state.right).toBeLessThanOrEqual(state.width);
-    expect(state.top).toBeGreaterThanOrEqual(0); expect(state.bottom).toBeLessThanOrEqual(state.height);
+    expect(state.marginStart).toBeGreaterThanOrEqual(8); expect(state.marginEnd).toBeGreaterThanOrEqual(8);
+    const ring = state.outline + state.outlineOffset;
+    expect(state.top - ring).toBeGreaterThanOrEqual(0); expect(state.bottom + ring).toBeLessThanOrEqual(state.height);
   }).toPass({ timeout: 10000, intervals: [50, 100, 250] });
 }
 async function boundedOverflow(target: Locator) {
