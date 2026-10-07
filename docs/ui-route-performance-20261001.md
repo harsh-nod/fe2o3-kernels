@@ -136,3 +136,70 @@ isolated parsing/decompression, the maximum valid or worst-cap importer
 workload, peak heap/RSS, hardware behavior and full accessibility/route
 coverage. These results support only the named recorded-viewer workload.
 V0 owner/contract decisions and remaining V5 scope stay open.
+
+## Later-panel inventory (separate diagnostic suite)
+
+The original eight cells above do not include the subsequently added
+`AuthoredRegisterDemand` or `LinkedRegionLines` panels. The existing
+`scripts/resource-view-performance.mjs NEW_OUTPUT_DIRECTORY` suite now includes
+four real authored-demand profile/optimization cells and one linked-line cell
+that switches O0 → O3 → O0, alongside its three original resource-view cases.
+It uses the exact retained native comparison, authored-demand capsule and
+sixteen-artifact linked-line capsule; same-size byte substitution fails.
+
+For each new cell the suite runs five warmups and retains 30 measured observations
+at 1280×800: JSON decode, awaited real validation/projection, component mount
+through independently validated semantic DOM plus layout, and a selection/reset
+round trip. Each sample starts from an empty component baseline. Modules and
+browser caches stay warm. Async polling time is included; these are not paint,
+cold-load, production-route, GPU or independently authenticated capture timings.
+The development-Vite result schema is v2; original synchronous resource-view
+timings remain separately named and are not merged with the async metrics.
+
+The fixed input ceiling remains 512 KiB per cell; real panel readiness has a
+10-second/600-frame refusal limit within the existing 120-second browser timeout.
+Failure to validate, render the expected rows or show the exact selected identity
+fails the diagnostic instead of publishing a timing for a refusal state.
+Panel latency targets are not adopted by this change. Running the command
+produces fresh `samples.json` and `receipt.json`; adding the inventory alone
+does not assert measured results.
+
+This addresses a concrete measurement-inventory gap, not completion of V5 or
+U4. Maximum-valid/worst-case imports, narrow/production-route coverage for these
+panels, peak heap/RSS, broad accessibility, live/reverse operations and explicitly
+agreed panel budgets remain separate. Existing tutorial and public admission
+limitations are unchanged.
+
+### October 7 standalone-panel observation
+
+The source-aware normal `repo=site` gate passed on mi350 at
+`2026-10-07T03:25:25.584Z`, Chromium `151.0.7922.34`, Node `22.22.3`,
+AMD EPYC 9575F, 1280×800. The following values are p95 milliseconds; the
+[raw evidence](evidence/panel-performance-20261007.json) retains all 240 measured
+samples across the five panel and three original cases, unrounded distributions,
+fixture pins and environment. Forty warmup iterations were executed but their
+timings were not retained.
+
+| Actual retained panel cell | Async projection | Mount → ready/layout | Selection/reset round trip |
+| --- | ---: | ---: | ---: |
+| Authored default / O0 | 23.1 | 24.9 | 29.5 |
+| Authored default / O3 | 21.8 | 25.0 | 29.7 |
+| Authored edited / O0 | 21.8 | 26.7 | 30.1 |
+| Authored edited / O3 | 21.1 | 24.4 | 30.1 |
+| Linked lines O0 → O3 → O0 | 3.0 | 14.7 | 33.0 |
+
+Authored cases render six rows; linked cases render two case rows and one
+coverage row. The input byte counts are 510,581 and 80,466 respectively.
+Projection and component mount each perform validation independently, so their
+timings are separate stages rather than an end-to-end production-route sum.
+Round trips contain two UI actions and must not be compared directly with the
+October 1 single-action targets.
+
+The normal receipt is 33,103 bytes,
+SHA-256 `f762343f1ce40118f255ac0035922f906c29f3631ebea50fe8e410b01f6fcb0e`.
+Its pre/post site census is 1,169 files / 26,391,355 bytes,
+SHA-256 `c70d5fff2df93f3930f60f3f4132f1aecbdec068549174c3aa16a36f303d4f35`,
+based on `7663838260764e3572bf673c14e52ac64ef20e99` plus the four scoped
+measurement/doc edits. This results note and its evidence file were added
+afterward; they are not relabeled as measured source. The run establishes no
+new SLO, full browser/runtime dependency attestation, V5 or U4 completion.
