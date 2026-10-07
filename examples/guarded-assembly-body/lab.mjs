@@ -6,7 +6,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CASES, makeRequest as oneWaveRequest, checkInspection,
+import { CASES, makeRequest as oneWaveRequest, checkInspection, checkCanonicalBytes,
   directory, readBounded, json } from "../public-authoring-inspector/lab.mjs";
 
 export const LENGTHS = Object.freeze([0, 1, 63, 64, 65, 127, 128, 129]);
@@ -137,7 +137,7 @@ export function checkFiles(root) {
   assert(LIMITS.kir + LIMITS.inspection + CASE_COUNT * (LIMITS.request + LIMITS.result) <= LIMITS.total);
   const inspection = checkBodyInspection(json(path.join(root, "inspection.json"), LIMITS.inspection));
   const kir = readBounded(path.join(root, "source-body.kir"), LIMITS.kir);
-  assert.equal(kir.length, inspection.canonical.bytes, "caller-selected KIR length only");
+  checkCanonicalBytes(kir, inspection.canonical);
   const rawKirSha256 = crypto.createHash("sha256").update(kir).digest("hex");
   for (let index = 0; index < CASE_COUNT; index++) {
     const id = caseSpec(index).id;

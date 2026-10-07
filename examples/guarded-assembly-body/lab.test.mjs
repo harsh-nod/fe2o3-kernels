@@ -1,6 +1,8 @@
-// Synthetic checker controls only. No compiler/simulator/native execution.
+// Synthetic result controls plus a retained real guarded-body byte/inspection vector.
+// No compiler/simulator/native execution.
 import test from "node:test";
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -64,6 +66,28 @@ function temporary(body) {
   finally { fs.rmSync(root, { recursive: true }); } // Only this freshly created test directory.
 }
 function writeJson(file, value) { fs.writeFileSync(file, JSON.stringify(value) + "\n", { flag: "wx", mode: 0o600 }); }
+
+const retained = JSON.parse(fs.readFileSync(new URL("./canonical-v17-vector.json", import.meta.url), "utf8"));
+function retainedBytes() {
+  const bytes = Buffer.from(retained.kir_base64, "base64");
+  assert.equal(bytes.toString("base64"), retained.kir_base64);
+  return bytes;
+}
+function retainedInspection() { return JSON.parse(retained.inspection_utf8); }
+function boundResult(index, canonical = retainedInspection().canonical) {
+  // These result objects are synthetic checker controls, not retained simulator output.
+  const response = result(index);
+  response.kir = { sha256: canonical.sha256, canonical_bytes: canonical.bytes };
+  return response;
+}
+function retainedRun(root) {
+  const run = path.join(root, "run"); prepare(run);
+  writeJson(path.join(run, "inspection.json"), retainedInspection());
+  fs.writeFileSync(path.join(run, "source-body.kir"), retainedBytes(), { flag: "wx", mode: 0o600 });
+  for (let i = 0; i < 96; i++)
+    writeJson(path.join(run, caseSpec(i).id + "-result.json"), boundResult(i));
+  return run;
+}
 
 test("exact 96-case roster and one-wave representative inspection request", () => {
   assert.equal(CASE_COUNT, 96); assert.equal(CASES.length, 6);
@@ -224,23 +248,65 @@ test("bounded file and directory readers refuse symlinks and wrong object types"
   const linked = path.join(root, "linked"); fs.symlinkSync(real, linked);
   assert.throws(() => directory(linked)); assert.throws(() => prepare(path.join(linked, "child")));
 }));
-test("retained-file checker checks all 96 but does not authenticate raw KIR custody", () => temporary(root => {
-  const run = path.join(root, "run"); prepare(run);
-  writeJson(path.join(run, "inspection.json"), inspection());
-  // Deliberately NOT a KIR construction: arbitrary bytes prove this checker only
-  // observes raw file length/hash; compiler-owned admission is a separate step.
-  const kir = path.join(run, "source-body.kir"); fs.writeFileSync(kir, Buffer.alloc(1234, 0x78), { flag: "wx" });
-  for (let i = 0; i < 96; i++) writeJson(path.join(run, caseSpec(i).id + "-result.json"), result(i));
-  const first = checkFiles(run);
-  assert.deepEqual(first.summary, expectedSummary()); assert.equal(first.canonical_identity, "c".repeat(64));
-  fs.writeFileSync(kir, Buffer.alloc(1234, 0x79));
-  const second = checkFiles(run);
-  assert.notEqual(second.raw_kir_sha256, first.raw_kir_sha256);
-  assert.equal(second.canonical_identity, first.canonical_identity);
-  assert.equal(second.raw_kir_bytes, 1234);
-  const wrong = result(95); wrong.counts.invocations_executed--;
+test("retained guarded-body bytes and inspection match independently recorded identities", () => {
+  const bytes = retainedBytes(), report = retainedInspection();
+  assert.equal(bytes.length, 1017);
+  assert.equal(crypto.createHash("sha256").update(bytes).digest("hex"),
+    "bd8ac1ad4de837952f207bc650f83063e044830c88dee662b7819f4c6be4d066");
+  assert.equal(retained.raw_sha256, "bd8ac1ad4de837952f207bc650f83063e044830c88dee662b7819f4c6be4d066");
+  assert.equal(Buffer.byteLength(retained.inspection_utf8), 2118);
+  assert.equal(crypto.createHash("sha256").update(retained.inspection_utf8).digest("hex"),
+    "13995dad4ea0c4c1cd832c313fa876e7341825cc3d6f71f0bec2ad8d8507e7ef");
+  assert.deepEqual(report.canonical, { wire_version: 17, bytes: 1017,
+    sha256: "b838c1a6aca2333e403074f5652de49e24d45d4c071730ae2e23f43eff714320" });
+  assert.deepEqual(retained.canonical, report.canonical);
+  checkBodyInspection(report);
+});
+test("retained-file checker binds real bytes before all 96 synthetic result controls", () => temporary(root => {
+  const run = retainedRun(root), checked = checkFiles(run);
+  assert.deepEqual(checked.summary, expectedSummary());
+  assert.equal(checked.canonical_identity, "b838c1a6aca2333e403074f5652de49e24d45d4c071730ae2e23f43eff714320");
+  assert.equal(checked.raw_kir_sha256, "bd8ac1ad4de837952f207bc650f83063e044830c88dee662b7819f4c6be4d066");
+  assert.equal(checked.raw_kir_bytes, 1017);
+  const wrong = boundResult(95); wrong.counts.invocations_executed--;
   fs.writeFileSync(path.join(run, "case-96-result.json"), JSON.stringify(wrong));
   assert.throws(() => checkFiles(run));
+}));
+test("same-size first middle and last byte substitutions refuse in the guarded file route", () => temporary(root => {
+  const run = retainedRun(root), kir = path.join(run, "source-body.kir"), original = retainedBytes();
+  for (const offset of [0, Math.floor(original.length / 2), original.length - 1]) {
+    const changed = Buffer.from(original); changed[offset] ^= 1;
+    assert.equal(changed.length, original.length); assert.notDeepEqual(changed, original);
+    fs.writeFileSync(kir, changed);
+    assert.throws(() => checkFiles(run), /canonical file identity differs from selected inspection/u);
+  }
+  fs.writeFileSync(kir, original);
+  assert.equal(checkFiles(run).raw_kir_bytes, 1017);
+}));
+test("coherent result declarations cannot replace canonical byte binding with a report or raw digest", () => temporary(root => {
+  const run = retainedRun(root);
+  for (const digest of ["e".repeat(64), retained.raw_sha256]) {
+    const report = retainedInspection(); report.canonical.sha256 = digest;
+    fs.writeFileSync(path.join(run, "inspection.json"), JSON.stringify(report));
+    for (let i = 0; i < 96; i++)
+      fs.writeFileSync(path.join(run, caseSpec(i).id + "-result.json"), JSON.stringify(boundResult(i, report.canonical)));
+    assert.throws(() => checkFiles(run), /canonical file identity differs from selected inspection/u);
+  }
+}));
+test("truncated appended empty and over-bound bytes refuse without decoding or admission", () => temporary(root => {
+  const run = retainedRun(root), kir = path.join(run, "source-body.kir"), original = retainedBytes();
+  for (const changed of [original.subarray(0, original.length - 1),
+    Buffer.concat([original, Buffer.from([0])]), Buffer.alloc(0), Buffer.alloc(LIMITS.kir + 1)]) {
+    fs.writeFileSync(kir, changed);
+    assert.throws(() => checkFiles(run));
+  }
+  fs.writeFileSync(kir, original);
+  for (const change of [r => { r.canonical.wire_version = 16; },
+    r => { r.canonical.sha256 = "not-a-digest"; }, r => { r.canonical.bytes--; }]) {
+    const report = retainedInspection(); change(report);
+    fs.writeFileSync(path.join(run, "inspection.json"), JSON.stringify(report));
+    assert.throws(() => checkFiles(run));
+  }
 }));
 test("CLI rejects unknown or expanded argument rosters without side effects", () => {
   for (const args of [[], ["run", "/tmp"], ["check"], ["check", "/tmp", "extra"], ["prepare"]])

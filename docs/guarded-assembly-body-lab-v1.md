@@ -17,7 +17,10 @@ Compiler reference: [`c60cd746e63b34b9072a493744d73b87ed1defc3`](https://github.
 now public on canonical main. The helper and its imports are separately pinned
 to public website commit
 [`61ff37ac4fea140ccd046b145637b597be7c6645`](https://github.com/harsh-nod/fe2o3-kernels/commit/61ff37ac4fea140ccd046b145637b597be7c6645).
-These are this experiment's pins, not the curriculum's `FE2O3_PIN`.
+These are this experiment's pins, not the curriculum's `FE2O3_PIN`. The historical
+recipe below deliberately retains that helper revision. The current-checker
+hardening described in section 3 is later code, not a change to those recorded
+pins or a claim that the old helper performed the new byte-binding check.
 
 **Fresh source/CPU/LLVM reproduction passed on 2026-09-21.** A bounded maintainer
 run on `mi350` used these public compiler/helper pins, one ordinary host build,
@@ -245,8 +248,9 @@ node "$body_helper" check "$body_run" \
 
 The expected totals are 6,924 output words, 52,992 backing bytes, 25,296 unchanged
 guard/tail bytes and 13,056 invocations, with exact initialization bits. The
-helper joins declared result identities to the selected inspection and reports
-the raw KIR SHA separately. Its raw-file check is length/hash observation,
+helper at the historical website pin joins declared result identities to the
+selected inspection and reports the raw KIR SHA separately. Its raw-file check
+is length/hash observation,
 not proof that a result came from those exact bytes; same-size substitution
 needs additional input custody. These are CPU checks, not native output
 equivalence. The [logical debugger](ordered-program-debugger-v1.md)
@@ -254,6 +258,36 @@ observes one CPU program operation, not per-instruction physical scratch states.
 In particular, `check` does not read exporter stderr, source-inventory IDs,
 LLVM bytes or emitter stderr. A successful helper check must not be described
 as a verified source-to-LLVM identity join.
+
+### Current-checker byte binding
+
+The current checkout's guarded-body helper additionally calls the existing
+V17 canonical-byte identity checker from the instruction-edit lab. It recomputes
+the versioned, domain-separated identity of the selected KIR bytes and compares
+it with the selected inspection **before** checking the 96 result files.
+The raw SHA remains a separate observation. Same-size byte substitution, a
+changed report digest, truncation and malformed identity fields refuse; there
+is no fallback to matching length or raw SHA.
+
+After the historical recipe above, the current checkout can perform this
+additional read-only check of the same retained directory:
+
+```bash
+node examples/guarded-assembly-body/lab.mjs check "$body_run"
+```
+
+This establishes byte/report consistency, not authenticity of the report or
+evidence that the simulator consumed those bytes. It does not decode/admit a
+saved KIR, authenticate source, join LLVM, create proof/artifact authority or
+qualify native/hardware execution. The original per-file and total read limits
+are unchanged.
+
+The committed test vector contains the historical 1,017-byte guarded-body
+export and its exact retained inspection. Its raw and canonical identities are
+the separate values listed above. File-route regressions combine that real
+byte vector with explicitly synthetic 96-case result objects; they are helper
+controls, not another source-export or simulator campaign. The shared checker
+retains its independent domain/version/policy/framing regression controls.
 
 ## 4. Learn from the native boundary
 

@@ -100,6 +100,30 @@ const RecordedAuthoringNavigation = lazy(async () => {
   };
 });
 
+const RecordedOrderedMacroFrames = lazy(async () => {
+  const [{ OrderedMacroFrames }, { default: retained }] = await Promise.all([
+    import("./OrderedMacroFrames"),
+    import("../../examples/ordered_macro_frames_v1.json"),
+  ]);
+  // Caller-selected historical identities, independent of the capsule's claims.
+  // Keep this input stable across frame selection and page renders.
+  const input = {
+    captureUtf8: retained.captureUtf8,
+    expectedCaptureSha256: "1072359854b9fa1af0d6501bac5bcef2cb8bd3ce6560cac78b97633872791cf5",
+    selection: {
+      reportSha256: "6f519171ce7ff382a27ed6ef3f260aa190ecb9f888a2ddebf29d7aa5cac1aed6",
+      canonicalSha256: "c9722c19fe89dd4edb097bb05362ad1e1185db5fad60172ca65da2e832f5bd53",
+      sourceSha256: "69aacd8e3c60915958ba77b7c0ca5e990a6a7f382cbd952266909da3ea706d42",
+      expansionChainSha256: "4efe30b98bdab0ce7e929806444d06dc32394f70bd47d01119d3907bc37fa31a",
+    },
+  };
+  return {
+    default: function RetainedOrderedMacroFrames() {
+      return <OrderedMacroFrames input={input} />;
+    },
+  };
+});
+
 const RecordedProgramGuide = lazy(() =>
   import("./RecordedProgramTutorial").then((module) => ({
     default: module.RecordedProgramTutorial,
@@ -233,6 +257,7 @@ export function SourceIsaAgentPage() {
   const [showRepeatNativeImport, setShowRepeatNativeImport] = useState(false);
   const [showSameExportNative, setShowSameExportNative] = useState(false);
   const [showAuthoringNavigation, setShowAuthoringNavigation] = useState(false);
+  const [showMacroFrames, setShowMacroFrames] = useState(false);
   const [showProgramTutorial, setShowProgramTutorial] = useState(false);
   const [showCompleteBodyV19, setShowCompleteBodyV19] = useState(false);
   const [showPhysicalEntryV20, setShowPhysicalEntryV20] = useState(false);
@@ -396,6 +421,32 @@ export function SourceIsaAgentPage() {
         <div id="ordinary-source-navigation-content">
           {showAuthoringNavigation && <Suspense fallback={<p role="status">Loading retained navigation…</p>}>
             <RecordedAuthoringNavigation />
+          </Suspense>}
+        </div>
+      </section>
+
+      <section className="source-isa-agent-truth" aria-labelledby="ordered-macro-frames-heading"
+        style={{ minWidth: 0, overflowWrap: "anywhere" }}>
+        <h2 id="ordered-macro-frames-heading">Trace retained whole-region macro origins</h2>
+        <p>This historical compiler capture contains two nested macro frames, not a run of current
+          main. Integrity checks do not authenticate its compiler process or grant source, artifact,
+          debugger or launch authority.</p>
+        <ol>
+          <li>Start with <code>amdgpu_ordered_program</code>: compare its call site, definition and
+            whole-region expansion against the retained source bytes.</li>
+          <li>Choose <code>ordered_program_wrapper</code> to inspect the complete wrapper definition
+            and the outer call. Frame selection does not select individual instructions.</li>
+          <li>Open the exact identities to distinguish canonical identity from byte hashes.
+            Final artifact association and physical register values remain unavailable.</li>
+        </ol>
+        <button type="button" aria-expanded={showMacroFrames}
+          aria-controls="ordered-macro-frames-content"
+          onClick={() => setShowMacroFrames((open) => !open)}>
+          {showMacroFrames ? "Close retained macro frames" : "Open retained macro frames"}
+        </button>
+        <div id="ordered-macro-frames-content" style={{ minWidth: 0, maxWidth: "100%" }}>
+          {showMacroFrames && <Suspense fallback={<p role="status">Loading retained macro frames…</p>}>
+            <RecordedOrderedMacroFrames />
           </Suspense>}
         </div>
       </section>
