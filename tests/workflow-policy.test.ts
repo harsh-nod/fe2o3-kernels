@@ -203,3 +203,37 @@ describe("Built-panel publication validation", () => {
     }
   });
 });
+
+describe("Browser failure artifact retention", () => {
+  function requireFailureEvidence(workflow: string) {
+    const steps = workflow.split(/^ {6}- name: /mu).slice(1);
+    const selected = steps.filter(value => value.startsWith("Upload Playwright report on failure\n"));
+    if (selected.length !== 1
+      || !selected[0].includes("        if: failure()\n")
+      || !selected[0].includes("          path: |\n            test-results/\n            playwright-report/\n")
+      || !selected[0].includes("          retention-days: 7\n")
+      || selected[0].includes("continue-on-error:")
+      || selected[0].includes("include-hidden-files:"))
+      throw new Error("browser evidence: missing or unsafe failure upload");
+    if (workflow.indexOf("name: Upload Playwright report on failure")
+      <= workflow.indexOf("name: Run built panel browser tests"))
+      throw new Error("browser evidence: upload must follow both browser gates");
+  }
+
+  it.each([{ name: "CI", workflow: ciWorkflow }, { name: "Pages", workflow: pagesWorkflow }])(
+    "$name retains screenshot/error-context files without requiring the HTML reporter",
+    ({ workflow }) => {
+      expect(() => requireFailureEvidence(workflow)).not.toThrow();
+      for (const changed of [
+        workflow.replace("            test-results/\n", ""),
+        workflow.replace("            test-results/\n", "            ./\n"),
+        workflow.replace("        if: failure()\n", "        if: success()\n"),
+        workflow.replace("          retention-days: 7\n", "          retention-days: 90\n"),
+        workflow.replace("          retention-days: 7\n", "          retention-days: 7\n          include-hidden-files: true\n"),
+      ]) {
+        expect(changed).not.toBe(workflow);
+        expect(() => requireFailureEvidence(changed)).toThrow(/^browser evidence:/u);
+      }
+    },
+  );
+});
