@@ -321,3 +321,28 @@ the independent readback is SHA256
 Production integration and exact target/layout/resource/ISA and numerical
 qualification remain separate, including authored gfx950 support. This
 private observation does not close M4 or the broader tutorial milestone.
+
+## Private non-test connector checkpoint — 2026-10-07
+
+A later private integration candidate contains the crate-private
+`bf16_same_owner_handoff_v1` connector as non-test compiler code. It carries
+the actual source owner and original resource account through checked lowering
+to an opaque typed handoff; this is distinct from the earlier private Worker
+campaign above.
+
+Four fresh compiler observations used matching, freshly prepared dependency
+metadata and invocation records. Identity session 1 and Swap01 session 3 each
+completed that connector and dropped the handoff. A separate wrong-return
+observation for each source required the exact typed source-profile refusal.
+Each case entered one real compiler callback.
+
+The public source and Cargo commands in this lesson remain unchanged and still
+end at the documented normal-ranked refusal. The private ignored test is not a
+new tutorial command. No Worker ran in these four observations; normal/formal
+admission, artifact/launch authority and GPU observation all remained false.
+This does not qualify numerical results or close M4/U4.
+
+The [compiler checkpoint](https://github.com/harsh-nod/fe2o3/blob/main/docs/generated-bf16-source-and-bindings-qualification-20261001.md#private-non-test-connector-checkpoint--2026-10-07)
+records the exact candidate source and ELF, not a blanket claim about later
+public merges. Its four-case aggregate SHA-256 is
+`14cec9fc3cb545530bf70de26a7878162280bb4e6ad163c0e171aff3333064b7`.
