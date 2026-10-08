@@ -309,3 +309,105 @@ Use the exact source/recipe/oracle chain above to diagnose your own result.
 A successful checkpoint does not authorize a different source edit, prove
 whole-backend correctness, or complete U4. Keep all failed attempts and the
 separate historical measurements instead of selecting the most favorable row.
+
+## Observe process memory without calling it owner memory
+
+The separate Linux process-memory profile helps distinguish checkpoint RSS from
+the process's earlier high-water mark. It observes the whole compiler process,
+including frontend state and the observer itself, not just a retained recipe
+owner. It is a backend test adapter, not another ordinary CLI command or a new
+JSON mode.
+
+The observer and its dated qualification are published in compiler commit
+[60829fe70b](https://github.com/harsh-nod/fe2o3/commit/60829fe70b60fb85a666d8290d364346e447bfa0),
+on both compiler forks. This is a profile-specific reference; it does not change
+the site-wide compiler pin or authorize other workflows.
+
+Use a checkout containing the selector below and discover it in the actual
+qualified backend test ELF. Reuse the genuine Create → ordinary → series chain
+from section 5, with fresh configs, independent ordinary oracles and retained
+raw streams for each workload:
+
+```text
+production_rustc_driver_v1::source_local_order_recipe_driver_v1::warm_series::outcome_series::actual_source_local_order_recipe_outcome_process_memory_v1
+```
+
+Its complete input contract is the compiler's
+`docs/recipe-outcome-series-v1.md`, under “Separate Linux process-memory
+profile.” Do not invent a `--rss` flag, change the nested invocation, or
+substitute a successful outcome for the designated exact-revision refusal.
+The original latency selector and `scripts/recipe-outcome-series-v1.mjs`
+remain unchanged. That strict latency parser rejects an instrumented series
+with `rss_measured: true`; do not remove the field to make it pass.
+
+### Check the complete sequence
+
+Each memory-record stderr line starts with `FE2O3_RECIPE_PROCESS_MEMORY_V1 ` and contains
+one LF-terminated `fe2o3-recipe-process-memory-v1` record. Keep strict UTF-8.
+Join its `pid` to the actual child receipt, and its `config_sha256`,
+`current_source_sha256` and `workload` to that child's exact inputs.
+Require consecutive `sequence` values and the original `call_ordinal`:
+
+1. `before_run`, once after config/origin admission;
+2. `before_transaction`, `after_return_result_retained`, then
+   `after_result_drop` for each real call;
+3. `terminal_before_child_return`, once after the outcome/oracle checks.
+
+Ordinary mode has exactly 5 memory rows. A 35-call series has exactly 107:
+one opening row, three per call and one terminal row. The ordinary call includes
+the genuine compiler-driver entry and return; a series call is already inside
+the reused frontend. These are different observation boundaries.
+
+A missing terminal row is an incomplete profile, not a zero-memory result.
+Missing, duplicate, reordered or cross-PID rows must not be repaired or merged.
+A complete memory sequence also does not replace the accepted-result or typed
+refusal oracle.
+
+### Interpret the fields at their actual scope
+
+`rss_bytes` is reported resident memory at a checkpoint.
+`os_high_water_rss_bytes` is the OS process high-water mark through that
+checkpoint, including earlier work; it is not reset per call. Both come from
+bounded reads of `/proc/self/status`. Linux's literal `kB` is converted with
+1,024 bytes per unit. These approximate counters are not an atomic snapshot.
+
+The maximum sampled RSS can miss an intervening peak. Terminal VmHWM can retain
+such an earlier peak, but `terminal_before_child_return` is not process exit:
+later harness teardown is outside the observation. Ordinary and series memory
+profiles are not directly interchangeable, and their instrumented timing is
+not comparable to the uninstrumented latency tables above.
+
+`retained_owner_bytes`, `temporary_owner_overlap_bytes` and
+`heap_peak_bytes` remain null. Do not subtract the first RSS sample and label
+the difference owner memory. Likewise, `canonical_peak_storage` is a
+reservation-ledger peak, not measured heap. Neither a memory row nor a process
+timeout supplies compiler cancellation, an accepted SLO or U4 completion.
+
+### Read the dated observation separately
+
+On 2026-10-08 UTC, a bounded campaign retained 224 memory rows:
+`2 × (5 + 107)` across `checked_rebind` and `exact_revision_refusal`.
+Its six children were two Create drivers, two ordinary observations and two
+35-call series. All 70 series outcomes matched their own ordinary oracle;
+all four observed children retained a terminal memory row. Separate controls
+passed 85 JavaScript checks and 26 Rust checks; these are not tutorial tests.
+
+For the ordinary `checked_rebind` child, maximum sampled RSS was
+213,180,416 bytes and terminal VmHWM was 231,145,472 bytes. The larger
+high-water value records earlier whole-process residency, not a measured
+retained-owner allocation or proof of an exact temporary overlap.
+
+This observation ran from 05:52:53.315 to 05:53:10.846 UTC against source census
+`e8d079fcf43e4b23428da70f8cce17338bed3c533a989c4f46d1ef5786f8719e`
+(15,382 files / 221,623,527 bytes). Its normal receipt SHA-256 is
+`1f74456624717c8c2c0ab9ae26b3eae67f87b098a34b2cc088e3c435fb8d121e`;
+the campaign result SHA-256 is
+`0fcad714e94a06e6177474c5d461d47547924ab41e0d47075e1abf8fdac329de`.
+These identify a tested source snapshot, not every later compiler checkout
+or a fresh execution. The earlier latency evidence remains independent.
+
+Exercise: use a separate copy of the retained memory stream. Remove the
+terminal row, duplicate a sequence number or replace one PID with another
+child's PID. Explain why each copy is incomplete or inconsistent even if its
+RSS values look plausible. Preserve the original evidence and the designated
+outcome; this exercise checks record consistency, not execution authenticity.
