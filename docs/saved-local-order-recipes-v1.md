@@ -304,3 +304,14 @@ They are inclusive provider intervals, not isolated helper costs or a warm
 generation percentile series. Reading these records is a read-only exercise:
 it does not compile, launch a GPU, promote the draft program lesson, or establish
 completion of the broader small and tiled kernel workflows.
+
+## Follow-on: JSON reports and changed-source outcomes
+
+The earlier sections and dated positive-Replay timings above are historical.
+The opt-in ordinary `create-json` / `replay-json` interface adds a structured
+diagnostic projection; legacy `create` / `replay` keep their short summaries.
+Continue with [Read a recipe report, then debug a changed-source outcome](source-local-order-report-outcomes-v1.md)
+to capture raw streams and exit status, independently rehash outputs, compare
+exact-revision and checked-rebind results, and inspect the separate 5+30
+changed-source series contract. It records the completed nine-case ordinary
+campaign without presenting pending series metrics as results or closing U4.
