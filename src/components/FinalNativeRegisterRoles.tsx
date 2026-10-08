@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { selectedRegisterInstruction, type NativeInstructionSelection } from "../content/native-resource-selection.mjs";
 import type { DeclaredRegisterUseGrid, StaticRegisterUse } from "../content/final-native-register-roles.mjs";
 import "./FinalNativeRegisterRoles.css";
 
@@ -6,7 +7,10 @@ const USE_LABELS: Record<StaticRegisterUse, string> = {
   none: "No explicit use", read: "Read", write: "Write", "read-write": "Read + write",
 };
 
-export function FinalNativeRegisterRoles({ grid }: { grid: DeclaredRegisterUseGrid }) {
+export function FinalNativeRegisterRoles({ grid, instructionSelection = null }: {
+  grid: DeclaredRegisterUseGrid; instructionSelection?: NativeInstructionSelection | null;
+}) {
+  const instruction = selectedRegisterInstruction(instructionSelection, grid);
   const [selection, setSelection] = useState<{ grid: DeclaredRegisterUseGrid; register: number } | null>(null);
   const selected = selection?.grid === grid
     ? grid.roles.find(role => role.register === selection.register) : undefined;
@@ -17,8 +21,8 @@ export function FinalNativeRegisterRoles({ grid }: { grid: DeclaredRegisterUseGr
       <table aria-label="Declared VGPR roles by retained instruction">
         <caption>Five declared VGPR roles, not a live register map</caption>
         <thead><tr><th scope="col">Declared role</th>
-          {grid.instructionOffsets.map((offset, index) => <th scope="col" key={offset}>
-            Instruction {index + 1}<span className="final-native-register-offset">Payload offset {offset}</span>
+          {grid.instructionOffsets.map((offset, index) => <th scope="col" key={offset} data-static-selected={instruction === index}>
+            Instruction {index + 1}{instruction === index && <span className="static-selection-label">Selected static instruction</span>}<span className="final-native-register-offset">Payload offset {offset}</span>
           </th>)}
         </tr></thead>
         <tbody>{grid.roles.map(role => <tr key={role.register} data-selected={selected?.register === role.register}>
@@ -27,7 +31,7 @@ export function FinalNativeRegisterRoles({ grid }: { grid: DeclaredRegisterUseGr
             onClick={() => setSelection(selected?.register === role.register ? null : { grid, register: role.register })}>
             <code>v{role.register}</code> {role.role}
           </button></th>
-          {role.uses.map((use, index) => <td key={grid.instructionOffsets[index]} data-use={use}>
+          {role.uses.map((use, index) => <td key={grid.instructionOffsets[index]} data-use={use} data-static-selected={instruction === index}>
             {USE_LABELS[use]}
           </td>)}
         </tr>)}</tbody>

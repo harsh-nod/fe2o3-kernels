@@ -11,3 +11,8 @@
 .final-native-comparison dd { margin-inline-start: 1rem; }
 .final-native-boundary { padding-inline-start: .75rem; border-inline-start: 3px solid currentColor; }
 @media (max-width: 600px) { .final-native-comparison th, .final-native-comparison td { padding: .4rem; } }
+
+/* The text labels carry selection meaning without depending on color. */
+.final-native-comparison [data-static-selected="true"] { outline: 2px solid currentColor; outline-offset: -2px; }
+.final-native-comparison .static-selection-label { display: block; font-size: .75rem; font-weight: 700; }
+.final-native-comparison button { max-width: 100%; overflow-wrap: anywhere; }

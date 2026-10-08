@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { selectedDemandBoundaries, type NativeInstructionSelection, type SelectedDemandBoundaries } from "../content/native-resource-selection.mjs";
 import { projectAuthoredDemand, type AuthoredDemandProjection, type AuthoredDemandCase } from "../content/authored-register-demand.mjs";
 import "./AuthoredRegisterDemand.css";
 
@@ -6,11 +7,14 @@ export interface AuthoredDemandEvidence { evidence: unknown; expectedSha256: str
 interface Props {
   nativeEvidence: unknown; expectedNativeJoin: string; demand: AuthoredDemandEvidence;
   profile: "default" | "edited"; optimization: "O0" | "O3";
+  instructionSelection?: NativeInstructionSelection | null;
 }
 const CELL_LABEL: Readonly<Record<string, string>> = {
   D: "Definition", r: "Operand read", R: "Region result", "-": "Declared demand", x: "Overwritten", ".": "No declared demand",
 };
-function DemandReady({ model, optimization }: { model: AuthoredDemandCase; optimization: Props["optimization"] }) {
+function DemandReady({ model, optimization, boundaries }: {
+  model: AuthoredDemandCase; optimization: Props["optimization"]; boundaries: SelectedDemandBoundaries | null;
+}) {
   const [selection, setSelection] = useState<{ model: AuthoredDemandCase; id: number } | null>(null);
   const selected = selection?.model === model ? model.values.find(row => row.id === selection.id) : undefined;
   return <>
@@ -20,18 +24,26 @@ function DemandReady({ model, optimization }: { model: AuthoredDemandCase; optim
       boundary {model.plan.result_boundary} hands off the region result, even if surrounding KIR does not use it.</p>
     <div className="authored-demand-scroll"><table aria-label="Authored value demand by logical boundary">
       <caption>Versioned declared values, not physical-register live ranges</caption>
-      <thead><tr><th scope="col">Authored value</th>{model.boundaries.map(at => <th key={at} scope="col">Boundary {at}</th>)}</tr></thead>
+      <thead><tr><th scope="col">Authored value</th>{model.boundaries.map(at => <th key={at} scope="col" data-static-selected={boundaries?.read === at || boundaries?.write === at}>Boundary {at}
+        {boundaries?.read === at && <span className="static-selection-label">Selected read boundary</span>}
+        {boundaries?.write === at && <span className="static-selection-label">Selected write boundary</span>}</th>)}</tr></thead>
       <tbody>{model.values.map(row => <tr key={row.id} data-selected={selected?.id === row.id}>
         <th scope="row"><button type="button" aria-pressed={selected?.id === row.id}
           aria-label={"Inspect authored value " + row.id + " " + row.role}
           onClick={() => setSelection(selected?.id === row.id ? null : { model, id: row.id })}>
           #{row.id} <code>v{row.binding}</code> {row.role}
         </button></th>
-        {row.cells.map((cell, at) => <td key={at} data-demand={cell} aria-label={CELL_LABEL[cell] + " at boundary " + at}>
+        {row.cells.map((cell, at) => <td key={at} data-demand={cell}
+          data-static-selected={(boundaries?.read === at && boundaries.readValueIds.includes(row.id)) ||
+            (boundaries?.write === at && boundaries.writeValueIds.includes(row.id))}
+          aria-label={CELL_LABEL[cell] + " at boundary " + at}>
           <span aria-hidden="true">{cell}</span><span className="authored-demand-cell-label">{CELL_LABEL[cell]}</span>
         </td>)}
       </tr>)}</tbody>
     </table></div>
+    {boundaries && <p aria-label="Selected authored boundary identities">Static selection joins capsule <code>{boundaries.capsuleSha256}</code>
+      and exact report <code>{boundaries.reportSha256}</code>. Only the declared operand reads at {boundaries.read} and
+      definition at {boundaries.write} are highlighted, not the entire live interval.</p>}
     <p aria-live="polite" className="authored-demand-selection">{selected
       ? "Authored value #" + selected.id + ": defined at " + selected.def +
         (selected.last_use === null ? "; no declared use" : "; last declared use at " + selected.last_use) +
@@ -50,7 +62,7 @@ function DemandReady({ model, optimization }: { model: AuthoredDemandCase; optim
   </>;
 }
 
-export function AuthoredRegisterDemand({ nativeEvidence, expectedNativeJoin, demand, profile, optimization }: Props) {
+export function AuthoredRegisterDemand({ nativeEvidence, expectedNativeJoin, demand, profile, optimization, instructionSelection = null }: Props) {
   const [completed, setCompleted] = useState<{
     nativeEvidence: unknown; expectedNativeJoin: string; evidence: unknown; expectedSha256: string;
     result: AuthoredDemandProjection;
@@ -69,7 +81,8 @@ export function AuthoredRegisterDemand({ nativeEvidence, expectedNativeJoin, dem
     <p className="authored-demand-title">Authored demand, separate from final native resources</p>
     {result === null ? <p role="status">Checking authored-demand evidence; no previous demand is shown.</p>
       : result.status !== "ready" ? <p role="status" data-state={result.status}>{result.detail}</p>
-        : model ? <DemandReady key={profile + "-" + optimization} model={model} optimization={optimization} />
+        : model ? <DemandReady key={profile + "-" + optimization} model={model} optimization={optimization}
+          boundaries={selectedDemandBoundaries(instructionSelection, result, model)} />
           : <p role="status" data-state="invalid">Selected authored profile unavailable.</p>}
     <p>No source mutation, compiler request, native execution, or hardware action is supplied by this view.</p>
   </section>;

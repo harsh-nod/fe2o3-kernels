@@ -203,3 +203,88 @@ based on `7663838260764e3572bf673c14e52ac64ef20e99` plus the four scoped
 measurement/doc edits. This results note and its evidence file were added
 afterward; they are not relabeled as measured source. The run establishes no
 new SLO, full browser/runtime dependency attestation, V5 or U4 completion.
+
+## October 8 current-build production-route baseline (R87)
+
+A fresh production build of clean site commit
+`29b2a93272e9abd4dc2f7c2d04e72cfa1c191edc` completed the same eight cells on
+mi350 during 2026-10-08 10:14:15–10:20:49 UTC. The complete before/after source
+census is 1,187 files / 26,696,448 bytes, SHA-256
+`f7f6026d49b797fc700c082cd2751eb4348607fd090809d8596dc8fee75908df`.
+Later V3 shared static-instruction selection changes were integrated only
+afterward. Those changes and the standalone panels above are not included in
+these eight measured routes. This adds a dated observation, not replacement
+of earlier results or a new acceptance of their targets.
+
+Headless Chromium 151.0.7922.34 served the fresh 138-file production distribution
+from loopback with GPU disabled, light theme and device scale 1. Desktop is
+1280×800; narrow is 390×844, not mobile hardware. Each cell has exactly five
+calibration pairs and 30 retained pairs: 280 raw pairs, 240 retained, with
+720 retained first/warm/interaction timings and no recorded failed pair.
+All 24 p50/p95/maximum distributions were independently recomputed.
+
+Values below are nearest-rank p95 milliseconds, rounded to 0.1 ms.
+Timing remains the actual click/change capture listener to the exact expected
+semantic DOM plus two animation frames, not paint. The shell is already loaded
+and V22 files already selected; first/repeat import is a whole UI operation,
+not isolated parsing/decompression. HTTP caching is disabled; fresh contexts
+share browser/OS/server caches, and warm repeats reuse the same page.
+
+| Cell | First open/import | Warm reopen/reimport | Named interaction |
+| --- | ---: | ---: | ---: |
+| navigation-desktop | 359.7 | 48.9 | 48.5 |
+| navigation-narrow | 357.3 | 48.8 | 48.9 |
+| program-desktop | 429.0 | 67.8 | 47.8 |
+| program-narrow | 428.7 | 81.0 | 44.8 |
+| v22-one-desktop | 363.2 | 281.1 | 51.3 |
+| v22-one-narrow | 361.4 | 272.8 | 50.4 |
+| v22-registers-desktop | 334.7 | 272.1 | 51.9 |
+| v22-registers-narrow | 329.2 | 273.0 | 50.4 |
+
+Interactions are unchanged: exact BitOr attribution, retained whole-program
+checkpoint 23→19, and V22 index rows 65–128 after 1–64. None is execution stepping
+or reverse replay. The unchanged V22 recordings contain 8,833 and 8,718 index
+rows, 88 protocol pairs each, and 3,605,669 / 3,554,682 expanded aggregate bytes.
+Their original byte identities and counts were rechecked; these are historical
+CPU observations, not fresh kernel execution or the worst 11 MiB import class.
+
+Seven `Runtime.getHeapUsage.usedSize` checkpoints per pair and four signed
+delta series remain available without forced GC. Across 1,680 retained
+checkpoints, observed used heap ranges from 2,173,624 to 64,642,040 bytes:
+sampled values, not a measured peak. Forty-one retained warm-stage deltas are
+negative and remain signed. This campaign measures no RSS, peak heap,
+owner-attributed memory, leak-freedom or exit reclamation.
+
+Original limits remain: 240-second cell, 260-second external child,
+15-second cleanup, 2,250-second campaign; per cell, 4 MiB per response,
+128 MiB aggregate network and 4,096 requests. All 8,470 requests completed
+without a recorded network refusal. Every cell matched its 975 selected inputs
+(483,214,604 bytes) before/after; these pins also join the normal receipt's
+1,011 selected rows and unchanged source census.
+
+Separate service cleanup recorded launcher exit 0, inactive/dead state,
+MainPID 0 and a removed/empty cgroup. All 320 distinct browser PID/start
+identities sampled across the cells appear in CPU10–11 service observations.
+This is evidence for the named owned service, not global quiescence, proof
+that no process escaped or transitive tool/future-dlopen attestation.
+Individual reports keep their false qualification/whole-family claim flags;
+outer receipt and cleanup are separate evidence, not rewritten reports.
+
+Private retained evidence (custody records, not public download URLs):
+
+- Normal receipt: 1,538,614 bytes, SHA-256
+  `f28124a4ed30948a13986bb92be946513168c9e5bbb337182fd047918ff0c4c0`.
+- Eight-cell summary: 19,019 bytes, SHA-256
+  `515b80feb52ca4bde9d804966b6be6c1796dca3f26b2e6e01acc18c30629a6d7`.
+- Named-service cleanup: 129,400 bytes, SHA-256
+  `32bed6043c557a41e79817f7cc41d40d0b11952ca26bda9beeec2af14a79f920`.
+- Independent raw-sample/binding audit: 21,997 bytes, SHA-256
+  `c8b160f01965e4aa490d01aafea9a02f99c52a5eab1167b6f9fa9866d3fefb8d`.
+
+The first three records are under
+`logs/phase28-resume-r87-site-v0-eight-cells-r1/`; exact reports remain under
+`phase28-site-ui-performance-r87-r1/cells/`. No new SLO or memory budget is
+adopted. Isolated transport/query/projection/render timing, live/reverse
+operations, maximum-valid/oversize workloads, later-panel production routes,
+peak heap/RSS and broader accessibility remain separate. This observation
+does not close V0 or any other milestone.

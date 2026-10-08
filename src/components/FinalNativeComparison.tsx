@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { matchesNativeInstruction, selectNativeInstruction, type NativeInstructionSelection } from "../content/native-resource-selection.mjs";
 import { HighlightedCode } from "./HighlightedCode";
 import { FinalNativeRegisterRoles } from "./FinalNativeRegisterRoles";
 import { AuthoredRegisterDemand, type AuthoredDemandEvidence } from "./AuthoredRegisterDemand";
@@ -19,6 +20,19 @@ function NativeReady({ projection, nativeEvidence, authoredDemand }: {
 }) {
   const [selected, setSelected] = useState(0);
   const current = projection.cases[selected];
+  const selectionState = (token: NativeInstructionSelection | null) => ({ token, projection, nativeEvidence,
+    demandEvidence: authoredDemand?.evidence, demandPin: authoredDemand?.expectedSha256 });
+  const [instructionSelection, setInstructionSelection] = useState(() => selectionState(null));
+  const sameInputs = instructionSelection.projection === projection && instructionSelection.nativeEvidence === nativeEvidence &&
+    instructionSelection.demandEvidence === authoredDemand?.evidence && instructionSelection.demandPin === authoredDemand?.expectedSha256;
+  // Guarded render-time reset: never briefly show old selection, or resurrect it on A -> B -> A replacement.
+  if (!sameInputs) setInstructionSelection(selectionState(null));
+  const instruction = sameInputs && matchesNativeInstruction(instructionSelection.token, projection, current)
+    ? instructionSelection.token : null;
+  const clearInstruction = () => setInstructionSelection(selectionState(null));
+  const chooseInstruction = (ordinal: number, fileOffset: number) => {
+    setInstructionSelection(selectionState(selectNativeInstruction(projection, current.id, ordinal, fileOffset)));
+  };
   return <>
     <p className="final-native-boundary">
       {projection.kind === "synthetic_test_only" ? "Synthetic test data. " : "Retained source and compiled code-object observations. "}
@@ -35,7 +49,7 @@ function NativeReady({ projection, nativeEvidence, authoredDemand }: {
         <th scope="col">Complete HSACO bytes</th></tr></thead>
       <tbody>{projection.cases.map((item, index) => <tr key={item.id}>
         <th scope="row"><button type="button" aria-pressed={selected === index}
-          aria-label={"Inspect " + item.profile + " " + item.optimization} onClick={() => setSelected(index)}>
+          aria-label={"Inspect " + item.profile + " " + item.optimization} onClick={() => { setSelected(index); clearInstruction(); }}>
           {item.profile} {item.optimization}</button></th>
         <td>{item.declaredVgprHighWater}</td><td>{item.encodedVgprCapacity}</td>
         <td>{item.architectedVgprBoundary}</td><td>{item.hsacoBytes}</td>
@@ -48,18 +62,26 @@ function NativeReady({ projection, nativeEvidence, authoredDemand }: {
       <div className="final-native-scroll"><table aria-label="Exact native instruction bytes">
         <thead><tr><th scope="col">Declared instruction</th><th scope="col">Reported machine opcode</th>
           <th scope="col">Exact bytes</th><th scope="col">Register operands</th><th scope="col">Payload offset</th></tr></thead>
-        <tbody>{current.program.map((instruction) => <tr key={instruction.fileOffset}>
-          <th scope="row"><code>{instruction.declaredInstruction}</code></th>
-          <td><code>{instruction.opcode}</code></td><td><code>{instruction.bytesHex}</code></td>
-          <td><code>{instruction.registers.join(", ")}</code></td><td>{instruction.fileOffset}</td>
+        <tbody>{current.program.map((row, ordinal) => <tr key={row.fileOffset} data-static-selected={instruction?.ordinal === ordinal}>
+          <th scope="row"><button type="button" aria-pressed={instruction?.ordinal === ordinal}
+            aria-label={"Select static instruction " + (ordinal + 1) + " at file offset " + row.fileOffset}
+            onClick={() => chooseInstruction(ordinal, row.fileOffset)}><code>{row.declaredInstruction}</code></button></th>
+          <td><code>{row.opcode}</code></td><td><code>{row.bytesHex}</code></td>
+          <td><code>{row.registers.join(", ")}</code></td><td>{row.fileOffset}</td>
         </tr>)}</tbody>
       </table></div>
       <p>All three contiguous slices match their reported full-file offsets. Reported implicit reads: EXEC;
         no implicit writes. This is byte consistency against a retained observer report, not new disassembly.</p>
-      <FinalNativeRegisterRoles grid={current.registerGrid} />
+      <p role="status" aria-live="polite">{instruction
+        ? "Selected static instruction " + (instruction.ordinal + 1) + " at file offset " + instruction.fileOffset +
+          ". Matching static-use column is marked below; authored boundaries are marked only when their independent evidence joins."
+        : "Select an exact static instruction to link its declared uses and authored boundaries."}</p>
+      <p>This is static selection, not execution stepping, a current program counter, or physical liveness.</p>
+      <button type="button" disabled={instruction === null} onClick={clearInstruction}>Clear static instruction selection</button>
+      <FinalNativeRegisterRoles grid={current.registerGrid} instructionSelection={instruction} />
       {authoredDemand && <AuthoredRegisterDemand nativeEvidence={nativeEvidence}
         expectedNativeJoin={projection.joinSha256} demand={authoredDemand}
-        profile={current.profile} optimization={current.optimization} />}
+        profile={current.profile} optimization={current.optimization} instructionSelection={instruction} />}
       <p>Descriptor: 64 bytes at payload offset {current.descriptorOffset}. Resource words:
         <code> compute_pgm_rsrc1=0x{current.resource1.toString(16)}</code>,
         <code> compute_pgm_rsrc3=0x{current.resource3.toString(16)}</code>.</p>
