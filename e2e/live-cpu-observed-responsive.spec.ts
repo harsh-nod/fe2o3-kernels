@@ -40,6 +40,32 @@ test("observed runtime and selected storage remain usable in a narrow viewport",
   await observed.getByRole("button", { name: "Read observed storage", exact: true }).click();
   await expect(observed.getByRole("region", { name: "Observed storage bytes", exact: true })).toContainText("0x12121212");
   await expect(observed.getByRole("region", { name: "Actual allocation lifecycle", exact: true })).toContainText("release");
+
+  const lifetimes = observed.getByRole("region", { name: "Logical storage lifetimes and byte demand", exact: true });
+  await expect(lifetimes).toContainText("Complete lifecycle prefix through selected watermark 4.");
+  const demandTable = lifetimes.getByRole("table", { name: "Logical byte demand by address space and exact owning scope", exact: true });
+  const lifetimeTable = lifetimes.getByRole("table", { name: "Allocation lifetimes; release is the exclusive end boundary", exact: true });
+  await expect(demandTable).toContainText("global");
+  await expect(demandTable).toContainText("private");
+  await expect(lifetimeTable).toContainText("2 / 2 / 1");
+  await expect(lifetimeTable).toContainText("3 / 2 / 2");
+  await expect(lifetimeTable).toContainText("Released at 3 (exclusive)");
+  await expect(lifetimeTable).toContainText("Preexisting; first observed at 1; creation unknown");
+  const commandsBeforeBrowsing = bridge.commands.length;
+  await demandTable.focus();
+  await expect(demandTable).toBeFocused();
+  await page.keyboard.press("Tab");
+  await expect(lifetimeTable).toBeFocused();
+  for (const table of [demandTable, lifetimeTable]) {
+    await table.focus();
+    const overflows = await table.evaluate(node => node.scrollWidth > node.clientWidth);
+    if (overflows) {
+      await page.keyboard.press("ArrowRight");
+      await expect.poll(() => table.evaluate(node => node.scrollLeft)).toBeGreaterThan(0);
+    }
+  }
+  expect(bridge.commands).toHaveLength(commandsBeforeBrowsing);
+
   for (const theme of ["light", "dark"]) {
     await page.evaluate(value => { document.documentElement.dataset.theme = value; }, theme);
     const layout = await observed.evaluate(node => {

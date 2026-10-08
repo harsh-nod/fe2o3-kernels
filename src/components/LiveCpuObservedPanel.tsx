@@ -1,5 +1,6 @@
 import { useId, useState } from "react";
 import { LiveCpuObservedBankView } from "./LiveCpuObservedBankView";
+import { CpuObservedLifetimesView } from "./CpuObservedLifetimes";
 import type { CpuBridgeReply } from "../lib/cpu-debug-session";
 import type { CpuLiveCheckpoint } from "../lib/cpu-live-query-collection";
 import { observedCollectionKey, validateObservedSelection, type CpuObservedCollection, type CpuObservedSelection } from "../lib/cpu-observed-collection";
@@ -139,6 +140,7 @@ function Collected({ collection, checkpoint, enabled, busy, remainingCommands, o
       </tbody></table>}
       <p>Release contains no bytes. A predecessor is reported only for an actual allocator pool hit; a reused slot is not a physical GPU address.</p>
     </section>
+    <CpuObservedLifetimesView collection={collection} />
     {!selectedData ? <p role="status">No memory/access result matches the current selection fields.</p> : <>
       <section aria-label="Observed storage accesses"><h4>Retained accesses for this exact incarnation</h4>
         <p>{availability(collection.accesses)} {paging(collection.accesses)}</p>

@@ -113,3 +113,63 @@ The combination detects mistaken pairing of repeated calls, stale frame selectio
 This representation is logical simulator KIR, not physical AMD registers. Source editing and assembly authoring remain separate checked compiler workflows: see [lowered-kernel inspection](inspect-lowered-kernels.md), [source promotion](source-promotion-lab-v1.md) and [ordered programs](ordered-program-authoring-v1.md). A captured runtime identity does not authorize source rewriting, LLVM IR resumption, native code emission or round-tripping arbitrary machine instructions back to Rust.
 
 The retained source census binds the exact source input and selected lowered operations for a particular run. It does not authenticate compiler execution or prove arbitrary source-variable-to-SSA ownership. Private Alloca reuse, deeply nested calls and faults have separate lower-level tests; this two-fixture lab must not be presented as ordinary-source qualification for those cases.
+
+## Read the logical lifetime and byte-demand tables
+
+The live observed panel derives two small tables from its existing, checked
+first lifecycle page. Refresh is still explicit; this projection sends no
+requests, follows no token and changes no capture limits.
+
+The demand table groups allocations by **address space and the exact owning
+scope**. Distinct workgroups and full invocation identities do not share a
+physical map. At each retained transition it adds a created/preexisting
+allocation's byte length or subtracts the exact released incarnation. Its
+peak is the maximum of those logical live-byte sums, computed with checked
+unsigned-64-bit `BigInt` arithmetic. It is not allocator capacity, retained
+reuse-pool bytes, process memory, physical LDS layout, register pressure,
+occupancy, timing or a whole-execution peak.
+
+The lifetime table keeps allocation, storage slot and generation separate.
+A create sequence is inclusive; its release is the exclusive end. A
+preexisting allocation has an unknown actual creation time, even though its
+first retained observation has a sequence. No bytes or initialization state
+are reconstructed from these transitions.
+
+For the workgroup source example above:
+
+1. Select A's checkpoint and explicitly refresh runtime/storage. Inspect
+   A's workgroup scope and its 256-byte logical demand.
+2. Select B's checkpoint and refresh. A's exclusive release and B's new
+   generation/predecessor are distinct rows. Each exact workgroup's peak
+   remains 256 bytes; this is not a shared physical 256-byte LDS placement.
+3. Return to A and refresh again. The old collection is hidden during the
+   control; B must not leak into the earlier selected lifecycle.
+4. Inspect a first page that has a continuation token. It shows only the
+   known prefix: current live bytes are unavailable, open intervals have an
+   unknown state at the selected watermark, and prefix peaks are explicitly
+   lower bounds. The component never follows the token automatically.
+5. A complete page with complete lifecycle metadata can describe demand
+   through the selected watermark. The separate legacy capture-completeness
+   label remains visible. Neither permits inventing a later terminal release
+   or calling the prefix peak a complete-run peak.
+
+The existing 16-row/64-scan first-page limits remain. Zero-length allocations
+remain real lifetime rows with zero byte demand. Values beyond JavaScript's
+exact Number range remain decimal strings; an unsigned-64-bit per-scope sum
+overflow refuses the entire derived view instead of clamping or showing a
+partial result. Stale owner/cursor/connection/session, changed descriptors,
+invalid reuse, noncontiguous sequences and malformed page/watermark bindings
+use the existing strict response checks. An unavailable/refused query is not
+an empty successful table.
+
+Both tables have captions and row/column headers, are keyboard-focusable for
+horizontal scrolling, and retain text for every availability and interval
+state. They require no color or timing animation. The neighboring original
+raw lifecycle table remains available for the underlying facts.
+
+These instructions describe the implemented read-only projection; the new
+pure/component controls are synthetic and are not a fresh source/HTTP/browser
+qualification. Root must retain the actual matching source/bridge/browser
+acceptance separately. The historical source reuse qualification linked above
+remains historical. This addition neither supplies a compiler allocator trace
+nor completes #280 M5, #281 V3/V5 or #282 U4.
