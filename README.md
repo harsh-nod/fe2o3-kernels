@@ -13,6 +13,18 @@ what it verifies, what it observes in compiler or hardware tests, and what is
 still a design. It does not present advanced tutorial pseudocode as a working
 kernel.
 
+## Current-main release status
+
+The [2026-10-19 release matrix](docs/community-release-matrix-20261019.md)
+reconciles all 56 lessons and 314 tabs against exact compiler and site mains.
+Historical `gpu-observed` labels, source bindings, CPU recordings and mock
+checks are not current-main end-to-end correctness receipts. The current
+contract keeps 50 fixture/target rows and all 46 lesson pairs pending; it does
+not promise a supported public source-to-GPU first run. The matrix retains
+architecture-specific hardware/performance evidence, formal boundaries,
+unmerged site corrections and clean-newcomer prerequisites without changing
+the existing evidence pins.
+
 ## Functional reference gates
 
 Every tutorial kernel is organized around a safe Rust CPU reference or oracle.
