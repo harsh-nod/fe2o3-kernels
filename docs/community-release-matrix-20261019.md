@@ -40,6 +40,22 @@ differ. The other 313 common projections match, which is not a full source,
 compiler, semantic, or execution qualification. The failure is preserved;
 no expected bytes, contract or frozen pin was refreshed to hide it.
 
+### First-fill Follow-up Candidate
+
+The follow-up source-display correction relocates the unchanged four-line
+`fill_reference` helper into `reference.rs` and includes it at the same module
+position. Re-inlining those exact companion bytes reconstructs the old 680-byte
+library; the current 552-byte library is byte-identical at historical
+`b9378bdb` and reviewed compiler main `188f388b`. Kernel signature, 64x1x1
+launch, optional `reference-proof` selection, bounds guard and F32 store are
+unchanged. The companion is displayed-source support, not a new proof.
+
+This corrects the local first-fill source/display association without changing
+the compiler contract or any of the other 313 tab projections. The 4358
+failure above remains the actual public-main baseline until a reviewed site
+candidate is published. Follow-up binding/test receipts are separate from GPU,
+simulation, native and formal qualification; all pending/unknown counts remain.
+
 ## Counts And Meaning
 
 | Surface | Count | What Is Established |
