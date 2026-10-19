@@ -4,12 +4,12 @@ import { readFileSync } from "node:fs";
 
 const source = readFileSync(new URL("../examples/fill/src/lib.rs", import.meta.url), "utf8");
 const historicalSource = readFileSync(new URL("../examples/fill_kernel.rs", import.meta.url), "utf8");
-const revision = "f84c2a59ba34c3e4c12e316cc9b30f14342e36cf";
+const revision = "b9378bdbee0dd1e284a1c31b25c3614c5c2039fe";
 
 test("fill preserves exact source and historical execution boundaries", async ({ page, context }, testInfo) => {
-  expect(Buffer.byteLength(source)).toBe(680);
+  expect(Buffer.byteLength(source)).toBe(552);
   expect(createHash("sha256").update(source).digest("hex"))
-    .toBe("66593042d32204a35d4371de11387466c6eb553b54a24d21e370f47b3ee4789e");
+    .toBe("21b26bbd0d54f8966bade4ed80e2cb2457e89ecf13e9469eb0c9c030e3a8f6f3");
   expect(Buffer.byteLength(historicalSource)).toBe(308);
   expect(createHash("sha256").update(historicalSource).digest("hex"))
     .toBe("827ea368df5dd7f429792e0f8a21df79d4d5508525061a844c190da25de54213");
