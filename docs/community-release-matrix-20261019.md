@@ -31,6 +31,15 @@ file provenance), `b4e4184` (separate current gfx950 pipelined source), and
 `1919554` (associated link tests). Each needs independent source/evidence/pin
 review before integration; this documentation patch imports none of them.
 
+The maintained curriculum checker actually rejects these reviewed mains with
+`first-fill tab 0 source/display binding differs`. An all-314-tab comparison
+of common projection fields found one mismatching tab: the contract expects
+552 displayed bytes from `b9378bdb`, while site main retains 680 bytes from
+`f84c2a59`; displayed length, displayed digest, source commit and source digest
+differ. The other 313 common projections match, which is not a full source,
+compiler, semantic, or execution qualification. The failure is preserved;
+no expected bytes, contract or frozen pin was refreshed to hide it.
+
 ## Counts And Meaning
 
 | Surface | Count | What Is Established |
@@ -96,6 +105,19 @@ are inspectable, but presence does not refresh an old run.
 New readiness wire, credential, nonce, deadline and cleanup bodies need
 separate exact-code review and positive/negative tests; this proof does not
 verify them.
+
+### Simulator And Debugger Availability
+
+The assembly owner's independent current-main review finds the private
+`70a7400ed1` replay-identity/example candidate unmerged. Its proposed
+`cargo run --example schedule_replay_walkthrough` is not a main-runnable
+onboarding command. The candidate's earlier 179/317 checks must stay tied to
+their retained source, not be credited to current main. The public
+[ordered-region debugger guide](https://github.com/harsh-nod/fe2o3/blob/188f388b5879dabd740c7b4f0c46588d4bb7da3d/docs/ordered-region-debugger-v1.md)
+documents diagnostic V16 JSONL and smoke-script surfaces, with logical
+CPU-only, physical-register and source-authority limits. Ordinary source
+simulation, diagnostic assembly views and live hardware debugging are separate
+capabilities, not interchangeable demonstrations.
 
 ## Every Lesson
 
