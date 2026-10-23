@@ -119,34 +119,46 @@ export const scalarGemmKernelTab: CodeTab = {
 const sourceAssociationRecords = deepFreeze({
   "gpt-scalar-attention-current-source-v1": {
     lessonId: "gfx950-gpt-oss-120b-megakernel",
+    tabOrdinal: 6,
     authority: "source-association-only",
     source: currentGptScalarAttentionKernelTab,
   },
   "tiled-gemm-current-source-v1": {
     lessonId: "gemm-tiling",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentGemmKernelTab,
   },
   "wave64-collectives-current-source-v1": {
     lessonId: "reductions-scans",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentWaveKernelTab,
   },
   "workgroup-sync-current-source-v1": {
     lessonId: "lds-barriers-atomics",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentWorkgroupKernelTab,
   },
   "moe-top2-current-source-v1": {
     lessonId: "moe-routing",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentMoeKernelTab,
   },
 } satisfies Record<SourceAssociationId, {
   lessonId: string;
+  tabOrdinal: number;
   authority: "source-association-only";
   source: CodeTab;
 }>);
+
+export const primarySourceAssociationLessonIds = Object.freeze(
+  Object.values(sourceAssociationRecords)
+    .filter((record) => record.tabOrdinal === 0)
+    .map((record) => record.lessonId),
+);
 
 export const sourceAssociationLessonIds = Object.freeze(
   Object.values(sourceAssociationRecords).map((record) => record.lessonId),

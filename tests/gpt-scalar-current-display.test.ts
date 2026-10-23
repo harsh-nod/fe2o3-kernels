@@ -34,6 +34,26 @@ describe("GPT scalar current source and retained historical rejection", () => {
       .toContain("3d10825df93a86644cc5a5b006cadd45f71afb91");
   });
 
+  it("rejects moving the exact current scalar view to another tab", () => {
+    const changed = structuredClone(curriculum);
+    const lesson = changed.flatMap((module) => module.lessons)
+      .find((item) => item.id === "gfx950-gpt-oss-120b-megakernel")!;
+    [lesson.tabs[5], lesson.tabs[6]] = [lesson.tabs[6], lesson.tabs[5]];
+    expect(validateCurriculum(changed)).toContainEqual(expect.objectContaining({
+      message: "code tab does not match its exact source-only association",
+    }));
+  });
+
+  it("keeps exact primary-kernel provenance required for existing primary associations", () => {
+    const changed = structuredClone(curriculum);
+    const lesson = changed.flatMap((module) => module.lessons)
+      .find((item) => item.id === "gemm-tiling")!;
+    delete lesson.tabs[0].evidenceId;
+    expect(validateCurriculum(changed)).toContainEqual(expect.objectContaining({
+      message: "promoted algorithm kernel lacks exact source provenance",
+    }));
+  });
+
   it.each(["sourceCommit", "sourceSha256"] as const)("rejects changed current %s", (field) => {
     const changed = structuredClone(curriculum);
     const lesson = changed.flatMap((module) => module.lessons)
