@@ -66,7 +66,14 @@ const gemmProofEvidence = stagedEvidenceRecord(
 const gemmProtectedEvidence = completedIssue94IncrementRecord(
   "tiled-lds-protected-lifecycle-v1",
 );
-const gemmProofCommand = gemmProofEvidence.commands[0]!;
+const gemmProofCommand = [
+  "git worktree add --detach ../fe2o3-proof-gemm-5a452 5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
+  "(",
+  "  cd ../fe2o3-proof-gemm-5a452",
+  `  ${gemmProofEvidence.commands[0]!}`,
+  "  VERUS=/absolute/path/to/pinned/verus examples/tiled_gemm_v1/run-verus.sh",
+  ")",
+].join("\n");
 const gemmProtectedCommand = gemmProtectedEvidence.commands.at(-1)!;
 const collectivesSource = sourceMilestoneRecord(
   "wave64-collectives-source-v1",
@@ -215,7 +222,7 @@ function exactGemmProofTab() {
     evidenceId: "tiled-lds-source-model-correspondence-v1" as const,
     explanatory: true,
     notice:
-      "Real pinned command and bounded Verus source/model. The tab shows the replay command rather than reproducing the proof file, so it remains explanatory; 96 obligations verify, but no production certificate is consumed.",
+      "Run from the repository root with a new, absent neighboring worktree and pinned Verus 0.2026.08.02.b677dd5. The retained example is absent from current source. This replays the historical identity check and all six proof groups, including the 96-obligation source/model group, with 21 intended rejections. It grants no current-kernel, numerical, compiler/ISA, production-certificate, or GPU authority.",
   };
 }
 

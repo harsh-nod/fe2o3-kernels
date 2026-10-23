@@ -1145,6 +1145,8 @@ const compilerChecks: Lesson = {
         "The single production ranked route runs bounded target preflight, a sealed checked constant fold, and the fixed nine analysis stages, including pipeline protocol between barrier and workgroup-memory verification. V5 is the sole live middle-end evidence producer; V4 is decoder-only archival data and the V1 declarative refinement API is removed. Independent raw replay is Complete only for the documented static bounded-access fragment; nonempty tensor flow and all other current witnesses remain Incomplete and grant no KIR authority.",
       reference: currentImplementationReference(
         [
+          "git worktree add --detach ../fe2o3-checks-308d 308d8fa00fa41e098b2a1a47bbfea1bc29735464",
+          "cd ../fe2o3-checks-308d",
           "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold",
           "cargo test --locked -p fe2o3-kernel-analysis --lib pliron_analysis_witness",
         ],
@@ -1227,10 +1229,10 @@ const compilerChecks: Lesson = {
       kind: "host",
       label: "Run checks",
       language: "bash",
-      code: "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold\ncargo test --locked -p fe2o3-kernel-analysis --lib pliron_analysis_witness\ncargo test --locked -p fe2o3-kernel-analysis --test pliron_lit",
+      code: "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold\ncargo test --locked -p fe2o3-pliron --lib pliron_analysis_witness\ncargo test --locked -p fe2o3-pliron --lib textual_pliron_lit_suite",
       explanatory: true,
       notice:
-        "These commands cover the checked transform, independent witness replay, and the textual workload-neutral PLIRON diagnostics. They do not execute a GPU artifact.",
+        "These current-worktree commands cover the checked transform, independent witness replay, and textual workload-neutral PLIRON diagnostics with nonempty selections. The historical 308d evidence reference retains its original package/source identities and gives detached-source steps separately. Neither role executes a GPU artifact.",
     },
   ],
   diagram: "memory",

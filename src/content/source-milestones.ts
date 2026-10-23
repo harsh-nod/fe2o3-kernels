@@ -216,6 +216,8 @@ const sourceMilestoneRecords = deepFreeze({
     commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
     tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
     commands: [
+      "git worktree add --detach ../fe2o3-proof-flash-af0fd af0fd523e3b774377a9c5192cf0511e34fa19735",
+      "cd ../fe2o3-proof-flash-af0fd",
       "VERUS=/absolute/path/to/pinned/verus examples/flash_attention_v1/run-verus.sh",
     ],
     sourcePaths: [
@@ -311,6 +313,8 @@ const sourceMilestoneRecords = deepFreeze({
     commit: "e3c7018f428192c350c9c425df8e4c031c788272",
     tree: "f717440c4fbc034672ca5ea9e97406e78eb38be0",
     commands: [
+      "git worktree add --detach ../fe2o3-proof-moe-e3c701 e3c7018f428192c350c9c425df8e4c031c788272",
+      "cd ../fe2o3-proof-moe-e3c701",
       "VERUS=/absolute/path/to/pinned/verus examples/moe_expert_v1/run-verus.sh",
     ],
     sourcePaths: [
