@@ -3,6 +3,7 @@ import attentionSource from "../../examples/gfx950_advanced_attention/src/kernel
 import systemsSource from "../../examples/gfx950_advanced_systems/src/kernel.rs?raw";
 import gptOssSource from "../../examples/gfx950_gpt_oss_decode/src/kernel.rs?raw";
 import { narrativeSection } from "./narrative-registry";
+import { currentGfx950ExcerptNotice, currentGfx950ExcerptSource } from "./current-gfx950-excerpts";
 import {
   historicalReference,
   type CurriculumModule,
@@ -60,17 +61,17 @@ const excerptSha256BySymbol: Record<string, string> = {
   gfx950_fp4_attention_rust:
     "8ec06528968a2357e0aa9c597cde4e926fea7a0d9c0e04a47d0b81ef2eacef89",
   gfx950_fp8_attention_rust:
-    "0a06ba5894d9afa1504dd036f9a0c8a4b3deb242156f37d5930f047d5ec1d5f1",
+    "db02c7da83c25654b6a87590caff9d84965ac91e4ebbac52cbf6ebaf8aa91001",
   gfx950_kda_decode:
     "d345800b6cd83b88452a85f4b99cfbb8f0a2093e05542ad6c3a3add2dcf7cb04",
   gfx950_kda_chunkwise_prefill:
     "6eb55c61d75d233f08d31f766ede17b1fe45c5a7116893bbe33050124dcedc4c",
   gfx950_content_sparse_attention:
-    "8af6b4374d55d1cda9a8c5b8488df3b29dd280690fcf5f643d0d3a7776fd21bd",
+    "611fed39499572579a1f80b7aa855926e219791fc71085e330d0e564ffcdab8b",
   gfx950_deepseek_sparse_attention:
     "6af51078d2c1b7bcf8949937dc843c0eeba408dff16ad7c552ec89bf8917845f",
   gfx950_compressed_hybrid_attention:
-    "f1d09336b950f0a71e8fc81beeff438ce19ba045c46d6865db833175fba0b1e1",
+    "aa2436df9d8635507b8d29fba15054afdbf3e18347f8dce338c9ff2b30d15332",
   gfx950_attnres_aggregate:
     "af9ec1ae0600335d6f7ba05fb87dd022ed319b7cf42872cab631a418c1bbf2df",
   gfx950_four_branch_residual:
@@ -78,19 +79,19 @@ const excerptSha256BySymbol: Record<string, string> = {
   gfx950_mhc_sinkhorn_mix:
     "55b47101b8965c4516713f5953152a6b51c14a218bb5fc022611b9d76ea4620c",
   gfx950_moe_route_fp4_t16_e4_k2_v1:
-    "cce2f0b75d205c2a11e199e813dda79521cd9000ec5d589de7dae045c7e42ca2",
+    "ae4d43e6d6c0c138af1231c7a6905ceadd5c80cb18d9b95e07f28a565c6cac76",
   gfx950_moe_expert_rank_fp4_fp8_v1:
-    "14021f7543d77ecf1d5aaba727d996a8553c8ea0bc034145862757db68f84e89",
+    "8e1ae077dca417ea6c9b477dba99a82e1b6f9b93f78161d4ac5dd22bef227093",
   gfx950_combine_expert_ranks_v1:
-    "11cdfd804fea2b5f981f3b8b35826730df57bf89e1166cfba0133195dd6811f8",
+    "b8ae7aaac1e98068851ac70a8d93972d4160e4e67db4a13137a3a4dd37c8b816",
   gfx950_speculative_transaction_v1:
-    "2730064fc70eca25fc1f18933ac2d71899f48a4467338a49cd9800e9fa2a5fcd",
+    "2ba7eab1adc144eaeda5dd4af486d08751cca15a397e1e37332681ea31344ccc",
   gfx950_qwen_ngram_gather_v1:
-    "ec93dc1a8b806b1c777a846517b42319b5dcfb5cc86d1fff4dda1b87d7d91b9c",
+    "07466eb90124408a905cc46752961ba5f12ac427cf41c59f23f25f6b435d5945",
   gfx950_stage_gradient_shard_v1:
-    "b94ce8b5548c59ee9a661e6e36184e0b8049f0635581d5c8753265defa8b90c9",
+    "50f95ebd0b1534488fcf103c20793965ad2a5dcbb2961a6a0bf34ec08e77248d",
   gfx950_muon_update_4x4_v1:
-    "9a692941b8c346bf79b88287202cd9ee7803be9ac45218c083427df396b8938b",
+    "2eba6ccfae90464a367ee679084d53794f2ceb3622b60d5d06addd55a41d7876",
   gfx950_gpt_oss_120b_decode_megakernel_v1:
     "fdc428f33edbcebe6ca7764c537db58e68009115d740fc21a8252253db8d4081",
 };
@@ -447,7 +448,8 @@ function performanceText(spec: PerformanceSpec): string {
 
 function lesson(spec: PerformanceSpec, order: number): Lesson {
   const source = sources[spec.source];
-  const excerpt = functionExcerpt(source.text, spec.symbol);
+  const currentSource = currentGfx950ExcerptSource(spec.symbol);
+  const excerpt = functionExcerpt(currentSource?.code ?? source.text, spec.symbol);
   const excerptSha256 = excerptSha256BySymbol[spec.symbol];
   if (excerptSha256 === undefined) {
     throw new Error(`Missing excerpt digest for ${spec.symbol}`);
@@ -473,7 +475,7 @@ function lesson(spec: PerformanceSpec, order: number): Lesson {
       {
         kind: "gpu-observed",
         label: `MI350X performance audit: ${spec.symbol}`,
-        detail: `${spec.measured} ${spec.verdict} The archived campaign includes numerical-oracle and canary checks; it is not a whole-model result.`,
+        detail: `${spec.measured} ${spec.verdict} The archived campaign includes numerical-oracle and canary checks; it is not a whole-model result.${currentSource ? ` ${currentGfx950ExcerptNotice}` : ""}`,
         reference: historicalReference(
           sourceCommit,
           sourceTree,
@@ -494,12 +496,12 @@ function lesson(spec: PerformanceSpec, order: number): Lesson {
         language: "rust",
         code: excerpt,
         sourcePath: source.path,
-        sourceCommit,
+        sourceCommit: currentSource?.commit ?? sourceCommit,
         sourceSha256: excerptSha256,
         sourceDigestScope: "displayed",
         sourceFragments: [excerpt],
         explanatory: false,
-        notice: "The displayed function is extracted from the exact pinned file; the digest covers this displayed excerpt.",
+        notice: `The displayed function is extracted from the exact pinned file; the digest covers this displayed excerpt.${currentSource ? ` ${currentGfx950ExcerptNotice}` : ""}`,
       },
       {
         kind: "verus",

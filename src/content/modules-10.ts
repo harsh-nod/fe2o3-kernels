@@ -1,4 +1,5 @@
 import { currentGptScalarAttentionKernelTab, currentGptSourceCommit } from "./current-kernel-sources";
+import { currentGfx950ExcerptNotice, currentGfx950ExcerptSource } from "./current-gfx950-excerpts";
 import advancedAttentionSource from "../../examples/gfx950_advanced_attention/gfx950_advanced_attention.hip?raw";
 import advancedAttentionAblation from "../../examples/gfx950_advanced_attention/src/ablation.rs?raw";
 import advancedAttentionRustKernel from "../../examples/gfx950_advanced_attention/src/kernel.rs?raw";
@@ -348,6 +349,7 @@ function evidenceLines(evidence: AdvancedRustEvidence): string[] {
 }
 
 function advancedClaim(spec: AdvancedLessonSpec): Claim {
+  const currentSource = currentGfx950ExcerptSource(spec.rustSymbols[0]);
   const evidence = advancedEvidenceFor(spec.rustSymbols);
   if (
     advancedCoreSourceTree !== null &&
@@ -369,7 +371,7 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
     return {
       kind: "gpu-observed",
       label: `Production Rust ${spec.sourceRole} observed on MI350X`,
-      detail: `At retained campaign commit ${campaign.sourceCommit}, every ordinary attributed Rust kernel in this lesson passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and its digest-pinned HSA numerical comparison on mi350. The code tab separately pins the current promoted source at ${advancedCoreSourceCommit}. ${observed.map((entry) => `${entry.label}: ${entry.numericalResult}`).join("; ")}. This bounded observation is not a formal source-to-machine proof, protected publication, or full-model result.`,
+      detail: `At retained campaign commit ${campaign.sourceCommit}, every ordinary attributed Rust kernel in this lesson passed production extraction, ${advancedProductionTarget} LLVM and COV6 finalization, symbol-scoped ISA inspection, and its digest-pinned HSA numerical comparison on mi350. The code tab separately pins the current promoted source at ${currentSource?.commit ?? advancedCoreSourceCommit}. ${observed.map((entry) => `${entry.label}: ${entry.numericalResult}`).join("; ")}. This bounded observation is not a formal source-to-machine proof, protected publication, or full-model result.${currentSource ? ` ${currentGfx950ExcerptNotice}` : ""}`,
       reference: historicalReference(
         campaign.sourceCommit,
         campaign.sourceTree,
@@ -401,13 +403,14 @@ function advancedClaim(spec: AdvancedLessonSpec): Claim {
 
 function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
   const bundle = sourceBundle(spec.bundle);
+  const currentSource = currentGfx950ExcerptSource(spec.rustSymbols[0]);
   const hipSymbols = spec.hipSymbols ?? [];
   const productionEvidence = advancedEvidenceFor(spec.rustSymbols);
   const allObserved =
     loweringSupported(bundle) &&
     productionEvidence.every(isObservedAdvancedEvidence);
   const rustFragments = spec.rustSymbols.map((symbol) =>
-    rustFunctionExcerpt(bundle.rustKernel, symbol, true),
+    rustFunctionExcerpt(currentSource?.code ?? bundle.rustKernel, symbol, true),
   );
   if (spec.id === "gfx950-kda-gdn-linear-attention") {
     rustFragments.unshift(
@@ -433,12 +436,12 @@ function advancedTabs(spec: AdvancedLessonSpec): CodeTab[] {
       language: "rust",
       code: rustFragments.join("\n\n"),
       sourcePath: bundle.rustKernelPath,
-      sourceCommit: advancedCoreSourceCommit,
+      sourceCommit: currentSource?.commit ?? advancedCoreSourceCommit,
       sourceSha256: spec.rustExcerptSha256,
       sourceDigestScope: "displayed",
       sourceFragments: rustFragments,
       explanatory: false,
-      notice: `Exact published ordinary attributed Rust for ${spec.rustSymbols.join(", ")}, pinned to the core commit and displayed-byte SHA-256. The production evidence area lists one Rust-to-HSACO runner and one HSA harness test per kernel.`,
+      notice: `Exact published ordinary attributed Rust for ${spec.rustSymbols.join(", ")}, pinned to the core commit and displayed-byte SHA-256. ${currentSource ? currentGfx950ExcerptNotice : "The production evidence area lists one Rust-to-HSACO runner and one HSA harness test per kernel."}`,
     },
     ...variantTabs,
     {
@@ -926,7 +929,7 @@ const advancedLessons = [
       "gfx950_combine_expert_ranks_v1",
     ],
     rustExcerptSha256:
-      "c2131eeb0bf55ad7d272076655f5d3144bf61aa2ed04e3960cca3e09a854929c",
+      "597f67584c129e67b9dce7972315d8fce986e4a7f002575f6ef41345f568300e",
     referenceSymbols: [
       "moe_routing_reference",
       "batched_moe_routing_reference",
@@ -1082,7 +1085,7 @@ const advancedLessons = [
     sourceRole: "content-indexed sparse QK, softmax, and PV teaching kernel",
     rustSymbols: ["gfx950_content_sparse_attention"],
     rustExcerptSha256:
-      "8af6b4374d55d1cda9a8c5b8488df3b29dd280690fcf5f643d0d3a7776fd21bd",
+      "611fed39499572579a1f80b7aa855926e219791fc71085e330d0e564ffcdab8b",
     referenceSymbols: ["content_sparse_attention_reference_v1"],
     referenceExcerptSha256:
       "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
@@ -1210,7 +1213,7 @@ const advancedLessons = [
       "compressed-state, direct-attention, and hybrid fusion teaching kernels",
     rustSymbols: ["gfx950_compressed_hybrid_attention"],
     rustExcerptSha256:
-      "f1d09336b950f0a71e8fc81beeff438ce19ba045c46d6865db833175fba0b1e1",
+      "aa2436df9d8635507b8d29fba15054afdbf3e18347f8dce338c9ff2b30d15332",
     referenceSymbols: ["compressed_hybrid_attention_reference_v1"],
     referenceExcerptSha256:
       "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
@@ -1352,7 +1355,7 @@ const advancedLessons = [
       "speculative-decoding and multi-token-prediction verification teaching kernels",
     rustSymbols: ["gfx950_speculative_transaction_v1"],
     rustExcerptSha256:
-      "2730064fc70eca25fc1f18933ac2d71899f48a4467338a49cd9800e9fa2a5fcd",
+      "2ba7eab1adc144eaeda5dd4af486d08751cca15a397e1e37332681ea31344ccc",
     referenceSymbols: [
       "speculative_reference",
       "batched_speculative_reference",
@@ -1422,7 +1425,7 @@ const advancedLessons = [
       "N-gram hash-table lookup and integer-value gather teaching kernel",
     rustSymbols: ["gfx950_qwen_ngram_gather_v1"],
     rustExcerptSha256:
-      "ec93dc1a8b806b1c777a846517b42319b5dcfb5cc86d1fff4dda1b87d7d91b9c",
+      "07466eb90124408a905cc46752961ba5f12ac427cf41c59f23f25f6b435d5945",
     referenceSymbols: ["ngram_reference", "batched_ngram_reference"],
     referenceExcerptSha256:
       "a15572e565a090dba9169056ede64caf7186815a48c618985f1f95bb129f51de",
@@ -1491,7 +1494,7 @@ const advancedLessons = [
       "gfx950_muon_update_4x4_v1",
     ],
     rustExcerptSha256:
-      "df2ded4e4f5fa4fe6e170f2701097d9087ef0929c318768b8c5ac83fa63896f5",
+      "b408f9edc331402727311192aa3fbbb74da7753bf0de0f03692d5032802cf4f7",
     referenceSymbols: ["muon_reference", "batched_muon_reference"],
     referenceExcerptSha256:
       "d43c796135a06d777cd4189267ff0a9fc6fa37ff94c4c04273820a5bfcdfc24f",
