@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
 const publicationGate = JSON.parse(
@@ -1394,7 +1395,9 @@ test("row softmax shows exact source and historical GPU qualification", async ({
   page,
   context,
 }, testInfo) => {
-  const source = readFileSync(new URL("../examples/row_softmax_general_v1/src/kernel.rs", import.meta.url), "utf8");
+  const source = readFileSync(new URL("../examples/row_softmax_general_v1/src/kernel_current.rs", import.meta.url), "utf8");
+  expect(createHash("sha256").update(source).digest("hex"))
+    .toBe("06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8");
   const errors: string[] = [];
   page.on("pageerror", (error) => errors.push(error.message));
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -1415,9 +1418,10 @@ test("row softmax shows exact source and historical GPU qualification", async ({
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/bfa616c996fa529da67f2f6c32e7829213914e3e/examples/row_softmax_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/044b85871308076c7a15d1c20c7794069fd73bb2/examples/row_softmax_general_v1/src/kernel.rs",
   );
-  await expect(lessonCode.locator(".code-status")).toContainText("does not qualify a SIMT/tile pair");
+  await expect(lessonCode.locator(".code-status")).toContainText("qualifies no SIMT/tile pair");
+  await expect(lessonCode.locator(".code-status")).toContainText("Historical source-model and GPU evidence belongs to its original source, not this tab");
   await lessonCode.getByRole("button", { name: "Copy code", exact: true }).click();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(source);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
@@ -1581,7 +1585,11 @@ test("Wave 2 lessons expose exact source and bounded latest status", async ({
 test("MoE expert lesson exposes dynamic MFMA source and qualification evidence", async ({
   page,
 }) => {
+  const source = readFileSync(new URL("../examples/moe_grouped_expert_general_v1/src/kernel_current.rs", import.meta.url), "utf8");
+  expect(createHash("sha256").update(source).digest("hex"))
+    .toBe("9e31980d48320d2978823af76465f882a99263137ba828261f605e74afc110a7");
   await page.goto("./#/lesson/moe-expert-compute");
+  expect(await page.getByRole("tabpanel").locator("code").textContent()).toBe(source);
   await expect(page.getByRole("tabpanel")).toContainText(
     "pub fn moe_grouped_expert_general_v1",
   );
@@ -1593,8 +1601,9 @@ test("MoE expert lesson exposes dynamic MFMA source and qualification evidence",
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/moe_grouped_expert_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/d558aa97758cf553c956c5ce92178eac96bd2461/examples/moe_grouped_expert_general_v1/src/kernel.rs",
   );
+  await expect(page.locator(".code-status")).toContainText("qualifies no SIMT/tile pair");
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
@@ -1749,6 +1758,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950_fp4_gemm_rust",
       "436964a09c11a1a3f7ae24642972ddeb632cfcd62c52e6db33ddea0ff13d9900",
       "max_absolute_error=0",
+      "9006001157e2c3062e44088634e467b0f8963ee0",
     ],
     [
       "gfx950-fp8-gemm",
@@ -1756,6 +1766,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950_fp8_gemm_rust",
       "16a6725e375a0e8a71defb8740a2f2080f67bd035c749c29df3a895fcbcb08e0",
       "max_absolute_error=0",
+      "9006001157e2c3062e44088634e467b0f8963ee0",
     ],
     [
       "gfx950-fp4-attention",
@@ -1763,6 +1774,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950_fp4_attention_rust",
       "cc25e739a12b1a889e42f522708d59b4e626908a2b351dc051f4d3df59a92e38",
       "4,096 outputs; max_absolute_error=1.192092896e-7",
+      "9006001157e2c3062e44088634e467b0f8963ee0",
     ],
     [
       "gfx950-fp8-attention",
@@ -1770,6 +1782,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       "gfx950_fp8_attention_rust",
       "aa479249efa9d45e7eb0fd44f000feb77005b289556ba2030afd2545b4fda1e1",
       "max_absolute_error=5.960464478e-8",
+      "34aa704c5bc3e3c84ad904dfcf7f044374e7dcd8",
     ],
   ] as const;
 
@@ -1779,6 +1792,7 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
     symbol,
     hsacoSha256,
     numericalResult,
+    sourceCommit,
   ] of lessons) {
     await page.goto(`./#/lesson/${lessonId}`);
     await expect(
@@ -1802,8 +1816,12 @@ test("every gfx950 low-precision lesson opens its production Rust evidence", asy
       page.getByRole("link", { name: "Source", exact: true }),
     ).toHaveAttribute(
       "href",
-      /\/blob\/9006001157e2c3062e44088634e467b0f8963ee0\/examples\/gfx950_low_precision\/src\/kernel\.rs$/,
+      `https://github.com/harsh-nod/fe2o3/blob/${sourceCommit}/examples/gfx950_low_precision/src/kernel.rs`,
     );
+    if (lessonId === "gfx950-fp8-attention") {
+      await expect(page.locator(".code-status")).toContainText("Current-source association only");
+      await expect(page.locator(".code-status")).toContainText("do not qualify this displayed revision");
+    }
     await page.getByRole("tab", { name: "Evidence record" }).click();
     await expect(page.getByRole("tabpanel")).toContainText(
       `Rust-produced HSACO SHA-256: ${hsacoSha256}`,
@@ -1992,8 +2010,17 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/3d10825df93a86644cc5a5b006cadd45f71afb91/examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba/examples/gfx950_gpt_oss_decode/src/kernel.rs",
   );
+  const gptSource = readFileSync(new URL("../examples/gfx950_gpt_oss_decode/src/kernel_current.rs", import.meta.url), "utf8");
+  expect(createHash("sha256").update(gptSource).digest("hex"))
+    .toBe("bb825281caa03f0d35fa8e84b524ea15ff4e6c8b7628da4709f6a66abe0da3d5");
+  const gptExcerpt = await page.getByRole("tabpanel").locator("code").textContent();
+  expect(gptExcerpt).not.toBeNull();
+  expect(gptSource).toContain(gptExcerpt!);
+  expect(createHash("sha256").update(gptExcerpt!).digest("hex"))
+    .toBe("4fbd84c0a5d264256f6058acc838007033fea20b01f19ae03a46e80c36522c27");
+  await expect(page.locator(".code-status")).toContainText("Historical GPU and timing evidence retains its original source identity");
   await page.getByRole("tab", { name: "Performance" }).click();
   await expect(page.getByRole("tabpanel")).toContainText(
     "optimized full kernel 1.065004 ms",
@@ -2026,7 +2053,7 @@ test("advanced gfx950 production Rust lessons render on desktop and mobile", asy
   );
 });
 
-test("GPT rejected variants retain whole-file source and unqualified boundaries", async ({ page }, testInfo) => {
+test("GPT current variants retain whole-file source and historical rejection boundaries", async ({ page }, testInfo) => {
   expect(["desktop", "mobile"]).toContain(testInfo.project.name);
   await page.goto("./#/lesson/gfx950-gpt-oss-120b-megakernel");
   await expect(page.getByText("Loading content...", { exact: true })).toBeHidden({ timeout: 120_000 });
@@ -2034,32 +2061,43 @@ test("GPT rejected variants retain whole-file source and unqualified boundaries"
   const panel = tool.getByRole("tabpanel");
   for (const variant of [
     {
-      label: "BF16 LDS pipeline [COMPILER-REJECTED]",
+      label: "BF16 LDS pipeline",
       file: "kernel_pipelined_attention.rs",
-      header: "//! Compiler-rejected two-stage BF16 attention-pipeline experiment.",
-      screenshot: "gfx950-gpt-oss-rejected-pipelined-attention.png",
+      snapshot: "kernel_pipelined_attention_current.rs",
+      sha256: "15798c5d8dc2089fd05b9234ab9153faa10ed20cd88f59c54fde88f0a45ac502",
+      header: "//! Two-stage BF16 attention pipeline with checked whole-profile operand views.",
+      historicalReason: "retained pipeline scalar temporary had multiple definitions",
+      screenshot: "gfx950-gpt-oss-current-pipelined-attention.png",
     },
     {
-      label: "Scalar attention [COMPILER-REJECTED]",
+      label: "Scalar attention",
       file: "kernel_scalar_attention.rs",
+      snapshot: "kernel_scalar_attention_current.rs",
+      sha256: "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
       header: "//! Safe Rust source for the scalar-attention GPT-OSS-120B gfx950 decode ablation.",
-      screenshot: "gfx950-gpt-oss-rejected-scalar-attention.png",
+      historicalReason: "a call terminator was reached before exact callable memory-effect summaries were available",
+      screenshot: "gfx950-gpt-oss-current-scalar-attention.png",
     },
   ]) {
+    await expect(tool.getByRole("tab", { name: `${variant.label} [COMPILER-REJECTED]`, exact: true })).toHaveCount(0);
     const tab = tool.getByRole("tab", { name: variant.label, exact: true });
     await tab.click();
     await expect(tab).toHaveAttribute("aria-selected", "true");
     await expect(panel).toContainText(variant.header);
     await expect(panel).toContainText("use fe2o3_device::{");
     await expect(panel).toContainText("pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(");
-    const source = readFileSync(new URL(`../examples/gfx950_gpt_oss_decode/src/${variant.file}`, import.meta.url), "utf8");
+    const source = readFileSync(new URL(`../examples/gfx950_gpt_oss_decode/src/${variant.snapshot}`, import.meta.url), "utf8");
+    expect(createHash("sha256").update(source).digest("hex")).toBe(variant.sha256);
     expect(await panel.locator("code").textContent()).toBe(source);
     await expect(tool.getByRole("link", { name: "Source", exact: true })).toHaveAttribute(
       "href",
-      `https://github.com/harsh-nod/fe2o3/blob/3d10825df93a86644cc5a5b006cadd45f71afb91/examples/gfx950_gpt_oss_decode/src/${variant.file}`,
+      `https://github.com/harsh-nod/fe2o3/blob/d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba/examples/gfx950_gpt_oss_decode/src/${variant.file}`,
     );
-    await expect(tool.locator(".code-status")).toContainText("Exact compiler-rejected Rust ablation source");
-    await expect(tool.locator(".code-status")).toContainText("no HSACO, numerical result, or latency result");
+    await expect(tool.locator(".code-status")).toContainText("SIMT and tile runners passed");
+    await expect(tool.locator(".code-status")).toContainText("No formal qualification");
+    await expect(tool.locator(".code-status")).toContainText("3d10825df93a86644cc5a5b006cadd45f71afb91");
+    await expect(tool.locator(".code-status")).toContainText(variant.historicalReason);
+    await expect(tool.locator(".code-status")).toContainText("historical source had no HSACO, numerical result, or latency result");
     await expect(tool.locator(".code-status")).not.toContainText("FINAL-COMPATIBILITY");
     expect(await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)).toBe(false);
     await tool.screenshot({ path: testInfo.outputPath(variant.screenshot), animations: "disabled" });
