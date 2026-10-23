@@ -108,6 +108,7 @@ export type CodeTabEvidenceId =
   | SourceAssociationId;
 
 export type SourceAssociationId =
+  | "row-softmax-current-source-v1"
   | "tiled-gemm-current-source-v1"
   | "wave64-collectives-current-source-v1"
   | "workgroup-sync-current-source-v1"
