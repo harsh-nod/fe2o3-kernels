@@ -308,8 +308,8 @@ const sourceMilestoneRecords = deepFreeze({
     claimLabel: "Exact MoE expert memory/effect model",
     detail:
       "Pinned Verus proves 15 fixed T8/E4/K2/C4 expert-pipeline obligations covering route, activation, weight, expert-tile, compact-output, and combined-output index bounds; padding separation; disjoint logical write owners; inverse-slot admission; and host phase order. Six named mutations fail. It proves no numerical correctness, Rust/compiler/LLVM/ISA refinement, machine memory safety, generalized race freedom, or GPU execution.",
-    commit: "af0fd523e3b774377a9c5192cf0511e34fa19735",
-    tree: "37ec6083aba26f3057bb21f3a51c619c17bceb49",
+    commit: "e3c7018f428192c350c9c425df8e4c031c788272",
+    tree: "f717440c4fbc034672ca5ea9e97406e78eb38be0",
     commands: [
       "VERUS=/absolute/path/to/pinned/verus examples/moe_expert_v1/run-verus.sh",
     ],

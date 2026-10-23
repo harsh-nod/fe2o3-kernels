@@ -168,7 +168,7 @@ describe("evidence source digest scopes", () => {
       }[lessonId]);
       expect(archived?.reference?.commit).toBe("af0fd523e3b774377a9c5192cf0511e34fa19735");
     }
-    if (snapshot === "lib_current.rs") {
+    if (snapshot === "lib_gfx950_current.rs") {
       expect(lesson.tabs[0].code).toBe(
         readFileSync(`${process.cwd()}/examples/vecadd_kernel.rs`, "utf8"),
       );
