@@ -2739,9 +2739,9 @@ describe("curriculum integrity", () => {
       label: "Rust kernel",
       language: "rust",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
-      sourceCommit: advancedCoreSourceCommit,
+      sourceCommit: "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba",
       sourceSha256:
-        "fdc428f33edbcebe6ca7764c537db58e68009115d740fc21a8252253db8d4081",
+        "4fbd84c0a5d264256f6058acc838007033fea20b01f19ae03a46e80c36522c27",
       explanatory: false,
     });
     expect(kernel?.code).toContain(
@@ -2764,35 +2764,35 @@ describe("curriculum integrity", () => {
       [
         "Serial router ablation [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
-        "fdee28b13856ecc5464839273f58966e6663d27975ede2d6b78c9a8b888808f5",
+        "85a5282cbbb5d4efeda4d317d20dda257e65eaa12fb5d959aa6de0d01e960d5f",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
         "Held-fragment ablation [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
-        "2309c35e55b4980c54acb607499767251d73d7ad7e56e802e5cf5ae43af1a021",
+        "7e660694fd103f66e0ce478765f537ef70ee2f39aaa90dfe8d66fd65f5bb0125",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
         "Interleaved-store ablation [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
-        "3a34845ea4c82d1de356a3f64f8f3ee15467a8cb01ebc773623814f8af0e7a19",
+        "b824977e006449ae3ff21b82bc76b15a287621ffc581ae7ab39a9c74e42805dc",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
         "Materialized components [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
-        "d83b12f14f5c5ce58834a48665f7e955210cab30dabf8476c16274d8748e5c64",
+        "72bb8858eec772eb4a68a28a9ac6a36b23e0c6ae40fc5c640484700244d144ab",
         "pub fn gfx950_gpt_oss_120b_router_v1(",
       ],
       [
-        "BF16 LDS pipeline [COMPILER-REJECTED]",
+        "BF16 LDS pipeline",
         "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
-        "faf9bc589658b1381e1042c71b952881488261cc85ff86c21dbb7f1f1a83a460",
+        "15798c5d8dc2089fd05b9234ab9153faa10ed20cd88f59c54fde88f0a45ac502",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
-        "Scalar attention [COMPILER-REJECTED]",
+        "Scalar attention",
         "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
         "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
@@ -2804,16 +2804,14 @@ describe("curriculum integrity", () => {
         kind: "kernel",
         language: "rust",
         sourcePath,
-        sourceCommit: sourcePath === "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs"
-          ? "1ca6a24941875477677c9b546b98910419a2e0fc"
-          : advancedCoreSourceCommit,
+        sourceCommit: "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba",
         sourceSha256,
         sourceDigestScope: "file",
         explanatory: false,
       });
       expect(variant?.code).toContain(symbol);
       expect(variant?.notice).toContain(
-        label.includes("COMPILER-REJECTED")
+        label === "Scalar attention" || label === "BF16 LDS pipeline"
           ? "compiler-rejected"
           : "final-compatibility",
       );

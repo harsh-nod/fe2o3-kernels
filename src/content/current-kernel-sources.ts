@@ -13,23 +13,30 @@ const notice =
   "Historical source-model and GPU evidence belongs to its original source, not this tab. " +
   "Current source export, simulation, native execution and paired correctness remain pending.";
 
+export const currentGptSourceCommit = "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba";
+
 export const currentGptScalarAttentionKernelTab: CodeTab = {
   kind: "kernel",
-  label: "Scalar attention [COMPILER-REJECTED]",
+  label: "Scalar attention",
   evidenceId: "gpt-scalar-attention-current-source-v1",
   language: "rust",
   code: gptScalarAttentionKernel,
   sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
-  sourceCommit: "1ca6a24941875477677c9b546b98910419a2e0fc",
+  sourceCommit: currentGptSourceCommit,
   sourceSha256: "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
   sourceDigestScope: "file",
   explanatory: false,
-  notice: notice +
-    " The COMPILER-REJECTED label preserves the historical compiler-rejected WG256/grid4 scalar-attention result at " +
+  notice:
+    "Current source association only. The scalar-attention SIMT and tile runners passed " +
+    "gfx950 compilation, ISA checks and the full HSA numerical oracle on 2026-10-23 " +
+    "with compiler d9c709d86b099ec45377a6c979c3d355c4ddd1c9. " +
+    "The tested code blobs match this source anchor. The paired source is public in PR #341; " +
+    "normal CI and curriculum integration remain separate. No formal qualification or performance result is claimed. " +
+    "Historical compiler-rejected evidence remains at " +
     "3d10825df93a86644cc5a5b006cadd45f71afb91: a call terminator was reached before exact " +
-    "callable memory-effect summaries were available; that source had no HSACO, numerical " +
-    "result, or latency result. This historical rejection does not establish acceptance " +
-    "or rejection of the current source snapshot.",
+    "callable memory-effect summaries were available; that historical source had no HSACO, " +
+    "numerical result, or latency result. Its rejection and timing records do not transfer " +
+    "to this current source.",
 };
 
 export const currentGemmKernelTab: CodeTab = {
