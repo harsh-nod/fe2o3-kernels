@@ -1,4 +1,5 @@
 import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel_current.rs?raw";
+import groupedExpertMoeKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel_current.rs?raw";
 import gemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel_current.rs?raw";
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
 import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.rs?raw";
@@ -22,6 +23,20 @@ export const currentRowSoftmaxKernelTab: CodeTab = {
   sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
   sourceCommit: "044b85871308076c7a15d1c20c7794069fd73bb2",
   sourceSha256: "06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice,
+};
+
+export const currentGroupedExpertMoeKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Kernel",
+  evidenceId: "grouped-expert-moe-current-source-v1",
+  language: "rust",
+  code: groupedExpertMoeKernel,
+  sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
+  sourceCommit: "d558aa97758cf553c956c5ce92178eac96bd2461",
+  sourceSha256: "9e31980d48320d2978823af76465f882a99263137ba828261f605e74afc110a7",
   sourceDigestScope: "file",
   explanatory: false,
   notice,
@@ -116,6 +131,11 @@ const sourceAssociationRecords = deepFreeze({
     lessonId: "softmax-invariant",
     authority: "source-association-only",
     source: currentRowSoftmaxKernelTab,
+  },
+  "grouped-expert-moe-current-source-v1": {
+    lessonId: "moe-expert-compute",
+    authority: "source-association-only",
+    source: currentGroupedExpertMoeKernelTab,
   },
   "tiled-gemm-current-source-v1": {
     lessonId: "gemm-tiling",
