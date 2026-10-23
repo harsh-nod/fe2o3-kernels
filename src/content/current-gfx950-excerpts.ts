@@ -1,6 +1,7 @@
 import systemsKernel from "../../examples/gfx950_advanced_systems/src/kernel_current.rs?raw";
 import attentionKernel from "../../examples/gfx950_advanced_attention/src/kernel_current.rs?raw";
 import lowPrecisionKernel from "../../examples/gfx950_low_precision/src/kernel_current.rs?raw";
+import gptKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel_current.rs?raw";
 
 const sources = {
   systems: {
@@ -18,6 +19,11 @@ const sources = {
     path: "examples/gfx950_low_precision/src/kernel.rs",
     commit: "34aa704c5bc3e3c84ad904dfcf7f044374e7dcd8",
   },
+  gpt: {
+    code: gptKernel,
+    path: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
+    commit: "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba",
+  },
 } as const;
 
 const sourceBySymbol: Record<string, keyof typeof sources> = {
@@ -31,6 +37,7 @@ const sourceBySymbol: Record<string, keyof typeof sources> = {
   gfx950_content_sparse_attention: "attention",
   gfx950_compressed_hybrid_attention: "attention",
   gfx950_fp8_attention_rust: "lowp",
+  gfx950_gpt_oss_120b_decode_megakernel_v1: "gpt",
 };
 
 export function currentGfx950ExcerptSource(symbol: string) {

@@ -22,6 +22,7 @@ const expected = [
   ["gfx950-ngram-performance-lab", "gfx950_qwen_ngram_gather_v1"],
   ["gfx950-gradient-stage-performance-lab", "gfx950_stage_gradient_shard_v1"],
   ["gfx950-muon-performance-lab", "gfx950_muon_update_4x4_v1"],
+  ["gfx950-gpt-oss-megakernel-performance-lab", "gfx950_gpt_oss_120b_decode_megakernel_v1"],
 ] as const;
 
 const sha256 = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
@@ -59,6 +60,7 @@ describe("current gfx950 excerpts and historical evidence", () => {
     ["advanced_systems", "45b9a7e5198bf274f6814438a230ec22405fde713b39f080bb4045c303f671ab", "0211e451f562b961eea723fd4d5a6c5b188cfaab83ae2354ff8bcf36dd5056d6"],
     ["advanced_attention", "d39afa52a9143033ce4edd58607f2d9897e1293ffe7310c588cb0cc30f029349", "b37d2717079a596f0efac2de38bf670e96364f931b01622fc59b5e2506f11240"],
     ["low_precision", "219691cbccdd6f71ac86a7f54c27f7891e8b022484ca7efffcfc59a12e4b29af", "feebb7e80801c6b5323d19bcdb7908b93a5159c26fe2aa8181fb2de623bf6a5d"],
+    ["gpt_oss_decode", "bb825281caa03f0d35fa8e84b524ea15ff4e6c8b7628da4709f6a66abe0da3d5", "e731c38f983434aace7b4a89c17e176a058dab8eea9f05e7223e4cb097997423"],
   ])("retains separate public current and historical %s snapshots", (name, current, historical) => {
     expect(sha256(readFileSync(`examples/gfx950_${name}/src/kernel_current.rs`))).toBe(current);
     expect(sha256(readFileSync(`examples/gfx950_${name}/src/kernel.rs`))).toBe(historical);
@@ -66,6 +68,6 @@ describe("current gfx950 excerpts and historical evidence", () => {
 
   it("does not rebind unrelated symbols", () => {
     expect(currentGfx950ExcerptSource("gfx950_fp4_attention_rust")).toBeUndefined();
-    expect(currentGfx950ExcerptSource("gfx950_gpt_oss_120b_decode_megakernel_v1")).toBeUndefined();
+    expect(currentGfx950ExcerptSource("gfx950_kda_decode")).toBeUndefined();
   });
 });

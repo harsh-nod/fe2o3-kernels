@@ -93,7 +93,7 @@ const excerptSha256BySymbol: Record<string, string> = {
   gfx950_muon_update_4x4_v1:
     "2eba6ccfae90464a367ee679084d53794f2ceb3622b60d5d06addd55a41d7876",
   gfx950_gpt_oss_120b_decode_megakernel_v1:
-    "fdc428f33edbcebe6ca7764c537db58e68009115d740fc21a8252253db8d4081",
+    "4fbd84c0a5d264256f6058acc838007033fea20b01f19ae03a46e80c36522c27",
 };
 
 type SourceKey = keyof typeof sources;

@@ -2028,7 +2028,7 @@ describe("curriculum integrity", () => {
         lessonId: "gfx950-fp8-attention",
         rustSymbol: "gfx950_fp8_attention_rust",
         rustSha256:
-          "69650ea2502ee149949d6cbec3e909032ede026be47ca52568bda455b9d9ef2c",
+          "1868eedc608691d53c7f90358540a8546a54af90a1b9bbf6f38b21a38117bb07",
         referenceSymbol: "attention_reference",
         referenceSha256:
           "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
@@ -2106,7 +2106,9 @@ describe("curriculum integrity", () => {
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
       expect(kernel?.sourceCommit).toBe(
-        "9006001157e2c3062e44088634e467b0f8963ee0",
+        lessonId === "gfx950-fp8-attention"
+          ? "34aa704c5bc3e3c84ad904dfcf7f044374e7dcd8"
+          : "9006001157e2c3062e44088634e467b0f8963ee0",
       );
       expect(kernel?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
@@ -2339,7 +2341,7 @@ describe("curriculum integrity", () => {
 
     const excerptHashes = {
       "gfx950-advanced-moe": [
-        "c2131eeb0bf55ad7d272076655f5d3144bf61aa2ed04e3960cca3e09a854929c",
+        "597f67584c129e67b9dce7972315d8fce986e4a7f002575f6ef41345f568300e",
         "49826130508e509b46cb0d56dd746e49ddf60b470c19243dd9adc9b7d51c041f",
       ],
       "gfx950-kda-gdn-linear-attention": [
@@ -2347,7 +2349,7 @@ describe("curriculum integrity", () => {
         "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
       ],
       "gfx950-indexed-sparse-attention": [
-        "8af6b4374d55d1cda9a8c5b8488df3b29dd280690fcf5f643d0d3a7776fd21bd",
+        "611fed39499572579a1f80b7aa855926e219791fc71085e330d0e564ffcdab8b",
         "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
       ],
       "gfx950-deepseek-sparse-attention": [
@@ -2355,7 +2357,7 @@ describe("curriculum integrity", () => {
         "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
       ],
       "gfx950-compressed-hybrid-attention": [
-        "f1d09336b950f0a71e8fc81beeff438ce19ba045c46d6865db833175fba0b1e1",
+        "aa2436df9d8635507b8d29fba15054afdbf3e18347f8dce338c9ff2b30d15332",
         "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
       ],
       "gfx950-attnres-gr-mhc": [
@@ -2363,15 +2365,15 @@ describe("curriculum integrity", () => {
         "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
       ],
       "gfx950-speculative-mtp-verification": [
-        "2730064fc70eca25fc1f18933ac2d71899f48a4467338a49cd9800e9fa2a5fcd",
+        "2ba7eab1adc144eaeda5dd4af486d08751cca15a397e1e37332681ea31344ccc",
         "0e0f28117f664d0e54e85b853d442d68d36c280d442b6a428ed47d6510ae72b7",
       ],
       "gfx950-ngram-embedding-gather": [
-        "ec93dc1a8b806b1c777a846517b42319b5dcfb5cc86d1fff4dda1b87d7d91b9c",
+        "07466eb90124408a905cc46752961ba5f12ac427cf41c59f23f25f6b435d5945",
         "a15572e565a090dba9169056ede64caf7186815a48c618985f1f95bb129f51de",
       ],
       "gfx950-muon-optimizer": [
-        "df2ded4e4f5fa4fe6e170f2701097d9087ef0929c318768b8c5ac83fa63896f5",
+        "b408f9edc331402727311192aa3fbbb74da7753bf0de0f03692d5032802cf4f7",
         "d43c796135a06d777cd4189267ff0a9fc6fa37ff94c4c04273820a5bfcdfc24f",
       ],
     } as const;
@@ -2558,7 +2560,15 @@ describe("curriculum integrity", () => {
       expect(kernel?.sourcePath).toBe(sourcePath);
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
-      expect(kernel?.sourceCommit).toBe(advancedCoreSourceCommit);
+      const currentSourceCommits: Record<string, string> = {
+        "gfx950-advanced-moe": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+        "gfx950-indexed-sparse-attention": "154a8c08c9995efffd56894768d04f0b91124e62",
+        "gfx950-compressed-hybrid-attention": "154a8c08c9995efffd56894768d04f0b91124e62",
+        "gfx950-speculative-mtp-verification": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+        "gfx950-ngram-embedding-gather": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+        "gfx950-muon-optimizer": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+      };
+      expect(kernel?.sourceCommit).toBe(currentSourceCommits[lessonId] ?? advancedCoreSourceCommit);
       expect(kernel?.sourceSha256).toBe(rustExcerptSha256);
       expect(kernel?.code).toContain(rustSymbol);
       expect(kernel?.code).not.toContain("SOURCE MIRROR PENDING");
