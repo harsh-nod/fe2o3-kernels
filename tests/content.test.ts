@@ -4391,10 +4391,10 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
+      sourceCommit: "0e0963df4f230bf728a7b4605677c0ff09624adf",
       sourceSha256:
-        "a898a078ac411b17764d87c0b06681045ddccc83ea8d4314fd2a48b59e8462cd",
-      evidenceId: "workgroup-pipeline-source-v1",
+        "ef3bbea31da5311bfb5bfb9edb9f43569e602501c079bebb16eb5f0c6b5973b4",
+      evidenceId: "tiled-gemm-current-source-v1",
       explanatory: false,
     });
     expect(kernel?.code).toContain("while phase_index < phase_count");
@@ -4407,11 +4407,13 @@ describe("curriculum integrity", () => {
     );
     expect(kernel?.code).toContain("-> KernelResult");
     expect(kernel?.code).toContain(
-      "let a_matrix = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)?;",
+      "let Ok(a_matrix) = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)\n    else {\n        return Err(KernelError::InvalidArgument);\n    };",
     );
     expect(kernel?.code).toContain(
-      "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, next_phase);",
+      "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row_base, next_phase);",
     );
+    expect(kernel?.code).toContain("if tile_row > usize::MAX / 16");
+    expect(kernel?.code).toContain("let tile_row_base = tile_row * 16;");
     expect(kernel?.code).not.toMatch(/load_(?:m16k16|k16n16)\([^;]+\)\?/u);
     expect(kernel?.code).toContain("let matrix = Matrix::current()");
     expect(kernel?.code).toContain("alpha * values[0] + beta * *output");
@@ -4741,17 +4743,18 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "bfa616c996fa529da67f2f6c32e7829213914e3e",
+      sourceCommit: "044b85871308076c7a15d1c20c7794069fd73bb2",
       sourceSha256:
-        "b7f65c16395ea89c590aaee800167a9dceea620e55765044f423eadf9360e04d",
+        "06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8",
+      evidenceId: "row-softmax-current-source-v1",
       sourceDigestScope: "file",
       explanatory: false,
     });
-    const source = readFileSync("examples/row_softmax_general_v1/src/kernel.rs", "utf8");
+    const source = readFileSync("examples/row_softmax_general_v1/src/kernel_current.rs", "utf8");
     expect(kernel?.code).toBe(source);
-    expect(Buffer.byteLength(source)).toBe(3979);
-    expect(kernel?.notice).toContain("does not qualify a SIMT/tile pair");
-    expect(kernel?.notice).toContain("historical GPU execution evidence remains pinned separately");
+    expect(Buffer.byteLength(source)).toBe(4483);
+    expect(kernel?.notice).toContain("qualifies no SIMT/tile pair");
+    expect(kernel?.notice).toContain("Historical source-model and GPU evidence belongs to its original source");
     expect(
       createHash("sha256")
         .update(kernel?.code ?? "")
@@ -5083,7 +5086,7 @@ describe("curriculum integrity", () => {
       }),
     ).toContainEqual(
       expect.objectContaining({
-        message: "code tab source commit does not match its evidence",
+        message: "code tab does not match its exact source-only association",
       }),
     );
     expect(
@@ -5092,7 +5095,7 @@ describe("curriculum integrity", () => {
       }),
     ).toContainEqual(
       expect.objectContaining({
-        message: "code tab source path is not covered by its evidence",
+        message: "code tab does not match its exact source-only association",
       }),
     );
     expect(
