@@ -108,6 +108,7 @@ export type CodeTabEvidenceId =
   | SourceAssociationId;
 
 export type SourceAssociationId =
+  | "flash-attention-current-source-v1"
   | "row-softmax-current-source-v1"
   | "grouped-expert-moe-current-source-v1"
   | "gpt-scalar-attention-current-source-v1"

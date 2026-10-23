@@ -1,5 +1,6 @@
 import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel_current.rs?raw";
 import groupedExpertMoeKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel_current.rs?raw";
+import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel_current.rs?raw";
 import gptScalarAttentionKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention_current.rs?raw";
 import gemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel_current.rs?raw";
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
@@ -44,6 +45,20 @@ export const currentGroupedExpertMoeKernelTab: CodeTab = {
 };
 
 export const currentGptSourceCommit = "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba";
+
+export const currentFlashAttentionKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Kernel",
+  evidenceId: "flash-attention-current-source-v1",
+  language: "rust",
+  code: flashAttentionKernel,
+  sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
+  sourceCommit: "055ffa8dccc70fccc7675721f98f2b096abd68e7",
+  sourceSha256: "72fd0148eb5a29c0747ec6b96616eeb4aed15939b365890846c49e1c1d0fbc50",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice,
+};
 
 export const currentGptScalarAttentionKernelTab: CodeTab = {
   kind: "kernel",
@@ -154,6 +169,12 @@ export const scalarGemmKernelTab: CodeTab = {
 // These links authenticate source bytes only. The existing tab owns the identity;
 // no execution claim or second curriculum/source inventory is created here.
 const sourceAssociationRecords = deepFreeze({
+  "flash-attention-current-source-v1": {
+    lessonId: "flash-attention",
+    tabOrdinal: 0,
+    authority: "source-association-only",
+    source: currentFlashAttentionKernelTab,
+  },
   "row-softmax-current-source-v1": {
     lessonId: "softmax-invariant",
     tabOrdinal: 0,

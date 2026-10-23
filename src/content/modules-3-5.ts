@@ -1,7 +1,6 @@
 import { currentState } from "./current-state";
-import { currentRowSoftmaxKernelTab, currentGemmKernelTab, currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
+import { currentFlashAttentionKernelTab, currentRowSoftmaxKernelTab, currentGemmKernelTab, currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
-import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
 import flashAttentionReference from "../../examples/flash_attention_general_v1/src/reference.rs?raw";
 import flashAttentionMilestoneSpec from "../../examples/semantic_reference_vnext/flash_attention_verus.rs?raw";
@@ -918,7 +917,7 @@ const flash: Lesson = {
       kind: "compiler-checked",
       label: "Nested dynamic attention pipeline lowers to gfx942 LLVM",
       detail:
-        "At compiler commit 1dd61a01, the workload-neutral projector preserves the nested dynamic key/depth loops, checked tiled output ownership, and two role-typed workgroup rings. The generic passes prove their loop progress, race, barrier, epoch, slot, initialization, and reuse obligations before KIR and gfx942 LLVM lowering.",
+        "At compiler commit 1dd61a01, the workload-neutral projector preserves the nested dynamic key/depth loops, checked tiled output ownership, and two role-typed workgroup rings. The generic passes prove their loop progress, race, barrier, epoch, slot, initialization, and reuse obligations before KIR and gfx942 LLVM lowering. This historical source-specific evidence does not qualify the current Kernel tab.",
       reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
@@ -941,7 +940,7 @@ const flash: Lesson = {
       kind: "gpu-observed",
       label: "End-to-end fused attention on MI300X",
       detail:
-        "The exact displayed source compiled to HSACO and launched four workgroups for two heads, 19 queries, 21 keys, depth 23, and value width 13. It exercised independent strides, finite and negative-infinity additive masks, a fully masked row, and output padding, then matched the safe CPU oracle at zero maximum absolute error.",
+        "The historical source at compiler commit 1dd61a01 compiled to HSACO and launched four workgroups for two heads, 19 queries, 21 keys, depth 23, and value width 13. It exercised independent strides, finite and negative-infinity additive masks, a fully masked row, and output padding, then matched the safe CPU oracle at zero maximum absolute error. This retained observation does not qualify the current Kernel tab or a SIMT/tile pair.",
       reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
@@ -966,18 +965,7 @@ const flash: Lesson = {
     narrativeSection("flash-attention/composed-reference"),
   ],
   tabs: completeReferenceSpecTabs(
-    {
-      language: "rust",
-      code: flashAttentionKernel,
-      sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
-      sourceCommit: annotatedKernelCommit,
-      sourceSha256:
-        "f160e1391e1b354657049b5b11d745428fbbfb8fb6e5e2fceb4143ac93e7b00b",
-      sourceDigestScope: "file",
-      explanatory: false,
-      notice:
-        "Current annotated safe Rust source. Its executable statements match the qualified 1dd61a01 snapshot; comments now identify whole-launch validation, checked ownership, online FP32 softmax, and the double-buffer protocol.",
-    },
+    currentFlashAttentionKernelTab,
     {
       language: "rust",
       code: flashAttentionReference,
