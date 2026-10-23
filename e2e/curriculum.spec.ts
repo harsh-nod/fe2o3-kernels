@@ -1115,7 +1115,10 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   );
   await expect(page.getByRole("tabpanel")).toContainText("-> KernelResult");
   await expect(page.getByRole("tabpanel")).toContainText(
-    "Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)?",
+    `let Ok(a_matrix) = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)
+    else {
+        return Err(KernelError::InvalidArgument);
+    };`,
   );
   await expect(page.getByRole("tabpanel")).toContainText(
     "WorkgroupPipeline::<Bf16MfmaAFragment",
@@ -1134,7 +1137,7 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     page.getByRole("link", { name: "Source", exact: true }),
   ).toHaveAttribute(
     "href",
-    "https://github.com/harsh-nod/fe2o3/blob/9006001157e2c3062e44088634e467b0f8963ee0/examples/tiled_gemm_general_v1/src/kernel.rs",
+    "https://github.com/harsh-nod/fe2o3/blob/0e0963df4f230bf728a7b4605677c0ff09624adf/examples/tiled_gemm_general_v1/src/kernel.rs",
   );
 
   await page.getByRole("tab", { name: "Safe CPU reference" }).click();
