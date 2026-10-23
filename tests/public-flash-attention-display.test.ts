@@ -25,7 +25,7 @@ describe("public FlashAttention display and preserved history", () => {
     );
     for (const kind of ["compiler-checked", "gpu-observed"] as const) {
       const claim = lesson.claims.find((item) => item.kind === kind)!;
-      expect(claim.reference?.commit).toMatch(/^1dd61a01/u);
+      expect(claim.reference?.commit).toBe("9006001157e2c3062e44088634e467b0f8963ee0");
       expect(claim.detail).toContain("does not qualify the current Kernel tab");
     }
   });

@@ -6,7 +6,7 @@ import gemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel_current.
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
 import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.rs?raw";
 import scalarGemmKernel from "../../examples/scalar_gemm_v1/src/kernel.rs?raw";
-import vecaddKernel from "../../examples/vecadd/src/lib_current.rs?raw";
+import vecaddKernel from "../../examples/vecadd/src/lib_gfx950_current.rs?raw";
 import workgroupKernel from "../../examples/workgroup_sync_v1/src/kernel_current.rs?raw";
 import type { CodeTab, SourceAssociationId } from "./model";
 import { deepFreeze, hasOwn } from "./registry";
@@ -132,8 +132,8 @@ export const currentVecaddKernelTab: CodeTab = {
   language: "rust",
   code: vecaddKernel,
   sourcePath: "examples/vecadd/src/lib.rs",
-  sourceCommit: "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
-  sourceSha256: "60ea857d0aaba57e05fc30691b15908c188e449c789c39abd27abf4c35b017e2",
+  sourceCommit: "7404720885b13ee77bef4c48364993b463f25a6a",
+  sourceSha256: "96a6d5774c0d36661540829025194c918100abcce53fed91cae3c909aea67345",
   sourceDigestScope: "file",
   explanatory: false,
   notice,

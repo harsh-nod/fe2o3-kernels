@@ -12,7 +12,7 @@ import sourceSimulationResult from "../../examples/source_simulation_result.json
 import sourceSimulationSchedule from "../../examples/source_simulation_schedule_v1.json?raw";
 import currentMilestones from "../../config/debugger-profiler-current-milestones.json";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
-import currentFillKernel from "../../examples/fill/src/lib.rs?raw";
+import currentFillKernel from "../../examples/fill/src/lib_current.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import safeCpuReferences from "../../examples/verus_vecadd/src/reference.rs?raw";
@@ -339,13 +339,13 @@ const fill: Lesson = {
       language: "rust",
       code: currentFillKernel,
       sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "b9378bdbee0dd1e284a1c31b25c3614c5c2039fe",
+      sourceCommit: "7404720885b13ee77bef4c48364993b463f25a6a",
       sourceSha256:
-        "21b26bbd0d54f8966bade4ed80e2cb2457e89ecf13e9469eb0c9c030e3a8f6f3",
+        "81b6f547ae89ef77a9b85e9d6589586910a2f92f050c7ffa45b45a9e188f32fa",
       sourceDigestScope: "file",
       explanatory: false,
       notice:
-        "Exact whole-file source at b9378bdb, byte-identical to compiler main 188f388b, with default features and no selected features. The unchanged CPU oracle is in the companion reference.rs file. The reference-proof feature is opt-in and is not selected by this fixture. Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed, and no SIMT/tile pair is qualified. The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins.",
+        "Exact whole-file source at 74047208, with default features and no selected features. The unchanged CPU oracle is in the companion reference.rs file. The reference-proof feature is opt-in and is not selected by this fixture; structured-tile selects the separate tiled.rs module. Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed, and no SIMT/tile pair is qualified. The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins.",
     },
     {
       language: "rust",
