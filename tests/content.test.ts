@@ -4743,17 +4743,18 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "bfa616c996fa529da67f2f6c32e7829213914e3e",
+      sourceCommit: "044b85871308076c7a15d1c20c7794069fd73bb2",
       sourceSha256:
-        "b7f65c16395ea89c590aaee800167a9dceea620e55765044f423eadf9360e04d",
+        "06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8",
+      evidenceId: "row-softmax-current-source-v1",
       sourceDigestScope: "file",
       explanatory: false,
     });
-    const source = readFileSync("examples/row_softmax_general_v1/src/kernel.rs", "utf8");
+    const source = readFileSync("examples/row_softmax_general_v1/src/kernel_current.rs", "utf8");
     expect(kernel?.code).toBe(source);
-    expect(Buffer.byteLength(source)).toBe(3979);
-    expect(kernel?.notice).toContain("does not qualify a SIMT/tile pair");
-    expect(kernel?.notice).toContain("historical GPU execution evidence remains pinned separately");
+    expect(Buffer.byteLength(source)).toBe(4483);
+    expect(kernel?.notice).toContain("qualifies no SIMT/tile pair");
+    expect(kernel?.notice).toContain("Historical source-model and GPU evidence belongs to its original source");
     expect(
       createHash("sha256")
         .update(kernel?.code ?? "")

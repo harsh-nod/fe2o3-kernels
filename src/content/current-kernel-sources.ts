@@ -1,3 +1,4 @@
+import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel_current.rs?raw";
 import gemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel_current.rs?raw";
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
 import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.rs?raw";
@@ -11,6 +12,20 @@ const notice =
   "Source association only; this exact whole-file snapshot qualifies no SIMT/tile pair. " +
   "Historical source-model and GPU evidence belongs to its original source, not this tab. " +
   "Current source export, simulation, native execution and paired correctness remain pending.";
+
+export const currentRowSoftmaxKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Kernel",
+  evidenceId: "row-softmax-current-source-v1",
+  language: "rust",
+  code: rowSoftmaxKernel,
+  sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
+  sourceCommit: "044b85871308076c7a15d1c20c7794069fd73bb2",
+  sourceSha256: "06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice,
+};
 
 export const currentGemmKernelTab: CodeTab = {
   kind: "kernel",
@@ -97,6 +112,11 @@ export const scalarGemmKernelTab: CodeTab = {
 // These links authenticate source bytes only. The existing tab owns the identity;
 // no execution claim or second curriculum/source inventory is created here.
 const sourceAssociationRecords = deepFreeze({
+  "row-softmax-current-source-v1": {
+    lessonId: "softmax-invariant",
+    authority: "source-association-only",
+    source: currentRowSoftmaxKernelTab,
+  },
   "tiled-gemm-current-source-v1": {
     lessonId: "gemm-tiling",
     authority: "source-association-only",

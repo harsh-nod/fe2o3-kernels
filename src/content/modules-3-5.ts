@@ -1,12 +1,11 @@
 import { currentState } from "./current-state";
-import { currentGemmKernelTab, currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
+import { currentRowSoftmaxKernelTab, currentGemmKernelTab, currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
 import flashAttentionReference from "../../examples/flash_attention_general_v1/src/reference.rs?raw";
 import flashAttentionMilestoneSpec from "../../examples/semantic_reference_vnext/flash_attention_verus.rs?raw";
 import gemmMilestoneSpec from "../../examples/semantic_reference_vnext/gemm_verus.rs?raw";
-import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel.rs?raw";
 import rowSoftmaxHost from "../../examples/row_softmax_general_v1/src/main.rs?raw";
 import rowSoftmaxReference from "../../examples/row_softmax_general_v1/src/reference.rs?raw";
 import rowSoftmaxMilestoneSpec from "../../examples/semantic_reference_vnext/softmax_verus.rs?raw";
@@ -817,7 +816,7 @@ const softmax: Lesson = {
       kind: "gpu-observed",
       label: "Pinned dynamic row softmax on MI300X",
       detail:
-        "Four dynamic-shape and strided cases compiled through the explicit nonpublishing row-softmax qualification oracle and matched an independent CPU oracle on gfx942.",
+        "Four dynamic-shape and strided cases compiled through the explicit nonpublishing row-softmax qualification oracle and matched an independent CPU oracle on gfx942. This historical receipt does not qualify the current Kernel tab.",
       reference: historicalReference(
         dynamicGemmSource.commit,
         dynamicGemmSource.tree,
@@ -840,18 +839,7 @@ const softmax: Lesson = {
     narrativeSection("softmax-invariant/composed-reference"),
   ],
   tabs: completeReferenceSpecTabs(
-    {
-      language: "rust",
-      code: rowSoftmaxKernel,
-      sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "bfa616c996fa529da67f2f6c32e7829213914e3e",
-      sourceSha256:
-        "b7f65c16395ea89c590aaee800167a9dceea620e55765044f423eadf9360e04d",
-      sourceDigestScope: "file",
-      explanatory: false,
-      notice:
-        "Exact whole-file compiler source at bfa616c9. This source association does not qualify a SIMT/tile pair; historical GPU execution evidence remains pinned separately.",
-    },
+    currentRowSoftmaxKernelTab,
     {
       language: "rust",
       code: rowSoftmaxReference,
