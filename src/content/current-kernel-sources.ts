@@ -1,5 +1,6 @@
 import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel_current.rs?raw";
 import groupedExpertMoeKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel_current.rs?raw";
+import gptScalarAttentionKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention_current.rs?raw";
 import gemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel_current.rs?raw";
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
 import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.rs?raw";
@@ -40,6 +41,32 @@ export const currentGroupedExpertMoeKernelTab: CodeTab = {
   sourceDigestScope: "file",
   explanatory: false,
   notice,
+};
+
+export const currentGptSourceCommit = "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba";
+
+export const currentGptScalarAttentionKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Scalar attention",
+  evidenceId: "gpt-scalar-attention-current-source-v1",
+  language: "rust",
+  code: gptScalarAttentionKernel,
+  sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+  sourceCommit: currentGptSourceCommit,
+  sourceSha256: "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice:
+    "Current source association only. The scalar-attention SIMT and tile runners passed " +
+    "gfx950 compilation, ISA checks and the full HSA numerical oracle on 2026-10-23 " +
+    "with compiler d9c709d86b099ec45377a6c979c3d355c4ddd1c9. " +
+    "The tested code blobs match this source anchor. The paired source is public in PR #341; " +
+    "normal CI and curriculum integration remain separate. No formal qualification or performance result is claimed. " +
+    "Historical compiler-rejected evidence remains at " +
+    "3d10825df93a86644cc5a5b006cadd45f71afb91: a call terminator was reached before exact " +
+    "callable memory-effect summaries were available; that historical source had no HSACO, " +
+    "numerical result, or latency result. Its rejection and timing records do not transfer " +
+    "to this current source.",
 };
 
 export const currentGemmKernelTab: CodeTab = {
@@ -129,39 +156,58 @@ export const scalarGemmKernelTab: CodeTab = {
 const sourceAssociationRecords = deepFreeze({
   "row-softmax-current-source-v1": {
     lessonId: "softmax-invariant",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentRowSoftmaxKernelTab,
   },
   "grouped-expert-moe-current-source-v1": {
     lessonId: "moe-expert-compute",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentGroupedExpertMoeKernelTab,
   },
+  "gpt-scalar-attention-current-source-v1": {
+    lessonId: "gfx950-gpt-oss-120b-megakernel",
+    tabOrdinal: 6,
+    authority: "source-association-only",
+    source: currentGptScalarAttentionKernelTab,
+  },
   "tiled-gemm-current-source-v1": {
     lessonId: "gemm-tiling",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentGemmKernelTab,
   },
   "wave64-collectives-current-source-v1": {
     lessonId: "reductions-scans",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentWaveKernelTab,
   },
   "workgroup-sync-current-source-v1": {
     lessonId: "lds-barriers-atomics",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentWorkgroupKernelTab,
   },
   "moe-top2-current-source-v1": {
     lessonId: "moe-routing",
+    tabOrdinal: 0,
     authority: "source-association-only",
     source: currentMoeKernelTab,
   },
 } satisfies Record<SourceAssociationId, {
   lessonId: string;
+  tabOrdinal: number;
   authority: "source-association-only";
   source: CodeTab;
 }>);
+
+export const primarySourceAssociationLessonIds = Object.freeze(
+  Object.values(sourceAssociationRecords)
+    .filter((record) => record.tabOrdinal === 0)
+    .map((record) => record.lessonId),
+);
 
 export const sourceAssociationLessonIds = Object.freeze(
   Object.values(sourceAssociationRecords).map((record) => record.lessonId),

@@ -1,3 +1,4 @@
+import { currentGptScalarAttentionKernelTab, currentGptSourceCommit } from "./current-kernel-sources";
 import advancedAttentionSource from "../../examples/gfx950_advanced_attention/gfx950_advanced_attention.hip?raw";
 import advancedAttentionAblation from "../../examples/gfx950_advanced_attention/src/ablation.rs?raw";
 import advancedAttentionRustKernel from "../../examples/gfx950_advanced_attention/src/kernel.rs?raw";
@@ -12,15 +13,15 @@ import advancedSystemsRustReference from "../../examples/gfx950_advanced_systems
 import advancedSystemsRustContract from "../../examples/gfx950_advanced_systems/src/lib.rs?raw";
 import advancedSystemsBuild from "../../examples/gfx950_advanced_systems/build_and_test.sh?raw";
 import advancedSystemsIsa from "../../examples/gfx950_advanced_systems/check_isa.sh?raw";
-import gptOssRustKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel.rs?raw";
-import gptOssComponents from "../../examples/gfx950_gpt_oss_decode/src/kernel_components.rs?raw";
-import gptOssHeldFragments from "../../examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs?raw";
-import gptOssInterleavedStores from "../../examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs?raw";
-import gptOssPipelinedAttention from "../../examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs?raw";
-import gptOssRouterSerial from "../../examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs?raw";
-import gptOssScalarAttention from "../../examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs?raw";
-import gptOssRustReference from "../../examples/gfx950_gpt_oss_decode/src/reference.rs?raw";
-import gptOssUnfusedHip from "../../examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip?raw";
+import gptOssRustKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel_current.rs?raw";
+import gptOssComponents from "../../examples/gfx950_gpt_oss_decode/src/kernel_components_current.rs?raw";
+import gptOssHeldFragments from "../../examples/gfx950_gpt_oss_decode/src/kernel_held_fragments_current.rs?raw";
+import gptOssInterleavedStores from "../../examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores_current.rs?raw";
+import gptOssPipelinedAttention from "../../examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention_current.rs?raw";
+import gptOssRouterSerial from "../../examples/gfx950_gpt_oss_decode/src/kernel_router_serial_current.rs?raw";
+import gptOssScalarAttention from "../../examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention_current.rs?raw";
+import gptOssRustReference from "../../examples/gfx950_gpt_oss_decode/src/reference_current.rs?raw";
+import gptOssUnfusedHip from "../../examples/gfx950_gpt_oss_decode/gpt_oss_unfused_current.hip?raw";
 import gptOssRunFused from "../../examples/gfx950_gpt_oss_decode/run-gfx950.sh?raw";
 import gptOssRunUnfused from "../../examples/gfx950_gpt_oss_decode/run-unfused-gfx950.sh?raw";
 import gptOssPerformanceRunner from "../../perf-evidence/run-gpt-oss-performance.sh?raw";
@@ -620,9 +621,9 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     code: gptOssRouterSerial,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
     sourceSha256:
-      "fdee28b13856ecc5464839273f58966e6663d27975ede2d6b78c9a8b888808f5",
+      "85a5282cbbb5d4efeda4d317d20dda257e65eaa12fb5d959aa6de0d01e960d5f",
     detail:
-      "This WG256/grid4 serial-router source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (3f9fe7...).",
+      "The retained 16-item serial-router compatibility campaign is historical; the da6 timing record retains its own historical single-wave source digest (3f9fe7...).",
   },
   {
     label: "Held-fragment ablation",
@@ -630,9 +631,9 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     code: gptOssHeldFragments,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
     sourceSha256:
-      "2309c35e55b4980c54acb607499767251d73d7ad7e56e802e5cf5ae43af1a021",
+      "7e660694fd103f66e0ce478765f537ef70ee2f39aaa90dfe8d66fd65f5bb0125",
     detail:
-      "This WG256/grid4 held-fragment source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (081ee7...).",
+      "The retained 16-item held-fragment compatibility campaign is historical; the da6 timing record retains its own historical single-wave source digest (081ee7...).",
   },
   {
     label: "Interleaved-store ablation",
@@ -641,9 +642,9 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     sourcePath:
       "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
     sourceSha256:
-      "3a34845ea4c82d1de356a3f64f8f3ee15467a8cb01ebc773623814f8af0e7a19",
+      "b824977e006449ae3ff21b82bc76b15a287621ffc581ae7ab39a9c74e42805dc",
     detail:
-      "This WG256/grid4 interleaved-store source passed the current 16-item compatibility campaign; the da6 timing record retains its own historical single-wave source digest (41e8ce...).",
+      "The retained 16-item interleaved-store compatibility campaign is historical; the da6 timing record retains its own historical single-wave source digest (41e8ce...).",
   },
   {
     label: "Materialized components",
@@ -651,30 +652,30 @@ const gptOssVariantSources: VariantSourceSpec[] = [
     code: gptOssComponents,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
     sourceSha256:
-      "d83b12f14f5c5ce58834a48665f7e955210cab30dabf8476c16274d8748e5c64",
+      "72bb8858eec772eb4a68a28a9ac6a36b23e0c6ae40fc5c640484700244d144ab",
     detail:
-      "This current file contains the router, attention, and expert exports validated at WG256/grid4 over 16 items; the da6 timing record retains its own historical single-wave source digest (fd2b80...).",
+      "This current file contains the router, attention, and expert exports; their retained WG256/grid4 16-item compatibility record is historical; the da6 timing record retains its own historical single-wave source digest (fd2b80...).",
   },
   {
     label: "BF16 LDS pipeline",
-    status: "compiler-rejected",
+    status: "compatibility-validated",
     code: gptOssPipelinedAttention,
     sourcePath:
       "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
     sourceSha256:
-      "faf9bc589658b1381e1042c71b952881488261cc85ff86c21dbb7f1f1a83a460",
+      "15798c5d8dc2089fd05b9234ab9153faa10ed20cd88f59c54fde88f0a45ac502",
     detail:
-      "The WG256/grid4 two-stage implementation was compiler-rejected because its retained pipeline scalar temporary has multiple definitions; it has no HSACO, numerical result, or latency result.",
+      "The current BF16 LDS pipeline SIMT and tile runners passed gfx950 compilation, ISA checks and the full HSA numerical oracle on 2026-10-23 with compiler d9c709d86b099ec45377a6c979c3d355c4ddd1c9. The tested code blobs match this source anchor. The paired source is public in PR #341; normal CI and curriculum integration remain separate. No formal qualification or latency result is claimed. The historical WG256/grid4 source at 3d10825df93a86644cc5a5b006cadd45f71afb91 was compiler-rejected because its retained pipeline scalar temporary had multiple definitions; that historical source had no HSACO, numerical result, or latency result.",
   },
   {
     label: "Scalar attention",
-    status: "compiler-rejected",
+    status: "compatibility-validated",
     code: gptOssScalarAttention,
     sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
     sourceSha256:
-      "e2e326a500c92bf1cbd33acb364f707bf339a54ee3259b79875c079a9f967c96",
+      "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
     detail:
-      "The WG256/grid4 scalar-attention candidate was compiler-rejected because a call terminator is reached before exact callable memory-effect summaries are available; it has no HSACO, numerical result, or latency result.",
+      "The current scalar-attention SIMT and tile runners passed the same 2026-10-23 gfx950 compilation, ISA checks and full HSA numerical oracle with compiler d9c709d86b099ec45377a6c979c3d355c4ddd1c9. Historical compiler rejection remains tied to 3d10825df93a86644cc5a5b006cadd45f71afb91; no historical timing or formal qualification transfers to this current view.",
   },
 ];
 const gptOssPerformance = advancedPerformanceTabFor(
@@ -745,30 +746,41 @@ const gptOssMegakernelLesson: Lesson = {
       language: "rust",
       code: gptOssKernelExcerpt,
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
-      sourceCommit: gptOssSourceCommit,
+      sourceCommit: currentGptSourceCommit,
       sourceSha256:
-        "fdc428f33edbcebe6ca7764c537db58e68009115d740fc21a8252253db8d4081",
+        "4fbd84c0a5d264256f6058acc838007033fea20b01f19ae03a46e80c36522c27",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssKernelExcerpt],
       explanatory: false,
       notice:
-        "Exact ordinary attributed WG256/grid4 Rust from the current mirrored core source. Its file SHA-256 is e731c38f983434aace7b4a89c17e176a058dab8eea9f05e7223e4cb097997423.",
+        "Exact ordinary attributed WG256/grid4 Rust at the current source anchor. Its full-file SHA-256 is bb825281caa03f0d35fa8e84b524ea15ff4e6c8b7628da4709f6a66abe0da3d5. The displayed function digest is separate. Historical GPU and timing evidence retains its original source identity; the paired source is available in public PR #341, with normal CI and curriculum integration separate.",
     },
-    ...gptOssVariantSources.map(variantSourceTab),
+    ...gptOssVariantSources.map((source) =>
+      source.sourcePath === currentGptScalarAttentionKernelTab.sourcePath
+        ? currentGptScalarAttentionKernelTab
+        : {
+            ...variantSourceTab(source),
+            label: source.label === "BF16 LDS pipeline"
+              ? source.label
+              : variantSourceTab(source).label,
+            sourceCommit: currentGptSourceCommit,
+            notice: "Exact current whole-file Rust source. Historical final-compatibility and timing records retain their original source identities. " + source.detail,
+          },
+    ),
     {
       kind: "reference",
       label: "Safe CPU reference",
       language: "rust",
       code: gptOssReferenceExcerpt,
       sourcePath: "examples/gfx950_gpt_oss_decode/src/reference.rs",
-      sourceCommit: gptOssSourceCommit,
+      sourceCommit: currentGptSourceCommit,
       sourceSha256:
         "f4f361e44d8cf56348d1189aa012ebeb2a83efc1833eaa110ea4f095ce22bd84",
       sourceDigestScope: "displayed",
       sourceFragments: [gptOssReferenceExcerpt],
       explanatory: false,
       notice:
-        "Exact independent 16-item CPU oracle from the current mirrored core source. Its file SHA-256 is 5ac168adad32e821164947d3baa57d78cf813332b8a265e992263964e556628d.",
+        "Exact independent 16-item CPU oracle at the current source anchor. Its full-file SHA-256 is 7dbb9ace1ae62e6b5296de0da640e2afff50626b8a2105cdfc3224073030c8d6. The displayed function digest is separate; the historical evidence remains pinned independently.",
     },
     {
       kind: "comparison",
@@ -776,12 +788,12 @@ const gptOssMegakernelLesson: Lesson = {
       language: "cpp",
       code: gptOssUnfusedHip,
       sourcePath: "examples/gfx950_gpt_oss_decode/gpt_oss_unfused.hip",
-      sourceCommit: gptOssSourceCommit,
+      sourceCommit: currentGptSourceCommit,
       sourceSha256:
-        "902d38e7a6b974f95c6d3420a069ee6400b52b9eb7f24f4cfb9f5eeae147a09b",
+        "af497bc07612baab01054194c727a399fca037a9a8d2db70a337c7f606af9c92",
       explanatory: true,
       notice:
-        "Archived c138 HIP three-dispatch router, attention, and expert comparator with the same fixed inputs and output oracle. It is distinct from the da6 exact Rust component-materialization ablation and is not a framework or whole-model baseline.",
+        "Current source copy of the archived c138 HIP three-dispatch router, attention, and expert comparator with the same fixed inputs and output oracle. The source pin authenticates this full file; the c138 timing record retains its historical source identity. It is distinct from the da6 exact Rust component-materialization ablation and is not a framework or whole-model baseline.",
     },
     {
       kind: "verus",
