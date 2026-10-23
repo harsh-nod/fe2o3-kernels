@@ -20,12 +20,12 @@ export const currentGptScalarAttentionKernelTab: CodeTab = {
   language: "rust",
   code: gptScalarAttentionKernel,
   sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
-  sourceCommit: "d1cf8b59e77f8e99b04b60cacfe42259303d5683",
+  sourceCommit: "1d4e714492b5df9dce236c8ed80c50db117c08fb",
   sourceSha256: "7acece0280e117d64cfe28b673413535fb35ad5f94afd092208173cc051ff0f9",
   sourceDigestScope: "file",
   explanatory: false,
   notice: notice +
-    " The COMPILER-REJECTED label preserves the historical scalar-attention result at " +
+    " The COMPILER-REJECTED label preserves the historical compiler-rejected WG256/grid4 scalar-attention result at " +
     "3d10825df93a86644cc5a5b006cadd45f71afb91: a call terminator was reached before exact " +
     "callable memory-effect summaries were available; that source had no HSACO, numerical " +
     "result, or latency result. This historical rejection does not establish acceptance " +
