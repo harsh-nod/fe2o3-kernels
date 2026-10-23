@@ -543,7 +543,7 @@ describe("application shell", () => {
     expect(screen.queryByText(/Explanatory source/u)).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Source" })).toHaveAttribute(
       "href",
-      "https://github.com/harsh-nod/fe2o3/blob/bfa616c996fa529da67f2f6c32e7829213914e3e/examples/row_softmax_general_v1/src/kernel.rs",
+      "https://github.com/harsh-nod/fe2o3/blob/c69bbcc055aa931c990ce2e6736b93f2ab00cbcb/examples/row_softmax_general_v1/src/kernel.rs",
     );
 
     expect(
