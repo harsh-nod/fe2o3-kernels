@@ -1,3 +1,4 @@
+import { currentGptScalarAttentionKernelTab } from "./current-kernel-sources";
 import advancedAttentionSource from "../../examples/gfx950_advanced_attention/gfx950_advanced_attention.hip?raw";
 import advancedAttentionAblation from "../../examples/gfx950_advanced_attention/src/ablation.rs?raw";
 import advancedAttentionRustKernel from "../../examples/gfx950_advanced_attention/src/kernel.rs?raw";
@@ -754,7 +755,11 @@ const gptOssMegakernelLesson: Lesson = {
       notice:
         "Exact ordinary attributed WG256/grid4 Rust from the current mirrored core source. Its file SHA-256 is e731c38f983434aace7b4a89c17e176a058dab8eea9f05e7223e4cb097997423.",
     },
-    ...gptOssVariantSources.map(variantSourceTab),
+    ...gptOssVariantSources.map((source) =>
+      source.sourcePath === currentGptScalarAttentionKernelTab.sourcePath
+        ? currentGptScalarAttentionKernelTab
+        : variantSourceTab(source),
+    ),
     {
       kind: "reference",
       label: "Safe CPU reference",

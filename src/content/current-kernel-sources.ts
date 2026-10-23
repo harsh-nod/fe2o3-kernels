@@ -1,3 +1,4 @@
+import gptScalarAttentionKernel from "../../examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention_current.rs?raw";
 import gemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel_current.rs?raw";
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
 import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.rs?raw";
@@ -11,6 +12,25 @@ const notice =
   "Source association only; this exact whole-file snapshot qualifies no SIMT/tile pair. " +
   "Historical source-model and GPU evidence belongs to its original source, not this tab. " +
   "Current source export, simulation, native execution and paired correctness remain pending.";
+
+export const currentGptScalarAttentionKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Scalar attention [COMPILER-REJECTED]",
+  evidenceId: "gpt-scalar-attention-current-source-v1",
+  language: "rust",
+  code: gptScalarAttentionKernel,
+  sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
+  sourceCommit: "d1cf8b59e77f8e99b04b60cacfe42259303d5683",
+  sourceSha256: "7acece0280e117d64cfe28b673413535fb35ad5f94afd092208173cc051ff0f9",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice: notice +
+    " The COMPILER-REJECTED label preserves the historical scalar-attention result at " +
+    "3d10825df93a86644cc5a5b006cadd45f71afb91: a call terminator was reached before exact " +
+    "callable memory-effect summaries were available; that source had no HSACO, numerical " +
+    "result, or latency result. This historical rejection does not establish acceptance " +
+    "or rejection of the current source snapshot.",
+};
 
 export const currentGemmKernelTab: CodeTab = {
   kind: "kernel",
@@ -97,6 +117,11 @@ export const scalarGemmKernelTab: CodeTab = {
 // These links authenticate source bytes only. The existing tab owns the identity;
 // no execution claim or second curriculum/source inventory is created here.
 const sourceAssociationRecords = deepFreeze({
+  "gpt-scalar-attention-current-source-v1": {
+    lessonId: "gfx950-gpt-oss-120b-megakernel",
+    authority: "source-association-only",
+    source: currentGptScalarAttentionKernelTab,
+  },
   "tiled-gemm-current-source-v1": {
     lessonId: "gemm-tiling",
     authority: "source-association-only",
