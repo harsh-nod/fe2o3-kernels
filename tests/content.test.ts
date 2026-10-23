@@ -4743,7 +4743,7 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "c69bbcc055aa931c990ce2e6736b93f2ab00cbcb",
+      sourceCommit: "044b85871308076c7a15d1c20c7794069fd73bb2",
       sourceSha256:
         "06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8",
       evidenceId: "row-softmax-current-source-v1",

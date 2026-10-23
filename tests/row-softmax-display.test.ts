@@ -17,7 +17,7 @@ describe("current row-softmax display and retained history", () => {
     expect(createHash("sha256").update(source).digest("hex")).toBe(
       "06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8",
     );
-    expect(currentRowSoftmaxKernelTab.sourceCommit).toBe("c69bbcc055aa931c990ce2e6736b93f2ab00cbcb");
+    expect(currentRowSoftmaxKernelTab.sourceCommit).toBe("044b85871308076c7a15d1c20c7794069fd73bb2");
     expect(sourceAssociationRecord("row-softmax-current-source-v1").authority)
       .toBe("source-association-only");
     expect(currentRowSoftmaxKernelTab.notice).toContain("qualifies no SIMT/tile pair");
