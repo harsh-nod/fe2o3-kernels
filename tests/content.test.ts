@@ -4407,7 +4407,7 @@ describe("curriculum integrity", () => {
     );
     expect(kernel?.code).toContain("-> KernelResult");
     expect(kernel?.code).toContain(
-      "let a_matrix = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)?;",
+      "let Ok(a_matrix) = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)\n    else {\n        return Err(KernelError::InvalidArgument);\n    };",
     );
     expect(kernel?.code).toContain(
       "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, next_phase);",
@@ -5083,7 +5083,7 @@ describe("curriculum integrity", () => {
       }),
     ).toContainEqual(
       expect.objectContaining({
-        message: "code tab source commit does not match its evidence",
+        message: "code tab does not match its exact source-only association",
       }),
     );
     expect(
@@ -5092,7 +5092,7 @@ describe("curriculum integrity", () => {
       }),
     ).toContainEqual(
       expect.objectContaining({
-        message: "code tab source path is not covered by its evidence",
+        message: "code tab does not match its exact source-only association",
       }),
     );
     expect(
