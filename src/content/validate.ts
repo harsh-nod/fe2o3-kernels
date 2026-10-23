@@ -152,8 +152,8 @@ function validateLesson(
   if (lesson.objectives.length < 2 || lesson.sections.length < 2) {
     issues.push({ path, message: "lesson lacks substantive structure" });
   }
-  if (lesson.tabs.length < 4 || lesson.tabs.length > 13) {
-    issues.push({ path, message: "lesson must expose four to thirteen code tabs" });
+  if (lesson.tabs.length < 4 || lesson.tabs.length > 14) {
+    issues.push({ path, message: "lesson must expose four to fourteen code tabs" });
   }
   if (lesson.module === 11 && !lesson.performanceStudy) {
     issues.push({ path, message: "performance lab is missing its plotted study" });
