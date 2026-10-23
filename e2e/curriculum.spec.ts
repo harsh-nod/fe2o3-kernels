@@ -1333,9 +1333,13 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
     "owner-custodied semantic MIR correspondence",
   );
   await page.getByRole("tab", { name: "Run checks" }).click();
-  await expect(page.getByRole("tabpanel")).toContainText(
-    "cargo test --locked -p fe2o3-kernel-analysis --test pliron_lit",
-  );
+  expect(await page.getByRole("tabpanel").locator("code").textContent()).toBe([
+    "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold",
+    "cargo test --locked -p fe2o3-pliron --lib pliron_analysis_witness",
+    "cargo test --locked -p fe2o3-pliron --lib textual_pliron_lit_suite",
+  ].join("\n"));
+  await expect(page.locator(".code-status")).toContainText("nonempty selections");
+  await expect(page.locator(".code-status")).toContainText("historical 308d evidence reference retains its original package/source identities");
   await page
     .getByRole("heading", {
       level: 3,
@@ -1363,6 +1367,20 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", { level: 2, name: "Property ledger" }),
   ).toBeVisible();
+  await page.getByRole("button", { name: "Show proof details" }).click();
+  await page.getByRole("tab", { name: "Verus proof", exact: true }).click();
+  expect(await page.getByRole("tabpanel").locator("code").textContent()).toBe([
+    "git worktree add --detach ../fe2o3-proof-gemm-5a452 5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
+    "(",
+    "  cd ../fe2o3-proof-gemm-5a452",
+    "  cargo test --locked --manifest-path examples/tiled_gemm_v1/Cargo.toml --test lds_source_refinement",
+    "  VERUS=/absolute/path/to/pinned/verus examples/tiled_gemm_v1/run-verus.sh",
+    ")",
+  ].join("\n"));
+  await expect(page.locator(".code-status")).toContainText("pinned Verus 0.2026.08.02.b677dd5");
+  await expect(page.locator(".code-status")).toContainText("new, absent neighboring worktree");
+  await expect(page.locator(".code-status")).toContainText("21 intended rejections");
+  await expect(page.locator(".code-status")).toContainText("no current-kernel, numerical, compiler/ISA, production-certificate, or GPU authority");
   await expect(
     page.getByRole("heading", {
       level: 2,
