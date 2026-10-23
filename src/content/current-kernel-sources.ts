@@ -1,3 +1,4 @@
+import groupedExpertMoeKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel_current.rs?raw";
 import gemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel_current.rs?raw";
 import moeKernel from "../../examples/moe_top2_v1/src/kernel_current.rs?raw";
 import waveKernel from "../../examples/wave64_collectives_v1/src/kernel_current.rs?raw";
@@ -11,6 +12,20 @@ const notice =
   "Source association only; this exact whole-file snapshot qualifies no SIMT/tile pair. " +
   "Historical source-model and GPU evidence belongs to its original source, not this tab. " +
   "Current source export, simulation, native execution and paired correctness remain pending.";
+
+export const currentGroupedExpertMoeKernelTab: CodeTab = {
+  kind: "kernel",
+  label: "Kernel",
+  evidenceId: "grouped-expert-moe-current-source-v1",
+  language: "rust",
+  code: groupedExpertMoeKernel,
+  sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
+  sourceCommit: "d558aa97758cf553c956c5ce92178eac96bd2461",
+  sourceSha256: "9e31980d48320d2978823af76465f882a99263137ba828261f605e74afc110a7",
+  sourceDigestScope: "file",
+  explanatory: false,
+  notice,
+};
 
 export const currentGemmKernelTab: CodeTab = {
   kind: "kernel",
@@ -97,6 +112,11 @@ export const scalarGemmKernelTab: CodeTab = {
 // These links authenticate source bytes only. The existing tab owns the identity;
 // no execution claim or second curriculum/source inventory is created here.
 const sourceAssociationRecords = deepFreeze({
+  "grouped-expert-moe-current-source-v1": {
+    lessonId: "moe-expert-compute",
+    authority: "source-association-only",
+    source: currentGroupedExpertMoeKernelTab,
+  },
   "tiled-gemm-current-source-v1": {
     lessonId: "gemm-tiling",
     authority: "source-association-only",

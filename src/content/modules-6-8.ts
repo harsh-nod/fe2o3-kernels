@@ -1,9 +1,8 @@
 import { currentState } from "./current-state";
-import { currentMoeKernelTab } from "./current-kernel-sources";
+import { currentGroupedExpertMoeKernelTab, currentMoeKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
 import moeTop2Proof from "../../examples/moe_top2_v1/verus/moe_top2_v1.rs?raw";
 import moeTop2Reference from "../../examples/moe_top2_v1/src/oracle.rs?raw";
-import moeExpertKernel from "../../examples/moe_grouped_expert_general_v1/src/kernel.rs?raw";
 import moeExpertHost from "../../examples/moe_grouped_expert_general_v1/src/main.rs?raw";
 import moeExpertReference from "../../examples/moe_grouped_expert_general_v1/src/reference.rs?raw";
 import moeMilestoneSpec from "../../examples/semantic_reference_vnext/moe_verus.rs?raw";
@@ -150,7 +149,7 @@ const expertCompute: Lesson = {
       kind: "gpu-observed",
       label: "Pinned top-2 grouped experts on MI300X",
       detail:
-        "Five output widths across both sides of the 16-column tile boundary, with 41 tokens, 4 experts, 82 routes, K=35, strides, edge tiles, bias, gates, and combine, matched an independent CPU oracle exactly on gfx942.",
+        "Five output widths across both sides of the 16-column tile boundary, with 41 tokens, 4 experts, 82 routes, K=35, strides, edge tiles, bias, gates, and combine, matched an independent CPU oracle exactly on gfx942. This historical receipt does not qualify the current Kernel tab.",
       reference: historicalReference(
         qualificationCommit,
         qualificationTree,
@@ -175,18 +174,7 @@ const expertCompute: Lesson = {
     narrativeSection("moe-expert-compute/composed-reference"),
   ],
   tabs: completeReferenceSpecTabs(
-    {
-      language: "rust",
-      code: moeExpertKernel,
-      sourcePath: "examples/moe_grouped_expert_general_v1/src/kernel.rs",
-      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
-      sourceSha256:
-        "a4af47e5ab3cad6a16d4b0cd2fc9028d0660469a75914474a7fc0d984934bd0a",
-      sourceDigestScope: "file",
-      explanatory: false,
-      notice:
-        "Current annotated kernel source; comments expose launch validation, wave ownership, the typed MFMA tile, and disjoint output commit. Historical execution evidence remains pinned separately.",
-    },
+    currentGroupedExpertMoeKernelTab,
     {
       language: "rust",
       code: moeExpertReference,
