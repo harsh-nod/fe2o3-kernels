@@ -4391,10 +4391,10 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
+      sourceCommit: "0e0963df4f230bf728a7b4605677c0ff09624adf",
       sourceSha256:
-        "a898a078ac411b17764d87c0b06681045ddccc83ea8d4314fd2a48b59e8462cd",
-      evidenceId: "workgroup-pipeline-source-v1",
+        "ef3bbea31da5311bfb5bfb9edb9f43569e602501c079bebb16eb5f0c6b5973b4",
+      evidenceId: "tiled-gemm-current-source-v1",
       explanatory: false,
     });
     expect(kernel?.code).toContain("while phase_index < phase_count");

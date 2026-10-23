@@ -108,6 +108,7 @@ export type CodeTabEvidenceId =
   | SourceAssociationId;
 
 export type SourceAssociationId =
+  | "tiled-gemm-current-source-v1"
   | "wave64-collectives-current-source-v1"
   | "workgroup-sync-current-source-v1"
   | "moe-top2-current-source-v1";

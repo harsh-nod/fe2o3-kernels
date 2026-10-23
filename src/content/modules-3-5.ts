@@ -1,5 +1,5 @@
 import { currentState } from "./current-state";
-import { currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
+import { currentGemmKernelTab, currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
 import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
@@ -11,7 +11,6 @@ import rowSoftmaxHost from "../../examples/row_softmax_general_v1/src/main.rs?ra
 import rowSoftmaxReference from "../../examples/row_softmax_general_v1/src/reference.rs?raw";
 import rowSoftmaxMilestoneSpec from "../../examples/semantic_reference_vnext/softmax_verus.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
-import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.rs?raw";
 import dynamicGemmHost from "../../examples/tiled_gemm_general_v1/src/main.rs?raw";
 import dynamicGemmHip from "../../examples/tiled_gemm_general_v1/benchmark_hip.cpp?raw";
 import dynamicGemmReference from "../../examples/tiled_gemm_general_v1/src/reference.rs?raw";
@@ -169,21 +168,6 @@ fully masked rows, output padding, and the same BF16-input/FP32 recurrence.
 This is end-to-end functional qualification, not protected Worker V3 publication,
 complete source-to-machine refinement, or a tuned-library performance claim.`,
 );
-
-function exactDynamicGemmKernelTab() {
-  return {
-    language: "rust" as const,
-    code: dynamicGemmKernel,
-    sourcePath: workgroupPipelineSource.primarySourcePath,
-    sourceCommit: workgroupPipelineSource.commit,
-    sourceSha256: workgroupPipelineSource.primarySourceSha256,
-    sourceDigestScope: "file" as const,
-    evidenceId: workgroupPipelineSource.id,
-    explanatory: false,
-    notice:
-      "Current annotated safe Rust source. Its executable statements match the qualified 1dd61a01 snapshot; the added phase comments make the ownership, typed MFMA, and double-buffer contracts explicit.",
-  };
-}
 
 function exactDynamicGemmHipTab() {
   return {
@@ -509,7 +493,7 @@ const gemmMapping: Lesson = {
         ],
         {
           target: FE2O3_PIN.target,
-          note: "Qualification compiler-lowering evidence for the exact source; protected artifact publication remains separate.",
+          note: "Historical compiler-lowering evidence for the source pinned by this qualification commit; it does not transfer to the current Kernel tab. Protected artifact publication remains separate.",
         },
       ),
     },
@@ -517,7 +501,7 @@ const gemmMapping: Lesson = {
       kind: "gpu-observed",
       label: "End-to-end MI300X qualification",
       detail:
-        "The exact displayed safe Rust source compiled to HSACO, launched as four workgroups for M=19, N=21, K=23 with independent strides and alpha/beta epilogue, and matched the safe CPU oracle at zero maximum absolute error. Disassembly confirmed MFMA, LDS traffic, and four barriers.",
+        "The historical safe Rust source pinned by this qualification commit compiled to HSACO, launched as four workgroups for M=19, N=21, K=23 with independent strides and alpha/beta epilogue, and matched the safe CPU oracle at zero maximum absolute error. Disassembly confirmed MFMA, LDS traffic, and four barriers. This receipt does not qualify the current Kernel tab.",
       reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
@@ -542,7 +526,7 @@ const gemmMapping: Lesson = {
     narrativeSection("gemm-tiling/composed-reference"),
   ],
   tabs: [
-    { kind: "kernel", label: "Kernel", ...exactDynamicGemmKernelTab() },
+    currentGemmKernelTab,
     {
       kind: "reference",
       label: "Safe CPU reference",
