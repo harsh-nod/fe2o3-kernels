@@ -4410,8 +4410,10 @@ describe("curriculum integrity", () => {
       "let Ok(a_matrix) = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)\n    else {\n        return Err(KernelError::InvalidArgument);\n    };",
     );
     expect(kernel?.code).toContain(
-      "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, next_phase);",
+      "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row_base, next_phase);",
     );
+    expect(kernel?.code).toContain("if tile_row > usize::MAX / 16");
+    expect(kernel?.code).toContain("let tile_row_base = tile_row * 16;");
     expect(kernel?.code).not.toMatch(/load_(?:m16k16|k16n16)\([^;]+\)\?/u);
     expect(kernel?.code).toContain("let matrix = Matrix::current()");
     expect(kernel?.code).toContain("alpha * values[0] + beta * *output");
