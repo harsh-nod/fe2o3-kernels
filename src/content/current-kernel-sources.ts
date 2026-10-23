@@ -20,8 +20,8 @@ export const currentGptScalarAttentionKernelTab: CodeTab = {
   language: "rust",
   code: gptScalarAttentionKernel,
   sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
-  sourceCommit: "1d4e714492b5df9dce236c8ed80c50db117c08fb",
-  sourceSha256: "7acece0280e117d64cfe28b673413535fb35ad5f94afd092208173cc051ff0f9",
+  sourceCommit: "1ca6a24941875477677c9b546b98910419a2e0fc",
+  sourceSha256: "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
   sourceDigestScope: "file",
   explanatory: false,
   notice: notice +

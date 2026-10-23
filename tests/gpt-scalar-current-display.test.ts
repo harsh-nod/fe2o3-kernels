@@ -13,11 +13,11 @@ describe("GPT scalar current source and retained historical rejection", () => {
     expect(lesson.tabs).toHaveLength(13);
     expect(lesson.tabs[6]).toBe(currentGptScalarAttentionKernelTab);
     expect(lesson.tabs[6].label).toBe("Scalar attention [COMPILER-REJECTED]");
-    expect(source.byteLength).toBe(24772);
-    expect(lesson.tabs[6].sourceCommit).toBe("1d4e714492b5df9dce236c8ed80c50db117c08fb");
+    expect(source.byteLength).toBe(25577);
+    expect(lesson.tabs[6].sourceCommit).toBe("1ca6a24941875477677c9b546b98910419a2e0fc");
     expect(source.toString()).toBe(lesson.tabs[6].code);
     expect(createHash("sha256").update(source).digest("hex")).toBe(
-      "7acece0280e117d64cfe28b673413535fb35ad5f94afd092208173cc051ff0f9",
+      "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
     );
     expect(historical.byteLength).toBe(22857);
     expect(createHash("sha256").update(historical).digest("hex")).toBe(

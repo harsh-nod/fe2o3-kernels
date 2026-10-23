@@ -2794,7 +2794,7 @@ describe("curriculum integrity", () => {
       [
         "Scalar attention [COMPILER-REJECTED]",
         "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
-        "7acece0280e117d64cfe28b673413535fb35ad5f94afd092208173cc051ff0f9",
+        "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
     ] as const;
@@ -2805,7 +2805,7 @@ describe("curriculum integrity", () => {
         language: "rust",
         sourcePath,
         sourceCommit: sourcePath === "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs"
-          ? "1d4e714492b5df9dce236c8ed80c50db117c08fb"
+          ? "1ca6a24941875477677c9b546b98910419a2e0fc"
           : advancedCoreSourceCommit,
         sourceSha256,
         sourceDigestScope: "file",
