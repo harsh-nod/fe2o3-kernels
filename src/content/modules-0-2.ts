@@ -1020,7 +1020,7 @@ const verusBasics: Lesson = {
       kind: "source-model-verified",
       label: "Positive and negative suite",
       detail:
-        "The runner checks five positive harnesses and 24 expected proof rejections, including exact diagnostic and marker checks for the real-kernel mutations.",
+        "The runner verifies seven positive harnesses and checks 28 expected proof rejections, including exact diagnostic and marker checks for the real-kernel mutations. The pinned historical wrapper's final summary still reports six harnesses and 26 rejections; the individual PASS and XFAIL lines contain the complete results.",
       reference: pinnedReference(
         [verusCommand],
         ["examples/verus_vecadd/run-verus.sh", "examples/verus_vecadd/verus"],
@@ -1044,7 +1044,7 @@ const verusBasics: Lesson = {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Expected summary at this pin: 5 proof harnesses pass and 24 intentional mutations are rejected.",
+        "Expected results at this pin: 7 verified harnesses and 28 intended proof rejections. The historical wrapper prints the stale summary: Verus fixture run passed: 6 proof harnesses, 26 expected rejections.",
       ),
     },
   ),

@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { lessons } from "../src/content/curriculum";
 import {
   sourceMilestoneRecord,
   sourceMilestoneReference,
@@ -21,5 +22,15 @@ describe("historical MoE expert proof source", () => {
     expect(sourceMilestoneRecord("moe-expert-source-v1").commit).toBe(
       "af0fd523e3b774377a9c5192cf0511e34fa19735",
     );
+  });
+
+  it("distinguishes complete Verus results from the historical wrapper summary", () => {
+    const lesson = lessons.find((entry) => entry.id === "verus-contracts")!;
+    expect(lesson.claims[0].detail).toContain("seven positive harnesses");
+    expect(lesson.claims[0].detail).toContain("28 expected proof rejections");
+    expect(lesson.claims[0].detail).toContain("historical wrapper");
+    expect(lesson.tabs.some((tab) => tab.code.includes(
+      "Verus fixture run passed: 6 proof harnesses, 26 expected rejections",
+    ))).toBe(true);
   });
 });
