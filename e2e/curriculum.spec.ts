@@ -1367,7 +1367,9 @@ test("dynamic GEMM shows safe MFMA source and an equivalent HIP comparison", asy
   await expect(
     page.getByRole("heading", { level: 2, name: "Property ledger" }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Show proof details" }).click();
+  await expect(
+    page.getByRole("button", { name: "Hide proof details", expanded: true }),
+  ).toBeVisible();
   await page.getByRole("tab", { name: "Verus proof", exact: true }).click();
   expect(await page.getByRole("tabpanel").locator("code").textContent()).toBe([
     "git worktree add --detach ../fe2o3-proof-gemm-5a452 5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
