@@ -12,7 +12,7 @@ import sourceSimulationResult from "../../examples/source_simulation_result.json
 import sourceSimulationSchedule from "../../examples/source_simulation_schedule_v1.json?raw";
 import currentMilestones from "../../config/debugger-profiler-current-milestones.json";
 import fillKernel from "../../examples/fill_kernel.rs?raw";
-import currentFillKernel from "../../examples/fill/src/lib.rs?raw";
+import currentFillKernel from "../../examples/fill/src/lib_current.rs?raw";
 import injectiveProof from "../../examples/verus_injective.rs?raw";
 import referenceRefinementProof from "../../examples/reference_refinement_v1.rs?raw";
 import safeCpuReferences from "../../examples/verus_vecadd/src/reference.rs?raw";
@@ -339,13 +339,13 @@ const fill: Lesson = {
       language: "rust",
       code: currentFillKernel,
       sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "b9378bdbee0dd1e284a1c31b25c3614c5c2039fe",
+      sourceCommit: "7404720885b13ee77bef4c48364993b463f25a6a",
       sourceSha256:
-        "21b26bbd0d54f8966bade4ed80e2cb2457e89ecf13e9469eb0c9c030e3a8f6f3",
+        "81b6f547ae89ef77a9b85e9d6589586910a2f92f050c7ffa45b45a9e188f32fa",
       sourceDigestScope: "file",
       explanatory: false,
       notice:
-        "Exact whole-file source at b9378bdb, byte-identical to compiler main 188f388b, with default features and no selected features. The unchanged CPU oracle is in the companion reference.rs file. The reference-proof feature is opt-in and is not selected by this fixture. Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed, and no SIMT/tile pair is qualified. The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins.",
+        "Exact whole-file source at 74047208, with default features and no selected features. The unchanged CPU oracle is in the companion reference.rs file. The reference-proof feature is opt-in and is not selected by this fixture; structured-tile selects the separate tiled.rs module. Source association only: no fresh simulation, artifact, generated-host, KFD or hardware result is claimed, and no SIMT/tile pair is qualified. The recorded no-GPU execution and the earlier source at 7a536e0a retain their independent historical pins.",
     },
     {
       language: "rust",
@@ -1020,7 +1020,7 @@ const verusBasics: Lesson = {
       kind: "source-model-verified",
       label: "Positive and negative suite",
       detail:
-        "The runner checks five positive harnesses and 24 expected proof rejections, including exact diagnostic and marker checks for the real-kernel mutations.",
+        "The runner verifies seven positive harnesses and checks 28 expected proof rejections, including exact diagnostic and marker checks for the real-kernel mutations. The pinned historical wrapper's final summary still reports six harnesses and 26 rejections; the individual PASS and XFAIL lines contain the complete results.",
       reference: pinnedReference(
         [verusCommand],
         ["examples/verus_vecadd/run-verus.sh", "examples/verus_vecadd/verus"],
@@ -1044,7 +1044,7 @@ const verusBasics: Lesson = {
       language: "text",
       code: resultText(
         "source-model-verified",
-        "Expected summary at this pin: 5 proof harnesses pass and 24 intentional mutations are rejected.",
+        "Expected results at this pin: 7 verified harnesses and 28 intended proof rejections. The historical wrapper prints the stale summary: Verus fixture run passed: 6 proof harnesses, 26 expected rejections.",
       ),
     },
   ),
@@ -1145,6 +1145,8 @@ const compilerChecks: Lesson = {
         "The single production ranked route runs bounded target preflight, a sealed checked constant fold, and the fixed nine analysis stages, including pipeline protocol between barrier and workgroup-memory verification. V5 is the sole live middle-end evidence producer; V4 is decoder-only archival data and the V1 declarative refinement API is removed. Independent raw replay is Complete only for the documented static bounded-access fragment; nonempty tensor flow and all other current witnesses remain Incomplete and grant no KIR authority.",
       reference: currentImplementationReference(
         [
+          "git worktree add --detach ../fe2o3-checks-308d 308d8fa00fa41e098b2a1a47bbfea1bc29735464",
+          "cd ../fe2o3-checks-308d",
           "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold",
           "cargo test --locked -p fe2o3-kernel-analysis --lib pliron_analysis_witness",
         ],
@@ -1227,10 +1229,10 @@ const compilerChecks: Lesson = {
       kind: "host",
       label: "Run checks",
       language: "bash",
-      code: "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold\ncargo test --locked -p fe2o3-kernel-analysis --lib pliron_analysis_witness\ncargo test --locked -p fe2o3-kernel-analysis --test pliron_lit",
+      code: "cargo test --locked -p fe2o3-pliron --test production_ranked_constant_fold\ncargo test --locked -p fe2o3-pliron --lib pliron_analysis_witness\ncargo test --locked -p fe2o3-pliron --lib textual_pliron_lit_suite",
       explanatory: true,
       notice:
-        "These commands cover the checked transform, independent witness replay, and the textual workload-neutral PLIRON diagnostics. They do not execute a GPU artifact.",
+        "These current-worktree commands cover the checked transform, independent witness replay, and textual workload-neutral PLIRON diagnostics with nonempty selections. The historical 308d evidence reference retains its original package/source identities and gives detached-source steps separately. Neither role executes a GPU artifact.",
     },
   ],
   diagram: "memory",

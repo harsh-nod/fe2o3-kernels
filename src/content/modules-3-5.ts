@@ -1,17 +1,14 @@
 import { currentState } from "./current-state";
-import { currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
+import { currentFlashAttentionKernelTab, currentRowSoftmaxKernelTab, currentGemmKernelTab, currentWaveKernelTab, currentWorkgroupKernelTab, scalarGemmKernelTab } from "./current-kernel-sources";
 import { narrativeSection } from "./narrative-registry";
-import flashAttentionKernel from "../../examples/flash_attention_general_v1/src/kernel.rs?raw";
 import flashAttentionHost from "../../examples/flash_attention_general_v1/src/main.rs?raw";
 import flashAttentionReference from "../../examples/flash_attention_general_v1/src/reference.rs?raw";
 import flashAttentionMilestoneSpec from "../../examples/semantic_reference_vnext/flash_attention_verus.rs?raw";
 import gemmMilestoneSpec from "../../examples/semantic_reference_vnext/gemm_verus.rs?raw";
-import rowSoftmaxKernel from "../../examples/row_softmax_general_v1/src/kernel.rs?raw";
 import rowSoftmaxHost from "../../examples/row_softmax_general_v1/src/main.rs?raw";
 import rowSoftmaxReference from "../../examples/row_softmax_general_v1/src/reference.rs?raw";
 import rowSoftmaxMilestoneSpec from "../../examples/semantic_reference_vnext/softmax_verus.rs?raw";
 import gemmSlice1Kernel from "../../examples/gemm_design.rs?raw";
-import dynamicGemmKernel from "../../examples/tiled_gemm_general_v1/src/kernel.rs?raw";
 import dynamicGemmHost from "../../examples/tiled_gemm_general_v1/src/main.rs?raw";
 import dynamicGemmHip from "../../examples/tiled_gemm_general_v1/benchmark_hip.cpp?raw";
 import dynamicGemmReference from "../../examples/tiled_gemm_general_v1/src/reference.rs?raw";
@@ -69,7 +66,14 @@ const gemmProofEvidence = stagedEvidenceRecord(
 const gemmProtectedEvidence = completedIssue94IncrementRecord(
   "tiled-lds-protected-lifecycle-v1",
 );
-const gemmProofCommand = gemmProofEvidence.commands[0]!;
+const gemmProofCommand = [
+  "git worktree add --detach ../fe2o3-proof-gemm-5a452 5a45239aeeda3ca64cf16beb7fb1d3589e649bfe",
+  "(",
+  "  cd ../fe2o3-proof-gemm-5a452",
+  `  ${gemmProofEvidence.commands[0]!}`,
+  "  VERUS=/absolute/path/to/pinned/verus examples/tiled_gemm_v1/run-verus.sh",
+  ")",
+].join("\n");
 const gemmProtectedCommand = gemmProtectedEvidence.commands.at(-1)!;
 const collectivesSource = sourceMilestoneRecord(
   "wave64-collectives-source-v1",
@@ -170,21 +174,6 @@ This is end-to-end functional qualification, not protected Worker V3 publication
 complete source-to-machine refinement, or a tuned-library performance claim.`,
 );
 
-function exactDynamicGemmKernelTab() {
-  return {
-    language: "rust" as const,
-    code: dynamicGemmKernel,
-    sourcePath: workgroupPipelineSource.primarySourcePath,
-    sourceCommit: workgroupPipelineSource.commit,
-    sourceSha256: workgroupPipelineSource.primarySourceSha256,
-    sourceDigestScope: "file" as const,
-    evidenceId: workgroupPipelineSource.id,
-    explanatory: false,
-    notice:
-      "Current annotated safe Rust source. Its executable statements match the qualified 1dd61a01 snapshot; the added phase comments make the ownership, typed MFMA, and double-buffer contracts explicit.",
-  };
-}
-
 function exactDynamicGemmHipTab() {
   return {
     language: "cpp" as const,
@@ -233,7 +222,7 @@ function exactGemmProofTab() {
     evidenceId: "tiled-lds-source-model-correspondence-v1" as const,
     explanatory: true,
     notice:
-      "Real pinned command and bounded Verus source/model. The tab shows the replay command rather than reproducing the proof file, so it remains explanatory; 96 obligations verify, but no production certificate is consumed.",
+      "Run from the repository root with a new, absent neighboring worktree and pinned Verus 0.2026.08.02.b677dd5. The retained example is absent from current source. This replays the historical identity check and all six proof groups, including the 96-obligation source/model group, with 21 intended rejections. It grants no current-kernel, numerical, compiler/ISA, production-certificate, or GPU authority.",
   };
 }
 
@@ -509,7 +498,7 @@ const gemmMapping: Lesson = {
         ],
         {
           target: FE2O3_PIN.target,
-          note: "Qualification compiler-lowering evidence for the exact source; protected artifact publication remains separate.",
+          note: "Historical compiler-lowering evidence for the source pinned by this qualification commit; it does not transfer to the current Kernel tab. Protected artifact publication remains separate.",
         },
       ),
     },
@@ -517,7 +506,7 @@ const gemmMapping: Lesson = {
       kind: "gpu-observed",
       label: "End-to-end MI300X qualification",
       detail:
-        "The exact displayed safe Rust source compiled to HSACO, launched as four workgroups for M=19, N=21, K=23 with independent strides and alpha/beta epilogue, and matched the safe CPU oracle at zero maximum absolute error. Disassembly confirmed MFMA, LDS traffic, and four barriers.",
+        "The historical safe Rust source pinned by this qualification commit compiled to HSACO, launched as four workgroups for M=19, N=21, K=23 with independent strides and alpha/beta epilogue, and matched the safe CPU oracle at zero maximum absolute error. Disassembly confirmed MFMA, LDS traffic, and four barriers. This receipt does not qualify the current Kernel tab.",
       reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
@@ -542,7 +531,7 @@ const gemmMapping: Lesson = {
     narrativeSection("gemm-tiling/composed-reference"),
   ],
   tabs: [
-    { kind: "kernel", label: "Kernel", ...exactDynamicGemmKernelTab() },
+    currentGemmKernelTab,
     {
       kind: "reference",
       label: "Safe CPU reference",
@@ -833,7 +822,7 @@ const softmax: Lesson = {
       kind: "gpu-observed",
       label: "Pinned dynamic row softmax on MI300X",
       detail:
-        "Four dynamic-shape and strided cases compiled through the explicit nonpublishing row-softmax qualification oracle and matched an independent CPU oracle on gfx942.",
+        "Four dynamic-shape and strided cases compiled through the explicit nonpublishing row-softmax qualification oracle and matched an independent CPU oracle on gfx942. This historical receipt does not qualify the current Kernel tab.",
       reference: historicalReference(
         dynamicGemmSource.commit,
         dynamicGemmSource.tree,
@@ -856,18 +845,7 @@ const softmax: Lesson = {
     narrativeSection("softmax-invariant/composed-reference"),
   ],
   tabs: completeReferenceSpecTabs(
-    {
-      language: "rust",
-      code: rowSoftmaxKernel,
-      sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "bfa616c996fa529da67f2f6c32e7829213914e3e",
-      sourceSha256:
-        "b7f65c16395ea89c590aaee800167a9dceea620e55765044f423eadf9360e04d",
-      sourceDigestScope: "file",
-      explanatory: false,
-      notice:
-        "Exact whole-file compiler source at bfa616c9. This source association does not qualify a SIMT/tile pair; historical GPU execution evidence remains pinned separately.",
-    },
+    currentRowSoftmaxKernelTab,
     {
       language: "rust",
       code: rowSoftmaxReference,
@@ -946,7 +924,7 @@ const flash: Lesson = {
       kind: "compiler-checked",
       label: "Nested dynamic attention pipeline lowers to gfx942 LLVM",
       detail:
-        "At compiler commit 1dd61a01, the workload-neutral projector preserves the nested dynamic key/depth loops, checked tiled output ownership, and two role-typed workgroup rings. The generic passes prove their loop progress, race, barrier, epoch, slot, initialization, and reuse obligations before KIR and gfx942 LLVM lowering.",
+        "At compiler commit 1dd61a01, the workload-neutral projector preserves the nested dynamic key/depth loops, checked tiled output ownership, and two role-typed workgroup rings. The generic passes prove their loop progress, race, barrier, epoch, slot, initialization, and reuse obligations before KIR and gfx942 LLVM lowering. This historical source-specific evidence does not qualify the current Kernel tab.",
       reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
@@ -969,7 +947,7 @@ const flash: Lesson = {
       kind: "gpu-observed",
       label: "End-to-end fused attention on MI300X",
       detail:
-        "The exact displayed source compiled to HSACO and launched four workgroups for two heads, 19 queries, 21 keys, depth 23, and value width 13. It exercised independent strides, finite and negative-infinity additive masks, a fully masked row, and output padding, then matched the safe CPU oracle at zero maximum absolute error.",
+        "The historical source at compiler commit 1dd61a01 compiled to HSACO and launched four workgroups for two heads, 19 queries, 21 keys, depth 23, and value width 13. It exercised independent strides, finite and negative-infinity additive masks, a fully masked row, and output padding, then matched the safe CPU oracle at zero maximum absolute error. This retained observation does not qualify the current Kernel tab or a SIMT/tile pair.",
       reference: qualificationReference(
         qualificationCommit,
         qualificationTree,
@@ -994,18 +972,7 @@ const flash: Lesson = {
     narrativeSection("flash-attention/composed-reference"),
   ],
   tabs: completeReferenceSpecTabs(
-    {
-      language: "rust",
-      code: flashAttentionKernel,
-      sourcePath: "examples/flash_attention_general_v1/src/kernel.rs",
-      sourceCommit: annotatedKernelCommit,
-      sourceSha256:
-        "f160e1391e1b354657049b5b11d745428fbbfb8fb6e5e2fceb4143ac93e7b00b",
-      sourceDigestScope: "file",
-      explanatory: false,
-      notice:
-        "Current annotated safe Rust source. Its executable statements match the qualified 1dd61a01 snapshot; comments now identify whole-launch validation, checked ownership, online FP32 softmax, and the double-buffer protocol.",
-    },
+    currentFlashAttentionKernelTab,
     {
       language: "rust",
       code: flashAttentionReference,

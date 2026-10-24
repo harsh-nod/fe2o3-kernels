@@ -1,7 +1,7 @@
 import { currentState } from "./current-state";
 import {
   isSourceAssociationId,
-  sourceAssociationLessonIds,
+  primarySourceAssociationLessonIds,
   sourceAssociationRecord,
 } from "./current-kernel-sources";
 import { validateDebugSimMilestone } from "./debug-sim-milestone";
@@ -46,7 +46,7 @@ import {
 const exactObjectName = /^[0-9a-f]{40}$/;
 const exactSha256 = /^[0-9a-f]{64}$/;
 const promotedAlgorithmLessonIds = new Set([
-  ...sourceAssociationLessonIds,
+  ...primarySourceAssociationLessonIds,
   "gemm-tiling",
   "gemm-proof-plan",
 ]);
@@ -283,6 +283,7 @@ function validateLesson(
       const source = association.source;
       if (
         lesson.id !== association.lessonId ||
+        tabIndex !== association.tabOrdinal ||
         tab.kind !== source.kind || tab.language !== source.language ||
         tab.sourcePath !== source.sourcePath ||
         tab.sourceCommit !== source.sourceCommit ||

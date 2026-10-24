@@ -5,6 +5,7 @@ import buildAndTest from "../../examples/gfx950_low_precision/build_and_test.sh?
 import inspectIsa from "../../examples/gfx950_low_precision/check_isa.sh?raw";
 import { narrativeSection } from "./narrative-registry";
 import { resultText } from "./shared";
+import { currentGfx950ExcerptNotice, currentGfx950ExcerptSource } from "./current-gfx950-excerpts";
 import {
   historicalReference,
   type Claim,
@@ -189,7 +190,7 @@ function productionRustClaim(evidence: ProductionRustEvidence): Claim {
   return {
     kind: "gpu-observed",
     label: `Production Rust ${evidence.label} observed on MI350X`,
-    detail: `At the exact pinned core commit, the ordinary #[kernel(typed)] Rust ${evidence.label} source passed its production extractor, ${productionTarget} LLVM and COV6 finalization checks, symbol-scoped ISA inspection, and digest-pinned HSA numerical test on the mi350 MI350X. ${evidence.launch}. The measured ${evidence.numericalResult} was within ${evidence.tolerance}. This bounded observation is not a formal source-to-machine proof, performance result, protected publication, or measured protected Worker V3 native build.`,
+    detail: `At the exact pinned core commit, the ordinary #[kernel(typed)] Rust ${evidence.label} source passed its production extractor, ${productionTarget} LLVM and COV6 finalization checks, symbol-scoped ISA inspection, and digest-pinned HSA numerical test on the mi350 MI350X. ${evidence.launch}. The measured ${evidence.numericalResult} was within ${evidence.tolerance}. This bounded observation is not a formal source-to-machine proof, performance result, protected publication, or measured protected Worker V3 native build.${evidence === fp8AttentionEvidence ? ` ${currentGfx950ExcerptNotice}` : ""}`,
     reference: historicalReference(
       coreSourceCommit,
       coreSourceTree,
@@ -222,18 +223,21 @@ function tutorialTabs(
   nextHipSymbol: string,
   evidence: ProductionRustEvidence,
 ): CodeTab[] {
+  const currentSource = currentGfx950ExcerptSource(rustSymbol);
   return [
     {
       kind: "kernel",
       label: "Rust kernel",
       language: "rust",
-      code: rustFunctionExcerpt(lowPrecisionRustKernel, rustSymbol, true),
+      code: rustFunctionExcerpt(currentSource?.code ?? lowPrecisionRustKernel, rustSymbol, true),
       sourcePath: rustKernelPath,
-      sourceCommit: coreSourceCommit,
+      sourceCommit: currentSource?.commit ?? coreSourceCommit,
       sourceSha256: rustExcerptSha256,
       sourceDigestScope: "displayed",
       explanatory: false,
-      notice: `Exact ordinary #[kernel(typed)] Rust excerpt for ${rustSymbol}, pinned to the production core commit and displayed-byte SHA-256. Its measured compiler-derived binding is ${evidence.namespace}; the evidence record binds the corresponding Rust-produced LLVM, HSACO, ISA, and MI350X run. Historical source bytes can retain the former explicit syntax and are not current author templates.`,
+      notice: currentSource
+        ? `Exact current Rust excerpt for ${rustSymbol}, pinned to its public source commit and displayed-byte SHA-256. ${currentGfx950ExcerptNotice}`
+        : `Exact ordinary #[kernel(typed)] Rust excerpt for ${rustSymbol}, pinned to the production core commit and displayed-byte SHA-256. Its measured compiler-derived binding is ${evidence.namespace}; the evidence record binds the corresponding Rust-produced LLVM, HSACO, ISA, and MI350X run. Historical source bytes can retain the former explicit syntax and are not current author templates.`,
     },
     {
       kind: "reference",
@@ -502,7 +506,7 @@ const fp8Attention: Lesson = {
   ],
   tabs: tutorialTabs(
     "gfx950_fp8_attention_rust",
-    "69650ea2502ee149949d6cbec3e909032ede026be47ca52568bda455b9d9ef2c",
+    "1868eedc608691d53c7f90358540a8546a54af90a1b9bbf6f38b21a38117bb07",
     "attention_reference",
     "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
     "gfx950_fp8_flash_attention",

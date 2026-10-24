@@ -33,7 +33,7 @@ describe("evidence source digest scopes", () => {
       [
         "gfx950-fp8-attention: Rust kernel",
         "gfx950_fp8_attention_rust",
-        "69650ea2502ee149949d6cbec3e909032ede026be47ca52568bda455b9d9ef2c",
+        "1868eedc608691d53c7f90358540a8546a54af90a1b9bbf6f38b21a38117bb07",
       ],
     ] as const;
 
@@ -42,7 +42,9 @@ describe("evidence source digest scopes", () => {
         (candidate) => candidate.label === label,
       );
 
-      expect(source?.commit).toBe("9006001157e2c3062e44088634e467b0f8963ee0");
+      expect(source?.commit).toBe(symbol === "gfx950_fp8_attention_rust"
+        ? "34aa704c5bc3e3c84ad904dfcf7f044374e7dcd8"
+        : "9006001157e2c3062e44088634e467b0f8963ee0");
       expect(source?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
       );
@@ -118,9 +120,9 @@ describe("evidence source digest scopes", () => {
     ["gemm-tiling", 7, "scalar_gemm_v1", "kernel.rs", "kernel.rs",
       "6399ee2cf8456c6237a89d5507f50c1872602269",
       "b3a21a1fdd7f6fbede2437551500cabddb4500d4a07371f821a2c9a8ab620b21", 1818],
-    ["typed-vecadd", 5, "vecadd", "lib_current.rs", "lib.rs",
-      "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
-      "60ea857d0aaba57e05fc30691b15908c188e449c789c39abd27abf4c35b017e2", 369],
+    ["typed-vecadd", 5, "vecadd", "lib_gfx950_current.rs", "lib.rs",
+      "7404720885b13ee77bef4c48364993b463f25a6a",
+      "96a6d5774c0d36661540829025194c918100abcce53fed91cae3c909aea67345", 859],
     ["lds-barriers-atomics", 0, "workgroup_sync_v1", "kernel_current.rs", "kernel.rs",
       "302aabc3ed80fe39d5655fbb39fca7cb5859bd9c",
       "b0074b426ef8ad0b9eea91e933e76dd03240852ce4ce976ccc89c1f2c7f1b515", 2626],
@@ -168,7 +170,7 @@ describe("evidence source digest scopes", () => {
       }[lessonId]);
       expect(archived?.reference?.commit).toBe("af0fd523e3b774377a9c5192cf0511e34fa19735");
     }
-    if (snapshot === "lib_current.rs") {
+    if (snapshot === "lib_gfx950_current.rs") {
       expect(lesson.tabs[0].code).toBe(
         readFileSync(`${process.cwd()}/examples/vecadd_kernel.rs`, "utf8"),
       );
@@ -249,18 +251,18 @@ describe("evidence source digest scopes", () => {
       label: "Kernel",
       language: "rust",
       sourcePath: "examples/fill/src/lib.rs",
-      sourceCommit: "b9378bdbee0dd1e284a1c31b25c3614c5c2039fe",
-      sourceSha256: "21b26bbd0d54f8966bade4ed80e2cb2457e89ecf13e9469eb0c9c030e3a8f6f3",
+      sourceCommit: "7404720885b13ee77bef4c48364993b463f25a6a",
+      sourceSha256: "81b6f547ae89ef77a9b85e9d6589586910a2f92f050c7ffa45b45a9e188f32fa",
       sourceDigestScope: "file",
       explanatory: false,
     });
-    const source = readFileSync(tab.sourcePath!, "utf8");
+    const source = readFileSync("examples/fill/src/lib_current.rs", "utf8");
     expect(tab.code).toBe(source);
-    expect(Buffer.byteLength(source)).toBe(552);
+    expect(Buffer.byteLength(source)).toBe(837);
     expect(createHash("sha256").update(source).digest("hex")).toBe(tab.sourceSha256);
     expect(source).toContain('include!("reference.rs");');
     expect(source).not.toContain("pub fn fill_reference(");
-    expect(source.indexOf("pub fn fill(") + "pub fn ".length).toBe(392);
+    expect(source.indexOf("pub fn fill(") + "pub fn ".length).toBe(677);
     expect(readFileSync("examples/fill/src/reference.rs", "utf8")).toBe(
       "/// CPU result for one output coordinate; launch coverage is checked separately.\n"
       + "pub fn fill_reference(_point: usize, out: &mut f32) {\n"

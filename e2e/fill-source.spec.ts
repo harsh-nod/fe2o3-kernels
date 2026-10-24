@@ -2,14 +2,14 @@ import { expect, test } from "@playwright/test";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
-const source = readFileSync(new URL("../examples/fill/src/lib.rs", import.meta.url), "utf8");
+const source = readFileSync(new URL("../examples/fill/src/lib_current.rs", import.meta.url), "utf8");
 const historicalSource = readFileSync(new URL("../examples/fill_kernel.rs", import.meta.url), "utf8");
-const revision = "b9378bdbee0dd1e284a1c31b25c3614c5c2039fe";
+const revision = "7404720885b13ee77bef4c48364993b463f25a6a";
 
 test("fill preserves exact source and historical execution boundaries", async ({ page, context }, testInfo) => {
-  expect(Buffer.byteLength(source)).toBe(552);
+  expect(Buffer.byteLength(source)).toBe(837);
   expect(createHash("sha256").update(source).digest("hex"))
-    .toBe("21b26bbd0d54f8966bade4ed80e2cb2457e89ecf13e9469eb0c9c030e3a8f6f3");
+    .toBe("81b6f547ae89ef77a9b85e9d6589586910a2f92f050c7ffa45b45a9e188f32fa");
   expect(Buffer.byteLength(historicalSource)).toBe(308);
   expect(createHash("sha256").update(historicalSource).digest("hex"))
     .toBe("827ea368df5dd7f429792e0f8a21df79d4d5508525061a844c190da25de54213");

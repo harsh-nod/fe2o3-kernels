@@ -2028,7 +2028,7 @@ describe("curriculum integrity", () => {
         lessonId: "gfx950-fp8-attention",
         rustSymbol: "gfx950_fp8_attention_rust",
         rustSha256:
-          "69650ea2502ee149949d6cbec3e909032ede026be47ca52568bda455b9d9ef2c",
+          "1868eedc608691d53c7f90358540a8546a54af90a1b9bbf6f38b21a38117bb07",
         referenceSymbol: "attention_reference",
         referenceSha256:
           "cad34588d47fcd31930fec04bccfc83f3c2d4b56fb413c2a5fc1fba1dd3b35c0",
@@ -2106,7 +2106,9 @@ describe("curriculum integrity", () => {
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
       expect(kernel?.sourceCommit).toBe(
-        "9006001157e2c3062e44088634e467b0f8963ee0",
+        lessonId === "gfx950-fp8-attention"
+          ? "34aa704c5bc3e3c84ad904dfcf7f044374e7dcd8"
+          : "9006001157e2c3062e44088634e467b0f8963ee0",
       );
       expect(kernel?.sourcePath).toBe(
         "examples/gfx950_low_precision/src/kernel.rs",
@@ -2339,7 +2341,7 @@ describe("curriculum integrity", () => {
 
     const excerptHashes = {
       "gfx950-advanced-moe": [
-        "c2131eeb0bf55ad7d272076655f5d3144bf61aa2ed04e3960cca3e09a854929c",
+        "597f67584c129e67b9dce7972315d8fce986e4a7f002575f6ef41345f568300e",
         "49826130508e509b46cb0d56dd746e49ddf60b470c19243dd9adc9b7d51c041f",
       ],
       "gfx950-kda-gdn-linear-attention": [
@@ -2347,7 +2349,7 @@ describe("curriculum integrity", () => {
         "9b693e07fa53fc0fdff9b235bffdb012987e336d63ca7cbeac8cac01cb5ac76d",
       ],
       "gfx950-indexed-sparse-attention": [
-        "8af6b4374d55d1cda9a8c5b8488df3b29dd280690fcf5f643d0d3a7776fd21bd",
+        "611fed39499572579a1f80b7aa855926e219791fc71085e330d0e564ffcdab8b",
         "813fce6fee60239b9c2ee8aa0c66958680595bfa66162d27b95f7cde7ca2dad9",
       ],
       "gfx950-deepseek-sparse-attention": [
@@ -2355,7 +2357,7 @@ describe("curriculum integrity", () => {
         "6b2c81b68e6cdbf1f328ba6a061407113882457624067f2a0be679f26eb57a5f",
       ],
       "gfx950-compressed-hybrid-attention": [
-        "f1d09336b950f0a71e8fc81beeff438ce19ba045c46d6865db833175fba0b1e1",
+        "aa2436df9d8635507b8d29fba15054afdbf3e18347f8dce338c9ff2b30d15332",
         "afe790e4c83988aae90763d6dccd394b265017ba72d6e4024b6f7b794e8d08db",
       ],
       "gfx950-attnres-gr-mhc": [
@@ -2363,15 +2365,15 @@ describe("curriculum integrity", () => {
         "d3fa6ba2d5fb187aeb5bf304ba3b29327636f8ce6afbf9455adbcf2273a3382f",
       ],
       "gfx950-speculative-mtp-verification": [
-        "2730064fc70eca25fc1f18933ac2d71899f48a4467338a49cd9800e9fa2a5fcd",
+        "2ba7eab1adc144eaeda5dd4af486d08751cca15a397e1e37332681ea31344ccc",
         "0e0f28117f664d0e54e85b853d442d68d36c280d442b6a428ed47d6510ae72b7",
       ],
       "gfx950-ngram-embedding-gather": [
-        "ec93dc1a8b806b1c777a846517b42319b5dcfb5cc86d1fff4dda1b87d7d91b9c",
+        "07466eb90124408a905cc46752961ba5f12ac427cf41c59f23f25f6b435d5945",
         "a15572e565a090dba9169056ede64caf7186815a48c618985f1f95bb129f51de",
       ],
       "gfx950-muon-optimizer": [
-        "df2ded4e4f5fa4fe6e170f2701097d9087ef0929c318768b8c5ac83fa63896f5",
+        "b408f9edc331402727311192aa3fbbb74da7753bf0de0f03692d5032802cf4f7",
         "d43c796135a06d777cd4189267ff0a9fc6fa37ff94c4c04273820a5bfcdfc24f",
       ],
     } as const;
@@ -2558,7 +2560,15 @@ describe("curriculum integrity", () => {
       expect(kernel?.sourcePath).toBe(sourcePath);
       expect(kernel?.language).toBe("rust");
       expect(kernel?.explanatory).toBe(false);
-      expect(kernel?.sourceCommit).toBe(advancedCoreSourceCommit);
+      const currentSourceCommits: Record<string, string> = {
+        "gfx950-advanced-moe": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+        "gfx950-indexed-sparse-attention": "154a8c08c9995efffd56894768d04f0b91124e62",
+        "gfx950-compressed-hybrid-attention": "154a8c08c9995efffd56894768d04f0b91124e62",
+        "gfx950-speculative-mtp-verification": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+        "gfx950-ngram-embedding-gather": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+        "gfx950-muon-optimizer": "6fa38652e105b16a83dcd5e800c91d3ae42a9781",
+      };
+      expect(kernel?.sourceCommit).toBe(currentSourceCommits[lessonId] ?? advancedCoreSourceCommit);
       expect(kernel?.sourceSha256).toBe(rustExcerptSha256);
       expect(kernel?.code).toContain(rustSymbol);
       expect(kernel?.code).not.toContain("SOURCE MIRROR PENDING");
@@ -2739,9 +2749,9 @@ describe("curriculum integrity", () => {
       label: "Rust kernel",
       language: "rust",
       sourcePath: "examples/gfx950_gpt_oss_decode/src/kernel.rs",
-      sourceCommit: advancedCoreSourceCommit,
+      sourceCommit: "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba",
       sourceSha256:
-        "fdc428f33edbcebe6ca7764c537db58e68009115d740fc21a8252253db8d4081",
+        "4fbd84c0a5d264256f6058acc838007033fea20b01f19ae03a46e80c36522c27",
       explanatory: false,
     });
     expect(kernel?.code).toContain(
@@ -2764,37 +2774,37 @@ describe("curriculum integrity", () => {
       [
         "Serial router ablation [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_router_serial.rs",
-        "fdee28b13856ecc5464839273f58966e6663d27975ede2d6b78c9a8b888808f5",
+        "85a5282cbbb5d4efeda4d317d20dda257e65eaa12fb5d959aa6de0d01e960d5f",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
         "Held-fragment ablation [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_held_fragments.rs",
-        "2309c35e55b4980c54acb607499767251d73d7ad7e56e802e5cf5ae43af1a021",
+        "7e660694fd103f66e0ce478765f537ef70ee2f39aaa90dfe8d66fd65f5bb0125",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
         "Interleaved-store ablation [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_interleaved_stores.rs",
-        "3a34845ea4c82d1de356a3f64f8f3ee15467a8cb01ebc773623814f8af0e7a19",
+        "b824977e006449ae3ff21b82bc76b15a287621ffc581ae7ab39a9c74e42805dc",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
         "Materialized components [FINAL-COMPATIBILITY]",
         "examples/gfx950_gpt_oss_decode/src/kernel_components.rs",
-        "d83b12f14f5c5ce58834a48665f7e955210cab30dabf8476c16274d8748e5c64",
+        "72bb8858eec772eb4a68a28a9ac6a36b23e0c6ae40fc5c640484700244d144ab",
         "pub fn gfx950_gpt_oss_120b_router_v1(",
       ],
       [
-        "BF16 LDS pipeline [COMPILER-REJECTED]",
+        "BF16 LDS pipeline",
         "examples/gfx950_gpt_oss_decode/src/kernel_pipelined_attention.rs",
-        "faf9bc589658b1381e1042c71b952881488261cc85ff86c21dbb7f1f1a83a460",
+        "15798c5d8dc2089fd05b9234ab9153faa10ed20cd88f59c54fde88f0a45ac502",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
       [
-        "Scalar attention [COMPILER-REJECTED]",
+        "Scalar attention",
         "examples/gfx950_gpt_oss_decode/src/kernel_scalar_attention.rs",
-        "e2e326a500c92bf1cbd33acb364f707bf339a54ee3259b79875c079a9f967c96",
+        "5531e12d47e1d3c39c6b56a01335f97fd669fa4d0b8b709633a53cccab4d5a9d",
         "pub fn gfx950_gpt_oss_120b_decode_megakernel_v1(",
       ],
     ] as const;
@@ -2804,14 +2814,14 @@ describe("curriculum integrity", () => {
         kind: "kernel",
         language: "rust",
         sourcePath,
-        sourceCommit: advancedCoreSourceCommit,
+        sourceCommit: "d670b3cfc3a04f39dcf37bd9e6b3d3bf1a9bbfba",
         sourceSha256,
         sourceDigestScope: "file",
         explanatory: false,
       });
       expect(variant?.code).toContain(symbol);
       expect(variant?.notice).toContain(
-        label.includes("COMPILER-REJECTED")
+        label === "Scalar attention" || label === "BF16 LDS pipeline"
           ? "compiler-rejected"
           : "final-compatibility",
       );
@@ -4391,10 +4401,10 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/tiled_gemm_general_v1/src/kernel.rs",
-      sourceCommit: "9006001157e2c3062e44088634e467b0f8963ee0",
+      sourceCommit: "0e0963df4f230bf728a7b4605677c0ff09624adf",
       sourceSha256:
-        "a898a078ac411b17764d87c0b06681045ddccc83ea8d4314fd2a48b59e8462cd",
-      evidenceId: "workgroup-pipeline-source-v1",
+        "ef3bbea31da5311bfb5bfb9edb9f43569e602501c079bebb16eb5f0c6b5973b4",
+      evidenceId: "tiled-gemm-current-source-v1",
       explanatory: false,
     });
     expect(kernel?.code).toContain("while phase_index < phase_count");
@@ -4407,11 +4417,13 @@ describe("curriculum integrity", () => {
     );
     expect(kernel?.code).toContain("-> KernelResult");
     expect(kernel?.code).toContain(
-      "let a_matrix = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)?;",
+      "let Ok(a_matrix) = Bf16MfmaAMatrix::row_major(a, 0, m as usize, k as usize, lda as usize)\n    else {\n        return Err(KernelError::InvalidArgument);\n    };",
     );
     expect(kernel?.code).toContain(
-      "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row * 16, next_phase);",
+      "let next_lhs = a_matrix.load_m16k16(&wave_lane, tile_row_base, next_phase);",
     );
+    expect(kernel?.code).toContain("if tile_row > usize::MAX / 16");
+    expect(kernel?.code).toContain("let tile_row_base = tile_row * 16;");
     expect(kernel?.code).not.toMatch(/load_(?:m16k16|k16n16)\([^;]+\)\?/u);
     expect(kernel?.code).toContain("let matrix = Matrix::current()");
     expect(kernel?.code).toContain("alpha * values[0] + beta * *output");
@@ -4741,17 +4753,18 @@ describe("curriculum integrity", () => {
     const kernel = lesson?.tabs.find((tab) => tab.kind === "kernel");
     expect(kernel).toMatchObject({
       sourcePath: "examples/row_softmax_general_v1/src/kernel.rs",
-      sourceCommit: "bfa616c996fa529da67f2f6c32e7829213914e3e",
+      sourceCommit: "044b85871308076c7a15d1c20c7794069fd73bb2",
       sourceSha256:
-        "b7f65c16395ea89c590aaee800167a9dceea620e55765044f423eadf9360e04d",
+        "06896717d72deee6e52f957979c796a19ebb22146e9512abf7fdd3c5de366ba8",
+      evidenceId: "row-softmax-current-source-v1",
       sourceDigestScope: "file",
       explanatory: false,
     });
-    const source = readFileSync("examples/row_softmax_general_v1/src/kernel.rs", "utf8");
+    const source = readFileSync("examples/row_softmax_general_v1/src/kernel_current.rs", "utf8");
     expect(kernel?.code).toBe(source);
-    expect(Buffer.byteLength(source)).toBe(3979);
-    expect(kernel?.notice).toContain("does not qualify a SIMT/tile pair");
-    expect(kernel?.notice).toContain("historical GPU execution evidence remains pinned separately");
+    expect(Buffer.byteLength(source)).toBe(4483);
+    expect(kernel?.notice).toContain("qualifies no SIMT/tile pair");
+    expect(kernel?.notice).toContain("Historical source-model and GPU evidence belongs to its original source");
     expect(
       createHash("sha256")
         .update(kernel?.code ?? "")
@@ -5083,7 +5096,7 @@ describe("curriculum integrity", () => {
       }),
     ).toContainEqual(
       expect.objectContaining({
-        message: "code tab source commit does not match its evidence",
+        message: "code tab does not match its exact source-only association",
       }),
     );
     expect(
@@ -5092,7 +5105,7 @@ describe("curriculum integrity", () => {
       }),
     ).toContainEqual(
       expect.objectContaining({
-        message: "code tab source path is not covered by its evidence",
+        message: "code tab does not match its exact source-only association",
       }),
     );
     expect(
