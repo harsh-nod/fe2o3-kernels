@@ -54,5 +54,21 @@ test("fill preserves exact source and historical execution boundaries", async ({
     .toHaveCount(0);
   await page.getByRole("button", { name: "Copy code", exact: true }).click();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(historicalSource);
+  const historicalEvidence = page.getByLabel("Evidence for this lesson");
+  const historicalDisclosure = historicalEvidence.locator("details");
+  if (await historicalDisclosure.getAttribute("open") === null) {
+    await historicalDisclosure.locator("summary").click();
+  }
+  await expect(historicalDisclosure).toHaveAttribute("open", "");
+  await expect(historicalEvidence.getByText(/At the retained acb3d275 source/u)).toBeVisible();
+  await expect(historicalEvidence).toContainText("five positive harnesses");
+  await expect(historicalEvidence).toContainText("24 expected proof rejections");
+  await expect(historicalEvidence).toContainText("do not qualify a later source revision or executable GPU artifact");
+  await expect(historicalEvidence.getByRole("link", { name: "examples/verus_vecadd/run-verus.sh", exact: true }))
+    .toHaveAttribute("href", "https://github.com/harsh-nod/fe2o3/blob/acb3d2752e4e50e4f4a99ebfc4b180eb79160930/examples/verus_vecadd/run-verus.sh");
+  await page.getByRole("tab", { name: "Expected result", exact: true }).click();
+  await expect(code).toContainText("Expected results at acb3d275: 5 verified harnesses and 24 intended proof rejections");
+  await expect(code).toContainText("Verus fixture run passed: 5 proof harnesses, 24 expected rejections");
+  await expect(code).not.toContainText("stale summary");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });
