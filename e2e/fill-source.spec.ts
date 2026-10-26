@@ -55,7 +55,12 @@ test("fill preserves exact source and historical execution boundaries", async ({
   await page.getByRole("button", { name: "Copy code", exact: true }).click();
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(historicalSource);
   const historicalEvidence = page.getByLabel("Evidence for this lesson");
-  await historicalEvidence.locator("summary").click();
+  const historicalDisclosure = historicalEvidence.locator("details");
+  if (await historicalDisclosure.getAttribute("open") === null) {
+    await historicalDisclosure.locator("summary").click();
+  }
+  await expect(historicalDisclosure).toHaveAttribute("open", "");
+  await expect(historicalEvidence.getByText(/At the retained acb3d275 source/u)).toBeVisible();
   await expect(historicalEvidence).toContainText("five positive harnesses");
   await expect(historicalEvidence).toContainText("24 expected proof rejections");
   await expect(historicalEvidence).toContainText("do not qualify a later source revision or executable GPU artifact");
