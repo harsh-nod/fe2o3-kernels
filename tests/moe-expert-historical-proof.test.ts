@@ -24,13 +24,20 @@ describe("historical MoE expert proof source", () => {
     );
   });
 
-  it("distinguishes complete Verus results from the historical wrapper summary", () => {
+  it("binds the historical Verus counts to their retained source revision", () => {
     const lesson = lessons.find((entry) => entry.id === "verus-contracts")!;
-    expect(lesson.claims[0].detail).toContain("seven positive harnesses");
-    expect(lesson.claims[0].detail).toContain("28 expected proof rejections");
-    expect(lesson.claims[0].detail).toContain("historical wrapper");
-    expect(lesson.tabs.some((tab) => tab.code.includes(
-      "Verus fixture run passed: 6 proof harnesses, 26 expected rejections",
-    ))).toBe(true);
+    const claim = lesson.claims[0];
+    expect(claim.kind).toBe("source-model-verified");
+    expect(claim.reference?.commit).toBe("acb3d2752e4e50e4f4a99ebfc4b180eb79160930");
+    expect(claim.reference?.tree).toBe("f53fdf76950e392d74c17c20e0999a7727305d49");
+    expect(claim.detail).toContain("five positive harnesses");
+    expect(claim.detail).toContain("24 expected proof rejections");
+    expect(claim.detail).toContain("do not qualify a later source revision or executable GPU artifact");
+    const result = lesson.tabs.find((tab) => tab.kind === "result")!;
+    expect(result.code).toContain("Expected results at acb3d275: 5 verified harnesses and 24 intended proof rejections");
+    expect(result.code).toContain("Verus fixture run passed: 5 proof harnesses, 24 expected rejections");
+    for (const text of [claim.detail, result.code]) {
+      expect(text).not.toMatch(/seven positive|7 verified|28 expected|28 intended|6 proof harnesses|26 expected|stale summary/u);
+    }
   });
 });
